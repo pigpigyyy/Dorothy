@@ -1,0 +1,46 @@
+typedef unsigned char GLubyte;
+typedef int GLint;
+typedef int GLsizei;
+typedef unsigned char	GLubyte;
+typedef unsigned short GLushort;
+typedef unsigned int GLuint;
+typedef float GLfloat;
+typedef short GLshort;
+typedef unsigned int GLenum;
+
+class ccColor3B @ ccColor3
+{
+	ccColor3B();
+	ccColor3B(GLubyte r, GLubyte g, GLubyte b);
+	~ccColor3B();
+    GLubyte r;
+    GLubyte g;
+    GLubyte b;
+};
+
+class ccColor4B @ ccColor4
+{
+	ccColor4B();
+	ccColor4B(unsigned int value);
+	ccColor4B(ccColor3B c, GLubyte a = 255);
+	ccColor4B(GLubyte r, GLubyte g, GLubyte b, GLubyte a);
+	~ccColor4B();
+    GLubyte r;
+    GLubyte g;
+    GLubyte b;
+    GLubyte a;
+};
+
+typedef enum
+{
+    kCCVerticalTextAlignmentTop,
+    kCCVerticalTextAlignmentCenter,
+    kCCVerticalTextAlignmentBottom,
+} CCVerticalTextAlignment;
+
+typedef enum
+{
+    kCCTextAlignmentLeft,
+    kCCTextAlignmentCenter,
+    kCCTextAlignmentRight,
+} CCTextAlignment;

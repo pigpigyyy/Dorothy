@@ -1,0 +1,23 @@
+
+class CCTouch : public CCObject
+{
+	enum
+	{
+		Began,
+		Moved,
+		Ended,
+		Cancelled
+	};
+	CCPoint getLocation() const;
+    CCPoint getPreviousLocation() const;
+    CCPoint getDelta() const;
+    CCPoint getLocationInView() const;
+    CCPoint getPreviousLocationInView() const;
+
+	void setTouchInfo(int id, float x, float y);
+    int getID();
+};
+
+class CCEvent : public CCObject
+{
+};

@@ -1,0 +1,50 @@
+class CCSprite : public CCNode//CCNodeRGBA
+{
+	CCRect getTextureRect();
+
+	bool isTextureRectRotated();
+
+	void setAtlasIndex(unsigned int uAtlasIndex);
+	unsigned int getAtlasIndex();
+
+	CCPoint getOffsetPosition();
+
+	void setFlipX(bool bFlipX);
+	bool isFlipX();
+	
+	void setFlipY(bool bFlipY);
+	bool isFlipY();
+
+	void removeChild(CCNode* pChild, bool bCleanUp = true);
+	void removeAllChildrenWithCleanup(bool bCleanup = true);
+	void reorderChild(CCNode* pChild, int zOrder);
+	void addChild(CCNode* pChild);
+	void addChild(CCNode* pChild, int zOrder);
+	void addChild(CCNode* pChild, int zOrder, int tag);
+
+	void setRotation(float rotation);
+	void setSkewX(float sx);
+	void setSkewY(float sy);
+	void setScale(float fScale);
+	void setScaleX(float fScaleX);
+	void setScaleY(float fScaleY);
+	void setPositionZ(float var);
+	void setAnchorPoint(const CCPoint & anchor);
+	void setVisible(bool bVisible);
+
+	void setTexture(CCTexture2D *texture);
+	CCTexture2D* getTexture();
+
+	void setTextureRect(CCRect rect);
+	void setTextureRect(CCRect rect, bool rotated, CCSize size);
+
+	static CCSprite* createWithTexture(CCTexture2D *pTexture);
+	static CCSprite* createWithTexture(CCTexture2D *pTexture, CCRect rect);
+	static CCSprite* createWithSpriteFrame(CCSpriteFrame *pSpriteFrame);
+	static CCSprite* createWithSpriteFrameName(const char *pszSpriteFrameName);
+	static CCSprite* create(const char *pszFileName, CCRect rect);
+	static CCSprite* create(const char *pszFileName);
+	static CCSprite* create();
+
+	static tolua_outside CCSprite* CCSprite_createWithClip @ createWithClip( const char* clipStr );
+};

@@ -1,0 +1,465 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{202b519b-b5e0-499f-b3b8-ed5da144b248}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\CCControlExtension">
+      <UniqueIdentifier>{c07abd14-e9dd-4e2d-85c4-a180070161b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\CCScrollView">
+      <UniqueIdentifier>{46797895-f71d-4ddb-b381-d0884e678d39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LocalStorage">
+      <UniqueIdentifier>{4da8061d-80f3-45fd-aa7e-2c0a96701b79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\CCEditBox">
+      <UniqueIdentifier>{5d186e3d-0aaf-4904-a5d8-e5cb0f35f4cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AssetsManager">
+      <UniqueIdentifier>{49487dbe-5758-436a-b014-8e2edc6b33ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dorothy">
+      <UniqueIdentifier>{0a199095-ef13-42b6-ba8e-9999ed4b83e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dorothy\const">
+      <UniqueIdentifier>{cf141816-7409-4452-b4d4-47d00ff3ef82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dorothy\misc">
+      <UniqueIdentifier>{1eac39af-b8c1-4179-b4fd-6a62f4c36268}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dorothy\model">
+      <UniqueIdentifier>{7c3aadb3-98bb-4be8-9346-843c68447bc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dorothy\other">
+      <UniqueIdentifier>{b41c3ada-ee5b-4cc8-aac7-5fef9cbdecec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dorothy\platform">
+      <UniqueIdentifier>{8d513c02-618e-4976-a49d-97a6ac68d518}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="network">
+      <UniqueIdentifier>{373166ef-b514-4374-ae95-bc7d30a3cd52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dorothy\effect">
+      <UniqueIdentifier>{42097300-46fe-4aaf-96a4-9352f5d301f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dorothy\audio">
+      <UniqueIdentifier>{37d89f36-9d41-4360-844d-2d00c818198c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dorothy\other\physics">
+      <UniqueIdentifier>{109ab104-04ab-4894-bcc0-39a967f80bb2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\GUI\CCScrollView\CCScrollView.cpp">
+      <Filter>GUI\CCScrollView</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GUI\CCScrollView\CCSorting.cpp">
+      <Filter>GUI\CCScrollView</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GUI\CCScrollView\CCTableView.cpp">
+      <Filter>GUI\CCScrollView</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GUI\CCScrollView\CCTableViewCell.cpp">
+      <Filter>GUI\CCScrollView</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GUI\CCControlExtension\CCControlColourPicker.cpp">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GUI\CCControlExtension\CCControlHuePicker.cpp">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GUI\CCControlExtension\CCControlPotentiometer.cpp">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GUI\CCControlExtension\CCControlSaturationBrightnessPicker.cpp">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GUI\CCControlExtension\CCControlSlider.cpp">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GUI\CCControlExtension\CCControlStepper.cpp">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GUI\CCControlExtension\CCControlSwitch.cpp">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GUI\CCControlExtension\CCControlUtils.cpp">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GUI\CCControlExtension\CCInvocation.cpp">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GUI\CCControlExtension\CCScale9Sprite.cpp">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GUI\CCControlExtension\CCControl.cpp">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GUI\CCControlExtension\CCControlButton.cpp">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LocalStorage\LocalStorage.cpp">
+      <Filter>LocalStorage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GUI\CCEditBox\CCEditBoxImplWin.cpp">
+      <Filter>GUI\CCEditBox</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32InputBox.cpp">
+      <Filter>GUI\CCEditBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GUI\CCEditBox\CCEditBox.cpp">
+      <Filter>GUI\CCEditBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\AssetsManager\AssetsManager.cpp">
+      <Filter>AssetsManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\model\oActionDuration.cpp">
+      <Filter>Dorothy\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\model\oKeyFrame.cpp">
+      <Filter>Dorothy\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\model\oModel.cpp">
+      <Filter>Dorothy\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\model\oModelDef.cpp">
+      <Filter>Dorothy\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\physics\oBody.cpp">
+      <Filter>Dorothy\other\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\physics\oBodyDef.cpp">
+      <Filter>Dorothy\other\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\physics\oSensor.cpp">
+      <Filter>Dorothy\other\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\physics\oWorld.cpp">
+      <Filter>Dorothy\other\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\model\oSequence.cpp">
+      <Filter>Dorothy\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\model\oEase.cpp">
+      <Filter>Dorothy\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\model\oKeyFrameDef.cpp">
+      <Filter>Dorothy\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\misc\oContent.cpp">
+      <Filter>Dorothy\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\model\oClip.cpp">
+      <Filter>Dorothy\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\model\oAnimation.cpp">
+      <Filter>Dorothy\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\model\oModelCache.cpp">
+      <Filter>Dorothy\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\misc\oHelper.cpp">
+      <Filter>Dorothy\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\const\oDefine.cpp">
+      <Filter>Dorothy\const</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\platform\oCamera.cpp">
+      <Filter>Dorothy\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\platform\oPlatformWorld.cpp">
+      <Filter>Dorothy\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\network\HttpClient.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\misc\oNode3D.cpp">
+      <Filter>Dorothy\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\platform\oPlatformDefine.cpp">
+      <Filter>Dorothy\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\effect\oParticleCache.cpp">
+      <Filter>Dorothy\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\platform\oAction.cpp">
+      <Filter>Dorothy\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\platform\oAI.cpp">
+      <Filter>Dorothy\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\platform\oAINode.cpp">
+      <Filter>Dorothy\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\platform\oBullet.cpp">
+      <Filter>Dorothy\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\platform\oBulletDef.cpp">
+      <Filter>Dorothy\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\platform\oData.cpp">
+      <Filter>Dorothy\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\platform\oProperty.cpp">
+      <Filter>Dorothy\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\platform\oUnit.cpp">
+      <Filter>Dorothy\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\platform\oUnitDef.cpp">
+      <Filter>Dorothy\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\audio\oAudio.cpp">
+      <Filter>Dorothy\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\misc\oScriptHandler.cpp">
+      <Filter>Dorothy\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\misc\oVec2.cpp">
+      <Filter>Dorothy\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\effect\oEffectCache.cpp">
+      <Filter>Dorothy\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\model\oFace.cpp">
+      <Filter>Dorothy\misc</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\GUI\CCScrollView\CCScrollView.h">
+      <Filter>GUI\CCScrollView</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos-ext.h" />
+    <ClInclude Include="..\ExtensionMacros.h" />
+    <ClInclude Include="..\GUI\CCScrollView\CCSorting.h">
+      <Filter>GUI\CCScrollView</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GUI\CCScrollView\CCTableView.h">
+      <Filter>GUI\CCScrollView</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GUI\CCScrollView\CCTableViewCell.h">
+      <Filter>GUI\CCScrollView</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GUI\CCControlExtension\CCControlButton.h">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GUI\CCControlExtension\CCControlColourPicker.h">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GUI\CCControlExtension\CCControlExtensions.h">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GUI\CCControlExtension\CCControlHuePicker.h">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GUI\CCControlExtension\CCControlPotentiometer.h">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GUI\CCControlExtension\CCControlSaturationBrightnessPicker.h">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GUI\CCControlExtension\CCControlSlider.h">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GUI\CCControlExtension\CCControlStepper.h">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GUI\CCControlExtension\CCControlSwitch.h">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GUI\CCControlExtension\CCControlUtils.h">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GUI\CCControlExtension\CCInvocation.h">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GUI\CCControlExtension\CCScale9Sprite.h">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GUI\CCControlExtension\CCControl.h">
+      <Filter>GUI\CCControlExtension</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LocalStorage\LocalStorage.h">
+      <Filter>LocalStorage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GUI\CCEditBox\CCEditBoxImplWin.h">
+      <Filter>GUI\CCEditBox</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32InputBox.h">
+      <Filter>GUI\CCEditBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GUI\CCEditBox\CCEditBox.h">
+      <Filter>GUI\CCEditBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GUI\CCEditBox\CCEditBoxImpl.h">
+      <Filter>GUI\CCEditBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\AssetsManager\AssetsManager.h">
+      <Filter>AssetsManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\const\oDefine.h">
+      <Filter>Dorothy\const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\model\oActionDuration.h">
+      <Filter>Dorothy\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\model\oKeyFrame.h">
+      <Filter>Dorothy\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\model\oModel.h">
+      <Filter>Dorothy\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\model\oModelDef.h">
+      <Filter>Dorothy\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\physics\oBody.h">
+      <Filter>Dorothy\other\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\physics\oBodyDef.h">
+      <Filter>Dorothy\other\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\physics\oSensor.h">
+      <Filter>Dorothy\other\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\physics\oWorld.h">
+      <Filter>Dorothy\other\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy.h" />
+    <ClInclude Include="..\Dorothy\model\oSequence.h">
+      <Filter>Dorothy\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\model\oEase.h">
+      <Filter>Dorothy\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\model\oKeyFrameDef.h">
+      <Filter>Dorothy\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oXmlItemCache.h">
+      <Filter>Dorothy\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oContent.h">
+      <Filter>Dorothy\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\const\oXml.h">
+      <Filter>Dorothy\const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\model\oClip.h">
+      <Filter>Dorothy\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\model\oAnimation.h">
+      <Filter>Dorothy\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\model\oModelAnimationDef.h">
+      <Filter>Dorothy\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\other\AcfDelegate.h">
+      <Filter>Dorothy\other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\other\hash_common.hpp">
+      <Filter>Dorothy\other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\other\hash_strmap.hpp">
+      <Filter>Dorothy\other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\model\oModelCache.h">
+      <Filter>Dorothy\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oHelper.h">
+      <Filter>Dorothy\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\platform\oCamera.h">
+      <Filter>Dorothy\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\platform\oPlatformWorld.h">
+      <Filter>Dorothy\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\platform\oPlatformDefine.h">
+      <Filter>Dorothy\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\network\HttpClient.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\network\HttpRequest.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\network\HttpResponse.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oNode3D.h">
+      <Filter>Dorothy\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oIDisposable.h">
+      <Filter>Dorothy\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oOwn.h">
+      <Filter>Dorothy\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oOwnVector.h">
+      <Filter>Dorothy\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oRef.h">
+      <Filter>Dorothy\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oRefVector.h">
+      <Filter>Dorothy\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\model\oFace.h">
+      <Filter>Dorothy\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\effect\oEffectCache.h">
+      <Filter>Dorothy\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\effect\oParticleCache.h">
+      <Filter>Dorothy\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\platform\oAction.h">
+      <Filter>Dorothy\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\platform\oAI.h">
+      <Filter>Dorothy\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\platform\oAINode.h">
+      <Filter>Dorothy\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\platform\oBullet.h">
+      <Filter>Dorothy\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\platform\oBulletDef.h">
+      <Filter>Dorothy\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\platform\oData.h">
+      <Filter>Dorothy\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\platform\oProperty.h">
+      <Filter>Dorothy\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\platform\oUnit.h">
+      <Filter>Dorothy\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\platform\oUnitDef.h">
+      <Filter>Dorothy\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\audio\oAudio.h">
+      <Filter>Dorothy\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oScriptHandler.h">
+      <Filter>Dorothy\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oCallFunc.h">
+      <Filter>Dorothy\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oVec2.h">
+      <Filter>Dorothy\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\other\Property.h">
+      <Filter>Dorothy\other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oMemoryPool.h">
+      <Filter>Dorothy\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\other\AcfDelegateTemplate.h">
+      <Filter>Dorothy\other</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
