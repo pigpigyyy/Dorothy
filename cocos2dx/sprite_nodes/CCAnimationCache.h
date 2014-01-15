@@ -58,7 +58,8 @@ public:
     /** Purges the cache. It releases all the CCAnimation objects and the shared instance.
     */
     static void purgeSharedAnimationCache();
-
+	
+	void clear();
     /** Adds a CCAnimation with a name.
     */
     void addAnimation(CCAnimation *animation, const char * name);

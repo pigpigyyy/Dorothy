@@ -69,6 +69,8 @@ public:
 
     /**  A CCAnimationFrameDisplayedNotification notification will be broadcast when the frame is displayed with this dictionary as UserInfo. If UserInfo is nil, then no notification will be broadcast. */
     CC_SYNTHESIZE_RETAIN(CCDictionary*, m_pUserInfo, UserInfo)
+	
+	static CCAnimationFrame* create(CCSpriteFrame* spriteFrame, float delayUnits);
 };
 
 
@@ -129,7 +131,7 @@ public:
     /** Initializes a CCAnimation with frames and a delay between frames
     @since v0.99.5
     */
-    bool initWithSpriteFrames(CCArray *pFrames, float delay = 0.0f);
+    bool initWithSpriteFrames(CCArray *pFrames, float delayPerUnit = 0.0f);
 
     /** Initializes a CCAnimation with CCAnimationFrame
     @since v2.0

@@ -369,7 +369,7 @@ public:
     /**
      * Returns the current displayed frame.
      */
-    virtual CCSpriteFrame* displayFrame();
+    virtual CCSpriteFrame* getDisplayFrame();
     
     /// @} End of frames methods
     

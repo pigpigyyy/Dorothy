@@ -1,49 +1,26 @@
-
-class CCAnimationFrame : public CCObject
+class CCAnimationFrame: public CCObject
 {
-    CCAnimationFrame();
-    ~CCAnimationFrame();
+	tolua_property__common CCSpriteFrame* spriteFrame;
+	tolua_property__common float delayUnits;
 
-    bool initWithSpriteFrame(CCSpriteFrame* spriteFrame, float delayUnits, CCDictionary* userInfo);
-
-    CCSpriteFrame* getSpriteFrame();
-    void setSpriteFrame(CCSpriteFrame* pSpFrame);
-
-    float getDelayUnits();
-    void setDelayUnits(float fDelayUnits);
-
-    CCDictionary*  getUserInfo();
-    void setUserInfo(CCDictionary* pDict);
+	static CCAnimationFrame* create(CCSpriteFrame* spriteFrame, float delayUnits);
 };
 
-
-class CCAnimation : public CCObject
+class CCAnimation: public CCObject
 {
-    static CCAnimation* create(CCArray *arrayOfAnimationFrameNames, float delayPerUnit, unsigned int loops);
-    static CCAnimation* create(void);
-    static CCAnimation* createWithSpriteFrames(CCArray* arrayOfSpriteFrameNames, float delay);
-    static CCAnimation* createWithSpriteFrames(CCArray* arrayOfSpriteFrameNames);
+	static CCAnimation* create();
+	static CCAnimation* createWithSpriteFrames(CCArray* arrayOfSpriteFrameNames, float delayPerUnit);
+	static CCAnimation* create(CCArray* arrayOfAnimationFrameNames, float delayPerUnit, unsigned int loops);
 
-    void addSpriteFrame(CCSpriteFrame *pFrame);
-    void addSpriteFrameWithFileName(const char *pszFileName);
-    void addSpriteFrameWithTexture(CCTexture2D* pobTexture, const CCRect& rect);
+	tolua_readonly tolua_property__common float totalDelayUnits;
+	tolua_readonly tolua_property__common float duration;
+	tolua_readonly tolua_property__common CCArray* frames;
 
-    float getTotalDelayUnits();
+	tolua_property__common float delayPerUnit;
+	tolua_property__common bool restoreOriginalFrame;	
+	tolua_property__common unsigned int loops;
 
-    float getDelayPerUnit();
-    void setDelayPerUnit(float fDelayPerUnits);
-
-    float getDuration();
+	void addSpriteFrame @ add(CCSpriteFrame* pFrame);
 
 	CCAnimation* copy();
-
-    CCArray* getFrames();
-    void setFrames(CCArray* pFrames);
-
-
-    bool getRestoreOriginalFrame();
-    void setRestoreOriginalFrame(bool bRestoreFrame);
-
-    unsigned int getLoops();
-    void setLoops(unsigned int uLoops);
 };

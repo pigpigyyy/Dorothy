@@ -79,6 +79,15 @@ CCObject* CCAnimationFrame::copyWithZone(CCZone* pZone)
     return pCopy;
 }
 
+CCAnimationFrame* CCAnimationFrame::create(CCSpriteFrame* spriteFrame, float delayUnits)
+{
+	CCAnimationFrame* animationFrame = new CCAnimationFrame();
+	animationFrame->setSpriteFrame(spriteFrame);
+	animationFrame->setDelayUnits(delayUnits);
+	animationFrame->autorelease();
+	return animationFrame;
+}
+
 // implementation of CCAnimation
 
 CCAnimation* CCAnimation::create()
@@ -112,12 +121,12 @@ bool CCAnimation::init()
     return initWithSpriteFrames(NULL, 0.0f);
 }
 
-bool CCAnimation::initWithSpriteFrames(CCArray *pFrames, float delay/* = 0.0f*/)
+bool CCAnimation::initWithSpriteFrames(CCArray *pFrames, float delayPerUnit)
 {
     CCARRAY_VERIFY_TYPE(pFrames, CCSpriteFrame*);
 
     m_uLoops = 1;
-    m_fDelayPerUnit = delay;
+	m_fDelayPerUnit = delayPerUnit;
     CCArray* pTmpFrames = CCArray::create();
     setFrames(pTmpFrames);
 

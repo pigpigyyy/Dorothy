@@ -1,32 +1,11 @@
-
-class CCSpriteFrame : public CCObject
+class CCSpriteFrame: public CCObject
 {
-    CCRect getRectInPixels(void);
-    void setRectInPixels(CCRect rectInPixels);
+    tolua_property__bool bool rotated;
+    tolua_property__common CCRect rect;
+	tolua_property__common CCSize originalSize;
+	tolua_property__common CCTexture2D* texture;
+	tolua_property__common oVec2 offset;
 
-    bool isRotated(void);
-    void setRotated(bool bRotated);
-
-    CCRect getRect(void);
-    void setRect(CCRect rect);
-
-    CCPoint getOffsetInPixels(void);
-    void setOffsetInPixels(CCPoint offsetInPixels);
-
-    CCSize getOriginalSizeInPixels(void);
-    void setOriginalSizeInPixels(CCSize sizeInPixels);
-
-	const CCSize & getOriginalSize();
-	void setOriginalSize(const CCSize & size);
-
-	CCTexture2D* getTexture(void);
-    void setTexture(CCTexture2D* pobTexture);
-
-	const CCPoint & getOffset();
-	void setOffset(const CCPoint & offsets);
-
-    static CCSpriteFrame* create(const char* filename, CCRect rect, bool rotated, CCPoint offset, CCSize originalSize);
-	static CCSpriteFrame* create(const char* filename, CCRect rect);
-    static CCSpriteFrame* createWithTexture(CCTexture2D* pobTexture, CCRect rect, bool rotated, CCPoint offset, CCSize originalSize);
+    static CCSpriteFrame* createWithTexture(CCTexture2D* pobTexture, CCRect rect, bool rotated, oVec2 offset, CCSize originalSize);
     static CCSpriteFrame* createWithTexture(CCTexture2D* pobTexture, CCRect rect);
 };

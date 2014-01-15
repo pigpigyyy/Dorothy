@@ -223,7 +223,7 @@
       <Filter>Dorothy\effect</Filter>
     </ClCompile>
     <ClCompile Include="..\Dorothy\model\oFace.cpp">
-      <Filter>Dorothy\misc</Filter>
+      <Filter>Dorothy\model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

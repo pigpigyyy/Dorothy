@@ -53,6 +53,11 @@ void CCAnimationCache::purgeSharedAnimationCache()
     CC_SAFE_RELEASE_NULL(s_pSharedAnimationCache);
 }
 
+void CCAnimationCache::clear()
+{
+	m_pAnimations->removeAllObjects();
+}
+
 bool CCAnimationCache::init()
 {
     m_pAnimations = new CCDictionary();

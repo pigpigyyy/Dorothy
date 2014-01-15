@@ -2308,7 +2308,7 @@ void CCAnimate::startWithTarget(CCNode *pTarget)
 
     if (m_pAnimation->getRestoreOriginalFrame())
     {
-        m_pOrigFrame = pSprite->displayFrame();
+        m_pOrigFrame = pSprite->getDisplayFrame();
         m_pOrigFrame->retain();
     }
     m_nNextFrame = 0;

@@ -152,5 +152,12 @@ void oCache_clear()
 
 CCSprite* CCSprite_createWithClip(const char* clipStr)
 {
-	return oSharedClipCache.loadSprite(clipStr);
+	if (string(clipStr).find('|') == string::npos)
+	{
+		return CCSprite::create(clipStr);
+	}
+	else
+	{
+		return oSharedClipCache.loadSprite(clipStr);
+	}
 }

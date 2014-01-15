@@ -998,7 +998,7 @@ bool CCSprite::isFrameDisplayed(CCSpriteFrame *pFrame)
             pFrame->getOffset().equals(m_obUnflippedOffsetPositionFromCenter));
 }
 
-CCSpriteFrame* CCSprite::displayFrame()
+CCSpriteFrame* CCSprite::getDisplayFrame()
 {
     return CCSpriteFrame::createWithTexture(m_pobTexture,
                                            CC_RECT_POINTS_TO_PIXELS(m_obRect),
