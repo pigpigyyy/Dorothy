@@ -55,161 +55,161 @@ NS_CC_BEGIN
 
 CCSprite* CCSprite::createWithTexture(CCTexture2D *pTexture)
 {
-    CCSprite *pobSprite = new CCSprite();
-    if (pobSprite && pobSprite->initWithTexture(pTexture))
-    {
-        pobSprite->autorelease();
-        return pobSprite;
-    }
-    CC_SAFE_DELETE(pobSprite);
-    return NULL;
+	CCSprite *pobSprite = new CCSprite();
+	if (pobSprite && pobSprite->initWithTexture(pTexture))
+	{
+		pobSprite->autorelease();
+		return pobSprite;
+	}
+	CC_SAFE_DELETE(pobSprite);
+	return NULL;
 }
 
 CCSprite* CCSprite::createWithTexture(CCTexture2D *pTexture, const CCRect& rect)
 {
-    CCSprite *pobSprite = new CCSprite();
-    if (pobSprite && pobSprite->initWithTexture(pTexture, rect))
-    {
-        pobSprite->autorelease();
-        return pobSprite;
-    }
-    CC_SAFE_DELETE(pobSprite);
-    return NULL;
+	CCSprite *pobSprite = new CCSprite();
+	if (pobSprite && pobSprite->initWithTexture(pTexture, rect))
+	{
+		pobSprite->autorelease();
+		return pobSprite;
+	}
+	CC_SAFE_DELETE(pobSprite);
+	return NULL;
 }
 
 CCSprite* CCSprite::create(const char *pszFileName)
 {
-    CCSprite *pobSprite = new CCSprite();
-    if (pobSprite && pobSprite->initWithFile(pszFileName))
-    {
-        pobSprite->autorelease();
-        return pobSprite;
-    }
-    CC_SAFE_DELETE(pobSprite);
-    return NULL;
+	CCSprite *pobSprite = new CCSprite();
+	if (pobSprite && pobSprite->initWithFile(pszFileName))
+	{
+		pobSprite->autorelease();
+		return pobSprite;
+	}
+	CC_SAFE_DELETE(pobSprite);
+	return NULL;
 }
 
 CCSprite* CCSprite::create(const char *pszFileName, const CCRect& rect)
 {
-    CCSprite *pobSprite = new CCSprite();
-    if (pobSprite && pobSprite->initWithFile(pszFileName, rect))
-    {
-        pobSprite->autorelease();
-        return pobSprite;
-    }
-    CC_SAFE_DELETE(pobSprite);
-    return NULL;
+	CCSprite *pobSprite = new CCSprite();
+	if (pobSprite && pobSprite->initWithFile(pszFileName, rect))
+	{
+		pobSprite->autorelease();
+		return pobSprite;
+	}
+	CC_SAFE_DELETE(pobSprite);
+	return NULL;
 }
 
 CCSprite* CCSprite::create()
 {
-    CCSprite *pSprite = new CCSprite();
-    if (pSprite && pSprite->init())
-    {
-        pSprite->autorelease();
-        return pSprite;
-    }
-    CC_SAFE_DELETE(pSprite);
-    return NULL;
+	CCSprite *pSprite = new CCSprite();
+	if (pSprite && pSprite->init())
+	{
+		pSprite->autorelease();
+		return pSprite;
+	}
+	CC_SAFE_DELETE(pSprite);
+	return NULL;
 }
 
 bool CCSprite::init()
 {
-    return initWithTexture(NULL, CCRectZero);
+	return initWithTexture(NULL, CCRectZero);
 }
 
 // designated initializer
 bool CCSprite::initWithTexture(CCTexture2D *pTexture, const CCRect& rect)
 {
-    if (CCNodeRGBA::init())
-    {
-        m_pobBatchNode = NULL;
-        // shader program
-        setShaderProgram(CCShaderCache::sharedShaderCache()->programForKey(kCCShader_PositionTextureColor));
-        
-        m_bRecursiveDirty = false;
-        setDirty(false);
-        
-        m_bOpacityModifyRGB = true;
-        
-        m_sBlendFunc.src = CC_BLEND_SRC;
-        m_sBlendFunc.dst = CC_BLEND_DST;
-        
-        m_bFlipX = m_bFlipY = false;
-        
-        // default transform anchor: center
-        setAnchorPoint(ccp(0.5f, 0.5f));
-        
-        m_bHasChildren = false;
-        
-        // clean the Quad
-        memset(&m_sQuad, 0, sizeof(m_sQuad));
-        
-        // Atlas: Color
-        ccColor4B tmpColor = { 255, 255, 255, 255 };
-        m_sQuad.bl.colors = tmpColor;
-        m_sQuad.br.colors = tmpColor;
-        m_sQuad.tl.colors = tmpColor;
-        m_sQuad.tr.colors = tmpColor;
-        
-        // update texture (calls updateBlendFunc)
-        setTexture(pTexture);
-        setTextureRect(rect);
-        
-        // by default use "Self Render".
-        // if the sprite is added to a batchnode, then it will automatically switch to "batchnode Render"
-        setBatchNode(NULL);
-        
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+	if (CCNodeRGBA::init())
+	{
+		m_pobBatchNode = NULL;
+		// shader program
+		setShaderProgram(CCShaderCache::sharedShaderCache()->programForKey(kCCShader_PositionTextureColor));
+
+		m_bRecursiveDirty = false;
+		setDirty(false);
+
+		m_bOpacityModifyRGB = true;
+
+		m_sBlendFunc.src = CC_BLEND_SRC;
+		m_sBlendFunc.dst = CC_BLEND_DST;
+
+		m_bFlipX = m_bFlipY = false;
+
+		// default transform anchor: center
+		setAnchorPoint(ccp(0.5f, 0.5f));
+
+		m_bHasChildren = false;
+
+		// clean the Quad
+		memset(&m_sQuad, 0, sizeof(m_sQuad));
+
+		// Atlas: Color
+		ccColor4B tmpColor = { 255, 255, 255, 255 };
+		m_sQuad.bl.colors = tmpColor;
+		m_sQuad.br.colors = tmpColor;
+		m_sQuad.tl.colors = tmpColor;
+		m_sQuad.tr.colors = tmpColor;
+
+		// update texture (calls updateBlendFunc)
+		setTexture(pTexture);
+		setTextureRect(rect);
+
+		// by default use "Self Render".
+		// if the sprite is added to a batchnode, then it will automatically switch to "batchnode Render"
+		setBatchNode(NULL);
+
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 bool CCSprite::initWithTexture(CCTexture2D *pTexture)
 {
-    CCAssert(pTexture != NULL, "Invalid texture for sprite");
+	CCAssert(pTexture != NULL, "Invalid texture for sprite");
 
-    CCRect rect = CCRectZero;
-    rect.size = pTexture->getContentSize();
-    
-    return initWithTexture(pTexture, rect);
+	CCRect rect = CCRectZero;
+	rect.size = pTexture->getContentSize();
+
+	return initWithTexture(pTexture, rect);
 }
 
 bool CCSprite::initWithFile(const char *pszFilename)
 {
-    CCAssert(pszFilename != NULL, "Invalid filename for sprite");
+	CCAssert(pszFilename != NULL, "Invalid filename for sprite");
 
-    CCTexture2D *pTexture = CCTextureCache::sharedTextureCache()->addImage(pszFilename);
-    if (pTexture)
-    {
-        CCRect rect = CCRectZero;
-        rect.size = pTexture->getContentSize();
-        return initWithTexture(pTexture, rect);
-    }
+	CCTexture2D *pTexture = CCTextureCache::sharedTextureCache()->addImage(pszFilename);
+	if (pTexture)
+	{
+		CCRect rect = CCRectZero;
+		rect.size = pTexture->getContentSize();
+		return initWithTexture(pTexture, rect);
+	}
 
-    // don't release here.
-    // when load texture failed, it's better to get a "transparent" sprite then a crashed program
-    // this->release(); 
-    return false;
+	// don't release here.
+	// when load texture failed, it's better to get a "transparent" sprite then a crashed program
+	// this->release(); 
+	return false;
 }
 
 bool CCSprite::initWithFile(const char *pszFilename, const CCRect& rect)
 {
-    CCAssert(pszFilename != NULL, "");
+	CCAssert(pszFilename != NULL, "");
 
-    CCTexture2D *pTexture = CCTextureCache::sharedTextureCache()->addImage(pszFilename);
-    if (pTexture)
-    {
-        return initWithTexture(pTexture, rect);
-    }
+	CCTexture2D *pTexture = CCTextureCache::sharedTextureCache()->addImage(pszFilename);
+	if (pTexture)
+	{
+		return initWithTexture(pTexture, rect);
+	}
 
-    // don't release here.
-    // when load texture failed, it's better to get a "transparent" sprite then a crashed program
-    // this->release(); 
-    return false;
+	// don't release here.
+	// when load texture failed, it's better to get a "transparent" sprite then a crashed program
+	// this->release(); 
+	return false;
 }
 
 CCSprite::CCSprite()
@@ -220,187 +220,187 @@ m_pobTexture(NULL)
 
 CCSprite::~CCSprite()
 {
-    CC_SAFE_RELEASE(m_pobTexture);
+	CC_SAFE_RELEASE(m_pobTexture);
 }
 
 void CCSprite::setTextureRect(const CCRect& rect)
 {
-    setContentSize(rect.size);
-    setVertexRect(rect);
-    setTextureCoords(rect);
+	setContentSize(rect.size);
+	setVertexRect(rect);
+	setTextureCoords(rect);
 
-    float offsetX = (m_obContentSize.width - m_obRect.size.width) / 2;
-    float offsetY = (m_obContentSize.height - m_obRect.size.height) / 2;
+	float offsetX = (m_obContentSize.width - m_obRect.size.width) / 2;
+	float offsetY = (m_obContentSize.height - m_obRect.size.height) / 2;
 
-    // rendering using batch node
-    if (m_pobBatchNode)
-    {
-        // update dirty_, don't update recursiveDirty_
-        setDirty(true);
-    }
-    else
-    {
-        // self rendering
-        
-        // Atlas: Vertex
-        float x1 = 0 + offsetX;
-        float y1 = 0 + offsetY;
-        float x2 = x1 + m_obRect.size.width;
-        float y2 = y1 + m_obRect.size.height;
+	// rendering using batch node
+	if (m_pobBatchNode)
+	{
+		// update dirty_, don't update recursiveDirty_
+		setDirty(true);
+	}
+	else
+	{
+		// self rendering
 
-        // Don't update Z.
-        m_sQuad.bl.vertices = vertex3(x1, y1, 0);
-        m_sQuad.br.vertices = vertex3(x2, y1, 0);
-        m_sQuad.tl.vertices = vertex3(x1, y2, 0);
-        m_sQuad.tr.vertices = vertex3(x2, y2, 0);
-    }
+		// Atlas: Vertex
+		float x1 = 0 + offsetX;
+		float y1 = 0 + offsetY;
+		float x2 = x1 + m_obRect.size.width;
+		float y2 = y1 + m_obRect.size.height;
+
+		// Don't update Z.
+		m_sQuad.bl.vertices = vertex3(x1, y1, 0);
+		m_sQuad.br.vertices = vertex3(x2, y1, 0);
+		m_sQuad.tl.vertices = vertex3(x1, y2, 0);
+		m_sQuad.tr.vertices = vertex3(x2, y2, 0);
+	}
 }
 
 // override this method to generate "double scale" sprites
 void CCSprite::setVertexRect(const CCRect& rect)
 {
-    m_obRect = rect;
+	m_obRect = rect;
 }
 
 void CCSprite::setTextureCoords(CCRect rect)
 {
-    rect = CC_RECT_POINTS_TO_PIXELS(rect);
+	rect = CC_RECT_POINTS_TO_PIXELS(rect);
 
-    CCTexture2D *tex = m_pobBatchNode ? m_pobTextureAtlas->getTexture() : m_pobTexture;
-    if (! tex)
-    {
-        return;
-    }
+	CCTexture2D *tex = m_pobBatchNode ? m_pobTextureAtlas->getTexture() : m_pobTexture;
+	if (!tex)
+	{
+		return;
+	}
 
-    float atlasWidth = (float)tex->getPixelsWide();
-    float atlasHeight = (float)tex->getPixelsHigh();
+	float atlasWidth = (float)tex->getPixelsWide();
+	float atlasHeight = (float)tex->getPixelsHigh();
 
-    float left, right, top, bottom;
+	float left, right, top, bottom;
 
 #if CC_FIX_ARTIFACTS_BY_STRECHING_TEXEL
-        left    = (2*rect.origin.x+1)/(2*atlasWidth);
-        right    = left + (rect.size.width*2-2)/(2*atlasWidth);
-        top        = (2*rect.origin.y+1)/(2*atlasHeight);
-        bottom    = top + (rect.size.height*2-2)/(2*atlasHeight);
+	left    = (2*rect.origin.x+1)/(2*atlasWidth);
+	right    = left + (rect.size.width*2-2)/(2*atlasWidth);
+	top        = (2*rect.origin.y+1)/(2*atlasHeight);
+	bottom    = top + (rect.size.height*2-2)/(2*atlasHeight);
 #else
-        left    = rect.origin.x/atlasWidth;
-        right    = (rect.origin.x + rect.size.width) / atlasWidth;
-        top        = rect.origin.y/atlasHeight;
-        bottom    = (rect.origin.y + rect.size.height) / atlasHeight;
+	left = rect.origin.x / atlasWidth;
+	right = (rect.origin.x + rect.size.width) / atlasWidth;
+	top = rect.origin.y / atlasHeight;
+	bottom = (rect.origin.y + rect.size.height) / atlasHeight;
 #endif // ! CC_FIX_ARTIFACTS_BY_STRECHING_TEXEL
 
-        if(m_bFlipX)
-        {
-            CC_SWAP(left,right,float);
-        }
+	if (m_bFlipX)
+	{
+		CC_SWAP(left, right, float);
+	}
 
-        if(m_bFlipY)
-        {
-            CC_SWAP(top,bottom,float);
-        }
+	if (m_bFlipY)
+	{
+		CC_SWAP(top, bottom, float);
+	}
 
-        m_sQuad.bl.texCoords.u = left;
-        m_sQuad.bl.texCoords.v = bottom;
-        m_sQuad.br.texCoords.u = right;
-        m_sQuad.br.texCoords.v = bottom;
-        m_sQuad.tl.texCoords.u = left;
-        m_sQuad.tl.texCoords.v = top;
-        m_sQuad.tr.texCoords.u = right;
-        m_sQuad.tr.texCoords.v = top;
+	m_sQuad.bl.texCoords.u = left;
+	m_sQuad.bl.texCoords.v = bottom;
+	m_sQuad.br.texCoords.u = right;
+	m_sQuad.br.texCoords.v = bottom;
+	m_sQuad.tl.texCoords.u = left;
+	m_sQuad.tl.texCoords.v = top;
+	m_sQuad.tr.texCoords.u = right;
+	m_sQuad.tr.texCoords.v = top;
 }
 
 void CCSprite::updateTransform()
 {
-    CCAssert(m_pobBatchNode, "updateTransform is only valid when CCSprite is being rendered using an CCSpriteBatchNode");
+	CCAssert(m_pobBatchNode, "updateTransform is only valid when CCSprite is being rendered using an CCSpriteBatchNode");
 
-    // recalculate matrix only if it is dirty
-    if( isDirty() ) {
+	// recalculate matrix only if it is dirty
+	if (isDirty()) {
 
-        // If it is not visible, or one of its ancestors is not visible, then do nothing:
-        if( !m_bVisible || ( m_pParent && m_pParent != m_pobBatchNode && ((CCSprite*)m_pParent)->m_bShouldBeHidden) )
-        {
-            m_sQuad.br.vertices = m_sQuad.tl.vertices = m_sQuad.tr.vertices = m_sQuad.bl.vertices = vertex3(0,0,0);
-            m_bShouldBeHidden = true;
-        }
-        else 
-        {
-            m_bShouldBeHidden = false;
-
-            if( ! m_pParent || m_pParent == m_pobBatchNode )
-            {
-                m_transformToBatch = nodeToParentTransform();
-            }
-            else 
-            {
-                CCAssert( dynamic_cast<CCSprite*>(m_pParent), "Logic error in CCSprite. Parent must be a CCSprite");
-                m_transformToBatch = CCAffineTransformConcat( nodeToParentTransform() , ((CCSprite*)m_pParent)->m_transformToBatch );
-            }
-
-            //
-            // calculate the Quad based on the Affine Matrix
-            //
-
-            CCSize size = m_obRect.size;
-
-            float x1 = 0;
-            float y1 = 0;
-
-            float x2 = x1 + size.width;
-            float y2 = y1 + size.height;
-            float x = m_transformToBatch.tx;
-            float y = m_transformToBatch.ty;
-
-            float cr = m_transformToBatch.a;
-            float sr = m_transformToBatch.b;
-            float cr2 = m_transformToBatch.d;
-            float sr2 = -m_transformToBatch.c;
-            float ax = x1 * cr - y1 * sr2 + x;
-            float ay = x1 * sr + y1 * cr2 + y;
-
-            float bx = x2 * cr - y1 * sr2 + x;
-            float by = x2 * sr + y1 * cr2 + y;
-
-            float cx = x2 * cr - y2 * sr2 + x;
-            float cy = x2 * sr + y2 * cr2 + y;
-
-            float dx = x1 * cr - y2 * sr2 + x;
-            float dy = x1 * sr + y2 * cr2 + y;
-
-            m_sQuad.bl.vertices = vertex3( RENDER_IN_SUBPIXEL(ax), RENDER_IN_SUBPIXEL(ay), m_fPositionZ );
-            m_sQuad.br.vertices = vertex3( RENDER_IN_SUBPIXEL(bx), RENDER_IN_SUBPIXEL(by), m_fPositionZ );
-            m_sQuad.tl.vertices = vertex3( RENDER_IN_SUBPIXEL(dx), RENDER_IN_SUBPIXEL(dy), m_fPositionZ );
-            m_sQuad.tr.vertices = vertex3( RENDER_IN_SUBPIXEL(cx), RENDER_IN_SUBPIXEL(cy), m_fPositionZ );
-        }
-
-        // MARMALADE CHANGE: ADDED CHECK FOR NULL, TO PERMIT SPRITES WITH NO BATCH NODE / TEXTURE ATLAS
-        if (m_pobTextureAtlas)
+		// If it is not visible, or one of its ancestors is not visible, then do nothing:
+		if (!m_bVisible || (m_pParent && m_pParent != m_pobBatchNode && ((CCSprite*)m_pParent)->m_bShouldBeHidden))
 		{
-            m_pobTextureAtlas->updateQuad(&m_sQuad, m_uAtlasIndex);
-        }
-		
-        m_bRecursiveDirty = false;
-        setDirty(false);
-    }
+			m_sQuad.br.vertices = m_sQuad.tl.vertices = m_sQuad.tr.vertices = m_sQuad.bl.vertices = vertex3(0, 0, 0);
+			m_bShouldBeHidden = true;
+		}
+		else
+		{
+			m_bShouldBeHidden = false;
 
-    // MARMALADE CHANGED
-    // recursively iterate over children
-/*    if( m_bHasChildren ) 
-    {
-        // MARMALADE: CHANGED TO USE CCNode*
-        // NOTE THAT WE HAVE ALSO DEFINED virtual CCNode::updateTransform()
-        arrayMakeObjectsPerformSelector(m_pChildren, updateTransform, CCSprite*);
-    }*/
-    CCNode::updateTransform();
+			if (!m_pParent || m_pParent == m_pobBatchNode)
+			{
+				m_transformToBatch = nodeToParentTransform();
+			}
+			else
+			{
+				CCAssert(dynamic_cast<CCSprite*>(m_pParent), "Logic error in CCSprite. Parent must be a CCSprite");
+				m_transformToBatch = CCAffineTransformConcat(nodeToParentTransform(), ((CCSprite*)m_pParent)->m_transformToBatch);
+			}
+
+			//
+			// calculate the Quad based on the Affine Matrix
+			//
+
+			CCSize size = m_obRect.size;
+
+			float x1 = 0;
+			float y1 = 0;
+
+			float x2 = x1 + size.width;
+			float y2 = y1 + size.height;
+			float x = m_transformToBatch.tx;
+			float y = m_transformToBatch.ty;
+
+			float cr = m_transformToBatch.a;
+			float sr = m_transformToBatch.b;
+			float cr2 = m_transformToBatch.d;
+			float sr2 = -m_transformToBatch.c;
+			float ax = x1 * cr - y1 * sr2 + x;
+			float ay = x1 * sr + y1 * cr2 + y;
+
+			float bx = x2 * cr - y1 * sr2 + x;
+			float by = x2 * sr + y1 * cr2 + y;
+
+			float cx = x2 * cr - y2 * sr2 + x;
+			float cy = x2 * sr + y2 * cr2 + y;
+
+			float dx = x1 * cr - y2 * sr2 + x;
+			float dy = x1 * sr + y2 * cr2 + y;
+
+			m_sQuad.bl.vertices = vertex3(RENDER_IN_SUBPIXEL(ax), RENDER_IN_SUBPIXEL(ay), m_fPositionZ);
+			m_sQuad.br.vertices = vertex3(RENDER_IN_SUBPIXEL(bx), RENDER_IN_SUBPIXEL(by), m_fPositionZ);
+			m_sQuad.tl.vertices = vertex3(RENDER_IN_SUBPIXEL(dx), RENDER_IN_SUBPIXEL(dy), m_fPositionZ);
+			m_sQuad.tr.vertices = vertex3(RENDER_IN_SUBPIXEL(cx), RENDER_IN_SUBPIXEL(cy), m_fPositionZ);
+		}
+
+		// MARMALADE CHANGE: ADDED CHECK FOR NULL, TO PERMIT SPRITES WITH NO BATCH NODE / TEXTURE ATLAS
+		if (m_pobTextureAtlas)
+		{
+			m_pobTextureAtlas->updateQuad(&m_sQuad, m_uAtlasIndex);
+		}
+
+		m_bRecursiveDirty = false;
+		setDirty(false);
+	}
+
+	// MARMALADE CHANGED
+	// recursively iterate over children
+	/*    if( m_bHasChildren )
+		{
+		// MARMALADE: CHANGED TO USE CCNode*
+		// NOTE THAT WE HAVE ALSO DEFINED virtual CCNode::updateTransform()
+		arrayMakeObjectsPerformSelector(m_pChildren, updateTransform, CCSprite*);
+		}*/
+	CCNode::updateTransform();
 
 #if CC_SPRITE_DEBUG_DRAW
-    // draw bounding box
-    CCPoint vertices[4] = {
-        ccp( m_sQuad.bl.vertices.x, m_sQuad.bl.vertices.y ),
-        ccp( m_sQuad.br.vertices.x, m_sQuad.br.vertices.y ),
-        ccp( m_sQuad.tr.vertices.x, m_sQuad.tr.vertices.y ),
-        ccp( m_sQuad.tl.vertices.x, m_sQuad.tl.vertices.y ),
-    };
-    ccDrawPoly(vertices, 4, true);
+	// draw bounding box
+	CCPoint vertices[4] = {
+		ccp( m_sQuad.bl.vertices.x, m_sQuad.bl.vertices.y ),
+		ccp( m_sQuad.br.vertices.x, m_sQuad.br.vertices.y ),
+		ccp( m_sQuad.tr.vertices.x, m_sQuad.tr.vertices.y ),
+		ccp( m_sQuad.tl.vertices.x, m_sQuad.tl.vertices.y ),
+	};
+	ccDrawPoly(vertices, 4, true);
 #endif // CC_SPRITE_DEBUG_DRAW
 }
 
@@ -408,189 +408,189 @@ void CCSprite::updateTransform()
 
 void CCSprite::draw()
 {
-    CC_PROFILER_START_CATEGORY(kCCProfilerCategorySprite, "CCSprite - draw");
+	CC_PROFILER_START_CATEGORY(kCCProfilerCategorySprite, "CCSprite - draw");
 
-    CCAssert(!m_pobBatchNode, "If CCSprite is being rendered by CCSpriteBatchNode, CCSprite#draw SHOULD NOT be called");
+	CCAssert(!m_pobBatchNode, "If CCSprite is being rendered by CCSpriteBatchNode, CCSprite#draw SHOULD NOT be called");
 
-    CC_NODE_DRAW_SETUP();
+	CC_NODE_DRAW_SETUP();
 
-    ccGLBlendFunc( m_sBlendFunc.src, m_sBlendFunc.dst );
+	ccGLBlendFunc(m_sBlendFunc.src, m_sBlendFunc.dst);
 
-    if (m_pobTexture != NULL)
-    {
-        ccGLBindTexture2D( m_pobTexture->getName() );
-    }
-    else
-    {
-        ccGLBindTexture2D(0);
-    }
-    
-    //
-    // Attributes
-    //
+	if (m_pobTexture != NULL)
+	{
+		ccGLBindTexture2D(m_pobTexture->getName());
+	}
+	else
+	{
+		ccGLBindTexture2D(0);
+	}
 
-    ccGLEnableVertexAttribs( kCCVertexAttribFlag_PosColorTex );
+	//
+	// Attributes
+	//
+
+	ccGLEnableVertexAttribs(kCCVertexAttribFlag_PosColorTex);
 
 #define kQuadSize sizeof(m_sQuad.bl)
-    long offset = (long)&m_sQuad;
+	long offset = (long)&m_sQuad;
 
-    // vertex
-    int diff = offsetof( ccV3F_C4B_T2F, vertices);
-    glVertexAttribPointer(kCCVertexAttrib_Position, 3, GL_FLOAT, GL_FALSE, kQuadSize, (void*) (offset + diff));
+	// vertex
+	int diff = offsetof(ccV3F_C4B_T2F, vertices);
+	glVertexAttribPointer(kCCVertexAttrib_Position, 3, GL_FLOAT, GL_FALSE, kQuadSize, (void*)(offset + diff));
 
-    // texCoods
-    diff = offsetof( ccV3F_C4B_T2F, texCoords);
-    glVertexAttribPointer(kCCVertexAttrib_TexCoords, 2, GL_FLOAT, GL_FALSE, kQuadSize, (void*)(offset + diff));
+	// texCoods
+	diff = offsetof(ccV3F_C4B_T2F, texCoords);
+	glVertexAttribPointer(kCCVertexAttrib_TexCoords, 2, GL_FLOAT, GL_FALSE, kQuadSize, (void*)(offset + diff));
 
-    // color
-    diff = offsetof( ccV3F_C4B_T2F, colors);
-    glVertexAttribPointer(kCCVertexAttrib_Color, 4, GL_UNSIGNED_BYTE, GL_TRUE, kQuadSize, (void*)(offset + diff));
+	// color
+	diff = offsetof(ccV3F_C4B_T2F, colors);
+	glVertexAttribPointer(kCCVertexAttrib_Color, 4, GL_UNSIGNED_BYTE, GL_TRUE, kQuadSize, (void*)(offset + diff));
 
 
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-    CHECK_GL_ERROR_DEBUG();
+	CHECK_GL_ERROR_DEBUG();
 
 
 #if CC_SPRITE_DEBUG_DRAW == 1
-    // draw bounding box
-    CCPoint vertices[4]={
-        ccp(m_sQuad.tl.vertices.x,m_sQuad.tl.vertices.y),
-        ccp(m_sQuad.bl.vertices.x,m_sQuad.bl.vertices.y),
-        ccp(m_sQuad.br.vertices.x,m_sQuad.br.vertices.y),
-        ccp(m_sQuad.tr.vertices.x,m_sQuad.tr.vertices.y),
-    };
-    ccDrawPoly(vertices, 4, true);
+	// draw bounding box
+	CCPoint vertices[4]={
+		ccp(m_sQuad.tl.vertices.x,m_sQuad.tl.vertices.y),
+		ccp(m_sQuad.bl.vertices.x,m_sQuad.bl.vertices.y),
+		ccp(m_sQuad.br.vertices.x,m_sQuad.br.vertices.y),
+		ccp(m_sQuad.tr.vertices.x,m_sQuad.tr.vertices.y),
+	};
+	ccDrawPoly(vertices, 4, true);
 #elif CC_SPRITE_DEBUG_DRAW == 2
-    // draw texture box
-    CCSize s = this->getTextureRect().size;
-    CCPoint offsetPix = this->getOffsetPosition();
-    CCPoint vertices[4] = {
-        ccp(offsetPix.x,offsetPix.y), ccp(offsetPix.x+s.width,offsetPix.y),
-        ccp(offsetPix.x+s.width,offsetPix.y+s.height), ccp(offsetPix.x,offsetPix.y+s.height)
-    };
-    ccDrawPoly(vertices, 4, true);
+	// draw texture box
+	CCSize s = this->getTextureRect().size;
+	CCPoint offsetPix = this->getOffsetPosition();
+	CCPoint vertices[4] = {
+		ccp(offsetPix.x,offsetPix.y), ccp(offsetPix.x+s.width,offsetPix.y),
+		ccp(offsetPix.x+s.width,offsetPix.y+s.height), ccp(offsetPix.x,offsetPix.y+s.height)
+	};
+	ccDrawPoly(vertices, 4, true);
 #endif // CC_SPRITE_DEBUG_DRAW
 
-    CC_INCREMENT_GL_DRAWS(1);
+	CC_INCREMENT_GL_DRAWS(1);
 
-    CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySprite, "CCSprite - draw");
+	CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySprite, "CCSprite - draw");
 }
 
 // CCNode overrides
 
 void CCSprite::addChild(CCNode* pChild)
 {
-    CCNode::addChild(pChild);
+	CCNode::addChild(pChild);
 }
 
 void CCSprite::addChild(CCNode *pChild, int zOrder)
 {
-    CCNode::addChild(pChild, zOrder);
+	CCNode::addChild(pChild, zOrder);
 }
 
 void CCSprite::addChild(CCNode *pChild, int zOrder, int tag)
 {
-    CCAssert(pChild != NULL, "Argument must be non-NULL");
+	CCAssert(pChild != NULL, "Argument must be non-NULL");
 
-    if (m_pobBatchNode)
-    {
-        CCSprite* pChildSprite = dynamic_cast<CCSprite*>(pChild);
-        CCAssert( pChildSprite, "CCSprite only supports CCSprites as children when using CCSpriteBatchNode");
-        CCAssert(pChildSprite->getTexture()->getName() == m_pobTextureAtlas->getTexture()->getName(), "");
-        //put it in descendants array of batch node
-        m_pobBatchNode->appendChild(pChildSprite);
+	if (m_pobBatchNode)
+	{
+		CCSprite* pChildSprite = dynamic_cast<CCSprite*>(pChild);
+		CCAssert(pChildSprite, "CCSprite only supports CCSprites as children when using CCSpriteBatchNode");
+		CCAssert(pChildSprite->getTexture()->getName() == m_pobTextureAtlas->getTexture()->getName(), "");
+		//put it in descendants array of batch node
+		m_pobBatchNode->appendChild(pChildSprite);
 
-        if (!m_bReorderChildDirty)
-        {
-            setReorderChildDirtyRecursively();
-        }
-    }
-    //CCNode already sets isReorderChildDirty_ so this needs to be after batchNode check
-    CCNode::addChild(pChild, zOrder, tag);
-    m_bHasChildren = true;
+		if (!m_bReorderChildDirty)
+		{
+			setReorderChildDirtyRecursively();
+		}
+	}
+	//CCNode already sets isReorderChildDirty_ so this needs to be after batchNode check
+	CCNode::addChild(pChild, zOrder, tag);
+	m_bHasChildren = true;
 }
 
 void CCSprite::reorderChild(CCNode *pChild, int zOrder)
 {
-    CCAssert(pChild != NULL, "");
-    CCAssert(m_pChildren->containsObject(pChild), "");
+	CCAssert(pChild != NULL, "");
+	CCAssert(m_pChildren->containsObject(pChild), "");
 
-    if (zOrder == pChild->getZOrder())
-    {
-        return;
-    }
+	if (zOrder == pChild->getZOrder())
+	{
+		return;
+	}
 
-    if( m_pobBatchNode && ! m_bReorderChildDirty)
-    {
-        setReorderChildDirtyRecursively();
-        m_pobBatchNode->reorderBatch(true);
-    }
+	if (m_pobBatchNode && !m_bReorderChildDirty)
+	{
+		setReorderChildDirtyRecursively();
+		m_pobBatchNode->reorderBatch(true);
+	}
 
-    CCNode::reorderChild(pChild, zOrder);
+	CCNode::reorderChild(pChild, zOrder);
 }
 
 void CCSprite::removeChild(CCNode *pChild, bool bCleanup)
 {
-    if (m_pobBatchNode)
-    {
-        m_pobBatchNode->removeSpriteFromAtlas((CCSprite*)(pChild));
-    }
+	if (m_pobBatchNode)
+	{
+		m_pobBatchNode->removeSpriteFromAtlas((CCSprite*)(pChild));
+	}
 
-    CCNode::removeChild(pChild, bCleanup);
-    
+	CCNode::removeChild(pChild, bCleanup);
+
 }
 
 void CCSprite::removeAllChildrenWithCleanup(bool bCleanup)
 {
-    if (m_pobBatchNode)
-    {
-        CCObject* pObject = NULL;
-        CCARRAY_FOREACH(m_pChildren, pObject)
-        {
-            CCSprite* pChild = dynamic_cast<CCSprite*>(pObject);
-            if (pChild)
-            {
-                m_pobBatchNode->removeSpriteFromAtlas(pChild);
-            }
-        }
-    }
+	if (m_pobBatchNode)
+	{
+		CCObject* pObject = NULL;
+		CCARRAY_FOREACH(m_pChildren, pObject)
+		{
+			CCSprite* pChild = dynamic_cast<CCSprite*>(pObject);
+			if (pChild)
+			{
+				m_pobBatchNode->removeSpriteFromAtlas(pChild);
+			}
+		}
+	}
 
-    CCNode::removeAllChildrenWithCleanup(bCleanup);
-    
-    m_bHasChildren = false;
+	CCNode::removeAllChildrenWithCleanup(bCleanup);
+
+	m_bHasChildren = false;
 }
 
 void CCSprite::sortAllChildren()
 {
-    if (m_bReorderChildDirty)
-    {
-        int i = 0,j = 0,length = m_pChildren->data->num;
-        CCNode** x = (CCNode**)m_pChildren->data->arr;
-        CCNode *tempItem = NULL;
+	if (m_bReorderChildDirty)
+	{
+		int i = 0, j = 0, length = m_pChildren->data->num;
+		CCNode** x = (CCNode**)m_pChildren->data->arr;
+		CCNode *tempItem = NULL;
 
-        // insertion sort
-        for(i=1; i<length; i++)
-        {
-            tempItem = x[i];
-            j = i-1;
+		// insertion sort
+		for (i = 1; i < length; i++)
+		{
+			tempItem = x[i];
+			j = i - 1;
 
-            //continue moving element downwards while zOrder is smaller or when zOrder is the same but orderOfArrival is smaller
-            while(j >= 0 && tempItem->getZOrder() < x[j]->getZOrder())
-            {
-                x[j+1] = x[j];
-                j = j-1;
-            }
-            x[j+1] = tempItem;
-        }
+			//continue moving element downwards while zOrder is smaller or when zOrder is the same but orderOfArrival is smaller
+			while (j >= 0 && tempItem->getZOrder() < x[j]->getZOrder())
+			{
+				x[j + 1] = x[j];
+				j = j - 1;
+			}
+			x[j + 1] = tempItem;
+		}
 
-        if ( m_pobBatchNode)
-        {
-            arrayMakeObjectsPerformSelector(m_pChildren, sortAllChildren, CCSprite*);
-        }
+		if (m_pobBatchNode)
+		{
+			arrayMakeObjectsPerformSelector(m_pChildren, sortAllChildren, CCSprite*);
+		}
 
-        m_bReorderChildDirty = false;
-    }
+		m_bReorderChildDirty = false;
+	}
 }
 
 //
@@ -600,139 +600,139 @@ void CCSprite::sortAllChildren()
 
 void CCSprite::setReorderChildDirtyRecursively()
 {
-    //only set parents flag the first time
-    if ( ! m_bReorderChildDirty )
-    {
-        m_bReorderChildDirty = true;
-        CCNode* pNode = (CCNode*)m_pParent;
-        while (pNode && pNode != m_pobBatchNode)
-        {
-            ((CCSprite*)pNode)->setReorderChildDirtyRecursively();
-            pNode=pNode->getParent();
-        }
-    }
+	//only set parents flag the first time
+	if (!m_bReorderChildDirty)
+	{
+		m_bReorderChildDirty = true;
+		CCNode* pNode = (CCNode*)m_pParent;
+		while (pNode && pNode != m_pobBatchNode)
+		{
+			((CCSprite*)pNode)->setReorderChildDirtyRecursively();
+			pNode = pNode->getParent();
+		}
+	}
 }
 
 
 void CCSprite::setDirtyRecursively(bool bValue)
 {
-    m_bRecursiveDirty = bValue;
-    setDirty(bValue);
-    // recursively set dirty
-    if (m_bHasChildren)
-    {
-        CCObject* pObject = NULL;
-        CCARRAY_FOREACH(m_pChildren, pObject)
-        {
-            CCSprite* pChild = dynamic_cast<CCSprite*>(pObject);
-            if (pChild)
-            {
-                pChild->setDirtyRecursively(true);
-            }
-        }
-    }
+	m_bRecursiveDirty = bValue;
+	setDirty(bValue);
+	// recursively set dirty
+	if (m_bHasChildren)
+	{
+		CCObject* pObject = NULL;
+		CCARRAY_FOREACH(m_pChildren, pObject)
+		{
+			CCSprite* pChild = dynamic_cast<CCSprite*>(pObject);
+			if (pChild)
+			{
+				pChild->setDirtyRecursively(true);
+			}
+		}
+	}
 }
 
 // XXX HACK: optimization
-#define SET_DIRTY_RECURSIVELY() {                                    \
-                    if (m_pobBatchNode && ! m_bRecursiveDirty) {    \
-                        m_bRecursiveDirty = true;                    \
-                        setDirty(true);                              \
-                        if ( m_bHasChildren)                        \
-                            setDirtyRecursively(true);                \
-                        }                                            \
-                    }
+#define SET_DIRTY_RECURSIVELY() {\
+	if (m_pobBatchNode && !m_bRecursiveDirty)\
+	{\
+		m_bRecursiveDirty = true;\
+		setDirty(true);\
+		if (m_bHasChildren) setDirtyRecursively(true);\
+	}\
+}
 
 void CCSprite::setPosition(const CCPoint& pos)
 {
-    CCNode::setPosition(pos);
-    SET_DIRTY_RECURSIVELY();
+	CCNode::setPosition(pos);
+	SET_DIRTY_RECURSIVELY();
 }
 
 void CCSprite::setRotation(float fRotation)
 {
-    CCNode::setRotation(fRotation);
-    SET_DIRTY_RECURSIVELY();
+	CCNode::setRotation(fRotation);
+	SET_DIRTY_RECURSIVELY();
 }
 
 void CCSprite::setSkewX(float sx)
 {
-    CCNode::setSkewX(sx);
-    SET_DIRTY_RECURSIVELY();
+	CCNode::setSkewX(sx);
+	SET_DIRTY_RECURSIVELY();
 }
 
 void CCSprite::setSkewY(float sy)
 {
-    CCNode::setSkewY(sy);
-    SET_DIRTY_RECURSIVELY();
+	CCNode::setSkewY(sy);
+	SET_DIRTY_RECURSIVELY();
 }
 
 void CCSprite::setScaleX(float fScaleX)
 {
-    CCNode::setScaleX(fScaleX);
-    SET_DIRTY_RECURSIVELY();
+	CCNode::setScaleX(fScaleX);
+	SET_DIRTY_RECURSIVELY();
 }
 
 void CCSprite::setScaleY(float fScaleY)
 {
-    CCNode::setScaleY(fScaleY);
-    SET_DIRTY_RECURSIVELY();
+	CCNode::setScaleY(fScaleY);
+	SET_DIRTY_RECURSIVELY();
 }
 
 void CCSprite::setScale(float fScale)
 {
-    CCNode::setScale(fScale);
-    SET_DIRTY_RECURSIVELY();
+	CCNode::setScale(fScale);
+	SET_DIRTY_RECURSIVELY();
 }
 
 void CCSprite::setPositionZ(float fVertexZ)
 {
-    CCNode::setPositionZ(fVertexZ);
-    SET_DIRTY_RECURSIVELY();
+	CCNode::setPositionZ(fVertexZ);
+	SET_DIRTY_RECURSIVELY();
 }
 
 void CCSprite::setAnchorPoint(const CCPoint& anchor)
 {
-    CCNode::setAnchorPoint(anchor);
-    SET_DIRTY_RECURSIVELY();
+	CCNode::setAnchorPoint(anchor);
+	SET_DIRTY_RECURSIVELY();
 }
 
 void CCSprite::ignoreAnchorPointForPosition(bool value)
 {
-    CCAssert(! m_pobBatchNode, "ignoreAnchorPointForPosition is invalid in CCSprite");
-    CCNode::ignoreAnchorPointForPosition(value);
+	CCAssert(!m_pobBatchNode, "ignoreAnchorPointForPosition is invalid in CCSprite");
+	CCNode::ignoreAnchorPointForPosition(value);
 }
 
 void CCSprite::setVisible(bool bVisible)
 {
-    CCNode::setVisible(bVisible);
-    SET_DIRTY_RECURSIVELY();
+	CCNode::setVisible(bVisible);
+	SET_DIRTY_RECURSIVELY();
 }
 
 void CCSprite::setFlipX(bool bFlipX)
 {
-    if (m_bFlipX != bFlipX)
-    {
-        m_bFlipX = bFlipX;
-    }
+	if (m_bFlipX != bFlipX)
+	{
+		m_bFlipX = bFlipX;
+	}
 }
 
 bool CCSprite::isFlipX()
 {
-    return m_bFlipX;
+	return m_bFlipX;
 }
 
 void CCSprite::setFlipY(bool bFlipY)
 {
-    if (m_bFlipY != bFlipY)
-    {
-        m_bFlipY = bFlipY;
-    }
+	if (m_bFlipY != bFlipY)
+	{
+		m_bFlipY = bFlipY;
+	}
 }
 
 bool CCSprite::isFlipY()
 {
-    return m_bFlipY;
+	return m_bFlipY;
 }
 
 //
@@ -741,155 +741,156 @@ bool CCSprite::isFlipY()
 
 void CCSprite::updateColor()
 {
-    ccColor4B color4 = { _displayedColor.r, _displayedColor.g, _displayedColor.b, _displayedOpacity };
-    
-    // special opacity for premultiplied textures
+	ccColor4B color4 = { _displayedColor.r, _displayedColor.g, _displayedColor.b, _displayedOpacity };
+
+	// special opacity for premultiplied textures
 	if (m_bOpacityModifyRGB)
-    {
-		color4.r *= _displayedOpacity/255.0f;
-		color4.g *= _displayedOpacity/255.0f;
-		color4.b *= _displayedOpacity/255.0f;
-    }
+	{
+		color4.r *= _displayedOpacity / 255.0f;
+		color4.g *= _displayedOpacity / 255.0f;
+		color4.b *= _displayedOpacity / 255.0f;
+	}
 
-    m_sQuad.bl.colors = color4;
-    m_sQuad.br.colors = color4;
-    m_sQuad.tl.colors = color4;
-    m_sQuad.tr.colors = color4;
+	m_sQuad.bl.colors = color4;
+	m_sQuad.br.colors = color4;
+	m_sQuad.tl.colors = color4;
+	m_sQuad.tr.colors = color4;
 
-    // renders using batch node
-    if (m_pobBatchNode)
-    {
-        if (m_uAtlasIndex != CCSpriteIndexNotInitialized)
-        {
-            m_pobTextureAtlas->updateQuad(&m_sQuad, m_uAtlasIndex);
-        }
-        else
-        {
-            // no need to set it recursively
-            // update dirty_, don't update recursiveDirty_
-            setDirty(true);
-        }
-    }
+	// renders using batch node
+	if (m_pobBatchNode)
+	{
+		if (m_uAtlasIndex != CCSpriteIndexNotInitialized)
+		{
+			m_pobTextureAtlas->updateQuad(&m_sQuad, m_uAtlasIndex);
+		}
+		else
+		{
+			// no need to set it recursively
+			// update dirty_, don't update recursiveDirty_
+			setDirty(true);
+		}
+	}
 
-    // self render
-    // do nothing
+	// self render
+	// do nothing
 }
 
 void CCSprite::setOpacity(GLubyte opacity)
 {
-    CCNodeRGBA::setOpacity(opacity);
+	CCNodeRGBA::setOpacity(opacity);
 
-    updateColor();
+	updateColor();
 }
 
 void CCSprite::setColor(const ccColor3B& color3)
 {
-    CCNodeRGBA::setColor(color3);
+	CCNodeRGBA::setColor(color3);
 
-    updateColor();
+	updateColor();
 }
 
 void CCSprite::setOpacityModifyRGB(bool modify)
 {
-    if (m_bOpacityModifyRGB != modify)
-    {
-        m_bOpacityModifyRGB = modify;
-        updateColor();
-    }
+	if (m_bOpacityModifyRGB != modify)
+	{
+		m_bOpacityModifyRGB = modify;
+		updateColor();
+	}
 }
 
 bool CCSprite::isOpacityModifyRGB()
 {
-    return m_bOpacityModifyRGB;
+	return m_bOpacityModifyRGB;
 }
 
 void CCSprite::updateDisplayedColor(const ccColor3B& parentColor)
 {
-    CCNodeRGBA::updateDisplayedColor(parentColor);
-    
-    updateColor();
+	CCNodeRGBA::updateDisplayedColor(parentColor);
+
+	updateColor();
 }
 
 void CCSprite::updateDisplayedOpacity(GLubyte opacity)
 {
-    CCNodeRGBA::updateDisplayedOpacity(opacity);
-    
-    updateColor();
+	CCNodeRGBA::updateDisplayedOpacity(opacity);
+
+	updateColor();
 }
 
 CCSpriteBatchNode* CCSprite::getBatchNode()
 {
-    return m_pobBatchNode;
+	return m_pobBatchNode;
 }
 
 void CCSprite::setBatchNode(CCSpriteBatchNode *pobSpriteBatchNode)
 {
-    m_pobBatchNode = pobSpriteBatchNode; // weak reference
+	m_pobBatchNode = pobSpriteBatchNode; // weak reference
 
-    // self render
-    if( ! m_pobBatchNode ) {
-        m_uAtlasIndex = CCSpriteIndexNotInitialized;
-        setTextureAtlas(NULL);
-        m_bRecursiveDirty = false;
-        setDirty(false);
+	// self render
+	if (!m_pobBatchNode) {
+		m_uAtlasIndex = CCSpriteIndexNotInitialized;
+		setTextureAtlas(NULL);
+		m_bRecursiveDirty = false;
+		setDirty(false);
 
-        float x1 = 0;
-        float y1 = 0;
-        float x2 = x1 + m_obRect.size.width;
-        float y2 = y1 + m_obRect.size.height;
-        m_sQuad.bl.vertices = vertex3( x1, y1, 0 );
-        m_sQuad.br.vertices = vertex3( x2, y1, 0 );
-        m_sQuad.tl.vertices = vertex3( x1, y2, 0 );
-        m_sQuad.tr.vertices = vertex3( x2, y2, 0 );
+		float x1 = 0;
+		float y1 = 0;
+		float x2 = x1 + m_obRect.size.width;
+		float y2 = y1 + m_obRect.size.height;
+		m_sQuad.bl.vertices = vertex3(x1, y1, 0);
+		m_sQuad.br.vertices = vertex3(x2, y1, 0);
+		m_sQuad.tl.vertices = vertex3(x1, y2, 0);
+		m_sQuad.tr.vertices = vertex3(x2, y2, 0);
 
-    } else {
+	}
+	else {
 
-        // using batch
-        m_transformToBatch = CCAffineTransformIdentity;
-        setTextureAtlas(m_pobBatchNode->getTextureAtlas()); // weak ref
-    }
+		// using batch
+		m_transformToBatch = CCAffineTransformIdentity;
+		setTextureAtlas(m_pobBatchNode->getTextureAtlas()); // weak ref
+	}
 }
 
 // Texture protocol
 
 void CCSprite::updateBlendFunc()
 {
-    CCAssert (! m_pobBatchNode, "CCSprite: updateBlendFunc doesn't work when the sprite is rendered using a CCSpriteBatchNode");
+	CCAssert(!m_pobBatchNode, "CCSprite: updateBlendFunc doesn't work when the sprite is rendered using a CCSpriteBatchNode");
 
-    // it is possible to have an untextured sprite
-    if (! m_pobTexture || ! m_pobTexture->hasPremultipliedAlpha())
-    {
-        m_sBlendFunc.src = GL_SRC_ALPHA;
-        m_sBlendFunc.dst = GL_ONE_MINUS_SRC_ALPHA;
-        setOpacityModifyRGB(false);
-    }
-    else
-    {
-        m_sBlendFunc.src = CC_BLEND_SRC;
-        m_sBlendFunc.dst = CC_BLEND_DST;
-        setOpacityModifyRGB(true);
-    }
+	// it is possible to have an untextured sprite
+	if (!m_pobTexture || !m_pobTexture->hasPremultipliedAlpha())
+	{
+		m_sBlendFunc.src = GL_SRC_ALPHA;
+		m_sBlendFunc.dst = GL_ONE_MINUS_SRC_ALPHA;
+		setOpacityModifyRGB(false);
+	}
+	else
+	{
+		m_sBlendFunc.src = CC_BLEND_SRC;
+		m_sBlendFunc.dst = CC_BLEND_DST;
+		setOpacityModifyRGB(true);
+	}
 }
 
 void CCSprite::setTexture(CCTexture2D *texture)
 {
-    // If batchnode, then texture id should be the same
-    CCAssert(! m_pobBatchNode || texture->getName() == m_pobBatchNode->getTexture()->getName(), "CCSprite: Batched sprites should use the same texture as the batchnode");
-    // accept texture==nil as argument
-    CCAssert( !texture || dynamic_cast<CCTexture2D*>(texture), "setTexture expects a CCTexture2D. Invalid argument");
+	// If batchnode, then texture id should be the same
+	CCAssert(!m_pobBatchNode || texture->getName() == m_pobBatchNode->getTexture()->getName(), "CCSprite: Batched sprites should use the same texture as the batchnode");
+	// accept texture==nil as argument
+	CCAssert(!texture || dynamic_cast<CCTexture2D*>(texture), "setTexture expects a CCTexture2D. Invalid argument");
 
-    if (!m_pobBatchNode && m_pobTexture != texture)
-    {
-        CC_SAFE_RETAIN(texture);
-        CC_SAFE_RELEASE(m_pobTexture);
-        m_pobTexture = texture;
-        updateBlendFunc();
-    }
+	if (!m_pobBatchNode && m_pobTexture != texture)
+	{
+		CC_SAFE_RETAIN(texture);
+		CC_SAFE_RELEASE(m_pobTexture);
+		m_pobTexture = texture;
+		updateBlendFunc();
+	}
 }
 
 CCTexture2D* CCSprite::getTexture()
 {
-    return m_pobTexture;
+	return m_pobTexture;
 }
 
 NS_CC_END
