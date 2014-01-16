@@ -95,10 +95,6 @@ class CCMenuItemImage : public CCMenuItemSprite
     void setOpacity(GLubyte opacity);
     GLubyte getOpacity();
 
-	void setNormalSpriteFrame(CCSpriteFrame* frame);
-    void setSelectedSpriteFrame(CCSpriteFrame* frame);
-    void setDisabledSpriteFrame(CCSpriteFrame* frame);
-
     static CCMenuItemImage* create(const char* normalImage,
                                                 const char* selectedImage,
                                                 const char* disabledImage);

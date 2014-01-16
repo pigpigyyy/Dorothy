@@ -72,7 +72,7 @@ public:
 class CCControlUtils
 {
 public:
-    static CCSprite* addSpriteToTargetWithPosAndAnchor(const char* spriteName, CCNode * target, CCPoint pos, CCPoint anchor);
+    static CCSprite* addSpriteToTargetWithPosAndAnchor(const char* filename, CCNode * target, CCPoint pos, CCPoint anchor);
     static HSV HSVfromRGB(RGBA value);
     static RGBA RGBfromHSV(HSV value);
     static CCRect CCRectUnion(const CCRect& src1, const CCRect& src2);

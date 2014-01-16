@@ -1,19 +1,14 @@
 class CCSprite: public CCNode//CCNodeRGBA
 {
-	tolua_property__common CCSpriteFrame* displayFrame @ frame;
 	tolua_property__common CCTexture2D* texture;
 	tolua_property__common CCRect textureRect;
+	tolua_property__common GLubyte opacity;
+	tolua_property__common ccColor3B color;
 	
-	tolua_readonly tolua_property__bool bool textureRectRotated;
-	tolua_readonly tolua_property__common const CCPoint& offsetPosition;
-
 	tolua_property__bool bool flipX;
 	tolua_property__bool bool flipY;
 
-	void setTextureRect @ set(CCRect textureRect, bool rotated, CCSize size);
-
 	static CCSprite* create();
-	static CCSprite* createWithSpriteFrame(CCSpriteFrame* pSpriteFrame);
 	static CCSprite* createWithTexture(CCTexture2D* pTexture);
 	static CCSprite* createWithTexture(CCTexture2D* pTexture, CCRect rect);
 	static CCSprite* create(const char* pszFileName, CCRect rect);

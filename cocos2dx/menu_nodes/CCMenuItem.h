@@ -36,7 +36,6 @@ NS_CC_BEGIN
 class CCLabelTTF;
 class CCLabelAtlas;
 class CCSprite;
-class CCSpriteFrame;
 #define kCCItemSize 32
     
 /**
@@ -291,12 +290,6 @@ public:
     bool init();
     /** initializes a menu item with a normal, selected  and disabled image with target/selector */
     bool initWithNormalImage(const char *normalImage, const char *selectedImage, const char *disabledImage, CCObject* target, SEL_MenuHandler selector);
-    /** sets the sprite frame for the normal image */
-    void setNormalSpriteFrame(CCSpriteFrame* frame);
-    /** sets the sprite frame for the selected image */
-    void setSelectedSpriteFrame(CCSpriteFrame* frame);
-    /** sets the sprite frame for the disabled image */
-    void setDisabledSpriteFrame(CCSpriteFrame* frame);
 
     /** Creates an CCMenuItemImage.
      */

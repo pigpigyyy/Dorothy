@@ -31,7 +31,6 @@
 
 #include "CCControlColourPicker.h"
 #include "support/CCPointExtension.h"
-#include "sprite_nodes/CCSpriteFrameCache.h"
 #include "sprite_nodes/CCSpriteBatchNode.h"
 
 NS_CC_EXT_BEGIN
@@ -72,8 +71,6 @@ bool CCControlColourPicker::init()
     {
         setTouchEnabled(true);
         // Cache the sprites
-        CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("extensions/CCControlColourPickerSpriteSheet.plist");
-        
         // Create the sprite batch node
         CCSpriteBatchNode *spriteSheet  = CCSpriteBatchNode::create("extensions/CCControlColourPickerSpriteSheet.png");
         addChild(spriteSheet);

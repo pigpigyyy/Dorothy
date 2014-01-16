@@ -511,13 +511,6 @@ void CCControlButton::setBackgroundSpriteForState(CCScale9Sprite* sprite, CCCont
     }
 }
 
-void CCControlButton::setBackgroundSpriteFrameForState(CCSpriteFrame * spriteFrame, CCControlState state)
-{
-    CCScale9Sprite * sprite = CCScale9Sprite::createWithSpriteFrame(spriteFrame);
-    this->setBackgroundSpriteForState(sprite, state);
-}
-
-
 void CCControlButton::needsLayout()
 {
     if (!m_bParentInited) {

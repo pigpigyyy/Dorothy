@@ -243,7 +243,7 @@ void CCControlSlider::needsLayout()
     // Stretches content proportional to newLevel
     CCRect textureRect          = m_progressSprite->getTextureRect();
     textureRect                 = CCRectMake(textureRect.origin.x, textureRect.origin.y, pos.x, textureRect.size.height);
-    m_progressSprite->setTextureRect(textureRect, m_progressSprite->isTextureRectRotated(), textureRect.size);
+    m_progressSprite->setTextureRect(textureRect);
 }
 
 void CCControlSlider::sliderBegan(CCPoint location)

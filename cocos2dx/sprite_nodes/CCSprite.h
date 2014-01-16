@@ -37,8 +37,6 @@ THE SOFTWARE.
 NS_CC_BEGIN
 
 class CCSpriteBatchNode;
-class CCSpriteFrame;
-class CCAnimation;
 class CCRect;
 class CCPoint;
 class CCSize;
@@ -130,29 +128,6 @@ public:
      */
     static CCSprite* createWithTexture(CCTexture2D *pTexture, const CCRect& rect);
     
-    /**
-     * Creates a sprite with an sprite frame.
-     *
-     * @param   pSpriteFrame    A sprite frame which involves a texture and a rect
-     * @return  A valid sprite object that is marked as autoreleased.
-     */
-    static CCSprite* createWithSpriteFrame(CCSpriteFrame *pSpriteFrame);
-    
-    /**
-     * Creates a sprite with an sprite frame name.
-     *
-     * A CCSpriteFrame will be fetched from the CCSpriteFrameCache by pszSpriteFrameName param.
-     * If the CCSpriteFrame doesn't exist it will raise an exception.
-     *
-     * @param   pszSpriteFrameName A null terminated string which indicates the sprite frame name.
-     * @return  A valid sprite object that is marked as autoreleased.
-     */
-    static CCSprite* createWithSpriteFrameName(const char *pszSpriteFrameName);
-    
-    /// @}  end of creators group
-    
-    
-    
     /// @{
     /// @name Initializers
     
@@ -193,39 +168,7 @@ public:
      * @return  true if the sprite is initialized properly, false otherwise.
      */
     virtual bool initWithTexture(CCTexture2D *pTexture, const CCRect& rect);
-    
-    /**
-     * Initializes a sprite with a texture and a rect in points, optionally rotated.
-     *
-     * After initialization, the offset will be (0,0).
-     * @note    This is the designated initializer.
-     *
-     * @param   pTexture    A CCTexture2D object whose texture will be applied to this sprite.
-     * @param   rect        A rectangle assigned the contents of texture.
-     * @param   rotated     Whether or not the texture rectangle is rotated.
-     * @return  true if the sprite is initialized properly, false otherwise.
-     */
-    virtual bool initWithTexture(CCTexture2D *pTexture, const CCRect& rect, bool rotated);
-    
-    /**
-     * Initializes a sprite with an SpriteFrame. The texture and rect in SpriteFrame will be applied on this sprite
-     *
-     * @param   pSpriteFrame  A CCSpriteFrame object. It should includes a valid texture and a rect
-     * @return  true if the sprite is initialized properly, false otherwise.
-     */
-    virtual bool initWithSpriteFrame(CCSpriteFrame *pSpriteFrame);
-    
-    /**
-     * Initializes a sprite with an sprite frame name.
-     *
-     * A CCSpriteFrame will be fetched from the CCSpriteFrameCache by name.
-     * If the CCSpriteFrame doesn't exist it will raise an exception.
-     *
-     * @param   pszSpriteFrameName  A key string that can fected a volid CCSpriteFrame from CCSpriteFrameCache
-     * @return  true if the sprite is initialized properly, false otherwise.
-     */
-    virtual bool initWithSpriteFrameName(const char *pszSpriteFrameName);
-    
+
     /**
      * Initializes a sprite with an image filename.
      *
@@ -334,13 +277,7 @@ public:
      * It will call setTextureRect:rotated:untrimmedSize with rotated = NO, and utrimmedSize = rect.size.
      */
     virtual void setTextureRect(const CCRect& rect);
-    
-    /**
-     * Sets the texture rect, rectRotated and untrimmed size of the CCSprite in points.
-     * It will update the texture coordinates and the vertex rectangle.
-     */
-    virtual void setTextureRect(const CCRect& rect, bool rotated, const CCSize& untrimmedSize);
-    
+
     /**
      * Sets the vertex rect.
      * It will be called internally by setTextureRect.
@@ -350,39 +287,6 @@ public:
     virtual void setVertexRect(const CCRect& rect);
     
     /// @} end of texture methods
-    
-
-    
-    /// @{
-    /// @name Frames methods
-    
-    /**
-     * Sets a new display frame to the CCSprite.
-     */
-    virtual void setDisplayFrame(CCSpriteFrame *pNewFrame);
-    
-    /**
-     * Returns whether or not a CCSpriteFrame is being displayed
-     */
-    virtual bool isFrameDisplayed(CCSpriteFrame *pFrame);
-    
-    /**
-     * Returns the current displayed frame.
-     */
-    virtual CCSpriteFrame* getDisplayFrame();
-    
-    /// @} End of frames methods
-    
-
-    /// @{
-    /// @name Animation methods
-    /**
-     * Changes the display frame with animation name and index.
-     * The animation name will be get from the CCAnimationCache
-     */
-    virtual void setDisplayFrameWithAnimationName(const char *animationName, int frameIndex);
-    /// @}
-    
     
     /// @{
     /// @name Sprite Properties' setter/getters
@@ -404,11 +308,6 @@ public:
      */
     inline ccV3F_C4B_T2F_Quad getQuad() { return m_sQuad; }
 
-    /** 
-     * Returns whether or not the texture rectangle is rotated.
-     */
-    inline bool isTextureRectRotated() { return m_bRectRotated; }
-    
     /** 
      * Returns the index used on the TextureAtlas. 
      */
@@ -434,12 +333,6 @@ public:
      * Sets the weak reference of the CCTextureAtlas when the sprite is rendered using via CCSpriteBatchNode
      */
     inline void setTextureAtlas(CCTextureAtlas *pobTextureAtlas) { m_pobTextureAtlas = pobTextureAtlas; }
-
-    /** 
-     * Gets the offset position of the sprite. Calculated automatically by editors like Zwoptex.
-     */
-    inline const CCPoint& getOffsetPosition() { return m_obOffsetPosition; }
-
 
     /** 
      * Returns the flag which indicates whether the sprite is flipped horizontally or not.
@@ -511,11 +404,6 @@ protected:
 
     // texture
     CCRect m_obRect;                            /// Retangle of CCTexture2D
-    bool   m_bRectRotated;                      /// Whether the texture is rotated
-
-    // Offset Position (used by Zwoptex)
-    CCPoint m_obOffsetPosition;
-    CCPoint m_obUnflippedOffsetPositionFromCenter;
 
     // vertex coords, texture coords and color info
     ccV3F_C4B_T2F_Quad m_sQuad;

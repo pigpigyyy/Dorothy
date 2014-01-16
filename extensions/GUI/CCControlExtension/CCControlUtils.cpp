@@ -27,9 +27,9 @@ THE SOFTWARE.
 
 NS_CC_EXT_BEGIN
 
-CCSprite* CCControlUtils::addSpriteToTargetWithPosAndAnchor(const char* spriteName, CCNode * target, CCPoint pos, CCPoint anchor)
+CCSprite* CCControlUtils::addSpriteToTargetWithPosAndAnchor(const char* filename, CCNode * target, CCPoint pos, CCPoint anchor)
 {
-    CCSprite *sprite =CCSprite::createWithSpriteFrameName(spriteName);
+    CCSprite *sprite = CCSprite::create(filename);
     
     if (!sprite)
         return NULL;

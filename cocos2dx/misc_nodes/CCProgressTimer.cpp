@@ -173,10 +173,6 @@ ccTex2F CCProgressTimer::textureCoordFromAlphaPoint(CCPoint alpha)
     ccV3F_C4B_T2F_Quad quad = m_pSprite->getQuad();
     CCPoint min = ccp(quad.bl.texCoords.u,quad.bl.texCoords.v);
     CCPoint max = ccp(quad.tr.texCoords.u,quad.tr.texCoords.v);
-    //  Fix bug #1303 so that progress timer handles sprite frame texture rotation
-    if (m_pSprite->isTextureRectRotated()) {
-        CC_SWAP(alpha.x, alpha.y, float);
-    }
     return tex2(min.x * (1.f - alpha.x) + max.x * alpha.x, min.y * (1.f - alpha.y) + max.y * alpha.y);
 }
 

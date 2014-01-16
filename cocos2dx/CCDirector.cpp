@@ -37,7 +37,6 @@ THE SOFTWARE.
 #include "support/CCNotificationCenter.h"
 #include "layers_scenes_transitions_nodes/CCTransition.h"
 #include "textures/CCTextureCache.h"
-#include "sprite_nodes/CCSpriteFrameCache.h"
 #include "cocoa/CCAutoreleasePool.h"
 #include "platform/platform.h"
 #include "platform/CCFileUtils.h"
@@ -48,7 +47,6 @@ THE SOFTWARE.
 #include "CCConfiguration.h"
 #include "keypad_dispatcher/CCKeypadDispatcher.h"
 #include "CCAccelerometer.h"
-#include "sprite_nodes/CCAnimationCache.h"
 #include "touch_dispatcher/CCTouch.h"
 #include "support/user_default/CCUserDefault.h"
 #include "shaders/ccGLStateCache.h"
@@ -646,8 +644,6 @@ void CCDirector::purgeDirector()
 
     // purge all managed caches
     ccDrawFree();
-    CCAnimationCache::purgeSharedAnimationCache();
-    CCSpriteFrameCache::purgeSharedSpriteFrameCache();
     CCTextureCache::purgeSharedTextureCache();
 	CCShaderCache::purgeSharedShaderCache();
     CCConfiguration::purgeConfiguration();

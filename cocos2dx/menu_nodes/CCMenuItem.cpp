@@ -677,23 +677,6 @@ bool CCMenuItemImage::initWithNormalImage(const char *normalImage, const char *s
     }
     return initWithNormalSprite(normalSprite, selectedSprite, disabledSprite, target, selector);
 }
-//
-// Setter of sprite frames
-//
-void CCMenuItemImage::setNormalSpriteFrame(CCSpriteFrame * frame)
-{
-    setNormalImage(CCSprite::createWithSpriteFrame(frame));
-}
-
-void CCMenuItemImage::setSelectedSpriteFrame(CCSpriteFrame * frame)
-{
-    setSelectedImage(CCSprite::createWithSpriteFrame(frame));
-}
-
-void CCMenuItemImage::setDisabledSpriteFrame(CCSpriteFrame * frame)
-{
-    setDisabledImage(CCSprite::createWithSpriteFrame(frame));
-}
 
 //
 // MenuItemToggle

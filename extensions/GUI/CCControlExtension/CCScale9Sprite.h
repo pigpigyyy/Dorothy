@@ -188,90 +188,6 @@ public:
     static CCScale9Sprite* create(const char* file);
     
     /**
-     * Initializes a 9-slice sprite with an sprite frame and with the specified 
-     * cap insets.
-     * Once the sprite is created, you can then call its "setContentSize:" method
-     * to resize the sprite will all it's 9-slice goodness intract.
-     * It respects the anchorPoint too.
-     *
-     * @param spriteFrame The sprite frame object.
-     * @param capInsets The values to use for the cap insets.
-     */
-    virtual bool initWithSpriteFrame(CCSpriteFrame* spriteFrame, CCRect capInsets);
-
-    /**
-     * Creates a 9-slice sprite with an sprite frame and the centre of its zone.
-     * Once the sprite is created, you can then call its "setContentSize:" method
-     * to resize the sprite will all it's 9-slice goodness intract.
-     * It respects the anchorPoint too.
-     *
-     * @see initWithSpriteFrame:centerRegion:
-     */
-    static CCScale9Sprite* createWithSpriteFrame(CCSpriteFrame* spriteFrame, CCRect capInsets); 
-    /**
-     * Initializes a 9-slice sprite with an sprite frame.
-     * Once the sprite is created, you can then call its "setContentSize:" method
-     * to resize the sprite will all it's 9-slice goodness intract.
-     * It respects the anchorPoint too.
-     *
-     * @param spriteFrame The sprite frame object.
-     */
-    virtual bool initWithSpriteFrame(CCSpriteFrame* spriteFrame);
-
-    /**
-     * Creates a 9-slice sprite with an sprite frame.
-     * Once the sprite is created, you can then call its "setContentSize:" method
-     * to resize the sprite will all it's 9-slice goodness intract.
-     * It respects the anchorPoint too.
-     *
-     * @see initWithSpriteFrame:
-     */
-    static CCScale9Sprite* createWithSpriteFrame(CCSpriteFrame* spriteFrame);  
-
-    /**
-     * Initializes a 9-slice sprite with an sprite frame name and with the specified 
-     * cap insets.
-     * Once the sprite is created, you can then call its "setContentSize:" method
-     * to resize the sprite will all it's 9-slice goodness intract.
-     * It respects the anchorPoint too.
-     *
-     * @param spriteFrameName The sprite frame name.
-     * @param capInsets The values to use for the cap insets.
-     */
-    virtual bool initWithSpriteFrameName(const char*spriteFrameName, CCRect capInsets);
-
-    /**
-     * Creates a 9-slice sprite with an sprite frame name and the centre of its
-     * zone.
-     * Once the sprite is created, you can then call its "setContentSize:" method
-     * to resize the sprite will all it's 9-slice goodness intract.
-     * It respects the anchorPoint too.
-     *
-     * @see initWithSpriteFrameName:centerRegion:
-     */
-    static CCScale9Sprite* createWithSpriteFrameName(const char*spriteFrameName, CCRect capInsets); 
-
-    /**
-     * Initializes a 9-slice sprite with an sprite frame name.
-     * Once the sprite is created, you can then call its "setContentSize:" method
-     * to resize the sprite will all it's 9-slice goodness intract.
-     * It respects the anchorPoint too.
-     *
-     * @param spriteFrameName The sprite frame name.
-     */
-    virtual bool initWithSpriteFrameName(const char*spriteFrameName);
-
-    /**
-     * Creates a 9-slice sprite with an sprite frame name.
-     * Once the sprite is created, you can then call its "setContentSize:" method
-     * to resize the sprite will all it's 9-slice goodness intract.
-     * It respects the anchorPoint too.
-     *
-     * @see initWithSpriteFrameName:
-     */
-    static CCScale9Sprite* createWithSpriteFrameName(const char*spriteFrameName);
-    
-    /**
      * Creates and returns a new sprite object with the specified cap insets.
      * You use this method to add cap insets to a sprite or to change the existing
      * cap insets of a sprite. In both cases, you get back a new image and the 
@@ -299,8 +215,6 @@ public:
     virtual bool isOpacityModifyRGB(void);
 
     virtual bool updateWithBatchNode(CCSpriteBatchNode* batchnode, CCRect rect, bool rotated, CCRect capInsets);
-
-    virtual void setSpriteFrame(CCSpriteFrame * spriteFrame);
 };
 
 // end of GUI group

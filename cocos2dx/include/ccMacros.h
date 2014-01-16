@@ -246,12 +246,4 @@ It should work same as apples CFSwapInt32LittleToHost(..)
 extern unsigned int CC_DLL g_uNumberOfDraws;
 #define CC_INCREMENT_GL_DRAWS(__n__) g_uNumberOfDraws += __n__
 
-/*******************/
-/** Notifications **/
-/*******************/
-/** @def CCAnimationFrameDisplayedNotification
- Notification name when a CCSpriteFrame is displayed
- */
-#define CCAnimationFrameDisplayedNotification "CCAnimationFrameDisplayedNotification"
-
 #endif // __CCMACROS_H__

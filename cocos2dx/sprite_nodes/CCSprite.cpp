@@ -25,12 +25,8 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "CCSpriteBatchNode.h"
-#include "CCAnimation.h"
-#include "CCAnimationCache.h"
 #include "ccConfig.h"
 #include "CCSprite.h"
-#include "CCSpriteFrame.h"
-#include "CCSpriteFrameCache.h"
 #include "textures/CCTextureCache.h"
 #include "draw_nodes/CCDrawingPrimitives.h"
 #include "shaders/CCShaderCache.h"
@@ -105,31 +101,6 @@ CCSprite* CCSprite::create(const char *pszFileName, const CCRect& rect)
     return NULL;
 }
 
-CCSprite* CCSprite::createWithSpriteFrame(CCSpriteFrame *pSpriteFrame)
-{
-    CCSprite *pobSprite = new CCSprite();
-    if (pSpriteFrame && pobSprite && pobSprite->initWithSpriteFrame(pSpriteFrame))
-    {
-        pobSprite->autorelease();
-        return pobSprite;
-    }
-    CC_SAFE_DELETE(pobSprite);
-    return NULL;
-}
-
-CCSprite* CCSprite::createWithSpriteFrameName(const char *pszSpriteFrameName)
-{
-    CCSpriteFrame *pFrame = CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(pszSpriteFrameName);
-    
-#if COCOS2D_DEBUG > 0
-    char msg[256] = {0};
-    sprintf(msg, "Invalid spriteFrameName: %s", pszSpriteFrameName);
-    CCAssert(pFrame != NULL, msg);
-#endif
-    
-    return createWithSpriteFrame(pFrame);
-}
-
 CCSprite* CCSprite::create()
 {
     CCSprite *pSprite = new CCSprite();
@@ -148,7 +119,7 @@ bool CCSprite::init()
 }
 
 // designated initializer
-bool CCSprite::initWithTexture(CCTexture2D *pTexture, const CCRect& rect, bool rotated)
+bool CCSprite::initWithTexture(CCTexture2D *pTexture, const CCRect& rect)
 {
     if (CCNodeRGBA::init())
     {
@@ -169,9 +140,6 @@ bool CCSprite::initWithTexture(CCTexture2D *pTexture, const CCRect& rect, bool r
         // default transform anchor: center
         setAnchorPoint(ccp(0.5f, 0.5f));
         
-        // zwoptex default values
-        m_obOffsetPosition = CCPointZero;
-        
         m_bHasChildren = false;
         
         // clean the Quad
@@ -186,7 +154,7 @@ bool CCSprite::initWithTexture(CCTexture2D *pTexture, const CCRect& rect, bool r
         
         // update texture (calls updateBlendFunc)
         setTexture(pTexture);
-        setTextureRect(rect, rotated, rect.size);
+        setTextureRect(rect);
         
         // by default use "Self Render".
         // if the sprite is added to a batchnode, then it will automatically switch to "batchnode Render"
@@ -198,11 +166,6 @@ bool CCSprite::initWithTexture(CCTexture2D *pTexture, const CCRect& rect, bool r
     {
         return false;
     }
-}
-
-bool CCSprite::initWithTexture(CCTexture2D *pTexture, const CCRect& rect)
-{
-    return initWithTexture(pTexture, rect, false);
 }
 
 bool CCSprite::initWithTexture(CCTexture2D *pTexture)
@@ -249,50 +212,6 @@ bool CCSprite::initWithFile(const char *pszFilename, const CCRect& rect)
     return false;
 }
 
-bool CCSprite::initWithSpriteFrame(CCSpriteFrame *pSpriteFrame)
-{
-    CCAssert(pSpriteFrame != NULL, "");
-
-    bool bRet = initWithTexture(pSpriteFrame->getTexture(), pSpriteFrame->getRect());
-    setDisplayFrame(pSpriteFrame);
-
-    return bRet;
-}
-
-bool CCSprite::initWithSpriteFrameName(const char *pszSpriteFrameName)
-{
-    CCAssert(pszSpriteFrameName != NULL, "");
-
-    CCSpriteFrame *pFrame = CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(pszSpriteFrameName);
-    return initWithSpriteFrame(pFrame);
-}
-
-// XXX: deprecated
-/*
-CCSprite* CCSprite::initWithCGImage(CGImageRef pImage)
-{
-    // todo
-    // because it is deprecated, so we do not implement it
-
-    return NULL;
-}
-*/
-
-/*
-CCSprite* CCSprite::initWithCGImage(CGImageRef pImage, const char *pszKey)
-{
-    CCAssert(pImage != NULL);
-
-    // XXX: possible bug. See issue #349. New API should be added
-    CCTexture2D *pTexture = CCTextureCache::sharedTextureCache()->addCGImage(pImage, pszKey);
-
-    const CCSize& size = pTexture->getContentSize();
-    CCRect rect = CCRectMake(0 ,0, size.width, size.height);
-
-    return initWithTexture(texture, rect);
-}
-*/
-
 CCSprite::CCSprite()
 : m_bShouldBeHidden(false),
 m_pobTexture(NULL)
@@ -306,32 +225,12 @@ CCSprite::~CCSprite()
 
 void CCSprite::setTextureRect(const CCRect& rect)
 {
-    setTextureRect(rect, false, rect.size);
-}
-
-
-void CCSprite::setTextureRect(const CCRect& rect, bool rotated, const CCSize& untrimmedSize)
-{
-    m_bRectRotated = rotated;
-
-    setContentSize(untrimmedSize);
+    setContentSize(rect.size);
     setVertexRect(rect);
     setTextureCoords(rect);
 
-    CCPoint relativeOffset = m_obUnflippedOffsetPositionFromCenter;
-
-    // issue #732
-    if (m_bFlipX)
-    {
-        relativeOffset.x = -relativeOffset.x;
-    }
-    if (m_bFlipY)
-    {
-        relativeOffset.y = -relativeOffset.y;
-    }
-
-    m_obOffsetPosition.x = relativeOffset.x + (m_obContentSize.width - m_obRect.size.width) / 2;
-    m_obOffsetPosition.y = relativeOffset.y + (m_obContentSize.height - m_obRect.size.height) / 2;
+    float offsetX = (m_obContentSize.width - m_obRect.size.width) / 2;
+    float offsetY = (m_obContentSize.height - m_obRect.size.height) / 2;
 
     // rendering using batch node
     if (m_pobBatchNode)
@@ -344,8 +243,8 @@ void CCSprite::setTextureRect(const CCRect& rect, bool rotated, const CCSize& un
         // self rendering
         
         // Atlas: Vertex
-        float x1 = 0 + m_obOffsetPosition.x;
-        float y1 = 0 + m_obOffsetPosition.y;
+        float x1 = 0 + offsetX;
+        float y1 = 0 + offsetY;
         float x2 = x1 + m_obRect.size.width;
         float y2 = y1 + m_obRect.size.height;
 
@@ -378,41 +277,6 @@ void CCSprite::setTextureCoords(CCRect rect)
 
     float left, right, top, bottom;
 
-    if (m_bRectRotated)
-    {
-#if CC_FIX_ARTIFACTS_BY_STRECHING_TEXEL
-        left    = (2*rect.origin.x+1)/(2*atlasWidth);
-        right    = left+(rect.size.height*2-2)/(2*atlasWidth);
-        top        = (2*rect.origin.y+1)/(2*atlasHeight);
-        bottom    = top+(rect.size.width*2-2)/(2*atlasHeight);
-#else
-        left    = rect.origin.x/atlasWidth;
-        right    = (rect.origin.x+rect.size.height) / atlasWidth;
-        top        = rect.origin.y/atlasHeight;
-        bottom    = (rect.origin.y+rect.size.width) / atlasHeight;
-#endif // CC_FIX_ARTIFACTS_BY_STRECHING_TEXEL
-
-        if (m_bFlipX)
-        {
-            CC_SWAP(top, bottom, float);
-        }
-
-        if (m_bFlipY)
-        {
-            CC_SWAP(left, right, float);
-        }
-
-        m_sQuad.bl.texCoords.u = left;
-        m_sQuad.bl.texCoords.v = top;
-        m_sQuad.br.texCoords.u = left;
-        m_sQuad.br.texCoords.v = bottom;
-        m_sQuad.tl.texCoords.u = right;
-        m_sQuad.tl.texCoords.v = top;
-        m_sQuad.tr.texCoords.u = right;
-        m_sQuad.tr.texCoords.v = bottom;
-    }
-    else
-    {
 #if CC_FIX_ARTIFACTS_BY_STRECHING_TEXEL
         left    = (2*rect.origin.x+1)/(2*atlasWidth);
         right    = left + (rect.size.width*2-2)/(2*atlasWidth);
@@ -443,7 +307,6 @@ void CCSprite::setTextureCoords(CCRect rect)
         m_sQuad.tl.texCoords.v = top;
         m_sQuad.tr.texCoords.u = right;
         m_sQuad.tr.texCoords.v = top;
-    }
 }
 
 void CCSprite::updateTransform()
@@ -479,8 +342,8 @@ void CCSprite::updateTransform()
 
             CCSize size = m_obRect.size;
 
-            float x1 = m_obOffsetPosition.x;
-            float y1 = m_obOffsetPosition.y;
+            float x1 = 0;
+            float y1 = 0;
 
             float x2 = x1 + size.width;
             float y2 = y1 + size.height;
@@ -851,7 +714,6 @@ void CCSprite::setFlipX(bool bFlipX)
     if (m_bFlipX != bFlipX)
     {
         m_bFlipX = bFlipX;
-        setTextureRect(m_obRect, m_bRectRotated, m_obContentSize);
     }
 }
 
@@ -865,7 +727,6 @@ void CCSprite::setFlipY(bool bFlipY)
     if (m_bFlipY != bFlipY)
     {
         m_bFlipY = bFlipY;
-        setTextureRect(m_obRect, m_bRectRotated, m_obContentSize);
     }
 }
 
@@ -956,57 +817,6 @@ void CCSprite::updateDisplayedOpacity(GLubyte opacity)
     updateColor();
 }
 
-// Frames
-
-void CCSprite::setDisplayFrame(CCSpriteFrame *pNewFrame)
-{
-    m_obUnflippedOffsetPositionFromCenter = pNewFrame->getOffset();
-
-    CCTexture2D *pNewTexture = pNewFrame->getTexture();
-    // update texture before updating texture rect
-    if (pNewTexture != m_pobTexture)
-    {
-        setTexture(pNewTexture);
-    }
-
-    // update rect
-    m_bRectRotated = pNewFrame->isRotated();
-    setTextureRect(pNewFrame->getRect(), m_bRectRotated, pNewFrame->getOriginalSize());
-}
-
-void CCSprite::setDisplayFrameWithAnimationName(const char *animationName, int frameIndex)
-{
-    CCAssert(animationName, "CCSprite#setDisplayFrameWithAnimationName. animationName must not be NULL");
-
-    CCAnimation *a = CCAnimationCache::sharedAnimationCache()->animationByName(animationName);
-
-    CCAssert(a, "CCSprite#setDisplayFrameWithAnimationName: Frame not found");
-
-    CCAnimationFrame* frame = (CCAnimationFrame*)a->getFrames()->objectAtIndex(frameIndex);
-
-    CCAssert(frame, "CCSprite#setDisplayFrame. Invalid frame");
-
-    setDisplayFrame(frame->getSpriteFrame());
-}
-
-bool CCSprite::isFrameDisplayed(CCSpriteFrame *pFrame)
-{
-    CCRect r = pFrame->getRect();
-
-    return (r.equals(m_obRect) &&
-            pFrame->getTexture()->getName() == m_pobTexture->getName() &&
-            pFrame->getOffset().equals(m_obUnflippedOffsetPositionFromCenter));
-}
-
-CCSpriteFrame* CCSprite::getDisplayFrame()
-{
-    return CCSpriteFrame::createWithTexture(m_pobTexture,
-                                           CC_RECT_POINTS_TO_PIXELS(m_obRect),
-                                           m_bRectRotated,
-                                           CC_POINT_POINTS_TO_PIXELS(m_obUnflippedOffsetPositionFromCenter),
-                                           CC_SIZE_POINTS_TO_PIXELS(m_obContentSize));
-}
-
 CCSpriteBatchNode* CCSprite::getBatchNode()
 {
     return m_pobBatchNode;
@@ -1023,8 +833,8 @@ void CCSprite::setBatchNode(CCSpriteBatchNode *pobSpriteBatchNode)
         m_bRecursiveDirty = false;
         setDirty(false);
 
-        float x1 = m_obOffsetPosition.x;
-        float y1 = m_obOffsetPosition.y;
+        float x1 = 0;
+        float y1 = 0;
         float x2 = x1 + m_obRect.size.width;
         float y2 = y1 + m_obRect.size.height;
         m_sQuad.bl.vertices = vertex3( x1, y1, 0 );

@@ -261,22 +261,10 @@
     <ClCompile Include="..\platform\win32\CCStdC.cpp">
       <Filter>platform\win32</Filter>
     </ClCompile>
-    <ClCompile Include="..\sprite_nodes\CCAnimation.cpp">
-      <Filter>sprite_nodes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\sprite_nodes\CCAnimationCache.cpp">
-      <Filter>sprite_nodes</Filter>
-    </ClCompile>
     <ClCompile Include="..\sprite_nodes\CCSprite.cpp">
       <Filter>sprite_nodes</Filter>
     </ClCompile>
     <ClCompile Include="..\sprite_nodes\CCSpriteBatchNode.cpp">
-      <Filter>sprite_nodes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\sprite_nodes\CCSpriteFrame.cpp">
-      <Filter>sprite_nodes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\sprite_nodes\CCSpriteFrameCache.cpp">
       <Filter>sprite_nodes</Filter>
     </ClCompile>
     <ClCompile Include="..\support\base64.cpp">
@@ -671,22 +659,10 @@
     <ClInclude Include="..\platform\win32\CCStdC.h">
       <Filter>platform\win32</Filter>
     </ClInclude>
-    <ClInclude Include="..\sprite_nodes\CCAnimation.h">
-      <Filter>sprite_nodes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sprite_nodes\CCAnimationCache.h">
-      <Filter>sprite_nodes</Filter>
-    </ClInclude>
     <ClInclude Include="..\sprite_nodes\CCSprite.h">
       <Filter>sprite_nodes</Filter>
     </ClInclude>
     <ClInclude Include="..\sprite_nodes\CCSpriteBatchNode.h">
-      <Filter>sprite_nodes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sprite_nodes\CCSpriteFrame.h">
-      <Filter>sprite_nodes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sprite_nodes\CCSpriteFrameCache.h">
       <Filter>sprite_nodes</Filter>
     </ClInclude>
     <ClInclude Include="..\support\base64.h">

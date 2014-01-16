@@ -520,7 +520,7 @@ bool CCLabelBMFont::initWithString(const char *theString, const char *fntFile, f
         m_tImageOffset = imageOffset;
         
         m_pReusedChar = new CCSprite();
-        m_pReusedChar->initWithTexture(m_pobTextureAtlas->getTexture(), CCRectMake(0, 0, 0, 0), false);
+        m_pReusedChar->initWithTexture(m_pobTextureAtlas->getTexture(), CCRectMake(0, 0, 0, 0));
         m_pReusedChar->setBatchNode(this);
         
         this->setString(theString, true);
@@ -686,7 +686,7 @@ void CCLabelBMFont::createFontChars()
         }
 
         // updating previous sprite
-        fontChar->setTextureRect(rect, false, rect.size);
+        fontChar->setTextureRect(rect);
 
         // See issue 1343. cast( signed short + unsigned integer ) == unsigned integer (sign is lost!)
         int yOffset = m_pConfiguration->m_nCommonHeight - fontDef.yOffset;

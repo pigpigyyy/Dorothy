@@ -57,7 +57,7 @@ NS_CC_BEGIN
  @return CCPoint
  @since v0.7.2
  */
-#define ccp(__X__,__Y__) cocos2d::CCPointMake((float)(__X__), (float)(__Y__))
+#define ccp(__X__,__Y__) CCPointMake((float)(__X__), (float)(__Y__))
 
 /** Returns opposite of point.
  @return CCPoint

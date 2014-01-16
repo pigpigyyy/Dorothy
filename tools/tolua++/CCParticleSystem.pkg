@@ -142,7 +142,6 @@ class CCParticleSystemQuad : public CCParticleSystem
 {
 	CCParticleSystemQuad(void);
 	void postStep();
-	void setDisplayFrame(CCSpriteFrame* spriteFrame);
 	void setTexture(CCTexture2D* texture);
 	void setTextureWithRect(CCTexture2D *texture, const CCRect& rect);
 	void setBatchNode(CCParticleBatchNode* batchNode);

@@ -209,13 +209,8 @@ THE SOFTWARE.
 #include "shaders/ccShaders.h"
 
 // sprite_nodes
-#include "sprite_nodes/CCAnimation.h"
-#include "sprite_nodes/CCAnimationCache.h"
 #include "sprite_nodes/CCSprite.h"
 #include "sprite_nodes/CCSpriteBatchNode.h"
-#include "sprite_nodes/CCSpriteFrame.h"
-#include "sprite_nodes/CCSpriteFrameCache.h"
-
 // support
 #include "support/ccUTF8.h"
 #include "support/CCNotificationCenter.h"

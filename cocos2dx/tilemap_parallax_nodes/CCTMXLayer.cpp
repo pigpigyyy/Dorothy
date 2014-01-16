@@ -297,7 +297,7 @@ CCSprite* CCTMXLayer::reusedTileWithRect(CCRect rect)
     if (! m_pReusedTile) 
     {
         m_pReusedTile = new CCSprite();
-        m_pReusedTile->initWithTexture(m_pobTextureAtlas->getTexture(), rect, false);
+        m_pReusedTile->initWithTexture(m_pobTextureAtlas->getTexture(), rect);
         m_pReusedTile->setBatchNode(this);
     }
     else
@@ -307,7 +307,7 @@ CCSprite* CCTMXLayer::reusedTileWithRect(CCRect rect)
         m_pReusedTile->setBatchNode(NULL);
         
 		// Re-init the sprite
-        m_pReusedTile->setTextureRect(rect, false, rect.size);
+        m_pReusedTile->setTextureRect(rect);
         
 		// restore the batch node
         m_pReusedTile->setBatchNode(this);
@@ -535,7 +535,7 @@ void CCTMXLayer::setTileGID(unsigned int gid, const CCPoint& pos, ccTMXTileFlags
                 CCRect rect = m_pTileSet->rectForGID(gid);
                 rect = CC_RECT_PIXELS_TO_POINTS(rect);
 
-                sprite->setTextureRect(rect, false, rect.size);
+                sprite->setTextureRect(rect);
                 if (flags) 
                 {
                     setupTileSprite(sprite, sprite->getPosition(), gidAndFlags);

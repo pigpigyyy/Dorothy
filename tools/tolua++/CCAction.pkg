@@ -232,16 +232,6 @@ class CCReverseTime : public CCActionInterval
     static CCReverseTime* create(CCFiniteTimeAction *pAction);
 };
 
-class CCAnimate : public CCActionInterval
-{
-	CCActionInterval* reverse(void);
-
-    CCAnimation* getAnimation(void);
-    void setAnimation(CCAnimation *pAnimation);
-
-    static CCAnimate* create(CCAnimation *pAnimation);
-};
-
 class CCTargetedAction : public CCActionInterval
 {
 	CCNode* getForcedTarget(void);

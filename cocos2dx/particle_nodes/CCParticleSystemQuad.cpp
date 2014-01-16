@@ -27,7 +27,6 @@ THE SOFTWARE.
 
 #include "CCGL.h"
 #include "CCParticleSystemQuad.h"
-#include "sprite_nodes/CCSpriteFrame.h"
 #include "CCDirector.h"
 #include "CCParticleBatchNode.h"
 #include "textures/CCTextureAtlas.h"
@@ -208,17 +207,6 @@ void CCParticleSystemQuad::setTexture(CCTexture2D* texture)
 {
     const CCSize& s = texture->getContentSize();
     this->setTextureWithRect(texture, CCRectMake(0, 0, s.width, s.height));
-}
-void CCParticleSystemQuad::setDisplayFrame(CCSpriteFrame *spriteFrame)
-{
-    CCAssert(spriteFrame->getOffsetInPixels().equals(CCPointZero), 
-             "QuadParticle only supports SpriteFrames with no offsets");
-
-    // update texture before updating texture rect
-    if ( !m_pTexture || spriteFrame->getTexture()->getName() != m_pTexture->getName())
-    {
-        this->setTexture(spriteFrame->getTexture());
-    }
 }
 
 void CCParticleSystemQuad::initIndices()

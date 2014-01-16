@@ -30,8 +30,6 @@ THE SOFTWARE.
 #include "base_nodes/CCNode.h"
 #include "CCAction.h"
 #include "CCProtocols.h"
-#include "sprite_nodes/CCSpriteFrame.h"
-#include "sprite_nodes/CCAnimation.h"
 #include <vector>
 
 NS_CC_BEGIN
@@ -690,35 +688,6 @@ public:
     static CCReverseTime* create(CCFiniteTimeAction *pAction);
 protected:
     CCFiniteTimeAction *m_pOther;
-};
-
-class CCTexture2D;
-/** @brief Animates a sprite given the name of an Animation */
-class CC_DLL CCAnimate : public CCActionInterval
-{
-public:
-    CCAnimate();
-    ~CCAnimate();
-
-    /** initializes the action with an Animation and will restore the original frame when the animation is over */
-    bool initWithAnimation(CCAnimation *pAnimation);
-
-
-    virtual CCObject* copyWithZone(CCZone* pZone);
-    virtual void startWithTarget(CCNode *pTarget);
-    virtual void stop();
-    virtual void update(float t);
-    virtual CCActionInterval* reverse();
-
-public:
-    /** creates the action with an Animation and will restore the original frame when the animation is over */
-    static CCAnimate* create(CCAnimation *pAnimation);
-    CC_SYNTHESIZE_RETAIN(CCAnimation*, m_pAnimation, Animation)
-protected:
-    std::vector<float>* m_pSplitTimes;
-    int                m_nNextFrame;
-    CCSpriteFrame*  m_pOrigFrame;
-       unsigned int    m_uExecutedLoops;
 };
 
 /** Overrides the target of an action so that it always runs on the target

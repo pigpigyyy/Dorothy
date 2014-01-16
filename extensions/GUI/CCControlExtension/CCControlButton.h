@@ -230,15 +230,6 @@ public:
     */
     virtual void setBackgroundSpriteForState(CCScale9Sprite* sprite, CCControlState state);
 
-    /**
-     * Sets the background spriteFrame to use for the specified button state.
-     *
-     * @param spriteFrame The background spriteFrame to use for the specified state.
-     * @param state The state that uses the specified image. The values are described
-     * in "CCControlState".
-     */
-    virtual void setBackgroundSpriteFrameForState(CCSpriteFrame * spriteFrame, CCControlState state);
-
     static CCControlButton* create();
 };
 
