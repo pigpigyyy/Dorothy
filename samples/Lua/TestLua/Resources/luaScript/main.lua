@@ -35,15 +35,13 @@ local function createLayer()
 	},0.5,ccColor4(255,0,0,255),ccColor4(255,0,0,255))
 	drawNode.position = oVec2(100,100)
 	layer:addChild(drawNode)
-	
 	local LAYER_FRONT = 2
 	local LAYER_GAME = 1
 	local LAYER_BACK = 0
 
 	oCache.Effect:load("main.effect")
-	oCache.Model:load("jiandunA.model")
-	local model = oModel("jixienv.model")	
-	--local modelRef = ref(model)
+	--oCache.Model:load("jixienv.model")
+	local model = oModel("jixienv.model")
 	model.loop = true
 	model.recovery = 0.1
 	model.look = "happy"
@@ -53,6 +51,8 @@ local function createLayer()
 	end
 	model:addHandler("walk", func)
 	model:removeHandler("walk", func)
+	model.scaleX = 0.5
+	model.scaleY = 0.5
 	--model:setPosition(CCPointMake(200,200))
 	--layer:addChild(model)
 	
@@ -95,6 +95,7 @@ local function createLayer()
     
 	local function onTouchEnded(x, y)
 		model:play("attack")
+		cclog("%d",CCObject.count)
 		--char.velocity.y = 400
         --local s = layer:getChildByTag(kTagSprite)
         --s:stopAllActions()
@@ -137,4 +138,3 @@ local scene = CCScene()
 scene:addChild(CreateBackMenuItem())
 scene:addChild(createLayer())
 CCDirector:run(CCScene:pageTurn(3,scene,true))
-CCDirector.scheduler.timeScale = 2

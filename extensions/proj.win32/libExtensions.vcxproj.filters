@@ -46,7 +46,7 @@
     <Filter Include="Dorothy\audio">
       <UniqueIdentifier>{37d89f36-9d41-4360-844d-2d00c818198c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Dorothy\other\physics">
+    <Filter Include="Dorothy\physics">
       <UniqueIdentifier>{109ab104-04ab-4894-bcc0-39a967f80bb2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -127,16 +127,16 @@
       <Filter>Dorothy\model</Filter>
     </ClCompile>
     <ClCompile Include="..\Dorothy\physics\oBody.cpp">
-      <Filter>Dorothy\other\physics</Filter>
+      <Filter>Dorothy\physics</Filter>
     </ClCompile>
     <ClCompile Include="..\Dorothy\physics\oBodyDef.cpp">
-      <Filter>Dorothy\other\physics</Filter>
+      <Filter>Dorothy\physics</Filter>
     </ClCompile>
     <ClCompile Include="..\Dorothy\physics\oSensor.cpp">
-      <Filter>Dorothy\other\physics</Filter>
+      <Filter>Dorothy\physics</Filter>
     </ClCompile>
     <ClCompile Include="..\Dorothy\physics\oWorld.cpp">
-      <Filter>Dorothy\other\physics</Filter>
+      <Filter>Dorothy\physics</Filter>
     </ClCompile>
     <ClCompile Include="..\Dorothy\model\oSequence.cpp">
       <Filter>Dorothy\model</Filter>
@@ -314,16 +314,16 @@
       <Filter>Dorothy\model</Filter>
     </ClInclude>
     <ClInclude Include="..\Dorothy\physics\oBody.h">
-      <Filter>Dorothy\other\physics</Filter>
+      <Filter>Dorothy\physics</Filter>
     </ClInclude>
     <ClInclude Include="..\Dorothy\physics\oBodyDef.h">
-      <Filter>Dorothy\other\physics</Filter>
+      <Filter>Dorothy\physics</Filter>
     </ClInclude>
     <ClInclude Include="..\Dorothy\physics\oSensor.h">
-      <Filter>Dorothy\other\physics</Filter>
+      <Filter>Dorothy\physics</Filter>
     </ClInclude>
     <ClInclude Include="..\Dorothy\physics\oWorld.h">
-      <Filter>Dorothy\other\physics</Filter>
+      <Filter>Dorothy\physics</Filter>
     </ClInclude>
     <ClInclude Include="..\Dorothy.h" />
     <ClInclude Include="..\Dorothy\model\oSequence.h">
