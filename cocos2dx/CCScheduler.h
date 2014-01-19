@@ -123,7 +123,7 @@ class CC_DLL CCScheduler : public CCObject
 {
 public:
     CCScheduler();
-    ~CCScheduler();
+    virtual ~CCScheduler();
 
     inline float getTimeScale() { return m_fTimeScale; }
     /** Modifies the time of all scheduled callbacks.
@@ -191,14 +191,13 @@ public:
     void unscheduleAllWithMinPriority(int nMinPriority);
 
     /** The scheduled script callback will be called every 'interval' seconds.
-     If paused is YES, then it won't be called until it is resumed.
      If 'interval' is 0, it will be called every frame.
      return schedule script entry ID, used for unscheduleScriptFunc().
      */
-    unsigned int scheduleScriptFunc(unsigned int nHandler, float fInterval, bool bPaused);
+    void scheduleScriptFunc(int nHandler, float fInterval);
     
     /** Unschedule a script entry. */
-    void unscheduleScriptEntry(unsigned int uScheduleScriptEntryID);
+	void unscheduleScriptFunc(int nHandler);
 
     /** Pauses the target.
      All scheduled selectors/update for a given target won't be 'ticked' until the target is resumed.
@@ -237,6 +236,7 @@ public:
       */
     void resumeTargets(CCSet* targetsToResume);
 
+	static CCScheduler* create();
 private:
     void removeHashElement(struct _hashSelectorEntry *pElement);
     void removeUpdateFromHash(struct _listEntry *entry);

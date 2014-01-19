@@ -42,12 +42,7 @@ HANDLER_WRAP_START(oSensorHandlerWrapper)
 		CCScriptEngine::sharedEngine()->executeFunction(getHandler(), 2, params, paramNames);
 	}
 HANDLER_WRAP_END
-ENUM_START(oSensorFlag)
-{
-	Enter = 0,
-	Leave = 1
-}
-ENUM_END
+
 void oSensor_addHandler( oSensor* sensor, uint32 flag, int nHandler )
 {
 	switch (flag)
@@ -160,4 +155,138 @@ CCSprite* CCSprite_createWithClip(const char* clipStr)
 	{
 		return oSharedClipCache.loadSprite(clipStr);
 	}
+}
+
+CCScene* CCScene_createOriented(float duration, CCScene* nextScene, tOrientation orientation)
+{
+	return CCTransitionSceneOriented::create(duration, nextScene, orientation);
+}
+CCScene* CCScene_createRotoZoom(float duration, CCScene* nextScene)
+{
+	return CCTransitionRotoZoom::create(duration, nextScene);
+}
+CCScene* CCScene_createJumpZoom(float duration, CCScene* nextScene)
+{
+	return CCTransitionJumpZoom::create(duration, nextScene);
+}
+CCScene* CCScene_createMove(float duration, CCScene* nextScene, tOrientation orientation)
+{
+	switch (orientation)
+	{
+	case kCCTransitionOrientationLeftOver:
+		return CCTransitionMoveInL::create(duration, nextScene);
+	case kCCTransitionOrientationRightOver:
+		return CCTransitionMoveInR::create(duration, nextScene);
+	case kCCTransitionOrientationUpOver:
+		return CCTransitionMoveInT::create(duration, nextScene);
+	case kCCTransitionOrientationDownOver:
+		return CCTransitionMoveInB::create(duration, nextScene);
+	}
+	return nullptr;
+}
+CCScene* CCScene_createSlide(float duration, CCScene* nextScene, tOrientation orientation)
+{
+	switch (orientation)
+	{
+	case kCCTransitionOrientationLeftOver:
+		return CCTransitionSlideInL::create(duration, nextScene);
+	case kCCTransitionOrientationRightOver:
+		return CCTransitionSlideInR::create(duration, nextScene);
+	case kCCTransitionOrientationUpOver:
+		return CCTransitionSlideInT::create(duration, nextScene);
+	case kCCTransitionOrientationDownOver:
+		return CCTransitionSlideInB::create(duration, nextScene);
+	}
+	return nullptr;
+}
+CCScene* CCScene_createShrinkGrow(float duration, CCScene* nextScene)
+{
+	return CCTransitionShrinkGrow::create(duration, nextScene);
+}
+CCScene* CCScene_createFlipX(float duration, CCScene* nextScene, tOrientation orientation)
+{
+	return CCTransitionFlipX::create(duration, nextScene);
+}
+CCScene* CCScene_createFlipY(float duration, CCScene* nextScene, tOrientation orientation)
+{
+	return CCTransitionFlipY::create(duration, nextScene);
+}
+CCScene* CCScene_createFlipAngular(float duration, CCScene* nextScene, tOrientation orientation)
+{
+	return CCTransitionFlipAngular::create(duration, nextScene);
+}
+CCScene* CCScene_createZoomFlipX(float duration, CCScene* nextScene, tOrientation orientation)
+{
+	return CCTransitionZoomFlipX::create(duration, nextScene, orientation);
+}
+CCScene* CCScene_createZoomFlipY(float duration, CCScene* nextScene, tOrientation orientation)
+{
+	return CCTransitionZoomFlipY::create(duration, nextScene, orientation);
+}
+CCScene* CCScene_createZoomFlipAngular(float duration, CCScene* nextScene, tOrientation orientation)
+{
+	return CCTransitionZoomFlipAngular::create(duration, nextScene, orientation);
+}
+CCScene* CCScene_createFade(float duration, CCScene* nextScene, const ccColor3B& color)
+{
+	return CCTransitionFade::create(duration, nextScene, color);
+}
+CCScene* CCScene_createCrossFade(float duration, CCScene* nextScene)
+{
+	return CCTransitionCrossFade::create(duration, nextScene);
+}
+CCScene* CCScene_createTurnOffTiles(float duration, CCScene* nextScene)
+{
+	return CCTransitionTurnOffTiles::create(duration, nextScene);
+}
+CCScene* CCScene_createSplitCols(float duration, CCScene* nextScene)
+{
+	return CCTransitionSplitCols::create(duration, nextScene);
+}
+CCScene* CCScene_createSplitRows(float duration, CCScene* nextScene)
+{
+	return CCTransitionSplitRows::create(duration, nextScene);
+}
+CCScene* CCScene_createFadeTiles(float duration, CCScene* nextScene, tOrientation orientation)
+{
+	switch (orientation)
+	{
+	case kCCTransitionOrientationLeftOver:
+		return CCTransitionFadeBL::create(duration, nextScene);
+	case kCCTransitionOrientationRightOver:
+		return CCTransitionFadeTR::create(duration, nextScene);
+	case kCCTransitionOrientationUpOver:
+		return CCTransitionFadeUp::create(duration, nextScene);
+	case kCCTransitionOrientationDownOver:
+		return CCTransitionFadeDown::create(duration, nextScene);
+	}
+	return nullptr;
+}
+CCScene* CCScene_createPageTurn(float duration, CCScene* nextScene, bool backward)
+{
+	return CCTransitionPageTurn::create(duration, nextScene, backward);
+}
+CCScene* CCScene_createProgressCCW(float duration, CCScene* nextScene)
+{
+	return CCTransitionProgressRadialCCW::create(duration, nextScene);
+}
+CCScene* CCScene_createProgressCW(float duration, CCScene* nextScene)
+{
+	return CCTransitionProgressRadialCW::create(duration, nextScene);
+}
+CCScene* CCScene_createProgressH(float duration, CCScene* nextScene)
+{
+	return CCTransitionProgressHorizontal::create(duration, nextScene);
+}
+CCScene* CCScene_createProgressV(float duration, CCScene* nextScene)
+{
+	return CCTransitionProgressVertical::create(duration, nextScene);
+}
+CCScene* CCScene_createProgressIO(float duration, CCScene* nextScene)
+{
+	return CCTransitionProgressInOut::create(duration, nextScene);
+}
+CCScene* CCScene_createProgressOI(float duration, CCScene* nextScene)
+{
+	return CCTransitionProgressOutIn::create(duration, nextScene);
 }

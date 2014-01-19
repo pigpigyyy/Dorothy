@@ -112,42 +112,6 @@ local CCObjectTypes = {
     "CCRenderTexture",
     "CCRibbon",
     "CCScene",
-    "CCTransitionScene",
-    "CCTransitionCrossFade",
-    "CCTransitionFade",
-    "CCTransitionFadeTR",
-    "CCTransitionFadeBL",
-    "CCTransitionFadeDown",
-    "CCTransitionFadeUp",
-    "CCTransitionJumpZoom",
-    "CCTransitionMoveInL",
-    "CCTransitionMoveInB",
-    "CCTransitionMoveInR",
-    "CCTransitionMoveInT",
-    "CCTransitionPageTurn",
-    "CCTransitionRotoZoom",
-    "CCTransitionSceneOriented",
-    "CCTransitionFlipAngular",
-    "CCTransitionFlipX",
-    "CCTransitionFlipY",
-    "CCTransitionZoomFlipAngular",
-    "CCTransitionZoomFlipX",
-    "CCTransitionZoomFlipY",
-    "CCTransitionShrinkGrow",
-    "CCTransitionSlideInL",
-    "CCTransitionSlideInB",
-    "CCTransitionSlideInR",
-    "CCTransitionSlideInT",
-    "CCTransitionSplitCols",
-    "CCTransitionSplitRows",
-    "CCTransitionTurnOffTiles",
-    "CCTransitionProgress",
-    "CCTransitionProgressRadialCCW",
-    "CCTransitionProgressRadialCW",
-    "CCTransitionProgressHorizontal",
-    "CCTransitionProgressVertical",
-    "CCTransitionProgressInOut",
-    "CCTransitionProgressOutIn",
     "CCSprite",
     "CCLabelTTF",
     "CCTextFieldTTF",
@@ -297,10 +261,6 @@ TOLUA_API int  tolua_Cocos2d_open (lua_State* tolua_S);]], [[]])
 	replace([[unsigned void* tolua_ret = (unsigned void*)  self->getTiles();]],
         [[unsigned int* tolua_ret = (unsigned int*)  self->getTiles();]])
 
-	replace([[ccColor3B color = *((ccColor3B*)  tolua_tousertype(tolua_S,4,(void*)&(const ccColor3B)ccBLACK));]],
-        [[const ccColor3B clr = ccBLACK;
-	ccColor3B color = *((ccColor3B*)  tolua_tousertype(tolua_S,4,(void*)&clr));]])
-
 	replace([[tolua_usertype(tolua_S,"LUA_FUNCTION");]], [[]])
 
 	replace([[toluafix_pushusertype_ccobject(tolua_S,(void*)tolua_ret]],
@@ -308,11 +268,6 @@ TOLUA_API int  tolua_Cocos2d_open (lua_State* tolua_S);]], [[]])
 	
 	replace([[toluafix_pushusertype_ccobject(tolua_S,(void*)]],
 		[[TOLUAFIX_PUSHUSERTYPE_CCOBJECT(tolua_S,]])
-    
-	replace([[tolua_beginmodule(tolua_S,"oSensor");]],
-	[[tolua_beginmodule(tolua_S,"oSensor");
-    tolua_constant(tolua_S,"Enter",0);
-    tolua_constant(tolua_S,"Leave",1);]])
 	
 	replace([[unsigned int]], [[uint32]])
 	

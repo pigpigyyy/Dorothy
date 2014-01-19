@@ -310,7 +310,7 @@ void CCScheduler::scheduleSelector(SEL_SCHEDULE pfnSelector, CCObject *pTarget, 
                 CCLOG("CCScheduler#scheduleSelector. Selector already scheduled. Updating interval from: %.4f to %.4f", timer->getInterval(), fInterval);
                 timer->setInterval(fInterval);
                 return;
-            }        
+            }
         }
         ccArrayEnsureExtraCapacity(pElement->timers, 1);
     }
@@ -467,7 +467,7 @@ void CCScheduler::scheduleUpdateForTarget(CCObject *pTarget, int nPriority, bool
         return;
     }
 
-    // most of the updates are going to be 0, that's way there
+    // most of the updates are going to be 0, that's why there
     // is an special list for updates with priority 0
     if (nPriority == 0)
     {
@@ -618,24 +618,23 @@ void CCScheduler::unscheduleAllForTarget(CCObject *pTarget)
     unscheduleUpdateForTarget(pTarget);
 }
 
-unsigned int CCScheduler::scheduleScriptFunc(unsigned int nHandler, float fInterval, bool bPaused)
+void CCScheduler::scheduleScriptFunc(int nHandler, float fInterval)
 {
-    CCSchedulerScriptHandlerEntry* pEntry = CCSchedulerScriptHandlerEntry::create(nHandler, fInterval, bPaused);
+    CCSchedulerScriptHandlerEntry* pEntry = CCSchedulerScriptHandlerEntry::create(nHandler, fInterval, false);
     if (!m_pScriptHandlerEntries)
     {
         m_pScriptHandlerEntries = CCArray::createWithCapacity(20);
         m_pScriptHandlerEntries->retain();
     }
     m_pScriptHandlerEntries->addObject(pEntry);
-    return pEntry->getHandler();
 }
 
-void CCScheduler::unscheduleScriptEntry(unsigned int uScheduleScriptEntryID)
+void CCScheduler::unscheduleScriptFunc(int nHandler)
 {
     for (int i = m_pScriptHandlerEntries->count() - 1; i >= 0; i--)
     {
         CCSchedulerScriptHandlerEntry* pEntry = static_cast<CCSchedulerScriptHandlerEntry*>(m_pScriptHandlerEntries->objectAtIndex(i));
-        if (pEntry->getHandler() == (int)uScheduleScriptEntryID)
+		if (CCScriptEngine::sharedEngine()->scriptHandlerEqual(pEntry->getHandler(), nHandler))
         {
             pEntry->markedForDeletion();
             break;
@@ -901,5 +900,11 @@ void CCScheduler::update(float dt)
     m_pCurrentTarget = NULL;
 }
 
+CCScheduler* CCScheduler::create()
+{
+	CCScheduler* scheduler = new CCScheduler();
+	scheduler->autorelease();
+	return scheduler;
+}
 
 NS_CC_END

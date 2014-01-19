@@ -26,11 +26,12 @@ const oVec2& oModel_getKey(oModel* model, uint32 index);
 
 void oWorld_query(oWorld* world, const CCRect& rect, int nHandler);
 
-/*
-Sensor flag:
-	Enter = 0
-	Leave = 1
-*/
+ENUM_START(oSensorFlag)
+{
+	Enter,
+	Leave
+}
+ENUM_END
 void oSensor_addHandler(oSensor* sensor, uint32 flag, int nHandler);
 void oSensor_removeHandler(oSensor* sensor, uint32 flag, int nHandler);
 void oSensor_clearHandler(oSensor* sensor, uint32 flag);
@@ -53,5 +54,31 @@ bool oModelCache_unload(const char* filename = nullptr);
 void oCache_clear();
 
 CCSprite* CCSprite_createWithClip(const char* clipStr);
+
+CCScene* CCScene_createOriented(float duration, CCScene* nextScene, tOrientation orientation);
+CCScene* CCScene_createRotoZoom(float duration, CCScene* nextScene);
+CCScene* CCScene_createJumpZoom(float duration, CCScene* nextScene);
+CCScene* CCScene_createMove(float duration, CCScene* nextScene, tOrientation orientation);
+CCScene* CCScene_createSlide(float duration, CCScene* nextScene, tOrientation orientation);
+CCScene* CCScene_createShrinkGrow(float duration, CCScene* nextScene);
+CCScene* CCScene_createFlipX(float duration, CCScene* nextScene, tOrientation orientation);
+CCScene* CCScene_createFlipY(float duration, CCScene* nextScene, tOrientation orientation);
+CCScene* CCScene_createFlipAngular(float duration, CCScene* nextScene, tOrientation orientation);
+CCScene* CCScene_createZoomFlipX(float duration, CCScene* nextScene, tOrientation orientation);
+CCScene* CCScene_createZoomFlipY(float duration, CCScene* nextScene, tOrientation orientation);
+CCScene* CCScene_createZoomFlipAngular(float duration, CCScene* nextScene, tOrientation orientation);
+CCScene* CCScene_createFade(float duration, CCScene* nextScene, const ccColor3B& color);
+CCScene* CCScene_createCrossFade(float duration, CCScene* nextScene);
+CCScene* CCScene_createTurnOffTiles(float duration, CCScene* nextScene);
+CCScene* CCScene_createSplitCols(float duration, CCScene* nextScene);
+CCScene* CCScene_createSplitRows(float duration, CCScene* nextScene);
+CCScene* CCScene_createFadeTiles(float duration, CCScene* nextScene, tOrientation orientation);
+CCScene* CCScene_createPageTurn(float duration, CCScene* nextScene, bool backward);
+CCScene* CCScene_createProgressCCW(float duration, CCScene* nextScene);
+CCScene* CCScene_createProgressCW(float duration, CCScene* nextScene);
+CCScene* CCScene_createProgressH(float duration, CCScene* nextScene);
+CCScene* CCScene_createProgressV(float duration, CCScene* nextScene);
+CCScene* CCScene_createProgressIO(float duration, CCScene* nextScene);
+CCScene* CCScene_createProgressOI(float duration, CCScene* nextScene);
 
 #endif // __DOROTHY_MODULE_H__

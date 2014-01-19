@@ -60,19 +60,13 @@ public:
 */
 typedef enum {
     /// An horizontal orientation where the Left is nearer
-	kCCTransitionOrientationLeftOver = 0,
+	kCCTransitionOrientationLeftOver,
 	/// An horizontal orientation where the Right is nearer
-	kCCTransitionOrientationRightOver = 1,
+	kCCTransitionOrientationRightOver,
 	/// A vertical orientation where the Up is nearer
-	kCCTransitionOrientationUpOver = 0,
+	kCCTransitionOrientationUpOver,
 	/// A vertical orientation where the Bottom is nearer
-	kCCTransitionOrientationDownOver = 1,
-    
-	// Deprecated
-    //	kOrientationLeftOver = kCCTransitionOrientationLeftOver,
-    //	kOrientationRightOver = kCCTransitionOrientationRightOver,
-    //	kOrientationUpOver = kCCTransitionOrientationUpOver,
-    //	kOrientationDownOver = kCCTransitionOrientationDownOver,
+	kCCTransitionOrientationDownOver,
 } tOrientation;
 
 /** @brief Base class for CCTransition scenes

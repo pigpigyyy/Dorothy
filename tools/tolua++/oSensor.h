@@ -1,12 +1,7 @@
 class oSensor: public CCObject
 {
-	/*
-	enum
-	{
-		Enter = 0,
-		Leave = 1
-	};
-	*/
+	#define oSensorFlag::Enter @ Enter
+	#define oSensorFlag::Leave @ Leave
 	tolua_property__bool bool enabled;
 	tolua_readonly tolua_property__common int tag;
 	tolua_readonly tolua_property__common oBody* owner;

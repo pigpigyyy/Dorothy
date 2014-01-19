@@ -172,7 +172,7 @@ TOLUA_API void toluafix_get_function_by_refid(lua_State* L, int refid)
 {
     lua_pushstring(L, TOLUA_REFID_FUNCTION_MAPPING);
     lua_rawget(L, LUA_REGISTRYINDEX);                           /* stack: ... refid_fun */
-    lua_pushinteger(L, refid);                                  /* stack: ... refid_fun refid */
+    lua_pushinteger(L, refid);/* stack: ... refid_fun refid */
     lua_rawget(L, -2);                                          /* stack: ... refid_fun fun */
     lua_remove(L, -2);                                          /* stack: ... fun */
 }

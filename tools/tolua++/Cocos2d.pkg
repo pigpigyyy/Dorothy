@@ -24,8 +24,6 @@ $pfile "CCSprite.pkg"
 $pfile "CCSpriteBatchNode.pkg"
 $pfile "CCLayer.pkg"
 $pfile "CCScene.pkg"
-$pfile "CCTransition.pkg"
-$pfile "CCTransitionProgress.pkg"
 
 $pfile "CCScheduler.pkg"
 

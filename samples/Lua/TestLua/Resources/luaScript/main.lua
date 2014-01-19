@@ -32,7 +32,7 @@ local function createLayer()
 		oVec2(100,0),
 		oVec2(100,100),
 		oVec2(0,100),
-	},0.5,ccColor4(255,255,0,255),ccColor4(255,0,0,255))
+	},0.5,ccColor4(255,0,0,255),ccColor4(255,0,0,255))
 	drawNode.position = oVec2(100,100)
 	layer:addChild(drawNode)
 	
@@ -42,13 +42,17 @@ local function createLayer()
 
 	oCache.Effect:load("main.effect")
 	oCache.Model:load("jiandunA.model")
-	local model = oModel("jiandunA.model")	
+	local model = oModel("jixienv.model")	
 	--local modelRef = ref(model)
 	model.loop = true
 	model.recovery = 0.1
 	model.look = "happy"
 	model:play("walk")
-	model:addHandler("walk", function(model) cclog(model.currentAnimation) end)
+	local function func(model)
+		cclog(model.currentAnimation)
+	end
+	model:addHandler("walk", func)
+	model:removeHandler("walk", func)
 	--model:setPosition(CCPointMake(200,200))
 	--layer:addChild(model)
 	
@@ -56,7 +60,7 @@ local function createLayer()
 	layer:setShouldContact(groupOne, groupOne, true)
 	
 	local bodyDef = oBodyDef()
-	bodyDef["type"] = oBodyDef.Dynamic
+	bodyDef.type = oBodyDef.Dynamic
 	bodyDef:attachPolygon(100, 200, 1.0, 0.4, 0.4)
 	local body = bodyDef:toBody(layer, groupOne, 200, 200)
 	body:addChild(model, 0, 998)
@@ -90,7 +94,7 @@ local function createLayer()
 	--oMusic:play("background.mp3", true)
     
 	local function onTouchEnded(x, y)
-		model:play("attack1")
+		model:play("attack")
 		--char.velocity.y = 400
         --local s = layer:getChildByTag(kTagSprite)
         --s:stopAllActions()
@@ -132,4 +136,5 @@ end
 local scene = CCScene()
 scene:addChild(CreateBackMenuItem())
 scene:addChild(createLayer())
-CCDirector:run(scene)
+CCDirector:run(CCScene:pageTurn(3,scene,true))
+CCDirector.scheduler.timeScale = 2
