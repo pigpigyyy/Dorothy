@@ -141,6 +141,8 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\actions\CCActionEase.cpp" />
+    <ClCompile Include="..\actions\CCActionTween.cpp" />
     <ClCompile Include="..\base_nodes\CCAtlasNode.cpp" />
     <ClCompile Include="..\base_nodes\CCNode.cpp" />
     <ClCompile Include="..\cocoa\CCAffineTransform.cpp" />
@@ -160,7 +162,6 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
     <ClCompile Include="..\actions\CCAction.cpp" />
     <ClCompile Include="..\actions\CCActionCamera.cpp" />
     <ClCompile Include="..\actions\CCActionCatmullRom.cpp" />
-    <ClCompile Include="..\actions\CCActionEase.cpp" />
     <ClCompile Include="..\actions\CCActionGrid.cpp" />
     <ClCompile Include="..\actions\CCActionGrid3D.cpp" />
     <ClCompile Include="..\actions\CCActionInstant.cpp" />
@@ -169,7 +170,6 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
     <ClCompile Include="..\actions\CCActionPageTurn3D.cpp" />
     <ClCompile Include="..\actions\CCActionProgressTimer.cpp" />
     <ClCompile Include="..\actions\CCActionTiledGrid.cpp" />
-    <ClCompile Include="..\actions\CCActionTween.cpp" />
     <ClCompile Include="..\label_nodes\CCLabelAtlas.cpp" />
     <ClCompile Include="..\label_nodes\CCLabelBMFont.cpp" />
     <ClCompile Include="..\label_nodes\CCLabelTTF.cpp" />
@@ -263,6 +263,8 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
     <ClCompile Include="..\cocos2d.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\actions\CCActionEase.h" />
+    <ClInclude Include="..\actions\CCActionTween.h" />
     <ClInclude Include="..\base_nodes\CCAtlasNode.h" />
     <ClInclude Include="..\base_nodes\CCNode.h" />
     <ClInclude Include="..\cocoa\CCAffineTransform.h" />
@@ -283,7 +285,6 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
     <ClInclude Include="..\actions\CCAction.h" />
     <ClInclude Include="..\actions\CCActionCamera.h" />
     <ClInclude Include="..\actions\CCActionCatmullRom.h" />
-    <ClInclude Include="..\actions\CCActionEase.h" />
     <ClInclude Include="..\actions\CCActionGrid.h" />
     <ClInclude Include="..\actions\CCActionGrid3D.h" />
     <ClInclude Include="..\actions\CCActionInstant.h" />
@@ -292,7 +293,6 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
     <ClInclude Include="..\actions\CCActionPageTurn3D.h" />
     <ClInclude Include="..\actions\CCActionProgressTimer.h" />
     <ClInclude Include="..\actions\CCActionTiledGrid.h" />
-    <ClInclude Include="..\actions\CCActionTween.h" />
     <ClInclude Include="..\include\ccConfig.h" />
     <ClInclude Include="..\include\CCEventType.h" />
     <ClInclude Include="..\include\ccMacros.h" />

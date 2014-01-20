@@ -1322,7 +1322,7 @@ void CCTransitionCrossFade::onEnter()
     // create the blend action
     CCAction* layerAction = CCSequence::create
     (
-        CCFadeTo::create(m_fDuration, 0),
+        CCFadeTo::create(m_fDuration, 0.0f),
         CCCallFunc::create(this, callfunc_selector(CCTransitionScene::hideOutShowIn)),
         CCCallFunc::create(this, callfunc_selector(CCTransitionScene::finish)),
         NULL

@@ -57,6 +57,7 @@ public:
 	void setValue(float endScaleX, float endScaleY);
 public:
 	static oKeyScale* create(float duration, float scaleX, float scaleY, uint8 easeId = 0);
+	static oKeyScale* create(float duration, float scale, uint8 easeId = 0);
 protected:
 	oEaseFunc _ease;
 	float _startScaleX;

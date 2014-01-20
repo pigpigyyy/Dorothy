@@ -102,7 +102,7 @@ static float InOutCirc(float t, float b, float c)
 }
 static float InElastic(float t, float b, float c)
 {
-	static float s=1.70158f, p=0.3f, a=c;
+	float s=1.70158f, p=0.3f, a=c;
 	if (t==0) return b;  if (t==1) return b+c;
 	if (a < abs(c)) { a=c; s=p/4; }
 	else s = p/(2*b2_pi) * asinf(c/a);
@@ -110,7 +110,7 @@ static float InElastic(float t, float b, float c)
 }
 static float OutElastic(float t, float b, float c)
 {
-	static float s=1.70158f, p=0.3f, a=c;
+	float s=1.70158f, p=0.3f, a=c;
 	if (t==0) return b;  if (t==1) return b+c;
 	if (a < abs(c)) { a=c; s=p/4; }
 	else s = p/(2*b2_pi) * asinf(c/a);
@@ -118,8 +118,9 @@ static float OutElastic(float t, float b, float c)
 }
 static float InOutElastic(float t, float b, float c)
 {
-	static float s=1.70158f, p=(0.3f*1.5f), a=c;
-	if (t==0) return b;  if ((t*=2)==2) return b+c;
+	float s=1.70158f, p=(0.3f*1.5f), a=c;
+	if (t==0) return b;
+	if ((t*=2)==2) return b+c;
 	if (a < abs(c)) { a=c; s=p/4; }
 	else s = p/(2*b2_pi) * asinf(c/a);
 	if (t < 1) return -0.5f*(a*powf(2,10*(t-=1)) * sinf( (t-s)*(2*b2_pi)/p )) + b;
@@ -133,14 +134,14 @@ static float InBack(float t, float b, float c)
 static float OutBack(float t, float b, float c)
 {
 	t = t - 1;
-	const static float s = 1.70158f;
+	const float s = 1.70158f;
 	return c*(t * t * ((s + 1) * t + s) + 1) + b;
 }
 static float InOutBack(float t, float b, float c)
 {
-	static float s = 1.70158f;
-	if ((t*=2) < 1) return c/2*(t*t*(((s*=(1.525f))+1)*t - s)) + b;
-	return c/2*((t-=2)*t*(((s*=(1.525f))+1)*t + s) + 2) + b;
+	float s = 1.70158f;
+	if ((t*=2) < 1) return c/2*(t*t*(((s*=1.525f)+1)*t - s)) + b;
+	return c/2*((t-=2)*t*(((s*=1.525f)+1)*t + s) + 2) + b;
 }
 static float OutBounce(float t, float b, float c)
 {

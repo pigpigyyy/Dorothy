@@ -164,6 +164,10 @@ oKeyScale* oKeyScale::create( float duration, float scaleX, float scaleY, uint8 
 	keyScale->autorelease();
 	return keyScale;
 }
+oKeyScale* oKeyScale::create(float duration, float scale, uint8 easeId)
+{
+	return oKeyScale::create(duration, scale, scale, easeId);
+}
 void oKeyScale::setValue( float endScaleX, float endScaleY )
 {
 	_endScaleX = endScaleX;

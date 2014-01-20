@@ -11,7 +11,7 @@ class CCDirector
 	tolua_property__common float contentScaleFactor;
 	tolua_property__common CCNode* notificationNode;
 	tolua_property__common CCScheduler* scheduler;
-	
+
 	oVec2 convertToGL(oVec2 point);
 	oVec2 convertToUI(oVec2 point);
 

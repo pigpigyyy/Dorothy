@@ -51,8 +51,7 @@ local function createLayer()
 	end
 	model:addHandler("walk", func)
 	model:removeHandler("walk", func)
-	model.scaleX = 0.5
-	model.scaleY = 0.5
+	
 	--model:setPosition(CCPointMake(200,200))
 	--layer:addChild(model)
 	
@@ -64,6 +63,7 @@ local function createLayer()
 	bodyDef:attachPolygon(100, 200, 1.0, 0.4, 0.4)
 	local body = bodyDef:toBody(layer, groupOne, 200, 200)
 	body:addChild(model, 0, 998)
+	model:runAction(oScale(2, 0.5, 0.5, oEase.Linear))
 	layer:addChild(body, LAYER_GAME, 998)
 	--local char = body
 	--oEffect(1):attachTo(body):autoRemove():start()
@@ -92,7 +92,6 @@ local function createLayer()
 	layer:addChild(body)
 	
 	--oMusic:play("background.mp3", true)
-    
 	local function onTouchEnded(x, y)
 		model:play("attack")
 		cclog("%d",CCObject.count)
@@ -137,4 +136,5 @@ end
 local scene = CCScene()
 scene:addChild(CreateBackMenuItem())
 scene:addChild(createLayer())
-CCDirector:run(CCScene:pageTurn(3,scene,true))
+--CCDirector:run(CCScene:pageTurn(3,scene,true))
+CCDirector:run(scene)

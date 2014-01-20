@@ -81,4 +81,9 @@ CCScene* CCScene_createProgressV(float duration, CCScene* nextScene);
 CCScene* CCScene_createProgressIO(float duration, CCScene* nextScene);
 CCScene* CCScene_createProgressOI(float duration, CCScene* nextScene);
 
+CCCardinalSplineTo* CCCardinalSplineTo_create(float duration, const vector<oVec2>& points, float tension);
+CCCardinalSplineBy* CCCardinalSplineBy_create(float duration, const vector<oVec2>& points, float tension);
+CCCatmullRomTo* CCCatmullRomTo_create(float duration, const vector<oVec2>& points);
+CCCatmullRomBy* CCCatmullRomBy_create(float duration, const vector<oVec2>& points);
+
 #endif // __DOROTHY_MODULE_H__

@@ -1,13 +1,1 @@
-
-class CCActionCamera : public CCActionInterval
-{
-    void startWithTarget(CCNode *pTarget);
-	CCActionInterval* reverse();
-};
-
-class CCOrbitCamera : public CCActionCamera
-{
-    void sphericalRadius(float *r, float *zenith, float *azimuth);
-
-    static CCOrbitCamera * create(float t, float radius, float deltaRadius, float angleZ, float deltaAngleZ, float angleX, float deltaAngleX);
-};
+CCActionInterval* CCOrbitCamera::create @ CCOrbitCamera(float t, float radius, float deltaRadius, float angleZ, float deltaAngleZ, float angleX, float deltaAngleX);

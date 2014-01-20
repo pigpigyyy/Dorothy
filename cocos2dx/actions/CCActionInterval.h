@@ -418,14 +418,14 @@ public:
 
 /** @typedef bezier configuration structure
  */
-typedef struct _ccBezierConfig {
+struct ccBezierConfig {
     //! end position of the bezier
     CCPoint endPosition;
     //! Bezier control point 1
     CCPoint controlPoint_1;
     //! Bezier control point 2
     CCPoint controlPoint_2;
-} ccBezierConfig;
+};
 
 /** @brief An action that moves the target with a cubic Bezier curve by a certain distance.
  */
@@ -443,6 +443,7 @@ public:
 public:
     /** creates the action with a duration and a bezier configuration */
     static CCBezierBy* create(float t, const ccBezierConfig& c);
+	static CCBezierBy* create(float t, const CCPoint& position, const CCPoint& controlA, const CCPoint& controlB);
 protected:
     ccBezierConfig m_sConfig;
     CCPoint m_startPosition;
@@ -462,6 +463,7 @@ public:
 
     /** creates the action with a duration and a bezier configuration */
     static CCBezierTo* create(float t, const ccBezierConfig& c);
+	static CCBezierTo* create(float t, const CCPoint& position, const CCPoint& controlA, const CCPoint& controlB);
     bool initWithDuration(float t, const ccBezierConfig &c);
     
 protected:
@@ -591,7 +593,7 @@ public:
 
 public:
     /** creates an action with duration and opacity */
-    static CCFadeTo* create(float duration, GLubyte opacity);
+	static CCFadeTo* create(float duration, float opacity);
 protected:
     GLubyte m_toOpacity;
     GLubyte m_fromOpacity;

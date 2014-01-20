@@ -1,5 +1,1 @@
-
-class CCPageTurn3D : public CCGrid3DAction
-{
-    static CCPageTurn3D* create(float duration, CCSize gridSize);
-};
+CCActionInterval* CCPageTurn3D::create @ CCPageTurn3D(float duration, CCSize gridSize);

@@ -1,85 +1,23 @@
+CCActionInterval* CCShakyTiles3D::create @ CCShakyTiles3D(float duration, CCSize gridSize, int nRange, bool bShakeZ);
 
-class CCShakyTiles3D : public CCTiledGrid3DAction
-{
-    static CCShakyTiles3D* create(float duration, CCSize gridSize, int nRange, bool bShakeZ);
-};
+CCActionInterval* CCShatteredTiles3D::create @ CCShatteredTiles3D(float duration, CCSize gridSize, int nRange, bool bShatterZ);
 
-class CCShatteredTiles3D : public CCTiledGrid3DAction
-{
-    static CCShatteredTiles3D* create(float duration, CCSize gridSize, int nRange, bool bShatterZ);
-};
+CCActionInterval* CCShuffleTiles::create @ CCShuffleTiles(float duration, CCSize gridSize, unsigned int seed);
 
-class CCShuffleTiles : public CCTiledGrid3DAction
-{
-    void shuffle(unsigned int *pArray, int nLen);
-    CCSize getDelta(CCSize pos);
-    void placeTile(CCPoint pos, Tile *t);
+CCActionInterval* CCFadeOutTRTiles::create @ CCFadeOutTRTiles(float duration, CCSize gridSize);
 
-    static CCShuffleTiles* create(float duration, CCSize gridSize, unsigned int seed);
-};
+CCActionInterval* CCFadeOutBLTiles::create @ CCFadeOutBLTiles(float duration, CCSize gridSize);
 
-class CCFadeOutTRTiles : public CCTiledGrid3DAction
-{
-    void turnOnTile(CCPoint pos);
-    void turnOffTile(CCPoint pos);
-    void transformTile(CCPoint pos, float distance);
+CCActionInterval* CCFadeOutUpTiles::create @ CCFadeOutUpTiles(float duration, CCSize gridSize);
 
-    static CCFadeOutTRTiles* create(float duration, CCSize gridSize);
-};
+CCActionInterval* CCFadeOutDownTiles::create @ CCFadeOutDownTiles(float duration, CCSize gridSize);
 
-class CCFadeOutBLTiles : public CCFadeOutTRTiles
-{
-     static CCFadeOutBLTiles* create(float duration, CCSize gridSize);
-};
+CCActionInterval* CCTurnOffTiles::create @ CCTurnOffTiles(float duration, CCSize gridSize);
 
-class CCFadeOutUpTiles : public CCFadeOutTRTiles
-{
-	void transformTile(CCPoint pos, float distance);
+CCActionInterval* CCWavesTiles3D::create @ CCWavesTiles3D(float duration, CCSize gridSize, unsigned int waves, float amplitude);
 
-    static CCFadeOutUpTiles* create(float duration, CCSize gridSize);
-};
+CCActionInterval* CCJumpTiles3D::create @ CCJumpTiles3D(float duration, CCSize gridSize, unsigned int numberOfJumps, float amplitude);
 
-class CCFadeOutDownTiles : public CCFadeOutUpTiles
-{
-    static CCFadeOutDownTiles* create(float duration, CCSize gridSize);
-};
+CCActionInterval* CCSplitRows::create @ CCSplitRows(float duration, unsigned int nRows);
 
-class CCTurnOffTiles : public CCTiledGrid3DAction
-{
-    void shuffle(unsigned int *pArray, int nLen);
-    void turnOnTile(CCPoint pos);
-    void turnOffTile(CCPoint pos);
-
-    static CCTurnOffTiles* create(float duration, CCSize gridSize);
-    static CCTurnOffTiles* create(float duration, CCSize gridSize, unsigned int seed);
-};
-
-class CCWavesTiles3D : public CCTiledGrid3DAction
-{
-    float getAmplitude(void);
-    void setAmplitude(float fAmplitude);
-    float getAmplitudeRate(void);
-    void setAmplitudeRate(float fAmplitudeRate);
-
-    static CCWavesTiles3D* create(float duration, CCSize gridSize, unsigned int waves, float amplitude);
-};
-
-class CCJumpTiles3D : public CCTiledGrid3DAction
-{
-    float getAmplitude(void);
-    void setAmplitude(float fAmplitude);
-    float getAmplitudeRate(void);
-    void setAmplitudeRate(float fAmplitudeRate);
-
-    static CCJumpTiles3D* create(float duration, CCSize gridSize, unsigned int numberOfJumps, float amplitude);
-};
-
-class CCSplitRows : public CCTiledGrid3DAction
-{
-    static CCSplitRows* create(float duration, unsigned int nRows);
-};
-
-class CCSplitCols : public CCTiledGrid3DAction
-{
-    static CCSplitCols* create(float duration, unsigned int nCols);
-};
+CCActionInterval* CCSplitCols::create @ CCSplitCols(float duration, unsigned int nCols);

@@ -150,9 +150,6 @@
     <ClCompile Include="..\actions\CCActionCatmullRom.cpp">
       <Filter>actions</Filter>
     </ClCompile>
-    <ClCompile Include="..\actions\CCActionEase.cpp">
-      <Filter>actions</Filter>
-    </ClCompile>
     <ClCompile Include="..\actions\CCActionGrid.cpp">
       <Filter>actions</Filter>
     </ClCompile>
@@ -175,9 +172,6 @@
       <Filter>actions</Filter>
     </ClCompile>
     <ClCompile Include="..\actions\CCActionTiledGrid.cpp">
-      <Filter>actions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\actions\CCActionTween.cpp">
       <Filter>actions</Filter>
     </ClCompile>
     <ClCompile Include="..\label_nodes\CCLabelAtlas.cpp">
@@ -450,6 +444,12 @@
     <ClCompile Include="..\support\CCNotificationCenter.cpp">
       <Filter>support</Filter>
     </ClCompile>
+    <ClCompile Include="..\actions\CCActionEase.cpp">
+      <Filter>actions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\actions\CCActionTween.cpp">
+      <Filter>actions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\base_nodes\CCAtlasNode.h">
@@ -506,9 +506,6 @@
     <ClInclude Include="..\actions\CCActionCatmullRom.h">
       <Filter>actions</Filter>
     </ClInclude>
-    <ClInclude Include="..\actions\CCActionEase.h">
-      <Filter>actions</Filter>
-    </ClInclude>
     <ClInclude Include="..\actions\CCActionGrid.h">
       <Filter>actions</Filter>
     </ClInclude>
@@ -531,9 +528,6 @@
       <Filter>actions</Filter>
     </ClInclude>
     <ClInclude Include="..\actions\CCActionTiledGrid.h">
-      <Filter>actions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\actions\CCActionTween.h">
       <Filter>actions</Filter>
     </ClInclude>
     <ClInclude Include="..\include\ccConfig.h">
@@ -902,6 +896,12 @@
     </ClInclude>
     <ClInclude Include="..\support\CCNotificationCenter.h">
       <Filter>support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\actions\CCActionEase.h">
+      <Filter>actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\actions\CCActionTween.h">
+      <Filter>actions</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

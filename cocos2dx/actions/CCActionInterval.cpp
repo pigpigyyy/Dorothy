@@ -1392,6 +1392,14 @@ CCBezierBy* CCBezierBy::create(float t, const ccBezierConfig& c)
 
     return pBezierBy;
 }
+CCBezierBy* CCBezierBy::create(float t, const CCPoint& position, const CCPoint& controlA, const CCPoint& controlB)
+{
+	ccBezierConfig config = {position, controlA, controlB};
+	CCBezierBy *pBezierBy = new CCBezierBy();
+	pBezierBy->initWithDuration(t, config);
+	pBezierBy->autorelease();
+	return pBezierBy;
+}
 
 bool CCBezierBy::initWithDuration(float t, const ccBezierConfig& c)
 {
@@ -1488,6 +1496,15 @@ CCBezierTo* CCBezierTo::create(float t, const ccBezierConfig& c)
     pBezierTo->autorelease();
 
     return pBezierTo;
+}
+CCBezierTo* CCBezierTo::create(float t, const CCPoint& position, const CCPoint& controlA, const CCPoint& controlB)
+{
+	ccBezierConfig config = {position, controlA, controlB};
+	CCBezierTo *pBezierTo = new CCBezierTo();
+	pBezierTo->initWithDuration(t, config);
+	pBezierTo->autorelease();
+
+	return pBezierTo;
 }
 
 bool CCBezierTo::initWithDuration(float t, const ccBezierConfig &c)
@@ -1861,14 +1878,13 @@ CCActionInterval* CCFadeOut::reverse()
 //
 // FadeTo
 //
-
-CCFadeTo* CCFadeTo::create(float duration, GLubyte opacity)
+CCFadeTo* CCFadeTo::create(float duration, float opacity)
 {
-    CCFadeTo *pFadeTo = new CCFadeTo();
-    pFadeTo->initWithDuration(duration, opacity);
-    pFadeTo->autorelease();
+	CCFadeTo *pFadeTo = new CCFadeTo();
+	pFadeTo->initWithDuration(duration, opacity*255);
+	pFadeTo->autorelease();
 
-    return pFadeTo;
+	return pFadeTo;
 }
 
 bool CCFadeTo::initWithDuration(float duration, GLubyte opacity)

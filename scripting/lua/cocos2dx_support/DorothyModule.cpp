@@ -290,3 +290,40 @@ CCScene* CCScene_createProgressOI(float duration, CCScene* nextScene)
 {
 	return CCTransitionProgressOutIn::create(duration, nextScene);
 }
+
+CCCardinalSplineTo* CCCardinalSplineTo_create(float duration, const vector<oVec2>& points, float tension)
+{
+	CCPointArray* array = CCPointArray::create(points.size());
+	for (const oVec2& v : points)
+	{
+		array->addControlPoint(v);
+	}
+	return CCCardinalSplineTo::create(duration, array, tension);
+}
+CCCardinalSplineBy* CCCardinalSplineBy_create(float duration, const vector<oVec2>& points, float tension)
+{
+	CCPointArray* array = CCPointArray::create(points.size());
+	for (const oVec2& v : points)
+	{
+		array->addControlPoint(v);
+	}
+	return CCCardinalSplineBy::create(duration, array, tension);
+}
+CCCatmullRomTo* CCCatmullRomTo_create(float duration, const vector<oVec2>& points)
+{
+	CCPointArray* array = CCPointArray::create(points.size());
+	for (const oVec2& v : points)
+	{
+		array->addControlPoint(v);
+	}
+	return CCCatmullRomTo::create(duration, array);
+}
+CCCatmullRomBy* CCCatmullRomBy_create(float duration, const vector<oVec2>& points)
+{
+	CCPointArray* array = CCPointArray::create(points.size());
+	for (const oVec2& v : points)
+	{
+		array->addControlPoint(v);
+	}
+	return CCCatmullRomBy::create(duration, array);
+}

@@ -1,41 +1,7 @@
+CCActionInterval* CCCardinalSplineTo_create @ CCCardinalSplineTo(float duration, const vector<oVec2>& points, float tension);
 
-class CCPointArray : public CCNode
-{
-    bool initWithCapacity(unsigned int capacity);
-    void addControlPoint(CCPoint controlPoint);
-    void insertControlPoint(CCPoint &controlPoint, unsigned int index);
-    void replaceControlPoint(CCPoint &controlPoint, unsigned int index);
-    CCPoint getControlPointAtIndex(unsigned int index);
-    void removeControlPointAtIndex(unsigned int index);
-    unsigned int count();
-    CCPointArray* reverse();
-    void reverseInline();
-	static CCPointArray* create(unsigned int capacity);
-};
+CCActionInterval* CCCardinalSplineBy_create @ CCCardinalSplineBy(float duration, const vector<oVec2>& points, float tension);
 
-class CCCardinalSplineTo : public CCActionInterval
-{
-    CCActionInterval* reverse();
-    CCPointArray* getPoints();
-    void  setPoints(CCPointArray* points);
+CCActionInterval* CCCatmullRomTo_create @ CCCatmullRomTo(float duration, const vector<oVec2>& points);
 
-	static CCCardinalSplineTo* create(float duration, CCPointArray* points, float tension);
-};
-
-
-class CCCardinalSplineBy : public CCCardinalSplineTo
-{
-    CCActionInterval* reverse();
-
-	static CCCardinalSplineBy* create(float duration, CCPointArray* points, float tension);
-};
-
-class CCCatmullRomTo : public CCCardinalSplineTo
-{
-	static CCCatmullRomTo* create(float dt, CCPointArray* points);
-};
-
-class CCCatmullRomBy : public CCCardinalSplineBy
-{
-    static CCCatmullRomBy* create(float dt, CCPointArray* points);
-};
+CCActionInterval* CCCatmullRomBy_create @ CCCatmullRomBy(float duration, const vector<oVec2>& points);

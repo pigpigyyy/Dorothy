@@ -48,8 +48,8 @@ THE SOFTWARE.
 #include "actions/CCActionGrid3D.h"
 #include "actions/CCActionTiledGrid.h"
 #include "actions/CCActionInstant.h"
-#include "actions/CCActionTween.h"
 #include "actions/CCActionCatmullRom.h"
+#include "actions/CCActionTween.h"
 
 // base_nodes
 #include "base_nodes/CCNode.h"
