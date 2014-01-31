@@ -233,13 +233,13 @@ void CCShatteredTiles3D::update(float time)
 
 // implementation of CCShuffleTiles
 
-CCShuffleTiles* CCShuffleTiles::create(float duration, const CCSize& gridSize, unsigned int seed)
+CCShuffleTiles* CCShuffleTiles::create(float duration, const CCSize& gridSize)
 {
     CCShuffleTiles *pAction = new CCShuffleTiles();
 
     if (pAction)
     {
-        if (pAction->initWithDuration(duration, gridSize, seed))
+        if (pAction->initWithDuration(duration, gridSize, time(NULL)))
         {
             pAction->autorelease();
         }

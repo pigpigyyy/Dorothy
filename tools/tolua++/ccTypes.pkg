@@ -31,16 +31,23 @@ class ccColor4B @ ccColor4
     GLubyte a;
 };
 
-typedef enum
+class ccBlendFunc
 {
-    kCCVerticalTextAlignmentTop,
-    kCCVerticalTextAlignmentCenter,
-    kCCVerticalTextAlignmentBottom,
-} CCVerticalTextAlignment;
+	ccBlendFunc();
+	~ccBlendFunc();
+	static tolua_outside ccBlendFunc* ccBlendFuncNew @ create(GLenum src, GLenum dst);
+	GLenum src;
+	GLenum dst;
+};
 
-typedef enum
+enum CCTextAlignment {};
+enum CCVerticalTextAlignment {};
+module CCTextAlign
 {
-    kCCTextAlignmentLeft,
-    kCCTextAlignmentCenter,
-    kCCTextAlignmentRight,
-} CCTextAlignment;
+	#define kCCTextAlignmentLeft @ HLeft
+	#define kCCTextAlignmentCenter @ HCenter
+	#define kCCTextAlignmentRight @ HRight
+	#define kCCVerticalTextAlignmentTop @ VTop
+	#define kCCVerticalTextAlignmentCenter @ VCenter
+    #define kCCVerticalTextAlignmentBottom @ VBottom
+}

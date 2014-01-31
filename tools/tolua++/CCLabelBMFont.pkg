@@ -1,36 +1,16 @@
-
-enum {
-    kCCLabelAutomaticWidth = -1,
-};
-
-class CCLabelBMFont : public CCSpriteBatchNode
+class CCLabelBMFont: public CCNode\\CCSpriteBatchNode
 {
-    void setString(const char *label);
-	void setString(const char *label, bool fromUpdate);
-    void setCString(const char *label);
-	const char* getString(void);
+	#define kCCLabelAutomaticWidth @ AutomaticWidth
+    tolua_property__common char* string @ text;
+	tolua_property__common char* fntFile;
+	tolua_property__common ccColor3B color;
+	tolua_property__common GLubyte opacity;
 
-	void setAnchorPoint(const CCPoint & var);
 	void setAlignment(CCTextAlignment alignment);
 	void setWidth(float width);
 	void setLineBreakWithoutSpace(bool breakWithoutSpace);
-	void setScale(float scale);
-	void setScaleX(float scaleX);
-	void setScaleY(float scaleY);
 
-	void setFntFile(const char* fntFile);
-	const char* getFntFile();
-
-    void setColor(const ccColor3B& color);
-    const ccColor3B& getColor(void);
-
-    GLubyte getOpacity(void);
-    void setOpacity(GLubyte opacity);
-
-	bool isOpacityModifyRGB();
-    void setOpacityModifyRGB(bool isOpacityModifyRGB);
-
-    static void purgeCachedData();
-    static CCLabelBMFont * create(const char *str, const char *fntFile, float width = kCCLabelAutomaticWidth, CCTextAlignment alignment = kCCTextAlignmentLeft, CCPoint imageOffset = CCPointMake(0, 0));
-	static CCLabelBMFont * create();
+	static void purgeCachedData();
+	static CCLabelBMFont* create(const char *str, const char *fntFile, float width = kCCLabelAutomaticWidth, CCTextAlignment alignment = kCCTextAlignmentLeft, oVec2 imageOffset = oVec2::zero);
+	static CCLabelBMFont* create();
 };

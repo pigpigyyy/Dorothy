@@ -86,4 +86,12 @@ CCCardinalSplineBy* CCCardinalSplineBy_create(float duration, const vector<oVec2
 CCCatmullRomTo* CCCatmullRomTo_create(float duration, const vector<oVec2>& points);
 CCCatmullRomBy* CCCatmullRomBy_create(float duration, const vector<oVec2>& points);
 
+CCActionInterval* CCTile_createFadeOut(float duration, CCSize gridSize, tOrientation orientation);
+
+inline ccBlendFunc* ccBlendFuncNew(GLenum src, GLenum dst)
+{
+	ccBlendFunc* func = new ccBlendFunc{ src, dst };
+	return func;
+}
+
 #endif // __DOROTHY_MODULE_H__

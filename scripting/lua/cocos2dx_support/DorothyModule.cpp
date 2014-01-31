@@ -327,3 +327,19 @@ CCCatmullRomBy* CCCatmullRomBy_create(float duration, const vector<oVec2>& point
 	}
 	return CCCatmullRomBy::create(duration, array);
 }
+
+CCActionInterval* CCTile_createFadeOut(float duration, CCSize gridSize, tOrientation orientation)
+{
+	switch (orientation)
+	{
+	case kCCTransitionOrientationLeftOver:
+		return CCFadeOutBLTiles::create(duration, gridSize);
+	case kCCTransitionOrientationRightOver:
+		return CCFadeOutTRTiles::create(duration, gridSize);
+	case kCCTransitionOrientationUpOver:
+		return CCFadeOutUpTiles::create(duration, gridSize);
+	case kCCTransitionOrientationDownOver:
+		return CCFadeOutDownTiles::create(duration, gridSize);
+	}
+	return nullptr;
+}

@@ -93,8 +93,8 @@ public:
     virtual CCObject* copyWithZone(CCZone* pZone);
 
 public:
-    /** creates the action with a random seed, the grid size and the duration */
-    static CCShuffleTiles* create(float duration, const CCSize& gridSize, unsigned int seed);
+    /** creates the action with the grid size and the duration */
+    static CCShuffleTiles* create(float duration, const CCSize& gridSize);
 protected:
     unsigned int m_nSeed;
     unsigned int m_nTilesCount;

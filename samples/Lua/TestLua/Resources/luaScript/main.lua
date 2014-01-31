@@ -67,7 +67,7 @@ local function createLayer()
 	layer:addChild(body, LAYER_GAME, 998)
 	--local char = body
 	--oEffect(1):attachTo(body):autoRemove():start()
-	
+
 	--Terrain
 	bodyDef = oBodyDef()
 	bodyDef.type = oBodyDef.Static

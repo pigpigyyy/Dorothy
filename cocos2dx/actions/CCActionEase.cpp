@@ -45,7 +45,7 @@ NS_CC_BEGIN
 
 CCActionEase* CCActionEase::create(CCActionInterval *pAction)
 {
-    CCActionEase *pRet = new CCActionEase();
+    CCActionEase* pRet = new CCActionEase();
     if (pRet)
     {
         if (pRet->initWithAction(pAction))
