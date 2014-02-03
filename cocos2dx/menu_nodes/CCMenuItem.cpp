@@ -38,7 +38,6 @@ NS_CC_BEGIN
     
 static unsigned int _globalFontSize = kCCItemSize;
 static std::string _globalFontName = "Marker Felt";
-static bool _globalFontNameRelease = false;
 
 const unsigned int    kCurrentItem = 0xc0c05001;
 const unsigned int    kZoomActionTag = 0xc0c05002;
@@ -213,9 +212,9 @@ CCMenuItemLabel::~CCMenuItemLabel()
 {
 }
 
-void CCMenuItemLabel::setString(const char * label)
+void CCMenuItemLabel::setText(const char * label)
 {
-    dynamic_cast<CCLabelProtocol*>(m_pLabel)->setString(label);
+	dynamic_cast<CCLabelProtocol*>(m_pLabel)->setText(label);
     this->setContentSize(m_pLabel->getContentSize());
 }
 
@@ -320,22 +319,17 @@ void CCMenuItemFont::setFontSize(unsigned int s)
     _globalFontSize = s;
 }
 
-unsigned int CCMenuItemFont::fontSize()
+unsigned int CCMenuItemFont::getFontSize()
 {
     return _globalFontSize;
 }
 
 void CCMenuItemFont::setFontName(const char *name)
 {
-    if (_globalFontNameRelease)
-    {
-        _globalFontName.clear();
-    }
     _globalFontName = name;
-    _globalFontNameRelease = true;
 }
 
-const char * CCMenuItemFont::fontName()
+const char * CCMenuItemFont::getFontName()
 {
     return _globalFontName.c_str();
 }
@@ -373,7 +367,7 @@ bool CCMenuItemFont::initWithString(const char *value, CCObject* target, SEL_Men
 
 void CCMenuItemFont::recreateLabel()
 {
-    CCLabelTTF *label = CCLabelTTF::create(dynamic_cast<CCLabelProtocol*>(m_pLabel)->getString(), 
+    CCLabelTTF *label = CCLabelTTF::create(dynamic_cast<CCLabelProtocol*>(m_pLabel)->getText(), 
                                                     m_strFontName.c_str(), (float)m_uFontSize);
     this->setLabel(label);
 }
@@ -384,7 +378,7 @@ void CCMenuItemFont::setFontSizeObj(unsigned int s)
     recreateLabel();
 }
 
-unsigned int CCMenuItemFont::fontSizeObj()
+unsigned int CCMenuItemFont::getFontSizeObj()
 {
     return m_uFontSize;
 }
@@ -395,7 +389,7 @@ void CCMenuItemFont::setFontNameObj(const char* name)
     recreateLabel();
 }
 
-const char* CCMenuItemFont::fontNameObj()
+const char* CCMenuItemFont::getFontNameObj()
 {
     return m_strFontName.c_str();
 }

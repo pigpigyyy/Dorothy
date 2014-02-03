@@ -169,13 +169,13 @@ void CCEditBoxImplWin::setText(const char* pText)
             }
 
             //! std::string strWithEllipsis = getStringWithEllipsisJni(strToShow.c_str(), m_EditSize.width, m_EditSize.height-12);
-            //! m_pLabel->setString(strWithEllipsis.c_str());
-			m_pLabel->setString(strToShow.c_str());
+            //! m_pLabel->setText(strWithEllipsis.c_str());
+			m_pLabel->setText(strToShow.c_str());
         }
         else
         {
             m_pLabelPlaceHolder->setVisible(true);
-            m_pLabel->setString("");
+			m_pLabel->setText("");
         }
 
     }
@@ -196,7 +196,7 @@ void CCEditBoxImplWin::setPlaceHolder(const char* pText)
             m_pLabelPlaceHolder->setVisible(true);
         }
 
-        m_pLabelPlaceHolder->setString(m_strPlaceHolder.c_str());
+		m_pLabelPlaceHolder->setText(m_strPlaceHolder.c_str());
     }
 }
 
@@ -243,7 +243,7 @@ void CCEditBoxImplWin::openKeyboard()
         m_pDelegate->editBoxEditingDidBegin(m_pEditBox);
     }
 
-	std::string placeHolder = m_pLabelPlaceHolder->getString();
+	std::string placeHolder = m_pLabelPlaceHolder->getText();
 	if (placeHolder.length() == 0)
 		placeHolder = "Enter value";
 

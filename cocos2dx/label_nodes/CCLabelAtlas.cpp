@@ -67,7 +67,7 @@ bool CCLabelAtlas::initWithString(const char *string, CCTexture2D* texture, unsi
     if (CCAtlasNode::initWithTexture(texture, itemWidth, itemHeight, strlen(string)))
     {
         m_uMapStartChar = startCharMap;
-        this->setString(string);
+		this->setText(string);
         return true;
     }
     return false;
@@ -176,7 +176,7 @@ void CCLabelAtlas::updateAtlasValues()
 }
 
 //CCLabelAtlas - CCLabelProtocol
-void CCLabelAtlas::setString(const char *label)
+void CCLabelAtlas::setText(const char *label)
 {
     unsigned int len = strlen(label);
     if (len > m_pTextureAtlas->getTotalQuads())
@@ -194,7 +194,7 @@ void CCLabelAtlas::setString(const char *label)
     m_uQuadsToDraw = len;
 }
 
-const char* CCLabelAtlas::getString()
+const char* CCLabelAtlas::getText()
 {
     return m_sString.c_str();
 }

@@ -7,8 +7,6 @@ class CCMotionStreak: public CCNode//CCNodeRGBA
 	
 	tolua_property__bool bool fastMode;
 	tolua_property__bool bool startingPositionInitialized @ startPosInit;
-	bool isStartingPositionInitialized();
-
 	
 	void tintWithColor(ccColor3B colors);
 	void reset();

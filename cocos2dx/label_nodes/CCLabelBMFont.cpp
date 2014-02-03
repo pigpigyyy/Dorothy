@@ -523,7 +523,7 @@ bool CCLabelBMFont::initWithString(const char *theString, const char *fntFile, f
         m_pReusedChar->initWithTexture(m_pobTextureAtlas->getTexture(), CCRectMake(0, 0, 0, 0));
         m_pReusedChar->setBatchNode(this);
         
-        this->setString(theString, true);
+		this->setText(theString, true);
         
         return true;
     }
@@ -726,12 +726,12 @@ void CCLabelBMFont::createFontChars()
 }
 
 //LabelBMFont - CCLabelProtocol protocol
-void CCLabelBMFont::setString(const char *newString)
+void CCLabelBMFont::setText(const char *newString)
 {
-    this->setString(newString, true);
+    this->setText(newString, true);
 }
 
-void CCLabelBMFont::setString(const char *newString, bool needUpdateLabel)
+void CCLabelBMFont::setText(const char *newString, bool needUpdateLabel)
 {
     if (newString == NULL) {
         newString = "";
@@ -740,11 +740,11 @@ void CCLabelBMFont::setString(const char *newString, bool needUpdateLabel)
         m_sInitialStringUTF8 = newString;
     }
     unsigned short* utf16String = cc_utf8_to_utf16(newString);
-    setString(utf16String, needUpdateLabel);
+    setText(utf16String, needUpdateLabel);
     CC_SAFE_DELETE_ARRAY(utf16String);
  }
 
-void CCLabelBMFont::setString(unsigned short *newString, bool needUpdateLabel)
+void CCLabelBMFont::setText(unsigned short *newString, bool needUpdateLabel)
 {
     if (!needUpdateLabel)
     {
@@ -778,14 +778,14 @@ void CCLabelBMFont::setString(unsigned short *newString, bool needUpdateLabel)
     }
 }
 
-const char* CCLabelBMFont::getString()
+const char* CCLabelBMFont::getText()
 {
     return m_sInitialStringUTF8.c_str();
 }
 
 void CCLabelBMFont::setCString(const char *label)
 {
-    setString(label);
+    setText(label);
 }
 
 //LabelBMFont - CCRGBAProtocol protocol
@@ -924,7 +924,7 @@ void CCLabelBMFont::setAnchorPoint(const CCPoint& point)
 // LabelBMFont - Alignment
 void CCLabelBMFont::updateLabel()
 {
-    this->setString(m_sInitialString, false);
+	this->setText(m_sInitialString, false);
 
     if (m_fWidth > 0)
     {
@@ -1091,7 +1091,7 @@ void CCLabelBMFont::updateLabel()
 
         str_new[size] = '\0';
 
-        this->setString(str_new, false);
+		this->setText(str_new, false);
         
         CC_SAFE_DELETE_ARRAY(str_new);
     }

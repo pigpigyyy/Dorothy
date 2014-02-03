@@ -1,129 +1,75 @@
-
-class CCMenuItem : public CCNode//CCNodeRGBA
+class CCMenuItem: public CCNode//CCNodeRGBA
 {
-    CCRect rect();
-    void activate();
-    void selected();
-    void unselected();
-    void setEnabled(bool enabled);
-    bool isEnabled();
-    bool isSelected();
+	tolua_property__common GLubyte opacity;
+	tolua_property__common ccColor3B color;
 
-    void registerScriptTapHandler(LUA_FUNCTION funcID);
-    void unregisterScriptTapHandler(void);
+	tolua_readonly tolua_property__qt CCRect rect @ hitArea;
+	tolua_readonly tolua_property__bool bool selected;
+	tolua_property__bool bool enabled;
+	
+	void registerScriptTapHandler @ registerTapHandler(LUA_FUNCTION funcID);
+	void unregisterScriptTapHandler @ unregisterTapHandler();
 };
 
-class CCMenuItemLabel : public CCMenuItem
+class CCMenuItemLabel: public CCMenuItem
 {
-    void setString(const char*  label);
+	void setText(const char* label);
 
-    void setOpacity(GLubyte opacity);
-    GLubyte getOpacity();
-    void setColor(ccColor3B color);
-    ccColor3B getColor();
-	void setDisabledColor(const ccColor3B & color);
-	const ccColor3B & getDisabledColor();
-	void setLabel(CCNode* pLabel);
-	CCNode* getLabel();
+	tolua_property__common ccColor3B disabledColor;
+	tolua_property__common CCNode* label;
 
-	void activate();
-    void selected();
-    void unselected();
-    void setEnabled(bool enabled);
-
-	void setOpacityModifyRGB(bool bValue);
-    bool isOpacityModifyRGB(void);
-
-    static CCMenuItemLabel* create(CCNode* label);
+	static CCMenuItemLabel* create(CCNode* label);
 };
 
-class CCMenuItemAtlasFont : public CCMenuItemLabel
+class CCMenuItemAtlasFont: public CCMenuItemLabel
 {
-    static CCMenuItemAtlasFont* create(const char* value,
-                                               const char* charMapFile,
-                                               int itemWidth,
-                                               int itemHeight,
-                                               char startCharMap);
+	static CCMenuItemAtlasFont* create(const char* value,
+										const char* charMapFile,
+										int itemWidth,
+										int itemHeight,
+										char startCharMap);
 };
 
-class CCMenuItemFont : public CCMenuItemLabel
+class CCMenuItemFont: public CCMenuItemLabel
 {
-    static void setFontSize(int s);
-    static unsigned int fontSize();
-    static void setFontName(const char* name);
-    static const char* fontName();
-	void setFontSizeObj(unsigned int s);
-    unsigned int fontSizeObj();
-    void setFontNameObj(const char* name);
-    const char* fontNameObj();
+	static tolua_property__common unsigned int fontSize @ defaultFontSize;
+	static tolua_property__common char* fontName @ defaultFontName;
 
-    static CCMenuItemFont * create(const char* value);
+	tolua_property__common unsigned int fontSizeObj @ fontSize;
+	tolua_property__common char* fontNameObj @ fontName;
+
+	static CCMenuItemFont* create(const char* value);
 };
 
-class CCMenuItemSprite : public CCMenuItem
+class CCMenuItemSprite: public CCMenuItem
 {
-    void setColor(ccColor3B color);
-    ccColor3B getColor();
-    void setOpacity(GLubyte opacity);
-    GLubyte getOpacity();
+	tolua_property__common CCNode* normalImage @ normalSprite;
+	tolua_property__common CCNode* selectedImage @ selectedSprite;
+	tolua_property__common CCNode* disabledImage @ disabledSprite;
 
-	void setNormalImage(CCNode* pImage);
-	CCNode* getNormalImage();
-	void setSelectedImage(CCNode* pImage);
-	CCNode* getSelectedImage();
-	void setDisabledImage(CCNode* pImage);
-	CCNode* getDisabledImage();
-
-	void selected();
-    void unselected();
-    void setEnabled(bool bEnabled);
-
-    void setOpacityModifyRGB(bool bValue);
-    bool isOpacityModifyRGB(void);
-
-    static CCMenuItemSprite * create(CCNode* normalSprite,
-                                                   CCNode* selectedSprite,
-                                                   CCNode* disabledSprite);
-    static CCMenuItemSprite * create(CCNode* normalSprite,
-                                                   CCNode* selectedSprite);
+	static CCMenuItemSprite* create(CCNode* normalSprite,
+									CCNode* selectedSprite);
+	static CCMenuItemSprite* create(CCNode* normalSprite,
+									CCNode* selectedSprite,
+									CCNode* disabledSprite);
 };
 
-class CCMenuItemImage : public CCMenuItemSprite
+class CCMenuItemImage: public CCMenuItemSprite
 {
-    void setColor(ccColor3B color);
-    ccColor3B getColor();
-    void setOpacity(GLubyte opacity);
-    GLubyte getOpacity();
-
-    static CCMenuItemImage* create(const char* normalImage,
-                                                const char* selectedImage,
-                                                const char* disabledImage);
-    static CCMenuItemImage* create(const char* normalImage,
-                                                const char* selectedImage);
-    static CCMenuItemImage* create();
+	static CCMenuItemImage* create(const char* normalImage,
+									const char* selectedImage);
+	static CCMenuItemImage* create(const char* normalImage,
+									const char* selectedImage,
+									const char* disabledImage);
 };
 
-class CCMenuItemToggle : public CCMenuItem
+class CCMenuItemToggle: public CCMenuItem
 {
-    void setColor(ccColor3B color);
-    ccColor3B getColor();
-    void setOpacity(GLubyte opacity);
-    GLubyte getOpacity();
-    void setSelectedIndex(unsigned int index);
-    unsigned int getSelectedIndex();
-    void setSubItems(CCArray* pArrayOfItems);
-    CCArray* getSubItems();
+	tolua_property__common unsigned int selectedIndex;
+	tolua_property__common CCArray* subItems;
 
-    void addSubItem(CCMenuItem *item);
-    CCMenuItem* selectedItem();
+	void addSubItem(CCMenuItem* item);
+	tolua_readonly tolua_property__qt CCMenuItem* selectedItem;
 
-    void activate();
-    void selected();
-    void unselected();
-    void setEnabled(bool var);
-
-    void setOpacityModifyRGB(bool bValue);
-    bool isOpacityModifyRGB(void);
-
-    static CCMenuItemToggle* create(CCMenuItem *item);
+	static CCMenuItemToggle* create(CCMenuItem *item);
 };

@@ -743,17 +743,17 @@ void CCDirector::showStats()
             if (m_fAccumDt > CC_DIRECTOR_STATS_INTERVAL)
             {
                 sprintf(m_pszFPS, "%.3f", m_fSecondsPerFrame);
-                m_pSPFLabel->setString(m_pszFPS);
+				m_pSPFLabel->setText(m_pszFPS);
                 
                 m_fFrameRate = m_uFrames / m_fAccumDt;
                 m_uFrames = 0;
                 m_fAccumDt = 0;
                 
                 sprintf(m_pszFPS, "%.1f", m_fFrameRate);
-                m_pFPSLabel->setString(m_pszFPS);
+				m_pFPSLabel->setText(m_pszFPS);
                 
                 sprintf(m_pszFPS, "%4lu", (unsigned long)g_uNumberOfDraws);
-                m_pDrawsLabel->setString(m_pszFPS);
+				m_pDrawsLabel->setText(m_pszFPS);
             }
             
             m_pDrawsLabel->visit();

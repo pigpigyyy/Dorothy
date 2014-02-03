@@ -1,6 +1,6 @@
 class CCLabelTTF: public CCSprite
 {
-	tolua_property__common char* string @ text;
+	tolua_property__common char* text;
 	tolua_property__common CCTextAlignment horizontalAlignment;
 	tolua_property__common CCVerticalTextAlignment verticalAlignment;
 	tolua_property__common CCSize dimensions;

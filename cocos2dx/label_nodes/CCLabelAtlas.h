@@ -80,8 +80,8 @@ public:
     
     // super methods
     virtual void updateAtlasValues();
-    virtual void setString(const char *label);
-    virtual const char* getString();
+    virtual void setText(const char *label);
+    virtual const char* getText();
     
 #if CC_LABELATLAS_DEBUG_DRAW
     virtual void draw();

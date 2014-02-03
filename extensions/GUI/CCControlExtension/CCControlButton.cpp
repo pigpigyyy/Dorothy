@@ -124,7 +124,7 @@ bool CCControlButton::initWithLabelAndBackgroundSprite(CCNode* node, CCScale9Spr
         
         // Initialize the dispatch table
         
-        CCString* tempString = CCString::create(label->getString());
+        CCString* tempString = CCString::create(label->getText());
         //tempString->autorelease();
         setTitleForState(tempString, CCControlStateNormal);
         setTitleColorForState(rgbaLabel->getColor(), CCControlStateNormal);
@@ -538,7 +538,7 @@ void CCControlButton::needsLayout()
     CCLabelProtocol* label = dynamic_cast<CCLabelProtocol*>(m_titleLabel);
     if (label && m_currentTitle)
     {
-        label->setString(m_currentTitle->getCString());
+		label->setText(m_currentTitle->getCString());
     }
 
     CCRGBAProtocol* rgbaLabel = dynamic_cast<CCRGBAProtocol*>(m_titleLabel);

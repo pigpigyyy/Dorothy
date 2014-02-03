@@ -211,10 +211,10 @@ public:
     /** updates the font chars based on the string to render */
     void createFontChars();
     // super method
-    virtual void setString(const char *newString);
-    virtual void setString(const char *newString, bool needUpdateLabel);
+    virtual void setText(const char *newString);
+    virtual void setText(const char *newString, bool needUpdateLabel);
 
-    virtual const char* getString();
+    virtual const char* getText();
     virtual void setCString(const char *label);
     virtual void setAnchorPoint(const CCPoint& var);
     virtual void updateLabel();
@@ -252,7 +252,7 @@ private:
     float getLetterPosXRight( CCSprite* characterSprite );
     
 protected:
-    virtual void setString(unsigned short *newString, bool needUpdateLabel);
+    virtual void setText(unsigned short *newString, bool needUpdateLabel);
     // string to render
     unsigned short* m_sString;
     

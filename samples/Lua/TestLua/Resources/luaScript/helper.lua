@@ -8,9 +8,11 @@ end
 
 -- add the menu item for back to main menu
 function CreateBackMenuItem()
-    local label = CCLabelTTF("Exit", "Arial", 20)
-    local menuItem = CCMenuItemLabel(label)
-    menuItem:registerScriptTapHandler(function() CCDirector:stop() end)
+    local menuItem = CCMenuItemLabel(CCLabelTTF("Exit", "Arial", 20))
+    menuItem:registerTapHandler(
+		function(item)
+			CCDirector:stop()
+		end)
 	cclog("bad")
     local s = CCDirector.winSize
     local menu = CCMenu()

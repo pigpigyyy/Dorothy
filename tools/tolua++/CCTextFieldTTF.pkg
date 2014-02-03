@@ -7,8 +7,8 @@ class CCTextFieldTTF : public CCLabelTTF
     int getCharCount();
     void setColorSpaceHolder(ccColor3B val);
     ccColor3B getColorSpaceHolder();
-    void setString(const char *text);
-    const char* getString(void);
+    void setText(const char *text);
+    const char* getText(void);
 
     void setPlaceHolder(const char * text);
     const char * getPlaceHolder(void);

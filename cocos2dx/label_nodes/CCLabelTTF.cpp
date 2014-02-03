@@ -125,7 +125,7 @@ bool CCLabelTTF::initWithString(const char *string, const char *fontName, float 
         m_pFontName = new std::string(fontName);
         m_fFontSize = fontSize;
         
-        this->setString(string);
+		this->setText(string);
         
         return true;
     }
@@ -133,7 +133,7 @@ bool CCLabelTTF::initWithString(const char *string, const char *fontName, float 
     return false;
 }
 
-void CCLabelTTF::setString(const char *string)
+void CCLabelTTF::setText(const char *string)
 {
     CCAssert(string != NULL, "Invalid string");
     
@@ -145,7 +145,7 @@ void CCLabelTTF::setString(const char *string)
     }
 }
 
-const char* CCLabelTTF::getString()
+const char* CCLabelTTF::getText()
 {
     return m_string.c_str();
 }

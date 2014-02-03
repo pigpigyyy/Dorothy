@@ -1,7 +1,7 @@
 class CCLabelBMFont: public CCNode\\CCSpriteBatchNode
 {
 	#define kCCLabelAutomaticWidth @ AutomaticWidth
-    tolua_property__common char* string @ text;
+    tolua_property__common char* text;
 	tolua_property__common char* fntFile;
 	tolua_property__common ccColor3B color;
 	tolua_property__common GLubyte opacity;

@@ -133,7 +133,7 @@ public:
     /** initializes a CCMenuItemLabel with a Label, target and selector */
     bool initWithLabel(CCNode* label, CCObject* target, SEL_MenuHandler selector);
     /** sets a new string to the inner label */
-    void setString(const char * label);
+	void setText(const char * label);
     // super methods
     virtual void activate();
     virtual void selected();
@@ -178,11 +178,11 @@ public:
     /** set default font size */
     static void setFontSize(unsigned int s);
     /** get default font size */
-    static unsigned int fontSize();
+    static unsigned int getFontSize();
     /** set the default font name */
     static void setFontName(const char *name);
     /** get the default font name */
-    static const char *fontName();
+    static const char *getFontName();
 
     /** creates a menu item from a string without target/selector. To be used with CCMenuItemToggle */
     static CCMenuItemFont * create(const char *value);
@@ -199,7 +199,7 @@ public:
     void setFontSizeObj(unsigned int s);
     
     /** get font size */
-    unsigned int fontSizeObj();
+    unsigned int getFontSizeObj();
     
     /** set the font name 
      * c++ can not overload static and non-static member functions with the same parameter types
@@ -207,7 +207,7 @@ public:
      */
     void setFontNameObj(const char* name);
     
-    const char* fontNameObj();
+    const char* getFontNameObj();
     
 protected:
     void recreateLabel();

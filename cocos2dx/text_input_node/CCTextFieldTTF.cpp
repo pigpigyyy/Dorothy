@@ -191,7 +191,7 @@ void CCTextFieldTTF::insertText(const char * text, int len)
         m_nCharCount += _calcCharCount(sInsert.c_str());
         std::string sText(*m_pInputText);
         sText.append(sInsert);
-        setString(sText.c_str());
+		setText(sText.c_str());
     }
 
     if ((int)sInsert.npos == nPos) {
@@ -237,13 +237,13 @@ void CCTextFieldTTF::deleteBackward()
         CC_SAFE_DELETE(m_pInputText);
         m_pInputText = new std::string;
         m_nCharCount = 0;
-        CCLabelTTF::setString(m_pPlaceHolder->c_str());
+        CCLabelTTF::setText(m_pPlaceHolder->c_str());
         return;
     }
 
     // set new input text
     std::string sText(m_pInputText->c_str(), nStrLen - nDeleteLen);
-    setString(sText.c_str());
+	setText(sText.c_str());
 }
 
 const char * CCTextFieldTTF::getContentText()
@@ -285,7 +285,7 @@ void CCTextFieldTTF::setColorSpaceHolder(const ccColor3B& color)
 //////////////////////////////////////////////////////////////////////////
 
 // input text property
-void CCTextFieldTTF::setString(const char *text)
+void CCTextFieldTTF::setText(const char *text)
 {
     CC_SAFE_DELETE(m_pInputText);
 
@@ -301,11 +301,11 @@ void CCTextFieldTTF::setString(const char *text)
     // if there is no input text, display placeholder instead
     if (! m_pInputText->length())
     {
-        CCLabelTTF::setString(m_pPlaceHolder->c_str());
+        CCLabelTTF::setText(m_pPlaceHolder->c_str());
     }
     else
     {
-        CCLabelTTF::setString(m_pInputText->c_str());
+		CCLabelTTF::setText(m_pInputText->c_str());
     }
     m_nCharCount = _calcCharCount(m_pInputText->c_str());
 }
@@ -322,7 +322,7 @@ void CCTextFieldTTF::setPlaceHolder(const char * text)
     m_pPlaceHolder = (text) ? new std::string(text) : new std::string;
     if (! m_pInputText->length())
     {
-        CCLabelTTF::setString(m_pPlaceHolder->c_str());
+		CCLabelTTF::setText(m_pPlaceHolder->c_str());
     }
 }
 

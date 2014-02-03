@@ -188,14 +188,14 @@ public:
      *
      * @param A null terminated string 
      */
-    virtual void setString(const char *label) = 0;
+    virtual void setText(const char *label) = 0;
 
     /** 
      * Returns the string that is currently being used in this label 
      *
      * @return The string that is currently being used in this label
      */
-    virtual const char* getString() = 0;
+    virtual const char* getText() = 0;
 };
 
 /** 

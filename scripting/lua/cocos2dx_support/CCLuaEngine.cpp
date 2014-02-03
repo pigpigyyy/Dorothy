@@ -134,10 +134,8 @@ int CCLuaEngine::executeMenuItemEvent(CCMenuItem* pMenuItem)
 {
     int nHandler = pMenuItem->getScriptTapHandler();
     if (!nHandler) return 0;
-    
-    m_stack->pushInt(pMenuItem->getTag());
     m_stack->pushCCObject(pMenuItem, "CCMenuItem");
-    int ret = m_stack->executeFunctionByHandler(nHandler, 2);
+    int ret = m_stack->executeFunctionByHandler(nHandler, 1);
     m_stack->clean();
     return ret;
 }
