@@ -1,4 +1,3 @@
-
 class CCTMXObjectGroup : public CCObject
 {
     void setPositionOffset(CCPoint pt);

@@ -1,5 +1,4 @@
-
-class CCTouch : public CCObject
+class CCTouch: public CCObject
 {
 	enum
 	{
@@ -8,16 +7,10 @@ class CCTouch : public CCObject
 		Ended,
 		Cancelled
 	};
-	CCPoint getLocation() const;
-    CCPoint getPreviousLocation() const;
-    CCPoint getDelta() const;
-    CCPoint getLocationInView() const;
-    CCPoint getPreviousLocationInView() const;
-
-	void setTouchInfo(int id, float x, float y);
-    int getID();
-};
-
-class CCEvent : public CCObject
-{
+	tolua_readonly tolua_property__common oVec2 location;
+    tolua_readonly tolua_property__common oVec2 previousLocation @ preLocation;
+    tolua_readonly tolua_property__common oVec2 delta;
+    tolua_readonly tolua_property__common oVec2 locationInView;
+    tolua_readonly tolua_property__common oVec2 previousLocationInView @ preLocationInView;
+    tolua_readonly tolua_property__common int iD @ id;
 };

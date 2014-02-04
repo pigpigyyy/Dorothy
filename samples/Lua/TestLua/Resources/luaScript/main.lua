@@ -39,6 +39,10 @@ local function createLayer()
 	local LAYER_GAME = 1
 	local LAYER_BACK = 0
 
+	local txtInput = CCTextFieldTTF("Click here","Arial",20)
+	txtInput.position = oVec2(100,100)
+	layer:addChild(txtInput)
+
 	oCache.Effect:load("main.effect")
 	--oCache.Model:load("jixienv.model")
 	local model = oModel("jixienv.model")

@@ -330,7 +330,7 @@ function classDeclaration:getarray (narg)
 	 output('#endif\n')
   output('   {')
   output('    int i;')
-  output('    for(i=0; i<'..self.dim..';i++)')
+  output('    for(i=0; i<(int)'..self.dim..';i++)')
   local t = isbasic(type)
   local ptr = ''
   if self.ptr~='' then ptr = '*' end
@@ -359,7 +359,7 @@ function classDeclaration:setarray (narg)
 	 local type = gsub(self.type,'const ','')
   output('  {')
   output('   int i;')
-  output('   for(i=0; i<'..self.dim..';i++)')
+  output('   for(i=0; i<(int)'..self.dim..';i++)')
   local t,ct = isbasic(type)
   if t then
    output('    tolua_pushfield'..t..'(tolua_S,',narg,',i+1,(',ct,')',self.name,'[i]);')

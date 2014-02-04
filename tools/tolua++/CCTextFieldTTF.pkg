@@ -1,18 +1,13 @@
-
-class CCTextFieldTTF : public CCLabelTTF
+class CCTextFieldTTF: public CCLabelTTF
 {
-    bool attachWithIME();
-    bool detachWithIME();
+	bool attachWithIME();
+	bool detachWithIME();
 
-    int getCharCount();
-    void setColorSpaceHolder(ccColor3B val);
-    ccColor3B getColorSpaceHolder();
-    void setText(const char *text);
-    const char* getText(void);
+	tolua_readonly tolua_property__common int charCount;
+	tolua_property__common ccColor3B colorSpaceHolder;
+	tolua_property__common char* text;
+	tolua_property__common char* placeHolder;
 
-    void setPlaceHolder(const char * text);
-    const char * getPlaceHolder(void);
-
-    static CCTextFieldTTF * textFieldWithPlaceHolder(const char *placeholder, CCSize dimensions, CCTextAlignment alignment, const char *fontName, float fontSize);
-    static CCTextFieldTTF * textFieldWithPlaceHolder(const char *placeholder, const char *fontName, float fontSize);
+	static CCTextFieldTTF* textFieldWithPlaceHolder @ create(const char* placeholder, const char* fontName, float fontSize);
+	static CCTextFieldTTF* textFieldWithPlaceHolder @ create(const char* placeholder, CCSize dimensions, CCTextAlignment alignment, const char* fontName, float fontSize);
 };

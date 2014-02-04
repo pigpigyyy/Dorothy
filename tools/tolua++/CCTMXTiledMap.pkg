@@ -1,36 +1,15 @@
-
-enum
+class CCTMXTiledMap: public CCNode
 {
-    /** Orthogonal orientation */
-    CCTMXOrientationOrtho,
-    /** Hexagonal orientation */
-    CCTMXOrientationHex,
-    /** Isometric orientation */
-    CCTMXOrientationIso,
-};
+	#define CCTMXOrientationOrtho @ Ortho
+	#define CCTMXOrientationHex @ Hex
+	#define CCTMXOrientationIso @ Iso
 
-class CCTMXTiledMap : public CCNode
-{
-    void setMapSize(CCSize sz);
-    CCSize getMapSize();
+	tolua_readonly tolua_property__common CCSize mapSize;
+	tolua_readonly tolua_property__common CCSize tileSize;
+	tolua_readonly tolua_property__common int mapOrientation;
 
-    void setTileSize(CCSize sz);
-    CCSize getTileSize();
+	CCTMXLayer* layerNamed @ getLayer(const char *layerName);
 
-    void setMapOrientation(int val);
-    int getMapOrientation();
-
-    void  setObjectGroups(CCArray* pval);
-    CCArray* getObjectGroups();
-
-    void setProperties(CCDictionary* pval);
-    CCDictionary* getProperties();
-
-    CCTMXLayer* layerNamed(const char *layerName);
-    CCTMXObjectGroup* objectGroupNamed(const char *groupName);
-    CCString *propertyNamed(const char *propertyName);
-    CCDictionary *propertiesForGID(int GID);
-
-    static CCTMXTiledMap * create(const char *tmxFile);
+	static CCTMXTiledMap* create(const char *tmxFile);
 	static CCTMXTiledMap* createWithXML(const char* tmxString, const char* resourcePath);
 };

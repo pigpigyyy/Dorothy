@@ -114,7 +114,7 @@ public:
     if it returns 0, it means that the tile is empty.
     This method requires the the tile map has not been previously released (eg. don't call layer->releaseMap())
     */
-    unsigned int  tileGIDAt(const CCPoint& tileCoordinate);
+    unsigned int tileGIDAt(const CCPoint& tileCoordinate);
 
     /** returns the tile gid at a given tile coordinate. It also returns the tile flags.
      This method requires the the tile map has not been previously released (eg. don't call [layer releaseMap])

@@ -13,7 +13,7 @@ function CreateBackMenuItem()
 		function(item)
 			CCDirector:stop()
 		end)
-	cclog("bad")
+	ccmsg("bad","apple")
     local s = CCDirector.winSize
     local menu = CCMenu()
     menu:addChild(menuItem)

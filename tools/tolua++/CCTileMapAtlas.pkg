@@ -1,16 +1,7 @@
-
-
-// struct sImageTGA;
-
-class CCTileMapAtlas : public CCAtlasNode
+class CCTileMapAtlas: public CCNode\\CCAtlasNode
 {
-    // struct sImageTGA* getTGAInfo();
-    // void setTGAInfo(struct sImageTGA* val);
+	void setTile(ccColor3B tile, oVec2 position);
+	ccColor3B tileAt @ getTile(const oVec2& pos);
 
-    void setTile(ccColor3B tile, CCPoint position);
-    void releaseMap();
-
-	ccColor3B tileAt(const CCPoint & pos);
-
-    static CCTileMapAtlas * create(const char *tile, const char *mapFile, int tileWidth, int tileHeight);
+	static CCTileMapAtlas* create(const char* tile, const char* mapFile, int tileWidth, int tileHeight);
 };
