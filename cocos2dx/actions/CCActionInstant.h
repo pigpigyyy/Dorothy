@@ -28,7 +28,6 @@ THE SOFTWARE.
 #define __CCINSTANT_ACTION_H__
 
 #include <string>
-#include "ccTypeInfo.h"
 #include "CCAction.h"
 
 NS_CC_BEGIN
@@ -248,15 +247,11 @@ protected:
 @brief Calls a 'callback' with the node as the first argument
 N means Node
 */
-class CC_DLL CCCallFuncN : public CCCallFunc, public TypeInfo
+class CC_DLL CCCallFuncN : public CCCallFunc
 {
 public:
     CCCallFuncN(){}
     virtual ~CCCallFuncN(){}
-    virtual long getClassTypeInfo() {
-		static const long id = cocos2d::getHashCodeByString(typeid(cocos2d::CCCallFunc).name());
-		return id;
-    }
 
     /** creates the action with the callback 
 
@@ -285,11 +280,6 @@ public:
 class CC_DLL CCCallFuncND : public CCCallFuncN
 {
 public:
-    virtual long getClassTypeInfo() {
-        static const long id = cocos2d::getHashCodeByString(typeid(cocos2d::CCCallFunc).name());
-		return id;
-    }
-
     /** creates the action with the callback and the data to pass as an argument */
     static CCCallFuncND * create(CCObject* pSelectorTarget, SEL_CallFuncND selector, void* d);
 
@@ -310,16 +300,11 @@ O means Object.
 @since v0.99.5
 */
 
-class CC_DLL CCCallFuncO : public CCCallFunc, public TypeInfo
+class CC_DLL CCCallFuncO : public CCCallFunc
 {
 public:
     CCCallFuncO();
     virtual ~CCCallFuncO();
-
-    virtual long getClassTypeInfo() {
-	    static const long id = cocos2d::getHashCodeByString(typeid(cocos2d::CCCallFunc).name());
-		return id;
-    }
 
     /** creates the action with the callback 
 

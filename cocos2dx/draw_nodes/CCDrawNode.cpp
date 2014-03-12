@@ -101,6 +101,7 @@ CCDrawNode::CCDrawNode()
 , m_nBufferCount(0)
 , m_pBuffer(NULL)
 , m_bDirty(false)
+, m_bOpacityModifyRGB(false)
 {
     m_sBlendFunc.src = CC_BLEND_SRC;
     m_sBlendFunc.dst = CC_BLEND_DST;
@@ -140,7 +141,7 @@ void CCDrawNode::ensureCapacity(unsigned int count)
     if(m_nBufferCount + count > m_uBufferCapacity)
     {
 		m_uBufferCapacity += MAX(m_uBufferCapacity, count);
-		m_pBuffer = (ccV2F_C4B_T2F*)realloc(m_pBuffer, m_uBufferCapacity*sizeof(ccV2F_C4B_T2F));
+		m_pBuffer = (ccV2F_C4F_T2F*)realloc(m_pBuffer, m_uBufferCapacity*sizeof(ccV2F_C4F_T2F));
 	}
 }
 
@@ -151,7 +152,7 @@ bool CCDrawNode::init()
 
     setShaderProgram(CCShaderCache::sharedShaderCache()->programForKey(kCCShader_PositionLengthTexureColor));
     
-    ensureCapacity(512);
+    ensureCapacity(4);
     
 #if CC_TEXTURE_ATLAS_USE_VAO    
     glGenVertexArrays(1, &m_uVao);
@@ -160,16 +161,16 @@ bool CCDrawNode::init()
     
     glGenBuffers(1, &m_uVbo);
     glBindBuffer(GL_ARRAY_BUFFER, m_uVbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(ccV2F_C4B_T2F)* m_uBufferCapacity, m_pBuffer, GL_STREAM_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(ccV2F_C4F_T2F)* m_uBufferCapacity, m_pBuffer, GL_STREAM_DRAW);
     
     glEnableVertexAttribArray(kCCVertexAttrib_Position);
-    glVertexAttribPointer(kCCVertexAttrib_Position, 2, GL_FLOAT, GL_FALSE, sizeof(ccV2F_C4B_T2F), (GLvoid *)offsetof(ccV2F_C4B_T2F, vertices));
+    glVertexAttribPointer(kCCVertexAttrib_Position, 2, GL_FLOAT, GL_FALSE, sizeof(ccV2F_C4F_T2F), (GLvoid *)offsetof(ccV2F_C4F_T2F, vertices));
     
     glEnableVertexAttribArray(kCCVertexAttrib_Color);
-    glVertexAttribPointer(kCCVertexAttrib_Color, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ccV2F_C4B_T2F), (GLvoid *)offsetof(ccV2F_C4B_T2F, colors));
+	glVertexAttribPointer(kCCVertexAttrib_Color, 4, GL_FLOAT, GL_FALSE, sizeof(ccV2F_C4F_T2F), (GLvoid *)offsetof(ccV2F_C4F_T2F, colors));
     
     glEnableVertexAttribArray(kCCVertexAttrib_TexCoords);
-    glVertexAttribPointer(kCCVertexAttrib_TexCoords, 2, GL_FLOAT, GL_FALSE, sizeof(ccV2F_C4B_T2F), (GLvoid *)offsetof(ccV2F_C4B_T2F, texCoords));
+    glVertexAttribPointer(kCCVertexAttrib_TexCoords, 2, GL_FLOAT, GL_FALSE, sizeof(ccV2F_C4F_T2F), (GLvoid *)offsetof(ccV2F_C4F_T2F, texCoords));
     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     
@@ -189,7 +190,7 @@ void CCDrawNode::render()
     if (m_bDirty)
     {
         glBindBuffer(GL_ARRAY_BUFFER, m_uVbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(ccV2F_C4B_T2F)*m_uBufferCapacity, m_pBuffer, GL_STREAM_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(ccV2F_C4F_T2F)*m_uBufferCapacity, m_pBuffer, GL_STREAM_DRAW);
         m_bDirty = false;
     }
 #if CC_TEXTURE_ATLAS_USE_VAO     
@@ -198,13 +199,13 @@ void CCDrawNode::render()
     ccGLEnableVertexAttribs(kCCVertexAttribFlag_PosColorTex);
     glBindBuffer(GL_ARRAY_BUFFER, m_uVbo);
     // vertex
-    glVertexAttribPointer(kCCVertexAttrib_Position, 2, GL_FLOAT, GL_FALSE, sizeof(ccV2F_C4B_T2F), (GLvoid *)offsetof(ccV2F_C4B_T2F, vertices));
+    glVertexAttribPointer(kCCVertexAttrib_Position, 2, GL_FLOAT, GL_FALSE, sizeof(ccV2F_C4F_T2F), (GLvoid *)offsetof(ccV2F_C4F_T2F, vertices));
     
     // color
-    glVertexAttribPointer(kCCVertexAttrib_Color, 4, GL_UNSIGNED_BYTE, GL_FALSE, sizeof(ccV2F_C4B_T2F), (GLvoid *)offsetof(ccV2F_C4B_T2F, colors));
+	glVertexAttribPointer(kCCVertexAttrib_Color, 4, GL_FLOAT, GL_FALSE, sizeof(ccV2F_C4F_T2F), (GLvoid *)offsetof(ccV2F_C4F_T2F, colors));
     
     // texcood
-    glVertexAttribPointer(kCCVertexAttrib_TexCoords, 2, GL_FLOAT, GL_FALSE, sizeof(ccV2F_C4B_T2F), (GLvoid *)offsetof(ccV2F_C4B_T2F, texCoords));
+    glVertexAttribPointer(kCCVertexAttrib_TexCoords, 2, GL_FLOAT, GL_FALSE, sizeof(ccV2F_C4F_T2F), (GLvoid *)offsetof(ccV2F_C4F_T2F, texCoords));
 #endif
 
     glDrawArrays(GL_TRIANGLES, 0, m_nBufferCount);
@@ -224,19 +225,25 @@ void CCDrawNode::draw()
     render();
 }
 
-void CCDrawNode::drawDot(const CCPoint& pos, float radius, const ccColor4B& color)
+void CCDrawNode::drawDot(const CCPoint& pos, float radius, const ccColor4B& colorArg)
 {
+	ccColor4B color = colorArg;
+	color.a *= _displayedOpacity;
+	color.r *= (_displayedColor.r / 255.0f);
+	color.g *= (_displayedColor.g / 255.0f);
+	color.b *= (_displayedColor.b / 255.0f);
+
     unsigned int vertex_count = 2*3;
     ensureCapacity(vertex_count);
 	
-	ccV2F_C4B_T2F a = {{pos.x - radius, pos.y - radius}, color, {-1.0, -1.0} };
-	ccV2F_C4B_T2F b = {{pos.x - radius, pos.y + radius}, color, {-1.0,  1.0} };
-	ccV2F_C4B_T2F c = {{pos.x + radius, pos.y + radius}, color, { 1.0,  1.0} };
-	ccV2F_C4B_T2F d = {{pos.x + radius, pos.y - radius}, color, { 1.0, -1.0} };
+	ccV2F_C4F_T2F a = {{pos.x - radius, pos.y - radius}, color, {-1.0, -1.0} };
+	ccV2F_C4F_T2F b = {{pos.x - radius, pos.y + radius}, color, {-1.0,  1.0} };
+	ccV2F_C4F_T2F c = {{pos.x + radius, pos.y + radius}, color, { 1.0,  1.0} };
+	ccV2F_C4F_T2F d = {{pos.x + radius, pos.y - radius}, color, { 1.0, -1.0} };
 	
-	ccV2F_C4B_T2F_Triangle *triangles = (ccV2F_C4B_T2F_Triangle *)(m_pBuffer + m_nBufferCount);
-    ccV2F_C4B_T2F_Triangle triangle0 = {a, b, c};
-    ccV2F_C4B_T2F_Triangle triangle1 = {a, c, d};
+	ccV2F_C4F_T2F_Triangle *triangles = (ccV2F_C4F_T2F_Triangle *)(m_pBuffer + m_nBufferCount);
+    ccV2F_C4F_T2F_Triangle triangle0 = {a, b, c};
+    ccV2F_C4F_T2F_Triangle triangle1 = {a, c, d};
 	triangles[0] = triangle0;
 	triangles[1] = triangle1;
 	
@@ -245,14 +252,19 @@ void CCDrawNode::drawDot(const CCPoint& pos, float radius, const ccColor4B& colo
 	m_bDirty = true;
 }
 
-void CCDrawNode::drawSegment(const CCPoint& from, const CCPoint& to, float radius, const ccColor4B& color)
+void CCDrawNode::drawSegment(const CCPoint& from, const CCPoint& to, float radius, const ccColor4B& colorArg)
 {
+	ccColor4B color = colorArg;
+	color.a *= _displayedOpacity;
+	color.r *= (_displayedColor.r / 255.0f);
+	color.g *= (_displayedColor.g / 255.0f);
+	color.b *= (_displayedColor.b / 255.0f);
+
     unsigned int vertex_count = 6*3;
     ensureCapacity(vertex_count);
 	
 	ccVertex2F a = __v2f(from);
 	ccVertex2F b = __v2f(to);
-	
 	
 	ccVertex2F n = v2fnormalize(v2fperp(v2fsub(b, a)));
 	ccVertex2F t = v2fperp(n);
@@ -268,45 +280,44 @@ void CCDrawNode::drawSegment(const CCPoint& from, const CCPoint& to, float radiu
 	ccVertex2F v6 = v2fsub(a, v2fsub(nw, tw));
 	ccVertex2F v7 = v2fadd(a, v2fadd(nw, tw));
 	
+	ccV2F_C4F_T2F_Triangle *triangles = (ccV2F_C4F_T2F_Triangle *)(m_pBuffer + m_nBufferCount);
 	
-	ccV2F_C4B_T2F_Triangle *triangles = (ccV2F_C4B_T2F_Triangle *)(m_pBuffer + m_nBufferCount);
-	
-    ccV2F_C4B_T2F_Triangle triangles0 = {
+    ccV2F_C4F_T2F_Triangle triangles0 = {
         {v0, color, __t(v2fneg(v2fadd(n, t)))},
         {v1, color, __t(v2fsub(n, t))},
         {v2, color, __t(v2fneg(n))},
     };
 	triangles[0] = triangles0;
 	
-    ccV2F_C4B_T2F_Triangle triangles1 = {
+    ccV2F_C4F_T2F_Triangle triangles1 = {
         {v3, color, __t(n)},
         {v1, color, __t(v2fsub(n, t))},
         {v2, color, __t(v2fneg(n))},
     };
 	triangles[1] = triangles1;
 	
-    ccV2F_C4B_T2F_Triangle triangles2 = {
+    ccV2F_C4F_T2F_Triangle triangles2 = {
         {v3, color, __t(n)},
         {v4, color, __t(v2fneg(n))},
         {v2, color, __t(v2fneg(n))},
     };
 	triangles[2] = triangles2;
 
-    ccV2F_C4B_T2F_Triangle triangles3 = {
+    ccV2F_C4F_T2F_Triangle triangles3 = {
         {v3, color, __t(n)},
         {v4, color, __t(v2fneg(n))},
         {v5, color, __t(n) },
     };
     triangles[3] = triangles3;
 
-    ccV2F_C4B_T2F_Triangle triangles4 = {
+    ccV2F_C4F_T2F_Triangle triangles4 = {
         {v6, color, __t(v2fsub(t, n))},
         {v4, color, __t(v2fneg(n)) },
         {v5, color, __t(n)},
     };
 	triangles[4] = triangles4;
 
-    ccV2F_C4B_T2F_Triangle triangles5 = {
+    ccV2F_C4F_T2F_Triangle triangles5 = {
         {v6, color, __t(v2fsub(t, n))},
         {v7, color, __t(v2fadd(n, t))},
         {v5, color, __t(n)},
@@ -318,8 +329,20 @@ void CCDrawNode::drawSegment(const CCPoint& from, const CCPoint& to, float radiu
 	m_bDirty = true;
 }
 
-void CCDrawNode::drawPolygon(CCPoint* verts, unsigned int count, const ccColor4B& fillColor, float borderWidth, const ccColor4B& borderColor)
+void CCDrawNode::drawPolygon(CCPoint* verts, unsigned int count, const ccColor4B& fillColorArg, float borderWidth, const ccColor4B& borderColorArg)
 {
+	ccColor4B fillColor = fillColorArg;
+	fillColor.a *= _displayedOpacity;
+	fillColor.r *= (_displayedColor.r / 255.0f);
+	fillColor.g *= (_displayedColor.g / 255.0f);
+	fillColor.b *= (_displayedColor.b / 255.0f);
+
+	ccColor4B borderColor = borderColorArg;
+	borderColor.a *= _displayedOpacity;
+	borderColor.r *= (_displayedColor.r / 255.0f);
+	borderColor.g *= (_displayedColor.g / 255.0f);
+	borderColor.b *= (_displayedColor.b / 255.0f);
+
     struct ExtrudeVerts {ccVertex2F offset, n;};
 	struct ExtrudeVerts* extrude = (struct ExtrudeVerts*)malloc(sizeof(struct ExtrudeVerts)*count);
 	memset(extrude, 0, sizeof(struct ExtrudeVerts)*count);
@@ -338,23 +361,23 @@ void CCDrawNode::drawPolygon(CCPoint* verts, unsigned int count, const ccColor4B
 		extrude[i] = tmp;
 	}
 	
-	bool outline = (fillColor.a > 0.0 && borderWidth > 0.0);
+	bool outline = (borderColor.a > 0 && borderWidth > 0.0);
 	
 	unsigned int triangle_count = 3*count - 2;
 	unsigned int vertex_count = 3*triangle_count;
     ensureCapacity(vertex_count);
 	
-	ccV2F_C4B_T2F_Triangle *triangles = (ccV2F_C4B_T2F_Triangle *)(m_pBuffer + m_nBufferCount);
-	ccV2F_C4B_T2F_Triangle *cursor = triangles;
+	ccV2F_C4F_T2F_Triangle *triangles = (ccV2F_C4F_T2F_Triangle *)(m_pBuffer + m_nBufferCount);
+	ccV2F_C4F_T2F_Triangle *cursor = triangles;
 	
-	float inset = (outline == 0.0 ? 0.5 : 0.0);
+	float inset = (outline ? 0.0f : 0.5f);
 	for(unsigned int i = 0; i < count-2; i++)
     {
 		ccVertex2F v0 = v2fsub(__v2f(verts[0  ]), v2fmult(extrude[0  ].offset, inset));
 		ccVertex2F v1 = v2fsub(__v2f(verts[i+1]), v2fmult(extrude[i+1].offset, inset));
 		ccVertex2F v2 = v2fsub(__v2f(verts[i+2]), v2fmult(extrude[i+2].offset, inset));
 		
-        ccV2F_C4B_T2F_Triangle tmp = {
+        ccV2F_C4F_T2F_Triangle tmp = {
             {v0, fillColor, __t(v2fzero)},
             {v1, fillColor, __t(v2fzero)},
             {v2, fillColor, __t(v2fzero)},
@@ -381,14 +404,14 @@ void CCDrawNode::drawPolygon(CCPoint* verts, unsigned int count, const ccColor4B
 			ccVertex2F outer0 = v2fadd(v0, v2fmult(offset0, borderWidth));
 			ccVertex2F outer1 = v2fadd(v1, v2fmult(offset1, borderWidth));
 			
-            ccV2F_C4B_T2F_Triangle tmp1 = {
+            ccV2F_C4F_T2F_Triangle tmp1 = {
                 {inner0, borderColor, __t(v2fneg(n0))},
                 {inner1, borderColor, __t(v2fneg(n0))},
                 {outer1, borderColor, __t(n0)}
             };
 			*cursor++ = tmp1;
 
-            ccV2F_C4B_T2F_Triangle tmp2 = {
+            ccV2F_C4F_T2F_Triangle tmp2 = {
                 {inner0, borderColor, __t(v2fneg(n0))},
                 {outer0, borderColor, __t(n0)},
                 {outer1, borderColor, __t(n0)}
@@ -401,14 +424,14 @@ void CCDrawNode::drawPolygon(CCPoint* verts, unsigned int count, const ccColor4B
 			ccVertex2F outer0 = v2fadd(v0, v2fmult(offset0, 0.5));
 			ccVertex2F outer1 = v2fadd(v1, v2fmult(offset1, 0.5));
 			
-            ccV2F_C4B_T2F_Triangle tmp1 = {
+            ccV2F_C4F_T2F_Triangle tmp1 = {
                 {inner0, fillColor, __t(v2fzero)},
                 {inner1, fillColor, __t(v2fzero)},
                 {outer1, fillColor, __t(n0)}
             };
 			*cursor++ = tmp1;
 
-            ccV2F_C4B_T2F_Triangle tmp2 = {
+            ccV2F_C4F_T2F_Triangle tmp2 = {
                 {inner0, fillColor, __t(v2fzero)},
                 {outer0, fillColor, __t(n0)},
                 {outer1, fillColor, __t(n0)}
@@ -428,6 +451,60 @@ void CCDrawNode::clear()
 {
     m_nBufferCount = 0;
     m_bDirty = true;
+}
+
+void CCDrawNode::updateColor(const ccColor3B& color)
+{
+	float oldr = _displayedColor.r / 255.0f;
+	float oldg = _displayedColor.g / 255.0f;
+	float oldb = _displayedColor.b / 255.0f;
+
+	float newr = color.r / 255.0f;
+	float newg = color.g / 255.0f;
+	float newb = color.b / 255.0f;
+
+	for (int i = 0; i < m_nBufferCount; i++)
+	{
+		m_pBuffer[i].colors.r /= oldr;
+		m_pBuffer[i].colors.g /= oldg;
+		m_pBuffer[i].colors.b /= oldb;
+
+		m_pBuffer[i].colors.r *= newr;
+		m_pBuffer[i].colors.g *= newg;
+		m_pBuffer[i].colors.b *= newb;
+	}
+	m_bDirty = true;
+}
+
+void CCDrawNode::updateOpacity(float opacity)
+{
+	for (int i = 0; i < m_nBufferCount; i++)
+	{
+		m_pBuffer[i].colors.a /= _displayedOpacity;
+		m_pBuffer[i].colors.a *= opacity;
+	}
+	m_bDirty = true;
+}
+
+void CCDrawNode::setColor(const ccColor3B& color3)
+{
+	CCDrawNode::updateColor(color3);
+	CCNode::setColor(color3);
+}
+void CCDrawNode::updateDisplayedColor(const ccColor3B& parentColor)
+{
+	CCDrawNode::updateColor(parentColor);
+	CCNode::updateDisplayedColor(parentColor);
+}
+void CCDrawNode::setOpacity(float opacity)
+{
+	CCDrawNode::updateOpacity(opacity);
+	CCNode::setOpacity(opacity);
+}
+void CCDrawNode::updateDisplayedOpacity(float parentOpacity)
+{
+	CCDrawNode::updateOpacity(parentOpacity);
+	CCNode::updateDisplayedOpacity(parentOpacity);
 }
 
 ccBlendFunc CCDrawNode::getBlendFunc() const

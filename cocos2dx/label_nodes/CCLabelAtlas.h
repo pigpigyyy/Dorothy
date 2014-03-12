@@ -82,7 +82,7 @@ public:
     virtual void updateAtlasValues();
     virtual void setText(const char *label);
     virtual const char* getText();
-    
+
 #if CC_LABELATLAS_DEBUG_DRAW
     virtual void draw();
 #endif

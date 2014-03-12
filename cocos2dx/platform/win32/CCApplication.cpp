@@ -55,21 +55,22 @@ int CCApplication::run()
 
     while (1)
     {
+		// Get current time tick.
+		QueryPerformanceCounter(&nNow);
+
+		// If it's the time to draw next frame, draw it, else sleep a while.
+		if (nNow.QuadPart - nLast.QuadPart > m_nAnimationInterval.QuadPart)
+		{
+			nLast.QuadPart = nNow.QuadPart;
+			CCDirector::sharedDirector()->mainLoop();
+		}
+		else
+		{
+			Sleep(0);
+		}
+
         if (! PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
         {
-            // Get current time tick.
-            QueryPerformanceCounter(&nNow);
-
-            // If it's the time to draw next frame, draw it, else sleep a while.
-            if (nNow.QuadPart - nLast.QuadPart > m_nAnimationInterval.QuadPart)
-            {
-                nLast.QuadPart = nNow.QuadPart;
-                CCDirector::sharedDirector()->mainLoop();
-            }
-            else
-            {
-                Sleep(0);
-            }
             continue;
         }
 

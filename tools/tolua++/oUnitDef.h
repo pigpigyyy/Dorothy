@@ -35,6 +35,6 @@ class oUnitDef: public CCObject
 	string desc;
 	string sndAttack;
 	string sndDeath;
-	vector<int> actions;
-	vector<int> instincts;
+	tolua_outside void oUnitDef_setActions @ setActions(int actions[tolua_len]);
+	tolua_outside void oUnitDef_setInstincts @ setInstincts(int instincts[tolua_len]);
 };

@@ -96,6 +96,7 @@ void oWorld::update( float dt )
 		body->updatePhysics();
 	}
 	_contactListner->SolveSensors();
+	CCNode::update(dt);
 }
 
 void oWorld::query( const CCRect& rect, const function<bool(oBody*)>& callback )

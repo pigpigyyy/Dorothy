@@ -28,7 +28,7 @@ public:
 		float friction = 0.4f,
 		float restitution = 0.0f);
 	static oFixtureDef* polygon(
-		const vector<oVec2>& vertices,
+		const oVec2 vertices[tolua_len],
 		float density = 0.0f,
 		float friction = 0.4f,
 		float restitution = 0.0f);
@@ -47,16 +47,16 @@ public:
 		float friction = 0.4f,
 		float restitution = 0.0f);
 	void attachPolygon(
-		const vector<oVec2>& vertices,
+		const oVec2 vertices[tolua_len],
 		float density = 0.0f,
 		float friction = 0.4f,
 		float restitution = 0.0f);
 	static oFixtureDef* loop(
-		const vector<oVec2>& vertices,
+		const oVec2 vertices[tolua_len],
 		float friction = 0.4f,
 		float restitution = 0.0f);
 	void attachLoop(
-		const vector<oVec2>& vertices,
+		const oVec2 vertices[tolua_len],
 		float friction = 0.4f,
 		float restitution = 0.0f);
 	static oFixtureDef* circle(
@@ -82,11 +82,11 @@ public:
 		float friction = 0.4f,
 		float restitution = 0.0f);
 	static oFixtureDef* chain(
-		const vector<oVec2>& vertices,
+		const oVec2 vertices[tolua_len],
 		float friction = 0.4f,
 		float restitution = 0.0f);
 	void attachChain(
-		const vector<oVec2>& vertices,
+		const oVec2 vertices[tolua_len],
 		float friction = 0.4f,
 		float restitution = 0.0f);
 	void attachPolygonSensor(
@@ -101,7 +101,7 @@ public:
 		float angle = 0.0f);
 	void attachPolygonSensor(
 		int tag,
-		const vector<oVec2>& vertices);
+		const oVec2 vertices[tolua_len]);
 	void attachCircleSensor(
 		int tag,
 		const oVec2& center,

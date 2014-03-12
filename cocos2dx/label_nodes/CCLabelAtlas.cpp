@@ -68,6 +68,7 @@ bool CCLabelAtlas::initWithString(const char *string, CCTexture2D* texture, unsi
     {
         m_uMapStartChar = startCharMap;
 		this->setText(string);
+		this->setAnchorPoint(ccp(0.5f,0.5f));
         return true;
     }
     return false;
@@ -165,12 +166,19 @@ void CCLabelAtlas::updateAtlasValues()
         quad.tr.vertices.x = (float)(i * m_uItemWidth + m_uItemWidth);
         quad.tr.vertices.y = (float)(m_uItemHeight);
         quad.tr.vertices.z = 0.0f;
-        
-        ccColor4B c = { _displayedColor.r, _displayedColor.g, _displayedColor.b, _displayedOpacity };
+		/*
+		ccColor4B c =
+		{
+		    _displayedColor.r,
+		    _displayedColor.g,
+		    _displayedColor.b,
+		    (GLubyte)(_displayedOpacity*255.0f)
+	    };
         quad.tl.colors = c;
         quad.tr.colors = c;
         quad.bl.colors = c;
         quad.br.colors = c;
+		*/
         m_pTextureAtlas->updateQuad(&quad, i);
     }
 }

@@ -16,24 +16,5 @@ class oVec2
 	void normalize();
 	float x;
 	float y;
-	static const oVec2 zero;
+	static tolua_readonly oVec2 zero;
 };
-
-class vector
-{
-    TOLUA_TEMPLATE_BIND(T, oVec2, int)
-
-	vector();
-	vector(int capacity);
-    ~vector();
-	
-    void clear();
-    tolua_readonly tolua_property__qt int size;
-
-    const T& operator[](int index) const;
-    T& operator[](int index);
-    void push_back @ add(T val);
-};
-
-$renaming vector<oVec2> @ oVec2s
-$renaming vector<int> @ oInts

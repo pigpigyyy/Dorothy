@@ -1148,7 +1148,7 @@ public:
 	}
 
 	Value& operator[](const fstring key) {
-		std::pair<size_t, bool> ib = insert_i(key, Value());
+		std::pair<size_t, bool> ib = insert_new_empty(key);
 		return nth_value(ib.first, ValuePlace());
 	}
 #if 1
@@ -1566,6 +1566,49 @@ public:
 		strpool[xend-1] = (char)(real_len - key.n - 1); // extra-1
 		memcpy(strpool + xbeg, key.p, key.n);
 		new(&nth_value(slot))Value(val);
+		pNodes[slot].link = bucket[i]; // newer at head
+		bucket[i] = LinkTp(slot); // new head of i'th bucket
+		if (intptr_t(pHash) != hash_cache_disabled) {
+			assert(NULL != pHash);
+			pHash[slot] = h;
+		}
+		sort_flag = en_unsorted;
+		return std::make_pair(slot, true);
+	}
+
+
+	std::pair<size_t, bool> insert_new_empty(const fstring key) {
+		assert(key.n >= 0);
+		size_t n = nNodes; // compiler is easier to track local var
+		size_t h = hash(key);
+		size_t i = h % nBucket;
+		for (LinkTp p = bucket[i]; tail != p; p = pNodes[p].link) {
+			HSM_SANITY(p < n);
+			const Node* y = &pNodes[p];
+			HSM_SANITY(y[0].offset < y[1].offset);
+			HSM_SANITY(y[1].offset <= SAVE_OFFSET(maxpool));
+			// doesn't need to compare cached hash value, it almost always true
+			size_t ybeg = LOAD_OFFSET(y[0].offset);
+			size_t yend = LOAD_OFFSET(y[1].offset);
+			size_t ylen = yend - ybeg - extralen(yend);
+			if (equal(key, fstring(strpool + ybeg, ylen)))
+				return std::make_pair(p, false);
+		}
+		if (HSM_unlikely(n >= maxload)) {
+			rehash(nBucket * 2);
+			i = h % nBucket;
+		}
+		HSM_SANITY(n <= maxNodes);
+		size_t real_len = fstring::align_to(key.n + 1);
+		size_t slot = alloc_slot(real_len);
+		size_t xbeg = LOAD_OFFSET(pNodes[slot + 0].offset);
+		size_t xend = LOAD_OFFSET(pNodes[slot + 1].offset);
+		assert(xend - xbeg == real_len);
+		assert(slot < nNodes);
+		((align_type*)(strpool + xend))[-1] = 0; // pad 0
+		strpool[xend - 1] = (char)(real_len - key.n - 1); // extra-1
+		memcpy(strpool + xbeg, key.p, key.n);
+		new(&nth_value(slot))Value();
 		pNodes[slot].link = bucket[i]; // newer at head
 		bucket[i] = LinkTp(slot); // new head of i'th bucket
 		if (intptr_t(pHash) != hash_cache_disabled) {

@@ -2,6 +2,7 @@
 #define __DOROTHY_MODEL_OKEYFRAME_H__
 
 #include "Dorothy/model/oEase.h"
+#include "Dorothy/misc/oMemoryPool.h"
 
 NS_DOROTHY_BEGIN
 
@@ -15,7 +16,7 @@ public:
 	static oKeyReset* create(oKeyFrameDef* def);
 private:
 	bool _visible;
-	GLubyte _opacity;
+	float _opacity;
 	float _x;
 	float _y;
 	float _scaleX;
@@ -23,6 +24,11 @@ private:
 	float _rotation;
 	float _skewX;
 	float _skewY;
+public:
+	inline void* operator new(size_t size){ return _memory.alloc(); }
+	inline void operator delete(void* ptr, size_t size) { _memory.free(ptr); }
+private:
+	static oMemoryPool<oKeyReset> _memory;
 };
 
 class oKeyPos: public CCActionInterval
@@ -44,6 +50,11 @@ protected:
 	float _endPosY;
 	float _deltaPosX;
 	float _deltaPosY;
+public:
+	inline void* operator new(size_t size){ return _memory.alloc(); }
+	inline void operator delete(void* ptr, size_t size) { _memory.free(ptr); }
+private:
+	static oMemoryPool<oKeyPos> _memory;
 };
 
 class oKeyScale: public CCActionInterval
@@ -66,6 +77,11 @@ protected:
 	float _endScaleY;
 	float _deltaScaleX;
 	float _deltaScaleY;
+public:
+	inline void* operator new(size_t size){ return _memory.alloc(); }
+	inline void operator delete(void* ptr, size_t size) { _memory.free(ptr); }
+private:
+	static oMemoryPool<oKeyScale> _memory;
 };
 
 class oKeyRotate: public CCActionInterval
@@ -84,26 +100,34 @@ protected:
 	float _startRotate;
 	float _endRotate;
 	float _deltaRotate;
+public:
+	inline void* operator new(size_t size){ return _memory.alloc(); }
+	inline void operator delete(void* ptr, size_t size) { _memory.free(ptr); }
+private:
+	static oMemoryPool<oKeyRotate> _memory;
 };
 
 class oKeyOpacity: public CCActionInterval
 {
 public:
 	void setEase(uint8 easeId);
-	bool initWithDuration(float duration, GLubyte opacity);
+	bool initWithDuration(float duration, float opacity);
 	virtual CCObject* copyWithZone(CCZone* pZone);
 	virtual void startWithTarget(CCNode* pTarget);
 	virtual void update(float time);
-	void setValue(GLubyte endOpacity);
 	void setValue(float endOpacity);
 public:
-	static oKeyOpacity* create(float duration, GLubyte opacity, uint8 easeId = 0);
 	static oKeyOpacity* create(float duration, float opacity, uint8 easeId = 0);
 protected:
 	oEaseFunc _ease;
-	GLubyte _startOpacity;
-	GLubyte _endOpacity;
-	short _deltaOpacity;
+	float _startOpacity;
+	float _endOpacity;
+	float _deltaOpacity;
+public:
+	inline void* operator new(size_t size){ return _memory.alloc(); }
+	inline void operator delete(void* ptr, size_t size) { _memory.free(ptr); }
+private:
+	static oMemoryPool<oKeyOpacity> _memory;
 };
 
 class oKeySkew: public CCActionInterval
@@ -125,6 +149,11 @@ protected:
 	float _endSkewY;
 	float _deltaSkewX;
 	float _deltaSkewY;
+public:
+	inline void* operator new(size_t size){ return _memory.alloc(); }
+	inline void operator delete(void* ptr, size_t size) { _memory.free(ptr); }
+private:
+	static oMemoryPool<oKeySkew> _memory;
 };
 
 class oKeyRoll: public CCActionInterval
@@ -143,6 +172,11 @@ protected:
 	float _startRoll;
 	float _endRoll;
 	float _deltaRoll;
+public:
+	inline void* operator new(size_t size){ return _memory.alloc(); }
+	inline void operator delete(void* ptr, size_t size) { _memory.free(ptr); }
+private:
+	static oMemoryPool<oKeyRoll> _memory;
 };
 
 NS_DOROTHY_END

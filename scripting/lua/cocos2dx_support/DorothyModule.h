@@ -15,7 +15,8 @@ using namespace Dorothy::Platform;
 
 void CCDrawNode_drawPolygon(
 	CCDrawNode* self,
-	unsigned int count, oVec2* verts,
+	oVec2* verts,
+	int count,
 	const ccColor4B& fillColor, float borderWidth,
 	const ccColor4B& borderColor);
 
@@ -37,21 +38,31 @@ void oSensor_removeHandler(oSensor* sensor, uint32 flag, int nHandler);
 void oSensor_clearHandler(oSensor* sensor, uint32 flag);
 
 bool oAnimationCache_load(const char* filename);
+bool oAnimationCache_update(const char* name, const char* content);
 bool oAnimationCache_unload(const char* filename = nullptr);
 
 bool oClipCache_load(const char* filename);
+bool oClipCache_update(const char* name, const char* content);
 bool oClipCache_unload(const char* filename = nullptr);
 
 bool oEffectCache_load(const char* filename);
+bool oEffectCache_update(const char* content);
 bool oEffectCache_unload();
 
 bool oParticleCache_load(const char* filename);
+bool oParticleCache_update(const char* name, const char* content);
 bool oParticleCache_unload(const char* filename = nullptr);
 
 bool oModelCache_load(const char* filename);
+bool oModelCache_update(const char* name, const char* content);
 bool oModelCache_unload(const char* filename = nullptr);
 
 void oCache_clear();
+
+void oUnitDef_setActions(oUnitDef* def, int actions[], int count);
+void oUnitDef_setInstincts(oUnitDef* def, int instincts[], int count);
+
+oListener* oListener_create(const string& name, int handler);
 
 CCSprite* CCSprite_createWithClip(const char* clipStr);
 
@@ -81,12 +92,14 @@ CCScene* CCScene_createProgressV(float duration, CCScene* nextScene);
 CCScene* CCScene_createProgressIO(float duration, CCScene* nextScene);
 CCScene* CCScene_createProgressOI(float duration, CCScene* nextScene);
 
-CCCardinalSplineTo* CCCardinalSplineTo_create(float duration, const vector<oVec2>& points, float tension);
-CCCardinalSplineBy* CCCardinalSplineBy_create(float duration, const vector<oVec2>& points, float tension);
-CCCatmullRomTo* CCCatmullRomTo_create(float duration, const vector<oVec2>& points);
-CCCatmullRomBy* CCCatmullRomBy_create(float duration, const vector<oVec2>& points);
+CCCardinalSplineTo* CCCardinalSplineTo_create(float duration, const oVec2 points[], int count, float tension);
+CCCardinalSplineBy* CCCardinalSplineBy_create(float duration, const oVec2 points[], int count, float tension);
+CCCatmullRomTo* CCCatmullRomTo_create(float duration, const oVec2 points[], int count);
+CCCatmullRomBy* CCCatmullRomBy_create(float duration, const oVec2 points[], int count);
 
 CCActionInterval* CCTile_createFadeOut(float duration, CCSize gridSize, tOrientation orientation);
+
+CCArray* CCArray_create(CCObject* object[], int count);
 
 inline ccBlendFunc* ccBlendFuncNew(GLenum src, GLenum dst)
 {

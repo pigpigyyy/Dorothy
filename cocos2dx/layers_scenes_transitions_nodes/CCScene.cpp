@@ -32,8 +32,6 @@ NS_CC_BEGIN
 
 CCScene::CCScene()
 {
-    m_bIgnoreAnchorPointForPosition = true;
-    setAnchorPoint(ccp(0.5f, 0.5f));
 }
 
 CCScene::~CCScene()
@@ -42,16 +40,10 @@ CCScene::~CCScene()
 
 bool CCScene::init()
 {
-    bool bRet = false;
-     do 
-     {
-         CCDirector * pDirector;
-         CC_BREAK_IF( ! (pDirector = CCDirector::sharedDirector()) );
-         this->setContentSize(pDirector->getWinSize());
-         // success
-         bRet = true;
-     } while (0);
-     return bRet;
+	this->setAnchorPoint(ccp(0.5f, 0.5f));
+	this->setContentSize(
+		CCDirector::sharedDirector()->getWinSize());
+    return true;
 }
 
 CCScene *CCScene::create()

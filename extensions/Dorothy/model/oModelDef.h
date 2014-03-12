@@ -22,7 +22,7 @@ public:
 	float skewX;
 	float skewY;
 	bool visible;
-	GLubyte opacity;
+	float opacity;
 	CCRect rect;
 	string name;
 

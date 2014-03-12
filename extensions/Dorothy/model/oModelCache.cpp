@@ -63,7 +63,7 @@ void oModelCache::startElement( void *ctx, const char *name, const char **atts )
 						oHelper::getPosFromStr(atts[++i], spriteDef->archorX, spriteDef->archorY);
 						break;
 					oCase::Opacity:
-						spriteDef->opacity = (GLubyte)atoi(atts[++i]);
+						spriteDef->opacity = (float)atof(atts[++i]);
 						break;
 					oCase::Position:
 						oHelper::getPosFromStr(atts[++i], spriteDef->x, spriteDef->y);
@@ -120,7 +120,7 @@ void oModelCache::startElement( void *ctx, const char *name, const char **atts )
 						oHelper::getPosFromStr(atts[++i], keyFrameDef->skewX, keyFrameDef->skewY);
 						break;
 					oCase::Opacity:
-						keyFrameDef->opacity = (GLubyte)atoi(atts[++i]);
+						keyFrameDef->opacity = (float)atof(atts[++i]);
 						break;
 					oCase::Visible:
 						keyFrameDef->visible = atoi(atts[++i]) == 1;

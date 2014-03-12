@@ -5,6 +5,7 @@ class oSound
 	static void stop(int id);
 	static void stop();
 	static tolua_property__common float volume;
+	static tolua_property__bool bool useCache;
 };
 
 class oMusic

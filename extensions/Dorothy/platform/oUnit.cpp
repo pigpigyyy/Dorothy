@@ -41,8 +41,8 @@ sensity(unitDef->sensity),
 _unitDef(unitDef),
 _reflexArcId(0)
 {
-	properties.setOwner(this);
-	_instincts.setOwner(this);
+	properties(this);
+	_instincts(this);
 	oUnit::setDetectDistance(unitDef->detectDistance);
 	oUnit::setAttackRange(unitDef->attackRange);
 	_groundSensor = oBody::getSensorByTag(oUnitDef::GroundSensorTag);
@@ -289,7 +289,8 @@ oUnit::oPropertySet::~oPropertySet()
 {
 	for (auto it : _items) delete it.second;
 }
-void oUnit::oPropertySet::setOwner( oUnit* owner )
+
+void oUnit::oPropertySet::operator()(oUnit* owner)
 {
 	_owner = owner;
 	_items["hp"] = new oProperty(_owner, _owner->maxHp);//Add the default property "hp"
@@ -363,7 +364,7 @@ void oUnit::oInstinctSet::clear()
 	}
 	_instincts.clear();
 }
-void oUnit::oInstinctSet::setOwner( oUnit* owner )
+void oUnit::oInstinctSet::operator()(oUnit* owner)
 {
 	_owner = owner;
 }

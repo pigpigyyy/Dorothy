@@ -13,6 +13,10 @@
 #include "Dorothy/misc/oNode3D.h"
 #include "Dorothy/misc/oScriptHandler.h"
 
+//event
+#include "Dorothy/event/oEvent.h"
+#include "Dorothy/event/oListener.h"
+
 //model
 #include "Dorothy/model/oEase.h"
 #include "Dorothy/model/oActionDuration.h"

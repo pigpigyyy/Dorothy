@@ -71,6 +71,7 @@ public:
 	~oEffectCache();
 	/** Load an effect file into memory. */
 	bool load(const char* filename);
+	bool update(const char* content);
 	/** Clear all effect data from memory. */
 	bool unload();
 	/** Create a new effect instance. */

@@ -40,7 +40,7 @@ NS_CC_BEGIN
 /** MotionStreak.
  Creates a trailing path.
  */
-class CC_DLL CCMotionStreak : public CCNodeRGBA, public CCTextureProtocol
+class CC_DLL CCMotionStreak : public CCNode, public CCTextureProtocol
 {
 public:
     CCMotionStreak();
@@ -72,10 +72,6 @@ public:
     virtual void setTexture(CCTexture2D *texture);
     virtual void setBlendFunc(ccBlendFunc blendFunc);
     virtual ccBlendFunc getBlendFunc();
-    virtual GLubyte getOpacity();
-    virtual void setOpacity(GLubyte opacity);
-    virtual void setOpacityModifyRGB(bool bValue);
-    virtual bool isOpacityModifyRGB();
 
     /** When fast mode is enabled, new points are added faster but with lower precision */
     inline bool isFastMode() { return m_bFastMode; }

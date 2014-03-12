@@ -87,7 +87,22 @@ void oBodyDef::attachLoop( const vector<oVec2>& vertices, float friction, float 
 	}
 	shape->CreateLoop(vs, length);
 	delete [] vs;
-	vs = NULL;
+	b2FixtureDef* fixtureDef = new b2FixtureDef();
+	fixtureDef->shape = shape;
+	fixtureDef->friction = friction;
+	fixtureDef->restitution = restitution;
+	_fixtureDefs.push_back(fixtureDef);
+}
+void oBodyDef::attachLoop( const oVec2 vertices[], int count, float friction, float restitution)
+{
+	b2ChainShape* shape = new b2ChainShape();
+	b2Vec2* vs = new b2Vec2[count];
+	for (int i = 0; i < count; i++)
+	{
+		vs[i] = oWorld::b2Val(vertices[i]);
+	}
+	shape->CreateLoop(vs, count);
+	delete[] vs;
 	b2FixtureDef* fixtureDef = new b2FixtureDef();
 	fixtureDef->shape = shape;
 	fixtureDef->friction = friction;
@@ -127,6 +142,22 @@ void oBodyDef::attachChain( const vector<oVec2>& vertices, float friction, float
 	fixtureDef->restitution = restitution;
 	_fixtureDefs.push_back(fixtureDef);
 }
+void oBodyDef::attachChain(const oVec2 vertices[], int count, float friction, float restitution)
+{
+	b2ChainShape* shape = new b2ChainShape();
+	b2Vec2* vs = new b2Vec2[count];
+	for (int i = 0; i < count; i++)
+	{
+		vs[i] = oWorld::b2Val(vertices[i]);
+	}
+	shape->CreateChain(vs, count);
+	delete[] vs;
+	b2FixtureDef* fixtureDef = new b2FixtureDef();
+	fixtureDef->shape = shape;
+	fixtureDef->friction = friction;
+	fixtureDef->restitution = restitution;
+	_fixtureDefs.push_back(fixtureDef);
+}
 void oBodyDef::attachPolygonSensor( int tag, float width, float height )
 {
 	oBodyDef::attachPolygonSensor(tag, width, height, oVec2(0,0), 0);
@@ -154,6 +185,21 @@ void oBodyDef::attachPolygonSensor( int tag, const vector<oVec2>& vertices )
 		vs[i] = oWorld::b2Val(vertices[i]);
 	}
 	shape->Set(vs, length);
+	b2FixtureDef* fixtureDef = new b2FixtureDef();
+	fixtureDef->shape = shape;
+	fixtureDef->isSensor = true;
+	fixtureDef->userData = (void*)tag;
+	_fixtureDefs.push_back(fixtureDef);
+}
+void oBodyDef::attachPolygonSensor(int tag, const oVec2 vertices[], int count)
+{
+	b2PolygonShape* shape = new b2PolygonShape();
+	b2Vec2 vs[b2_maxPolygonVertices];
+	for (int i = 0; i < count; i++)
+	{
+		vs[i] = oWorld::b2Val(vertices[i]);
+	}
+	shape->Set(vs, count);
 	b2FixtureDef* fixtureDef = new b2FixtureDef();
 	fixtureDef->shape = shape;
 	fixtureDef->isSensor = true;
@@ -239,6 +285,21 @@ b2FixtureDef* oBodyDef::loop( const vector<oVec2>& vertices, float friction, flo
 	_fixtureDef.restitution = restitution;
 	return &_fixtureDef;
 }
+b2FixtureDef* oBodyDef::loop(const oVec2 vertices[], int count, float friction, float restitution)
+{
+	b2Vec2* vs = new b2Vec2[count];
+	for (int i = 0; i < count; i++)
+	{
+		vs[i] = oWorld::b2Val(vertices[i]);
+	}
+	_chainShape.CreateLoop(vs, count);
+	delete[] vs;
+	b2FixtureDef* fixtureDef = new b2FixtureDef();
+	_fixtureDef.shape = &_chainShape;
+	_fixtureDef.friction = friction;
+	_fixtureDef.restitution = restitution;
+	return &_fixtureDef;
+}
 b2FixtureDef* oBodyDef::circle( const oVec2& center, float radius, float density, float friction, float restitution )
 {
 	_circleShape.m_p = oWorld::b2Val(center);
@@ -263,6 +324,20 @@ b2FixtureDef* oBodyDef::chain( const vector<oVec2>& vertices, float friction, fl
 	}
 	_chainShape.CreateChain(vs, length);
 	delete [] vs;
+	_fixtureDef.shape = &_chainShape;
+	_fixtureDef.friction = friction;
+	_fixtureDef.restitution = restitution;
+	return &_fixtureDef;
+}
+b2FixtureDef* oBodyDef::chain(const oVec2 vertices[], int count, float friction, float restitution)
+{
+	b2Vec2* vs = new b2Vec2[count];
+	for (int i = 0; i < count; i++)
+	{
+		vs[i] = oWorld::b2Val(vertices[i]);
+	}
+	_chainShape.CreateChain(vs, count);
+	delete[] vs;
 	_fixtureDef.shape = &_chainShape;
 	_fixtureDef.friction = friction;
 	_fixtureDef.restitution = restitution;

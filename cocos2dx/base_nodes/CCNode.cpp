@@ -75,101 +75,104 @@ CCNode::CCNode()
 , m_bTransformDirty(true)
 , m_bInverseDirty(true)
 , m_bVisible(true)
-, m_bIgnoreAnchorPointForPosition(false)
 , m_bReorderChildDirty(false)
 , m_nScriptHandler(0)
 , m_nUpdateScriptHandler(0)
+, _displayedOpacity(1.0f)
+, _realOpacity(1.0f)
+, _displayedColor(ccWHITE)
+, _realColor(ccWHITE)
 {
-    // set default scheduler and actionManager
-    CCDirector *director = CCDirector::sharedDirector();
-    m_pActionManager = director->getActionManager();
-    m_pActionManager->retain();
-    m_pScheduler = director->getScheduler();
-    m_pScheduler->retain();
+	// set default scheduler and actionManager
+	CCDirector *director = CCDirector::sharedDirector();
+	m_pActionManager = director->getActionManager();
+	m_pActionManager->retain();
+	m_pScheduler = director->getScheduler();
+	m_pScheduler->retain();
 
-    CCScriptEngine* pEngine = CCScriptEngine::sharedEngine();
+	CCScriptEngine* pEngine = CCScriptEngine::sharedEngine();
 }
 
 CCNode::~CCNode()
 {
-    CCLOGINFO( "cocos2d: deallocing" );
-    
-    unregisterScriptHandler();
-    if (m_nUpdateScriptHandler)
-    {
-        CCScriptEngine::sharedEngine()->removeScriptHandler(m_nUpdateScriptHandler);
-    }
+	CCLOGINFO("cocos2d: deallocing");
 
-    CC_SAFE_RELEASE(m_pActionManager);
-    CC_SAFE_RELEASE(m_pScheduler);
-    // attributes
-    CC_SAFE_RELEASE(m_pCamera);
+	unregisterScriptHandler();
+	if (m_nUpdateScriptHandler)
+	{
+		CCScriptEngine::sharedEngine()->removeScriptHandler(m_nUpdateScriptHandler);
+	}
 
-    CC_SAFE_RELEASE(m_pGrid);
-    CC_SAFE_RELEASE(m_pShaderProgram);
-    CC_SAFE_RELEASE(m_pUserObject);
+	CC_SAFE_RELEASE(m_pActionManager);
+	CC_SAFE_RELEASE(m_pScheduler);
+	// attributes
+	CC_SAFE_RELEASE(m_pCamera);
 
-    if(m_pChildren && m_pChildren->count() > 0)
-    {
-        CCObject* child;
-        CCARRAY_FOREACH(m_pChildren, child)
-        {
-            CCNode* pChild = (CCNode*) child;
-            if (pChild)
-            {
-                pChild->m_pParent = NULL;
-            }
-        }
-    }
+	CC_SAFE_RELEASE(m_pGrid);
+	CC_SAFE_RELEASE(m_pShaderProgram);
+	CC_SAFE_RELEASE(m_pUserObject);
 
-    // children
-    CC_SAFE_RELEASE(m_pChildren);
+	if (m_pChildren && m_pChildren->count() > 0)
+	{
+		CCObject* child;
+		CCARRAY_FOREACH(m_pChildren, child)
+		{
+			CCNode* pChild = (CCNode*)child;
+			if (pChild)
+			{
+				pChild->m_pParent = NULL;
+			}
+		}
+	}
+
+	// children
+	CC_SAFE_RELEASE(m_pChildren);
 }
 
 bool CCNode::init()
 {
-    return true;
+	return true;
 }
 
 float CCNode::getSkewX()
 {
-    return m_fSkewX;
+	return m_fSkewX;
 }
 
 void CCNode::setSkewX(float newSkewX)
 {
-    m_fSkewX = newSkewX;
-    m_bTransformDirty = m_bInverseDirty = true;
+	m_fSkewX = newSkewX;
+	m_bTransformDirty = m_bInverseDirty = true;
 }
 
 float CCNode::getSkewY()
 {
-    return m_fSkewY;
+	return m_fSkewY;
 }
 
 void CCNode::setSkewY(float newSkewY)
 {
-    m_fSkewY = newSkewY;
+	m_fSkewY = newSkewY;
 
-    m_bTransformDirty = m_bInverseDirty = true;
+	m_bTransformDirty = m_bInverseDirty = true;
 }
 
 /// zOrder getter
 int CCNode::getZOrder()
 {
-    return m_nZOrder;
+	return m_nZOrder;
 }
 
 void CCNode::setZOrder(int z)
 {
-    if (m_pParent)
-    {
+	if (m_pParent)
+	{
 		m_pParent->reorderChild(this, z);
 	}
 	m_nZOrder = z;
 }
 
-void CCNode::setZOrderValue( int zOrder )
+void CCNode::setZOrderValue(int zOrder)
 {
 	m_nZOrder = zOrder;
 }
@@ -177,338 +180,323 @@ void CCNode::setZOrderValue( int zOrder )
 /// vertexZ getter
 float CCNode::getPositionZ()
 {
-    return m_fPositionZ;
+	return m_fPositionZ;
 }
 
 
 /// vertexZ setter
 void CCNode::setPositionZ(float var)
 {
-    m_fPositionZ = var;
+	m_fPositionZ = var;
 }
 
 
 /// rotation getter
 float CCNode::getRotation()
 {
-    return m_fRotation;
+	return m_fRotation;
 }
 
 /// rotation setter
 void CCNode::setRotation(float newRotation)
 {
 	m_fRotation = newRotation;
-    m_bTransformDirty = m_bInverseDirty = true;
+	m_bTransformDirty = m_bInverseDirty = true;
 }
 
 /// scale getter
 float CCNode::getScale()
 {
-    CCAssert( m_fScaleX == m_fScaleY, "CCNode#scale. ScaleX != ScaleY. Don't know which one to return");
-    return m_fScaleX;
+	CCAssert(m_fScaleX == m_fScaleY, "CCNode#scale. ScaleX != ScaleY. Don't know which one to return");
+	return m_fScaleX;
 }
 
 /// scale setter
 void CCNode::setScale(float scale)
 {
-    m_fScaleX = m_fScaleY = scale;
-    m_bTransformDirty = m_bInverseDirty = true;
+	m_fScaleX = m_fScaleY = scale;
+	m_bTransformDirty = m_bInverseDirty = true;
 }
 
 /// scaleX getter
 float CCNode::getScaleX()
 {
-    return m_fScaleX;
+	return m_fScaleX;
 }
 
 /// scaleX setter
 void CCNode::setScaleX(float newScaleX)
 {
-    m_fScaleX = newScaleX;
-    m_bTransformDirty = m_bInverseDirty = true;
+	m_fScaleX = newScaleX;
+	m_bTransformDirty = m_bInverseDirty = true;
 }
 
 /// scaleY getter
 float CCNode::getScaleY()
 {
-    return m_fScaleY;
+	return m_fScaleY;
 }
 
 /// scaleY setter
 void CCNode::setScaleY(float newScaleY)
 {
-    m_fScaleY = newScaleY;
-    m_bTransformDirty = m_bInverseDirty = true;
+	m_fScaleY = newScaleY;
+	m_bTransformDirty = m_bInverseDirty = true;
 }
 
 /// position getter
 const CCPoint& CCNode::getPosition()
 {
-    return m_obPosition;
+	return m_obPosition;
 }
 
 /// position setter
 void CCNode::setPosition(const CCPoint& newPosition)
 {
-    m_obPosition = newPosition;
-    m_bTransformDirty = m_bInverseDirty = true;
+	m_obPosition = newPosition;
+	m_bTransformDirty = m_bInverseDirty = true;
 }
 
 void CCNode::getPosition(float* x, float* y)
 {
-    *x = m_obPosition.x;
-    *y = m_obPosition.y;
+	*x = m_obPosition.x;
+	*y = m_obPosition.y;
 }
 
 void CCNode::setPosition(float x, float y)
 {
-    setPosition(ccp(x, y));
+	setPosition(ccp(x, y));
 }
 
 float CCNode::getPositionX()
 {
-    return m_obPosition.x;
+	return m_obPosition.x;
 }
 
 float CCNode::getPositionY()
 {
-    return  m_obPosition.y;
+	return  m_obPosition.y;
 }
 
 void CCNode::setPositionX(float x)
 {
-    setPosition(ccp(x, m_obPosition.y));
+	setPosition(ccp(x, m_obPosition.y));
 }
 
 void CCNode::setPositionY(float y)
 {
-    setPosition(ccp(m_obPosition.x, y));
+	setPosition(ccp(m_obPosition.x, y));
 }
 
 /// children getter
 CCArray* CCNode::getChildren()
 {
-    return m_pChildren;
+	return m_pChildren;
 }
 
 unsigned int CCNode::getChildrenCount()
 {
-    return m_pChildren ? m_pChildren->count() : 0;
+	return m_pChildren ? m_pChildren->count() : 0;
 }
 
 /// camera getter: lazy alloc
 CCCamera* CCNode::getCamera()
 {
-    if (!m_pCamera)
-    {
-        m_pCamera = new CCCamera();
-    }
-    
-    return m_pCamera;
+	if (!m_pCamera)
+	{
+		m_pCamera = new CCCamera();
+	}
+
+	return m_pCamera;
 }
 
 
 /// grid getter
 CCGridBase* CCNode::getGrid()
 {
-    return m_pGrid;
+	return m_pGrid;
 }
 
 /// grid setter
 void CCNode::setGrid(CCGridBase* pGrid)
 {
-    CC_SAFE_RETAIN(pGrid);
-    CC_SAFE_RELEASE(m_pGrid);
-    m_pGrid = pGrid;
+	CC_SAFE_RETAIN(pGrid);
+	CC_SAFE_RELEASE(m_pGrid);
+	m_pGrid = pGrid;
 }
 
 
 /// isVisible getter
 bool CCNode::isVisible()
 {
-    return m_bVisible;
+	return m_bVisible;
 }
 
 /// isVisible setter
 void CCNode::setVisible(bool var)
 {
-    m_bVisible = var;
+	m_bVisible = var;
 }
 
 const CCPoint& CCNode::getAnchorPointInPoints()
 {
-    return m_obAnchorPointInPoints;
+	return m_obAnchorPointInPoints;
 }
 
 /// anchorPoint getter
 const CCPoint& CCNode::getAnchorPoint()
 {
-    return m_obAnchorPoint;
+	return m_obAnchorPoint;
 }
 
 void CCNode::setAnchorPoint(const CCPoint& point)
 {
-    if( ! point.equals(m_obAnchorPoint))
-    {
-        m_obAnchorPoint = point;
-        m_obAnchorPointInPoints = ccp(m_obContentSize.width * m_obAnchorPoint.x, m_obContentSize.height * m_obAnchorPoint.y );
-        m_bTransformDirty = m_bInverseDirty = true;
-    }
+	if (!point.equals(m_obAnchorPoint))
+	{
+		m_obAnchorPoint = point;
+		m_obAnchorPointInPoints = ccp(m_obContentSize.width * m_obAnchorPoint.x, m_obContentSize.height * m_obAnchorPoint.y);
+		m_bTransformDirty = m_bInverseDirty = true;
+	}
 }
 
 /// contentSize getter
 const CCSize& CCNode::getContentSize()
 {
-    return m_obContentSize;
+	return m_obContentSize;
 }
 
 void CCNode::setContentSize(const CCSize & size)
 {
-    if (!size.equals(m_obContentSize))
-    {
-        m_obContentSize = size;
+	if (!size.equals(m_obContentSize))
+	{
+		m_obContentSize = size;
 
-        m_obAnchorPointInPoints = ccp(m_obContentSize.width * m_obAnchorPoint.x, m_obContentSize.height * m_obAnchorPoint.y );
-        m_bTransformDirty = m_bInverseDirty = true;
-    }
+		m_obAnchorPointInPoints = ccp(m_obContentSize.width * m_obAnchorPoint.x, m_obContentSize.height * m_obAnchorPoint.y);
+		m_bTransformDirty = m_bInverseDirty = true;
+	}
 }
 
 // isRunning getter
 bool CCNode::isRunning()
 {
-    return m_bRunning;
+	return m_bRunning;
 }
 
 /// parent getter
 CCNode * CCNode::getParent()
 {
-    return m_pParent;
+	return m_pParent;
 }
 /// parent setter
 void CCNode::setParent(CCNode * var)
 {
-    m_pParent = var;
-}
-
-/// isRelativeAnchorPoint getter
-bool CCNode::isIgnoreAnchorPointForPosition()
-{
-    return m_bIgnoreAnchorPointForPosition;
-}
-/// isRelativeAnchorPoint setter
-void CCNode::ignoreAnchorPointForPosition(bool newValue)
-{
-    if (newValue != m_bIgnoreAnchorPointForPosition) 
-    {
-		m_bIgnoreAnchorPointForPosition = newValue;
-		m_bTransformDirty = m_bInverseDirty = true;
-	}
+	m_pParent = var;
 }
 
 /// tag getter
 int CCNode::getTag()
 {
-    return m_nTag;
+	return m_nTag;
 }
 
 /// tag setter
 void CCNode::setTag(int var)
 {
-    m_nTag = var;
+	m_nTag = var;
 }
 
 CCGLProgram* CCNode::getShaderProgram()
 {
-    return m_pShaderProgram;
+	return m_pShaderProgram;
 }
 
 CCObject* CCNode::getUserObject()
 {
-    return m_pUserObject;
+	return m_pUserObject;
 }
 
 ccGLServerState CCNode::getGLServerState()
 {
-    return m_eGLServerState;
+	return m_eGLServerState;
 }
 
 void CCNode::setGLServerState(ccGLServerState glServerState)
 {
-    m_eGLServerState = glServerState;
+	m_eGLServerState = glServerState;
 }
 
 void CCNode::setUserObject(CCObject *pUserObject)
 {
-    CC_SAFE_RELEASE(m_pUserObject);
-    CC_SAFE_RETAIN(pUserObject);
-    m_pUserObject = pUserObject;
+	CC_SAFE_RELEASE(m_pUserObject);
+	CC_SAFE_RETAIN(pUserObject);
+	m_pUserObject = pUserObject;
 }
 
 void CCNode::setShaderProgram(CCGLProgram *pShaderProgram)
 {
-    CC_SAFE_RELEASE(m_pShaderProgram);
-    m_pShaderProgram = pShaderProgram;
-    CC_SAFE_RETAIN(m_pShaderProgram);
+	CC_SAFE_RELEASE(m_pShaderProgram);
+	m_pShaderProgram = pShaderProgram;
+	CC_SAFE_RETAIN(m_pShaderProgram);
 }
 
 CCRect CCNode::boundingBox()
 {
-    CCRect rect = CCRectMake(0, 0, m_obContentSize.width, m_obContentSize.height);
-    return CCRectApplyAffineTransform(rect, nodeToParentTransform());
+	CCRect rect(0, 0, m_obContentSize.width, m_obContentSize.height);
+	return CCRectApplyAffineTransform(rect, nodeToParentTransform());
 }
 
-CCNode * CCNode::create()
+CCNode* CCNode::create()
 {
-	CCNode * pRet = new CCNode();
-    if (pRet && pRet->init())
-    {
-        pRet->autorelease();
-    }
-    else
-    {
-        CC_SAFE_DELETE(pRet);
-    }
+	CCNode* pRet = new CCNode();
+	if (pRet && pRet->init())
+	{
+		pRet->autorelease();
+	}
+	else
+	{
+		CC_SAFE_DELETE(pRet);
+	}
 	return pRet;
 }
 
 void CCNode::cleanup()
 {
-    // actions
-    this->stopAllActions();
-    this->unscheduleAllSelectors();
+	// actions
+	this->stopAllActions();
+	this->unscheduleAllSelectors();
 
 	CCScriptEngine::sharedEngine()->executeNodeEvent(this, CCNode::Cleanup);
-    
-    // timers
-    arrayMakeObjectsPerformSelector(m_pChildren, cleanup, CCNode*);
+
+	// timers
+	arrayMakeObjectsPerformSelector(m_pChildren, cleanup, CCNode*);
 }
 
 
 const char* CCNode::description()
 {
-    return CCString::createWithFormat("<CCNode | Tag = %d>", m_nTag)->getCString();
+	return CCString::createWithFormat("<CCNode | Tag = %d>", m_nTag)->getCString();
 }
 
 // lazy allocs
 void CCNode::childrenAlloc()
 {
-    m_pChildren = CCArray::createWithCapacity(4);
-    m_pChildren->retain();
+	m_pChildren = CCArray::createWithCapacity(4);
+	m_pChildren->retain();
 }
 
 CCNode* CCNode::getChildByTag(int aTag)
 {
-    CCAssert( aTag != CCNode::InvalidTag, "Invalid tag");
+	CCAssert(aTag != CCNode::InvalidTag, "Invalid tag");
 	CCObject* child;
 	CCARRAY_FOREACH(m_pChildren, child)
 	{
-		CCNode* pNode = (CCNode*) child;
-		if(pNode && pNode->m_nTag == aTag)
+		CCNode* pNode = (CCNode*)child;
+		if (pNode && pNode->m_nTag == aTag)
 		{
 			return pNode;
 		}
 	}
-    return NULL;
+	return NULL;
 }
 
 /* "add" logic MUST only be on this method
@@ -516,56 +504,58 @@ CCNode* CCNode::getChildByTag(int aTag)
 * to override this method
 */
 void CCNode::addChild(CCNode *child, int zOrder, int tag)
-{    
-    CCAssert( child != NULL, "Argument must be non-nil");
-    CCAssert( child->m_pParent == NULL, "child already added. It can't be added again");
+{
+	CCAssert(child != NULL, "Argument must be non-nil");
+	CCAssert(child->m_pParent == NULL, "child already added. It can't be added again");
 
-    if( ! m_pChildren )
-    {
-        this->childrenAlloc();
-    }
+	if (!m_pChildren)
+	{
+		this->childrenAlloc();
+	}
 
-    this->insertChild(child, zOrder);
+	this->insertChild(child, zOrder);
 
-    child->m_nTag = tag;
+	child->m_nTag = tag;
 
-    child->setParent(this);
+	child->setParent(this);
+	child->updateDisplayedColor(this->_displayedColor);
+	child->updateDisplayedOpacity(this->_displayedOpacity);
 
-    if( m_bRunning )
-    {
-        child->onEnter();
-        child->onEnterTransitionDidFinish();
-    }
+	if (m_bRunning)
+	{
+		child->onEnter();
+		child->onEnterTransitionDidFinish();
+	}
 }
 
 void CCNode::addChild(CCNode *child, int zOrder)
 {
-    CCAssert( child != NULL, "Argument must be non-nil");
-    this->addChild(child, zOrder, child->m_nTag);
+	CCAssert(child != NULL, "Argument must be non-nil");
+	this->addChild(child, zOrder, child->m_nTag);
 }
 
 void CCNode::addChild(CCNode *child)
 {
-    CCAssert( child != NULL, "Argument must be non-nil");
-    this->addChild(child, child->m_nZOrder, child->m_nTag);
+	CCAssert(child != NULL, "Argument must be non-nil");
+	this->addChild(child, child->m_nZOrder, child->m_nTag);
 }
 
 void CCNode::removeFromParent()
 {
-    this->removeFromParentAndCleanup(true);
+	this->removeFromParentAndCleanup(true);
 }
 
 void CCNode::removeFromParentAndCleanup(bool cleanup)
 {
-    if (m_pParent != NULL)
-    {
-        m_pParent->removeChild(this,cleanup);
-    } 
+	if (m_pParent != NULL)
+	{
+		m_pParent->removeChild(this, cleanup);
+	}
 }
 
 void CCNode::removeChild(CCNode* child)
 {
-    this->removeChild(child, true);
+	this->removeChild(child, true);
 }
 
 /* "remove" logic MUST only be on this method
@@ -574,476 +564,445 @@ void CCNode::removeChild(CCNode* child)
 */
 void CCNode::removeChild(CCNode* child, bool cleanup)
 {
-    // explicit nil handling
-    if (m_pChildren == NULL)
-    {
-        return;
-    }
+	// explicit nil handling
+	if (m_pChildren == NULL)
+	{
+		return;
+	}
 
-    if ( m_pChildren->containsObject(child) )
-    {
-        this->detachChild(child,cleanup);
-    }
+	if (m_pChildren->containsObject(child))
+	{
+		this->detachChild(child, cleanup);
+	}
 }
 
 void CCNode::removeChildByTag(int tag)
 {
-    this->removeChildByTag(tag, true);
+	this->removeChildByTag(tag, true);
 }
 
 void CCNode::removeChildByTag(int tag, bool cleanup)
 {
-    CCAssert( tag != CCNode::InvalidTag, "Invalid tag");
+	CCAssert(tag != CCNode::InvalidTag, "Invalid tag");
 
-    CCNode *child = this->getChildByTag(tag);
+	CCNode *child = this->getChildByTag(tag);
 
-    if (child == NULL)
-    {
-        CCLOG("cocos2d: removeChildByTag: child not found!");
-    }
-    else
-    {
-        this->removeChild(child, cleanup);
-    }
+	if (child == NULL)
+	{
+		CCLOG("cocos2d: removeChildByTag: child not found!");
+	}
+	else
+	{
+		this->removeChild(child, cleanup);
+	}
 }
 
 void CCNode::removeAllChildren()
 {
-    this->removeAllChildrenWithCleanup(true);
+	this->removeAllChildrenWithCleanup(true);
 }
 
 void CCNode::removeAllChildrenWithCleanup(bool cleanup)
 {
-    // not using detachChild improves speed here
-    if ( m_pChildren && m_pChildren->count() > 0 )
-    {
-        CCObject* child;
-        CCARRAY_FOREACH(m_pChildren, child)
-        {
-            CCNode* pNode = (CCNode*) child;
-            if (pNode)
-            {
-                // IMPORTANT:
-                //  -1st do onExit
-                //  -2nd cleanup
-                if(m_bRunning)
-                {
-                    pNode->onExitTransitionDidStart();
-                    pNode->onExit();
-                }
+	// not using detachChild improves speed here
+	if (m_pChildren && m_pChildren->count() > 0)
+	{
+		CCObject* child;
+		CCARRAY_FOREACH(m_pChildren, child)
+		{
+			CCNode* pNode = (CCNode*)child;
+			if (pNode)
+			{
+				// IMPORTANT:
+				//  -1st do onExit
+				//  -2nd cleanup
+				if (m_bRunning)
+				{
+					pNode->onExitTransitionDidStart();
+					pNode->onExit();
+				}
 
-                if (cleanup)
-                {
-                    pNode->cleanup();
-                }
-                // set parent nil at the end
-                pNode->setParent(NULL);
-            }
-        }
-        
-        m_pChildren->removeAllObjects();
-    }
-    
+				if (cleanup)
+				{
+					pNode->cleanup();
+				}
+				// set parent nil at the end
+				pNode->setParent(NULL);
+			}
+		}
+
+		m_pChildren->removeAllObjects();
+	}
+
 }
 
 void CCNode::detachChild(CCNode *child, bool doCleanup)
 {
-    // IMPORTANT:
-    //  -1st do onExit
-    //  -2nd cleanup
-    if (m_bRunning)
-    {
-        child->onExitTransitionDidStart();
-        child->onExit();
-    }
+	// IMPORTANT:
+	//  -1st do onExit
+	//  -2nd cleanup
+	if (m_bRunning)
+	{
+		child->onExitTransitionDidStart();
+		child->onExit();
+	}
 
-    // If you don't do cleanup, the child's actions will not get removed and the
-    // its scheduledSelectors_ dict will not get released!
-    if (doCleanup)
-    {
-        child->cleanup();
-    }
+	// If you don't do cleanup, the child's actions will not get removed and the
+	// its scheduledSelectors_ dict will not get released!
+	if (doCleanup)
+	{
+		child->cleanup();
+	}
 
-    // set parent nil at the end
-    child->setParent(NULL);
+	// set parent nil at the end
+	child->setParent(NULL);
 
-    m_pChildren->removeObject(child);
+	m_pChildren->removeObject(child);
 }
 
 
 // helper used by reorderChild & add
 void CCNode::insertChild(CCNode* child, int z)
 {
-    m_bReorderChildDirty = true;
-    ccArrayAppendObjectWithResize(m_pChildren->data, child);
-    child->m_nZOrder = z;
+	m_bReorderChildDirty = true;
+	ccArrayAppendObjectWithResize(m_pChildren->data, child);
+	child->m_nZOrder = z;
 }
 
 void CCNode::reorderChild(CCNode *child, int zOrder)
 {
-    CCAssert( child != NULL, "Child must be non-nil");
-    m_bReorderChildDirty = true;
-    child->m_nZOrder = zOrder;
+	CCAssert(child != NULL, "Child must be non-nil");
+	m_bReorderChildDirty = true;
+	child->m_nZOrder = zOrder;
 }
 
 void CCNode::sortAllChildren()
 {
-    if (m_bReorderChildDirty)
-    {
-        int i,j,length = m_pChildren->data->num;
-        CCNode ** x = (CCNode**)m_pChildren->data->arr;
-        CCNode *tempItem;
+	if (m_bReorderChildDirty)
+	{
+		int i, j, length = m_pChildren->data->num;
+		CCNode ** x = (CCNode**)m_pChildren->data->arr;
+		CCNode *tempItem;
 
-        // insertion sort
-        for(i=1; i<length; i++)
-        {
-            tempItem = x[i];
-            j = i-1;
+		// insertion sort
+		for (i = 1; i < length; i++)
+		{
+			tempItem = x[i];
+			j = i - 1;
 
-            //continue moving element downwards while zOrder is smaller or when zOrder is the same but mutatedIndex is smaller
-            while(j >= 0 && tempItem->m_nZOrder < x[j]->m_nZOrder)
-            {
-                x[j+1] = x[j];
-                j = j-1;
-            }
-            x[j+1] = tempItem;
-        }
-
-        //don't need to check children recursively, that's done in visit of each child
-
-        m_bReorderChildDirty = false;
-    }
-}
-
-
- void CCNode::draw()
- {
-     //CCAssert(0);
-     // override me
-     // Only use- this function to draw your stuff.
-     // DON'T draw your stuff outside this method
- }
-
-void CCNode::visit()
-{
-    // quick return if not visible. children won't be drawn.
-    if (!m_bVisible)
-    {
-        return;
-    }
-    kmGLPushMatrix();
-
-     if (m_pGrid && m_pGrid->isActive())
-     {
-         m_pGrid->beforeDraw();
-     }
-
-    this->transform();
-
-    CCNode* pNode = NULL;
-    unsigned int i = 0;
-
-    if(m_pChildren && m_pChildren->count() > 0)
-    {
-        sortAllChildren();
-        // draw children zOrder < 0
-        ccArray *arrayData = m_pChildren->data;
-        for( ; i < arrayData->num; i++ )
-        {
-            pNode = (CCNode*) arrayData->arr[i];
-
-            if ( pNode && pNode->m_nZOrder < 0 ) 
-            {
-                pNode->visit();
-            }
-            else
-            {
-                break;
-            }
-        }
-        // self draw
-        this->draw();
-
-        for( ; i < arrayData->num; i++ )
-        {
-            pNode = (CCNode*) arrayData->arr[i];
-            if (pNode)
-            {
-                pNode->visit();
-            }
-        }        
-    }
-    else
-    {
-        this->draw();
-    }
-
-     if (m_pGrid && m_pGrid->isActive())
-     {
-         m_pGrid->afterDraw(this);
-    }
- 
-    kmGLPopMatrix();
-}
-
-void CCNode::transformAncestors()
-{
-    if( m_pParent != NULL  )
-    {
-        m_pParent->transformAncestors();
-        m_pParent->transform();
-    }
-}
-
-void CCNode::transform()
-{    
-    kmMat4 transfrom4x4;
-
-    // Convert 3x3 into 4x4 matrix
-    CCAffineTransform tmpAffine = this->nodeToParentTransform();
-    CGAffineToGL(&tmpAffine, transfrom4x4.mat);
-
-    // Update Z vertex manually
-    transfrom4x4.mat[14] = m_fPositionZ;
-
-    kmGLMultMatrix( &transfrom4x4 );
-
-    // XXX: Expensive calls. Camera should be integrated into the cached affine matrix
-    if ( m_pCamera != NULL && !(m_pGrid != NULL && m_pGrid->isActive()) )
-    {
-        bool translate = (m_obAnchorPointInPoints.x != 0.0f || m_obAnchorPointInPoints.y != 0.0f);
-
-        if( translate )
-        {
-			kmGLTranslatef(RENDER_IN_SUBPIXEL(m_obAnchorPointInPoints.x), RENDER_IN_SUBPIXEL(m_obAnchorPointInPoints.y), 0 );
+			//continue moving element downwards while zOrder is smaller or when zOrder is the same but mutatedIndex is smaller
+			while (j >= 0 && tempItem->m_nZOrder < x[j]->m_nZOrder)
+			{
+				x[j + 1] = x[j];
+				j = j - 1;
+			}
+			x[j + 1] = tempItem;
 		}
-        m_pCamera->locate();
-        if( translate )
-        {
-			kmGLTranslatef(RENDER_IN_SUBPIXEL(-m_obAnchorPointInPoints.x), RENDER_IN_SUBPIXEL(-m_obAnchorPointInPoints.y), 0 );
-		}
+
+		//don't need to check children recursively, that's done in visit of each child
+
+		m_bReorderChildDirty = false;
 	}
 }
 
 
+void CCNode::draw()
+{
+	//CCAssert(0);
+	// override me
+	// Only use- this function to draw your stuff.
+	// DON'T draw your stuff outside this method
+}
+
+void CCNode::visit()
+{
+	// quick return if not visible. children won't be drawn.
+	if (!m_bVisible)
+	{
+		return;
+	}
+	kmGLPushMatrix();
+
+	if (m_pGrid && m_pGrid->isActive())
+	{
+		m_pGrid->beforeDraw();
+	}
+
+	this->transform();
+
+	// self draw
+	this->draw();
+
+	this->sortAllChildren();
+	CCObject* pObject;
+	CCARRAY_FOREACH(m_pChildren, pObject)
+	{
+		CCNode* pNode = (CCNode*)pObject;
+		if (pNode)
+		{
+			pNode->visit();
+		}
+	}
+
+	if (m_pGrid && m_pGrid->isActive())
+	{
+		m_pGrid->afterDraw(this);
+	}
+
+	kmGLPopMatrix();
+}
+
+void CCNode::transformAncestors()
+{
+	if (m_pParent != NULL)
+	{
+		m_pParent->transformAncestors();
+		m_pParent->transform();
+	}
+}
+
+void CCNode::transform()
+{
+	kmMat4 transfrom4x4;
+
+	// Convert 3x3 into 4x4 matrix
+	CCAffineTransform tmpAffine = this->nodeToParentTransform();
+	CGAffineToGL(&tmpAffine, transfrom4x4.mat);
+
+	// Update Z vertex manually
+	transfrom4x4.mat[14] = m_fPositionZ;
+
+	kmGLMultMatrix(&transfrom4x4);
+
+	// XXX: Expensive calls. Camera should be integrated into the cached affine matrix
+	if (m_pCamera != NULL && !(m_pGrid != NULL && m_pGrid->isActive()))
+	{
+		bool translate = (m_obAnchorPointInPoints.x != 0.0f || m_obAnchorPointInPoints.y != 0.0f);
+
+		if (translate)
+		{
+			kmGLTranslatef(RENDER_IN_SUBPIXEL(m_obAnchorPointInPoints.x), RENDER_IN_SUBPIXEL(m_obAnchorPointInPoints.y), 0);
+		}
+		m_pCamera->locate();
+		if (translate)
+		{
+			kmGLTranslatef(RENDER_IN_SUBPIXEL(-m_obAnchorPointInPoints.x), RENDER_IN_SUBPIXEL(-m_obAnchorPointInPoints.y), 0);
+		}
+	}
+}
+
 void CCNode::onEnter()
 {
-    arrayMakeObjectsPerformSelector(m_pChildren, onEnter, CCNode*);
+	arrayMakeObjectsPerformSelector(m_pChildren, onEnter, CCNode*);
 
-    this->resumeSchedulerAndActions();
+	this->resumeSchedulerAndActions();
 
-    m_bRunning = true;
+	m_bRunning = true;
 
 	CCScriptEngine::sharedEngine()->executeNodeEvent(this, CCNode::Enter);
 }
 
 void CCNode::onEnterTransitionDidFinish()
 {
-    arrayMakeObjectsPerformSelector(m_pChildren, onEnterTransitionDidFinish, CCNode*);
+	arrayMakeObjectsPerformSelector(m_pChildren, onEnterTransitionDidFinish, CCNode*);
 
 	CCScriptEngine::sharedEngine()->executeNodeEvent(this, CCNode::EnterTransitionDidFinish);
 }
 
 void CCNode::onExitTransitionDidStart()
 {
-    arrayMakeObjectsPerformSelector(m_pChildren, onExitTransitionDidStart, CCNode*);
-	
+	arrayMakeObjectsPerformSelector(m_pChildren, onExitTransitionDidStart, CCNode*);
+
 	CCScriptEngine::sharedEngine()->executeNodeEvent(this, CCNode::ExitTransitionDidStart);
 }
 
 void CCNode::onExit()
 {
-    this->pauseSchedulerAndActions();
+	this->pauseSchedulerAndActions();
 
-    m_bRunning = false;
+	m_bRunning = false;
 
-    arrayMakeObjectsPerformSelector(m_pChildren, onExit, CCNode*);
-	
+	arrayMakeObjectsPerformSelector(m_pChildren, onExit, CCNode*);
+
 	CCScriptEngine::sharedEngine()->executeNodeEvent(this, CCNode::Exit);
 }
 
 void CCNode::registerScriptHandler(int nHandler)
 {
-    unregisterScriptHandler();
-    m_nScriptHandler = nHandler;
-    LUALOG("[LUA] Add CCNode event handler: %d", m_nScriptHandler);
+	unregisterScriptHandler();
+	m_nScriptHandler = nHandler;
+	LUALOG("[LUA] Add CCNode event handler: %d", m_nScriptHandler);
 }
 
 void CCNode::unregisterScriptHandler()
 {
-    if (m_nScriptHandler)
-    {
-        CCScriptEngine::sharedEngine()->removeScriptHandler(m_nScriptHandler);
-        LUALOG("[LUA] Remove CCNode event handler: %d", m_nScriptHandler);
-        m_nScriptHandler = 0;
-    }
+	if (m_nScriptHandler)
+	{
+		CCScriptEngine::sharedEngine()->removeScriptHandler(m_nScriptHandler);
+		LUALOG("[LUA] Remove CCNode event handler: %d", m_nScriptHandler);
+		m_nScriptHandler = 0;
+	}
 }
 
 void CCNode::setActionManager(CCActionManager* actionManager)
 {
-    if( actionManager != m_pActionManager ) {
-        this->stopAllActions();
-        CC_SAFE_RETAIN(actionManager);
-        CC_SAFE_RELEASE(m_pActionManager);
-        m_pActionManager = actionManager;
-    }
+	if (actionManager != m_pActionManager) {
+		this->stopAllActions();
+		CC_SAFE_RETAIN(actionManager);
+		CC_SAFE_RELEASE(m_pActionManager);
+		m_pActionManager = actionManager;
+	}
 }
 
 CCActionManager* CCNode::getActionManager()
 {
-    return m_pActionManager;
+	return m_pActionManager;
 }
 
 CCAction * CCNode::runAction(CCAction* action)
 {
-    CCAssert( action != NULL, "Argument must be non-nil");
-    m_pActionManager->addAction(action, this, !m_bRunning);
-    return action;
+	CCAssert(action != NULL, "Argument must be non-nil");
+	m_pActionManager->addAction(action, this, !m_bRunning);
+	return action;
 }
 
 void CCNode::stopAllActions()
 {
-    m_pActionManager->removeAllActionsFromTarget(this);
+	m_pActionManager->removeAllActionsFromTarget(this);
 }
 
 void CCNode::stopAction(CCAction* action)
 {
-    m_pActionManager->removeAction(action);
+	m_pActionManager->removeAction(action);
 }
 
 void CCNode::stopActionByTag(int tag)
 {
-    CCAssert( tag != kCCActionTagInvalid, "Invalid tag");
-    m_pActionManager->removeActionByTag(tag, this);
+	CCAssert(tag != kCCActionTagInvalid, "Invalid tag");
+	m_pActionManager->removeActionByTag(tag, this);
 }
 
 CCAction * CCNode::getActionByTag(int tag)
 {
-    CCAssert( tag != kCCActionTagInvalid, "Invalid tag");
-    return m_pActionManager->getActionByTag(tag, this);
+	CCAssert(tag != kCCActionTagInvalid, "Invalid tag");
+	return m_pActionManager->getActionByTag(tag, this);
 }
 
 unsigned int CCNode::numberOfRunningActions()
 {
-    return m_pActionManager->numberOfRunningActionsInTarget(this);
+	return m_pActionManager->numberOfRunningActionsInTarget(this);
 }
 
 // CCNode - Callbacks
 
 void CCNode::setScheduler(CCScheduler* scheduler)
 {
-    if( scheduler != m_pScheduler ) {
-        this->unscheduleAllSelectors();
-        CC_SAFE_RETAIN(scheduler);
-        CC_SAFE_RELEASE(m_pScheduler);
-        m_pScheduler = scheduler;
-    }
+	if (scheduler != m_pScheduler) {
+		this->unscheduleAllSelectors();
+		CC_SAFE_RETAIN(scheduler);
+		CC_SAFE_RELEASE(m_pScheduler);
+		m_pScheduler = scheduler;
+	}
 }
 
 CCScheduler* CCNode::getScheduler()
 {
-    return m_pScheduler;
+	return m_pScheduler;
 }
 
 void CCNode::scheduleUpdate()
 {
-    scheduleUpdateWithPriority(0);
+	scheduleUpdateWithPriority(0);
 }
 
 void CCNode::scheduleUpdateWithPriority(int priority)
 {
-    m_pScheduler->scheduleUpdateForTarget(this, priority, !m_bRunning);
+	m_pScheduler->scheduleUpdateForTarget(this, priority, !m_bRunning);
 }
 
 void CCNode::scheduleUpdateWithPriorityLua(int nHandler, int priority)
 {
-    unscheduleUpdate();
-    m_nUpdateScriptHandler = nHandler;
-    m_pScheduler->scheduleUpdateForTarget(this, priority, !m_bRunning);
+	unscheduleUpdate();
+	m_nUpdateScriptHandler = nHandler;
+	m_pScheduler->scheduleUpdateForTarget(this, priority, !m_bRunning);
 }
 
 void CCNode::unscheduleUpdate()
 {
-    m_pScheduler->unscheduleUpdateForTarget(this);
-    if (m_nUpdateScriptHandler)
-    {
-        CCScriptEngine::sharedEngine()->removeScriptHandler(m_nUpdateScriptHandler);
-        m_nUpdateScriptHandler = 0;
-    }
+	m_pScheduler->unscheduleUpdateForTarget(this);
+	if (m_nUpdateScriptHandler)
+	{
+		CCScriptEngine::sharedEngine()->removeScriptHandler(m_nUpdateScriptHandler);
+		m_nUpdateScriptHandler = 0;
+	}
 }
 
 void CCNode::schedule(SEL_SCHEDULE selector)
 {
-    this->schedule(selector, 0.0f, kCCRepeatForever, 0.0f);
+	this->schedule(selector, 0.0f, kCCRepeatForever, 0.0f);
 }
 
 void CCNode::schedule(SEL_SCHEDULE selector, float interval)
 {
-    this->schedule(selector, interval, kCCRepeatForever, 0.0f);
+	this->schedule(selector, interval, kCCRepeatForever, 0.0f);
 }
 
 void CCNode::schedule(SEL_SCHEDULE selector, float interval, unsigned int repeat, float delay)
 {
-    CCAssert( selector, "Argument must be non-nil");
-    CCAssert( interval >=0, "Argument must be positive");
+	CCAssert(selector, "Argument must be non-nil");
+	CCAssert(interval >= 0, "Argument must be positive");
 
-    m_pScheduler->scheduleSelector(selector, this, interval , repeat, delay, !m_bRunning);
+	m_pScheduler->scheduleSelector(selector, this, interval, repeat, delay, !m_bRunning);
 }
 
 void CCNode::scheduleOnce(SEL_SCHEDULE selector, float delay)
 {
-    this->schedule(selector, 0.0f, 0, delay);
+	this->schedule(selector, 0.0f, 0, delay);
 }
 
 void CCNode::unschedule(SEL_SCHEDULE selector)
 {
-    // explicit nil handling
-    if (selector == 0)
-        return;
+	// explicit nil handling
+	if (selector == 0)
+		return;
 
-    m_pScheduler->unscheduleSelector(selector, this);
+	m_pScheduler->unscheduleSelector(selector, this);
 }
 
 void CCNode::unscheduleAllSelectors()
 {
-    m_pScheduler->unscheduleAllForTarget(this);
+	m_pScheduler->unscheduleAllForTarget(this);
 }
 
 void CCNode::resumeSchedulerAndActions()
 {
-    m_pScheduler->resumeTarget(this);
-    m_pActionManager->resumeTarget(this);
+	m_pScheduler->resumeTarget(this);
+	m_pActionManager->resumeTarget(this);
 }
 
 void CCNode::pauseSchedulerAndActions()
 {
-    m_pScheduler->pauseTarget(this);
-    m_pActionManager->pauseTarget(this);
+	m_pScheduler->pauseTarget(this);
+	m_pActionManager->pauseTarget(this);
 }
 
 // override me
 void CCNode::update(float fDelta)
 {
-    if (m_nUpdateScriptHandler)
-    {
-        CCScriptEngine::sharedEngine()->executeSchedule(m_nUpdateScriptHandler, fDelta, this);
-    }
+	if (m_nUpdateScriptHandler)
+	{
+		CCScriptEngine::sharedEngine()->executeSchedule(m_nUpdateScriptHandler, fDelta, this);
+	}
 }
 
 CCAffineTransform CCNode::nodeToParentTransform()
 {
-	if (m_bTransformDirty) 
+	if (m_bTransformDirty)
 	{
 
 		// Translate values
 		float x = m_obPosition.x;
 		float y = m_obPosition.y;
-
-		if (m_bIgnoreAnchorPointForPosition) 
-		{
-			x += m_obAnchorPointInPoints.x;
-			y += m_obAnchorPointInPoints.y;
-		}
 
 		// Rotation values
 		// Change rotation code to handle X and Y
@@ -1056,32 +1015,32 @@ CCAffineTransform CCNode::nodeToParentTransform()
 			s = sinf(radians);
 		}
 
-		bool needsSkewMatrix = ( m_fSkewX || m_fSkewY );
+		bool needsSkewMatrix = (m_fSkewX || m_fSkewY);
 
 
 		// optimization:
 		// inline anchor point calculation if skew is not needed
 		// Adjusted transform calculation for rotational skew
-		if (! needsSkewMatrix && !m_obAnchorPointInPoints.equals(CCPointZero))
+		if (!needsSkewMatrix && !m_obAnchorPointInPoints.equals(CCPointZero))
 		{
 			x += c * -m_obAnchorPointInPoints.x * m_fScaleX + -s * -m_obAnchorPointInPoints.y * m_fScaleY;
-			y += s * -m_obAnchorPointInPoints.x * m_fScaleX +  c * -m_obAnchorPointInPoints.y * m_fScaleY;
+			y += s * -m_obAnchorPointInPoints.x * m_fScaleX + c * -m_obAnchorPointInPoints.y * m_fScaleY;
 		}
 
 
 		// Build Transform Matrix
 		// Adjusted transform calculation for rotational skew
-		m_sTransform = CCAffineTransformMake( c * m_fScaleX,  s * m_fScaleX,
+		m_sTransform = CCAffineTransformMake(c * m_fScaleX, s * m_fScaleX,
 			-s * m_fScaleY, c * m_fScaleY,
-			x, y );
+			x, y);
 
 		// XXX: Try to inline skew
 		// If skew is needed, apply skew and then anchor point
-		if (needsSkewMatrix) 
+		if (needsSkewMatrix)
 		{
 			CCAffineTransform skewMatrix = CCAffineTransformMake(1.0f, tanf(CC_DEGREES_TO_RADIANS(m_fSkewY)),
 				tanf(CC_DEGREES_TO_RADIANS(m_fSkewX)), 1.0f,
-				0.0f, 0.0f );
+				0.0f, 0.0f);
 			m_sTransform = CCAffineTransformConcat(skewMatrix, m_sTransform);
 
 			// adjust anchor point
@@ -1098,38 +1057,38 @@ CCAffineTransform CCNode::nodeToParentTransform()
 }
 CCAffineTransform CCNode::parentToNodeTransform()
 {
-    if ( m_bInverseDirty ) {
-        m_sInverse = CCAffineTransformInvert(this->nodeToParentTransform());
-        m_bInverseDirty = false;
-    }
+	if (m_bInverseDirty) {
+		m_sInverse = CCAffineTransformInvert(this->nodeToParentTransform());
+		m_bInverseDirty = false;
+	}
 
-    return m_sInverse;
+	return m_sInverse;
 }
 
 CCAffineTransform CCNode::nodeToWorldTransform()
 {
-    CCAffineTransform t = this->nodeToParentTransform();
+	CCAffineTransform t = this->nodeToParentTransform();
 
-    for (CCNode *p = m_pParent; p != NULL; p = p->getParent())
-        t = CCAffineTransformConcat(t, p->nodeToParentTransform());
+	for (CCNode *p = m_pParent; p != NULL; p = p->getParent())
+		t = CCAffineTransformConcat(t, p->nodeToParentTransform());
 
-    return t;
+	return t;
 }
 CCAffineTransform CCNode::worldToNodeTransform()
 {
-    return CCAffineTransformInvert(this->nodeToWorldTransform());
+	return CCAffineTransformInvert(this->nodeToWorldTransform());
 }
 
-CCAffineTransform CCNode::nodeToGameParentTransform( void )
+CCAffineTransform CCNode::nodeToGameParentTransform(void)
 {
 	return CCNode::nodeToParentTransform();
 }
-CCAffineTransform CCNode::gameParentToNodeTransform( void )
+CCAffineTransform CCNode::gameParentToNodeTransform(void)
 {
 	return CCAffineTransformInvert(this->nodeToGameParentTransform());
 }
 
-CCAffineTransform CCNode::nodeToGameTransform( void )
+CCAffineTransform CCNode::nodeToGameTransform(void)
 {
 	CCAffineTransform t = this->nodeToGameParentTransform();
 	for (CCNode *p = m_pParent; p != NULL; p = p->getParent())
@@ -1138,197 +1097,124 @@ CCAffineTransform CCNode::nodeToGameTransform( void )
 	}
 	return t;
 }
-CCAffineTransform CCNode::gameToNodeTransform( void )
+CCAffineTransform CCNode::gameToNodeTransform(void)
 {
 	return CCAffineTransformInvert(this->nodeToGameTransform());
 }
 
 CCPoint CCNode::convertToNodeSpace(const CCPoint& worldPoint)
 {
-    CCPoint ret = CCPointApplyAffineTransform(worldPoint, worldToNodeTransform());
-    return ret;
+	CCPoint ret = CCPointApplyAffineTransform(worldPoint, worldToNodeTransform());
+	return ret;
 }
 
 CCPoint CCNode::convertToWorldSpace(const CCPoint& nodePoint)
 {
-    CCPoint ret = CCPointApplyAffineTransform(nodePoint, nodeToWorldTransform());
-    return ret;
+	CCPoint ret = CCPointApplyAffineTransform(nodePoint, nodeToWorldTransform());
+	return ret;
 }
 
 CCPoint CCNode::convertToNodeSpaceAR(const CCPoint& worldPoint)
 {
-    CCPoint nodePoint = convertToNodeSpace(worldPoint);
-    return ccpSub(nodePoint, m_obAnchorPointInPoints);
+	CCPoint nodePoint = convertToNodeSpace(worldPoint);
+	return ccpSub(nodePoint, m_obAnchorPointInPoints);
 }
 
 CCPoint CCNode::convertToWorldSpaceAR(const CCPoint& nodePoint)
 {
-    CCPoint pt = ccpAdd(nodePoint, m_obAnchorPointInPoints);
-    return convertToWorldSpace(pt);
+	CCPoint pt = ccpAdd(nodePoint, m_obAnchorPointInPoints);
+	return convertToWorldSpace(pt);
 }
 
 CCPoint CCNode::convertToWindowSpace(const CCPoint& nodePoint)
 {
-    CCPoint worldPoint = this->convertToWorldSpace(nodePoint);
-    return CCDirector::sharedDirector()->convertToUI(worldPoint);
+	CCPoint worldPoint = this->convertToWorldSpace(nodePoint);
+	return CCDirector::sharedDirector()->convertToUI(worldPoint);
 }
 
 // convenience methods which take a CCTouch instead of CCPoint
 CCPoint CCNode::convertTouchToNodeSpace(CCTouch *touch)
 {
-    CCPoint point = touch->getLocation();
-    return this->convertToNodeSpace(point);
+	CCPoint point = touch->getLocation();
+	return this->convertToNodeSpace(point);
 }
 CCPoint CCNode::convertTouchToNodeSpaceAR(CCTouch *touch)
 {
-    CCPoint point = touch->getLocation();
-    return this->convertToNodeSpaceAR(point);
+	CCPoint point = touch->getLocation();
+	return this->convertToNodeSpaceAR(point);
 }
 
-CCPoint CCNode::convertToGameSpace( const CCPoint& nodePoint )
+CCPoint CCNode::convertToGameSpace(const CCPoint& nodePoint)
 {
 	return CCPointApplyAffineTransform(nodePoint, nodeToGameTransform());
 }
 
 void CCNode::updateTransform()
 {
-    // Recursively iterate over children
-    arrayMakeObjectsPerformSelector(m_pChildren, updateTransform, CCNode*);
+	// Recursively iterate over children
+	arrayMakeObjectsPerformSelector(m_pChildren, updateTransform, CCNode*);
 }
 
-// CCNodeRGBA
-CCNodeRGBA::CCNodeRGBA()
-: _displayedOpacity(255)
-, _realOpacity(255)
-, _displayedColor(ccWHITE)
-, _realColor(ccWHITE)
-, _cascadeColorEnabled(false)
-, _cascadeOpacityEnabled(false)
-{}
-
-CCNodeRGBA::~CCNodeRGBA() {}
-
-bool CCNodeRGBA::init()
-{
-    if (CCNode::init())
-    {
-        _displayedOpacity = _realOpacity = 255;
-        _displayedColor = _realColor = ccWHITE;
-        _cascadeOpacityEnabled = _cascadeColorEnabled = false;
-        return true;
-    }
-    return false;
-}
-
-GLubyte CCNodeRGBA::getOpacity()
+float CCNode::getOpacity()
 {
 	return _realOpacity;
 }
 
-GLubyte CCNodeRGBA::getDisplayedOpacity()
+float CCNode::getDisplayedOpacity()
 {
 	return _displayedOpacity;
 }
 
-void CCNodeRGBA::setOpacity(GLubyte opacity)
+void CCNode::setOpacity(float opacity)
 {
-    _displayedOpacity = _realOpacity = opacity;
-    
-	if (_cascadeOpacityEnabled)
-    {
-		GLubyte parentOpacity = 255;
-        CCRGBAProtocol* pParent = dynamic_cast<CCRGBAProtocol*>(m_pParent);
-        if (pParent && pParent->isCascadeOpacityEnabled())
-        {
-            parentOpacity = pParent->getDisplayedOpacity();
-        }
-        this->updateDisplayedOpacity(parentOpacity);
+	if (opacity < 0.0f) opacity = 0.0f;
+	if (opacity > 1.0f) opacity = 1.0f;
+	_displayedOpacity = _realOpacity = opacity;
+	this->updateDisplayedOpacity(
+		m_pParent ? m_pParent->getDisplayedOpacity() :
+		1.0f);
+}
+
+void CCNode::updateDisplayedOpacity(float parentOpacity)
+{
+	_displayedOpacity = _realOpacity * parentOpacity;
+	CCObject* pObj;
+	CCARRAY_FOREACH(m_pChildren, pObj)
+	{
+		CCNode* node = (CCNode*)pObj;
+		node->updateDisplayedOpacity(_displayedOpacity);
 	}
 }
 
-void CCNodeRGBA::updateDisplayedOpacity(GLubyte parentOpacity)
-{
-	_displayedOpacity = _realOpacity * parentOpacity/255.0;
-	
-    if (_cascadeOpacityEnabled)
-    {
-        CCObject* pObj;
-        CCARRAY_FOREACH(m_pChildren, pObj)
-        {
-            CCRGBAProtocol* item = dynamic_cast<CCRGBAProtocol*>(pObj);
-            if (item)
-            {
-                item->updateDisplayedOpacity(_displayedOpacity);
-            }
-        }
-    }
-}
-
-bool CCNodeRGBA::isCascadeOpacityEnabled()
-{
-    return _cascadeOpacityEnabled;
-}
-
-void CCNodeRGBA::setCascadeOpacityEnabled(bool cascadeOpacityEnabled)
-{
-    _cascadeOpacityEnabled = cascadeOpacityEnabled;
-}
-
-const ccColor3B& CCNodeRGBA::getColor()
+const ccColor3B& CCNode::getColor()
 {
 	return _realColor;
 }
 
-const ccColor3B& CCNodeRGBA::getDisplayedColor()
+const ccColor3B& CCNode::getDisplayedColor()
 {
 	return _displayedColor;
 }
 
-void CCNodeRGBA::setColor(const ccColor3B& color)
+void CCNode::setColor(const ccColor3B& color)
 {
 	_displayedColor = _realColor = color;
-	
-	if (_cascadeColorEnabled)
-    {
-		ccColor3B parentColor = ccWHITE;
-        CCRGBAProtocol *parent = dynamic_cast<CCRGBAProtocol*>(m_pParent);
-		if (parent && parent->isCascadeColorEnabled())
-        {
-            parentColor = parent->getDisplayedColor(); 
-        }
-        
-        updateDisplayedColor(parentColor);
+	updateDisplayedColor(
+		m_pParent ? m_pParent->getDisplayedColor() :
+		ccWHITE);
+}
+
+void CCNode::updateDisplayedColor(const ccColor3B& parentColor)
+{
+	_displayedColor.r = _realColor.r * parentColor.r / 255.0;
+	_displayedColor.g = _realColor.g * parentColor.g / 255.0;
+	_displayedColor.b = _realColor.b * parentColor.b / 255.0;
+	CCObject *obj = NULL;
+	CCARRAY_FOREACH(m_pChildren, obj)
+	{
+		CCNode* node = (CCNode*)obj;
+		node->updateDisplayedColor(_displayedColor);
 	}
-}
-
-void CCNodeRGBA::updateDisplayedColor(const ccColor3B& parentColor)
-{
-	_displayedColor.r = _realColor.r * parentColor.r/255.0;
-	_displayedColor.g = _realColor.g * parentColor.g/255.0;
-	_displayedColor.b = _realColor.b * parentColor.b/255.0;
-    
-    if (_cascadeColorEnabled)
-    {
-        CCObject *obj = NULL;
-        CCARRAY_FOREACH(m_pChildren, obj)
-        {
-            CCRGBAProtocol *item = dynamic_cast<CCRGBAProtocol*>(obj);
-            if (item)
-            {
-                item->updateDisplayedColor(_displayedColor);
-            }
-        }
-    }
-}
-
-bool CCNodeRGBA::isCascadeColorEnabled()
-{
-    return _cascadeColorEnabled;
-}
-
-void CCNodeRGBA::setCascadeColorEnabled(bool cascadeColorEnabled)
-{
-    _cascadeColorEnabled = cascadeColorEnabled;
 }
 
 NS_CC_END

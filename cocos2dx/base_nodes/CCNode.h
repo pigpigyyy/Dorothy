@@ -448,26 +448,6 @@ public:
      */
     virtual ccGLServerState getGLServerState();
     
-    
-    /**
-     * Sets whether the anchor point will be (0,0) when you position this node.
-     *
-     * This is an internal method, only used by CCLayer and CCScene. Don't call it outside framework.
-     * The default value is false, while in CCLayer and CCScene are true
-     *
-     * @param ignore    true if anchor point will be (0,0) when you position this node
-     * @todo This method shoud be renamed as setIgnoreAnchorPointForPosition(bool) or something with "set"
-     */
-    virtual void ignoreAnchorPointForPosition(bool ignore);
-    /**
-     * Gets whether the anchor point will be (0,0) when you position this node.
-     *
-     * @see ignoreAnchorPointForPosition(bool)
-     *
-     * @return true if the anchor point will be (0,0) when you position this node.
-     */
-    virtual bool isIgnoreAnchorPointForPosition();
-    
     /// @}  end of Setters & Getters for Graphic Peroperties
     
     
@@ -1175,6 +1155,19 @@ public:
 
 	CCPoint convertToGameSpace(const CCPoint& nodePoint);
 
+	virtual float getOpacity();
+	virtual float getDisplayedOpacity();
+	virtual void setOpacity(float opacity);
+	virtual void updateDisplayedOpacity(float parentOpacity);
+
+	virtual const ccColor3B& getColor();
+	virtual const ccColor3B& getDisplayedColor();
+	virtual void setColor(const ccColor3B& color);
+	virtual void updateDisplayedColor(const ccColor3B& parentColor);
+
+	virtual void setOpacityModifyRGB(bool bValue) {};
+	virtual bool isOpacityModifyRGB() { return false; };
+
 	template<typename NodeFunc>
 	static void traverse(CCNode* root, const NodeFunc& func)
 	{
@@ -1214,6 +1207,11 @@ private:
     CCPoint convertToWindowSpace(const CCPoint& nodePoint);
 
 protected:
+	float _displayedOpacity;
+	float _realOpacity;
+	ccColor3B _displayedColor;
+	ccColor3B _realColor;
+
     float m_fRotation;                 ///< rotation angle on x-axis
     float m_fScaleX;                    ///< scaling factor on x-axis
     float m_fScaleY;                    ///< scaling factor on y-axis
@@ -1260,58 +1258,10 @@ protected:
     bool m_bInverseDirty;               ///< transform dirty flag
     bool m_bVisible;                    ///< is this node visible
     
-    bool m_bIgnoreAnchorPointForPosition; ///< true if the Anchor Point will be (0,0) when you position the CCNode, false otherwise.
-                                          ///< Used by CCLayer and CCScene.
-    
     bool m_bReorderChildDirty;          ///< children order dirty flag
     
     int m_nScriptHandler;               ///< script handler for onEnter() & onExit(), used in Javascript binding and Lua binding.
     int m_nUpdateScriptHandler;         ///< script handler for update() callback per frame, which is invoked from lua & javascript.
-};
-
-//#pragma mark - CCNodeRGBA
-
-/** CCNodeRGBA is a subclass of CCNode that implements the CCRGBAProtocol protocol.
- 
- All features from CCNode are valid, plus the following new features:
- - opacity
- - RGB colors
- 
- Opacity/Color propagates into children that conform to the CCRGBAProtocol if cascadeOpacity/cascadeColor is enabled.
- @since v2.1
- */
-class CC_DLL CCNodeRGBA : public CCNode, public CCRGBAProtocol
-{
-public:
-    CCNodeRGBA();
-    virtual ~CCNodeRGBA();
-    
-    virtual bool init();
-    
-    virtual GLubyte getOpacity();
-    virtual GLubyte getDisplayedOpacity();
-    virtual void setOpacity(GLubyte opacity);
-    virtual void updateDisplayedOpacity(GLubyte parentOpacity);
-    virtual bool isCascadeOpacityEnabled();
-    virtual void setCascadeOpacityEnabled(bool cascadeOpacityEnabled);
-    
-    virtual const ccColor3B& getColor();
-    virtual const ccColor3B& getDisplayedColor();
-    virtual void setColor(const ccColor3B& color);
-    virtual void updateDisplayedColor(const ccColor3B& parentColor);
-    virtual bool isCascadeColorEnabled();
-    virtual void setCascadeColorEnabled(bool cascadeColorEnabled);
-    
-    virtual void setOpacityModifyRGB(bool bValue) {};
-    virtual bool isOpacityModifyRGB() { return false; };
-
-protected:
-	GLubyte		_displayedOpacity;
-    GLubyte     _realOpacity;
-	ccColor3B	_displayedColor;
-    ccColor3B   _realColor;
-	bool		_cascadeColorEnabled;
-    bool        _cascadeOpacityEnabled;
 };
 
 // end of base_node group

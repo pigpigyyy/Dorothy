@@ -21,7 +21,7 @@ public:
 	uint8 easeRotation;
 	uint8 easeSkew;
 	bool visible;/*1*/
-	GLubyte opacity;/*2*/
+	float opacity;/*2*/
 	float duration;
 	float x;
 	float y;/*3*/

@@ -12,6 +12,8 @@ public:
 	static void stop();
 	static void setVolume(float volume);
 	static float getVolume();
+	static void setUseCache(bool cache);
+	static bool isUseCache();
 };
 
 class oMusic

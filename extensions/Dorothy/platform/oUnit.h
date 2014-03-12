@@ -60,7 +60,7 @@ public:
 		void remove(const string& name);
 		void clear();
 	private:
-		void setOwner(oUnit* owner);
+		void operator()(oUnit* owner);
 		oUnit* _owner;
 		oPropertyMap _items;
 		friend class oUnit;
@@ -105,7 +105,7 @@ protected:
 		void reinstall();
 		void clear();
 	private:
-		void setOwner(oUnit* owner);
+		void operator()(oUnit* owner);
 		oUnit* _owner;
 		oRefVector<oInstinct> _instincts;
 		friend class oUnit;

@@ -74,7 +74,7 @@ struct transformValues_;
  *
  * The default anchorPoint in CCSprite is (0.5, 0.5).
  */
-class CC_DLL CCSprite : public CCNodeRGBA, public CCTextureProtocol
+class CC_DLL CCSprite : public CCNode, public CCTextureProtocol
 {
 public:
     /// @{
@@ -222,7 +222,6 @@ public:
     virtual void setScale(float fScale);
     virtual void setPositionZ(float fVertexZ);
     virtual void setAnchorPoint(const CCPoint& anchor);
-    virtual void ignoreAnchorPointForPosition(bool value);
     virtual void setVisible(bool bVisible);
     virtual void draw();
     /// @}
@@ -231,10 +230,10 @@ public:
     /// @name Functions inherited from CCNodeRGBA
     virtual void setColor(const ccColor3B& color3);
     virtual void updateDisplayedColor(const ccColor3B& parentColor);
-    virtual void setOpacity(GLubyte opacity);
+    virtual void setOpacity(float opacity);
     virtual void setOpacityModifyRGB(bool modify);
     virtual bool isOpacityModifyRGB();
-    virtual void updateDisplayedOpacity(GLubyte parentOpacity);
+	virtual void updateDisplayedOpacity(float parentOpacity);
     /// @}
 
     

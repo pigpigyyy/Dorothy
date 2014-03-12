@@ -3,8 +3,10 @@
 #include "AppDelegate.h"
 #include "CCLuaEngine.h"
 #include "SimpleAudioEngine.h"
-
 using namespace CocosDenshion;
+#include "Dorothy.h"
+using namespace Dorothy;
+using namespace Dorothy::Platform;
 
 USING_NS_CC;
 
@@ -23,23 +25,19 @@ bool AppDelegate::applicationDidFinishLaunching()
     CCDirector *pDirector = CCDirector::sharedDirector();
     pDirector->setOpenGLView(CCEGLView::sharedOpenGLView());
 
-    // turn on display FPS
-    pDirector->setDisplayStats(true);
-
-    // set FPS. the default value is 1.0/60 if you don't call this
-    pDirector->setAnimationInterval(1.0 / 60);
-
-    // register lua engine
-    CCLuaEngine* pEngine = CCLuaEngine::defaultEngine();
-    CCScriptEngine::setEngine(pEngine);
-
 #if CC_TARGET_PLATFORM == CC_PLATFORM_BLACKBERRY
     std::vector<std::string> searchPaths;
     searchPaths.push_back("TestCppResources");
     CCFileUtils::sharedFileUtils()->setSearchPaths(searchPaths);
 #endif
-
-    pEngine->executeScriptFile("luaScript/main.lua");
+	/*
+	oSharedContent.setGameFile("Resources.zip");
+	oSharedContent.setPassword("pigyypigy");
+	oSharedContent.setUsingGameFile(true);
+	*/
+	// register lua engine
+	CCScriptEngine::setEngine(CCLuaEngine::defaultEngine());
+	CCScriptEngine::sharedEngine()->executeScriptFile("luaScript/main.lua");
 
     return true;
 }

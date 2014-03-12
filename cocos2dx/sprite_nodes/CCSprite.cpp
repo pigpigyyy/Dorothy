@@ -121,7 +121,7 @@ bool CCSprite::init()
 // designated initializer
 bool CCSprite::initWithTexture(CCTexture2D *pTexture, const CCRect& rect)
 {
-	if (CCNodeRGBA::init())
+	if (CCNode::init())
 	{
 		m_pobBatchNode = NULL;
 		// shader program
@@ -697,12 +697,6 @@ void CCSprite::setAnchorPoint(const CCPoint& anchor)
 	SET_DIRTY_RECURSIVELY();
 }
 
-void CCSprite::ignoreAnchorPointForPosition(bool value)
-{
-	CCAssert(!m_pobBatchNode, "ignoreAnchorPointForPosition is invalid in CCSprite");
-	CCNode::ignoreAnchorPointForPosition(value);
-}
-
 void CCSprite::setVisible(bool bVisible)
 {
 	CCNode::setVisible(bVisible);
@@ -741,14 +735,20 @@ bool CCSprite::isFlipY()
 
 void CCSprite::updateColor()
 {
-	ccColor4B color4 = { _displayedColor.r, _displayedColor.g, _displayedColor.b, _displayedOpacity };
+	ccColor4B color4 =
+	{
+		_displayedColor.r,
+		_displayedColor.g,
+		_displayedColor.b,
+		(GLubyte)(_displayedOpacity*255.0f)
+	};
 
 	// special opacity for premultiplied textures
 	if (m_bOpacityModifyRGB)
 	{
-		color4.r *= _displayedOpacity / 255.0f;
-		color4.g *= _displayedOpacity / 255.0f;
-		color4.b *= _displayedOpacity / 255.0f;
+		color4.r *= _displayedOpacity;
+		color4.g *= _displayedOpacity;
+		color4.b *= _displayedOpacity;
 	}
 
 	m_sQuad.bl.colors = color4;
@@ -775,16 +775,16 @@ void CCSprite::updateColor()
 	// do nothing
 }
 
-void CCSprite::setOpacity(GLubyte opacity)
+void CCSprite::setOpacity(float opacity)
 {
-	CCNodeRGBA::setOpacity(opacity);
+	CCNode::setOpacity(opacity);
 
 	updateColor();
 }
 
 void CCSprite::setColor(const ccColor3B& color3)
 {
-	CCNodeRGBA::setColor(color3);
+	CCNode::setColor(color3);
 
 	updateColor();
 }
@@ -805,15 +805,13 @@ bool CCSprite::isOpacityModifyRGB()
 
 void CCSprite::updateDisplayedColor(const ccColor3B& parentColor)
 {
-	CCNodeRGBA::updateDisplayedColor(parentColor);
-
+	CCNode::updateDisplayedColor(parentColor);
 	updateColor();
 }
 
-void CCSprite::updateDisplayedOpacity(GLubyte opacity)
+void CCSprite::updateDisplayedOpacity(float opacity)
 {
-	CCNodeRGBA::updateDisplayedOpacity(opacity);
-
+	CCNode::updateDisplayedOpacity(opacity);
 	updateColor();
 }
 

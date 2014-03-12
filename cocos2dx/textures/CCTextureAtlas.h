@@ -149,7 +149,6 @@ public:
     */
     void removeAllQuads();
 
-
     /** resize the capacity of the CCTextureAtlas.
     * The new capacity can be lower or higher than the current one
     * It returns YES if the resize was successful.

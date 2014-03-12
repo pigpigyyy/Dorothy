@@ -103,7 +103,6 @@ bool CCMotionStreak::initWithFade(float fade, float minSeg, float stroke, ccColo
 {
     CCNode::setPosition(CCPointZero);
     setAnchorPoint(CCPointZero);
-    ignoreAnchorPointForPosition(true);
     m_bStartingPositionInitialized = false;
 
     m_tPositionR = CCPointZero;
@@ -177,27 +176,6 @@ void CCMotionStreak::setBlendFunc(ccBlendFunc blendFunc)
 ccBlendFunc CCMotionStreak::getBlendFunc()
 {
     return m_tBlendFunc;
-}
-
-void CCMotionStreak::setOpacity(GLubyte opacity)
-{
-    CCAssert(false, "Set opacity no supported");
-}
-
-GLubyte CCMotionStreak::getOpacity()
-{
-    CCAssert(false, "Opacity no supported");
-    return 0;
-}
-
-void CCMotionStreak::setOpacityModifyRGB(bool bValue)
-{
-    CC_UNUSED_PARAM(bValue);
-}
-
-bool CCMotionStreak::isOpacityModifyRGB()
-{
-    return false;
 }
 
 void CCMotionStreak::update(float delta)

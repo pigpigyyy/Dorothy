@@ -90,6 +90,7 @@ void CCActionManager::actionAllocWithHashElement(tHashElement *pElement)
 void CCActionManager::removeActionAtIndex(unsigned int uIndex, tHashElement *pElement)
 {
     CCAction *pAction = (CCAction*)pElement->actions->arr[uIndex];
+	pAction->stop();
 
     if (pAction == pElement->currentAction && (! pElement->currentActionSalvaged))
     {
@@ -224,7 +225,12 @@ void CCActionManager::removeAllActionsFromTarget(CCObject *pTarget)
             pElement->currentActionSalvaged = true;
         }
 
+		for (int i = 0; i < pElement->actions->num; i++)
+		{
+			((CCAction*)pElement->actions->arr[i])->stop();
+		}
         ccArrayRemoveAllObjects(pElement->actions);
+		
         if (m_pCurrentTarget == pElement)
         {
             m_bCurrentTargetSalvaged = true;

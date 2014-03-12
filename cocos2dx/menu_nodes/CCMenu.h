@@ -53,7 +53,7 @@ enum {
 *  - You can add MenuItem objects in runtime using addChild:
 *  - But the only accepted children are MenuItem objects
 */
-class CC_DLL CCMenu : public CCLayerRGBA
+class CC_DLL CCMenu : public CCLayer
 {
     /** whether or not the menu will receive events */
     bool m_bEnabled;

@@ -13,7 +13,7 @@ easeRotation(0),
 easeSkew(0),
 easeOpacity(0),
 visible(true),
-opacity(255),
+opacity(1.0f),
 duration(0.0f),
 x(0.0f),
 y(0.0f),
@@ -44,9 +44,9 @@ string oKeyFrameDef::toXml()
 	{
 		stream << ' ' << char(oModelXml::Scale) << "=\"" << scaleX << ',' << scaleY << '\"';
 	}
-	if (opacity != 255)
+	if (opacity != 1.0f)
 	{
-		stream << ' ' << char(oModelXml::Opacity) << "=\"" << (int)opacity << '\"';
+		stream << ' ' << char(oModelXml::Opacity) << "=\"" << opacity << '\"';
 	}
 	if (skewX != 0.0f || skewY != 0.0f)
 	{
@@ -87,11 +87,15 @@ oActionDuration* oKeyAnimationDef::toAction()
 	{
 		return nullptr;
 	}
-	CCArray keyFrames(_keyFrameDefs.size());
-	CCArray keyAttrs(oKeyFrameDef::MaxKeyAttributes);
+
+	int indexFrames = 0;
+	CCFiniteTimeAction** keyFrames = (CCFiniteTimeAction**)alloca(sizeof(CCFiniteTimeAction*)*(_keyFrameDefs.size() + 1));
+	int indexAttrs = 0;
+	CCFiniteTimeAction** keyAttrs = (CCFiniteTimeAction**)alloca(sizeof(CCFiniteTimeAction*)*(oKeyFrameDef::MaxKeyAttributes + 1));
 
 	oKeyFrameDef* lastDef = _keyFrameDefs.front();
-	keyFrames.addObject(oKeyReset::create(lastDef));
+	keyFrames[indexFrames++] = oKeyReset::create(lastDef);
+
 	for (uint32 i = 1; i < _keyFrameDefs.size(); i++)
 	{
 		/* Get current keyFrameDef */
@@ -99,45 +103,47 @@ oActionDuration* oKeyAnimationDef::toAction()
 		/* Check for animated attributes of keyFrame */
 		if (lastDef->x != def->x || lastDef->y != def->y)
 		{
-			keyAttrs.addObject(oKeyPos::create(def->duration, def->x, def->y, def->easePos));
+			keyAttrs[indexAttrs++] = oKeyPos::create(def->duration, def->x, def->y, def->easePos);
 		}
 		if (lastDef->scaleX != def->scaleX || lastDef->scaleY != def->scaleY)
 		{
-			keyAttrs.addObject(oKeyScale::create(def->duration, def->scaleX, def->scaleY, def->easeScale));
+			keyAttrs[indexAttrs++] = oKeyScale::create(def->duration, def->scaleX, def->scaleY, def->easeScale);
 		}
 		if (lastDef->skewX != def->skewX || lastDef->skewY != def->skewY)
 		{
-			keyAttrs.addObject(oKeySkew::create(def->duration, def->skewX, def->skewY, def->easeSkew));
+			keyAttrs[indexAttrs++] = oKeySkew::create(def->duration, def->skewX, def->skewY, def->easeSkew);
 		}
 		if (lastDef->rotation != def->rotation)
 		{
-			keyAttrs.addObject(oKeyRotate::create(def->duration, def->rotation, def->easeRotation));
+			keyAttrs[indexAttrs++] = oKeyRotate::create(def->duration, def->rotation, def->easeRotation);
 		}
 		if (lastDef->opacity != def->opacity)
 		{
-			keyAttrs.addObject(oKeyOpacity::create(def->duration, def->opacity, def->easeOpacity));
+			keyAttrs[indexAttrs++] = oKeyOpacity::create(def->duration, def->opacity, def->easeOpacity);
 		}
 		if (lastDef->visible != def->visible)
 		{
-			keyAttrs.addObject(def->visible ? (CCObject*)CCShow::create() : (CCObject*)CCHide::create());
+			keyAttrs[indexAttrs++] = def->visible ? (CCFiniteTimeAction*)CCShow::create() : (CCFiniteTimeAction*)CCHide::create();
 		}
 		/* Add a new keyFrame */
-		if (keyAttrs.count() > 1)// Multiple attributes animated
+		if (indexAttrs > 1)// Multiple attributes animated
 		{
-			keyFrames.addObject(CCSpawn::create(&keyAttrs));
+			keyAttrs[indexAttrs++] = nullptr;
+			keyFrames[indexFrames++] = oSpawn::createWithVariableList(keyAttrs[0],(va_list)(keyAttrs+1));
 		}
-		else if (keyAttrs.count() == 1)// Single attribute animated
+		else if (indexAttrs == 1)// Single attribute animated
 		{
-			keyFrames.addObject(keyAttrs.objectAtIndex(0));
+			keyFrames[indexFrames++] = keyAttrs[0];
 		}
 		else // No attribute animated
 		{
-			keyFrames.addObject(CCDelayTime::create(def->duration));
+			keyFrames[indexFrames++] = CCDelayTime::create(def->duration);
 		}
-		keyAttrs.removeAllObjects();
+		indexAttrs = 0;
 		lastDef = def;
 	}
-	return oSequence::create(&keyFrames);
+	keyFrames[indexFrames++] = nullptr;
+	return oSequence::createWithVariableList(keyFrames[0],(va_list)(keyFrames+1));
 }
 
 string oKeyAnimationDef::toXml()

@@ -354,14 +354,22 @@ CCArray* CCFileUtils::createCCArrayWithContentsOfFile(const std::string& filenam
 
 #endif /* (CC_TARGET_PLATFORM != CC_PLATFORM_IOS) && (CC_TARGET_PLATFORM != CC_PLATFORM_MAC) */
 
+void CCFileUtils::setDataSource(CCDataSource* dataSource)
+{
+	CC_SAFE_DELETE(m_pDataSource);
+	m_pDataSource = dataSource;
+}
+
 CCFileUtils::CCFileUtils()
 : m_pFilenameLookupDict(NULL)
+, m_pDataSource(NULL)
 {
 }
 
 CCFileUtils::~CCFileUtils()
 {
-    CC_SAFE_RELEASE(m_pFilenameLookupDict);
+	CC_SAFE_RELEASE(m_pFilenameLookupDict);
+	CC_SAFE_DELETE(m_pDataSource);
 }
 
 bool CCFileUtils::init()
@@ -378,7 +386,9 @@ void CCFileUtils::purgeCachedEntries()
 
 unsigned char* CCFileUtils::getFileData(const char* pszFileName, const char* pszMode, unsigned long * pSize)
 {
-    unsigned char * pBuffer = NULL;
+	unsigned char* pBuffer = NULL;
+	if (m_pDataSource) pBuffer = m_pDataSource->getFileData(pszFileName, pszMode, pSize);
+	if (pBuffer) return pBuffer;
     CCAssert(pszFileName != NULL && pSize != NULL && pszMode != NULL, "Invalid parameters.");
     *pSize = 0;
     do

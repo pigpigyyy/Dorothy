@@ -150,6 +150,8 @@ local CCObjectTypes = {
 	"oUnitDef",
 	"oUnit",
 	"oAILeaf",
+	
+	"oListener",
 }
 
 -- register CCObject types

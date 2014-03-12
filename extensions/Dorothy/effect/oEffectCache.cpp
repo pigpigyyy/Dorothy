@@ -59,6 +59,15 @@ bool oEffectCache::load( const char* filename )
 	}
 	return _parser.parse(data, size);
 }
+bool oEffectCache::update(const char* content)
+{
+	if (!_effects.empty())
+	{
+		oEffectCache::unload();
+	}
+	unsigned long size = ::strlen(content);
+	return _parser.parse(content, size);
+}
 bool oEffectCache::unload()
 {
 	if (_effects.empty())

@@ -37,7 +37,7 @@ NS_CC_BEGIN
  */
 struct ccColor3B
 {
-	ccColor3B():r(0), g(0), b(0){}
+	ccColor3B():r(255), g(255), b(255){}
 	ccColor3B(unsigned int value): r((value&0x00FF0000)>>16), g((value&0x0000FF00)>>8), b(value&0x000000FF){}
 	ccColor3B(GLubyte r, GLubyte g, GLubyte b):r(r), g(g), b(b){}
     GLubyte r;
@@ -76,7 +76,7 @@ static const ccColor3B ccGRAY(0xaaaaaa);
 struct ccColor4B
 {
 	ccColor4B(unsigned int value) :a(value >> 24), r((value & 0x00FF0000) >> 16), g((value & 0x0000FF00) >> 8), b(value & 0x000000FF){}
-	ccColor4B():r(0), g(0), b(0), a(0){}
+	ccColor4B():r(255), g(255), b(255), a(255){}
 	ccColor4B(GLubyte r, GLubyte g, GLubyte b, GLubyte a) :r(r), g(g), b(b), a(a){}
 	ccColor4B(ccColor3B c, GLubyte a = 255) :r(c.r), g(c.g), b(c.b), a(a){}
     GLubyte r;
@@ -234,6 +234,14 @@ typedef struct _ccV2F_C4F_T2F
     ccTex2F            texCoords;
 } ccV2F_C4F_T2F;
 
+typedef struct _ccV2F_C4F
+{
+	//! vertices (2F)
+	ccVertex2F        vertices;
+	//! colors (4F)
+	ccColor4F        colors;
+} ccV2F_C4F;
+
 //! a Point with a vertex point, a tex coord point and a color 4B
 typedef struct _ccV3F_C4B_T2F
 {
@@ -259,6 +267,26 @@ typedef struct _ccV2F_C4B_T2F_Triangle
 	//! Point B
 	ccV2F_C4B_T2F c;
 } ccV2F_C4B_T2F_Triangle;
+
+typedef struct _ccV2F_C4F_T2F_Triangle
+{
+	//! Point A
+	ccV2F_C4F_T2F a;
+	//! Point B
+	ccV2F_C4F_T2F b;
+	//! Point B
+	ccV2F_C4F_T2F c;
+} ccV2F_C4F_T2F_Triangle;
+
+typedef struct _ccV2F_C4F_Triangle
+{
+	//! Point A
+	ccV2F_C4F a;
+	//! Point B
+	ccV2F_C4F b;
+	//! Point B
+	ccV2F_C4F c;
+} ccV2F_C4F_Triangle;
 
 //! A Quad of ccV2F_C4B_T2F
 typedef struct _ccV2F_C4B_T2F_Quad

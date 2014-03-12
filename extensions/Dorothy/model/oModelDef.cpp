@@ -39,7 +39,7 @@ skewY(0.0f),
 texture(nullptr),
 rect(),
 clip(-1),
-opacity(255),
+opacity(1.0f),
 visible(true)
 { }
 

@@ -72,7 +72,8 @@ public:
     CCSize  size;
 
 public:
-    CCRect();    
+    CCRect();
+	CCRect(const CCPoint& origin, const CCSize& size);
     CCRect(float x, float y, float width, float height);
     CCRect(const CCRect& other);
     CCRect& operator= (const CCRect& other); 

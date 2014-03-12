@@ -1,13 +1,32 @@
 #include "Dorothy/const/oDefine.h"
 #include "Dorothy/misc/oContent.h"
 #include <cstdio>
+#include <sys/stat.h>
 
 NS_DOROTHY_BEGIN
+
+class oDataSource: public CCDataSource
+{
+public:
+	virtual unsigned char* getFileData(const char* pszFileName, const char* pszMode, unsigned long* pSize)
+	{
+		if (oSharedContent.isUsingGameFile())
+		{
+			return ccUZipReadFile(
+				pszFileName,
+				oSharedContent.getPassword().empty() ? nullptr : oSharedContent.getPassword().c_str(),
+				*pSize);
+		}
+		return nullptr;
+	}
+};
 
 oContent::oContent():
 _isUsingGameFile(false),
 _writablePath(std::move(CCFileUtils::sharedFileUtils()->getWritablePath()))
-{ }
+{
+	CCFileUtils::sharedFileUtils()->setDataSource(new oDataSource());
+}
 
 oContent::~oContent()
 {
@@ -91,31 +110,41 @@ void oContent::setPassword( const string& password )
 	_password = password;
 }
 
-string oContent::extractGameFile( const char* filename )
+const string& oContent::getPassword() const
+{
+	return _password;
+}
+
+void oContent::extractGameFile(const char* filename, const char* targetFullName)
 {
 	if (!_gameFileName.empty())
 	{
-		string targetFullName = oContent::getExtractedFullName(filename);
 		ccUZipExtract(
 			filename,
 			_password.empty() ? nullptr : _password.c_str(),
-			targetFullName.c_str());
-		return targetFullName;
+			targetFullName);
 	}
-	return string();
 }
 
 string oContent::getExtractedFullName( const char* filename )
 {
 	string file(filename);
-	int index = file.find_last_of('.');
-	string targetName = _writablePath + file.substr(0, index) + ".tmp";
-	return targetName;
+	return std::move(_writablePath + file);
+}
+
+bool oContent::isFileExist(const char* filename)
+{
+	struct stat buf;
+	if (::stat(filename, &buf) != -1)
+	{
+		return true;
+	}
+	return false;
 }
 
 bool oContent::removeExtractedFile( const char* filename )
 {
-	return ::remove(oContent::getExtractedFullName(filename).c_str()) == 0;
+	return ::remove(filename) == 0;
 }
 
 NS_DOROTHY_END

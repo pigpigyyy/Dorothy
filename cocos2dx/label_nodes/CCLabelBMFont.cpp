@@ -507,11 +507,6 @@ bool CCLabelBMFont::initWithString(const char *theString, const char *fntFile, f
         m_fWidth = width;
         m_pAlignment = alignment;
         
-        m_cDisplayedOpacity = m_cRealOpacity = 255;
-		m_tDisplayedColor = m_tRealColor = ccWHITE;
-        m_bCascadeOpacityEnabled = true;
-        m_bCascadeColorEnabled = true;
-        
         m_obContentSize = CCSizeZero;
         
         m_bIsOpacityModifyRGB = m_pobTextureAtlas->getTexture()->hasPremultipliedAlpha();
@@ -539,12 +534,6 @@ CCLabelBMFont::CCLabelBMFont()
 , m_bLineBreakWithoutSpaces(false)
 , m_tImageOffset(CCPointZero)
 , m_pReusedChar(NULL)
-, m_cDisplayedOpacity(255)
-, m_cRealOpacity(255)
-, m_tDisplayedColor(ccWHITE)
-, m_tRealColor(ccWHITE)
-, m_bCascadeColorEnabled(true)
-, m_bCascadeOpacityEnabled(true)
 , m_bIsOpacityModifyRGB(false)
 {
 
@@ -679,10 +668,6 @@ void CCLabelBMFont::createFontChars()
             
             // Apply label properties
 			fontChar->setOpacityModifyRGB(m_bIsOpacityModifyRGB);
-            
-			// Color MUST be set before opacity, since opacity might change color if OpacityModifyRGB is on
-			fontChar->updateDisplayedColor(m_tDisplayedColor);
-			fontChar->updateDisplayedOpacity(m_cDisplayedOpacity);
         }
 
         // updating previous sprite
@@ -788,58 +773,6 @@ void CCLabelBMFont::setCString(const char *label)
     setText(label);
 }
 
-//LabelBMFont - CCRGBAProtocol protocol
-const ccColor3B& CCLabelBMFont::getColor()
-{
-    return m_tRealColor;
-}
-
-const ccColor3B& CCLabelBMFont::getDisplayedColor()
-{
-    return m_tDisplayedColor;
-}
-
-void CCLabelBMFont::setColor(const ccColor3B& color)
-{
-	m_tDisplayedColor = m_tRealColor = color;
-	
-	if( m_bCascadeColorEnabled ) {
-		ccColor3B parentColor = ccWHITE;
-        CCRGBAProtocol* pParent = dynamic_cast<CCRGBAProtocol*>(m_pParent);
-        if (pParent && pParent->isCascadeColorEnabled())
-        {
-            parentColor = pParent->getDisplayedColor();
-        }
-        this->updateDisplayedColor(parentColor);
-	}
-}
-
-GLubyte CCLabelBMFont::getOpacity()
-{
-    return m_cRealOpacity;
-}
-
-GLubyte CCLabelBMFont::getDisplayedOpacity()
-{
-    return m_cDisplayedOpacity;
-}
-
-/** Override synthesized setOpacity to recurse items */
-void CCLabelBMFont::setOpacity(GLubyte opacity)
-{
-	m_cDisplayedOpacity = m_cRealOpacity = opacity;
-    
-	if( m_bCascadeOpacityEnabled ) {
-		GLubyte parentOpacity = 255;
-        CCRGBAProtocol* pParent = dynamic_cast<CCRGBAProtocol*>(m_pParent);
-        if (pParent && pParent->isCascadeOpacityEnabled())
-        {
-            parentOpacity = pParent->getDisplayedOpacity();
-        }
-        this->updateDisplayedOpacity(parentOpacity);
-	}
-}
-
 void CCLabelBMFont::setOpacityModifyRGB(bool var)
 {
     m_bIsOpacityModifyRGB = var;
@@ -850,12 +783,8 @@ void CCLabelBMFont::setOpacityModifyRGB(bool var)
         {
             CCNode* pNode = (CCNode*) child;
             if (pNode)
-            {
-                CCRGBAProtocol *pRGBAProtocol = dynamic_cast<CCRGBAProtocol*>(pNode);
-                if (pRGBAProtocol)
-                {
-                    pRGBAProtocol->setOpacityModifyRGB(m_bIsOpacityModifyRGB);
-                }
+			{
+				pNode->setOpacityModifyRGB(m_bIsOpacityModifyRGB);
             }
         }
     }
@@ -863,52 +792,6 @@ void CCLabelBMFont::setOpacityModifyRGB(bool var)
 bool CCLabelBMFont::isOpacityModifyRGB()
 {
     return m_bIsOpacityModifyRGB;
-}
-
-void CCLabelBMFont::updateDisplayedOpacity(GLubyte parentOpacity)
-{
-	m_cDisplayedOpacity = m_cRealOpacity * parentOpacity/255.0;
-    
-	CCObject* pObj;
-	CCARRAY_FOREACH(m_pChildren, pObj)
-    {
-        CCSprite *item = (CCSprite*)pObj;
-		item->updateDisplayedOpacity(m_cDisplayedOpacity);
-	}
-}
-
-void CCLabelBMFont::updateDisplayedColor(const ccColor3B& parentColor)
-{
-	m_tDisplayedColor.r = m_tRealColor.r * parentColor.r/255.0;
-	m_tDisplayedColor.g = m_tRealColor.g * parentColor.g/255.0;
-	m_tDisplayedColor.b = m_tRealColor.b * parentColor.b/255.0;
-    
-    CCObject* pObj;
-	CCARRAY_FOREACH(m_pChildren, pObj)
-    {
-        CCSprite *item = (CCSprite*)pObj;
-		item->updateDisplayedColor(m_tDisplayedColor);
-	}
-}
-
-bool CCLabelBMFont::isCascadeColorEnabled()
-{
-    return false;
-}
-
-void CCLabelBMFont::setCascadeColorEnabled(bool cascadeColorEnabled)
-{
-    m_bCascadeColorEnabled = cascadeColorEnabled;
-}
-
-bool CCLabelBMFont::isCascadeOpacityEnabled()
-{
-    return false;
-}
-
-void CCLabelBMFont::setCascadeOpacityEnabled(bool cascadeOpacityEnabled)
-{
-    m_bCascadeOpacityEnabled = cascadeOpacityEnabled;
 }
 
 // LabelBMFont - AnchorPoint

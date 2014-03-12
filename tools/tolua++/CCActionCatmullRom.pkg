@@ -1,7 +1,0 @@
-CCActionInterval* CCCardinalSplineTo_create @ CCCardinalSplineTo(float duration, const vector<oVec2>& points, float tension);
-
-CCActionInterval* CCCardinalSplineBy_create @ CCCardinalSplineBy(float duration, const vector<oVec2>& points, float tension);
-
-CCActionInterval* CCCatmullRomTo_create @ CCCatmullRomTo(float duration, const vector<oVec2>& points);
-
-CCActionInterval* CCCatmullRomBy_create @ CCCatmullRomBy(float duration, const vector<oVec2>& points);

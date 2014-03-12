@@ -59,7 +59,7 @@ public:
 		TouchesAllAtOnce,
 		TouchesOneByOne
 	};
-    CCLayer();
+	CCLayer();
     virtual ~CCLayer();
     virtual bool init();
     
@@ -144,7 +144,7 @@ public:
     inline CCTouchScriptHandlerEntry* getScriptTouchHandlerEntry() { return m_pScriptTouchHandlerEntry; };
     inline CCScriptHandlerEntry* getScriptKeypadHandlerEntry() { return m_pScriptKeypadHandlerEntry; };
     inline CCScriptHandlerEntry* getScriptAccelerateHandlerEntry() { return m_pScriptAccelerateHandlerEntry; };
-protected:   
+protected:
     bool m_bTouchEnabled;
     bool m_bAccelerometerEnabled;
     bool m_bKeypadEnabled;
@@ -161,44 +161,6 @@ private:
     int  excuteScriptTouchHandler(int nEventType, CCTouch *pTouch);
     int  excuteScriptTouchHandler(int nEventType, CCSet *pTouches);
 };
-/** CCLayerRGBA is a subclass of CCLayer that implements the CCRGBAProtocol protocol using a solid color as the background.
- 
- All features from CCLayer are valid, plus the following new features that propagate into children that conform to the CCRGBAProtocol:
- - opacity
- - RGB colors
- @since 2.1
- */
-class CC_DLL CCLayerRGBA : public CCLayer, public CCRGBAProtocol
-{
-public:
-    CREATE_FUNC(CCLayerRGBA);
-    
-    CCLayerRGBA();
-    virtual ~CCLayerRGBA();
-    
-    virtual bool init();
-    
-    virtual GLubyte getOpacity();
-    virtual GLubyte getDisplayedOpacity();
-    virtual void setOpacity(GLubyte opacity);
-    virtual void updateDisplayedOpacity(GLubyte parentOpacity);
-    virtual bool isCascadeOpacityEnabled();
-    virtual void setCascadeOpacityEnabled(bool cascadeOpacityEnabled);
-    
-    virtual const ccColor3B& getColor();
-    virtual const ccColor3B& getDisplayedColor();
-    virtual void setColor(const ccColor3B& color);
-    virtual void updateDisplayedColor(const ccColor3B& parentColor);
-    virtual bool isCascadeColorEnabled();
-    virtual void setCascadeColorEnabled(bool cascadeColorEnabled);
-    
-    virtual void setOpacityModifyRGB(bool bValue) {}
-    virtual bool isOpacityModifyRGB() { return false; }
-protected:
-	GLubyte		_displayedOpacity, _realOpacity;
-	ccColor3B	_displayedColor, _realColor;
-	bool		_cascadeOpacityEnabled, _cascadeColorEnabled;
-};
 
 //
 // CCLayerColor
@@ -209,7 +171,7 @@ All features from CCLayer are valid, plus the following new features:
 - opacity
 - RGB colors
 */
-class CC_DLL CCLayerColor : public CCLayerRGBA, public CCBlendProtocol
+class CC_DLL CCLayerColor : public CCLayer, public CCBlendProtocol
 {
 protected:
     ccVertex2F m_pSquareVertices[4];
@@ -247,10 +209,8 @@ public:
     /** BlendFunction. Conforms to CCBlendProtocol protocol */
     CC_PROPERTY(ccBlendFunc, m_tBlendFunc, BlendFunc)
 
-    virtual void setOpacityModifyRGB(bool bValue) {CC_UNUSED_PARAM(bValue);}
-    virtual bool isOpacityModifyRGB() { return false;}
     virtual void setColor(const ccColor3B &color);
-    virtual void setOpacity(GLubyte opacity);
+    virtual void setOpacity(float opacity);
 
 protected:
     virtual void updateColor();
@@ -297,8 +257,8 @@ public:
 
     CC_PROPERTY_PASS_BY_REF(ccColor3B, m_startColor, StartColor)
     CC_PROPERTY_PASS_BY_REF(ccColor3B, m_endColor, EndColor)
-    CC_PROPERTY(GLubyte, m_cStartOpacity, StartOpacity)
-    CC_PROPERTY(GLubyte, m_cEndOpacity, EndOpacity)
+    CC_PROPERTY(float, m_cStartOpacity, StartOpacity)
+    CC_PROPERTY(float, m_cEndOpacity, EndOpacity)
     CC_PROPERTY_PASS_BY_REF(CCPoint, m_AlongVector, Vector)
 
     /** Whether or not the interpolation will be compressed in order to display all the colors of the gradient both in canonical and non canonical vectors

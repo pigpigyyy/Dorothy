@@ -153,7 +153,7 @@ public:
      */
     virtual int executeNodeEvent(CCNode* pNode, int nAction);
     
-    virtual int executeMenuItemEvent(CCMenuItem* pMenuItem);
+    virtual int executeMenuItemEvent(int eventType, CCMenuItem* pMenuItem);
     /** Execute a notification event function */
     virtual int executeNotificationEvent(CCNotificationCenter* pNotificationCenter, const char* pszName);
     

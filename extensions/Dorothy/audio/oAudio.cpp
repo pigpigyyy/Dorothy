@@ -6,27 +6,35 @@ using namespace CocosDenshion;
 
 NS_DOROTHY_BEGIN
 
-static unordered_set<string> g_extracted;
+static hash_strmap<string> g_extracted;
 
-bool isExtractNeeded(const char* filename)
+bool isExtractNeeded(const char* filename, string*& extractedName)
 {
-	if (g_extracted.find(filename) == g_extracted.end())
+	auto it = g_extracted.find(filename);
+	if (it == g_extracted.end())
 	{
-		g_extracted.insert(filename);
-		return true;
+		extractedName = &(g_extracted[filename] = oSharedContent.getExtractedFullName(filename));
+		return !oSharedContent.isFileExist(extractedName->c_str());
 	}
+	extractedName = &(it->second);
 	return false;
 }
 
+static bool g_useCache = false;
 void oSound::load( const char* filename )
 {
 	if (oSharedContent.isUsingGameFile())
 	{
-		if (isExtractNeeded(filename))
+		string* extractedName;
+		if (isExtractNeeded(filename, extractedName))
 		{
-			string targetFile = oSharedContent.extractGameFile(filename);
-			oShareAudioEngine.loadSound(targetFile.c_str());
-			oSharedContent.removeExtractedFile(targetFile.c_str());
+			oSharedContent.extractGameFile(filename, extractedName->c_str());
+			oShareAudioEngine.loadSound(extractedName->c_str());
+			if (!g_useCache) oSharedContent.removeExtractedFile(extractedName->c_str());
+		}
+		else
+		{
+			oShareAudioEngine.loadSound(extractedName->c_str());
 		}
 	}
 	else
@@ -38,16 +46,17 @@ int oSound::play( const char* filename, bool loop )
 {
 	if (oSharedContent.isUsingGameFile())
 	{
-		if (isExtractNeeded(filename))
+		string* extractedName;
+		if (isExtractNeeded(filename, extractedName))
 		{
-			string targetFile = oSharedContent.extractGameFile(filename);
-			oShareAudioEngine.loadSound(targetFile.c_str());
-			oSharedContent.removeExtractedFile(targetFile.c_str());
-			return oShareAudioEngine.playSound(targetFile.c_str(), loop);
+			oSharedContent.extractGameFile(filename, extractedName->c_str());
+			oShareAudioEngine.loadSound(extractedName->c_str());
+			if (!g_useCache) oSharedContent.removeExtractedFile(extractedName->c_str());
+			return oShareAudioEngine.playSound(extractedName->c_str(), loop);
 		}
 		else
 		{
-			return oShareAudioEngine.playSound(oSharedContent.getExtractedFullName(filename).c_str(), loop);
+			return oShareAudioEngine.playSound(extractedName->c_str(), loop);
 		}
 	}
 	return oShareAudioEngine.playSound(filename, loop);
@@ -68,15 +77,24 @@ float oSound::getVolume()
 {
 	return oShareAudioEngine.getSoundVolume();
 }
+void oSound::setUseCache(bool cache)
+{
+	g_useCache = cache;
+}
+bool oSound::isUseCache()
+{
+	return g_useCache;
+}
 
 void oMusic::load( const char* filename )
 {
 	if (oSharedContent.isUsingGameFile())
 	{
-		if (isExtractNeeded(filename))
+		string* extractedName;
+		if (isExtractNeeded(filename, extractedName))
 		{
-			string targetFile = oSharedContent.extractGameFile(filename);
-			oShareAudioEngine.loadMusic(targetFile.c_str());
+			oSharedContent.extractGameFile(filename, extractedName->c_str());
+			oShareAudioEngine.loadMusic(extractedName->c_str());
 		}
 	}
 	else
@@ -88,11 +106,12 @@ void oMusic::play( const char* filename, bool loop )
 {
 	if (oSharedContent.isUsingGameFile())
 	{
-		if (isExtractNeeded(filename))
+		string* extractedName;
+		if (isExtractNeeded(filename, extractedName))
 		{
-			string targetFile = oSharedContent.extractGameFile(filename);
-			oShareAudioEngine.loadMusic(targetFile.c_str());
-			oShareAudioEngine.playMusic(targetFile.c_str(), loop);
+			oSharedContent.extractGameFile(filename, extractedName->c_str());
+			oShareAudioEngine.loadMusic(extractedName->c_str());
+			oShareAudioEngine.playMusic(extractedName->c_str(), loop);
 		}
 		else
 		{
@@ -184,14 +203,6 @@ public:
 	virtual void unload()
 	{
 		SimpleAudioEngine::sharedEngine()->end();
-		if (oSharedContent.isUsingGameFile())
-		{
-			for (const string& item : g_extracted)
-			{
-				oSharedContent.removeExtractedFile(item.c_str());
-			}
-			g_extracted.clear();
-		}
 	}
 } g_defaultAudioEngine;
 

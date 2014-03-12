@@ -14,6 +14,7 @@ public:
 	bool setGameFile(const string& filename);
 	/** Set password for encrypted .game file. */
 	void setPassword(const string& password);
+	const string& getPassword() const;
 	/** Set whether game resource should be load from .game file.
 	 This method will affect behaviors of the following load function.
 	*/
@@ -24,13 +25,12 @@ public:
 	/** Get file data content and size from either a certain folder or a .game pack with only filename. */
 	oOwnArray<char> loadFile(const char* filename, unsigned long& size);
 	/** Extract file from .game file to certain place.
-	 Returning the new file`s full pathname.
 	 Extracting files with same name but different extensions causes errors.
 	*/
-	string extractGameFile(const char* filename);
+	void extractGameFile(const char* filename, const char* targetFullName);
 	/** Get the full path name of the file if it was extracted. */
 	string getExtractedFullName(const char* filename);
-	
+	bool isFileExist(const char* filename);
 	bool removeExtractedFile(const char* filename);
 	/** Singleton method. */
 	SHARED_FUNC(oContent);

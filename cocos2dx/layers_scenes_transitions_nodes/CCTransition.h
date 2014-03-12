@@ -85,7 +85,7 @@ public:
 
     CCTransitionScene();
     virtual ~CCTransitionScene();
-    virtual void draw();
+    virtual void visit();
     virtual void onEnter();
     virtual void onExit();
     virtual void cleanup();

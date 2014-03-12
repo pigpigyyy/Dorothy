@@ -1,5 +1,0 @@
-class CCTMXMapInfo: public CCObject
-{
-    static CCTMXMapInfo* formatWithTMXFile @ create(const char *tmxFile);
-	static CCTMXMapInfo* formatWithXML @ create(const char *tmxString, const char* resourcePath);
-};

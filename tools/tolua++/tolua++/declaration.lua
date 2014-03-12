@@ -260,6 +260,7 @@ function classDeclaration:builddeclaration (narg, cplusplus)
    line = concatparam(line,'[',self.dim,'];')
   else
 	if cplusplus then
+		output('  int tolua_len = lua_objlen(tolua_S,',narg,");")
 		line = concatparam(line,' = Mtolua_new_dim(',type,ptr,', '..self.dim..');')
 	else
 		line = concatparam(line,' = (',type,ptr,'*)',
@@ -315,22 +316,22 @@ end
 -- Get parameter value
 function classDeclaration:getarray (narg)
  if self.dim ~= '' then
-	 local type = gsub(self.type,'const ','')
+  local type = gsub(self.type,'const ','')
   output('  {')
-	 output('#ifndef TOLUA_RELEASE\n')
-  local def; if self.def~='' then def=1 else def=0 end
-		local t = isbasic(type)
-		if (t) then
-		   output('   if (!tolua_is'..t..'array(tolua_S,',narg,',',self.dim,',',def,',&tolua_err))')
-		else
-		   output('   if (!tolua_isusertypearray(tolua_S,',narg,',"',type,'",',self.dim,',',def,',&tolua_err))')
-		end
+  output('#ifndef TOLUA_RELEASE\n')
+  local def
+  if self.def~='' then def=1 else def=0 end
+  local t = isbasic(type)
+  if (t) then
+    output('   if (!tolua_is'..t..'array(tolua_S,',narg,',',self.dim,',',def,',&tolua_err))')
+  else
+    output('   if (!tolua_isusertypearray(tolua_S,',narg,',"',type,'",',self.dim,',',def,',&tolua_err))')
+  end
   output('    goto tolua_lerror;')
   output('   else\n')
-	 output('#endif\n')
+  output('#endif\n')
   output('   {')
-  output('    int i;')
-  output('    for(i=0; i<(int)'..self.dim..';i++)')
+  output('    for (int i=0;i<(int)'..self.dim..';i++)')
   local t = isbasic(type)
   local ptr = ''
   if self.ptr~='' then ptr = '*' end
@@ -355,23 +356,23 @@ end
 
 -- Get parameter value
 function classDeclaration:setarray (narg)
- if not strfind(self.type,'const%s+') and self.dim ~= '' then
-	 local type = gsub(self.type,'const ','')
-  output('  {')
-  output('   int i;')
-  output('   for(i=0; i<(int)'..self.dim..';i++)')
-  local t,ct = isbasic(type)
-  if t then
-   output('    tolua_pushfield'..t..'(tolua_S,',narg,',i+1,(',ct,')',self.name,'[i]);')
-  else
-   if self.ptr == '' then
-     output('   {')
-     output('    void* tolua_obj = Mtolua_new((',type,')(',self.name,'[i]));')
-     output('    tolua_pushfieldusertype_and_takeownership(tolua_S,',narg,',i+1,tolua_obj,"',type,'");')
-     output('   }')
-   else
-    output('   tolua_pushfieldusertype(tolua_S,',narg,',i+1,(void*)',self.name,'[i],"',type,'");')
-   end
+  if not strfind(self.type,'const%s+') and self.dim ~= '' then
+    local type = gsub(self.type,'const ','')
+    output('  {')
+    output('   int i;')
+    output('   for(i=0; i<(int)'..self.dim..';i++)')
+    local t,ct = isbasic(type)
+    if t then
+      output('    tolua_pushfield'..t..'(tolua_S,',narg,',i+1,(',ct,')',self.name,'[i]);')
+    else
+      if self.ptr == '' then
+        output('   {')
+        output('    void* tolua_obj = Mtolua_new((',type,')(',self.name,'[i]));')
+        output('    tolua_pushfieldusertype_and_takeownership(tolua_S,',narg,',i+1,tolua_obj,"',type,'");')
+        output('   }')
+    else
+      output('   tolua_pushfieldusertype(tolua_S,',narg,',i+1,(void*)',self.name,'[i],"',type,'");')
+    end
   end
   output('  }')
  end
@@ -392,6 +393,9 @@ function classDeclaration:passpar ()
   output('&'..self.name)
  else
   output(self.name)
+ end
+ if self.dim == "tolua_len" then
+  output(",tolua_len")
  end
 end
 

@@ -48,7 +48,7 @@ If you are going to render a TextureAtlas consider subclassing CCAtlasNode (or a
 All features from CCNode are valid, plus the following features:
 - opacity and RGB colors
 */
-class CC_DLL CCAtlasNode : public CCNodeRGBA, public CCTextureProtocol
+class CC_DLL CCAtlasNode : public CCNode, public CCTextureProtocol
 {
 protected:
 
@@ -108,8 +108,10 @@ public:
     virtual void setOpacityModifyRGB(bool isOpacityModifyRGB);
     virtual const ccColor3B& getColor();
     virtual void setColor(const ccColor3B& color);
-    virtual void setOpacity(GLubyte opacity);
+    virtual void setOpacity(float opacity);
 
+	virtual void updateDisplayedColor(const ccColor3B& parentColor);
+	virtual void updateDisplayedOpacity(float parentOpacity);
 private :
     void calculateMaxItems();
     void updateBlendFunc();

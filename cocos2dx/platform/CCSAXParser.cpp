@@ -105,7 +105,14 @@ bool CCSAXParser::init(const char *pszEncoding)
 bool CCSAXParser::parse(const char* pXMLData, unsigned int uDataLength)
 {
 	tinyxml2::XMLDocument tinyDoc;
-	tinyDoc.Parse(pXMLData);
+	if (uDataLength == 0)
+	{
+		tinyDoc.Parse(pXMLData);
+	}
+	else
+	{
+		tinyDoc.Parse(pXMLData,uDataLength);
+	}
 	XmlSaxHander printer;
 	printer.setCCSAXParserImp(this);
 	

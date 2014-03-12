@@ -49,7 +49,7 @@ class CCSprite;
  *
  *  Subclass CCMenuItem (or any subclass) to create your custom CCMenuItem objects.
  */
-class CC_DLL CCMenuItem : public CCNodeRGBA
+class CC_DLL CCMenuItem : public CCNode
 {
 protected:
     /** whether or not the item is selected
@@ -59,6 +59,12 @@ protected:
     bool m_bEnabled;
 
 public:
+	enum
+	{
+		TapBegan,
+		Tapped,
+		TapEnded
+	};
     CCMenuItem()
     : m_bSelected(false)
     , m_bEnabled(false)            
@@ -92,9 +98,6 @@ public:
     //@note: It's 'setIsEnable' in cocos2d-iphone. 
     virtual void setEnabled(bool value);
     virtual bool isSelected();
-    
-    virtual void setOpacityModifyRGB(bool bValue) {CC_UNUSED_PARAM(bValue);}
-    virtual bool isOpacityModifyRGB() { return false;}
     
     /** set the target/selector of the menu item*/
     void setTarget(CCObject *rec, SEL_MenuHandler selector);

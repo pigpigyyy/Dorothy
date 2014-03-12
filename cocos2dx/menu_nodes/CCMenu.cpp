@@ -130,11 +130,8 @@ bool CCMenu::initWithArray(CCArray* pArrayOfItems)
         // menu in the center of the screen
         CCSize s = CCDirector::sharedDirector()->getWinSize();
 
-        this->ignoreAnchorPointForPosition(true);
-        setAnchorPoint(ccp(0.5f, 0.5f));
+        this->setAnchorPoint(ccp(0.5f, 0.5f));
         this->setContentSize(s);
-
-        setPosition(ccp(s.width/2, s.height/2));
         
         if (pArrayOfItems != NULL)
         {
@@ -151,11 +148,6 @@ bool CCMenu::initWithArray(CCArray* pArrayOfItems)
         //    [self alignItemsVertically];
         m_pSelectedItem = NULL;
         m_eState = kCCMenuStateWaiting;
-        
-        // enable cascade color and opacity on menus
-        setCascadeColorEnabled(true);
-        setCascadeOpacityEnabled(true);
-        
         return true;
     }
     return false;
@@ -603,7 +595,14 @@ void CCMenu::alignItemsInRowsWithArray(CCArray* columnArray)
 CCMenuItem* CCMenu::itemForTouch(CCTouch *touch)
 {
     CCPoint touchLocation = touch->getLocation();
-
+	if (!this->getContentSize().equals(CCSizeZero))
+	{
+		CCPoint loc = this->convertToNodeSpace(touchLocation);
+		if (!CCRect(CCPointZero, this->getContentSize()).containsPoint(loc))
+		{
+			return NULL;
+		}
+	}
     if (m_pChildren && m_pChildren->count() > 0)
     {
         CCObject* pObject = NULL;
@@ -613,10 +612,7 @@ CCMenuItem* CCMenu::itemForTouch(CCTouch *touch)
             if (pChild && pChild->isVisible() && pChild->isEnabled())
             {
                 CCPoint local = pChild->convertToNodeSpace(touchLocation);
-                CCRect r = pChild->rect();
-                r.origin = CCPointZero;
-
-                if (r.containsPoint(local))
+				if (CCRect(CCPointZero, pChild->getContentSize()).containsPoint(local))
                 {
                     return pChild;
                 }

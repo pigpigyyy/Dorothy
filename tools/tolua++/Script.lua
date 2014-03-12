@@ -7,11 +7,23 @@ ccmsg = function(title, ...)
     CCMessageBox(string.format(...), title)
 end
 
-CCDrawNode.drawPolygon =
-	(function()
-		local _drawPolygon = CCDrawNode.drawPolygon
-		return function(self, verts, borderWidth, fillColor, borderColor)
-			_drawPolygon(self, #verts, verts, fillColor, borderWidth, borderColor)
+oEvent.args = {}
+
+oEvent.send = (function()
+	local send = oEvent.send
+	return function(self, name, args)
+			oEvent.args[name] = args
+			send(self, name)
+		end
+	end)()
+
+oListener = (function()
+	local listener = oListener
+	return function(name, handler)
+		return listener(name,
+			function(event)
+				handler(oEvent.args[name], event)
+			end)
 		end
 	end)()
 

@@ -40,7 +40,7 @@ varying vec2 v_texcoord;											\n\
 void main()															\n\
 {																	\n\
 	v_color = vec4(a_color.rgb * a_color.a, a_color.a);				\n\
-	v_texcoord = a_texcoord;										\n\
+	v_texcoord = a_texcoord;							\n\
 																	\n\
 	gl_Position = CC_MVPMatrix * a_position;						\n\
 }																	\n\

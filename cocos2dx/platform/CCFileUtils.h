@@ -29,33 +29,24 @@ THE SOFTWARE.
 #include <map>
 #include "CCPlatformMacros.h"
 #include "ccTypes.h"
-#include "ccTypeInfo.h"
 
 NS_CC_BEGIN
 
 class CCDictionary;
 class CCArray;
-/**
- * @addtogroup platform
- * @{
- */
+
+class CCDataSource
+{
+public:
+	virtual unsigned char* getFileData(const char* pszFileName, const char* pszMode, unsigned long* pSize) = 0;
+};
 
 //! @brief  Helper class to handle file operations
-class CC_DLL CCFileUtils : public TypeInfo
+class CC_DLL CCFileUtils
 {
     friend class CCArray;
     friend class CCDictionary;
 public:
-    /**
-     *  Returns an unique ID for this class.
-     *  @note It's only used for JSBindings now.
-     *  @return The unique ID for this class.
-     */
-    virtual long getClassTypeInfo() {
-		static const long id = cocos2d::getHashCodeByString(typeid(cocos2d::CCFileUtils).name());
-		return id;
-    }
-    
     /**
      *  Gets the instance of CCFileUtils.
      */
@@ -289,6 +280,7 @@ public:
     virtual void setPopupNotify(bool bNotify);
     virtual bool isPopupNotify();
 
+	void setDataSource(CCDataSource* dataSource);
 protected:
     /**
      *  The default constructor.
@@ -388,12 +380,8 @@ protected:
      *  This variable is used for improving the performance of file search.
      */
     std::map<std::string, std::string> m_fullPathCache;
-    
-    /**
-     *  The singleton pointer of CCFileUtils.
-     */
-    static CCFileUtils* s_sharedFileUtils;
-    
+
+	CCDataSource* m_pDataSource;
 };
 
 // end of platform group

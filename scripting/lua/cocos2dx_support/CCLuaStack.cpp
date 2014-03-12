@@ -188,12 +188,13 @@ int CCLuaStack::executeString(const char *codes)
 
 int CCLuaStack::executeScriptFile(const char* filename)
 {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+//#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     std::string code("require \"");
     code.append(filename);
     code.append("\"");
     return executeString(code.c_str());
-#else
+//#else
+	/*
     std::string fullPath = CCFileUtils::sharedFileUtils()->fullPathForFilename(filename);
     ++m_callFromLua;
     int nRet = luaL_dofile(m_state, fullPath.c_str());
@@ -207,8 +208,8 @@ int CCLuaStack::executeScriptFile(const char* filename)
         lua_pop(m_state, 1);
         return nRet;
     }
-    return 0;
-#endif
+    return 0;*/
+//#endif
 }
 
 int CCLuaStack::executeGlobalFunction(const char* functionName)

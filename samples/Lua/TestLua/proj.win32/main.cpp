@@ -25,8 +25,10 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     // create the application instance
     AppDelegate app;
     CCEGLView* eglView = CCEGLView::sharedOpenGLView();
-    eglView->setViewName("TestLua");
-    eglView->setFrameSize(CCSize(480, 320));
+    eglView->setViewName("Dorothy Animation Editor");
+	float width = CCUserDefault::sharedUserDefault()->getFloatForKey("Width");
+	float height = CCUserDefault::sharedUserDefault()->getFloatForKey("Height");
+    eglView->setFrameSize(CCSize(width, height));
 
     int ret = CCApplication::sharedApplication()->run();
 

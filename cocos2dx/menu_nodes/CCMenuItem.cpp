@@ -79,12 +79,14 @@ CCMenuItem::~CCMenuItem()
 
 void CCMenuItem::selected()
 {
-    m_bSelected = true;
+	m_bSelected = true;
+	CCScriptEngine::sharedEngine()->executeMenuItemEvent(CCMenuItem::TapBegan, this);
 }
 
 void CCMenuItem::unselected()
 {
-    m_bSelected = false;
+	m_bSelected = false;
+	CCScriptEngine::sharedEngine()->executeMenuItemEvent(CCMenuItem::TapEnded, this);
 }
 
 void CCMenuItem::registerScriptTapHandler(int nHandler)
@@ -112,8 +114,7 @@ void CCMenuItem::activate()
         {
             (m_pListener->*m_pfnSelector)(this);
         }
-		
-		CCScriptEngine::sharedEngine()->executeMenuItemEvent(this);
+		CCScriptEngine::sharedEngine()->executeMenuItemEvent(CCMenuItem::Tapped, this);
     }
 }
 
@@ -202,9 +203,6 @@ bool CCMenuItemLabel::initWithLabel(CCNode* label, CCObject* target, SEL_MenuHan
     setDisabledColor(ccc3(126,126,126));
     this->setLabel(label);
     
-    setCascadeColorEnabled(true);
-    setCascadeOpacityEnabled(true);
-    
     return true;
 }
 
@@ -270,12 +268,12 @@ void CCMenuItemLabel::setEnabled(bool enabled)
     {
         if(enabled == false)
         {
-            m_tColorBackup = dynamic_cast<CCRGBAProtocol*>(m_pLabel)->getColor();
-            dynamic_cast<CCRGBAProtocol*>(m_pLabel)->setColor(m_tDisabledColor);
+            m_tColorBackup = m_pLabel->getColor();
+            m_pLabel->setColor(m_tDisabledColor);
         }
         else
         {
-            dynamic_cast<CCRGBAProtocol*>(m_pLabel)->setColor(m_tColorBackup);
+            m_pLabel->setColor(m_tColorBackup);
         }
     }
     CCMenuItem::setEnabled(enabled);
@@ -507,10 +505,6 @@ bool CCMenuItemSprite::initWithNormalSprite(CCNode* normalSprite, CCNode* select
     {
         this->setContentSize(m_pNormalImage->getContentSize());
     }
-    
-    setCascadeColorEnabled(true);
-    setCascadeOpacityEnabled(true);
-    
     return true;
 }
 
@@ -744,10 +738,6 @@ bool CCMenuItemToggle::initWithItem(CCMenuItem *item)
     }
     m_uSelectedIndex = UINT_MAX;
     this->setSelectedIndex(0);
-    
-    setCascadeColorEnabled(true);
-    setCascadeOpacityEnabled(true);
-    
     return true;
 }
 

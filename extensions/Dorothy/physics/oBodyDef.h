@@ -70,8 +70,18 @@ public:
 		const vector<oVec2>& vertices,
 		float friction = 0.2f,
 		float restitution = 0.0f);
+	static b2FixtureDef* loop(
+		const oVec2 vertices[],
+		int count,
+		float friction = 0.2f,
+		float restitution = 0.0f);
 	void attachLoop(
 		const vector<oVec2>& vertices,
+		float friction = 0.2f,
+		float restitution = 0.0f);
+	void attachLoop(
+		const oVec2 vertices[],
+		int count,
 		float friction = 0.2f,
 		float restitution = 0.0f);
 	static b2FixtureDef* circle(
@@ -100,8 +110,18 @@ public:
 		const vector<oVec2>& vertices,
 		float friction = 0.2f,
 		float restitution = 0.0f);
+	static b2FixtureDef* chain(
+		const oVec2 vertices[],
+		int count,
+		float friction = 0.2f,
+		float restitution = 0.0f);
 	void attachChain(
 		const vector<oVec2>& vertices,
+		float friction = 0.2f,
+		float restitution = 0.0f);
+	void attachChain(
+		const oVec2 vertices[],
+		int count,
 		float friction = 0.2f,
 		float restitution = 0.0f);
 	void attachPolygonSensor(
@@ -117,6 +137,10 @@ public:
 	void attachPolygonSensor(
 		int tag,
 		const vector<oVec2>& vertices);
+	void attachPolygonSensor(
+		int tag,
+		const oVec2 vertices[],
+		int count);
 	void attachCircleSensor(
 		int tag,
 		const oVec2& center,

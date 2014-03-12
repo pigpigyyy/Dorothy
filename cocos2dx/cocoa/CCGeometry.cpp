@@ -28,22 +28,22 @@ THE SOFTWARE.
 // implementation of CCPoint
 NS_CC_BEGIN
 
-CCPoint::CCPoint()
-{
-    setPoint(0.0f, 0.0f);
-}
+CCPoint::CCPoint():
+x(0.0f),
+y(0.0f)
+{ }
 
-CCPoint::CCPoint(float x, float y)
-{
-    setPoint(x, y);
-}
+CCPoint::CCPoint(float x, float y):
+x(x),
+y(y)
+{ }
 
-CCPoint::CCPoint(const CCPoint& other)
-{
-    setPoint(other.x, other.y);
-}
+CCPoint::CCPoint(const CCPoint& other):
+x(other.x),
+y(other.y)
+{ }
 
-CCPoint& CCPoint::operator= (const CCPoint& other)
+CCPoint& CCPoint::operator=(const CCPoint& other)
 {
     setPoint(other.x, other.y);
     return *this;
@@ -97,21 +97,24 @@ bool CCSize::equals(const CCSize& target) const
 // implementation of CCRect
 
 CCRect::CCRect()
-{
-    setRect(0.0f, 0.0f, 0.0f, 0.0f);
-}
+{ }
 
-CCRect::CCRect(float x, float y, float width, float height)
-{
-    setRect(x, y, width, height);
-}
+CCRect::CCRect(const CCPoint& origin, const CCSize& size):
+origin(origin),
+size(size)
+{ }
 
-CCRect::CCRect(const CCRect& other)
-{
-    setRect(other.origin.x, other.origin.y, other.size.width, other.size.height);
-}
+CCRect::CCRect(float x, float y, float width, float height):
+origin(x,y),
+size(width,height)
+{ }
 
-CCRect& CCRect::operator= (const CCRect& other)
+CCRect::CCRect(const CCRect& other):
+origin(other.origin),
+size(other.size)
+{ }
+
+CCRect& CCRect::operator=(const CCRect& other)
 {
     setRect(other.origin.x, other.origin.y, other.size.width, other.size.height);
     return *this;

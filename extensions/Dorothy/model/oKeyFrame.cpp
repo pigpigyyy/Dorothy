@@ -14,7 +14,7 @@ void oKeyReset::update( float time )
 	m_pTarget->setSkewY(_skewY);
 	m_pTarget->setRotation(_rotation);
 	m_pTarget->setVisible(_visible);
-	((CCSprite*)m_pTarget)->setOpacity(_opacity);
+	m_pTarget->setOpacity(_opacity);
 }
 CCFiniteTimeAction* oKeyReset::reverse()
 {
@@ -50,6 +50,7 @@ oKeyReset* oKeyReset::create( oKeyFrameDef* def )
 	keyReset->autorelease();
 	return keyReset;
 }
+oMemoryPool<oKeyReset> oKeyReset::_memory;
 
 void oKeyPos::setEase( uint8 easeId )
 {
@@ -110,6 +111,7 @@ void oKeyPos::setValue( float endX, float endY )
 	_endPosX = endX;
 	_endPosY = endY;
 }
+oMemoryPool<oKeyPos> oKeyPos::_memory;
 
 void oKeyScale::setEase( uint8 easeId )
 {
@@ -173,6 +175,7 @@ void oKeyScale::setValue( float endScaleX, float endScaleY )
 	_endScaleX = endScaleX;
 	_endScaleY = endScaleY;
 }
+oMemoryPool<oKeyScale> oKeyScale::_memory;
 
 void oKeyRotate::setEase( uint8 easeId )
 {
@@ -227,12 +230,13 @@ void oKeyRotate::setValue( float endRotate )
 {
 	_endRotate = endRotate;
 }
+oMemoryPool<oKeyRotate> oKeyRotate::_memory;
 
 void oKeyOpacity::setEase( uint8 easeId )
 {
 	_ease = oEase::get(easeId);
 }
-bool oKeyOpacity::initWithDuration( float duration, GLubyte opacity )
+bool oKeyOpacity::initWithDuration(float duration, float opacity)
 {
 	if (CCActionInterval::initWithDuration(duration))
 	{
@@ -262,14 +266,14 @@ CCObject* oKeyOpacity::copyWithZone( CCZone* pZone )
 void oKeyOpacity::startWithTarget( CCNode *pTarget )
 {
 	CCActionInterval::startWithTarget(pTarget);
-	_startOpacity = ((CCSprite*)pTarget)->getOpacity();
+	_startOpacity = pTarget->getOpacity();
 	_deltaOpacity = _endOpacity - _startOpacity;
 }
 void oKeyOpacity::update( float time )
 {
-	((CCSprite*)m_pTarget)->setOpacity(GLubyte(_ease(time, _startOpacity, _deltaOpacity)));
+	m_pTarget->setOpacity(_ease(time, _startOpacity, _deltaOpacity));
 }
-oKeyOpacity* oKeyOpacity::create( float duration, GLubyte opacity, uint8 easeId )
+oKeyOpacity* oKeyOpacity::create( float duration, float opacity, uint8 easeId )
 {
 	oKeyOpacity* keyOpacity = new oKeyOpacity();
 	keyOpacity->_ease = oEase::get(easeId);
@@ -277,22 +281,11 @@ oKeyOpacity* oKeyOpacity::create( float duration, GLubyte opacity, uint8 easeId 
 	keyOpacity->autorelease();
 	return keyOpacity;
 }
-oKeyOpacity* oKeyOpacity::create(float duration, float opacity, uint8 easeId)
-{
-	oKeyOpacity* keyOpacity = new oKeyOpacity();
-	keyOpacity->_ease = oEase::get(easeId);
-	keyOpacity->initWithDuration(duration, (GLubyte)(255.0f*opacity));
-	keyOpacity->autorelease();
-	return keyOpacity;
-}
-void oKeyOpacity::setValue( GLubyte endOpacity )
+void oKeyOpacity::setValue(float endOpacity)
 {
 	_endOpacity = endOpacity;
 }
-void oKeyOpacity::setValue(float endOpacity)
-{
-	_endOpacity = (GLubyte)(255.0f*endOpacity);
-}
+oMemoryPool<oKeyOpacity> oKeyOpacity::_memory;
 
 void oKeySkew::setEase( uint8 easeId )
 {
@@ -352,6 +345,7 @@ void oKeySkew::setValue( float endSkewX, float endSkewY )
 	_endSkewX = endSkewX;
 	_endSkewY = endSkewY;
 }
+oMemoryPool<oKeySkew> oKeySkew::_memory;
 
 void oKeyRoll::setEase( uint8 easeId )
 {
@@ -422,5 +416,6 @@ void oKeyRoll::setValue( float endRoll )
 {
 	_endRoll = endRoll;
 }
+oMemoryPool<oKeyRoll> oKeyRoll::_memory;
 
 NS_DOROTHY_END

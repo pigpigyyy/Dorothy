@@ -447,9 +447,6 @@
     <ClCompile Include="..\actions\CCActionEase.cpp">
       <Filter>actions</Filter>
     </ClCompile>
-    <ClCompile Include="..\actions\CCActionTween.cpp">
-      <Filter>actions</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\base_nodes\CCAtlasNode.h">
@@ -898,9 +895,6 @@
       <Filter>support</Filter>
     </ClInclude>
     <ClInclude Include="..\actions\CCActionEase.h">
-      <Filter>actions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\actions\CCActionTween.h">
       <Filter>actions</Filter>
     </ClInclude>
   </ItemGroup>

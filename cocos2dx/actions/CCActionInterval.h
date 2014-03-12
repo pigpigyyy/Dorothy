@@ -70,6 +70,7 @@ public:
 
     virtual CCObject* copyWithZone(CCZone* pZone);
     virtual void step(float dt);
+	virtual void stop();
     virtual void startWithTarget(CCNode *pTarget);
     /** returns a reversed action */
     virtual CCActionInterval* reverse();
@@ -115,7 +116,8 @@ public:
     static CCSequence* createWithVariableList(CCFiniteTimeAction *pAction1, va_list args);
     /** creates the action */
     static CCSequence* createWithTwoActions(CCFiniteTimeAction *pActionOne, CCFiniteTimeAction *pActionTwo);
-
+	/** helper constructor to create an array of sequenceable actions given an array */
+	static CCSequence* create(CCFiniteTimeAction* actions[], int count);
 protected:
     CCFiniteTimeAction *m_pActions[2];
     float m_split;
@@ -241,7 +243,7 @@ public:
 
     /** creates the Spawn action */
     static CCSpawn* createWithTwoActions(CCFiniteTimeAction *pAction1, CCFiniteTimeAction *pAction2);
-
+	static CCSpawn* create(CCFiniteTimeAction* actions[], int count);
 protected:
     CCFiniteTimeAction *m_pOne;
     CCFiniteTimeAction *m_pTwo;
@@ -585,7 +587,7 @@ class CC_DLL CCFadeTo : public CCActionInterval
 {
 public:
     /** initializes the action with duration and opacity */
-    bool initWithDuration(float duration, GLubyte opacity);
+    bool initWithDuration(float duration, float opacity);
 
     virtual CCObject* copyWithZone(CCZone* pZone);
     virtual void startWithTarget(CCNode *pTarget);
@@ -595,8 +597,8 @@ public:
     /** creates an action with duration and opacity */
 	static CCFadeTo* create(float duration, float opacity);
 protected:
-    GLubyte m_toOpacity;
-    GLubyte m_fromOpacity;
+    float m_toOpacity;
+    float m_fromOpacity;
 };
 
 /** @brief Tints a CCNode that implements the CCNodeRGB protocol from current tint to a custom one.

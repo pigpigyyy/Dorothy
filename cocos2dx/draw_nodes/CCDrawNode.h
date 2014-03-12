@@ -49,7 +49,7 @@ protected:
     
     unsigned int    m_uBufferCapacity;
     GLsizei         m_nBufferCount;
-    ccV2F_C4B_T2F   *m_pBuffer;
+    ccV2F_C4F_T2F   *m_pBuffer;
     
     ccBlendFunc     m_sBlendFunc;
     
@@ -74,6 +74,11 @@ public:
 	/** Clear the geometry in the node's buffer. */
     void clear();
     
+	virtual void setColor(const ccColor3B& color3);
+	virtual void updateDisplayedColor(const ccColor3B& parentColor);
+	virtual void setOpacity(float opacity);
+	virtual void updateDisplayedOpacity(float parentOpacity);
+
     ccBlendFunc getBlendFunc() const;
     void setBlendFunc(const ccBlendFunc &blendFunc);
     
@@ -82,6 +87,9 @@ public:
 private:
     void ensureCapacity(unsigned int count);
     void render();
+	void updateColor(const ccColor3B& color);
+	void updateOpacity(float opacity);
+	bool m_bOpacityModifyRGB;
 };
 
 NS_CC_END

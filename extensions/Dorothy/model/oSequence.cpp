@@ -32,6 +32,8 @@ public:
 	}
 };
 
+oMemoryPool<oSequence> oSequence::_memory;
+
 oSequence* oSequence::createWithTwoActions(CCFiniteTimeAction *pActionOne, CCFiniteTimeAction *pActionTwo)
 {
 	oSequence *pSequence = new oSequence();
@@ -221,6 +223,179 @@ void oSequence::update(float t)
 oActionDuration* oSequence::reverse(void)
 {
 	return oSequence::createWithTwoActions(m_pActions[1]->reverse(), m_pActions[0]->reverse());
+}
+
+oMemoryPool<oSpawn> oSpawn::_memory;
+
+oSpawn* oSpawn::create(CCFiniteTimeAction *pAction1, ...)
+{
+	va_list params;
+	va_start(params, pAction1);
+
+	oSpawn *pRet = oSpawn::createWithVariableList(pAction1, params);
+
+	va_end(params);
+
+	return pRet;
+}
+
+oSpawn* oSpawn::createWithVariableList(CCFiniteTimeAction *pAction1, va_list args)
+{
+	CCFiniteTimeAction *pNow;
+	CCFiniteTimeAction *pPrev = pAction1;
+	bool bOneAction = true;
+
+	while (pAction1)
+	{
+		pNow = va_arg(args, CCFiniteTimeAction*);
+		if (pNow)
+		{
+			pPrev = createWithTwoActions(pPrev, pNow);
+			bOneAction = false;
+		}
+		else
+		{
+			// If only one action is added to oSpawn, make up a oSpawn by adding a simplest finite time action.
+			if (bOneAction)
+			{
+				pPrev = createWithTwoActions(pPrev, ExtraAction::create());
+			}
+			break;
+		}
+	}
+
+	return ((oSpawn*)pPrev);
+}
+
+oSpawn* oSpawn::create(CCArray *arrayOfActions)
+{
+	oSpawn* pRet = NULL;
+	do
+	{
+		unsigned  int count = arrayOfActions->count();
+		CC_BREAK_IF(count == 0);
+		CCFiniteTimeAction* prev = (CCFiniteTimeAction*)arrayOfActions->objectAtIndex(0);
+		if (count > 1)
+		{
+			for (unsigned int i = 1; i < arrayOfActions->count(); ++i)
+			{
+				prev = createWithTwoActions(prev, (CCFiniteTimeAction*)arrayOfActions->objectAtIndex(i));
+			}
+		}
+		else
+		{
+			// If only one action is added to oSpawn, make up a oSpawn by adding a simplest finite time action.
+			prev = createWithTwoActions(prev, ExtraAction::create());
+		}
+		pRet = (oSpawn*)prev;
+	} while (0);
+
+	return pRet;
+}
+
+oSpawn* oSpawn::createWithTwoActions(CCFiniteTimeAction *pAction1, CCFiniteTimeAction *pAction2)
+{
+	oSpawn *pSpawn = new oSpawn();
+	pSpawn->initWithTwoActions(pAction1, pAction2);
+	pSpawn->autorelease();
+
+	return pSpawn;
+}
+
+bool oSpawn::initWithTwoActions(CCFiniteTimeAction *pAction1, CCFiniteTimeAction *pAction2)
+{
+	CCAssert(pAction1 != NULL, "");
+	CCAssert(pAction2 != NULL, "");
+
+	bool bRet = false;
+
+	float d1 = pAction1->getDuration();
+	float d2 = pAction2->getDuration();
+
+	if (CCActionInterval::initWithDuration(MAX(d1, d2)))
+	{
+		m_pOne = pAction1;
+		m_pTwo = pAction2;
+
+		if (d1 > d2)
+		{
+			m_pTwo = CCSequence::createWithTwoActions(pAction2, CCDelayTime::create(d1 - d2));
+		}
+		else if (d1 < d2)
+		{
+			m_pOne = CCSequence::createWithTwoActions(pAction1, CCDelayTime::create(d2 - d1));
+		}
+
+		m_pOne->retain();
+		m_pTwo->retain();
+
+		bRet = true;
+	}
+
+
+	return bRet;
+}
+
+CCObject* oSpawn::copyWithZone(CCZone *pZone)
+{
+	CCZone* pNewZone = NULL;
+	oSpawn* pCopy = NULL;
+
+	if (pZone && pZone->m_pCopyObject)
+	{
+		//in case of being called at sub class
+		pCopy = (oSpawn*)(pZone->m_pCopyObject);
+	}
+	else
+	{
+		pCopy = new oSpawn();
+		pZone = pNewZone = new CCZone(pCopy);
+	}
+
+	CCActionInterval::copyWithZone(pZone);
+
+	pCopy->initWithTwoActions((CCFiniteTimeAction*)(m_pOne->copy()->autorelease()),
+		(CCFiniteTimeAction*)(m_pTwo->copy()->autorelease()));
+
+	CC_SAFE_DELETE(pNewZone);
+	return pCopy;
+}
+
+oSpawn::~oSpawn()
+{
+	CC_SAFE_RELEASE(m_pOne);
+	CC_SAFE_RELEASE(m_pTwo);
+}
+
+void oSpawn::startWithTarget(CCNode *pTarget)
+{
+	CCActionInterval::startWithTarget(pTarget);
+	m_pOne->startWithTarget(pTarget);
+	m_pTwo->startWithTarget(pTarget);
+}
+
+void oSpawn::stop()
+{
+	m_pOne->stop();
+	m_pTwo->stop();
+	CCActionInterval::stop();
+}
+
+void oSpawn::update(float time)
+{
+	if (m_pOne)
+	{
+		m_pOne->update(time);
+	}
+	if (m_pTwo)
+	{
+		m_pTwo->update(time);
+	}
+}
+
+CCActionInterval* oSpawn::reverse()
+{
+	return oSpawn::createWithTwoActions(m_pOne->reverse(), m_pTwo->reverse());
 }
 
 NS_DOROTHY_END

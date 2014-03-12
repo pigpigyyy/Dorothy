@@ -10,7 +10,7 @@ NS_DOROTHY_BEGIN
 template<class Item, int CHUNK_CAPACITY = 4096>
 class oMemoryPool
 {
-#define CHUNK_ITEM (CHUNK_CAPACITY/sizeof(Item))
+#define ITEM_SIZE sizeof(Item)
 public:
 	oMemoryPool():
 	_chunk(new Chunk()),
@@ -30,12 +30,12 @@ public:
 		}
 		else
 		{
-			if (_chunk->size + 1 > CHUNK_ITEM)
+			if (_chunk->size + ITEM_SIZE > CHUNK_CAPACITY)
 			{
 				_chunk = new Chunk(_chunk);
 			}
-			Item* addr = _chunk->buffer + _chunk->size;
-			_chunk->size++;
+			char* addr = _chunk->buffer + _chunk->size;
+			_chunk->size += ITEM_SIZE;
 			return (void*)addr;
 		}
 	}
@@ -64,13 +64,13 @@ private:
 	struct Chunk
 	{
 		Chunk(Chunk* next = nullptr):
-		buffer(new Item[CHUNK_ITEM]),
+		buffer(new char[CHUNK_CAPACITY - CHUNK_CAPACITY % ITEM_SIZE]),
 		size(0),
 		next(next)
 		{ }
 		~Chunk() { delete [] buffer; }
 		int size;
-		Item* buffer;
+		char* buffer;
 		Chunk* next;
 	};
 	FreeList* _freeList;

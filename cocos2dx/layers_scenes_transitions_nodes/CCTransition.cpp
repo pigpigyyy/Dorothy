@@ -100,9 +100,9 @@ void CCTransitionScene::sceneOrder()
     m_bIsInSceneOnTop = true;
 }
 
-void CCTransitionScene::draw()
+void CCTransitionScene::visit()
 {
-    CCScene::draw();
+	//CCScene::visit();
 
     if( m_bIsInSceneOnTop ) {
         m_pOutScene->visit();
@@ -1316,8 +1316,8 @@ void CCTransitionCrossFade::onEnter()
     layer->addChild(outTexture);
 
     // initial opacity:
-    inTexture->getSprite()->setOpacity(255);
-    outTexture->getSprite()->setOpacity(255);
+    inTexture->getSprite()->setOpacity(1.0f);
+    outTexture->getSprite()->setOpacity(1.0f);
 
     // create the blend action
     CCAction* layerAction = CCSequence::create

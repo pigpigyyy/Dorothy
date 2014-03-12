@@ -36,6 +36,16 @@ public:
 			return item;
 		}
 	}
+	T* update(const char* name, const char* content)
+	{
+		this->beforeParse(name);
+		_parser.parse(content, 0);
+		this->afterParse(name);
+		_dict[name] = _item;
+		T* item = _item;
+		_item = nullptr;
+		return item;
+	}
 	/** Purge the cached file. */
 	bool unload( const char* filename )
 	{
