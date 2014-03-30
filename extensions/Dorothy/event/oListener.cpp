@@ -7,7 +7,7 @@ NS_DOROTHY_BEGIN
 
 const int oListener::INVALID_ORDER = -1;
 
-void oListener::setEnable( bool enable )
+void oListener::setEnabled( bool enable )
 {
 	if (enable)
 	{
@@ -19,7 +19,7 @@ void oListener::setEnable( bool enable )
 	}
 }
 
-bool oListener::isEnable() const
+bool oListener::isEnabled() const
 {
 	return _order != INVALID_ORDER;
 }
@@ -46,7 +46,7 @@ oListener* oListener::create( const string& name, const oEventHandler& handler )
 {
 	oListener* listener = new oListener(name, handler);
 	listener->autorelease();
-	listener->setEnable(true);
+	listener->setEnabled(true);
 	return listener;
 }
 
@@ -63,7 +63,7 @@ const string& oListener::getName() const
 
 oListener::~oListener()
 {
-	oListener::setEnable(false);
+	oListener::setEnabled(false);
 }
 
 NS_DOROTHY_END

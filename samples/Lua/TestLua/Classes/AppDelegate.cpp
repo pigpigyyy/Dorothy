@@ -22,8 +22,7 @@ AppDelegate::~AppDelegate()
 bool AppDelegate::applicationDidFinishLaunching()
 {
     // initialize director
-    CCDirector *pDirector = CCDirector::sharedDirector();
-    pDirector->setOpenGLView(CCEGLView::sharedOpenGLView());
+	CCDirector::sharedDirector()->setOpenGLView(CCEGLView::sharedOpenGLView());
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_BLACKBERRY
     std::vector<std::string> searchPaths;
@@ -37,7 +36,7 @@ bool AppDelegate::applicationDidFinishLaunching()
 	*/
 	// register lua engine
 	CCScriptEngine::setEngine(CCLuaEngine::defaultEngine());
-	CCScriptEngine::sharedEngine()->executeScriptFile("luaScript/main.lua");
+	CCScriptEngine::sharedEngine()->executeScriptFile("script/main.lua");
 
     return true;
 }

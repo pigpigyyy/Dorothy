@@ -196,7 +196,7 @@ void oModel::reset( oSpriteDef* parentDef, CCNode* parentNode )
 	if (children)
 	{
 		const oOwnVector<oSpriteDef>& childrenDefs = parentDef->children;
-		for (uint32 n = 0;n < children->count();n++)
+		for (uint32 n = 0; n < childrenDefs.size(); n++)
 		{
 			CCNode* childNode = (CCNode*)children->objectAtIndex(n);
 			childrenDefs[n]->restore((CCSprite*)childNode);
@@ -207,6 +207,10 @@ void oModel::reset( oSpriteDef* parentDef, CCNode* parentNode )
 
 void oModel::onActionEnd()
 {
+	if (_isPaused)
+	{
+		return;
+	}
 	if (_loop)
 	{
 		for (oAnimation* animation : _animationGroups[_currentAnimation]->animations)
@@ -244,7 +248,7 @@ int oModel::getCurrentAnimationIndex() const
 void oModel::resume( uint32 index )
 {
 	oModel::resume();
-	if (_currentAnimation != index)
+	if (!_isPlaying || _currentAnimation != index || oModel::getTime() == 1.0f)
 	{
 		oModel::play(index);
 	}
@@ -317,6 +321,14 @@ void oModel::setTime( float time )
 {
 	if (_isPlaying)
 	{
+		if (time > 1.0f)
+		{
+			time = 1.0f;
+		}
+		else if (time < 0)
+		{
+			time = 0.0f;
+		}
 		for (oAnimation* animation : _animationGroups[_currentAnimation]->animations)
 		{
 			animation->setTime(time);

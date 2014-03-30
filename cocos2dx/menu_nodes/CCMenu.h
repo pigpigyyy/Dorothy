@@ -57,28 +57,28 @@ class CC_DLL CCMenu : public CCLayer
 {
     /** whether or not the menu will receive events */
     bool m_bEnabled;
-    
+	bool m_bSwallowTouches;
 public:
-    CCMenu() : m_pSelectedItem(NULL) {}
+	CCMenu(bool swallow) : m_pSelectedItem(NULL), m_bSwallowTouches(swallow) {}
     virtual ~CCMenu(){}
 
     /** creates an empty CCMenu */
-    static CCMenu* create();
+    static CCMenu* create(bool swallow = true);
 
     /** creates a CCMenu with CCMenuItem objects */
-    static CCMenu* create(CCMenuItem* item, ...);
+	static CCMenu* create(bool swallow, CCMenuItem* item, ...);
 
     /** creates a CCMenu with a CCArray of CCMenuItem objects */
-    static CCMenu* createWithArray(CCArray* pArrayOfItems);
+	static CCMenu* createWithArray(CCArray* pArrayOfItems, bool swallow = true);
 
     /** creates a CCMenu with it's item, then use addChild() to add 
       * other items. It is used for script, it can't init with undetermined
       * number of variables.
     */
-    static CCMenu* createWithItem(CCMenuItem* item);
+	static CCMenu* createWithItem(CCMenuItem* item, bool swallow = true);
     
     /** creates a CCMenu with CCMenuItem objects */
-    static CCMenu* createWithItems(CCMenuItem *firstItem, va_list args);
+	static CCMenu* createWithItems(CCMenuItem *firstItem, va_list args, bool swallow = true);
 
     /** initializes an empty CCMenu */
     bool init();
@@ -114,9 +114,6 @@ public:
     void setHandlerPriority(int newPriority);
 
     //super methods
-    virtual void addChild(CCNode * child);
-    virtual void addChild(CCNode * child, int zOrder);
-    virtual void addChild(CCNode * child, int zOrder, int tag);
     virtual void registerWithTouchDispatcher();
     virtual void removeChild(CCNode* child, bool cleanup);
 

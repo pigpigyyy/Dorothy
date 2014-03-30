@@ -33,6 +33,7 @@ class oFrameAnimationDef: public oModelAnimationDef
 public:
 	oFrameAnimationDef();
 	void setFile(const char* filename);
+	const string& getFile() const;
 	float begin;
 	float end;
 	virtual oActionDuration* toAction();

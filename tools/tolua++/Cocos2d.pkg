@@ -58,6 +58,7 @@ $pfile "oCache.h"
 $pfile "oNode3D.h"
 $pfile "oContent.h"
 $pfile "oVec2.h"
+$pfile "oLine.h"
 
 $pfile "oEvent.h"
 $pfile "oListener.h"

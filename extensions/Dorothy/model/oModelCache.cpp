@@ -60,7 +60,7 @@ void oModelCache::startElement( void *ctx, const char *name, const char **atts )
 					switch (atts[i][0])
 					{
 					oCase::Key:
-						oHelper::getPosFromStr(atts[++i], spriteDef->archorX, spriteDef->archorY);
+						oHelper::getPosFromStr(atts[++i], spriteDef->anchorX, spriteDef->anchorY);
 						break;
 					oCase::Opacity:
 						spriteDef->opacity = (float)atof(atts[++i]);
@@ -77,10 +77,7 @@ void oModelCache::startElement( void *ctx, const char *name, const char **atts )
 					oCase::Skew:
 						oHelper::getPosFromStr(atts[++i], spriteDef->skewX, spriteDef->skewY);
 					oCase::Name:
-						if (!_item->_isBatchUsed)
-						{
-							spriteDef->name = atts[++i];
-						}
+						spriteDef->name = atts[++i];
 						break;
 					oCase::Clip:
 						spriteDef->clip = atoi(atts[++i]);

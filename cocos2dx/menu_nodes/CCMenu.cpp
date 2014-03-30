@@ -59,26 +59,26 @@ enum
 //CCMenu
 //
 
-CCMenu* CCMenu::create()
+CCMenu* CCMenu::create(bool swallow)
 {
-    return CCMenu::create(NULL, NULL);
+	return CCMenu::createWithItems(NULL, NULL, swallow);
 }
 
-CCMenu * CCMenu::create(CCMenuItem* item, ...)
+CCMenu * CCMenu::create(bool swallow, CCMenuItem* item, ...)
 {
     va_list args;
     va_start(args,item);
     
-    CCMenu *pRet = CCMenu::createWithItems(item, args);
+	CCMenu *pRet = CCMenu::createWithItems(item, args, swallow);
     
     va_end(args);
     
     return pRet;
 }
 
-CCMenu* CCMenu::createWithArray(CCArray* pArrayOfItems)
+CCMenu* CCMenu::createWithArray(CCArray* pArrayOfItems, bool swallow)
 {
-    CCMenu *pRet = new CCMenu();
+    CCMenu *pRet = new CCMenu(swallow);
     if (pRet && pRet->initWithArray(pArrayOfItems))
     {
         pRet->autorelease();
@@ -91,7 +91,7 @@ CCMenu* CCMenu::createWithArray(CCArray* pArrayOfItems)
     return pRet;
 }
 
-CCMenu* CCMenu::createWithItems(CCMenuItem* item, va_list args)
+CCMenu* CCMenu::createWithItems(CCMenuItem* item, va_list args, bool swallow)
 {
     CCArray* pArray = NULL;
     if( item )
@@ -105,12 +105,12 @@ CCMenu* CCMenu::createWithItems(CCMenuItem* item, va_list args)
         }
     }
     
-    return CCMenu::createWithArray(pArray);
+    return CCMenu::createWithArray(pArray, swallow);
 }
 
-CCMenu* CCMenu::createWithItem(CCMenuItem* item)
+CCMenu* CCMenu::createWithItem(CCMenuItem* item, bool swallow)
 {
-    return CCMenu::create(item, NULL);
+	return CCMenu::createWithItems(item, NULL, swallow);
 }
 
 bool CCMenu::init()
@@ -153,25 +153,6 @@ bool CCMenu::initWithArray(CCArray* pArrayOfItems)
     return false;
 }
 
-/*
-* override add:
-*/
-void CCMenu::addChild(CCNode * child)
-{
-    CCLayer::addChild(child);
-}
-
-void CCMenu::addChild(CCNode * child, int zOrder)
-{
-    CCLayer::addChild(child, zOrder);
-}
-
-void CCMenu::addChild(CCNode * child, int zOrder, int tag)
-{
-    CCAssert( dynamic_cast<CCMenuItem*>(child) != NULL, "Menu only supports MenuItem objects as children");
-    CCLayer::addChild(child, zOrder, tag);
-}
-
 void CCMenu::onExit()
 {
     if (m_eState == kCCMenuStateTrackingTouch)
@@ -191,9 +172,8 @@ void CCMenu::onExit()
 void CCMenu::removeChild(CCNode* child, bool cleanup)
 {
     CCMenuItem *pMenuItem = dynamic_cast<CCMenuItem*>(child);
-    CCAssert(pMenuItem != NULL, "Menu only supports MenuItem objects as children");
     
-    if (m_pSelectedItem == pMenuItem)
+	if (pMenuItem && m_pSelectedItem == pMenuItem)
     {
         m_pSelectedItem = NULL;
     }
@@ -212,7 +192,7 @@ void CCMenu::setHandlerPriority(int newPriority)
 void CCMenu::registerWithTouchDispatcher()
 {
     CCDirector* pDirector = CCDirector::sharedDirector();
-    pDirector->getTouchDispatcher()->addTargetedDelegate(this, this->getTouchPriority(), true);
+    pDirector->getTouchDispatcher()->addTargetedDelegate(this, this->getTouchPriority(), m_bSwallowTouches);
 }
 
 bool CCMenu::ccTouchBegan(CCTouch* touch, CCEvent* event)
@@ -246,7 +226,16 @@ void CCMenu::ccTouchEnded(CCTouch *touch, CCEvent* event)
     CC_UNUSED_PARAM(touch);
     CC_UNUSED_PARAM(event);
     CCAssert(m_eState == kCCMenuStateTrackingTouch, "[Menu ccTouchEnded] -- invalid state");
-    if (m_pSelectedItem)
+	if (!m_bEnabled)
+	{
+		if (m_pSelectedItem)
+		{
+			m_pSelectedItem->unselected();
+		}
+		m_eState = kCCMenuStateWaiting;
+		return;
+	}
+	if (m_pSelectedItem)
     {
         m_pSelectedItem->unselected();
         m_pSelectedItem->activate();
@@ -271,7 +260,16 @@ void CCMenu::ccTouchMoved(CCTouch* touch, CCEvent* event)
     CC_UNUSED_PARAM(event);
     CCAssert(m_eState == kCCMenuStateTrackingTouch, "[Menu ccTouchMoved] -- invalid state");
     CCMenuItem *currentItem = this->itemForTouch(touch);
-    if (currentItem != m_pSelectedItem) 
+	if (!m_bEnabled)
+	{
+		if (currentItem && currentItem == m_pSelectedItem)
+		{
+			m_pSelectedItem->unselected();
+			m_pSelectedItem = NULL;
+		}
+		return;
+	}
+	if (currentItem != m_pSelectedItem) 
     {
         if (m_pSelectedItem)
         {
@@ -595,10 +593,10 @@ void CCMenu::alignItemsInRowsWithArray(CCArray* columnArray)
 CCMenuItem* CCMenu::itemForTouch(CCTouch *touch)
 {
     CCPoint touchLocation = touch->getLocation();
-	if (!this->getContentSize().equals(CCSizeZero))
+	if (this->getContentSize() != CCSize::zero)
 	{
 		CCPoint loc = this->convertToNodeSpace(touchLocation);
-		if (!CCRect(CCPointZero, this->getContentSize()).containsPoint(loc))
+		if (!CCRect(CCPoint::zero, this->getContentSize()).containsPoint(loc))
 		{
 			return NULL;
 		}
@@ -612,7 +610,7 @@ CCMenuItem* CCMenu::itemForTouch(CCTouch *touch)
             if (pChild && pChild->isVisible() && pChild->isEnabled())
             {
                 CCPoint local = pChild->convertToNodeSpace(touchLocation);
-				if (CCRect(CCPointZero, pChild->getContentSize()).containsPoint(local))
+				if (CCRect(CCPoint::zero, pChild->getContentSize()).containsPoint(local))
                 {
                     return pChild;
                 }

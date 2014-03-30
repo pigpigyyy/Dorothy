@@ -26,6 +26,9 @@ module oCache
 		static tolua_outside bool oModelCache_load @ load( const char* filename );
 		static tolua_outside bool oModelCache_update @ update(const char* name, const char* content);
 		static tolua_outside bool oModelCache_unload @ unload( const char* filename = nullptr );
+		static tolua_outside void oModelCache_getData @ getData( const char* filename);
+		static tolua_outside void oModelCache_loadData @ loadData( const char* filename, tolua_table);
+		static tolua_outside void oModelCache_save @ save(const char* itemName, const char* targetName);
 	};
 
 	class oClipCache @ Clip

@@ -45,6 +45,11 @@ void oFrameAnimationDef::setFile( const char* filename )
 	_def = oSharedAnimationCache.load(filename);
 }
 
+const string& oFrameAnimationDef::getFile() const
+{
+	return _file;
+}
+
 string oFrameAnimationDef::toXml()
 {
 	ostringstream stream;

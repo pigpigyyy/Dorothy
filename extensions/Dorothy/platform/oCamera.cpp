@@ -46,7 +46,7 @@ void oCamera::follow( CCNode* target )
 
 void oCamera::setPosition(const CCPoint& var)
 {
-	if (!_camPos.equals(var))
+	if (_camPos != var)
 	{
 		_camPos = var;
 		CCPoint pos(

@@ -168,6 +168,9 @@
     <ClCompile Include="..\Dorothy\event\oListener.cpp">
       <Filter>Dorothy\event</Filter>
     </ClCompile>
+    <ClCompile Include="..\Dorothy\misc\oLine.cpp">
+      <Filter>Dorothy\misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\cocos-ext.h" />
@@ -349,6 +352,9 @@
     </ClInclude>
     <ClInclude Include="..\Dorothy\event\oListener.h">
       <Filter>Dorothy\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oLine.h">
+      <Filter>Dorothy\misc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

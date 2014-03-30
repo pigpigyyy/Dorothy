@@ -225,7 +225,7 @@ void CCActionManager::removeAllActionsFromTarget(CCObject *pTarget)
             pElement->currentActionSalvaged = true;
         }
 
-		for (int i = 0; i < pElement->actions->num; i++)
+		for (unsigned int i = 0; i < pElement->actions->num; i++)
 		{
 			((CCAction*)pElement->actions->arr[i])->stop();
 		}

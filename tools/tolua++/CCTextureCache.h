@@ -1,5 +1,7 @@
 class CCTextureCache
 {
+	tolua_outside CCTexture2D* CCTextureCache_add @ add(CCRenderTexture* renderTexture, const char* key);
+	
 	CCTexture2D* addImage @ load(const char* fileimage);
 	void removeAllTextures @ unload();
 	static void reloadAllTextures @ reload();

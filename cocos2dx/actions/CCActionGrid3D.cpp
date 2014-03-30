@@ -401,7 +401,7 @@ CCObject* CCLens3D::copyWithZone(CCZone *pZone)
 
 void CCLens3D::setPosition(const CCPoint& pos)
 {
-    if( !pos.equals(m_position))
+    if(pos != m_position)
     {
         m_position = pos;
         m_bDirty = true;

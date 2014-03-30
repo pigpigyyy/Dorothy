@@ -350,7 +350,7 @@ LRESULT CCEGLView::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
             pt.x /= m_fFrameZoomFactor;
             pt.y /= m_fFrameZoomFactor;
             CCPoint tmp = ccp(pt.x, m_obScreenSize.height - pt.y);
-            if (m_obViewPortRect.equals(CCRectZero) || m_obViewPortRect.containsPoint(tmp))
+            if (m_obViewPortRect == CCRect::zero || m_obViewPortRect.containsPoint(tmp))
             {
                 m_bCaptured = true;
                 SetCapture(m_hWnd);
@@ -404,6 +404,13 @@ LRESULT CCEGLView::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
             {
                 if (s_pfGetTouchInputInfoFunction((HTOUCHINPUT)lParam, cInputs, pInputs, sizeof(TOUCHINPUT)))
                 {
+					int* ids = (int*)alloca(sizeof(int)*cInputs);
+					int* events = (int*)alloca(sizeof(int)*cInputs);
+					float* xs = (float*)alloca(sizeof(float)*cInputs);
+					float* ys = (float*)alloca(sizeof(float)*cInputs);
+					int* rids = (int*)alloca(sizeof(int)*cInputs);
+					float* rxs = (float*)alloca(sizeof(float)*cInputs);
+					float* rys = (float*)alloca(sizeof(float)*cInputs);
                     for (UINT i=0; i < cInputs; i++)
                     {
                         TOUCHINPUT ti = pInputs[i];
@@ -413,20 +420,63 @@ LRESULT CCEGLView::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
                         ScreenToClient(m_hWnd, &input);
                         CCPoint pt(input.x, input.y);
                         CCPoint tmp = ccp(pt.x, m_obScreenSize.height - pt.y);
-                        if (m_obViewPortRect.equals(CCRectZero) || m_obViewPortRect.containsPoint(tmp))
+                        if (m_obViewPortRect == CCRect::zero || m_obViewPortRect.containsPoint(tmp))
                         {
                             pt.x /= m_fFrameZoomFactor;
                             pt.y /= m_fFrameZoomFactor;
 
-                            if (ti.dwFlags & TOUCHEVENTF_DOWN)
-                                handleTouchesBegin(1, reinterpret_cast<int*>(&ti.dwID), &pt.x, &pt.y);
-                            else if (ti.dwFlags & TOUCHEVENTF_MOVE)
-                                handleTouchesMove(1, reinterpret_cast<int*>(&ti.dwID), &pt.x, &pt.y);
-                            else if (ti.dwFlags & TOUCHEVENTF_UP)
-                                handleTouchesEnd(1, reinterpret_cast<int*>(&ti.dwID), &pt.x, &pt.y);
+							ids[i] = ti.dwID;
+							events[i] = ti.dwFlags;
+							xs[i] = pt.x;
+							ys[i] = pt.y;
                          }
                      }
-                     bHandled = TRUE;
+					int index = 0;
+					for (UINT i = 0; i < cInputs; i++)
+					{
+						if (events[i] & TOUCHEVENTF_DOWN)
+						{
+							rids[index] = ids[i];
+							rxs[index] = xs[i];
+							rys[index] = ys[i];
+							index++;
+						}
+					}
+					if (index > 0)
+					{
+						handleTouchesBegin(index, rids, rxs, rys);
+					}
+					index = 0;
+					for (UINT i = 0; i < cInputs; i++)
+					{
+						if (events[i] & TOUCHEVENTF_MOVE)
+						{
+							rids[index] = ids[i];
+							rxs[index] = xs[i];
+							rys[index] = ys[i];
+							index++;
+						}
+					}
+					if (index > 0)
+					{
+						handleTouchesMove(index, rids, rxs, rys);
+					}
+					index = 0;
+					for (UINT i = 0; i < cInputs; i++)
+					{
+						if (events[i] & TOUCHEVENTF_UP)
+						{
+							rids[index] = ids[i];
+							rxs[index] = xs[i];
+							rys[index] = ys[i];
+							index++;
+						}
+					}
+					if (index > 0)
+					{
+						handleTouchesEnd(index, rids, rxs, rys);
+					}
+					bHandled = TRUE;
                  }
                  delete [] pInputs;
              }

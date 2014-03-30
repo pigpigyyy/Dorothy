@@ -38,7 +38,7 @@ CCMotionStreak::CCMotionStreak()
 : m_bFastMode(false)
 , m_bStartingPositionInitialized(false)
 , m_pTexture(NULL)
-, m_tPositionR(CCPointZero)
+, m_tPositionR(CCPoint::zero)
 , m_fStroke(0.0f)
 , m_fFadeDelta(0.0f)
 , m_fMinSeg(0.0f)
@@ -101,11 +101,11 @@ bool CCMotionStreak::initWithFade(float fade, float minSeg, float stroke, ccColo
 
 bool CCMotionStreak::initWithFade(float fade, float minSeg, float stroke, ccColor3B color, CCTexture2D* texture)
 {
-    CCNode::setPosition(CCPointZero);
-    setAnchorPoint(CCPointZero);
+    CCNode::setPosition(CCPoint::zero);
+    setAnchorPoint(CCPoint::zero);
     m_bStartingPositionInitialized = false;
 
-    m_tPositionR = CCPointZero;
+    m_tPositionR = CCPoint::zero;
     m_bFastMode = true;
     m_fMinSeg = (minSeg == -1.0f) ? stroke/5.0f : minSeg;
     m_fMinSeg *= m_fMinSeg;

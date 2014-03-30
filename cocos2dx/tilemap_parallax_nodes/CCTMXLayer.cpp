@@ -99,8 +99,8 @@ bool CCTMXLayer::initWithTilesetInfo(CCTMXTilesetInfo *tilesetInfo, CCTMXLayerIn
 }
 
 CCTMXLayer::CCTMXLayer()
-:m_tLayerSize(CCSizeZero)
-,m_tMapTileSize(CCSizeZero)
+:m_tLayerSize(CCSize::zero)
+,m_tMapTileSize(CCSize::zero)
 ,m_pTiles(NULL)
 ,m_pTileSet(NULL)
 ,m_pProperties(NULL)
@@ -239,7 +239,7 @@ void CCTMXLayer::setupTileSprite(CCSprite* sprite, CCPoint pos, unsigned int gid
 {
     sprite->setPosition(positionAt(pos));
     sprite->setPositionZ((float)vertexZForPos(pos));
-    sprite->setAnchorPoint(CCPointZero);
+    sprite->setAnchorPoint(CCPoint::zero);
     sprite->setOpacity(m_cOpacity);
 
     //issue 1264, flip can be undone as well
@@ -342,7 +342,7 @@ CCSprite * CCTMXLayer::tileAt(const CCPoint& pos)
             tile->setBatchNode(this);
             tile->setPosition(positionAt(pos));
             tile->setPositionZ((float)vertexZForPos(pos));
-            tile->setAnchorPoint(CCPointZero);
+            tile->setAnchorPoint(CCPoint::zero);
             tile->setOpacity(m_cOpacity);
 
             unsigned int indexForZ = atlasIndexForExistantZ(z);
@@ -625,7 +625,7 @@ void CCTMXLayer::removeTileAt(const CCPoint& pos)
 //CCTMXLayer - obtaining positions, offset
 CCPoint CCTMXLayer::calculateLayerOffset(const CCPoint& pos)
 {
-    CCPoint ret = CCPointZero;
+    CCPoint ret = CCPoint::zero;
     switch (m_uLayerOrientation) 
     {
     case CCTMXOrientationOrtho:
@@ -636,14 +636,14 @@ CCPoint CCTMXLayer::calculateLayerOffset(const CCPoint& pos)
                   (m_tMapTileSize.height /2 ) * (-pos.x - pos.y));
         break;
     case CCTMXOrientationHex:
-        CCAssert(pos.equals(CCPointZero), "offset for hexagonal map not implemented yet");
+        CCAssert(pos == CCPoint::zero, "offset for hexagonal map not implemented yet");
         break;
     }
     return ret;    
 }
 CCPoint CCTMXLayer::positionAt(const CCPoint& pos)
 {
-    CCPoint ret = CCPointZero;
+    CCPoint ret = CCPoint::zero;
     switch (m_uLayerOrientation)
     {
     case CCTMXOrientationOrtho:

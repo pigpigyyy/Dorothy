@@ -38,6 +38,6 @@ void main()											\n\
 {													\n\
     gl_Position = CC_MVPMatrix * a_position;		\n\
 	gl_PointSize = u_pointSize;						\n\
-	v_fragmentColor = u_color;						\n\
+		v_fragmentColor = vec4(u_color.rgb * u_color.a, u_color.a);						\n\
 }													\n\
 ";

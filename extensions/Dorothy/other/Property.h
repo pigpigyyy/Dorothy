@@ -9,7 +9,7 @@ template <
 class _RProperty
 {
 public:
-	void operator()(Object* obj)  
+	void operator()(Object* obj)
 	{
 		_target = obj;
 	}

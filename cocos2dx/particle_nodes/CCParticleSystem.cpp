@@ -94,8 +94,8 @@ CCParticleSystem::CCParticleSystem()
 , m_bIsActive(true)
 , m_uParticleCount(0)
 , m_fDuration(0)
-, m_tSourcePosition(CCPointZero)
-, m_tPosVar(CCPointZero)
+, m_tSourcePosition(CCPoint::zero)
+, m_tPosVar(CCPoint::zero)
 , m_fLife(0)
 , m_fLifeVar(0)
 , m_fAngle(0)
@@ -117,7 +117,7 @@ CCParticleSystem::CCParticleSystem()
 , m_bIsAutoRemoveOnFinish(false)
 , m_nEmitterMode(kCCParticleModeGravity)
 {
-    modeA.gravity = CCPointZero;
+    modeA.gravity = CCPoint::zero;
     modeA.speed = 0;
     modeA.speedVar = 0;
     modeA.tangentialAccel = 0;
@@ -523,7 +523,7 @@ void CCParticleSystem::initParticle(tCCParticle* particle)
     // position
     if( m_ePositionType == kCCPositionTypeFree )
     {
-        particle->startPos = this->convertToGameSpace(CCPointZero);
+        particle->startPos = this->convertToGameSpace(CCPoint::zero);
     }
     else if ( m_ePositionType == kCCPositionTypeRelative )
     {
@@ -628,10 +628,10 @@ void CCParticleSystem::update(float dt)
 
     m_uParticleIdx = 0;
 
-    CCPoint currentPosition = CCPointZero;
+    CCPoint currentPosition = CCPoint::zero;
     if (m_ePositionType == kCCPositionTypeFree)
     {
-        currentPosition = this->convertToGameSpace(CCPointZero);
+        currentPosition = this->convertToGameSpace(CCPoint::zero);
     }
     else if (m_ePositionType == kCCPositionTypeRelative)
     {
@@ -654,7 +654,7 @@ void CCParticleSystem::update(float dt)
                 {
                     CCPoint tmp, radial, tangential;
 
-                    radial = CCPointZero;
+                    radial = CCPoint::zero;
                     // radial acceleration
                     if (p->pos.x || p->pos.y)
                     {

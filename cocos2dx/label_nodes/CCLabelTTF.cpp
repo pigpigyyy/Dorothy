@@ -70,7 +70,7 @@ CCLabelTTF * CCLabelTTF::create()
 CCLabelTTF * CCLabelTTF::create(const char *string, const char *fontName, float fontSize)
 {
     return CCLabelTTF::create(string, fontName, fontSize,
-                              CCSizeZero, kCCTextAlignmentCenter, kCCVerticalTextAlignmentTop);
+                              CCSize::zero, kCCTextAlignmentCenter, kCCVerticalTextAlignmentTop);
 }
 
 CCLabelTTF * CCLabelTTF::create(const char *string, const char *fontName, float fontSize,
@@ -107,7 +107,7 @@ bool CCLabelTTF::initWithString(const char *label, const char *fontName, float f
 bool CCLabelTTF::initWithString(const char *label, const char *fontName, float fontSize)
 {
     return this->initWithString(label, fontName, fontSize, 
-                                CCSizeZero, kCCTextAlignmentLeft, kCCVerticalTextAlignmentTop);
+                                CCSize::zero, kCCTextAlignmentLeft, kCCVerticalTextAlignmentTop);
 }
 
 bool CCLabelTTF::initWithString(const char *string, const char *fontName, float fontSize,
@@ -274,7 +274,7 @@ bool CCLabelTTF::updateTexture()
     this->setTexture(tex);
     tex->release();
 	
-	CCRect rect = CCRectZero;
+	CCRect rect = CCRect::zero;
     rect.size = m_pobTexture->getContentSize();
     this->setTextureRect(rect);
 

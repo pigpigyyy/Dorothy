@@ -32,6 +32,7 @@ public:
 	string getExtractedFullName(const char* filename);
 	bool isFileExist(const char* filename);
 	bool removeExtractedFile(const char* filename);
+	void saveToFile(const string& filename, const string& content);
 	/** Singleton method. */
 	SHARED_FUNC(oContent);
 protected:

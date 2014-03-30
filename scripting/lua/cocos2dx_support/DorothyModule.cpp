@@ -1,4 +1,5 @@
 #include "DorothyModule.h"
+#include "CCLuaEngine.h"
 
 void CCDrawNode_drawPolygon(
 	CCDrawNode* self,
@@ -11,22 +12,22 @@ void CCDrawNode_drawPolygon(
 }
 
 HANDLER_WRAP_START(oModelHandlerWrapper)
-	void call( oModel* model ) const
-	{
-		CCObject* params[] = {model};
-		char* paramNames[] = {"oModel"};
-		CCScriptEngine::sharedEngine()->executeFunction(getHandler(), 1, params, paramNames);
-	}
+void call(oModel* model) const
+{
+	CCObject* params[] = { model };
+	char* paramNames[] = { "oModel" };
+	CCScriptEngine::sharedEngine()->executeFunction(getHandler(), 1, params, paramNames);
+}
 HANDLER_WRAP_END
-void oModel_addHandler( oModel* model, const string& name, int nHandler )
+void oModel_addHandler(oModel* model, const string& name, int nHandler)
 {
 	model->handlers[name] += std::make_pair(oModelHandlerWrapper(nHandler), &oModelHandlerWrapper::call);
 }
-void oModel_removeHandler( oModel* model, const string& name, int nHandler )
+void oModel_removeHandler(oModel* model, const string& name, int nHandler)
 {
 	model->handlers[name] -= std::make_pair(oModelHandlerWrapper(nHandler), &oModelHandlerWrapper::call);
 }
-void oModel_clearHandler( oModel* model, const string& name )
+void oModel_clearHandler(oModel* model, const string& name)
 {
 	model->handlers[name].Clear();
 }
@@ -36,15 +37,15 @@ const oVec2& oModel_getKey(oModel* model, uint32 index)
 }
 
 HANDLER_WRAP_START(oSensorHandlerWrapper)
-	void call( oSensor* sensor, oBody* body ) const
-	{
-		CCObject* params[] = { sensor, body };
-		char* paramNames[] = { "oSensor", "oBody" };
-		CCScriptEngine::sharedEngine()->executeFunction(getHandler(), 2, params, paramNames);
-	}
+void call(oSensor* sensor, oBody* body) const
+{
+	CCObject* params[] = { sensor, body };
+	char* paramNames[] = { "oSensor", "oBody" };
+	CCScriptEngine::sharedEngine()->executeFunction(getHandler(), 2, params, paramNames);
+}
 HANDLER_WRAP_END
 
-void oSensor_addHandler( oSensor* sensor, uint32 flag, int nHandler )
+void oSensor_addHandler(oSensor* sensor, uint32 flag, int nHandler)
 {
 	switch (flag)
 	{
@@ -56,7 +57,7 @@ void oSensor_addHandler( oSensor* sensor, uint32 flag, int nHandler )
 		break;
 	}
 }
-void oSensor_removeHandler( oSensor* sensor, uint32 flag, int nHandler )
+void oSensor_removeHandler(oSensor* sensor, uint32 flag, int nHandler)
 {
 	switch (flag)
 	{
@@ -68,7 +69,7 @@ void oSensor_removeHandler( oSensor* sensor, uint32 flag, int nHandler )
 		break;
 	}
 }
-void oSensor_clearHandler( oSensor* sensor, uint32 flag )
+void oSensor_clearHandler(oSensor* sensor, uint32 flag)
 {
 	switch (flag)
 	{
@@ -81,13 +82,13 @@ void oSensor_clearHandler( oSensor* sensor, uint32 flag )
 	}
 }
 
-void oWorld_query( oWorld* world, const CCRect& rect, int nHandler )
+void oWorld_query(oWorld* world, const CCRect& rect, int nHandler)
 {
 	world->query(rect,
 		[&](oBody* body)
 	{
-		CCObject* params[] = {body};
-		char* paramNames[] = {"oBody"};
+		CCObject* params[] = { body };
+		char* paramNames[] = { "oBody" };
 		return CCScriptEngine::sharedEngine()->executeFunction(nHandler, 1, params, paramNames) != 0;
 	});
 }
@@ -184,12 +185,12 @@ void oUnitDef_setInstincts(oUnitDef* def, int instincts[], int count)
 }
 
 HANDLER_WRAP_START(oListenerHandlerWrapper)
-	void call(oEvent* event) const
-	{
-		void* params[] = {event};
-		char* names[] = {"oEvent"};
-		CCScriptEngine::sharedEngine()->executeFunction(getHandler(), 1, params, names);
-	}
+void call(oEvent* event) const
+{
+	void* params[] = { event };
+	char* names[] = { "oEvent" };
+	CCScriptEngine::sharedEngine()->executeFunction(getHandler(), 1, params, names);
+}
 HANDLER_WRAP_END
 oListener* oListener_create(const string& name, int handler)
 {
@@ -404,4 +405,379 @@ CCArray* CCArray_create(CCObject* object[], int count)
 	}
 	return array;
 }
+unsigned int CCArray_index(CCArray* array, CCObject* object)
+{
+	return array->indexOfObject(object) + 1;
+}
+CCObject* CArray_get(CCArray* array, unsigned int index)
+{
+	return array->objectAtIndex(index - 1);
+}
+void CArray_insert(CCArray* array, CCObject* object, unsigned int index)
+{
+	array->insertObject(object, index - 1);
+}
+void CArray_removeAt(CCArray* array, unsigned int index)
+{
+	array->removeObjectAtIndex(index - 1);
+}
+void CArray_exchange(CCArray* array, unsigned int index1, unsigned int index2)
+{
+	array->exchangeObjectAtIndex(index1 - 1, index2 - 1);
+}
+void CArray_fastRemoveAt(CCArray* array, unsigned int index)
+{
+	array->fastRemoveObjectAtIndex(index - 1);
+}
+void CArray_set(CCArray* array, unsigned int index, CCObject* object)
+{
+	array->replaceObjectAtIndex(index - 1, object);
+}
 
+CCTexture2D* CCTextureCache_add(CCTextureCache* self, CCRenderTexture* renderTexture, const char* name)
+{
+	CCImage* image = renderTexture->newCCImage();
+	CCTexture2D* texture = self->addUIImage(image, name);
+	delete image;
+	return texture;
+}
+
+void __oModelCache_getData(const char* filename)
+{
+	oModelDef* modelDef = oSharedModelCache.load(filename);
+	CCLuaStack* stack = ((CCLuaEngine*)CCLuaEngine::sharedEngine())->getLuaStack();
+	lua_State* L = stack->getLuaState();
+	auto lua_setFloat = [&](int index, float value)
+	{
+		lua_pushnumber(L, value);
+		lua_rawseti(L, -2, index);
+	};
+	auto lua_setInt = [&](int index, int value)
+	{
+		lua_pushinteger(L, value);
+		lua_rawseti(L, -2, index);
+	};
+	auto lua_setBool = [&](int index, bool value)
+	{
+		lua_pushboolean(L, value);
+		lua_rawseti(L, -2, index);
+	};
+	auto lua_setString = [&](int index, const char* value)
+	{
+		lua_pushstring(L, value);
+		lua_rawseti(L, -2, index);
+	};
+	auto lua_setUserType = [&](int index, void* value, const char* typeName)
+	{
+		stack->pushUserType(value, typeName);
+		lua_rawseti(L, -2, index);
+	};
+	static function<void(oSpriteDef*)> visitSpriteDef = [&](oSpriteDef* parent)
+	{
+		lua_createtable(L, 17, 0);
+		lua_setFloat(1, parent->anchorX);
+		lua_setFloat(2, parent->anchorY);
+		lua_setInt(3, parent->clip);
+		lua_setString(4, parent->name.c_str());
+		lua_setFloat(5, parent->opacity);
+		lua_setUserType(6, new CCRect(parent->rect), "CCRect");
+		lua_setFloat(7, parent->rotation);
+		lua_setFloat(8, parent->scaleX);
+		lua_setFloat(9, parent->scaleY);
+		lua_setFloat(10, parent->skewX);
+		lua_setFloat(11, parent->skewY);
+		lua_setFloat(12, parent->x);
+		lua_setFloat(13, parent->y);
+		lua_setBool(14, parent->visible);
+		/*["looks"]*/
+		lua_createtable(L, parent->looks.size(), 0);
+		for (int i = 0; i < (int)parent->looks.size(); i++)
+		{
+			stack->pushInt(parent->looks[i]);
+			lua_rawseti(L, -2, i + 1);
+		}
+		lua_rawseti(L, -2, 15);
+		/*["animationDefs"]*/
+		lua_createtable(L, parent->animationDefs.size(), 0);
+		for (int defIndex = 0; defIndex < (int)parent->animationDefs.size(); defIndex++)
+		{
+			oModelAnimationDef* def = parent->animationDefs[defIndex];
+			/* nullptr */
+			if (!def)
+			{
+				lua_pushboolean(L, 0);
+				lua_rawseti(L, -2, defIndex + 1);
+				continue;
+			}
+			/* oKeyAnimationDef */
+			oKeyAnimationDef* keyDef = dynamic_cast<oKeyAnimationDef*>(def);
+			if (keyDef)
+			{
+				auto& frames = keyDef->getFrames();
+				lua_createtable(L, frames.size()+1, 0);
+				lua_setInt(1, 1);
+				for (int i = 0; i < (int)frames.size(); i++)
+				{
+					oKeyFrameDef* frame = frames[i];
+					lua_createtable(L, 15, 0);
+					lua_setFloat(1, frame->x);
+					lua_setFloat(2, frame->y);
+					lua_setFloat(3, frame->scaleX);
+					lua_setFloat(4, frame->scaleY);
+					lua_setFloat(5, frame->skewX);
+					lua_setFloat(6, frame->skewY);
+					lua_setFloat(7, frame->rotation);
+					lua_setFloat(8, frame->opacity);
+					lua_setBool(9, frame->visible);
+					lua_setInt(10, frame->easeOpacity);
+					lua_setInt(11, frame->easePos);
+					lua_setInt(12, frame->easeRotation);
+					lua_setInt(13, frame->easeScale);
+					lua_setInt(14, frame->easeSkew);
+					lua_setFloat(15, frame->duration);
+					lua_rawseti(L, -2, i + 2);
+				}
+				lua_rawseti(L, -2, defIndex + 1);
+				continue;
+			}
+			/* oFrameAnimationDef */
+			oFrameAnimationDef* frameDef = dynamic_cast<oFrameAnimationDef*>(def);
+			if (frameDef)
+			{
+				lua_createtable(L, 4, 0);
+				lua_setInt(1, 2);
+				lua_setString(2, frameDef->getFile().c_str());
+				lua_setFloat(3, frameDef->begin);
+				lua_setFloat(4, frameDef->end);
+				lua_rawseti(L, -2, defIndex + 1);
+				continue;
+			}
+		}
+		lua_rawseti(L, -2, 16);
+		/*["children"]*/
+		lua_createtable(L, parent->children.size(), 0);
+		for (int i = 0; i < (int)parent->children.size(); i++)
+		{
+			visitSpriteDef(parent->children[i]);
+			lua_rawseti(L, -2, i + 1);
+		}
+		lua_rawseti(L, -2, 17);
+	};
+
+	oSpriteDef* root = modelDef->getRoot();
+	if (root)
+	{
+		visitSpriteDef(root);
+		lua_setBool(18, modelDef->isFaceRight());
+		lua_setBool(19, modelDef->isBatchUsed());
+		lua_setString(20, modelDef->getClipFile().c_str());
+		/*["keys"]*/
+		lua_createtable(L, modelDef->getKeyPointCount(), 0);
+		for (int i = 0; i < modelDef->getKeyPointCount(); i++)
+		{
+			stack->pushUserType(new oVec2(modelDef->getKeyPoint(i)), "oVec2");
+			lua_rawseti(L, -2, i + 1);
+		}
+		lua_rawseti(L, -2, 21);
+		/*["animationNames"]*/
+		lua_newtable(L);
+		for (auto& pair : modelDef->getAnimationIndexMap())
+		{
+			lua_pushstring(L, pair.first.c_str());
+			lua_pushinteger(L, pair.second);
+			lua_rawset(L, -3);
+		}
+		lua_rawseti(L, -2, 22);
+		/*["lookNames"]*/
+		lua_newtable(L);
+		for (auto& pair : modelDef->getLookIndexMap())
+		{
+			lua_pushstring(L, pair.first.c_str());
+			lua_pushinteger(L, pair.second);
+			lua_rawset(L, -3);
+		}
+		lua_rawseti(L, -2, 23);
+	}
+	else
+	{
+		stack->pushNil();
+	}
+}
+
+void oModelCache_save(const char* itemName, const char* targetName)
+{
+	oSharedContent.saveToFile(targetName, oSharedModelCache.load(itemName)->toXml());
+}
+
+oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
+{
+	CCLuaStack* stack = ((CCLuaEngine*)CCLuaEngine::sharedEngine())->getLuaStack();
+	lua_State* L = stack->getLuaState();
+	auto lua_getFloat = [&](int index)->float
+	{
+		lua_rawgeti(L, -1, index);
+		float v = (float)lua_tonumber(L, -1);
+		lua_pop(L, 1);
+		return v;
+	};
+	auto lua_getInt = [&](int index)->int
+	{
+		lua_rawgeti(L, -1, index);
+		int v = lua_tointeger(L, -1);
+		lua_pop(L, 1);
+		return v;
+	};
+	auto lua_getBool = [&](int index)->bool
+	{
+		lua_rawgeti(L, -1, index);
+		bool v = (lua_toboolean(L, -1) != 0);
+		lua_pop(L, 1);
+		return v;
+	};
+	auto lua_getString = [&](int index)->const char*
+	{
+		lua_rawgeti(L, -1, index);
+		const char* v = lua_tostring(L, -1);
+		lua_pop(L, 1);
+		return v;
+	};
+	auto lua_getUserType = [&](int index)->void*
+	{
+		lua_rawgeti(L, -1, index);
+		void* v = (*(void **)(lua_touserdata(L, -1)));
+		lua_pop(L, 1);
+		return v;
+	};
+	lua_pushvalue(L, tableIndex);// push content
+
+	bool isFaceRight = lua_getBool(18);
+	bool isBatchUsed = lua_getBool(19);
+	string clipFile = lua_getString(20);
+	CCTexture2D* texture = oSharedContent.loadTexture(oSharedClipCache.load(clipFile.c_str())->textureFile.c_str());
+	/*["keys"]*/
+	lua_rawgeti(L, -1, 21);// push keys
+	vector<oVec2> keys(lua_objlen(L, -1));
+	for (size_t i = 0; i < keys.size(); i++)
+	{
+		lua_rawgeti(L, -1, i + 1);
+		oVec2* v = (*(oVec2**)(lua_touserdata(L, -1)));
+		keys[i] = *v;
+		lua_pop(L, 1);
+	}
+	lua_pop(L, 1);// pop keys
+	/*["animationNames"]*/
+	lua_rawgeti(L, -1, 22);// push animationNames
+	hash_strmap<int> animationNames;
+	int top = lua_gettop(L);
+	for (lua_pushnil(L); lua_next(L, top) != 0; lua_pop(L, 1))
+	{
+		animationNames[lua_tostring(L, -2)] = lua_tointeger(L, -1);
+	}
+	lua_pop(L, 1);// pop animationNames
+	/*["lookNames"]*/
+	lua_rawgeti(L, -1, 23);// push lookNames
+	hash_strmap<int> lookNames;
+	top = lua_gettop(L);
+	for (lua_pushnil(L); lua_next(L, top) != 0; lua_pop(L, 1))
+	{
+		lookNames[lua_tostring(L, -2)] = lua_tointeger(L, -1);
+	}
+	lua_pop(L, 1);// pop lookNames
+	/*oSpriteDef*/
+	static function<oSpriteDef*()> visitSpriteDef = [&]()->oSpriteDef*
+	{
+		oSpriteDef* spriteDef = new oSpriteDef();
+		spriteDef->texture = texture;
+		spriteDef->anchorX = lua_getFloat(1);
+		spriteDef->anchorY = lua_getFloat(2);
+		spriteDef->clip = lua_getInt(3);
+		spriteDef->name = lua_getString(4);
+		spriteDef->opacity = lua_getFloat(5);
+		spriteDef->rect = *(CCRect*)lua_getUserType(6);
+		spriteDef->rotation = lua_getFloat(7);
+		spriteDef->scaleX = lua_getFloat(8);
+		spriteDef->scaleY = lua_getFloat(9);
+		spriteDef->skewX = lua_getFloat(10);
+		spriteDef->skewY = lua_getFloat(11);
+		spriteDef->x = lua_getFloat(12);
+		spriteDef->y = lua_getFloat(13);
+		spriteDef->visible = lua_getBool(14);
+		/*["looks"]*/
+		lua_rawgeti(L, -1, 15);// puah looks
+		for (size_t i = 0, len = lua_objlen(L, -1); i < len; i++)
+		{
+			lua_rawgeti(L, -1, i + 1);
+			spriteDef->looks.push_back(lua_tointeger(L, -1));
+			lua_pop(L, 1);
+		}
+		lua_pop(L, 1);// pop looks
+		/*["animationDefs"]*/
+		lua_rawgeti(L, -1, 16);// push animationDefs
+		for (size_t defIndex = 0, len = lua_objlen(L, -1); defIndex < len; defIndex++)
+		{
+			lua_rawgeti(L, -1, defIndex + 1);// push animationDef or boolean
+			/* nullptr */
+			if (lua_isboolean(L, -1))
+			{
+				spriteDef->animationDefs.push_back(nullptr);
+				lua_pop(L, 1);// pop boolean
+				continue;
+			}
+			int type = lua_getInt(1);
+			/* oKeyAnimationDef */
+			if (type == 1)
+			{
+				oKeyAnimationDef* keyAnimationDef = new oKeyAnimationDef();
+				for (size_t i = 0, len = lua_objlen(L, -1)-1; i < len; i++)
+				{
+					lua_rawgeti(L, -1, i + 2);// push frameDef
+					oKeyFrameDef* frameDef = new oKeyFrameDef();
+					frameDef->x = lua_getFloat(1);
+					frameDef->y = lua_getFloat(2);
+					frameDef->scaleX = lua_getFloat(3);
+					frameDef->scaleY = lua_getFloat(4);
+					frameDef->skewX = lua_getFloat(5);
+					frameDef->skewY = lua_getFloat(6);
+					frameDef->rotation = lua_getFloat(7);
+					frameDef->opacity = lua_getFloat(8);
+					frameDef->visible = lua_getBool(9);
+					frameDef->easeOpacity = lua_getInt(10);
+					frameDef->easePos = lua_getInt(11);
+					frameDef->easeRotation = lua_getInt(12);
+					frameDef->easeScale = lua_getInt(13);
+					frameDef->easeSkew = lua_getInt(14);
+					frameDef->duration = lua_getFloat(15);
+					keyAnimationDef->add(frameDef);
+					lua_pop(L, 1);// pop frameDef
+				}
+				spriteDef->animationDefs.push_back(keyAnimationDef);
+			}
+			/* oFrameAnimationDef */
+			else if (type == 2)
+			{
+				oFrameAnimationDef* frameAnimationDef = new oFrameAnimationDef();
+				frameAnimationDef->begin = lua_getFloat(2);
+				frameAnimationDef->end = lua_getFloat(3);
+				frameAnimationDef->setFile(lua_getString(4));
+				spriteDef->animationDefs.push_back(frameAnimationDef);
+			}
+			lua_pop(L, 1);// pop animationDef
+		}
+		lua_pop(L, 1);// pop animationDefs
+		/* ["children"] */
+		lua_rawgeti(L, -1, 17);// push children
+		for (size_t i = 0, len = lua_objlen(L, -1); i < len; i++)
+		{
+			lua_rawgeti(L, -1, i + 1);// push childDef
+			spriteDef->children.push_back(visitSpriteDef());
+			lua_pop(L, 1);// pop childDef
+		}
+		lua_pop(L, 1);// pop children
+		return spriteDef;
+	};
+	oSpriteDef* root = visitSpriteDef();
+	oModelDef* modelDef = new oModelDef(isFaceRight, isBatchUsed, clipFile, texture, root, keys, animationNames, lookNames);
+	modelDef->autorelease();
+	lua_pop(L, 1);// pop content
+	return oSharedModelCache.update(filename, modelDef);
+}

@@ -64,7 +64,7 @@ void CCEGLViewProtocol::setDesignResolutionSize(float width, float height, Resol
         return;
     }
 
-    m_obDesignResolutionSize.setSize(width, height);
+    m_obDesignResolutionSize.set(width, height);
     
     m_fScaleX = (float)m_obScreenSize.width / m_obDesignResolutionSize.width;
     m_fScaleY = (float)m_obScreenSize.height / m_obDesignResolutionSize.height;
@@ -83,7 +83,7 @@ void CCEGLViewProtocol::setDesignResolutionSize(float width, float height, Resol
     float viewPortW = m_obDesignResolutionSize.width * m_fScaleX;
     float viewPortH = m_obDesignResolutionSize.height * m_fScaleY;
 
-    m_obViewPortRect.setRect((m_obScreenSize.width - viewPortW) / 2, (m_obScreenSize.height - viewPortH) / 2, viewPortW, viewPortH);
+    m_obViewPortRect.set((m_obScreenSize.width - viewPortW) / 2, (m_obScreenSize.height - viewPortH) / 2, viewPortW, viewPortH);
     
     m_eResolutionPolicy = resolutionPolicy;
     
@@ -129,7 +129,7 @@ CCPoint CCEGLViewProtocol::getVisibleOrigin() const
     }
     else 
     {
-        return CCPointZero;
+        return CCPoint::zero;
     }
 }
 

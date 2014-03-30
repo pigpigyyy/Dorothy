@@ -214,7 +214,7 @@ public:
     inline void setBoudarySet(bool bValue) { m_bBoundarySet = bValue; }
 
     /** initializes the action with a set boundary */
-    bool initWithTarget(CCNode *pFollowedNode, const CCRect& rect = CCRectZero);
+    bool initWithTarget(CCNode *pFollowedNode, const CCRect& rect = CCRect::zero);
 
     virtual CCObject* copyWithZone(CCZone *pZone);
     virtual void step(float dt);
@@ -223,9 +223,9 @@ public:
 
 public:
     /** creates the action with a set boundary,
-    It will work with no boundary if @param rect is equal to CCRectZero.
+    It will work with no boundary if @param rect is equal to CCRect::zero.
     */
-    static CCFollow* create(CCNode *pFollowedNode, const CCRect& rect = CCRectZero);
+    static CCFollow* create(CCNode *pFollowedNode, const CCRect& rect = CCRect::zero);
 protected:
     // node to follow
     CCNode *m_pobFollowedNode;

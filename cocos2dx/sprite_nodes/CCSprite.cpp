@@ -115,7 +115,7 @@ CCSprite* CCSprite::create()
 
 bool CCSprite::init()
 {
-	return initWithTexture(NULL, CCRectZero);
+	return initWithTexture(NULL, CCRect::zero);
 }
 
 // designated initializer
@@ -172,7 +172,7 @@ bool CCSprite::initWithTexture(CCTexture2D *pTexture)
 {
 	CCAssert(pTexture != NULL, "Invalid texture for sprite");
 
-	CCRect rect = CCRectZero;
+	CCRect rect = CCRect::zero;
 	rect.size = pTexture->getContentSize();
 
 	return initWithTexture(pTexture, rect);
@@ -185,7 +185,7 @@ bool CCSprite::initWithFile(const char *pszFilename)
 	CCTexture2D *pTexture = CCTextureCache::sharedTextureCache()->addImage(pszFilename);
 	if (pTexture)
 	{
-		CCRect rect = CCRectZero;
+		CCRect rect = CCRect::zero;
 		rect.size = pTexture->getContentSize();
 		return initWithTexture(pTexture, rect);
 	}

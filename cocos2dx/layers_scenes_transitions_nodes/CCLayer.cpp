@@ -240,7 +240,8 @@ void CCLayer::setAccelerometerEnabled(bool enabled)
 }
 
 
-void CCLayer::setAccelerometerInterval(double interval) {
+void CCLayer::setAccelerometerInterval(double interval)
+{
 	if (m_bAccelerometerEnabled)
 	{
 		if (m_bRunning)
@@ -434,6 +435,8 @@ CCLayerColor::CCLayerColor()
 	// default blend function
 	m_tBlendFunc.src = CC_BLEND_SRC;
 	m_tBlendFunc.dst = CC_BLEND_DST;
+	_cascadeColor = false;
+	_cascadeOpacity = false;
 }
 
 CCLayerColor::~CCLayerColor()

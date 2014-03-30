@@ -155,11 +155,15 @@ int CCLuaEngine::executeCallFuncActionEvent(CCCallFunc* pAction, CCObject* pTarg
     return ret;
 }
 
-int CCLuaEngine::executeSchedule(int nHandler, float dt, CCNode* pNode/* = NULL*/)
+int CCLuaEngine::executeSchedule(int nHandler, float dt, CCNode* pNode)
 {
     if (!nHandler) return 0;
     m_stack->pushFloat(dt);
-    int ret = m_stack->executeFunctionByHandler(nHandler, 1);
+	if (pNode)
+	{
+		m_stack->pushCCObject(pNode, "CCNode");
+	}
+    int ret = m_stack->executeFunctionByHandler(nHandler, pNode ? 2 : 1);
     m_stack->clean();
     return ret;
 }
@@ -186,7 +190,7 @@ int CCLuaEngine::executeLayerTouchesEvent(CCLayer* pLayer, int eventType, CCSet 
 	m_stack->pushInt(eventType);
     CCDirector* pDirector = CCDirector::sharedDirector();
     lua_State *L = m_stack->getLuaState();
-    lua_newtable(L);
+    lua_createtable(L,pTouches->count(),0);
     int i = 1;
     for (CCSetIterator it = pTouches->begin(); it != pTouches->end(); ++it)
     {

@@ -4,13 +4,15 @@
 #include "Dorothy/const/oXml.h"
 #include "Dorothy/model/oKeyFrame.h"
 #include "Dorothy/model/oModel.h"
+#include "Dorothy/model/oClip.h"
+#include "Dorothy/misc/oContent.h"
 
 NS_DOROTHY_BEGIN
 
 CCSprite* oSpriteDef::toSprite()
 {
 	CCSprite* sprite = CCSprite::createWithTexture(texture, rect);
-	sprite->setAnchorPoint(ccp(archorX, archorY));
+	sprite->setAnchorPoint(ccp(anchorX, anchorY));
 	oSpriteDef::restore(sprite);
 	return sprite;
 }
@@ -30,8 +32,8 @@ oSpriteDef::oSpriteDef():
 x(0.0f),
 y(0.0f),
 rotation(0.0f),
-archorX(0.0f),
-archorY(0.0f),
+anchorX(0.0f),
+anchorY(0.0f),
 scaleX(1.0f),
 scaleY(1.0f),
 skewX(0.0f),
@@ -55,9 +57,9 @@ string oSpriteDef::toXml()
 	{
 		stream << ' ' << char(oModelXml::Rotation) << "=\"" << rotation << '\"';
 	}
-	if (archorX != 0.5f || archorY != 0.5f)
+	if (anchorX != 0.5f || anchorY != 0.5f)
 	{
-		stream << ' ' << char(oModelXml::Key) << "=\"" << archorX << ',' << archorY << '\"';
+		stream << ' ' << char(oModelXml::Key) << "=\"" << anchorX << ',' << anchorY << '\"';
 	}
 	if (scaleX != 1.0f || scaleY != 1.0f)
 	{
@@ -138,9 +140,33 @@ _isFaceRight(false),
 _isBatchUsed(true)
 { }
 
+oModelDef::oModelDef(
+	bool isFaceRight,
+	bool isBatchUsed,
+	const string& clipFile,
+	CCTexture2D* texture,
+	oSpriteDef* root,
+	const vector<oVec2>& keys,
+	const hash_strmap<int>& animationIndex,
+	const hash_strmap<int>& lookIndex):
+_texture(texture),
+_clip(clipFile),
+_isFaceRight(isFaceRight),
+_isBatchUsed(isBatchUsed),
+_keys(keys),
+_animationIndex(animationIndex),
+_lookIndex(lookIndex),
+_root(oOwnMake(root))
+{ }
+
 void oModelDef::setTexture( CCTexture2D* tex )
 {
 	_texture = tex;
+}
+
+const string& oModelDef::getClipFile() const
+{
+	return _clip;
 }
 
 CCTexture2D* oModelDef::getTexture()
@@ -233,6 +259,21 @@ int oModelDef::getLookIndexByName( const string& name )
 		return it->second;
 	}
 	return oLook::None;
+}
+
+int oModelDef::getKeyPointCount() const
+{
+	return _keys.size();
+}
+
+const hash_strmap<int>& oModelDef::getAnimationIndexMap() const
+{
+	return _animationIndex;
+}
+
+const hash_strmap<int>& oModelDef::getLookIndexMap() const
+{
+	return _lookIndex;
 }
 
 void oModelDef::setActionName( int index, const string& name )

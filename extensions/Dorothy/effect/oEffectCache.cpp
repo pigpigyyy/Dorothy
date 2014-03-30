@@ -163,7 +163,7 @@ oParticleEffect* oParticleEffect::create( const char* filename )
 	oParticleEffect* effect = new oParticleEffect();
 	effect->_particle = (oParticleSystemQuad*)oSharedParticleCache.loadParticle(filename);
 	effect->_particle->setPositionType(kCCPositionTypeFree);
-	effect->_particle->setPosition(CCPointZero);
+	effect->_particle->setPosition(CCPoint::zero);
 	effect->_particle->setVisible(false);
 	effect->_particle->stopSystem();
 	effect->autorelease();

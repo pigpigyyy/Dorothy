@@ -53,12 +53,12 @@ CCNode::CCNode()
 , m_fScaleX(1.0f)
 , m_fScaleY(1.0f)
 , m_fPositionZ(0.0f)
-, m_obPosition(CCPointZero)
+, m_obPosition(CCPoint::zero)
 , m_fSkewX(0.0f)
 , m_fSkewY(0.0f)
-, m_obAnchorPointInPoints(CCPointZero)
-, m_obAnchorPoint(CCPointZero)
-, m_obContentSize(CCSizeZero)
+, m_obAnchorPointInPoints(CCPoint::zero)
+, m_obAnchorPoint(CCPoint::zero)
+, m_obContentSize(CCSize::zero)
 , m_pCamera(NULL)
 // children (lazy allocs)
 // lazy alloc
@@ -82,6 +82,8 @@ CCNode::CCNode()
 , _realOpacity(1.0f)
 , _displayedColor(ccWHITE)
 , _realColor(ccWHITE)
+, _cascadeOpacity(true)
+, _cascadeColor(true)
 {
 	// set default scheduler and actionManager
 	CCDirector *director = CCDirector::sharedDirector();
@@ -351,7 +353,7 @@ const CCPoint& CCNode::getAnchorPoint()
 
 void CCNode::setAnchorPoint(const CCPoint& point)
 {
-	if (!point.equals(m_obAnchorPoint))
+	if (point != m_obAnchorPoint)
 	{
 		m_obAnchorPoint = point;
 		m_obAnchorPointInPoints = ccp(m_obContentSize.width * m_obAnchorPoint.x, m_obContentSize.height * m_obAnchorPoint.y);
@@ -367,7 +369,7 @@ const CCSize& CCNode::getContentSize()
 
 void CCNode::setContentSize(const CCSize & size)
 {
-	if (!size.equals(m_obContentSize))
+	if (size != m_obContentSize)
 	{
 		m_obContentSize = size;
 
@@ -999,7 +1001,6 @@ CCAffineTransform CCNode::nodeToParentTransform()
 {
 	if (m_bTransformDirty)
 	{
-
 		// Translate values
 		float x = m_obPosition.x;
 		float y = m_obPosition.y;
@@ -1021,7 +1022,7 @@ CCAffineTransform CCNode::nodeToParentTransform()
 		// optimization:
 		// inline anchor point calculation if skew is not needed
 		// Adjusted transform calculation for rotational skew
-		if (!needsSkewMatrix && !m_obAnchorPointInPoints.equals(CCPointZero))
+		if (!needsSkewMatrix && m_obAnchorPointInPoints != CCPoint::zero)
 		{
 			x += c * -m_obAnchorPointInPoints.x * m_fScaleX + -s * -m_obAnchorPointInPoints.y * m_fScaleY;
 			y += s * -m_obAnchorPointInPoints.x * m_fScaleX + c * -m_obAnchorPointInPoints.y * m_fScaleY;
@@ -1044,7 +1045,7 @@ CCAffineTransform CCNode::nodeToParentTransform()
 			m_sTransform = CCAffineTransformConcat(skewMatrix, m_sTransform);
 
 			// adjust anchor point
-			if (!m_obAnchorPointInPoints.equals(CCPointZero))
+			if (m_obAnchorPointInPoints != CCPoint::zero)
 			{
 				m_sTransform = CCAffineTransformTranslate(m_sTransform, -m_obAnchorPointInPoints.x, -m_obAnchorPointInPoints.y);
 			}
@@ -1177,13 +1178,29 @@ void CCNode::setOpacity(float opacity)
 
 void CCNode::updateDisplayedOpacity(float parentOpacity)
 {
-	_displayedOpacity = _realOpacity * parentOpacity;
-	CCObject* pObj;
-	CCARRAY_FOREACH(m_pChildren, pObj)
+	if (m_pParent && m_pParent->isCascadeOpacity())
 	{
-		CCNode* node = (CCNode*)pObj;
-		node->updateDisplayedOpacity(_displayedOpacity);
+		_displayedOpacity = _realOpacity * parentOpacity;
 	}
+	if (_cascadeOpacity)
+	{
+		CCObject* pObj;
+		CCARRAY_FOREACH(m_pChildren, pObj)
+		{
+			CCNode* node = (CCNode*)pObj;
+			node->updateDisplayedOpacity(_displayedOpacity);
+		}
+	}
+}
+
+void CCNode::setCascadeOpacity(bool var)
+{
+	_cascadeOpacity = var;
+}
+
+bool CCNode::isCascadeOpacity() const
+{
+	return _cascadeOpacity;
 }
 
 const ccColor3B& CCNode::getColor()
@@ -1206,15 +1223,31 @@ void CCNode::setColor(const ccColor3B& color)
 
 void CCNode::updateDisplayedColor(const ccColor3B& parentColor)
 {
-	_displayedColor.r = _realColor.r * parentColor.r / 255.0;
-	_displayedColor.g = _realColor.g * parentColor.g / 255.0;
-	_displayedColor.b = _realColor.b * parentColor.b / 255.0;
-	CCObject *obj = NULL;
-	CCARRAY_FOREACH(m_pChildren, obj)
+	if (m_pParent && m_pParent->isCascadeColor())
 	{
-		CCNode* node = (CCNode*)obj;
-		node->updateDisplayedColor(_displayedColor);
+		_displayedColor.r = _realColor.r * parentColor.r / 255.0f;
+		_displayedColor.g = _realColor.g * parentColor.g / 255.0f;
+		_displayedColor.b = _realColor.b * parentColor.b / 255.0f;
 	}
+	if (_cascadeColor)
+	{
+		CCObject *obj = NULL;
+		CCARRAY_FOREACH(m_pChildren, obj)
+		{
+			CCNode* node = (CCNode*)obj;
+			node->updateDisplayedColor(_displayedColor);
+		}
+	}
+}
+
+void CCNode::setCascadeColor(bool var)
+{
+	_cascadeColor = var;
+}
+
+bool CCNode::isCascadeColor() const
+{
+	return _cascadeColor;
 }
 
 NS_CC_END

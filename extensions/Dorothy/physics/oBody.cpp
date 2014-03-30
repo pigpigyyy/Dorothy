@@ -172,7 +172,7 @@ float oBody::getVelocityY() const
 
 void oBody::setPosition( const CCPoint& var )
 {
-	if (!var.equals(CCNode::getPosition()))
+	if (var != CCNode::getPosition())
 	{
 		CCNode::setPosition(var);
 		_bodyB2->SetTransform(oWorld::b2Val(var), _bodyB2->GetAngle());

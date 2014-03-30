@@ -33,6 +33,7 @@ TOLUA_API void toluafix_stack_dump(lua_State* L, const char* label);
 #endif
 
 #define TOLUAFIX_PUSHUSERTYPE_CCOBJECT(L, ptr, type) \
-	toluafix_pushusertype_ccobject(L, ptr->getObjectId(), &ptr->m_nLuaRef, (void*)ptr, type)
+	if (ptr) toluafix_pushusertype_ccobject(L, ptr->getObjectId(), &ptr->m_nLuaRef, (void*)ptr, type); \
+	else lua_pushnil(L)
 
 #endif // __TOLUA_FIX_H_

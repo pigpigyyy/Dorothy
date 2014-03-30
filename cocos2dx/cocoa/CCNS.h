@@ -42,7 +42,7 @@ NS_CC_BEGIN
                     An example of a valid string is "{{3,2},{4,5}}".
                     The string is not localized, so items are always separated with a comma.
 @return A Core Graphics structure that represents a rectangle.
-        If the string is not well-formed, the function returns CCRectZero.
+        If the string is not well-formed, the function returns CCRect::zero.
 */
 CCRect CC_DLL CCRectFromString(const char* pszContent);
 
@@ -54,7 +54,7 @@ CCRect CC_DLL CCRectFromString(const char* pszContent);
                     An example of a valid string is "{3.0,2.5}".
                     The string is not localized, so items are always separated with a comma.
 @return A Core Graphics structure that represents a point.
-        If the string is not well-formed, the function returns CCPointZero.
+        If the string is not well-formed, the function returns CCPoint::zero.
 */
 CCPoint CC_DLL CCPointFromString(const char* pszContent);
 
@@ -66,7 +66,7 @@ CCPoint CC_DLL CCPointFromString(const char* pszContent);
                     An example of a valid string is "{3.0,2.5}".
                     The string is not localized, so items are always separated with a comma.
 @return A Core Graphics structure that represents a size.
-        If the string is not well-formed, the function returns CCSizeZero.
+        If the string is not well-formed, the function returns CCSize::zero.
 */
 CCSize CC_DLL CCSizeFromString(const char* pszContent);
 

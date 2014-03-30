@@ -28,6 +28,8 @@ THE SOFTWARE.
 // implementation of CCPoint
 NS_CC_BEGIN
 
+const CCPoint CCPoint::zero;
+
 CCPoint::CCPoint():
 x(0.0f),
 y(0.0f)
@@ -45,56 +47,68 @@ y(other.y)
 
 CCPoint& CCPoint::operator=(const CCPoint& other)
 {
-    setPoint(other.x, other.y);
+    set(other.x, other.y);
     return *this;
 }
 
-void CCPoint::setPoint(float x, float y)
+void CCPoint::set(float x, float y)
 {
     this->x = x;
     this->y = y;
 }
 
-bool CCPoint::equals(const CCPoint& target) const
+bool CCPoint::operator==(const CCPoint& other) const
 {
-    return ((x == target.x) && (y == target.y));
+	return x == other.x && y == other.y;
+}
+
+bool CCPoint::operator!=(const CCPoint& other) const
+{
+	return x != other.x || y != other.y;
 }
 
 // implementation of CCSize
+const CCSize CCSize::zero;
 
 CCSize::CCSize()
-{
-    setSize(0.0f, 0.0f);
-}
+: width(0.0f)
+, height(0.0f)
+{ }
 
 CCSize::CCSize(float width, float height)
-{
-    setSize(width, height);
-}
+: width(width)
+, height(height)
+{ }
 
 CCSize::CCSize(const CCSize& other)
-{
-    setSize(other.width, other.height);
-}
+: width(other.width)
+, height(other.height)
+{ }
 
-CCSize& CCSize::operator= (const CCSize& other)
+CCSize& CCSize::operator=(const CCSize& other)
 {
-    setSize(other.width, other.height);
+    set(other.width, other.height);
     return *this;
 }
 
-void CCSize::setSize(float width, float height)
+void CCSize::set(float width, float height)
 {
     this->width = width;
     this->height = height;
 }
 
-bool CCSize::equals(const CCSize& target) const
+bool CCSize::operator==(const CCSize& target) const
 {
-    return ((width == target.width) && (height == target.height));
+    return width == target.width && height == target.height;
+}
+
+bool CCSize::operator!=(const CCSize& target) const
+{
+	return width != target.width || height != target.height;
 }
 
 // implementation of CCRect
+const CCRect CCRect::zero;
 
 CCRect::CCRect()
 { }
@@ -116,11 +130,11 @@ size(other.size)
 
 CCRect& CCRect::operator=(const CCRect& other)
 {
-    setRect(other.origin.x, other.origin.y, other.size.width, other.size.height);
+    set(other.origin.x, other.origin.y, other.size.width, other.size.height);
     return *this;
 }
 
-void CCRect::setRect(float x, float y, float width, float height)
+void CCRect::set(float x, float y, float width, float height)
 {
     // CGRect can support width<0 or height<0
     // CCAssert(width >= 0.0f && height >= 0.0f, "width and height of Rect must not less than 0.");
@@ -132,10 +146,14 @@ void CCRect::setRect(float x, float y, float width, float height)
     size.height = height;
 }
 
-bool CCRect::equals(const CCRect& rect) const
+bool CCRect::operator==(const CCRect& rect) const
 {
-    return (origin.equals(rect.origin) && 
-            size.equals(rect.size));
+    return origin == rect.origin && size == rect.size;
+}
+
+bool CCRect::operator!=(const CCRect& rect) const
+{
+	return origin != rect.origin || size != rect.size;
 }
 
 float CCRect::getMaxX() const

@@ -53,7 +53,8 @@ CCClippingNode::CCClippingNode()
 : m_pStencil(NULL)
 , m_fAlphaThreshold(0.0f)
 , m_bInverted(false)
-{}
+{
+}
 
 CCClippingNode::~CCClippingNode()
 {
@@ -255,9 +256,9 @@ void CCClippingNode::visit()
     glStencilOp(!m_bInverted ? GL_ZERO : GL_REPLACE, GL_KEEP, GL_KEEP);
     
     // draw a fullscreen solid rectangle to clear the stencil buffer
-    //ccDrawSolidRect(CCPointZero, ccpFromSize([[CCDirector sharedDirector] winSize]), ccc4f(1, 1, 1, 1));
-    ccDrawSolidRect(CCPointZero, ccpFromSize(CCDirector::sharedDirector()->getWinSize()), ccc4f(1, 1, 1, 1));
-    
+    //ccDrawSolidRect(CCPoint::zero, ccpFromSize([[CCDirector sharedDirector] winSize]), ccc4f(1, 1, 1, 1));
+    ccDrawSolidRect(CCPoint::zero, ccpFromSize(CCDirector::sharedDirector()->getWinSize()), ccc4f(1, 1, 1, 1));
+
     ///////////////////////////////////
     // DRAW CLIPPING STENCIL
     
@@ -345,6 +346,15 @@ void CCClippingNode::visit()
     // draw (according to the stencil test func) this node and its childs
     CCNode::visit();
     
+	glStencilFunc(GL_NEVER, mask_layer, mask_layer);
+	glStencilOp(!m_bInverted ? GL_ZERO : GL_REPLACE, GL_KEEP, GL_KEEP);
+
+	// draw stencil again to clear the stencil buffer
+	kmGLPushMatrix();
+	transform();
+	m_pStencil->visit();
+	kmGLPopMatrix();
+
     ///////////////////////////////////
     // CLEANUP
     

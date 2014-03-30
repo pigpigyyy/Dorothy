@@ -233,7 +233,7 @@ CCPoint CCProgressTimer::getMidpoint()
 
 void CCProgressTimer::setMidpoint(CCPoint midPoint)
 {
-    m_tMidpoint = ccpClamp(midPoint, CCPointZero, ccp(1,1));
+    m_tMidpoint = ccpClamp(midPoint, CCPoint::zero, ccp(1,1));
 }
 
 ///
@@ -262,7 +262,7 @@ void CCProgressTimer::updateRadial()
 
 
     int index = 0;
-    CCPoint hit = CCPointZero;
+    CCPoint hit = CCPoint::zero;
 
     if (alpha == 0.f) {
         //    More efficient since we don't always need to check intersection
@@ -479,7 +479,7 @@ CCPoint CCProgressTimer::boundaryTexCoord(char index)
             return ccp((kCCProgressTextureCoords>>((index<<1)+1))&1,(kCCProgressTextureCoords>>(index<<1))&1);
         }
     }
-    return CCPointZero;
+    return CCPoint::zero;
 }
 
 void CCProgressTimer::draw()

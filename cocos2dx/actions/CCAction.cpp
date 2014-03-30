@@ -211,7 +211,7 @@ CCFollow::~CCFollow()
     CC_SAFE_RELEASE(m_pobFollowedNode);
 }
 
-CCFollow* CCFollow::create(CCNode *pFollowedNode, const CCRect& rect/* = CCRectZero*/)
+CCFollow* CCFollow::create(CCNode *pFollowedNode, const CCRect& rect/* = CCRect::zero*/)
 {
     CCFollow *pRet = new CCFollow();
     if (pRet && pRet->initWithTarget(pFollowedNode, rect))
@@ -223,13 +223,13 @@ CCFollow* CCFollow::create(CCNode *pFollowedNode, const CCRect& rect/* = CCRectZ
     return NULL;
 }
 
-bool CCFollow::initWithTarget(CCNode *pFollowedNode, const CCRect& rect/* = CCRectZero*/)
+bool CCFollow::initWithTarget(CCNode *pFollowedNode, const CCRect& rect/* = CCRect::zero*/)
 {
     CCAssert(pFollowedNode != NULL, "");
  
     pFollowedNode->retain();
     m_pobFollowedNode = pFollowedNode;
-    if (rect.equals(CCRectZero))
+    if (rect != CCRect::zero)
     {
         m_bBoundarySet = false;
     }

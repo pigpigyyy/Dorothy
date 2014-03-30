@@ -81,6 +81,11 @@ void oKeyAnimationDef::add( oKeyFrameDef* def )
 	_keyFrameDefs.push_back(def);
 }
 
+const oOwnVector<oKeyFrameDef>& oKeyAnimationDef::getFrames() const
+{
+	return _keyFrameDefs;
+}
+
 oActionDuration* oKeyAnimationDef::toAction()
 {
 	if (_keyFrameDefs.empty())

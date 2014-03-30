@@ -216,4 +216,12 @@ oEaseFunc oEase::get( uint8 index )
 	return nullptr;
 }
 
+float oEase::func(uint8 id, float time, float begin, float change)
+{
+	if (id < sizeof(g_eases) / sizeof(oEaseFunc))
+	{
+		return g_eases[id](time, begin, change);
+	}
+	return 0.0f;
+}
 NS_DOROTHY_END

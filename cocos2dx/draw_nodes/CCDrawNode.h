@@ -46,7 +46,7 @@ class CC_DLL CCDrawNode : public CCNode
 protected:
     GLuint      m_uVao;
     GLuint      m_uVbo;
-    
+
     unsigned int    m_uBufferCapacity;
     GLsizei         m_nBufferCount;
     ccV2F_C4F_T2F   *m_pBuffer;
@@ -87,8 +87,6 @@ public:
 private:
     void ensureCapacity(unsigned int count);
     void render();
-	void updateColor(const ccColor3B& color);
-	void updateOpacity(float opacity);
 	bool m_bOpacityModifyRGB;
 };
 

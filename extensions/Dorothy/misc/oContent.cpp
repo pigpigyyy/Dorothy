@@ -2,6 +2,8 @@
 #include "Dorothy/misc/oContent.h"
 #include <cstdio>
 #include <sys/stat.h>
+#include <fstream>
+using std::ofstream;
 
 NS_DOROTHY_BEGIN
 
@@ -145,6 +147,12 @@ bool oContent::isFileExist(const char* filename)
 bool oContent::removeExtractedFile( const char* filename )
 {
 	return ::remove(filename) == 0;
+}
+
+void oContent::saveToFile(const string& filename, const string& content)
+{
+	ofstream stream(filename, std::ios::trunc);
+	stream.write(content.c_str(), content.size());
 }
 
 NS_DOROTHY_END

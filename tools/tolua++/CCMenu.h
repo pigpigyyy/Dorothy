@@ -11,9 +11,6 @@ class CCMenu: public CCLayer
 
 	void setHandlerPriority(int newPriority);
 
-	void addChild(CCMenuItem* child, int zOrder = 0, int tag = -1);
-
-	static CCMenu* create();
-	static CCMenu* createWithItem(CCMenuItem* item);
-	static CCMenu* createWithArray(CCArray* items);
+	static CCMenu* create(bool swallow = true);
+	static CCMenu* createWithArray(CCArray* items, bool swallow = true);
 };

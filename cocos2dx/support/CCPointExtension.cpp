@@ -147,7 +147,7 @@ CCPoint ccpIntersectPoint(const CCPoint& A, const CCPoint& B, const CCPoint& C, 
         return P;
     }
 
-    return CCPointZero;
+    return CCPoint::zero;
 }
 
 bool ccpLineIntersect(const CCPoint& A, const CCPoint& B, 

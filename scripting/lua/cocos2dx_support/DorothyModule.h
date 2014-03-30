@@ -5,14 +5,6 @@
 using namespace Dorothy;
 using namespace Dorothy::Platform;
 
-#define __CCEGLView (CCEGLView::sharedOpenGLView())
-#define __CCFileUtils (CCFileUtils::sharedFileUtils())
-#define __CCApplication (CCApplication::sharedApplication())
-#define __CCDirector (CCDirector::sharedDirector())
-
-#define __oContent (oContent::shared())
-#define __oData (oData::shared())
-
 void CCDrawNode_drawPolygon(
 	CCDrawNode* self,
 	oVec2* verts,
@@ -100,11 +92,24 @@ CCCatmullRomBy* CCCatmullRomBy_create(float duration, const oVec2 points[], int 
 CCActionInterval* CCTile_createFadeOut(float duration, CCSize gridSize, tOrientation orientation);
 
 CCArray* CCArray_create(CCObject* object[], int count);
+unsigned int CCArray_index(CCArray* array, CCObject* object);
+CCObject* CArray_get(CCArray* array, unsigned int index);
+void CArray_insert(CCArray* array, CCObject* object, unsigned int index);
+void CArray_removeAt(CCArray* array, unsigned int index);
+void CArray_exchange(CCArray* array, unsigned int index1, unsigned int index2);
+void CArray_fastRemoveAt(CCArray* array, unsigned int index);
+void CArray_set(CCArray* array, unsigned int uIndex, CCObject* pObject);
+
+CCTexture2D* CCTextureCache_add(CCTextureCache* self, CCRenderTexture* renderTexture, const char* name);
+
+void __oModelCache_getData(const char* filename);
+#define oModelCache_getData(filename) {__oModelCache_getData(filename);return 1;}
+oModelDef* oModelCache_loadData(const char* filename, int tableIndex);
+void oModelCache_save(const char* itemName, const char* targetName);
 
 inline ccBlendFunc* ccBlendFuncNew(GLenum src, GLenum dst)
 {
-	ccBlendFunc* func = new ccBlendFunc{ src, dst };
-	return func;
+	return new ccBlendFunc{ src, dst };
 }
 
 #endif // __DOROTHY_MODULE_H__

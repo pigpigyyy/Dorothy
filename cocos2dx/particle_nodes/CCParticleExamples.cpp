@@ -325,7 +325,7 @@ bool CCParticleSun::initWithTotalParticles(unsigned int numberOfParticles)
         // emitter position
         CCSize winSize = CCDirector::sharedDirector()->getWinSize();
         this->setPosition(ccp(winSize.width/2, winSize.height/2));
-        setPosVar(CCPointZero);
+        setPosVar(CCPoint::zero);
 
         // life of particles
         m_fLife = 1;
@@ -432,7 +432,7 @@ bool CCParticleGalaxy::initWithTotalParticles(unsigned int numberOfParticles)
         // emitter position
         CCSize winSize = CCDirector::sharedDirector()->getWinSize();
         this->setPosition(ccp(winSize.width/2, winSize.height/2));
-        setPosVar(CCPointZero);
+        setPosVar(CCPoint::zero);
 
         // life of particles
         m_fLife = 4;
@@ -541,7 +541,7 @@ bool CCParticleFlower::initWithTotalParticles(unsigned int numberOfParticles)
         // emitter position
         CCSize winSize = CCDirector::sharedDirector()->getWinSize();
         this->setPosition(ccp(winSize.width/2, winSize.height/2));
-        setPosVar(CCPointZero);
+        setPosVar(CCPoint::zero);
 
         // life of particles
         m_fLife = 4;
@@ -649,7 +649,7 @@ bool CCParticleMeteor::initWithTotalParticles(unsigned int numberOfParticles)
         // emitter position
         CCSize winSize = CCDirector::sharedDirector()->getWinSize();
         this->setPosition(ccp(winSize.width/2, winSize.height/2));
-        setPosVar(CCPointZero);
+        setPosVar(CCPoint::zero);
 
         // life of particles
         m_fLife = 2;
@@ -758,7 +758,7 @@ bool CCParticleSpiral::initWithTotalParticles(unsigned int numberOfParticles)
         // emitter position
         CCSize winSize = CCDirector::sharedDirector()->getWinSize();
         this->setPosition(ccp(winSize.width/2, winSize.height/2));
-        setPosVar(CCPointZero);
+        setPosVar(CCPoint::zero);
 
         // life of particles
         m_fLife = 12;
@@ -866,7 +866,7 @@ bool CCParticleExplosion::initWithTotalParticles(unsigned int numberOfParticles)
         // emitter position
         CCSize winSize = CCDirector::sharedDirector()->getWinSize();
         this->setPosition(ccp(winSize.width/2, winSize.height/2));
-        setPosVar(CCPointZero);
+        setPosVar(CCPoint::zero);
 
         // life of particles
         m_fLife = 5.0f;

@@ -34,4 +34,6 @@ class oEase
 		OutBounce,
 		InOutBounce
 	};
+	static float func(int id, float time, float begin, float change);
+
 };

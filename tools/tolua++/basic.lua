@@ -134,6 +134,7 @@ local CCObjectTypes = {
 	"oKeyRoll",
 	"oFrameAction",
 	"oFace",
+	"oLine",
 	
 	"oNode3D",
 	"oEffect",

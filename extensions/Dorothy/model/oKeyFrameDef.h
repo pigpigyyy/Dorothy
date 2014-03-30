@@ -37,6 +37,7 @@ class oKeyAnimationDef: public oModelAnimationDef
 {
 public:
 	void add(oKeyFrameDef* def);
+	const oOwnVector<oKeyFrameDef>& getFrames() const;
 	virtual oActionDuration* toAction();
 	virtual string toXml();
 	virtual void restoreResetAnimation(CCObject* data);

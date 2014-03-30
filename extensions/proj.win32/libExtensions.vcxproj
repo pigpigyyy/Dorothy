@@ -103,6 +103,7 @@
     <ClCompile Include="..\Dorothy\event\oListener.cpp" />
     <ClCompile Include="..\Dorothy\misc\oContent.cpp" />
     <ClCompile Include="..\Dorothy\misc\oHelper.cpp" />
+    <ClCompile Include="..\Dorothy\misc\oLine.cpp" />
     <ClCompile Include="..\Dorothy\misc\oNode3D.cpp" />
     <ClCompile Include="..\Dorothy\misc\oScriptHandler.cpp" />
     <ClCompile Include="..\Dorothy\misc\oVec2.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="..\Dorothy\misc\oContent.h" />
     <ClInclude Include="..\Dorothy\misc\oHelper.h" />
     <ClInclude Include="..\Dorothy\misc\oIDisposable.h" />
+    <ClInclude Include="..\Dorothy\misc\oLine.h" />
     <ClInclude Include="..\Dorothy\misc\oMemoryPool.h" />
     <ClInclude Include="..\Dorothy\misc\oNode3D.h" />
     <ClInclude Include="..\Dorothy\misc\oOwn.h" />

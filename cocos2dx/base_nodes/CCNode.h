@@ -1159,11 +1159,15 @@ public:
 	virtual float getDisplayedOpacity();
 	virtual void setOpacity(float opacity);
 	virtual void updateDisplayedOpacity(float parentOpacity);
+	void setCascadeOpacity(bool var);
+	bool isCascadeOpacity() const;
 
 	virtual const ccColor3B& getColor();
 	virtual const ccColor3B& getDisplayedColor();
 	virtual void setColor(const ccColor3B& color);
 	virtual void updateDisplayedColor(const ccColor3B& parentColor);
+	void setCascadeColor(bool var);
+	bool isCascadeColor() const;
 
 	virtual void setOpacityModifyRGB(bool bValue) {};
 	virtual bool isOpacityModifyRGB() { return false; };
@@ -1211,6 +1215,8 @@ protected:
 	float _realOpacity;
 	ccColor3B _displayedColor;
 	ccColor3B _realColor;
+	bool _cascadeOpacity;
+	bool _cascadeColor;
 
     float m_fRotation;                 ///< rotation angle on x-axis
     float m_fScaleX;                    ///< scaling factor on x-axis

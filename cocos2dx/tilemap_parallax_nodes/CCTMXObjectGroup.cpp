@@ -32,7 +32,7 @@ NS_CC_BEGIN
 //implementation CCTMXObjectGroup
 
 CCTMXObjectGroup::CCTMXObjectGroup()
-    :m_tPositionOffset(CCPointZero)
+    :m_tPositionOffset(CCPoint::zero)
     ,m_sGroupName("")        
 {
     m_pObjects = CCArray::create();

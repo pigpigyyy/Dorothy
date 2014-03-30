@@ -214,6 +214,9 @@ end
 
 -- output type checking
 function classDeclaration:outchecktype (narg)
+ if self.type == "tolua_table" then
+  return '!tolua_istable(tolua_S,'..narg..',0,&tolua_err)'
+ end
  local def
  local t = isbasic(self.type)
  if self.def~='' then
@@ -240,6 +243,9 @@ function classDeclaration:outchecktype (narg)
 end
 
 function classDeclaration:builddeclaration (narg, cplusplus)
+ if self.type == "tolua_table" then
+  return " int tolua_tableIndex = "..tostring(narg)..";"
+ end
  local array = self.dim ~= '' and tonumber(self.dim)==nil
 	local line = ""
  local ptr = ''
@@ -387,6 +393,10 @@ end
 
 -- Pass parameter
 function classDeclaration:passpar ()
+ if self.type == "tolua_table" then
+  output("tolua_tableIndex")
+  return
+ end
  if self.ptr=='&' and not isbasic(self.type) then
   output('*'..self.name)
  elseif self.ret=='*' then

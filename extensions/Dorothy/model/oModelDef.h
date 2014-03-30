@@ -15,8 +15,8 @@ public:
 	float x;
 	float y;
 	float rotation;
-	float archorX;
-	float archorY;
+	float anchorX;
+	float anchorY;
 	float scaleX;
 	float scaleY;
 	float skewX;
@@ -58,6 +58,17 @@ public:
 class oModelDef: public CCObject
 {
 public:
+	oModelDef();
+	oModelDef(
+		bool isFaceRight,
+		bool isBatchUsed,
+		const string& clipFile,
+		CCTexture2D* texture,
+		oSpriteDef* root,
+		const vector<oVec2>& keys,
+		const hash_strmap<int>& animationIndex,
+		const hash_strmap<int>& lookIndex);
+	const string& getClipFile() const;
 	CCTexture2D* getTexture();
 	oSpriteDef* getRoot();
 	void addKeyPoint(const oVec2& point);
@@ -69,11 +80,12 @@ public:
 	int getAnimationIndexByName(const string& name);
 	string getAnimationNameByIndex(int index);
 	int getLookIndexByName(const string& name);
+	int getKeyPointCount() const;
+	const hash_strmap<int>& getAnimationIndexMap() const;
+	const hash_strmap<int>& getLookIndexMap() const;
 	oModel* toModel();
 	string toXml();
 	static oModelDef* create();
-protected:
-	oModelDef();
 private:
 	typedef hash_strmap<int> oIndexMap;
 	void setTexture(CCTexture2D* tex);

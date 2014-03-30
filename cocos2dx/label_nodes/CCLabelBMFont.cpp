@@ -435,21 +435,21 @@ CCLabelBMFont * CCLabelBMFont::create()
 
 CCLabelBMFont * CCLabelBMFont::create(const char *str, const char *fntFile, float width, CCTextAlignment alignment)
 {
-    return CCLabelBMFont::create(str, fntFile, width, alignment, CCPointZero);
+    return CCLabelBMFont::create(str, fntFile, width, alignment, CCPoint::zero);
 }
 
 CCLabelBMFont * CCLabelBMFont::create(const char *str, const char *fntFile, float width)
 {
-    return CCLabelBMFont::create(str, fntFile, width, kCCTextAlignmentLeft, CCPointZero);
+    return CCLabelBMFont::create(str, fntFile, width, kCCTextAlignmentLeft, CCPoint::zero);
 }
 
 CCLabelBMFont * CCLabelBMFont::create(const char *str, const char *fntFile)
 {
-    return CCLabelBMFont::create(str, fntFile, kCCLabelAutomaticWidth, kCCTextAlignmentLeft, CCPointZero);
+    return CCLabelBMFont::create(str, fntFile, kCCLabelAutomaticWidth, kCCTextAlignmentLeft, CCPoint::zero);
 }
 
 //LabelBMFont - Creation & Init
-CCLabelBMFont *CCLabelBMFont::create(const char *str, const char *fntFile, float width/* = kCCLabelAutomaticWidth*/, CCTextAlignment alignment/* = kCCTextAlignmentLeft*/, CCPoint imageOffset/* = CCPointZero*/)
+CCLabelBMFont *CCLabelBMFont::create(const char *str, const char *fntFile, float width/* = kCCLabelAutomaticWidth*/, CCTextAlignment alignment/* = kCCTextAlignmentLeft*/, CCPoint imageOffset/* = CCPoint::zero*/)
 {
     CCLabelBMFont *pRet = new CCLabelBMFont();
     if(pRet && pRet->initWithString(str, fntFile, width, alignment, imageOffset))
@@ -463,10 +463,10 @@ CCLabelBMFont *CCLabelBMFont::create(const char *str, const char *fntFile, float
 
 bool CCLabelBMFont::init()
 {
-    return initWithString(NULL, NULL, kCCLabelAutomaticWidth, kCCTextAlignmentLeft, CCPointZero);
+    return initWithString(NULL, NULL, kCCLabelAutomaticWidth, kCCTextAlignmentLeft, CCPoint::zero);
 }
 
-bool CCLabelBMFont::initWithString(const char *theString, const char *fntFile, float width/* = kCCLabelAutomaticWidth*/, CCTextAlignment alignment/* = kCCTextAlignmentLeft*/, CCPoint imageOffset/* = CCPointZero*/)
+bool CCLabelBMFont::initWithString(const char *theString, const char *fntFile, float width/* = kCCLabelAutomaticWidth*/, CCTextAlignment alignment/* = kCCTextAlignmentLeft*/, CCPoint imageOffset/* = CCPoint::zero*/)
 {
     CCAssert(!m_pConfiguration, "re-init is no longer supported");
     CCAssert( (theString && fntFile) || (theString==NULL && fntFile==NULL), "Invalid params for CCLabelBMFont");
@@ -507,7 +507,7 @@ bool CCLabelBMFont::initWithString(const char *theString, const char *fntFile, f
         m_fWidth = width;
         m_pAlignment = alignment;
         
-        m_obContentSize = CCSizeZero;
+        m_obContentSize = CCSize::zero;
         
         m_bIsOpacityModifyRGB = m_pobTextureAtlas->getTexture()->hasPremultipliedAlpha();
         m_obAnchorPoint = ccp(0.5f, 0.5f);
@@ -532,7 +532,7 @@ CCLabelBMFont::CCLabelBMFont()
 , m_fWidth(-1.0f)
 , m_pConfiguration(NULL)
 , m_bLineBreakWithoutSpaces(false)
-, m_tImageOffset(CCPointZero)
+, m_tImageOffset(CCPoint::zero)
 , m_pReusedChar(NULL)
 , m_bIsOpacityModifyRGB(false)
 {
@@ -569,7 +569,7 @@ void CCLabelBMFont::createFontChars()
     unsigned short prev = -1;
     int kerningAmount = 0;
 
-    CCSize tmpSize = CCSizeZero;
+    CCSize tmpSize = CCSize::zero;
 
     int longestLine = 0;
     unsigned int totalHeight = 0;
@@ -797,7 +797,7 @@ bool CCLabelBMFont::isOpacityModifyRGB()
 // LabelBMFont - AnchorPoint
 void CCLabelBMFont::setAnchorPoint(const CCPoint& point)
 {
-    if( ! point.equals(m_obAnchorPoint))
+    if(point != m_obAnchorPoint)
     {
         CCSpriteBatchNode::setAnchorPoint(point);
         updateLabel();

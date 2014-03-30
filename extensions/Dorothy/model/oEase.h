@@ -43,6 +43,7 @@ public:
 		InOutBounce
 	};
 	static oEaseFunc get(uint8 id);
+	static float func(uint8 id, float time, float begin, float change);
 };
 
 NS_DOROTHY_END

@@ -131,7 +131,7 @@ bool CCDirector::init()
     // purge ?
     m_bPurgeDirecotorInNextLoop = false;
 
-    m_obWinSizeInPoints = CCSizeZero;    
+    m_obWinSizeInPoints = CCSize::zero;    
 
     m_pobOpenGLView = NULL;
 
@@ -506,7 +506,7 @@ CCSize CCDirector::getVisibleSize()
     }
     else 
     {
-        return CCSizeZero;
+        return CCSize::zero;
     }
 }
 
@@ -518,7 +518,7 @@ CCPoint CCDirector::getVisibleOrigin()
     }
     else 
     {
-        return CCPointZero;
+        return CCPoint::zero;
     }
 }
 

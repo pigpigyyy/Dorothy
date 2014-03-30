@@ -275,7 +275,7 @@ void CCCardinalSplineTo::startWithTarget(cocos2d::CCNode *pTarget)
     m_fDeltaT = (float) 1 / (m_pPoints->count() - 1);
 
     m_previousPosition = pTarget->getPosition();
-    m_accumulatedDiff = CCPointZero;
+    m_accumulatedDiff = CCPoint::zero;
 }
 
 CCCardinalSplineTo* CCCardinalSplineTo::copyWithZone(cocos2d::CCZone *pZone)

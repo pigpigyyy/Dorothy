@@ -61,7 +61,7 @@ bool CCTMXTiledMap::initWithTMXFile(const char *tmxFile)
 {
     CCAssert(tmxFile != NULL && strlen(tmxFile)>0, "TMXTiledMap: tmx file should not bi NULL");
     
-    setContentSize(CCSizeZero);
+    setContentSize(CCSize::zero);
 
     CCTMXMapInfo *mapInfo = CCTMXMapInfo::formatWithTMXFile(tmxFile);
 
@@ -77,7 +77,7 @@ bool CCTMXTiledMap::initWithTMXFile(const char *tmxFile)
 
 bool CCTMXTiledMap::initWithXML(const char* tmxString, const char* resourcePath)
 {
-    setContentSize(CCSizeZero);
+    setContentSize(CCSize::zero);
 
     CCTMXMapInfo *mapInfo = CCTMXMapInfo::formatWithXML(tmxString, resourcePath);
 
@@ -88,8 +88,8 @@ bool CCTMXTiledMap::initWithXML(const char* tmxString, const char* resourcePath)
 }
 
 CCTMXTiledMap::CCTMXTiledMap()
-    :m_tMapSize(CCSizeZero)
-    ,m_tTileSize(CCSizeZero)        
+    :m_tMapSize(CCSize::zero)
+    ,m_tTileSize(CCSize::zero)        
     ,m_pObjectGroups(NULL)
     ,m_pProperties(NULL)
     ,m_pTileProperties(NULL)

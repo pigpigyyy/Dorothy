@@ -49,7 +49,7 @@ oUnitDef* oUnitDef::create( const string& modelFile, const CCSize& size, float d
 	}
 	unitDef->_size = size;
 	oBodyDef* bodyDef = oBodyDef::create();
-	if (!size.equals(CCSizeZero))
+	if (size != CCSize::zero)
 	{
 		bodyDef->fixedRotation = true;
 		float hw = size.width * 0.5f;

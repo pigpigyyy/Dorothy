@@ -25,6 +25,8 @@ class CCNode: public CCObject
 	tolua_property__common int tag;
 	tolua_property__common ccColor3B color;
 	tolua_property__common float opacity;
+	tolua_property__bool bool cascadeOpacity;
+	tolua_property__bool bool cascadeColor;
 	//tolua_property__common CCGLProgram* shaderProgram;
 	tolua_property__common CCScheduler* scheduler;
 	tolua_readonly tolua_property__common CCNode* parent;

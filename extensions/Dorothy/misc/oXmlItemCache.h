@@ -46,6 +46,11 @@ public:
 		_item = nullptr;
 		return item;
 	}
+	T* update(const char* name, T* item)
+	{
+		_dict[name] = item;
+		return item;
+	}
 	/** Purge the cached file. */
 	bool unload( const char* filename )
 	{

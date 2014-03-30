@@ -71,7 +71,7 @@ CCTMXLayerInfo::CCTMXLayerInfo()
 , m_bOwnTiles(true)
 , m_uMinGID(100000)
 , m_uMaxGID(0)        
-, m_tOffset(CCPointZero)
+, m_tOffset(CCPoint::zero)
 {
     m_pProperties= new CCDictionary();;
 }
@@ -100,10 +100,10 @@ void CCTMXLayerInfo::setProperties(CCDictionary* var)
 // implementation CCTMXTilesetInfo
 CCTMXTilesetInfo::CCTMXTilesetInfo()
     :m_uFirstGid(0)
-    ,m_tTileSize(CCSizeZero)
+    ,m_tTileSize(CCSize::zero)
     ,m_uSpacing(0)
     ,m_uMargin(0)
-    ,m_tImageSize(CCSizeZero)
+    ,m_tImageSize(CCSize::zero)
 {
 }
 CCTMXTilesetInfo::~CCTMXTilesetInfo()
@@ -193,8 +193,8 @@ bool CCTMXMapInfo::initWithTMXFile(const char *tmxFile)
 }
 
 CCTMXMapInfo::CCTMXMapInfo()
-: m_tMapSize(CCSizeZero)    
-, m_tTileSize(CCSizeZero)
+: m_tMapSize(CCSize::zero)    
+, m_tTileSize(CCSize::zero)
 , m_pLayers(NULL)
 , m_pTilesets(NULL)
 , m_pObjectGroups(NULL)

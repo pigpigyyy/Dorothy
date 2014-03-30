@@ -15,9 +15,9 @@ public:
 	~oListener();
 	const string& getName() const;
 	/** True to receive event and handle it, false to not receive event. */
-	void setEnable(bool enable);
+	void setEnabled(bool enable);
 	/** Get is registered. */
-	bool isEnable() const;
+	bool isEnabled() const;
 	/** Change the callback delegate. */
 	void setHandler(const oEventHandler& handler);
 	/** Get callback delegate. */

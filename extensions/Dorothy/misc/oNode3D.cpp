@@ -71,7 +71,7 @@ void oNode3D::transform()
 	{
 		kmGLRotatef(_rotationY, 0, 1, 0);
 	}
-	if (!m_obAnchorPointInPoints.equals(CCPointZero))
+	if (m_obAnchorPointInPoints != CCPoint::zero)
 	{
 		kmGLTranslatef(m_obAnchorPointInPoints.x, m_obAnchorPointInPoints.y, 0);
 	}

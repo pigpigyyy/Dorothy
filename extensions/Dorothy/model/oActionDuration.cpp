@@ -84,14 +84,6 @@ float oActionDuration::getSpeed() const
 
 void oActionDuration::setTime(float var)
 {
-	if (var > 1.0f)
-	{
-		var = 1.0f;
-	}
-	else if (var < 0)
-	{
-		var = 0;
-	}
 	_elapsed = m_fDuration * var;
 	this->update(var);
 }

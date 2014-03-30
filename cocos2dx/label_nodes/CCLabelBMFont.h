@@ -206,7 +206,7 @@ public:
 
     bool init();
     /** init a bitmap font atlas with an initial string and the FNT file */
-    bool initWithString(const char *str, const char *fntFile, float width = kCCLabelAutomaticWidth, CCTextAlignment alignment = kCCTextAlignmentLeft, CCPoint imageOffset = CCPointZero);
+    bool initWithString(const char *str, const char *fntFile, float width = kCCLabelAutomaticWidth, CCTextAlignment alignment = kCCTextAlignmentLeft, CCPoint imageOffset = CCPoint::zero);
 
     /** updates the font chars based on the string to render */
     void createFontChars();
