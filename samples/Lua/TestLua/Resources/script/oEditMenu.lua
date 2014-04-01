@@ -8,6 +8,8 @@ local function oEditMenu()
 	{
 		Edit = oButton("Edit",16,50,50,35,winSize.height-35,
 			function()
+				oEditor.controlBar:clearCursors()
+				oEditor.settingPanel:updateValues(nil)
 				local isBatchUsed = oEditor.data[oSd.isBatchUsed]
 				oEditor.data[oSd.isBatchUsed] = false
 				oCache.Model:loadData(oEditor.model, oEditor.data)

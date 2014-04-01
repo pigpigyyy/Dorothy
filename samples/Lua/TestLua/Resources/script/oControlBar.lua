@@ -211,6 +211,7 @@ local function oControlBar()
 							model:pause()
 						end
 						model.time = (math.floor(pos+0.5)/60.0)/model.duration
+						oEditor.settingPanel:updateValues(pos)
 					end
 				else
 					local deltaX = touch.delta.x
@@ -228,7 +229,7 @@ local function oControlBar()
 	
 	-- time: model animation`s played time
 	controlBar.setTime = function(self,time)
-		local pos = time/(1/60)
+		local pos = time*60
 		local deltaX = barIterval * (pos - bar:getPos())
 		lastPos = lastPos + deltaX
 		if lastPos > barLength then
@@ -241,8 +242,13 @@ local function oControlBar()
 			controlNode:setOffset(0)
 		end
 		bar:setPos(pos)
+		oEditor.settingPanel:updateValues(pos)
 	end
-		
+	
+	controlBar.getPos = function(self)
+		return bar:getPos()
+	end
+
 	return controlBar
 end
 

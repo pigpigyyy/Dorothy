@@ -206,15 +206,24 @@ local function oViewPanel()
 			oVec2(size,0),
 			oVec2(size,size),
 			oVec2(0,size)
-		},ccColor4(0x88000000),0.5,ccColor4(0xffffffff))
+		},ccColor4(0x88000000),0,ccColor4(0x00000000))
 
+		border:addChild(oLine(
+		{
+			oVec2(0,0),
+			oVec2(size,0),
+			oVec2(size,size),
+			oVec2(0,size),
+			oVec2(0,0)
+		},ccColor4(0xffffffff)))
+		
 		local menuItem = CCMenuItem()
 		menuItem.anchorPoint = oVec2(0,1)
 		menuItem.contentSize = CCSize(size,size)
 		menuItem.position = oVec2(x, y)
 		menuItem:addChild(borderSelected)
 		menuItem:addChild(border)
-		
+
 		local isSelected = false
 		local seqAnim = CCSequence(
 		{
@@ -342,7 +351,7 @@ local function oViewPanel()
 
 	panel.updateImages = function(self, data, model)
 		initValues()
-		menu:removeAllChildrenWithCleanup(true)
+		menu:removeAllChildrenWithCleanup()
 		local clipFile = data[oSd.clipFile]
 		local drawNode = CCDrawNode()
 		menu:addChild(drawNode)
@@ -389,7 +398,77 @@ local function oViewPanel()
 		moveX = borderSize.width-viewWidth
 	end
 
+	local function oImageOutline(node, withFrame)
+		local w = node.contentSize.width
+		local h = node.contentSize.height
+		local outline = CCNode()
+		local frame = oLine({},ccColor4(0xff00a2d8))
+		if withFrame then
+			frame:set(
+			{
+				oVec2(0,0),
+				oVec2(w,0),
+				oVec2(w,h),
+				oVec2(0,h),
+				oVec2(0,0),
+			})
+		end
+		frame.acceptOpacity = false
+		outline:addChild(frame)
+		local anchor = oLine(
+		{
+			oVec2(0,-5),
+			oVec2(5,0),
+			oVec2(0,5),
+			oVec2(-5,0),
+			oVec2(0,-5)
+		},ccColor4(0xffffffff))
+		anchor:addChild(oLine(
+		{
+			oVec2(0,-5),
+			oVec2(0,5)
+		},ccColor4(0xffffffff)))
+		anchor:addChild(oLine(
+		{
+			oVec2(-5,0),
+			oVec2(5,0)
+		},ccColor4(0xffffffff)))
+		anchor.position = oVec2(w*node.anchorPoint.x, h*node.anchorPoint.y)
+		anchor.acceptOpacity = false
+		outline:addChild(anchor)
+		
+		local vs = {}
+		local num = 30
+		for i = 0, num do
+			local angle = 2*math.pi*i/num
+			table.insert(vs,oVec2(200*math.cos(angle),200*math.sin(angle)))
+		end
+		local line = oLine(vs,ccColor4(0xffffffff))
+		anchor:addChild(line)
+		anchor:addChild(oLine({oVec2(-200,0),oVec2(200,0)},ccColor4()))
+		anchor:addChild(oLine({oVec2(0,-200),oVec2(0,200)},ccColor4()))
+		outline.setNode = function(self, node, withFrame)
+			local w = node.contentSize.width
+			local h = node.contentSize.height
+			if withFrame then
+				frame:set(
+				{
+					oVec2(0,0),
+					oVec2(w,0),
+					oVec2(w,h),
+					oVec2(0,h),
+					oVec2(0,0),
+				})
+			else
+				frame:set({})
+			end
+			anchor.position = oVec2(w*node.anchorPoint.x, h*node.anchorPoint.y)
+		end
+		return outline
+	end
+
 	local selectedItem = nil
+	local outline = nil
 	panel.listener = oListener("ImageSelected",
 		function(args)
 			local sp = args[1]
@@ -398,92 +477,51 @@ local function oViewPanel()
 			local aDefs = sp[oSd.animationDefs]
 			local aNames = oEditor.data[oSd.animationNames]
 			local animation = aDefs[aNames[oEditor.animation]+1]
-			if animation then
-				if animation[oAd.type] == 1 then
-					local d = 0
-					oEditor.controlBar:clearCursors()
-					for i = oAd.frameDefs, #animation do
-						d = d + animation[i][oKd.duration]
-						oEditor.controlBar:addCursor(d*60.0)
-					end
-				elseif animation[oAd.type] == 2 then
-					--TODO
-				end
+
+			oEditor.animationData = animation
+
+			if outline then
+				outline.visible = (selectedItem ~= menuItem)
 			end
-			--node=CCNode
-			if node.contentSize ~= CCSize.zero then
-				local w = node.contentSize.width
-				local h = node.contentSize.height
-				local frame = oLine(
-				{
-					oVec2(0,0),
-					oVec2(w,0),
-					oVec2(w,h),
-					oVec2(0,h),
-					oVec2(0,0),
-				},ccColor4(0xff00a2d8))
-				frame.acceptOpacity = false
-				node:addChild(frame)
-				local anchor = oLine(
-				{
-					oVec2(-5,0),
-					oVec2(5,0)
-				},ccColor4(0xffffffff))
-				anchor.position = oVec2(node.contentSize.width*node.anchorPoint.x,node.contentSize.height*node.anchorPoint.y)
-				anchor.acceptOpacity = false
-				node:addChild(anchor)
-				anchor = oLine(
-				{
-					oVec2(0,-5),
-					oVec2(0,5)
-				},ccColor4(0xffffffff))
-				node:addChild(anchor)
-				anchor.position = oVec2(node.contentSize.width*node.anchorPoint.x,node.contentSize.height*node.anchorPoint.y)
-				anchor.acceptOpacity = false
-				anchor = oLine(
-				{
-					oVec2(0,-5),
-					oVec2(5,0),
-					oVec2(0,5),
-					oVec2(-5,0),
-					oVec2(0,-5)
-				},ccColor4(0xffffffff))
-				anchor.position = oVec2(node.contentSize.width*node.anchorPoint.x,node.contentSize.height*node.anchorPoint.y)
-				anchor.acceptOpacity = false
-				node:addChild(anchor)
-			else
-				local anchor = oLine(
-				{
-					oVec2(-5,0),
-					oVec2(5,0)
-				},ccColor4(0xffffffff))
-				anchor.position = oVec2(node.contentSize.width*node.anchorPoint.x,node.contentSize.height*node.anchorPoint.y)
-				anchor.acceptOpacity = false
-				node:addChild(anchor)
-				anchor = oLine(
-				{
-					oVec2(0,-5),
-					oVec2(0,5)
-				},ccColor4(0xffffffff))
-				node:addChild(anchor)
-				anchor.position = oVec2(node.contentSize.width*node.anchorPoint.x,node.contentSize.height*node.anchorPoint.y)
-				anchor.acceptOpacity = false
-				anchor = oLine(
-				{
-					oVec2(0,-5),
-					oVec2(5,0),
-					oVec2(0,5),
-					oVec2(-5,0),
-					oVec2(0,-5)
-				},ccColor4(0xffffffff))
-				anchor.position = oVec2(node.contentSize.width*node.anchorPoint.x,node.contentSize.height*node.anchorPoint.y)
-				anchor.acceptOpacity = false
-				node:addChild(anchor)
-			end
-			if selectedItem and selectedItem ~= menuItem then
+
+			if selectedItem then
 				selectedItem:select(false)
 			end
-			selectedItem = menuItem
+
+			if selectedItem ~= menuItem then
+				local withFrame = node.contentSize ~= CCSize.zero
+				if not outline then
+					outline = oImageOutline(node,withFrame)
+				else
+					outline.parent:removeChild(outline)
+					outline:setNode(node,withFrame)
+				end
+				oEditor.sprite = node
+				oEditor.spriteData = sp
+				node:addChild(outline)
+				if animation then
+					if animation[oAd.type] == 1 then
+						local d = 0
+						oEditor.controlBar:clearCursors()
+						for i = oAd.frameDefs, #animation do
+							d = d + animation[i][oKd.duration]
+							oEditor.controlBar:addCursor(d*60.0)
+						end
+					elseif animation[oAd.type] == 2 then
+						--TODO Frame animation
+					end
+					oEditor.settingPanel:updateValues(0)
+				else
+					oEditor.controlBar:clearCursors()
+					oEditor.settingPanel:updateValues(nil)
+				end
+				selectedItem = menuItem
+			else
+				selectedItem = nil
+				oEditor.controlBar:clearCursors()
+				oEditor.settingPanel:updateValues(nil)
+			end
+			
 		end)
 	return panel
 end

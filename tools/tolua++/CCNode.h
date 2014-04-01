@@ -39,9 +39,9 @@ class CCNode: public CCObject
 	void addChild(CCNode * child);
 	void addChild(CCNode * child, int zOrder);
 	void addChild(CCNode * child, int zOrder, int tag);
-	void removeChild(CCNode* child, bool cleanup);
-	void removeChildByTag(int tag, bool cleanup);
-	void removeAllChildrenWithCleanup(bool cleanup);
+	void removeChild(CCNode* child, bool cleanup = true);
+	void removeChildByTag(int tag, bool cleanup = true);
+	void removeAllChildrenWithCleanup(bool cleanup = true);
 	void reorderChild(CCNode * child, int zOrder);
 	void runAction(CCAction* action);
 	void stopAllActions();

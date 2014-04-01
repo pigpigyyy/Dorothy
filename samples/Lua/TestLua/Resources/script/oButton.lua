@@ -11,7 +11,16 @@ local function oButton(text, fontSize, width, height, x, y, tapped)
 		oVec2(width,0),
 		oVec2(width,height),
 		oVec2(0,height)
-	},ccColor4(0x88000000),0.5,ccColor4(0xff00ffff))
+	},ccColor4(0x88000000),0,ccColor4(0x00000000))
+
+	drawNode:addChild(oLine(
+	{
+		oVec2(0,0),
+		oVec2(width,0),
+		oVec2(width,height),
+		oVec2(0,height),
+		oVec2(0,0)
+	},ccColor4(0xff00ffff)))
 
 	local face = CCNode()
 	face.anchorPoint = oVec2(0.5,0.5)
@@ -24,7 +33,7 @@ local function oButton(text, fontSize, width, height, x, y, tapped)
 	menuItem.contentSize = CCSize(width,height)
 	menuItem.anchorPoint = oVec2(0.5,0.5)
 	menuItem:addChild(face)
-	
+
 	face.opacity = 0.3
 	local scale = oScale(0.3,1.0,1.0,oEase.OutBack)
 	local fade = oOpacity(0.3,0.3,oEase.InExpo)

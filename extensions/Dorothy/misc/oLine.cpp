@@ -33,10 +33,13 @@ bool oLine::init()
 void oLine::set(oVec2 vecs[], int count)
 {
 	CC_SAFE_DELETE_ARRAY(_buffer);
-	_buffer = new ccVertex2F[count];
-	for (size_t i = 0; i < (size_t)count; i++)
+	if (count > 0)
 	{
-		_buffer[i] = {vecs[i].x,vecs[i].y};
+		_buffer = new ccVertex2F[count];
+		for (size_t i = 0; i < (size_t)count; i++)
+		{
+			_buffer[i] = { vecs[i].x, vecs[i].y };
+		}
 	}
 	_count = count;
 }
@@ -54,17 +57,20 @@ bool oLine::isAcceptOpacity() const
 
 void oLine::draw()
 {
-	ccGLBlendFunc(CC_BLEND_SRC, CC_BLEND_DST);
-	m_pShaderProgram->use();
-	m_pShaderProgram->setUniformsForBuiltins();
-	ccColor4F color(_displayedColor, _displayedOpacity);
-	m_pShaderProgram->setUniformLocationWith4fv(getColorLocation(), (GLfloat*)&color.r, 1);
+	if (_count >= 2)
+	{
+		ccGLBlendFunc(CC_BLEND_SRC, CC_BLEND_DST);
+		m_pShaderProgram->use();
+		m_pShaderProgram->setUniformsForBuiltins();
+		ccColor4F color(_displayedColor, _displayedOpacity);
+		m_pShaderProgram->setUniformLocationWith4fv(getColorLocation(), (GLfloat*)&color.r, 1);
 
-	ccGLEnableVertexAttribs(kCCVertexAttribFlag_Position);
-	glVertexAttribPointer(kCCVertexAttrib_Position, 2, GL_FLOAT, GL_FALSE, 0, _buffer);
-	glDrawArrays(GL_LINE_STRIP, 0, _count);
+		ccGLEnableVertexAttribs(kCCVertexAttribFlag_Position);
+		glVertexAttribPointer(kCCVertexAttrib_Position, 2, GL_FLOAT, GL_FALSE, 0, _buffer);
+		glDrawArrays(GL_LINE_STRIP, 0, _count);
 
-	CC_INCREMENT_GL_DRAWS(1);
+		CC_INCREMENT_GL_DRAWS(1);
+	}
 }
 
 void oLine::updateDisplayedOpacity(float parentOpacity)

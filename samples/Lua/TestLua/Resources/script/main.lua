@@ -86,6 +86,11 @@ end
 oEditor.model = "jixienv.model"
 oEditor.look = "happy"
 oEditor.animation = "attack"
+oEditor.animationData = nil
+oEditor.keyIndex = 1
+oEditor.sprite = nil
+oEditor.spriteData = nil
+oEditor.dirty = false
 oEditor.loop = false
 oEditor.isPlaying = false
 oEditor.data = oCache.Model:getData(oEditor.model)
