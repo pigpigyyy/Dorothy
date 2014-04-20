@@ -15,12 +15,13 @@ oClipDef* oClipDef::create()
 	return clipDef;
 }
 
-CCSprite* oClipDef::toSprite( uint32 index )
+CCSprite* oClipDef::toSprite( const string& name )
 {
-	if (index < rects.size())
+	auto it = rects.find(name);
+	if (it != rects.end())
 	{
 		CCTexture2D* texture = oSharedContent.loadTexture(textureFile.c_str());
-		CCSprite* sprite = CCSprite::createWithTexture(texture, *rects[index]);
+		CCSprite* sprite = CCSprite::createWithTexture(texture, *it->second);
 		return sprite;
 	}
 	return nullptr;
@@ -31,12 +32,13 @@ string oClipDef::toXml()
 	ostringstream stream;
 	stream << '<' << char(oClipXml::Texture) << ' ' << char(oClipXml::File) << "=\""
 		<< textureFile << "\">";
-	for (const CCRect* rect : rects)
+	for (const auto& rect : rects)
 	{
 		stream << '<' << char(oClipXml::Clip) << ' '
+			<< char(oClipXml::Name) << "=\"" << rect.first.c_str() << "\" "
 			<< char(oClipXml::Rect) << "=\""
-			<< rect->origin.x << ',' << rect->origin.y << ','
-			<< rect->size.width << ',' << rect->size.height
+			<< rect.second->origin.x << ',' << rect.second->origin.y << ','
+			<< rect.second->size.width << ',' << rect.second->size.height
 			<< "\"/>";
 	}
 	stream << "</" << char(oClipXml::Texture) << '>';
@@ -50,11 +52,11 @@ CCSprite* oClipCache::loadSprite( const char* clipStr )
 	char* token = strtok(name, "|");
 	oClipDef* clipDef = oClipCache::load(token);
 	token = strtok(nullptr, "|");
-	int index = atoi(token);
-	if (0 <= index && index < (int)clipDef->rects.size())
+	auto it = clipDef->rects.find(token);
+	if (it != clipDef->rects.end())
 	{
 		CCTexture2D* texture = oSharedContent.loadTexture(clipDef->textureFile.c_str());
-		CCSprite* sprite = CCSprite::createWithTexture(texture, *clipDef->rects[index]);
+		CCSprite* sprite = CCSprite::createWithTexture(texture, *it->second);
 		return sprite;
 	}
 	return nullptr;
@@ -69,37 +71,47 @@ void oClipCache::startElement( void *ctx, const char *name, const char **atts )
 {
 	switch (name[0])
 	{
-	oCase::Texture:
-		for (int i = 0;atts[i] != nullptr;i++)
+		oCase::Texture:
 		{
-			switch (atts[i][0])
+			for (int i = 0; atts[i] != nullptr; i++)
 			{
-				oCase::File:
-					_item->textureFile = atts[++i];
+				switch (atts[i][0])
+				{
+					oCase::File:
+					_item->textureFile = _path + atts[++i];
 					break;
+				}
 			}
 		}
 		break;
-	oCase::Clip:
-		for (int i = 0;atts[i] != nullptr;i++)
+		oCase::Clip:
 		{
-			switch (atts[i][0])
+			const char* name = nullptr;
+			for (int i = 0; atts[i] != nullptr; i++)
 			{
-				oCase::Rect:
+				switch (atts[i][0])
 				{
-					char rectStr[4*4+3];//四位数×4 + 3个","号
-					strcpy(rectStr, atts[1]);
-					char* token = strtok(rectStr, ",");
-					int x = atoi(token);
-					token = strtok(nullptr, ",");
-					int y = atoi(token);
-					token = strtok(nullptr, ",");
-					int w = atoi(token);
-					token = strtok(nullptr, ",");
-					int h = atoi(token);
-					_item->rects.push_back(new CCRect((float)x, (float)y, (float)w, (float)h));
+					oCase::Name:
+					{
+						name = atts[++i];
+					}
+					break;
+					oCase::Rect:
+					{
+						char rectStr[4 * 4 + 3];//四位数×4 + 3个","号
+						strcpy(rectStr, atts[++i]);
+						char* token = strtok(rectStr, ",");
+						int x = atoi(token);
+						token = strtok(nullptr, ",");
+						int y = atoi(token);
+						token = strtok(nullptr, ",");
+						int w = atoi(token);
+						token = strtok(nullptr, ",");
+						int h = atoi(token);
+						_item->rects[name] = oOwnMake(new CCRect((float)x, (float)y, (float)w, (float)h));
+					}
+					break;
 				}
-				break;
 			}
 		}
 		break;

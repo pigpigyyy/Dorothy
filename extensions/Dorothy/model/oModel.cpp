@@ -55,6 +55,7 @@ bool oModel::init()
 		CCSpriteBatchNode::createWithTexture(_modelDef->getTexture()) :
 		CCNode::create();
 	oModel::visit(_modelDef->getRoot(), _root);
+	oModel::setupCallback();
 	this->addChild(_root);
 	//Make model`s none look applied below.
 	_root->setVisible(false);
@@ -156,12 +157,6 @@ void oModel::play( const string& name )
 void oModel::addAnimation( int index, CCNode* node, oActionDuration* action )
 {
 	for (int n = _animationGroups.size();n < index + 1;_animationGroups.push_back(new oAnimationGroup()), n++);
-	if (_animationGroups[index]->animations.size() == 0)
-	{
-		action = oSequence::createWithTwoActions(
-			action,
-			oCallFunc::create(this, callfunc_selector(oModel::onActionEnd)));
-	}
 	_animationGroups[index]->animations.push_back(new oAnimation(node, action));
 }
 
@@ -331,7 +326,7 @@ void oModel::setTime( float time )
 		}
 		for (oAnimation* animation : _animationGroups[_currentAnimation]->animations)
 		{
-			animation->setTime(time);
+			animation->setElapsed(time*oModel::getDuration());
 		}
 	}
 }
@@ -499,7 +494,12 @@ CCNode* oAnimation::getNode() const
 	return _node;
 }
 
-oActionDuration* oAnimation::getAction()
+void oAnimation::setAction(oActionDuration* action)
+{
+	_action = action;
+}
+
+oActionDuration* oAnimation::getAction() const
 {
 	return _action;
 }
@@ -524,8 +524,10 @@ float oAnimation::getSpeed() const
 	return _action->getSpeed();
 }
 
-void oAnimation::setTime( float time )
+void oAnimation::setElapsed( float time )
 {
+	time = time / _action->getDuration();
+	time = time > 1.0f ? 1.0f : time;
 	_action->setTime(time);
 }
 
@@ -611,6 +613,39 @@ oAnimationHandler& oModel::oAnimationHandlerGroup::operator[]( int index )
 oAnimationHandler& oModel::oAnimationHandlerGroup::operator[]( const string& name )
 {
 	return _owner->_animationGroups[_owner->_modelDef->getAnimationIndexByName(name)]->animationEnd;
+}
+
+void oModel::setupCallback()
+{
+	for (oAnimationGroup* animationGroup : _animationGroups)
+	{
+		float duration = 0.0f;
+		for (oAnimation* animation : animationGroup->animations)
+		{
+			float d = animation->getDuration();
+			if (duration < d)
+			{
+				duration = d;
+			}
+		}
+		oActionDuration* action = animationGroup->animations[0]->getAction();
+		float d = action->getDuration();
+		if (d < duration)
+		{
+			action = oSequence::create(
+				action,
+				CCDelayTime::create(duration - d),
+				oCallFunc::create(this, callfunc_selector(oModel::onActionEnd)),
+				nullptr);
+		}
+		else
+		{
+			action = oSequence::createWithTwoActions(
+				action,
+				oCallFunc::create(this, callfunc_selector(oModel::onActionEnd)));
+		}
+		animationGroup->animations[0]->setAction(action);
+	}
 }
 
 NS_DOROTHY_END

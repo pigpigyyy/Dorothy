@@ -16,7 +16,8 @@ struct oClipXml
 
 			Clip = 'B',//1
 				//<a>
-				Rect = 'A'
+				Name = 'A',
+				Rect = 'B'
 				//</a>
 	};
 };

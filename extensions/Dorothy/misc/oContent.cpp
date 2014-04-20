@@ -1,5 +1,6 @@
 #include "Dorothy/const/oDefine.h"
 #include "Dorothy/misc/oContent.h"
+#include "Dorothy/other/tinydir.h"
 #include <cstdio>
 #include <sys/stat.h>
 #include <fstream>
@@ -153,6 +154,27 @@ void oContent::saveToFile(const string& filename, const string& content)
 {
 	ofstream stream(filename, std::ios::trunc);
 	stream.write(content.c_str(), content.size());
+}
+
+vector<string> oContent::getDirEntries(const char* path, bool isFolder)
+{
+	vector<string> files;
+	tinydir_dir dir;
+	if (tinydir_open(&dir, path) == 0)
+	{
+		while (dir.has_next)
+		{
+			tinydir_file file;
+			tinydir_readfile(&dir, &file);
+			if ((file.is_dir != 0) == isFolder)
+			{
+				files.push_back(file.name);
+			}
+			tinydir_next(&dir);
+		}
+		tinydir_close(&dir);
+	}
+	return std::move(files);
 }
 
 NS_DOROTHY_END

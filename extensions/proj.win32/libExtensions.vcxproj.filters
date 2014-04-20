@@ -356,5 +356,8 @@
     <ClInclude Include="..\Dorothy\misc\oLine.h">
       <Filter>Dorothy\misc</Filter>
     </ClInclude>
+    <ClInclude Include="..\Dorothy\other\tinydir.h">
+      <Filter>Dorothy\other</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

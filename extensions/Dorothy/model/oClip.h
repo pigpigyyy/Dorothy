@@ -16,9 +16,9 @@ public:
 	/** Name of the texture file. Name only, not file path. */
 	string textureFile;
 	/** Different areas on this texture. */
-	oOwnVector<CCRect> rects;
-	/** Get a sprite instance with an area index. */
-	CCSprite* toSprite(uint32 index);
+	hash_strmap<oOwn<CCRect>> rects;
+	/** Get a sprite instance with an name. */
+	CCSprite* toSprite(const string& name);
 	string toXml();
 protected:
 	oClipDef();

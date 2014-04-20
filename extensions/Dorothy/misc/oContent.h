@@ -33,6 +33,7 @@ public:
 	bool isFileExist(const char* filename);
 	bool removeExtractedFile(const char* filename);
 	void saveToFile(const string& filename, const string& content);
+	vector<string> getDirEntries(const char* path, bool isFolder);
 	/** Singleton method. */
 	SHARED_FUNC(oContent);
 protected:

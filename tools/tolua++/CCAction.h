@@ -48,7 +48,7 @@ CCActionInterval* CCTintTo::create @ CCTintTo(float duration, GLubyte red, GLuby
 
 CCActionInterval* CCTintBy::create @ CCTintBy(float duration, GLshort deltaRed, GLshort deltaGreen, GLshort deltaBlue);
 
-CCActionInterval* CCDelayTime::create @ CCDelayTime(float d);
+CCActionInterval* CCDelayTime::create @ CCDelay(float d);
 
 CCFiniteTimeAction* CCShow::create @ CCShow();
 
@@ -62,6 +62,4 @@ CCFiniteTimeAction* CCFlipY::create @ CCFlipY(bool y);
 
 CCFiniteTimeAction* CCPlace::create @ CCPlace(oVec2 pos);
 
-CCFiniteTimeAction* CCCallFunc::create @ CCCallFunc(LUA_FUNCTION handler);
-
-CCFiniteTimeAction* CCCallFuncN::create @ CCCallFuncN(LUA_FUNCTION handler);
+CCFiniteTimeAction* CCCall::create @ CCCall(LUA_FUNCTION handler);

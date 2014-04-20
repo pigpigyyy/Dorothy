@@ -3,6 +3,7 @@
 
 #include "Dorothy/const/oDefine.h"
 #include "Dorothy/misc/oContent.h"
+#include "Dorothy/misc/oHelper.h"
 
 NS_DOROTHY_BEGIN
 
@@ -18,6 +19,7 @@ public:
 	/** Load a new xml file or get its data for cache. */
 	T* load( const char* filename )
 	{
+		_path = oString::getFilePath(filename);
 		dict_iter it = _dict.find(filename);
 		if (it != _dict.end())
 		{
@@ -38,6 +40,7 @@ public:
 	}
 	T* update(const char* name, const char* content)
 	{
+		_path = oString::getFilePath(name);
 		this->beforeParse(name);
 		_parser.parse(content, 0);
 		this->afterParse(name);
@@ -80,6 +83,7 @@ protected:
 	{
 		_parser.setDelegator(this);
 	}
+	string _path;
 	dict _dict;
 	oRef<T> _item;//Use reference in case that do the loading in another thread
 private:

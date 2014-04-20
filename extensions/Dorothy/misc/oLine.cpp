@@ -11,8 +11,7 @@ int getColorLocation()
 
 oLine::oLine():
 _buffer(nullptr),
-_count(0),
-_acceptOpacity(true)
+_count(0)
 { }
 
 oLine::~oLine()
@@ -44,17 +43,6 @@ void oLine::set(oVec2 vecs[], int count)
 	_count = count;
 }
 
-void oLine::setAcceptOpacity(bool var)
-{
-	_acceptOpacity = var;
-	CCNode::setOpacity(_realOpacity);
-}
-
-bool oLine::isAcceptOpacity() const
-{
-	return _acceptOpacity;
-}
-
 void oLine::draw()
 {
 	if (_count >= 2)
@@ -73,28 +61,17 @@ void oLine::draw()
 	}
 }
 
-void oLine::updateDisplayedOpacity(float parentOpacity)
-{
-	if (m_pParent && m_pParent->isCascadeOpacity() && _acceptOpacity)
-	{
-		_displayedOpacity = _realOpacity * parentOpacity;
-	}
-	if (_cascadeOpacity)
-	{
-		CCObject* pObj;
-		CCARRAY_FOREACH(m_pChildren, pObj)
-		{
-			CCNode* node = (CCNode*)pObj;
-			node->updateDisplayedOpacity(_displayedOpacity);
-		}
-	}
-}
-
-oLine* oLine::create(oVec2 vecs[], int count, const ccColor4B& color)
+oLine* oLine::create()
 {
 	oLine* line = new oLine();
 	line->init();
 	line->autorelease();
+	return line;
+}
+
+oLine* oLine::create(oVec2 vecs[], int count, const ccColor4B& color)
+{
+	oLine* line = oLine::create();
 	line->set(vecs, count);
 	line->setColor(ccColor3B(color.r, color.g, color.b));
 	line->setOpacity(color.a / 255.0f);

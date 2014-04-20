@@ -60,14 +60,8 @@ public:
 		// release temp font resource	
 		if (m_curFontPath.size() > 0)
 		{
-			wchar_t * pwszBuffer = utf8ToUtf16(m_curFontPath);
-			if (pwszBuffer)
-			{
-				RemoveFontResource(pwszBuffer);
-				SendMessage( m_hWnd, WM_FONTCHANGE, 0, 0);
-				delete [] pwszBuffer;
-				pwszBuffer = NULL;
-			}
+			RemoveFontResource(m_curFontPath.c_str());
+			SendMessage(m_hWnd, WM_FONTCHANGE, 0, 0);
 		}
     }
 
@@ -141,15 +135,9 @@ public:
 				// release old font register
 				if (m_curFontPath.size() > 0)
 				{
-					wchar_t * pwszBuffer = utf8ToUtf16(m_curFontPath);
-					if (pwszBuffer)
+					if (RemoveFontResource(m_curFontPath.c_str()))
 					{
-						if(RemoveFontResource(pwszBuffer))
-						{
-							SendMessage( m_hWnd, WM_FONTCHANGE, 0, 0);
-						}						
-						delete [] pwszBuffer;
-						pwszBuffer = NULL;
+						SendMessage(m_hWnd, WM_FONTCHANGE, 0, 0);
 					}
 				}
 				if (fontPath.size() > 0)
@@ -159,15 +147,9 @@ public:
 				// register temp font
 				if (m_curFontPath.size() > 0)
 				{
-					wchar_t * pwszBuffer = utf8ToUtf16(m_curFontPath);
-					if (pwszBuffer)
+					if (AddFontResource(m_curFontPath.c_str()))
 					{
-						if(AddFontResource(pwszBuffer))
-						{
-							SendMessage( m_hWnd, WM_FONTCHANGE, 0, 0);
-						}						
-						delete [] pwszBuffer;
-						pwszBuffer = NULL;
+						SendMessage(m_hWnd, WM_FONTCHANGE, 0, 0);
 					}
 				}
             }

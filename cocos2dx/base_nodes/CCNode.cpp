@@ -1196,6 +1196,9 @@ void CCNode::updateDisplayedOpacity(float parentOpacity)
 void CCNode::setCascadeOpacity(bool var)
 {
 	_cascadeOpacity = var;
+	this->updateDisplayedOpacity(
+		m_pParent ? m_pParent->getDisplayedOpacity() :
+		1.0f);
 }
 
 bool CCNode::isCascadeOpacity() const
@@ -1216,7 +1219,7 @@ const ccColor3B& CCNode::getDisplayedColor()
 void CCNode::setColor(const ccColor3B& color)
 {
 	_displayedColor = _realColor = color;
-	updateDisplayedColor(
+	this->updateDisplayedColor(
 		m_pParent ? m_pParent->getDisplayedColor() :
 		ccWHITE);
 }
@@ -1243,6 +1246,9 @@ void CCNode::updateDisplayedColor(const ccColor3B& parentColor)
 void CCNode::setCascadeColor(bool var)
 {
 	_cascadeColor = var;
+	this->updateDisplayedColor(
+		m_pParent ? m_pParent->getDisplayedColor() :
+		ccWHITE);
 }
 
 bool CCNode::isCascadeColor() const

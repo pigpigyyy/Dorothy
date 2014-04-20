@@ -197,8 +197,8 @@ static void PVRFrameEnableControlWindow(bool bEnable)
     HKEY hKey = 0;
 
     // Open PVRFrame control key, if not exist create it.
-    if(ERROR_SUCCESS != RegCreateKeyExW(HKEY_CURRENT_USER,
-        L"Software\\Imagination Technologies\\PVRVFRame\\STARTUP\\",
+    if(ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER,
+        "Software\\Imagination Technologies\\PVRVFRame\\STARTUP\\",
         0,
         0,
         REG_OPTION_NON_VOLATILE,
@@ -210,16 +210,16 @@ static void PVRFrameEnableControlWindow(bool bEnable)
         return;
     }
 
-    const WCHAR* wszValue = L"hide_gui";
-    const WCHAR* wszNewData = (bEnable) ? L"NO" : L"YES";
-    WCHAR wszOldData[256] = {0};
+    const CHAR* wszValue = "hide_gui";
+    const CHAR* wszNewData = (bEnable) ? "NO" : "YES";
+    CHAR wszOldData[256] = {0};
     DWORD   dwSize = sizeof(wszOldData);
-    LSTATUS status = RegQueryValueExW(hKey, wszValue, 0, NULL, (LPBYTE)wszOldData, &dwSize);
+    LSTATUS status = RegQueryValueEx(hKey, wszValue, 0, NULL, (LPBYTE)wszOldData, &dwSize);
     if (ERROR_FILE_NOT_FOUND == status              // the key not exist
         || (ERROR_SUCCESS == status                 // or the hide_gui value is exist
-        && 0 != wcscmp(wszNewData, wszOldData)))    // but new data and old data not equal
+        && 0 != strcmp(wszNewData, wszOldData)))    // but new data and old data not equal
     {
-        dwSize = sizeof(WCHAR) * (wcslen(wszNewData) + 1);
+        dwSize = sizeof(CHAR) * (strlen(wszNewData) + 1);
         RegSetValueEx(hKey, wszValue, 0, REG_SZ, (const BYTE *)wszNewData, dwSize);
     }
 

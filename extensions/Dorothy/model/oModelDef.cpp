@@ -40,7 +40,7 @@ skewX(0.0f),
 skewY(0.0f),
 texture(nullptr),
 rect(),
-clip(-1),
+clip(),
 opacity(1.0f),
 visible(true)
 { }
@@ -73,7 +73,7 @@ string oSpriteDef::toXml()
 	{
 		stream << ' ' << char(oModelXml::Visible) << "=\"1\"";
 	}
-	if (clip != -1)
+	if (!clip.empty())
 	{
 		stream << ' ' << char(oModelXml::Clip) << "=\"" << clip << '\"';
 	}

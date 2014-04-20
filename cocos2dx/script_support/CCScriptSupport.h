@@ -108,7 +108,7 @@ class CC_DLL CCScriptEngine
 {
 public:
     virtual ~CCScriptEngine();
-    
+
     /** Get script type */
     virtual ccScriptType getScriptType();
 
@@ -157,8 +157,6 @@ public:
     /** Execute a notification event function */
     virtual int executeNotificationEvent(CCNotificationCenter* pNotificationCenter, const char* pszName);
     
-    /** execute a callfun event */
-    virtual int executeCallFuncActionEvent(CCCallFunc* pAction, CCObject* pTarget = NULL);
     /** execute a schedule function */
     virtual int executeSchedule(int nHandler, float dt, CCNode* pNode = NULL);
     

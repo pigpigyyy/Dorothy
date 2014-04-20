@@ -100,7 +100,7 @@ oActionDuration* oKeyAnimationDef::toAction()
 
 	oKeyFrameDef* lastDef = _keyFrameDefs.front();
 	keyFrames[indexFrames++] = oKeyReset::create(lastDef);
-
+	bool lastVisible = lastDef->visible;
 	for (uint32 i = 1; i < _keyFrameDefs.size(); i++)
 	{
 		/* Get current keyFrameDef */
@@ -126,9 +126,10 @@ oActionDuration* oKeyAnimationDef::toAction()
 		{
 			keyAttrs[indexAttrs++] = oKeyOpacity::create(def->duration, def->opacity, def->easeOpacity);
 		}
-		if (lastDef->visible != def->visible)
+		if (lastVisible != lastDef->visible)
 		{
-			keyAttrs[indexAttrs++] = def->visible ? (CCFiniteTimeAction*)CCShow::create() : (CCFiniteTimeAction*)CCHide::create();
+			keyAttrs[indexAttrs++] = lastDef->visible ? (CCFiniteTimeAction*)CCShow::create() : (CCFiniteTimeAction*)CCHide::create();
+			lastVisible = lastDef->visible;
 		}
 		/* Add a new keyFrame */
 		if (indexAttrs > 1)// Multiple attributes animated

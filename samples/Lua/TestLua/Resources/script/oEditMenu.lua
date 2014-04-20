@@ -1,15 +1,15 @@
-local oButton = require("script/oButton")
+local oButton = require("Script/oButton")
 
 local function oEditMenu()
     local winSize = CCDirector.winSize
-    local menu = CCMenu()
+    local menu = CCMenu(false)
 	menu.anchorPoint = oVec2.zero
+	local frameCopy = nil
 	menu.items =
 	{
 		Edit = oButton("Edit",16,50,50,35,winSize.height-35,
 			function()
 				oEditor.controlBar:clearCursors()
-				oEditor.settingPanel:updateValues(nil)
 				local isBatchUsed = oEditor.data[oSd.isBatchUsed]
 				oEditor.data[oSd.isBatchUsed] = false
 				oCache.Model:loadData(oEditor.model, oEditor.data)
@@ -20,20 +20,229 @@ local function oEditMenu()
 				--model.opacity = 0.3
 				oEditor.viewArea:setModel(model)
 				oEditor.viewPanel:updateImages(oEditor.data,model)
+				oEditor.controlBar:setTime(0)
 			end),
+		Fix = oButton("Fixed\nOff",16,50,50,35,winSize.height-95,
+			function(item)
+				oEditor.viewArea.isValueFixed = not oEditor.viewArea.isValueFixed
+				if oEditor.viewArea.isValueFixed then
+					item.label.text = "Fixed\nOn"
+					item.label.texture.antiAlias = false
+				else
+					item.label.text = "Fixed\nOff"
+					item.label.texture.antiAlias = false
+				end
+			end),
+		--[[
 		Move = oButton("Move",16,50,50,35,winSize.height-95),
-		Rotate = oButton("Rotate",16,50,50,35,winSize.height-155),
-		Scale = oButton("Scale",16,50,50,35,winSize.height-215),
+		Rotate = oButton("Rotate",16,50,50,35,winSize.height-155,
+			function()
+				oEditor.viewArea:editRot()
+			end),
+		Scale = oButton("Scale",16,50,50,35,winSize.height-215,
+			function(self)
+			end),
 		Opacity = oButton("Opacity",14,50,50,35,winSize.height-275),
-		
-		New = oButton("New",16,50,50,35,95),
+		]]
+		New = oButton("New",16,50,50,35,95,
+			function()
+				local pos = oEditor.controlBar:getPos()
+				if oEditor.sprite and pos ~= oEditor.currentFramePos then
+					local sprite = oEditor.sprite
+					local sp = oEditor.spriteData
+					local animationDef = oEditor.animationData
+					if not animationDef then
+						animationDef = {}
+						local aDefs = sp[oSd.animationDefs]
+						local aNames = oEditor.data[oSd.animationNames]
+						aDefs[aNames[oEditor.animation]+1] = animationDef
+						oEditor.animationData = animationDef
+						animationDef[oAd.type] = 1
+						local curPos = oAd.frameDefs
+						if pos ~= 0 then
+							animationDef[curPos] =
+							{
+								sp[oSd.x],
+								sp[oSd.y],
+								sp[oSd.scaleX],
+								sp[oSd.scaleY],
+								sp[oSd.skewX],
+								sp[oSd.skewY],
+								sp[oSd.rotation],
+								sp[oSd.opacity],
+								sp[oSd.visible],
+								0,0,0,0,0,0
+							}
+							curPos = curPos+1
+						end
+						animationDef[curPos] =
+						{
+							sp[oSd.x],
+							sp[oSd.y],
+							sp[oSd.scaleX],
+							sp[oSd.scaleY],
+							sp[oSd.skewX],
+							sp[oSd.skewY],
+							sp[oSd.rotation],
+							sp[oSd.opacity],
+							sp[oSd.visible],
+							0,0,0,0,0,
+							pos/60
+						}
+					else
+						local duration = pos/60 - oEditor.currentFramePos/60
+						local nextDef = oEditor.animationData[oEditor.keyIndex+1]
+						if nextDef then	
+							nextDef[oKd.duration] = nextDef[oKd.duration]-duration
+						end
+						local frameDef =
+						{
+							sprite.positionX,
+							sprite.positionY,
+							sprite.scaleX,
+							sprite.scaleY,
+							sprite.skewX,
+							sprite.skewY,
+							sprite.rotation,
+							sprite.opacity,
+							sprite.visible,
+							0,0,0,0,0,
+							duration
+						}
+						table.insert(oEditor.animationData,oEditor.keyIndex+1,frameDef)
+					end	
+					oEditor.controlBar:updateCursors()
+					oEditor.settingPanel:clearSelection()
+					oEditor.settingPanel:update()
+				end
+			end),
 		Delete = oButton("Delete",16,50,50,95,95,
 			function()
-				oEditor.viewArea:setModel(nil)
+				local pos = oEditor.controlBar:getPos()
+				if oEditor.sprite and pos == oEditor.currentFramePos and (oEditor.keyIndex ~= 2 or #oEditor.animationData == 2) then
+					local sprite = oEditor.sprite
+					local sp = oEditor.spriteData
+					local animationDef = oEditor.animationData
+					if animationDef then
+						local nextDef = animationDef[oEditor.keyIndex+1]
+						local prevDef = nil
+						if oEditor.keyIndex > 2 then
+							prevDef = animationDef[oEditor.keyIndex-1]
+						end
+						local curDef = animationDef[oEditor.keyIndex]
+						if prevDef then
+							if nextDef then
+								nextDef[oKd.duration] = 								nextDef[oKd.duration]+curDef[oKd.duration]
+							end
+							table.remove(animationDef, oEditor.keyIndex)
+							oEditor.keyIndex = oEditor.keyIndex-1
+						else
+							local aDefs = sp[oSd.animationDefs]
+							local aNames = oEditor.data[oSd.animationNames]
+							aDefs[aNames[oEditor.animation]+1] = false
+							oEditor.animationData = false
+						end
+						oEditor.dirty = true
+						oEditor.viewArea:getModel()
+						oEditor.controlBar:updateCursors()
+						oEditor.settingPanel:clearSelection()
+						oEditor.settingPanel:update()
+					end
+				end
 			end),
-		Copy = oButton("Copy",16,50,50,155,95),
-		Paste = oButton("Paste",16,50,50,215,95),
-		Clear = oButton("Clear",16,50,50,275,95),
+		Copy = oButton("Copy",16,50,50,155,95,
+			function(item)
+				local pos = oEditor.controlBar:getPos()
+				if oEditor.sprite and pos == oEditor.currentFramePos then
+					local frameDef = oEditor.animationData[oEditor.keyIndex]
+					frameCopy =
+					{
+						frameDef[oKd.x],
+						frameDef[oKd.y],
+						frameDef[oKd.scaleX],
+						frameDef[oKd.scaleY],
+						frameDef[oKd.skewX],
+						frameDef[oKd.skewY],
+						frameDef[oKd.rotation],
+						frameDef[oKd.opacity],
+						frameDef[oKd.visible],
+						frameDef[oKd.easeOpacity],
+						frameDef[oKd.easePos],
+						frameDef[oKd.easeRotation],
+						frameDef[oKd.easeScale],
+						frameDef[oKd.easeSkew],
+						0,
+					}
+					item.color = ccColor3(0xff88cc)
+				end
+			end),
+		Paste = oButton("Paste",16,50,50,215,95,
+			function()
+				local pos = oEditor.controlBar:getPos()
+				if oEditor.sprite and pos ~= oEditor.currentFramePos then
+					local sprite = oEditor.sprite
+					local sp = oEditor.spriteData
+					local animationDef = oEditor.animationData
+					if not animationDef then
+						animationDef = {}
+						local aDefs = sp[oSd.animationDefs]
+						local aNames = oEditor.data[oSd.animationNames]
+						aDefs[aNames[oEditor.animation]+1] = animationDef
+						oEditor.animationData = animationDef
+						animationDef[oAd.type] = 1
+						local curPos = oAd.frameDefs
+						if pos ~= 0 then
+							animationDef[curPos] =
+							{
+								sp[oSd.x],
+								sp[oSd.y],
+								sp[oSd.scaleX],
+								sp[oSd.scaleY],
+								sp[oSd.skewX],
+								sp[oSd.skewY],
+								sp[oSd.rotation],
+								sp[oSd.opacity],
+								sp[oSd.visible],
+								0,0,0,0,0,0
+							}
+							curPos = curPos+1
+						end
+						frameCopy[oKd.duration] = pos/60
+						animationDef[curPos] = frameCopy
+					else
+						local duration = pos/60 - oEditor.currentFramePos/60
+						local nextDef = oEditor.animationData[oEditor.keyIndex+1]
+						if nextDef then	
+							nextDef[oKd.duration] = nextDef[oKd.duration]-duration
+						end
+						frameCopy[oKd.duration] = duration
+						table.insert(oEditor.animationData,oEditor.keyIndex+1,frameCopy)
+					end	
+					oEditor.dirty = true
+					oEditor.viewArea:getModel()
+					oEditor.controlBar:updateCursors()
+					oEditor.settingPanel:clearSelection()
+					oEditor.settingPanel:update()
+					frameCopy = nil
+					menu.items.Copy.color = ccColor3(0x00ffff)
+				end
+			end),
+		Clear = oButton("Clear",16,50,50,275,95,
+			function()
+				if oEditor.sprite and oEditor.animationData then
+					local sp = oEditor.spriteData
+					local aDefs = sp[oSd.animationDefs]
+					local aNames = oEditor.data[oSd.animationNames]
+					aDefs[aNames[oEditor.animation]+1] = false
+					oEditor.animationData = false
+					oEditor.keyIndex = 1
+					oEditor.dirty = true
+					oEditor.viewArea:getModel()
+					oEditor.controlBar:updateCursors()
+					oEditor.settingPanel:clearSelection()
+					oEditor.settingPanel:update()
+				end
+			end),
 		Loop = oButton("Once",16,50,50,winSize.width-205,155,
 			function(item)
 				if oEditor.loop then
@@ -51,6 +260,7 @@ local function oEditMenu()
 		Play = oButton("Play",16,50,50,winSize.width-205,95,
 			function(item)
 				-- item = CCNode
+				oEditor.settingPanel:clearSelection()
 				local model = oEditor.viewArea:getModel()
 				if model then
 					if not oEditor.isPlaying then
@@ -97,6 +307,7 @@ local function oEditMenu()
 	for _,item in pairs(menu.items) do
 		menu:addChild(item)
 	end
+
     return menu
 end
 

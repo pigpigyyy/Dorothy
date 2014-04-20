@@ -36,6 +36,8 @@ bool oAnimationCache_unload(const char* filename = nullptr);
 bool oClipCache_load(const char* filename);
 bool oClipCache_update(const char* name, const char* content);
 bool oClipCache_unload(const char* filename = nullptr);
+void __oClipCache_getNames(const char* filename);
+#define oClipCache_getNames(filename) {__oClipCache_getNames(filename);return 1;}
 
 bool oEffectCache_load(const char* filename);
 bool oEffectCache_update(const char* content);
@@ -55,6 +57,9 @@ void oUnitDef_setActions(oUnitDef* def, int actions[], int count);
 void oUnitDef_setInstincts(oUnitDef* def, int instincts[], int count);
 
 oListener* oListener_create(const string& name, int handler);
+
+void __oContent_getDirEntries(oContent* self, const char* path, bool isFolder);
+#define oContent_getDirEntries(self,path,isFolder) {__oContent_getDirEntries(self,path,isFolder);return 1;}
 
 CCSprite* CCSprite_createWithClip(const char* clipStr);
 
@@ -111,5 +116,18 @@ inline ccBlendFunc* ccBlendFuncNew(GLenum src, GLenum dst)
 {
 	return new ccBlendFunc{ src, dst };
 }
+
+class CCCall: public CCActionInstant
+{
+public:
+	CCCall():_scriptHandler(0){}
+	virtual ~CCCall();
+	static CCCall* create(int nHandler);
+	virtual void execute();
+	virtual void update(float time);
+	CCObject* copyWithZone(CCZone *pZone);
+private:
+	int _scriptHandler;
+};
 
 #endif // __DOROTHY_MODULE_H__

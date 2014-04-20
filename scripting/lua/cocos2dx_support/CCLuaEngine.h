@@ -44,8 +44,8 @@ NS_CC_BEGIN
 class CCLuaEngine : public CCScriptEngine
 {
 public:
-    static CCLuaEngine* defaultEngine(void);    
-    virtual ~CCLuaEngine(void);
+    static CCLuaEngine* sharedEngine();    
+    virtual ~CCLuaEngine();
     
     virtual ccScriptType getScriptType() {
         return kScriptTypeLua;
@@ -105,7 +105,6 @@ public:
 
     virtual int executeNodeEvent(CCNode* pNode, int nAction);
     virtual int executeMenuItemEvent(int eventType, CCMenuItem* pMenuItem);
-    virtual int executeCallFuncActionEvent(CCCallFunc* pAction, CCObject* pTarget = NULL);
     virtual int executeSchedule(int nHandler, float dt, CCNode* pNode = NULL);
     virtual int executeLayerTouchesEvent(CCLayer* pLayer, int eventType, CCSet *pTouches);
     virtual int executeLayerTouchEvent(CCLayer* pLayer, int eventType, CCTouch *pTouch);

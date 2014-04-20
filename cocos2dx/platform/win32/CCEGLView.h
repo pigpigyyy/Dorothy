@@ -49,7 +49,7 @@ public:
     virtual void setFrameSize(const CCSize& size);
     virtual void setIMEKeyboardState(bool bOpen);
 
-    void setMenuResource(LPCWSTR menu);
+    void setMenuResource(LPCSTR menu);
     void setWndProc(CUSTOM_WND_PROC proc);
 
 private:
@@ -91,7 +91,7 @@ private:
     LPFN_ACCELEROMETER_KEYHOOK m_lpfnAccelerometerKeyHook;
     bool m_bSupportTouch;
 
-    LPCWSTR m_menu;
+    LPCSTR m_menu;
     CUSTOM_WND_PROC m_wndproc;
 
     float m_fFrameZoomFactor;

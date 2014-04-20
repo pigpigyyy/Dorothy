@@ -159,8 +159,8 @@ local function oViewPanel()
 		else
 			if newPos.x > 0 then
 				newPos.x = 0
-			elseif newPos.x < moveX then
-				newPos.x = moveX
+			elseif newPos.x < moveX-padding then
+				newPos.x = moveX-padding
 			end
 			if newPos.y < -padding then
 				newPos.y = -padding
@@ -171,7 +171,7 @@ local function oViewPanel()
 		end
 		
 		if viewWidth < borderSize.width then deltaPos.x = 0 end
-		if viewHeight < borderSize.width then deltaPos.y = 0 end
+		if viewHeight < borderSize.height then deltaPos.y = 0 end
 
 		totalDelta = totalDelta + deltaPos
 
@@ -180,13 +180,13 @@ local function oViewPanel()
 			node.position = node.position + deltaPos
 		end
 		
-		if not touching and (newPos.y < -padding*0.5 or newPos.y > moveY+padding*0.5) then
+		if not touching and (newPos.y < -padding*0.5 or newPos.y > moveY+padding*0.5 or newPos.x > padding*0.5 or newPos.x < moveX-padding*0.5) then
 			startReset()
 		end
 	end
 	view:addChild(menu)
 
-	local function oImageView(size, x, y, clipStr, tapped)
+	local function oImageView(size, x, y, clipStr, sp, root)
 		local borderSelected = CCDrawNode()
 		local borderHalfSize = size*0.5+1
 		borderSelected:drawPolygon(
@@ -224,6 +224,16 @@ local function oViewPanel()
 		menuItem:addChild(borderSelected)
 		menuItem:addChild(border)
 
+		if root then
+			local label = CCLabelTTF("Root","Arial",16)
+			label.color = ccColor3(0x00ffff)
+			label.position = oVec2(size*0.5, size*0.5)
+			label.texture.antiAlias = false
+			menuItem:addChild(label)
+			menuItem.enabled = false
+			return menuItem
+		end
+
 		local isSelected = false
 		local seqAnim = CCSequence(
 		{
@@ -234,23 +244,33 @@ local function oViewPanel()
 			isSelected = selected
 			borderSelected.visible = selected
 			if selected then
+				borderSelected:stopAllActions()
 				borderSelected:runAction(seqAnim)
 				border.color = ccColor3(0x00ffff)
+				menuItem.cascadeOpacity = false
 			else
 				border.color = ccColor3(0xffffff)
+				menuItem.cascadeOpacity = true
 			end
 		end
+		
+		menuItem.getData = function(self)
+			return sp,sp[oSd.sprite]
+		end
+		
 		menuItem:registerTapHandler(
 			function(eventType, self)
+				if oEditor.isPlaying then
+					return false
+				end
 				if eventType == CCMenuItem.TapBegan then
 				elseif eventType == CCMenuItem.TapEnded then
 				elseif eventType == CCMenuItem.Tapped then
 					menuItem:select(true)
-					if tapped then
-						tapped(menuItem,isSelected)
-					end
+					oEvent:send("ImageSelected",{sp,sp[oSd.sprite],menuItem})
 				end
 			end)
+
 		if clipStr ~= "" then
 			local sprite = CCSprite(clipStr)
 			local contentSize = sprite.contentSize
@@ -277,6 +297,7 @@ local function oViewPanel()
 		self.opacity = 1.0
 	end
 	panel.hide = function(self)
+		self:stopAllActions()
 		self:runAction(opacity)
 	end
 
@@ -351,25 +372,23 @@ local function oViewPanel()
 
 	panel.updateImages = function(self, data, model)
 		initValues()
-		menu:removeAllChildrenWithCleanup()
+		menu:removeAllChildren()
 		local clipFile = data[oSd.clipFile]
 		local drawNode = CCDrawNode()
 		menu:addChild(drawNode)
 		local size = 60
 		local indent = 10
+		local root = tolua.cast(model.children:get(1),"CCNode")
 		local function visitSprite(sp,x,y,node)
 			local clip = sp[oSd.clip]
 			local child = tolua.cast(node,tolua.type(node) == "CCNode" and "CCNode" or "CCSprite")
 			sp[oSd.sprite] = child
-			menu:addChild(
-				oImageView(
-					size,
-					x, y,
-					clip == -1 and "" or (clipFile.."|"..tostring(clip)),
-					function(menuItem,selected)
-						oEvent:send("ImageSelected",{sp,menuItem,child})
-					end
-				))
+			local isRoot = node == root
+			local imageView = oImageView(size,x,y,
+				clip == ""
+				and "" or (clipFile.."|"..tostring(clip)),
+				sp,isRoot)
+			menu:addChild(imageView)
 			local children = sp[oSd.children]
 			local nextY = -size-indent
 			local layer = 1
@@ -391,7 +410,7 @@ local function oViewPanel()
 			return nextY, layer+maxSubLayer
 		end
 		
-		local height, layer = visitSprite(data,indent,borderSize.height-indent,tolua.cast(model.children:get(1),"CCNode"))
+		local height, layer = visitSprite(data,indent,borderSize.height-indent,root)
 		viewHeight = -height+indent
 		viewWidth = layer*indent*2+size
 		moveY = viewHeight-borderSize.height
@@ -402,6 +421,7 @@ local function oViewPanel()
 		local w = node.contentSize.width
 		local h = node.contentSize.height
 		local outline = CCNode()
+		outline.cascadeOpacity = false
 		local frame = oLine({},ccColor4(0xff00a2d8))
 		if withFrame then
 			frame:set(
@@ -413,7 +433,6 @@ local function oViewPanel()
 				oVec2(0,0),
 			})
 		end
-		frame.acceptOpacity = false
 		outline:addChild(frame)
 		local anchor = oLine(
 		{
@@ -423,30 +442,13 @@ local function oViewPanel()
 			oVec2(-5,0),
 			oVec2(0,-5)
 		},ccColor4(0xffffffff))
-		anchor:addChild(oLine(
-		{
-			oVec2(0,-5),
-			oVec2(0,5)
-		},ccColor4(0xffffffff)))
-		anchor:addChild(oLine(
-		{
-			oVec2(-5,0),
-			oVec2(5,0)
-		},ccColor4(0xffffffff)))
+		anchor:addChild(
+			oLine({oVec2(0,-5),oVec2(0,5)},ccColor4(0xffffffff)))
+		anchor:addChild(
+			oLine({oVec2(-5,0),oVec2(5,0)},ccColor4(0xffffffff)))
 		anchor.position = oVec2(w*node.anchorPoint.x, h*node.anchorPoint.y)
-		anchor.acceptOpacity = false
 		outline:addChild(anchor)
-		
-		local vs = {}
-		local num = 30
-		for i = 0, num do
-			local angle = 2*math.pi*i/num
-			table.insert(vs,oVec2(200*math.cos(angle),200*math.sin(angle)))
-		end
-		local line = oLine(vs,ccColor4(0xffffffff))
-		anchor:addChild(line)
-		anchor:addChild(oLine({oVec2(-200,0),oVec2(200,0)},ccColor4()))
-		anchor:addChild(oLine({oVec2(0,-200),oVec2(0,200)},ccColor4()))
+
 		outline.setNode = function(self, node, withFrame)
 			local w = node.contentSize.width
 			local h = node.contentSize.height
@@ -472,57 +474,81 @@ local function oViewPanel()
 	panel.listener = oListener("ImageSelected",
 		function(args)
 			local sp = args[1]
-			local menuItem = args[2]
-			local node = args[3]
+			local node = args[2]
+			local menuItem = args[3]
 			local aDefs = sp[oSd.animationDefs]
 			local aNames = oEditor.data[oSd.animationNames]
 			local animation = aDefs[aNames[oEditor.animation]+1]
 
 			oEditor.animationData = animation
 
-			if outline then
-				outline.visible = (selectedItem ~= menuItem)
-			end
-
 			if selectedItem then
 				selectedItem:select(false)
 			end
-
+			
 			if selectedItem ~= menuItem then
 				local withFrame = node.contentSize ~= CCSize.zero
 				if not outline then
 					outline = oImageOutline(node,withFrame)
+					outline.visble = false
 				else
 					outline.parent:removeChild(outline)
 					outline:setNode(node,withFrame)
 				end
 				oEditor.sprite = node
 				oEditor.spriteData = sp
+				oEditor.settingPanel.items.Name:setValue(sp[oSd.name])
 				node:addChild(outline)
-				if animation then
-					if animation[oAd.type] == 1 then
-						local d = 0
-						oEditor.controlBar:clearCursors()
-						for i = oAd.frameDefs, #animation do
-							d = d + animation[i][oKd.duration]
-							oEditor.controlBar:addCursor(d*60.0)
-						end
-					elseif animation[oAd.type] == 2 then
-						--TODO Frame animation
-					end
-					oEditor.settingPanel:updateValues(0)
-				else
-					oEditor.controlBar:clearCursors()
-					oEditor.settingPanel:updateValues(nil)
-				end
+				oEditor.controlBar:updateCursors()
 				selectedItem = menuItem
 			else
 				selectedItem = nil
+				oEditor.sprite = nil
+				oEditor.spriteData = nil
 				oEditor.controlBar:clearCursors()
 				oEditor.settingPanel:updateValues(nil)
 			end
-			
+
+			oEditor.keyIndex = 1
+			oEditor.settingPanel:clearSelection()
+			oEditor.settingPanel:update()
 		end)
+	
+	panel.updateSprite = function(self,data,model)
+		local function visitSprite(sp,node)
+			local child = tolua.cast(node,tolua.type(node) == "CCNode" and "CCNode" or "CCSprite")
+			if sp[oSd.sprite] == oEditor.sprite then
+				oEditor.sprite = child
+			end
+			sp[oSd.sprite] = child
+			local children = sp[oSd.children]
+			local childrenSize = #children
+			for i = 1, #children do
+				visitSprite(children[i],child.children:get(i))
+			end
+		end
+		visitSprite(data,tolua.cast(model.children:get(1),"CCNode"))
+		if selectedItem ~= nil then
+			local sp,node = selectedItem:getData()
+			local withFrame = node.contentSize ~= CCSize.zero
+			if not outline then
+				outline = oImageOutline(node,withFrame)
+			else
+				outline.parent:removeChild(outline)
+				outline:setNode(node,withFrame)
+			end
+			oEditor.sprite = node
+			oEditor.spriteData = sp
+			node:addChild(outline)
+		end
+	end
+
+	panel.showOutline = function(self, show)
+		if outline then
+			outline.visible = show
+		end
+	end
+	
 	return panel
 end
 

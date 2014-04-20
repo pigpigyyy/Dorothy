@@ -36,6 +36,7 @@ module oCache
 		static tolua_outside bool oClipCache_load @ load( const char* filename );
 		static tolua_outside bool oClipCache_update @ update(const char* name, const char* content);
 		static tolua_outside bool oClipCache_unload @ unload( const char* filename = nullptr );
+		static tolua_outside void oClipCache_getNames @ getNames(const char* filename);
 	};
 	
 	void oCache_clear @ clear();

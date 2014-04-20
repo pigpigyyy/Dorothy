@@ -15,6 +15,25 @@ void oHelper::getPosFromStr( const char* str, float& x, float& y )
 	y = (float)atof(token);
 }
 
+string oString::getFilePath(const string& filename)
+{
+	size_t pos = filename.find_last_of("/\\");
+	if (pos == string::npos)
+	{
+		return oString::Empty;
+	}
+	return filename.substr(0, pos) + "/";
+}
+string oString::getFileName(const string& filename)
+{
+	size_t pos = filename.find_last_of("/\\");
+	if (pos == string::npos)
+	{
+		return oString::Empty;
+	}
+	return filename.substr(pos+1);
+}
+
 const string oFileExt::Clip = ".clip";
 const string oFileExt::Model = ".model";
 const string oFileExt::Texture = ".png";

@@ -241,7 +241,7 @@ TOLUA_API int  tolua_Cocos2d_open (lua_State* tolua_S);]], [[]])
 	replace([[tolua_usertype(tolua_S,"LUA_FUNCTION");]], [[]])
 
 	replace([[toluafix_pushusertype_ccobject(tolua_S,(void*)tolua_ret]],
-        [[toluafix_pushusertype_ccobject(tolua_S, tolua_ret->getObjectId(), &tolua_ret->m_nLuaRef, (void*)tolua_ret]])
+        [[TOLUAFIX_PUSHUSERTYPE_CCOBJECT(tolua_S,tolua_ret]])
 	
 	replace([[toluafix_pushusertype_ccobject(tolua_S,(void*)]],
 		[[TOLUAFIX_PUSHUSERTYPE_CCOBJECT(tolua_S,]])

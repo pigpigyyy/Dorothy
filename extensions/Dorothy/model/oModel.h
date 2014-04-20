@@ -34,13 +34,14 @@ public:
 	void pause();
 	void resume();
 	void stop();
-	void setTime(float time);
+	void setElapsed(float time);
 	float getTime() const;
 	float getDuration() const;
 	void setSpeed(float speed);
 	float getSpeed() const;
 	CCNode* getNode() const;
-	oActionDuration* getAction();
+	void setAction(oActionDuration* action);
+	oActionDuration* getAction() const;
 private:
 	CCNode* _node;
 	oRef<oActionDuration> _action;
@@ -125,6 +126,7 @@ private:
 	void addLook(int index, CCNode* node);
 	void addAnimation(int index, CCNode* node, oActionDuration* action);
 	void reset(oSpriteDef* parentDef, CCNode* parentNode);
+	void setupCallback();
 	void onActionEnd();
 	oNodeMap& nodeMap();
 	bool _isPlaying;

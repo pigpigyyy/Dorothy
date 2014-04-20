@@ -328,11 +328,10 @@ CCNode* oFace::load(bool isRoot)
 			char name[256];
 			strcpy(name, _file.c_str());
 			char* filename = strtok(name, "|");
-			char* idStr = strtok(nullptr, "|");
-			int index = atoi(idStr);
+			char* nameStr = strtok(nullptr, "|");
 			oClipDef* clipDef = oSharedClipCache.load(filename);
 			CCTexture2D* texture = oSharedContent.loadTexture(clipDef->textureFile.c_str());
-			oSprite* sprite = oSprite::createWithTexture(texture, *clipDef->rects[index]);
+			oSprite* sprite = oSprite::createWithTexture(texture, *clipDef->rects[nameStr]);
 			sprite->_isFaceRoot = isRoot;
 			node = sprite;
 		}

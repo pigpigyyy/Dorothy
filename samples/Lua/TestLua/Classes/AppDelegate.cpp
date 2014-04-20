@@ -35,7 +35,7 @@ bool AppDelegate::applicationDidFinishLaunching()
 	oSharedContent.setUsingGameFile(true);
 	*/
 	// register lua engine
-	CCScriptEngine::setEngine(CCLuaEngine::defaultEngine());
+	CCScriptEngine::setEngine(CCLuaEngine::sharedEngine());
 	CCScriptEngine::sharedEngine()->executeScriptFile("script/main.lua");
 
     return true;

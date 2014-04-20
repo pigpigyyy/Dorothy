@@ -6,6 +6,8 @@ NS_DOROTHY_BEGIN
 struct oString
 {
 	static const string Empty;
+	static string getFilePath(const string& filename);
+	static string getFileName(const string& filename);
 };
 
 struct oHelper

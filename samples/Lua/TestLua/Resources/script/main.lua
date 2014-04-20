@@ -3,7 +3,6 @@ collectgarbage("setstepmul", 5000)
 
 oSd =
 {
-	sprite = 0,
 	anchorX = 1,
 	anchorY = 2,
 	clip = 3,
@@ -27,6 +26,7 @@ oSd =
 	keys = 21,
 	animationNames = 22,
 	lookNames = 23,
+	sprite = 24,
 }
 
 oAd =
@@ -61,13 +61,64 @@ oFd =
 	endTime = 4
 }
 
-local oViewArea = require("script/oViewArea")
-local oEditMenu = require("script/oEditMenu")
-local oViewPanel = require("script/oViewPanel")
-local oControlBar = require("script/oControlBar")
-local oSettingPanel = require("script/oSettingPanel")
+oEditor = {}
+oEditor.model = "Model/Output/jixienv.model"
+oEditor.look = "happy"
+oEditor.animation = "walk"
+oEditor.animationData = nil
+oEditor.keyIndex = nil
+oEditor.currentFramePos = nil
+oEditor.sprite = nil
+oEditor.spriteData = nil
+oEditor.dirty = false
+oEditor.loop = false
+oEditor.isPlaying = false
+oEditor.data = oCache.Model:getData(oEditor.model)
+oEditor.scene = CCScene()
+oEditor.easeNames =
+{
+	"InQuad",
+	"OutQuad",
+	"InOutQuad",
+	"InCubic",
+	"OutCubic",
+	"InOutCubic",
+	"InQuart",
+	"OutQuart",
+	"InOutQuart",
+	"InQuint",
+	"OutQuint",
+	"InOutQuint",
+	"InSine",
+	"OutSine",
+	"InOutSine",
+	"InExpo",
+	"OutExpo",
+	"InOutExpo",
+	"InCirc",
+	"OutCirc",
+	"InOutCirc",
+	"InElastic",
+	"OutElastic",
+	"InOutElastic",
+	"InBack",
+	"OutBack",
+	"InOutBack",
+	"InBounce",
+	"OutBounce",
+	"InOutBounce"
+}
+oEditor.easeNames[0] = "Linear"
+oEditor.input = "Model/Input/"
+oEditor.output = "Model/Output/"
 
-oEditor =
+local oViewArea = require("Script/oViewArea")
+local oEditMenu = require("Script/oEditMenu")
+local oViewPanel = require("Script/oViewPanel")
+local oControlBar = require("Script/oControlBar")
+local oSettingPanel = require("Script/oSettingPanel")
+
+local controls =
 {
 	-- Animation oEditor
 	viewArea = oViewArea(),
@@ -77,22 +128,28 @@ oEditor =
 	settingPanel = oSettingPanel(),
 }
 
-local scene = CCScene()
-scene.anchorPoint = oVec2.zero
-for _,item in pairs(oEditor) do
-	scene:addChild(item)
+oEditor.scene.anchorPoint = oVec2.zero
+for key,item in pairs(controls) do
+	oEditor.scene:addChild(item)
+	oEditor[key] = item
 end
 
-oEditor.model = "jixienv.model"
-oEditor.look = "happy"
-oEditor.animation = "attack"
-oEditor.animationData = nil
-oEditor.keyIndex = 1
-oEditor.sprite = nil
-oEditor.spriteData = nil
-oEditor.dirty = false
-oEditor.loop = false
-oEditor.isPlaying = false
-oEditor.data = oCache.Model:getData(oEditor.model)
 
-CCDirector:run(scene)
+local oFileChooser = require("Script/oFileChooser")
+
+local chooser = oFileChooser()
+chooser:show()
+oEditor.scene:addChild(chooser)
+--[[
+local names = oCache.Clip:getNames("jixienv.clip")
+for i = 1,#names do
+	local sp = CCSprite("jixienv.clip|"..names[i])
+	sp.anchorPoint = oVec2.zero
+	local target = CCRenderTarget(sp.contentSize.width,sp.contentSize.height)
+	target:beginPaint(ccColor4(0))
+	target:draw(sp)
+	target:endPaint()
+	target:save(names[i]..".png",CCImage.PNG)
+end]]
+
+CCDirector:run(oEditor.scene)

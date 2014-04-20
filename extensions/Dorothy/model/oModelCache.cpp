@@ -34,7 +34,7 @@ void oModelCache::startElement( void *ctx, const char *name, const char **atts )
 				switch (atts[i][0])
 				{
 				oCase::File:
-					_item->_clip = atts[++i];
+					_item->_clip = _path + atts[++i];
 					_currentClip = oSharedClipCache.load(_item->_clip.c_str());
 					_currentTexture = oSharedContent.loadTexture(_currentClip->textureFile.c_str());
 					_item->setTexture(_currentTexture);
@@ -80,9 +80,19 @@ void oModelCache::startElement( void *ctx, const char *name, const char **atts )
 						spriteDef->name = atts[++i];
 						break;
 					oCase::Clip:
-						spriteDef->clip = atoi(atts[++i]);
-						spriteDef->rect = *_currentClip->rects[spriteDef->clip];
+					{
+						spriteDef->clip = atts[++i];
+						auto it = _currentClip->rects.find(spriteDef->clip);
+						if (it == _currentClip->rects.end())
+						{
+							spriteDef->clip.clear();
+						}
+						else
+						{
+							spriteDef->rect = *(it->second);
+						}
 						break;
+					}
 					oCase::Visible:
 						spriteDef->visible = atoi(atts[++i]) == 1;
 						break;

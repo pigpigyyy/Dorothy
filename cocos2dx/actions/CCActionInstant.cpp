@@ -87,7 +87,7 @@ CCShow* CCShow::create()
 }
 
 void CCShow::update(float time) {
-    CC_UNUSED_PARAM(time);
+	CC_UNUSED_PARAM(time);
     m_pTarget->setVisible(true);
 }
 
@@ -126,7 +126,7 @@ CCHide * CCHide::create()
 }
 
 void CCHide::update(float time) {
-    CC_UNUSED_PARAM(time);
+	CC_UNUSED_PARAM(time);
     m_pTarget->setVisible(false);
 }
 
@@ -345,20 +345,6 @@ CCCallFunc * CCCallFunc::create(CCObject* pSelectorTarget, SEL_CallFunc selector
     return NULL;
 }
 
-CCCallFunc * CCCallFunc::create(int nHandler)
-{
-	CCCallFunc *pRet = new CCCallFunc();
-
-	if (pRet) {
-		pRet->m_nScriptHandler = nHandler;
-		pRet->autorelease();
-	}
-	else{
-		CC_SAFE_DELETE(pRet);
-	}
-	return pRet;
-}
-
 bool CCCallFunc::initWithTarget(CCObject* pSelectorTarget) {
     if (pSelectorTarget) 
     {
@@ -376,10 +362,6 @@ bool CCCallFunc::initWithTarget(CCObject* pSelectorTarget) {
 
 CCCallFunc::~CCCallFunc()
 {
-    if (m_nScriptHandler)
-    {
-        cocos2d::CCScriptEngine::sharedEngine()->removeScriptHandler(m_nScriptHandler);
-    }
     CC_SAFE_RELEASE(m_pSelectorTarget);
 }
 
@@ -413,9 +395,6 @@ void CCCallFunc::execute() {
     if (m_pCallFunc) {
         (m_pSelectorTarget->*m_pCallFunc)();
     }
-	if (m_nScriptHandler) {
-		CCScriptEngine::sharedEngine()->executeCallFuncActionEvent(this);
-	}
 }
 
 //
@@ -425,9 +404,6 @@ void CCCallFuncN::execute() {
     if (m_pCallFuncN) {
         (m_pSelectorTarget->*m_pCallFuncN)(m_pTarget);
     }
-	if (m_nScriptHandler) {
-		CCScriptEngine::sharedEngine()->executeCallFuncActionEvent(this, m_pTarget);
-	}
 }
 
 CCCallFuncN * CCCallFuncN::create(CCObject* pSelectorTarget, SEL_CallFuncN selector)
@@ -442,20 +418,6 @@ CCCallFuncN * CCCallFuncN::create(CCObject* pSelectorTarget, SEL_CallFuncN selec
 
     CC_SAFE_DELETE(pRet);
     return NULL;
-}
-
-CCCallFuncN * CCCallFuncN::create(int nHandler)
-{
-	CCCallFuncN *pRet = new CCCallFuncN();
-
-	if (pRet) {
-		pRet->m_nScriptHandler = nHandler;
-		pRet->autorelease();
-	}
-	else{
-		CC_SAFE_DELETE(pRet);
-	}
-	return pRet;
 }
 
 bool CCCallFuncN::initWithTarget(CCObject* pSelectorTarget,

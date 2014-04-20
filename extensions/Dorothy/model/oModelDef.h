@@ -11,7 +11,7 @@ class oSpriteDef
 {
 public:
 	CCTexture2D* texture;
-	int clip;
+	string clip;
 	float x;
 	float y;
 	float rotation;

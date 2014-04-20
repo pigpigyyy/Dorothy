@@ -118,6 +118,18 @@ bool oClipCache_unload(const char* filename)
 {
 	return filename ? oSharedClipCache.unload(filename) : oSharedClipCache.unload();
 }
+void __oClipCache_getNames(const char* filename)
+{
+	oClipDef* clipDef = oSharedClipCache.load(filename);
+	lua_State* L = CCLuaEngine::sharedEngine()->getLuaStack()->getLuaState();
+	lua_createtable(L, clipDef->rects.size(), 0);
+	int i = 1;
+	for (auto& item : clipDef->rects)
+	{
+		lua_pushstring(L,item.first.c_str());
+		lua_rawseti(L, -2, i++);
+	}
+}
 
 bool oEffectCache_load(const char* filename)
 {
@@ -197,16 +209,30 @@ oListener* oListener_create(const string& name, int handler)
 	return oListener::create(name, std::make_pair(oListenerHandlerWrapper(handler), &oListenerHandlerWrapper::call));
 }
 
+void __oContent_getDirEntries(oContent* self, const char* path, bool isFolder)
+{
+	lua_State* L = CCLuaEngine::sharedEngine()->getLuaStack()->getLuaState();
+	auto dirs = self->getDirEntries(path, isFolder);
+	lua_createtable(L, dirs.size(), 0);
+	for (size_t i = 0; i < dirs.size(); i++)
+	{
+		lua_pushstring(L, dirs[i].c_str());
+		lua_rawseti(L, -2, i+1);
+	}
+}
+
 CCSprite* CCSprite_createWithClip(const char* clipStr)
 {
-	if (string(clipStr).find('|') == string::npos)
-	{
-		return CCSprite::create(clipStr);
-	}
-	else
+	if (string(clipStr).find('|') != string::npos)
 	{
 		return oSharedClipCache.loadSprite(clipStr);
 	}
+	else if (oFileExt::check(clipStr,oFileExt::Clip))
+	{
+		oClipDef* def = oSharedClipCache.load(clipStr);
+		return CCSprite::create(def->textureFile.c_str());
+	}
+	return CCSprite::create(clipStr);
 }
 
 CCScene* CCScene_createOriented(float duration, CCScene* nextScene, tOrientation orientation)
@@ -445,7 +471,7 @@ CCTexture2D* CCTextureCache_add(CCTextureCache* self, CCRenderTexture* renderTex
 void __oModelCache_getData(const char* filename)
 {
 	oModelDef* modelDef = oSharedModelCache.load(filename);
-	CCLuaStack* stack = ((CCLuaEngine*)CCLuaEngine::sharedEngine())->getLuaStack();
+	CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
 	lua_State* L = stack->getLuaState();
 	auto lua_setFloat = [&](int index, float value)
 	{
@@ -472,12 +498,12 @@ void __oModelCache_getData(const char* filename)
 		stack->pushUserType(value, typeName);
 		lua_rawseti(L, -2, index);
 	};
-	static function<void(oSpriteDef*)> visitSpriteDef = [&](oSpriteDef* parent)
+	function<void(oSpriteDef*)> visitSpriteDef = [&](oSpriteDef* parent)
 	{
 		lua_createtable(L, 17, 0);
 		lua_setFloat(1, parent->anchorX);
 		lua_setFloat(2, parent->anchorY);
-		lua_setInt(3, parent->clip);
+		lua_setString(3, parent->clip.c_str());
 		lua_setString(4, parent->name.c_str());
 		lua_setFloat(5, parent->opacity);
 		lua_setUserType(6, new CCRect(parent->rect), "CCRect");
@@ -613,6 +639,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 {
 	CCLuaStack* stack = ((CCLuaEngine*)CCLuaEngine::sharedEngine())->getLuaStack();
 	lua_State* L = stack->getLuaState();
+	
 	auto lua_getFloat = [&](int index)->float
 	{
 		lua_rawgeti(L, -1, index);
@@ -684,13 +711,13 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 	}
 	lua_pop(L, 1);// pop lookNames
 	/*oSpriteDef*/
-	static function<oSpriteDef*()> visitSpriteDef = [&]()->oSpriteDef*
+	function<oSpriteDef*()> visitSpriteDef = [&]()->oSpriteDef*
 	{
 		oSpriteDef* spriteDef = new oSpriteDef();
 		spriteDef->texture = texture;
 		spriteDef->anchorX = lua_getFloat(1);
 		spriteDef->anchorY = lua_getFloat(2);
-		spriteDef->clip = lua_getInt(3);
+		spriteDef->clip = lua_getString(3);
 		spriteDef->name = lua_getString(4);
 		spriteDef->opacity = lua_getFloat(5);
 		spriteDef->rect = *(CCRect*)lua_getUserType(6);
@@ -780,4 +807,48 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 	modelDef->autorelease();
 	lua_pop(L, 1);// pop content
 	return oSharedModelCache.update(filename, modelDef);
+}
+
+CCCall* CCCall::create(int nHandler)
+{
+	CCCall* pRet = new CCCall();
+	pRet->_scriptHandler = nHandler;
+	pRet->autorelease();
+	return pRet;
+}
+CCCall::~CCCall()
+{
+	if (_scriptHandler)
+	{
+		CCScriptEngine::sharedEngine()->removeScriptHandler(_scriptHandler);
+	}
+}
+CCObject * CCCall::copyWithZone(CCZone *pZone) {
+	CCZone* pNewZone = NULL;
+	CCCall* pRet = NULL;
+	if (pZone && pZone->m_pCopyObject) {
+		pRet = (CCCall*)(pZone->m_pCopyObject);
+	}
+	else {
+		pRet = new CCCall();
+		pZone = pNewZone = new CCZone(pRet);
+	}
+	CCActionInstant::copyWithZone(pZone);
+	pRet->_scriptHandler = _scriptHandler;
+	CC_SAFE_DELETE(pNewZone);
+	return pRet;
+}
+void CCCall::update(float time)
+{
+	if (time > 0.0f)
+	{
+		this->execute();
+	}
+}
+void CCCall::execute()
+{
+	if (_scriptHandler)
+	{
+		CCScriptEngine::sharedEngine()->executeFunction(_scriptHandler);
+	}
 }

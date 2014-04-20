@@ -6,13 +6,12 @@ NS_DOROTHY_BEGIN
 class oLine : public CCNode
 {
 public:
-	PROPERTY_BOOL(_acceptOpacity, AcceptOpacity);
 	virtual ~oLine();
 	virtual bool init();
 	void set(oVec2 vecs[], int count);
 	virtual void draw();
-	virtual void updateDisplayedOpacity(float parentOpacity);
 	static oLine* create(oVec2 vecs[], int count, const ccColor4B& color);
+	static oLine* create();
 private:
 	oLine();
 	ccVertex2F* _buffer;

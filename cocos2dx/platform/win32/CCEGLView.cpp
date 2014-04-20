@@ -162,7 +162,7 @@ static bool glew_dynamic_binding()
 // impliment CCEGLView
 //////////////////////////////////////////////////////////////////////////
 static CCEGLView* s_pMainWindow = NULL;
-static const WCHAR* kWindowClassName = L"Cocos2dx_Dorothy_Win32";
+static const CHAR* kWindowClassName = "Cocos2dx_Dorothy_Win32";
 
 static LRESULT CALLBACK _WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -292,16 +292,13 @@ bool CCEGLView::Create()
         RECT rcDesktop;
         GetWindowRect(GetDesktopWindow(), &rcDesktop);
 
-        WCHAR wszBuf[50] = {0};
-        MultiByteToWideChar(CP_UTF8, 0, m_szViewName, -1, wszBuf, sizeof(wszBuf));
-
         // create window
         m_hWnd = CreateWindowEx(
             WS_EX_APPWINDOW | WS_EX_WINDOWEDGE,    // Extended Style For The Window
             kWindowClassName,                                    // Class Name
-            wszBuf,                                                // Window Title
+			m_szViewName,                                                // Window Title
             WS_CAPTION | WS_POPUPWINDOW | WS_MINIMIZEBOX,        // Defined Window Style
-            0, 0,                                                // Window Position
+            0, 0,                                    // Window Position
             //TODO: Initializing width with a large value to avoid getting a wrong client area by 'GetClientRect' function.
             1000,                                               // Window Width
             1000,                                               // Window Height
@@ -635,7 +632,7 @@ void CCEGLView::setIMEKeyboardState(bool /*bOpen*/)
 
 }
 
-void CCEGLView::setMenuResource(LPCWSTR menu)
+void CCEGLView::setMenuResource(LPCSTR menu)
 {
     m_menu = menu;
     if (m_hWnd != NULL)
@@ -678,17 +675,15 @@ void CCEGLView::resize(int width, int height)
     const CCSize& frameSize = getFrameSize();
     if (frameSize.width > 0)
     {
-        WCHAR wszBuf[MAX_PATH] = {0};
 #ifdef _DEBUG
         char szBuf[MAX_PATH + 1];
         memset(szBuf, 0, sizeof(szBuf));
         snprintf(szBuf, MAX_PATH, "%s - %0.0fx%0.0f - %0.2f",
-                   m_szViewName, frameSize.width, frameSize.height, m_fFrameZoomFactor);
-        MultiByteToWideChar(CP_UTF8, 0, szBuf, -1, wszBuf, sizeof(wszBuf));
+			m_szViewName, frameSize.width, frameSize.height, m_fFrameZoomFactor);
+		SetWindowText(m_hWnd, szBuf);
 #else
-        MultiByteToWideChar(CP_UTF8, 0, m_szViewName, -1, wszBuf, sizeof(wszBuf));
+		SetWindowText(m_hWnd, m_szViewName);
 #endif
-        SetWindowText(m_hWnd, wszBuf);
     }
 
     AdjustWindowRectEx(&rcClient, GetWindowLong(m_hWnd, GWL_STYLE), FALSE, GetWindowLong(m_hWnd, GWL_EXSTYLE));

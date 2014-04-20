@@ -63,7 +63,7 @@ public:
     CCShow(){}
     virtual ~CCShow(){}
     //super methods
-    virtual void update(float time);
+	virtual void update(float time);
     virtual CCFiniteTimeAction * reverse();
     virtual CCObject* copyWithZone(CCZone *pZone);
 public:
@@ -83,7 +83,7 @@ public:
     CCHide(){}
     virtual ~CCHide(){}
     //super methods
-    virtual void update(float time);
+	virtual void update(float time);
     virtual CCFiniteTimeAction * reverse();
     virtual CCObject* copyWithZone(CCZone *pZone);
 public:
@@ -186,7 +186,6 @@ class CC_DLL CCCallFunc : public CCActionInstant //<NSCopying>
 public:
     CCCallFunc()
         : m_pSelectorTarget(NULL)
-		, m_nScriptHandler(0)
         , m_pCallFunc(NULL)
     {
     }
@@ -197,9 +196,6 @@ public:
     typedef void (CCObject::*SEL_CallFunc)();
     */
     static CCCallFunc * create(CCObject* pSelectorTarget, SEL_CallFunc selector);
-
-	/** creates the action with the handler script function */
-	static CCCallFunc * create(int nHandler);
 
 	/** initializes the action with the callback 
     
@@ -226,13 +222,9 @@ public:
             m_pSelectorTarget = pSel; 
         }
     }
-    
-    inline int getScriptHandler() { return m_nScriptHandler; };
 protected:
     /** Target that will be called */
     CCObject*   m_pSelectorTarget;
-
-	int m_nScriptHandler;
 
     union
     {

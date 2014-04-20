@@ -1,9 +1,10 @@
-local function oButton(text, fontSize, width, height, x, y, tapped)
+local function oButton(text, fontSize, width, height, x, y,tapped)
 	local label = CCLabelTTF(text,"Arial",fontSize)
-	label.color = ccColor3(0x00ffff)
 	label.position = oVec2(width*0.5, height*0.5)
 	label.texture.antiAlias = false
 
+	local node = CCNode()
+	node.cascadeColor = false
 	local drawNode = CCDrawNode()
 	drawNode:drawPolygon(
 	{
@@ -12,21 +13,21 @@ local function oButton(text, fontSize, width, height, x, y, tapped)
 		oVec2(width,height),
 		oVec2(0,height)
 	},ccColor4(0x88000000),0,ccColor4(0x00000000))
-
-	drawNode:addChild(oLine(
+	node:addChild(drawNode)
+	
+	local face = CCNode()
+	face.anchorPoint = oVec2(0.5,0.5)
+	face.contentSize = CCSize(width,height)
+	face.position = oVec2(width*0.5,height*0.5)
+	face:addChild(node)
+	face:addChild(oLine(
 	{
 		oVec2(0,0),
 		oVec2(width,0),
 		oVec2(width,height),
 		oVec2(0,height),
 		oVec2(0,0)
-	},ccColor4(0xff00ffff)))
-
-	local face = CCNode()
-	face.anchorPoint = oVec2(0.5,0.5)
-	face.contentSize = CCSize(width,height)
-	face.position = oVec2(width*0.5,height*0.5)
-	face:addChild(drawNode)
+	},ccColor4()))
 	face:addChild(label)
 
 	local menuItem = CCMenuItem()
@@ -61,6 +62,7 @@ local function oButton(text, fontSize, width, height, x, y, tapped)
 			end
 		end)
 	menuItem.position = oVec2(x,y)
+	menuItem.color = ccColor3(0x00ffff)
 	return menuItem
 end
 

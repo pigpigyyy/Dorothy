@@ -146,7 +146,7 @@ local function oSettingPanel()
 		end
 		
 		if viewWidth < borderSize.width then deltaPos.x = 0 end
-		if viewHeight < borderSize.width then deltaPos.y = 0 end
+		if viewHeight < borderSize.height then deltaPos.y = 0 end
 
 		totalDelta = totalDelta + deltaPos
 
@@ -155,24 +155,25 @@ local function oSettingPanel()
 			node.position = node.position + deltaPos
 		end
 		
-		if not touching and (newPos.y < -padding*0.5 or newPos.y > moveY+padding*0.5) then
+		if not touching and (newPos.y < -padding*0.5 or newPos.y > moveY+padding*0.5 or newPos.x > padding*0.5 or newPos.x < moveX-padding*0.5) then
 			startReset()
 		end
 	end
 	view:addChild(menu)
 	
-	local function oSettingItem(name, x, y, tapped)
+	local function oSettingItem(name, x, y, enableFunc, disableFunc)
 		local menuItem = CCMenuItem()
 		menuItem.anchorPoint = oVec2(0,1)
 		menuItem.contentSize = CCSize(160,30)
 		menuItem.position = oVec2(x, y)
+		menuItem.enabled = false
 		
 		local label = CCLabelTTF(name,"Arial",14)
 		label.color = ccColor3(0xffffff)
 		label.position = oVec2(40,15)
 		label.texture.antiAlias = false
 		menuItem:addChild(label)
-		
+
 		label = CCLabelTTF("","Arial",14)
 		label.color = ccColor3(0xffffff)
 		label.position = oVec2(120,15)
@@ -194,7 +195,7 @@ local function oSettingPanel()
 		local _value = nil
 		
 		menuItem.setValue = function(self,value)
-			if value then
+			if value ~= nil then
 				if type(value) == "number" then
 					label.text = string.format("%.2f",value)
 				else
@@ -211,21 +212,46 @@ local function oSettingPanel()
 		menuItem.getValue = function(self)
 			return _value
 		end
-		
-		menuItem.select = function(self, var)
+
+		menuItem.setHighlighted = function(self, var)
 			border.visible = var
+			menuItem.cascadeOpacity = not var
 		end
-		
-		local selected = false
+
+		menuItem.selected = false
+		menuItem.select = function(self, var)
+			menuItem.selected = var
+			menuItem:setHighlighted(var)
+			if var then
+				if enableFunc then
+					enableFunc(menuItem)
+				end
+			else
+				if disableFunc then
+					disableFunc(menuItem)
+				end
+			end
+		end
 		
 		menuItem:registerTapHandler(
 			function(eventType,self)
 				if eventType == CCMenuItem.TapBegan then
 				elseif eventType == CCMenuItem.TapEnded then
 				elseif eventType == CCMenuItem.Tapped then
-					oEvent:send("SettingSelected",{menuItem,})
+					if enableFunc ~= nil and disableFunc ~= nil then
+						oEvent:send("SettingSelected",menuItem)
+					end
 				end
 			end)
+		
+		menuItem.setEnabled = function(self,enabled)
+			menuItem.enabled = enabled
+			if not enabled then menuItem:select(false) end
+		end
+	
+		menuItem.getEnabled = function(self)
+			return menuItem.enabled
+		end
 		
 		return menuItem
 	end
@@ -238,6 +264,7 @@ local function oSettingPanel()
 		self.opacity = 1.0
 	end
 	panel.hide = function(self)
+		self:stopAllActions()
 		self:runAction(opacity)
 	end
 
@@ -275,7 +302,7 @@ local function oSettingPanel()
 	panel:registerTouchHandler(
 		function(eventType, touch)
 			--touch=CCTouch
-			if touch.id ~= 0 then
+			if touch.id ~= 0 or oEditor.isPlaying then
 				return false
 			end
 			if eventType == CCTouch.Began then
@@ -319,95 +346,427 @@ local function oSettingPanel()
 		end
 	end)()
 	
+	local posItem = nil
+	local posNextItem = nil
+	local posXY = false
+	
+	local scaleItem = nil
+	local scaleNextItem = nil
+	local scaleXY = false
+	
+	local skewItem = nil
+	local skewNextItem = nil
+	local skewXY = false
+
+	local skipSelection = false
 	local keyItems =
 	{
-		oSettingItem("Time :",0,getPosY()),
-		oSettingItem("PosX :",0,getPosY()),
-		oSettingItem("PosY :",0,getPosY()),
-		oSettingItem("ScaleX :",0,getPosY()),
-		oSettingItem("ScaleY :",0,getPosY()),
-		oSettingItem("Rotation :",0,getPosY()),
-		oSettingItem("Opacity :",0,getPosY()),
-		oSettingItem("SkewX :",0,getPosY()),
-		oSettingItem("SkewY :",0,getPosY()),
-		oSettingItem("visible :",0,getPosY()),
-		oSettingItem("EaseP :",0,getPosY()),
-		oSettingItem("EaseS :",0,getPosY()),
-		oSettingItem("EaseK :",0,getPosY()),
-		oSettingItem("EaseR :",0,getPosY()),
-		oSettingItem("EaseO :",0,getPosY()),
+		Name = oSettingItem("Name :",0,getPosY()),
+		Time = oSettingItem("Time :",0,getPosY()),--1
+		PosX = oSettingItem("PosX :",0,getPosY(),
+			function(item)
+				if posItem and posItem ~= item then
+					if posXY then
+						oEditor.viewArea:stopEditPosXY()
+						posXY = false
+						posItem:setHighlighted(false)
+						return
+					else
+						oEditor.viewArea:stopEditPosY()
+						posXY = true
+						posItem:setHighlighted(true)
+					end
+					posNextItem = posItem
+				end
+				posItem = item
+				if posXY then
+					oEditor.viewArea:editPosXY()
+				else
+					oEditor.viewArea:editPosX()
+				end
+			end,
+			function(item)
+				if posItem == item then
+					if posXY then
+						posNextItem:setHighlighted(false)
+						oEditor.viewArea:stopEditPosXY()
+						posXY = false
+						posItem = nil
+						skipSelection = true
+					else
+						oEditor.viewArea:stopEditPosX()
+					end
+				end
+			end),--2
+		PosY = oSettingItem("PosY :",0,getPosY(),
+			function(item)
+				if posItem and posItem ~= item then
+					if posXY then
+						oEditor.viewArea:stopEditPosXY()
+						posXY = false
+						posItem:setHighlighted(false)
+						return
+					else
+						oEditor.viewArea:stopEditPosX()
+						posXY = true
+						posItem:setHighlighted(true)
+					end
+					posNextItem = posItem
+				end
+				posItem = item
+				if posXY then
+					oEditor.viewArea:editPosXY()
+				else
+					oEditor.viewArea:editPosY()
+				end
+			end,
+			function(item)
+				if posItem == item then
+					if posXY then
+						posNextItem:setHighlighted(false)
+						oEditor.viewArea:stopEditPosXY()
+						posXY = false
+						posItem = nil
+						skipSelection = true
+					else
+						oEditor.viewArea:stopEditPosY()
+					end
+				end
+			end),--3
+		ScaleX = oSettingItem("ScaleX :",0,getPosY(),
+			function(item)
+				if scaleItem and scaleItem ~= item then
+					if scaleXY then
+						oEditor.viewArea:stopEditScaleXY()
+						scaleXY = false
+						scaleItem:setHighlighted(false)
+						return
+					else
+						oEditor.viewArea:stopEditScaleY()
+						scaleXY = true
+						scaleItem:setHighlighted(true)
+					end
+					scaleNextItem = scaleItem
+				end
+				scaleItem = item
+				if scaleXY then
+					oEditor.viewArea:editScaleXY()
+				else
+					oEditor.viewArea:editScaleX()
+				end
+			end,
+			function(item)
+				if scaleItem == item then
+					if scaleXY then
+						scaleNextItem:setHighlighted(false)
+						oEditor.viewArea:stopEditScaleXY()
+						scaleXY = false
+						scaleItem = nil
+						skipSelection = true
+					else
+						oEditor.viewArea:stopEditScaleX()
+					end
+				end
+			end),--4
+		ScaleY = oSettingItem("ScaleY :",0,getPosY(),
+			function(item)
+				if scaleItem and scaleItem ~= item then
+					if scaleXY then
+						oEditor.viewArea:stopEditScaleXY()
+						scaleXY = false
+						scaleItem:setHighlighted(false)
+						return
+					else
+						oEditor.viewArea:stopEditScaleX()
+						scaleXY = true
+						scaleItem:setHighlighted(true)
+					end
+					scaleNextItem = scaleItem
+				end
+				scaleItem = item
+				if scaleXY then
+					oEditor.viewArea:editScaleXY()
+				else
+					oEditor.viewArea:editScaleY()
+				end
+			end,
+			function(item)
+				if scaleItem == item then
+					if scaleXY then
+						scaleNextItem:setHighlighted(false)
+						oEditor.viewArea:stopEditScaleXY()
+						scaleXY = false
+						scaleItem = nil
+						skipSelection = true
+					else
+						oEditor.viewArea:stopEditScaleY()
+					end
+				end
+			end),--5
+		Rotation = oSettingItem("Rotation :",0,getPosY(),--6
+			function()
+				oEditor.viewArea:editRot()
+			end,
+			function()
+				oEditor.viewArea:stopEditRot()
+			end),
+		Opacity = oSettingItem("Opacity :",0,getPosY(),
+			function()
+				oEditor.viewArea:editOpacity()
+			end,
+			function()
+				oEditor.viewArea:stopEditOpacity()
+			end),--7
+		SkewX = oSettingItem("SkewX :",0,getPosY(),
+			function(item)
+				if skewItem and skewItem ~= item then
+					if skewXY then
+						oEditor.viewArea:stopEditSkewXY()
+						skewXY = false
+						skewItem:setHighlighted(false)
+						return
+					else
+						oEditor.viewArea:stopEditSkewY()
+						skewXY = true
+						skewItem:setHighlighted(true)
+					end
+					skewNextItem = skewItem
+				end
+				skewItem = item
+				if skewXY then
+					oEditor.viewArea:editSkewXY()
+				else
+					oEditor.viewArea:editSkewX()
+				end
+			end,
+			function(item)
+				if skewItem == item then
+					if skewXY then
+						skewNextItem:setHighlighted(false)
+						oEditor.viewArea:stopEditSkewXY()
+						skewXY = false
+						skewItem = nil
+						skipSelection = true
+					else
+						oEditor.viewArea:stopEditSkewX()
+					end
+				end
+			end),--8
+		SkewY = oSettingItem("SkewY :",0,getPosY(),
+			function(item)
+				if skewItem and skewItem ~= item then
+					if skewXY then
+						oEditor.viewArea:stopEditSkewXY()
+						skewXY = false
+						skewItem:setHighlighted(false)
+						return
+					else
+						oEditor.viewArea:stopEditSkewX()
+						skewXY = true
+						skewItem:setHighlighted(true)
+					end
+					skewNextItem = skewItem
+				end
+				skewItem = item
+				if skewXY then
+					oEditor.viewArea:editSkewXY()
+				else
+					oEditor.viewArea:editSkewY()
+				end
+			end,
+			function(item)
+				if skewItem == item then
+					if skewXY then
+						skewNextItem:setHighlighted(false)
+						oEditor.viewArea:stopEditSkewXY()
+						skewXY = false
+						skewItem = nil
+						skipSelection = true
+					else
+						oEditor.viewArea:stopEditSkewY()
+					end
+				end
+			end),--9
+		Visible = oSettingItem("visible :",0,getPosY(),
+			function()
+				oEditor.viewArea:editVisible()
+			end,
+			function()
+				oEditor.viewArea:stopEditVisible()
+			end),--10
+		EaseP = oSettingItem("EaseP :",0,getPosY(),
+			function(item)
+				oEditor.viewArea:editEase(oKd.easePos,item)
+			end,
+			function()
+				oEditor.viewArea:stopEditEase()
+			end),--11
+		EaseS = oSettingItem("EaseS :",0,getPosY(),
+			function(item)
+				oEditor.viewArea:editEase(oKd.easeScale,item)
+			end,
+			function()
+				oEditor.viewArea:stopEditEase()
+			end),--12
+		EaseK = oSettingItem("EaseK :",0,getPosY(),
+			function(item)
+				oEditor.viewArea:editEase(oKd.easeSkew,item)
+			end,
+			function()
+				oEditor.viewArea:stopEditEase()
+			end),--13
+		EaseR = oSettingItem("EaseR :",0,getPosY(),
+			function(item)
+				oEditor.viewArea:editEase(oKd.easeRotation,item)
+			end,
+			function()
+				oEditor.viewArea:stopEditEase()
+			end),--14
+		EaseO = oSettingItem("EaseO :",0,getPosY(),
+			function(item)
+				oEditor.viewArea:editEase(oKd.easeOpacity,item)
+			end,
+			function()
+				oEditor.viewArea:stopEditEase()
+			end),--15
 	}
-		
-	for _,item in ipairs(keyItems) do
+	panel.items = keyItems
+
+	local keyCount = 0
+	for _,item in pairs(keyItems) do
 		menu:addChild(item)
+		keyCount = keyCount + 1
 	end
 
 	panel.updateItems = function(self)
 		initValues()
-		viewHeight = 30*#keyItems+20
+		viewHeight = 30*keyCount+20
 		viewWidth = borderSize.width
 		moveY = viewHeight-borderSize.height
 		moveX = borderSize.width-viewWidth
 	end
 	
-	panel.updateValues = function(self, pos)
-		if not pos then
-			for _,item in ipairs(keyItems) do
+	panel.updateValues = function(self,index)
+		if index == nil then
+			for _,item in pairs(keyItems) do
 				item:setValue(nil)
 			end
 			oEditor.keyIndex = nil
+			oEditor.currentFramePos = nil
 			return
 		end
-		if not oEditor.animationData then return end
-		local time = math.floor(pos+0.5)
-		local total = 0
-		local index = 1
-		for i = 2, #oEditor.animationData do
-			total = total + oEditor.animationData[i][oKd.duration]
-			if time >= math.floor(total*60+0.5) then
-				index = i
-			end
-		end
-		if oEditor.keyIndex and oEditor.keyIndex == index then
-			return
-		end
+		
 		local frame = oEditor.animationData[index]
-		keyItems[1]:setValue(time/60)
-		keyItems[2]:setValue(frame[oKd.x])
-		keyItems[3]:setValue(frame[oKd.y])
-		keyItems[4]:setValue(frame[oKd.scaleX])
-		keyItems[5]:setValue(frame[oKd.scaleY])
-		keyItems[6]:setValue(frame[oKd.rotation])
-		keyItems[7]:setValue(frame[oKd.opacity])
-		keyItems[8]:setValue(frame[oKd.skewX])
-		keyItems[9]:setValue(frame[oKd.skewY])
-		keyItems[10]:setValue(frame[oKd.visible])
-		keyItems[11]:setValue(frame[oKd.easePos])
-		keyItems[12]:setValue(frame[oKd.easeScale])
-		keyItems[13]:setValue(frame[oKd.easeSkew])
-		keyItems[14]:setValue(frame[oKd.easeRotation])
-		keyItems[15]:setValue(frame[oKd.easeOpacity])
-		oEditor.keyIndex = index
+		keyItems.Time:setValue(oEditor.currentFramePos/60)
+		keyItems.PosX:setValue(frame[oKd.x])
+		keyItems.PosY:setValue(frame[oKd.y])
+		keyItems.ScaleX:setValue(frame[oKd.scaleX])
+		keyItems.ScaleY:setValue(frame[oKd.scaleY])
+		keyItems.Rotation:setValue(frame[oKd.rotation])
+		keyItems.Opacity:setValue(frame[oKd.opacity])
+		keyItems.SkewX:setValue(frame[oKd.skewX])
+		keyItems.SkewY:setValue(frame[oKd.skewY])
+		keyItems.Visible:setValue(frame[oKd.visible])
+		keyItems.EaseP:setValue(oEditor.easeNames[frame[oKd.easePos]])
+		keyItems.EaseS:setValue(oEditor.easeNames[frame[oKd.easeScale]])
+		keyItems.EaseK:setValue(oEditor.easeNames[frame[oKd.easeSkew]])
+		keyItems.EaseR:setValue(oEditor.easeNames[frame[oKd.easeRotation]])
+		keyItems.EaseO:setValue(oEditor.easeNames[frame[oKd.easeOpacity]])
 	end
 	
+	panel.posListener = oListener("ControlBarPos",
+		function(pos)
+			if not oEditor.animationData or not oEditor.sprite then
+				for _,item in pairs(keyItems) do
+					item:setEnabled(false)
+				end
+				oEvent:send("SettingSelected",nil)
+				return
+			end
+			local total = 0
+			local index = 1
+			oEditor.currentFramePos = nil
+			for i = 2, #oEditor.animationData do
+				total = total + oEditor.animationData[i][oKd.duration]
+				local curPos = math.floor(total*60+0.5)
+				if pos >= curPos then
+					index = i
+					oEditor.currentFramePos = curPos
+				end
+			end
+
+			local enable = oEditor.currentFramePos ~= nil and oEditor.currentFramePos == pos
+			for _,item in pairs(keyItems) do
+				item:setEnabled(enable)
+			end
+			if not enable then
+				oEvent:send("SettingSelected",nil)
+			end
+
+			if oEditor.keyIndex and oEditor.keyIndex == index then
+				oEditor.sprite.visible = oEditor.animationData[index][oKd.visible]
+				return
+			end
+			panel:updateValues(index)
+			oEditor.keyIndex = index
+		end)
+
 	panel:updateItems()
-	
+
 	local selectedItem = nil
-	
 	panel.listener = oListener("SettingSelected",
-		function(args)
-			local menuItem = args[1]
+		function(menuItem)
+			if selectedItem and selectedItem == menuItem then
+				selectedItem:select(false)
+				skipSelection = false
+				selectedItem = nil
+				if posItem and not posXY then
+					posItem = nil
+				end
+				if scaleItem and not scaleXY then
+					scaleItem = nil
+				end
+				if skewItem and not skewXY then
+					skewItem = nil
+				end
+				return
+			end
 			if selectedItem then
 				selectedItem:select(false)
 			end
-			if selectedItem ~= menuItem then
-				menuItem:select(true)
-				selectedItem = menuItem
-			else
-				menuItem:select(false)
-				selectedItem = nil
+			if (selectedItem == keyItems.PosX or selectedItem == keyItems.PosY) and menuItem ~= keyItems.PosX and menuItem ~= keyItems.PosY then
+				skipSelection = false
+				posItem = nil
 			end
+			if (selectedItem == keyItems.ScaleX or selectedItem == keyItems.ScaleY) and menuItem ~= keyItems.ScaleX and menuItem ~= keyItems.ScaleY then
+				skipSelection = false
+				scaleItem = nil
+			end
+			if (selectedItem == keyItems.SkewX or selectedItem == keyItems.SkewY) and menuItem ~= keyItems.SkewX and menuItem ~= keyItems.SkewY then
+				skipSelection = false
+				skewItem = nil
+			end
+			if skipSelection then
+				skipSelection = false
+				selectedItem = nil
+				return
+			elseif menuItem then
+				menuItem:select(true)
+			end
+			selectedItem = menuItem
 		end)
+
+	panel.clearSelection = function(self)
+		for _,item in pairs(keyItems) do
+			item:select(false)
+		end
+		oEvent:send("SettingSelected",nil)
+	end
+	
+	panel.update = function(self)
+		local model = oEditor.viewArea:getModel()
+		oEditor.controlBar:setTime(model.time*model.duration)
+	end
 	
 	return panel
 end

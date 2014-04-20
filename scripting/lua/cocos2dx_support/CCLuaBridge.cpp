@@ -31,7 +31,7 @@ int        CCLuaBridge::s_newFunctionId = 0;
 
 CCLuaStack *CCLuaBridge::getStack(void)
 {
-    return CCLuaEngine::defaultEngine()->getLuaStack();
+    return CCLuaEngine::sharedEngine()->getLuaStack();
 }
 
 int CCLuaBridge::pushLuaFunctionById(int functionId)
