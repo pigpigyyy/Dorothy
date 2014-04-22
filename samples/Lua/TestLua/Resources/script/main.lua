@@ -111,6 +111,12 @@ oEditor.easeNames =
 oEditor.easeNames[0] = "Linear"
 oEditor.input = "Model/Input/"
 oEditor.output = "Model/Output/"
+oEditor.EDIT_NONE = 0
+oEditor.EDIT_SPRITE = 1
+oEditor.EDIT_ANIMTION = 2
+oEditor.EDIT_LOOK = 3
+oEditor.state = oEditor.EDIT_NONE
+oEditor.needSave = false
 
 local oViewArea = require("Script/oViewArea")
 local oEditMenu = require("Script/oEditMenu")
@@ -134,12 +140,6 @@ for key,item in pairs(controls) do
 	oEditor[key] = item
 end
 
-
-local oFileChooser = require("Script/oFileChooser")
-
-local chooser = oFileChooser()
-chooser:show()
-oEditor.scene:addChild(chooser)
 --[[
 local names = oCache.Clip:getNames("jixienv.clip")
 for i = 1,#names do

@@ -139,6 +139,7 @@ local function oViewArea()
 			model:pause()
 			model.time = time
 			oEditor.viewPanel:updateSprite(oEditor.data,model)
+			oEditor.editMenu:markEditButton(true)
 		end
 		return self._model
 	end

@@ -1,37 +1,51 @@
 local function oButton(text, fontSize, width, height, x, y,tapped)
 	local label = CCLabelTTF(text,"Arial",fontSize)
-	label.position = oVec2(width*0.5, height*0.5)
+	label.position = oVec2(width*0.5, height and height*0.5 or width*0.5)
 	label.texture.antiAlias = false
 
 	local node = CCNode()
 	node.cascadeColor = false
 	local drawNode = CCDrawNode()
-	drawNode:drawPolygon(
-	{
-		oVec2(0,0),
-		oVec2(width,0),
-		oVec2(width,height),
-		oVec2(0,height)
-	},ccColor4(0x88000000),0,ccColor4(0x00000000))
+	if not height then
+		drawNode:drawDot(oVec2(width*0.5,width*0.5),width*0.5,ccColor4(0x88000000))
+	else
+		drawNode:drawPolygon(
+		{
+			oVec2(0,0),
+			oVec2(width,0),
+			oVec2(width,height),
+			oVec2(0,height)
+		},ccColor4(0x88000000),0,ccColor4(0x00000000))
+	end
 	node:addChild(drawNode)
-	
+
 	local face = CCNode()
 	face.anchorPoint = oVec2(0.5,0.5)
-	face.contentSize = CCSize(width,height)
-	face.position = oVec2(width*0.5,height*0.5)
+	face.contentSize = CCSize(width,height and height or width)
+	face.position = oVec2(width*0.5,height and height*0.5 or width*0.5)
 	face:addChild(node)
-	face:addChild(oLine(
-	{
-		oVec2(0,0),
-		oVec2(width,0),
-		oVec2(width,height),
-		oVec2(0,height),
-		oVec2(0,0)
-	},ccColor4()))
+	if not height then
+		local vs = {}
+		local num = 20
+		for i = 0, num do
+			local angle = 2*math.pi*i/num
+			table.insert(vs,oVec2(width*0.5*math.cos(angle),width*0.5*math.sin(angle))+oVec2(width*0.5,width*0.5))
+		end
+		face:addChild(oLine(vs,ccColor4()))
+	else
+		face:addChild(oLine(
+		{
+			oVec2(0,0),
+			oVec2(width,0),
+			oVec2(width,height),
+			oVec2(0,height),
+			oVec2(0,0)
+		},ccColor4()))
+	end
 	face:addChild(label)
 
 	local menuItem = CCMenuItem()
-	menuItem.contentSize = CCSize(width,height)
+	menuItem.contentSize = CCSize(width,height and height or width)
 	menuItem.anchorPoint = oVec2(0.5,0.5)
 	menuItem:addChild(face)
 
@@ -61,6 +75,7 @@ local function oButton(text, fontSize, width, height, x, y,tapped)
 				end
 			end
 		end)
+	menuItem.tapped = tapped
 	menuItem.position = oVec2(x,y)
 	menuItem.color = ccColor3(0x00ffff)
 	return menuItem

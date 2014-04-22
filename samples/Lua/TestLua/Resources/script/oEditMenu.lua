@@ -1,26 +1,28 @@
 local oButton = require("Script/oButton")
+local oFileChooser = require("Script/oFileChooser")
 
 local function oEditMenu()
     local winSize = CCDirector.winSize
     local menu = CCMenu(false)
 	menu.anchorPoint = oVec2.zero
 	local frameCopy = nil
-	menu.items =
+	local items =
 	{
 		Edit = oButton("Edit",16,50,50,35,winSize.height-35,
 			function()
-				oEditor.controlBar:clearCursors()
-				local isBatchUsed = oEditor.data[oSd.isBatchUsed]
-				oEditor.data[oSd.isBatchUsed] = false
-				oCache.Model:loadData(oEditor.model, oEditor.data)
-				oEditor.data[oSd.isBatchUsed] = isBatchUsed
-				local model = oModel(oEditor.model)
-				model.look = oEditor.look
-				model.loop = oEditor.loop
-				--model.opacity = 0.3
-				oEditor.viewArea:setModel(model)
-				oEditor.viewPanel:updateImages(oEditor.data,model)
-				oEditor.controlBar:setTime(0)
+				oEditor.settingPanel:clearSelection()
+				if oEditor.needSave then
+					menu:markEditButton(false)
+					oCache.Model:loadData(oEditor.model,oEditor.data)
+					oCache.Model:save(oEditor.model,oEditor.model)
+					return
+				end
+				if oEditor.isPlaying then
+					menu.items.Play:tapped()
+				end
+				local chooser = oFileChooser()
+				chooser:show()
+				oEditor.scene:addChild(chooser)
 			end),
 		Fix = oButton("Fixed\nOff",16,50,50,35,winSize.height-95,
 			function(item)
@@ -47,7 +49,7 @@ local function oEditMenu()
 		New = oButton("New",16,50,50,35,95,
 			function()
 				local pos = oEditor.controlBar:getPos()
-				if oEditor.sprite and pos ~= oEditor.currentFramePos then
+				if oEditor.sprite and pos ~= oEditor.currentFramePos and not oEditor.spriteData[oSd.animationNames] then
 					local sprite = oEditor.sprite
 					local sp = oEditor.spriteData
 					local animationDef = oEditor.animationData
@@ -114,6 +116,7 @@ local function oEditMenu()
 					oEditor.controlBar:updateCursors()
 					oEditor.settingPanel:clearSelection()
 					oEditor.settingPanel:update()
+					menu:markEditButton(true)
 				end
 			end),
 		Delete = oButton("Delete",16,50,50,95,95,
@@ -147,6 +150,7 @@ local function oEditMenu()
 						oEditor.controlBar:updateCursors()
 						oEditor.settingPanel:clearSelection()
 						oEditor.settingPanel:update()
+						menu:markEditButton(true)
 					end
 				end
 			end),
@@ -223,6 +227,7 @@ local function oEditMenu()
 					oEditor.controlBar:updateCursors()
 					oEditor.settingPanel:clearSelection()
 					oEditor.settingPanel:update()
+					menu:markEditButton(true)
 					frameCopy = nil
 					menu.items.Copy.color = ccColor3(0x00ffff)
 				end
@@ -241,6 +246,7 @@ local function oEditMenu()
 					oEditor.controlBar:updateCursors()
 					oEditor.settingPanel:clearSelection()
 					oEditor.settingPanel:update()
+					menu:markEditButton(true)
 				end
 			end),
 		Loop = oButton("Once",16,50,50,winSize.width-205,155,
@@ -260,6 +266,7 @@ local function oEditMenu()
 		Play = oButton("Play",16,50,50,winSize.width-205,95,
 			function(item)
 				-- item = CCNode
+				if not oEditor.animation then return end
 				oEditor.settingPanel:clearSelection()
 				local model = oEditor.viewArea:getModel()
 				if model then
@@ -304,10 +311,70 @@ local function oEditMenu()
 				oEditor.viewArea:zoomReset()
 			end),
 	}
-	for _,item in pairs(menu.items) do
+	for _,item in pairs(items) do
 		menu:addChild(item)
 	end
+	menu.items = items
+	
+	menu.toStart = function(self)
+		local group = {
+			items.Fix,
+			items.New,
+			items.Delete,
+			items.Copy,
+			items.Paste,
+			items.Clear,
+			items.Loop,
+			items.Play
+		}
+		for i = 1,#group do
+			group[i].visible = false
+		end
+	end
 
+	menu.markEditButton = function(self,flag)
+		if oEditor.needSave == flag then
+			cclog("same"..tostring(flag))
+			return
+		end
+		local label = items.Edit.label
+		if flag then
+			cclog("S")
+			label.text = "Save"
+			label.texture.antiAlias = false
+		else
+			cclog("E")
+			label.text = "Edit"
+			label.texture.antiAlias = false
+		end
+		oEditor.needSave = flag
+	end
+
+	menu.startToAnimation = function(self)
+		local group = {
+			items.Fix,
+			items.New,
+			items.Delete,
+			items.Copy,
+			items.Paste,
+			items.Clear,
+			items.Play,
+			items.Loop
+		}
+		for i = 1,#group do
+			group[i].visible = true
+			group[i].opacity = 0
+			group[i]:runAction(
+				CCSequence(
+				{
+					CCDelay(i*0.1),
+					oOpacity(0.3,1)
+				}))
+		end
+		oEditor.state = oEditor.EDIT_ANIMATION
+	end
+	
+	menu:toStart()
     return menu
 end
 

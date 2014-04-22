@@ -1,6 +1,7 @@
 local function oSettingPanel()
 	local winSize = CCDirector.winSize
-	local borderSize = CCSize(160,200*winSize.height/600)
+	local borderSize = CCSize(160,200*(winSize.height-90)/510)
+	cclog(tostring(winSize.height))
 	local viewWidth = 0
 	local viewHeight = 0
 	local moveY = 0

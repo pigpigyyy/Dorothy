@@ -3,7 +3,9 @@ local oPacker = require("Script/oPacker")
 
 local function oFileChooser()
 	local winSize = CCDirector.winSize
-	local borderSize = CCSize(670,370)
+	local borderSize = CCSize(670,400)
+	local halfBW = borderSize.width*0.5
+	local halfBH = borderSize.height*0.5
 	local viewWidth = 0
 	local viewHeight = 0
 	local moveY = 0
@@ -41,10 +43,10 @@ local function oFileChooser()
 	local border = CCDrawNode()
 	border:drawPolygon(
 	{
-		oVec2(-335,-185),
-		oVec2(335,-185),
-		oVec2(335,185),
-		oVec2(-335,185)
+		oVec2(-halfBW,-halfBH),
+		oVec2(halfBW,-halfBH),
+		oVec2(halfBW,halfBH),
+		oVec2(-halfBW,halfBH)
 	},ccColor4(0xe5100000),0.5,ccColor4(0x88ffafaf))
 	border.position = oVec2(winSize.width*0.5,winSize.height*0.5)
 	border.scaleX = 0.3
@@ -55,10 +57,10 @@ local function oFileChooser()
 	local stencil = CCDrawNode()
 	stencil:drawPolygon(
 	{
-		oVec2(-335+1,-185+1),
-		oVec2(335-1,-185+1),
-		oVec2(335-1,185-1),
-		oVec2(-335+1,185-1)
+		oVec2(-halfBW+1,-halfBH+1),
+		oVec2(halfBW-1,-halfBH+1),
+		oVec2(halfBW-1,halfBH-1),
+		oVec2(-halfBW+1,halfBH-1)
 	},ccColor4(0xffffffff),0,ccColor4(0x00000000))
 
 	local view = CCClipNode(stencil)
@@ -296,6 +298,244 @@ local function oFileChooser()
 			return true
 		end, false, CCMenu.DefaultHandlerPriority-3, false)
 	
+
+	local function addClip(file)
+		menu:removeAllChildren()
+		oCache.Clip:load(oEditor.output..file)
+		local sprite = CCSprite(oEditor.output..file)
+		sprite.anchorPoint = oVec2(0,1)
+		sprite.position = oVec2(winSize.width*0.5-borderSize.width*0.5+10,winSize.height*0.5+borderSize.height*0.5-10)
+		sprite.opacity = 0
+		sprite:runAction(oOpacity(0.3,1))
+		menu:addChild(sprite)
+		local frame = oLine(
+		{
+			oVec2.zero,
+			oVec2(sprite.contentSize.width,0),
+			oVec2(sprite.contentSize.width,sprite.contentSize.height),
+			oVec2(0,sprite.contentSize.height),
+			oVec2.zero
+		},ccColor4(0x44ffffff))
+		local names = oCache.Clip:getNames(oEditor.output..file)
+		for i = 1,#names do
+			local sp = CCSprite(oEditor.output..file.."|"..names[i])
+			local rc = sp.textureRect
+			local line = oLine(
+			{
+				oVec2(rc.left,rc.bottom),
+				oVec2(rc.right,rc.bottom),
+				oVec2(rc.right,rc.up),
+				oVec2(rc.left,rc.up),
+				oVec2(rc.left,rc.bottom)
+			},ccColor4(0xffffffff))
+			frame:addChild(line)
+		end
+		frame.scaleY = -1
+		frame.positionY = sprite.contentSize.height
+		sprite:addChild(frame)
+					
+		initValues()
+		local yTo = sprite.contentSize.height+20
+		local xTo = sprite.contentSize.width+20
+		viewHeight = yTo < borderSize.height and borderSize.height or yTo
+		if yTo < borderSize.height then paddingY = 0 end
+		viewWidth = xTo < borderSize.width and borderSize.width or xTo
+		moveY = viewHeight-borderSize.height
+		if xTo < borderSize.width then
+			paddingX = 0
+			sprite.positionX = sprite.positionX+borderSize.width*0.5-sprite.contentSize.width*0.5
+		else
+			paddingX = 100
+		end
+		moveX = borderSize.width-viewWidth
+	end
+	
+	local function addImages(file)
+		menu:removeAllChildren()
+		local blocks = {}
+		local images = oContent:getDirEntries(oEditor.input..file,false)
+		for i = 1,#images do
+			local sp = CCSprite(oEditor.input..file.."/"..images[i])
+			sp.anchorPoint = oVec2.zero
+			local block =
+			{
+				w = sp.contentSize.width+4,
+				h = sp.contentSize.height+4,
+				sp = sp,
+				name = images[i]:sub(1,images[i]:find("%.")-1)
+			}
+			table.insert(blocks,block)
+		end
+
+		oPacker:fit(blocks)
+		local w = oPacker.root.w
+		local v = 2;while v < w do v = v*2	end
+		w = v
+		local h = oPacker.root.h
+		v = 2;while v < h do v = v*2 end
+		local dy = v - h
+		h = v
+		local frame = oLine(
+		{
+			oVec2.zero,
+			oVec2(w,0),
+			oVec2(w,h),
+			oVec2(0,h),
+			oVec2.zero
+		},ccColor4(0x44ffffff))
+
+		local node = CCNode()
+		node:addChild(frame)
+		
+		for n = 1, #blocks do
+			local block = blocks[n]
+			if block.fit then
+				block.fit.y = h-block.fit.y-block.h
+				local rect = CCRect(block.fit.x, block.fit.y, block.w, block.h)
+				local line = oLine(
+				{
+					oVec2(rect.left+2,rect.bottom+2),
+					oVec2(rect.right-2,rect.bottom+2),
+					oVec2(rect.right-2,rect.up-2),
+					oVec2(rect.left+2,rect.up-2),
+					oVec2(rect.left+2,rect.bottom+2)
+				},ccColor4())
+				frame:addChild(line)
+
+				block.sp.position = rect.origin+oVec2(2,2)
+				node:addChild(block.sp)
+			end
+		end
+						
+		local target = CCRenderTarget(w,h)
+		target:beginPaint(ccColor4(0))
+		frame.visible = false
+		target:draw(node)
+		frame.visible = true
+		target:endPaint()
+		target:save(oEditor.output..file..".png",CCImage.PNG)
+		local xml = "<A A=\""..file..".png\">"
+		for i = 1,#blocks do
+			local block = blocks[i]
+			xml = xml.."<B A=\""..block.name.."\" B=\""..tostring(block.fit.x+2)..","..tostring(h-block.fit.y-2-block.h+4)..","..tostring(block.w-4)..","..tostring(block.h-4).."\"/>"
+		end
+		xml = xml.."</A>"
+
+		local clipFile = oEditor.output..file..".clip"
+		local modelFile = oEditor.output..file..".model"
+		local texFile = oEditor.output..file..".png"
+		oContent:saveToFile(clipFile,xml)
+		oCache.Clip:update(clipFile,xml)
+		oCache.Model:unload(modelFile)
+		CCTextureCache:remove(texFile)
+		CCTextureCache:add(target,texFile)
+	
+		node.opacity = 0
+		node:runAction(oOpacity(0.3,1))
+		node.position = oVec2(winSize.width*0.5-borderSize.width*0.5+10,winSize.height*0.5-borderSize.height*0.5-h+borderSize.height-10)
+		menu:addChild(node)
+						
+		initValues()
+		local yTo = h+20
+		local xTo = w+20
+		viewHeight = yTo < borderSize.height and borderSize.height or yTo
+		if yTo < borderSize.height then paddingY = 0 end
+		viewWidth = xTo < borderSize.width and borderSize.width or xTo
+		moveY = viewHeight-borderSize.height
+		if xTo < borderSize.width then
+			paddingX = 0
+			node.positionX = node.positionX+borderSize.width*0.5-w*0.5
+		else
+			paddingX = 100
+		end
+		moveX = borderSize.width-viewWidth
+	end
+
+	local opMenu = CCMenu()
+	opMenu.contentSize = CCSize(130,60)
+	opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
+	opMenu.position = oVec2(winSize.width*0.5+borderSize.width*0.5-35,winSize.height*0.5+borderSize.height*0.5)
+	panel:addChild(opMenu)
+
+	local cancelButton = oButton("Cancel",17,60,false,
+		70,0,
+		function(item)
+			opMenu.enabled = false
+			panel:hide()
+			if item.editTarget then
+				oEditor.controlBar:clearCursors()
+				oEditor.model = oEditor.output..item.editTarget..".model"
+				oEditor.data = oCache.Model:getData(oEditor.model)
+
+				if oEditor.data then
+					local isBatchUsed = oEditor.data[oSd.isBatchUsed]
+					oEditor.data[oSd.isBatchUsed] = false
+					oCache.Model:loadData(oEditor.model, oEditor.data)
+					oEditor.data[oSd.isBatchUsed] = isBatchUsed
+				else
+					oEditor.data =
+					{
+						0.5,--anchorX
+						0.5,--anchorY
+						"",--clip
+						"",--name
+						1,--opacity
+						CCRect.zero,--rect
+						0,--rotation
+						1,--scaleX
+						1,--scaleY
+						0,--skewX
+						0,--skewY
+						0,--x
+						0,--y
+						true,--visible
+						{},--looks
+						{},--animationDefs
+						{},--children
+						true,--isFaceRight
+						false,--isBatchUsed
+						oEditor.output..item.editTarget..".clip",--clipFile
+						{},--keys
+						{},--animationNames
+						{}--lookNames
+					}
+					oCache.Model:loadData(oEditor.model, oEditor.data)
+				end
+
+				local model = oModel(oEditor.model)
+				oEditor.look = pairs(oEditor.data[oSd.lookNames])(oEditor.data[oSd.lookNames])
+				oEditor.animation = pairs(oEditor.data[oSd.animationNames])(oEditor.data[oSd.animationNames])
+				if oEditor.look then
+					model.look = oEditor.look
+				end
+				model.loop = oEditor.loop
+				oEditor.viewArea:setModel(model)
+				oEditor.viewPanel:updateImages(oEditor.data,model)
+				oEditor.controlBar:setTime(0)
+				
+				oEditor.editMenu:startToAnimation()
+			end
+		end)
+	cancelButton.anchorPoint = oVec2.zero
+	local btnBk = CCDrawNode()
+	btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
+	btnBk.position = oVec2(30,30)
+	cancelButton:addChild(btnBk,-1)
+	opMenu:addChild(cancelButton)
+
+	local updateButton = oButton("Update",17,60,false,
+		0,0,
+		function(item)
+			addImages(item.targetFile)
+		end)
+	updateButton.anchorPoint = oVec2.zero
+	btnBk = CCDrawNode()
+	btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
+	btnBk.position = oVec2(30,30)
+	updateButton:addChild(btnBk,-1)
+	updateButton.visible = false
+	opMenu:addChild(updateButton)
+
 	panel.updateItems = function(self)
 		initValues()
 		local dirs = oContent:getDirEntries(oEditor.input,true)
@@ -311,173 +551,50 @@ local function oFileChooser()
 				name = files[i]:sub(1,-6)
 			end
 			if name then
+				fileDict[name] = true
 				if not dirDict[name] then
-					fileDict[name] = true
 					table.insert(dirs,name)
 				end
 			end
 		end
-		menu:removeAllChildren()
 		local n = 0
 		local y = 0
 		for i = 1, #dirs do
 			if dirs[i] ~= "." and dirs[i] ~= ".." then
 				n = n+1
-				y = winSize.height*0.5+185-35-math.floor((n-1)/6)*60
+				y = winSize.height*0.5+halfBH-35-math.floor((n-1)/6)*60
 				local name = #dirs[i] > 10 and dirs[i]:sub(1,7).."..." or dirs[i]
 				local button = oButton(
 				name,
 				17,
 				100,50,
-				winSize.width*0.5-275+((n-1)%6)*110, y,
+				winSize.width*0.5-halfBW+60+((n-1)%6)*110, y,
 				function(item)
+					cancelButton.label.text = "Edit"
+					cancelButton.label.texture.antiAlias = false
 					menu:removeAllChildren()
 					if item.file:sub(-5,-1) == ".clip" then
-						oCache.Clip:load(oEditor.output..item.file)
-						local sprite = CCSprite(oEditor.output..item.file)
-						sprite.anchorPoint = oVec2(0,1)
-						sprite.position = oVec2(winSize.width*0.5-335+10,winSize.height-10)
-						sprite.opacity = 0
-						sprite:runAction(oOpacity(0.3,1))
-						menu:addChild(sprite)
-						local frame = oLine(
-						{
-							oVec2.zero,
-							oVec2(sprite.contentSize.width,0),
-							oVec2(sprite.contentSize.width,sprite.contentSize.height),
-							oVec2(0,sprite.contentSize.height),
-							oVec2.zero
-						},ccColor4(0x44ffffff))
-						local names = oCache.Clip:getNames(oEditor.output..item.file)
-						for i = 1,#names do
-							local sp = CCSprite(oEditor.output..item.file.."|"..names[i])
-							local rc = sp.textureRect
-							local line = oLine(
-							{
-								oVec2(rc.left,rc.bottom),
-								oVec2(rc.right,rc.bottom),
-								oVec2(rc.right,rc.up),
-								oVec2(rc.left,rc.up),
-								oVec2(rc.left,rc.bottom)
-							},ccColor4(0xffffffff))
-							frame:addChild(line)
-						end
-						frame.scaleY = -1
-						frame.positionY = sprite.contentSize.height
-						sprite:addChild(frame)
-					
-						initValues()
-						local yTo = sprite.contentSize.height+20
-						local xTo = sprite.contentSize.width+20
-						viewHeight = yTo < borderSize.height and borderSize.height or yTo
-						if yTo < borderSize.height then paddingY = 0 end
-						viewWidth = xTo < borderSize.width and borderSize.width or xTo
-						moveY = viewHeight-borderSize.height
-						if xTo < borderSize.width then
-							paddingX = 0
-							sprite.positionX = sprite.positionX+borderSize.width*0.5-sprite.contentSize.width*0.5
-						else
-							paddingX = 100
-						end
-						moveX = borderSize.width-viewWidth
+						cancelButton.editTarget = item.file:sub(1,-6)
+						addClip(item.file)
 					else
-						local blocks = {}
-						local images = oContent:getDirEntries(oEditor.input..item.file,false)
-						for i = 1,#images do
-							local sp = CCSprite(oEditor.input..item.file.."/"..images[i])
-							sp.anchorPoint = oVec2.zero
-							local block =
-							{
-								w = sp.contentSize.width+4,
-								h = sp.contentSize.height+4,
-								sp = sp,
-								name = images[i]:sub(1,images[i]:find("%.")-1)
-							}
-							table.insert(blocks,block)
-						end
-
-						oPacker:fit(blocks)
-						local w = oPacker.root.w
-						local v = 2;while v < w do v = v*2	end
-						w = v
-						local h = oPacker.root.h
-						v = 2;while v < h do v = v*2 end
-						local dy = v - h
-						h = v
-						local frame = oLine(
-						{
-							oVec2.zero,
-							oVec2(w,0),
-							oVec2(w,h),
-							oVec2(0,h),
-							oVec2.zero
-						},ccColor4(0x44ffffff))
-
-						local node = CCNode()
-						node:addChild(frame)
-
-						for n = 1, #blocks do
-							local block = blocks[n]
-							if block.fit then
-								block.fit.y = h-block.fit.y-block.h
-								local rect = CCRect(block.fit.x, block.fit.y, block.w, block.h)
-								local line = oLine(
-								{
-									oVec2(rect.left+2,rect.bottom+2),
-									oVec2(rect.right-2,rect.bottom+2),
-									oVec2(rect.right-2,rect.up-2),
-									oVec2(rect.left+2,rect.up-2),
-									oVec2(rect.left+2,rect.bottom+2)
-								},ccColor4())
-								frame:addChild(line)
-
-								block.sp.position = rect.origin+oVec2(2,2)
-								node:addChild(block.sp)
-							end
-						end
-						
-						local target = CCRenderTarget(w,h)
-						target:beginPaint(ccColor4(0))
-						frame.visible = false
-						target:draw(node)
-						frame.visible = true
-						target:endPaint()
-						target:save(oEditor.output..item.file..".png",CCImage.PNG)
-						local xml = "<A A=\""..item.file..".png\">"
-						for i = 1,#blocks do
-							local block = blocks[i]
-							xml = xml.."<B A=\""..block.name.."\" B=\""..tostring(block.fit.x+2)..","..tostring(h-block.fit.y-2-block.h+4)..","..tostring(block.w-4)..","..tostring(block.h-4).."\"/>"
-						end
-						xml = xml.."</A>"
-						oContent:saveToFile(oEditor.output..item.file..".clip",xml)
-						
-						node.position = oVec2(winSize.width*0.5-borderSize.width*0.5+10,winSize.height*0.5-borderSize.height*0.5-h+borderSize.height-10)
-						menu:addChild(node)
-						
-						initValues()
-						local yTo = h+20
-						local xTo = w+20
-						viewHeight = yTo < borderSize.height and borderSize.height or yTo
-						if yTo < borderSize.height then paddingY = 0 end
-						viewWidth = xTo < borderSize.width and borderSize.width or xTo
-						moveY = viewHeight-borderSize.height
-						if xTo < borderSize.width then
-							paddingX = 0
-							node.positionX = node.positionX+borderSize.width*0.5-w*0.5
+						cancelButton.editTarget = item.file
+						if fileDict[item.file] then
+							updateButton.targetFile = item.file
+							addClip(item.file..".clip")
+							updateButton.visible = true
 						else
-							paddingX = 100
+							addImages(item.file)
 						end
-						moveX = borderSize.width-viewWidth
 					end
 				end)
-				button.file = dirs[i]..(fileDict[dirs[i]] and ".clip" or "")
+				button.file = dirDict[dirs[i]] and dirs[i] or dirs[i]..".clip"
 				button.color = ccColor3(0xffffff)
 				button.enabled = false
 				button.opacity = 0
 				button:runAction(
 					CCSequence(
 					{
-						CCDelay(n*0.2),
+						CCDelay(n*0.1),
 						oOpacity(0.3,1),
 						CCCall(
 							function()
@@ -487,17 +604,8 @@ local function oFileChooser()
 				menu:addChild(button)
 			end
 		end
-
-		local button = oButton("Cancel",17,100,50,
-			610+winSize.width*0.5-335,
-			35+winSize.height*0.5-185,
-			function(item)
-				panel:hide()
-			end)
-		button.color = ccColor3(0xffffff)
-		menu:addChild(button)
 		
-		local yTo = winSize.height*0.5+185-y-35
+		local yTo = winSize.height*0.5+halfBH-y-35
 		viewHeight = yTo < borderSize.height and borderSize.height or yTo
 		viewWidth = borderSize.width
 		moveY = viewHeight-borderSize.height

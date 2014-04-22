@@ -1,6 +1,6 @@
 local function oViewPanel()
 	local winSize = CCDirector.winSize
-	local borderSize = CCSize(160,310*winSize.height/600)
+	local borderSize = CCSize(160,310*(winSize.height-90)/510)
 	local viewWidth = 0
 	local viewHeight = 0
 	local moveY = 0
@@ -169,7 +169,7 @@ local function oViewPanel()
 			end
 			deltaPos = newPos - totalDelta
 		end
-		
+
 		if viewWidth < borderSize.width then deltaPos.x = 0 end
 		if viewHeight < borderSize.height then deltaPos.y = 0 end
 
@@ -230,8 +230,22 @@ local function oViewPanel()
 			label.position = oVec2(size*0.5, size*0.5)
 			label.texture.antiAlias = false
 			menuItem:addChild(label)
-			menuItem.enabled = false
-			return menuItem
+		else
+			if clipStr ~= "" then
+				local sprite = CCSprite(clipStr)
+				local contentSize = sprite.contentSize
+				local scale = contentSize.width > contentSize.height and (size-2)/contentSize.width or (size-2)/contentSize.height
+				sprite.scaleX = scale
+				sprite.scaleY = scale
+				sprite.position = oVec2(size*0.5,size*0.5)
+				menuItem:addChild(sprite)
+			else
+				local label = CCLabelTTF("Empty","Arial",16)
+				label.color = ccColor3(0x00ffff)
+				label.position = oVec2(size*0.5, size*0.5)
+				label.texture.antiAlias = false
+				menuItem:addChild(label)
+			end
 		end
 
 		local isSelected = false
@@ -271,21 +285,6 @@ local function oViewPanel()
 				end
 			end)
 
-		if clipStr ~= "" then
-			local sprite = CCSprite(clipStr)
-			local contentSize = sprite.contentSize
-			local scale = contentSize.width > contentSize.height and (size-2)/contentSize.width or (size-2)/contentSize.height
-			sprite.scaleX = scale
-			sprite.scaleY = scale
-			sprite.position = oVec2(size*0.5,size*0.5)
-			menuItem:addChild(sprite)
-		else
-			local label = CCLabelTTF("Empty","Arial",16)
-			label.color = ccColor3(0x00ffff)
-			label.position = oVec2(size*0.5, size*0.5)
-			label.texture.antiAlias = false
-			menuItem:addChild(label)
-		end
 		return menuItem
 	end
 	
@@ -412,7 +411,9 @@ local function oViewPanel()
 		
 		local height, layer = visitSprite(data,indent,borderSize.height-indent,root)
 		viewHeight = -height+indent
+		if viewHeight < borderSize.height then viewHeight = borderSize.height end
 		viewWidth = layer*indent*2+size
+		if viewWidth < borderSize.width then viewWidth = borderSize.width end
 		moveY = viewHeight-borderSize.height
 		moveX = borderSize.width-viewWidth
 	end
@@ -477,10 +478,12 @@ local function oViewPanel()
 			local node = args[2]
 			local menuItem = args[3]
 			local aDefs = sp[oSd.animationDefs]
-			local aNames = oEditor.data[oSd.animationNames]
-			local animation = aDefs[aNames[oEditor.animation]+1]
 
-			oEditor.animationData = animation
+			if oEditor.animation then
+				local aNames = oEditor.data[oSd.animationNames]
+				local animation = aDefs[aNames[oEditor.animation]+1]
+				oEditor.animationData = animation
+			end
 
 			if selectedItem then
 				selectedItem:select(false)
