@@ -57,6 +57,7 @@ bool oEffectCache::load( const char* filename )
 	{
 		return false;
 	}
+	_path = oString::getFilePath(filename);
 	return _parser.parse(data, size);
 }
 bool oEffectCache::update(const char* content)
@@ -103,7 +104,7 @@ void oEffectCache::startElement( void *ctx, const char *name, const char **atts 
 	oCase::Effect:
 		{
 			int index;
-			const char* file;
+			string file;
 			for (int i = 0;atts[i] != nullptr;i++)
 			{
 				switch (atts[i][0])
@@ -112,11 +113,11 @@ void oEffectCache::startElement( void *ctx, const char *name, const char **atts 
 					index = atoi(atts[++i]);
 					break;
 				oCase::File:
-					file = atts[++i];
+					file = _path + atts[++i];
 					break;
 				}
 			}
-			_effects[index] = oOwnMake(new oEffectType(file));
+			_effects[index] = oOwnMake(new oEffectType(file.c_str()));
 		}
 		break;
 	}

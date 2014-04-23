@@ -1,306 +1,28 @@
 local oButton = require("Script/oButton")
 local oPacker = require("Script/oPacker")
+local oSelectionPanel = require("Script/oSelectionPanel")
 
 local function oFileChooser()
 	local winSize = CCDirector.winSize
-	local borderSize = CCSize(670,400)
+	local itemWidth = 120
+	local borderSize = CCSize((120+10)*5+10,370)
+	local panel = oSelectionPanel(borderSize)
+	local menu = panel.menu
+	local border = panel.border
 	local halfBW = borderSize.width*0.5
 	local halfBH = borderSize.height*0.5
-	local viewWidth = 0
-	local viewHeight = 0
-	local moveY = 0
-	local moveX = 0
-	local totalDelta = oVec2.zero
-	local paddingY = 200
-	local paddingX = 200
-	local startPos = oVec2.zero
-	local time = 0
-	local _s = oVec2.zero
-	local _v = oVec2.zero
-	local deltaMoveLength = 0
-	local function initValues()
-		viewWidth = 0
-		viewHeight = 0
-		moveY = 0
-		moveX = 0
-		totalDelta = oVec2.zero
-		startPos = oVec2.zero
-		time = 0
-		_s = oVec2.zero
-		_v = oVec2.zero
-		deltaMoveLength = 0
-	end
-	local panel = CCLayer()
-	panel.anchorPoint = oVec2.zero
-	panel.touchEnabled = true
-	panel.visible = false
-	local mask = CCLayer()
-	mask.anchorPoint = oVec2.zero
-	mask.touchEnabled = true
-	mask:registerTouchHandler(function()return true end,false,CCMenu.DefaultHandlerPriority-1,true)
-	panel:addChild(mask)
-
-	local border = CCDrawNode()
-	border:drawPolygon(
+	local background= CCDrawNode()
+	background:drawPolygon(
 	{
 		oVec2(-halfBW,-halfBH),
 		oVec2(halfBW,-halfBH),
 		oVec2(halfBW,halfBH),
 		oVec2(-halfBW,halfBH)
 	},ccColor4(0xe5100000),0.5,ccColor4(0x88ffafaf))
-	border.position = oVec2(winSize.width*0.5,winSize.height*0.5)
-	border.scaleX = 0.3
-	border.scaleY = 0.3
-	border.opacity = 0
-	panel:addChild(border)
-
-	local stencil = CCDrawNode()
-	stencil:drawPolygon(
-	{
-		oVec2(-halfBW+1,-halfBH+1),
-		oVec2(halfBW-1,-halfBH+1),
-		oVec2(halfBW-1,halfBH-1),
-		oVec2(-halfBW+1,halfBH-1)
-	},ccColor4(0xffffffff),0,ccColor4(0x00000000))
-
-	local view = CCClipNode(stencil)
-	border:addChild(view)
-
-	local menu = CCMenu(false)
-	menu.contentSize = CCSize(winSize.width,winSize.height)
-	menu.enabled = false
-	menu.touchPriority = CCMenu.DefaultHandlerPriority-2
-	menu.anchorPoint = oVec2(0,1)
-	menu.position = oVec2(-winSize.width*0.5,winSize.height*0.5)
-	
-	local easeStarEditAction = CCSequence(
-	{
-		CCSpawn(
-		{
-			oOpacity(0.3,1),
-			oScale(0.3,1,1,oEase.OutBack)
-		}),
-		CCCall(
-			function()
-				panel:updateItems()
-			end)
-	})
-	panel.show = function(self)
-		menu.enabled = true
-		panel.visible = true
-		mask.touchEnabled = true
-		border:stopAllActions()
-		border:runAction(easeStarEditAction)
-	end
-
-	local easeEndEditAction = CCSequence(
-	{
-		CCSpawn(
-		{
-			oOpacity(0.3,0),
-			oScale(0.3,0.3,0.3,oEase.InBack)
-		}),
-		CCCall(
-			function()
-				panel.visible = false
-				mask.touchEnabled = false
-				menu:removeAllChildren()
-			end)
-	})
-	panel.hide = function(self)
-		menu.enabled = false
-		border:stopAllActions()
-		border:runAction(easeEndEditAction)
-	end
-
-	local function updateReset(deltaTime)
-		local children = menu.children
-		if not children then return end
-
-		local xVal = nil
-		local yVal = nil
-		time = time + deltaTime
-		local t = time/4.0
-		if t > 1.0 then t = 1.0 end
-		if startPos.x > 0 then
-			xVal = totalDelta.x
-			totalDelta.x = oEase:func(oEase.OutExpo,t,startPos.x,0-startPos.x)
-			xVal = totalDelta.x - xVal
-		end
-		if startPos.x < moveX then
-			xVal = totalDelta.x
-			totalDelta.x = oEase:func(oEase.OutBack,t,startPos.x,moveX-startPos.x)
-			xVal = totalDelta.x - xVal
-		end
-		if startPos.y < 0 then
-			yVal = totalDelta.y
-			totalDelta.y = oEase:func(oEase.OutBack,t,startPos.y,0-startPos.y)
-			yVal = totalDelta.y - yVal
-		end
-		if startPos.y > moveY then
-			yVal = totalDelta.y
-			totalDelta.y = oEase:func(oEase.OutBack,t,startPos.y,moveY-startPos.y)
-			yVal = totalDelta.y - yVal
-		end
-		
-		for i = 1, children.count do
-			local node = tolua.cast(children:get(i), "CCNode")
-			node.position = node.position + oVec2(xVal and xVal or 0, yVal and yVal or 0)
-		end
-		
-		if t == 1.0 then
-			panel:unscheduleUpdate()
-		end
-	end
-
-	local function isReseting()
-		if totalDelta.x > 0 or totalDelta.x < moveX or totalDelta.y > moveY or totalDelta.y < 0 then
-			return true
-		end
-		return false
-	end
-
-	local function startReset()
-		startPos = totalDelta
-		time = 0
-		panel:scheduleUpdate(updateReset)
-	end
-
-	local function setOffset(deltaPos, touching)
-		local children = menu.children
-		if not children then return end
-
-		local newPos = totalDelta + deltaPos
-		
-		if touching then
-			if newPos.x > paddingX then
-				newPos.x = paddingX 
-			elseif newPos.x-moveX < -paddingX then
-				newPos.x = moveX-paddingX
-			end
-			if newPos.y < -paddingY then
-				newPos.y = -paddingY
-			elseif moveY-newPos.y < -paddingY then
-				newPos.y = moveY+paddingY
-			end
-			deltaPos = newPos - totalDelta
-			
-			local lenY = 0
-			local lenX = 0
-			if newPos.y < 0 then
-				lenY = -newPos.y/paddingY
-			elseif newPos.y > moveY then
-				lenY = (newPos.y-moveY)/paddingY
-			end
-			if newPos.x > 0 then
-				lenX = newPos.x/paddingX
-			elseif newPos.x < moveX then
-				lenX = (moveX-newPos.x)/paddingX
-			end
-			if lenY > 0 then
-				local v = 3*lenY
-				deltaPos.y = deltaPos.y / (v > 1 and v*v or 1)
-			end
-			if lenX > 0 then
-				local v = 3*lenX
-				deltaPos.x = deltaPos.x / (v > 1 and v*v or 1)
-			end
-		else
-			if newPos.x > paddingX then
-				newPos.x = paddingX
-			elseif newPos.x < moveX-paddingX then
-				newPos.x = moveX-paddingX
-			end
-			if newPos.y < -paddingY then
-				newPos.y = -paddingY
-			elseif newPos.y > moveY+paddingY then
-				newPos.y = moveY+paddingY
-			end
-			deltaPos = newPos - totalDelta
-		end
-		
-		if viewWidth < borderSize.width then deltaPos.x = 0 end
-		if viewHeight < borderSize.height then deltaPos.y = 0 end
-
-		totalDelta = totalDelta + deltaPos
-
-		for i = 1, children.count do
-			local node = tolua.cast(children:get(i), "CCNode")
-			node.position = node.position + deltaPos
-		end
-		
-		if not touching and (newPos.y < -paddingY*0.5 or newPos.y > moveY+paddingY*0.5 or newPos.x > paddingX*0.5 or newPos.x < moveX-paddingX*0.5) then
-			startReset()
-		end
-	end
-	view:addChild(menu)
-
-	local function updateSpeed(deltaTime)
-		if _s == oVec2.zero then
-			return
-		end
-		_v = _s / deltaTime
-		_s = oVec2.zero
-	end
-	local function updatePos(deltaTime)
-		local val = winSize.height*2
-		local a = oVec2(_v.x > 0 and -val or val,_v.y > 0 and -val or val)
-		
-		local xR = _v.x > 0
-		local yR = _v.y > 0
-		
-		_v = _v + a*deltaTime
-		if _v.x < 0 == xR then _v.x = 0;a.x = 0 end
-		if _v.y < 0 == yR then _v.y = 0;a.y = 0 end
-		
-		local ds = _v * deltaTime + a*(0.5*deltaTime*deltaTime)
-		setOffset(ds, false)
-		
-		if _v == oVec2.zero then
-			if isReseting() then
-				startReset()
-			else
-				panel:unscheduleUpdate()
-			end
-		end
-	end
-
-	panel:registerTouchHandler(
-		function(eventType, touch)
-			--touch=CCTouch
-			if touch.id ~= 0 then
-				return false
-			end
-			if eventType == CCTouch.Began then
-				if not CCRect(oVec2(winSize.width-borderSize.width,winSize.height-borderSize.height)*0.5, borderSize):containsPoint(panel:convertToNodeSpace(touch.location)) then
-					return false
-				end
-				deltaMoveLength = 0
-				menu.enabled = true
-				panel:scheduleUpdate(updateSpeed)
-			elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
-				menu.enabled = true
-				if isReseting() then
-					startReset()
-				else
-					if _v ~= oVec2.zero and deltaMoveLength > 20 then
-						panel:scheduleUpdate(updatePos)
-					end
-				end
-			elseif eventType == CCTouch.Moved then
-				deltaMoveLength = deltaMoveLength + touch.delta.length
-				_s = _s + touch.delta
-				if deltaMoveLength > 20 then
-					menu.enabled = false
-					setOffset(touch.delta, true)
-				end
-			end
-			return true
-		end, false, CCMenu.DefaultHandlerPriority-3, false)
-	
+	border:addChild(background,-1)
 
 	local function addClip(file)
-		menu:removeAllChildren()
+		panel:removeMenuItems()
 		oCache.Clip:load(oEditor.output..file)
 		local sprite = CCSprite(oEditor.output..file)
 		sprite.anchorPoint = oVec2(0,1)
@@ -333,25 +55,23 @@ local function oFileChooser()
 		frame.scaleY = -1
 		frame.positionY = sprite.contentSize.height
 		sprite:addChild(frame)
-					
-		initValues()
+
 		local yTo = sprite.contentSize.height+20
 		local xTo = sprite.contentSize.width+20
-		viewHeight = yTo < borderSize.height and borderSize.height or yTo
+		local viewHeight = yTo < borderSize.height and borderSize.height or yTo
+		local paddingY = 100
 		if yTo < borderSize.height then paddingY = 0 end
-		viewWidth = xTo < borderSize.width and borderSize.width or xTo
-		moveY = viewHeight-borderSize.height
+		local viewWidth = xTo < borderSize.width and borderSize.width or xTo
+		local paddingX = 100
 		if xTo < borderSize.width then
 			paddingX = 0
 			sprite.positionX = sprite.positionX+borderSize.width*0.5-sprite.contentSize.width*0.5
-		else
-			paddingX = 100
 		end
-		moveX = borderSize.width-viewWidth
+		panel:reset(viewWidth,viewHeight,paddingX,paddingY)
 	end
 	
 	local function addImages(file)
-		menu:removeAllChildren()
+		panel:removeMenuItems()
 		local blocks = {}
 		local images = oContent:getDirEntries(oEditor.input..file,false)
 		for i = 1,#images do
@@ -406,7 +126,7 @@ local function oFileChooser()
 				node:addChild(block.sp)
 			end
 		end
-						
+
 		local target = CCRenderTarget(w,h)
 		target:beginPaint(ccColor4(0))
 		frame.visible = false
@@ -434,21 +154,19 @@ local function oFileChooser()
 		node:runAction(oOpacity(0.3,1))
 		node.position = oVec2(winSize.width*0.5-borderSize.width*0.5+10,winSize.height*0.5-borderSize.height*0.5-h+borderSize.height-10)
 		menu:addChild(node)
-						
-		initValues()
+
 		local yTo = h+20
 		local xTo = w+20
-		viewHeight = yTo < borderSize.height and borderSize.height or yTo
+		local viewHeight = yTo < borderSize.height and borderSize.height or yTo
+		local paddingY = 100
 		if yTo < borderSize.height then paddingY = 0 end
-		viewWidth = xTo < borderSize.width and borderSize.width or xTo
-		moveY = viewHeight-borderSize.height
+		local viewWidth = xTo < borderSize.width and borderSize.width or xTo
+		local paddingX = 100
 		if xTo < borderSize.width then
 			paddingX = 0
 			node.positionX = node.positionX+borderSize.width*0.5-w*0.5
-		else
-			paddingX = 100
 		end
-		moveX = borderSize.width-viewWidth
+		panel:reset(viewWidth,viewHeight,paddingX,paddingY)
 	end
 
 	local opMenu = CCMenu()
@@ -513,7 +231,7 @@ local function oFileChooser()
 				oEditor.viewPanel:updateImages(oEditor.data,model)
 				oEditor.controlBar:setTime(0)
 				
-				oEditor.editMenu:startToAnimation()
+				oEditor.editMenu:toSprite()
 			end
 		end)
 	cancelButton.anchorPoint = oVec2.zero
@@ -536,8 +254,7 @@ local function oFileChooser()
 	updateButton.visible = false
 	opMenu:addChild(updateButton)
 
-	panel.updateItems = function(self)
-		initValues()
+	panel.init = function(self)
 		local dirs = oContent:getDirEntries(oEditor.input,true)
 		local files = oContent:getDirEntries(oEditor.output,false)
 		local dirDict = {}
@@ -562,13 +279,13 @@ local function oFileChooser()
 		for i = 1, #dirs do
 			if dirs[i] ~= "." and dirs[i] ~= ".." then
 				n = n+1
-				y = winSize.height*0.5+halfBH-35-math.floor((n-1)/6)*60
+				y = winSize.height*0.5+halfBH-35-math.floor((n-1)/5)*60
 				local name = #dirs[i] > 10 and dirs[i]:sub(1,7).."..." or dirs[i]
 				local button = oButton(
 				name,
 				17,
-				100,50,
-				winSize.width*0.5-halfBW+60+((n-1)%6)*110, y,
+				itemWidth,50,
+				winSize.width*0.5-halfBW+itemWidth*0.5+10+((n-1)%5)*(itemWidth+10), y,
 				function(item)
 					cancelButton.label.text = "Edit"
 					cancelButton.label.texture.antiAlias = false
@@ -594,8 +311,8 @@ local function oFileChooser()
 				button:runAction(
 					CCSequence(
 					{
-						CCDelay(n*0.1),
-						oOpacity(0.3,1),
+						CCDelay(n*0.05),
+						oOpacity(0.2,1),
 						CCCall(
 							function()
 								button.enabled = true
@@ -604,16 +321,15 @@ local function oFileChooser()
 				menu:addChild(button)
 			end
 		end
-		
-		local yTo = winSize.height*0.5+halfBH-y-35
-		viewHeight = yTo < borderSize.height and borderSize.height or yTo
-		viewWidth = borderSize.width
-		moveY = viewHeight-borderSize.height
-		moveX = borderSize.width-viewWidth
-		paddingX = 0
-		paddingY = 100
+
+		local yTo = winSize.height*0.5+halfBH-y+35
+		local viewHeight = yTo < borderSize.height and borderSize.height or yTo
+		local viewWidth = borderSize.width
+		local paddingX = 0
+		local paddingY = 100
+		panel:reset(viewWidth,viewHeight,paddingX,paddingY)
 	end
-	
+
 	return panel
 end
 

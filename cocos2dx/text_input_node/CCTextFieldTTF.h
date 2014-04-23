@@ -38,7 +38,7 @@ class CCTextFieldTTF;
  * @{
  */
 
-class CC_DLL CCTextFieldDelegate
+class CC_DLL CCTextFieldDelegate: public CCObject
 {
 public:
     /**
@@ -124,8 +124,8 @@ public:
     //////////////////////////////////////////////////////////////////////////
     // properties
     //////////////////////////////////////////////////////////////////////////
-    
-    CC_SYNTHESIZE(CCTextFieldDelegate *, m_pDelegate, Delegate);
+
+	CC_SYNTHESIZE_RETAIN(CCTextFieldDelegate *, m_pDelegate, Delegate);
     CC_SYNTHESIZE_READONLY(int, m_nCharCount, CharCount);
     virtual const ccColor3B& getColorSpaceHolder();
     virtual void setColorSpaceHolder(const ccColor3B& color);

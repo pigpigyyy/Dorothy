@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <math.h>
 
+TOLUA_API int tolua_pushccobject(lua_State* L, void* ptr, const char* type);
 /* Create metatable
     * Create and register new metatable
 */
@@ -131,15 +132,13 @@ static void mapinheritance (lua_State* L, const char* name, const char* base)
     if (base && *base)
         luaL_getmetatable(L,base);
     else {
-
         if (lua_getmetatable(L, -1)) { /* already has a mt, we don't overwrite it */
             lua_pop(L, 2);
             return;
-        };
-        luaL_getmetatable(L,"tolua_commonclass");
+		};
+		luaL_getmetatable(L, "tolua_class");
+		set_ubox(L);
     };
-
-    set_ubox(L);
 
     lua_setmetatable(L,-2);
     lua_pop(L,1);
@@ -157,7 +156,6 @@ static int tolua_bnd_type (lua_State* L)
 */
 static int tolua_bnd_cast (lua_State* L)
 {
-
     /* // old code
             void* v = tolua_tousertype(L,1,NULL);
             const char* s = tolua_tostring(L,2,NULL);
@@ -170,17 +168,52 @@ static int tolua_bnd_cast (lua_State* L)
 
     void* v;
     const char* s;
+	int can_cast = 0;
+	int ccobject_idx;
+	int start_idx;
+	int end_idx;
+	int base_idx;
+	int is_ccobject = 0;
     if (lua_islightuserdata(L, 1)) {
         v = tolua_touserdata(L, 1, NULL);
-    } else {
+    }
+	else {
         v = tolua_tousertype(L, 1, 0);
     };
 
     s = tolua_tostring(L,2,NULL);
-    if (v && s)
-        tolua_pushusertype(L,v,s);
-    else
-        lua_pushnil(L);
+	if (v && s)
+	{
+		lua_getmetatable(L, 1);
+		start_idx = lua_gettop(L);
+		luaL_getmetatable(L, "CCObject");
+		ccobject_idx = lua_gettop(L);
+		luaL_getmetatable(L, "tolua_class");
+		base_idx = lua_gettop(L);
+		luaL_getmetatable(L, s);
+		while (!lua_isnil(L, -1) && lua_equal(L, base_idx, -1) == 0)
+		{
+			if (lua_equal(L, ccobject_idx, -1) != 0)
+			{
+				is_ccobject = 1;
+			}
+			lua_getmetatable(L, -1);
+		}
+		end_idx = lua_gettop(L);
+		lua_pop(L, end_idx - start_idx + 1);
+		if (is_ccobject)
+		{
+			tolua_pushccobject(L, v, s);
+		}
+		else
+		{
+			tolua_pushusertype(L, v, s);
+		}
+	}
+	else
+	{
+		lua_pushnil(L);
+	}
     return 1;
 }
 
@@ -237,7 +270,6 @@ static int tolua_bnd_getpeer(lua_State* L) {
 #endif
 
 /* static int class_gc_event (lua_State* L); */
-
 TOLUA_API void tolua_open (lua_State* L)
 {
     int top = lua_gettop(L);
@@ -273,16 +305,11 @@ TOLUA_API void tolua_open (lua_State* L)
         lua_setmetatable(L, -2);  /* stack: string ubox */
         lua_rawset(L,LUA_REGISTRYINDEX);
         
-//        /* create object ptr -> class type mapping table */
-//        lua_pushstring(L, "tolua_ptr2type");
-//        lua_newtable(L);
-//        lua_rawset(L, LUA_REGISTRYINDEX);
-
         lua_pushstring(L,"tolua_super");
         lua_newtable(L);
         lua_rawset(L,LUA_REGISTRYINDEX);
 
-        tolua_newmetatable(L,"tolua_commonclass");
+		tolua_newmetatable(L, "tolua_class");
 
         tolua_module(L,NULL,0);
         tolua_beginmodule(L,NULL);

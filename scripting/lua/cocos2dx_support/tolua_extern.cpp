@@ -1,6 +1,7 @@
 extern "C"
 {
 	#include "tolua++.h"
+	#include "tolua_fix.h"
 }
 #include <stack>
 using std::stack;
@@ -46,3 +47,7 @@ extern "C" int tolua_collect_ccobject(lua_State* tolua_S)
 	return 0;
 }
 
+extern "C" int tolua_pushccobject(lua_State* L, void* ptr, const char* type)
+{
+	return toluafix_pushusertype_ccobject(L, ((CCObject*)ptr)->getObjectId(), (void*)ptr, type);
+}

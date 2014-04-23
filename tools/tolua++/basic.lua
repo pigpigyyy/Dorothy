@@ -157,7 +157,7 @@ local CCObjectTypes = {
 
 -- register CCObject types
 for i = 1, #CCObjectTypes do
-    _push_functions[CCObjectTypes[i]] = "toluafix_pushusertype_ccobject"
+    _push_functions[CCObjectTypes[i]] = "toluafix_push_ccobject"
 	_collect_functions[CCObjectTypes[i]] = "tolua_collect_ccobject"
 end
 
@@ -240,12 +240,6 @@ TOLUA_API int  tolua_Cocos2d_open (lua_State* tolua_S);]], [[]])
 
 	replace([[tolua_usertype(tolua_S,"LUA_FUNCTION");]], [[]])
 
-	replace([[toluafix_pushusertype_ccobject(tolua_S,(void*)tolua_ret]],
-        [[TOLUAFIX_PUSHUSERTYPE_CCOBJECT(tolua_S,tolua_ret]])
-	
-	replace([[toluafix_pushusertype_ccobject(tolua_S,(void*)]],
-		[[TOLUAFIX_PUSHUSERTYPE_CCOBJECT(tolua_S,]])
-	
 	replace([[unsigned int]], [[uint32]])
 	
 	replace([[unsigned char]], [[uint8]])

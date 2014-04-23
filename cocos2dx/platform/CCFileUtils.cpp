@@ -408,10 +408,7 @@ unsigned char* CCFileUtils::getFileData(const char* pszFileName, const char* psz
     
     if (! pBuffer)
     {
-        std::string msg = "Get data from file(";
-        msg.append(pszFileName).append(") failed!");
-        
-        CCLOG(msg.c_str());
+		CCLOG("Get data from file(%s) failed!", pszFileName);
     }
     return pBuffer;
 }

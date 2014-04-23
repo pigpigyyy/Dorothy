@@ -1,7 +1,6 @@
 local function oSettingPanel()
 	local winSize = CCDirector.winSize
 	local borderSize = CCSize(160,200*(winSize.height-90)/510)
-	cclog(tostring(winSize.height))
 	local viewWidth = 0
 	local viewHeight = 0
 	local moveY = 0
@@ -31,15 +30,24 @@ local function oSettingPanel()
 	panel.opacity = 0.3
 	panel.touchEnabled = true
 	panel.position = oVec2(winSize.width-170,70)
-	
+
 	local border = CCDrawNode()
 	border:drawPolygon(
 	{
-		oVec2(0,0),
+		oVec2.zero,
 		oVec2(borderSize.width,0),
 		oVec2(borderSize.width,borderSize.height),
 		oVec2(0,borderSize.height)
-	},ccColor4(0x88000000),0.5,ccColor4(0xffffffff))
+	},ccColor4(0x88000000),0,ccColor4(0))
+	border:addChild(
+		oLine(
+		{
+			oVec2.zero,
+			oVec2(borderSize.width,0),
+			oVec2(borderSize.width,borderSize.height),
+			oVec2(0,borderSize.height),
+			oVec2.zero
+		},ccColor4()))
 	panel:addChild(border)
 
 	local stencil = CCDrawNode()
@@ -196,7 +204,7 @@ local function oSettingPanel()
 		local _value = nil
 		
 		menuItem.setValue = function(self,value)
-			if value ~= nil then
+			if value ~= nil and value ~= "" then
 				if type(value) == "number" then
 					label.text = string.format("%.2f",value)
 				else
@@ -338,14 +346,15 @@ local function oSettingPanel()
 			return true
 		end, false, 0, true)
 	
-	local getPosY = (function()
+	local function genPosY()
 		local index = 0
 		return function()
 			local v = index
 			index = index + 1
 			return borderSize.height-10-30*v
 		end
-	end)()
+	end
+	local getPosY = genPosY()
 	
 	local posItem = nil
 	local posNextItem = nil
@@ -588,7 +597,7 @@ local function oSettingPanel()
 					end
 				end
 			end),--9
-		Visible = oSettingItem("visible :",0,getPosY(),
+		Visible = oSettingItem("Visible :",0,getPosY(),
 			function()
 				oEditor.viewArea:editVisible()
 			end,
@@ -632,6 +641,19 @@ local function oSettingPanel()
 			end),--15
 	}
 	panel.items = keyItems
+	
+	keyItems.AnchorX = oSettingItem("AnchorX :",0,keyItems.EaseP.positionY,
+			function(item)
+			end,
+			function()
+			end)
+	keyItems.AnchorY = oSettingItem("AnchorY :",0,keyItems.EaseS.positionY,
+			function(item)
+			end,
+			function()
+			end)
+	keyItems.AnchorX.visible = false
+	keyItems.AnchorY.visible = false
 
 	local keyCount = 0
 	for _,item in pairs(keyItems) do
@@ -641,7 +663,82 @@ local function oSettingPanel()
 
 	panel.updateItems = function(self)
 		initValues()
-		viewHeight = 30*keyCount+20
+		if oEditor.state == oEditor.EDIT_ANIMATION then
+			panel.position = oVec2(winSize.width-170,70)
+			local borderH = 200*(winSize.height-90)/510
+			border.scaleY = 1
+			stencil.scaleY = 1
+			borderSize.height = borderH
+			panel.contentSize = borderSize
+			keyItems.Time.visible = true
+			keyItems.EaseP.visible = true
+			keyItems.EaseS.visible = true
+			keyItems.EaseR.visible = true
+			keyItems.EaseK.visible = true
+			keyItems.EaseO.visible = true
+			keyItems.AnchorX.visible = false
+			keyItems.AnchorY.visible = false
+			local items = 
+			{
+				keyItems.Name,
+				keyItems.Time,
+				keyItems.PosX,
+				keyItems.PosY,
+				keyItems.ScaleX,
+				keyItems.ScaleY,
+				keyItems.Rotation,
+				keyItems.Opacity,
+				keyItems.SkewX,
+				keyItems.SkewY,
+				keyItems.Visible,
+				keyItems.EaseP,
+				keyItems.EaseS,
+				keyItems.EaseK,
+				keyItems.EaseR,
+				keyItems.EaseO
+			}
+			local posY = genPosY()
+			for i = 1,#items do
+				items[i].positionY = posY()
+			end
+			viewHeight = 30*(keyCount-2)+20
+		else
+			panel.position = oVec2(winSize.width-170,10)
+			local borderH = 200*(winSize.height-90)/510
+			local scale = (borderH+60)/borderH
+			border.scaleY = scale
+			stencil.scaleY = scale
+			borderSize.height = borderH+60
+			panel.contentSize = borderSize
+			keyItems.Time.visible = false
+			keyItems.EaseP.visible = false
+			keyItems.EaseS.visible = false
+			keyItems.EaseR.visible = false
+			keyItems.EaseK.visible = false
+			keyItems.EaseO.visible = false
+			keyItems.AnchorX.visible = true
+			keyItems.AnchorY.visible = true
+			local items =
+			{
+				keyItems.Name,
+				keyItems.AnchorX,
+				keyItems.AnchorY,
+				keyItems.PosX,
+				keyItems.PosY,
+				keyItems.ScaleX,
+				keyItems.ScaleY,
+				keyItems.Rotation,
+				keyItems.Opacity,
+				keyItems.SkewX,
+				keyItems.SkewY,
+				keyItems.Visible
+			}
+			local posY = genPosY()
+			for i = 1,#items do
+				items[i].positionY = posY()
+			end
+			viewHeight = 30*(keyCount-6)+20
+		end
 		viewWidth = borderSize.width
 		moveY = viewHeight-borderSize.height
 		moveX = borderSize.width-viewWidth
@@ -765,8 +862,23 @@ local function oSettingPanel()
 	end
 	
 	panel.update = function(self)
-		local model = oEditor.viewArea:getModel()
-		oEditor.controlBar:setTime(model.time*model.duration)
+		if oEditor.state == oEditor.EDIT_ANIMATION then
+			local model = oEditor.viewArea:getModel()
+			oEditor.controlBar:setTime(model.time*model.duration)
+		elseif oEditor.spriteData then
+			local sp = oEditor.spriteData
+			keyItems.AnchorX:setValue(sp[oSd.anchorX])
+			keyItems.AnchorY:setValue(sp[oSd.anchorY])
+			keyItems.PosX:setValue(sp[oSd.x])
+			keyItems.PosY:setValue(sp[oSd.y])
+			keyItems.ScaleX:setValue(sp[oSd.scaleX])
+			keyItems.ScaleY:setValue(sp[oSd.scaleY])
+			keyItems.Rotation:setValue(sp[oSd.rotation])
+			keyItems.Opacity:setValue(sp[oSd.opacity])
+			keyItems.SkewX:setValue(sp[oSd.skewX])
+			keyItems.SkewY:setValue(sp[oSd.skewY])
+			keyItems.Visible:setValue(sp[oSd.visible])
+		end
 	end
 	
 	return panel

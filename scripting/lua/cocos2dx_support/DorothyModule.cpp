@@ -49,10 +49,10 @@ void oSensor_addHandler(oSensor* sensor, uint32 flag, int nHandler)
 {
 	switch (flag)
 	{
-	case oSensorFlag::Enter:
+	case oSensorEvent::Enter:
 		sensor->bodyEnter += std::make_pair(oSensorHandlerWrapper(nHandler), &oSensorHandlerWrapper::call);
 		break;
-	case oSensorFlag::Leave:
+	case oSensorEvent::Leave:
 		sensor->bodyLeave += std::make_pair(oSensorHandlerWrapper(nHandler), &oSensorHandlerWrapper::call);
 		break;
 	}
@@ -61,10 +61,10 @@ void oSensor_removeHandler(oSensor* sensor, uint32 flag, int nHandler)
 {
 	switch (flag)
 	{
-	case oSensorFlag::Enter:
+	case oSensorEvent::Enter:
 		sensor->bodyEnter -= std::make_pair(oSensorHandlerWrapper(nHandler), &oSensorHandlerWrapper::call);
 		break;
-	case oSensorFlag::Leave:
+	case oSensorEvent::Leave:
 		sensor->bodyLeave -= std::make_pair(oSensorHandlerWrapper(nHandler), &oSensorHandlerWrapper::call);
 		break;
 	}
@@ -73,10 +73,10 @@ void oSensor_clearHandler(oSensor* sensor, uint32 flag)
 {
 	switch (flag)
 	{
-	case oSensorFlag::Enter:
+	case oSensorEvent::Enter:
 		sensor->bodyEnter.Clear();
 		break;
-	case oSensorFlag::Leave:
+	case oSensorEvent::Leave:
 		sensor->bodyLeave.Clear();
 		break;
 	}
@@ -470,9 +470,14 @@ CCTexture2D* CCTextureCache_add(CCTextureCache* self, CCRenderTexture* renderTex
 
 void __oModelCache_getData(const char* filename)
 {
-	oModelDef* modelDef = oSharedModelCache.load(filename);
 	CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
 	lua_State* L = stack->getLuaState();
+	oModelDef* modelDef = oSharedModelCache.load(filename);
+	if (!modelDef)
+	{
+		lua_pushnil(L);
+		return;
+	}
 	auto lua_setFloat = [&](int index, float value)
 	{
 		lua_pushnumber(L, value);
@@ -852,3 +857,55 @@ void CCCall::execute()
 		CCScriptEngine::sharedEngine()->executeFunction(_scriptHandler);
 	}
 }
+
+class oTextFieldDelegate: public CCTextFieldDelegate
+{
+public:
+	oRef<oScriptHandler> handler;
+	virtual bool onTextFieldAttachWithIME(CCTextFieldTTF * sender)
+	{
+		if (handler)
+		{
+			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
+			stack->pushCCObject(sender, "CCTextFieldTTF");
+			stack->pushInt(oTextFieldEvent::Attach);
+			return stack->executeFunctionByHandler(handler->get(), 2) == 0;
+		}
+		return false;
+	}
+	virtual bool onTextFieldDetachWithIME(CCTextFieldTTF * sender)
+	{
+		if (handler)
+		{
+			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
+			stack->pushCCObject(sender, "CCTextFieldTTF");
+			stack->pushInt(oTextFieldEvent::Detach);
+			return stack->executeFunctionByHandler(handler->get(), 2) == 0;
+		}
+		return false;
+	}
+	virtual bool onTextFieldInsertText(CCTextFieldTTF * sender, const char * text, int nLen)
+	{
+		if (handler)
+		{
+			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
+			stack->pushCCObject(sender, "CCTextFieldTTF");
+			stack->pushInt(oTextFieldEvent::Insert);
+			stack->pushString(text);
+			return stack->executeFunctionByHandler(handler->get(), 3) == 0;
+		}
+		return false;
+	}
+	virtual bool onTextFieldDeleteBackward(CCTextFieldTTF * sender, const char * delText, int nLen)
+	{
+		if (handler)
+		{
+			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
+			stack->pushCCObject(sender, "CCTextFieldTTF");
+			stack->pushInt(oTextFieldEvent::Delete);
+			stack->pushString(delText);
+			return stack->executeFunctionByHandler(handler->get(), 3) == 0;
+		}
+		return false;
+	}
+};

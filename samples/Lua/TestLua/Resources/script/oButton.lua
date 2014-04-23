@@ -1,8 +1,5 @@
 local function oButton(text, fontSize, width, height, x, y,tapped)
-	local label = CCLabelTTF(text,"Arial",fontSize)
-	label.position = oVec2(width*0.5, height and height*0.5 or width*0.5)
-	label.texture.antiAlias = false
-
+	
 	local node = CCNode()
 	node.cascadeColor = false
 	local drawNode = CCDrawNode()
@@ -42,17 +39,23 @@ local function oButton(text, fontSize, width, height, x, y,tapped)
 			oVec2(0,0)
 		},ccColor4()))
 	end
-	face:addChild(label)
 
 	local menuItem = CCMenuItem()
 	menuItem.contentSize = CCSize(width,height and height or width)
 	menuItem.anchorPoint = oVec2(0.5,0.5)
 	menuItem:addChild(face)
+	
+	if text ~= "" then
+		local label = CCLabelTTF(text,"Arial",fontSize)
+		label.position = oVec2(width*0.5, height and height*0.5 or width*0.5)
+		label.texture.antiAlias = false
+		face:addChild(label)
+		menuItem.label = label
+	end
 
 	face.opacity = 0.3
 	local scale = oScale(0.3,1.0,1.0,oEase.OutBack)
 	local fade = oOpacity(0.3,0.3,oEase.InExpo)
-	menuItem.label = label
 	menuItem:registerTapHandler(
 		function(eventType, item)
 			--item = CCMenuItem
@@ -75,6 +78,7 @@ local function oButton(text, fontSize, width, height, x, y,tapped)
 				end
 			end
 		end)
+	menuItem.face = face
 	menuItem.tapped = tapped
 	menuItem.position = oVec2(x,y)
 	menuItem.color = ccColor3(0x00ffff)

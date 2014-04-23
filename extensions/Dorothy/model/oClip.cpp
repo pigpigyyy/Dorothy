@@ -1,6 +1,7 @@
 #include "Dorothy/const/oDefine.h"
 #include "Dorothy/model/oClip.h"
 #include "Dorothy/misc/oContent.h"
+#include "Dorothy/misc/oHelper.h"
 #include "Dorothy/const/oXml.h"
 
 NS_DOROTHY_BEGIN
@@ -31,7 +32,7 @@ string oClipDef::toXml()
 {
 	ostringstream stream;
 	stream << '<' << char(oClipXml::Texture) << ' ' << char(oClipXml::File) << "=\""
-		<< textureFile << "\">";
+		<< oString::getFileName(textureFile) << "\">";
 	for (const auto& rect : rects)
 	{
 		stream << '<' << char(oClipXml::Clip) << ' '

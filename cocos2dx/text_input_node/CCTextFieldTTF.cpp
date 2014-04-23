@@ -63,6 +63,7 @@ CCTextFieldTTF::~CCTextFieldTTF()
 {
     CC_SAFE_DELETE(m_pInputText);
     CC_SAFE_DELETE(m_pPlaceHolder);
+	CC_SAFE_RELEASE(m_pDelegate);
 }
 
 //////////////////////////////////////////////////////////////////////////

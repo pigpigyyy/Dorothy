@@ -6,6 +6,7 @@
 #include "Dorothy/model/oModel.h"
 #include "Dorothy/model/oClip.h"
 #include "Dorothy/misc/oContent.h"
+#include "Dorothy/misc/oHelper.h"
 
 NS_DOROTHY_BEGIN
 
@@ -32,8 +33,8 @@ oSpriteDef::oSpriteDef():
 x(0.0f),
 y(0.0f),
 rotation(0.0f),
-anchorX(0.0f),
-anchorY(0.0f),
+anchorX(0.5f),
+anchorY(0.5f),
 scaleX(1.0f),
 scaleY(1.0f),
 skewX(0.0f),
@@ -73,6 +74,10 @@ string oSpriteDef::toXml()
 	{
 		stream << ' ' << char(oModelXml::Visible) << "=\"1\"";
 	}
+	if (!name.empty())
+	{
+		stream << ' ' << char(oModelXml::Name) << "=\"" << name << '\"';
+	}
 	if (!clip.empty())
 	{
 		stream << ' ' << char(oModelXml::Clip) << "=\"" << clip << '\"';
@@ -92,7 +97,7 @@ string oSpriteDef::toXml()
 	if (!looks.empty())
 	{
 		stream << '<' << char(oModelXml::Look) << ' '
-			<< char(oModelXml::Index) << "=\"";
+			<< char(oModelXml::Name) << "=\"";
 		int last = looks.size() - 1;
 		for (int i = 0;i < (int)looks.size();i++)
 		{
@@ -202,23 +207,27 @@ string oModelDef::toXml()
 {
 	ostringstream stream;
 	stream << '<' << char(oModelXml::Dorothy) << ' '
-		<< char(oModelXml::File) << "=\"" << _clip << "\" ";
+		<< char(oModelXml::File) << "=\"" << oString::getFileName(_clip) << "\" ";
 	if (_isFaceRight)
 	{
-		stream << char(oModelXml::FaceRight) << "=\"" << _clip << "\" ";
+		stream << char(oModelXml::FaceRight) << "=\"1\" ";
 	}
-	stream << "\">" << _root->toXml();
+	if (_isBatchUsed)
+	{
+		stream << char(oModelXml::UseBatch) << "=\"1\" ";
+	}
+	stream << '>' << _root->toXml();
 	for (const oIndexMap::value_type& item: _animationIndex)
 	{
 		stream << '<' << char(oModelXml::AnimationName) << ' '
 			<< char(oModelXml::Index) << "=\"" << item.second << "\" "
-			<< char(oModelXml::Name) << "=\"" << item.first.p << "\">";
+			<< char(oModelXml::Name) << "=\"" << item.first.p << "\"/>";
 	}
 	for (const oIndexMap::value_type& item: _lookIndex)
 	{
 		stream << '<' << char(oModelXml::LookName) << ' '
 			<< char(oModelXml::Index) << "=\"" << item.second << "\" "
-			<< char(oModelXml::Name) << "=\"" << item.first.p << "\">";
+			<< char(oModelXml::Name) << "=\"" << item.first.p << "\"/>";
 	}
 	stream << "</" << char(oModelXml::Dorothy) << '>';
 	return stream.str();

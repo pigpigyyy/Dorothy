@@ -84,6 +84,7 @@ private:
 	virtual void startElement( void *ctx, const char *name, const char **atts );
 	virtual void endElement( void *ctx, const char *name );
 	unordered_map<int, oOwn<oEffectType>> _effects;
+	string _path;
 	CCSAXParser _parser;
 };
 

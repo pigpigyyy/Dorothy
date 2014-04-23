@@ -1,7 +1,7 @@
 class oSensor: public CCObject
 {
-	#define oSensorFlag::Enter @ Enter
-	#define oSensorFlag::Leave @ Leave
+	#define oSensorEvent::Enter @ Enter
+	#define oSensorEvent::Leave @ Leave
 	tolua_property__bool bool enabled;
 	tolua_readonly tolua_property__common int tag;
 	tolua_readonly tolua_property__common oBody* owner;

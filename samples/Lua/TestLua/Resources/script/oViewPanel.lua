@@ -177,7 +177,12 @@ local function oViewPanel()
 
 		for i = 1, children.count do
 			local node = tolua.cast(children:get(i), "CCNode")
+			if node == nil then
+				cclog("nil")
+			else
+				
 			node.position = node.position + deltaPos
+			end
 		end
 		
 		if not touching and (newPos.y < -padding*0.5 or newPos.y > moveY+padding*0.5 or newPos.x > padding*0.5 or newPos.x < moveX-padding*0.5) then
@@ -488,7 +493,7 @@ local function oViewPanel()
 			if selectedItem then
 				selectedItem:select(false)
 			end
-			
+
 			if selectedItem ~= menuItem then
 				local withFrame = node.contentSize ~= CCSize.zero
 				if not outline then
@@ -502,7 +507,9 @@ local function oViewPanel()
 				oEditor.spriteData = sp
 				oEditor.settingPanel.items.Name:setValue(sp[oSd.name])
 				node:addChild(outline)
-				oEditor.controlBar:updateCursors()
+				if oEditor.state == oEditor.EDIT_ANIMATION then
+					oEditor.controlBar:updateCursors()
+				end
 				selectedItem = menuItem
 			else
 				selectedItem = nil
@@ -516,7 +523,7 @@ local function oViewPanel()
 			oEditor.settingPanel:clearSelection()
 			oEditor.settingPanel:update()
 		end)
-	
+
 	panel.updateSprite = function(self,data,model)
 		local function visitSprite(sp,node)
 			local child = tolua.cast(node,tolua.type(node) == "CCNode" and "CCNode" or "CCSprite")

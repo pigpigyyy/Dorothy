@@ -1,5 +1,6 @@
 local oButton = require("Script/oButton")
 local oFileChooser = require("Script/oFileChooser")
+local oSpriteChooser = require("Script/oSpriteChooser")
 
 local function oEditMenu()
     local winSize = CCDirector.winSize
@@ -310,13 +311,46 @@ local function oEditMenu()
 			function()
 				oEditor.viewArea:zoomReset()
 			end),
+		
+		Add = oButton("Add",16,50,50,winSize.width-205,95,
+			function(item)
+				-- item = CCNode
+				if oEditor.spriteData then
+					local chooser = oSpriteChooser()
+					chooser:show()
+					oEditor.scene:addChild(chooser)
+				end
+			end),
+		Remove = oButton("Delete",16,50,50,winSize.width-205,35,
+			function(item)
+				-- item = CCNode
+				if oEditor.spriteData then
+					
+				end
+				menu:toAnimation()
+			end)
 	}
 	for _,item in pairs(items) do
 		menu:addChild(item)
 	end
 	menu.items = items
-	
-	menu.toStart = function(self)
+
+	menu.markEditButton = function(self,flag)
+		if oEditor.needSave == flag then
+			return
+		end
+		local label = items.Edit.label
+		if flag then
+			label.text = "Save"
+			label.texture.antiAlias = false
+		else
+			label.text = "Edit"
+			label.texture.antiAlias = false
+		end
+		oEditor.needSave = flag
+	end
+
+	local function hideItems()
 		local group = {
 			items.Fix,
 			items.New,
@@ -325,32 +359,54 @@ local function oEditMenu()
 			items.Paste,
 			items.Clear,
 			items.Loop,
-			items.Play
+			items.Play,
+			items.Add,
+			items.Remove,
 		}
 		for i = 1,#group do
 			group[i].visible = false
 		end
+		oEditor.controlBar.visible = false
 	end
-
-	menu.markEditButton = function(self,flag)
-		if oEditor.needSave == flag then
-			cclog("same"..tostring(flag))
+	
+	menu.toStart = function(self)
+		if oEditor.state == oEditor.EDIT_START then
 			return
 		end
-		local label = items.Edit.label
-		if flag then
-			cclog("S")
-			label.text = "Save"
-			label.texture.antiAlias = false
-		else
-			cclog("E")
-			label.text = "Edit"
-			label.texture.antiAlias = false
-		end
-		oEditor.needSave = flag
+		hideItems()
+		oEditor.state = oEditor.EDIT_START
+		oEditor.settingPanel:updateItems()
 	end
 
-	menu.startToAnimation = function(self)
+	menu.toSprite = function(self)
+		if oEditor.state == oEditor.EDIT_SPRITE then
+			return
+		end
+		hideItems()
+		local group = {
+			items.Fix,
+			items.Add,
+			items.Remove,
+		}
+		for i = 1,#group do
+			group[i].visible = true
+			group[i].opacity = 0
+			group[i]:runAction(
+				CCSequence(
+				{
+					CCDelay(i*0.1),
+					oOpacity(0.3,1)
+				}))
+		end
+		oEditor.state = oEditor.EDIT_SPRITE
+		oEditor.settingPanel:updateItems()
+	end
+
+	menu.toAnimation = function(self)
+		if oEditor.state == oEditor.EDIT_ANIMATION then
+			return
+		end
+		hideItems()
 		local group = {
 			items.Fix,
 			items.New,
@@ -372,9 +428,16 @@ local function oEditMenu()
 				}))
 		end
 		oEditor.state = oEditor.EDIT_ANIMATION
+		oEditor.settingPanel:updateItems()
+		oEditor.controlBar.visible = true
+		oEditor.controlBar.opacity = 0
+		oEditor.controlBar:runAction(oOpacity(0.3,0.3))
 	end
-	
-	menu:toStart()
+
+	menu.loadListener = oListener("EditorLoaded",
+		function()
+			menu:toStart()
+		end)
     return menu
 end
 

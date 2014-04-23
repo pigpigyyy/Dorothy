@@ -19,7 +19,7 @@ const oVec2& oModel_getKey(oModel* model, uint32 index);
 
 void oWorld_query(oWorld* world, const CCRect& rect, int nHandler);
 
-ENUM_START(oSensorFlag)
+ENUM_START(oSensorEvent)
 {
 	Enter,
 	Leave
@@ -129,5 +129,14 @@ public:
 private:
 	int _scriptHandler;
 };
+
+ENUM_START(oTextFieldEvent)
+{
+	Attach,
+	Detach,
+	Insert,
+	Delete
+}
+ENUM_END
 
 #endif // __DOROTHY_MODULE_H__

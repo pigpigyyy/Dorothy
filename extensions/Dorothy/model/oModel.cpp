@@ -58,7 +58,10 @@ bool oModel::init()
 	oModel::setupCallback();
 	this->addChild(_root);
 	//Make model`s none look applied below.
-	_root->setVisible(false);
+	if (!_looks.empty())
+	{
+		_root->setVisible(false);
+	}
 	return true;
 }
 
@@ -70,6 +73,7 @@ void oModel::addLook( int index, CCNode* node )
 
 void oModel::setLook( int index )
 {
+	if (_looks.empty()) return;
 	if (index < oLook::None || index >= (int)_looks.size())
 	{
 		if (_looks.empty() && oLook::None < index && _currentLook == oLook::None)

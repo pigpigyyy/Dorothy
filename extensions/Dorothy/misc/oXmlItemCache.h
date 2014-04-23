@@ -30,12 +30,16 @@ public:
 			this->beforeParse(filename);
 			unsigned long size;
 			auto data = oSharedContent.loadFile(filename, size);
-			_parser.parse(data, size);
-			this->afterParse(filename);
-			_dict[filename] = _item;
-			T* item = _item;
-			_item = nullptr;
-			return item;
+			if (data)
+			{
+				_parser.parse(data, size);
+				this->afterParse(filename);
+				_dict[filename] = _item;
+				T* item = _item;
+				_item = nullptr;
+				return item;
+			}
+			return nullptr;
 		}
 	}
 	T* update(const char* name, const char* content)

@@ -786,7 +786,7 @@ local function oViewArea()
 		end
 	end
 	
-	-- viaible
+	-- visible
 	local visibleEditor = CCMenu()
 	visibleEditor.contentSize = CCSize(50,50)
 	visibleEditor.anchorPoint = oVec2.zero

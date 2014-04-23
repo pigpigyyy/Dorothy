@@ -53,7 +53,7 @@ TOLUA_API void tolua_pushusertype (lua_State* L, void* value, const char* type)
     if (value == NULL)
         lua_pushnil(L);
     else
-    {        
+    {
         luaL_getmetatable(L, type);                                 /* stack: mt */
         if (lua_isnil(L, -1)) { /* NOT FOUND metatable */
             lua_pop(L, 1);
@@ -72,7 +72,7 @@ TOLUA_API void tolua_pushusertype (lua_State* L, void* value, const char* type)
         
         if (lua_isnil(L,-1))
         {
-            lua_pop(L,1);                                           /* stack: mt ubox */
+            lua_pop(L,1);                                   /* stack: mt ubox */
             lua_pushlightuserdata(L,value);
             *(void**)lua_newuserdata(L,sizeof(void *)) = value;     /* stack: mt ubox value newud */
             lua_pushvalue(L,-1);                                    /* stack: mt ubox value newud newud */

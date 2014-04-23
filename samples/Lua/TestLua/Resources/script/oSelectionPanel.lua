@@ -254,7 +254,9 @@ local function oSelectionPanel(borderSize)
 				}),
 				CCCall(
 					function()
-						panel:init()
+						if panel.init then
+							panel:init()
+						end
 					end)
 			}))
 	end
@@ -272,13 +274,14 @@ local function oSelectionPanel(borderSize)
 				}),
 				CCCall(
 					function()
-						panel.visible = false
-						mask.touchEnabled = false
-						menu:removeAllChildren()
+						panel:removeMenuItems()
+						panel:unregisterTouchHandler()
+						panel:unscheduleUpdate()
+						panel.parent:removeChild(panel)
 					end)
 			}))
 	end
-
+	
 	panel.reset = function(self,width,height,padX,padY)
 		viewWidth = width
 		viewHeight = height
@@ -292,6 +295,20 @@ local function oSelectionPanel(borderSize)
 		_s = oVec2.zero
 		_v = oVec2.zero
 		deltaMoveLength = 0
+	end
+
+	panel.removeMenuItems = function(self)
+		local children = menu.children
+		--children=CCArray
+		if children then
+			for i = 1,children.count do
+				if tolua.type(children:get(i)) == "CCMenuItem" then
+					local item = tolua.cast(children:get(i),"CCMenuItem")
+					item:unregisterTapHandler()
+				end
+			end
+		end
+		menu:removeAllChildren()
 	end
 	
 	return panel

@@ -32,7 +32,7 @@ string oKeyFrameDef::toXml()
 	{
 		stream << ' ' << char(oModelXml::Duration) << "=\"" << duration << '\"';
 	}
-	if (x != 0.0f && y != 0.0f)
+	if (x != 0.0f || y != 0.0f)
 	{
 		stream << ' ' << char(oModelXml::Position) << "=\"" << x << ',' << y << '\"';
 	}

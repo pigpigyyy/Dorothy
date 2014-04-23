@@ -62,9 +62,9 @@ oFd =
 }
 
 oEditor = {}
-oEditor.model = "Model/Output/jixienv.model"
-oEditor.look = "happy"
-oEditor.animation = "walk"
+oEditor.model = nil
+oEditor.look = nil
+oEditor.animation = nil
 oEditor.animationData = nil
 oEditor.keyIndex = nil
 oEditor.currentFramePos = nil
@@ -73,7 +73,7 @@ oEditor.spriteData = nil
 oEditor.dirty = false
 oEditor.loop = false
 oEditor.isPlaying = false
-oEditor.data = oCache.Model:getData(oEditor.model)
+oEditor.data = nil
 oEditor.scene = CCScene()
 oEditor.easeNames =
 {
@@ -112,9 +112,10 @@ oEditor.easeNames[0] = "Linear"
 oEditor.input = "Model/Input/"
 oEditor.output = "Model/Output/"
 oEditor.EDIT_NONE = 0
-oEditor.EDIT_SPRITE = 1
-oEditor.EDIT_ANIMTION = 2
-oEditor.EDIT_LOOK = 3
+oEditor.EDIT_START = 1
+oEditor.EDIT_SPRITE = 2
+oEditor.EDIT_ANIMTION = 3
+oEditor.EDIT_LOOK = 4
 oEditor.state = oEditor.EDIT_NONE
 oEditor.needSave = false
 
@@ -139,6 +140,32 @@ for key,item in pairs(controls) do
 	oEditor.scene:addChild(item)
 	oEditor[key] = item
 end
+oEvent:send("EditorLoaded")
+
+local winSize = CCDirector.winSize
+local textField = CCTextFieldTTF("Tap To Input","Arial",20)
+textField.anchorPoint = oVec2.zero
+textField.horizontalAlignment = CCTextAlign.HRight
+cclog(tostring(textField.contentSize.width))
+cclog(tostring(CCLabelTTF("Tap To Input","Arial",20).contentSize.width))
+textField:attachWithIME()
+textField.position = oVec2(winSize.width*0.5,winSize.height*0.5)
+oEditor.scene:addChild(textField)
+local cursor = oLine({oVec2(0,0),oVec2(0,20)},ccColor4(0xff00ffff))
+cursor:runAction(
+	CCRepeatForever(
+		CCSequence(
+		{
+			CCShow(),
+			CCDelay(0.5),
+			CCHide(),
+			CCDelay(0.5)
+		})))
+textField:scheduleUpdate(
+	function()
+		cursor.position = textField.position + oVec2(textField.contentSize.width,0)
+	end)
+oEditor.scene:addChild(cursor)
 
 --[[
 local names = oCache.Clip:getNames("jixienv.clip")
