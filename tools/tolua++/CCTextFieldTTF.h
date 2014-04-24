@@ -1,13 +1,22 @@
 class CCTextFieldTTF: public CCLabelTTF
 {
+	#define oTextFieldEvent::Attach @ Attach
+	#define oTextFieldEvent::Detach @ Detach
+	#define oTextFieldEvent::Insert @ Insert
+	#define oTextFieldEvent::Inserted @ Inserted
+	#define oTextFieldEvent::Delete @ Delete
+	#define oTextFieldEvent::Deleted @ Deleted
+
 	bool attachWithIME();
 	bool detachWithIME();
 
-	tolua_readonly tolua_property__common int charCount;
 	tolua_property__common ccColor3B colorSpaceHolder;
 	tolua_property__common char* text;
 	tolua_property__common char* placeHolder;
 
-	static CCTextFieldTTF* textFieldWithPlaceHolder @ create(const char* placeholder, const char* fontName, float fontSize);
-	static CCTextFieldTTF* textFieldWithPlaceHolder @ create(const char* placeholder, CCSize dimensions, CCTextAlignment alignment, const char* fontName, float fontSize);
+	tolua_outside void CCTextFieldTTF_registerInputHandler @ registerInputHandler(LUA_FUNCTION handler);
+	
+	tolua_outside void CCTextFieldTTF_unregisterInputHandler @ unregisterInputHandler();
+
+	static tolua_outside CCTextFieldTTF* CCTextFieldTTF_create @ create(const char* placeholder, const char* fontName, float fontSize);
 };

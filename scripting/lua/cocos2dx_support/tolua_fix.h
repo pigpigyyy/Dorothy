@@ -12,11 +12,6 @@ extern "C"
 #define TOLUA_REFID_FUNCTION_MAPPING "tolua_functions"
 
 TOLUA_API void toluafix_open(lua_State* L);
-TOLUA_API int toluafix_pushusertype_ccobject(lua_State* L,
-                                             int refid,
-                                             void* ptr,
-                                             const char* type);
-TOLUA_API int toluafix_remove_ccobject_by_refid(lua_State* L, int refid);
 TOLUA_API int toluafix_ref_function(lua_State* L, int lo, int def);
 TOLUA_API void toluafix_get_function_by_refid(lua_State* L, int refid);
 TOLUA_API void toluafix_remove_function_by_refid(lua_State* L, int refid);
@@ -28,9 +23,5 @@ TOLUA_API void toluafix_stack_dump(lua_State* L, const char* label);
 #ifdef __cplusplus
 } // extern "C"
 #endif
-
-#define toluafix_push_ccobject(L, ptr, type) \
-	if (ptr) toluafix_pushusertype_ccobject(L, ((CCObject*)ptr)->getObjectId(), (void*)ptr, type); \
-	else lua_pushnil(L)
 
 #endif // __TOLUA_FIX_H_

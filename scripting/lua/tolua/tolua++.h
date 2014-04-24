@@ -115,6 +115,7 @@ TOLUA_API void tolua_pushfieldnumber (lua_State* L, int lo, int index, lua_Numbe
 TOLUA_API void tolua_pushfieldstring (lua_State* L, int lo, int index, const char* v);
 TOLUA_API void tolua_pushfielduserdata (lua_State* L, int lo, int index, void* v);
 TOLUA_API void tolua_pushfieldusertype (lua_State* L, int lo, int index, void* v, const char* type);
+TOLUA_API void tolua_pushccobject(lua_State* L, void* ptr, const char* type);
 
 TOLUA_API lua_Number tolua_tonumber (lua_State* L, int narg, lua_Number def);
 TOLUA_API const char* tolua_tostring (lua_State* L, int narg, const char* def);
@@ -133,7 +134,6 @@ TOLUA_API void tolua_dobuffer(lua_State* L, char* B, unsigned int size, const ch
 
 TOLUA_API int class_gc_event (lua_State* L);
 
-TOLUA_API void tolua_register_ccobject_gc(void* ptr);
 TOLUA_API int tolua_collect_ccobject(lua_State* tolua_S);
 
 #ifdef __cplusplus

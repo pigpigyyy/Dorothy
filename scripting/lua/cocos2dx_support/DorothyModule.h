@@ -135,8 +135,13 @@ ENUM_START(oTextFieldEvent)
 	Attach,
 	Detach,
 	Insert,
-	Delete
+	Inserted,
+	Delete,
+	Deleted
 }
 ENUM_END
+CCTextFieldTTF* CCTextFieldTTF_create(const char* placeholder, const char* fontName, float fontSize);
+void CCTextFieldTTF_registerInputHandler(CCTextFieldTTF* textField, int handler);
+void CCTextFieldTTF_unregisterInputHandler(CCTextFieldTTF* textField);
 
 #endif // __DOROTHY_MODULE_H__

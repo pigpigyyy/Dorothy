@@ -21,7 +21,6 @@
 #include <stdlib.h>
 #include <math.h>
 
-TOLUA_API int tolua_pushccobject(lua_State* L, void* ptr, const char* type);
 /* Create metatable
     * Create and register new metatable
 */
@@ -156,64 +155,78 @@ static int tolua_bnd_type (lua_State* L)
 */
 static int tolua_bnd_cast (lua_State* L)
 {
-    /* // old code
-            void* v = tolua_tousertype(L,1,NULL);
-            const char* s = tolua_tostring(L,2,NULL);
-            if (v && s)
-             tolua_pushusertype(L,v,s);
-            else
-             lua_pushnil(L);
-            return 1;
-    */
-
     void* v;
     const char* s;
-	int can_cast = 0;
 	int ccobject_idx;
+	int target_idx;
 	int start_idx;
 	int end_idx;
 	int base_idx;
+	int can_cast = 0;
 	int is_ccobject = 0;
-    if (lua_islightuserdata(L, 1)) {
+    if (lua_islightuserdata(L, 1))
+	{
         v = tolua_touserdata(L, 1, NULL);
     }
-	else {
+	else
+	{
         v = tolua_tousertype(L, 1, 0);
     };
-
     s = tolua_tostring(L,2,NULL);
 	if (v && s)
 	{
 		lua_getmetatable(L, 1);
 		start_idx = lua_gettop(L);
-		luaL_getmetatable(L, "CCObject");
-		ccobject_idx = lua_gettop(L);
 		luaL_getmetatable(L, "tolua_class");
 		base_idx = lua_gettop(L);
+		luaL_getmetatable(L, "CCObject");
+		ccobject_idx = lua_gettop(L);
 		luaL_getmetatable(L, s);
-		while (!lua_isnil(L, -1) && lua_equal(L, base_idx, -1) == 0)
+		target_idx = lua_gettop(L);
+		while (!lua_isnil(L, -1) && lua_rawequal(L, base_idx, -1) == 0)
 		{
-			if (lua_equal(L, ccobject_idx, -1) != 0)
+			if (lua_rawequal(L, start_idx, -1) != 0)
+			{
+				can_cast = 1;
+			}
+			if (lua_rawequal(L, ccobject_idx, -1) != 0)
 			{
 				is_ccobject = 1;
+				break;
 			}
 			lua_getmetatable(L, -1);
 		}
 		end_idx = lua_gettop(L);
-		lua_pop(L, end_idx - start_idx + 1);
-		if (is_ccobject)
+		if (can_cast)
 		{
-			tolua_pushccobject(L, v, s);
+			lua_pop(L, end_idx - start_idx + 1);
+			if (is_ccobject) tolua_pushccobject(L, v, s);
+			else tolua_pushusertype(L, v, s);
 		}
 		else
 		{
-			tolua_pushusertype(L, v, s);
+			lua_pop(L, end_idx - start_idx - 3);
+			lua_getmetatable(L, start_idx);
+			while (!lua_isnil(L, -1) && lua_rawequal(L, base_idx, -1) == 0)
+			{
+				if (lua_rawequal(L, target_idx, -1) != 0)
+				{
+					can_cast = 1;
+					break;
+				}
+				lua_getmetatable(L, -1);
+			}
+			end_idx = lua_gettop(L);
+			lua_pop(L, end_idx - start_idx + 1);
+			if (can_cast)
+			{
+				if (is_ccobject) tolua_pushccobject(L, v, s);
+				else tolua_pushusertype(L, v, s);
+			}
+			else lua_pushnil(L);
 		}
 	}
-	else
-	{
-		lua_pushnil(L);
-	}
+	else lua_pushnil(L);
     return 1;
 }
 

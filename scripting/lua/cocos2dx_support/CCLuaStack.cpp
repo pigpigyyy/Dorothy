@@ -166,15 +166,6 @@ void CCLuaStack::addLuaLoader(lua_CFunction func)
     lua_pop(m_state, 1);
 }
 
-
-void CCLuaStack::removeScriptObjectByCCObject(CCObject* pObj)
-{
-	if (pObj->m_nLuaRef)
-	{
-		toluafix_remove_ccobject_by_refid(m_state, pObj->getObjectId());
-	}
-}
-
 void CCLuaStack::removeScriptHandler(int nHandler)
 {
     toluafix_remove_function_by_refid(m_state, nHandler);
@@ -261,7 +252,7 @@ void CCLuaStack::pushNil(void)
 
 void CCLuaStack::pushCCObject(CCObject* objectValue, const char* typeName)
 {
-    toluafix_pushusertype_ccobject(m_state, objectValue->getObjectId(), objectValue, typeName);
+    tolua_pushccobject(m_state, objectValue, typeName);
 }
 
 void CCLuaStack::pushCCLuaValue(const CCLuaValue& value)

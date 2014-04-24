@@ -59,13 +59,7 @@ public:
      @brief Add lua loader, now it is used on android
      */
     virtual void addLuaLoader(lua_CFunction func);
-    
-    /**
-     @brief Remove CCObject from lua state
-     @param object to remove
-     */
-    virtual void removeScriptObjectByCCObject(CCObject* pObj);
-    
+
     /**
      @brief Remove Lua function reference
      */

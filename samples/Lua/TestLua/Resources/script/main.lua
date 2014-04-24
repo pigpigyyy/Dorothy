@@ -146,8 +146,6 @@ local winSize = CCDirector.winSize
 local textField = CCTextFieldTTF("Tap To Input","Arial",20)
 textField.anchorPoint = oVec2.zero
 textField.horizontalAlignment = CCTextAlign.HRight
-cclog(tostring(textField.contentSize.width))
-cclog(tostring(CCLabelTTF("Tap To Input","Arial",20).contentSize.width))
 textField:attachWithIME()
 textField.position = oVec2(winSize.width*0.5,winSize.height*0.5)
 oEditor.scene:addChild(textField)
@@ -161,11 +159,21 @@ cursor:runAction(
 			CCHide(),
 			CCDelay(0.5)
 		})))
-textField:scheduleUpdate(
-	function()
-		cursor.position = textField.position + oVec2(textField.contentSize.width,0)
+cursor.visible = false
+cursor.positionX = textField.contentSize.width
+textField:addChild(cursor)
+textField:registerInputHandler(
+	function(self,eventType,text)
+		if eventType == CCTextFieldTTF.Attach then
+			cursor.visible = true
+		elseif eventType == CCTextFieldTTF.Detach then
+			cursor:stopAllActions()
+			cursor.visible = false
+		elseif eventType == CCTextFieldTTF.Inserted or eventType == CCTextFieldTTF.Deleted then
+			cursor.positionX = textField.contentSize.width
+		end
+		return true
 	end)
-oEditor.scene:addChild(cursor)
 
 --[[
 local names = oCache.Clip:getNames("jixienv.clip")

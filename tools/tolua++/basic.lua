@@ -157,7 +157,7 @@ local CCObjectTypes = {
 
 -- register CCObject types
 for i = 1, #CCObjectTypes do
-    _push_functions[CCObjectTypes[i]] = "toluafix_push_ccobject"
+    _push_functions[CCObjectTypes[i]] = "tolua_pushccobject"
 	_collect_functions[CCObjectTypes[i]] = "tolua_collect_ccobject"
 end
 

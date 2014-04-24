@@ -131,6 +131,10 @@ bool CCTextFieldTTF::initWithPlaceHolder(const char *placeholder, const char *fo
 
 bool CCTextFieldTTF::attachWithIME()
 {
+	if (!CCTextFieldTTF::canAttachWithIME())
+	{
+		return false;
+	}
     bool bRet = CCIMEDelegate::attachWithIME();
     if (bRet)
     {
@@ -146,6 +150,10 @@ bool CCTextFieldTTF::attachWithIME()
 
 bool CCTextFieldTTF::detachWithIME()
 {
+	if (!CCTextFieldTTF::canDetachWithIME())
+	{
+		return false;
+	}
     bool bRet = CCIMEDelegate::detachWithIME();
     if (bRet)
     {
@@ -181,19 +189,22 @@ void CCTextFieldTTF::insertText(const char * text, int len)
         sInsert.erase(nPos);
     }
     
-    if (len > 0)
-    {
-        if (m_pDelegate && m_pDelegate->onTextFieldInsertText(this, sInsert.c_str(), len))
-        {
-            // delegate doesn't want to insert text
-            return;
-        }
-        
-        m_nCharCount += _calcCharCount(sInsert.c_str());
-        std::string sText(*m_pInputText);
-        sText.append(sInsert);
+	if (len > 0)
+	{
+		if (m_pDelegate && m_pDelegate->onTextFieldInsertText(this, sInsert.c_str(), len))
+		{
+			// delegate doesn't want to insert text
+			return;
+		}
+		m_nCharCount += _calcCharCount(sInsert.c_str());
+		std::string sText(*m_pInputText);
+		sText.append(sInsert);
 		setText(sText.c_str());
-    }
+		if (m_pDelegate)
+		{
+			m_pDelegate->onTextFieldInserted(this, sInsert.c_str());
+		}
+	}
 
     if ((int)sInsert.npos == nPos) {
         return;
@@ -204,7 +215,6 @@ void CCTextFieldTTF::insertText(const char * text, int len)
     {
         return;
     }
-    
     // if delegate hasn't processed, detach from IME by default
     detachWithIME();
 }
@@ -235,16 +245,24 @@ void CCTextFieldTTF::deleteBackward()
     // if all text deleted, show placeholder string
     if (nStrLen <= nDeleteLen)
     {
-        CC_SAFE_DELETE(m_pInputText);
-        m_pInputText = new std::string;
-        m_nCharCount = 0;
         CCLabelTTF::setText(m_pPlaceHolder->c_str());
+		if (m_pDelegate)
+		{
+			m_pDelegate->onTextFieldDeleted(this, m_pInputText->c_str() + nStrLen - nDeleteLen);
+		}
+		CC_SAFE_DELETE(m_pInputText);
+		m_pInputText = new std::string;
+		m_nCharCount = 0;
         return;
     }
 
     // set new input text
     std::string sText(m_pInputText->c_str(), nStrLen - nDeleteLen);
 	setText(sText.c_str());
+	if (m_pDelegate)
+	{
+		m_pDelegate->onTextFieldDeleted(this, m_pInputText->c_str() + nStrLen - nDeleteLen);
+	}
 }
 
 const char * CCTextFieldTTF::getContentText()

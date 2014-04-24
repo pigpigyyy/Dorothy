@@ -69,17 +69,27 @@ public:
         CC_UNUSED_PARAM(nLen);
         return false;
     }
+	virtual void onTextFieldInserted(CCTextFieldTTF* sender, const char* text)
+	{
+		CC_UNUSED_PARAM(sender);
+		CC_UNUSED_PARAM(text);
+	}
 
     /**
     @brief    If the sender doesn't want to delete the delText, return true;
     */
-    virtual bool onTextFieldDeleteBackward(CCTextFieldTTF * sender, const char * delText, int nLen)
+    virtual bool onTextFieldDeleteBackward(CCTextFieldTTF* sender, const char* delText, int nLen)
     {
         CC_UNUSED_PARAM(sender);
         CC_UNUSED_PARAM(delText);
         CC_UNUSED_PARAM(nLen);
         return false;
     }
+	virtual void onTextFieldDeleted(CCTextFieldTTF* sender, const char* delText)
+	{
+		CC_UNUSED_PARAM(sender);
+		CC_UNUSED_PARAM(delText);
+	}
 
     /**
     @brief    If the sender doesn't want to draw, return true.

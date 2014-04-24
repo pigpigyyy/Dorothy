@@ -869,7 +869,9 @@ public:
 			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
 			stack->pushCCObject(sender, "CCTextFieldTTF");
 			stack->pushInt(oTextFieldEvent::Attach);
-			return stack->executeFunctionByHandler(handler->get(), 2) == 0;
+			bool result = stack->executeFunctionByHandler(handler->get(), 2) == 0;
+			stack->clean();
+			return result;
 		}
 		return false;
 	}
@@ -880,7 +882,9 @@ public:
 			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
 			stack->pushCCObject(sender, "CCTextFieldTTF");
 			stack->pushInt(oTextFieldEvent::Detach);
-			return stack->executeFunctionByHandler(handler->get(), 2) == 0;
+			bool result = stack->executeFunctionByHandler(handler->get(), 2) == 0;
+			stack->clean();
+			return result;
 		}
 		return false;
 	}
@@ -892,9 +896,23 @@ public:
 			stack->pushCCObject(sender, "CCTextFieldTTF");
 			stack->pushInt(oTextFieldEvent::Insert);
 			stack->pushString(text);
-			return stack->executeFunctionByHandler(handler->get(), 3) == 0;
+			bool result = stack->executeFunctionByHandler(handler->get(), 3) == 0;
+			stack->clean();
+			return result;
 		}
 		return false;
+	}
+	virtual void onTextFieldInserted(CCTextFieldTTF* sender, const char* text)
+	{
+		if (handler)
+		{
+			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
+			stack->pushCCObject(sender, "CCTextFieldTTF");
+			stack->pushInt(oTextFieldEvent::Inserted);
+			stack->pushString(text);
+			stack->executeFunctionByHandler(handler->get(), 3);
+			stack->clean();
+		}
 	}
 	virtual bool onTextFieldDeleteBackward(CCTextFieldTTF * sender, const char * delText, int nLen)
 	{
@@ -904,8 +922,41 @@ public:
 			stack->pushCCObject(sender, "CCTextFieldTTF");
 			stack->pushInt(oTextFieldEvent::Delete);
 			stack->pushString(delText);
-			return stack->executeFunctionByHandler(handler->get(), 3) == 0;
+			bool result = stack->executeFunctionByHandler(handler->get(), 3) == 0;
+			stack->clean();
+			return result;
 		}
 		return false;
 	}
+	virtual void onTextFieldDeleted(CCTextFieldTTF* sender, const char* delText)
+	{
+		if (handler)
+		{
+			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
+			stack->pushCCObject(sender, "CCTextFieldTTF");
+			stack->pushInt(oTextFieldEvent::Deleted);
+			stack->pushString(delText);
+			stack->executeFunctionByHandler(handler->get(), 3);
+			stack->clean();
+		}
+	}
 };
+
+CCTextFieldTTF* CCTextFieldTTF_create(const char* placeholder, const char* fontName, float fontSize)
+{
+	CCTextFieldTTF* textField = CCTextFieldTTF::textFieldWithPlaceHolder(placeholder, fontName, fontSize);
+	oTextFieldDelegate* delegate = new oTextFieldDelegate();
+	delegate->autorelease();
+	textField->setDelegate(delegate);
+	return textField;
+}
+void CCTextFieldTTF_registerInputHandler(CCTextFieldTTF* textField, int handler)
+{
+	oTextFieldDelegate* delegate = (oTextFieldDelegate*)(textField->getDelegate());
+	delegate->handler = oScriptHandler::create(handler);
+}
+void CCTextFieldTTF_unregisterInputHandler(CCTextFieldTTF* textField)
+{
+	oTextFieldDelegate* delegate = (oTextFieldDelegate*)(textField->getDelegate());
+	delegate->handler = nullptr;
+}

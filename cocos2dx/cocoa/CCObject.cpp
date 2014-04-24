@@ -43,18 +43,17 @@ CCObject* CCCopying::copyWithZone(CCZone *pZone)
 }
 
 CCObject::CCObject()
-: m_nLuaRef(0)
-, m_uReference(1) // when the object is created, the reference count of it is 1
+: m_uReference(1) // when the object is created, the reference count of it is 1
 , m_uAutoReleaseCount(0)
 {
-	if (!g_availableObjectIds.empty())
+	if (g_availableObjectIds.empty())
 	{
-		m_nID = g_availableObjectIds.top();
-		g_availableObjectIds.pop();
+		m_nID = ++g_maxObjectCount;
 	}
 	else
 	{
-		m_nID = ++g_maxObjectCount;
+		m_nID = g_availableObjectIds.top();
+		g_availableObjectIds.pop();
 	}
 }
 
@@ -65,11 +64,6 @@ CCObject::~CCObject()
     if (m_uAutoReleaseCount > 0)
     {
         CCPoolManager::sharedPoolManager()->removeObject(this);
-    }
-    // if the object is referenced by Lua engine, remove it
-    if (m_nLuaRef)
-    {
-        CCScriptEngine::sharedEngine()->removeScriptObjectByCCObject(this);
     }
 	g_availableObjectIds.push(m_nID);
 }

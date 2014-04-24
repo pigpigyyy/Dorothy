@@ -396,27 +396,6 @@ static int class_eq_event(lua_State* L)
 	return 1;
 }
 
-/*
-static int class_gc_event (lua_State* L)
-{
-void* u = *((void**)lua_touserdata(L,1));
-fprintf(stderr, "collecting: looking at %p\n", u);
-lua_pushstring(L,"tolua_gc");
-lua_rawget(L,LUA_REGISTRYINDEX);
-lua_pushlightuserdata(L,u);
-lua_rawget(L,-2);
-if (lua_isfunction(L,-1))
-{
-lua_pushvalue(L,1);
-lua_call(L,1,0);
-lua_pushlightuserdata(L,u);
-lua_pushnil(L);
-lua_rawset(L,-3);
-}
-lua_pop(L,2);
-return 0;
-}
-*/
 TOLUA_API int class_gc_event(lua_State* L) {
 	lua_getmetatable(L, 1);
 	lua_pushliteral(L, ".del");
