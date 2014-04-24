@@ -609,7 +609,7 @@ class CC_DLL CCTintTo : public CCActionInterval
 {
 public:
     /** initializes the action with duration and color */
-    bool initWithDuration(float duration, GLubyte red, GLubyte green, GLubyte blue);
+	bool initWithDuration(float duration, unsigned int colorValue);
 
     virtual CCObject* copyWithZone(CCZone* pZone);
     virtual void startWithTarget(CCNode *pTarget);
@@ -617,7 +617,7 @@ public:
 
 public:
     /** creates an action with duration and color */
-    static CCTintTo* create(float duration, GLubyte red, GLubyte green, GLubyte blue);
+	static CCTintTo* create(float duration, unsigned int colorValue);
 protected:
     ccColor3B m_to;
     ccColor3B m_from;
@@ -630,7 +630,7 @@ class CC_DLL CCTintBy : public CCActionInterval
 {
 public:
     /** initializes the action with duration and color */
-    bool initWithDuration(float duration, GLshort deltaRed, GLshort deltaGreen, GLshort deltaBlue);
+	bool initWithDuration(float duration, GLshort deltaRed, GLshort deltaGreen, GLshort deltaBlue);
 
     virtual CCObject* copyWithZone(CCZone* pZone);
     virtual void startWithTarget(CCNode *pTarget);
@@ -639,7 +639,7 @@ public:
 
 public:
     /** creates an action with duration and color */
-    static CCTintBy* create(float duration, GLshort deltaRed, GLshort deltaGreen, GLshort deltaBlue);
+	static CCTintBy* create(float duration, unsigned int colorValue);
 protected:
     GLshort m_deltaR;
     GLshort m_deltaG;

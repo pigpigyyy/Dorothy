@@ -202,7 +202,6 @@ local function oSettingPanel()
 		menuItem:addChild(border)
 		
 		local _value = nil
-		
 		menuItem.setValue = function(self,value)
 			if value ~= nil and value ~= "" then
 				if type(value) == "number" then

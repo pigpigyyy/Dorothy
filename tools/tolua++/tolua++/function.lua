@@ -345,6 +345,18 @@ function classFunction:supcode(local_constructor)
 
 end
 
+local _metaOps =
+{
+	['.add'] = 'MT_ADD',
+	['.sub'] = 'MT_SUB',
+	['.mul'] = 'MT_MUL',
+	['.div'] = 'MT_DIV',
+	['.lt'] = 'MT_LT',
+	['.le'] = 'MT_LE',
+	['.eq'] = 'MT_EQ',
+	['.geti'] = 'MT_GETI',
+	['.seti'] = 'MT_SETI',
+}
 
 -- register function
 function classFunction:register (pre)
@@ -359,13 +371,12 @@ function classFunction:register (pre)
  	end
   
   -- Only .call is needed
-  if self.lname ~= 'new' and self.lname ~= 'delete' then
+  if self.lname:sub(1,1) == '.' then
+    output(pre..'tolua_call(tolua_S,'.._metaOps[self.lname]..','..self.cname..');')
+  elseif self.lname ~= 'new' and self.lname ~= 'delete' then
     output(pre..'tolua_function(tolua_S,"'..self.lname..'",'..self.cname..');')
-  end
-  if self.name == 'new' then
-	--output(pre..'tolua_function(tolua_S,"new_local",'..self.cname..'_local);')
-	output(pre..'tolua_function(tolua_S,".call",'..self.cname..'_local);')
-	--output(' tolua_set_call_event(tolua_S,'..self.cname..'_local, "'..self.parent.type..'");')
+  elseif self.name == 'new' then
+	output(pre..'tolua_call(tolua_S,MT_CALL,'..self.cname..'_local);')
   end
 end
 

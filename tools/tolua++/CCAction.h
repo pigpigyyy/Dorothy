@@ -44,9 +44,9 @@ CCActionInterval* CCBezierTo::create @ CCBezierTo(float t, const oVec2& position
 
 CCActionInterval* CCBlink::create @ CCBlink(float duration, unsigned int uBlinks);
 
-CCActionInterval* CCTintTo::create @ CCTintTo(float duration, GLubyte red, GLubyte green, GLubyte blue);
+CCActionInterval* CCTintTo::create @ CCTintTo(float duration, unsigned int colorValue);
 
-CCActionInterval* CCTintBy::create @ CCTintBy(float duration, GLshort deltaRed, GLshort deltaGreen, GLshort deltaBlue);
+CCActionInterval* CCTintBy::create @ CCTintBy(float duration, unsigned int colorValue);
 
 CCActionInterval* CCDelayTime::create @ CCDelay(float d);
 

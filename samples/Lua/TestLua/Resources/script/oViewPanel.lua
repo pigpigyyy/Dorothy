@@ -30,7 +30,7 @@ local function oViewPanel()
 	panel.opacity = 0.3
 	panel.touchEnabled = true
 	panel.position = oVec2(winSize.width-170,winSize.height-borderSize.height-10)
-	
+
 	local border = CCDrawNode()
 	border:drawPolygon(
 	{
@@ -203,7 +203,7 @@ local function oViewPanel()
 		},ccColor4(0x00000000),1,ccColor4(0xff00ffff))
 		borderSelected.position = oVec2(size*0.5,size*0.5)
 		borderSelected.visible = false
-		
+
 		local border = CCDrawNode()
 		border:drawPolygon(
 		{

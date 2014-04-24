@@ -243,11 +243,8 @@ static int tolua_bnd_isnulluserdata (lua_State* L) {
 static int tolua_bnd_inherit (lua_State* L) {
 
     /* stack: lua object, c object */
-    lua_pushstring(L, ".c_instance");
-    lua_pushvalue(L, -2);
-    lua_rawset(L, -4);
-    /* l_obj[".c_instance"] = c_obj */
-
+    lua_pushvalue(L, -1);
+    lua_rawseti(L, -3, MT_C_INSTANCE);// l_obj[MT_C_INSTANCE] = c_obj
     return 0;
 };
 
@@ -474,9 +471,8 @@ static void push_collector(lua_State* L, const char* type, lua_CFunction col)
     /* push collector function, but only if it's not NULL. */
     if (!col) return;
     luaL_getmetatable(L,type);// metatable
-    lua_pushstring(L,".del");// ".del"
     lua_pushcfunction(L,col);// cfunc
-	lua_rawset(L, -3);// metatable[".del"] = cfunc;
+	lua_rawseti(L, -2, MT_DEL);// metatable[MT_DEL] = cfunc;
     lua_pop(L, 1);// pop metable
 };
 
@@ -527,11 +523,17 @@ TOLUA_API void tolua_addbase(lua_State* L, char* name, char* base)
 /* Map function
     * It assigns a function into the current module (or class)
 */
-TOLUA_API void tolua_function (lua_State* L, const char* name, lua_CFunction func)
+TOLUA_API void tolua_function(lua_State* L, const char* name, lua_CFunction func)
 {
     lua_pushstring(L,name);
     lua_pushcfunction(L,func);
     lua_rawset(L,-3);
+}
+
+TOLUA_API void tolua_call(lua_State* L, int index, lua_CFunction func)
+{
+	lua_pushcfunction(L, func);
+	lua_rawseti(L, -2, index);
 }
 
 /* sets the __call event for the class (expects the class' main table on top) */
@@ -563,16 +565,14 @@ TOLUA_API void tolua_constant (lua_State* L, const char* name, lua_Number value)
 TOLUA_API void tolua_variable (lua_State* L, const char* name, lua_CFunction get, lua_CFunction set)
 {
     /* get func */
-    lua_pushstring(L,".get");
-    lua_rawget(L,-2);
+    lua_rawgeti(L,-1, MT_GET);
     if (!lua_istable(L,-1))
     {
         /* create .get table, leaving it at the top */
         lua_pop(L,1);
         lua_newtable(L);
-        lua_pushstring(L,".get");
-        lua_pushvalue(L,-2);
-        lua_rawset(L,-4);
+        lua_pushvalue(L,-1);
+        lua_rawseti(L,-3,MT_GET);
     }
     lua_pushstring(L,name);
     lua_pushcfunction(L,get);
@@ -582,16 +582,14 @@ TOLUA_API void tolua_variable (lua_State* L, const char* name, lua_CFunction get
     /* set func */
     if (set)
     {
-        lua_pushstring(L,".set");
-        lua_rawget(L,-2);
+        lua_rawgeti(L,-1,MT_SET);
         if (!lua_istable(L,-1))
         {
             /* create .set table, leaving it at the top */
             lua_pop(L,1);
             lua_newtable(L);
-            lua_pushstring(L,".set");
-            lua_pushvalue(L,-2);
-            lua_rawset(L,-4);
+            lua_pushvalue(L,-1);
+            lua_rawseti(L,-3,MT_SET);
         }
         lua_pushstring(L,name);
         lua_pushcfunction(L,set);
@@ -614,16 +612,14 @@ static int const_array (lua_State* L)
 */
 TOLUA_API void tolua_array (lua_State* L, const char* name, lua_CFunction get, lua_CFunction set)
 {
-    lua_pushstring(L,".get");
-    lua_rawget(L,-2);
+    lua_rawgeti(L,-1,MT_GET);
     if (!lua_istable(L,-1))
     {
         /* create .get table, leaving it at the top */
         lua_pop(L,1);
         lua_newtable(L);
-        lua_pushstring(L,".get");
-        lua_pushvalue(L,-2);
-        lua_rawset(L,-4);
+        lua_pushvalue(L,-1);
+        lua_rawseti(L,-3,MT_GET);
     }
     lua_pushstring(L,name);
 

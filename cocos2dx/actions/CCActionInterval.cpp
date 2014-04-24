@@ -1980,23 +1980,22 @@ void CCFadeTo::update(float time)
 //
 // TintTo
 //
-CCTintTo* CCTintTo::create(float duration, GLubyte red, GLubyte green, GLubyte blue)
+CCTintTo* CCTintTo::create(float duration, unsigned int colorValue)
 {
 	CCTintTo *pTintTo = new CCTintTo();
-	pTintTo->initWithDuration(duration, red, green, blue);
+	pTintTo->initWithDuration(duration, colorValue);
 	pTintTo->autorelease();
 
 	return pTintTo;
 }
 
-bool CCTintTo::initWithDuration(float duration, GLubyte red, GLubyte green, GLubyte blue)
+bool CCTintTo::initWithDuration(float duration, unsigned int colorValue)
 {
 	if (CCActionInterval::initWithDuration(duration))
 	{
-		m_to = ccc3(red, green, blue);
+		m_to = ccColor3B(colorValue);
 		return true;
 	}
-
 	return false;
 }
 
@@ -2017,7 +2016,7 @@ CCObject* CCTintTo::copyWithZone(CCZone *pZone)
 
 	CCActionInterval::copyWithZone(pZone);
 
-	pCopy->initWithDuration(m_fDuration, m_to.r, m_to.g, m_to.b);
+	pCopy->initWithDuration(m_fDuration, m_to.r << 16 | m_to.g << 8 | m_to.b);
 
 	CC_SAFE_DELETE(pNewZone);
 	return pCopy;
@@ -2040,10 +2039,11 @@ void CCTintTo::update(float time)
 // TintBy
 //
 
-CCTintBy* CCTintBy::create(float duration, GLshort deltaRed, GLshort deltaGreen, GLshort deltaBlue)
+CCTintBy* CCTintBy::create(float duration, unsigned int colorValue)
 {
 	CCTintBy *pTintBy = new CCTintBy();
-	pTintBy->initWithDuration(duration, deltaRed, deltaGreen, deltaBlue);
+	ccColor3B color(colorValue);
+	pTintBy->initWithDuration(duration, color.r, color.g, color.b);
 	pTintBy->autorelease();
 
 	return pTintBy;
@@ -2104,7 +2104,7 @@ void CCTintBy::update(float time)
 
 CCActionInterval* CCTintBy::reverse()
 {
-	return CCTintBy::create(m_fDuration, -m_deltaR, -m_deltaG, -m_deltaB);
+	return CCTintBy::create(m_fDuration, -(m_deltaR << 16 | m_deltaG << 8 | m_deltaB));
 }
 
 //

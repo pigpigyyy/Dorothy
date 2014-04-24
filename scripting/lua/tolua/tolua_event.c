@@ -58,8 +58,7 @@ static void storeatubox(lua_State* L, int lo)
 */
 static int module_index_event(lua_State* L)
 {
-	lua_pushstring(L, ".get");
-	lua_rawget(L, -3);
+	lua_rawgeti(L,-2,MT_GET);
 	if (lua_istable(L, -1))
 	{
 		lua_pushvalue(L, 2);  /* key */
@@ -98,8 +97,7 @@ static int module_index_event(lua_State* L)
 */
 static int module_newindex_event(lua_State* L)
 {
-	lua_pushstring(L, ".set");
-	lua_rawget(L, -4);
+	lua_rawgeti(L,-3,MT_SET);
 	if (lua_istable(L, -1))
 	{
 		lua_pushvalue(L, 2);  /* key */
@@ -170,8 +168,7 @@ static int class_index_event(lua_State* L)
 			if (lua_isnumber(L, 2))                 /* check if key is a numeric value */
 			{
 				/* try operator[] */
-				lua_pushstring(L, ".geti");
-				lua_rawget(L, -2);                      /* stack: obj key mt func */
+				lua_rawgeti(L,-1,MT_GETI);                      /* stack: obj key mt func */
 				if (lua_isfunction(L, -1))
 				{
 					lua_pushvalue(L, 1);
@@ -189,8 +186,7 @@ static int class_index_event(lua_State* L)
 				else
 					lua_pop(L, 1);
 				/* try C/C++ variable */
-				lua_pushstring(L, ".get");
-				lua_rawget(L, -2);                      /* stack: obj key mt tget */
+				lua_rawgeti(L,-1,MT_GET);                      /* stack: obj key mt tget */
 				if (lua_istable(L, -1))
 				{
 					lua_pushvalue(L, 2);
@@ -207,9 +203,8 @@ static int class_index_event(lua_State* L)
 						/* deal with array: create table to be returned and cache it in ubox */
 						void* u = *((void**)lua_touserdata(L, 1));
 						lua_newtable(L);                /* stack: obj key mt value table */
-						lua_pushstring(L, ".self");
 						lua_pushlightuserdata(L, u);
-						lua_rawset(L, -3);               /* store usertype in ".self" */
+						lua_rawseti(L, -2, MT_SELF);     /* store usertype at index MT_SELF */
 						lua_insert(L, -2);               /* stack: obj key mt table value */
 						lua_setmetatable(L, -2);         /* set stored value as metatable */
 						lua_pushvalue(L, -1);            /* stack: obj key met table table */
@@ -251,8 +246,7 @@ static int class_newindex_event(lua_State* L)
 			if (lua_isnumber(L, 2))                 /* check if key is a numeric value */
 			{
 				/* try operator[] */
-				lua_pushstring(L, ".seti");
-				lua_rawget(L, -2);                      /* stack: obj key mt func */
+				lua_rawgeti(L,-1,MT_SETI);                      /* stack: obj key mt func */
 				if (lua_isfunction(L, -1))
 				{
 					lua_pushvalue(L, 1);
@@ -264,8 +258,7 @@ static int class_newindex_event(lua_State* L)
 			}
 			else
 			{
-				lua_pushstring(L, ".set");
-				lua_rawget(L, -2);                      /* stack: t k v mt tset */
+				lua_rawgeti(L,-1,MT_SET);                      /* stack: t k v mt tset */
 				if (lua_istable(L, -1))
 				{
 					lua_pushvalue(L, 2);
@@ -300,8 +293,7 @@ static int class_newindex_event(lua_State* L)
 static int class_call_event(lua_State* L) {
 
 	if (lua_istable(L, 1)) {
-		lua_pushstring(L, ".call");
-		lua_rawget(L, 1);
+		lua_rawgeti(L, 1, MT_CALL);
 		if (lua_isfunction(L, -1)) {
 
 			lua_insert(L, 1);
@@ -314,7 +306,7 @@ static int class_call_event(lua_State* L) {
 	return 0;
 };
 
-static int do_operator(lua_State* L, const char* op)
+static int do_operator(lua_State* L, int op)
 {
 	if (lua_isuserdata(L, 1))
 	{
@@ -323,8 +315,7 @@ static int do_operator(lua_State* L, const char* op)
 		while (lua_getmetatable(L, -1))
 		{   /* stack: op1 op2 op1 mt */
 			lua_remove(L, -2);                      /* stack: op1 op2 mt */
-			lua_pushstring(L, op);                  /* stack: op1 op2 mt key */
-			lua_rawget(L, -2);                      /* stack: obj key mt func */
+			lua_rawgeti(L, -1, op);                      /* stack: obj key mt func */
 			if (lua_isfunction(L, -1))
 			{
 				lua_pushvalue(L, 1);
@@ -341,32 +332,32 @@ static int do_operator(lua_State* L, const char* op)
 
 static int class_add_event(lua_State* L)
 {
-	return do_operator(L, ".add");
+	return do_operator(L, MT_ADD);
 }
 
 static int class_sub_event(lua_State* L)
 {
-	return do_operator(L, ".sub");
+	return do_operator(L, MT_SUB);
 }
 
 static int class_mul_event(lua_State* L)
 {
-	return do_operator(L, ".mul");
+	return do_operator(L, MT_MUL);
 }
 
 static int class_div_event(lua_State* L)
 {
-	return do_operator(L, ".div");
+	return do_operator(L, MT_DIV);
 }
 
 static int class_lt_event(lua_State* L)
 {
-	return do_operator(L, ".lt");
+	return do_operator(L, MT_LT);
 }
 
 static int class_le_event(lua_State* L)
 {
-	return do_operator(L, ".le");
+	return do_operator(L, MT_LE);
 }
 
 static int class_eq_event(lua_State* L)
@@ -379,8 +370,7 @@ static int class_eq_event(lua_State* L)
 		while (lua_getmetatable(L, -1))
 		{   /* stack: op1 op2 op1 mt */
 			lua_remove(L, -2);                      /* stack: op1 op2 mt */
-			lua_pushstring(L, ".eq");                  /* stack: op1 op2 mt key */
-			lua_rawget(L, -2);                      /* stack: obj key mt func */
+			lua_rawgeti(L, -1, MT_EQ);                      /* stack: obj key mt func */
 			if (lua_isfunction(L, -1))
 			{
 				lua_pushvalue(L, 1);
@@ -398,8 +388,7 @@ static int class_eq_event(lua_State* L)
 
 TOLUA_API int class_gc_event(lua_State* L) {
 	lua_getmetatable(L, 1);
-	lua_pushliteral(L, ".del");
-	lua_rawget(L, -2); // stack: mt collector
+	lua_rawgeti(L, -1, MT_DEL); // stack: mt collector
 	if (lua_isfunction(L, -1)) {
 		lua_pushvalue(L, 1); // stack: mt collector u
 		lua_call(L, 1, 0);

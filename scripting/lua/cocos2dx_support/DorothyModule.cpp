@@ -828,20 +828,9 @@ CCCall::~CCCall()
 		CCScriptEngine::sharedEngine()->removeScriptHandler(_scriptHandler);
 	}
 }
-CCObject * CCCall::copyWithZone(CCZone *pZone) {
-	CCZone* pNewZone = NULL;
-	CCCall* pRet = NULL;
-	if (pZone && pZone->m_pCopyObject) {
-		pRet = (CCCall*)(pZone->m_pCopyObject);
-	}
-	else {
-		pRet = new CCCall();
-		pZone = pNewZone = new CCZone(pRet);
-	}
-	CCActionInstant::copyWithZone(pZone);
-	pRet->_scriptHandler = _scriptHandler;
-	CC_SAFE_DELETE(pNewZone);
-	return pRet;
+CCObject* CCCall::copyWithZone(CCZone *pZone)
+{
+	return nullptr;
 }
 void CCCall::update(float time)
 {

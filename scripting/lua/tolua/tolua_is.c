@@ -143,7 +143,7 @@ int push_table_instance(lua_State* L, int lo) {
 
 	if (lua_istable(L, lo)) {
 
-		lua_pushstring(L, ".c_instance");
+		lua_pushinteger(L, MT_C_INSTANCE);
 		lua_gettable(L, lo);
 		if (lua_isuserdata(L, -1)) {
 

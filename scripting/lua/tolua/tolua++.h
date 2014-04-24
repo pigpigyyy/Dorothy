@@ -41,6 +41,22 @@ extern "C" {
 #define TOLUA_PROTECTED_DESTRUCTOR
 #define TOLUA_PROPERTY_TYPE(p)
 
+#define MT_SELF 1
+#define MT_DEL 2
+#define MT_CALL 3
+#define MT_C_INSTANCE 4
+#define MT_GET 5
+#define MT_SET 6
+#define MT_GETI 7
+#define MT_SETI 8
+#define MT_ADD 9
+#define MT_SUB 10
+#define MT_MUL 11
+#define MT_DIV 12
+#define MT_LT 13
+#define MT_LE 14
+#define MT_EQ 15
+
 typedef int lua_Object;
 
 #include "lua.h"
@@ -96,6 +112,7 @@ TOLUA_API void tolua_module (lua_State* L, const char* name, int hasvar);
 TOLUA_API void tolua_class (lua_State* L, const char* name, const char* base);
 TOLUA_API void tolua_cclass (lua_State* L, const char* lname, const char* name, const char* base, lua_CFunction col);
 TOLUA_API void tolua_function (lua_State* L, const char* name, lua_CFunction func);
+TOLUA_API void tolua_call(lua_State* L, int index, lua_CFunction func);
 TOLUA_API void tolua_constant (lua_State* L, const char* name, lua_Number value);
 TOLUA_API void tolua_variable (lua_State* L, const char* name, lua_CFunction get, lua_CFunction set);
 TOLUA_API void tolua_array (lua_State* L,const char* name, lua_CFunction get, lua_CFunction set);
