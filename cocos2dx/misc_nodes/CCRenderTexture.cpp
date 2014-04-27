@@ -233,7 +233,7 @@ CCRenderTexture * CCRenderTexture::create(int w, int h)
 {
     CCRenderTexture *pRet = new CCRenderTexture();
 
-    if(pRet && pRet->initWithWidthAndHeight(w, h, kCCTexture2DPixelFormat_RGBA8888, 0))
+	if (pRet && pRet->initWithWidthAndHeight(w, h, kCCTexture2DPixelFormat_RGBA8888, 0))
     {
         pRet->autorelease();
         return pRet;
@@ -244,7 +244,7 @@ CCRenderTexture * CCRenderTexture::create(int w, int h)
 
 bool CCRenderTexture::initWithWidthAndHeight(int w, int h, CCTexture2DPixelFormat eFormat)
 {
-    return initWithWidthAndHeight(w, h, eFormat, 0);
+	return initWithWidthAndHeight(w, h, eFormat, 0);
 }
 
 bool CCRenderTexture::initWithWidthAndHeight(int w, int h, CCTexture2DPixelFormat eFormat, GLuint uDepthStencilFormat)
@@ -400,6 +400,11 @@ void CCRenderTexture::begin()
     }
 }
 
+void CCRenderTexture::beginWithClear()
+{
+	beginWithClear(ccColor4B(0), 0, 0, GL_COLOR_BUFFER_BIT);
+}
+
 void CCRenderTexture::beginWithClear(const ccColor4B& color)
 {
 	beginWithClear(color, 0, 0, GL_COLOR_BUFFER_BIT);
@@ -419,45 +424,23 @@ void CCRenderTexture::beginWithClear(const ccColor4B& color, float depthValue, i
 {
 	ccColor4F fColor(color);
     this->begin();
-
-    // save clear color
-    GLfloat	clearColor[4] = {0.0f};
-    GLfloat depthClearValue = 0.0f;
-    int stencilClearValue = 0;
     
     if (flags & GL_COLOR_BUFFER_BIT)
     {
-        glGetFloatv(GL_COLOR_CLEAR_VALUE,clearColor);
 		glClearColor(fColor.r, fColor.g, fColor.b, fColor.a);
     }
     
     if (flags & GL_DEPTH_BUFFER_BIT)
     {
-        glGetFloatv(GL_DEPTH_CLEAR_VALUE, &depthClearValue);
         glClearDepth(depthValue);
     }
 
     if (flags & GL_STENCIL_BUFFER_BIT)
     {
-        glGetIntegerv(GL_STENCIL_CLEAR_VALUE, &stencilClearValue);
         glClearStencil(stencilValue);
     }
     
     glClear(flags);
-
-    // restore
-    if (flags & GL_COLOR_BUFFER_BIT)
-    {
-        glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
-    }
-    if (flags & GL_DEPTH_BUFFER_BIT)
-    {
-        glClearDepth(depthClearValue);
-    }
-    if (flags & GL_STENCIL_BUFFER_BIT)
-    {
-        glClearStencil(stencilClearValue);
-    }
 }
 
 void CCRenderTexture::render(CCNode* target)
@@ -489,29 +472,17 @@ void CCRenderTexture::clear(const ccColor4B& color)
 void CCRenderTexture::clearDepth(float depthValue)
 {
     this->begin();
-    //! save old depth value
-    GLfloat depthClearValue;
-    glGetFloatv(GL_DEPTH_CLEAR_VALUE, &depthClearValue);
 
     glClearDepth(depthValue);
     glClear(GL_DEPTH_BUFFER_BIT);
 
-    // restore clear color
-    glClearDepth(depthClearValue);
-    this->end();
+	this->end();
 }
 
 void CCRenderTexture::clearStencil(int stencilValue)
 {
-    // save old stencil value
-    int stencilClearValue;
-    glGetIntegerv(GL_STENCIL_CLEAR_VALUE, &stencilClearValue);
-
     glClearStencil(stencilValue);
     glClear(GL_STENCIL_BUFFER_BIT);
-
-    // restore clear color
-    glClearStencil(stencilClearValue);
 }
 
 void CCRenderTexture::visit()
@@ -551,45 +522,24 @@ void CCRenderTexture::draw()
 		
         if (m_uClearFlags)
         {
-            GLfloat oldClearColor[4] = {0.0f};
-			GLfloat oldDepthClearValue = 0.0f;
-			GLint oldStencilClearValue = 0;
-			
 			// backup and set
 			if (m_uClearFlags & GL_COLOR_BUFFER_BIT)
             {
-				glGetFloatv(GL_COLOR_CLEAR_VALUE, oldClearColor);
 				glClearColor(m_sClearColor.r, m_sClearColor.g, m_sClearColor.b, m_sClearColor.a);
 			}
 			
 			if (m_uClearFlags & GL_DEPTH_BUFFER_BIT)
             {
-				glGetFloatv(GL_DEPTH_CLEAR_VALUE, &oldDepthClearValue);
 				glClearDepth(m_fClearDepth);
 			}
 			
 			if (m_uClearFlags & GL_STENCIL_BUFFER_BIT)
             {
-				glGetIntegerv(GL_STENCIL_CLEAR_VALUE, &oldStencilClearValue);
 				glClearStencil(m_nClearStencil);
 			}
 			
 			// clear
 			glClear(m_uClearFlags);
-			
-			// restore
-			if (m_uClearFlags & GL_COLOR_BUFFER_BIT)
-            {
-				glClearColor(oldClearColor[0], oldClearColor[1], oldClearColor[2], oldClearColor[3]);
-            }
-			if (m_uClearFlags & GL_DEPTH_BUFFER_BIT)
-            {
-				glClearDepth(oldDepthClearValue);
-            }
-			if (m_uClearFlags & GL_STENCIL_BUFFER_BIT)
-            {
-				glClearStencil(oldStencilClearValue);
-            }
 		}
 		
 		//! make sure all children are drawn

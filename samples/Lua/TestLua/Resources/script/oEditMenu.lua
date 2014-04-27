@@ -366,7 +366,6 @@ local function oEditMenu()
 		for i = 1,#group do
 			group[i].visible = false
 		end
-		oEditor.controlBar.visible = false
 	end
 	
 	menu.toStart = function(self)
@@ -376,6 +375,7 @@ local function oEditMenu()
 		hideItems()
 		oEditor.state = oEditor.EDIT_START
 		oEditor.settingPanel:updateItems()
+		oEditor.controlBar.visible = false
 	end
 
 	menu.toSprite = function(self)
@@ -401,6 +401,7 @@ local function oEditMenu()
 		oEditor.state = oEditor.EDIT_SPRITE
 		oEditor.settingPanel:updateItems()
 		oEditor.settingPanel:update()
+		oEditor.controlBar.visible = false
 	end
 
 	menu.toAnimation = function(self)

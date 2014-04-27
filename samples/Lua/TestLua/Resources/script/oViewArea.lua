@@ -31,6 +31,9 @@ local function oViewArea()
 	local scrollNode = CCNode()
 	crossNode:addChild(scrollNode)
 
+	view.outline = CCNode()
+	crossNode:addChild(view.outline)
+
 	--0: scale = 2.0
 	--1: scale = 0.5
 	--2: scale = 1.0
@@ -176,8 +179,10 @@ local function oViewArea()
 			pos = crossNode:convertToNodeSpace(pos)
 			editor.position = pos
 			editor:setTarget(editTarget)
+			editor.visible = true
 		else
 			editorView:setTarget(nil)
+			editorView.visible = false
 		end
 		editorView = editor
 	end
@@ -192,12 +197,12 @@ local function oViewArea()
 		end
 		return posRotFix
 	end
-
+--[[
 	local renderTarget = CCRenderTarget(winSize.width,winSize.height)
 	renderTarget.position = oVec2(winSize.width*0.5,winSize.height*0.5)
 	renderTarget:scheduleUpdate(
 		function()
-			renderTarget:beginPaint(ccColor4(0x00000000))
+			renderTarget:beginPaint()
 			crossNode.opacity = 0
 			if editorView then
 				editorView.visible = true
@@ -212,7 +217,7 @@ local function oViewArea()
 			renderTarget:endPaint()
 		end)
 	view:addChild(renderTarget)
-
+]]
 	view.isValueFixed = false
 	local valueChanged = false
 	local function updateModel()
@@ -1033,6 +1038,7 @@ local function oViewArea()
 		view:stopEditPosXY()
 		view:stopEditRot()
 	end
+
 	return view
 end
 

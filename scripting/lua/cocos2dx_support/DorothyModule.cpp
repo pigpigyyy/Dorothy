@@ -947,3 +947,8 @@ void CCTextFieldTTF_unregisterInputHandler(CCTextFieldTTF* textField)
 	oTextFieldDelegate* delegate = (oTextFieldDelegate*)(textField->getDelegate());
 	delegate->handler = nullptr;
 }
+
+CCRenderTexture* CCRenderTexture_create(int w, int h, bool withDepthStencil)
+{
+	return CCRenderTexture::create(w, h, kCCTexture2DPixelFormat_RGBA8888, withDepthStencil ? GL_DEPTH24_STENCIL8 : 0);
+}

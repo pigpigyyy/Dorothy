@@ -127,19 +127,45 @@ local oSettingPanel = require("Script/oSettingPanel")
 local controls =
 {
 	-- Animation oEditor
-	viewArea = oViewArea(),
-	editMenu = oEditMenu(),
-	viewPanel = oViewPanel(),
-	controlBar = oControlBar(),
-	settingPanel = oSettingPanel(),
+	oViewArea,
+	oEditMenu,
+	oViewPanel,
+	oControlBar,
+	oSettingPanel,
+}
+
+local controlNames =
+{
+	"viewArea",
+	"editMenu",
+	"viewPanel",
+	"controlBar",
+	"settingPanel",
 }
 
 oEditor.scene.anchorPoint = oVec2.zero
-for key,item in pairs(controls) do
-	oEditor.scene:addChild(item)
-	oEditor[key] = item
-end
-oEvent:send("EditorLoaded")
+oEditor.scene.visible = false
+
+local thread = coroutine.create(
+	function()
+		for i = 1,#controls do
+			controls[i] = controls[i]()
+			oEditor[controlNames[i]] = controls[i]
+			coroutine.yield()
+		end
+		for i = 1,#controls do
+			oEditor.scene:addChild(controls[i])
+		end
+	end)
+
+oEditor.scene:scheduleUpdate(
+	function(deltaTime, self)
+		if not coroutine.resume(thread) then
+			self:unscheduleUpdate()
+			oEvent:send("EditorLoaded")
+			oEditor.scene.visible = true
+		end
+	end)
 
 --[[
 local names = oCache.Clip:getNames("jixienv.clip")

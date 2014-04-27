@@ -84,6 +84,8 @@ public:
     /** starts grabbing */
     void begin();
 
+	void beginWithClear();
+
     /** starts rendering to the texture while clearing the texture first.
     This is more efficient then calling -clear first and then -begin */
 	void beginWithClear(const ccColor4B& color);

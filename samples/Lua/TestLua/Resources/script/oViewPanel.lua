@@ -425,21 +425,8 @@ local function oViewPanel()
 	end
 
 	local function oImageOutline(node, withFrame)
-		local w = node.contentSize.width
-		local h = node.contentSize.height
 		local outline = CCNode()
-		outline.cascadeOpacity = false
 		local frame = oLine({},ccColor4(0xff00a2d8))
-		if withFrame then
-			frame:set(
-			{
-				oVec2(0,0),
-				oVec2(w,0),
-				oVec2(w,h),
-				oVec2(0,h),
-				oVec2(0,0),
-			})
-		end
 		outline:addChild(frame)
 		local anchor = oLine(
 		{
@@ -453,7 +440,6 @@ local function oViewPanel()
 			oLine({oVec2(0,-5),oVec2(0,5)},ccColor4(0xffffffff)))
 		anchor:addChild(
 			oLine({oVec2(-5,0),oVec2(5,0)},ccColor4(0xffffffff)))
-		anchor.position = oVec2(w*node.anchorPoint.x, h*node.anchorPoint.y)
 		outline:addChild(anchor)
 
 		outline.setNode = function(self, node, withFrame)
@@ -472,7 +458,11 @@ local function oViewPanel()
 				frame:set({})
 			end
 			anchor.position = oVec2(w*node.anchorPoint.x, h*node.anchorPoint.y)
+			self.transformTarget = node
 		end
+		
+		outline:setNode(node, withFrame)
+		
 		return outline
 	end
 
@@ -510,16 +500,15 @@ local function oViewPanel()
 				local withFrame = node.contentSize ~= CCSize.zero
 				if not outline then
 					outline = oImageOutline(node,withFrame)
-					outline.visble = false
+					oEditor.viewArea.outline:addChild(outline)
 				else
-					if outline.parent then
-						outline.parent:removeChild(outline)
-					end
 					outline:setNode(node,withFrame)
 				end
+				outline.visible = true
+
 				oEditor.sprite = node
 				oEditor.spriteData = sp
-				node:addChild(outline)
+				
 				if oEditor.state == oEditor.EDIT_ANIMATION then
 					oEditor.controlBar:updateCursors()
 				end
@@ -528,9 +517,7 @@ local function oViewPanel()
 					oEditor.settingPanel:setEditEnable(true)
 				end
 			else
-				if outline.parent then
-					outline.parent:removeChild(outline)
-				end
+				outline.visible = false
 				selectedItem = nil
 				oEditor.sprite = nil
 				oEditor.spriteData = nil
@@ -565,13 +552,14 @@ local function oViewPanel()
 			local withFrame = node.contentSize ~= CCSize.zero
 			if not outline then
 				outline = oImageOutline(node,withFrame)
+				oEditor.viewArea.outline:addChild(outline)
 			else
-				outline.parent:removeChild(outline)
 				outline:setNode(node,withFrame)
 			end
+			outline.visible = true
+			
 			oEditor.sprite = node
 			oEditor.spriteData = sp
-			node:addChild(outline)
 		end
 	end
 

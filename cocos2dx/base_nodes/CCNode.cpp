@@ -84,6 +84,7 @@ CCNode::CCNode()
 , _realColor(ccWHITE)
 , _cascadeOpacity(true)
 , _cascadeColor(true)
+, _transformTarget(nullptr)
 {
 	// set default scheduler and actionManager
 	CCDirector *director = CCDirector::sharedDirector();
@@ -725,6 +726,13 @@ void CCNode::visit()
 	}
 	kmGLPushMatrix();
 
+	if (_transformTarget)
+	{
+		CCDirector::sharedDirector()->projection();
+		_transformTarget->transformAncestors();
+		_transformTarget->transform();
+	}
+
 	if (m_pGrid && m_pGrid->isActive())
 	{
 		m_pGrid->beforeDraw();
@@ -1254,6 +1262,16 @@ void CCNode::setCascadeColor(bool var)
 bool CCNode::isCascadeColor() const
 {
 	return _cascadeColor;
+}
+
+void CCNode::setTransformTarget(CCNode* target)
+{
+	_transformTarget = target;
+}
+
+CCNode* CCNode::getTransformTarget() const
+{
+	return _transformTarget;
 }
 
 NS_CC_END

@@ -144,4 +144,6 @@ CCTextFieldTTF* CCTextFieldTTF_create(const char* placeholder, const char* fontN
 void CCTextFieldTTF_registerInputHandler(CCTextFieldTTF* textField, int handler);
 void CCTextFieldTTF_unregisterInputHandler(CCTextFieldTTF* textField);
 
+CCRenderTexture* CCRenderTexture_create(int w, int h, bool withDepthStencil = false);
+
 #endif // __DOROTHY_MODULE_H__

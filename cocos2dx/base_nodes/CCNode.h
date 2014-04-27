@@ -1172,6 +1172,9 @@ public:
 	virtual void setOpacityModifyRGB(bool bValue) {};
 	virtual bool isOpacityModifyRGB() { return false; };
 
+	void setTransformTarget(CCNode* target);
+	CCNode* getTransformTarget() const;
+
 	template<typename NodeFunc>
 	static void traverse(CCNode* root, const NodeFunc& func)
 	{
@@ -1211,6 +1214,8 @@ private:
     CCPoint convertToWindowSpace(const CCPoint& nodePoint);
 
 protected:
+	CCNode* _transformTarget;
+
 	float _displayedOpacity;
 	float _realOpacity;
 	ccColor3B _displayedColor;

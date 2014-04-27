@@ -137,6 +137,8 @@ public:
     inline ccDirectorProjection getProjection() { return m_eProjection; }
     void setProjection(ccDirectorProjection kProjection);
     
+	void projection();
+
     /** Sets the glViewport*/
     void setViewport();
 

@@ -208,7 +208,7 @@ public:
         , m_fBottomBoundary(0.0)
     {}
     virtual ~CCFollow();
-    
+
     inline bool isBoundarySet() { return m_bBoundarySet; }
     /** alter behavior - turn on/off boundary */
     inline void setBoudarySet(bool bValue) { m_bBoundarySet = bValue; }

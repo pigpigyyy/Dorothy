@@ -199,7 +199,6 @@ void CCDirector::setGLDefaultValues()
     setProjection(m_eProjection);
 
     // set other opengl default values
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 // Draw the Scene
@@ -214,6 +213,8 @@ void CCDirector::drawScene()
 		m_pScheduler->update(1.0f / 60);// m_fDeltaTime* m_fUpdateRate);
     }
 
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearDepth(0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     /* to avoid flickr, nextScene MUST be here: after tick and before draw.
@@ -236,7 +237,7 @@ void CCDirector::drawScene()
     {
         m_pNotificationNode->visit();
     }
-    
+
     if (m_bDisplayStats)
     {
         showStats();
@@ -333,6 +334,11 @@ void CCDirector::setViewport()
 void CCDirector::setNextDeltaTimeZero(bool bNextDeltaTimeZero)
 {
     m_bNextDeltaTimeZero = bNextDeltaTimeZero;
+}
+
+void CCDirector::projection()
+{
+	CCDirector::setProjection(m_eProjection);
 }
 
 void CCDirector::setProjection(ccDirectorProjection kProjection)
