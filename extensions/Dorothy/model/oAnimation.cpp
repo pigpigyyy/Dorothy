@@ -28,15 +28,13 @@ oFrameAction* oFrameActionDef::toAction()
 oActionDuration* oFrameAnimationDef::toAction()
 {
 	return oSequence::create(
-		CCDelayTime::create(begin),
+		CCDelayTime::create(delay),
 		_def->toAction(),
-		CCDelayTime::create(end),
 		nullptr);
 }
 
 oFrameAnimationDef::oFrameAnimationDef():
-begin(0.0f),
-end(0.0f)
+delay(0.0f)
 { }
 
 void oFrameAnimationDef::setFile( const char* filename )
@@ -55,13 +53,9 @@ string oFrameAnimationDef::toXml()
 	ostringstream stream;
 	stream << '<' << char(oModelXml::FrameAnimation) << ' '
 		<< char(oModelXml::File) << "=\"" << _file << '\"';
-	if (begin != 0.0f)
+	if (delay != 0.0f)
 	{
-		stream << ' ' << char(oModelXml::Begin) << "=\"" << begin << '\"';
-	}
-	if (end != 0.0f)
-	{
-		stream << ' ' << char(oModelXml::End) << "=\"" << end << '\"';
+		stream << ' ' << char(oModelXml::Delay) << "=\"" << delay << '\"';
 	}
 	stream << "/>";
 	return stream.str();

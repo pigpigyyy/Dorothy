@@ -94,7 +94,7 @@ local function oViewPanel()
 			node.position = node.position + oVec2(xVal and xVal or 0, yVal and yVal or 0)
 		end
 		
-		if t == 1.0 then
+		if t == 1 then
 			panel:unscheduleUpdate()
 			--panel.touchEnabled = true
 			--menu.touchEnabled = true
@@ -272,7 +272,7 @@ local function oViewPanel()
 				menuItem.cascadeOpacity = true
 			end
 		end
-		
+
 		menuItem.getData = function(self)
 			return sp,sp[oSd.sprite]
 		end
@@ -286,6 +286,7 @@ local function oViewPanel()
 				elseif eventType == CCMenuItem.TapEnded then
 				elseif eventType == CCMenuItem.Tapped then
 					menuItem:select(true)
+					oEditor.settingPanel:clearSelection()
 					oEvent:send("ImageSelected",{sp,sp[oSd.sprite],menuItem})
 				end
 			end)
@@ -315,10 +316,10 @@ local function oViewPanel()
 	local function updatePos(deltaTime)
 		local val = winSize.height*2
 		local a = oVec2(_v.x > 0 and -val or val,_v.y > 0 and -val or val)
-		
+
 		local xR = _v.x > 0
 		local yR = _v.y > 0
-		
+
 		_v = _v + a*deltaTime
 		if _v.x < 0 == xR then _v.x = 0;a.x = 0 end
 		if _v.y < 0 == yR then _v.y = 0;a.y = 0 end
@@ -479,6 +480,17 @@ local function oViewPanel()
 	local outline = nil
 	panel.listener = oListener("ImageSelected",
 		function(args)
+			if not args then
+				if selectedItem then
+					selectedItem:select(false)
+					selectedItem = nil
+					oEditor.sprite = nil
+					oEditor.spriteData = nil
+					oEditor.controlBar:clearCursors()
+					oEditor.settingPanel:setEditEnable(false)
+				end
+				return
+			end
 			local sp = args[1]
 			local node = args[2]
 			local menuItem = args[3]
@@ -500,23 +512,33 @@ local function oViewPanel()
 					outline = oImageOutline(node,withFrame)
 					outline.visble = false
 				else
-					outline.parent:removeChild(outline)
+					if outline.parent then
+						outline.parent:removeChild(outline)
+					end
 					outline:setNode(node,withFrame)
 				end
 				oEditor.sprite = node
 				oEditor.spriteData = sp
-				oEditor.settingPanel.items.Name:setValue(sp[oSd.name])
 				node:addChild(outline)
 				if oEditor.state == oEditor.EDIT_ANIMATION then
 					oEditor.controlBar:updateCursors()
 				end
 				selectedItem = menuItem
+				if oEditor.state == oEditor.EDIT_SPRITE then
+					oEditor.settingPanel:setEditEnable(true)
+				end
 			else
+				if outline.parent then
+					outline.parent:removeChild(outline)
+				end
 				selectedItem = nil
 				oEditor.sprite = nil
 				oEditor.spriteData = nil
 				oEditor.controlBar:clearCursors()
 				oEditor.settingPanel:updateValues(nil)
+				if oEditor.state == oEditor.EDIT_SPRITE then
+					oEditor.settingPanel:setEditEnable(false)
+				end
 			end
 
 			oEditor.keyIndex = 1
@@ -557,6 +579,18 @@ local function oViewPanel()
 		if outline then
 			outline.visible = show
 		end
+	end
+	
+	panel.isOutlineVisible = function(self)
+		if outline then
+			return outline.visible
+		else
+			return false
+		end 
+	end
+	
+	panel.clearSelection = function(self)
+		oEvent:send("ImageSelected",nil)
 	end
 	
 	return panel

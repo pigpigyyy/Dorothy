@@ -50,6 +50,9 @@ local function oViewArea()
 	local EDIT_SKEWXY = 11
 	local EDIT_VISIBLE = 12
 	local EDIT_EASE = 13
+	local EDIT_ANCHORX = 14
+	local EDIT_ANCHORY = 15
+	local EDIT_ANCHORXY = 16
 
 	local editState = EDIT_NONE
 	view:registerTouchHandler(
@@ -133,13 +136,14 @@ local function oViewArea()
 			local model = oModel(oEditor.model)
 			model.look = oEditor.look
 			model.loop = oEditor.loop
-			local time = self._model.time
+			if oEditor.state == oEditor.EDIT_ANIMATION then
+				local time = self._model.time
+				model:play(oEditor.animation)
+				model:pause()
+				model.time = time
+			end
 			view:setModel(model)
-			model:play(oEditor.animation)
-			model:pause()
-			model.time = time
 			oEditor.viewPanel:updateSprite(oEditor.data,model)
-			oEditor.editMenu:markEditButton(true)
 		end
 		return self._model
 	end
@@ -159,6 +163,35 @@ local function oViewArea()
 	end
 	
 	local editorView = nil
+	local editTarget = nil
+	local function setEditorView(editor)
+		if editor then
+			local pos = editTarget.position
+			local parent = editTarget.parent
+			--parent=CCNode
+			pos = pos-oVec2(
+				parent.contentSize.width*parent.anchorPoint.x,
+				parent.contentSize.height*parent.anchorPoint.y)
+			pos = parent:convertToWorldSpace(pos)
+			pos = crossNode:convertToNodeSpace(pos)
+			editor.position = pos
+			editor:setTarget(editTarget)
+		else
+			editorView:setTarget(nil)
+		end
+		editorView = editor
+	end
+
+	local posRotFix = 0
+	local function getEditorRot()
+		posRotFix = editTarget.rotation
+		local p = editTarget.parent
+		while p and p ~= scrollNode do
+			posRotFix = posRotFix + p.rotation
+			p = p.parent
+		end
+		return posRotFix
+	end
 
 	local renderTarget = CCRenderTarget(winSize.width,winSize.height)
 	renderTarget.position = oVec2(winSize.width*0.5,winSize.height*0.5)
@@ -203,22 +236,22 @@ local function oViewArea()
 	rotEditor.cascadeOpacity = false
 	rotEditor.cascadeColor = false
 	rotEditor.visible = false
-
-	local editTarget = nil
-
-	local function setEditorView(editor)
-		if editor then
-			if editorView and editorView.parent then
-				editorView.parent:removeChild(editorView)
-			end
-			editTarget:addChild(editor)
-			editor.position = oVec2(
-				editTarget.contentSize.width*editTarget.anchorPoint.x, 
-				editTarget.contentSize.height*editTarget.anchorPoint.y)
+	crossNode:addChild(rotEditor)
+	rotEditor.setTarget = function(self,target)
+		if target then
+			self:scheduleUpdate(
+				function(deltaTime,self)
+					local rot = 0
+					local p = target
+					while p and p ~= crossNode do
+						rot = rot + p.rotation
+						p = p.parent
+					end
+					self.rotation = rot
+				end,-1)
 		else
-			editorView.parent:removeChild(editorView)
+			self:unscheduleUpdate()
 		end
-		editorView = editor
 	end
 
 	-- rot
@@ -235,7 +268,7 @@ local function oViewArea()
 	end
 	
 	view.stopEditRot = function(self)
-		if editState == EDIT_ROT then			
+		if editState == EDIT_ROT then
 			updateModel()
 			setEditorView(nil)
 			editTarget = nil
@@ -267,10 +300,13 @@ local function oViewArea()
 				end
 				local rotation = editTarget.rotation + delta
 				editTarget.rotation = rotation
-				if editState == EDIT_ROT and oEditor.animationData then
-					oEditor.animationData[oEditor.keyIndex][oKd.rotation] = rotation
-				end
 				oEditor.settingPanel.items.Rotation:setValue(rotation)
+				if oEditor.state == oEditor.EDIT_ANIMATION then
+					oEditor.animationData[oEditor.keyIndex][oKd.rotation] = rotation
+				elseif oEditor.state == oEditor.EDIT_SPRITE then
+					oEditor.spriteData[oSd.rotation] = rotation
+				end
+				oEditor.editMenu:markEditButton(true)
 				valueChanged = true
 			end
 		end
@@ -303,26 +339,32 @@ local function oViewArea()
 	posEditor.cascadeOpacity = false
 	posEditor.cascadeColor = false
 	posEditor.visible = false
+	crossNode:addChild(posEditor)
+	posEditor.setTarget = function(self,target)
+		if target then
+			local parent = target.parent
+			local off = oVec2(
+					parent.contentSize.width*parent.anchorPoint.x,
+					parent.contentSize.height*parent.anchorPoint.y)
+			self:scheduleUpdate(
+				function(deltaTime,self)
+					self.position = crossNode:convertToNodeSpace(
+						parent:convertToWorldSpace(
+							target.position-off))
+				end,-1)
+			getEditorRot()
+		else
+			self:unscheduleUpdate()
+		end
+	end
 	
-	local posRotFix = 0
 	local totalX = 0
 	local totalY = 0
-	local function placePosEditor()
-		posRotFix = 0
-		local p = posEditor.parent
-		while p and p ~= scrollNode do
-			posRotFix = posRotFix + p.rotation
-			p = p.parent
-		end
-		posRotFix = -posRotFix
-		--posEditor.rotation = posRotFix
-	end
 
 	view.editPosX = function(self)
 		if editState == EDIT_NONE then
 			editTarget = oEditor.sprite
 			setEditorView(posEditor)
-			placePosEditor()
 			totalX = 0
 			xArrow.visible = true
 			editState = EDIT_POSX
@@ -343,7 +385,6 @@ local function oViewArea()
 		if editState == EDIT_NONE then
 			editTarget = oEditor.sprite
 			setEditorView(posEditor)
-			placePosEditor()
 			totalY = 0
 			yArrow.visible = true
 			editState = EDIT_POSY
@@ -364,7 +405,6 @@ local function oViewArea()
 		if editState == EDIT_NONE then
 			editTarget = oEditor.sprite
 			setEditorView(posEditor)
-			placePosEditor()
 			totalX = 0
 			totalY = 0
 			xArrow.visible = true
@@ -387,44 +427,51 @@ local function oViewArea()
 	view.updatePos = function(self, delta)
 		if delta ~= oVec2.zero then
 			--editTarget=CCNode
-			local r = -(posRotFix+editTarget.rotation)*math.pi/180
-			local x1 = delta.x*math.cos(r)-delta.y*math.sin(r)
-			x1 = x1/crossNode.scaleX
-			local y1 = delta.x*math.sin(r)+delta.y*math.cos(r)
-			y1 = y1/crossNode.scaleX
-			totalX = totalX + x1
-			totalY = totalY + y1
+			if editState == EDIT_POSX then
+				delta.y = 0
+			elseif editState == EDIT_POSY then
+				delta.x = 0
+			end
+			local x2 = delta.x
+			local y2 = delta.y
+			x2 = x2/crossNode.scaleX
+			y2 = y2/crossNode.scaleX
+			totalX = totalX + x2
+			totalY = totalY + y2
 			if view.isValueFixed then
 				if totalX < 1 and totalX > -1 then
-					x1 = 0
+					x2 = 0
 				else
-					x1 = totalX > 0 and math.floor(totalX) or math.ceil(totalX)
+					x2 = totalX > 0 and math.floor(totalX) or math.ceil(totalX)
 					totalX = 0
-					editTarget.positionX = editTarget.positionX > 0 and math.floor(editTarget.positionX) or math.ceil(editTarget.positionX)
 				end
 				if totalY < 1 and totalY > -1 then
-					y1 = 0
+					y2 = 0
 				else
-					y1 = totalY > 0 and math.floor(totalY) or math.ceil(totalY)
+					y2 = totalY > 0 and math.floor(totalY) or math.ceil(totalY)
 					totalY = 0
-					editTarget.positionY = editTarget.positionY > 0 and math.floor(editTarget.positionY) or math.ceil(editTarget.positionY)
 				end
 			end
-			if editState == EDIT_POSX then
-				y1 = 0
-			elseif editState == EDIT_POSY then
-				x1 = 0
-			end
+
+			local r = -(editTarget.rotation-posRotFix)*math.pi/180
+			local x1 = x2*math.cos(r)-y2*math.sin(r)
+			local y1 = x2*math.sin(r)+y2*math.cos(r)
 			editTarget.positionX = editTarget.positionX + x1
 			editTarget.positionY = editTarget.positionY + y1
 			local x = editTarget.positionX
 			local y = editTarget.positionY
 			oEditor.settingPanel.items.PosX:setValue(x)
 			oEditor.settingPanel.items.PosY:setValue(y)
-			if oEditor.animationData then
+
+			if oEditor.state == oEditor.EDIT_ANIMATION then
 				oEditor.animationData[oEditor.keyIndex][oKd.x] = x
 				oEditor.animationData[oEditor.keyIndex][oKd.y] = y
+			elseif oEditor.state == oEditor.EDIT_SPRITE then
+				oEditor.spriteData[oSd.x] = x
+				oEditor.spriteData[oSd.y] = y
 			end
+			
+			oEditor.editMenu:markEditButton(true)
 			valueChanged = true
 		end
 	end
@@ -458,7 +505,13 @@ local function oViewArea()
 	scaleEditor.cascadeOpacity = false
 	scaleEditor.cascadeColor = false
 	scaleEditor.visible = false
-	
+	crossNode:addChild(scaleEditor)
+	scaleEditor.setTarget = function(self,target)
+		if target then
+			self.rotation = getEditorRot()
+		end
+	end
+
 	local totalScaleX = 0
 	local totalScaleY = 0
 
@@ -528,14 +581,19 @@ local function oViewArea()
 	view.updateScale = function(self, delta)
 		if delta ~= oVec2.zero then
 			--editTarget=CCNode
+			local x2 = delta.x
+			local y2 = delta.y
+			local r = posRotFix*math.pi/180
+			local x3 = x2*math.cos(r)-y2*math.sin(r)
+			local y3 = x2*math.sin(r)+y2*math.cos(r)
 			if editState == EDIT_SCALEX then
-				delta.y = 0
+				y3 = 0
 			elseif editState == EDIT_SCALEY then
-				delta.x = 0
+				x3 = 0
 			end
 			local f = 2/crossNode.scaleX/winSize.height
-			local x1 = delta.x*f
-			local y1 = delta.y*f
+			local x1 = x3*f
+			local y1 = y3*f
 			totalScaleX = totalScaleX + x1
 			totalScaleY = totalScaleY + y1
 			if view.isValueFixed then
@@ -564,10 +622,16 @@ local function oViewArea()
 			local y = editTarget.scaleY
 			oEditor.settingPanel.items.ScaleX:setValue(x)
 			oEditor.settingPanel.items.ScaleY:setValue(y)
-			if oEditor.animationData then
+			
+			if oEditor.state == oEditor.EDIT_ANIMATION then
 				oEditor.animationData[oEditor.keyIndex][oKd.scaleX] = x
 				oEditor.animationData[oEditor.keyIndex][oKd.scaleY] = y
+			elseif oEditor.state == oEditor.EDIT_SPRITE then
+				oEditor.spriteData[oSd.scaleX] = x
+				oEditor.spriteData[oSd.scaleY] = y
 			end
+
+			oEditor.editMenu:markEditButton(true)
 			valueChanged = true
 		end
 	end
@@ -633,10 +697,16 @@ local function oViewArea()
 			if opacity > 1 then opacity = 1 end
 			editTarget.opacity = opacity
 			yBar.scaleY = opacity
-			if editState == EDIT_OPACITY and oEditor.animationData then
-				oEditor.animationData[oEditor.keyIndex][oKd.opacity] = opacity
-			end
+			
 			oEditor.settingPanel.items.Opacity:setValue(opacity)
+
+			if oEditor.state == oEditor.EDIT_ANIMATION then
+				oEditor.animationData[oEditor.keyIndex][oKd.opacity] = opacity
+			elseif oEditor.state == oEditor.EDIT_SPRITE then
+				oEditor.spriteData[oSd.opacity] = opacity
+			end
+
+			oEditor.editMenu:markEditButton(true)
 			valueChanged = true
 		end
 	end
@@ -672,7 +742,9 @@ local function oViewArea()
 	skewEditor.cascadeOpacity = false
 	skewEditor.cascadeColor = false
 	skewEditor.visible = false
-	
+	crossNode:addChild(skewEditor)
+	skewEditor.setTarget = function(self,target) end
+
 	local totalSkewX = 0
 	local totalSkewY = 0
 
@@ -778,10 +850,15 @@ local function oViewArea()
 			local y = editTarget.skewY
 			oEditor.settingPanel.items.SkewX:setValue(x)
 			oEditor.settingPanel.items.SkewY:setValue(y)
-			if oEditor.animationData then
+			if oEditor.state == oEditor.EDIT_ANIMATION then
 				oEditor.animationData[oEditor.keyIndex][oKd.skewX] = x
 				oEditor.animationData[oEditor.keyIndex][oKd.skewY] = y
+			elseif oEditor.state == oEditor.EDIT_SPRITE then
+				oEditor.spriteData[oSd.skewX] = x
+				oEditor.spriteData[oSd.skewY] = y
 			end
+
+			oEditor.editMenu:markEditButton(true)
 			valueChanged = true
 		end
 	end
@@ -796,10 +873,12 @@ local function oViewArea()
 			editTarget.visible = not editTarget.visible
 			item.label.text = editTarget.visible and "Show" or "Hide"
 			item.label.texture.antiAlias = false
-			if editState == EDIT_VISIBLE and oEditor.animationData then
+			oEditor.settingPanel.items.Visible:setValue(editTarget.visible)
+			if oEditor.state == oEditor.EDIT_ANIMATION then
 				oEditor.animationData[oEditor.keyIndex][oKd.visible] = editTarget.visible
 			end
-			oEditor.settingPanel.items.Visible:setValue(editTarget.visible)
+
+			oEditor.editMenu:markEditButton(true)
 			valueChanged = true
 		end)
 	vButton.anchorPoint = oVec2.zero
@@ -895,12 +974,13 @@ local function oViewArea()
 	end
 
 	local function onItemClick(item)
-		if editState == EDIT_EASE and oEditor.animationData then
+		if oEditor.state == oEditor.EDIT_ANIMATION then
 			oEditor.animationData[oEditor.keyIndex][easeType] = item.easeId
-			valueChanged = true
-			easeMenuItem:setValue(item.easeName)
-			oEvent:send("SettingSelected",easeMenuItem)
 		end
+		easeMenuItem:setValue(item.easeName)
+		oEditor.editMenu:markEditButton(true)
+		valueChanged = true
+		oEvent:send("SettingSelected",easeMenuItem)
 	end
 
 	for i = 1,#oEditor.easeNames do

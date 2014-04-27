@@ -58,7 +58,6 @@ oFd =
 {
 	file = 2,
 	beginTime = 3,
-	endTime = 4
 }
 
 oEditor = {}
@@ -141,45 +140,6 @@ for key,item in pairs(controls) do
 	oEditor[key] = item
 end
 oEvent:send("EditorLoaded")
-
-local winSize = CCDirector.winSize
-local textField = CCTextFieldTTF("","Arial",20)
-textField.anchorPoint = oVec2.zero
-textField.horizontalAlignment = CCTextAlign.HRight
-textField:attachWithIME()
-textField.position = oVec2(winSize.width*0.5,winSize.height*0.5)
-oEditor.scene:addChild(textField)
-local cursor = oLine({oVec2(0,0),oVec2(0,20)},ccColor4(0xff00ffff))
-local blink = CCRepeatForever(
-	CCSequence(
-	{
-		CCShow(),
-		CCDelay(0.5),
-		CCHide(),
-		CCDelay(0.5)
-	}))
-cursor:runAction(blink)
-cursor.visible = false
-cursor.positionX = textField.contentSize.width
-textField:addChild(cursor)
-textField:registerInputHandler(
-	function(self,eventType,text)
-		if eventType == CCTextFieldTTF.Attach then
-			cursor.visible = true
-		elseif eventType == CCTextFieldTTF.Detach then
-			cursor:stopAllActions()
-			cursor.visible = false
-		elseif eventType == CCTextFieldTTF.Insert then
-			if string.len(self.text) >= 8 then
-				return false
-			end
-		elseif eventType == CCTextFieldTTF.Inserted or eventType == CCTextFieldTTF.Deleted then
-			cursor:stopAction(blink)
-			cursor:runAction(blink)
-			cursor.positionX = textField.contentSize.width
-		end
-		return true
-	end)
 
 --[[
 local names = oCache.Clip:getNames("jixienv.clip")

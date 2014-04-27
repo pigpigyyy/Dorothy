@@ -41,13 +41,10 @@ class CCTextFieldTTF;
 class CC_DLL CCTextFieldDelegate: public CCObject
 {
 public:
-    /**
-    @brief    If the sender doesn't want to attach to the IME, return true;
-    */
     virtual bool onTextFieldAttachWithIME(CCTextFieldTTF * sender)
     { 
         CC_UNUSED_PARAM(sender);
-        return false;
+		return false;
     }
 
     /**
@@ -56,7 +53,7 @@ public:
     virtual bool onTextFieldDetachWithIME(CCTextFieldTTF * sender)
     {
         CC_UNUSED_PARAM(sender);
-        return false;
+		return false;
     }
 
     /**
@@ -155,6 +152,7 @@ public:
 protected:
     std::string * m_pPlaceHolder;
     ccColor3B m_ColorSpaceHolder;
+	bool m_attached;
 protected:
 
     virtual void draw();

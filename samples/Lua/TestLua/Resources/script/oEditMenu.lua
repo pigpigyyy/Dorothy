@@ -400,6 +400,7 @@ local function oEditMenu()
 		end
 		oEditor.state = oEditor.EDIT_SPRITE
 		oEditor.settingPanel:updateItems()
+		oEditor.settingPanel:update()
 	end
 
 	menu.toAnimation = function(self)
@@ -429,9 +430,16 @@ local function oEditMenu()
 		end
 		oEditor.state = oEditor.EDIT_ANIMATION
 		oEditor.settingPanel:updateItems()
+		oEditor.settingPanel:clearSelection()
+		oEditor.settingPanel:update()
+		oEditor.controlBar:updateCursors()
 		oEditor.controlBar.visible = true
 		oEditor.controlBar.opacity = 0
 		oEditor.controlBar:runAction(oOpacity(0.3,0.3))
+		local model = oEditor.viewArea:getModel()
+		model:play(oEditor.animation)
+		model:pause()
+		model.time = 0
 	end
 
 	menu.loadListener = oListener("EditorLoaded",

@@ -19,10 +19,10 @@ CCSprite* oSpriteDef::toSprite()
 }
 
 void oSpriteDef::restore( CCSprite* sprite )
-{	
+{
 	sprite->setPosition(ccp(x, y));
 	sprite->setScaleX(scaleX);
-	sprite->setScaleX(scaleY);
+	sprite->setScaleY(scaleY);
 	sprite->setRotation(rotation);
 	sprite->setSkewX(skewX);
 	sprite->setSkewY(skewY);

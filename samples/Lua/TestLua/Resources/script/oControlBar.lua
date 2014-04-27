@@ -193,7 +193,7 @@ local function oControlBar()
 	controlBar:registerTouchHandler(
 		function(eventType, touch)
 			--touch = CCTouch
-			if touch.id ~= 0 then
+			if not controlBar.visible or touch.id ~= 0 then
 				return false
 			end
 			if not oEditor.viewArea:getModel() then
@@ -295,6 +295,10 @@ local function oControlBar()
 	controlBar.setTime = function(self,time)
 		local pos = time*60
 		controlBar:setPos(pos)
+	end
+	
+	controlBar.getTime = function(self,time)
+		return bar:getPos()/60
 	end
 	
 	return controlBar

@@ -55,6 +55,7 @@ CCTextFieldTTF::CCTextFieldTTF()
 , m_nCharCount(0)
 , m_pInputText(new std::string)
 , m_pPlaceHolder(new std::string)   // prevent CCLabelTTF initWithString assertion
+, m_attached(false)
 {
     m_ColorSpaceHolder.r = m_ColorSpaceHolder.g = m_ColorSpaceHolder.b = 127;
 }
@@ -131,15 +132,12 @@ bool CCTextFieldTTF::initWithPlaceHolder(const char *placeholder, const char *fo
 
 bool CCTextFieldTTF::attachWithIME()
 {
-	if (!CCTextFieldTTF::canAttachWithIME())
-	{
-		return false;
-	}
+	if (m_attached) return false;
     bool bRet = CCIMEDelegate::attachWithIME();
     if (bRet)
     {
         // open keyboard
-        CCEGLView * pGlView = CCDirector::sharedDirector()->getOpenGLView();
+        CCEGLView* pGlView = CCDirector::sharedDirector()->getOpenGLView();
         if (pGlView)
         {
             pGlView->setIMEKeyboardState(true);
@@ -150,13 +148,11 @@ bool CCTextFieldTTF::attachWithIME()
 
 bool CCTextFieldTTF::detachWithIME()
 {
-	if (!CCTextFieldTTF::canDetachWithIME())
-	{
-		return false;
-	}
+	if (!m_attached) return false;
     bool bRet = CCIMEDelegate::detachWithIME();
     if (bRet)
     {
+		m_attached = false;
         // close keyboard
         CCEGLView * pGlView = CCDirector::sharedDirector()->getOpenGLView();
         if (pGlView)
@@ -169,12 +165,14 @@ bool CCTextFieldTTF::detachWithIME()
 
 bool CCTextFieldTTF::canAttachWithIME()
 {
-    return (m_pDelegate) ? (! m_pDelegate->onTextFieldAttachWithIME(this)) : true;
+	m_attached = true;
+	return (m_pDelegate ? m_pDelegate->onTextFieldAttachWithIME(this) : true);
 }
 
 bool CCTextFieldTTF::canDetachWithIME()
 {
-    return (m_pDelegate) ? (! m_pDelegate->onTextFieldDetachWithIME(this)) : true;
+	m_attached = false;
+	return (m_pDelegate ? m_pDelegate->onTextFieldDetachWithIME(this) : true);
 }
 
 void CCTextFieldTTF::insertText(const char * text, int len)

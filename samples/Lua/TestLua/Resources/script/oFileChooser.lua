@@ -184,6 +184,14 @@ local function oFileChooser()
 				oEditor.controlBar:clearCursors()
 				oEditor.model = oEditor.output..item.editTarget..".model"
 				oEditor.data = oCache.Model:getData(oEditor.model)
+				oEditor.animation = nil
+				oEditor.animationData = nil
+				oEditor.keyIndex = nil
+				oEditor.currentFramePos = nil
+				oEditor.sprite = nil
+				oEditor.spriteData = nil
+				oEditor.dirty = false
+				oEditor.needSave = false
 
 				if oEditor.data then
 					local isBatchUsed = oEditor.data[oSd.isBatchUsed]
@@ -228,9 +236,8 @@ local function oFileChooser()
 				end
 				model.loop = oEditor.loop
 				oEditor.viewArea:setModel(model)
+				oEditor.viewPanel:clearSelection()
 				oEditor.viewPanel:updateImages(oEditor.data,model)
-				oEditor.controlBar:setTime(0)
-				
 				oEditor.editMenu:toSprite()
 			end
 		end)

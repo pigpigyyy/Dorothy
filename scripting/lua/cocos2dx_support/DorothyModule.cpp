@@ -578,8 +578,7 @@ void __oModelCache_getData(const char* filename)
 				lua_createtable(L, 4, 0);
 				lua_setInt(1, 2);
 				lua_setString(2, frameDef->getFile().c_str());
-				lua_setFloat(3, frameDef->begin);
-				lua_setFloat(4, frameDef->end);
+				lua_setFloat(3, frameDef->delay);
 				lua_rawseti(L, -2, defIndex + 1);
 				continue;
 			}
@@ -788,9 +787,8 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 			else if (type == 2)
 			{
 				oFrameAnimationDef* frameAnimationDef = new oFrameAnimationDef();
-				frameAnimationDef->begin = lua_getFloat(2);
-				frameAnimationDef->end = lua_getFloat(3);
-				frameAnimationDef->setFile(lua_getString(4));
+				frameAnimationDef->setFile(lua_getString(2));
+				frameAnimationDef->delay = lua_getFloat(3);
 				spriteDef->animationDefs.push_back(frameAnimationDef);
 			}
 			lua_pop(L, 1);// pop animationDef
@@ -858,7 +856,7 @@ public:
 			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
 			stack->pushCCObject(sender, "CCTextFieldTTF");
 			stack->pushInt(oTextFieldEvent::Attach);
-			bool result = stack->executeFunctionByHandler(handler->get(), 2) == 0;
+			bool result = stack->executeFunctionByHandler(handler->get(), 2) != 0;
 			stack->clean();
 			return result;
 		}
@@ -871,7 +869,7 @@ public:
 			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
 			stack->pushCCObject(sender, "CCTextFieldTTF");
 			stack->pushInt(oTextFieldEvent::Detach);
-			bool result = stack->executeFunctionByHandler(handler->get(), 2) == 0;
+			bool result = stack->executeFunctionByHandler(handler->get(), 2) != 0;
 			stack->clean();
 			return result;
 		}

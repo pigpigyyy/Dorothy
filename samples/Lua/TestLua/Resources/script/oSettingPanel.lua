@@ -1,3 +1,5 @@
+local oTextField = require("Script/oTextField")
+
 local function oSettingPanel()
 	local winSize = CCDirector.winSize
 	local borderSize = CCSize(160,200*(winSize.height-90)/510)
@@ -183,11 +185,21 @@ local function oSettingPanel()
 		label.texture.antiAlias = false
 		menuItem:addChild(label)
 
-		label = CCLabelTTF("","Arial",14)
+		local isInput = false
+		if name == "Name :" then
+			label = oTextField(108,7,14,8,
+				function(item)
+					oEvent:send("SettingSelected",nil)
+				end)
+			isInput = true
+		else
+			label = CCLabelTTF("","Arial",14)
+			label.position = oVec2(120,15)
+		end
 		label.color = ccColor3(0xffffff)
-		label.position = oVec2(120,15)
 		menuItem:addChild(label)
-		
+		menuItem.label = label
+
 		local border = oLine(
 		{
 			oVec2(0,0),
@@ -200,7 +212,7 @@ local function oSettingPanel()
 		border.visible = false
 
 		menuItem:addChild(border)
-		
+
 		local _value = nil
 		menuItem.setValue = function(self,value)
 			if value ~= nil and value ~= "" then
@@ -216,7 +228,7 @@ local function oSettingPanel()
 				_value = nil
 			end
 		end
-		
+
 		menuItem.getValue = function(self)
 			return _value
 		end
@@ -240,30 +252,34 @@ local function oSettingPanel()
 				end
 			end
 		end
-		
+
 		menuItem:registerTapHandler(
 			function(eventType,self)
-				if eventType == CCMenuItem.TapBegan then
-				elseif eventType == CCMenuItem.TapEnded then
-				elseif eventType == CCMenuItem.Tapped then
-					if enableFunc ~= nil and disableFunc ~= nil then
-						oEvent:send("SettingSelected",menuItem)
+				if eventType == CCMenuItem.Tapped then
+					if not isInput then
+						if enableFunc ~= nil and disableFunc ~= nil then
+							oEvent:send("SettingSelected",menuItem)
+						end
+					else
+						if oEditor.state == oEditor.EDIT_SPRITE and enableFunc ~= nil and disableFunc ~= nil then
+							oEvent:send("SettingSelected",menuItem)
+						end
 					end
 				end
 			end)
-		
+
 		menuItem.setEnabled = function(self,enabled)
 			menuItem.enabled = enabled
 			if not enabled then menuItem:select(false) end
 		end
-	
+
 		menuItem.getEnabled = function(self)
 			return menuItem.enabled
 		end
-		
+
 		return menuItem
 	end
-	
+
 	local opacity = oOpacity(0.5,0.3,oEase.InExpo)
 	panel.show = function(self)
 		if not opacity.done then
@@ -317,7 +333,7 @@ local function oSettingPanel()
 				if not CCRect(oVec2.zero, panel.contentSize):containsPoint(panel:convertToNodeSpace(touch.location)) then
 					return false
 				end
-				
+
 				panel:show()
 
 				deltaMoveLength = 0
@@ -366,11 +382,29 @@ local function oSettingPanel()
 	local skewItem = nil
 	local skewNextItem = nil
 	local skewXY = false
+	
+	local isEditingName = false
 
 	local skipSelection = false
 	local keyItems =
 	{
-		Name = oSettingItem("Name :",0,getPosY()),
+		Name = oSettingItem("Name :",0,getPosY(),
+			function(item)
+				item.label:attachWithIME()
+				isEditingName = true
+			end,
+			function(item)
+				if not isEditingName or not oEditor.spriteData then
+					return
+				end
+				isEditingName = false
+				item.label:detachWithIME()
+				local text = item.label.text
+				if text ~= oEditor.spriteData[oSd.name] then
+					oEditor.spriteData[oSd.name] = text
+					oEditor.editMenu:markEditButton(true)
+				end
+			end),
 		Time = oSettingItem("Time :",0,getPosY()),--1
 		PosX = oSettingItem("PosX :",0,getPosY(),
 			function(item)
@@ -660,6 +694,12 @@ local function oSettingPanel()
 		keyCount = keyCount + 1
 	end
 
+	panel.setEditEnable = function(self,enable)
+		for _,item in pairs(keyItems) do
+			item:setEnabled(enable)
+		end
+	end
+
 	panel.updateItems = function(self)
 		initValues()
 		if oEditor.state == oEditor.EDIT_ANIMATION then
@@ -669,17 +709,20 @@ local function oSettingPanel()
 			stencil.scaleY = 1
 			borderSize.height = borderH
 			panel.contentSize = borderSize
+			menu.contentSize = borderSize
+			menu.positionY = borderSize.height
 			keyItems.Time.visible = true
 			keyItems.EaseP.visible = true
 			keyItems.EaseS.visible = true
 			keyItems.EaseR.visible = true
 			keyItems.EaseK.visible = true
 			keyItems.EaseO.visible = true
+			keyItems.Visible.visible = true
+			keyItems.Name.visible = false
 			keyItems.AnchorX.visible = false
 			keyItems.AnchorY.visible = false
 			local items = 
 			{
-				keyItems.Name,
 				keyItems.Time,
 				keyItems.PosX,
 				keyItems.PosY,
@@ -700,7 +743,7 @@ local function oSettingPanel()
 			for i = 1,#items do
 				items[i].positionY = posY()
 			end
-			viewHeight = 30*(keyCount-2)+20
+			viewHeight = 30*(keyCount-3)+20
 		else
 			panel.position = oVec2(winSize.width-170,10)
 			local borderH = 200*(winSize.height-90)/510
@@ -709,12 +752,16 @@ local function oSettingPanel()
 			stencil.scaleY = scale
 			borderSize.height = borderH+60
 			panel.contentSize = borderSize
+			menu.contentSize = borderSize
+			menu.positionY = borderSize.height
 			keyItems.Time.visible = false
 			keyItems.EaseP.visible = false
 			keyItems.EaseS.visible = false
 			keyItems.EaseR.visible = false
 			keyItems.EaseK.visible = false
 			keyItems.EaseO.visible = false
+			keyItems.Visible.visible = false
+			keyItems.Name.visible = true
 			keyItems.AnchorX.visible = true
 			keyItems.AnchorY.visible = true
 			local items =
@@ -729,14 +776,13 @@ local function oSettingPanel()
 				keyItems.Rotation,
 				keyItems.Opacity,
 				keyItems.SkewX,
-				keyItems.SkewY,
-				keyItems.Visible
+				keyItems.SkewY
 			}
 			local posY = genPosY()
 			for i = 1,#items do
 				items[i].positionY = posY()
 			end
-			viewHeight = 30*(keyCount-6)+20
+			viewHeight = 30*(keyCount-7)+20
 		end
 		viewWidth = borderSize.width
 		moveY = viewHeight-borderSize.height
@@ -793,9 +839,7 @@ local function oSettingPanel()
 			end
 
 			local enable = oEditor.currentFramePos ~= nil and oEditor.currentFramePos == pos
-			for _,item in pairs(keyItems) do
-				item:setEnabled(enable)
-			end
+			panel:setEditEnable(enable)
 			if not enable then
 				oEvent:send("SettingSelected",nil)
 			end
@@ -854,18 +898,29 @@ local function oSettingPanel()
 		end)
 
 	panel.clearSelection = function(self)
+		oEvent:send("SettingSelected",nil)
 		for _,item in pairs(keyItems) do
 			item:select(false)
 		end
-		oEvent:send("SettingSelected",nil)
 	end
 	
 	panel.update = function(self)
 		if oEditor.state == oEditor.EDIT_ANIMATION then
 			local model = oEditor.viewArea:getModel()
 			oEditor.controlBar:setTime(model.time*model.duration)
-		elseif oEditor.spriteData then
-			local sp = oEditor.spriteData
+		else
+			local sp = nil
+			if oEditor.spriteData then
+				sp = oEditor.spriteData
+			else
+				sp = {}
+			end
+			-- editing root name is not allowed
+			if sp ~= oEditor.data then
+				keyItems.Name:setValue(sp[oSd.name])
+			else
+				keyItems.Name:setValue("Root")
+			end
 			keyItems.AnchorX:setValue(sp[oSd.anchorX])
 			keyItems.AnchorY:setValue(sp[oSd.anchorY])
 			keyItems.PosX:setValue(sp[oSd.x])

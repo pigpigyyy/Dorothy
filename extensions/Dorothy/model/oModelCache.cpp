@@ -164,11 +164,8 @@ void oModelCache::startElement( void *ctx, const char *name, const char **atts )
 				oCase::File:
 					frameAnimationDef->setFile(atts[++i]);
 					break;
-				oCase::Begin:
-					frameAnimationDef->begin = (float)atof(atts[++i]);
-					break;
-				oCase::End:
-					frameAnimationDef->end = (float)atof(atts[++i]);
+				oCase::Delay:
+					frameAnimationDef->delay = (float)atof(atts[++i]);
 					break;
 				}
 			}

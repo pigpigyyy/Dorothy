@@ -96,8 +96,7 @@ struct oModelXml
  				FrameAnimation = 'E',//4
 					//<a>
 //		 			File = 'A',
-					Begin = 'B',
-					End = 'C',
+					Delay = 'B',
 					//</a>
 
 				Look = 'F',//5
