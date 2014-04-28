@@ -43,9 +43,6 @@ public:
 class CC_DLL CCObject : public CCCopying
 {
 public:
-    // Lua reference flag
-    int m_nLuaRef;
-public:
     CCObject();
     virtual ~CCObject();
 	int getObjectId() const;

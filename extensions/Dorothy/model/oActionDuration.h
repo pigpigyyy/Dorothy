@@ -14,11 +14,11 @@ public:
 	void pause();
 	bool isPaused() const;
 	void resume();
-	virtual bool isDone(void);
+	virtual bool isDone();
 	virtual CCObject* copyWithZone(CCZone* zone);
 	virtual void step(float dt);
 	virtual void startWithTarget(CCNode* target);
-	virtual oActionDuration* reverse(void);
+	virtual oActionDuration* reverse();
 	static oActionDuration* create(float d);
 protected:
 	float _elapsed;

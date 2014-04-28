@@ -1,5 +1,4 @@
 local oButton = require("Script/oButton")
-local oPacker = require("Script/oPacker")
 local oSelectionPanel = require("Script/oSelectionPanel")
 
 local function oSpriteChooser()

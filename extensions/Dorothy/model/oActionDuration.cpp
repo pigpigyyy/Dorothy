@@ -43,7 +43,7 @@ CCObject* oActionDuration::copyWithZone(CCZone* pZone)
 	return pCopy;
 }
 
-bool oActionDuration::isDone(void)
+bool oActionDuration::isDone()
 {
 	return _elapsed < 0 || _elapsed >= m_fDuration;
 }
@@ -66,7 +66,7 @@ void oActionDuration::startWithTarget(CCNode* target)
 	_pause = false;
 }
 
-oActionDuration* oActionDuration::reverse(void)
+oActionDuration* oActionDuration::reverse()
 {
 	CCAssert(false, "oActionDuration: reverse not implemented.");
 	return nullptr;
