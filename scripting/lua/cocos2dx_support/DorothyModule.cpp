@@ -511,15 +511,14 @@ void __oModelCache_getData(const char* filename)
 		lua_setString(3, parent->clip.c_str());
 		lua_setString(4, parent->name.c_str());
 		lua_setFloat(5, parent->opacity);
-		lua_setUserType(6, new CCRect(parent->rect), "CCRect");
-		lua_setFloat(7, parent->rotation);
-		lua_setFloat(8, parent->scaleX);
-		lua_setFloat(9, parent->scaleY);
-		lua_setFloat(10, parent->skewX);
-		lua_setFloat(11, parent->skewY);
-		lua_setFloat(12, parent->x);
-		lua_setFloat(13, parent->y);
-		lua_setBool(14, parent->visible);
+		lua_setFloat(6, parent->rotation);
+		lua_setFloat(7, parent->scaleX);
+		lua_setFloat(8, parent->scaleY);
+		lua_setFloat(9, parent->skewX);
+		lua_setFloat(10, parent->skewY);
+		lua_setFloat(11, parent->x);
+		lua_setFloat(12, parent->y);
+		lua_setBool(13, parent->visible);
 		/*["looks"]*/
 		lua_createtable(L, parent->looks.size(), 0);
 		for (int i = 0; i < (int)parent->looks.size(); i++)
@@ -527,7 +526,7 @@ void __oModelCache_getData(const char* filename)
 			stack->pushInt(parent->looks[i]);
 			lua_rawseti(L, -2, i + 1);
 		}
-		lua_rawseti(L, -2, 15);
+		lua_rawseti(L, -2, 14);
 		/*["animationDefs"]*/
 		lua_createtable(L, parent->animationDefs.size(), 0);
 		for (int defIndex = 0; defIndex < (int)parent->animationDefs.size(); defIndex++)
@@ -583,7 +582,7 @@ void __oModelCache_getData(const char* filename)
 				continue;
 			}
 		}
-		lua_rawseti(L, -2, 16);
+		lua_rawseti(L, -2, 15);
 		/*["children"]*/
 		lua_createtable(L, parent->children.size(), 0);
 		for (int i = 0; i < (int)parent->children.size(); i++)
@@ -591,16 +590,16 @@ void __oModelCache_getData(const char* filename)
 			visitSpriteDef(parent->children[i]);
 			lua_rawseti(L, -2, i + 1);
 		}
-		lua_rawseti(L, -2, 17);
+		lua_rawseti(L, -2, 16);
 	};
 
 	oSpriteDef* root = modelDef->getRoot();
 	if (root)
 	{
 		visitSpriteDef(root);
-		lua_setBool(18, modelDef->isFaceRight());
-		lua_setBool(19, modelDef->isBatchUsed());
-		lua_setString(20, modelDef->getClipFile().c_str());
+		lua_setBool(17, modelDef->isFaceRight());
+		lua_setBool(18, modelDef->isBatchUsed());
+		lua_setString(19, modelDef->getClipFile().c_str());
 		/*["keys"]*/
 		lua_createtable(L, modelDef->getKeyPointCount(), 0);
 		for (int i = 0; i < modelDef->getKeyPointCount(); i++)
@@ -608,7 +607,7 @@ void __oModelCache_getData(const char* filename)
 			stack->pushUserType(new oVec2(modelDef->getKeyPoint(i)), "oVec2");
 			lua_rawseti(L, -2, i + 1);
 		}
-		lua_rawseti(L, -2, 21);
+		lua_rawseti(L, -2, 20);
 		/*["animationNames"]*/
 		lua_newtable(L);
 		for (auto& pair : modelDef->getAnimationIndexMap())
@@ -617,7 +616,7 @@ void __oModelCache_getData(const char* filename)
 			lua_pushinteger(L, pair.second);
 			lua_rawset(L, -3);
 		}
-		lua_rawseti(L, -2, 22);
+		lua_rawseti(L, -2, 21);
 		/*["lookNames"]*/
 		lua_newtable(L);
 		for (auto& pair : modelDef->getLookIndexMap())
@@ -626,7 +625,7 @@ void __oModelCache_getData(const char* filename)
 			lua_pushinteger(L, pair.second);
 			lua_rawset(L, -3);
 		}
-		lua_rawseti(L, -2, 23);
+		lua_rawseti(L, -2, 22);
 	}
 	else
 	{
@@ -681,12 +680,13 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 	};
 	lua_pushvalue(L, tableIndex);// push content
 
-	bool isFaceRight = lua_getBool(18);
-	bool isBatchUsed = lua_getBool(19);
-	string clipFile = lua_getString(20);
-	CCTexture2D* texture = oSharedContent.loadTexture(oSharedClipCache.load(clipFile.c_str())->textureFile.c_str());
+	bool isFaceRight = lua_getBool(17);
+	bool isBatchUsed = lua_getBool(18);
+	string clipFile = lua_getString(19);
+	oClipDef* clipDef = oSharedClipCache.load(clipFile.c_str());
+	CCTexture2D* texture = oSharedContent.loadTexture(clipDef->textureFile.c_str());
 	/*["keys"]*/
-	lua_rawgeti(L, -1, 21);// push keys
+	lua_rawgeti(L, -1, 20);// push keys
 	vector<oVec2> keys(lua_objlen(L, -1));
 	for (size_t i = 0; i < keys.size(); i++)
 	{
@@ -697,7 +697,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 	}
 	lua_pop(L, 1);// pop keys
 	/*["animationNames"]*/
-	lua_rawgeti(L, -1, 22);// push animationNames
+	lua_rawgeti(L, -1, 21);// push animationNames
 	hash_strmap<int> animationNames;
 	int top = lua_gettop(L);
 	for (lua_pushnil(L); lua_next(L, top) != 0; lua_pop(L, 1))
@@ -706,7 +706,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 	}
 	lua_pop(L, 1);// pop animationNames
 	/*["lookNames"]*/
-	lua_rawgeti(L, -1, 23);// push lookNames
+	lua_rawgeti(L, -1, 22);// push lookNames
 	hash_strmap<int> lookNames;
 	top = lua_gettop(L);
 	for (lua_pushnil(L); lua_next(L, top) != 0; lua_pop(L, 1))
@@ -722,19 +722,19 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 		spriteDef->anchorX = lua_getFloat(1);
 		spriteDef->anchorY = lua_getFloat(2);
 		spriteDef->clip = lua_getString(3);
+		spriteDef->rect = spriteDef->clip == "" ? CCRect::zero : *clipDef->rects[spriteDef->clip];
 		spriteDef->name = lua_getString(4);
 		spriteDef->opacity = lua_getFloat(5);
-		spriteDef->rect = *(CCRect*)lua_getUserType(6);
-		spriteDef->rotation = lua_getFloat(7);
-		spriteDef->scaleX = lua_getFloat(8);
-		spriteDef->scaleY = lua_getFloat(9);
-		spriteDef->skewX = lua_getFloat(10);
-		spriteDef->skewY = lua_getFloat(11);
-		spriteDef->x = lua_getFloat(12);
-		spriteDef->y = lua_getFloat(13);
-		spriteDef->visible = lua_getBool(14);
+		spriteDef->rotation = lua_getFloat(6);
+		spriteDef->scaleX = lua_getFloat(7);
+		spriteDef->scaleY = lua_getFloat(8);
+		spriteDef->skewX = lua_getFloat(9);
+		spriteDef->skewY = lua_getFloat(10);
+		spriteDef->x = lua_getFloat(11);
+		spriteDef->y = lua_getFloat(12);
+		spriteDef->visible = lua_getBool(13);
 		/*["looks"]*/
-		lua_rawgeti(L, -1, 15);// puah looks
+		lua_rawgeti(L, -1, 14);// puah looks
 		for (size_t i = 0, len = lua_objlen(L, -1); i < len; i++)
 		{
 			lua_rawgeti(L, -1, i + 1);
@@ -743,7 +743,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 		}
 		lua_pop(L, 1);// pop looks
 		/*["animationDefs"]*/
-		lua_rawgeti(L, -1, 16);// push animationDefs
+		lua_rawgeti(L, -1, 15);// push animationDefs
 		for (size_t defIndex = 0, len = lua_objlen(L, -1); defIndex < len; defIndex++)
 		{
 			lua_rawgeti(L, -1, defIndex + 1);// push animationDef or boolean
@@ -795,7 +795,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 		}
 		lua_pop(L, 1);// pop animationDefs
 		/* ["children"] */
-		lua_rawgeti(L, -1, 17);// push children
+		lua_rawgeti(L, -1, 16);// push children
 		for (size_t i = 0, len = lua_objlen(L, -1); i < len; i++)
 		{
 			lua_rawgeti(L, -1, i + 1);// push childDef

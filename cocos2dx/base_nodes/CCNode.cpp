@@ -1190,6 +1190,10 @@ void CCNode::updateDisplayedOpacity(float parentOpacity)
 	{
 		_displayedOpacity = _realOpacity * parentOpacity;
 	}
+	else
+	{
+		_displayedOpacity = _realOpacity;
+	}
 	if (_cascadeOpacity)
 	{
 		CCObject* pObj;
@@ -1204,9 +1208,16 @@ void CCNode::updateDisplayedOpacity(float parentOpacity)
 void CCNode::setCascadeOpacity(bool var)
 {
 	_cascadeOpacity = var;
-	this->updateDisplayedOpacity(
-		m_pParent ? m_pParent->getDisplayedOpacity() :
-		1.0f);
+	this->setOpacity(_realOpacity);
+	if (!var)
+	{
+		CCObject* pObj;
+		CCARRAY_FOREACH(m_pChildren, pObj)
+		{
+			CCNode* node = (CCNode*)pObj;
+			node->updateDisplayedOpacity(_realOpacity);
+		}
+	}
 }
 
 bool CCNode::isCascadeOpacity() const
@@ -1240,6 +1251,10 @@ void CCNode::updateDisplayedColor(const ccColor3B& parentColor)
 		_displayedColor.g = _realColor.g * parentColor.g / 255.0f;
 		_displayedColor.b = _realColor.b * parentColor.b / 255.0f;
 	}
+	else
+	{
+		_displayedColor = _realColor;
+	}
 	if (_cascadeColor)
 	{
 		CCObject *obj = NULL;
@@ -1254,9 +1269,16 @@ void CCNode::updateDisplayedColor(const ccColor3B& parentColor)
 void CCNode::setCascadeColor(bool var)
 {
 	_cascadeColor = var;
-	this->updateDisplayedColor(
-		m_pParent ? m_pParent->getDisplayedColor() :
-		ccWHITE);
+	this->setColor(_realColor);
+	if (!var)
+	{
+		CCObject *obj = NULL;
+		CCARRAY_FOREACH(m_pChildren, obj)
+		{
+			CCNode* node = (CCNode*)obj;
+			node->updateDisplayedColor(_displayedColor);
+		}
+	}
 }
 
 bool CCNode::isCascadeColor() const

@@ -8,25 +8,27 @@ oSd =
 	clip = 3,
 	name = 4,
 	opacity = 5,
-	rect = 6,
-	rotation = 7,
-	scaleX = 8,
-	scaleY = 9,
-	skewX = 10,
-	skewY = 11,
-	x = 12,
-	y = 13,
-	visible = 14,
-	looks = 15,
-	animationDefs = 16,
-	children = 17,
-	isFaceRight = 18,
-	isBatchUsed = 19,
-	clipFile = 20,
-	keys = 21,
-	animationNames = 22,
-	lookNames = 23,
-	sprite = 24,
+	rotation = 6,
+	scaleX = 7,
+	scaleY = 8,
+	skewX = 9,
+	skewY = 10,
+	x = 11,
+	y = 12,
+	visible = 13,
+	looks = 14,
+	animationDefs = 15,
+	children = 16,
+	isFaceRight = 17,
+	isBatchUsed = 18,
+	clipFile = 19,
+	keys = 20,
+	animationNames = 21,
+	lookNames = 22,
+	-- extra
+	sprite = 23,
+	parent = 24,
+	index = 25,
 }
 
 oAd =
@@ -164,6 +166,8 @@ oEditor.scene:scheduleUpdate(
 			self:unscheduleUpdate()
 			oEvent:send("EditorLoaded")
 			oEditor.scene.visible = true
+			oEditor.scene.opacity = 0
+			oEditor.scene:runAction(oOpacity(0.3,1))
 		end
 	end)
 

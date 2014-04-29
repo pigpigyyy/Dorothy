@@ -383,6 +383,10 @@ local function oSettingPanel()
 	local skewNextItem = nil
 	local skewXY = false
 	
+	local anchorItem = nil
+	local anchorNextItem = nil
+	local anchorXY = false
+	
 	local isEditingName = false
 
 	local skipSelection = false
@@ -677,13 +681,73 @@ local function oSettingPanel()
 	
 	keyItems.AnchorX = oSettingItem("AnchorX :",0,keyItems.EaseP.positionY,
 			function(item)
+				if anchorItem and anchorItem ~= item then
+					if anchorXY then
+						oEditor.viewArea:stopEditAnchorXY()
+						anchorXY = false
+						anchorItem:setHighlighted(false)
+						return
+					else
+						oEditor.viewArea:stopEditAnchorY()
+						anchorXY = true
+						anchorItem:setHighlighted(true)
+					end
+					posNextItem = anchorItem
+				end
+				anchorItem = item
+				if anchorXY then
+					oEditor.viewArea:editAnchorXY()
+				else
+					oEditor.viewArea:editAnchorX()
+				end
 			end,
-			function()
+			function(item)
+				if anchorItem == item then
+					if anchorXY then
+						posNextItem:setHighlighted(false)
+						oEditor.viewArea:stopEditAnchorXY()
+						anchorXY = false
+						anchorItem = nil
+						skipSelection = true
+					else
+						oEditor.viewArea:stopEditAnchorX()
+					end
+				end
 			end)
 	keyItems.AnchorY = oSettingItem("AnchorY :",0,keyItems.EaseS.positionY,
 			function(item)
+				if anchorItem and anchorItem ~= item then
+					if anchorXY then
+						oEditor.viewArea:stopEditAnchorXY()
+						anchorXY = false
+						anchorItem:setHighlighted(false)
+						return
+					else
+						oEditor.viewArea:stopEditAnchorX()
+						anchorXY = true
+						anchorItem:setHighlighted(true)
+					end
+					posNextItem = anchorItem
+				end
+				anchorItem = item
+				if anchorXY then
+					oEditor.viewArea:editAnchorXY()
+				else
+					oEditor.viewArea:editAnchorY()
+				end
 			end,
-			function()
+			function(item)
+				if anchorItem == item then
+					if anchorXY then
+						posNextItem:setHighlighted(false)
+						oEditor.viewArea:stopEditAnchorXY()
+						anchorXY = false
+						anchorItem = nil
+						skipSelection = true
+					else
+						oEditor.viewArea:stopEditAnchorY()
+					end
+				end
 			end)
 	keyItems.AnchorX.visible = false
 	keyItems.AnchorY.visible = false
@@ -870,6 +934,9 @@ local function oSettingPanel()
 				if skewItem and not skewXY then
 					skewItem = nil
 				end
+				if anchorItem and not anchorXY then
+					anchorItem = nil
+				end
 				return
 			end
 			if selectedItem then
@@ -886,6 +953,10 @@ local function oSettingPanel()
 			if (selectedItem == keyItems.SkewX or selectedItem == keyItems.SkewY) and menuItem ~= keyItems.SkewX and menuItem ~= keyItems.SkewY then
 				skipSelection = false
 				skewItem = nil
+			end
+			if (selectedItem == keyItems.AnchorX or selectedItem == keyItems.AnchorY) and menuItem ~= keyItems.AnchorX and menuItem ~= keyItems.AnchorY then
+				skipSelection = false
+				anchorItem = nil
 			end
 			if skipSelection then
 				skipSelection = false

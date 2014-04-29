@@ -57,11 +57,6 @@ bool oModel::init()
 	oModel::visit(_modelDef->getRoot(), _root);
 	oModel::setupCallback();
 	this->addChild(_root);
-	//Make model`s none look applied below.
-	if (!_looks.empty())
-	{
-		_root->setVisible(false);
-	}
 	return true;
 }
 
@@ -79,7 +74,6 @@ void oModel::setLook( int index )
 		if (_looks.empty() && oLook::None < index && _currentLook == oLook::None)
 		{
 			_currentLook = index;
-			_root->setVisible(true);
 		}
 		return;
 	}
@@ -89,18 +83,10 @@ void oModel::setLook( int index )
 		{
 			_looks[_currentLook]->unApply();
 		}
-		else
-		{
-			_root->setVisible(true);
-		}
 		_currentLook = index;
 		if (_currentLook != oLook::None)
 		{
 			_looks[_currentLook]->apply();
-		}
-		else
-		{
-			_root->setVisible(false);
 		}
 	}
 }

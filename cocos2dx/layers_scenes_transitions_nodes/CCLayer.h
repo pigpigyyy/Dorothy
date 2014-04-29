@@ -211,6 +211,8 @@ public:
 
     virtual void setColor(const ccColor3B &color);
     virtual void setOpacity(float opacity);
+	virtual void updateDisplayedOpacity(float parentOpacity);
+	virtual void updateDisplayedColor(const ccColor3B& parentColor);
 
 protected:
     virtual void updateColor();

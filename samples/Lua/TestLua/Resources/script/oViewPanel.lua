@@ -117,6 +117,32 @@ local function oViewPanel()
 		panel:scheduleUpdate(updateReset)
 	end
 
+	local function setPos(delta)
+		local children = menu.children
+		if not children then return end
+		local newPos = totalDelta+delta
+		if newPos.x > 0 then
+			newPos.x = 0 
+		elseif newPos.x-moveX < 0 then
+				newPos.x = moveX
+		end
+		if newPos.y < 0 then
+			newPos.y = 0
+		elseif moveY < newPos.y then
+				newPos.y = moveY
+		end
+		delta = newPos - totalDelta
+		if viewWidth < borderSize.width then delta.x = 0 end
+		if viewHeight < borderSize.height then delta.y = 0 end
+
+		totalDelta = totalDelta + delta
+
+		for i = 1, children.count do
+			local node = tolua.cast(children:get(i), "CCNode")
+			node.position = node.position + delta
+		end
+	end
+	
 	local function setOffset(deltaPos, touching)
 		local children = menu.children
 		if not children then return end
@@ -177,12 +203,7 @@ local function oViewPanel()
 
 		for i = 1, children.count do
 			local node = tolua.cast(children:get(i), "CCNode")
-			if node == nil then
-				cclog("nil")
-			else
-				
 			node.position = node.position + deltaPos
-			end
 		end
 		
 		if not touching and (newPos.y < -padding*0.5 or newPos.y > moveY+padding*0.5 or newPos.x > padding*0.5 or newPos.x < moveX-padding*0.5) then
@@ -221,7 +242,7 @@ local function oViewPanel()
 			oVec2(0,size),
 			oVec2(0,0)
 		},ccColor4(0xffffffff)))
-		
+
 		local menuItem = CCMenuItem()
 		menuItem.anchorPoint = oVec2(0,1)
 		menuItem.contentSize = CCSize(size,size)
@@ -294,6 +315,19 @@ local function oViewPanel()
 		return menuItem
 	end
 	
+	panel.selectItem = function(self, targetSp)
+		local item = panel.items[targetSp]
+		if item then
+			local sp,sprite = item:getData()
+			if targetSp == sp then
+				item:select(true)
+				oEditor.settingPanel:clearSelection()
+				oEvent:send("ImageSelected",{sp,sprite,item})
+				setPos(oVec2(90-item.positionX,borderSize.height*0.5+30-item.positionY))
+			end
+		end
+	end
+
 	local opacity = oOpacity(0.5,0.3,oEase.InExpo)
 	panel.show = function(self)
 		if not opacity.done then
@@ -347,7 +381,7 @@ local function oViewPanel()
 				if not CCRect(oVec2.zero, panel.contentSize):containsPoint(panel:convertToNodeSpace(touch.location)) then
 					return false
 				end
-				
+
 				panel:show()
 
 				deltaMoveLength = 0
@@ -374,9 +408,12 @@ local function oViewPanel()
 			end
 			return true
 		end, false, 0, true)
-
+	
+	panel.items = {}
 	panel.updateImages = function(self, data, model)
 		initValues()
+		panel.items = {}
+		self:removeOutlineTarget()
 		menu:removeAllChildren()
 		local clipFile = data[oSd.clipFile]
 		local drawNode = CCDrawNode()
@@ -393,6 +430,7 @@ local function oViewPanel()
 				clip == ""
 				and "" or (clipFile.."|"..tostring(clip)),
 				sp,isRoot)
+			panel.items[sp] = imageView
 			menu:addChild(imageView)
 			local children = sp[oSd.children]
 			local nextY = -size-indent
@@ -402,6 +440,8 @@ local function oViewPanel()
 			local childrenSize = #children
 			for i = 1, childrenSize do
 				drawNode:drawSegment(oVec2(x+indent,y+nextY-size*0.5),oVec2(x+indent*2,y+nextY-size*0.5),0.5,ccColor4(0xffffffff))
+				children[i][oSd.parent] = sp
+				children[i][oSd.index] = i
 				local lenY, subLayer = visitSprite(children[i],x+indent*2,y+nextY,child.children:get(i))
 				nextY = nextY + lenY
 				if maxSubLayer < subLayer then maxSubLayer = subLayer end
@@ -462,6 +502,10 @@ local function oViewPanel()
 		end
 		
 		outline:setNode(node, withFrame)
+		
+		outline.updateAnchor = function(self, node)
+			anchor.position = oVec2(node.contentSize.width*node.anchorPoint.x, node.contentSize.height*node.anchorPoint.y)
+		end
 		
 		return outline
 	end
@@ -569,6 +613,13 @@ local function oViewPanel()
 		end
 	end
 	
+	panel.removeOutlineTarget = function(self)
+		if outline then
+			outline.transformTarget = nil
+			outline.visible = false
+		end
+	end
+	
 	panel.isOutlineVisible = function(self)
 		if outline then
 			return outline.visible
@@ -577,6 +628,12 @@ local function oViewPanel()
 		end 
 	end
 	
+	panel.updateAnchor = function(self,node)
+		if outline then
+			outline:updateAnchor(node)
+		end
+	end
+
 	panel.clearSelection = function(self)
 		oEvent:send("ImageSelected",nil)
 	end

@@ -206,7 +206,6 @@ local function oFileChooser()
 						"",--clip
 						"",--name
 						1,--opacity
-						CCRect.zero,--rect
 						0,--rotation
 						1,--scaleX
 						1,--scaleY
@@ -229,11 +228,6 @@ local function oFileChooser()
 				end
 
 				local model = oModel(oEditor.model)
-				oEditor.look = pairs(oEditor.data[oSd.lookNames])(oEditor.data[oSd.lookNames])
-				oEditor.animation = pairs(oEditor.data[oSd.animationNames])(oEditor.data[oSd.animationNames])
-				if oEditor.look then
-					model.look = oEditor.look
-				end
 				model.loop = oEditor.loop
 				oEditor.viewArea:setModel(model)
 				oEditor.viewPanel:clearSelection()

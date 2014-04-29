@@ -5,6 +5,7 @@ local function oViewArea()
 	local view = CCLayerColor(ccColor4(0xff1a1a1a), winSize.width, winSize.height)
 	view.anchorPoint = oVec2.zero
 	view.touchEnabled = true
+	view.cascadeOpacity = true
 	
 	local crossNode = CCNode()
 	local origin = oVec2(
@@ -12,19 +13,19 @@ local function oViewArea()
 		120+(winSize.height-60-120)*0.5)
 	crossNode.position = origin
 	view:addChild(crossNode)
-	
+
 	local cross = oLine(
 	{
 		oVec2(0,-winSize.height*2),
 		oVec2(0,winSize.height*2)
-	},ccColor4(0xffffffff))
+	},ccColor4())
 	cross.opacity = 0.2
 	crossNode:addChild(cross)
 	cross = oLine(
 	{
 		oVec2(-winSize.width*2,0),
 		oVec2(winSize.width*2,0)
-	},ccColor4(0xffffffff))
+	},ccColor4())
 	cross.opacity = 0.2
 	crossNode:addChild(cross)
 	
@@ -76,6 +77,8 @@ local function oViewArea()
 						view:updateOpacity(touches[1].delta)
 					elseif editState == EDIT_SKEWX or editState == EDIT_SKEWY or editState == EDIT_SKEWXY then
 						view:updateSkew(touches[1].delta)
+					elseif editState == EDIT_ANCHORX or editState == EDIT_ANCHORY or editState == EDIT_ANCHORXY then
+						view:updateAnchor(touches[1].delta)
 					end
 					return
 				end
@@ -356,7 +359,7 @@ local function oViewArea()
 					self.position = crossNode:convertToNodeSpace(
 						parent:convertToWorldSpace(
 							target.position-off))
-				end,-1)
+				end,-2)
 			getEditorRot()
 		else
 			self:unscheduleUpdate()
@@ -748,7 +751,11 @@ local function oViewArea()
 	skewEditor.cascadeColor = false
 	skewEditor.visible = false
 	crossNode:addChild(skewEditor)
-	skewEditor.setTarget = function(self,target) end
+	skewEditor.setTarget = function(self,target)
+		if target then
+			self.rotation = getEditorRot()
+		end
+	end
 
 	local totalSkewX = 0
 	local totalSkewY = 0
@@ -1022,8 +1029,171 @@ local function oViewArea()
 	board:addChild(button)
 
 	oEditor.scene:addChild(board,1)
+
+	-- anchor
+	local anchorEditor = CCNode()
+	local yAnchor = oLine(
+	{
+		oVec2(0,150),
+		oVec2(-20,150),
+		oVec2(0,190),
+		oVec2(20,150),
+		oVec2(0,150),
+		oVec2.zero
+	},ccColor4())
+	yAnchor.visible = false
+	local xAnchor = oLine(
+	{
+		oVec2.zero,
+		oVec2(150,0),
+		oVec2(150,20),
+		oVec2(190,0),
+		oVec2(150,-20),
+		oVec2(150,0)
+	},ccColor4())
+	xAnchor.visible = false
+	anchorEditor:addChild(xAnchor)
+	anchorEditor:addChild(yAnchor)
+	anchorEditor.cascadeOpacity = false
+	anchorEditor.cascadeColor = false
+	anchorEditor.visible = false
+	anchorEditor.scaleX = 0.5
+	anchorEditor.scaleY = 0.5
+	crossNode:addChild(anchorEditor)
+	anchorEditor.setTarget = function(self,target)
+		if target then
+			local parent = target.parent
+			local off = oVec2(
+					parent.contentSize.width*parent.anchorPoint.x,
+					parent.contentSize.height*parent.anchorPoint.y)
+			self.position = crossNode:convertToNodeSpace(
+				parent:convertToWorldSpace(
+					target.position-off))
+			getEditorRot()
+		end
+	end
+	
+	local totalAnchorX = 0
+	local totalAnchorY = 0
+
+	view.editAnchorX = function(self)
+		if editState == EDIT_NONE then
+			editTarget = oEditor.sprite
+			setEditorView(anchorEditor)
+			totalAnchorX = 0
+			xAnchor.visible = true
+			editState = EDIT_ANCHORX
+		end
+	end
+
+	view.stopEditAnchorX = function(self)
+		if editState == EDIT_ANCHORX then
+			updateModel()
+			setEditorView(nil)
+			editTarget = nil
+			xAnchor.visible = false
+			editState = EDIT_NONE
+		end
+	end
+
+	view.editAnchorY = function(self)
+		if editState == EDIT_NONE then
+			editTarget = oEditor.sprite
+			setEditorView(anchorEditor)
+			totalAnchorY = 0
+			yAnchor.visible = true
+			editState = EDIT_ANCHORY
+		end
+	end
+
+	view.stopEditAnchorY = function(self)
+		if editState == EDIT_ANCHORY then
+			updateModel()
+			setEditorView(nil)
+			editTarget = nil
+			yAnchor.visible = false
+			editState = EDIT_NONE
+		end
+	end
+
+	view.editAnchorXY = function(self)
+		if editState == EDIT_NONE then
+			editTarget = oEditor.sprite
+			setEditorView(anchorEditor)
+			totalAnchorX = 0
+			totalAnchorY = 0
+			xAnchor.visible = true
+			yAnchor.visible = true
+			editState = EDIT_ANCHORXY
+		end
+	end
+
+	view.stopEditAnchorXY = function(self)
+		if editState == EDIT_ANCHORXY then
+			updateModel()
+			setEditorView(nil)
+			editTarget = nil
+			xAnchor.visible = false
+			yAnchor.visible = false
+			editState = EDIT_NONE
+		end
+	end
+
+	view.updateAnchor = function(self, delta)
+		if delta ~= oVec2.zero and editTarget.contentSize ~= CCSize.zero then
+			--editTarget=CCNode
+			if editState == EDIT_ANCHORX then
+				delta.y = 0
+			elseif editState == EDIT_ANCHORY then
+				delta.x = 0
+			end
+			local x2 = delta.x
+			local y2 = delta.y
+			x2 = x2/crossNode.scaleX
+			y2 = y2/crossNode.scaleX
+			totalAnchorX = totalAnchorX + x2
+			totalAnchorY = totalAnchorY + y2
+			if view.isValueFixed then
+				if totalAnchorX < 1 and totalAnchorX > -1 then
+					x2 = 0
+				else
+					x2 = totalAnchorX > 0 and math.floor(totalAnchorX) or math.ceil(totalAnchorX)
+					totalAnchorX = 0
+				end
+				if totalAnchorY < 1 and totalAnchorY > -1 then
+					y2 = 0
+				else
+					y2 = totalAnchorY > 0 and math.floor(totalAnchorY) or math.ceil(totalAnchorY)
+					totalAnchorY = 0
+				end
+			end
+
+			local r = -(editTarget.rotation-posRotFix)*math.pi/180
+			local x1 = x2*math.cos(r)-y2*math.sin(r)
+			local y1 = x2*math.sin(r)+y2*math.cos(r)
+			x1 = x1/editTarget.contentSize.width
+			y1 = y1/editTarget.contentSize.height
+			editTarget.anchorPoint = editTarget.anchorPoint - oVec2(x1,y1)
+
+			local x = editTarget.anchorPoint.x
+			local y = editTarget.anchorPoint.y
+			oEditor.settingPanel.items.AnchorX:setValue(x)
+			oEditor.settingPanel.items.AnchorY:setValue(y)
+
+			if oEditor.state == oEditor.EDIT_SPRITE then
+				oEditor.spriteData[oSd.anchorX] = x
+				oEditor.spriteData[oSd.anchorY] = y
+			end
+			oEditor.viewPanel:updateAnchor(editTarget)
+			oEditor.editMenu:markEditButton(true)
+			valueChanged = true
+		end
+	end
 	
 	view.stopEdit = function(self)
+		view:stopEditAnchorX()
+		view:stopEditAnchorY()
+		view:stopEditAnchorXY()
 		view:stopEditEase()
 		view:stopEditVisible()
 		view:stopEditSkewX()

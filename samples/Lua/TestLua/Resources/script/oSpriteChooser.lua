@@ -45,6 +45,7 @@ local function oSpriteChooser()
 		local y = 0
 		local clipFile = oEditor.data[oSd.clipFile]
 		local names = oCache.Clip:getNames(clipFile)
+		table.insert(names,1,"")
 		for i = 1,#names do
 			y = winSize.height*0.5+halfBH-60-math.floor((i-1)/6)*110
 			local button = oButton(
@@ -54,16 +55,23 @@ local function oSpriteChooser()
 				winSize.width*0.5-halfBW+60+((i-1)%6)*110,y,
 				function(item)
 					if panel.selected then
-						panel.selected(names[i])
+						panel:selected(names[i])
 					end
 				end)
 			local clipStr = clipFile.."|"..names[i]
-			local sprite = CCSprite(clipStr)
-			local contentSize = sprite.contentSize
-			if contentSize.width > 100 or contentSize.height > 100 then
-				local scale = contentSize.width > contentSize.height and (100-2)/contentSize.width or (100-2)/contentSize.height
-				sprite.scaleX = scale
-				sprite.scaleY = scale
+			local sprite = nil
+			if names[i] ~= "" then
+				sprite = CCSprite(clipStr)
+				local contentSize = sprite.contentSize
+				if contentSize.width > 100 or contentSize.height > 100 then
+					local scale = contentSize.width > contentSize.height and (100-2)/contentSize.width or (100-2)/contentSize.height
+					sprite.scaleX = scale
+					sprite.scaleY = scale
+				end
+			else
+				sprite = CCLabelTTF("Empty","Arial",16)
+				sprite.texture.antiAlias = false
+				sprite.color = ccColor3(0x00ffff)
 			end
 			sprite.position = oVec2(100*0.5,100*0.5)
 			sprite.opacity = 0
@@ -73,8 +81,8 @@ local function oSpriteChooser()
 					CCDelay(((i-1)%6)*0.05),
 					oOpacity(0.3,1)
 				}))
-
 			button.color = ccColor3()
+			button.clip = names[i]
 			local node = CCNode()
 			node.cascadeColor = false
 			node.cascadeOpacity = false

@@ -601,6 +601,18 @@ void CCLayerColor::setOpacity(float opacity)
 	updateColor();
 }
 
+void CCLayerColor::updateDisplayedOpacity(float parentOpacity)
+{
+	CCLayer::updateDisplayedOpacity(parentOpacity);
+	updateColor();
+}
+
+void CCLayerColor::updateDisplayedColor(const ccColor3B& parentColor)
+{
+	CCLayer::updateDisplayedColor(parentColor);
+	updateColor();
+}
+
 //
 // CCLayerGradient
 // 

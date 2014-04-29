@@ -317,6 +317,38 @@ local function oEditMenu()
 				-- item = CCNode
 				if oEditor.spriteData then
 					local chooser = oSpriteChooser()
+					chooser.selected = function(self, name)
+						local children = oEditor.spriteData[oSd.children]
+						local sp =
+						{
+							0.5,--anchorX
+							0.5,--anchorY
+							name,--clip
+							"",--name
+							1,--opacity
+							0,--rotation
+							1,--scaleX
+							1,--scaleY
+							0,--skewX
+							0,--skewY
+							0,--x
+							0,--y
+							true,--visible
+							{},--looks
+							{},--animationDefs
+							{},--children
+						}
+						table.insert(children,sp)
+						oCache.Model:loadData(oEditor.model, oEditor.data)
+						local model = oModel(oEditor.model)
+						model.loop = oEditor.loop
+						oEditor.viewArea:setModel(model)
+						oEditor.viewPanel:clearSelection()
+						oEditor.viewPanel:updateImages(oEditor.data,model)
+						oEditor.viewPanel:selectItem(sp)
+						self:hide()
+						menu:markEditButton(true)
+					end
 					chooser:show()
 					oEditor.scene:addChild(chooser)
 				end
@@ -324,11 +356,64 @@ local function oEditMenu()
 		Remove = oButton("Delete",16,50,50,winSize.width-205,35,
 			function(item)
 				-- item = CCNode
-				if oEditor.spriteData then
-					
+				if oEditor.spriteData and  oEditor.spriteData[oSd.parent] then
+					local parent = oEditor.spriteData[oSd.parent]
+					local index = oEditor.spriteData[oSd.index]
+					table.remove(parent[oSd.children],index)
+					oCache.Model:loadData(oEditor.model, oEditor.data)
+					local model = oModel(oEditor.model)
+					model.loop = oEditor.loop
+					oEditor.viewArea:setModel(model)
+					oEditor.viewPanel:clearSelection()
+					oEditor.viewPanel:updateImages(oEditor.data,model)
+					menu:markEditButton(true)
 				end
-				menu:toAnimation()
-			end)
+			end),
+		Up = oButton("Up",16,50,50,winSize.width-205,215,
+			function(item)
+				if oEditor.spriteData and  oEditor.spriteData[oSd.parent] then
+					local sp = oEditor.spriteData
+					local parent = oEditor.spriteData[oSd.parent]
+					local index = 
+oEditor.spriteData[oSd.index]
+					local children = parent[oSd.children]
+					if index > 1 then
+						local prev = children[index-1]
+						children[index-1] = sp
+						children[index] = prev
+						oCache.Model:loadData(oEditor.model, oEditor.data)
+						local model = oModel(oEditor.model)
+						model.loop = oEditor.loop
+						oEditor.viewArea:setModel(model)
+						oEditor.viewPanel:clearSelection()
+						oEditor.viewPanel:updateImages(oEditor.data,model)
+						oEditor.viewPanel:selectItem(sp)
+						menu:markEditButton(true)
+					end
+				end
+			end),
+		Down = oButton("Down",16,50,50,winSize.width-205,155,
+			function(item)
+				if oEditor.spriteData and  oEditor.spriteData[oSd.parent] then
+					local sp = oEditor.spriteData
+					local parent = oEditor.spriteData[oSd.parent]
+					local index = oEditor.spriteData[oSd.index]
+					local children = parent[oSd.children]
+					if index < #children then
+						local next = children[index+1]
+						children[index+1] = sp
+						children[index] = next
+						oCache.Model:loadData(oEditor.model, oEditor.data)
+						local model = oModel(oEditor.model)
+						model.loop = oEditor.loop
+						oEditor.viewArea:setModel(model)
+						oEditor.viewPanel:clearSelection()
+						oEditor.viewPanel:updateImages(oEditor.data,model)
+						oEditor.viewPanel:selectItem(sp)
+						menu:markEditButton(true)
+					end
+				end
+			end),
 	}
 	for _,item in pairs(items) do
 		menu:addChild(item)
@@ -362,6 +447,8 @@ local function oEditMenu()
 			items.Play,
 			items.Add,
 			items.Remove,
+			items.Up,
+			items.Down,
 		}
 		for i = 1,#group do
 			group[i].visible = false
@@ -385,6 +472,8 @@ local function oEditMenu()
 		hideItems()
 		local group = {
 			items.Fix,
+			items.Up,
+			items.Down,
 			items.Add,
 			items.Remove,
 		}
