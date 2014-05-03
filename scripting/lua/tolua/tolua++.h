@@ -45,23 +45,22 @@ extern "C" {
 #define MT_DEL 2
 #define MT_CALL 3
 #define MT_SUPER 4
-#define MT_C_INSTANCE 5
-#define MT_GET 6
-#define MT_SET 7
-#define MT_GETI 8
-#define MT_SETI 9
-#define MT_ADD 10
-#define MT_SUB 11
-#define MT_MUL 12
-#define MT_DIV 13
-#define MT_LT 14
-#define MT_LE 15
-#define MT_EQ 16
+#define MT_UBOX 5
+#define MT_C_INSTANCE 6
+#define MT_GET 7
+#define MT_SET 8
+#define MT_GETI 9
+#define MT_SETI 10
+#define MT_ADD 11
+#define MT_SUB 12
+#define MT_MUL 13
+#define MT_DIV 14
+#define MT_LT 15
+#define MT_LE 16
+#define MT_EQ 17
 
 TOLUA_API int tolua_callback;
 #define TOLUA_CALLBACK ((void*)&tolua_callback)
-TOLUA_API int tolua_super;
-#define TOLUA_SUPER ((void*)&tolua_super)
 TOLUA_API int tolua_ubox;
 #define TOLUA_UBOX ((void*)&tolua_ubox)
 
@@ -179,7 +178,7 @@ static inline const char* tolua_tofieldcppstring (lua_State* L, int lo, int inde
 #define tolua_tofieldcppstring tolua_tofieldstring
 #endif
 
-TOLUA_API int tolua_fast_isa(lua_State *L, int mt_indexa, int mt_indexb, int super_index);
+TOLUA_API int tolua_fast_isa(lua_State *L, int mt_indexa, int mt_indexb);
 
 #ifndef Mtolua_new
 #define Mtolua_new(EXP) new EXP

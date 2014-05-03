@@ -80,27 +80,25 @@ extern "C" void tolua_pushccobject(lua_State* L, void* ptr, const char* type)
 	else
 	{
 		/* check the need of updating the metatable to a more specialized class */
-		lua_insert(L, -2);// mt ud ubox
-		lua_pop(L, 1);// mt ud
-		lua_pushlightuserdata(L, TOLUA_SUPER);
-		lua_rawget(L, LUA_REGISTRYINDEX);// mt ud super
-		lua_getmetatable(L, -2);// mt ud super mt
-		lua_rawget(L, -2);// mt ud super super[mt]
+		lua_remove(L, -2);// mt ud
+		lua_getmetatable(L, -1);// mt ud udmt
+		lua_rawgeti(L, -1, MT_SUPER);// mt ud udmt tb
 		if (lua_istable(L, -1))
 		{
-			lua_pushstring(L, type);// mt ud super super[mt] type
-			lua_rawget(L, -2);// mt ud super super[mt] flag
+			lua_pushstring(L, type);// mt ud udmt tb type
+			lua_rawget(L, -2);// tb[type], mt ud udmt tb flag
 			if (lua_toboolean(L, -1) == 1)// flag == true
 			{
 				lua_pop(L, 3);// mt ud
 				lua_remove(L, -2);// ud
 				return;
 			}
+			lua_pop(L, 3);// mt ud
 		}
+		else lua_pop(L, 2);// mt ud
 		// type represents a more specilized type
-		lua_pushvalue(L, -5);// mt ud super super[mt] flag mt
-		lua_setmetatable(L, -5);// mt<mt>, mt ud super super[mt] flag
-		lua_pop(L, 3);// mt ud
+		lua_pushvalue(L, -2);// mt ud mt
+		lua_setmetatable(L, -2);// ud<mt>, mt ud
 	}
 	lua_remove(L, -2);// ud
 }

@@ -20,27 +20,21 @@
 
 /* a fast check if a is b, without parameter validation
  i.e. if b is equal to a or a superclass of a. */
-TOLUA_API int tolua_fast_isa(lua_State *L, int mt_indexa, int mt_indexb, int super_index)
+TOLUA_API int tolua_fast_isa(lua_State *L, int mt_indexa, int mt_indexb)
 {
 	int result;
 	if (lua_rawequal(L, mt_indexa, mt_indexb))
+	{
 		result = 1;
+	}
 	else
 	{
-		if (super_index) {
-			lua_pushvalue(L, super_index);
-		}
-		else {
-			lua_pushlightuserdata(L, TOLUA_SUPER);
-			lua_rawget(L, LUA_REGISTRYINDEX);  /* stack: super */
-		};
-		lua_pushvalue(L, mt_indexa);       /* stack: super mta */
-		lua_rawget(L, -2);                 /* stack: super super[mta] */
-		lua_pushvalue(L, mt_indexb);       /* stack: super super[mta] mtb */
-		lua_rawget(L, LUA_REGISTRYINDEX);  /* stack: super super[mta] typenameB */
-		lua_rawget(L, -2);                 /* stack: super super[mta] bool */
+		lua_rawgeti(L, mt_indexa, MT_SUPER);// tb
+		lua_pushvalue(L, mt_indexb);// tb mtb
+		lua_rawget(L, LUA_REGISTRYINDEX);// tb typeb
+		lua_rawget(L, -2);// tb[typeb], tb flag
 		result = lua_toboolean(L, -1);
-		lua_pop(L, 3);
+		lua_pop(L, 2);
 	}
 	return result;
 }
@@ -183,17 +177,17 @@ TOLUA_API int tolua_istype(lua_State* L, int lo, const char* type) {
 		}
 		else {
 			/* check if it is a specialized class */
-			lua_pushlightuserdata(L, TOLUA_SUPER);
-			lua_rawget(L, LUA_REGISTRYINDEX); /* get super */
-			lua_getmetatable(L, lo);
-			lua_rawget(L, -2);                /* get super[mt] */
-			if (lua_istable(L, -1)) {
+			lua_getmetatable(L, lo);// mt
+			lua_rawgeti(L, -1, MT_SUPER);// mt tb
+			if (lua_istable(L, -1))
+			{
 				int b;
-				lua_pushstring(L, type);
-				lua_rawget(L, -2);                /* get super[mt][type] */
+				lua_pushstring(L, type);// mt tb type
+				lua_rawget(L, -2);// tb[type], mt tb flag
 				b = lua_toboolean(L, -1);
 				lua_pop(L, 3);
-				if (b) {
+				if (b)
+				{
 					return 1;
 				}
 			}
