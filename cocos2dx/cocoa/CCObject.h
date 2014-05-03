@@ -40,12 +40,27 @@ public:
     virtual CCObject* copyWithZone(CCZone* pZone);
 };
 
+class CCObject;
+class CC_DLL CCWeak
+{
+public:
+	CCWeak(CCObject* target): _refCount(1), target(target){}
+	void release();
+	void retain();
+	CCObject* target;
+private:
+	int _refCount;
+};
+
 class CC_DLL CCObject : public CCCopying
 {
 public:
     CCObject();
     virtual ~CCObject();
-	int getObjectId() const;
+	unsigned int getObjectId() const;
+	unsigned int getLuaRef();
+	void addLuaRef();
+	void removeLuaRef();
     void release();
     void retain();
     CCObject* autorelease();
@@ -54,14 +69,19 @@ public:
     unsigned int getRetainCount();
     virtual bool isEqual(const CCObject* pObject);
     virtual void update(float dt);
-	static int getObjectCount();
-protected:
-	// object id, CCScriptSupport need public m_uID
-	int m_nID;
+	static unsigned int getObjectCount();
+	static unsigned int getLuaRefCount();
+	CCWeak* getWeakRef();
+private:
+	bool _isManaged;
+	// object id, each object has unique one
+	unsigned int _id;
 	// count of references
-	unsigned int m_uReference;
-	// count of autorelease
-	unsigned int m_uAutoReleaseCount;
+	unsigned int _ref;
+	// lua reference id
+	unsigned int _luaRef;
+	// weak ref object
+	CCWeak* _weak;
 	friend class CCAutoreleasePool;
 };
 

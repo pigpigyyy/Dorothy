@@ -312,6 +312,12 @@ local function oViewPanel()
 				end
 			end)
 
+		menuItem.dispose = function(self)
+			menuItem:unregisterTapHandler()
+			local sp = self:getData()
+			sp[oSd.sprite] = nil
+		end
+	
 		return menuItem
 	end
 	
@@ -409,11 +415,16 @@ local function oViewPanel()
 			return true
 		end, false, 0, true)
 	
-	panel.items = {}
+	panel.items = nil
 	panel.updateImages = function(self, data, model)
 		initValues()
+		if panel.items then
+			for _,v in pairs(panel.items) do
+				v:dispose()
+			end
+		end
 		panel.items = {}
-		self:removeOutlineTarget()
+		panel:showOutline(false)
 		menu:removeAllChildren()
 		local clipFile = data[oSd.clipFile]
 		local drawNode = CCDrawNode()
@@ -610,13 +621,6 @@ local function oViewPanel()
 	panel.showOutline = function(self, show)
 		if outline then
 			outline.visible = show
-		end
-	end
-	
-	panel.removeOutlineTarget = function(self)
-		if outline then
-			outline.transformTarget = nil
-			outline.visible = false
 		end
 	end
 	

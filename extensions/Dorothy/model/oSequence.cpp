@@ -18,7 +18,7 @@ public:
 		ExtraAction* pRet = new ExtraAction();
 		return pRet;
 	}
-	virtual ExtraAction* reverse(void)
+	virtual ExtraAction* reverse()
 	{
 		return ExtraAction::create();
 	}
@@ -151,7 +151,7 @@ CCObject* oSequence::copyWithZone(CCZone *pZone)
 	return pCopy;
 }
 
-oSequence::~oSequence(void)
+oSequence::~oSequence()
 {
 	CC_SAFE_RELEASE(m_pActions[0]);
 	CC_SAFE_RELEASE(m_pActions[1]);
@@ -164,7 +164,7 @@ void oSequence::startWithTarget(CCNode *pTarget)
 	m_last = -1;
 }
 
-void oSequence::stop(void)
+void oSequence::stop()
 {
 	// Issue #1305
 	if(m_last != -1)
@@ -220,7 +220,7 @@ void oSequence::update(float t)
 	m_last = found;
 }
 
-oActionDuration* oSequence::reverse(void)
+oActionDuration* oSequence::reverse()
 {
 	return oSequence::createWithTwoActions(m_pActions[1]->reverse(), m_pActions[0]->reverse());
 }

@@ -1135,7 +1135,11 @@ public:
 	//	return next_i(intptr_t(-1)); assertion will fail in next_i
 	//	because size_t is unsigned, so write the code below
 	//	this code produce same result as next_i(intptr_t(-1))
-	   	const Node* pn = pNodes;
+		if (!pNodes)
+		{
+			return nNodes;
+		}
+		const Node* pn = pNodes;
 	   	size_t i = 0;
 	   	while (delmark == pn[i].link)
 			++i;

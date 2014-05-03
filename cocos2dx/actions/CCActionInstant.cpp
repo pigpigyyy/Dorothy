@@ -345,24 +345,22 @@ CCCallFunc * CCCallFunc::create(CCObject* pSelectorTarget, SEL_CallFunc selector
     return NULL;
 }
 
-bool CCCallFunc::initWithTarget(CCObject* pSelectorTarget) {
-    if (pSelectorTarget) 
-    {
-        pSelectorTarget->retain();
-    }
-
-    if (m_pSelectorTarget) 
-    {
-        m_pSelectorTarget->release();
-    }
-
-    m_pSelectorTarget = pSelectorTarget;
+bool CCCallFunc::initWithTarget(CCObject* pSelectorTarget)
+{
+	CCWeak* ref = NULL;
+	if (pSelectorTarget)
+	{
+		ref = pSelectorTarget->getWeakRef();
+		ref->retain();
+	}
+	CC_SAFE_RELEASE(_targetRef);
+	_targetRef = ref;
     return true;
 }
 
 CCCallFunc::~CCCallFunc()
 {
-    CC_SAFE_RELEASE(m_pSelectorTarget);
+    CC_SAFE_RELEASE(_targetRef);
 }
 
 CCObject * CCCallFunc::copyWithZone(CCZone *pZone) {
@@ -378,7 +376,7 @@ CCObject * CCCallFunc::copyWithZone(CCZone *pZone) {
     }
 
     CCActionInstant::copyWithZone(pZone);
-    pRet->initWithTarget(m_pSelectorTarget);
+	pRet->initWithTarget(getSelectorTarget());
     pRet->m_pCallFunc = m_pCallFunc;
     CC_SAFE_DELETE(pNewZone);
     return pRet;
@@ -392,8 +390,8 @@ void CCCallFunc::update(float time) {
 }
 
 void CCCallFunc::execute() {
-    if (m_pCallFunc) {
-        (m_pSelectorTarget->*m_pCallFunc)();
+	if (m_pCallFunc && getSelectorTarget()) {
+		(getSelectorTarget()->*m_pCallFunc)();
     }
 }
 
@@ -401,8 +399,8 @@ void CCCallFunc::execute() {
 // CallFuncN
 //
 void CCCallFuncN::execute() {
-    if (m_pCallFuncN) {
-        (m_pSelectorTarget->*m_pCallFuncN)(m_pTarget);
+	if (m_pCallFuncN && getSelectorTarget()) {
+		(getSelectorTarget()->*m_pCallFuncN)(m_pTarget);
     }
 }
 
@@ -443,7 +441,7 @@ CCObject * CCCallFuncN::copyWithZone(CCZone* zone) {
     }
 
     CCCallFunc::copyWithZone(zone);
-    pRet->initWithTarget(m_pSelectorTarget, m_pCallFuncN);
+	pRet->initWithTarget(getSelectorTarget(), m_pCallFuncN);
     CC_SAFE_DELETE(pNewZone);
     return pRet;
 }
@@ -489,14 +487,14 @@ CCObject * CCCallFuncND::copyWithZone(CCZone* zone) {
     }
 
     CCCallFunc::copyWithZone(zone);
-    pRet->initWithTarget(m_pSelectorTarget, m_pCallFuncND, m_pData);
+	pRet->initWithTarget(getSelectorTarget(), m_pCallFuncND, m_pData);
     CC_SAFE_DELETE(pNewZone);
     return pRet;
 }
 
 void CCCallFuncND::execute() {
-    if (m_pCallFuncND) {
-        (m_pSelectorTarget->*m_pCallFuncND)(m_pTarget, m_pData);
+	if (m_pCallFuncND && getSelectorTarget()) {
+		(getSelectorTarget()->*m_pCallFuncND)(m_pTarget, m_pData);
     }
 }
 
@@ -512,8 +510,8 @@ CCCallFuncO::~CCCallFuncO() {
 }
 
 void CCCallFuncO::execute() {
-    if (m_pCallFuncO) {
-        (m_pSelectorTarget->*m_pCallFuncO)(m_pObject);
+	if (m_pCallFuncO && getSelectorTarget()) {
+		(getSelectorTarget()->*m_pCallFuncO)(m_pObject);
     }
 }
 
@@ -556,7 +554,7 @@ CCObject * CCCallFuncO::copyWithZone(CCZone* zone) {
     }
 
     CCCallFunc::copyWithZone(zone);
-    pRet->initWithTarget(m_pSelectorTarget, m_pCallFuncO, m_pObject);
+	pRet->initWithTarget(getSelectorTarget(), m_pCallFuncO, m_pObject);
     CC_SAFE_DELETE(pNewZone);
     return pRet;
 }

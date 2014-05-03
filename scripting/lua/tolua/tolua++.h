@@ -44,18 +44,26 @@ extern "C" {
 #define MT_SELF 1
 #define MT_DEL 2
 #define MT_CALL 3
-#define MT_C_INSTANCE 4
-#define MT_GET 5
-#define MT_SET 6
-#define MT_GETI 7
-#define MT_SETI 8
-#define MT_ADD 9
-#define MT_SUB 10
-#define MT_MUL 11
-#define MT_DIV 12
-#define MT_LT 13
-#define MT_LE 14
-#define MT_EQ 15
+#define MT_SUPER 4
+#define MT_C_INSTANCE 5
+#define MT_GET 6
+#define MT_SET 7
+#define MT_GETI 8
+#define MT_SETI 9
+#define MT_ADD 10
+#define MT_SUB 11
+#define MT_MUL 12
+#define MT_DIV 13
+#define MT_LT 14
+#define MT_LE 15
+#define MT_EQ 16
+
+TOLUA_API int tolua_callback;
+#define TOLUA_CALLBACK ((void*)&tolua_callback)
+TOLUA_API int tolua_super;
+#define TOLUA_SUPER ((void*)&tolua_super)
+TOLUA_API int tolua_ubox;
+#define TOLUA_UBOX ((void*)&tolua_ubox)
 
 typedef int lua_Object;
 

@@ -1214,7 +1214,7 @@ private:
     CCPoint convertToWindowSpace(const CCPoint& nodePoint);
 
 protected:
-	CCNode* _transformTarget;
+	CCWeak* _transformTargetRef;
 
 	float _displayedOpacity;
 	float _realOpacity;

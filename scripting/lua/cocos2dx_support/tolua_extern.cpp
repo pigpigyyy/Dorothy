@@ -15,8 +15,7 @@ extern "C" int alloc_ref_id()
 {
 	if (g_available_ref_ids.empty())
 	{
-		g_ref_id++;
-		return g_ref_id;
+		return ++g_ref_id;
 	}
 	else
 	{
@@ -31,9 +30,10 @@ extern "C" void collect_ref_id(int refid)
 	g_available_ref_ids.push(refid);
 }
 
-extern "C" int tolua_collect_ccobject(lua_State* tolua_S)
+extern "C" int tolua_collect_ccobject(lua_State* L)
 {
-	CCObject* object = (CCObject*)tolua_tousertype(tolua_S, 1, 0);
+	CCObject* object = (CCObject*)tolua_tousertype(L, 1, 0);
+	object->removeLuaRef();
 	object->release();
 	return 0;
 }
@@ -46,7 +46,7 @@ extern "C" void tolua_pushccobject(lua_State* L, void* ptr, const char* type)
 		return;
 	}
 	CCObject* object = (CCObject*)ptr;
-	int refid = object->getObjectId();
+	int refid = object->getLuaRef();
 
 	luaL_getmetatable(L, type);// mt
 	if (lua_isnil(L, -1))// no such type
@@ -55,7 +55,7 @@ extern "C" void tolua_pushccobject(lua_State* L, void* ptr, const char* type)
 		lua_pushnil(L);
 		return;
 	}
-	lua_pushstring(L, "tolua_ubox");
+	lua_pushlightuserdata(L, TOLUA_UBOX);
 	lua_rawget(L, LUA_REGISTRYINDEX);// mt ubox
 	lua_rawgeti(L, -1, refid);// mt ubox ud
 
@@ -74,6 +74,7 @@ extern "C" void tolua_pushccobject(lua_State* L, void* ptr, const char* type)
 		lua_setfenv(L, -2);
 #endif
 		// register CCObject GC
+		object->addLuaRef();
 		object->retain();
 	}
 	else
@@ -81,7 +82,7 @@ extern "C" void tolua_pushccobject(lua_State* L, void* ptr, const char* type)
 		/* check the need of updating the metatable to a more specialized class */
 		lua_insert(L, -2);// mt ud ubox
 		lua_pop(L, 1);// mt ud
-		lua_pushstring(L, "tolua_super");
+		lua_pushlightuserdata(L, TOLUA_SUPER);
 		lua_rawget(L, LUA_REGISTRYINDEX);// mt ud super
 		lua_getmetatable(L, -2);// mt ud super mt
 		lua_rawget(L, -2);// mt ud super super[mt]

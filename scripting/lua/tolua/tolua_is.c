@@ -31,7 +31,7 @@ TOLUA_API int tolua_fast_isa(lua_State *L, int mt_indexa, int mt_indexb, int sup
 			lua_pushvalue(L, super_index);
 		}
 		else {
-			lua_pushliteral(L, "tolua_super");
+			lua_pushlightuserdata(L, TOLUA_SUPER);
 			lua_rawget(L, LUA_REGISTRYINDEX);  /* stack: super */
 		};
 		lua_pushvalue(L, mt_indexa);       /* stack: super mta */
@@ -183,7 +183,7 @@ TOLUA_API int tolua_istype(lua_State* L, int lo, const char* type) {
 		}
 		else {
 			/* check if it is a specialized class */
-			lua_pushstring(L, "tolua_super");
+			lua_pushlightuserdata(L, TOLUA_SUPER);
 			lua_rawget(L, LUA_REGISTRYINDEX); /* get super */
 			lua_getmetatable(L, lo);
 			lua_rawget(L, -2);                /* get super[mt] */

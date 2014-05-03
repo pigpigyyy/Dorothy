@@ -21,7 +21,7 @@ public:
 	CREATE_FUNC(oCamera);
 private:
 	CCPoint _camPos;
-	oRef<CCNode> _target;
+	oWRef<CCNode> _target;
 };
 
 NS_DOROTHY_PLATFORM_END

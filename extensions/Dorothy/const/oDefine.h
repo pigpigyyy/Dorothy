@@ -44,11 +44,11 @@ public: void set##funName(varType var)
 
 #define PROPERTY_REF(varType, varName, funName)\
 protected: varType varName;\
-public: const varType& get##funName(void) const;\
+public: const varType& get##funName() const;\
 public: void set##funName(const varType& var)
 
 #define PROPERTY_NAME_REF(varType, funName)\
-public: const varType& get##funName(void) const;\
+public: const varType& get##funName() const;\
 public: void set##funName(const varType& var)
 
 #define PROPERTY_VIRTUAL(varType, varName, funName)\
@@ -60,7 +60,7 @@ public: virtual void set##funName(varType var)
 public: varType get##funName() const
 
 #define PROPERTY_READONLY_REF(varType, funName)\
-public: const varType& get##funName(void) const
+public: const varType& get##funName() const
 
 #define PROPERTY_BOOL(varName, funName)\
 protected: bool varName;\
@@ -163,6 +163,8 @@ NS_DOROTHY_END
 #include "Dorothy/misc/oRefVector.h"
 #include "Dorothy/misc/oOwn.h"
 #include "Dorothy/misc/oOwnVector.h"
+#include "Dorothy/misc/oWRef.h"
+#include "Dorothy/misc/oWRefVector.h"
 #include "Dorothy/misc/oVec2.h"
 
 #endif // __DOROTHY_CONST_ODEFINE_H__

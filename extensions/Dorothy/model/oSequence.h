@@ -8,13 +8,13 @@ NS_DOROTHY_BEGIN
 class oSequence: public oActionDuration
 {
 public:
-	~oSequence(void);
+	~oSequence();
 	bool initWithTwoActions(CCFiniteTimeAction* pActionOne, CCFiniteTimeAction* pActionTwo);
 	virtual CCObject* copyWithZone(CCZone* pZone);
 	virtual void startWithTarget(CCNode* pTarget);
-	virtual void stop(void);
+	virtual void stop();
 	virtual void update(float t);
-	virtual oActionDuration* reverse(void);
+	virtual oActionDuration* reverse();
 	static oSequence* create(CCFiniteTimeAction* pAction1, ...);
 	static oSequence* create(CCArray* arrayOfActions);
 	static oSequence* createWithVariableList(CCFiniteTimeAction* pAction1, va_list args);

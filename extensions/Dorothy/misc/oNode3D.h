@@ -9,8 +9,8 @@ public:
 	oNode3D();
 	PROPERTY(float, _rotationX, RotationX);
 	PROPERTY(float, _rotationY, RotationY);
-	virtual CCAffineTransform nodeToParentTransform(void);
-	virtual void transform(void);
+	virtual CCAffineTransform nodeToParentTransform();
+	virtual void transform();
 	CREATE_FUNC(oNode3D);
 };
 

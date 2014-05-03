@@ -30,8 +30,13 @@ THE SOFTWARE.
 #include <stack>
 using std::stack;
 
-static int g_maxObjectCount = 0;
-static stack<int> g_availableObjectIds;
+static unsigned int g_maxObjectCount = 1;
+static stack<unsigned int> g_availableObjectIds;
+
+static unsigned int g_maxLuaCount = 1;
+static stack<unsigned int> g_availableLuaIds;
+
+static unsigned int g_luaRefCount = 0;
 
 NS_CC_BEGIN
 
@@ -43,29 +48,30 @@ CCObject* CCCopying::copyWithZone(CCZone *pZone)
 }
 
 CCObject::CCObject()
-: m_uReference(1) // when the object is created, the reference count of it is 1
-, m_uAutoReleaseCount(0)
+: _isManaged(false)
+, _ref(1) // when the object is created, the reference count of it is 1
+, _luaRef(0)
+, _weak(NULL)
 {
 	if (g_availableObjectIds.empty())
 	{
-		m_nID = ++g_maxObjectCount;
+		_id = g_maxObjectCount++;
 	}
 	else
 	{
-		m_nID = g_availableObjectIds.top();
+		_id = g_availableObjectIds.top();
 		g_availableObjectIds.pop();
 	}
 }
 
 CCObject::~CCObject()
 {
-    // if the object is managed, we should remove it
-    // from pool manager
-    if (m_uAutoReleaseCount > 0)
-    {
-        CCPoolManager::sharedPoolManager()->removeObject(this);
-    }
-	g_availableObjectIds.push(m_nID);
+	CCAssert(!_isManaged, "object is still managed when destroyed");
+	g_availableObjectIds.push(_id);
+	if (_luaRef != 0)
+	{
+		g_availableLuaIds.push(_luaRef);
+	}
 }
 
 CCObject* CCObject::copy()
@@ -75,36 +81,41 @@ CCObject* CCObject::copy()
 
 void CCObject::release()
 {
-    CCAssert(m_uReference > 0, "reference count should greater than 0");
-    --m_uReference;
-
-    if (m_uReference == 0)
+    CCAssert(_ref > 0, "reference count should greater than 0");
+    --_ref;
+    if (_ref == 0)
     {
+		if (_weak)
+		{
+			_weak->target = NULL;
+			_weak->release();
+		}
         delete this;
     }
 }
 
 void CCObject::retain()
 {
-	CCAssert(m_uReference > 0, "reference count should greater than 0");
-
-    ++m_uReference;
+	CCAssert(_ref > 0, "reference count should greater than 0");
+    ++_ref;
 }
 
 CCObject* CCObject::autorelease()
 {
-    CCPoolManager::sharedPoolManager()->addObject(this);
-    return this;
+	CCAssert(!_isManaged, "object is already managed");
+	_isManaged = true;
+	CCPoolManager::sharedPoolManager()->addObject(this);
+	return this;
 }
 
 bool CCObject::isSingleReference()
 {
-    return m_uReference == 1;
+    return _ref == 1;
 }
 
 unsigned int CCObject::getRetainCount()
 {
-    return m_uReference;
+    return _ref;
 }
 
 bool CCObject::isEqual(const CCObject *pObject)
@@ -117,14 +128,70 @@ void CCObject::update( float dt )
 	CC_UNUSED_PARAM(dt);
 }
 
-int CCObject::getObjectId() const
+unsigned int CCObject::getObjectId() const
 {
-	return m_nID;
+	return _id;
 }
 
-int CCObject::getObjectCount()
+unsigned int CCObject::getObjectCount()
 {
 	return g_maxObjectCount - g_availableObjectIds.size();
+}
+
+unsigned int CCObject::getLuaRefCount()
+{
+	return g_luaRefCount;
+}
+
+CCWeak* CCObject::getWeakRef()
+{
+	if (!_weak)
+	{
+		_weak = new CCWeak(this);
+		return _weak;
+	}
+	return _weak;
+}
+
+void CCObject::addLuaRef()
+{
+	++g_luaRefCount;
+}
+
+void CCObject::removeLuaRef()
+{
+	--g_luaRefCount;
+}
+
+unsigned int CCObject::getLuaRef()
+{
+	if (_luaRef == 0)
+	{
+		if (g_availableLuaIds.empty())
+		{
+			_luaRef = g_maxLuaCount++;
+		}
+		else
+		{
+			_luaRef = g_availableLuaIds.top();
+			g_availableLuaIds.pop();
+		}
+	}
+	return _luaRef;
+}
+
+void CCWeak::release()
+{
+	--_refCount;
+	if (_refCount == 0)
+	{
+		delete this;
+	}
+}
+
+void CCWeak::retain()
+{
+	++_refCount;
 }
 
 NS_CC_END

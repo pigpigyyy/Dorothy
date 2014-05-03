@@ -21,6 +21,10 @@
 #include <stdlib.h>
 #include <math.h>
 
+int tolua_callback;
+int tolua_super;
+int tolua_ubox;
+
 /* Create metatable
     * Create and register new metatable
 */
@@ -48,7 +52,7 @@ static int tolua_newmetatable (lua_State* L, const char* name)
 static void mapsuper (lua_State* L, const char* name, const char* base)
 {
     /* push registry.super */
-    lua_pushstring(L,"tolua_super");
+	lua_pushlightuserdata(L, TOLUA_SUPER);
     lua_rawget(L,LUA_REGISTRYINDEX);    /* stack: super */
     luaL_getmetatable(L,name);          /* stack: super mt */
     lua_rawget(L,-2);                   /* stack: super table */
@@ -91,22 +95,22 @@ static void set_ubox(lua_State* L) {
 
     /* mt basemt */
     if (!lua_isnil(L, -1)) {
-        lua_pushstring(L, "tolua_ubox");
+        lua_pushlightuserdata(L, TOLUA_UBOX);
         lua_rawget(L,-2);
     } else {
         lua_pushnil(L);
     };
     /* mt basemt base_ubox */
-    if (!lua_isnil(L,-1)) {
-        lua_pushstring(L, "tolua_ubox");
+	if (!lua_isnil(L, -1)) {
+		lua_pushlightuserdata(L, TOLUA_UBOX);
         lua_insert(L, -2);
         /* mt basemt key ubox */
         lua_rawset(L,-4);
         /* (mt with ubox) basemt */
     } else {
         /* mt basemt nil */
-        lua_pop(L, 1);
-        lua_pushstring(L,"tolua_ubox");
+		lua_pop(L, 1);
+		lua_pushlightuserdata(L, TOLUA_UBOX);
         lua_newtable(L);
         /* make weak value metatable for ubox table to allow userdata to be
         garbage-collected */
@@ -223,10 +227,18 @@ static int tolua_bnd_cast (lua_State* L)
 				if (is_ccobject) tolua_pushccobject(L, v, s);
 				else tolua_pushusertype(L, v, s);
 			}
-			else lua_pushnil(L);
+			else
+			{
+				if (is_ccobject) tolua_pushccobject(L, v, s);
+				else tolua_pushusertype(L, v, s);
+				//lua_pushnil(L);
+			}
 		}
 	}
-	else lua_pushnil(L);
+	else
+	{
+		lua_pushnil(L);
+	}
     return 1;
 }
 
@@ -304,18 +316,18 @@ TOLUA_API void tolua_open (lua_State* L)
         lua_rawset(L,LUA_REGISTRYINDEX);
 #endif
         /* create object ptr -> udata mapping table */
-        lua_pushstring(L,"tolua_ubox");
+		lua_pushlightuserdata(L, TOLUA_UBOX);
         lua_newtable(L);
         /* make weak value metatable for ubox table to allow userdata to be
            garbage-collected */
-        lua_newtable(L);
+		lua_newtable(L);
         lua_pushliteral(L, "__mode");
         lua_pushliteral(L, "v");
-        lua_rawset(L, -3);               /* stack: string ubox mt */
-        lua_setmetatable(L, -2);  /* stack: string ubox */
-        lua_rawset(L,LUA_REGISTRYINDEX);
+        lua_rawset(L, -3);               // stack: string ubox mt
+        lua_setmetatable(L, -2);  // stack: string ubox
+		lua_rawset(L,LUA_REGISTRYINDEX);
         
-        lua_pushstring(L,"tolua_super");
+		lua_pushlightuserdata(L, TOLUA_SUPER);
         lua_newtable(L);
         lua_rawset(L,LUA_REGISTRYINDEX);
 

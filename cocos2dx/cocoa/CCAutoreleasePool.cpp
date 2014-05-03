@@ -42,18 +42,14 @@ CCAutoreleasePool::~CCAutoreleasePool()
 void CCAutoreleasePool::addObject(CCObject* pObject)
 {
     m_pManagedObjectArray->addObject(pObject);
-
-    CCAssert(pObject->m_uReference > 1, "reference count should be greater than 1");
-    ++(pObject->m_uAutoReleaseCount);
+    CCAssert(pObject->_ref > 1, "reference count should be greater than 1");
     pObject->release(); // no ref count, in this case autorelease pool added.
 }
 
 void CCAutoreleasePool::removeObject(CCObject* pObject)
 {
-    for (unsigned int i = 0; i < pObject->m_uAutoReleaseCount; ++i)
-    {
-        m_pManagedObjectArray->removeObject(pObject, false);
-    }
+	pObject->_isManaged = false;
+	m_pManagedObjectArray->removeObject(pObject, false);
 }
 
 void CCAutoreleasePool::clear()
@@ -71,7 +67,7 @@ void CCAutoreleasePool::clear()
             if(!pObj)
                 break;
 
-            --(pObj->m_uAutoReleaseCount);
+			pObj->_isManaged = false;
             //(*it)->release();
             //delete (*it);
 #ifdef _DEBUG
@@ -186,7 +182,6 @@ void CCPoolManager::addObject(CCObject* pObject)
 {
     getCurReleasePool()->addObject(pObject);
 }
-
 
 CCAutoreleasePool* CCPoolManager::getCurReleasePool()
 {

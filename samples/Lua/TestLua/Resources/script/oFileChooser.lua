@@ -175,11 +175,26 @@ local function oFileChooser()
 	opMenu.position = oVec2(winSize.width*0.5+borderSize.width*0.5-35,winSize.height*0.5+borderSize.height*0.5)
 	panel:addChild(opMenu)
 
+	local updateButton = oButton("Update",17,60,false,
+		0,0,
+		function(item)
+			addImages(item.targetFile)
+		end)
+	updateButton.anchorPoint = oVec2.zero
+	local btnBk = CCDrawNode()
+	btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
+	btnBk.position = oVec2(30,30)
+	updateButton:addChild(btnBk,-1)
+	updateButton.visible = false
+	opMenu:addChild(updateButton)
+
 	local cancelButton = oButton("Cancel",17,60,false,
 		70,0,
 		function(item)
 			opMenu.enabled = false
 			panel:hide()
+			updateButton:unregisterTapHandler()
+			item:unregisterTapHandler()
 			if item.editTarget then
 				oEditor.controlBar:clearCursors()
 				oEditor.model = oEditor.output..item.editTarget..".model"
@@ -236,24 +251,11 @@ local function oFileChooser()
 			end
 		end)
 	cancelButton.anchorPoint = oVec2.zero
-	local btnBk = CCDrawNode()
+	btnBk = CCDrawNode()
 	btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
 	btnBk.position = oVec2(30,30)
 	cancelButton:addChild(btnBk,-1)
 	opMenu:addChild(cancelButton)
-
-	local updateButton = oButton("Update",17,60,false,
-		0,0,
-		function(item)
-			addImages(item.targetFile)
-		end)
-	updateButton.anchorPoint = oVec2.zero
-	btnBk = CCDrawNode()
-	btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
-	btnBk.position = oVec2(30,30)
-	updateButton:addChild(btnBk,-1)
-	updateButton.visible = false
-	opMenu:addChild(updateButton)
 
 	panel.init = function(self)
 		local dirs = oContent:getDirEntries(oEditor.input,true)
@@ -290,7 +292,7 @@ local function oFileChooser()
 				function(item)
 					cancelButton.label.text = "Edit"
 					cancelButton.label.texture.antiAlias = false
-					menu:removeAllChildren()
+					panel:removeMenuItems()
 					if item.file:sub(-5,-1) == ".clip" then
 						cancelButton.editTarget = item.file:sub(1,-6)
 						addClip(item.file)

@@ -58,12 +58,12 @@ TOLUA_API void tolua_pushusertype (lua_State* L, void* value, const char* type)
         if (lua_isnil(L, -1)) { /* NOT FOUND metatable */
             lua_pop(L, 1);
             return;
-        }
-        lua_pushstring(L,"tolua_ubox");
+		}
+		lua_pushlightuserdata(L, TOLUA_UBOX);
         lua_rawget(L,-2);                                           /* stack: mt ubox */
         if (lua_isnil(L, -1)) {
-            lua_pop(L, 1);
-            lua_pushstring(L, "tolua_ubox");
+			lua_pop(L, 1);
+			lua_pushlightuserdata(L, TOLUA_UBOX);
             lua_rawget(L, LUA_REGISTRYINDEX);
         };
         
@@ -93,7 +93,7 @@ TOLUA_API void tolua_pushusertype (lua_State* L, void* value, const char* type)
             /* check the need of updating the metatable to a more specialized class */
             lua_insert(L,-2);                                       /* stack: mt ubox[u] ubox */
             lua_pop(L,1);                                           /* stack: mt ubox[u] */
-            lua_pushstring(L,"tolua_super");
+			lua_pushlightuserdata(L, TOLUA_SUPER);
             lua_rawget(L,LUA_REGISTRYINDEX);                        /* stack: mt ubox[u] super */
             lua_getmetatable(L,-2);                                 /* stack: mt ubox[u] super mt */
             lua_rawget(L,-2);                                       /* stack: mt ubox[u] super super[mt] */

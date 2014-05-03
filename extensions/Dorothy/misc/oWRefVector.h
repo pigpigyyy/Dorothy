@@ -1,18 +1,18 @@
-#ifndef __DOROTHY_MISC_OREFVECTOR_H__
-#define __DOROTHY_MISC_OREFVECTOR_H__
+#ifndef __DOROTHY_MISC_oWREFVECTOR_H__
+#define __DOROTHY_MISC_oWREFVECTOR_H__
 
-#include "Dorothy/misc/oRef.h"
+#include "Dorothy/misc/oWRef.h"
 
 NS_DOROTHY_BEGIN
 
 /** @brief Used with Aggregation Relationship. */
 template<class T = CCObject>
-class oRefVector: public vector<oRef<T>>
+class oWRefVector: public vector<oWRef<T>>
 {
 public:
 	inline void push_back(T* item)
 	{
-		vector<oRef<T>>::push_back(oRefMake(item));
+		vector<oWRef<T>>::push_back(oWRefMake(item));
 	}
 	bool insert(size_t where, T* item)
 	{
@@ -20,7 +20,7 @@ public:
 		{
 			auto it = begin();
 			for (int i = 0; i < where; ++i, ++it);
-			vector<oRef<T>>::insert(it, oRefMake(item));
+			vector<oWRef<T>>::insert(it, oWRefMake(item));
 			return true;
 		}
 		return false;
@@ -40,7 +40,7 @@ public:
 	bool fast_remove(T* item)
 	{
 		int size = size();
-		oRef<T>* data = data();
+		oWRef<T>* data = data();
 		for (int i = 0; i < size; i++)
 		{
 			if (data[i] == body)
@@ -56,4 +56,4 @@ public:
 
 NS_DOROTHY_END
 
-#endif // __DOROTHY_MISC_OREFVECTOR_H__
+#endif // __DOROTHY_MISC_oWREFVECTOR_H__

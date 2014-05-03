@@ -84,7 +84,7 @@ CCNode::CCNode()
 , _realColor(ccWHITE)
 , _cascadeOpacity(true)
 , _cascadeColor(true)
-, _transformTarget(nullptr)
+, _transformTargetRef(NULL)
 {
 	// set default scheduler and actionManager
 	CCDirector *director = CCDirector::sharedDirector();
@@ -114,7 +114,7 @@ CCNode::~CCNode()
 	CC_SAFE_RELEASE(m_pGrid);
 	CC_SAFE_RELEASE(m_pShaderProgram);
 	CC_SAFE_RELEASE(m_pUserObject);
-
+	CC_SAFE_RELEASE(_transformTargetRef);
 	if (m_pChildren && m_pChildren->count() > 0)
 	{
 		CCObject* child;
@@ -726,11 +726,12 @@ void CCNode::visit()
 	}
 	kmGLPushMatrix();
 
-	if (_transformTarget)
+	CCNode* transformTarget = CCNode::getTransformTarget();
+	if (transformTarget)
 	{
 		CCDirector::sharedDirector()->projection();
-		_transformTarget->transformAncestors();
-		_transformTarget->transform();
+		transformTarget->transformAncestors();
+		transformTarget->transform();
 	}
 
 	if (m_pGrid && m_pGrid->isActive())
@@ -1288,12 +1289,26 @@ bool CCNode::isCascadeColor() const
 
 void CCNode::setTransformTarget(CCNode* target)
 {
-	_transformTarget = target;
+	CCWeak* ref = NULL;
+	if (target)
+	{
+		ref = target->getWeakRef();
+		ref->retain();
+	}
+	if (_transformTargetRef)
+	{
+		_transformTargetRef->release();
+	}
+	_transformTargetRef = ref;
 }
 
 CCNode* CCNode::getTransformTarget() const
 {
-	return _transformTarget;
+	if (_transformTargetRef)
+	{
+		return (CCNode*)_transformTargetRef->target;
+	}
+	return nullptr;
 }
 
 NS_CC_END

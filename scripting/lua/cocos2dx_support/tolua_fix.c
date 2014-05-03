@@ -6,7 +6,7 @@ TOLUA_API void collect_ref_id(int refid);
 
 TOLUA_API void toluafix_open(lua_State* L)
 {
-    lua_pushstring(L, TOLUA_REFID_FUNCTION_MAPPING);
+	lua_pushlightuserdata(L, TOLUA_CALLBACK);
     lua_newtable(L);
     lua_rawset(L, LUA_REGISTRYINDEX);
 }
@@ -16,8 +16,8 @@ TOLUA_API int toluafix_ref_function(lua_State* L, int lo, int def)
 	int refid;
     // function at lo
     if (!lua_isfunction(L, lo)) return 0;
-    refid = alloc_ref_id();
-    lua_pushstring(L, TOLUA_REFID_FUNCTION_MAPPING);
+	refid = alloc_ref_id();
+	lua_pushlightuserdata(L, TOLUA_CALLBACK);
     lua_rawget(L, LUA_REGISTRYINDEX);                           /* stack: fun ... refid_fun */
     lua_pushinteger(L, refid);                      /* stack: fun ... refid_fun refid */
     lua_pushvalue(L, lo);                                       /* stack: fun ... refid_fun refid fun */
@@ -32,7 +32,7 @@ TOLUA_API int toluafix_ref_function(lua_State* L, int lo, int def)
 
 TOLUA_API void toluafix_get_function_by_refid(lua_State* L, int refid)
 {
-    lua_pushstring(L, TOLUA_REFID_FUNCTION_MAPPING);
+	lua_pushlightuserdata(L, TOLUA_CALLBACK);
     lua_rawget(L, LUA_REGISTRYINDEX);                           /* stack: ... refid_fun */
     lua_pushinteger(L, refid);/* stack: ... refid_fun refid */
     lua_rawget(L, -2);                                          /* stack: ... refid_fun fun */
@@ -41,7 +41,7 @@ TOLUA_API void toluafix_get_function_by_refid(lua_State* L, int refid)
 
 TOLUA_API void toluafix_remove_function_by_refid(lua_State* L, int refid)
 {
-    lua_pushstring(L, TOLUA_REFID_FUNCTION_MAPPING);
+	lua_pushlightuserdata(L, TOLUA_CALLBACK);
     lua_rawget(L, LUA_REGISTRYINDEX);                           /* stack: ... refid_fun */
     lua_pushinteger(L, refid);                                  /* stack: ... refid_fun refid */
     lua_pushnil(L);                                             /* stack: ... refid_fun refid nil */

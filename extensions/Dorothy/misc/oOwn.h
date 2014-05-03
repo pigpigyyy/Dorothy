@@ -15,14 +15,10 @@ public:
 	{
 		return get();
 	}
-	inline oOwn& operator=(oOwn&& own)
+	inline const oOwn& operator=(oOwn&& own)
 	{
 		unique_ptr<Item, Del>::operator=(std::move(own));
 		return *this;
-	}
-	inline operator bool() const
-	{
-		return get() != nullptr;
 	}
 private:
 	oOwn(const oOwn& own);
@@ -40,14 +36,10 @@ public:
 	{
 		return get();
 	}
-	inline oOwnArray& operator=(oOwnArray&& own)
+	inline const oOwnArray& operator=(oOwnArray&& own)
 	{
 		oUPtr::operator=(std::move(own));
 		return *this;
-	}
-	inline operator bool() const
-	{
-		return get() != nullptr;
 	}
 private:
 	oOwnArray(const oOwnArray& own);

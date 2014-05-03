@@ -161,6 +161,8 @@
     <ClInclude Include="..\Dorothy\misc\oRefVector.h" />
     <ClInclude Include="..\Dorothy\misc\oScriptHandler.h" />
     <ClInclude Include="..\Dorothy\misc\oVec2.h" />
+    <ClInclude Include="..\Dorothy\misc\oWRef.h" />
+    <ClInclude Include="..\Dorothy\misc\oWRefVector.h" />
     <ClInclude Include="..\Dorothy\misc\oXmlItemCache.h" />
     <ClInclude Include="..\Dorothy\model\oActionDuration.h" />
     <ClInclude Include="..\Dorothy\model\oAnimation.h" />

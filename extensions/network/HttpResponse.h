@@ -67,7 +67,7 @@ public:
     }
     
     /** Override autorelease method to prevent developers from calling it */
-    CCObject* autorelease(void)
+    CCObject* autorelease()
     {
         CCAssert(false, "HttpResponse is used between network thread and ui thread \
                         therefore, autorelease is forbidden here");

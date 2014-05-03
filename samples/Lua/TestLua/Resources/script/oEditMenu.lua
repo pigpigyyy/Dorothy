@@ -302,9 +302,12 @@ local function oEditMenu()
 					end
 				end
 			end),
-		
+
 		Origin = oButton("Origin",16,50,50,winSize.width-265,winSize.height-35,
 			function()
+				collectgarbage()
+				cclog("Object Count: %d",CCObject.count)
+				cclog("Lua Count: %d",CCObject.luaRefCount)
 				oEditor.viewArea:originReset()
 			end),
 		Zoom = oButton("100%",16,50,50,winSize.width-205,winSize.height-35,

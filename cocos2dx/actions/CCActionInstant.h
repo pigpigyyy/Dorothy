@@ -185,7 +185,7 @@ class CC_DLL CCCallFunc : public CCActionInstant //<NSCopying>
 {
 public:
     CCCallFunc()
-        : m_pSelectorTarget(NULL)
+		: _targetRef(NULL)
         , m_pCallFunc(NULL)
     {
     }
@@ -207,24 +207,14 @@ public:
     //super methods
     virtual void update(float time);
     CCObject * copyWithZone(CCZone *pZone);
-
-    inline CCObject* getTargetCallback()
-    {
-        return m_pSelectorTarget;
-    }
-
-    inline void setTargetCallback(CCObject* pSel)
-    {
-        if (pSel != m_pSelectorTarget)
-        {
-            CC_SAFE_RETAIN(pSel);
-            CC_SAFE_RELEASE(m_pSelectorTarget);
-            m_pSelectorTarget = pSel; 
-        }
-    }
+	CCObject* getSelectorTarget()
+	{
+		if (_targetRef) return _targetRef->target;
+		return NULL;
+	}
 protected:
     /** Target that will be called */
-    CCObject*   m_pSelectorTarget;
+    CCWeak* _targetRef;// use weak reference
 
     union
     {
