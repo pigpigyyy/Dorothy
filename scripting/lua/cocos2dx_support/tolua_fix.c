@@ -13,40 +13,36 @@ TOLUA_API void toluafix_open(lua_State* L)
 
 TOLUA_API int toluafix_ref_function(lua_State* L, int lo, int def)
 {
+	/* function at lo */
 	int refid;
-    // function at lo
     if (!lua_isfunction(L, lo)) return 0;
 	refid = alloc_ref_id();
 	lua_pushlightuserdata(L, TOLUA_CALLBACK);
-    lua_rawget(L, LUA_REGISTRYINDEX);                           /* stack: fun ... refid_fun */
-    lua_pushinteger(L, refid);                      /* stack: fun ... refid_fun refid */
-    lua_pushvalue(L, lo);                                       /* stack: fun ... refid_fun refid fun */
-    
-    lua_rawset(L, -3);                  /* refid_fun[refid] = fun, stack: fun ... refid_ptr */
-    lua_pop(L, 1);                                              /* stack: fun ... */
+    lua_rawget(L, LUA_REGISTRYINDEX);// funcMap
+    lua_pushvalue(L, lo);// funcMap fun
+    lua_rawseti(L, -2, refid);// funcMap[refid] = fun, funcMap
+	lua_pop(L, 1);// empty
     return refid;
     
-    // lua_pushvalue(L, lo);                                           /* stack: ... func */
+    // lua_pushvalue(L, lo);/* stack: ... func */
     // return luaL_ref(L, LUA_REGISTRYINDEX);
 }
 
 TOLUA_API void toluafix_get_function_by_refid(lua_State* L, int refid)
 {
 	lua_pushlightuserdata(L, TOLUA_CALLBACK);
-    lua_rawget(L, LUA_REGISTRYINDEX);                           /* stack: ... refid_fun */
-    lua_pushinteger(L, refid);/* stack: ... refid_fun refid */
-    lua_rawget(L, -2);                                          /* stack: ... refid_fun fun */
-    lua_remove(L, -2);                                          /* stack: ... fun */
+	lua_rawget(L, LUA_REGISTRYINDEX);// funcMap
+    lua_rawgeti(L, -1, refid);// funcMap fun
+    lua_remove(L, -2);// fun
 }
 
 TOLUA_API void toluafix_remove_function_by_refid(lua_State* L, int refid)
 {
 	lua_pushlightuserdata(L, TOLUA_CALLBACK);
-    lua_rawget(L, LUA_REGISTRYINDEX);                           /* stack: ... refid_fun */
-    lua_pushinteger(L, refid);                                  /* stack: ... refid_fun refid */
-    lua_pushnil(L);                                             /* stack: ... refid_fun refid nil */
-    lua_rawset(L, -3);                  /* refid_fun[refid] = nil, stack: ... refid_ptr */
-    lua_pop(L, 1);                                              /* stack: ... */
+	lua_rawget(L, LUA_REGISTRYINDEX);// funcMap
+	lua_pushnil(L);// funcMap nil
+	lua_rawseti(L, -2, refid);// funcMap[refid] = nil, funcMap
+	lua_pop(L, 1);// empty
 
 	collect_ref_id(refid);
     // luaL_unref(L, LUA_REGISTRYINDEX, refid);

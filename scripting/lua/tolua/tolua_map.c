@@ -245,11 +245,11 @@ static int tolua_bnd_isnulluserdata (lua_State* L)
 
 /* Inheritance
 */
-static int tolua_bnd_inherit (lua_State* L)
+static int tolua_bnd_inherit(lua_State* L)
 {
     /* stack: lua object, c object */
     lua_pushvalue(L, -1);
-    lua_rawseti(L, -3, MT_C_INSTANCE);// l_obj[MT_C_INSTANCE] = c_obj
+	lua_rawseti(L, -3, TOLUA_C_INSTANCE);// l_obj[TOLUA_C_INSTANCE] = c_obj
     return 0;
 };
 

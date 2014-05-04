@@ -133,49 +133,52 @@ static  int lua_isusertable(lua_State* L, int lo, const char* type)
 	return r;
 }
 
-int push_table_instance(lua_State* L, int lo) {
-
-	if (lua_istable(L, lo)) {
-
-		lua_pushinteger(L, MT_C_INSTANCE);
+int push_table_instance(lua_State* L, int lo)
+{
+	if (lua_istable(L, lo))
+	{
+		lua_pushinteger(L, TOLUA_C_INSTANCE);
 		lua_gettable(L, lo);
-		if (lua_isuserdata(L, -1)) {
-
+		if (lua_isuserdata(L, -1))
+		{
 			lua_replace(L, lo);
 			return 1;
 		}
-		else {
-
+		else
+		{
 			lua_pop(L, 1);
 			return 0;
-		};
+		}
 	}
-	else {
+	else
+	{
 		return 0;
-	};
-
+	}
 	return 0;
 };
 
 /* the equivalent of lua_is* for usertype */
-TOLUA_API int tolua_istype(lua_State* L, int lo, const char* type) {
-	if (!lua_isuserdata(L, lo)) {
-		if (!push_table_instance(L, lo)) {
+TOLUA_API int tolua_istype(lua_State* L, int lo, const char* type)
+{
+	if (!lua_isuserdata(L, lo))
+	{
+		if (!push_table_instance(L, lo))
+		{
 			return 0;
 		}
 	}
 	/* check if it is of the same type */
 	int r;
 	const char* tn;
-	if (lua_getmetatable(L, lo)) {       /* if metatable? */
-		lua_rawget(L, LUA_REGISTRYINDEX);  /* get registry[mt] */
+	if (lua_getmetatable(L, lo))/* if metatable? */
+	{
+		lua_rawget(L, LUA_REGISTRYINDEX);/* get registry[mt] */
 		tn = lua_tostring(L, -1);
 		r = tn && (strcmp(tn, type) == 0);
 		lua_pop(L, 1);
-		if (r) {
-			return 1;
-		}
-		else {
+		if (r) return 1;
+		else
+		{
 			/* check if it is a specialized class */
 			lua_getmetatable(L, lo);// mt
 			lua_rawgeti(L, -1, MT_SUPER);// mt tb
@@ -186,10 +189,7 @@ TOLUA_API int tolua_istype(lua_State* L, int lo, const char* type) {
 				lua_rawget(L, -2);// tb[type], mt tb flag
 				b = lua_toboolean(L, -1);
 				lua_pop(L, 3);
-				if (b)
-				{
-					return 1;
-				}
+				if (b) return 1;
 			}
 		}
 	}

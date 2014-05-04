@@ -41,23 +41,23 @@ extern "C" {
 #define TOLUA_PROTECTED_DESTRUCTOR
 #define TOLUA_PROPERTY_TYPE(p)
 
+#define TOLUA_C_INSTANCE 0
 #define MT_SELF 1
 #define MT_DEL 2
 #define MT_CALL 3
 #define MT_SUPER 4
 #define MT_UBOX 5
-#define MT_C_INSTANCE 6
-#define MT_GET 7
-#define MT_SET 8
-#define MT_GETI 9
-#define MT_SETI 10
-#define MT_ADD 11
-#define MT_SUB 12
-#define MT_MUL 13
-#define MT_DIV 14
-#define MT_LT 15
-#define MT_LE 16
-#define MT_EQ 17
+#define MT_GET 6
+#define MT_SET 7
+#define MT_GETI 8
+#define MT_SETI 9
+#define MT_ADD 10
+#define MT_SUB 11
+#define MT_MUL 12
+#define MT_DIV 13
+#define MT_LT 14
+#define MT_LE 15
+#define MT_EQ 16
 
 TOLUA_API int tolua_callback;
 #define TOLUA_CALLBACK ((void*)&tolua_callback)
