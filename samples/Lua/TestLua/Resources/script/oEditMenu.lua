@@ -1,6 +1,16 @@
 local oButton = require("Script/oButton")
 local oFileChooser = require("Script/oFileChooser")
 local oSpriteChooser = require("Script/oSpriteChooser")
+local oEditChooser = require("Script/oEditChooser")
+
+local function removeAnimation(sp,index)
+	local aDefs = sp[oSd.animationDefs]
+	table.remove(aDefs,index)
+	local children = sp[oSd.children]
+	for i = 1,#children do
+		removeAnimation(children[i],index)
+	end
+end
 
 local function oEditMenu()
     local winSize = CCDirector.winSize
@@ -21,7 +31,35 @@ local function oEditMenu()
 				if oEditor.isPlaying then
 					menu.items.Play:tapped()
 				end
-				local chooser = oFileChooser()
+				if oEditor.state == oEditor.EDIT_START then
+					local chooser = oFileChooser()
+					chooser:show()
+					oEditor.scene:addChild(chooser)
+				elseif oEditor.state ~= oEditor.EDIT_NONE and oEditor.state ~= oEditor.EDIT_START then
+					local chooser = oEditChooser(true)
+					chooser:show()
+					oEditor.scene:addChild(chooser)
+				end
+			end),
+		Del = oButton("Del",16,50,50,95,winSize.height-35,
+			function()
+				local aNames = oEditor.data[oSd.animationNames]
+				local index = aNames[oEditor.animation]
+				
+				removeAnimation(oEditor.data,index+1)
+				for k,v in pairs(aNames) do
+					if v > index then
+						aNames[k] = v-1
+					end
+				end
+				aNames[oEditor.animation] = nil
+				oEditor.animation = nil
+
+				oEditor.dirty = true
+				oEditor.viewArea:getModel()
+				menu:markEditButton(true)
+				
+				local chooser = oEditChooser(false)
 				chooser:show()
 				oEditor.scene:addChild(chooser)
 			end),
@@ -114,6 +152,8 @@ local function oEditMenu()
 						}
 						table.insert(oEditor.animationData,oEditor.keyIndex+1,frameDef)
 					end	
+					oEditor.dirty = true
+					oEditor.viewArea:getModel()
 					oEditor.controlBar:updateCursors()
 					oEditor.settingPanel:clearSelection()
 					oEditor.settingPanel:update()
@@ -284,6 +324,7 @@ local function oEditMenu()
 									local time = model.time * model.duration
 									oEditor.controlBar:setTime(time)
 								else
+									oEditor.controlBar:setTime(model.duration)
 									oEditor.isPlaying = false
 									item.label.text = "Play"
 									item.label.texture.antiAlias = false
@@ -308,6 +349,7 @@ local function oEditMenu()
 				collectgarbage()
 				cclog("Object Count: %d",CCObject.count)
 				cclog("Lua Count: %d",CCObject.luaRefCount)
+				cclog("Callback Count: %d", CCObject.callRefCount)
 				oEditor.viewArea:originReset()
 			end),
 		Zoom = oButton("100%",16,50,50,winSize.width-205,winSize.height-35,
@@ -349,7 +391,6 @@ local function oEditMenu()
 						oEditor.viewPanel:clearSelection()
 						oEditor.viewPanel:updateImages(oEditor.data,model)
 						oEditor.viewPanel:selectItem(sp)
-						self:hide()
 						menu:markEditButton(true)
 					end
 					chooser:show()
@@ -440,6 +481,7 @@ oEditor.spriteData[oSd.index]
 
 	local function hideItems()
 		local group = {
+			items.Del,
 			items.Fix,
 			items.New,
 			items.Delete,
@@ -491,6 +533,8 @@ oEditor.spriteData[oSd.index]
 				}))
 		end
 		oEditor.state = oEditor.EDIT_SPRITE
+		local model = oEditor.viewArea:getModel()
+		model:reset()
 		oEditor.settingPanel:updateItems()
 		oEditor.settingPanel:update()
 		oEditor.controlBar.visible = false
@@ -498,10 +542,17 @@ oEditor.spriteData[oSd.index]
 
 	menu.toAnimation = function(self)
 		if oEditor.state == oEditor.EDIT_ANIMATION then
+			oEditor.viewPanel:clearSelection()
+			local model = oEditor.viewArea:getModel()
+			model:play(oEditor.animation)
+			model:pause()
+			model.time = 0
+			oEditor.controlBar:setTime(0)
 			return
 		end
 		hideItems()
 		local group = {
+			items.Del,
 			items.Fix,
 			items.New,
 			items.Delete,
@@ -526,6 +577,7 @@ oEditor.spriteData[oSd.index]
 		oEditor.settingPanel:clearSelection()
 		oEditor.settingPanel:update()
 		oEditor.controlBar:updateCursors()
+		oEditor.controlBar:setTime(0)
 		oEditor.controlBar.visible = true
 		oEditor.controlBar.opacity = 0
 		oEditor.controlBar:runAction(oOpacity(0.3,0.3))

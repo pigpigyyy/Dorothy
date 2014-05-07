@@ -28,6 +28,7 @@ local function oSpriteChooser()
 	local cancelButton = oButton("Cancel",17,60,false,
 		0,0,
 		function(item)
+			item:unregisterTapHandler()
 			opMenu.enabled = false
 			panel:fadeSprites()
 			panel:hide()
@@ -55,6 +56,8 @@ local function oSpriteChooser()
 				winSize.width*0.5-halfBW+60+((i-1)%6)*110,y,
 				function(item)
 					if panel.selected then
+						cancelButton:unregisterTapHandler()
+						panel:hide()
 						panel:selected(names[i])
 					end
 				end)
@@ -81,27 +84,20 @@ local function oSpriteChooser()
 					CCDelay(((i-1)%6)*0.05),
 					oOpacity(0.3,1)
 				}))
-			button.color = ccColor3()
+			--button.color = ccColor3()
 			button.clip = names[i]
 			local node = CCNode()
 			node.cascadeColor = false
 			node.cascadeOpacity = false
 			node:addChild(sprite)
 			table.insert(panel.sprites,node)
-			
+
 			button.face:addChild(node)
 			menu:addChild(button)
 		end
-		panel.fadeSprites = function(self)
-			local sprites = panel.sprites
-			for i = 1,#sprites do
-				sprites[i].cascadeOpacity = true
-			end
-			panel.sprites = nil
-		end
 		menu.opacity = 0
 		menu:runAction(oOpacity(0.3,1))
-		
+
 		local yTo = winSize.height*0.5+halfBH-y+60
 		local viewHeight = yTo < borderSize.height and borderSize.height or yTo
 		local viewWidth = borderSize.width
@@ -109,7 +105,15 @@ local function oSpriteChooser()
 		local paddingY = 100
 		panel:reset(viewWidth,viewHeight,paddingX,paddingY)
 	end
-	
+
+	panel.fadeSprites = function(self)
+		local sprites = panel.sprites
+		for i = 1,#sprites do
+			sprites[i].cascadeOpacity = true
+		end
+		panel.sprites = nil
+	end
+
 	return panel
 end
 

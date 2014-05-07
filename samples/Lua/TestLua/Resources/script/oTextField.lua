@@ -28,7 +28,7 @@ local function oTextField(x,y,fontSize,limit,textChanged)
 					textChanged(self)
 				end
 			elseif eventType == CCTextFieldTTF.Insert then
-				if string.len(self.text) >= limit then
+				if string.len(self.text) >= limit and text ~= "\n" then
 					return false
 				end
 			elseif eventType == CCTextFieldTTF.Inserted or eventType == CCTextFieldTTF.Deleted then

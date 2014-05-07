@@ -23,9 +23,6 @@ TOLUA_API int toluafix_ref_function(lua_State* L, int lo, int def)
     lua_rawseti(L, -2, refid);// funcMap[refid] = fun, funcMap
 	lua_pop(L, 1);// empty
     return refid;
-    
-    // lua_pushvalue(L, lo);/* stack: ... func */
-    // return luaL_ref(L, LUA_REGISTRYINDEX);
 }
 
 TOLUA_API void toluafix_get_function_by_refid(lua_State* L, int refid)
@@ -45,7 +42,6 @@ TOLUA_API void toluafix_remove_function_by_refid(lua_State* L, int refid)
 	lua_pop(L, 1);// empty
 
 	collect_ref_id(refid);
-    // luaL_unref(L, LUA_REGISTRYINDEX, refid);
 }
 
 // check lua value is funciton

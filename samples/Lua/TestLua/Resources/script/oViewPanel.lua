@@ -532,7 +532,14 @@ local function oViewPanel()
 					oEditor.sprite = nil
 					oEditor.spriteData = nil
 					oEditor.controlBar:clearCursors()
-					oEditor.settingPanel:setEditEnable(false)
+					oEditor.settingPanel:updateValues(nil)
+					if oEditor.state == oEditor.EDIT_SPRITE then
+						oEditor.settingPanel:setEditEnable(false)
+					end
+					panel:showOutline(false)
+					oEditor.keyIndex = 1
+					oEditor.settingPanel:clearSelection()
+					oEditor.settingPanel:update()
 				end
 				return
 			end
@@ -541,7 +548,7 @@ local function oViewPanel()
 			local menuItem = args[3]
 			local aDefs = sp[oSd.animationDefs]
 
-			if oEditor.animation then
+			if oEditor.state == oEditor.EDIT_ANIMATION and oEditor.animation then
 				local aNames = oEditor.data[oSd.animationNames]
 				local animation = aDefs[aNames[oEditor.animation]+1]
 				oEditor.animationData = animation

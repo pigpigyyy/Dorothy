@@ -144,6 +144,12 @@ void oModel::play( const string& name )
 	oModel::play(index);
 }
 
+void oModel::reset()
+{
+	oModel::stop();
+	oModel::reset(_modelDef->getRoot(), _root);
+}
+
 void oModel::addAnimation( int index, CCNode* node, oActionDuration* action )
 {
 	for (int n = _animationGroups.size();n < index + 1;_animationGroups.push_back(new oAnimationGroup()), n++);
@@ -349,7 +355,7 @@ float oModel::getRecovery() const
 
 float oModel::getDuration() const
 {
-	if (_currentAnimation != oAnimation::None)
+	if (_currentAnimation != oAnimation::None && !_animationGroups[_currentAnimation]->animations.empty())
 	{
 		return _animationGroups[_currentAnimation]->animations[0]->getDuration();
 	}
@@ -609,6 +615,10 @@ void oModel::setupCallback()
 {
 	for (oAnimationGroup* animationGroup : _animationGroups)
 	{
+		if (animationGroup->animations.empty())
+		{
+			continue;
+		}
 		float duration = 0.0f;
 		for (oAnimation* animation : animationGroup->animations)
 		{

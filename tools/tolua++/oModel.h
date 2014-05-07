@@ -19,6 +19,7 @@ class oModel: public CCNode
 	void resume();
 	void resume(const string& name);
 	void stop();
+	void reset();
 	CCNode* getNodeByName(const string& name);
 	static oModel* create(const char* filename);
 	static oModel* none();

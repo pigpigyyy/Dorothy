@@ -143,10 +143,12 @@ local function oViewArea()
 			model.look = oEditor.look
 			model.loop = oEditor.loop
 			if oEditor.state == oEditor.EDIT_ANIMATION then
-				local time = self._model.time
+				local time = oEditor.controlBar:getTime()
 				model:play(oEditor.animation)
 				model:pause()
-				model.time = time
+				if model.duration > 0 then
+					model.time = time/model.duration
+				end
 			end
 			view:setModel(model)
 			oEditor.viewPanel:updateSprite(oEditor.data,model)

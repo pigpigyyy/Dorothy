@@ -978,7 +978,7 @@ local function oSettingPanel()
 	panel.update = function(self)
 		if oEditor.state == oEditor.EDIT_ANIMATION then
 			local model = oEditor.viewArea:getModel()
-			oEditor.controlBar:setTime(model.time*model.duration)
+			oEditor.controlBar:setTime(oEditor.controlBar:getTime())
 		else
 			local sp = nil
 			if oEditor.spriteData then

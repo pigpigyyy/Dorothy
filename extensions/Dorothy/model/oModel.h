@@ -97,6 +97,7 @@ public:
 	void resume();
 	void resume(uint32 index);
 	void resume(const string& name);
+	void reset();
 	void stop();
 	bool isPlaying() const;
 	bool isPaused() const;

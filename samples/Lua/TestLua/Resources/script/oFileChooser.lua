@@ -5,7 +5,7 @@ local oSelectionPanel = require("Script/oSelectionPanel")
 local function oFileChooser()
 	local winSize = CCDirector.winSize
 	local itemWidth = 120
-	local borderSize = CCSize((120+10)*5+10,370)
+	local borderSize = CCSize((itemWidth+10)*5+10,370)
 	local panel = oSelectionPanel(borderSize)
 	local menu = panel.menu
 	local border = panel.border
@@ -308,7 +308,7 @@ local function oFileChooser()
 					end
 				end)
 				button.file = dirDict[dirs[i]] and dirs[i] or dirs[i]..".clip"
-				button.color = ccColor3(0xffffff)
+				--button.color = ccColor3(0xffffff)
 				button.enabled = false
 				button.opacity = 0
 				button:runAction(

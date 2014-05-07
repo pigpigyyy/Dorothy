@@ -1,6 +1,5 @@
 CCActionInterval* oKeyPos::create @ oPos(float duration, float posX, float posY, unsigned char easeId = 0);
 
-CCActionInterval* oKeyScale::create @ oScale(float duration, float scale, unsigned char easeId = 0);
 CCActionInterval* oKeyScale::create @ oScale(float duration, float scaleX, float scaleY, unsigned char easeId = 0);
 
 CCActionInterval* oKeyRotate::create @ oRotate(float duration, float rotate, unsigned char easeId = 0);

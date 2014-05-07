@@ -11,6 +11,11 @@ using namespace cocos2d;
 static int g_ref_id = 0;
 static stack<int> g_available_ref_ids;
 
+extern "C" int tolua_get_callback_ref_count()
+{
+	return g_ref_id - g_available_ref_ids.size();
+}
+
 extern "C" int alloc_ref_id()
 {
 	if (g_available_ref_ids.empty())

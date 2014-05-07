@@ -104,7 +104,8 @@ end
 function classVariable:supcode ()
 
  local class = self:inclass()
-
+ local out = string.find(self.mod, "tolua_outside")
+ if out then class = false end
 	local prop_get,prop_set
 	if string.find(self.mod, 'tolua_property') then
 

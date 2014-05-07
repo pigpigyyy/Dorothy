@@ -134,7 +134,7 @@ string oFrameActionDef::toXml()
 	ostringstream stream;
 	stream << '<' << char(oFrameXml::Texture) << ' '
 		<< char(oFrameXml::File) << "=\"" << textureFile << "\" "
-		<< char(oFrameXml::Duration) << "=\"" << duration << "\">";
+		<< char(oFrameXml::Duration) << "=\"" << (int)(duration*60.0f+0.5f) << "\">";
 	for (CCRect* rect: rects)
 	{
 		stream << '<' << char(oFrameXml::Clip) << ' '
@@ -163,7 +163,7 @@ void oAnimationCache::startElement( void *ctx, const char *name, const char **at
 				_item->textureFile = atts[++i];
 				break;
 			oCase::Duration:
-				_item->duration = (float)atof(atts[++i]);
+				_item->duration = (float)atoi(atts[++i])/60.0f;
 				break;
 			}
 		}

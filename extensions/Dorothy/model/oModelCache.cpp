@@ -112,7 +112,7 @@ void oModelCache::startElement( void *ctx, const char *name, const char **atts )
 					switch (atts[i][0])
 					{
 					oCase::Duration:
-						keyFrameDef->duration = (float)atof(atts[++i]);
+						keyFrameDef->duration = (float)atoi(atts[++i])/60.0f;
 						break;
 					oCase::Position:
 						oHelper::getPosFromStr(atts[++i], keyFrameDef->x, keyFrameDef->y);
