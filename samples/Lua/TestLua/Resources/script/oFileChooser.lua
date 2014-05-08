@@ -228,7 +228,6 @@ local function oFileChooser()
 						0,--skewY
 						0,--x
 						0,--y
-						true,--visible
 						{},--looks
 						{},--animationDefs
 						{},--children
@@ -241,7 +240,6 @@ local function oFileChooser()
 					}
 					oCache.Model:loadData(oEditor.model, oEditor.data)
 				end
-
 				local model = oModel(oEditor.model)
 				model.loop = oEditor.loop
 				oEditor.viewArea:setModel(model)

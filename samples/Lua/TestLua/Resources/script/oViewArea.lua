@@ -6,7 +6,7 @@ local function oViewArea()
 	view.anchorPoint = oVec2.zero
 	view.touchEnabled = true
 	view.cascadeOpacity = true
-	
+
 	local crossNode = CCNode()
 	local origin = oVec2(
 		60+(winSize.width-120-170)*0.5,
@@ -28,7 +28,7 @@ local function oViewArea()
 	},ccColor4())
 	cross.opacity = 0.2
 	crossNode:addChild(cross)
-	
+
 	local scrollNode = CCNode()
 	crossNode:addChild(scrollNode)
 
@@ -124,7 +124,7 @@ local function oViewArea()
 	view.originReset = function(self)
 		crossNode:runAction(oPos(0.5,origin.x,origin.y,oEase.OutQuad))
 	end
-	
+
 	view.setModel = function(self,model)
 		self._model = model
 		scrollNode:removeAllChildren(true)

@@ -22,7 +22,7 @@ class CCScene: public CCNode
 	static tolua_outside CCScene* CCScene_createZoomFlipX @ zoomFlipX(float duration, CCScene* nextScene, tOrientation orientation);
 	static tolua_outside CCScene* CCScene_createZoomFlipY @ zoomFlipY(float duration, CCScene* nextScene, tOrientation orientation);
 	static tolua_outside CCScene* CCScene_createZoomFlipAngular @ zoomFlipAngular(float duration, CCScene* nextScene, tOrientation orientation);
-	static tolua_outside CCScene* CCScene_createFade @ fade(float duration, CCScene* nextScene, const ccColor3B& color);
+	static tolua_outside CCScene* CCScene_createFade @ fade(float duration, CCScene* nextScene, ccColor3B& color);
 	static tolua_outside CCScene* CCScene_createCrossFade @ crossFade(float duration, CCScene* nextScene);
 	static tolua_outside CCScene* CCScene_createTurnOffTiles @ turnOffTiles(float duration, CCScene* nextScene);
 	static tolua_outside CCScene* CCScene_createSplitCols @ splitCols(float duration, CCScene* nextScene);

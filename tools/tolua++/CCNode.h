@@ -32,14 +32,14 @@ class CCNode: public CCObject
 	tolua_property__common CCScheduler* scheduler;
 	tolua_readonly tolua_property__common CCNode* parent;
 	tolua_readonly tolua_property__qt CCRect boundingBox;
-	tolua_readonly tolua_property__qt char* description;
+	tolua_readonly tolua_property__qt const char* description;
 	tolua_readonly tolua_property__qt int numberOfRunningActions;
 	tolua_readonly tolua_property__common CCArray* children;
 	tolua_readonly tolua_property__bool bool running;
 
-	void addChild(CCNode * child);
-	void addChild(CCNode * child, int zOrder);
-	void addChild(CCNode * child, int zOrder, int tag);
+	void addChild(CCNode* child);
+	void addChild(CCNode* child, int zOrder);
+	void addChild(CCNode* child, int zOrder, int tag);
 	void removeChild(CCNode* child, bool cleanup = true);
 	void removeChildByTag(int tag, bool cleanup = true);
 	void removeAllChildrenWithCleanup @ removeAllChildren(bool cleanup = true);
@@ -52,15 +52,15 @@ class CCNode: public CCObject
 	CCAction* getActionByTag(int tag);
 	CCNode* getChildByTag(int tag);
 
-	void scheduleUpdateWithPriorityLua @ scheduleUpdate(LUA_FUNCTION nHandler, int priority = 0);
+	void scheduleUpdateWithPriorityLua @ scheduleUpdate(tolua_function nHandler, int priority = 0);
 	void unscheduleUpdate();
 
-	void registerScriptHandler @ registerEventHandler(LUA_FUNCTION funcID);
+	void registerScriptHandler @ registerEventHandler(tolua_function funcID);
 	void unregisterScriptHandler @ unregisterEventHandler();
     
-    oVec2 convertToNodeSpaceAR @ convertToNodeSpace(const oVec2& worldPoint);
-    oVec2 convertToWorldSpaceAR @ convertToWorldSpace(const oVec2& nodePoint);
-	oVec2 convertToGameSpace(const oVec2& nodePoint);
+    oVec2 convertToNodeSpaceAR @ convertToNodeSpace(oVec2& worldPoint);
+    oVec2 convertToWorldSpaceAR @ convertToWorldSpace(oVec2& nodePoint);
+	oVec2 convertToGameSpace(oVec2& nodePoint);
 	
 	static CCNode* create();
 };

@@ -141,17 +141,18 @@ function classPackage:preamble ()
 
  output('\n')
  output('/* function to register type */')
- output('static void tolua_reg_types (lua_State* tolua_S)')
+ output('static void tolua_reg_types(lua_State* tolua_S)')
  output('{')
 
 	if flags.t then
-		output("#ifndef Mtolua_typeid\n#define Mtolua_typeid(L,TI,T)\n#endif\n")
+		output("#ifndef Mtolua_typeid\n#define Mtolua_typeid(TI,T)\n#endif\n")
 	end
 	foreach(_usertype,function(n,v)
-		if (not _global_classes[v]) or _global_classes[v]:check_public_access() then
-			output(' tolua_usertype(tolua_S,"',v,'");')
+		if ((not _global_classes[v]) or _global_classes[v]:check_public_access()) and v ~= "tolua_table" and v ~= "tolua_function" then
+			local t = _userltype[v]
+			output(' tolua_usertype(tolua_S,"',t,'");')
 			if flags.t then
-				output(' Mtolua_typeid(tolua_S,typeid(',v,'), "',v,'");')
+				output(' Mtolua_typeid(typeid(',v,'),"',t,'");')
 			end
 		end
 	 end)

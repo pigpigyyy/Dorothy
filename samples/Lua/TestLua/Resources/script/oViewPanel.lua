@@ -649,6 +649,25 @@ local function oViewPanel()
 		oEvent:send("ImageSelected",nil)
 	end
 	
+	panel.updateItems = function(self,look)
+		if look then
+			local oldSize = borderSize
+			borderSize = CCSize(160,winSize.height-20)
+			local scale = borderSize.height/oldSize.height
+			border.scaleY = scale
+			stencil.scaleY = scale
+		else
+			borderSize = CCSize(160,310*(winSize.height-90)/510)
+			border.scaleY = 1
+			stencil.scaleY = 1
+		end
+		panel.contentSize = borderSize
+		panel.position = oVec2(winSize.width-170,winSize.height-borderSize.height-10)
+		menu.contentSize = borderSize
+		menu.positionY = borderSize.height
+		panel:updateImages(oEditor.data,oEditor.viewArea:getModel())
+	end
+
 	return panel
 end
 

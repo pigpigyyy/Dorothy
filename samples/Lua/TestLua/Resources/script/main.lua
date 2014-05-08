@@ -15,16 +15,15 @@ oSd =
 	skewY = 10,
 	x = 11,
 	y = 12,
-	visible = 13,
-	looks = 14,
-	animationDefs = 15,
-	children = 16,
-	isFaceRight = 17,
-	isBatchUsed = 18,
-	clipFile = 19,
-	keys = 20,
-	animationNames = 21,
-	lookNames = 22,
+	looks = 13,
+	animationDefs = 14,
+	children = 15,
+	isFaceRight = 16,
+	isBatchUsed = 17,
+	clipFile = 18,
+	keys = 19,
+	animationNames = 20,
+	lookNames = 21,
 	-- extra
 	sprite = 23,
 	parent = 24,
@@ -182,5 +181,7 @@ for i = 1,#names do
 	target:endPaint()
 	target:save(names[i]..".png",CCImage.PNG)
 end]]
+
+cclog(tolua.type(CCClipNode))
 
 CCDirector:run(oEditor.scene)

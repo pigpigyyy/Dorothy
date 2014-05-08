@@ -74,7 +74,7 @@ function classOperator:supcode_tmp()
 	output(' if (\n')
 	-- check self
 	local is_func = get_is_function(self.parent.type)
-	output('     !'..is_func..'(tolua_S,1,"'..self.parent.type..'",0,&tolua_err) ||\n')
+	output('     !'..is_func..'(tolua_S,1,"'.._userltype[self.parent.type]..'",0,&tolua_err) ||\n')
 	output('     !tolua_isnoobj(tolua_S,2,&tolua_err)\n )')
 	output('  goto tolua_lerror;')
 
@@ -105,6 +105,7 @@ function classOperator:supcode_tmp()
 		t = self.type
 		local push_func = get_push_function(t)
 		new_t = string.gsub(t, "const%s+", "")
+		t = _userltype[t]
 		if self.ptr == '' then
 			output('   {')
 			output('    void* tolua_obj = Mtolua_new((',new_t,')(tolua_ret));')

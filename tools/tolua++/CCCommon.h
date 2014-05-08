@@ -1,2 +1,2 @@
-void CCLuaLog(const char * pszFormat);
-void CCMessageBox(const char * pszMsg, const char * pszTitle);
+void CCLuaLog(char * pszFormat);
+void CCMessageBox(char * pszMsg, char * pszTitle);

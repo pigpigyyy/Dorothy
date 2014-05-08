@@ -56,7 +56,6 @@ function classFunction:supcode(local_constructor)
  local class = self:inclass()
  local _,_,static = strfind(self.mod,'^%s*(static)')
  if class then
-
  	if self.name == 'new' and self.parent.flags.pure_virtual then
  		-- no constructor for classes with pure virtual methods
  		return
@@ -107,7 +106,7 @@ function classFunction:supcode(local_constructor)
 		if self.const ~= '' then
 			type = "const "..type
 		end
-		output('     !'..func..'(tolua_S,1,"'..type..'",0,&tolua_err) ||\n')
+		output('     !'..func..'(tolua_S,1,"'.._userltype[self.parent.type]..'",0,&tolua_err) ||\n')
  end
  -- check args
  if self.args[1].type ~= 'void' then
@@ -273,6 +272,7 @@ function classFunction:supcode(local_constructor)
 		owned = true
 	end
     local push_func = get_push_function(t)
+	t = _userltype[self.type]
     if self.ptr == '' then
      output('   {')
      output('    void* tolua_obj = Mtolua_new((',new_t,')(tolua_ret));')

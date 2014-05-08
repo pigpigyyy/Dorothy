@@ -14,6 +14,6 @@ class oBulletDef: public CCObject
 	void setAsCircle(float radius);
 	void setVelocity(float angle, float speed);
 	oBullet* toBullet(oWorld* world, oUnit* unit);
-	static const int SensorTag;
+	static tolua_readonly const int SensorTag;
 	static oBulletDef* create();
 };

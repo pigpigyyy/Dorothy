@@ -105,7 +105,7 @@ function classArray:supcode ()
  if t then
   output(' tolua_push'..t..'(tolua_S,(',ct,')'..self:getvalue(class,static)..');')
  else
-		t = self.type
+  t = _userltype[t]
   if self.ptr == '&' or self.ptr == '' then
    output(' ',push_func,'(tolua_S,(void*)&'..self:getvalue(class,static)..',"',t,'");')
   else

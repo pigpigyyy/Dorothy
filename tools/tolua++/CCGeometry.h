@@ -7,7 +7,7 @@ class CCSize
     float width;
     float height;
     
-	bool operator==(const CCSize & target) const;
+	bool operator==(CCSize & target);
 	
 	static tolua_readonly CCSize zero;
 };
@@ -15,7 +15,7 @@ class CCSize
 class CCRect
 {
 	CCRect();
-	CCRect(const oVec2& origin, const CCSize& size);
+	CCRect(oVec2& origin, CCSize& size);
     CCRect(float x, float y, float width, float height);
 	~CCRect();
 	
@@ -28,9 +28,9 @@ class CCRect
 	tolua_readonly tolua_property__common float midX;
 	tolua_readonly tolua_property__common float midY;
 
-	bool operator==(const CCRect & rect) const;
-	bool containsPoint(const oVec2 & point) const;
-	bool intersectsRect(const CCRect & rect) const;
+	bool operator==(CCRect & rect);
+	bool containsPoint(oVec2 & point);
+	bool intersectsRect(CCRect & rect);
 
 	static tolua_readonly CCRect zero;
 };

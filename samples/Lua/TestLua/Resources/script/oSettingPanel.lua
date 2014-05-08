@@ -326,7 +326,7 @@ local function oSettingPanel()
 	panel:registerTouchHandler(
 		function(eventType, touch)
 			--touch=CCTouch
-			if touch.id ~= 0 or oEditor.isPlaying then
+			if touch.id ~= 0 or oEditor.isPlaying or not panel.visible then
 				return false
 			end
 			if eventType == CCTouch.Began then
@@ -1002,7 +1002,6 @@ local function oSettingPanel()
 			keyItems.Opacity:setValue(sp[oSd.opacity])
 			keyItems.SkewX:setValue(sp[oSd.skewX])
 			keyItems.SkewY:setValue(sp[oSd.skewY])
-			keyItems.Visible:setValue(sp[oSd.visible])
 		end
 	end
 	

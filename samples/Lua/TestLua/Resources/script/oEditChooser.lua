@@ -318,6 +318,13 @@ local function oEditChooser(withCancel)
 				xStart+itemWidth*0.5+10+(i%itemNum)*(itemWidth+10),
 				y,
 				function(item)
+					cancelButton:unregisterTapHandler()
+					opMenu.enabled = false
+					panel:hide()
+					oEditor.look = item.name
+					local model = oEditor.viewArea:getModel()
+					model.look = oEditor.look
+					oEditor.editMenu:toLook()
 				end)
 			button.name = k
 			menu:addChild(button)

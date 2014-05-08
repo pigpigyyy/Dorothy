@@ -9,6 +9,7 @@ extern "C" {
 
 #include <map>
 #include <string>
+#include <typeinfo>
 #include "tolua_fix.h"
 #include "cocos2d.h"
 #include "CCLuaEngine.h"

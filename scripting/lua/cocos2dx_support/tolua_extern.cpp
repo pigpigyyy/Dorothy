@@ -5,17 +5,18 @@ extern "C"
 }
 #include <stack>
 using std::stack;
+#include <typeinfo>
 #include "cocos2d.h"
 using namespace cocos2d;
+#include "Dorothy.h"
+using namespace Dorothy;
 
 static int g_ref_id = 0;
 static stack<int> g_available_ref_ids;
-
-extern "C" int tolua_get_callback_ref_count()
+extern "C" int toluafix_get_callback_ref_count()
 {
 	return g_ref_id - g_available_ref_ids.size();
 }
-
 extern "C" int alloc_ref_id()
 {
 	if (g_available_ref_ids.empty())
@@ -88,22 +89,29 @@ extern "C" void tolua_pushccobject(lua_State* L, void* ptr, const char* type)
 		lua_remove(L, -2);// mt ud
 		lua_getmetatable(L, -1);// mt ud udmt
 		lua_rawgeti(L, -1, MT_SUPER);// mt ud udmt tb
-		if (lua_istable(L, -1))
+		lua_pushstring(L, type);// mt ud udmt tb type
+		lua_rawget(L, -2);// tb[type], mt ud udmt tb flag
+		if (lua_toboolean(L, -1))// flag == true
 		{
-			lua_pushstring(L, type);// mt ud udmt tb type
-			lua_rawget(L, -2);// tb[type], mt ud udmt tb flag
-			if (lua_toboolean(L, -1) == 1)// flag == true
-			{
-				lua_pop(L, 3);// mt ud
-				lua_remove(L, -2);// ud
-				return;
-			}
 			lua_pop(L, 3);// mt ud
+			lua_remove(L, -2);// ud
+			return;
 		}
-		else lua_pop(L, 2);// mt ud
+		lua_pop(L, 3);// mt ud
 		// type represents a more specilized type
 		lua_pushvalue(L, -2);// mt ud mt
 		lua_setmetatable(L, -2);// ud<mt>, mt ud
 	}
 	lua_remove(L, -2);// ud
+}
+
+static unordered_map<unsigned int, const char*> g_typeinfo;
+extern "C" void tolua_typeid(unsigned int hashCode, const char* className)
+{
+	g_typeinfo[hashCode] = className;
+}
+extern "C" const char* tolua_classname(void* ccobject)
+{
+	CCObject* object = (CCObject*)ccobject;
+	return g_typeinfo[typeid(*object).hash_code()];
 }

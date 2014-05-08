@@ -50,6 +50,7 @@ _basic_raw_push = {}
 -- List of user defined types
 -- Each type corresponds to a variable name that stores its tag value.
 _usertype = {}
+_userltype = {}
 
 -- List of types that have to be collected
 _collect = {}
@@ -119,12 +120,11 @@ function warning (msg)
 end
 
 -- register an user defined type: returns full type
-function regtype (t)
+function regtype(t)
 	--if isbasic(t) then
 	--	return t
 	--end
 	local ft = findtype(t)
-
 	if not _usertype[ft] then
 		return appendusertype(t)
 	end
@@ -146,7 +146,7 @@ function typevar(type)
 end
 
 -- check if basic type
-function isbasic (type)
+function isbasic(type)
  local t = gsub(type,'const ','')
  local m,t = applytypedef('', t)
  local b = _basic[t]

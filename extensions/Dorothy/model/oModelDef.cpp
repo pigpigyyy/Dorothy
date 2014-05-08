@@ -42,8 +42,7 @@ skewY(0.0f),
 texture(nullptr),
 rect(),
 clip(),
-opacity(1.0f),
-visible(true)
+opacity(1.0f)
 { }
 
 string oSpriteDef::toXml()
@@ -69,10 +68,6 @@ string oSpriteDef::toXml()
 	if (skewX != 0.0f || skewY != 0.0f)
 	{
 		stream << ' ' << char(oModelXml::Skew) << "=\"" << skewX << ',' << skewY << '\"';
-	}
-	if (visible != true)
-	{
-		stream << ' ' << char(oModelXml::Visible) << "=\"1\"";
 	}
 	if (!name.empty())
 	{
@@ -119,24 +114,20 @@ string oSpriteDef::toXml()
 
 tuple<CCFiniteTimeAction*,CCArray*> oSpriteDef::toResetAction()
 {
-	if (visible)
-	{
-		CCArray* keyFrames = CCArray::createWithCapacity(5);
-		keyFrames->addObject(oKeyPos::create(1.0f, x, y, oEase::InOutQuad));
-		keyFrames->addObject(oKeyScale::create(1.0f, scaleX, scaleY, oEase::InOutQuad));
-		keyFrames->addObject(oKeyRoll::create(1.0f, rotation, oEase::InOutQuad));
-		keyFrames->addObject(oKeySkew::create(1.0f, skewX, skewY, oEase::InOutQuad));
-		keyFrames->addObject(oKeyOpacity::create(1.0f, opacity, oEase::InOutQuad));
-		/*
-		oKeyPos
-		oKeyScale
-		oKeyRoll
-		oKeySkew
-		oKeyOpacity
-		*/
-		return std::make_tuple(CCSpawn::create(keyFrames), keyFrames);
-	}
-	return std::make_tuple(CCHide::create(), nullptr);
+	CCArray* keyFrames = CCArray::createWithCapacity(5);
+	keyFrames->addObject(oKeyPos::create(1.0f, x, y, oEase::InOutQuad));
+	keyFrames->addObject(oKeyScale::create(1.0f, scaleX, scaleY, oEase::InOutQuad));
+	keyFrames->addObject(oKeyRoll::create(1.0f, rotation, oEase::InOutQuad));
+	keyFrames->addObject(oKeySkew::create(1.0f, skewX, skewY, oEase::InOutQuad));
+	keyFrames->addObject(oKeyOpacity::create(1.0f, opacity, oEase::InOutQuad));
+	/*
+	oKeyPos
+	oKeyScale
+	oKeyRoll
+	oKeySkew
+	oKeyOpacity
+	*/
+	return std::make_tuple(CCSpawn::create(keyFrames), keyFrames);
 }
 
 oModelDef::oModelDef():

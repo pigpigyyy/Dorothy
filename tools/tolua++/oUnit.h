@@ -18,7 +18,7 @@ class oUnit: public oBody
 	
 	tolua_property__common oModel* model;
 	tolua_property__common float detectDistance;
-	tolua_property__common const CCSize& attackRange;
+	tolua_property__common CCSize attackRange;
 	tolua_property__bool bool faceRight;
 	tolua_property__common oBulletDef* bulletDef;
 	
@@ -37,7 +37,7 @@ class oUnit: public oBody
 	oAction* attachAction(int id);
 	void removeAction(int id);
 	void removeAllActions();
-	oAction* getAction(int id) const;
+	oAction* getAction(int id);
 	bool doIt(int id);
 	
 	void attachInstinct(int id);

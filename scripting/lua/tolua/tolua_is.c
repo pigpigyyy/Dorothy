@@ -39,25 +39,52 @@ TOLUA_API int tolua_fast_isa(lua_State *L, int mt_indexa, int mt_indexb)
 	return result;
 }
 
+TOLUA_API int tolua_fast_is(lua_State *L, int self_idx, const char* target_name)
+{
+	int result;
+	lua_rawgeti(L, self_idx, MT_SUPER);// tb
+	lua_pushstring(L, target_name);// tb name
+	lua_rawget(L, -2);// tb[name], tb flag
+	result = lua_toboolean(L, -1);
+	lua_pop(L, 2);
+	return result;
+}
+
 /* Push and returns the corresponding object typename */
 TOLUA_API const char* tolua_typename(lua_State* L, int lo)
 {
 	int tag = lua_type(L, lo);
 	if (tag == LUA_TNONE)
+	{
 		lua_pushstring(L, "[no object]");
+	}
 	else if (tag != LUA_TUSERDATA && tag != LUA_TTABLE)
+	{
 		lua_pushstring(L, lua_typename(L, tag));
+	}
 	else if (tag == LUA_TUSERDATA)
 	{
 		if (!lua_getmetatable(L, lo))
+		{
 			lua_pushstring(L, lua_typename(L, tag));
+		}
 		else
 		{
-			lua_rawget(L, LUA_REGISTRYINDEX);
-			if (!lua_isstring(L, -1))
+			if (tolua_fast_is(L, -1, "CCObject"))
 			{
-				lua_pop(L, 1);
-				lua_pushstring(L, "[undefined]");
+				void* ptr = tolua_tousertype(L, lo, 0);
+				const char* name = tolua_classname(ptr);
+				lua_pop(L, 2);
+				lua_pushstring(L, name);
+			}
+			else
+			{
+				lua_rawget(L, LUA_REGISTRYINDEX);
+				if (!lua_isstring(L, -1))
+				{
+					lua_pop(L, 1);
+					lua_pushstring(L, "[undefined]");
+				}
 			}
 		}
 	}
@@ -120,14 +147,6 @@ static  int lua_isusertable(lua_State* L, int lo, const char* type)
 	if (lua_isstring(L, -1))
 	{
 		r = strcmp(lua_tostring(L, -1), type) == 0;
-		if (!r)
-		{
-			/* try const */
-			lua_pushstring(L, "const ");
-			lua_insert(L, -2);
-			lua_concat(L, 2);
-			r = lua_isstring(L, -1) && strcmp(lua_tostring(L, -1), type) == 0;
-		}
 	}
 	lua_pop(L, 1);
 	return r;

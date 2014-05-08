@@ -80,22 +80,19 @@ void oModelCache::startElement( void *ctx, const char *name, const char **atts )
 						spriteDef->name = atts[++i];
 						break;
 					oCase::Clip:
-					{
-						spriteDef->clip = atts[++i];
-						auto it = _currentClip->rects.find(spriteDef->clip);
-						if (it == _currentClip->rects.end())
 						{
-							spriteDef->clip.clear();
+							spriteDef->clip = atts[++i];
+							auto it = _currentClip->rects.find(spriteDef->clip);
+							if (it == _currentClip->rects.end())
+							{
+								spriteDef->clip.clear();
+							}
+							else
+							{
+								spriteDef->rect = *(it->second);
+							}
+							break;
 						}
-						else
-						{
-							spriteDef->rect = *(it->second);
-						}
-						break;
-					}
-					oCase::Visible:
-						spriteDef->visible = atoi(atts[++i]) == 1;
-						break;
 					}
 				}
 			}

@@ -116,8 +116,7 @@ TOLUA_API void tolua_usertype (lua_State* L, const char* type);
 TOLUA_API void tolua_beginmodule (lua_State* L, const char* name);
 TOLUA_API void tolua_endmodule (lua_State* L);
 TOLUA_API void tolua_module (lua_State* L, const char* name, int hasvar);
-TOLUA_API void tolua_class (lua_State* L, const char* name, const char* base);
-TOLUA_API void tolua_cclass (lua_State* L, const char* lname, const char* name, const char* base, lua_CFunction col);
+TOLUA_API void tolua_cclass (lua_State* L, const char* name, const char* base, lua_CFunction col);
 TOLUA_API void tolua_function (lua_State* L, const char* name, lua_CFunction func);
 TOLUA_API void tolua_call(lua_State* L, int index, lua_CFunction func);
 TOLUA_API void tolua_constant (lua_State* L, const char* name, lua_Number value);
@@ -179,6 +178,9 @@ static inline const char* tolua_tofieldcppstring (lua_State* L, int lo, int inde
 #endif
 
 TOLUA_API int tolua_fast_isa(lua_State *L, int mt_indexa, int mt_indexb);
+TOLUA_API int tolua_fast_is(lua_State *L, int self_idx, const char* target_name);
+TOLUA_API void tolua_typeid(unsigned int hashCode, const char* className);
+TOLUA_API const char* tolua_classname(void* ccobject);
 
 #ifndef Mtolua_new
 #define Mtolua_new(EXP) new EXP
@@ -202,6 +204,10 @@ TOLUA_API int tolua_fast_isa(lua_State *L, int mt_indexa, int mt_indexb);
 
 #ifndef tolua_owned
 #define tolua_owned
+#endif
+
+#ifndef Mtolua_typeid
+#define Mtolua_typeid(TI,T) tolua_typeid(TI.hash_code(),T)
 #endif
 
 #ifdef __cplusplus

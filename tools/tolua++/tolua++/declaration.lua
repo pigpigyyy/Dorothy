@@ -211,11 +211,12 @@ function classDeclaration:decltype ()
 	end
 end
 
-
 -- output type checking
 function classDeclaration:outchecktype (narg)
  if self.type == "tolua_table" then
   return '!tolua_istable(tolua_S,'..narg..',0,&tolua_err)'
+ elseif self.type == "tolua_function" then
+   return '!toluafix_isfunction(tolua_S,'..narg..',&tolua_err)'
  end
  local def
  local t = isbasic(self.type)
@@ -235,16 +236,18 @@ function classDeclaration:outchecktype (narg)
  else
   local is_func = get_is_function(self.type)
   if self.ptr == '&' or self.ptr == '' then
-  	return '(tolua_isvaluenil(tolua_S,'..narg..',&tolua_err) || !'..is_func..'(tolua_S,'..narg..',"'..self.type..'",'..def..',&tolua_err))'
+  	return '(tolua_isvaluenil(tolua_S,'..narg..',&tolua_err) || !'..is_func..'(tolua_S,'..narg..',"'.._userltype[self.type]..'",'..def..',&tolua_err))'
   else
-	return '!'..is_func..'(tolua_S,'..narg..',"'..self.type..'",'..def..',&tolua_err)'
+	return '!'..is_func..'(tolua_S,'..narg..',"'.._userltype[self.type]..'",'..def..',&tolua_err)'
   end
  end
 end
 
 function classDeclaration:builddeclaration (narg, cplusplus)
  if self.type == "tolua_table" then
-  return " int tolua_tableIndex = "..tostring(narg)..";"
+  return "  int "..self.name.." = "..tostring(narg)..";"
+ elseif self.type == "tolua_function" then
+  return "  int "..self.name.." = toluafix_ref_function(tolua_S,"..tostring(narg)..");"
  end
  local array = self.dim ~= '' and tonumber(self.dim)==nil
 	local line = ""
@@ -393,8 +396,8 @@ end
 
 -- Pass parameter
 function classDeclaration:passpar ()
- if self.type == "tolua_table" then
-  output("tolua_tableIndex")
+ if self.type == "tolua_table" or self.type == "tolua_function" then
+  output(self.name)
   return
  end
  if self.ptr=='&' and not isbasic(self.type) then
@@ -417,7 +420,7 @@ function classDeclaration:retvalue ()
    output('   tolua_push'..t..'(tolua_S,(',ct,')'..self.name..');')
   else
    local push_func = get_push_function(self.type)
-   output('   ',push_func,'(tolua_S,(void*)'..self.name..',"',self.type,'");')
+   output('   ',push_func,'(tolua_S,(void*)'..self.name..',"',_userltype[self.type],'");')
   end
   return 1
  end

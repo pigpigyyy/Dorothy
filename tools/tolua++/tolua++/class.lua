@@ -38,11 +38,11 @@ function classClass:register (pre)
  pre = pre or ''
  push(self)
     if _collect_functions[self.type] then
-  output(pre..'tolua_cclass(tolua_S,"'..self.lname..'","'..self.type..'","'..self.btype..'",'.._collect_functions[self.type]..');')	
+  output(pre..'tolua_cclass(tolua_S,"'..self.lname..'","'..self.btype..'",'.._collect_functions[self.type]..');')	
 	elseif _collect[self.type] then
-  output(pre..'tolua_cclass(tolua_S,"'..self.lname..'","'..self.type..'","'..self.btype..'",'.._collect[self.type]..');')
+  output(pre..'tolua_cclass(tolua_S,"'..self.lname..'","'..self.btype..'",'.._collect[self.type]..');')
 	else
-  output(pre..'tolua_cclass(tolua_S,"'..self.lname..'","'..self.type..'","'..self.btype..'",NULL);')
+  output(pre..'tolua_cclass(tolua_S,"'..self.lname..'","'..self.btype..'",NULL);')
 	end
 	if self.extra_bases then
 		for k,base in ipairs(self.extra_bases) do

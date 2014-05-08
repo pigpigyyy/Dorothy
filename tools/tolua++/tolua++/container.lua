@@ -219,7 +219,7 @@ function classContainer:appendtypedef (t)
 end
 
 -- append usertype: return full type
-function classContainer:appendusertype (t)
+function classContainer:appendusertype(t)
 	local container
 	if t == (self.original_name or self.name) then
 		container = self.prox
@@ -229,6 +229,7 @@ function classContainer:appendusertype (t)
 	local ft = getnamespace(container) .. t
 	container.usertypes[t] = ft
 	_usertype[ft] = ft
+	_userltype[ft] = self.lname
 	return ft
 end
 

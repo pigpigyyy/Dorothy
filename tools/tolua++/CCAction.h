@@ -38,9 +38,9 @@ CCActionInterval* CCJumpBy::create @ CCJumpBy(float duration, oVec2 position, fl
 
 CCActionInterval* CCJumpTo::create @ CCJumpTo(float duration, oVec2 position, float height, int jumps);
 
-CCActionInterval* CCBezierBy::create @ CCBezierBy(float t, const oVec2& deltaPosition, const oVec2& deltaControlA, const oVec2& deltaControlB);
+CCActionInterval* CCBezierBy::create @ CCBezierBy(float t, oVec2& deltaPosition, oVec2& deltaControlA, oVec2& deltaControlB);
 
-CCActionInterval* CCBezierTo::create @ CCBezierTo(float t, const oVec2& position, const oVec2& controlA, const oVec2& controlB);
+CCActionInterval* CCBezierTo::create @ CCBezierTo(float t, oVec2& position, oVec2& controlA, oVec2& controlB);
 
 CCActionInterval* CCBlink::create @ CCBlink(float duration, unsigned int uBlinks);
 
@@ -62,4 +62,4 @@ CCFiniteTimeAction* CCFlipY::create @ CCFlipY(bool y);
 
 CCFiniteTimeAction* CCPlace::create @ CCPlace(oVec2 pos);
 
-CCFiniteTimeAction* CCCall::create @ CCCall(LUA_FUNCTION handler);
+CCFiniteTimeAction* CCCall::create @ CCCall(tolua_function handler);

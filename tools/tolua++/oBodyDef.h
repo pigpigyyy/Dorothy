@@ -14,7 +14,7 @@ public:
 	bool bullet;
 	float gravityScale;
 	static oFixtureDef* polygon(
-		const oVec2& center,
+		oVec2& center,
 		float width,
 		float height,
 		float angle = 0.0f,
@@ -28,12 +28,12 @@ public:
 		float friction = 0.4f,
 		float restitution = 0.0f);
 	static oFixtureDef* polygon(
-		const oVec2 vertices[tolua_len],
+		oVec2 vertices[tolua_len],
 		float density = 0.0f,
 		float friction = 0.4f,
 		float restitution = 0.0f);
 	void attachPolygon(
-		const oVec2& center,
+		oVec2& center,
 		float width,
 		float height,
 		float angle = 0.0f,
@@ -47,20 +47,20 @@ public:
 		float friction = 0.4f,
 		float restitution = 0.0f);
 	void attachPolygon(
-		const oVec2 vertices[tolua_len],
+		oVec2 vertices[tolua_len],
 		float density = 0.0f,
 		float friction = 0.4f,
 		float restitution = 0.0f);
 	static oFixtureDef* loop(
-		const oVec2 vertices[tolua_len],
+		oVec2 vertices[tolua_len],
 		float friction = 0.4f,
 		float restitution = 0.0f);
 	void attachLoop(
-		const oVec2 vertices[tolua_len],
+		oVec2 vertices[tolua_len],
 		float friction = 0.4f,
 		float restitution = 0.0f);
 	static oFixtureDef* circle(
-		const oVec2& center,
+		oVec2& center,
 		float radius,
 		float density = 0.0f,
 		float friction = 0.4f,
@@ -71,7 +71,7 @@ public:
 		float friction = 0.4f,
 		float restitution = 0.0f);
 	void attachCircle(
-		const oVec2& center,
+		oVec2& center,
 		float radius,
 		float density = 0.0f,
 		float friction = 0.4f,
@@ -82,11 +82,11 @@ public:
 		float friction = 0.4f,
 		float restitution = 0.0f);
 	static oFixtureDef* chain(
-		const oVec2 vertices[tolua_len],
+		oVec2 vertices[tolua_len],
 		float friction = 0.4f,
 		float restitution = 0.0f);
 	void attachChain(
-		const oVec2 vertices[tolua_len],
+		oVec2 vertices[tolua_len],
 		float friction = 0.4f,
 		float restitution = 0.0f);
 	void attachPolygonSensor(
@@ -97,14 +97,14 @@ public:
 		int tag,
 		float width,
 		float height,
-		const oVec2& center,
+		oVec2& center,
 		float angle = 0.0f);
 	void attachPolygonSensor(
 		int tag,
-		const oVec2 vertices[tolua_len]);
+		oVec2 vertices[tolua_len]);
 	void attachCircleSensor(
 		int tag,
-		const oVec2& center,
+		oVec2& center,
 		float radius);
 	void attachCircleSensor(
 		int tag,

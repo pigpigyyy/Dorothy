@@ -13,13 +13,9 @@ void oKeyReset::update( float time )
 	m_pTarget->setSkewX(_skewX);
 	m_pTarget->setSkewY(_skewY);
 	m_pTarget->setRotation(_rotation);
-	if (_visible)
+	if (!_visible)
 	{
-		m_pTarget->setVisible(_visible);
-	}
-	else
-	{
-		m_pTarget->setVisible(_visible);
+		m_pTarget->setVisible(false);
 	}
 	m_pTarget->setOpacity(_opacity);
 }

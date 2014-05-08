@@ -111,7 +111,7 @@ local function oEditMenu()
 								sp[oSd.skewY],
 								sp[oSd.rotation],
 								sp[oSd.opacity],
-								sp[oSd.visible],
+								true,
 								0,0,0,0,0,0
 							}
 							curPos = curPos+1
@@ -126,7 +126,7 @@ local function oEditMenu()
 							sp[oSd.skewY],
 							sp[oSd.rotation],
 							sp[oSd.opacity],
-							sp[oSd.visible],
+							true,
 							0,0,0,0,0,
 							pos/60
 						}
@@ -458,6 +458,27 @@ oEditor.spriteData[oSd.index]
 					end
 				end
 			end),
+		
+		Change = oButton("Rep",16,50,50,winSize.width-205,275,
+			function(item)
+				if oEditor.spriteData then
+					local sp = oEditor.spriteData
+					local chooser = oSpriteChooser()
+					chooser.selected = function(self, name)
+						sp[oSd.clip] = name
+						oCache.Model:loadData(oEditor.model, oEditor.data)
+						local model = oModel(oEditor.model)
+						model.loop = oEditor.loop
+						oEditor.viewArea:setModel(model)
+						oEditor.viewPanel:clearSelection()
+						oEditor.viewPanel:updateImages(oEditor.data,model)
+						oEditor.viewPanel:selectItem(sp)
+						menu:markEditButton(true)
+					end
+					chooser:show()
+					oEditor.scene:addChild(chooser)
+				end
+			end),
 	}
 	for _,item in pairs(items) do
 		menu:addChild(item)
@@ -494,6 +515,7 @@ oEditor.spriteData[oSd.index]
 			items.Remove,
 			items.Up,
 			items.Down,
+			items.Change,
 		}
 		for i = 1,#group do
 			group[i].visible = false
@@ -517,6 +539,7 @@ oEditor.spriteData[oSd.index]
 		hideItems()
 		local group = {
 			items.Fix,
+			items.Change,
 			items.Up,
 			items.Down,
 			items.Add,
@@ -531,6 +554,10 @@ oEditor.spriteData[oSd.index]
 					CCDelay(i*0.1),
 					oOpacity(0.3,1)
 				}))
+		end
+		if oEditor.state == oEditor.EDIT_LOOK then
+			oEditor.viewPanel:updateItems(false)
+			oEditor.settingPanel.visible = true
 		end
 		oEditor.state = oEditor.EDIT_SPRITE
 		local model = oEditor.viewArea:getModel()
@@ -572,6 +599,10 @@ oEditor.spriteData[oSd.index]
 					oOpacity(0.3,1)
 				}))
 		end
+		if oEditor.state == oEditor.EDIT_LOOK then
+			oEditor.viewPanel:updateItems(false)
+			oEditor.settingPanel.visible = true
+		end
 		oEditor.state = oEditor.EDIT_ANIMATION
 		oEditor.settingPanel:updateItems()
 		oEditor.settingPanel:clearSelection()
@@ -582,11 +613,22 @@ oEditor.spriteData[oSd.index]
 		oEditor.controlBar.opacity = 0
 		oEditor.controlBar:runAction(oOpacity(0.3,0.3))
 		local model = oEditor.viewArea:getModel()
+		model.look = oEditor.look
 		model:play(oEditor.animation)
 		model:pause()
 		model.time = 0
 	end
 
+	menu.toLook = function(self)
+		if oEditor.state == oEditor.EDIT_LOOK then
+			return
+		end
+		hideItems()
+		oEditor.state = oEditor.EDIT_LOOK
+		oEditor.settingPanel.visible = false
+		oEditor.controlBar.visible = false
+		oEditor.viewPanel:updateItems(true)
+	end
 	menu.loadListener = oListener("EditorLoaded",
 		function()
 			menu:toStart()

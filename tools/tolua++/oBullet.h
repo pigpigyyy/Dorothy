@@ -8,8 +8,8 @@ class oBullet: public oBody
 	tolua_readonly tolua_property__common oBulletDef* bulletDef;
 	tolua_property__common CCNode* face;
 		
-	void addHandler(LUA_FUNCTION handler);
-	void removeHandler(LUA_FUNCTION handler);
+	void addHandler(tolua_function handler);
+	void removeHandler(tolua_function handler);
 	void clearHandler();
 
 	void destroy();

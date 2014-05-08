@@ -21,7 +21,6 @@ public:
 	float scaleY;
 	float skewX;
 	float skewY;
-	bool visible;
 	float opacity;
 	CCRect rect;
 	string name;

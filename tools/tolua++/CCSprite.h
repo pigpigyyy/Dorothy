@@ -10,5 +10,5 @@ class CCSprite: public CCNode//CCNodeRGBA
 	static CCSprite* create();
 	static CCSprite* createWithTexture(CCTexture2D* pTexture);
 	static CCSprite* createWithTexture(CCTexture2D* pTexture, CCRect rect);
-	static tolua_outside CCSprite* CCSprite_createWithClip @ createWithClip( const char* clipStr );
+	static tolua_outside CCSprite* CCSprite_createWithClip @ createWithClip(const char* clipStr );
 };

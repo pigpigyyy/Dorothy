@@ -300,7 +300,7 @@ local function oSelectionPanel(borderSize)
 	panel.removeMenuItems = function(self)
 		local children = menu.children
 		if children then
-			for i = 1,children.count do
+			for i = 1, children.count do
 				local item = tolua.cast(children:get(i),"CCMenuItem")
 				if item then
 					item:unregisterTapHandler()

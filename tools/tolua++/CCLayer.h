@@ -11,16 +11,16 @@ class CCLayer: public CCNode
 	tolua_property__common int touchMode;
 	tolua_property__common int touchPriority;
 
-	void registerScriptTouchHandler @ registerTouchHandler(LUA_FUNCTION nHandler,
+	void registerScriptTouchHandler @ registerTouchHandler(tolua_function nHandler,
 									bool bIsMultiTouches = false,
 									int nPriority = 0,
 									bool bSwallowsTouches = false);
 	void unregisterScriptTouchHandler @ unregisterTouchHandler();
 
-	void registerScriptKeypadHandler @ registerKeypadHandler(LUA_FUNCTION nHandler);
+	void registerScriptKeypadHandler @ registerKeypadHandler(tolua_function nHandler);
 	void unregisterScriptKeypadHandler @ unregisterKeypadHandler();
 
-	void registerScriptAccelerateHandler @ registerAccelerateHandler(LUA_FUNCTION nHandler);
+	void registerScriptAccelerateHandler @ registerAccelerateHandler(tolua_function nHandler);
 	void unregisterScriptAccelerateHandler @ unregisterAccelerateHandler();
 
 	static CCLayer* create();

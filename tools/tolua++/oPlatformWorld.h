@@ -8,9 +8,9 @@ class oPlatformWorld: public oWorld
 	oLayer* getLayer(int zOrder);
 	void removeLayer(int zOrder);
 	void removeAllLayers();
-	void setLayerRatio(int zOrder, const oVec2& ratio);
-	const oVec2& getLayerRatio(int zOrder);
-	void setLayerOffset(int zOrder, const oVec2& offset);
-	const oVec2& getLayerOffset(int zOrder);
+	void setLayerRatio(int zOrder, oVec2& ratio);
+	oVec2& getLayerRatio(int zOrder);
+	void setLayerOffset(int zOrder, oVec2& offset);
+	oVec2& getLayerOffset(int zOrder);
 	static oPlatformWorld* create();
 };

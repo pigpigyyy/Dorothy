@@ -148,7 +148,7 @@ function classVariable:supcode ()
  -- return value
  if string.find(self.mod, 'tolua_inherits') then
 	local push_func = get_push_function(self.type)
-	output('  ',push_func,'(tolua_S,(void*)static_cast<'..self.type..'*>(self), "',self.type,'");')
+	output('  ',push_func,'(tolua_S,(void*)static_cast<'..self.type..'*>(self), "',_userltype[self.type],'");')
  else
 	local t,ct = isbasic(self.type)
 	if t then
@@ -157,6 +157,7 @@ function classVariable:supcode ()
 		local push_func = get_push_function(self.type)
 		t = self.type
 		local new_t = string.gsub(t, "const%s+", "")
+		t = _userltype[t]
 		if self.ptr == '&' then
 			output('  ',push_func,'(tolua_S,(void*)&'..self:getvalue(class,static,prop_get)..',"',t,'");')
 		elseif self.ptr == '' then

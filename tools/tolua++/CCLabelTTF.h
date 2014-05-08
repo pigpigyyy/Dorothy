@@ -8,6 +8,6 @@ class CCLabelTTF: public CCSprite
 	tolua_property__common char* fontName;
 
 	static CCLabelTTF* create();
-	static CCLabelTTF* create(const char *str, const char *fontName, float fontSize);
-	static CCLabelTTF* create(const char *str, const char *fontName, float fontSize, const CCSize& dimensions, CCTextAlignment hAlignment, CCVerticalTextAlignment vAlignment = kCCVerticalTextAlignmentCenter);
+	static CCLabelTTF* create(const char* str, const char* fontName, float fontSize);
+	static CCLabelTTF* create(const char* str, const char* fontName, float fontSize, CCSize& dimensions, CCTextAlignment hAlignment, CCVerticalTextAlignment vAlignment = kCCVerticalTextAlignmentCenter);
 };

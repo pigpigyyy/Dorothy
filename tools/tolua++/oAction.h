@@ -7,17 +7,17 @@ class oAction
 	tolua_readonly tolua_property__bool bool doing;
 	tolua_readonly tolua_property__common oUnit* owner;
 	void stop();
-	void addHandler(int type, LUA_FUNCTION handler);
-	void removeHandler(int type, LUA_FUNCTION handler);
+	void addHandler(int type, tolua_function handler);
+	void removeHandler(int type, tolua_function handler);
 	void clearHandler(int type);
 	static void add(
 		int id,
 		int priority,
 		float reaction,
-		LUA_FUNCTION available,
-		LUA_FUNCTION run,
-		LUA_FUNCTION update,
-		LUA_FUNCTION stop);
+		tolua_function available,
+		tolua_function run,
+		tolua_function update,
+		tolua_function stop);
 	static void clear();
-	static const int UserID;
+	static tolua_readonly const int UserID;
 };

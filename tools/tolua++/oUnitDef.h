@@ -1,8 +1,8 @@
 class oUnitDef: public CCObject
 {
 	static oUnitDef* create(
-		const string& modelFile,
-		const CCSize& size,
+		string& modelFile,
+		CCSize& size,
 		float density = 0,
 		float friction = 0,
 		float restitution = 0);

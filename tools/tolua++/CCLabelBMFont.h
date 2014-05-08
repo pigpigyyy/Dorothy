@@ -9,6 +9,6 @@ class CCLabelBMFont: public CCSpriteBatchNode
 	void setLineBreakWithoutSpace(bool breakWithoutSpace);
 
 	static void purgeCachedData();
-	static CCLabelBMFont* create(const char *str, const char *fntFile, float width = kCCLabelAutomaticWidth, CCTextAlignment alignment = kCCTextAlignmentLeft, oVec2 imageOffset = oVec2::zero);
+	static CCLabelBMFont* create(const char* str, const char* fntFile, float width = kCCLabelAutomaticWidth, CCTextAlignment alignment = kCCTextAlignmentLeft, oVec2 imageOffset = oVec2::zero);
 	static CCLabelBMFont* create();
 };

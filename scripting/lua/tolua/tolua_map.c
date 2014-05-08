@@ -27,7 +27,7 @@ int tolua_ubox;
 /* Create metatable
     * Create and register new metatable
 */
-static int tolua_newmetatable (lua_State* L, const char* name)
+static int tolua_newmetatable(lua_State* L, const char* name)
 {
     int r = luaL_newmetatable(L,name);
 #ifdef LUA_VERSION_NUM /* only lua 5.1 */
@@ -36,7 +36,7 @@ static int tolua_newmetatable (lua_State* L, const char* name)
         lua_pushvalue(L, -1);
         lua_pushstring(L, name);
         lua_settable(L, LUA_REGISTRYINDEX);// reg[mt] = type_name
-    };
+    }
 #endif
 	if (r)
 	{
@@ -142,7 +142,7 @@ static void mapinheritance(lua_State* L, const char* name, const char* base)
 
 /* Object type
 */
-static int tolua_bnd_type (lua_State* L)
+static int tolua_bnd_type(lua_State* L)
 {
     tolua_typename(L,lua_gettop(L));
     return 1;
@@ -152,91 +152,49 @@ static int tolua_bnd_type (lua_State* L)
 */
 static int tolua_bnd_cast(lua_State* L)
 {
-    void* v;
-    const char* s;
-	int ccobject_idx;
-	int target_idx;
-	int start_idx;
-	int end_idx;
-	int base_idx;
-	int can_cast = 0;
-	int is_ccobject = 0;
-    if (lua_islightuserdata(L, 1))
+	void* ptr = tolua_tousertype(L, 1, 0);
+	const char* target_name = tolua_tostring(L, 2, NULL);
+	if (ptr && target_name)
 	{
-        v = tolua_touserdata(L, 1, NULL);
-    }
-	else
-	{
-        v = tolua_tousertype(L, 1, 0);
-    };
-	s = tolua_tostring(L, 2, NULL);
-	if (v && s)
-	{
-		lua_getmetatable(L, 1);
-		start_idx = lua_gettop(L);
-		luaL_getmetatable(L, "tolua_class");
-		base_idx = lua_gettop(L);
-		luaL_getmetatable(L, "CCObject");
-		ccobject_idx = lua_gettop(L);
-		luaL_getmetatable(L, s);
-		target_idx = lua_gettop(L);
-		while (!lua_isnil(L, -1) && lua_rawequal(L, base_idx, -1) == 0)
+		lua_getmetatable(L, 1);// mt
+		if (tolua_fast_is(L, -1, "CCObject"))
 		{
-			if (lua_rawequal(L, start_idx, -1) != 0)
+			if (tolua_fast_is(L, -1, target_name))
 			{
-				can_cast = 1;
-			}
-			if (lua_rawequal(L, ccobject_idx, -1) != 0)
-			{
-				is_ccobject = 1;
-				break;
-			}
-			lua_getmetatable(L, -1);
-		}
-		end_idx = lua_gettop(L);
-		if (can_cast)
-		{
-			lua_pop(L, end_idx - start_idx + 1);
-			if (is_ccobject) tolua_pushccobject(L, v, s);
-			else tolua_pushusertype(L, v, s);
-		}
-		else
-		{
-			lua_pop(L, end_idx - start_idx - 3);
-			lua_getmetatable(L, start_idx);
-			while (!lua_isnil(L, -1) && lua_rawequal(L, base_idx, -1) == 0)
-			{
-				if (lua_rawequal(L, target_idx, -1) != 0)
-				{
-					can_cast = 1;
-					break;
-				}
-				lua_getmetatable(L, -1);
-			}
-			end_idx = lua_gettop(L);
-			lua_pop(L, end_idx - start_idx + 1);
-			if (can_cast)
-			{
-				if (is_ccobject) tolua_pushccobject(L, v, s);
-				else tolua_pushusertype(L, v, s);
+				lua_pop(L, 1);// empty
+				lua_pushvalue(L, 1);// ud
 			}
 			else
 			{
-				if (is_ccobject) tolua_pushccobject(L, v, s);
-				else tolua_pushusertype(L, v, s);
+				const char* realName = tolua_classname(ptr);
+				luaL_getmetatable(L, realName);// mt realmt
+				if (tolua_fast_is(L, -1, target_name))
+				{
+					lua_pop(L, 2);// empty
+					luaL_getmetatable(L, target_name);// targetmt
+					lua_setmetatable(L, 1);// empty
+					lua_pushvalue(L, 1);// ud
+				}
+				else
+				{
+					lua_pop(L, 2);// empty
+					lua_pushnil(L);// nil 
+				}
 			}
 		}
+		else
+		{
+			lua_pop(L, 1);// empty
+			lua_pushnil(L);// nil
+		}
 	}
-	else
-	{
-		lua_pushnil(L);
-	}
+	else lua_pushnil(L);
     return 1;
 }
 
 /* Test userdata is null
 */
-static int tolua_bnd_isnulluserdata (lua_State* L)
+static int tolua_bnd_isnulluserdata(lua_State* L)
 {
     void **ud = (void**)lua_touserdata(L, -1);
     tolua_pushboolean(L, ud == NULL || *ud == NULL);
@@ -360,24 +318,18 @@ TOLUA_API int tolua_default_collect(lua_State* tolua_S)
 }
 
 /* Register a usertype
-    * It creates the correspoding metatable in the registry, for both 'type' and 'const type'.
-    * It maps 'const type' as being also a 'type'
+    * It creates the correspoding metatable in the registry, for 'type'.
 */
 TOLUA_API void tolua_usertype(lua_State* L, const char* type)
 {
-    char ctype[128] = "const ";
-    strncat(ctype,type,120);
-
-    /* create both metatables */
-    if (tolua_newmetatable(L,ctype) && tolua_newmetatable(L,type))
-        mapsuper(L,type,ctype);             /* 'type' is also a 'const type' */
+	/* create metatable */
+	tolua_newmetatable(L, type);
 }
-
 
 /* Begin module
     * It pushes the module (or class) table on the stack
 */
-TOLUA_API void tolua_beginmodule (lua_State* L, const char* name)
+TOLUA_API void tolua_beginmodule(lua_State* L, const char* name)
 {
     if (name)
     {
@@ -465,45 +417,37 @@ TOLUA_API void tolua_module (lua_State* L, const char* name, int hasvar)
 }
 #endif
 
-static void push_collector(lua_State* L, const char* type, lua_CFunction col)
+static void push_collector(lua_State* L, lua_CFunction col)
 {
-    /* push collector function, but only if it's not NULL. */
+	/* mt */
     if (!col) return;
-    luaL_getmetatable(L,type);// mt
-    lua_pushcfunction(L,col);// mt cfunc
+	lua_pushcfunction(L, col);// mt cfunc
 	lua_rawseti(L, -2, MT_DEL);// mt[MT_DEL] = cfunc, mt
-    lua_pop(L, 1);// pop mt
-};
+}
+
+static void mapself(lua_State* L, const char* name)
+{
+	luaL_getmetatable(L, name);// mt
+	lua_rawgeti(L, -1, MT_SUPER);// mt super
+	lua_pushstring(L, name);// mt tb name
+	lua_pushboolean(L, 1);// mt tb name true
+	lua_rawset(L, -3);// tb[name] = true, mt tb
+	lua_pop(L, 1);// mt
+}
 
 /* Map C class
     * It maps a C class, setting the appropriate inheritance and super classes.
 */
-TOLUA_API void tolua_cclass (lua_State* L, const char* lname, const char* name, const char* base, lua_CFunction col)
+TOLUA_API void tolua_cclass(lua_State* L, const char* name, const char* base, lua_CFunction col)
 {
-    char cname[128] = "const ";
-    char cbase[128] = "const ";
-    strncat(cname,name,120);
-    strncat(cbase,base,120);
-
-    mapinheritance(L,name,base);
-    mapinheritance(L,cname,name);
-
-	if (base && *base)
-	{
-		mapsuper(L, cname, cbase);
-		mapsuper(L, name, base);
-	}
-
-    push_collector(L, name, col);
-
-	lua_pushstring(L, lname);
-    luaL_getmetatable(L,name);
-	/* assign class metatable to module*/
-	lua_rawset(L, -3);
-
-    /* now we also need to store the collector table for the const
-       instances of the class */
-    push_collector(L, cname, col);
+	mapinheritance(L, name, base);	
+	mapsuper(L, name, (base && *base) ? base : "tolua_class");
+	mapself(L, name);// mt
+	push_collector(L, col);// mt
+	lua_pushstring(L, name);// mt name
+	lua_insert(L, -2);// name mt
+	/* assign class metatable to module */
+	lua_rawset(L, -3);// empty
 }
 
 /* Add base
@@ -512,15 +456,8 @@ TOLUA_API void tolua_cclass (lua_State* L, const char* lname, const char* name, 
     */
 TOLUA_API void tolua_addbase(lua_State* L, char* name, char* base)
 {
-    char cname[128] = "const ";
-    char cbase[128] = "const ";
-    strncat(cname,name,120);
-    strncat(cbase,base,120);
-
-    mapsuper(L,cname,cbase);
     mapsuper(L,name,base);
-};
-
+}
 
 /* Map function
     * It assigns a function into the current module (or class)
@@ -647,5 +584,5 @@ TOLUA_API void tolua_dobuffer(lua_State* L, char* B, unsigned int size, const ch
 #else
     lua_dobuffer(L, B, size, name);
 #endif
-};
+}
 

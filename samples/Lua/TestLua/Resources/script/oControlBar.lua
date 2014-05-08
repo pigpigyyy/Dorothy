@@ -186,6 +186,9 @@ local function oControlBar()
 		self.opacity = 1.0
 	end
 	controlBar.hide = function(self)
+		if not fade.done then
+			self:stopAction(fade)
+		end
 		self:runAction(fade)
 	end
 

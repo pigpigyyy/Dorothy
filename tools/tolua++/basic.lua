@@ -1,8 +1,6 @@
 -- usage: (use instead of ant)
 -- tolua++ "-L" "basic.lua" "-o" "../../scripting/lua/cocos2dx_support/LuaCocos2d.cpp" "Cocos2d.pkg"
 
-_is_functions = _is_functions or {}
-_to_functions = _to_functions or {}
 _push_functions = _push_functions or {}
 _collect_functions = _collect_functions or {}
 local CCObjectTypes = {
@@ -161,12 +159,6 @@ for i = 1, #CCObjectTypes do
 	_collect_functions[CCObjectTypes[i]] = "tolua_collect_ccobject"
 end
 
--- register LUA_FUNCTION, LUA_TABLE, LUA_HANDLE type
-_to_functions["LUA_FUNCTION"] = "toluafix_ref_function"
-_is_functions["LUA_FUNCTION"] = "toluafix_isfunction"
-_to_functions["LUA_TABLE"] = "toluafix_totable"
-_is_functions["LUA_TABLE"] = "toluafix_istable"
-
 local toWrite = {}
 local currentString = ''
 local out
@@ -235,14 +227,6 @@ function post_output_hook(package)
 
 	replace([[/* Exported function */
 TOLUA_API int  tolua_Cocos2d_open (lua_State* tolua_S);]], [[]])
-
-	replace([[*((LUA_FUNCTION*)]], [[(]])
-
-	replace([[tolua_usertype(tolua_S,"LUA_FUNCTION");]], [[]])
-
-	replace([[unsigned int]], [[uint32]])
-	
-	replace([[unsigned char]], [[uint8]])
 
     WRITE(result)
 end

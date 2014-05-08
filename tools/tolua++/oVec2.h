@@ -2,14 +2,14 @@ class oVec2
 {
 	oVec2(float x = 0.0f, float y = 0.0f);
 	~oVec2();
-	oVec2 operator+(const oVec2& vec) const;
-	oVec2 operator-(const oVec2& vec) const;
-	oVec2 operator*(float value) const;
-	oVec2 operator*(const oVec2& vec) const;
-	oVec2 operator/(float value) const;
-	bool operator==(const oVec2& vec) const;
-	float distance(const oVec2& vec) const;
-	float distanceSquared(const oVec2& vec) const;
+	oVec2 operator+(oVec2& vec);
+	oVec2 operator-(oVec2& vec);
+	oVec2 operator*(float value);
+	oVec2 operator*(oVec2& vec);
+	oVec2 operator/(float value);
+	bool operator==(oVec2& vec);
+	float distance(oVec2& vec);
+	float distanceSquared(oVec2& vec);
 	tolua_readonly tolua_property__qt float length;
 	tolua_readonly tolua_property__qt float lengthSquared;
 	tolua_readonly tolua_property__qt float angle;
