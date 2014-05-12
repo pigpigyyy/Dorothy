@@ -412,6 +412,7 @@ local function oSettingPanel()
 				if text ~= oEditor.spriteData[oSd.name] then
 					oEditor.spriteData[oSd.name] = text
 					oEditor.viewPanel:updateItemName(oEditor.spriteData)
+					oEditor.dirty = true
 					oEditor.editMenu:markEditButton(true)
 				end
 			end),
