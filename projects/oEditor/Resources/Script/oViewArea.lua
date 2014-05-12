@@ -165,7 +165,11 @@ local function oViewArea()
 			oEditor.dirty = false
 			oCache.Model:loadData(oEditor.model,oEditor.data)
 			local model = oModel(oEditor.model)
-			model.look = oEditor.look
+			if oEditor.state == oEditor.EDIT_SPRITE then
+				model.look = ""
+			else
+				model.look = oEditor.look
+			end
 			model.loop = oEditor.loop
 			if oEditor.state == oEditor.EDIT_ANIMATION then
 				local time = oEditor.controlBar:getTime()

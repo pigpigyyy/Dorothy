@@ -199,6 +199,8 @@ local function oFileChooser()
 			if item.editTarget then
 				oEditor.controlBar:clearCursors()
 				oEditor.model = oEditor.output..item.editTarget..".model"
+				oCache.clear()
+				CCTextureCache:removeUnused()
 				oEditor.data = oCache.Model:getData(oEditor.model)
 				oEditor.look = ""
 				oEditor.animation = ""

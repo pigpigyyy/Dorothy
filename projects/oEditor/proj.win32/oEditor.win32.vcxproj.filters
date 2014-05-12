@@ -24,4 +24,9 @@
       <Filter>win32</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="oEditor.rc">
+      <Filter>Classes</Filter>
+    </ResourceCompile>
+  </ItemGroup>
 </Project>

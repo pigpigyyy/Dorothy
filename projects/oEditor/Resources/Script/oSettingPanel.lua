@@ -928,7 +928,7 @@ local function oSettingPanel()
 							moveX = 0
 						end
 						keyItems.Width:setValue(sp[oSd.size].width)
-						keyItems.Height:setValue(sp[oSd.size].width)
+						keyItems.Height:setValue(sp[oSd.size].height)
 					end
 				end
 			end
