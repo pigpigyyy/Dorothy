@@ -26,9 +26,16 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     AppDelegate app;
     CCEGLView* eglView = CCEGLView::sharedOpenGLView();
     eglView->setViewName("Dorothy Animation Editor");
-	float width = CCUserDefault::sharedUserDefault()->getFloatForKey("Width");
-	float height = CCUserDefault::sharedUserDefault()->getFloatForKey("Height");
-    eglView->setFrameSize(CCSize(width, height));
+	int width = CCUserDefault::sharedUserDefault()->getIntegerForKey("Width");
+	int height = CCUserDefault::sharedUserDefault()->getIntegerForKey("Height");
+	if (width == 0 || height == 0)
+	{
+		width = 1024;
+		height = 768;
+		CCUserDefault::sharedUserDefault()->setIntegerForKey("Width", width);
+		CCUserDefault::sharedUserDefault()->setIntegerForKey("Height", height);
+	}
+	eglView->setFrameSize(CCSize(width, height));
 
     int ret = CCApplication::sharedApplication()->run();
 
