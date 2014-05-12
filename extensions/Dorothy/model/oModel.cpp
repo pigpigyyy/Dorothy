@@ -56,6 +56,7 @@ bool oModel::init()
 		CCNode::create();
 	oModel::visit(_modelDef->getRoot(), _root);
 	oModel::setupCallback();
+	oModel::setContentSize(_modelDef->getSize());
 	this->addChild(_root);
 	return true;
 }

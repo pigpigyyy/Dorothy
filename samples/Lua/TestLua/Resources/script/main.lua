@@ -20,14 +20,16 @@ oSd =
 	children = 15,
 	isFaceRight = 16,
 	isBatchUsed = 17,
-	clipFile = 18,
-	keys = 19,
-	animationNames = 20,
-	lookNames = 21,
+	size = 18,
+	clipFile = 19,
+	keys = 20,
+	animationNames = 21,
+	lookNames = 22,
 	-- extra
 	sprite = 23,
 	parent = 24,
 	index = 25,
+	fold = 26,
 }
 
 oAd =
@@ -63,8 +65,8 @@ oFd =
 
 oEditor = {}
 oEditor.model = nil
-oEditor.look = nil
-oEditor.animation = nil
+oEditor.look = ""
+oEditor.animation = ""
 oEditor.animationData = nil
 oEditor.keyIndex = nil
 oEditor.currentFramePos = nil
@@ -143,9 +145,7 @@ local controlNames =
 	"controlBar",
 	"settingPanel",
 }
-
 oEditor.scene.anchorPoint = oVec2.zero
-oEditor.scene.visible = false
 
 local thread = coroutine.create(
 	function()
@@ -159,29 +159,89 @@ local thread = coroutine.create(
 		end
 	end)
 
+local bk = CCLayerColor(ccColor4(0xff000000),CCDirector.winSize.width,CCDirector.winSize.height)
+bk.anchorPoint = oVec2.zero
+local logo = CCLabelTTF("Luv Fight","Arial",12)
+logo.texture.antiAlias = false
+logo.position = oVec2(CCDirector.winSize.width*0.5,CCDirector.winSize.height*0.5)
+logo.scaleX = 5
+logo.scaleY = 5
+bk:addChild(logo)
+local flower = CCDrawNode()
+flower:drawPolygon(
+{
+	oVec2(-1,10),
+	oVec2(9,10),
+	oVec2(9,20),
+	oVec2(-1,20),
+},ccColor4(0xff00ffff))
+flower:drawPolygon(
+{
+	oVec2(10,-1),
+	oVec2(20,-1),
+	oVec2(20,9),
+	oVec2(10,9),
+},ccColor4(0xff00ffff))
+flower:drawPolygon(
+{
+	oVec2(21,10),
+	oVec2(31,10),
+	oVec2(31,20),
+	oVec2(21,20),
+},ccColor4(0xff00ffff))
+flower:drawPolygon(
+{
+	oVec2(10,21),
+	oVec2(20,21),
+	oVec2(20,31),
+	oVec2(10,31),
+},ccColor4(0xff00ffff))
+flower.scaleX = 0.1
+flower.scaleY = 0.1
+flower.position = oVec2(logo.contentSize.width+2,logo.contentSize.height-2)
+logo:addChild(flower)
+oEditor.scene:addChild(bk,998)
+
+local time = 0
 oEditor.scene:scheduleUpdate(
 	function(deltaTime, self)
+		time = time+deltaTime
 		if not coroutine.resume(thread) then
 			self:unscheduleUpdate()
 			oEvent:send("EditorLoaded")
-			oEditor.scene.visible = true
-			oEditor.scene.opacity = 0
-			oEditor.scene:runAction(oOpacity(0.3,1))
+			if time < 1 then
+				logo:runAction(
+					CCSequence
+					{
+						CCDelay(1-time),
+						oOpacity(0.3,0),
+						CCCall(
+							function()
+								bk.visible = false
+								bk.parent:removeChild(bk)
+								oEditor.scene.opacity = 0
+								oEditor.scene:runAction(oOpacity(0.3,1))
+							end)
+					})
+			else
+				bk.visible = false
+				bk.parent:removeChild(bk)
+				oEditor.scene.opacity = 0
+				oEditor.scene:runAction(oOpacity(0.3,1))
+			end
 		end
 	end)
 
 --[[
-local names = oCache.Clip:getNames("jixienv.clip")
+local names = oCache.Clip:getNames(oEditor.output.."nvjing.clip")
 for i = 1,#names do
-	local sp = CCSprite("jixienv.clip|"..names[i])
+	local sp = CCSprite(oEditor.output.."nvjing.clip|"..names[i])
 	sp.anchorPoint = oVec2.zero
 	local target = CCRenderTarget(sp.contentSize.width,sp.contentSize.height)
 	target:beginPaint(ccColor4(0))
 	target:draw(sp)
 	target:endPaint()
 	target:save(names[i]..".png",CCImage.PNG)
-end]]
-
-cclog(tolua.type(CCClipNode))
-
+end
+]]
 CCDirector:run(oEditor.scene)

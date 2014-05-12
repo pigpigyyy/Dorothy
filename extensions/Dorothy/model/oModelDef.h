@@ -61,6 +61,7 @@ public:
 	oModelDef(
 		bool isFaceRight,
 		bool isBatchUsed,
+		const CCSize& size,
 		const string& clipFile,
 		CCTexture2D* texture,
 		oSpriteDef* root,
@@ -74,6 +75,7 @@ public:
 	const oVec2& getKeyPoint(uint32 index) const;
 	bool isFaceRight() const;
 	bool isBatchUsed() const;
+	const CCSize& getSize() const;
 	void setActionName(int index, const string& name);
 	void setLookName(int index, const string& name);
 	int getAnimationIndexByName(const string& name);
@@ -91,6 +93,7 @@ private:
 	void setRoot(oSpriteDef* root);
 	bool _isBatchUsed;
 	bool _isFaceRight;
+	CCSize _size;
 	vector<oVec2> _keys;
 	oRef<CCTexture2D> _texture;
 	oOwn<oSpriteDef> _root;

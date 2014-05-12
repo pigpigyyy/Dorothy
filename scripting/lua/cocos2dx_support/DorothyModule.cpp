@@ -11,6 +11,15 @@ void CCDrawNode_drawPolygon(
 	self->drawPolygon((CCPoint*)verts, count, fillColor, borderWidth, borderColor);
 }
 
+void CCDrawNode_drawPolygon(
+	CCDrawNode* self,
+	oVec2* verts,
+	int count,
+	const ccColor4B& fillColor)
+{
+	self->drawPolygon((CCPoint*)verts, count, fillColor, 0, ccColor4B());
+}
+
 HANDLER_WRAP_START(oModelHandlerWrapper)
 void call(oModel* model) const
 {
@@ -598,7 +607,8 @@ void __oModelCache_getData(const char* filename)
 		visitSpriteDef(root);
 		lua_setBool(16, modelDef->isFaceRight());
 		lua_setBool(17, modelDef->isBatchUsed());
-		lua_setString(18, modelDef->getClipFile().c_str());
+		lua_setUserType(18, new CCSize(modelDef->getSize()), "CCSize");
+		lua_setString(19, modelDef->getClipFile().c_str());
 		/*["keys"]*/
 		lua_createtable(L, modelDef->getKeyPointCount(), 0);
 		for (int i = 0; i < modelDef->getKeyPointCount(); i++)
@@ -606,7 +616,7 @@ void __oModelCache_getData(const char* filename)
 			stack->pushUserType(new oVec2(modelDef->getKeyPoint(i)), "oVec2");
 			lua_rawseti(L, -2, i + 1);
 		}
-		lua_rawseti(L, -2, 19);
+		lua_rawseti(L, -2, 20);
 		/*["animationNames"]*/
 		lua_newtable(L);
 		for (auto& pair : modelDef->getAnimationIndexMap())
@@ -615,7 +625,7 @@ void __oModelCache_getData(const char* filename)
 			lua_pushinteger(L, pair.second);
 			lua_rawset(L, -3);
 		}
-		lua_rawseti(L, -2, 20);
+		lua_rawseti(L, -2, 21);
 		/*["lookNames"]*/
 		lua_newtable(L);
 		for (auto& pair : modelDef->getLookIndexMap())
@@ -624,7 +634,7 @@ void __oModelCache_getData(const char* filename)
 			lua_pushinteger(L, pair.second);
 			lua_rawset(L, -3);
 		}
-		lua_rawseti(L, -2, 21);
+		lua_rawseti(L, -2, 22);
 	}
 	else
 	{
@@ -673,7 +683,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 	auto lua_getUserType = [&](int index)->void*
 	{
 		lua_rawgeti(L, -1, index);
-		void* v = (*(void **)(lua_touserdata(L, -1)));
+		void* v = (*(void**)(lua_touserdata(L, -1)));
 		lua_pop(L, 1);
 		return v;
 	};
@@ -681,11 +691,12 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 
 	bool isFaceRight = lua_getBool(16);
 	bool isBatchUsed = lua_getBool(17);
-	string clipFile = lua_getString(18);
+	CCSize size = *(CCSize*)lua_getUserType(18);
+	string clipFile = lua_getString(19);
 	oClipDef* clipDef = oSharedClipCache.load(clipFile.c_str());
 	CCTexture2D* texture = oSharedContent.loadTexture(clipDef->textureFile.c_str());
 	/*["keys"]*/
-	lua_rawgeti(L, -1, 19);// push keys
+	lua_rawgeti(L, -1, 20);// push keys
 	vector<oVec2> keys(lua_objlen(L, -1));
 	for (size_t i = 0; i < keys.size(); i++)
 	{
@@ -696,7 +707,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 	}
 	lua_pop(L, 1);// pop keys
 	/*["animationNames"]*/
-	lua_rawgeti(L, -1, 20);// push animationNames
+	lua_rawgeti(L, -1, 21);// push animationNames
 	hash_strmap<int> animationNames;
 	int top = lua_gettop(L);
 	for (lua_pushnil(L); lua_next(L, top) != 0; lua_pop(L, 1))
@@ -705,7 +716,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 	}
 	lua_pop(L, 1);// pop animationNames
 	/*["lookNames"]*/
-	lua_rawgeti(L, -1, 21);// push lookNames
+	lua_rawgeti(L, -1, 22);// push lookNames
 	hash_strmap<int> lookNames;
 	top = lua_gettop(L);
 	for (lua_pushnil(L); lua_next(L, top) != 0; lua_pop(L, 1))
@@ -804,7 +815,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 		return spriteDef;
 	};
 	oSpriteDef* root = visitSpriteDef();
-	oModelDef* modelDef = new oModelDef(isFaceRight, isBatchUsed, clipFile, texture, root, keys, animationNames, lookNames);
+	oModelDef* modelDef = new oModelDef(isFaceRight, isBatchUsed, size, clipFile, texture, root, keys, animationNames, lookNames);
 	modelDef->autorelease();
 	lua_pop(L, 1);// pop content
 	return oSharedModelCache.update(filename, modelDef);

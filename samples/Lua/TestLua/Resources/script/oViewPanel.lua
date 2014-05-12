@@ -27,7 +27,7 @@ local function oViewPanel()
 	local panel = CCLayer()
 	panel.anchorPoint = oVec2.zero
 	panel.contentSize = borderSize
-	panel.opacity = 0.3
+	panel.opacity = 0.4
 	panel.touchEnabled = true
 	panel.position = oVec2(winSize.width-170,winSize.height-borderSize.height-10)
 
@@ -48,7 +48,7 @@ local function oViewPanel()
 		oVec2(borderSize.width-2,0),
 		oVec2(borderSize.width-2,borderSize.height-2),
 		oVec2(0,borderSize.height-2)
-	},ccColor4(0xffffffff),0,ccColor4(0x00000000))
+	},ccColor4(0xffffffff))
 	stencil.position = oVec2(1,1)
 
 	local view = CCClipNode(stencil)
@@ -232,7 +232,7 @@ local function oViewPanel()
 			oVec2(size,0),
 			oVec2(size,size),
 			oVec2(0,size)
-		},ccColor4(0x88000000),0,ccColor4(0x00000000))
+		},ccColor4(0x88000000))
 
 		border:addChild(oLine(
 		{
@@ -266,12 +266,30 @@ local function oViewPanel()
 				sprite.position = oVec2(size*0.5,size*0.5)
 				menuItem:addChild(sprite)
 			else
-				local label = CCLabelTTF("Empty","Arial",16)
+				local name = sp[oSd.name]
+				if name == "" then
+					name = "Node"
+				end
+				local label = CCLabelTTF(name,"Arial",16)
 				label.color = ccColor3(0x00ffff)
 				label.position = oVec2(size*0.5, size*0.5)
 				label.texture.antiAlias = false
 				menuItem:addChild(label)
+				menuItem.label = label
 			end
+		end
+
+		if sp[oSd.fold] then
+			local flag = CCDrawNode()
+			flag:drawPolygon(
+			{
+				oVec2.zero,
+				oVec2(5,0),
+				oVec2(5,5),
+				oVec2(0,5)
+			},ccColor4(0x8800ffff),0.5,ccColor4(0xff00ffff))
+			flag.position = oVec2(size-10,size-10)
+			menuItem:addChild(flag)
 		end
 
 		local isSelected = false
@@ -297,7 +315,8 @@ local function oViewPanel()
 		menuItem.getData = function(self)
 			return sp,sp[oSd.sprite]
 		end
-		
+
+		local isFolding = false
 		menuItem:registerTapHandler(
 			function(eventType, self)
 				if oEditor.isPlaying then
@@ -309,6 +328,25 @@ local function oViewPanel()
 					menuItem:select(true)
 					oEditor.settingPanel:clearSelection()
 					oEvent:send("ImageSelected",{sp,sp[oSd.sprite],menuItem})
+					if #sp[oSd.children] > 0 then
+						if isFolding then
+							isFolding = false
+							sp[oSd.fold] = not sp[oSd.fold]
+							local model = oEditor.viewArea:getModel()
+							panel:updateImages(oEditor.data,model)
+							panel:selectItem(sp)
+						else
+							isFolding = true
+							local interval = 0
+							self:scheduleUpdate(function(deltaTime)
+								interval = interval+deltaTime
+								if interval > 0.5 then
+									self:unscheduleUpdate()
+									isFolding = false
+								end
+							end)
+						end
+					end
 				end
 			end)
 
@@ -317,11 +355,22 @@ local function oViewPanel()
 			local sp = self:getData()
 			sp[oSd.sprite] = nil
 		end
-	
+
+		menuItem.setName = function(self,name)
+			if clipStr == "" then
+				self.label.text = name == "" and "Node" or name
+				self.label.texture.antiAlias = false
+			end
+		end
+
 		return menuItem
 	end
 	
 	panel.selectItem = function(self, targetSp)
+		panel:clearSelection()
+		if not targetSp then
+			return
+		end
 		local item = panel.items[targetSp]
 		if item then
 			local sp,sprite = item:getData()
@@ -334,7 +383,7 @@ local function oViewPanel()
 		end
 	end
 
-	local opacity = oOpacity(0.5,0.3,oEase.InExpo)
+	local opacity = oOpacity(0.5,0.4,oEase.InExpo)
 	panel.show = function(self)
 		if not opacity.done then
 			self:stopAction(opacity)
@@ -434,7 +483,10 @@ local function oViewPanel()
 		local root = tolua.cast(model.children:get(1),"CCNode")
 		local function visitSprite(sp,x,y,node)
 			local clip = sp[oSd.clip]
-			local child = tolua.cast(node,tolua.type(node) == "CCNode" and "CCNode" or "CCSprite")
+			local child = tolua.cast(node,"CCNode")
+			if child == nil then
+				cclog(tolua.type(node))
+			end
 			sp[oSd.sprite] = child
 			local isRoot = node == root
 			local imageView = oImageView(size,x,y,
@@ -448,16 +500,18 @@ local function oViewPanel()
 			local layer = 1
 			local maxSubLayer = 0
 			local lastLen = 0
-			local childrenSize = #children
-			for i = 1, childrenSize do
-				drawNode:drawSegment(oVec2(x+indent,y+nextY-size*0.5),oVec2(x+indent*2,y+nextY-size*0.5),0.5,ccColor4(0xffffffff))
-				children[i][oSd.parent] = sp
-				children[i][oSd.index] = i
-				local lenY, subLayer = visitSprite(children[i],x+indent*2,y+nextY,child.children:get(i))
-				nextY = nextY + lenY
-				if maxSubLayer < subLayer then maxSubLayer = subLayer end
-				if i == childrenSize then
-					lastLen = lenY
+			if not sp[oSd.fold] then
+				local childrenSize = #children
+				for i = 1, childrenSize do
+					drawNode:drawSegment(oVec2(x+indent,y+nextY-size*0.5),oVec2(x+indent*2,y+nextY-size*0.5),0.5,ccColor4(0xffffffff))
+					children[i][oSd.parent] = sp
+					children[i][oSd.index] = i
+					local lenY, subLayer = visitSprite(children[i],x+indent*2,y+nextY,child.children:get(i))
+					nextY = nextY + lenY
+					if maxSubLayer < subLayer then maxSubLayer = subLayer end
+					if i == childrenSize then
+						lastLen = lenY
+					end
 				end
 			end
 			if nextY < -size-indent then
@@ -519,6 +573,10 @@ local function oViewPanel()
 		end
 		
 		return outline
+	end
+	
+	panel.updateItemName = function(self,sp)
+		panel.items[sp]:setName(sp[oSd.name])
 	end
 
 	local selectedItem = nil
@@ -593,11 +651,14 @@ local function oViewPanel()
 			oEditor.keyIndex = 1
 			oEditor.settingPanel:clearSelection()
 			oEditor.settingPanel:update()
+			if not sp[oSd.parent] then
+				oEditor.settingPanel:setEditEnable(false)
+			end
 		end)
 
 	panel.updateSprite = function(self,data,model)
 		local function visitSprite(sp,node)
-			local child = tolua.cast(node,tolua.type(node) == "CCNode" and "CCNode" or "CCSprite")
+			local child = tolua.cast(node,"CCNode")
 			if sp[oSd.sprite] == oEditor.sprite then
 				oEditor.sprite = child
 			end
@@ -638,7 +699,7 @@ local function oViewPanel()
 			return false
 		end 
 	end
-	
+
 	panel.updateAnchor = function(self,node)
 		if outline then
 			outline:updateAnchor(node)
@@ -648,7 +709,15 @@ local function oViewPanel()
 	panel.clearSelection = function(self)
 		oEvent:send("ImageSelected",nil)
 	end
-	
+	panel.glow = function(self)
+		self:stopAllActions()
+		self:runAction(
+			CCSequence
+			{
+				oOpacity(0.15,0.2),
+				oOpacity(0.15,0.4)
+			})
+	end
 	panel.updateItems = function(self,look)
 		if look then
 			local oldSize = borderSize
@@ -666,6 +735,7 @@ local function oViewPanel()
 		menu.contentSize = borderSize
 		menu.positionY = borderSize.height
 		panel:updateImages(oEditor.data,oEditor.viewArea:getModel())
+		panel:glow()
 	end
 
 	return panel

@@ -2,6 +2,8 @@ local oButton = require("Script/oButton")
 local oFileChooser = require("Script/oFileChooser")
 local oSpriteChooser = require("Script/oSpriteChooser")
 local oEditChooser = require("Script/oEditChooser")
+local oLookChooser = require("Script/oLookChooser")
+local oBox = require("Script/oBox")
 
 local function removeAnimation(sp,index)
 	local aDefs = sp[oSd.animationDefs]
@@ -9,6 +11,20 @@ local function removeAnimation(sp,index)
 	local children = sp[oSd.children]
 	for i = 1,#children do
 		removeAnimation(children[i],index)
+	end
+end
+
+local function removeLook(sp,index)
+	local looks = sp[oSd.looks]
+	for i = 1,#looks do
+		if looks[i] == index then
+			table.remove(looks,i)
+			break
+		end
+	end
+	local children = sp[oSd.children]
+	for i = 1,#children do
+		removeLook(children[i],index)
 	end
 end
 
@@ -24,7 +40,7 @@ local function oEditMenu()
 				oEditor.settingPanel:clearSelection()
 				if oEditor.needSave then
 					menu:markEditButton(false)
-					oCache.Model:loadData(oEditor.model,oEditor.data)
+					oEditor.viewArea:getModel()
 					oCache.Model:save(oEditor.model,oEditor.model)
 					return
 				end
@@ -32,47 +48,68 @@ local function oEditMenu()
 					menu.items.Play:tapped()
 				end
 				if oEditor.state == oEditor.EDIT_START then
-					local chooser = oFileChooser()
-					chooser:show()
-					oEditor.scene:addChild(chooser)
+					oFileChooser()
 				elseif oEditor.state ~= oEditor.EDIT_NONE and oEditor.state ~= oEditor.EDIT_START then
-					local chooser = oEditChooser(true)
-					chooser:show()
-					oEditor.scene:addChild(chooser)
+					oEditChooser(true)
 				end
 			end),
 		Del = oButton("Del",16,50,50,95,winSize.height-35,
 			function()
-				local aNames = oEditor.data[oSd.animationNames]
-				local index = aNames[oEditor.animation]
-				
-				removeAnimation(oEditor.data,index+1)
-				for k,v in pairs(aNames) do
-					if v > index then
-						aNames[k] = v-1
-					end
+				if oEditor.state == oEditor.EDIT_ANIMATION then
+					oBox("Delete\n"..oEditor.animation,function()
+						local aNames = oEditor.data[oSd.animationNames]
+						local index = aNames[oEditor.animation]
+						
+						removeAnimation(oEditor.data,index+1)
+						for k,v in pairs(aNames) do
+							if v > index then
+								aNames[k] = v-1
+							end
+						end
+						aNames[oEditor.animation] = nil
+						oEditor.animation = ""
+						oEditor.dirty = true
+						oEditor.viewArea:getModel()
+						menu:markEditButton(true)
+						oEditChooser(false)
+					end)
+				elseif oEditor.state == oEditor.EDIT_LOOK then
+					oBox("Delete\n"..oEditor.look,function()
+						local lNames = oEditor.data[oSd.lookNames]
+						local index = lNames[oEditor.look]
+						removeLook(oEditor.data,index)
+						for k,v in pairs(lNames) do
+							if v > index then
+								lNames[k] = v-1
+							end
+						end
+						lNames[oEditor.look] = nil
+						oEditor.look = ""
+						oEditor.dirty = true
+						oEditor.viewArea:getModel()
+						menu:markEditButton(true)
+						oEditChooser(false)
+					end)
 				end
-				aNames[oEditor.animation] = nil
-				oEditor.animation = nil
-
-				oEditor.dirty = true
-				oEditor.viewArea:getModel()
-				menu:markEditButton(true)
-				
-				local chooser = oEditChooser(false)
-				chooser:show()
-				oEditor.scene:addChild(chooser)
 			end),
-		Fix = oButton("Fixed\nOff",16,50,50,35,winSize.height-95,
+		Fix = oButton("Fixed\nOn",16,50,50,35,winSize.height-95,
 			function(item)
 				oEditor.viewArea.isValueFixed = not oEditor.viewArea.isValueFixed
 				if oEditor.viewArea.isValueFixed then
-					item.label.text = "Fixed\nOn"
-					item.label.texture.antiAlias = false
+					item:setText("Fixed\nOn")
 				else
-					item.label.text = "Fixed\nOff"
-					item.label.texture.antiAlias = false
+					item:setText("Fixed\nOff")
 				end
+			end),
+		Size = oButton("Size\nOff",16,50,50,35,winSize.height-155,
+			function(item)
+				local visible = oEditor.viewArea:getModelSizeVisible()
+				if visible then
+					item:setText("Size\nOff")
+				else
+					item:setText("Size\nOn")
+				end
+				oEditor.viewArea:showModelSize(not visible)
 			end),
 		--[[
 		Move = oButton("Move",16,50,50,35,winSize.height-95),
@@ -164,35 +201,37 @@ local function oEditMenu()
 			function()
 				local pos = oEditor.controlBar:getPos()
 				if oEditor.sprite and pos == oEditor.currentFramePos and (oEditor.keyIndex ~= 2 or #oEditor.animationData == 2) then
-					local sprite = oEditor.sprite
-					local sp = oEditor.spriteData
-					local animationDef = oEditor.animationData
-					if animationDef then
-						local nextDef = animationDef[oEditor.keyIndex+1]
-						local prevDef = nil
-						if oEditor.keyIndex > 2 then
-							prevDef = animationDef[oEditor.keyIndex-1]
-						end
-						local curDef = animationDef[oEditor.keyIndex]
-						if prevDef then
-							if nextDef then
-								nextDef[oKd.duration] = 								nextDef[oKd.duration]+curDef[oKd.duration]
+					oBox("Delete\nFrame",function()
+						local sprite = oEditor.sprite
+						local sp = oEditor.spriteData
+						local animationDef = oEditor.animationData
+						if animationDef then
+							local nextDef = animationDef[oEditor.keyIndex+1]
+							local prevDef = nil
+							if oEditor.keyIndex > 2 then
+								prevDef = animationDef[oEditor.keyIndex-1]
 							end
-							table.remove(animationDef, oEditor.keyIndex)
-							oEditor.keyIndex = oEditor.keyIndex-1
-						else
-							local aDefs = sp[oSd.animationDefs]
-							local aNames = oEditor.data[oSd.animationNames]
-							aDefs[aNames[oEditor.animation]+1] = false
-							oEditor.animationData = false
+							local curDef = animationDef[oEditor.keyIndex]
+							if prevDef then
+								if nextDef then
+									nextDef[oKd.duration] = 								nextDef[oKd.duration]+curDef[oKd.duration]
+								end
+								table.remove(animationDef, oEditor.keyIndex)
+								oEditor.keyIndex = oEditor.keyIndex-1
+							else
+								local aDefs = sp[oSd.animationDefs]
+								local aNames = oEditor.data[oSd.animationNames]
+								aDefs[aNames[oEditor.animation]+1] = false
+								oEditor.animationData = false
+							end
+							oEditor.dirty = true
+							oEditor.viewArea:getModel()
+							oEditor.controlBar:updateCursors()
+							oEditor.settingPanel:clearSelection()
+							oEditor.settingPanel:update()
+							menu:markEditButton(true)
 						end
-						oEditor.dirty = true
-						oEditor.viewArea:getModel()
-						oEditor.controlBar:updateCursors()
-						oEditor.settingPanel:clearSelection()
-						oEditor.settingPanel:update()
-						menu:markEditButton(true)
-					end
+					end)
 				end
 			end),
 		Copy = oButton("Copy",16,50,50,155,95,
@@ -276,19 +315,25 @@ local function oEditMenu()
 		Clear = oButton("Clear",16,50,50,275,95,
 			function()
 				if oEditor.sprite and oEditor.animationData then
-					local sp = oEditor.spriteData
-					local aDefs = sp[oSd.animationDefs]
-					local aNames = oEditor.data[oSd.animationNames]
-					aDefs[aNames[oEditor.animation]+1] = false
-					oEditor.animationData = false
-					oEditor.keyIndex = 1
-					oEditor.dirty = true
-					oEditor.viewArea:getModel()
-					oEditor.controlBar:updateCursors()
-					oEditor.settingPanel:clearSelection()
-					oEditor.settingPanel:update()
-					menu:markEditButton(true)
+					oBox("Clear\nFrames",function()
+						local sp = oEditor.spriteData
+						local aDefs = sp[oSd.animationDefs]
+						local aNames = oEditor.data[oSd.animationNames]
+						aDefs[aNames[oEditor.animation]+1] = false
+						oEditor.animationData = false
+						oEditor.keyIndex = 1
+						oEditor.dirty = true
+						oEditor.viewArea:getModel()
+						oEditor.controlBar:updateCursors()
+						oEditor.settingPanel:clearSelection()
+						oEditor.settingPanel:update()
+						menu:markEditButton(true)
+					end)
 				end
+			end),
+		Look = oButton("Look",16,50,50,winSize.width-205,215,
+			function(item)
+				oLookChooser()
 			end),
 		Loop = oButton("Once",16,50,50,winSize.width-205,155,
 			function(item)
@@ -356,7 +401,31 @@ local function oEditMenu()
 			function()
 				oEditor.viewArea:zoomReset()
 			end),
-		
+
+		Batch = oButton("Batch\nUsed",16,54,50,35,35,
+			function(item)
+				if oEditor.data[oSd.isBatchUsed] then
+					item:setText("Batch\nUnused")
+					oEditor.data[oSd.isBatchUsed] = false
+				else
+					item:setText("Batch\nUsed")
+					oEditor.data[oSd.isBatchUsed] = true
+				end
+				oCache.Model:loadData(oEditor.model,oEditor.data)
+				menu:markEditButton(true)
+			end),
+		Face = oButton("Face\nRight",16,54,50,97,35,
+			function(item)
+				if oEditor.data[oSd.isFaceRight] then
+					item:setText("Face\nLeft")
+					oEditor.data[oSd.isFaceRight] = false
+				else
+					item:setText("Face\nRight")
+					oEditor.data[oSd.isFaceRight] = true
+				end
+				oCache.Model:loadData(oEditor.model,oEditor.data)
+				menu:markEditButton(true)
+			end),
 		Add = oButton("Add",16,50,50,winSize.width-205,95,
 			function(item)
 				-- item = CCNode
@@ -384,33 +453,33 @@ local function oEditMenu()
 							{},--children
 						}
 						table.insert(children,sp)
-						oCache.Model:loadData(oEditor.model, oEditor.data)
-						local model = oModel(oEditor.model)
-						model.loop = oEditor.loop
-						oEditor.viewArea:setModel(model)
+						oEditor.dirty = true
+						local model = oEditor.viewArea:getModel()
 						oEditor.viewPanel:clearSelection()
 						oEditor.viewPanel:updateImages(oEditor.data,model)
 						oEditor.viewPanel:selectItem(sp)
 						menu:markEditButton(true)
 					end
-					chooser:show()
-					oEditor.scene:addChild(chooser)
 				end
 			end),
 		Remove = oButton("Delete",16,50,50,winSize.width-205,35,
 			function(item)
 				-- item = CCNode
 				if oEditor.spriteData and  oEditor.spriteData[oSd.parent] then
-					local parent = oEditor.spriteData[oSd.parent]
-					local index = oEditor.spriteData[oSd.index]
-					table.remove(parent[oSd.children],index)
-					oCache.Model:loadData(oEditor.model, oEditor.data)
-					local model = oModel(oEditor.model)
-					model.loop = oEditor.loop
-					oEditor.viewArea:setModel(model)
-					oEditor.viewPanel:clearSelection()
-					oEditor.viewPanel:updateImages(oEditor.data,model)
-					menu:markEditButton(true)
+					local name = oEditor.spriteData[oSd.name]
+					if name == "" then
+						name = oEditor.spriteData[oSd.clip] == "" and "Node" or "Sprite"
+					end
+					oBox("Delete\n"..name,function()
+						local parent = oEditor.spriteData[oSd.parent]
+						local index = oEditor.spriteData[oSd.index]
+						table.remove(parent[oSd.children],index)
+						oEditor.dirty = true
+						local model = oEditor.viewArea:getModel()
+						oEditor.viewPanel:clearSelection()
+						oEditor.viewPanel:updateImages(oEditor.data,model)
+						menu:markEditButton(true)
+					end)
 				end
 			end),
 		Up = oButton("Up",16,50,50,winSize.width-205,215,
@@ -425,10 +494,8 @@ oEditor.spriteData[oSd.index]
 						local prev = children[index-1]
 						children[index-1] = sp
 						children[index] = prev
-						oCache.Model:loadData(oEditor.model, oEditor.data)
-						local model = oModel(oEditor.model)
-						model.loop = oEditor.loop
-						oEditor.viewArea:setModel(model)
+						oEditor.dirty = true
+						local model = oEditor.viewArea:getModel()
 						oEditor.viewPanel:clearSelection()
 						oEditor.viewPanel:updateImages(oEditor.data,model)
 						oEditor.viewPanel:selectItem(sp)
@@ -447,10 +514,8 @@ oEditor.spriteData[oSd.index]
 						local next = children[index+1]
 						children[index+1] = sp
 						children[index] = next
-						oCache.Model:loadData(oEditor.model, oEditor.data)
-						local model = oModel(oEditor.model)
-						model.loop = oEditor.loop
-						oEditor.viewArea:setModel(model)
+						oEditor.dirty = true
+						local model = oEditor.viewArea:getModel()
 						oEditor.viewPanel:clearSelection()
 						oEditor.viewPanel:updateImages(oEditor.data,model)
 						oEditor.viewPanel:selectItem(sp)
@@ -461,22 +526,78 @@ oEditor.spriteData[oSd.index]
 		
 		Change = oButton("Rep",16,50,50,winSize.width-205,275,
 			function(item)
-				if oEditor.spriteData then
+				if oEditor.spriteData and oEditor.spriteData[oSd.parent] then
 					local sp = oEditor.spriteData
 					local chooser = oSpriteChooser()
 					chooser.selected = function(self, name)
 						sp[oSd.clip] = name
-						oCache.Model:loadData(oEditor.model, oEditor.data)
-						local model = oModel(oEditor.model)
-						model.loop = oEditor.loop
-						oEditor.viewArea:setModel(model)
+						oEditor.dirty = true
+						local model = oEditor.viewArea:getModel()
 						oEditor.viewPanel:clearSelection()
 						oEditor.viewPanel:updateImages(oEditor.data,model)
 						oEditor.viewPanel:selectItem(sp)
 						menu:markEditButton(true)
 					end
-					chooser:show()
-					oEditor.scene:addChild(chooser)
+				end
+			end),
+		
+		Move = oButton("Move",16,50,50,winSize.width-205,335,
+			function(item)
+				if oEditor.spriteData and oEditor.spriteData[oSd.parent] then
+					if item.isMoving then
+						item.color = ccColor3(0x00ffff)
+						item:setText("Move")
+						item.isMoving = false
+						if item.sp ~= oEditor.spriteData then
+							local sp = oEditor.spriteData
+							local parent = item.sp[oSd.parent]
+							table.remove(parent[oSd.children],item.sp[oSd.index])
+							table.insert(sp[oSd.children],item.sp)
+							item.sp[oSd.parent] = sp
+							item.sp[oSd.index] = #sp[oSd.children]
+							oEditor.dirty = true
+							local model = oEditor.viewArea:getModel()
+							oEditor.viewPanel:clearSelection()
+							oEditor.viewPanel:updateImages(oEditor.data,model)
+							oEditor.viewPanel:selectItem(item.sp)
+							menu:markEditButton(true)
+						end
+					else
+						item.sp = oEditor.spriteData
+						item.color = ccColor3(0xff88cc)
+						item:setText("Mov\ning")
+						item.isMoving = true
+					end
+				end
+			end),
+		Visible = oButton("Hide",16,50,50,winSize.width-205,35,
+			function(item)
+				-- item = CCNode
+				if oEditor.sprite and oEditor.spriteData then
+					local sp = oEditor.spriteData
+					local lname = oEditor.data[oSd.lookNames]
+					local index = lname[oEditor.look]
+					local looks = sp[oSd.looks]
+					if not looks then
+						looks = {}
+						sp[oSd.looks] = looks
+					end
+					if oEditor.sprite.visible then
+						table.insert(looks,index)
+						oEditor.sprite.visible = false
+						item:setText("Show")
+					else
+						for i = 1,#looks do
+							if looks[i] == index then
+								table.remove(looks,i)
+								break
+							end
+						end
+						oEditor.sprite.visible = true
+						item:setText("Hide")
+					end
+					oEditor.dirty = true
+					menu:markEditButton(true)
 				end
 			end),
 	}
@@ -504,6 +625,7 @@ oEditor.spriteData[oSd.index]
 		local group = {
 			items.Del,
 			items.Fix,
+			items.Size,
 			items.New,
 			items.Delete,
 			items.Copy,
@@ -516,35 +638,69 @@ oEditor.spriteData[oSd.index]
 			items.Up,
 			items.Down,
 			items.Change,
+			items.Visible,
+			items.Look,
+			items.Batch,
+			items.Face,
+			items.Move,
 		}
 		for i = 1,#group do
 			group[i].visible = false
 		end
+		if items.Move.isMoving then
+			items.Move.color = ccColor3(0x00ffff)
+			items.Move:setText("Move")
+			items.Move.isMoving = false
+		end
 	end
-	
+
 	menu.toStart = function(self)
 		if oEditor.state == oEditor.EDIT_START then
 			return
 		end
+		items.Origin.visible = false
+		items.Zoom.visible = false
 		hideItems()
 		oEditor.state = oEditor.EDIT_START
 		oEditor.settingPanel:updateItems()
 		oEditor.controlBar.visible = false
+		oEditor.settingPanel.touchEnabled = false
+		oEditor.viewPanel.touchEnabled = false
+		oEditor.viewArea.touchEnabled = false
 	end
 
 	menu.toSprite = function(self)
+		local function updateBF()
+			items.Batch:setText(oEditor.data[oSd.isBatchUsed] and "Batch\nUsed" or "Batch\nUnused")
+			items.Face:setText(oEditor.data[oSd.isFaceRight] and "Face\nRight" or "Face\nLeft")
+		end
 		if oEditor.state == oEditor.EDIT_SPRITE then
+			updateBF()
 			return
 		end
 		hideItems()
 		local group = {
 			items.Fix,
-			items.Change,
-			items.Up,
-			items.Down,
-			items.Add,
+			items.Batch,
+			items.Face,
 			items.Remove,
+			items.Add,
+			items.Down,
+			items.Up,
+			items.Change,
+			items.Move,
 		}
+		if oEditor.state == oEditor.EDIT_ANIMATION then
+			table.remove(group,1)
+			items.Fix.visible = true
+		end
+		if oEditor.state == oEditor.EDIT_START then
+			table.insert(group,items.Zoom)
+			table.insert(group,items.Origin)
+			oEditor.settingPanel.touchEnabled = true
+			oEditor.viewPanel.touchEnabled = true
+			oEditor.viewArea.touchEnabled = true
+		end
 		for i = 1,#group do
 			group[i].visible = true
 			group[i].opacity = 0
@@ -560,10 +716,14 @@ oEditor.spriteData[oSd.index]
 			oEditor.settingPanel.visible = true
 		end
 		oEditor.state = oEditor.EDIT_SPRITE
+		updateBF()
 		local model = oEditor.viewArea:getModel()
+		model.look = ""
 		model:reset()
+		local sp = oEditor.spriteData
 		oEditor.settingPanel:updateItems()
-		oEditor.settingPanel:update()
+		oEditor.viewPanel:selectItem(sp)
+		oEditor.viewPanel:glow()
 		oEditor.controlBar.visible = false
 	end
 
@@ -587,8 +747,13 @@ oEditor.spriteData[oSd.index]
 			items.Paste,
 			items.Clear,
 			items.Play,
-			items.Loop
+			items.Loop,
+			items.Look,
 		}
+		if oEditor.state == oEditor.EDIT_SPRITE then
+			table.remove(group,2)
+			items.Fix.visible = true
+		end
 		for i = 1,#group do
 			group[i].visible = true
 			group[i].opacity = 0
@@ -605,8 +770,8 @@ oEditor.spriteData[oSd.index]
 		end
 		oEditor.state = oEditor.EDIT_ANIMATION
 		oEditor.settingPanel:updateItems()
-		oEditor.settingPanel:clearSelection()
-		oEditor.settingPanel:update()
+		oEditor.viewPanel:selectItem(oEditor.spriteData)
+		oEditor.viewPanel:glow()
 		oEditor.controlBar:updateCursors()
 		oEditor.controlBar:setTime(0)
 		oEditor.controlBar.visible = true
@@ -621,14 +786,47 @@ oEditor.spriteData[oSd.index]
 
 	menu.toLook = function(self)
 		if oEditor.state == oEditor.EDIT_LOOK then
+			if oEditor.sprite then
+				items.Visible:setText(oEditor.sprite.visible and "Hide" or "Show")
+			else
+				items.Visible:setText("Visible")
+			end
 			return
 		end
 		hideItems()
+		local group = {
+			items.Del,
+			items.Visible,
+		}
+		for i = 1,#group do
+			group[i].visible = true
+			group[i].opacity = 0
+			group[i]:runAction(
+				CCSequence(
+				{
+					CCDelay(i*0.1),
+					oOpacity(0.3,1)
+				}))
+		end
+		items.Size.visible = false
+		items.Visible:setText("Visible")
+		menu.selectListener.enabled = true
 		oEditor.state = oEditor.EDIT_LOOK
 		oEditor.settingPanel.visible = false
 		oEditor.controlBar.visible = false
 		oEditor.viewPanel:updateItems(true)
+		oEditor.viewPanel:selectItem(oEditor.spriteData)
 	end
+	
+	menu.selectListener = oListener("ImageSelected",
+		function(args)
+			if not args then
+				return
+			end
+			items.Visible:setText(args[2].visible and "Hide" or "Show")
+		end)
+	menu.selectListener.enabled = false
+
 	menu.loadListener = oListener("EditorLoaded",
 		function()
 			menu:toStart()

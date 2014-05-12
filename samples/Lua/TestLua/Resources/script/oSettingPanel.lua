@@ -29,7 +29,7 @@ local function oSettingPanel()
 	local panel = CCLayer()
 	panel.anchorPoint = oVec2.zero
 	panel.contentSize = borderSize
-	panel.opacity = 0.3
+	panel.opacity = 0.4
 	panel.touchEnabled = true
 	panel.position = oVec2(winSize.width-170,70)
 
@@ -40,7 +40,7 @@ local function oSettingPanel()
 		oVec2(borderSize.width,0),
 		oVec2(borderSize.width,borderSize.height),
 		oVec2(0,borderSize.height)
-	},ccColor4(0x88000000),0,ccColor4(0))
+	},ccColor4(0x88000000))
 	border:addChild(
 		oLine(
 		{
@@ -59,7 +59,7 @@ local function oSettingPanel()
 		oVec2(borderSize.width-2,0),
 		oVec2(borderSize.width-2,borderSize.height-2),
 		oVec2(0,borderSize.height-2)
-	},ccColor4(0xffffffff),0,ccColor4(0x00000000))
+	},ccColor4(0xffffffff))
 	stencil.position = oVec2(1,1)
 
 	local view = CCClipNode(stencil)
@@ -69,6 +69,7 @@ local function oSettingPanel()
 	menu.contentSize = borderSize
 	menu.anchorPoint = oVec2(0,1)
 	menu.positionY = borderSize.height
+	menu.visible = false
 
 	local function updateReset(deltaTime)
 		local children = menu.children
@@ -280,7 +281,7 @@ local function oSettingPanel()
 		return menuItem
 	end
 
-	local opacity = oOpacity(0.5,0.3,oEase.InExpo)
+	local opacity = oOpacity(0.5,0.4,oEase.InExpo)
 	panel.show = function(self)
 		if not opacity.done then
 			self:stopAction(opacity)
@@ -387,6 +388,10 @@ local function oSettingPanel()
 	local anchorNextItem = nil
 	local anchorXY = false
 	
+	local sizeItem = nil
+	local sizeNextItem = nil
+	local sizeXY = false
+	
 	local isEditingName = false
 
 	local skipSelection = false
@@ -406,6 +411,7 @@ local function oSettingPanel()
 				local text = item.label.text
 				if text ~= oEditor.spriteData[oSd.name] then
 					oEditor.spriteData[oSd.name] = text
+					oEditor.viewPanel:updateItemName(oEditor.spriteData)
 					oEditor.editMenu:markEditButton(true)
 				end
 			end),
@@ -676,10 +682,7 @@ local function oSettingPanel()
 			function()
 				oEditor.viewArea:stopEditEase()
 			end),--15
-	}
-	panel.items = keyItems
-	
-	keyItems.AnchorX = oSettingItem("AnchorX :",0,keyItems.EaseP.positionY,
+		AnchorX = oSettingItem("AnchorX :",0,0,
 			function(item)
 				if anchorItem and anchorItem ~= item then
 					if anchorXY then
@@ -692,7 +695,7 @@ local function oSettingPanel()
 						anchorXY = true
 						anchorItem:setHighlighted(true)
 					end
-					posNextItem = anchorItem
+					anchorNextItem = anchorItem
 				end
 				anchorItem = item
 				if anchorXY then
@@ -704,7 +707,7 @@ local function oSettingPanel()
 			function(item)
 				if anchorItem == item then
 					if anchorXY then
-						posNextItem:setHighlighted(false)
+						anchorNextItem:setHighlighted(false)
 						oEditor.viewArea:stopEditAnchorXY()
 						anchorXY = false
 						anchorItem = nil
@@ -713,8 +716,8 @@ local function oSettingPanel()
 						oEditor.viewArea:stopEditAnchorX()
 					end
 				end
-			end)
-	keyItems.AnchorY = oSettingItem("AnchorY :",0,keyItems.EaseS.positionY,
+			end),
+		AnchorY = oSettingItem("AnchorY :",0,0,
 			function(item)
 				if anchorItem and anchorItem ~= item then
 					if anchorXY then
@@ -727,7 +730,7 @@ local function oSettingPanel()
 						anchorXY = true
 						anchorItem:setHighlighted(true)
 					end
-					posNextItem = anchorItem
+					anchorNextItem = anchorItem
 				end
 				anchorItem = item
 				if anchorXY then
@@ -739,7 +742,7 @@ local function oSettingPanel()
 			function(item)
 				if anchorItem == item then
 					if anchorXY then
-						posNextItem:setHighlighted(false)
+						anchorNextItem:setHighlighted(false)
 						oEditor.viewArea:stopEditAnchorXY()
 						anchorXY = false
 						anchorItem = nil
@@ -748,9 +751,95 @@ local function oSettingPanel()
 						oEditor.viewArea:stopEditAnchorY()
 					end
 				end
-			end)
+			end),
+		Width = oSettingItem("Width :",0,0,
+			function(item)
+				if sizeItem and sizeItem ~= item then
+					if sizeXY then
+						oEditor.viewArea:stopEditSizeXY()
+						sizeXY = false
+						sizeItem:setHighlighted(false)
+						return
+					else
+						oEditor.viewArea:stopEditSizeY()
+						sizeXY = true
+						sizeItem:setHighlighted(true)
+					end
+					sizeNextItem = sizeItem
+				end
+				sizeItem = item
+				if sizeXY then
+					oEditor.viewArea:editSizeXY()
+				else
+					oEditor.viewArea:editSizeX()
+				end
+			end,
+			function(item)
+				if sizeItem == item then
+					if sizeXY then
+						sizeNextItem:setHighlighted(false)
+						oEditor.viewArea:stopEditSizeXY()
+						sizeXY = false
+						sizeItem = nil
+						skipSelection = true
+					else
+						oEditor.viewArea:stopEditSizeX()
+					end
+				end
+			end),
+		Height = oSettingItem("Height :",0,0,
+			function(item)
+				if sizeItem and sizeItem ~= item then
+					if sizeXY then
+						oEditor.viewArea:stopEditSizeXY()
+						sizeXY = false
+						sizeItem:setHighlighted(false)
+						return
+					else
+						oEditor.viewArea:stopEditSizeX()
+						sizeXY = true
+						sizeItem:setHighlighted(true)
+					end
+					sizeNextItem = sizeItem
+				end
+				sizeItem = item
+				if sizeXY then
+					oEditor.viewArea:editSizeXY()
+				else
+					oEditor.viewArea:editSizeY()
+				end
+			end,
+			function(item)
+				if sizeItem == item then
+					if sizeXY then
+						sizeNextItem:setHighlighted(false)
+						oEditor.viewArea:stopEditSizeXY()
+						sizeXY = false
+						sizeItem = nil
+						skipSelection = true
+					else
+						oEditor.viewArea:stopEditSizeY()
+					end
+				end
+			end),
+	}
+	panel.items = keyItems
+	local group = {}
+	for _,item in pairs(keyItems) do
+		table.insert(group,item)
+	end
+	local function hideItems()
+		for i = 1,#group do
+			group[i].visible = false
+		end
+	end
+
 	keyItems.AnchorX.visible = false
 	keyItems.AnchorY.visible = false
+	keyItems.Width.visible = false
+	keyItems.Height.visible = false
+	keyItems.AnchorX.positionX = keyItems.EaseP.positionX
+	keyItems.AnchorY.positionY = keyItems.EaseS.positionY
 
 	local keyCount = 0
 	for _,item in pairs(keyItems) do
@@ -762,10 +851,94 @@ local function oSettingPanel()
 		for _,item in pairs(keyItems) do
 			item:setEnabled(enable)
 		end
+		if not enable and oEditor.spriteData == oEditor.data then
+			keyItems.Width:setEnabled(true)
+			keyItems.Height:setEnabled(true)
+		end
+	end
+	
+	local function updateSpriteItems()
+		initValues()
+		hideItems()
+		local items =
+		{
+			keyItems.Name,
+			keyItems.AnchorX,
+			keyItems.AnchorY,
+			keyItems.PosX,
+			keyItems.PosY,
+			keyItems.ScaleX,
+			keyItems.ScaleY,
+			keyItems.Rotation,
+			keyItems.Opacity,
+			keyItems.SkewX,
+			keyItems.SkewY
+		}
+		local posY = genPosY()
+		for i = 1,#items do
+			items[i].visible = true
+			items[i].positionY = posY()
+		end
+		viewHeight = 30*(#items)+20
+		viewWidth = borderSize.width
+		moveY = viewHeight-borderSize.height
+		moveX = borderSize.width-viewWidth
 	end
 
+	local isShowingRoot = false
+	panel.selectListener = oListener("ImageSelected",
+		function(args)
+			if oEditor.state ~= oEditor.EDIT_LOOK and args then
+				local sp = args[1]
+				if sp[oSd.parent] then
+					oEditor.editMenu.items.Size.visible = false
+				else
+					if oEditor.editMenu.items.Size.visible then
+						oEditor.editMenu.items.Size.visible = false
+					else
+						oEditor.editMenu.items.Size.visible = true
+					end
+				end
+			end
+			if oEditor.state == oEditor.EDIT_SPRITE then
+				if args then
+					local sp = args[1]
+					if sp[oSd.parent] and isShowingRoot then
+						isShowingRoot = false
+						updateSpriteItems()
+					end
+					if not sp[oSd.parent] then
+						if not isShowingRoot then
+							isShowingRoot = true
+							initValues()
+							hideItems()
+							local items =
+							{
+								keyItems.Width,
+								keyItems.Height,
+							}
+							local posY = genPosY()
+							for i = 1,#items do
+								items[i].visible = true
+								items[i].positionY = posY()
+							end
+							viewHeight = borderSize.height
+							viewWidth = borderSize.width
+							moveY = 0
+							moveX = 0
+						end
+						keyItems.Width:setValue(sp[oSd.size].width)
+						keyItems.Height:setValue(sp[oSd.size].width)
+					end
+				end
+			end
+		end)
+	
 	panel.updateItems = function(self)
-		initValues()
+		isShowingRoot = false
+		if oEditor.state ~= oEditor.EDIT_START then
+			menu.visible = true
+		end
 		if oEditor.state == oEditor.EDIT_ANIMATION then
 			panel.position = oVec2(winSize.width-170,70)
 			local borderH = 200*(winSize.height-90)/510
@@ -775,16 +948,8 @@ local function oSettingPanel()
 			panel.contentSize = borderSize
 			menu.contentSize = borderSize
 			menu.positionY = borderSize.height
-			keyItems.Time.visible = true
-			keyItems.EaseP.visible = true
-			keyItems.EaseS.visible = true
-			keyItems.EaseR.visible = true
-			keyItems.EaseK.visible = true
-			keyItems.EaseO.visible = true
-			keyItems.Visible.visible = true
-			keyItems.Name.visible = false
-			keyItems.AnchorX.visible = false
-			keyItems.AnchorY.visible = false
+			initValues()
+			hideItems()
 			local items = 
 			{
 				keyItems.Time,
@@ -805,9 +970,13 @@ local function oSettingPanel()
 			}
 			local posY = genPosY()
 			for i = 1,#items do
+				items[i].visible = true
 				items[i].positionY = posY()
 			end
-			viewHeight = 30*(keyCount-3)+20
+			viewHeight = 30*(#items)+20
+			viewWidth = borderSize.width
+			moveY = viewHeight-borderSize.height
+			moveX = borderSize.width-viewWidth
 		else
 			panel.position = oVec2(winSize.width-170,10)
 			local borderH = 200*(winSize.height-90)/510
@@ -818,39 +987,15 @@ local function oSettingPanel()
 			panel.contentSize = borderSize
 			menu.contentSize = borderSize
 			menu.positionY = borderSize.height
-			keyItems.Time.visible = false
-			keyItems.EaseP.visible = false
-			keyItems.EaseS.visible = false
-			keyItems.EaseR.visible = false
-			keyItems.EaseK.visible = false
-			keyItems.EaseO.visible = false
-			keyItems.Visible.visible = false
-			keyItems.Name.visible = true
-			keyItems.AnchorX.visible = true
-			keyItems.AnchorY.visible = true
-			local items =
-			{
-				keyItems.Name,
-				keyItems.AnchorX,
-				keyItems.AnchorY,
-				keyItems.PosX,
-				keyItems.PosY,
-				keyItems.ScaleX,
-				keyItems.ScaleY,
-				keyItems.Rotation,
-				keyItems.Opacity,
-				keyItems.SkewX,
-				keyItems.SkewY
-			}
-			local posY = genPosY()
-			for i = 1,#items do
-				items[i].positionY = posY()
-			end
-			viewHeight = 30*(keyCount-7)+20
+			updateSpriteItems()
 		end
-		viewWidth = borderSize.width
-		moveY = viewHeight-borderSize.height
-		moveX = borderSize.width-viewWidth
+		panel:stopAllActions()
+		panel:runAction(
+			CCSequence
+			{
+				oOpacity(0.15,0.2),
+				oOpacity(0.15,0.4)
+			})
 	end
 	
 	panel.updateValues = function(self,index)
@@ -916,8 +1061,6 @@ local function oSettingPanel()
 			oEditor.keyIndex = index
 		end)
 
-	panel:updateItems()
-
 	local selectedItem = nil
 	panel.listener = oListener("SettingSelected",
 		function(menuItem)
@@ -936,6 +1079,9 @@ local function oSettingPanel()
 				end
 				if anchorItem and not anchorXY then
 					anchorItem = nil
+				end
+				if sizeItem and not sizeXY then
+					sizeItem = nil
 				end
 				return
 			end
@@ -957,6 +1103,10 @@ local function oSettingPanel()
 			if (selectedItem == keyItems.AnchorX or selectedItem == keyItems.AnchorY) and menuItem ~= keyItems.AnchorX and menuItem ~= keyItems.AnchorY then
 				skipSelection = false
 				anchorItem = nil
+			end
+			if (selectedItem == keyItems.Width or selectedItem == keyItems.Height) and menuItem ~= keyItems.Width and menuItem ~= keyItems.Height then
+				skipSelection = false
+				sizeItem = nil
 			end
 			if skipSelection then
 				skipSelection = false

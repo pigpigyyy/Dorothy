@@ -45,6 +45,9 @@ void oModelCache::startElement( void *ctx, const char *name, const char **atts )
 				oCase::UseBatch:
 					_item->_isBatchUsed = (atoi(atts[++i]) == 1);
 					break;
+				oCase::Size:
+					oHelper::getPosFromStr(atts[++i], _item->_size.width, _item->_size.height);
+					break;
 				}
 			}
 		}

@@ -351,7 +351,7 @@ void CCDrawNode::drawPolygon(CCPoint* verts, unsigned int count, const ccColor4B
 	
 	ccV2F_C4F_T2F_Triangle *triangles = (ccV2F_C4F_T2F_Triangle *)(m_pBuffer + m_nBufferCount);
 	ccV2F_C4F_T2F_Triangle *cursor = triangles;
-	
+
 	float inset = (outline ? 0.0f : 0.5f);
 	for(unsigned int i = 0; i < count-2; i++)
     {

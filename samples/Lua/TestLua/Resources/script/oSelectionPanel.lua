@@ -38,7 +38,7 @@ local function oSelectionPanel(borderSize)
 		oVec2(halfBW-1,-halfBH+1),
 		oVec2(halfBW-1,halfBH-1),
 		oVec2(-halfBW+1,halfBH-1)
-	},ccColor4(),0,ccColor4(0))
+	},ccColor4())
 
 	local view = CCClipNode(stencil)
 	border:addChild(view)

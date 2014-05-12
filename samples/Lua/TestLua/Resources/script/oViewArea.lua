@@ -35,6 +35,29 @@ local function oViewArea()
 	view.outline = CCNode()
 	crossNode:addChild(view.outline)
 
+	local frame = oLine({},ccColor4(0xff00ffff))
+	frame.visible = false
+	crossNode:addChild(frame,-1)
+	view.setModelSize = function(self,size)
+		--size=CCSize
+		local hw = size.width*0.5
+		local hh = size.height*0.5
+		frame:set(
+		{
+			oVec2(-hw,-hh),
+			oVec2(hw,-hh),
+			oVec2(hw,hh),
+			oVec2(-hw,hh),
+			oVec2(-hw,-hh)
+		})
+	end
+	view.showModelSize = function(self,show)
+		frame.visible = show
+	end
+	view.getModelSizeVisible = function(self)
+		return frame.visible
+	end
+
 	--0: scale = 2.0
 	--1: scale = 0.5
 	--2: scale = 1.0
@@ -57,7 +80,10 @@ local function oViewArea()
 	local EDIT_ANCHORX = 14
 	local EDIT_ANCHORY = 15
 	local EDIT_ANCHORXY = 16
-
+	local EDIT_SIZEX = 17
+	local EDIT_SIZEY = 18
+	local EDIT_SIZEXY = 19
+	
 	local editState = EDIT_NONE
 	view:registerTouchHandler(
 		function(eventType, touches)
@@ -79,6 +105,8 @@ local function oViewArea()
 						view:updateSkew(touches[1].delta)
 					elseif editState == EDIT_ANCHORX or editState == EDIT_ANCHORY or editState == EDIT_ANCHORXY then
 						view:updateAnchor(touches[1].delta)
+					elseif editState == EDIT_SIZEX or editState == EDIT_SIZEY or editState == EDIT_SIZEXY then
+						view:updateSize(touches[1].delta)
 					end
 					return
 				end
@@ -133,12 +161,9 @@ local function oViewArea()
 		end
 	end
 	view.getModel = function(self)
-		if self._model and oEditor.dirty then
+		if oEditor.dirty then
 			oEditor.dirty = false
-			local isBatchUsed = oEditor.data[oSd.isBatchUsed]
-			oEditor.data[oSd.isBatchUsed] = false
 			oCache.Model:loadData(oEditor.model,oEditor.data)
-			oEditor.data[oSd.isBatchUsed] = isBatchUsed
 			local model = oModel(oEditor.model)
 			model.look = oEditor.look
 			model.loop = oEditor.loop
@@ -223,7 +248,7 @@ local function oViewArea()
 		end)
 	view:addChild(renderTarget)
 ]]
-	view.isValueFixed = false
+	view.isValueFixed = true
 	local valueChanged = false
 	local function updateModel()
 		if valueChanged then
@@ -298,8 +323,8 @@ local function oViewArea()
 				if res < -1 then res = -1 end
 				local s = (oldPos.x*(newPos.y-rotCenter.y)-oldPos.y*(newPos.x-rotCenter.x)+(newPos.x*rotCenter.y-newPos.y*rotCenter.x))
 				local delta = (s>0 and -1 or 1)*math.acos(res)*180/math.pi/crossNode.scaleX
-				totalRot = totalRot + delta
 				if view.isValueFixed then
+					totalRot = totalRot + delta
 					if totalRot < 1 and totalRot > -1 then
 						delta = 0
 					else
@@ -446,9 +471,9 @@ local function oViewArea()
 			local y2 = delta.y
 			x2 = x2/crossNode.scaleX
 			y2 = y2/crossNode.scaleX
-			totalX = totalX + x2
-			totalY = totalY + y2
 			if view.isValueFixed then
+				totalX = totalX + x2
+				totalY = totalY + y2
 				if totalX < 1 and totalX > -1 then
 					x2 = 0
 				else
@@ -604,9 +629,9 @@ local function oViewArea()
 			local f = 2/crossNode.scaleX/winSize.height
 			local x1 = x3*f
 			local y1 = y3*f
-			totalScaleX = totalScaleX + x1
-			totalScaleY = totalScaleY + y1
 			if view.isValueFixed then
+				totalScaleX = totalScaleX + x1
+				totalScaleY = totalScaleY + y1
 				if totalScaleX < 0.1 and totalScaleX > -0.1 then
 					x1 = 0
 				else
@@ -661,7 +686,7 @@ local function oViewArea()
 		oVec2(24,0),
 		oVec2(24,144),
 		oVec2(0,144)
-	},ccColor4(0xff00ffff),0,ccColor4(0x00000000))
+	},ccColor4(0xff00ffff))
 	yBar.position = oVec2(6,6)
 	opacityEditor:addChild(yBar)
 	opacityEditor.position = oVec2(winSize.width-223,winSize.height*0.5-48)
@@ -692,8 +717,8 @@ local function oViewArea()
 		if delta.y ~= 0 then
 			local f = 4/crossNode.scaleX/winSize.height
 			local deltaOp = delta.y*f
-			totalOpacity = totalOpacity + deltaOp
 			if view.isValueFixed then
+				totalOpacity = totalOpacity + deltaOp
 				if totalOpacity < 0.1 and totalOpacity > -0.1 then
 					deltaOp = 0
 				else
@@ -836,9 +861,9 @@ local function oViewArea()
 			local f = 200/crossNode.scaleX/winSize.height
 			local x1 = delta.x*f
 			local y1 = delta.y*f
-			totalSkewX = totalSkewX + x1
-			totalSkewY = totalSkewY + y1
 			if view.isValueFixed then
+				totalSkewX = totalSkewX + x1
+				totalSkewY = totalSkewY + y1
 				if totalSkewX < 1 and totalSkewX > -1 then
 					x1 = 0
 				else
@@ -881,7 +906,7 @@ local function oViewArea()
 	local visibleEditor = CCMenu()
 	visibleEditor.contentSize = CCSize(50,50)
 	visibleEditor.anchorPoint = oVec2.zero
-	visibleEditor.position = oVec2(winSize.width-230,190)
+	visibleEditor.position = oVec2(winSize.width-230,250)
 	local vButton = oButton("Show",16,50,50,0,0,
 		function(item)
 			editTarget.visible = not editTarget.visible
@@ -1153,9 +1178,9 @@ local function oViewArea()
 			local y2 = delta.y
 			x2 = x2/crossNode.scaleX
 			y2 = y2/crossNode.scaleX
-			totalAnchorX = totalAnchorX + x2
-			totalAnchorY = totalAnchorY + y2
 			if view.isValueFixed then
+				totalAnchorX = totalAnchorX + x2
+				totalAnchorY = totalAnchorY + y2
 				if totalAnchorX < 1 and totalAnchorX > -1 then
 					x2 = 0
 				else
@@ -1191,8 +1216,151 @@ local function oViewArea()
 			valueChanged = true
 		end
 	end
+
+	-- size
+	local sizeEditor = CCNode()
+	local ysize = oLine(
+	{
+		oVec2(0,150),
+		oVec2(-20,150),
+		oVec2(0,150),
+		oVec2(20,150),
+		oVec2(0,150),
+		oVec2.zero
+	},ccColor4())
+	ysize.visible = false
+	local xsize = oLine(
+	{
+		oVec2.zero,
+		oVec2(150,0),
+		oVec2(150,20),
+		oVec2(150,0),
+		oVec2(150,-20),
+		oVec2(150,0)
+	},ccColor4())
+	xsize.visible = false
+	sizeEditor:addChild(xsize)
+	sizeEditor:addChild(ysize)
+	sizeEditor.cascadeOpacity = false
+	sizeEditor.cascadeColor = false
+	crossNode:addChild(sizeEditor)
+	local sizeVisible = false
+	local function showSize()
+		sizeVisible = oEditor.viewArea:getModelSizeVisible()
+		oEditor.viewArea:showModelSize(true)
+	end
+	
+	local totalSizeX = 0
+	local totalSizeY = 0
+
+	view.editSizeX = function(self)
+		if editState == EDIT_NONE then
+			showSize()
+			totalSizeX = 0
+			xsize.visible = true
+			editState = EDIT_SIZEX
+		end
+	end
+
+	view.stopEditSizeX = function(self)
+		if editState == EDIT_SIZEX then
+			updateModel()
+			xsize.visible = false
+			oEditor.viewArea:showModelSize(sizeVisible)
+			editState = EDIT_NONE
+		end
+	end
+
+	view.editSizeY = function(self)
+		if editState == EDIT_NONE then
+			showSize()
+			totalSizeY = 0
+			ysize.visible = true
+			editState = EDIT_SIZEY
+		end
+	end
+
+	view.stopEditSizeY = function(self)
+		if editState == EDIT_SIZEY then
+			updateModel()
+			ysize.visible = false
+			oEditor.viewArea:showModelSize(sizeVisible)
+			editState = EDIT_NONE
+		end
+	end
+
+	view.editSizeXY = function(self)
+		if editState == EDIT_NONE then
+			showSize()
+			totalSizeX = 0
+			totalSizeY = 0
+			xsize.visible = true
+			ysize.visible = true
+			editState = EDIT_SIZEXY
+		end
+	end
+
+	view.stopEditSizeXY = function(self)
+		if editState == EDIT_SIZEXY then
+			updateModel()
+			xsize.visible = false
+			ysize.visible = false
+			oEditor.viewArea:showModelSize(sizeVisible)
+			editState = EDIT_NONE
+		end
+	end
+
+	view.updateSize = function(self, delta)
+		if delta ~= oVec2.zero then
+			--editTarget=CCNode
+			if editState == EDIT_SIZEX then
+				delta.y = 0
+			elseif editState == EDIT_SIZEY then
+				delta.x = 0
+			end
+			local x2 = delta.x
+			local y2 = delta.y
+			x2 = x2/crossNode.scaleX
+			y2 = y2/crossNode.scaleX
+			if view.isValueFixed then
+				totalSizeX = totalSizeX + x2
+				totalSizeY = totalSizeY + y2
+				if totalSizeX < 1 and totalSizeX > -1 then
+					x2 = 0
+				else
+					x2 = totalSizeX > 0 and math.floor(totalSizeX) or math.ceil(totalSizeX)
+					totalSizeX = 0
+				end
+				if totalSizeY < 1 and totalSizeY > -1 then
+					y2 = 0
+				else
+					y2 = totalSizeY > 0 and math.floor(totalSizeY) or math.ceil(totalSizeY)
+					totalSizeY = 0
+				end
+			end
+
+			local size = oEditor.spriteData[oSd.size]
+			size.width = size.width+x2
+			size.height = size.height+y2
+			if size.width < 0 then size.width = 0 end
+			if size.height < 0 then size.height = 0 end
+			if view.isValueFixed then
+				size.width = math.floor(size.width+0.5)
+				size.height = math.floor(size.height+0.5)
+			end
+			oEditor.settingPanel.items.Width:setValue(size.width)
+			oEditor.settingPanel.items.Height:setValue(size.height)
+			
+			oEditor.viewArea:setModelSize(size)
+			oEditor.editMenu:markEditButton(true)
+			valueChanged = true
+		end
+	end
 	
 	view.stopEdit = function(self)
+		view:stopEditSizeX()
+		view:stopEditSizeY()
+		view:stopEditSizeXY()
 		view:stopEditAnchorX()
 		view:stopEditAnchorY()
 		view:stopEditAnchorXY()

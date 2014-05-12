@@ -8,6 +8,9 @@
 #include "Dorothy/misc/oContent.h"
 #include "Dorothy/misc/oHelper.h"
 
+#define s(x) oHelper::convert(x,2,buf,32)
+#define sp(x) oHelper::convert(x,3,buf,32)
+
 NS_DOROTHY_BEGIN
 
 CCSprite* oSpriteDef::toSprite()
@@ -47,27 +50,32 @@ opacity(1.0f)
 
 string oSpriteDef::toXml()
 {
+	char buf[32];
 	ostringstream stream;
 	stream << '<' << char(oModelXml::Sprite);
 	if (x != 0.0f || y != 0.0f)
 	{
-		stream << ' ' << char(oModelXml::Position) << "=\"" << x << ',' << y << '\"';
+		stream << ' ' << char(oModelXml::Position) << "=\"" << s(x);
+		stream << ',' << s(y) << '\"';
 	}
 	if (rotation != 0.0f)
 	{
-		stream << ' ' << char(oModelXml::Rotation) << "=\"" << rotation << '\"';
+		stream << ' ' << char(oModelXml::Rotation) << "=\"" << s(rotation) << '\"';
 	}
 	if (anchorX != 0.5f || anchorY != 0.5f)
 	{
-		stream << ' ' << char(oModelXml::Key) << "=\"" << anchorX << ',' << anchorY << '\"';
+		stream << ' ' << char(oModelXml::Key) << "=\"" << sp(anchorX);
+		stream << ',' << sp(anchorY) << '\"';
 	}
 	if (scaleX != 1.0f || scaleY != 1.0f)
 	{
-		stream << ' ' << char(oModelXml::Scale) << "=\"" << scaleX << ',' << scaleY << '\"';
+		stream << ' ' << char(oModelXml::Scale) << "=\"" << s(scaleX);
+		stream << ',' << s(scaleY) << '\"';
 	}
 	if (skewX != 0.0f || skewY != 0.0f)
 	{
-		stream << ' ' << char(oModelXml::Skew) << "=\"" << skewX << ',' << skewY << '\"';
+		stream << ' ' << char(oModelXml::Skew) << "=\"" << s(skewX);
+		stream << ',' << s(skewY) << '\"';
 	}
 	if (!name.empty())
 	{
@@ -139,6 +147,7 @@ _isBatchUsed(true)
 oModelDef::oModelDef(
 	bool isFaceRight,
 	bool isBatchUsed,
+	const CCSize& size,
 	const string& clipFile,
 	CCTexture2D* texture,
 	oSpriteDef* root,
@@ -149,6 +158,7 @@ _texture(texture),
 _clip(clipFile),
 _isFaceRight(isFaceRight),
 _isBatchUsed(isBatchUsed),
+_size(size),
 _keys(keys),
 _animationIndex(animationIndex),
 _lookIndex(lookIndex),
@@ -196,6 +206,7 @@ const oVec2& oModelDef::getKeyPoint( uint32 index ) const
 
 string oModelDef::toXml()
 {
+	char buf[32];
 	ostringstream stream;
 	stream << '<' << char(oModelXml::Dorothy) << ' '
 		<< char(oModelXml::File) << "=\"" << oString::getFileName(_clip) << "\" ";
@@ -203,9 +214,14 @@ string oModelDef::toXml()
 	{
 		stream << char(oModelXml::FaceRight) << "=\"1\" ";
 	}
-	if (_isBatchUsed)
+	if (!_isBatchUsed)
 	{
-		stream << char(oModelXml::UseBatch) << "=\"1\" ";
+		stream << char(oModelXml::UseBatch) << "=\"0\" ";
+	}
+	if (_size != CCSize::zero)
+	{
+		stream << char(oModelXml::Size) << "=\"" << s(_size.width);
+		stream << ',' << s(_size.height) << "\" ";
 	}
 	stream << '>' << _root->toXml();
 	for (const oIndexMap::value_type& item: _animationIndex)
@@ -301,6 +317,11 @@ oModelDef* oModelDef::create()
 bool oModelDef::isBatchUsed() const
 {
 	return _isBatchUsed;
+}
+
+const CCSize& oModelDef::getSize() const
+{
+	return _size;
 }
 
 NS_DOROTHY_END

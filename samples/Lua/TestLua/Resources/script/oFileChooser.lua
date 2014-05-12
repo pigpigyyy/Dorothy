@@ -5,7 +5,8 @@ local oSelectionPanel = require("Script/oSelectionPanel")
 local function oFileChooser()
 	local winSize = CCDirector.winSize
 	local itemWidth = 120
-	local borderSize = CCSize((itemWidth+10)*5+10,370)
+	local itemNum = 3
+	local borderSize = CCSize((itemWidth+10)*itemNum+10,winSize.height-200)
 	local panel = oSelectionPanel(borderSize)
 	local menu = panel.menu
 	local border = panel.border
@@ -199,7 +200,8 @@ local function oFileChooser()
 				oEditor.controlBar:clearCursors()
 				oEditor.model = oEditor.output..item.editTarget..".model"
 				oEditor.data = oCache.Model:getData(oEditor.model)
-				oEditor.animation = nil
+				oEditor.look = ""
+				oEditor.animation = ""
 				oEditor.animationData = nil
 				oEditor.keyIndex = nil
 				oEditor.currentFramePos = nil
@@ -208,12 +210,7 @@ local function oFileChooser()
 				oEditor.dirty = false
 				oEditor.needSave = false
 
-				if oEditor.data then
-					local isBatchUsed = oEditor.data[oSd.isBatchUsed]
-					oEditor.data[oSd.isBatchUsed] = false
-					oCache.Model:loadData(oEditor.model, oEditor.data)
-					oEditor.data[oSd.isBatchUsed] = isBatchUsed
-				else
+				if not oEditor.data then
 					oEditor.data =
 					{
 						0.5,--anchorX
@@ -238,13 +235,13 @@ local function oFileChooser()
 						{},--animationNames
 						{}--lookNames
 					}
-					oCache.Model:loadData(oEditor.model, oEditor.data)
+					oEditor.editMenu:markEditButton(true)
 				end
-				local model = oModel(oEditor.model)
-				model.loop = oEditor.loop
-				oEditor.viewArea:setModel(model)
+				oEditor.dirty = true
+				local model = oEditor.viewArea:getModel()
 				oEditor.viewPanel:clearSelection()
 				oEditor.viewPanel:updateImages(oEditor.data,model)
+				oEditor.viewArea:setModelSize(oEditor.data[oSd.size])
 				oEditor.editMenu:toSprite()
 			end
 		end)
@@ -277,16 +274,30 @@ local function oFileChooser()
 		end
 		local n = 0
 		local y = 0
+		local xStart = winSize.width*0.5-halfBW -- left
+		local yStart = winSize.height*0.5+halfBH -- top
+
+		local title = CCLabelTTF("Choose  Model","Arial",24)
+		title.texture.antiAlias = false
+		title.color = ccColor3(0x00ffff)
+		title.anchorPoint = oVec2(0.5,1)
+		y = yStart-20
+		title.position = oVec2(winSize.width*0.5,y)
+		menu:addChild(title)
+		title.opacity = 0
+		title:runAction(oOpacity(0.3,0.5))
+		yStart = y-title.contentSize.height-20
+
 		for i = 1, #dirs do
 			if dirs[i] ~= "." and dirs[i] ~= ".." then
 				n = n+1
-				y = winSize.height*0.5+halfBH-35-math.floor((n-1)/5)*60
+				y = yStart-35-math.floor((n-1)/itemNum)*60
 				local name = #dirs[i] > 10 and dirs[i]:sub(1,7).."..." or dirs[i]
 				local button = oButton(
 				name,
 				17,
 				itemWidth,50,
-				winSize.width*0.5-halfBW+itemWidth*0.5+10+((n-1)%5)*(itemWidth+10), y,
+				winSize.width*0.5-halfBW+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
 				function(item)
 					cancelButton.label.text = "Edit"
 					cancelButton.label.texture.antiAlias = false
@@ -299,7 +310,9 @@ local function oFileChooser()
 						if fileDict[item.file] then
 							updateButton.targetFile = item.file
 							addClip(item.file..".clip")
-							updateButton.visible = true
+							if #oContent:getDirEntries(oEditor.input..item.file,false) > 0 then
+								updateButton.visible = true
+							end
 						else
 							addImages(item.file)
 						end
@@ -331,6 +344,8 @@ local function oFileChooser()
 		panel:reset(viewWidth,viewHeight,paddingX,paddingY)
 	end
 
+	panel:show()
+	oEditor.scene:addChild(panel)
 	return panel
 end
 

@@ -12,7 +12,7 @@ local function oButton(text, fontSize, width, height, x, y,tapped)
 			oVec2(width,0),
 			oVec2(width,height),
 			oVec2(0,height)
-		},ccColor4(0x88000000),0,ccColor4(0x00000000))
+		},ccColor4(0x88000000))
 	end
 	node:addChild(drawNode)
 
@@ -53,9 +53,9 @@ local function oButton(text, fontSize, width, height, x, y,tapped)
 		menuItem.label = label
 	end
 
-	face.opacity = 0.3
+	face.opacity = 0.4
 	local scale = oScale(0.3,1.0,1.0,oEase.OutBack)
-	local fade = oOpacity(0.3,0.3,oEase.InExpo)
+	local fade = oOpacity(0.3,0.4,oEase.InExpo)
 	menuItem:registerTapHandler(
 		function(eventType, item)
 			--item = CCMenuItem
@@ -82,6 +82,12 @@ local function oButton(text, fontSize, width, height, x, y,tapped)
 	menuItem.tapped = tapped
 	menuItem.position = oVec2(x,y)
 	menuItem.color = ccColor3(0x00ffff)
+	
+	menuItem.setText = function(self,text)
+		self.label.text = text
+		self.label.texture.antiAlias = false
+	end
+
 	return menuItem
 end
 

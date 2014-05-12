@@ -33,6 +33,18 @@ string oString::getFileName(const string& filename)
 	}
 	return filename.substr(pos+1);
 }
+char* oHelper::convert(float value, int precision, char* buf, int buflen)
+{
+	snprintf(buf, buflen, "%f", value);
+	int len = strlen(buf);
+	char* pos = buf + len;
+	pos -= (6 - precision);
+	*pos = '\0';
+	pos--;
+	while (*pos == '0') *pos-- = '\0';
+	if (*pos == '.') *pos = '\0';
+	return buf;
+}
 
 const string oFileExt::Clip = ".clip";
 const string oFileExt::Model = ".model";

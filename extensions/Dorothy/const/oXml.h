@@ -61,6 +61,7 @@ struct oModelXml
 			File = 'A',
 			FaceRight = 'B',
 			UseBatch = 'C',
+			Size = 'D',
 			//</a>
 
 			Sprite = 'B',//1

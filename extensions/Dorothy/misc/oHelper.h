@@ -13,6 +13,7 @@ struct oString
 struct oHelper
 {
 	static void getPosFromStr(const char* str, float& x, float& y);
+	static char* convert(float value, int precision, char* buf, int len);
 };
 
 struct oFileExt

@@ -11,6 +11,11 @@ void CCDrawNode_drawPolygon(
 	int count,
 	const ccColor4B& fillColor, float borderWidth,
 	const ccColor4B& borderColor);
+void CCDrawNode_drawPolygon(
+	CCDrawNode* self,
+	oVec2* verts,
+	int count,
+	const ccColor4B& fillColor);
 
 void oModel_addHandler(oModel* model, const string& name, int nHandler);
 void oModel_removeHandler(oModel* model, const string& name, int nHandler);

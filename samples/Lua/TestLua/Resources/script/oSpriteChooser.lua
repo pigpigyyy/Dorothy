@@ -114,6 +114,8 @@ local function oSpriteChooser()
 		panel.sprites = nil
 	end
 
+	panel:show()
+	oEditor.scene:addChild(panel)
 	return panel
 end
 

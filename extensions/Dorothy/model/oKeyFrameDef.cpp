@@ -3,6 +3,9 @@
 #include "Dorothy/model/oKeyFrame.h"
 #include "Dorothy/model/oSequence.h"
 #include "Dorothy/const/oXml.h"
+#include "Dorothy/misc/oHelper.h"
+
+#define s(x) oHelper::convert(x,2,buf,32)
 
 NS_DOROTHY_BEGIN
 
@@ -26,6 +29,7 @@ skewY(0.0f)
 
 string oKeyFrameDef::toXml()
 {
+	char buf[32];
 	ostringstream stream;
 	stream << '<' << char(oModelXml::KeyFrame);
 	if (duration != 0.0f)
@@ -34,43 +38,46 @@ string oKeyFrameDef::toXml()
 	}
 	if (x != 0.0f || y != 0.0f)
 	{
-		stream << ' ' << char(oModelXml::Position) << "=\"" << x << ',' << y << '\"';
+		stream << ' ' << char(oModelXml::Position) << "=\"" << s(x);
+		stream << ',' << s(y) << '\"';
 	}
 	if (rotation != 0.0f)
 	{
-		stream << ' ' << char(oModelXml::Rotation) << "=\"" << rotation << '\"';
+		stream << ' ' << char(oModelXml::Rotation) << "=\"" << s(rotation) << '\"';
 	}
 	if (scaleX != 1.0f || scaleY != 1.0f)
 	{
-		stream << ' ' << char(oModelXml::Scale) << "=\"" << scaleX << ',' << scaleY << '\"';
+		stream << ' ' << char(oModelXml::Scale) << "=\"" << s(scaleX);
+		stream << ',' << s(scaleY) << '\"';
 	}
 	if (opacity != 1.0f)
 	{
-		stream << ' ' << char(oModelXml::Opacity) << "=\"" << opacity << '\"';
+		stream << ' ' << char(oModelXml::Opacity) << "=\"" << s(opacity) << '\"';
 	}
 	if (skewX != 0.0f || skewY != 0.0f)
 	{
-		stream << ' ' << char(oModelXml::Skew) << "=\"" << skewX << ',' << skewY << '\"';
+		stream << ' ' << char(oModelXml::Skew) << "=\"" << s(skewX);
+		stream << ',' << s(skewY) << '\"';
 	}
 	if (easePos != 0)
 	{
-		stream << ' ' << char(oModelXml::EasePos) << "=\"" << easePos << '\"';
+		stream << ' ' << char(oModelXml::EasePos) << "=\"" << (int)easePos << '\"';
 	}
 	if (easeScale != 0)
 	{
-		stream << ' ' << char(oModelXml::EaseScale) << "=\"" << easeScale << '\"';
+		stream << ' ' << char(oModelXml::EaseScale) << "=\"" << (int)easeScale << '\"';
 	}
 	if (easeRotation != 0)
 	{
-		stream << ' ' << char(oModelXml::EaseRotate) << "=\"" << easeRotation << '\"';
+		stream << ' ' << char(oModelXml::EaseRotate) << "=\"" << (int)easeRotation << '\"';
 	}
 	if (easeSkew != 0)
 	{
-		stream << ' ' << char(oModelXml::EaseSkew) << "=\"" << easeSkew << '\"';
+		stream << ' ' << char(oModelXml::EaseSkew) << "=\"" << (int)easeSkew << '\"';
 	}
 	if (easeOpacity != 0)
 	{
-		stream << ' ' << char(oModelXml::EaseOpacity) << "=\"" << easeOpacity << '\"';
+		stream << ' ' << char(oModelXml::EaseOpacity) << "=\"" << (int)easeOpacity << '\"';
 	}
 	stream << "/>";
 	return stream.str();

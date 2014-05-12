@@ -6,7 +6,7 @@ local function oControlBar()
 	local controlBar = CCLayer()
 	controlBar.anchorPoint = oVec2.zero
 	controlBar.contentSize = CCSize(winSize.width,60)
-	controlBar.opacity = 0.3
+	controlBar.opacity = 0.4
 	controlBar.touchEnabled = true
 	
 	-- border
@@ -30,7 +30,7 @@ local function oControlBar()
 		oVec2(barLength,0),
 		oVec2(barLength,6),
 		oVec2(0,6)
-	},ccColor4(0xffffffff),0,ccColor4(0x00000000))
+	},ccColor4(0xffffffff))
 	bar.setPos = function(self,pos)
 		pos = math.floor(pos+0.5)
 		self._pos = pos
@@ -107,7 +107,7 @@ local function oControlBar()
 			oVec2(x+1,-18),
 			oVec2(x+1,6),
 			oVec2(x-1,6)
-		},ccColor4(0xff00a2d8),0,ccColor4(0x00000000))
+		},ccColor4(0xff00a2d8))
 	end
 	controlBar.clearCursors = function(self)
 		cursorNode:clear()
@@ -152,7 +152,7 @@ local function oControlBar()
 		oVec2(winSize.width-20,0),
 		oVec2(winSize.width-20,50),
 		oVec2(0,50)
-	},ccColor4(0xffffffff),0,ccColor4(0x00000000))
+	},ccColor4(0xffffffff))
 	stencil.position = oVec2(10,10)
 	local clipNode = CCClipNode(stencil)
 	clipNode:addChild(controlNode)
@@ -160,7 +160,7 @@ local function oControlBar()
 	-- build controlBar
 	controlBar:addChild(border)
 	controlBar:addChild(clipNode)
-	local fade = oOpacity(0.5,0.3,oEase.InExpo)
+	local fade = oOpacity(0.5,0.4,oEase.InExpo)
 	local lastPos = 0
 	local offset = 0
 	local moveBar = false
@@ -225,9 +225,9 @@ local function oControlBar()
 				end
 				if jumpPos then
 					jumpPos = false
+					oEditor.settingPanel:clearSelection()
 					local model = oEditor.viewArea:getModel()
 					if model then
-						oEvent:send("SettingSelected",nil)
 						local pos = (locLength-offset)*60/barLength-1
 						if pos < 0 then pos = 0 end
 						if not model.doing then

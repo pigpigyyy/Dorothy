@@ -138,7 +138,7 @@ TOLUA_API void tolua_error(lua_State* L, const char* msg, tolua_Error* err)
 }
 
 /* the equivalent of lua_is* for usertable */
-static  int lua_isusertable(lua_State* L, int lo, const char* type)
+static int lua_isusertable(lua_State* L, int lo, const char* type)
 {
 	int r = 0;
 	if (lo < 0) lo = lua_gettop(L) + lo + 1;
@@ -168,10 +168,6 @@ int push_table_instance(lua_State* L, int lo)
 			lua_pop(L, 1);
 			return 0;
 		}
-	}
-	else
-	{
-		return 0;
 	}
 	return 0;
 };
@@ -355,8 +351,7 @@ TOLUA_API int tolua_isbooleanarray
 			lua_pushnumber(L, i);
 			lua_gettable(L, lo);
 			if (!(lua_isnil(L, -1) || lua_isboolean(L, -1)) &&
-				!(def && lua_isnil(L, -1))
-				)
+				!(def && lua_isnil(L, -1)))
 			{
 				err->index = lo;
 				err->array = 1;
@@ -382,8 +377,7 @@ TOLUA_API int tolua_isnumberarray
 			lua_pushnumber(L, i);
 			lua_gettable(L, lo);
 			if (!lua_isnumber(L, -1) &&
-				!(def && lua_isnil(L, -1))
-				)
+				!(def && lua_isnil(L, -1)))
 			{
 				err->index = lo;
 				err->array = 1;
@@ -436,8 +430,7 @@ TOLUA_API int tolua_istablearray
 			lua_pushnumber(L, i);
 			lua_gettable(L, lo);
 			if (!lua_istable(L, -1) &&
-				!(def && lua_isnil(L, -1))
-				)
+				!(def && lua_isnil(L, -1)))
 			{
 				err->index = lo;
 				err->array = 1;
@@ -463,8 +456,7 @@ TOLUA_API int tolua_isuserdataarray
 			lua_pushnumber(L, i);
 			lua_gettable(L, lo);
 			if (!(lua_isnil(L, -1) || lua_isuserdata(L, -1)) &&
-				!(def && lua_isnil(L, -1))
-				)
+				!(def && lua_isnil(L, -1)))
 			{
 				err->index = lo;
 				err->array = 1;
@@ -490,8 +482,7 @@ TOLUA_API int tolua_isusertypearray
 			lua_pushnumber(L, i);
 			lua_gettable(L, lo);
 			if (!(lua_isnil(L, -1) || lua_isuserdata(L, -1)) &&
-				!(def && lua_isnil(L, -1))
-				)
+				!(def && lua_isnil(L, -1)))
 			{
 				err->index = lo;
 				err->type = type;
@@ -503,131 +494,3 @@ TOLUA_API int tolua_isusertypearray
 	}
 	return 1;
 }
-
-#if 0
-int tolua_isbooleanfield
-(lua_State* L, int lo, int i, int def, tolua_Error* err)
-{
-	lua_pushnumber(L,i);
-	lua_gettable(L,lo);
-	if (!(lua_isnil(L,-1) || lua_isboolean(L,-1)) &&
-		!(def && lua_isnil(L,-1))
-		)
-	{
-		err->index = lo;
-		err->array = 1;
-		err->type = "boolean";
-		return 0;
-	}
-	lua_pop(L,1);
-	return 1;
-}
-
-int tolua_isnumberfield
-(lua_State* L, int lo, int i, int def, tolua_Error* err)
-{
-	lua_pushnumber(L,i);
-	lua_gettable(L,lo);
-	if (!lua_isnumber(L,-1) &&
-		!(def && lua_isnil(L,-1))
-		)
-	{
-		err->index = lo;
-		err->array = 1;
-		err->type = "number";
-		return 0;
-	}
-	lua_pop(L,1);
-	return 1;
-}
-
-int tolua_isstringfield
-(lua_State* L, int lo, int i, int def, tolua_Error* err)
-{
-	lua_pushnumber(L,i);
-	lua_gettable(L,lo);
-	if (!(lua_isnil(L,-1) || lua_isstring(L,-1)) &&
-		!(def && lua_isnil(L,-1))
-		)
-	{
-		err->index = lo;
-		err->array = 1;
-		err->type = "string";
-		return 0;
-	}
-	lua_pop(L,1);
-	return 1;
-}
-
-int tolua_istablefield
-(lua_State* L, int lo, int i, int def, tolua_Error* err)
-{
-	lua_pushnumber(L,i+1);
-	lua_gettable(L,lo);
-	if (! lua_istable(L,-1) &&
-		!(def && lua_isnil(L,-1))
-		)
-	{
-		err->index = lo;
-		err->array = 1;
-		err->type = "table";
-		return 0;
-	}
-	lua_pop(L,1);
-}
-
-int tolua_isusertablefield
-(lua_State* L, int lo, const char* type, int i, int def, tolua_Error* err)
-{
-	lua_pushnumber(L,i);
-	lua_gettable(L,lo);
-	if (! lua_isusertable(L,-1,type) &&
-		!(def && lua_isnil(L,-1))
-		)
-	{
-		err->index = lo;
-		err->array = 1;
-		err->type = type;
-		return 0;
-	}
-	lua_pop(L,1);
-	return 1;
-}
-
-int tolua_isuserdatafield
-(lua_State* L, int lo, int i, int def, tolua_Error* err)
-{
-	lua_pushnumber(L,i);
-	lua_gettable(L,lo);
-	if (!(lua_isnil(L,-1) || lua_isuserdata(L,-1)) &&
-		!(def && lua_isnil(L,-1))
-		)
-	{
-		err->index = lo;
-		err->array = 1;
-		err->type = "userdata";
-		return 0;
-	}
-	lua_pop(L,1);
-	return 1;
-}
-
-int tolua_isusertypefield
-(lua_State* L, int lo, const char* type, int i, int def, tolua_Error* err)
-{
-	lua_pushnumber(L,i);
-	lua_gettable(L,lo);
-	if (!(lua_isnil(L,-1) || tolua_istype(L,-1,type)) &&
-		!(def && lua_isnil(L,-1))
-		)
-	{
-		err->index = lo;
-		err->type = type;
-		err->array = 1;
-		return 0;
-	}
-	lua_pop(L,1);
-	return 1;
-}
-
-#endif
