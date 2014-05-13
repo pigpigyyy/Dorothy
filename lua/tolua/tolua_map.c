@@ -120,6 +120,16 @@ static int tolua_bnd_type(lua_State* L)
 	return 1;
 }
 
+static int fast_is(lua_State *L, int self_idx, int name_idx)
+{
+	int result;
+	lua_rawgeti(L, self_idx, MT_SUPER);// tb
+	lua_pushvalue(L, name_idx);// tb name
+	lua_rawget(L, -2);// tb[name], tb flag
+	result = lua_toboolean(L, -1);
+	lua_pop(L, 2);
+	return result;
+}
 /* Type casting
 */
 static int tolua_bnd_cast(lua_State* L)
@@ -131,7 +141,7 @@ static int tolua_bnd_cast(lua_State* L)
 		lua_getmetatable(L, 1);// mt
 		if (tolua_fast_is(L, -1, "CCObject"))
 		{
-			if (tolua_fast_is(L, -1, target_name))
+			if (fast_is(L, -1, 2))
 			{
 				lua_pop(L, 1);// empty
 				lua_pushvalue(L, 1);// ud
@@ -140,10 +150,11 @@ static int tolua_bnd_cast(lua_State* L)
 			{
 				const char* realName = tolua_classname(ptr);
 				luaL_getmetatable(L, realName);// mt realmt
-				if (tolua_fast_is(L, -1, target_name))
+				if (fast_is(L, -1, 2))
 				{
 					lua_pop(L, 2);// empty
-					luaL_getmetatable(L, target_name);// targetmt
+					lua_pushvalue(L, 2);// target_name
+					lua_rawget(L, LUA_REGISTRYINDEX);// targetmt
 					lua_setmetatable(L, 1);// empty
 					lua_pushvalue(L, 1);// ud
 				}
