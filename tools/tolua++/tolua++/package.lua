@@ -147,8 +147,8 @@ function classPackage:preamble ()
 		if ((not _global_classes[v]) or _global_classes[v]:check_public_access()) and v ~= "tolua_table" and v ~= "tolua_function" then
 			local t = _userltype[v]
 			output(' tolua_usertype(tolua_S,"',t,'");')
-			if flags.t then
-				output(' Mtolua_typeid(',v,',"',t,'");')
+			if flags.t and _ccobject_types[v] then
+				output(' Mtolua_typeid(tolua_S,',v,',"',t,'");')
 			end
 		end
 	 end)

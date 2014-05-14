@@ -31,14 +31,14 @@ static int tolua_newmetatable(lua_State* L, const char* name)
 {
 	int r = luaL_newmetatable(L, name);
 #ifdef LUA_VERSION_NUM /* only lua 5.1 */
-	if (r)
+	if(r)
 	{
 		lua_pushvalue(L, -1);
 		lua_pushstring(L, name);
 		lua_rawset(L, LUA_REGISTRYINDEX);// reg[mt] = type_name
 	}
 #endif
-	if (r)
+	if(r)
 	{
 		tolua_classevents(L);// set meta events
 	}
@@ -53,14 +53,14 @@ static void mapsuper(lua_State* L, const char* name, const char* base)
 {
 	luaL_getmetatable(L, name);// mt
 	lua_rawgeti(L, -1, MT_SUPER);// mt super
-	if (lua_isnil(L, -1))
+	if(lua_isnil(L, -1))
 	{
 		lua_pop(L, 1);// mt
 		lua_newtable(L);// mt tb
 		lua_pushvalue(L, -1);// mt tb tb
 		lua_rawseti(L, -3, MT_SUPER);// mt[MT_SUPER] = tb, mt tb
 	}
-	if (base && *base)
+	if(base && *base)
 	{
 		lua_pushstring(L, base);// mt tb base
 		lua_pushboolean(L, 1);// mt tb base true
@@ -70,11 +70,11 @@ static void mapsuper(lua_State* L, const char* name, const char* base)
 		luaL_getmetatable(L, base);// mt tb basemt
 		lua_rawgeti(L, -1, MT_SUPER);// mt tb basemt basetb
 
-		if (lua_istable(L, -1))
+		if(lua_istable(L, -1))
 		{
 			/* traverse basetb */
 			lua_pushnil(L);// mt tb basemt basetb nil
-			while (lua_next(L, -2) != 0)// mt tb basemt basetb k v
+			while(lua_next(L, -2) != 0)// mt tb basemt basetb k v
 			{
 				/* mt tb basemt basetb k v */
 				lua_pushvalue(L, -2);    // mt tb basemt basetb k v k
@@ -94,14 +94,14 @@ static void mapinheritance(lua_State* L, const char* name, const char* base)
 {
 	/* set metatable inheritance */
 	luaL_getmetatable(L, name);// mt
-	if (base && *base)
+	if(base && *base)
 	{
 		luaL_getmetatable(L, base);// mt basemt
 	}
 	else
 	{
 		/* already has a mt, we don't overwrite it */
-		if (lua_getmetatable(L, -1))// mt mtmt
+		if(lua_getmetatable(L, -1))// mt mtmt
 		{
 			lua_pop(L, 2);// empty
 			return;
@@ -135,27 +135,24 @@ static int fast_is(lua_State *L, int self_idx, int name_idx)
 static int tolua_bnd_cast(lua_State* L)
 {
 	void* ptr = tolua_tousertype(L, 1, 0);
-	const char* target_name = tolua_tostring(L, 2, NULL);
-	if (ptr && target_name)
+	if(ptr && lua_isstring(L, 2))
 	{
 		lua_getmetatable(L, 1);// mt
-		if (tolua_fast_is(L, -1, "CCObject"))
+		if(tolua_isccobject(L, -1))
 		{
-			if (fast_is(L, -1, 2))
+			if(fast_is(L, -1, 2))
 			{
 				lua_pop(L, 1);// empty
 				lua_pushvalue(L, 1);// ud
 			}
 			else
 			{
-				const char* realName = tolua_classname(ptr);
-				luaL_getmetatable(L, realName);// mt realmt
-				if (fast_is(L, -1, 2))
+				tolua_classname(L, ptr);// mt name
+				lua_rawget(L, LUA_REGISTRYINDEX);// reg[name], mt realmt
+				if(fast_is(L, -1, 2))
 				{
-					lua_pop(L, 2);// empty
-					lua_pushvalue(L, 2);// target_name
-					lua_rawget(L, LUA_REGISTRYINDEX);// targetmt
-					lua_setmetatable(L, 1);// empty
+					lua_setmetatable(L, 1);// mt
+					lua_pop(L, 1);// empty
 					lua_pushvalue(L, 1);// ud
 				}
 				else
@@ -189,12 +186,12 @@ static int tolua_bnd_inherit(lua_State* L)
 static int tolua_bnd_setpeer(lua_State* L)
 {
 	/* stack: userdata, table */
-	if (!lua_isuserdata(L, -2))
+	if(!lua_isuserdata(L, -2))
 	{
 		lua_pushstring(L, "Invalid argument #1 to setpeer: userdata expected.");
 		lua_error(L);
 	}
-	if (lua_isnil(L, -1))
+	if(lua_isnil(L, -1))
 	{
 		lua_pop(L, 1);
 		lua_pushvalue(L, TOLUA_NOPEER);
@@ -207,7 +204,7 @@ static int tolua_bnd_getpeer(lua_State* L)
 {
 	/* stack: userdata */
 	lua_getfenv(L, -1);
-	if (lua_rawequal(L, -1, TOLUA_NOPEER))
+	if(lua_rawequal(L, -1, TOLUA_NOPEER))
 	{
 		lua_pop(L, 1);
 		lua_pushnil(L);
@@ -221,7 +218,7 @@ TOLUA_API void tolua_open(lua_State* L)
 	int top = lua_gettop(L);
 	lua_pushstring(L, "tolua_opened");
 	lua_rawget(L, LUA_REGISTRYINDEX);
-	if (!lua_isboolean(L, -1))
+	if(!lua_isboolean(L, -1))
 	{
 		lua_pushstring(L, "tolua_opened");
 		lua_pushboolean(L, 1);
@@ -273,8 +270,8 @@ TOLUA_API void tolua_open(lua_State* L)
 */
 TOLUA_API void* tolua_copy(lua_State* L, void* value, unsigned int size)
 {
-	void* clone = (void*)malloc(size);
-	if (clone)
+	void* clone =(void*)malloc(size);
+	if(clone)
 		memcpy(clone, value, size);
 	else
 		tolua_error(L, "insuficient memory", NULL);
@@ -300,11 +297,11 @@ TOLUA_API void tolua_usertype(lua_State* L, const char* type)
 }
 
 /* Begin module
-	* It pushes the module (or class) table on the stack
+	* It pushes the module(or class) table on the stack
 	*/
 TOLUA_API void tolua_beginmodule(lua_State* L, const char* name)
 {
-	if (name)
+	if(name)
 	{
 		lua_pushstring(L, name);
 		lua_rawget(L, -2);
@@ -313,7 +310,7 @@ TOLUA_API void tolua_beginmodule(lua_State* L, const char* name)
 }
 
 /* End module
-	* It pops the module (or class) from the stack
+	* It pops the module(or class) from the stack
 	*/
 TOLUA_API void tolua_endmodule(lua_State* L)
 {
@@ -325,13 +322,13 @@ TOLUA_API void tolua_endmodule(lua_State* L)
 	*/
 TOLUA_API void tolua_module(lua_State* L, const char* name, int hasvar)
 {
-	if (name)
+	if(name)
 	{
 		/* tolua module */
 		lua_pushstring(L, name);
 		lua_rawget(L, -2);
 		/* check if module already exists */
-		if (!lua_istable(L, -1))
+		if(!lua_istable(L, -1))
 		{
 			lua_pop(L, 1);
 			lua_newtable(L);
@@ -346,15 +343,15 @@ TOLUA_API void tolua_module(lua_State* L, const char* name, int hasvar)
 		/* global table */
 		lua_pushvalue(L, LUA_GLOBALSINDEX);
 	}
-	if (hasvar)
+	if(hasvar)
 	{
 		/* check if it already has a module metatable */
-		if (!tolua_ismodulemetatable(L))
+		if(!tolua_ismodulemetatable(L))
 		{
 			/* create metatable to get/set C/C++ variable */
 			lua_newtable(L);
 			tolua_moduleevents(L);
-			if (lua_getmetatable(L, -2))
+			if(lua_getmetatable(L, -2))
 			{
 				/* set old metatable as metatable of metatable */
 				lua_setmetatable(L, -2);
@@ -368,7 +365,7 @@ TOLUA_API void tolua_module(lua_State* L, const char* name, int hasvar)
 static void push_collector(lua_State* L, lua_CFunction col)
 {
 	/* mt */
-	if (!col) return;
+	if(!col) return;
 	lua_pushcfunction(L, col);// mt cfunc
 	lua_rawseti(L, -2, MT_DEL);// mt[MT_DEL] = cfunc, mt
 }
@@ -399,8 +396,8 @@ TOLUA_API void tolua_cclass(lua_State* L, const char* name, const char* base, lu
 }
 
 /* Add base
-	* It adds additional base classes to a class (for multiple inheritance)
-	* (not for now)
+	* It adds additional base classes to a class(for multiple inheritance)
+	*(not for now)
 	*/
 TOLUA_API void tolua_addbase(lua_State* L, char* name, char* base)
 {
@@ -408,7 +405,7 @@ TOLUA_API void tolua_addbase(lua_State* L, char* name, char* base)
 }
 
 /* Map function
-	* It assigns a function into the current module (or class)
+	* It assigns a function into the current module(or class)
 	*/
 TOLUA_API void tolua_function(lua_State* L, const char* name, lua_CFunction func)
 {
@@ -424,7 +421,7 @@ TOLUA_API void tolua_call(lua_State* L, int index, lua_CFunction func)
 }
 
 /* Map constant number
-	* It assigns a constant number into the current module (or class)
+	* It assigns a constant number into the current module(or class)
 	*/
 TOLUA_API void tolua_constant(lua_State* L, const char* name, lua_Number value)
 {
@@ -434,13 +431,13 @@ TOLUA_API void tolua_constant(lua_State* L, const char* name, lua_Number value)
 }
 
 /* Map variable
-	* It assigns a variable into the current module (or class)
+	* It assigns a variable into the current module(or class)
 	*/
 TOLUA_API void tolua_variable(lua_State* L, const char* name, lua_CFunction get, lua_CFunction set)
 {
 	/* get func */
 	lua_rawgeti(L, -1, MT_GET);
-	if (!lua_istable(L, -1))
+	if(!lua_istable(L, -1))
 	{
 		/* create .get table, leaving it at the top */
 		lua_pop(L, 1);
@@ -454,10 +451,10 @@ TOLUA_API void tolua_variable(lua_State* L, const char* name, lua_CFunction get,
 	lua_pop(L, 1);// pop .get table
 
 	/* set func */
-	if (set)
+	if(set)
 	{
 		lua_rawgeti(L, -1, MT_SET);
-		if (!lua_istable(L, -1))
+		if(!lua_istable(L, -1))
 		{
 			/* create .set table, leaving it at the top */
 			lua_pop(L, 1);
@@ -482,12 +479,12 @@ static int const_array(lua_State* L)
 }
 
 /* Map an array
-	* It assigns an array into the current module (or class)
+	* It assigns an array into the current module(or class)
 	*/
 TOLUA_API void tolua_array(lua_State* L, const char* name, lua_CFunction get, lua_CFunction set)
 {
 	lua_rawgeti(L, -1, MT_GET);
-	if (!lua_istable(L, -1))
+	if(!lua_istable(L, -1))
 	{
 		/* create .get table, leaving it at the top */
 		lua_pop(L, 1);
@@ -501,7 +498,7 @@ TOLUA_API void tolua_array(lua_State* L, const char* name, lua_CFunction get, lu
 	lua_newtable(L);
 	lua_pushvalue(L, -1);
 	lua_setmetatable(L, -2);
-	/* set the own table as metatable (for modules) */
+	/* set the own table as metatable(for modules) */
 	lua_pushstring(L, "__index");
 	lua_pushcfunction(L, get);
 	lua_rawset(L, -3);
@@ -517,7 +514,7 @@ TOLUA_API void tolua_array(lua_State* L, const char* name, lua_CFunction get, lu
 TOLUA_API void tolua_dobuffer(lua_State* L, char* B, unsigned int size, const char* name) {
 
 #ifdef LUA_VERSION_NUM /* lua 5.1 */
-	if (!luaL_loadbuffer(L, B, size, name)) lua_pcall(L, 0, 0, 0);
+	if(!luaL_loadbuffer(L, B, size, name)) lua_pcall(L, 0, 0, 0);
 #else
 	lua_dobuffer(L, B, size, name);
 #endif

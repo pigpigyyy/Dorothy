@@ -1,10 +1,10 @@
 /****************************************************************************
- Copyright (c) 2011 cocos2d-x.org
+ Copyright(c) 2011 cocos2d-x.org
 
  http://www.cocos2d-x.org
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
+ of this software and associated documentation files(the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
@@ -78,7 +78,7 @@ int CCLuaEngine::executeGlobalFunction(const char* functionName)
 
 int CCLuaEngine::executeFunction( int nHandler, int paramCount, CCObject* params[], char* paramNames[] )
 {
-	for (int i = 0; i < paramCount; i++)
+	for(int i = 0; i < paramCount; i++)
 	{
 		m_stack->pushCCObject(params[i], paramNames[i]);
 	}
@@ -89,7 +89,7 @@ int CCLuaEngine::executeFunction( int nHandler, int paramCount, CCObject* params
 
 int CCLuaEngine::executeFunction( int nHandler, int paramCount, void* params[], char* paramNames[] )
 {
-	for (int i = 0; i < paramCount; i++)
+	for(int i = 0; i < paramCount; i++)
 	{
 		m_stack->pushUserType(params[i], paramNames[i]);
 	}
@@ -107,7 +107,7 @@ int CCLuaEngine::executeFunction( int nHandler )
 
 int CCLuaEngine::executeActionUpdate( int nHandler, void* param, char* paramName, float deltaTime )
 {
-	if (!nHandler) return 0;
+	if(!nHandler) return 0;
 	m_stack->pushUserType(param, paramName);
 	m_stack->pushFloat(deltaTime);
 	int ret = m_stack->executeFunctionByHandler(nHandler, 2);
@@ -118,7 +118,7 @@ int CCLuaEngine::executeActionUpdate( int nHandler, void* param, char* paramName
 int CCLuaEngine::executeNodeEvent(CCNode* pNode, int nAction)
 {
     int nHandler = pNode->getScriptHandler();
-    if (!nHandler) return 0;
+    if(!nHandler) return 0;
 	m_stack->pushInt(nAction);
     int ret = m_stack->executeFunctionByHandler(nHandler, 1);
     m_stack->clean();
@@ -128,7 +128,7 @@ int CCLuaEngine::executeNodeEvent(CCNode* pNode, int nAction)
 int CCLuaEngine::executeMenuItemEvent(int eventType, CCMenuItem* pMenuItem)
 {
     int nHandler = pMenuItem->getScriptTapHandler();
-	if (!nHandler) return 0;
+	if(!nHandler) return 0;
 	m_stack->pushInt(eventType);
     m_stack->pushCCObject(pMenuItem, "CCMenuItem");
     int ret = m_stack->executeFunctionByHandler(nHandler, 2);
@@ -138,9 +138,9 @@ int CCLuaEngine::executeMenuItemEvent(int eventType, CCMenuItem* pMenuItem)
 
 int CCLuaEngine::executeSchedule(int nHandler, float dt, CCNode* pNode)
 {
-    if (!nHandler) return 0;
+    if(!nHandler) return 0;
     m_stack->pushFloat(dt);
-	if (pNode)
+	if(pNode)
 	{
 		m_stack->pushCCObject(pNode, "CCNode");
 	}
@@ -152,9 +152,9 @@ int CCLuaEngine::executeSchedule(int nHandler, float dt, CCNode* pNode)
 int CCLuaEngine::executeLayerTouchEvent(CCLayer* pLayer, int eventType, CCTouch *pTouch)
 {
     CCTouchScriptHandlerEntry* pScriptHandlerEntry = pLayer->getScriptTouchHandlerEntry();
-    if (!pScriptHandlerEntry) return 0;
+    if(!pScriptHandlerEntry) return 0;
     int nHandler = pScriptHandlerEntry->getHandler();
-	if (!nHandler) return 0;
+	if(!nHandler) return 0;
 	m_stack->pushInt(eventType);
 	m_stack->pushCCObject(pTouch, "CCTouch");
     int ret = m_stack->executeFunctionByHandler(nHandler, 2);
@@ -165,17 +165,17 @@ int CCLuaEngine::executeLayerTouchEvent(CCLayer* pLayer, int eventType, CCTouch 
 int CCLuaEngine::executeLayerTouchesEvent(CCLayer* pLayer, int eventType, CCSet *pTouches)
 {
     CCTouchScriptHandlerEntry* pScriptHandlerEntry = pLayer->getScriptTouchHandlerEntry();
-    if (!pScriptHandlerEntry) return 0;
+    if(!pScriptHandlerEntry) return 0;
     int nHandler = pScriptHandlerEntry->getHandler();
-	if (!nHandler) return 0;
+	if(!nHandler) return 0;
 	m_stack->pushInt(eventType);
     CCDirector* pDirector = CCDirector::sharedDirector();
     lua_State *L = m_stack->getLuaState();
     lua_createtable(L,pTouches->count(),0);
     int i = 1;
-    for (CCSetIterator it = pTouches->begin(); it != pTouches->end(); ++it)
+    for(CCSetIterator it = pTouches->begin(); it != pTouches->end(); ++it)
     {
-		CCTouch* pTouch = (CCTouch*)*it;
+		CCTouch* pTouch =(CCTouch*)*it;
 		m_stack->pushCCObject(pTouch, "CCTouch");
         lua_rawseti(L, -2, i++);
     }
@@ -187,10 +187,10 @@ int CCLuaEngine::executeLayerTouchesEvent(CCLayer* pLayer, int eventType, CCSet 
 int CCLuaEngine::executeLayerKeypadEvent(CCLayer* pLayer, int eventType)
 {
     CCScriptHandlerEntry* pScriptHandlerEntry = pLayer->getScriptKeypadHandlerEntry();
-    if (!pScriptHandlerEntry)
+    if(!pScriptHandlerEntry)
         return 0;
     int nHandler = pScriptHandlerEntry->getHandler();
-    if (!nHandler) return 0;
+    if(!nHandler) return 0;
 	m_stack->pushInt(eventType);
     int ret = m_stack->executeFunctionByHandler(nHandler, 1);
     m_stack->clean();
@@ -200,10 +200,10 @@ int CCLuaEngine::executeLayerKeypadEvent(CCLayer* pLayer, int eventType)
 int CCLuaEngine::executeAccelerometerEvent(CCLayer* pLayer, CCAcceleration* pAccelerationValue)
 {
     CCScriptHandlerEntry* pScriptHandlerEntry = pLayer->getScriptAccelerateHandlerEntry();
-    if (!pScriptHandlerEntry)
+    if(!pScriptHandlerEntry)
         return 0;
     int nHandler = pScriptHandlerEntry->getHandler();
-    if (!nHandler) return 0;
+    if(!nHandler) return 0;
     
     m_stack->pushFloat(pAccelerationValue->x);
     m_stack->pushFloat(pAccelerationValue->y);
@@ -217,7 +217,7 @@ int CCLuaEngine::executeAccelerometerEvent(CCLayer* pLayer, CCAcceleration* pAcc
 int CCLuaEngine::executeEvent(int nHandler, const char* pEventName, CCObject* pEventSource /* = NULL*/, const char* pEventSourceClassName /* = NULL*/)
 {
     m_stack->pushString(pEventName);
-    if (pEventSource)
+    if(pEventSource)
     {
         m_stack->pushCCObject(pEventSource, pEventSourceClassName ? pEventSourceClassName : "CCObject");
     }

@@ -97,7 +97,6 @@ m_fUpdateRate(1.0f)
 bool CCDirector::init()
 {
     CCLOG("cocos2d: %s", cocos2dVersion());
-    
     // scenes
     m_pRunningScene = NULL;
     m_pNextScene = NULL;

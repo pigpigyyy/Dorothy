@@ -56,7 +56,7 @@ HANDLER_WRAP_END
 
 void oSensor_addHandler(oSensor* sensor, uint32 flag, int nHandler)
 {
-	switch (flag)
+	switch(flag)
 	{
 	case oSensorEvent::Enter:
 		sensor->bodyEnter += std::make_pair(oSensorHandlerWrapper(nHandler), &oSensorHandlerWrapper::call);
@@ -68,7 +68,7 @@ void oSensor_addHandler(oSensor* sensor, uint32 flag, int nHandler)
 }
 void oSensor_removeHandler(oSensor* sensor, uint32 flag, int nHandler)
 {
-	switch (flag)
+	switch(flag)
 	{
 	case oSensorEvent::Enter:
 		sensor->bodyEnter -= std::make_pair(oSensorHandlerWrapper(nHandler), &oSensorHandlerWrapper::call);
@@ -80,7 +80,7 @@ void oSensor_removeHandler(oSensor* sensor, uint32 flag, int nHandler)
 }
 void oSensor_clearHandler(oSensor* sensor, uint32 flag)
 {
-	switch (flag)
+	switch(flag)
 	{
 	case oSensorEvent::Enter:
 		sensor->bodyEnter.Clear();
@@ -133,7 +133,7 @@ void __oClipCache_getNames(const char* filename)
 	lua_State* L = CCLuaEngine::sharedEngine()->getLuaStack()->getLuaState();
 	lua_createtable(L, clipDef->rects.size(), 0);
 	int i = 1;
-	for (auto& item : clipDef->rects)
+	for(auto& item : clipDef->rects)
 	{
 		lua_pushstring(L,item.first.c_str());
 		lua_rawseti(L, -2, i++);
@@ -191,7 +191,7 @@ void oCache_clear()
 void oUnitDef_setActions(oUnitDef* def, int actions[], int count)
 {
 	def->actions.clear();
-	for (int i = 0; i < count; i++)
+	for(int i = 0; i < count; i++)
 	{
 		def->actions.push_back(i);
 	}
@@ -199,7 +199,7 @@ void oUnitDef_setActions(oUnitDef* def, int actions[], int count)
 void oUnitDef_setInstincts(oUnitDef* def, int instincts[], int count)
 {
 	def->instincts.clear();
-	for (int i = 0; i < count; i++)
+	for(int i = 0; i < count; i++)
 	{
 		def->instincts.push_back(i);
 	}
@@ -223,7 +223,7 @@ void __oContent_getDirEntries(oContent* self, const char* path, bool isFolder)
 	lua_State* L = CCLuaEngine::sharedEngine()->getLuaStack()->getLuaState();
 	auto dirs = self->getDirEntries(path, isFolder);
 	lua_createtable(L, dirs.size(), 0);
-	for (size_t i = 0; i < dirs.size(); i++)
+	for(size_t i = 0; i < dirs.size(); i++)
 	{
 		lua_pushstring(L, dirs[i].c_str());
 		lua_rawseti(L, -2, i+1);
@@ -232,11 +232,11 @@ void __oContent_getDirEntries(oContent* self, const char* path, bool isFolder)
 
 CCSprite* CCSprite_createWithClip(const char* clipStr)
 {
-	if (string(clipStr).find('|') != string::npos)
+	if(string(clipStr).find('|') != string::npos)
 	{
 		return oSharedClipCache.loadSprite(clipStr);
 	}
-	else if (oFileExt::check(clipStr,oFileExt::Clip))
+	else if(oFileExt::check(clipStr,oFileExt::Clip))
 	{
 		oClipDef* def = oSharedClipCache.load(clipStr);
 		return CCSprite::create(def->textureFile.c_str());
@@ -258,7 +258,7 @@ CCScene* CCScene_createJumpZoom(float duration, CCScene* nextScene)
 }
 CCScene* CCScene_createMove(float duration, CCScene* nextScene, tOrientation orientation)
 {
-	switch (orientation)
+	switch(orientation)
 	{
 	case kCCTransitionOrientationLeftOver:
 		return CCTransitionMoveInL::create(duration, nextScene);
@@ -273,7 +273,7 @@ CCScene* CCScene_createMove(float duration, CCScene* nextScene, tOrientation ori
 }
 CCScene* CCScene_createSlide(float duration, CCScene* nextScene, tOrientation orientation)
 {
-	switch (orientation)
+	switch(orientation)
 	{
 	case kCCTransitionOrientationLeftOver:
 		return CCTransitionSlideInL::create(duration, nextScene);
@@ -336,7 +336,7 @@ CCScene* CCScene_createSplitRows(float duration, CCScene* nextScene)
 }
 CCScene* CCScene_createFadeTiles(float duration, CCScene* nextScene, tOrientation orientation)
 {
-	switch (orientation)
+	switch(orientation)
 	{
 	case kCCTransitionOrientationLeftOver:
 		return CCTransitionFadeBL::create(duration, nextScene);
@@ -381,7 +381,7 @@ CCScene* CCScene_createProgressOI(float duration, CCScene* nextScene)
 CCCardinalSplineTo* CCCardinalSplineTo_create(float duration, const oVec2 points[], int count, float tension)
 {
 	CCPointArray* array = CCPointArray::create(count);
-	for (int i = 0; i < count; i++)
+	for(int i = 0; i < count; i++)
 	{
 		array->addControlPoint(points[i]);
 	}
@@ -390,7 +390,7 @@ CCCardinalSplineTo* CCCardinalSplineTo_create(float duration, const oVec2 points
 CCCardinalSplineBy* CCCardinalSplineBy_create(float duration, const oVec2 points[], int count, float tension)
 {
 	CCPointArray* array = CCPointArray::create(count);
-	for (int i = 0; i < count; i++)
+	for(int i = 0; i < count; i++)
 	{
 		array->addControlPoint(points[i]);
 	}
@@ -399,7 +399,7 @@ CCCardinalSplineBy* CCCardinalSplineBy_create(float duration, const oVec2 points
 CCCatmullRomTo* CCCatmullRomTo_create(float duration, const oVec2 points[], int count)
 {
 	CCPointArray* array = CCPointArray::create(count);
-	for (int i = 0; i < count; i++)
+	for(int i = 0; i < count; i++)
 	{
 		array->addControlPoint(points[i]);
 	}
@@ -408,7 +408,7 @@ CCCatmullRomTo* CCCatmullRomTo_create(float duration, const oVec2 points[], int 
 CCCatmullRomBy* CCCatmullRomBy_create(float duration, const oVec2 points[], int count)
 {
 	CCPointArray* array = CCPointArray::create(count);
-	for (int i = 0; i < count; i++)
+	for(int i = 0; i < count; i++)
 	{
 		array->addControlPoint(points[i]);
 	}
@@ -417,7 +417,7 @@ CCCatmullRomBy* CCCatmullRomBy_create(float duration, const oVec2 points[], int 
 
 CCActionInterval* CCTile_createFadeOut(float duration, CCSize gridSize, tOrientation orientation)
 {
-	switch (orientation)
+	switch(orientation)
 	{
 	case kCCTransitionOrientationLeftOver:
 		return CCFadeOutBLTiles::create(duration, gridSize);
@@ -434,7 +434,7 @@ CCActionInterval* CCTile_createFadeOut(float duration, CCSize gridSize, tOrienta
 CCArray* CCArray_create(CCObject* object[], int count)
 {
 	CCArray* array = CCArray::createWithCapacity(count);
-	for (int i = 0; i < count; i++)
+	for(int i = 0; i < count; i++)
 	{
 		array->addObject(object[i]);
 	}
@@ -482,7 +482,7 @@ void __oModelCache_getData(const char* filename)
 	CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
 	lua_State* L = stack->getLuaState();
 	oModelDef* modelDef = oSharedModelCache.load(filename);
-	if (!modelDef)
+	if(!modelDef)
 	{
 		lua_pushnil(L);
 		return;
@@ -529,7 +529,7 @@ void __oModelCache_getData(const char* filename)
 		lua_setFloat(12, parent->y);
 		/*["looks"]*/
 		lua_createtable(L, parent->looks.size(), 0);
-		for (int i = 0; i < (int)parent->looks.size(); i++)
+		for(int i = 0; i <(int)parent->looks.size(); i++)
 		{
 			stack->pushInt(parent->looks[i]);
 			lua_rawseti(L, -2, i + 1);
@@ -537,11 +537,11 @@ void __oModelCache_getData(const char* filename)
 		lua_rawseti(L, -2, 13);
 		/*["animationDefs"]*/
 		lua_createtable(L, parent->animationDefs.size(), 0);
-		for (int defIndex = 0; defIndex < (int)parent->animationDefs.size(); defIndex++)
+		for(int defIndex = 0; defIndex <(int)parent->animationDefs.size(); defIndex++)
 		{
 			oModelAnimationDef* def = parent->animationDefs[defIndex];
 			/* nullptr */
-			if (!def)
+			if(!def)
 			{
 				lua_pushboolean(L, 0);
 				lua_rawseti(L, -2, defIndex + 1);
@@ -549,12 +549,12 @@ void __oModelCache_getData(const char* filename)
 			}
 			/* oKeyAnimationDef */
 			oKeyAnimationDef* keyDef = dynamic_cast<oKeyAnimationDef*>(def);
-			if (keyDef)
+			if(keyDef)
 			{
 				auto& frames = keyDef->getFrames();
 				lua_createtable(L, frames.size()+1, 0);
 				lua_setInt(1, 1);
-				for (int i = 0; i < (int)frames.size(); i++)
+				for(int i = 0; i <(int)frames.size(); i++)
 				{
 					oKeyFrameDef* frame = frames[i];
 					lua_createtable(L, 15, 0);
@@ -580,7 +580,7 @@ void __oModelCache_getData(const char* filename)
 			}
 			/* oFrameAnimationDef */
 			oFrameAnimationDef* frameDef = dynamic_cast<oFrameAnimationDef*>(def);
-			if (frameDef)
+			if(frameDef)
 			{
 				lua_createtable(L, 4, 0);
 				lua_setInt(1, 2);
@@ -593,7 +593,7 @@ void __oModelCache_getData(const char* filename)
 		lua_rawseti(L, -2, 14);
 		/*["children"]*/
 		lua_createtable(L, parent->children.size(), 0);
-		for (int i = 0; i < (int)parent->children.size(); i++)
+		for(int i = 0; i <(int)parent->children.size(); i++)
 		{
 			visitSpriteDef(parent->children[i]);
 			lua_rawseti(L, -2, i + 1);
@@ -602,7 +602,7 @@ void __oModelCache_getData(const char* filename)
 	};
 
 	oSpriteDef* root = modelDef->getRoot();
-	if (root)
+	if(root)
 	{
 		visitSpriteDef(root);
 		lua_setBool(16, modelDef->isFaceRight());
@@ -611,7 +611,7 @@ void __oModelCache_getData(const char* filename)
 		lua_setString(19, modelDef->getClipFile().c_str());
 		/*["keys"]*/
 		lua_createtable(L, modelDef->getKeyPointCount(), 0);
-		for (int i = 0; i < modelDef->getKeyPointCount(); i++)
+		for(int i = 0; i < modelDef->getKeyPointCount(); i++)
 		{
 			stack->pushUserType(new oVec2(modelDef->getKeyPoint(i)), "oVec2");
 			lua_rawseti(L, -2, i + 1);
@@ -619,7 +619,7 @@ void __oModelCache_getData(const char* filename)
 		lua_rawseti(L, -2, 20);
 		/*["animationNames"]*/
 		lua_newtable(L);
-		for (auto& pair : modelDef->getAnimationIndexMap())
+		for(auto& pair : modelDef->getAnimationIndexMap())
 		{
 			lua_pushstring(L, pair.first.c_str());
 			lua_pushinteger(L, pair.second);
@@ -628,7 +628,7 @@ void __oModelCache_getData(const char* filename)
 		lua_rawseti(L, -2, 21);
 		/*["lookNames"]*/
 		lua_newtable(L);
-		for (auto& pair : modelDef->getLookIndexMap())
+		for(auto& pair : modelDef->getLookIndexMap())
 		{
 			lua_pushstring(L, pair.first.c_str());
 			lua_pushinteger(L, pair.second);
@@ -649,13 +649,13 @@ void oModelCache_save(const char* itemName, const char* targetName)
 
 oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 {
-	CCLuaStack* stack = ((CCLuaEngine*)CCLuaEngine::sharedEngine())->getLuaStack();
+	CCLuaStack* stack =((CCLuaEngine*)CCLuaEngine::sharedEngine())->getLuaStack();
 	lua_State* L = stack->getLuaState();
 	
 	auto lua_getFloat = [&](int index)->float
 	{
 		lua_rawgeti(L, -1, index);
-		float v = (float)lua_tonumber(L, -1);
+		float v =(float)lua_tonumber(L, -1);
 		lua_pop(L, 1);
 		return v;
 	};
@@ -669,7 +669,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 	auto lua_getBool = [&](int index)->bool
 	{
 		lua_rawgeti(L, -1, index);
-		bool v = (lua_toboolean(L, -1) != 0);
+		bool v =(lua_toboolean(L, -1) != 0);
 		lua_pop(L, 1);
 		return v;
 	};
@@ -683,7 +683,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 	auto lua_getUserType = [&](int index)->void*
 	{
 		lua_rawgeti(L, -1, index);
-		void* v = (*(void**)(lua_touserdata(L, -1)));
+		void* v =(*(void**)(lua_touserdata(L, -1)));
 		lua_pop(L, 1);
 		return v;
 	};
@@ -698,10 +698,10 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 	/*["keys"]*/
 	lua_rawgeti(L, -1, 20);// push keys
 	vector<oVec2> keys(lua_objlen(L, -1));
-	for (size_t i = 0; i < keys.size(); i++)
+	for(size_t i = 0; i < keys.size(); i++)
 	{
 		lua_rawgeti(L, -1, i + 1);
-		oVec2* v = (*(oVec2**)(lua_touserdata(L, -1)));
+		oVec2* v =(*(oVec2**)(lua_touserdata(L, -1)));
 		keys[i] = *v;
 		lua_pop(L, 1);
 	}
@@ -710,7 +710,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 	lua_rawgeti(L, -1, 21);// push animationNames
 	hash_strmap<int> animationNames;
 	int top = lua_gettop(L);
-	for (lua_pushnil(L); lua_next(L, top) != 0; lua_pop(L, 1))
+	for(lua_pushnil(L); lua_next(L, top) != 0; lua_pop(L, 1))
 	{
 		animationNames[lua_tostring(L, -2)] = lua_tointeger(L, -1);
 	}
@@ -719,7 +719,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 	lua_rawgeti(L, -1, 22);// push lookNames
 	hash_strmap<int> lookNames;
 	top = lua_gettop(L);
-	for (lua_pushnil(L); lua_next(L, top) != 0; lua_pop(L, 1))
+	for(lua_pushnil(L); lua_next(L, top) != 0; lua_pop(L, 1))
 	{
 		lookNames[lua_tostring(L, -2)] = lua_tointeger(L, -1);
 	}
@@ -744,7 +744,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 		spriteDef->y = lua_getFloat(12);
 		/*["looks"]*/
 		lua_rawgeti(L, -1, 13);// puah looks
-		for (size_t i = 0, len = lua_objlen(L, -1); i < len; i++)
+		for(size_t i = 0, len = lua_objlen(L, -1); i < len; i++)
 		{
 			lua_rawgeti(L, -1, i + 1);
 			spriteDef->looks.push_back(lua_tointeger(L, -1));
@@ -753,11 +753,11 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 		lua_pop(L, 1);// pop looks
 		/*["animationDefs"]*/
 		lua_rawgeti(L, -1, 14);// push animationDefs
-		for (size_t defIndex = 0, len = lua_objlen(L, -1); defIndex < len; defIndex++)
+		for(size_t defIndex = 0, len = lua_objlen(L, -1); defIndex < len; defIndex++)
 		{
 			lua_rawgeti(L, -1, defIndex + 1);// push animationDef or boolean
 			/* nullptr */
-			if (lua_isboolean(L, -1))
+			if(lua_isboolean(L, -1))
 			{
 				spriteDef->animationDefs.push_back(nullptr);
 				lua_pop(L, 1);// pop boolean
@@ -765,10 +765,10 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 			}
 			int type = lua_getInt(1);
 			/* oKeyAnimationDef */
-			if (type == 1)
+			if(type == 1)
 			{
 				oKeyAnimationDef* keyAnimationDef = new oKeyAnimationDef();
-				for (size_t i = 0, len = lua_objlen(L, -1)-1; i < len; i++)
+				for(size_t i = 0, len = lua_objlen(L, -1)-1; i < len; i++)
 				{
 					lua_rawgeti(L, -1, i + 2);// push frameDef
 					oKeyFrameDef* frameDef = new oKeyFrameDef();
@@ -793,7 +793,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 				spriteDef->animationDefs.push_back(keyAnimationDef);
 			}
 			/* oFrameAnimationDef */
-			else if (type == 2)
+			else if(type == 2)
 			{
 				oFrameAnimationDef* frameAnimationDef = new oFrameAnimationDef();
 				frameAnimationDef->setFile(lua_getString(2));
@@ -805,7 +805,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 		lua_pop(L, 1);// pop animationDefs
 		/* ["children"] */
 		lua_rawgeti(L, -1, 15);// push children
-		for (size_t i = 0, len = lua_objlen(L, -1); i < len; i++)
+		for(size_t i = 0, len = lua_objlen(L, -1); i < len; i++)
 		{
 			lua_rawgeti(L, -1, i + 1);// push childDef
 			spriteDef->children.push_back(visitSpriteDef());
@@ -830,7 +830,7 @@ CCCall* CCCall::create(int nHandler)
 }
 CCCall::~CCCall()
 {
-	if (_scriptHandler)
+	if(_scriptHandler)
 	{
 		CCScriptEngine::sharedEngine()->removeScriptHandler(_scriptHandler);
 	}
@@ -841,14 +841,14 @@ CCObject* CCCall::copyWithZone(CCZone *pZone)
 }
 void CCCall::update(float time)
 {
-	if (time > 0.0f)
+	if(time > 0.0f)
 	{
 		this->execute();
 	}
 }
 void CCCall::execute()
 {
-	if (_scriptHandler)
+	if(_scriptHandler)
 	{
 		CCScriptEngine::sharedEngine()->executeFunction(_scriptHandler);
 	}
@@ -860,7 +860,7 @@ public:
 	oRef<oScriptHandler> handler;
 	virtual bool onTextFieldAttachWithIME(CCTextFieldTTF * sender)
 	{
-		if (handler)
+		if(handler)
 		{
 			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
 			stack->pushCCObject(sender, "CCTextFieldTTF");
@@ -873,7 +873,7 @@ public:
 	}
 	virtual bool onTextFieldDetachWithIME(CCTextFieldTTF * sender)
 	{
-		if (handler)
+		if(handler)
 		{
 			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
 			stack->pushCCObject(sender, "CCTextFieldTTF");
@@ -886,7 +886,7 @@ public:
 	}
 	virtual bool onTextFieldInsertText(CCTextFieldTTF * sender, const char * text, int nLen)
 	{
-		if (handler)
+		if(handler)
 		{
 			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
 			stack->pushCCObject(sender, "CCTextFieldTTF");
@@ -900,7 +900,7 @@ public:
 	}
 	virtual void onTextFieldInserted(CCTextFieldTTF* sender, const char* text)
 	{
-		if (handler)
+		if(handler)
 		{
 			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
 			stack->pushCCObject(sender, "CCTextFieldTTF");
@@ -912,7 +912,7 @@ public:
 	}
 	virtual bool onTextFieldDeleteBackward(CCTextFieldTTF * sender, const char * delText, int nLen)
 	{
-		if (handler)
+		if(handler)
 		{
 			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
 			stack->pushCCObject(sender, "CCTextFieldTTF");
@@ -926,7 +926,7 @@ public:
 	}
 	virtual void onTextFieldDeleted(CCTextFieldTTF* sender, const char* delText)
 	{
-		if (handler)
+		if(handler)
 		{
 			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
 			stack->pushCCObject(sender, "CCTextFieldTTF");
@@ -948,12 +948,12 @@ CCTextFieldTTF* CCTextFieldTTF_create(const char* placeholder, const char* fontN
 }
 void CCTextFieldTTF_registerInputHandler(CCTextFieldTTF* textField, int handler)
 {
-	oTextFieldDelegate* delegate = (oTextFieldDelegate*)(textField->getDelegate());
+	oTextFieldDelegate* delegate =(oTextFieldDelegate*)(textField->getDelegate());
 	delegate->handler = oScriptHandler::create(handler);
 }
 void CCTextFieldTTF_unregisterInputHandler(CCTextFieldTTF* textField)
 {
-	oTextFieldDelegate* delegate = (oTextFieldDelegate*)(textField->getDelegate());
+	oTextFieldDelegate* delegate =(oTextFieldDelegate*)(textField->getDelegate());
 	delegate->handler = nullptr;
 }
 

@@ -1,10 +1,10 @@
 /****************************************************************************
-Copyright (c) 2011 cocos2d-x.org
+Copyright(c) 2011 cocos2d-x.org
 
 http://www.cocos2d-x.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
+of this software and associated documentation files(the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
@@ -33,13 +33,13 @@ extern "C"
     {
         std::string filename(luaL_checkstring(L, 1));
         size_t pos = filename.rfind(".lua");
-        if (pos != std::string::npos)
+        if(pos != std::string::npos)
         {
             filename = filename.substr(0, pos);
         }
         
         pos = filename.find_first_of(".");
-        while (pos != std::string::npos)
+        while(pos != std::string::npos)
         {
             filename.replace(pos, 1, "/");
             pos = filename.find_first_of(".");
@@ -49,9 +49,9 @@ extern "C"
         unsigned long codeBufferSize = 0;
         unsigned char* codeBuffer = CCFileUtils::sharedFileUtils()->getFileData(filename.c_str(), "rb", &codeBufferSize);
         
-        if (codeBuffer)
+        if(codeBuffer)
         {
-            if (luaL_loadbuffer(L, (char*)codeBuffer, codeBufferSize, filename.c_str()) != 0)
+            if(luaL_loadbuffer(L,(char*)codeBuffer, codeBufferSize, filename.c_str()) != 0)
             {
                 luaL_error(L, "error loading module %s from file %s :\n\t%s",
                     lua_tostring(L, 1), filename.c_str(), lua_tostring(L, -1));

@@ -55,20 +55,20 @@ private:
 class CC_DLL CCObject : public CCCopying
 {
 public:
-    CCObject();
-    virtual ~CCObject();
+	CCObject();
+	virtual ~CCObject();
 	unsigned int getObjectId() const;
 	unsigned int getLuaRef();
 	void addLuaRef();
 	void removeLuaRef();
-    void release();
-    void retain();
-    CCObject* autorelease();
-    CCObject* copy();
-    bool isSingleReference();
-    unsigned int getRetainCount();
-    virtual bool isEqual(const CCObject* pObject);
-    virtual void update(float dt);
+	void release();
+	void retain();
+	CCObject* autorelease();
+	CCObject* copy();
+	bool isSingleReference();
+	unsigned int getRetainCount();
+	virtual bool isEqual(const CCObject* pObject);
+	virtual void update(float dt);
 	static unsigned int getObjectCount();
 	static unsigned int getLuaRefCount();
 	CCWeak* getWeakRef();

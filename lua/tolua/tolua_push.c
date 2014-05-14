@@ -34,7 +34,7 @@ TOLUA_API void tolua_pushnumber(lua_State* L, lua_Number value)
 
 TOLUA_API void tolua_pushstring(lua_State* L, const char* value)
 {
-    if (value == NULL)
+    if(value == NULL)
         lua_pushnil(L);
     else
         lua_pushstring(L,value);
@@ -42,7 +42,7 @@ TOLUA_API void tolua_pushstring(lua_State* L, const char* value)
 
 TOLUA_API void tolua_pushuserdata(lua_State* L, void* value)
 {
-    if (value == NULL)
+    if(value == NULL)
         lua_pushnil(L);
     else
         lua_pushlightuserdata(L,value);
@@ -50,13 +50,13 @@ TOLUA_API void tolua_pushuserdata(lua_State* L, void* value)
 
 TOLUA_API void tolua_pushusertype(lua_State* L, void* value, const char* type)
 {
-	if (value == NULL)
+	if(value == NULL)
 	{
 		lua_pushnil(L);
 		return;
 	}
 	luaL_getmetatable(L, type);// mt
-	if (lua_isnil(L, -1))// mt == nil
+	if(lua_isnil(L, -1))// mt == nil
 	{
 		lua_pop(L, 1);
 		lua_pushnil(L);

@@ -1,10 +1,10 @@
 /****************************************************************************
- Copyright (c) 2011 cocos2d-x.org
+ Copyright(c) 2011 cocos2d-x.org
  
  http://www.cocos2d-x.org
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
+ of this software and associated documentation files(the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
@@ -31,7 +31,6 @@ extern "C" {
 
 #include "ccTypes.h"
 #include "cocoa/CCObject.h"
-#include "CCLuaValue.h"
 
 NS_CC_BEGIN
 
@@ -95,9 +94,6 @@ public:
     virtual void pushString(const char* stringValue, int length);
     virtual void pushNil(void);
     virtual void pushCCObject(CCObject* objectValue, const char* typeName);
-    virtual void pushCCLuaValue(const CCLuaValue& value);
-    virtual void pushCCLuaValueDict(const CCLuaValueDict& dict);
-    virtual void pushCCLuaValueArray(const CCLuaValueArray& array);    
     virtual bool pushFunctionByHandler(int nHandler);
 	virtual void pushUserType(void* ptr, const char* typeName);
     virtual int executeFunction(int numArgs);

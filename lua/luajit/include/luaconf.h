@@ -1,6 +1,6 @@
 /*
 ** Configuration header.
-** Copyright (C) 2005-2013 Mike Pall. See Copyright Notice in luajit.h
+** Copyright(C) 2005-2013 Mike Pall. See Copyright Notice in luajit.h
 */
 
 #ifndef luaconf_h
@@ -12,7 +12,7 @@
 /* Default path for loading Lua and C modules with require(). */
 #if defined(_WIN32)
 /*
-** In Windows, any exclamation mark ('!') in the path is replaced by the
+** In Windows, any exclamation mark('!') in the path is replaced by the
 ** path of the directory of the executable file of the current process.
 */
 #define LUA_LDIR	"!\\lua\\"
@@ -69,8 +69,8 @@
 #define LUA_QS		LUA_QL("%s")
 
 /* Various tunables. */
-#define LUAI_MAXSTACK	65500	/* Max. # of stack slots for a thread (<64K). */
-#define LUAI_MAXCSTACK	8000	/* Max. # of stack slots for a C func (<10K). */
+#define LUAI_MAXSTACK	65500	/* Max. # of stack slots for a thread(<64K). */
+#define LUAI_MAXCSTACK	8000	/* Max. # of stack slots for a C func(<10K). */
 #define LUAI_GCPAUSE	200	/* Pause GC until memory is at 200%. */
 #define LUAI_GCMUL	200	/* Run GC at 200% of allocation speed. */
 #define LUA_MAXCAPTURES	32	/* Max. pattern captures. */
@@ -79,7 +79,7 @@
 #define LUA_COMPAT_MOD		/* OLD: math.mod, NEW: math.fmod */
 #define LUA_COMPAT_GFIND	/* OLD: string.gfind, NEW: string.gmatch */
 
-/* Configuration for the frontend (the luajit executable). */
+/* Configuration for the frontend(the luajit executable). */
 #if defined(luajit_c)
 #define LUA_PROGNAME	"luajit"  /* Fallback frontend name. */
 #define LUA_PROMPT	"> "	/* Interactive prompt. */
@@ -105,7 +105,7 @@
 #define LUAI_UACNUMBER		double
 #define LUA_NUMBER_SCAN		"%lf"
 #define LUA_NUMBER_FMT		"%.14g"
-#define lua_number2str(s, n)	sprintf((s), LUA_NUMBER_FMT, (n))
+#define lua_number2str(s, n)	sprintf((s), LUA_NUMBER_FMT,(n))
 #define LUAI_MAXNUMBER2STR	32
 #define LUA_INTFRMLEN		"l"
 #define LUA_INTFRM_T		long
@@ -131,9 +131,9 @@
 #define lua_assert(x)		assert(x)
 #endif
 #ifdef LUA_USE_APICHECK
-#define luai_apicheck(L, o)	{ (void)L; assert(o); }
+#define luai_apicheck(L, o)	{(void)L; assert(o); }
 #else
-#define luai_apicheck(L, o)	{ (void)L; }
+#define luai_apicheck(L, o)	{(void)L; }
 #endif
 
 #endif

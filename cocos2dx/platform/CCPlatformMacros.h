@@ -31,6 +31,18 @@
 #include "CCPlatformConfig.h"
 #include "CCPlatformDefine.h"
 
+template<typename T>
+inline size_t CCTypeId()
+{
+	static char sType;
+	return size_t(&sType);
+}
+#define CC_TYPE(type) \
+public: virtual size_t getTypeId() const \
+{ \
+	return CCTypeId<type>(); \
+}
+
 /**
  * define a create function for a specific type, such as CCLayer
  * @__TYPE__ class type to add create(), such as CCLayer

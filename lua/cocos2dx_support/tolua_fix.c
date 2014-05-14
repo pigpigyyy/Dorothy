@@ -15,7 +15,7 @@ TOLUA_API int toluafix_ref_function(lua_State* L, int lo)
 {
 	/* function at lo */
 	int refid;
-    if (!lua_isfunction(L, lo)) return 0;
+    if(!lua_isfunction(L, lo)) return 0;
 	refid = alloc_ref_id();
 	lua_pushlightuserdata(L, TOLUA_CALLBACK);
     lua_rawget(L, LUA_REGISTRYINDEX);// funcMap
@@ -47,7 +47,7 @@ TOLUA_API void toluafix_remove_function_by_refid(lua_State* L, int refid)
 // check lua value is funciton
 TOLUA_API int toluafix_isfunction(lua_State* L, int lo, tolua_Error* err)
 {
-    if (lua_gettop(L) >= abs(lo) && lua_isfunction(L, lo))
+    if(lua_gettop(L) >= abs(lo) && lua_isfunction(L, lo))
     {
         return 1;
     }
@@ -62,10 +62,10 @@ TOLUA_API void toluafix_stack_dump(lua_State* L, const char* label)
     int i;
     int top = lua_gettop(L);
     printf("Total [%d] in lua stack: %s\n", top, label != 0 ? label : "");
-    for (i = -1; i >= -top; i--)
+    for(i = -1; i >= -top; i--)
     {
         int t = lua_type(L, i);
-        switch (t)
+        switch(t)
         {
             case LUA_TSTRING:
                 printf("  [%02d] string %s\n", i, lua_tostring(L, i));

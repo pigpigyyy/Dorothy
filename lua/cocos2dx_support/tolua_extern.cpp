@@ -5,7 +5,6 @@ extern "C"
 }
 #include <stack>
 using std::stack;
-#include <typeinfo>
 #include "cocos2d.h"
 using namespace cocos2d;
 #include "Dorothy.h"
@@ -19,7 +18,7 @@ extern "C" int toluafix_get_callback_ref_count()
 }
 extern "C" int alloc_ref_id()
 {
-	if (g_available_ref_ids.empty())
+	if(g_available_ref_ids.empty())
 	{
 		return ++g_ref_id;
 	}
@@ -38,7 +37,7 @@ extern "C" void collect_ref_id(int refid)
 
 extern "C" int tolua_collect_ccobject(lua_State* L)
 {
-	CCObject* object = (CCObject*)tolua_tousertype(L, 1, 0);
+	CCObject* object =(CCObject*)tolua_tousertype(L, 1, 0);
 	object->removeLuaRef();
 	object->release();
 	return 0;
@@ -51,11 +50,11 @@ extern "C" void tolua_pushccobject(lua_State* L, void* ptr, const char* type)
 		lua_pushnil(L);
 		return;
 	}
-	CCObject* object = (CCObject*)ptr;
+	CCObject* object =(CCObject*)ptr;
 	int refid = object->getLuaRef();
 
 	luaL_getmetatable(L, type);// mt
-	if (lua_isnil(L, -1))// no such type
+	if(lua_isnil(L, -1))// no such type
 	{
 		lua_pop(L, 1);
 		lua_pushnil(L);
@@ -65,7 +64,7 @@ extern "C" void tolua_pushccobject(lua_State* L, void* ptr, const char* type)
 	lua_rawget(L, LUA_REGISTRYINDEX);// mt ubox
 	lua_rawgeti(L, -1, refid);// mt ubox ud
 
-	if (lua_isnil(L, -1))// ud == nil
+	if(lua_isnil(L, -1))// ud == nil
 	{
 		lua_pop(L, 1);// mt ubox
 		*(void**)lua_newuserdata(L, sizeof(void *)) = ptr;// mt ubox newud
@@ -91,7 +90,7 @@ extern "C" void tolua_pushccobject(lua_State* L, void* ptr, const char* type)
 		lua_rawgeti(L, -1, MT_SUPER);// mt ud udmt tb
 		lua_pushstring(L, type);// mt ud udmt tb type
 		lua_rawget(L, -2);// tb[type], mt ud udmt tb flag
-		if (lua_toboolean(L, -1))// flag == true
+		if(lua_toboolean(L, -1))// flag == true
 		{
 			lua_pop(L, 3);// mt ud
 			lua_remove(L, -2);// ud
@@ -105,13 +104,25 @@ extern "C" void tolua_pushccobject(lua_State* L, void* ptr, const char* type)
 	lua_remove(L, -2);// ud
 }
 
-static unordered_map<unsigned int, const char*> g_typeinfo;
-extern "C" void tolua_typeid(unsigned int hashCode, const char* className)
+static unordered_map<unsigned int, int> g_typeinfo;
+extern "C" void tolua_typeid(lua_State* L, unsigned int hashCode, const char* className)
 {
-	g_typeinfo[hashCode] = className;
+	lua_pushstring(L, className);
+	g_typeinfo[hashCode] = luaL_ref(L, LUA_REGISTRYINDEX);
 }
-extern "C" const char* tolua_classname(void* ccobject)
+extern "C" void tolua_classname(lua_State* L, void* ccobject)
 {
-	CCObject* object = (CCObject*)ccobject;
-	return g_typeinfo[typeid(*object).hash_code()];
+	CCObject* object =(CCObject*)ccobject;
+	int ref = g_typeinfo[typeid(*object).hash_code()];
+	lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
+}
+extern "C" int tolua_isccobject(lua_State* L, int mt_idx)
+{
+	static int index = g_typeinfo[typeid(CCObject).hash_code()];
+	lua_rawgeti(L, mt_idx, MT_SUPER);// tb
+	lua_rawgeti(L, LUA_REGISTRYINDEX, index);// tb "CCObject"
+	lua_rawget(L, -2);// tb["CCObject"], tb flag
+	int result = lua_toboolean(L, -1);
+	lua_pop(L, 2);
+	return result;
 }

@@ -3,7 +3,7 @@
 
 _push_functions = _push_functions or {}
 _collect_functions = _collect_functions or {}
-local CCObjectTypes = {
+local ccobjects = {
 "CCTileMapAtlas",
 "CCParallaxNode",
 "CCFiniteTimeAction",
@@ -17,6 +17,7 @@ local CCObjectTypes = {
 "oLine",
 "CCTMXLayer",
 "oWorld",
+"oLayer",
 "oBulletDef",
 "CCLabelTTF",
 "CCImage",
@@ -52,12 +53,16 @@ local CCObjectTypes = {
 "CCTMXTiledMap",
 "CCScheduler",
 "oBodyDef",
+"CCClippingNode",
+"CCSpeed",
 }
+_ccobject_types = {}
 
 -- register CCObject types
-for i = 1, #CCObjectTypes do
-    _push_functions[CCObjectTypes[i]] = "tolua_pushccobject"
-	_collect_functions[CCObjectTypes[i]] = "tolua_collect_ccobject"
+for i = 1, #ccobjects do
+    _push_functions[ccobjects[i]] = "tolua_pushccobject"
+	_collect_functions[ccobjects[i]] = "tolua_collect_ccobject"
+	_ccobject_types[ccobjects[i]] = true
 end
 
 local toWrite = {}
