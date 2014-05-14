@@ -60,6 +60,7 @@ protected:
 	CCSize _size;
 	static const float BOTTOM_OFFSET;
 	static const float GROUND_SENSOR_HEIGHT;
+	CC_LUA_TYPE(oUnitDef)
 };
 NS_DOROTHY_PLATFORM_END
 

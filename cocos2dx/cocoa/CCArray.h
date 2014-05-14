@@ -213,6 +213,7 @@ public:
     ccArray* data;
     CCArray();
     CCArray(unsigned int capacity);
+	CC_LUA_TYPE(CCArray)
 };
 
 // end of data_structure group

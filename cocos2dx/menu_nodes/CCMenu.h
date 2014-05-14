@@ -141,6 +141,7 @@ protected:
     CCMenuItem* itemForTouch(CCTouch * touch);
     tCCMenuState m_eState;
     CCMenuItem *m_pSelectedItem;
+	CC_LUA_TYPE(CCMenu)
 };
 
 // end of GUI group

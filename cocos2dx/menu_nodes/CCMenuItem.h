@@ -94,6 +94,7 @@ protected:
     CCObject* m_pListener;
     SEL_MenuHandler m_pfnSelector;
     int m_nScriptTapHandler;
+	CC_LUA_TYPE(CCMenuItem)
 };
 
 NS_CC_END

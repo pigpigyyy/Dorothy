@@ -16,6 +16,7 @@ private:
 	oLine();
 	ccVertex2F* _buffer;
 	size_t _count;
+	CC_LUA_TYPE(oLine)
 };
 
 NS_DOROTHY_END

@@ -153,7 +153,7 @@ private:
 protected:
     //! tile properties
     CCDictionary* m_pTileProperties;
-
+	CC_LUA_TYPE(CCTMXTiledMap)
 };
 
 // end of tilemap_parallax_nodes group

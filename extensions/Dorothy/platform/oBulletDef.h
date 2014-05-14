@@ -35,6 +35,7 @@ protected:
 	oBulletDef();
 	oRef<oBodyDef> _bodyDef;
 	oRef<oFace> _face;
+	CC_LUA_TYPE(oBulletDef)
 };
 
 NS_DOROTHY_PLATFORM_END

@@ -69,10 +69,6 @@ void oFrameAction::update( float time )
 		_lastFrameIndex = current;
 		((CCSprite*)m_pTarget)->setTextureRect(*_def->rects[current]);
 	}
-	if (time == 1.0f && _loop)
-	{
-		oFrameAction::initWithDuration(oFrameAction::getDuration());
-	}
 }
 
 void oFrameAction::startWithTarget( CCNode *pTarget )
@@ -111,7 +107,6 @@ oFrameAction* oFrameAction::create( oFrameActionDef* def )
 {
 	oFrameAction* frame = new oFrameAction();
 	frame->_def = def;
-	frame->_loop = false;
 	frame->_interval = 1.0f / def->rects.size();//in update() total time is 1.0f
 	frame->initWithDuration(def->duration);
 	frame->autorelease();
@@ -124,11 +119,6 @@ oFrameAction* oFrameAction::create( const char* filename )
 	return frameActionDef->toAction();
 }
 
-void oFrameAction::setLoop( bool loop )
-{
-	_loop = loop;
-}
-
 string oFrameActionDef::toXml()
 {
 	ostringstream stream;
@@ -139,8 +129,8 @@ string oFrameActionDef::toXml()
 	{
 		stream << '<' << char(oFrameXml::Clip) << ' '
 			<< char(oFrameXml::Rect) << "=\""
-			<< rect->origin.x << ',' << rect->origin.y << ','
-			<< rect->size.width << ',' << rect->size.height
+			<< (int)rect->origin.x << ',' << (int)rect->origin.y << ','
+			<< (int)rect->size.width << ',' << (int)rect->size.height
 			<< "\"/>";
 	}
 	stream << "</" << char(oFrameXml::Texture) << '>';

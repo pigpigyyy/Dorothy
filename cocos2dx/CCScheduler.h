@@ -264,6 +264,7 @@ protected:
     // If true unschedule will not remove anything from a hash. Elements will only be marked for deletion.
     bool m_bUpdateHashLocked;
     CCArray* m_pScriptHandlerEntries;
+	CC_LUA_TYPE(CCScheduler)
 };
 
 // end of global group

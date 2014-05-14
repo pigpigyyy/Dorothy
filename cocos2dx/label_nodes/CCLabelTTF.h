@@ -123,6 +123,7 @@ protected:
     float m_fFontSize;
     
     std::string m_string;
+	CC_LUA_TYPE(CCLabelTTF)
 };
 
 

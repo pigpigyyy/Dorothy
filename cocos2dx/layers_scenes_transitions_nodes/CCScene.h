@@ -54,6 +54,7 @@ public:
     bool init();
 
     static CCScene *create();
+	CC_LUA_TYPE(CCScene)
 };
 
 // end of scene group

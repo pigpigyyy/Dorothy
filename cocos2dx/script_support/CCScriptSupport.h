@@ -111,9 +111,6 @@ public:
 
     /** Get script type */
     virtual ccScriptType getScriptType();
-
-    /** Remove script object. */
-	virtual void removeScriptObjectByCCObject(CCObject* pObj);
     
     /** Remove script function handler, only CCLuaEngine class need to implement this function. */
     virtual void removeScriptHandler(int nHandler);
@@ -140,7 +137,7 @@ public:
      */
     virtual int executeGlobalFunction(const char* functionName);
     
-	virtual int executeFunction(int nHandler, int paramCount, CCObject* params[], char* paramNames[]);
+	virtual int executeFunction(int nHandler, int paramCount, CCObject* params[]);
 	virtual int executeFunction(int nHandler, int paramCount, void* params[], char* paramNames[]);
 	virtual int executeFunction(int nHandler);
 

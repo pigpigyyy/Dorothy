@@ -76,11 +76,11 @@ int CCLuaEngine::executeGlobalFunction(const char* functionName)
     return ret;
 }
 
-int CCLuaEngine::executeFunction( int nHandler, int paramCount, CCObject* params[], char* paramNames[] )
+int CCLuaEngine::executeFunction( int nHandler, int paramCount, CCObject* params[] )
 {
 	for(int i = 0; i < paramCount; i++)
 	{
-		m_stack->pushCCObject(params[i], paramNames[i]);
+		m_stack->pushCCObject(params[i]);
 	}
 	int ret = m_stack->executeFunctionByHandler(nHandler, paramCount);
 	m_stack->clean();
@@ -130,7 +130,7 @@ int CCLuaEngine::executeMenuItemEvent(int eventType, CCMenuItem* pMenuItem)
     int nHandler = pMenuItem->getScriptTapHandler();
 	if(!nHandler) return 0;
 	m_stack->pushInt(eventType);
-    m_stack->pushCCObject(pMenuItem, "CCMenuItem");
+    m_stack->pushCCObject(pMenuItem);
     int ret = m_stack->executeFunctionByHandler(nHandler, 2);
     m_stack->clean();
     return ret;
@@ -142,7 +142,7 @@ int CCLuaEngine::executeSchedule(int nHandler, float dt, CCNode* pNode)
     m_stack->pushFloat(dt);
 	if(pNode)
 	{
-		m_stack->pushCCObject(pNode, "CCNode");
+		m_stack->pushCCObject(pNode);
 	}
     int ret = m_stack->executeFunctionByHandler(nHandler, pNode ? 2 : 1);
     m_stack->clean();
@@ -156,7 +156,7 @@ int CCLuaEngine::executeLayerTouchEvent(CCLayer* pLayer, int eventType, CCTouch 
     int nHandler = pScriptHandlerEntry->getHandler();
 	if(!nHandler) return 0;
 	m_stack->pushInt(eventType);
-	m_stack->pushCCObject(pTouch, "CCTouch");
+	m_stack->pushCCObject(pTouch);
     int ret = m_stack->executeFunctionByHandler(nHandler, 2);
     m_stack->clean();
     return ret;
@@ -176,7 +176,7 @@ int CCLuaEngine::executeLayerTouchesEvent(CCLayer* pLayer, int eventType, CCSet 
     for(CCSetIterator it = pTouches->begin(); it != pTouches->end(); ++it)
     {
 		CCTouch* pTouch =(CCTouch*)*it;
-		m_stack->pushCCObject(pTouch, "CCTouch");
+		m_stack->pushCCObject(pTouch);
         lua_rawseti(L, -2, i++);
     }
     int ret = m_stack->executeFunctionByHandler(nHandler, 2);
@@ -219,7 +219,7 @@ int CCLuaEngine::executeEvent(int nHandler, const char* pEventName, CCObject* pE
     m_stack->pushString(pEventName);
     if(pEventSource)
     {
-        m_stack->pushCCObject(pEventSource, pEventSourceClassName ? pEventSourceClassName : "CCObject");
+        m_stack->pushCCObject(pEventSource);
     }
     int ret = m_stack->executeFunctionByHandler(nHandler, pEventSource ? 2 : 1);
     m_stack->clean();

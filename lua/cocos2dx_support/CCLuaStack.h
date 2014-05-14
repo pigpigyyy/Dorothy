@@ -93,7 +93,7 @@ public:
     virtual void pushString(const char* stringValue);
     virtual void pushString(const char* stringValue, int length);
     virtual void pushNil(void);
-    virtual void pushCCObject(CCObject* objectValue, const char* typeName);
+    virtual void pushCCObject(CCObject* objectValue);
     virtual bool pushFunctionByHandler(int nHandler);
 	virtual void pushUserType(void* ptr, const char* typeName);
     virtual int executeFunction(int numArgs);

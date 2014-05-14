@@ -149,6 +149,7 @@ private:
     // noncopyable
     CCImage(const CCImage&    rImg);
     CCImage & operator=(const CCImage&);
+	CC_LUA_TYPE(CCImage)
 };
 
 // end of platform group

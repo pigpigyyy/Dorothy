@@ -209,8 +209,7 @@ HANDLER_WRAP_START(oBulletHandlerWrapper)
 	bool call(oBullet* bullet, oUnit* target) const
 	{
 		CCObject* params[] = {bullet, target};
-		char* paramNames[] = {"oBullet", "oUnit"};
-		return CCScriptEngine::sharedEngine()->executeFunction(getHandler(), 2, params, paramNames) != 0;
+		return CCScriptEngine::sharedEngine()->executeFunction(getHandler(), 2, params) != 0;
 	}
 HANDLER_WRAP_END
 

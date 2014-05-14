@@ -69,6 +69,7 @@ private:
     CCPoint m_startPoint;
     CCPoint m_point;
     CCPoint m_prevPoint;
+	CC_LUA_TYPE(CCTouch)
 };
 
 class CC_DLL CCEvent : public CCObject

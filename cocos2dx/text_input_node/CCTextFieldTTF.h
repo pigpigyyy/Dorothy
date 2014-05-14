@@ -169,6 +169,7 @@ protected:
 private:
     class LengthStack;
     LengthStack * m_pLens;
+	CC_LUA_TYPE(CCTextFieldTTF)
 };
 
 // end of input group

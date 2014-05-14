@@ -160,6 +160,7 @@ private:
     
     int  excuteScriptTouchHandler(int nEventType, CCTouch *pTouch);
     int  excuteScriptTouchHandler(int nEventType, CCSet *pTouches);
+	CC_LUA_TYPE(CCLayer)
 };
 
 //
@@ -216,6 +217,7 @@ public:
 
 protected:
     virtual void updateColor();
+	CC_LUA_TYPE(CCLayerColor)
 };
 
 //
@@ -276,6 +278,7 @@ public:
 
 protected:
     virtual void updateColor();
+	CC_LUA_TYPE(CCLayerGradient)
 };
 
 

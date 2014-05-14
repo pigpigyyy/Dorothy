@@ -122,6 +122,7 @@ protected:
     CC_SYNTHESIZE(CCPoint, m_tBarChangeRate, BarChangeRate);
 
     bool m_bReverseDirection;
+	CC_LUA_TYPE(CCProgressTimer)
 };
 
 // end of misc_nodes group

@@ -122,6 +122,7 @@ private:
 	oSensor* _attackSensor;
 	oAction* _currentAction;
 	oActionMap _actions;
+	CC_LUA_TYPE(oUnit)
 };
 
 NS_DOROTHY_PLATFORM_END

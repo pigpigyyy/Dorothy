@@ -45,6 +45,7 @@ private:
 	oSensor* _detectSensor;
 	float _lifeTime;
 	float _current;
+	CC_LUA_TYPE(oBullet)
 };
 
 NS_DOROTHY_PLATFORM_END

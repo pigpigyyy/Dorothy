@@ -34,6 +34,21 @@ class CCObject;
 class CCNode;
 class CCEvent;
 
+extern CC_DLL int g_luaType;
+
+template <class T>
+int CCLuaType()
+{
+	static int type = ++g_luaType;
+	return type;
+}
+
+#define CC_LUA_TYPE(type) \
+public: virtual int getLuaType() const \
+{ \
+	return CCLuaType<type>(); \
+}
+
 class CC_DLL CCCopying
 {
 public:
@@ -83,6 +98,7 @@ private:
 	// weak ref object
 	CCWeak* _weak;
 	friend class CCAutoreleasePool;
+	CC_LUA_TYPE(CCObject)
 };
 
 typedef void (CCObject::*SEL_SCHEDULE)(float);

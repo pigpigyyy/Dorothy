@@ -43,7 +43,7 @@ extern "C" int tolua_collect_ccobject(lua_State* L)
 	return 0;
 }
 
-extern "C" void tolua_pushccobject(lua_State* L, void* ptr, const char* type)
+extern "C" void tolua_pushccobject(lua_State* L, void* ptr)
 {
 	if (!ptr)
 	{
@@ -53,27 +53,20 @@ extern "C" void tolua_pushccobject(lua_State* L, void* ptr, const char* type)
 	CCObject* object =(CCObject*)ptr;
 	int refid = object->getLuaRef();
 
-	luaL_getmetatable(L, type);// mt
-	if(lua_isnil(L, -1))// no such type
-	{
-		lua_pop(L, 1);
-		lua_pushnil(L);
-		return;
-	}
 	lua_pushlightuserdata(L, TOLUA_UBOX);
-	lua_rawget(L, LUA_REGISTRYINDEX);// mt ubox
-	lua_rawgeti(L, -1, refid);// mt ubox ud
+	lua_rawget(L, LUA_REGISTRYINDEX);// ubox
+	lua_rawgeti(L, -1, refid);// ubox ud
 
 	if(lua_isnil(L, -1))// ud == nil
 	{
-		lua_pop(L, 1);// mt ubox
-		*(void**)lua_newuserdata(L, sizeof(void *)) = ptr;// mt ubox newud
-		lua_pushvalue(L, -1);// mt ubox newud newud
-		lua_insert(L, -3);// mt newud ubox newud
-		lua_rawseti(L, -2, refid);// ubox[refid] = newud, mt newud ubox
-		lua_pop(L, 1);// mt newud
-		lua_pushvalue(L, -2);// mt newud mt
-		lua_setmetatable(L, -2);// newud<mt>, mt newud
+		lua_pop(L, 1);// ubox
+		*(void**)lua_newuserdata(L, sizeof(void *)) = ptr;// ubox newud
+		lua_pushvalue(L, -1);// ubox newud newud
+		lua_insert(L, -3);// newud ubox newud
+		lua_rawseti(L, -2, refid);// ubox[refid] = newud, newud ubox
+		lua_pop(L, 1);// newud
+		lua_rawgeti(L, LUA_REGISTRYINDEX, object->getLuaType());// newud mt
+		lua_setmetatable(L, -2);// newud<mt>, newud
 #ifdef LUA_VERSION_NUM
 		lua_pushvalue(L, TOLUA_NOPEER);
 		lua_setfenv(L, -2);
@@ -82,45 +75,25 @@ extern "C" void tolua_pushccobject(lua_State* L, void* ptr, const char* type)
 		object->addLuaRef();
 		object->retain();
 	}
-	else
-	{
-		/* check the need of updating the metatable to a more specialized class */
-		lua_remove(L, -2);// mt ud
-		lua_getmetatable(L, -1);// mt ud udmt
-		lua_rawgeti(L, -1, MT_SUPER);// mt ud udmt tb
-		lua_pushstring(L, type);// mt ud udmt tb type
-		lua_rawget(L, -2);// tb[type], mt ud udmt tb flag
-		if(lua_toboolean(L, -1))// flag == true
-		{
-			lua_pop(L, 3);// mt ud
-			lua_remove(L, -2);// ud
-			return;
-		}
-		lua_pop(L, 3);// mt ud
-		// type represents a more specilized type
-		lua_pushvalue(L, -2);// mt ud mt
-		lua_setmetatable(L, -2);// ud<mt>, mt ud
-	}
-	lua_remove(L, -2);// ud
+	else lua_remove(L, -2);// ud
 }
 
-static unordered_map<unsigned int, int> g_typeinfo;
-extern "C" void tolua_typeid(lua_State* L, unsigned int hashCode, const char* className)
+extern "C" void tolua_typeid(lua_State* L, int typeId, const char* className)
 {
-	lua_pushstring(L, className);
-	g_typeinfo[hashCode] = luaL_ref(L, LUA_REGISTRYINDEX);
+	lua_getfield(L, LUA_REGISTRYINDEX, className);// mt 
+	lua_rawseti(L, LUA_REGISTRYINDEX, typeId); // empty
 }
 extern "C" void tolua_classname(lua_State* L, void* ccobject)
 {
 	CCObject* object =(CCObject*)ccobject;
-	int ref = g_typeinfo[typeid(*object).hash_code()];
-	lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
+	lua_rawgeti(L, LUA_REGISTRYINDEX, object->getLuaType());// mt
+	lua_rawget(L, LUA_REGISTRYINDEX);// reg[mt], name
 }
 extern "C" int tolua_isccobject(lua_State* L, int mt_idx)
 {
-	static int index = g_typeinfo[typeid(CCObject).hash_code()];
 	lua_rawgeti(L, mt_idx, MT_SUPER);// tb
-	lua_rawgeti(L, LUA_REGISTRYINDEX, index);// tb "CCObject"
+	lua_rawgeti(L, LUA_REGISTRYINDEX, CCLuaType<CCObject>());// tb ccobjmt
+	lua_rawget(L, LUA_REGISTRYINDEX);// tb "CCObject"
 	lua_rawget(L, -2);// tb["CCObject"], tb flag
 	int result = lua_toboolean(L, -1);
 	lua_pop(L, 2);

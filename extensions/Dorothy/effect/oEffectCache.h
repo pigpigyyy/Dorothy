@@ -15,6 +15,7 @@ public:
 	virtual oEffect* attachTo(CCNode* parent, int zOrder = 0) = 0;
 	virtual oEffect* autoRemove() = 0;
 	static oEffect* create(uint32 index);
+	CC_LUA_TYPE(oEffect)
 };
 
 class oParticleEffect: public oEffect

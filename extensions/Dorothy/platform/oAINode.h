@@ -35,6 +35,7 @@ class oAILeaf: public CCObject
 {
 public:
 	virtual bool doAction() = 0;
+	CC_LUA_TYPE(oAILeaf)
 };
 
 class oAINode: public oAILeaf

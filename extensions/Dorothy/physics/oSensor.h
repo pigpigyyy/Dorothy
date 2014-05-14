@@ -46,6 +46,7 @@ private:
 	void clear();
 	oRef<CCArray> _sensedBodies;
 	friend class oContactListener;
+	CC_LUA_TYPE(oSensor)
 };
 
 NS_DOROTHY_END

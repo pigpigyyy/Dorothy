@@ -40,6 +40,8 @@ static unsigned int g_luaRefCount = 0;
 
 NS_CC_BEGIN
 
+int g_luaType = 0;
+
 CCObject* CCCopying::copyWithZone(CCZone *pZone)
 {
     CC_UNUSED_PARAM(pZone);

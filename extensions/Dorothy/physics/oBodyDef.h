@@ -160,6 +160,7 @@ protected:
 	static b2ChainShape _chainShape;
 private:
 	vector<b2FixtureDef*> _fixtureDefs;
+	CC_LUA_TYPE(oBodyDef)
 };
 
 NS_DOROTHY_END

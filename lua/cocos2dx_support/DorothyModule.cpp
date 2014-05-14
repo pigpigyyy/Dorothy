@@ -24,8 +24,7 @@ HANDLER_WRAP_START(oModelHandlerWrapper)
 void call(oModel* model) const
 {
 	CCObject* params[] = { model };
-	char* paramNames[] = { "oModel" };
-	CCScriptEngine::sharedEngine()->executeFunction(getHandler(), 1, params, paramNames);
+	CCScriptEngine::sharedEngine()->executeFunction(getHandler(), 1, params);
 }
 HANDLER_WRAP_END
 void oModel_addHandler(oModel* model, const string& name, int nHandler)
@@ -49,8 +48,7 @@ HANDLER_WRAP_START(oSensorHandlerWrapper)
 void call(oSensor* sensor, oBody* body) const
 {
 	CCObject* params[] = { sensor, body };
-	char* paramNames[] = { "oSensor", "oBody" };
-	CCScriptEngine::sharedEngine()->executeFunction(getHandler(), 2, params, paramNames);
+	CCScriptEngine::sharedEngine()->executeFunction(getHandler(), 2, params);
 }
 HANDLER_WRAP_END
 
@@ -97,8 +95,7 @@ void oWorld_query(oWorld* world, const CCRect& rect, int nHandler)
 		[&](oBody* body)
 	{
 		CCObject* params[] = { body };
-		char* paramNames[] = { "oBody" };
-		return CCScriptEngine::sharedEngine()->executeFunction(nHandler, 1, params, paramNames) != 0;
+		return CCScriptEngine::sharedEngine()->executeFunction(nHandler, 1, params) != 0;
 	});
 }
 
@@ -863,7 +860,7 @@ public:
 		if(handler)
 		{
 			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
-			stack->pushCCObject(sender, "CCTextFieldTTF");
+			stack->pushCCObject(sender);
 			stack->pushInt(oTextFieldEvent::Attach);
 			bool result = stack->executeFunctionByHandler(handler->get(), 2) != 0;
 			stack->clean();
@@ -876,7 +873,7 @@ public:
 		if(handler)
 		{
 			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
-			stack->pushCCObject(sender, "CCTextFieldTTF");
+			stack->pushCCObject(sender);
 			stack->pushInt(oTextFieldEvent::Detach);
 			bool result = stack->executeFunctionByHandler(handler->get(), 2) != 0;
 			stack->clean();
@@ -889,7 +886,7 @@ public:
 		if(handler)
 		{
 			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
-			stack->pushCCObject(sender, "CCTextFieldTTF");
+			stack->pushCCObject(sender);
 			stack->pushInt(oTextFieldEvent::Insert);
 			stack->pushString(text);
 			bool result = stack->executeFunctionByHandler(handler->get(), 3) == 0;
@@ -903,7 +900,7 @@ public:
 		if(handler)
 		{
 			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
-			stack->pushCCObject(sender, "CCTextFieldTTF");
+			stack->pushCCObject(sender);
 			stack->pushInt(oTextFieldEvent::Inserted);
 			stack->pushString(text);
 			stack->executeFunctionByHandler(handler->get(), 3);
@@ -915,7 +912,7 @@ public:
 		if(handler)
 		{
 			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
-			stack->pushCCObject(sender, "CCTextFieldTTF");
+			stack->pushCCObject(sender);
 			stack->pushInt(oTextFieldEvent::Delete);
 			stack->pushString(delText);
 			bool result = stack->executeFunctionByHandler(handler->get(), 3) == 0;
@@ -929,7 +926,7 @@ public:
 		if(handler)
 		{
 			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
-			stack->pushCCObject(sender, "CCTextFieldTTF");
+			stack->pushCCObject(sender);
 			stack->pushInt(oTextFieldEvent::Deleted);
 			stack->pushString(delText);
 			stack->executeFunctionByHandler(handler->get(), 3);

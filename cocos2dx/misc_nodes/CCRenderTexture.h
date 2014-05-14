@@ -176,6 +176,7 @@ protected:
     GLclampf     m_fClearDepth;
     GLint        m_nClearStencil;
     bool         m_bAutoDraw;
+	CC_LUA_TYPE(CCRenderTexture)
 };
 
 // end of textures group

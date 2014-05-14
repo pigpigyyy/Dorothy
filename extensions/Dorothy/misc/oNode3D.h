@@ -12,6 +12,7 @@ public:
 	virtual CCAffineTransform nodeToParentTransform();
 	virtual void transform();
 	CREATE_FUNC(oNode3D);
+	CC_LUA_TYPE(oNode3D)
 };
 
 NS_DOROTHY_END

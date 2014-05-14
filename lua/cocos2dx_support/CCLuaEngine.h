@@ -91,7 +91,7 @@ public:
      @return The integer value returned from the script function.
      */
 	virtual int executeGlobalFunction(const char* functionName);
-	virtual int executeFunction(int nHandler, int paramCount, CCObject* params[], char* paramNames[]);
+	virtual int executeFunction(int nHandler, int paramCount, CCObject* params[]);
 	virtual int executeFunction(int nHandler, int paramCount, void* params[], char* paramNames[]);
 	virtual int executeFunction(int nHandler);
 	virtual int executeActionUpdate(int nHandler, void* param, char* paramName, float deltaTime);

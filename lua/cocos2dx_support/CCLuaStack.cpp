@@ -250,9 +250,9 @@ void CCLuaStack::pushNil(void)
     lua_pushnil(m_state);
 }
 
-void CCLuaStack::pushCCObject(CCObject* objectValue, const char* typeName)
+void CCLuaStack::pushCCObject(CCObject* objectValue)
 {
-    tolua_pushccobject(m_state, objectValue, typeName);
+    tolua_pushccobject(m_state, objectValue);
 }
 
 bool CCLuaStack::pushFunctionByHandler(int nHandler)

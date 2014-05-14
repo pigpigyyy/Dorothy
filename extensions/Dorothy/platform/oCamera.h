@@ -22,6 +22,7 @@ public:
 private:
 	CCPoint _camPos;
 	oWRef<CCNode> _target;
+	CC_LUA_TYPE(oCamera)
 };
 
 NS_DOROTHY_PLATFORM_END

@@ -255,6 +255,39 @@ NS_CC_BEGIN
 
 CC_DLL const char* cocos2dVersion();
 
+template int CC_DLL CCLuaType<CCObject>();
+template int CC_DLL CCLuaType<CCTileMapAtlas>();
+template int CC_DLL CCLuaType<CCParallaxNode>();
+template int CC_DLL CCLuaType<CCFiniteTimeAction>();
+template int CC_DLL CCLuaType<CCMotionStreak>();
+template int CC_DLL CCLuaType<CCSpriteBatchNode>();
+template int CC_DLL CCLuaType<CCDrawNode>();
+template int CC_DLL CCLuaType<CCTMXLayer>();
+template int CC_DLL CCLuaType<CCLabelTTF>();
+template int CC_DLL CCLuaType<CCImage>();
+template int CC_DLL CCLuaType<CCSprite>();
+template int CC_DLL CCLuaType<CCLayerGradient>();
+template int CC_DLL CCLuaType<CCTouch>();
+template int CC_DLL CCLuaType<CCMenu>();
+template int CC_DLL CCLuaType<CCProgressTimer>();
+template int CC_DLL CCLuaType<CCLayerColor>();
+template int CC_DLL CCLuaType<CCLabelAtlas>();
+template int CC_DLL CCLuaType<CCActionInterval>();
+template int CC_DLL CCLuaType<CCRenderTexture>();
+template int CC_DLL CCLuaType<CCTexture2D>();
+template int CC_DLL CCLuaType<CCLayer>();
+template int CC_DLL CCLuaType<CCMenuItem>();
+template int CC_DLL CCLuaType<CCArray>();
+template int CC_DLL CCLuaType<CCNode>();
+template int CC_DLL CCLuaType<CCAction>();
+template int CC_DLL CCLuaType<CCScene>();
+template int CC_DLL CCLuaType<CCTextFieldTTF>();
+template int CC_DLL CCLuaType<CCLabelBMFont>();
+template int CC_DLL CCLuaType<CCTMXTiledMap>();
+template int CC_DLL CCLuaType<CCScheduler>();
+template int CC_DLL CCLuaType<CCClippingNode>();
+template int CC_DLL CCLuaType<CCSpeed>();
+
 NS_CC_END
 
 #endif // __COCOS2D_H__

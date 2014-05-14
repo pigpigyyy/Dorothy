@@ -47,7 +47,6 @@ class CC_DLL CCParallaxNode : public CCNode
 {
     /** array that holds the offset / ratio of the children */
     CC_SYNTHESIZE(struct _ccArray *, m_pParallaxArray, ParallaxArray)
-
 public:
     /** Adds a child to the container with a z-order, a parallax ratio and a position offset
     It returns self, so you can chain several addChilds.
@@ -55,7 +54,6 @@ public:
     */
     CCParallaxNode();
     virtual ~CCParallaxNode();
-
     static CCParallaxNode * create();
     virtual void addChild(CCNode * child, unsigned int z, const CCPoint& parallaxRatio, const CCPoint& positionOffset);
     // super methods
@@ -66,7 +64,8 @@ public:
 private:
     CCPoint absolutePosition();
 protected:
-    CCPoint    m_tLastPosition;
+    CCPoint m_tLastPosition;
+	CC_LUA_TYPE(CCParallaxNode)
 };
 
 // end of tilemap_parallax_nodes group

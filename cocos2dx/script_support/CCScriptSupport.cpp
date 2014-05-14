@@ -195,14 +195,13 @@ int CCScriptEngine::executeSchedule( int nHandler, float dt, CCNode* pNode ){ret
 int CCScriptEngine::executeNotificationEvent( CCNotificationCenter* pNotificationCenter, const char* pszName ){return 0;}
 int CCScriptEngine::executeMenuItemEvent( int eventType, CCMenuItem* pMenuItem ){return 0;}
 int CCScriptEngine::executeNodeEvent( CCNode* pNode, int nAction ){return 0;}
-int CCScriptEngine::executeFunction( int nHandler, int paramCount, CCObject* params[], char* paramNames[] ){return 0;}
+int CCScriptEngine::executeFunction( int nHandler, int paramCount, CCObject* params[] ){return 0;}
 int CCScriptEngine::executeFunction( int nHandler, int paramCount, void* params[], char* paramNames[] ){return 0;}
 int CCScriptEngine::executeFunction( int nHandler ){return 0;}
 int CCScriptEngine::executeGlobalFunction( const char* functionName ){return 0;}
 int CCScriptEngine::executeScriptFile( const char* filename ){return 0;}
 int CCScriptEngine::executeString( const char* codes ){return 0;}
 void CCScriptEngine::removeScriptHandler( int nHandler ){}
-void CCScriptEngine::removeScriptObjectByCCObject( CCObject* pObj ){}
 bool CCScriptEngine::scriptHandlerEqual( int nHandlerA, int nHandlerB ){return false;}
 int CCScriptEngine::executeActionUpdate( int nHandler, void* param, char* paramName, float deltaTime ){return 0;}
 

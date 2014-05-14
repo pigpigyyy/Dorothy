@@ -268,7 +268,7 @@ protected:
 
     /** conforms to CCRGBAProtocol protocol */
     bool        m_bIsOpacityModifyRGB;
-
+	CC_LUA_TYPE(CCLabelBMFont)
 };
 
 /** Free function that parses a FNT file a place it on the cache

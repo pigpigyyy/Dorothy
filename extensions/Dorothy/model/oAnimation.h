@@ -48,12 +48,10 @@ public:
 	virtual void update( float time );
 	virtual void startWithTarget( CCNode* pTarget );
 	virtual CCObject* copyWithZone(CCZone* pZone);
-	void setLoop(bool loop);
 	virtual oActionDuration* reverse();
 	static oFrameAction* create(oFrameActionDef* def);
 	static oFrameAction* create(const char* filename);
 private:
-	bool _loop;
 	int _lastFrameIndex;
 	float _interval;
 	oRef<oFrameActionDef> _def;

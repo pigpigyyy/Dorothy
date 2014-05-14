@@ -88,6 +88,7 @@ public:
 protected:
     float m_elapsed;
     bool m_bFirstTick;
+	CC_LUA_TYPE(CCActionInterval)
 };
 
 /** @brief Runs actions sequentially, one after another

@@ -45,38 +45,30 @@ class CC_DLL CCMotionStreak : public CCNode, public CCTextureProtocol
 public:
     CCMotionStreak();
     virtual ~CCMotionStreak();
-
     /** creates and initializes a motion streak with fade in seconds, minimum segments, stroke's width, color, texture filename */
     static CCMotionStreak* create(float fade, float minSeg, float stroke, ccColor3B color, const char* path);
     /** creates and initializes a motion streak with fade in seconds, minimum segments, stroke's width, color, texture */
     static CCMotionStreak* create(float fade, float minSeg, float stroke, ccColor3B color, CCTexture2D* texture);
-
     /** initializes a motion streak with fade in seconds, minimum segments, stroke's width, color and texture filename */
     bool initWithFade(float fade, float minSeg, float stroke, ccColor3B color, const char* path);
     /** initializes a motion streak with fade in seconds, minimum segments, stroke's width, color and texture  */
     bool initWithFade(float fade, float minSeg, float stroke, ccColor3B color, CCTexture2D* texture);
-
     /** color used for the tint */
     void tintWithColor(ccColor3B colors);
-
     /** Remove all living segments of the ribbon */
     void reset();
-
     /** Override super methods */
     virtual void setPosition(const CCPoint& position);
     virtual void draw();
     virtual void update(float delta);
-
     /* Implement interfaces */
     virtual CCTexture2D* getTexture();
     virtual void setTexture(CCTexture2D *texture);
     virtual void setBlendFunc(ccBlendFunc blendFunc);
     virtual ccBlendFunc getBlendFunc();
-
     /** When fast mode is enabled, new points are added faster but with lower precision */
     inline bool isFastMode() { return m_bFastMode; }
     inline void setFastMode(bool bFastMode) { m_bFastMode = bFastMode; }
-
     inline bool isStartingPositionInitialized() { return m_bStartingPositionInitialized; }
     inline void setStartingPositionInitialized(bool bStartingPositionInitialized) 
     { 
@@ -90,23 +82,20 @@ private:
     CCTexture2D* m_pTexture;
     ccBlendFunc m_tBlendFunc;
     CCPoint m_tPositionR;
-
     float m_fStroke;
     float m_fFadeDelta;
     float m_fMinSeg;
-
     unsigned int m_uMaxPoints;
     unsigned int m_uNuPoints;
     unsigned int m_uPreviousNuPoints;
-
     /** Pointers */
     CCPoint* m_pPointVertexes;
     float* m_pPointState;
-
     // Opengl
     ccVertex2F* m_pVertices;
     GLubyte* m_pColorPointer;
     ccTex2F* m_pTexCoords;
+	CC_LUA_TYPE(CCMotionStreak)
 };
 
 // end of misc_nodes group

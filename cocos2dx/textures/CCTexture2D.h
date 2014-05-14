@@ -263,6 +263,7 @@ private:
 
     /** shader program used by drawAtPoint and drawInRect */
     CC_PROPERTY(CCGLProgram*, m_pShaderProgram, ShaderProgram);
+	CC_LUA_TYPE(CCTexture2D)
 };
 
 // end of textures group

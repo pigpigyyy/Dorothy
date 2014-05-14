@@ -98,6 +98,7 @@ private:
 	oOwn<oContactFilter> _contactFilter;
 	int _velocityIterations;
 	int _positionIterations;
+	CC_LUA_TYPE(oWorld)
 };
 
 NS_DOROTHY_END

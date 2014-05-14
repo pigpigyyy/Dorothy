@@ -96,6 +96,7 @@ public:
     
 private:
     CCClippingNode();
+	CC_LUA_TYPE(CCClippingNode)
 };
 
 NS_CC_END

@@ -92,6 +92,7 @@ protected:
     CCDictionary* m_pPosToAtlasIndex;
     //! numbers of tiles to render
     int m_nItemsToRender;
+	CC_LUA_TYPE(CCTileMapAtlas)
 };
 
 // end of tilemap_parallax_nodes group

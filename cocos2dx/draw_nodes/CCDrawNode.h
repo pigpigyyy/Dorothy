@@ -44,16 +44,16 @@ NS_CC_BEGIN
 class CC_DLL CCDrawNode : public CCNode
 {
 protected:
-    GLuint      m_uVao;
-    GLuint      m_uVbo;
+    GLuint m_uVao;
+    GLuint m_uVbo;
 
-    unsigned int    m_uBufferCapacity;
-    GLsizei         m_nBufferCount;
-    ccV2F_C4F_T2F   *m_pBuffer;
+    unsigned int m_uBufferCapacity;
+    GLsizei m_nBufferCount;
+    ccV2F_C4F_T2F* m_pBuffer;
     
-    ccBlendFunc     m_sBlendFunc;
+    ccBlendFunc m_sBlendFunc;
     
-    bool            m_bDirty;
+    bool m_bDirty;
     
 public:
     static CCDrawNode* create();
@@ -88,6 +88,7 @@ private:
     void ensureCapacity(unsigned int count);
     void render();
 	bool m_bOpacityModifyRGB;
+	CC_LUA_TYPE(CCDrawNode)
 };
 
 NS_CC_END

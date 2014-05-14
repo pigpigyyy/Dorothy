@@ -92,6 +92,7 @@ protected:
     std::string m_sString;
     // the first char in the charmap
     unsigned int m_uMapStartChar;
+	CC_LUA_TYPE(CCLabelAtlas)
 };
 
 // end of GUI group

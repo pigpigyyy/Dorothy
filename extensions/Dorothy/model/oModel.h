@@ -142,6 +142,7 @@ private:
 	oOwnVector<oLook> _looks;
 	oOwnVector<oAnimationGroup> _animationGroups;
 	oResetAnimation _resetAnimation;
+	CC_LUA_TYPE(oModel)
 };
 
 NS_DOROTHY_END

@@ -130,6 +130,7 @@ static int fast_is(lua_State *L, int self_idx, int name_idx)
 	lua_pop(L, 2);
 	return result;
 }
+
 /* Type casting
 */
 static int tolua_bnd_cast(lua_State* L)
@@ -138,34 +139,15 @@ static int tolua_bnd_cast(lua_State* L)
 	if(ptr && lua_isstring(L, 2))
 	{
 		lua_getmetatable(L, 1);// mt
-		if(tolua_isccobject(L, -1))
+		if (fast_is(L, -1, 2))
 		{
-			if(fast_is(L, -1, 2))
-			{
-				lua_pop(L, 1);// empty
-				lua_pushvalue(L, 1);// ud
-			}
-			else
-			{
-				tolua_classname(L, ptr);// mt name
-				lua_rawget(L, LUA_REGISTRYINDEX);// reg[name], mt realmt
-				if(fast_is(L, -1, 2))
-				{
-					lua_setmetatable(L, 1);// mt
-					lua_pop(L, 1);// empty
-					lua_pushvalue(L, 1);// ud
-				}
-				else
-				{
-					lua_pop(L, 2);// empty
-					lua_pushnil(L);// nil 
-				}
-			}
+			lua_pop(L, 1);// empty
+			lua_pushvalue(L, 1);// ud
 		}
 		else
 		{
 			lua_pop(L, 1);// empty
-			lua_pushnil(L);// nil
+			lua_pushnil(L);// ud
 		}
 	}
 	else lua_pushnil(L);

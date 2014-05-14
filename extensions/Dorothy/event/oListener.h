@@ -34,6 +34,7 @@ protected:
 	int _order;
 	oEventHandler _handler;
 	friend class oEventType;
+	CC_LUA_TYPE(oListener)
 };
 
 NS_DOROTHY_END

@@ -47,6 +47,7 @@ private:
 	oCamera* _camera;
 	CCNode* _layerUI;
 	oLayerMap _layers;
+	CC_LUA_TYPE(oPlatformWorld)
 };
 
 NS_DOROTHY_PLATFORM_END

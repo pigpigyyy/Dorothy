@@ -43,6 +43,7 @@ private:
 	oRef<oBodyDef> _bodyDef;
 	oRef<CCArray> _sensors;
 	friend class oWorld;
+	CC_LUA_TYPE(oBody)
 };
 
 NS_DOROTHY_END

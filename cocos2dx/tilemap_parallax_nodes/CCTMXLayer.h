@@ -196,7 +196,8 @@ protected:
     ccCArray            *m_pAtlasIndexArray;
     
     // used for retina display
-    float               m_fContentScaleFactor;            
+    float               m_fContentScaleFactor;
+	CC_LUA_TYPE(CCTMXLayer)
 };
 
 // end of tilemap_parallax_nodes group

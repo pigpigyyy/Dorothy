@@ -81,6 +81,7 @@ private:
 	uint32 _type;
 	oVec2 _pos;
 	oRefVector<oFace> _children;
+	CC_LUA_TYPE(oFace)
 };
 
 NS_DOROTHY_END

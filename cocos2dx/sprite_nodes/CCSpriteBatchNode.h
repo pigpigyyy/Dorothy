@@ -64,9 +64,7 @@ class CC_DLL CCSpriteBatchNode : public CCNode, public CCTextureProtocol
 {
 public:
     ~CCSpriteBatchNode();
-
     // property
-    
     // retain
     inline CCTextureAtlas* getTextureAtlas() { return m_pobTextureAtlas; }
     inline void setTextureAtlas(CCTextureAtlas* textureAtlas) 
@@ -78,26 +76,24 @@ public:
             m_pobTextureAtlas = textureAtlas;
         }
     }
-
     inline CCArray* getDescendants() { return m_pobDescendants; }
-
     /** creates a CCSpriteBatchNode with a texture2d and capacity of children.
     The capacity will be increased in 33% in runtime if it run out of space.
     */
     static CCSpriteBatchNode* createWithTexture(CCTexture2D* tex, unsigned int capacity);
-    static CCSpriteBatchNode* createWithTexture(CCTexture2D* tex) {
+    static CCSpriteBatchNode* createWithTexture(CCTexture2D* tex)
+	{
         return CCSpriteBatchNode::createWithTexture(tex, kDefaultSpriteBatchCapacity);
     }
-
     /** creates a CCSpriteBatchNode with a file image (.png, .jpeg, .pvr, etc) and capacity of children.
     The capacity will be increased in 33% in runtime if it run out of space.
     The file will be loaded using the TextureMgr.
     */
     static CCSpriteBatchNode* create(const char* fileImage, unsigned int capacity);
-    static CCSpriteBatchNode* create(const char* fileImage) {
+    static CCSpriteBatchNode* create(const char* fileImage)
+	{
         return CCSpriteBatchNode::create(fileImage, kDefaultSpriteBatchCapacity);
     }
-
     /** initializes a CCSpriteBatchNode with a texture2d and capacity of children.
     The capacity will be increased in 33% in runtime if it run out of space.
     */
@@ -108,18 +104,14 @@ public:
     */
     bool initWithFile(const char* fileImage, unsigned int capacity);
     bool init();
-
     void increaseAtlasCapacity();
-
     /** removes a child given a certain index. It will also cleanup the running actions depending on the cleanup parameter.
     @warning Removing a child from a CCSpriteBatchNode is very slow
     */
     void removeChildAtIndex(unsigned int index, bool doCleanup);
-
     void insertChild(CCSprite *child, unsigned int index);
     void appendChild(CCSprite* sprite);
     void removeSpriteFromAtlas(CCSprite *sprite);
-
     unsigned int rebuildIndexInOrder(CCSprite *parent, unsigned int index);
     unsigned int highestAtlasIndexInChild(CCSprite *sprite);
     unsigned int lowestAtlasIndexInChild(CCSprite *sprite);
@@ -170,6 +162,7 @@ protected:
 
     // all descendants: children, gran children, etc...
     CCArray* m_pobDescendants;
+	CC_LUA_TYPE(CCSpriteBatchNode)
 };
 
 // end of sprite_nodes group

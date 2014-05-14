@@ -1,11 +1,8 @@
-class oLayer: public oNode3D
-{ };
-
 class oPlatformWorld: public oWorld
 {
 	tolua_readonly tolua_property__common oCamera* camera;
 	tolua_readonly tolua_property__common CCNode* UILayer;
-	oLayer* getLayer(int zOrder);
+	oNode3D* getLayer(int zOrder);
 	void removeLayer(int zOrder);
 	void removeAllLayers();
 	void setLayerRatio(int zOrder, oVec2& ratio);

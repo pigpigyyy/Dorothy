@@ -109,6 +109,7 @@ protected:
     CCNode    *m_pTarget;
     /** The action tag. An identifier of the action */
     int     m_nTag;
+	CC_LUA_TYPE(CCAction)
 };
 
 /** 
@@ -131,12 +132,12 @@ public:
     inline float getDuration() { return m_fDuration; }
     //! set duration in seconds of the action
     inline void setDuration(float duration) { m_fDuration = duration; }
-
     /** returns a reversed action */
     virtual CCFiniteTimeAction* reverse();
 protected:
     //! duration in seconds
     float m_fDuration;
+	CC_LUA_TYPE(CCFiniteTimeAction)
 };
 
 class CCActionInterval;
@@ -184,6 +185,7 @@ public:
 protected:
     float m_fSpeed;
     CCActionInterval *m_pInnerAction;
+	CC_LUA_TYPE(CCSpeed)
 };
 
 /** 
