@@ -40,12 +40,6 @@ assets/
 local.properties
 
 # Ignore files built by NaCl
-samples/Cpp/HelloCpp/proj.nacl/Resources/
-samples/Cpp/TestCpp/proj.nacl/Resources/
-samples/Cpp/TestCpp/proj.nacl/out/
-samples/Cpp/SimpleGame/proj.nacl/Resources/
-samples/Lua/HelloLua/proj.nacl/Resources/
-samples/Lua/TestLua/proj.nacl/Resources/
 
 # Ignore python compiled files
 *.pyc
@@ -81,10 +75,4 @@ Device-Release/
 # Ignore vim swaps
 *.swp
 
-# Ignore config files in javascript bindings generator
-tools/tojs/user.cfg
-# ... userconf.ini generated if running from tools/tojs
-tools/tojs/userconf.ini
-# ... userconf.ini generated if running from tools/jenkins_scripts/mac/android/
-tools/jenkins_scripts/mac/android/userconf.ini
-/scripting/lua/cocos2dx_support/LuaCocos2d.cpp
+/lua/cocos2dx_support/LuaCocos2d.cpp

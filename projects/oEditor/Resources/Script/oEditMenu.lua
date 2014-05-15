@@ -392,6 +392,7 @@ local function oEditMenu()
 		Origin = oButton("Origin",16,50,50,winSize.width-265,winSize.height-35,
 			function()
 				collectgarbage()
+				cclog("[LUA MEMORY USAGE] %d KB",collectgarbage("count"))
 				cclog("Object Count: %d",CCObject.count)
 				cclog("Lua Count: %d",CCObject.luaRefCount)
 				cclog("Callback Count: %d", CCObject.callRefCount)

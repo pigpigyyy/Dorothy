@@ -81,10 +81,10 @@ local function oSelectionPanel(borderSize)
 		end
 		
 		for i = 1, children.count do
-			local node = tolua.cast(children:get(i), "CCNode")
+			local node = children:get(i)
 			node.position = node.position + oVec2(xVal and xVal or 0, yVal and yVal or 0)
 		end
-		
+
 		if t == 1.0 then
 			panel:unscheduleUpdate()
 		end
@@ -162,7 +162,7 @@ local function oSelectionPanel(borderSize)
 		totalDelta = totalDelta + deltaPos
 
 		for i = 1, children.count do
-			local node = tolua.cast(children:get(i), "CCNode")
+			local node = children:get(i)
 			node.position = node.position + deltaPos
 		end
 		

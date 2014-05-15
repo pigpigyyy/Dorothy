@@ -90,7 +90,7 @@ local function oViewPanel()
 		end
 		
 		for i = 1, children.count do
-			local node = tolua.cast(children:get(i), "CCNode")
+			local node = children:get(i)
 			node.position = node.position + oVec2(xVal and xVal or 0, yVal and yVal or 0)
 		end
 		
@@ -138,7 +138,7 @@ local function oViewPanel()
 		totalDelta = totalDelta + delta
 
 		for i = 1, children.count do
-			local node = tolua.cast(children:get(i), "CCNode")
+			local node = children:get(i)
 			node.position = node.position + delta
 		end
 	end
@@ -202,7 +202,7 @@ local function oViewPanel()
 		totalDelta = totalDelta + deltaPos
 
 		for i = 1, children.count do
-			local node = tolua.cast(children:get(i), "CCNode")
+			local node = children:get(i)
 			node.position = node.position + deltaPos
 		end
 		
@@ -351,7 +351,8 @@ local function oViewPanel()
 			end)
 
 		menuItem.dispose = function(self)
-			menuItem:unregisterTapHandler()
+			self:unregisterTapHandler()
+			self:unscheduleUpdate()
 			local sp = self:getData()
 			sp[oSd.sprite] = nil
 		end
@@ -480,10 +481,10 @@ local function oViewPanel()
 		menu:addChild(drawNode)
 		local size = 60
 		local indent = 10
-		local root = tolua.cast(model.children:get(1),"CCNode")
+		local root = model.children:get(1)
 		local function visitSprite(sp,x,y,node)
 			local clip = sp[oSd.clip]
-			local child = tolua.cast(node,"CCNode")
+			local child = node
 			if child == nil then
 				cclog(tolua.type(node))
 			end
@@ -657,8 +658,7 @@ local function oViewPanel()
 		end)
 
 	panel.updateSprite = function(self,data,model)
-		local function visitSprite(sp,node)
-			local child = tolua.cast(node,"CCNode")
+		local function visitSprite(sp,child)
 			if sp[oSd.sprite] == oEditor.sprite then
 				oEditor.sprite = child
 			end
@@ -669,7 +669,7 @@ local function oViewPanel()
 				visitSprite(children[i],child.children:get(i))
 			end
 		end
-		visitSprite(data,tolua.cast(model.children:get(1),"CCNode"))
+		visitSprite(data,model.children:get(1))
 		if selectedItem ~= nil then
 			local sp,node = selectedItem:getData()
 			local withFrame = node.contentSize ~= CCSize.zero

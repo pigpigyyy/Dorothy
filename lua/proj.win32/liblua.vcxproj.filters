@@ -42,9 +42,6 @@
     <ClCompile Include="..\cocos2dx_support\tolua_fix.c">
       <Filter>cocos2dx_support</Filter>
     </ClCompile>
-    <ClCompile Include="..\cocos2dx_support\CCLuaStack.cpp">
-      <Filter>cocos2dx_support</Filter>
-    </ClCompile>
     <ClCompile Include="..\cocos2dx_support\DorothyModule.cpp">
       <Filter>cocos2dx_support</Filter>
     </ClCompile>
@@ -69,9 +66,6 @@
       <Filter>cocos2dx_support</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos2dx_support\tolua_fix.h">
-      <Filter>cocos2dx_support</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos2dx_support\CCLuaStack.h">
       <Filter>cocos2dx_support</Filter>
     </ClInclude>
     <ClInclude Include="..\luajit\include\lauxlib.h">

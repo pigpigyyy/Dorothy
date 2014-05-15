@@ -244,4 +244,6 @@ for i = 1,#names do
 	target:save(names[i]..".png",CCImage.PNG)
 end
 ]]
+
+CCDirector.displayStats = true
 CCDirector:run(oEditor.scene)

@@ -1,5 +1,6 @@
 #include "DorothyModule.h"
 #include "CCLuaEngine.h"
+#include "tolua++.h"
 
 void CCDrawNode_drawPolygon(
 	CCDrawNode* self,
@@ -24,7 +25,7 @@ HANDLER_WRAP_START(oModelHandlerWrapper)
 void call(oModel* model) const
 {
 	CCObject* params[] = { model };
-	CCScriptEngine::sharedEngine()->executeFunction(getHandler(), 1, params);
+	CCLuaEngine::sharedEngine()->executeFunction(getHandler(), 1, params);
 }
 HANDLER_WRAP_END
 void oModel_addHandler(oModel* model, const string& name, int nHandler)
@@ -48,7 +49,7 @@ HANDLER_WRAP_START(oSensorHandlerWrapper)
 void call(oSensor* sensor, oBody* body) const
 {
 	CCObject* params[] = { sensor, body };
-	CCScriptEngine::sharedEngine()->executeFunction(getHandler(), 2, params);
+	CCLuaEngine::sharedEngine()->executeFunction(getHandler(), 2, params);
 }
 HANDLER_WRAP_END
 
@@ -127,7 +128,7 @@ bool oClipCache_unload(const char* filename)
 void __oClipCache_getNames(const char* filename)
 {
 	oClipDef* clipDef = oSharedClipCache.load(filename);
-	lua_State* L = CCLuaEngine::sharedEngine()->getLuaStack()->getLuaState();
+	lua_State* L = CCLuaEngine::sharedEngine()->getState();
 	lua_createtable(L, clipDef->rects.size(), 0);
 	int i = 1;
 	for(auto& item : clipDef->rects)
@@ -207,7 +208,7 @@ void call(oEvent* event) const
 {
 	void* params[] = { event };
 	char* names[] = { "oEvent" };
-	CCScriptEngine::sharedEngine()->executeFunction(getHandler(), 1, params, names);
+	CCLuaEngine::sharedEngine()->executeFunction(getHandler(), 1, params, names);
 }
 HANDLER_WRAP_END
 oListener* oListener_create(const string& name, int handler)
@@ -217,7 +218,7 @@ oListener* oListener_create(const string& name, int handler)
 
 void __oContent_getDirEntries(oContent* self, const char* path, bool isFolder)
 {
-	lua_State* L = CCLuaEngine::sharedEngine()->getLuaStack()->getLuaState();
+	lua_State* L = CCLuaEngine::sharedEngine()->getState();
 	auto dirs = self->getDirEntries(path, isFolder);
 	lua_createtable(L, dirs.size(), 0);
 	for(size_t i = 0; i < dirs.size(); i++)
@@ -476,8 +477,7 @@ CCTexture2D* CCTextureCache_add(CCTextureCache* self, CCRenderTexture* renderTex
 
 void __oModelCache_getData(const char* filename)
 {
-	CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
-	lua_State* L = stack->getLuaState();
+	lua_State* L = CCLuaEngine::sharedEngine()->getState();
 	oModelDef* modelDef = oSharedModelCache.load(filename);
 	if(!modelDef)
 	{
@@ -506,7 +506,7 @@ void __oModelCache_getData(const char* filename)
 	};
 	auto lua_setUserType = [&](int index, void* value, const char* typeName)
 	{
-		stack->pushUserType(value, typeName);
+		tolua_pushusertype(L, value, typeName);
 		lua_rawseti(L, -2, index);
 	};
 	function<void(oSpriteDef*)> visitSpriteDef = [&](oSpriteDef* parent)
@@ -528,7 +528,7 @@ void __oModelCache_getData(const char* filename)
 		lua_createtable(L, parent->looks.size(), 0);
 		for(int i = 0; i <(int)parent->looks.size(); i++)
 		{
-			stack->pushInt(parent->looks[i]);
+			lua_pushinteger(L, parent->looks[i]);
 			lua_rawseti(L, -2, i + 1);
 		}
 		lua_rawseti(L, -2, 13);
@@ -610,7 +610,7 @@ void __oModelCache_getData(const char* filename)
 		lua_createtable(L, modelDef->getKeyPointCount(), 0);
 		for(int i = 0; i < modelDef->getKeyPointCount(); i++)
 		{
-			stack->pushUserType(new oVec2(modelDef->getKeyPoint(i)), "oVec2");
+			tolua_pushusertype(L, new oVec2(modelDef->getKeyPoint(i)), "oVec2");
 			lua_rawseti(L, -2, i + 1);
 		}
 		lua_rawseti(L, -2, 20);
@@ -633,10 +633,7 @@ void __oModelCache_getData(const char* filename)
 		}
 		lua_rawseti(L, -2, 22);
 	}
-	else
-	{
-		stack->pushNil();
-	}
+	else lua_pushnil(L);
 }
 
 void oModelCache_save(const char* itemName, const char* targetName)
@@ -646,8 +643,7 @@ void oModelCache_save(const char* itemName, const char* targetName)
 
 oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 {
-	CCLuaStack* stack =((CCLuaEngine*)CCLuaEngine::sharedEngine())->getLuaStack();
-	lua_State* L = stack->getLuaState();
+	lua_State* L = CCLuaEngine::sharedEngine()->getState();
 	
 	auto lua_getFloat = [&](int index)->float
 	{
@@ -859,12 +855,10 @@ public:
 	{
 		if(handler)
 		{
-			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
-			stack->pushCCObject(sender);
-			stack->pushInt(oTextFieldEvent::Attach);
-			bool result = stack->executeFunctionByHandler(handler->get(), 2) != 0;
-			stack->clean();
-			return result;
+			lua_State* L = CCLuaEngine::sharedEngine()->getState();
+			tolua_pushccobject(L, sender);
+			lua_pushinteger(L, oTextFieldEvent::Attach);
+			return CCLuaEngine::sharedEngine()->executeFunction(handler->get(), 2) != 0;
 		}
 		return false;
 	}
@@ -872,12 +866,10 @@ public:
 	{
 		if(handler)
 		{
-			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
-			stack->pushCCObject(sender);
-			stack->pushInt(oTextFieldEvent::Detach);
-			bool result = stack->executeFunctionByHandler(handler->get(), 2) != 0;
-			stack->clean();
-			return result;
+			lua_State* L = CCLuaEngine::sharedEngine()->getState();
+			tolua_pushccobject(L, sender);
+			lua_pushinteger(L, oTextFieldEvent::Detach);
+			return CCLuaEngine::sharedEngine()->executeFunction(handler->get(), 2) != 0;
 		}
 		return false;
 	}
@@ -885,13 +877,11 @@ public:
 	{
 		if(handler)
 		{
-			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
-			stack->pushCCObject(sender);
-			stack->pushInt(oTextFieldEvent::Insert);
-			stack->pushString(text);
-			bool result = stack->executeFunctionByHandler(handler->get(), 3) == 0;
-			stack->clean();
-			return result;
+			lua_State* L = CCLuaEngine::sharedEngine()->getState();
+			tolua_pushccobject(L, sender);
+			lua_pushinteger(L, oTextFieldEvent::Insert);
+			lua_pushstring(L, text);
+			return CCLuaEngine::sharedEngine()->executeFunction(handler->get(), 3) == 0;
 		}
 		return false;
 	}
@@ -899,25 +889,22 @@ public:
 	{
 		if(handler)
 		{
-			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
-			stack->pushCCObject(sender);
-			stack->pushInt(oTextFieldEvent::Inserted);
-			stack->pushString(text);
-			stack->executeFunctionByHandler(handler->get(), 3);
-			stack->clean();
+			lua_State* L = CCLuaEngine::sharedEngine()->getState();
+			tolua_pushccobject(L, sender);
+			lua_pushinteger(L, oTextFieldEvent::Inserted);
+			lua_pushstring(L, text);
+			CCLuaEngine::sharedEngine()->executeFunction(handler->get(), 3);
 		}
 	}
 	virtual bool onTextFieldDeleteBackward(CCTextFieldTTF * sender, const char * delText, int nLen)
 	{
 		if(handler)
 		{
-			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
-			stack->pushCCObject(sender);
-			stack->pushInt(oTextFieldEvent::Delete);
-			stack->pushString(delText);
-			bool result = stack->executeFunctionByHandler(handler->get(), 3) == 0;
-			stack->clean();
-			return result;
+			lua_State* L = CCLuaEngine::sharedEngine()->getState();
+			tolua_pushccobject(L, sender);
+			lua_pushinteger(L, oTextFieldEvent::Delete);
+			lua_pushstring(L, delText);
+			return CCLuaEngine::sharedEngine()->executeFunction(handler->get(), 3) == 0;
 		}
 		return false;
 	}
@@ -925,12 +912,11 @@ public:
 	{
 		if(handler)
 		{
-			CCLuaStack* stack = CCLuaEngine::sharedEngine()->getLuaStack();
-			stack->pushCCObject(sender);
-			stack->pushInt(oTextFieldEvent::Deleted);
-			stack->pushString(delText);
-			stack->executeFunctionByHandler(handler->get(), 3);
-			stack->clean();
+			lua_State* L = CCLuaEngine::sharedEngine()->getState();
+			tolua_pushccobject(L, sender);
+			lua_pushinteger(L, oTextFieldEvent::Deleted);
+			lua_pushstring(L, delText);
+			CCLuaEngine::sharedEngine()->executeFunction(handler->get(), 3);
 		}
 	}
 };

@@ -253,10 +253,8 @@ TOLUA_API void tolua_open(lua_State* L)
 TOLUA_API void* tolua_copy(lua_State* L, void* value, unsigned int size)
 {
 	void* clone =(void*)malloc(size);
-	if(clone)
-		memcpy(clone, value, size);
-	else
-		tolua_error(L, "insuficient memory", NULL);
+	if(clone) memcpy(clone, value, size);
+	else tolua_error(L, "insuficient memory", NULL);
 	return clone;
 }
 
@@ -492,9 +490,8 @@ TOLUA_API void tolua_array(lua_State* L, const char* name, lua_CFunction get, lu
 	lua_pop(L, 1);// pop .get table
 }
 
-
-TOLUA_API void tolua_dobuffer(lua_State* L, char* B, unsigned int size, const char* name) {
-
+TOLUA_API void tolua_dobuffer(lua_State* L, char* B, unsigned int size, const char* name)
+{
 #ifdef LUA_VERSION_NUM /* lua 5.1 */
 	if(!luaL_loadbuffer(L, B, size, name)) lua_pcall(L, 0, 0, 0);
 #else

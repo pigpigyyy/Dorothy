@@ -170,11 +170,6 @@ CCScriptEngine* CCScriptEngine::_engine = &CCScriptEngine::_none;
 CCScriptEngine::~CCScriptEngine()
 { }
 
-ccScriptType CCScriptEngine::getScriptType()
-{
-	return kScriptTypeNone;
-}
-
 void CCScriptEngine::setEngine( CCScriptEngine* engine )
 {
 	_engine = engine ? engine : &CCScriptEngine::_none;
@@ -197,7 +192,7 @@ int CCScriptEngine::executeMenuItemEvent( int eventType, CCMenuItem* pMenuItem )
 int CCScriptEngine::executeNodeEvent( CCNode* pNode, int nAction ){return 0;}
 int CCScriptEngine::executeFunction( int nHandler, int paramCount, CCObject* params[] ){return 0;}
 int CCScriptEngine::executeFunction( int nHandler, int paramCount, void* params[], char* paramNames[] ){return 0;}
-int CCScriptEngine::executeFunction( int nHandler ){return 0;}
+int CCScriptEngine::executeFunction( int nHandler, int paramCount ){ return 0; }
 int CCScriptEngine::executeGlobalFunction( const char* functionName ){return 0;}
 int CCScriptEngine::executeScriptFile( const char* filename ){return 0;}
 int CCScriptEngine::executeString( const char* codes ){return 0;}

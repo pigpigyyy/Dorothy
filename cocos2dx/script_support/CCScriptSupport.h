@@ -45,12 +45,6 @@ class CCNotificationCenter;
 class CCCallFunc;
 class CCAcceleration;
 
-enum ccScriptType
-{
-    kScriptTypeNone = 0,
-    kScriptTypeLua
-};
-
 class CC_DLL CCScriptHandlerEntry : public CCObject
 {
 public:
@@ -108,9 +102,6 @@ class CC_DLL CCScriptEngine
 {
 public:
     virtual ~CCScriptEngine();
-
-    /** Get script type */
-    virtual ccScriptType getScriptType();
     
     /** Remove script function handler, only CCLuaEngine class need to implement this function. */
     virtual void removeScriptHandler(int nHandler);
@@ -139,7 +130,7 @@ public:
     
 	virtual int executeFunction(int nHandler, int paramCount, CCObject* params[]);
 	virtual int executeFunction(int nHandler, int paramCount, void* params[], char* paramNames[]);
-	virtual int executeFunction(int nHandler);
+	virtual int executeFunction(int nHandler, int paramCount = 0);
 
 	virtual int executeActionUpdate(int nHandler, void* param, char* paramName, float deltaTime);
     /**

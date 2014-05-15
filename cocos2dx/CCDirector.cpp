@@ -805,7 +805,7 @@ void CCDirector::createStatsLabel()
     {
         fontSize = (int)(m_obWinSizeInPoints.width / 320.0f * 24);
     }
-    
+   
     m_pFPSLabel = CCLabelTTF::create("00.0", "Arial", fontSize);
     m_pFPSLabel->retain();
     m_pSPFLabel = CCLabelTTF::create("0.000", "Arial", fontSize);

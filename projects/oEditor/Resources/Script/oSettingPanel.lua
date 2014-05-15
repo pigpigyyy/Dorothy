@@ -91,7 +91,7 @@ local function oSettingPanel()
 		end
 		
 		for i = 1, children.count do
-			local node = tolua.cast(children:get(i), "CCNode")
+			local node = children:get(i)
 			node.position = node.position + oVec2(0, yVal and yVal or 0)
 		end
 		
@@ -163,7 +163,7 @@ local function oSettingPanel()
 		totalDelta = totalDelta + deltaPos
 
 		for i = 1, children.count do
-			local node = tolua.cast(children:get(i), "CCNode")
+			local node = children:get(i)
 			node.position = node.position + deltaPos
 		end
 		
