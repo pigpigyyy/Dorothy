@@ -30,17 +30,17 @@ THE SOFTWARE.
 #include <stack>
 using std::stack;
 
-static unsigned int g_maxObjectCount = 1;
+static unsigned int g_maxObjectCount = 0;
 static stack<unsigned int> g_availableObjectIds;
 
-static unsigned int g_maxLuaCount = 1;
+static unsigned int g_maxLuaCount = 0;
 static stack<unsigned int> g_availableLuaIds;
 
 static unsigned int g_luaRefCount = 0;
 
 NS_CC_BEGIN
 
-int g_luaType = 0;
+int g_luaType = 2;
 
 CCObject* CCCopying::copyWithZone(CCZone *pZone)
 {
@@ -57,7 +57,7 @@ CCObject::CCObject()
 {
 	if (g_availableObjectIds.empty())
 	{
-		_id = g_maxObjectCount++;
+		_id = ++g_maxObjectCount;
 	}
 	else
 	{
@@ -171,7 +171,7 @@ unsigned int CCObject::getLuaRef()
 	{
 		if (g_availableLuaIds.empty())
 		{
-			_luaRef = g_maxLuaCount++;
+			_luaRef = ++g_maxLuaCount;
 		}
 		else
 		{

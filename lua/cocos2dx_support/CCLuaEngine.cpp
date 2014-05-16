@@ -68,8 +68,8 @@ m_callFromLua(0)
 {
 	L = lua_open();
 	luaL_openlibs(L);
-	tolua_Cocos2d_open(L);
 	toluafix_open(L);
+	tolua_Cocos2d_open(L);
 	// Register our version of the global "print" function
 	const luaL_reg global_functions[] =
 	{

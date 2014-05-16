@@ -58,10 +58,8 @@ extern "C" {
 #define MT_LT 14
 #define MT_LE 15
 
-TOLUA_API int tolua_callback;
-#define TOLUA_CALLBACK ((void*)&tolua_callback)
-TOLUA_API int tolua_ubox;
-#define TOLUA_UBOX ((void*)&tolua_ubox)
+#define TOLUA_UBOX 1
+#define TOLUA_CALLBACK 2
 
 typedef int lua_Object;
 

@@ -53,8 +53,7 @@ extern "C" void tolua_pushccobject(lua_State* L, void* ptr)
 	CCObject* object =(CCObject*)ptr;
 	int refid = object->getLuaRef();
 
-	lua_pushlightuserdata(L, TOLUA_UBOX);
-	lua_rawget(L, LUA_REGISTRYINDEX);// ubox
+	lua_rawgeti(L, LUA_REGISTRYINDEX, TOLUA_UBOX);// ubox
 	lua_rawgeti(L, -1, refid);// ubox ud
 
 	if(lua_isnil(L, -1))// ud == nil
@@ -67,10 +66,8 @@ extern "C" void tolua_pushccobject(lua_State* L, void* ptr)
 		lua_pop(L, 1);// newud
 		lua_rawgeti(L, LUA_REGISTRYINDEX, object->getLuaType());// newud mt
 		lua_setmetatable(L, -2);// newud<mt>, newud
-#ifdef LUA_VERSION_NUM
 		lua_pushvalue(L, TOLUA_NOPEER);
 		lua_setfenv(L, -2);
-#endif
 		// register CCObject GC
 		object->addLuaRef();
 		object->retain();

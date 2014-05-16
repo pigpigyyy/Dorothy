@@ -6,9 +6,15 @@ TOLUA_API void collect_ref_id(int refid);
 
 TOLUA_API void toluafix_open(lua_State* L)
 {
-	lua_pushlightuserdata(L, TOLUA_CALLBACK);
+	lua_newtable(L);
+	lua_newtable(L);
+	lua_pushliteral(L, "__mode");
+	lua_pushliteral(L, "v");
+	lua_rawset(L, -3);
+	lua_setmetatable(L, -2);
+	lua_rawseti(L, LUA_REGISTRYINDEX, TOLUA_UBOX);
     lua_newtable(L);
-    lua_rawset(L, LUA_REGISTRYINDEX);
+	lua_rawseti(L, LUA_REGISTRYINDEX, TOLUA_CALLBACK);
 }
 
 TOLUA_API int toluafix_ref_function(lua_State* L, int lo)
@@ -17,8 +23,7 @@ TOLUA_API int toluafix_ref_function(lua_State* L, int lo)
 	int refid;
     if(!lua_isfunction(L, lo)) return 0;
 	refid = alloc_ref_id();
-	lua_pushlightuserdata(L, TOLUA_CALLBACK);
-    lua_rawget(L, LUA_REGISTRYINDEX);// funcMap
+	lua_rawgeti(L, LUA_REGISTRYINDEX, TOLUA_CALLBACK);// funcMap
     lua_pushvalue(L, lo);// funcMap fun
     lua_rawseti(L, -2, refid);// funcMap[refid] = fun, funcMap
 	lua_pop(L, 1);// empty
@@ -27,20 +32,17 @@ TOLUA_API int toluafix_ref_function(lua_State* L, int lo)
 
 TOLUA_API void toluafix_get_function_by_refid(lua_State* L, int refid)
 {
-	lua_pushlightuserdata(L, TOLUA_CALLBACK);
-	lua_rawget(L, LUA_REGISTRYINDEX);// funcMap
+	lua_rawgeti(L, LUA_REGISTRYINDEX, TOLUA_CALLBACK);// funcMap
     lua_rawgeti(L, -1, refid);// funcMap fun
     lua_remove(L, -2);// fun
 }
 
 TOLUA_API void toluafix_remove_function_by_refid(lua_State* L, int refid)
 {
-	lua_pushlightuserdata(L, TOLUA_CALLBACK);
-	lua_rawget(L, LUA_REGISTRYINDEX);// funcMap
+	lua_rawgeti(L, LUA_REGISTRYINDEX, TOLUA_CALLBACK);// funcMap
 	lua_pushnil(L);// funcMap nil
 	lua_rawseti(L, -2, refid);// funcMap[refid] = nil, funcMap
 	lua_pop(L, 1);// empty
-
 	collect_ref_id(refid);
 }
 

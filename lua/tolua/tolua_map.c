@@ -21,25 +21,17 @@
 #include <stdlib.h>
 #include <math.h>
 
-int tolua_callback;
-int tolua_ubox;
-
 /* Create metatable
 	* Create and register new metatable
 	*/
 static int tolua_newmetatable(lua_State* L, const char* name)
 {
 	int r = luaL_newmetatable(L, name);
-#ifdef LUA_VERSION_NUM /* only lua 5.1 */
 	if(r)
 	{
 		lua_pushvalue(L, -1);
 		lua_pushstring(L, name);
 		lua_rawset(L, LUA_REGISTRYINDEX);// reg[mt] = type_name
-	}
-#endif
-	if(r)
-	{
 		tolua_classevents(L);// set meta events
 	}
 	lua_pop(L, 1);
@@ -164,7 +156,6 @@ static int tolua_bnd_inherit(lua_State* L)
 	return 0;
 };
 
-#ifdef LUA_VERSION_NUM /* lua 5.1 */
 static int tolua_bnd_setpeer(lua_State* L)
 {
 	/* stack: userdata, table */
@@ -193,7 +184,6 @@ static int tolua_bnd_getpeer(lua_State* L)
 	};
 	return 1;
 };
-#endif
 
 TOLUA_API void tolua_open(lua_State* L)
 {
@@ -205,32 +195,7 @@ TOLUA_API void tolua_open(lua_State* L)
 		lua_pushstring(L, "tolua_opened");
 		lua_pushboolean(L, 1);
 		lua_rawset(L, LUA_REGISTRYINDEX);
-#ifndef LUA_VERSION_NUM /* only prior to lua 5.1 */
-		/* create peer object table */
-		lua_pushstring(L, "tolua_peers");
-		lua_newtable(L);
-		/* make weak key metatable for peers indexed by userdata object */
-		lua_newtable(L);
-		lua_pushliteral(L, "__mode");
-		lua_pushliteral(L, "k");
-		lua_rawset(L, -3);                /* stack: string peers mt */
-		lua_setmetatable(L, -2);   /* stack: string peers */
-		lua_rawset(L,LUA_REGISTRYINDEX);
-#endif
-		/* create object ptr -> udata mapping table */
-		lua_pushlightuserdata(L, TOLUA_UBOX);
-		lua_newtable(L);
-		/* make weak value metatable for ubox table to allow userdata to be
-		   garbage-collected */
-		lua_newtable(L);
-		lua_pushliteral(L, "__mode");
-		lua_pushliteral(L, "v");
-		lua_rawset(L, -3);               // stack: string ubox mt
-		lua_setmetatable(L, -2);  // stack: string ubox
-		lua_rawset(L, LUA_REGISTRYINDEX);
-
 		tolua_newmetatable(L, "tolua_class");
-
 		tolua_module(L, NULL, 0);
 		tolua_beginmodule(L, NULL);
 		tolua_module(L, "tolua", 0);
@@ -238,10 +203,8 @@ TOLUA_API void tolua_open(lua_State* L)
 		tolua_function(L, "type", tolua_bnd_type);
 		tolua_function(L, "cast", tolua_bnd_cast);
 		tolua_function(L, "inherit", tolua_bnd_inherit);
-#ifdef LUA_VERSION_NUM /* lua 5.1 */
 		tolua_function(L, "setpeer", tolua_bnd_setpeer);
 		tolua_function(L, "getpeer", tolua_bnd_getpeer);
-#endif
 		tolua_endmodule(L);
 		tolua_endmodule(L);
 	}
@@ -492,10 +455,6 @@ TOLUA_API void tolua_array(lua_State* L, const char* name, lua_CFunction get, lu
 
 TOLUA_API void tolua_dobuffer(lua_State* L, char* B, unsigned int size, const char* name)
 {
-#ifdef LUA_VERSION_NUM /* lua 5.1 */
-	if(!luaL_loadbuffer(L, B, size, name)) lua_pcall(L, 0, 0, 0);
-#else
-	lua_dobuffer(L, B, size, name);
-#endif
+	if (!luaL_loadbuffer(L, B, size, name)) lua_pcall(L, 0, 0, 0);
 }
 

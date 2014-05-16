@@ -245,5 +245,5 @@ for i = 1,#names do
 end
 ]]
 
-CCDirector.displayStats = true
+--CCDirector.displayStats = true
 CCDirector:run(oEditor.scene)

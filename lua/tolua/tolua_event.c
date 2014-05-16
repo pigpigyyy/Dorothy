@@ -22,7 +22,6 @@
 	*/
 static void storeatubox(lua_State* L, int lo)
 {
-#ifdef LUA_VERSION_NUM
 	lua_getfenv(L, lo);
 	if(lua_rawequal(L, -1, TOLUA_NOPEER))
 	{
@@ -34,25 +33,6 @@ static void storeatubox(lua_State* L, int lo)
 	lua_insert(L, -3);
 	lua_settable(L, -3);/* on lua 5.1, we trade the "tolua_peers" lookup for a settable call */
 	lua_pop(L, 1);
-#else
-	/* stack: key value(to be stored) */
-	lua_pushstring(L,"tolua_peers");
-	lua_rawget(L,LUA_REGISTRYINDEX);        /* stack: k v ubox */
-	lua_pushvalue(L,lo);
-	lua_rawget(L,-2);                       /* stack: k v ubox ubox[u] */
-	if(!lua_istable(L,-1))
-	{
-		lua_pop(L,1);                          /* stack: k v ubox */
-		lua_newtable(L);                       /* stack: k v ubox table */
-		lua_pushvalue(L,1);
-		lua_pushvalue(L,-2);                   /* stack: k v ubox table u table */
-		lua_rawset(L,-4);                      /* stack: k v ubox ubox[u]=table */
-	}
-	lua_insert(L,-4);                       /* put table before k */
-	lua_pop(L,1);                           /* pop ubox */
-	lua_rawset(L,-3);                       /* store at table */
-	lua_pop(L,1);                           /* pop ubox[u] */
-#endif
 }
 
 /* Module index function
@@ -69,8 +49,7 @@ static int module_index_event(lua_State* L)
 			lua_call(L, 0, 1);
 			return 1;
 		}
-		else if(lua_istable(L, -1))
-			return 1;
+		else if (lua_istable(L, -1)) return 1;
 	}
 	/* call old index meta event */
 	if(lua_getmetatable(L, 1))
@@ -142,7 +121,6 @@ static int class_index_event(lua_State* L)
 	if(t == LUA_TUSERDATA)
 	{
 		/* Access alternative table */
-#ifdef LUA_VERSION_NUM /* new macro on version 5.1 */
 		lua_getfenv(L, 1);
 		if(!lua_rawequal(L, -1, TOLUA_NOPEER))
 		{
@@ -152,22 +130,7 @@ static int class_index_event(lua_State* L)
 			{
 				return 1;
 			}
-		};
-#else
-		lua_pushstring(L,"tolua_peers");
-		lua_rawget(L,LUA_REGISTRYINDEX);/* stack: obj key ubox */
-		lua_pushvalue(L,1);
-		lua_rawget(L,-2);/* stack: obj key ubox ubox[u] */
-		if(lua_istable(L,-1))
-		{
-			lua_pushvalue(L,2);/* key */
-			lua_rawget(L,-2);/* stack: obj key ubox ubox[u] value */
-			if(!lua_isnil(L, -1))
-			{
-				return 1;
-			}
 		}
-#endif
 		lua_settop(L, 2);/* stack: obj key */
 		/* Try metatables */
 		lua_pushvalue(L, 1);/* stack: obj key obj */
