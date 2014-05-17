@@ -94,7 +94,6 @@ local function oFileChooser()
 		w = v
 		local h = oPacker.root.h
 		v = 2;while v < h do v = v*2 end
-		local dy = v - h
 		h = v
 		local frame = oLine(
 		{
@@ -299,7 +298,7 @@ local function oFileChooser()
 				name,
 				17,
 				itemWidth,50,
-				winSize.width*0.5-halfBW+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
+				xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
 				function(item)
 					cancelButton.label.text = "Edit"
 					cancelButton.label.texture.antiAlias = false
