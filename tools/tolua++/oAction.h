@@ -1,6 +1,16 @@
 class oAction
 {
 	enum { Start, End };
+	#define oID::ActionWalk Walk
+	#define oID::ActionTurn Turn
+	#define oID::ActionMeleeAttack MeleeAttack
+	#define oID::ActionRangeAttack RangeAttack
+	#define oID::ActionIdle Idle
+	#define oID::ActionStop Stop
+	#define oID::ActionJump Jump
+	#define oID::ActionHit Hit
+	#define oID::ActionDie Die
+	#define oID::ActionUser UserID
 	float reaction;
 	tolua_readonly tolua_property__common int id;
 	tolua_readonly tolua_property__common int priority;

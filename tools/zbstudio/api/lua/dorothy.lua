@@ -3467,6 +3467,66 @@ local Dorothy =
 				static = true,
 				type = "value"
 			},
+			Walk =
+			{
+				description = "[Const][int] Built in action id",
+				static = true,
+				type = "value"
+			},
+			Turn =
+			{
+				description = "[Const][int] Built in action id",
+				static = true,
+				type = "value"
+			},
+			MeleeAttack =
+			{
+				description = "[Const][int] Built in action id",
+				static = true,
+				type = "value"
+			},
+			RangeAttack =
+			{
+				description = "[Const][int] Built in action id",
+				static = true,
+				type = "value"
+			},
+			Idle =
+			{
+				description = "[Const][int] Built in action id",
+				static = true,
+				type = "value"
+			},
+			Stop =
+			{
+				description = "[Const][int] Built in action id",
+				static = true,
+				type = "value"
+			},
+			Jump =
+			{
+				description = "[Const][int] Built in action id",
+				static = true,
+				type = "value"
+			},
+			Hit =
+			{
+				description = "[Const][int] Built in action id",
+				static = true,
+				type = "value"
+			},
+			Die =
+			{
+				description = "[Const][int] Built in action id",
+				static = true,
+				type = "value"
+			},
+			UserID =
+			{
+				description = "[Const][int] Built in action id",
+				static = true,
+				type = "value"
+			},
 			reaction =
 			{
 				description = "[float] When doing this action, the unit will take this extra reaction time\n\n in seconds to respond to the game world changes.",
@@ -5742,17 +5802,19 @@ local Dorothy =
 				typaName = "string",
 				type = "value"
 			},
-			actions =
+			setActions =
 			{
-				description = "[oInts]",
-				typeName = "oInts",
-				type = "value"
+				args = "(actionIds: table<int>)",
+				description = "",
+				returns = "()",
+				type = "method"
 			},
-			instincts =
+			setInstincts =
 			{
-				description = "[oInts]",
-				typeName = "oInts",
-				type = "value"
+				args = "(instinctIds: table<int>)",
+				description = "",
+				returns = "()",
+				type = "method"
 			},
 		},
 		description = "class oUnitDef(CCObject).\n args -- (modelFile: string, size: CCSize, density: float = 0, friction: float = 0, restitution: float = 0)",
