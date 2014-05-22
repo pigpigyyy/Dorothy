@@ -4,9 +4,9 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := testlua_shared
 
-LOCAL_MODULE_FILENAME := libtestlua
+LOCAL_MODULE_FILENAME := liboEditor
 
-LOCAL_SRC_FILES := testlua/main.cpp \
+LOCAL_SRC_FILES := oEditor/main.cpp \
                    ../../Classes/AppDelegate.cpp
 
 

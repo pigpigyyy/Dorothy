@@ -1,4 +1,4 @@
-APPNAME="TestLua"
+APPNAME="oEditor"
 
 # options
 
