@@ -3,6 +3,7 @@
 #include "Dorothy/platform/oPlatformWorld.h"
 #include "Dorothy/platform/oCamera.h"
 #include "Dorothy/platform/oData.h"
+#include "Dorothy/other/DebugDraw.h"
 
 NS_DOROTHY_PLATFORM_BEGIN
 
@@ -53,6 +54,19 @@ CCNode* oPlatformWorld::getChildByTag( int tag )
 		}
 	}
 	return NULL;
+}
+
+void oPlatformWorld::draw()
+{
+	GLESDebugDraw* draw = (GLESDebugDraw*)oWorld::getB2World()->GetDebugDraw();
+	if (draw)
+	{
+		kmGLTranslatef(_camera->getPositionX(), _camera->getPositionY(), 0);
+		draw->ratio = b2Factor;
+		draw->Begin();
+		oWorld::getB2World()->DrawDebugData();
+		kmGLTranslatef(-_camera->getPositionX(), -_camera->getPositionY(), 0);
+	}
 }
 
 void oPlatformWorld::setLayerRatio( int zOrder, const oVec2& ratio )

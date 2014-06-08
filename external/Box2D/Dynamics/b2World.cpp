@@ -104,6 +104,11 @@ void b2World::SetDebugDraw(b2Draw* debugDraw)
 	m_debugDraw = debugDraw;
 }
 
+b2Draw* b2World::GetDebugDraw() const
+{
+	return m_debugDraw;
+}
+
 b2Body* b2World::CreateBody(const b2BodyDef* def)
 {
 	b2Assert(IsLocked() == false);
@@ -1151,6 +1156,10 @@ void b2World::DrawDebugData()
 				if (b->IsActive() == false)
 				{
 					DrawShape(f, xf, b2Color(0.5f, 0.5f, 0.3f));
+				}
+				else if (f->IsSensor())
+				{
+					DrawShape(f, xf, b2Color(1.0f, 0.9f, 0.0f));
 				}
 				else if (b->GetType() == b2_staticBody)
 				{

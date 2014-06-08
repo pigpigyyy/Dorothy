@@ -11,7 +11,7 @@ public:
 	float linearDamping;
 	float angularDamping;
 	bool fixedRotation;
-	bool bullet;
+	bool bullet @ isBullet;
 	float gravityScale;
 	static oFixtureDef* polygon(
 		oVec2& center,
@@ -110,5 +110,4 @@ public:
 		int tag,
 		float radius);
 	static oBodyDef* create();
-	oBody* toBody(oWorld* world, int group, float x, float y, float angle = 0.0f);
 };

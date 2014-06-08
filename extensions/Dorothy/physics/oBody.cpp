@@ -6,17 +6,16 @@
 
 NS_DOROTHY_BEGIN
 
-oBody::oBody(oWorld* world, oBodyDef* bodyDef):
+oBody::oBody(oBodyDef* bodyDef, oWorld* world):
 _bodyB2(nullptr),
 _bodyDef(bodyDef),
 _world(world),
-_sensors(CCArray::create()),
 _group(0),
 _isDestroyed(false)
 {
 	_bodyB2 = world->getB2World()->CreateBody(_bodyDef);
 	_bodyB2->SetUserData((void*)this);
-	for (auto fixtureDef : _bodyDef->getFixtureDefs())
+	for (b2FixtureDef* fixtureDef : _bodyDef->getFixtureDefs())
 	{
 		if (fixtureDef->isSensor)
 		{
@@ -55,9 +54,9 @@ oBodyDef* oBody::getBodyDef() const
 	return _bodyDef;
 }
 
-oBody* oBody::create(oWorld* world, oBodyDef* bodyDef)
+oBody* oBody::create(oBodyDef* bodyDef, oWorld* world)
 {
-	oBody* body = new oBody(world, bodyDef);
+	oBody* body = new oBody(bodyDef, world);
 	body->autorelease();
 	return body;
 }
@@ -94,7 +93,7 @@ bool oBody::removeSensorByTag( int tag )
 
 bool oBody::removeSensor( oSensor* sensor )
 {
-	if (sensor && sensor->getFixture()->GetBody() == _bodyB2)
+	if (_sensors && sensor && sensor->getFixture()->GetBody() == _bodyB2)
 	{
 		_bodyB2->DestroyFixture(sensor->getFixture());
 		_sensors->removeObject(sensor);
@@ -118,6 +117,36 @@ oVec2 oBody::getVelocity() const
 	return oWorld::oVal(_bodyB2->GetLinearVelocity());
 }
 
+void oBody::setAngularRate(float var)
+{
+	_bodyB2->SetAngularVelocity(CC_DEGREES_TO_RADIANS(var));
+}
+
+float oBody::getAngularRate() const
+{
+	return CC_RADIANS_TO_DEGREES(_bodyB2->GetAngularVelocity());
+}
+
+void oBody::setLinearDamping(float var)
+{
+	_bodyB2->SetLinearDamping(var);
+}
+
+float oBody::getLinearDamping() const
+{
+	return _bodyB2->GetLinearDamping();
+}
+
+void oBody::setAngularDamping(float var)
+{
+	_bodyB2->SetAngularDamping(var);
+}
+
+float oBody::getAngularDamping() const
+{
+	return _bodyB2->GetAngularDamping();
+}
+
 void oBody::setGroup( int group )
 {
 	_group = group;
@@ -130,6 +159,16 @@ void oBody::setGroup( int group )
 int oBody::getGroup() const
 {
 	return _group;
+}
+
+void oBody::applyLinearImpulse(const oVec2& impulse, const oVec2& pos)
+{
+	_bodyB2->ApplyLinearImpulse(impulse, pos);
+}
+
+void oBody::applyAngularImpulse(float impulse)
+{
+	_bodyB2->ApplyAngularImpulse(impulse);
 }
 
 b2Fixture* oBody::attach( b2FixtureDef* fixtureDef )
@@ -146,6 +185,7 @@ oSensor* oBody::attachSensor( int tag, b2FixtureDef* fixtureDef )
 	b2Fixture* fixture = _bodyB2->CreateFixture(fixtureDef);
 	oSensor* sensor = oSensor::create(this, tag, fixture);
 	fixture->SetUserData((void*)sensor);
+	if (!_sensors) _sensors = CCArray::create();
 	_sensors->addObject(sensor);
 	return sensor;
 }

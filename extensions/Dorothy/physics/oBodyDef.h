@@ -148,10 +148,12 @@ public:
 	void attachCircleSensor(
 		int tag,
 		float radius);
-	PROPERTY_READONLY_REF(vector<b2FixtureDef*>, FixtureDefs);
+	PROPERTY_READONLY_REF(oOwnVector<b2FixtureDef>, FixtureDefs);
 	void clearFixtures();
+	void setDensity(float var);
+	void setFriction(float var);
+	void setRestitution(float var);
 	static oBodyDef* create();
-	oBody* toBody(oWorld* world, int group, float x, float y, float angle = 0.0f);
 protected:
 	oBodyDef();
 	static b2FixtureDef _fixtureDef;
@@ -159,7 +161,7 @@ protected:
 	static b2CircleShape _circleShape;
 	static b2ChainShape _chainShape;
 private:
-	vector<b2FixtureDef*> _fixtureDefs;
+	oOwnVector<b2FixtureDef> _fixtureDefs;
 	CC_LUA_TYPE(oBodyDef)
 };
 

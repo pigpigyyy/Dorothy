@@ -43,6 +43,7 @@ bool CCScene::init()
 	this->setAnchorPoint(ccp(0.5f, 0.5f));
 	this->setContentSize(
 		CCDirector::sharedDirector()->getWinSize());
+	this->setPosition(ccp(m_obContentSize.width*0.5f, m_obContentSize.height*0.5f));
     return true;
 }
 

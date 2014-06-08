@@ -14,6 +14,9 @@ public:
 	virtual ~oBody();
 	virtual void onEnter();
 	virtual void onExit();
+	PROPERTY_NAME(float, LinearDamping);
+	PROPERTY_NAME(float, AngularDamping);
+	PROPERTY_NAME(float, AngularRate);
 	PROPERTY_READONLY(oWorld*, World);
 	PROPERTY_READONLY(oBodyDef*, BodyDef);
 	PROPERTY_READONLY(b2Body*, B2Body);
@@ -21,6 +24,8 @@ public:
 	PROPERTY_NAME(float, VelocityX);
 	PROPERTY_NAME(float, VelocityY);
 	PROPERTY_VIRTUAL(int, _group, Group);
+	void applyLinearImpulse(const oVec2& impulse, const oVec2& pos);
+	void applyAngularImpulse(float impulse);
 	void setVelocity(float x, float y);
 	void setVelocity(const oVec2& velocity);
 	void setPosition(float x, float y);
@@ -32,9 +37,9 @@ public:
 	b2Fixture* attach(b2FixtureDef* fixtureDef);
 	oSensor* attachSensor(int tag, b2FixtureDef* fixtureDef);
 	virtual void destroy();
-	static oBody* create(oWorld* world, oBodyDef* bodyDef);
+	static oBody* create(oBodyDef* bodyDef, oWorld* world);
 protected:
-	oBody(oWorld* world, oBodyDef* bodyDef);
+	oBody(oBodyDef* bodyDef, oWorld* world);
 	virtual void updatePhysics();
 	b2Body* _bodyB2;// weak reference
 	oWorld* _world;

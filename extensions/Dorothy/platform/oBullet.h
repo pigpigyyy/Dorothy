@@ -28,7 +28,7 @@ public:
 	void onBodyEnter(oSensor* sensor, oBody* body);
 	void onFaceDisposed(oIDisposable* item);
 	oBulletDef* getBulletDef();
-	static oBullet* create(oWorld* world, oBulletDef* def, oUnit* unit);
+	static oBullet* create(oBulletDef* def, oUnit* unit);
 	oTargetAllow targetAllow;
 	oBulletHandler hitTarget;
 	void addHandler(int handler);
@@ -37,7 +37,7 @@ public:
 	int type;
 	virtual void destroy();
 protected:
-	oBullet(oWorld* world, oBulletDef* def, oUnit* unit);
+	oBullet(oBulletDef* def, oUnit* unit);
 	virtual void updatePhysics();
 private:
 	oRef<oBulletDef> _bulletDef;

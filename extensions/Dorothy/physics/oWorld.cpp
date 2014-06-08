@@ -2,6 +2,7 @@
 #include "Dorothy/physics/oWorld.h"
 #include "Dorothy/physics/oBody.h"
 #include "Dorothy/physics/oSensor.h"
+#include "Dorothy/other/DebugDraw.h"
 
 NS_DOROTHY_BEGIN
 
@@ -49,7 +50,7 @@ _contactFilter(new oContactFilter())
 		_filters[i].categoryBits = 1<<i;
 		_filters[i].maskBits = 0;
 	}
-	CCLayer::scheduleUpdate();
+	CCNode::scheduleUpdate();
 }
 
 oWorld::~oWorld()
@@ -60,14 +61,37 @@ oWorld::~oWorld()
 		if (body)
 		{
 			body->_bodyB2 = nullptr;
-			body->_sensors->removeAllObjects();
+			if (body->_sensors) body->_sensors->removeAllObjects();
 		}
+	}
+	b2Draw* draw = _world.GetDebugDraw();
+	CC_SAFE_DELETE(draw);
+}
+
+b2World* oWorld::getB2World() const
+{
+	return const_cast<b2World*>(&_world);
+}
+
+void oWorld::setShowDebug(bool var)
+{
+	if (var)
+	{
+		if (!_world.GetDebugDraw())
+		{
+			_world.SetDebugDraw(new GLESDebugDraw());
+		}
+	}
+	else
+	{
+		b2Draw* draw = _world.GetDebugDraw();
+		CC_SAFE_DELETE(draw);
 	}
 }
 
-b2World* oWorld::getB2World()
+bool oWorld::isShowDebug() const
 {
-	return &_world;
+	return _world.GetDebugDraw() != nullptr;
 }
 
 void oWorld::setIterations( int velocityIter, int positionIter )
@@ -97,6 +121,59 @@ void oWorld::update( float dt )
 	}
 	_contactListner->SolveSensors();
 	CCNode::update(dt);
+}
+
+void oWorld::draw()
+{
+	GLESDebugDraw* draw = (GLESDebugDraw*)_world.GetDebugDraw();
+	if (draw)
+	{
+		draw->ratio = b2Factor;
+		draw->Begin();
+		_world.DrawDebugData();
+	}
+}
+
+void oWorld::visit()
+{
+	if (!m_bVisible) return;
+
+	kmGLPushMatrix();
+
+	CCNode* transformTarget = CCNode::getTransformTarget();
+	if (transformTarget)
+	{
+		CCDirector::sharedDirector()->projection();
+		transformTarget->transformAncestors();
+		transformTarget->transform();
+	}
+
+	if (m_pGrid && m_pGrid->isActive())
+	{
+		m_pGrid->beforeDraw();
+	}
+
+	this->transform();
+
+	this->sortAllChildren();
+	CCObject* pObject;
+	CCARRAY_FOREACH(m_pChildren, pObject)
+	{
+		CCNode* pNode = (CCNode*)pObject;
+		if (pNode)
+		{
+			pNode->visit();
+		}
+	}
+
+	this->draw();
+
+	if (m_pGrid && m_pGrid->isActive())
+	{
+		m_pGrid->afterDraw(this);
+	}
+
+	kmGLPopMatrix();
 }
 
 void oWorld::query( const CCRect& rect, const function<bool(oBody*)>& callback )

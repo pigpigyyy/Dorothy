@@ -1,6 +1,7 @@
-class oWorld: public CCLayer
+class oWorld: public CCNode
 {
 	tolua_property__common oVec2 gravity;
+	tolua_property__bool bool showDebug;
 	tolua_outside void oWorld_query @ query(CCRect& rect, tolua_function nHandler);
 	void setIterations(int velocityIter, int positionIter);
 	void setShouldContact(int groupA, int groupB, bool contact);

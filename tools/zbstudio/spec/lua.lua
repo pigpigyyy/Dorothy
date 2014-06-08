@@ -103,7 +103,7 @@ return {
       local ls = editor:PositionFromLine(line)
       local s = bit.band(editor:GetStyleAt(ls),31)
 
-      if (not iscomment[s]) then
+--[[      if (not iscomment[s]) then
         local tx = editor:GetLine(line)
         local leftscope
 
@@ -115,7 +115,7 @@ return {
         if (leftscope) then
           break
         end
-      end
+      end]]
       line = line -1
     end
 
@@ -148,6 +148,7 @@ return {
             typ = nil
           end
           typ = typ and typ:gsub("%s","")
+		  if typ == "require" then typ = nil end
           if (var and typ) then
             class,func = typ:match(varname.."[%.:]"..varname)
             if (assigns[typ]) then

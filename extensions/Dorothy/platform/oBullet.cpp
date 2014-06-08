@@ -8,11 +8,13 @@
 #include "Dorothy/physics/oWorld.h"
 #include "Dorothy/effect/oEffectCache.h"
 #include "Dorothy/misc/oScriptHandler.h"
+#include "Dorothy/model/oModel.h"
+#include "Dorothy/model/oModelDef.h"
 
 NS_DOROTHY_PLATFORM_BEGIN
 
-oBullet::oBullet( oWorld* world, oBulletDef* bulletDef, oUnit* unit ):
-oBody(world, bulletDef->getBodyDef()),
+oBullet::oBullet(oBulletDef* bulletDef, oUnit* unit) :
+oBody(bulletDef->getBodyDef(), unit->getWorld()),
 type(bulletDef->type),
 _bulletDef(bulletDef),
 _owner(unit),
@@ -23,8 +25,25 @@ _face(nullptr)
 	oBullet::setFaceRight(unit->isFaceRight());
 	_detectSensor = oBody::getSensorByTag(oBulletDef::SensorTag);
 	_detectSensor->bodyEnter += std::make_pair(this, &oBullet::onBodyEnter);
-	b2Vec2 v = _bulletDef->getVelocity();
+	oVec2 v = _bulletDef->getVelocity();
 	oBody::setVelocity((_isFaceRight ? v.x : -v.x), v.y);
+	oBody::setGroup(oSharedData.getGroupDetect());
+	oFace* face = bulletDef->getFace();
+	if (face)
+	{
+		CCNode* node = face->toNode();
+		oBullet::setFace(node);
+	}
+	oModel* model = unit->getModel();
+	const oVec2& offset = (model ? model->getModelDef()->getKeyPoint(oUnitDef::BulletKey) : oVec2::zero);
+	oBullet::setPosition(
+		ccpAdd(
+		unit->getPosition(),
+		(unit->isFaceRight() ? ccp(-offset.x, offset.y) : offset)));
+	if (oBody::getBodyDef()->gravityScale != 0.0f)
+	{
+		oBullet::setRotation(-CC_RADIANS_TO_DEGREES(atan2f(v.y, unit->isFaceRight() ? v.x : -v.x)));
+	}
 	this->scheduleUpdate();
 }
 
@@ -71,9 +90,9 @@ void oBullet::onExit()
 	}
 }
 
-oBullet* oBullet::create( oWorld* world, oBulletDef* def, oUnit* unit )
+oBullet* oBullet::create(oBulletDef* def, oUnit* unit)
 {
-	oBullet* bullet = new oBullet(world, def, unit);
+	oBullet* bullet = new oBullet(def, unit);
 	bullet->autorelease();
 	return bullet;
 }

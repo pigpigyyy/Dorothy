@@ -89,7 +89,6 @@ public:
 	PROPERTY_READONLY(float, Duration);
 	PROPERTY(float, _recoverTime, Recovery);
 	PROPERTY_BOOL(_faceRight, FaceRight);
-	virtual bool init();
 	void setLook(int index);
 	void play(uint32 index);
 	void play(const string& name);

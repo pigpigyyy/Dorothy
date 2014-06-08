@@ -351,28 +351,48 @@ oBodyDef* oBodyDef::create()
 	return bodyDef;
 }
 
-oBody* oBodyDef::toBody( oWorld* world, int group, float x, float y, float angle )
-{
-	oBody* body = oBody::create(world, this);
-	body->setGroup(group);
-	body->setPosition(x, y);
-	body->setRotation(angle);
-	return body;
-}
-
-const vector<b2FixtureDef*>& oBodyDef::getFixtureDefs() const
+const oOwnVector<b2FixtureDef>& oBodyDef::getFixtureDefs() const
 {
 	return _fixtureDefs;
 }
 
 void oBodyDef::clearFixtures()
 {
-	for (unsigned int i = 0; i < _fixtureDefs.size(); i++)
+	for (b2FixtureDef* fixtureDef : _fixtureDefs)
 	{
-		delete _fixtureDefs[i]->shape;
-		_fixtureDefs[i]->shape = NULL;
-		delete _fixtureDefs[i];
-		_fixtureDefs[i] = NULL;
+		delete fixtureDef->shape;
+		fixtureDef->shape = nullptr;
+	}
+}
+
+void oBodyDef::setDensity(float var)
+{
+	for (b2FixtureDef* fixtureDef : _fixtureDefs)
+	{
+		if (!fixtureDef->isSensor)
+		{
+			fixtureDef->density = var;
+		}
+	}
+}
+void oBodyDef::setFriction(float var)
+{
+	for (b2FixtureDef* fixtureDef : _fixtureDefs)
+	{
+		if (!fixtureDef->isSensor)
+		{
+			fixtureDef->friction = var;
+		}
+	}
+}
+void oBodyDef::setRestitution(float var)
+{
+	for (b2FixtureDef* fixtureDef : _fixtureDefs)
+	{
+		if (!fixtureDef->isSensor)
+		{
+			fixtureDef->restitution = var;
+		}
 	}
 }
 

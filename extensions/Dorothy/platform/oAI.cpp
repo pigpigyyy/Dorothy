@@ -18,10 +18,10 @@ float oAI::_nearestFriendDistance;
 float oAI::_nearestEnemyDistance;
 float oAI::_nearestNeutralDistance;
 
-CCArray* oAI::_friends;
-CCArray* oAI::_enemies;
-CCArray* oAI::_neutrals;
-CCArray* oAI::_detectedUnits;
+oRef<CCArray> oAI::_friends(CCArray::create());
+oRef<CCArray> oAI::_enemies(CCArray::create());
+oRef<CCArray> oAI::_neutrals(CCArray::create());
+oRef<CCArray> oAI::_detectedUnits(CCArray::create());
 
 float oAI::_oldInstinctValue = 0;
 float oAI::_newInstinctValue = 0;
@@ -175,7 +175,10 @@ float oAI::getNewInstinctValue()
 
 void oAI::add( int id, oAILeaf* leaf )
 {
-	_reflexArcs[id] = leaf;
+	if (id != oAI::None)
+	{
+		_reflexArcs[id] = leaf;
+	}
 }
 
 void oAI::clear()
@@ -185,10 +188,13 @@ void oAI::clear()
 
 oAILeaf* oAI::get( int id )
 {
-	auto it = _reflexArcs.find(id);
-	if (it != _reflexArcs.end())
+	if (id != oAI::None)
 	{
-		return it->second;
+		auto it = _reflexArcs.find(id);
+		if (it != _reflexArcs.end())
+		{
+			return it->second;
+		}
 	}
 	return nullptr;
 }

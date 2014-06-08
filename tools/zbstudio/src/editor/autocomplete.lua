@@ -227,7 +227,7 @@ local function resolveAssign(editor,tx)
 		local key,rest = a:match("([%w_]+)[%.:](.*)")
 		--DisplayOutputLn("content:",a,"key:",key,"rest:",rest)
 		key = tonumber(key) or key -- make this work for childs[0]
-		if rest then		
+		if rest then
 			local nextKey, nextRest = rest:match("([%w_]+)[%.:](.*)")
 			--DisplayOutputLn("nextRest:",nextRest)
 			if nextRest then
@@ -266,9 +266,10 @@ local function resolveAssign(editor,tx)
 				-- check if what we have so far can be matched with a class name
 				-- this can happen if it's a reference to a value with a known type
 				classname = classname or assigns[c..w]
+				--DisplayOutputLn(0,classname,assigns[c..w],c..w)
 				if classname then
-					classname = classname:gsub("([%w_]+)[%.:({]*","%1")
-					--DisplayOutputLn(classname)
+					classname = classname:gsub("([%w_]+)[({]*[%w_]*","%1") or classname
+					--DisplayOutputLn(1,classname)
 				end
 				if (s ~= "" and old ~= classname) then
 					c = classname..s

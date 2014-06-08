@@ -191,7 +191,7 @@ void oUnitDef_setActions(oUnitDef* def, int actions[], int count)
 	def->actions.clear();
 	for(int i = 0; i < count; i++)
 	{
-		def->actions.push_back(i);
+		def->actions.push_back(actions[i]);
 	}
 }
 void oUnitDef_setInstincts(oUnitDef* def, int instincts[], int count)
@@ -199,7 +199,7 @@ void oUnitDef_setInstincts(oUnitDef* def, int instincts[], int count)
 	def->instincts.clear();
 	for(int i = 0; i < count; i++)
 	{
-		def->instincts.push_back(i);
+		def->instincts.push_back(instincts[i]);
 	}
 }
 

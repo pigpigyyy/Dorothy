@@ -13,5 +13,5 @@ class oBullet: public oBody
 	void clearHandler();
 
 	void destroy();
-	static oBullet* create(oWorld* world, oBulletDef* def, oUnit* unit);
+	static oBullet* create(oBulletDef* def, oUnit* owner);
 };

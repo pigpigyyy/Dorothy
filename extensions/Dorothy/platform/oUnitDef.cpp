@@ -3,6 +3,7 @@
 #include "Dorothy/platform/oUnitDef.h"
 #include "Dorothy/platform/oUnit.h"
 #include "Dorothy/platform/oBulletDef.h"
+#include "Dorothy/platform/oAI.h"
 
 #include "Dorothy/model/oModelDef.h"
 #include "Dorothy/model/oModelCache.h"
@@ -16,8 +17,9 @@ NS_DOROTHY_PLATFORM_BEGIN
 const float oUnitDef::BOTTOM_OFFSET(4.0f);
 const float oUnitDef::GROUND_SENSOR_HEIGHT(4.0f);
 
-oUnitDef::oUnitDef():
+oUnitDef::oUnitDef() :
 type(0),
+reflexArc(oAI::None),
 sensity(0),
 move(0),
 jump(0),
@@ -34,61 +36,18 @@ attackTarget(oAttackTarget::Single),
 damageType(0),
 defenceType(0),
 hitEffect(oEffectType::None),
-bulletType(oBulletDef::NoneType)
+bulletType(oBulletDef::None),
+_bodyDef(oBodyDef::create()),
+_density(1.0f),
+_friction(0.4f),
+_restitution(0.4f)
 { }
 
-oUnitDef* oUnitDef::create( const string& modelFile, const CCSize& size, float density, float friction, float restitution )
+oUnitDef* oUnitDef::create()
 {
 	oUnitDef* unitDef = new oUnitDef();
 	unitDef->autorelease();
-
-	if (modelFile.size() > 0)
-	{
-		unitDef->_modelDef = oSharedModelCache.load(modelFile.c_str());
-		unitDef->_modelDef->retain();
-	}
-	unitDef->_size = size;
-	oBodyDef* bodyDef = oBodyDef::create();
-	if (size != CCSize::zero)
-	{
-		bodyDef->fixedRotation = true;
-		float hw = size.width * 0.5f;
-		float hh = size.height * 0.5f;
-		vector<oVec2> vertices(4);
-		vertices[0].set(-hw, hh);
-		vertices[1].set(-hw + BOTTOM_OFFSET, -hh);
-		vertices[2].set(hw - BOTTOM_OFFSET, -hh);
-		vertices[3].set(hw, hh);
-		bodyDef->attachPolygon(vertices, density, friction, restitution);
-		bodyDef->attachPolygonSensor(
-			oUnitDef::GroundSensorTag,
-			size.width - BOTTOM_OFFSET * 2,
-			GROUND_SENSOR_HEIGHT,
-			b2Vec2(0, -hh - GROUND_SENSOR_HEIGHT * 0.5f),
-			0);
-	}
-	unitDef->_bodyDef = bodyDef;
 	return unitDef;
-}
-
-oUnit* oUnitDef::toUnit( oWorld* world, int group, float x, float y, bool isFaceRight )
-{
-	oUnit* unit = oUnit::create(world, this);
-	unit->setGroup(group);
-	unit->setPosition(x, y);
-	unit->setRotation(-CC_RADIANS_TO_DEGREES(_bodyDef->angle));
-	oModel* model = _modelDef ? _modelDef->toModel() : oModel::none();
-	unit->setModel(model);
-	unit->setFaceRight(isFaceRight);
-	for (int id : actions)
-	{
-		unit->attachAction(id);
-	}
-	for (int id : instincts)
-	{
-		unit->attachInstinct(id);
-	}
-	return unit;
 }
 
 oBodyDef* oUnitDef::getBodyDef() const
@@ -103,14 +62,79 @@ oModelDef* oUnitDef::getModelDef() const
 
 const CCSize& oUnitDef::getSize() const
 {
-	return _size;
+	if (_modelDef) return _modelDef->getSize();
+	return CCSize::zero;
+}
+
+void oUnitDef::setDensity(float density)
+{
+	_density = density;
+	_bodyDef->setDensity(density);
+}
+float oUnitDef::getDensity() const
+{
+	return _density;
+}
+
+void oUnitDef::setFriction(float friction)
+{
+	_friction = friction;
+	_bodyDef->setFriction(friction);
+}
+float oUnitDef::getFriction() const
+{
+	return _friction;
+}
+
+void oUnitDef::setRestitution(float restitution)
+{
+	_restitution = restitution;
+	_bodyDef->setRestitution(restitution);
+}
+float oUnitDef::getRestitution() const
+{
+	return _restitution;
+}
+
+void oUnitDef::setModel(const string& modelFile)
+{
+	_model = modelFile;
+	if (!modelFile.empty())
+	{
+		_modelDef = oSharedModelCache.load(modelFile.c_str());
+		CCSize size = _modelDef->getSize();
+		if (size != CCSize::zero)
+		{
+			_bodyDef->clearFixtures();
+			_bodyDef->fixedRotation = true;
+			float hw = size.width * 0.5f;
+			float hh = size.height * 0.5f;
+			oVec2 vertices[] =
+			{
+				oVec2(-hw, hh),
+				oVec2(-hw + BOTTOM_OFFSET, -hh),
+				oVec2(hw - BOTTOM_OFFSET, -hh),
+				oVec2(hw, hh)
+			};
+			_bodyDef->attachPolygon(vertices, 4, _density, _friction, _restitution);
+			_bodyDef->attachPolygonSensor(
+				oUnitDef::GroundSensorTag,
+				size.width - BOTTOM_OFFSET * 2,
+				GROUND_SENSOR_HEIGHT,
+				b2Vec2(0, -hh - GROUND_SENSOR_HEIGHT * 0.5f),
+				0);
+		}
+	}
+}
+const string& oUnitDef::getModel() const
+{
+	return _model;
 }
 
 void oUnitDef::setStatic(bool var)
 {
 	_bodyDef->type = var ? b2_staticBody : b2_dynamicBody;
 }
-
 bool oUnitDef::isStatic() const
 {
 	return _bodyDef->type == b2_staticBody;

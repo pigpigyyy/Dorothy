@@ -9,6 +9,7 @@ class oUnit;
 class oAI
 {
 public:
+	enum {None = -1};
 	static bool conditionedReflex(oUnit* unit);
 
 	static oUnit* getSelf();
@@ -30,10 +31,10 @@ private:
 	static oUnit* _nearestEnemy;
 	static oUnit* _nearestNeutral;
 
-	static CCArray* _friends;
-	static CCArray* _enemies;
-	static CCArray* _neutrals;
-	static CCArray* _detectedUnits;
+	static oRef<CCArray> _friends;
+	static oRef<CCArray> _enemies;
+	static oRef<CCArray> _neutrals;
+	static oRef<CCArray> _detectedUnits;
 
 	static float _nearestUnitDistance;
 	static float _nearestFriendDistance;

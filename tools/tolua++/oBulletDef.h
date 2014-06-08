@@ -1,6 +1,6 @@
 class oBulletDef: public CCObject
 {
-	enum { NoneType = -1 };
+	enum { None = -1 };
 	int type;
 	int endEffect;
 	float lifeTime;
@@ -13,7 +13,6 @@ class oBulletDef: public CCObject
 
 	void setAsCircle(float radius);
 	void setVelocity(float angle, float speed);
-	oBullet* toBullet(oWorld* world, oUnit* unit);
 	static tolua_readonly const int SensorTag;
 	static oBulletDef* create();
 };

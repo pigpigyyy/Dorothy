@@ -99,10 +99,10 @@ private:
 	int _actionId;
 };
 
-oAILeaf* oSel(CCArray* nodes);
-oAILeaf* oSeq(CCArray* nodes);
-oAILeaf* oParSel(CCArray* nodes);
-oAILeaf* oParSeq(CCArray* nodes);
+oAILeaf* oSel(oAILeaf* nodes[], int count);
+oAILeaf* oSeq(oAILeaf* nodes[], int count);
+oAILeaf* oParSel(oAILeaf* nodes[], int count);
+oAILeaf* oParSeq(oAILeaf* nodes[], int count);
 oAILeaf* oCon(int handler);
 oAILeaf* oAct(int actionId);
 

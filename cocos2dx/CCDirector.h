@@ -103,7 +103,7 @@ public:
     // attribute
 
     /** Get current running Scene. Director can only run one Scene at the time */
-    inline CCScene* getRunningScene() { return m_pRunningScene; }
+	inline CCScene* getRunningScene() { return m_pNextScene ? m_pNextScene : m_pRunningScene; }
 
     /** Get the FPS value */
     inline double getAnimationInterval() { return m_dAnimationInterval; }
@@ -426,7 +426,7 @@ class CCDisplayLinkDirector : public CCDirector
 {
 public:
     CCDisplayLinkDirector() 
-        : m_bInvalid(false)
+        : m_bInvalid(true)
     {}
 
     virtual void mainLoop();

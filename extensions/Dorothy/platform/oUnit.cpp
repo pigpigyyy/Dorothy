@@ -15,12 +15,11 @@
 
 NS_DOROTHY_PLATFORM_BEGIN
 
-oUnit::oUnit(oWorld* world, oUnitDef* unitDef):
-oBody(world, unitDef->getBodyDef()),
+oUnit::oUnit(oUnitDef* unitDef, oWorld* world) :
+oBody(unitDef->getBodyDef(), world),
 _model(nullptr),
 _detectSensor(nullptr),
 _attackSensor(nullptr),
-_isFaceRight(true),
 _currentAction(nullptr),
 _size(unitDef->getSize()),
 move(unitDef->move),
@@ -39,13 +38,27 @@ damageType(unitDef->damageType),
 defenceType(unitDef->defenceType),
 sensity(unitDef->sensity),
 _unitDef(unitDef),
-_reflexArcId(0)
+_reflexArcId(unitDef->reflexArc)
 {
 	properties(this);
 	_instincts(this);
 	oUnit::setDetectDistance(unitDef->detectDistance);
 	oUnit::setAttackRange(unitDef->attackRange);
 	_groundSensor = oBody::getSensorByTag(oUnitDef::GroundSensorTag);
+	oUnit::setRotation(-CC_RADIANS_TO_DEGREES(oBody::getBodyDef()->angle));
+	oModelDef* modelDef = unitDef->getModelDef();
+	oModel* model = modelDef ? modelDef->toModel() : oModel::none();
+	_isFaceRight = modelDef->isFaceRight();
+	oUnit::setModel(model);
+	for (int id : unitDef->actions)
+	{
+		oUnit::attachAction(id);
+	}
+	for (int id : unitDef->instincts)
+	{
+		oUnit::attachInstinct(id);
+	}
+	_reflexArc = oAI::get(_reflexArcId);
 	this->scheduleUpdate();
 }
 
@@ -93,9 +106,9 @@ oModel* oUnit::getModel() const
 	return _model;
 }
 
-oUnit* oUnit::create(oWorld* world, oUnitDef* unitDef)
+oUnit* oUnit::create(oUnitDef* unitDef, oWorld* world)
 {
-	oUnit* unit = new oUnit(world, unitDef);
+	oUnit* unit = new oUnit(unitDef, world);
 	unit->autorelease();
 	return unit;
 }

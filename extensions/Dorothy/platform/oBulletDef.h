@@ -15,7 +15,7 @@ class oUnit;
 class oBulletDef: public CCObject
 {
 public:
-	enum { NoneType = -1 };
+	enum { None = 0 };
 	void setVelocity(float angle, float speed);
 	PROPERTY_REF(oVec2, _velocity, Velocity);
 	void setHighSpeedFix(bool var);
@@ -29,7 +29,6 @@ public:
 	static oBulletDef* create();
 	void setAsCircle(float radius);
 	oBodyDef* getBodyDef() const;
-	oBullet* toBullet(oWorld* world, oUnit* unit);
 	static const int SensorTag;
 protected:
 	oBulletDef();

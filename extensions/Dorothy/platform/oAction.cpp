@@ -314,7 +314,7 @@ void oIdle::run()
 	model->setSpeed(1.0f);
 	model->setLoop(true);
 	model->setLook(oID::LookHappy);
-	model->setRecovery(0.05f);
+	model->setRecovery(0.2f);
 	if (!_owner->isOnSurface())
 	{
 		oModel* model = _owner->getModel();
@@ -329,10 +329,14 @@ void oIdle::run()
 
 void oIdle::update(float dt)
 {
+	oModel* model = _owner->getModel();
 	if (!_owner->isOnSurface())
 	{
-		oModel* model = _owner->getModel();
 		model->resume(oID::AnimationJump);
+	}
+	else if (_owner->getModel()->getCurrentAnimationName() != oID::AnimationIdle)
+	{
+		model->resume(oID::AnimationIdle);
 	}
 	oAction::update(dt);
 }
@@ -340,7 +344,7 @@ void oIdle::update(float dt)
 void oIdle::stop()
 {
 	oAction::stop();
-	_owner->getModel()->stop();
+	_owner->getModel()->pause();
 }
 
 oAction* oIdle::create( oUnit* unit )
@@ -365,7 +369,7 @@ void oJump::run()
 	model->setSpeed(1.0f);
 	model->setLoop(true);
 	model->setLook(oID::LookHappy);
-	model->setRecovery(0.1f);
+	model->setRecovery(0.2f);
 	model->resume(oID::AnimationJump);
 	_current = 0.0f;
 	_owner->setVelocityY(_owner->jump);
@@ -445,7 +449,7 @@ void oAttack::run()
 	oModel* model = _owner->getModel();
 	model->setLoop(false);
 	model->setLook(oID::LookFight);
-	model->setRecovery(0.0f);
+	model->setRecovery(0.2f);
 	model->setSpeed(_owner->attackSpeed);
 	model->play(oID::AnimationAttack);
 	oAction::run();
@@ -591,7 +595,7 @@ void oRangeAttack::onAttack()
 	oBulletDef* bulletDef = _owner->getBulletDef();
 	if (bulletDef)
 	{
-		oBullet* bullet = bulletDef->toBullet(_owner->getWorld(), _owner);
+		oBullet* bullet = oBullet::create(bulletDef, _owner);
 		bullet->targetAllow = _owner->targetAllow;
 		bullet->hitTarget = std::make_pair(this, &oRangeAttack::onHitTarget);
 		_owner->getWorld()->addChild(bullet, _owner->getZOrder());
@@ -764,7 +768,6 @@ const int oID::ActionStop = 5;
 const int oID::ActionJump = 6;
 const int oID::ActionHit = 7;
 const int oID::ActionDie = 8;
-const int oID::ActionUser = 9;
 
 const int oID::PriorityIdle = 0;
 const int oID::PriorityWalk = 1;

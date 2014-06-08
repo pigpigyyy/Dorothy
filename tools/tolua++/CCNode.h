@@ -20,7 +20,7 @@ class CCNode: public CCObject
 	tolua_property__common float skewX;
 	tolua_property__common float skewY;
 	tolua_property__bool bool visible;
-	tolua_property__common oVec2 anchorPoint;
+	tolua_property__common oVec2 anchorPoint @ anchor;
 	tolua_property__common CCSize contentSize;
 	tolua_property__common int tag;
 	tolua_property__common ccColor3B color;

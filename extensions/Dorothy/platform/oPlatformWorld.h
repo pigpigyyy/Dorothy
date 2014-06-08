@@ -34,6 +34,7 @@ public:
 	virtual void reorderChild(CCNode * child, int zOrder);
 	virtual void removeChild(CCNode* child, bool cleanup);
 	virtual CCNode* getChildByTag(int tag);
+	virtual void draw();
 	oLayer* getLayer(int zOrder);
 	void removeLayer(int zOrder);
 	void removeAllLayers();

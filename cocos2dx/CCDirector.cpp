@@ -532,7 +532,7 @@ CCPoint CCDirector::getVisibleOrigin()
 void CCDirector::runWithScene(CCScene *pScene)
 {
     CCAssert(pScene != NULL, "This command can only be used to start the CCDirector. There is already a scene present.");
-    CCAssert(m_pRunningScene == NULL, "m_pRunningScene should be null");
+    //CCAssert(m_pRunningScene == NULL, "m_pRunningScene should be null");
 
     pushScene(pScene);
     startAnimation();
@@ -574,8 +574,15 @@ void CCDirector::popScene()
     }
     else
     {
-        m_bSendCleanupToScene = true;
-        m_pNextScene = (CCScene*)m_pobScenesStack->objectAtIndex(c - 1);
+		m_pNextScene = (CCScene*)m_pobScenesStack->objectAtIndex(c - 1);
+		if (m_pRunningScene != m_pNextScene)
+		{
+			m_bSendCleanupToScene = true;
+		}
+		else
+		{
+			m_pNextScene = NULL;
+		}
     }
 }
 
@@ -947,13 +954,15 @@ float CCDirector::getUpdateRate() const
 // so we now only support DisplayLinkDirector
 void CCDisplayLinkDirector::startAnimation()
 {
-    if (CCTime::gettimeofdayCocos2d(m_pLastUpdate, NULL) != 0)
-    {
-        CCLOG("cocos2d: DisplayLinkDirector: Error on gettimeofday");
-    }
-
-    m_bInvalid = false;
-    CCApplication::sharedApplication()->setAnimationInterval(m_dAnimationInterval);
+	if (m_bInvalid)
+	{
+		if (CCTime::gettimeofdayCocos2d(m_pLastUpdate, NULL) != 0)
+		{
+			CCLOG("cocos2d: DisplayLinkDirector: Error on gettimeofday");
+		}
+		m_bInvalid = false;
+		CCApplication::sharedApplication()->setAnimationInterval(m_dAnimationInterval);
+	}
 }
 
 void CCDisplayLinkDirector::mainLoop()

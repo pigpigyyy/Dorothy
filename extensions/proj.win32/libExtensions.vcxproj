@@ -119,6 +119,7 @@
     <ClCompile Include="..\Dorothy\model\oModelCache.cpp" />
     <ClCompile Include="..\Dorothy\model\oModelDef.cpp" />
     <ClCompile Include="..\Dorothy\model\oSequence.cpp" />
+    <ClCompile Include="..\Dorothy\other\DebugDraw.cpp" />
     <ClCompile Include="..\Dorothy\physics\oBody.cpp" />
     <ClCompile Include="..\Dorothy\physics\oBodyDef.cpp" />
     <ClCompile Include="..\Dorothy\physics\oSensor.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="..\Dorothy\model\oSequence.h" />
     <ClInclude Include="..\Dorothy\other\AcfDelegate.h" />
     <ClInclude Include="..\Dorothy\other\AcfDelegateTemplate.h" />
+    <ClInclude Include="..\Dorothy\other\DebugDraw.h" />
     <ClInclude Include="..\Dorothy\other\hash_common.hpp" />
     <ClInclude Include="..\Dorothy\other\hash_strmap.hpp" />
     <ClInclude Include="..\Dorothy\other\Property.h" />

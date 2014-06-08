@@ -47,10 +47,6 @@ _currentLookName(oString::Empty)
 {
 	handlers(this);
 	_resetAnimation.end = std::make_pair(this, &oModel::onResetAnimationEnd);
-}
-
-bool oModel::init()
-{
 	_root = _modelDef->isBatchUsed() ?
 		CCSpriteBatchNode::createWithTexture(_modelDef->getTexture()) :
 		CCNode::create();
@@ -58,7 +54,6 @@ bool oModel::init()
 	oModel::setupCallback();
 	oModel::setContentSize(_modelDef->getSize());
 	this->addChild(_root);
-	return true;
 }
 
 void oModel::addLook( int index, CCNode* node )
@@ -109,7 +104,7 @@ void oModel::setFaceRight(bool var)
 	{
 		_faceRight = var;
 		float right = _modelDef->isFaceRight() ? 1.0f : -1.0f;
-		_root->setScaleX(var == _modelDef->isFaceRight() ? right : -right);
+		_root->setScaleX(var ? right : -right);
 	}
 }
 
@@ -380,13 +375,8 @@ void oModel::onResetAnimationEnd()
 oModel* oModel::create( oModelDef* modelDef )
 {
 	oModel* model = new oModel(modelDef);
-	if (model && model->init())
-	{
-		model->autorelease();
-		return model;
-	}
-	CC_SAFE_DELETE(model);
-	return nullptr;
+	model->autorelease();
+	return model;
 }
 
 oModel* oModel::create( const char* filename )

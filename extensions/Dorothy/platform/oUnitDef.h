@@ -14,20 +14,19 @@ class oBulletDef;
 class oUnitDef: public CCObject
 {
 public:
-	static oUnitDef* create(
-		const string& modelFile,
-		const CCSize& size,
-		float density = 0,
-		float friction = 0,
-		float restitution = 0);
-	PROPERTY_READONLY(oBodyDef*, BodyDef);
-	PROPERTY_READONLY_REF(CCSize, Size);
-	PROPERTY_BOOL_NAME(Static);
-	oUnit* toUnit(oWorld* world, int group, float x, float y, bool faceRight = true);
 	enum {GroundSensorTag = 0, DetectSensorTag = 1, AttackSensorTag = 2};
 	enum {BulletKey = 0, AttackKey = 1, HitKey = 2};
 	//Most are static properties below.
-	int type;//Type is hash code of name string.
+	PROPERTY_REF(string, _model, Model);
+	PROPERTY_NAME(float, Density);
+	PROPERTY_NAME(float, Friction);
+	PROPERTY_NAME(float, Restitution);
+	PROPERTY_BOOL_NAME(Static);
+	PROPERTY_READONLY(oModelDef*, ModelDef);
+	PROPERTY_READONLY(oBodyDef*, BodyDef);
+	PROPERTY_READONLY_REF(CCSize, Size);
+	int type;
+	int reflexArc;
 	float sensity;
 	float move;
 	float jump;
@@ -44,7 +43,6 @@ public:
 	uint16 damageType;
 	uint16 defenceType;
 	int bulletType;
-	PROPERTY_READONLY(oModelDef*, ModelDef);
 	int attackEffect;
 	int hitEffect;
 	string name;
@@ -53,11 +51,14 @@ public:
 	string sndDeath;
 	vector<int> actions;
 	vector<int> instincts;
+	static oUnitDef* create();
 protected:
 	oUnitDef();
 	oRef<oBodyDef> _bodyDef;
 	oRef<oModelDef> _modelDef;
-	CCSize _size;
+	float _density;
+	float _friction;
+	float _restitution;
 	static const float BOTTOM_OFFSET;
 	static const float GROUND_SENSOR_HEIGHT;
 	CC_LUA_TYPE(oUnitDef)

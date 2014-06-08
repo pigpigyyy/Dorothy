@@ -194,44 +194,40 @@ oActNode* oActNode::create(int actionId)
 	return node;
 }
 
-oAILeaf* oSel(CCArray* nodes)
+oAILeaf* oSel(oAILeaf* nodes[], int count)
 {
 	oSelNode* sel = oSelNode::create();
-	CCARRAY_START(oAILeaf, node, nodes)
+	for (int i = 0; i < count; i++)
 	{
-		sel->add(node);
+		sel->add(nodes[i]);
 	}
-	CCARRAY_END
 	return sel;
 }
-oAILeaf* oSeq(CCArray* nodes)
+oAILeaf* oSeq(oAILeaf* nodes[], int count)
 {
 	oSeqNode* seq = oSeqNode::create();
-	CCARRAY_START(oAILeaf, node, nodes)
+	for (int i = 0; i < count; i++)
 	{
-		seq->add(node);
+		seq->add(nodes[i]);
 	}
-	CCARRAY_END
 	return seq;
 }
-oAILeaf* oParSel(CCArray* nodes)
+oAILeaf* oParSel(oAILeaf* nodes[], int count)
 {
 	oParSelNode* parSel = oParSelNode::create();
-	CCARRAY_START(oAILeaf, node, nodes)
+	for (int i = 0; i < count; i++)
 	{
-		parSel->add(node);
+		parSel->add(nodes[i]);
 	}
-	CCARRAY_END
 	return parSel;
 }
-oAILeaf* oParSeq(CCArray* nodes)
+oAILeaf* oParSeq(oAILeaf* nodes[], int count)
 {
 	oParSeqNode* parSeq = oParSeqNode::create();
-	CCARRAY_START(oAILeaf, node, nodes)
+	for (int i = 0; i < count; i++)
 	{
-		parSeq->add(node);
+		parSeq->add(nodes[i]);
 	}
-	CCARRAY_END
 	return parSeq;
 }
 oAILeaf* oCon(int handler)

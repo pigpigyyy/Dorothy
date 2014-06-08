@@ -35,28 +35,6 @@ oBulletDef* oBulletDef::create()
 	return def;
 }
 
-oBullet* oBulletDef::toBullet( oWorld* world, oUnit* unit )
-{
-	oBullet* bullet = oBullet::create(world, this, unit);
-	bullet->setGroup(oSharedData.getGroupDetect());
-	if (_face)
-	{
-		CCNode* node = _face->toNode();
-		bullet->setFace(node);
-	}
-	oModel* model = unit->getModel();
-	const oVec2& offset = (model ? model->getModelDef()->getKeyPoint(oUnitDef::BulletKey) : oVec2::zero);
-	bullet->setPosition(
-		ccpAdd(
-			unit->getPosition(),
-			(unit->isFaceRight() ? ccp(-offset.x, offset.y) : offset)));
-	if (_bodyDef->gravityScale != 0.0f)
-	{
-		bullet->setRotation(-CC_RADIANS_TO_DEGREES(atan2f(_velocity.y, unit->isFaceRight() ? _velocity.x : -_velocity.x)));
-	}
-	return bullet;
-}
-
 void oBulletDef::setVelocity( float angle, float speed )
 {
 	angle = CC_DEGREES_TO_RADIANS(angle);

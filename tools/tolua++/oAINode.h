@@ -7,9 +7,9 @@ class oInstinct
 	static void clear();
 };
 
-oAILeaf* oSel(CCArray* nodes);
-oAILeaf* oSeq(CCArray* nodes);
-oAILeaf* oParSel(CCArray* nodes);
-oAILeaf* oParSeq(CCArray* nodes);
+oAILeaf* oSel(oAILeaf* nodes[tolua_len]);
+oAILeaf* oSeq(oAILeaf* nodes[tolua_len]);
+oAILeaf* oParSel(oAILeaf* nodes[tolua_len]);
+oAILeaf* oParSeq(oAILeaf* nodes[tolua_len]);
 oAILeaf* oCon(tolua_function handler);
 oAILeaf* oAct(int actionId);

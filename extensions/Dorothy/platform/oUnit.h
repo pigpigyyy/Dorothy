@@ -94,8 +94,10 @@ public:
 	void setReflexArc(int id);
 	int getReflexArc() const;
 	oAILeaf* getReflexArcNode();
+
+	static oUnit* create(oUnitDef* unitDef, oWorld* world);
 protected:
-	oUnit(oWorld* world, oUnitDef* unitDef);
+	oUnit(oUnitDef* unitDef, oWorld* world);
 	//Instinct
 	class oInstinctSet
 	{

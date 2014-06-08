@@ -192,7 +192,7 @@ local Dorothy =
 				description = "[bool]",
 				type = "value",
 			},
-			anchorPoint =
+			anchor =
 			{
 				description = "[oVec2]",
 				typeName = "oVec2",
@@ -446,7 +446,7 @@ local Dorothy =
 				type = "method",
 			},
 		},
-		description = " args -- ()",
+		description = "class CCDrawNode(CCNode).\n args -- ()",
 		parents = {"CCNode",},
 		type = "class",
 		index = index()
@@ -4038,9 +4038,14 @@ local Dorothy =
 				static = true,
 				type = "value",
 			},
+			showDebug =
+			{
+				description = "[bool]",
+				type = "value",
+			},
 		},
-		description = "class oWorld(CCLayer).\n args -- ()",
-		parents = {"CCLayer",},
+		description = "class oWorld(CCNode).\n args -- ()",
+		parents = {"CCNode",},
 		type = "class",
 		index = index()
 	},
@@ -4076,10 +4081,39 @@ local Dorothy =
 				typeName = "oVec2",
 				type = "value"
 			},
+			angularRate =
+			{
+				description = "[float] Degrees per second",
+				type = "value"
+			},
+			linearDamping =
+			{
+				description = "[float]",
+				type = "value"
+			},
+			angularDamping =
+			{
+				description = "[float]",
+				type = "value"
+			},
 			group =
 			{
-				description = "[int]",
+				description = "[int]\n\n [0] - Hide\n\n [1-12] - Player\n\n [13] - Sense player\n\n [14] - Terrain\n\n [15] - Contact all",
 				type = "value"
+			},
+			applyLinearImpulse =
+			{
+				args = "(impulse: oVec2, pos: oVec2)",
+				description = "",
+				returns = "()",
+				type = "method"
+			},
+			applyAngularImpulse =
+			{
+				args = "(impulse: float)",
+				description = "",
+				returns = "()",
+				type = "method"
 			},
 			getSensorByTag =
 			{
@@ -4127,7 +4161,7 @@ local Dorothy =
 			},
 		},
 		parents = {"CCNode",},
-		description = "class oBody(CCNode).",
+		description = "class oBody(CCNode).\n args -- (bodyDef: oBodyDef, world: oWorld)",
 		type = "class",
 		index = index()
 	},
@@ -4180,7 +4214,7 @@ local Dorothy =
 				description = "[boolean]",
 				type = "value"
 			},
-			bullet =
+			isBullet =
 			{
 				description = "[boolean]",
 				type = "value"
@@ -4268,14 +4302,6 @@ local Dorothy =
 				returns = "()",
 				type = "method"
 			},
-			toBody =
-			{
-				args = "(world: oWorld, group: int, x: float, y: float, angle: float = 0.0f)",
-				description = "",
-				returns = "(body: oBody)",
-				typeName = "oBody",
-				type = "method"
-			},
 		},
 		parents = {"CCObject",},
 		description = "class oBodyDef(CCObject).\n args -- ()",
@@ -4355,7 +4381,7 @@ local Dorothy =
 			},
 		},
 		parents = {"oBody",},
-		description = "class oBullet(oBody).",
+		description = "class oBullet(oBody).\n args -- (bulletDef: oBulletDef, owner: oUnit)",
 		type = "class",
 		index = index()
 	},
@@ -4428,14 +4454,6 @@ local Dorothy =
 				args = "(angle: float, speed: float)",
 				description = "Set bullet start velocity",
 				returns = "()",
-				type = "method"
-			},
-			toBullet =
-			{
-				args = "(world: oWorld, unit: oUnit)",
-				description = "",
-				returns = "()",
-				typeName = "oBullet",
 				type = "method"
 			},
 		},
@@ -5542,6 +5560,11 @@ local Dorothy =
 				description = "[float][readonly]",
 				type = "value"
 			},
+			reflexArc =
+			{
+				description = "[int]",
+				type = "value"
+			},
 			attachAction =
 			{
 				args = "(id: int)",
@@ -5608,7 +5631,7 @@ local Dorothy =
 				type = "method"
 			},
 		},
-		description = "class oUnit(oBody).",
+		description = "class oUnit(oBody).\n args -- (unitDef: oUnitDef, world: oWorld)",
 		parents = {"oBody",},
 		type = "class",
 		index = index()
@@ -5620,27 +5643,34 @@ local Dorothy =
 			bodyDef =
 			{
 				description = "[oBodyDef]",
-				typaName = "oBodyDef",
+				typeName = "oBodyDef",
 				type = "value"
 			},
 			size =
 			{
 				description = "[CCSize]",
-				typaName = "CCSize",
+				typeName = "CCSize",
+				type = "value"
+			},
+			density =
+			{
+				description = "[float]",
+				type = "value"
+			},
+			friction =
+			{
+				description = "[float]",
+				type = "value"
+			},
+			restitution =
+			{
+				description = "[float]",
 				type = "value"
 			},
 			static =
 			{
 				description = "[boolean]",
 				type = "value"
-			},
-			toUnit =
-			{
-				args = "(world: oWorld, group: int, x: float, y: float, faceRight: boolean = true)",
-				description = "",
-				returns = "(unitDef: oUnitDef)",
-				typeName = "oUnit",
-				type = "method"
 			},
 			GroundSensorTag =
 			{
@@ -5679,6 +5709,11 @@ local Dorothy =
 				type = "value"
 			},
 			type =
+			{
+				description = "[int]",
+				type = "value"
+			},
+			reflexArc =
 			{
 				description = "[int]",
 				type = "value"
@@ -5790,6 +5825,12 @@ local Dorothy =
 				typaName = "string",
 				type = "value"
 			},
+			model =
+			{
+				description = "[string]",
+				typaName = "string",
+				type = "value"
+			},
 			sndAttack =
 			{
 				description = "[string]",
@@ -5817,7 +5858,7 @@ local Dorothy =
 				type = "method"
 			},
 		},
-		description = "class oUnitDef(CCObject).\n args -- (modelFile: string, size: CCSize, density: float = 0, friction: float = 0, restitution: float = 0)",
+		description = "class oUnitDef(CCObject).\n args -- ()",
 		parents = {"CCObject",},
 		type = "class",
 		index = index()

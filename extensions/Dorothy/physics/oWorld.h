@@ -36,12 +36,13 @@ class oContactFilter: public b2ContactFilter
 	virtual bool ShouldCollide( b2Fixture* fixtureA, b2Fixture* fixtureB );
 };
 
-class oWorld: public CCLayer
+class oWorld: public CCNode
 {
 public:
 	oWorld();
 	virtual ~oWorld();
-	b2World* getB2World();
+	PROPERTY_READONLY(b2World*, B2World);
+	PROPERTY_BOOL_NAME(ShowDebug);
 	/**
 	 Iterations affect Box2D`s CPU cost greatly.
 	 Lower values to get better speed, high value to get better simulation.
@@ -61,6 +62,8 @@ public:
 	void setGravity(const oVec2& gravity);
 	oVec2 getGravity() const;
 	virtual void update(float dt);
+	virtual void draw();
+	virtual void visit();
 	/**
 	 Use this rect query at any time without worrying Box2D`s callback limits.
 	 */

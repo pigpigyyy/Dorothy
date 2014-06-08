@@ -105,7 +105,6 @@ struct oID
 	static const int ActionJump;
 	static const int ActionHit;
 	static const int ActionDie;
-	static const int ActionUser;
 
 	static const int PriorityWalk;
 	static const int PriorityTurn;

@@ -171,6 +171,9 @@
     <ClCompile Include="..\Dorothy\misc\oLine.cpp">
       <Filter>Dorothy\misc</Filter>
     </ClCompile>
+    <ClCompile Include="..\Dorothy\other\DebugDraw.cpp">
+      <Filter>Dorothy\other</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\cocos-ext.h" />
@@ -364,6 +367,9 @@
     </ClInclude>
     <ClInclude Include="..\Dorothy\misc\oWRefVector.h">
       <Filter>Dorothy\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\other\DebugDraw.h">
+      <Filter>Dorothy\other</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
