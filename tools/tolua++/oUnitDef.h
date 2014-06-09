@@ -48,6 +48,7 @@ class oUnitDef: public CCObject
 
 	tolua_outside void oUnitDef_setActions @ setActions(int actions[tolua_len]);
 	tolua_outside void oUnitDef_setInstincts @ setInstincts(int instincts[tolua_len]);
-
+	
+	static bool usePreciseHit;
 	static oUnitDef* create();
 };

@@ -4,7 +4,6 @@
 
 USING_NS_CC;
 
-// uncomment below line, open debug console
 #ifdef _DEBUG
 #define USE_WIN32_CONSOLE
 #endif
@@ -27,13 +26,13 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     // create the application instance
     AppDelegate app;
     CCEGLView* eglView = CCEGLView::sharedOpenGLView();
-    //eglView->setViewName("Dorothy");
+    eglView->setViewName("Dorothy");
 	int width = CCUserDefault::sharedUserDefault()->getIntegerForKey("Width");
 	int height = CCUserDefault::sharedUserDefault()->getIntegerForKey("Height");
 	if (width == 0 || height == 0)
 	{
-		width = 1024;
-		height = 768;
+		width = 800;
+		height = 600;
 		CCUserDefault::sharedUserDefault()->setIntegerForKey("Width", width);
 		CCUserDefault::sharedUserDefault()->setIntegerForKey("Height", height);
 	}

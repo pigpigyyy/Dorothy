@@ -36,25 +36,6 @@ public:
      */
     virtual TargetPlatform getTargetPlatform();
 
-    /**
-     *  Sets the Resource root path.
-     *  @deprecated Please use CCFileUtils::sharedFileUtils()->setSearchPaths() instead.
-     */
-    CC_DEPRECATED_ATTRIBUTE void setResourceRootPath(const std::string& rootResDir);
-
-    /** 
-     *  Gets the Resource root path.
-     *  @deprecated Please use CCFileUtils::sharedFileUtils()->getSearchPaths() instead. 
-     */
-    CC_DEPRECATED_ATTRIBUTE const std::string& getResourceRootPath();
-
-    void setStartupScriptFilename(const std::string& startupScriptFile);
-
-    const std::string& getStartupScriptFilename()
-    {
-        return m_startupScriptFilename;
-    }
-
 protected:
     HINSTANCE           m_hInstance;
     HACCEL              m_hAccelTable;

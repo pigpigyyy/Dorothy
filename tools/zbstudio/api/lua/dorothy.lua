@@ -5857,6 +5857,12 @@ local Dorothy =
 				returns = "()",
 				type = "method"
 			},
+			usePreciseHit =
+			{
+				description = "[bool]",
+				static = true,
+				type = "value"
+			},
 		},
 		description = "class oUnitDef(CCObject).\n args -- ()",
 		parents = {"CCObject",},

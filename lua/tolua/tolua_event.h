@@ -1,8 +1,8 @@
 /* tolua: event functions
 ** Support code for Lua bindings.
-** Written by Waldemar Celes
+** Written by Waldemar Celes, modified by Jin Li
 ** TeCGraf/PUC-Rio
-** Apr 2003
+** Apr 2003, Apr 2014
 ** $Id: $
 */
 

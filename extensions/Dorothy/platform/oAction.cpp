@@ -1,3 +1,11 @@
+/* Copyright (c) 2013 Jin Li, http://www.luv-fight.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+
 #include "Dorothy/const/oDefine.h"
 #include "Dorothy/platform/oPlatformDefine.h"
 #include "Dorothy/platform/oAction.h"
@@ -426,7 +434,6 @@ oAction* oStop::create( oUnit* unit )
 }
 
 // oAttack
-bool oAttack::usePreciseHit = true;
 
 oAttack::oAttack(int id, oUnit* unit ):
 oAction(id, oID::PriorityAttack, unit)
@@ -558,7 +565,7 @@ void oMeleeAttack::onAttack()
 				oHit* hitAction = (oHit*)(target->getAction(oID::ActionHit));
 				if (hitAction)
 				{
-					oVec2 hitPoint = oAttack::usePreciseHit ? oAttack::getHitPoint(_owner, target, &_polygon) : target->getPosition();
+					oVec2 hitPoint = oUnitDef::usePreciseHit ? oAttack::getHitPoint(_owner, target, &_polygon) : target->getPosition();
 					hitAction->setHitInfo(hitPoint, _owner->attackPower, !attackRight);
 				}
 				/* Make damage */
@@ -610,7 +617,7 @@ bool oRangeAttack::onHitTarget( oBullet* bullet, oUnit* target )
 	if (hitAction)
 	{
 		b2Shape* shape = bullet->getDetectSensor()->getFixture()->GetShape();
-		oVec2 hitPoint = oAttack::usePreciseHit ? oAttack::getHitPoint(_owner, target, shape) : target->getPosition();
+		oVec2 hitPoint = oUnitDef::usePreciseHit ? oAttack::getHitPoint(_owner, target, shape) : target->getPosition();
 		bool attackRight = bullet->getVelocityX() > 0.0f;
 		hitAction->setHitInfo(hitPoint, _owner->attackPower, !attackRight);
 	}
