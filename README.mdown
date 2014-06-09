@@ -1,58 +1,36 @@
-cocos2d-x
-=========
+#**Dorothy**
+------
+Another branch of Cocos2d-x with Lua derived from Cocos2d-x version 2.1rc0. Its target is to make a much easier framework for building a game. This branch provides simpler API interfaces, removes unnecessary features, addes features, improves the Lua binding codes and fixes Cocos2d-x bugs.
 
-[cocos2d-x][1] is a multi-platform 2D game framework in C++, branched on
-[cocos2d-iphone][2] and licensed under MIT.  The master branch on github uses
-OpenGL ES 2.0 rendering, while the old gles11 branch uses OpenGL ES 1.1
-rendering. Currently we focus on gles20 developmenet.
+##**Features**
+------
 
-Supported Platforms
--------------------
+###**Removal**
+* Cocos2d-x as pure graphic engine (Remove lots of extensions)
+* Box2D as physics engine (Remove chipmunk)
+* Lua as script engine (Remove Javascript)
+* Only bind necessary APIs to Lua (Don`t need every detail from C++)
 
-   * iOS:  stable, well tested on iOS 5.x ~ 6.x SDK.
-   * Android: stable, well tested on 2.0~4.x, ndk r5 ~ r8. If you use gles20
-     branch or cocos2d-x v2.0 above, only android 2.3 and higher are supported
-   * Windows Phone 8 and Win8 Metro: stable, it's in another repo
-     http://github.com/cocos2d-x/cocos2dx-win8.
-   * Bada: cocos2d-x v1.x supports Bada SDK 1.0 & 2.0. Bada support was
-     deprecated since cocos2d-x v2.0.
-   * BlackBerry: stable, contribued by staffs in RIM, supports Playbook & BB10.
-   * Marmalade: stable since cocos2d-x v0.11.0, contributed by Marmalade's staff.
-   * Native Client (NaCl): contributed by the Native Client authors.
-   * Windows: stable, well tested on WinXP/Vista/Win7. Please upgrde the drive
-     of your video card if you meet problems on OpenGL functions
-   * Linux: support but not very stable.
+###**Added**
+* Physics world, nodes and sensors that simplify the use of Box2D.
+* Skeleton animation with smooth transition for changing of two animations.
+* Animation editor which is simple enough to make skeleton animations and is written purely with the framework itself.
+* A platform game (Mario like game) framework with features of character, bullet, action, behavier tree, layer management and camera. And it can be used for other kinds of games as well.
+* Improved Zerobrane Studio with much more powerful code autocompletion abilities. All framework APIs is supported.
 
-You can visit our continuous integration system http://ci.cocos2d-x.org to
-check the stability on edge version.
+###**Enhance**
+* C++ object\`s life circle is auto managed while writting in Lua codes. (No manually calling `retain()` or `release()` is needed for memory management).
+* Improved Lua type systems with lower cost.
+* Small optimizations for Lua binding to run faster.
 
-Supported Programming Languages
--------------------------------
+##**Lisence**
+This code is distributed under the MIT License. Here is the full license:
 
-   * C++ is the major programming language of cocos2d-x. Tons of top-chart
-     cocos2d-x games were written in C++.
-   * Lua binding is also widely used. Glu mobile, Zynga, UCWEB, 4399, Renren
-     Games are using lua on cocos2d-x.
-   * Javascript binding is our recommendation since 2012 H2. Cocos2d community
-     are cooperating on the same Javasciprt API on cocos2d-iphone/-x/-html5.
+Copyright (c) 2013 Jin Li, http://www.luv-fight.com
 
-Documentations
---------------
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-   * Wiki: [wiki.cocos2d-x.org][3]
-   * [Online API References][4]
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-Contact us
-----------
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-   * Forum: [http://forum.cocos2d-x.org][5]
-   * Twitter: [http://www.twitter.com/cocos2dx][6]
-   * Weibo: [http://t.sina.com.cn/cocos2dx][7]
-
-[1]: http://www.cocos2d-x.org "cocos2d-x"
-[2]: http://www.cocos2d-iphone.org "cocos2d for iPhone"
-[3]: http://wiki.cocos2d-x.org "wiki.cocos2d-x.org"
-[4]: http://www.cocos2d-x.org/projects/cocos2d-x/wiki/Reference "API References"
-[5]: http://forum.cocos2d-x.org "http://forum.cocos2d-x.org"
-[6]: http://www.twitter.com/cocos2dx "http://www.twitter.com/cocos2dx"
-[7]: http://t.sina.com.cn/cocos2dx "http://t.sina.com.cn/cocos2dx"
