@@ -41,7 +41,6 @@ public:
      @brief Get target platform
      */
     virtual TargetPlatform getTargetPlatform();
-
 protected:
     static CCApplication * sm_pSharedApplication;
 };

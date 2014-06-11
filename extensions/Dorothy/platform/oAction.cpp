@@ -160,7 +160,7 @@ HANDLER_WRAP_START(oActionHandlerWrapper)
 	void call(oAction* action) const
 	{
 		void* params[] = {action};
-		char* paramNames[] = {"oAction"};
+		const char* paramNames[] = {"oAction"};
 		CCScriptEngine::sharedEngine()->executeFunction(getHandler(), 1, params, paramNames);
 	}
 HANDLER_WRAP_END
@@ -211,14 +211,14 @@ oAction(id, priority, owner)
 bool oScriptAction::isAvailable()
 {
 	void* params[] = {this};
-	char* paramNames[] = {"oAction"};
+	const char* paramNames[] = {"oAction"};
 	return CCScriptEngine::sharedEngine()->executeFunction(_available->get(), 1, params, paramNames) != 0;
 }
 
 void oScriptAction::run()
 {
 	void* params[] = {this};
-	char* paramNames[] = {"oAction"};
+	const char* paramNames[] = {"oAction"};
 	CCScriptEngine::sharedEngine()->executeFunction(_run->get(), 1, params, paramNames);
 	oAction::run();
 }
@@ -232,7 +232,7 @@ void oScriptAction::update( float dt )
 void oScriptAction::stop()
 {
 	void* params[] = {this};
-	char* paramNames[] = {"oAction"};
+	const char* paramNames[] = {"oAction"};
 	CCScriptEngine::sharedEngine()->executeFunction(_stop->get(), 1, params, paramNames);
 	oAction::stop();
 }

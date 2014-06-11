@@ -131,7 +131,7 @@ void __oClipCache_getNames(const char* filename)
 	lua_State* L = CCLuaEngine::sharedEngine()->getState();
 	lua_createtable(L, clipDef->rects.size(), 0);
 	int i = 1;
-	for(auto& item : clipDef->rects)
+	for(const auto& item : clipDef->rects)
 	{
 		lua_pushstring(L,item.first.c_str());
 		lua_rawseti(L, -2, i++);
@@ -207,7 +207,7 @@ HANDLER_WRAP_START(oListenerHandlerWrapper)
 void call(oEvent* event) const
 {
 	void* params[] = { event };
-	char* names[] = { "oEvent" };
+	const char* names[] = { "oEvent" };
 	CCLuaEngine::sharedEngine()->executeFunction(getHandler(), 1, params, names);
 }
 HANDLER_WRAP_END
@@ -616,7 +616,7 @@ void __oModelCache_getData(const char* filename)
 		lua_rawseti(L, -2, 20);
 		/*["animationNames"]*/
 		lua_newtable(L);
-		for(auto& pair : modelDef->getAnimationIndexMap())
+		for(const auto& pair : modelDef->getAnimationIndexMap())
 		{
 			lua_pushstring(L, pair.first.c_str());
 			lua_pushinteger(L, pair.second);
@@ -625,7 +625,7 @@ void __oModelCache_getData(const char* filename)
 		lua_rawseti(L, -2, 21);
 		/*["lookNames"]*/
 		lua_newtable(L);
-		for(auto& pair : modelDef->getLookIndexMap())
+		for(const auto& pair : modelDef->getLookIndexMap())
 		{
 			lua_pushstring(L, pair.first.c_str());
 			lua_pushinteger(L, pair.second);

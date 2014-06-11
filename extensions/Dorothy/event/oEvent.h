@@ -55,7 +55,7 @@ class oEvent
 public:
 	oEvent();
 	oEvent(const string& name);
-	inline const string& getName() const;
+	inline const string& getName() const { return _name; }
 public:
 	static void addType(const string& name);
 	static bool removeType(const string& name);

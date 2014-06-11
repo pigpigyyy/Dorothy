@@ -25,11 +25,11 @@
 
 #define ACF_MAKE_PARAMS1_0(t)
 #define ACF_MAKE_PARAMS1_1(t)    t##1
-#define ACF_MAKE_PARAMS1_2(t)    t##1, ##t##2
-#define ACF_MAKE_PARAMS1_3(t)    t##1, ##t##2, ##t##3
-#define ACF_MAKE_PARAMS1_4(t)    t##1, ##t##2, ##t##3, ##t##4
-#define ACF_MAKE_PARAMS1_5(t)    t##1, ##t##2, ##t##3, ##t##4, ##t##5
-#define ACF_MAKE_PARAMS1_6(t)    t##1, ##t##2, ##t##3, ##t##4, ##t##5, ##t##6
+#define ACF_MAKE_PARAMS1_2(t)    t##1, t##2
+#define ACF_MAKE_PARAMS1_3(t)    t##1, t##2, t##3
+#define ACF_MAKE_PARAMS1_4(t)    t##1, t##2, t##3, t##4
+#define ACF_MAKE_PARAMS1_5(t)    t##1, t##2, t##3, t##4, t##5
+#define ACF_MAKE_PARAMS1_6(t)    t##1, t##2, t##3, t##4, t##5, t##6
 
 #define ACF_MAKE_PARAMS2_0(t1, t2)
 #define ACF_MAKE_PARAMS2_1(t1, t2)   t1##1 t2##1
@@ -53,13 +53,13 @@ public:
 };
 
 template <class T>
-inline static T _HandleInvalidCall()
+inline T _HandleInvalidCall()
 {
     throw InvalidCallException();
 }
 
 template <>
-inline static void _HandleInvalidCall<void>()
+inline void _HandleInvalidCall<void>()
 {
 }
 

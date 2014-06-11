@@ -27,17 +27,24 @@ public:
 	{
 		vector<oOwn<T>>::push_back(oOwnMake(item));
 	}
-	inline iterator insert(const_iterator where, T* item)
+	inline void insert(size_t where, T* item)
 	{
-		vector<oOwn<T>>::insert(where, oOwnMake(item));
+		if (where >= 0 && where < vector<oOwn<T>>::size())
+		{
+			auto it = vector<oOwn<T>>::begin();
+			for (int i = 0; i < where; ++i, ++it);
+			vector<oOwn<T>>::insert(it, oOwnMake(item));
+			return true;
+		}
+		return false;
 	}
 	bool remove(T* item)
 	{
-		for (auto it = begin();it != end();++it)
+		for (auto it = vector<oOwn<T>>::begin(); it != vector<oOwn<T>>::end(); ++it)
 		{
 			if ((*it) == item)
 			{
-				oOwnVector<T>::erase(it);
+				vector<oOwn<T>>::erase(it);
 				return true;
 			}
 		}

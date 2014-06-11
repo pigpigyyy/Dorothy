@@ -129,10 +129,10 @@ public:
     virtual int executeGlobalFunction(const char* functionName);
     
 	virtual int executeFunction(int nHandler, int paramCount, CCObject* params[]);
-	virtual int executeFunction(int nHandler, int paramCount, void* params[], char* paramNames[]);
+	virtual int executeFunction(int nHandler, int paramCount, void* params[], const char* paramNames[]);
 	virtual int executeFunction(int nHandler, int paramCount = 0);
 
-	virtual int executeActionUpdate(int nHandler, void* param, char* paramName, float deltaTime);
+	virtual int executeActionUpdate(int nHandler, void* param, const char* paramName, float deltaTime);
     /**
      @brief Execute a node event function
      @param pNode which node produce this event

@@ -29,10 +29,7 @@ module CCTargetPlatform
 
 class CCApplication
 {
-	enum { EnterForeground, EnterBackground };
 	tolua_readonly tolua_property__common ccLanguageType currentLanguage;
 	tolua_readonly tolua_property__common TargetPlatform targetPlatform;
-	void registerEventHandler(tolua_function handler);
-	void unregisterEventHandler();
 	static CCApplication* sharedApplication @ create();
 };
