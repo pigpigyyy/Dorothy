@@ -88,6 +88,7 @@ public:
 
 	virtual int executeActionUpdate(int nHandler, void* param, char* paramName, float deltaTime);
 	virtual int executeNodeEvent(CCNode* pNode, int nAction);
+	virtual int executeAppEvent(int nHandler, int eventType);
 	virtual int executeMenuItemEvent(int eventType, CCMenuItem* pMenuItem);
 	virtual int executeSchedule(int nHandler, float dt, CCNode* pNode = NULL);
 	virtual int executeLayerTouchesEvent(CCLayer* pLayer, int eventType, CCSet* pTouches);

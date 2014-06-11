@@ -858,21 +858,6 @@ public:
     /// @{
     /// @name Actions
 
-    /**
-     * Sets the CCActionManager object that is used by all actions.
-     *
-     * @warning If you set a new CCActionManager, then previously created actions will be removed.
-     *
-     * @param actionManager     A CCActionManager object that is used by all actions.
-     */
-    virtual void setActionManager(CCActionManager* actionManager);
-    /**
-     * Gets the CCActionManager object that is used by all actions.
-     * @see setActionManager(CCActionManager*)
-     * @return A CCActionManager object.
-     */
-    virtual CCActionManager* getActionManager();
-    
     /** 
      * Executes an action, and returns the action that is executed.
      *
@@ -1260,9 +1245,7 @@ protected:
     ccGLServerState m_eGLServerState;   ///< OpenGL servier side state
     
     CCScheduler *m_pScheduler;          ///< scheduler used to schedule timers and updates
-    
-    CCActionManager *m_pActionManager;  ///< a pointer to ActionManager singleton, which is used to handle all the actions
-    
+
     bool m_bRunning;                    ///< is running
     
     bool m_bTransformDirty;             ///< transform dirty flag

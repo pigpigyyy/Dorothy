@@ -35,7 +35,6 @@ THE SOFTWARE.
 NS_CC_BEGIN
 
 class CCSet;
-
 struct _hashElement;
 
 /**
@@ -112,7 +111,6 @@ public:
     /** Resume a set of targets (convenience function to reverse a pauseAllRunningActions call)
      */
     void resumeTargets(CCSet *targetsToResume);
-
 protected:
     // declared in CCActionManager.m
 

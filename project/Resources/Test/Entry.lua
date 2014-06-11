@@ -1,9 +1,9 @@
-local oButton = require("Editor/Script/oButton")
-local oSelectionPanel = require("Editor/Script/oSelectionPanel")
+local oButton = require("ActionEditor/Script/oButton")
+local oSelectionPanel = require("ActionEditor/Script/oSelectionPanel")
 local Tests = require("Test/Tests")
 
 local winSize = CCDirector.winSize
-local panel = oSelectionPanel(winSize)
+local panel = oSelectionPanel(winSize,true)
 local menu = panel.menu
 local border = panel.border
 

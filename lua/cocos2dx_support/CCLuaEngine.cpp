@@ -191,6 +191,13 @@ int CCLuaEngine::executeNodeEvent(CCNode* pNode, int nAction)
 	return lua_execute(nHandler, 1);
 }
 
+int CCLuaEngine::executeAppEvent(int nHandler, int eventType)
+{
+	if (!nHandler) return 0;
+	lua_pushinteger(L, eventType);
+	return lua_execute(nHandler, 1);
+}
+
 int CCLuaEngine::executeMenuItemEvent(int eventType, CCMenuItem* pMenuItem)
 {
     int nHandler = pMenuItem->getScriptTapHandler();

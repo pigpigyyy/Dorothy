@@ -190,6 +190,7 @@ int CCScriptEngine::executeSchedule( int nHandler, float dt, CCNode* pNode ){ret
 int CCScriptEngine::executeNotificationEvent( CCNotificationCenter* pNotificationCenter, const char* pszName ){return 0;}
 int CCScriptEngine::executeMenuItemEvent( int eventType, CCMenuItem* pMenuItem ){return 0;}
 int CCScriptEngine::executeNodeEvent( CCNode* pNode, int nAction ){return 0;}
+int CCScriptEngine::executeAppEvent(int nHandler, int eventType){return 0;}
 int CCScriptEngine::executeFunction( int nHandler, int paramCount, CCObject* params[] ){return 0;}
 int CCScriptEngine::executeFunction( int nHandler, int paramCount, void* params[], char* paramNames[] ){return 0;}
 int CCScriptEngine::executeFunction( int nHandler, int paramCount ){ return 0; }

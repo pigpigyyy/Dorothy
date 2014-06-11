@@ -111,8 +111,8 @@ oEditor.easeNames =
 	"InOutBounce"
 }
 oEditor.easeNames[0] = "Linear"
-oEditor.script = "Editor/Script/"
-oEditor.res = "Editor/Model/"
+oEditor.script = "ActionEditor/Script/"
+oEditor.res = "ActionEditor/Model/"
 oEditor.input = oEditor.res.."Input/"
 oEditor.output = oEditor.res.."Output/"
 oEditor.EDIT_NONE = 0

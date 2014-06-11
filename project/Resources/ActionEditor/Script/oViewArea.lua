@@ -4,7 +4,6 @@ local function oViewArea()
 	local winSize = CCDirector.winSize
 	local view = CCLayerColor(ccColor4(0xff1a1a1a), winSize.width, winSize.height)
 	view.anchor = oVec2.zero
-	view.touchEnabled = true
 	view.cascadeOpacity = true
 
 	local crossNode = CCNode()
@@ -85,6 +84,7 @@ local function oViewArea()
 	local EDIT_SIZEXY = 19
 	
 	local editState = EDIT_NONE
+	view.touchEnabled = true
 	view:registerTouchHandler(
 		function(eventType, touches)
 			if eventType == CCTouch.Moved then
@@ -130,6 +130,13 @@ local function oViewArea()
 				end
 			end
 		end,true)
+
+	view.keypadEnabled = true
+	view:registerKeypadHandler(function(eventType)
+		if eventType == CCKeypad.Back then
+			CCDirector:stop()
+		end
+	end)
 
 	view.zoomReset = function(self)
 		local scale = 0

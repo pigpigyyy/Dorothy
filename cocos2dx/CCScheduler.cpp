@@ -31,6 +31,7 @@ THE SOFTWARE.
 #include "support/data_support/ccCArray.h"
 #include "cocoa/CCArray.h"
 #include "script_support/CCScriptSupport.h"
+#include "actions/CCActionManager.h"
 
 using namespace std;
 
@@ -245,8 +246,9 @@ CCScheduler::CCScheduler()
 , m_bCurrentTargetSalvaged(false)
 , m_bUpdateHashLocked(false)
 , m_pScriptHandlerEntries(NULL)
+, m_pActionManager(new CCActionManager())
 {
-
+	CCScheduler::scheduleUpdateForTarget(m_pActionManager, kCCPrioritySystem, false);
 }
 
 CCScheduler::~CCScheduler()

@@ -1259,6 +1259,18 @@ local Dorothy =
 	{
 		childs =
 		{
+			EnterForeground =
+			{
+				description = "[Const][int]",
+				static = true,
+				type = "value",
+			},
+			EnterBackground =
+			{
+				description = "[Const][int]",
+				static = true,
+				type = "value",
+			},
 			currentLanguage =
 			{
 				description = "[CCLanguageType]",
@@ -1272,6 +1284,22 @@ local Dorothy =
 				typeName = "CCTargetPlatform",
 				static = true,
 				type = "value",
+			},
+			registerEventHandler =
+			{
+				args = "(handler: function)",
+				description = " handler -- function(eventType)\n\n eventType -- CCApplication.[EnterForeground|EnterBackground]",
+				returns = "()",
+				static = true,
+				type = "method",
+			},
+			unregisterEventHandler =
+			{
+				args = "()",
+				description = "",
+				returns = "()",
+				static = true,
+				type = "method",
 			},
 		},
 		description = "class CCApplication.",
@@ -2048,14 +2076,14 @@ local Dorothy =
 			shedule =
 			{
 				args = "(handler: function)",
-				description = " -- handler: function(deltaTime: float)",
+				description = " -- handler: function(deltaTime: float)\n\n args1 -- (target: CCScheduler, priority: int = 0, paused: bool = false)",
 				returns = "()",
 				type = "method",
 			},
 			unshedule =
 			{
 				args = "(handler: function)",
-				description = "",
+				description = " args1 -- (target: CCScheduler)",
 				returns = "()",
 				type = "method",
 			},

@@ -90,8 +90,7 @@ CCDirector* CCDirector::sharedDirector()
     return s_SharedDirector;
 }
 
-CCDirector::CCDirector():
-m_fUpdateRate(1.0f)
+CCDirector::CCDirector()
 { }
 
 bool CCDirector::init()
@@ -138,9 +137,7 @@ bool CCDirector::init()
 
     // scheduler
     m_pScheduler = new CCScheduler();
-    // action manager
-    m_pActionManager = new CCActionManager();
-    m_pScheduler->scheduleUpdateForTarget(m_pActionManager, kCCPrioritySystem, false);
+
     // touchDispatcher
     m_pTouchDispatcher = new CCTouchDispatcher();
     m_pTouchDispatcher->init();
@@ -169,7 +166,6 @@ CCDirector::~CCDirector()
     CC_SAFE_RELEASE(m_pNotificationNode);
     CC_SAFE_RELEASE(m_pobScenesStack);
     CC_SAFE_RELEASE(m_pScheduler);
-    CC_SAFE_RELEASE(m_pActionManager);
     CC_SAFE_RELEASE(m_pTouchDispatcher);
     CC_SAFE_RELEASE(m_pKeypadDispatcher);
     CC_SAFE_DELETE(m_pAccelerometer);
@@ -203,14 +199,13 @@ void CCDirector::setGLDefaultValues()
 // Draw the Scene
 void CCDirector::drawScene()
 {
-    // calculate "global" dt
-    calculateDeltaTime();
+	if (m_bPaused) return;
 
-    //tick before glClear: issue #533
-    if (! m_bPaused)
-    {
-		m_pScheduler->update(1.0f / 60);// m_fDeltaTime* m_fUpdateRate);
-    }
+	// calculate "global" dt
+	calculateDeltaTime();
+
+	//tick before glClear: issue #533
+	m_pScheduler->update(m_fDeltaTime);
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClearDepth(0);
@@ -879,21 +874,6 @@ CCScheduler* CCDirector::getScheduler()
     return m_pScheduler;
 }
 
-void CCDirector::setActionManager(CCActionManager* pActionManager)
-{
-    if (m_pActionManager != pActionManager)
-    {
-        CC_SAFE_RETAIN(pActionManager);
-        CC_SAFE_RELEASE(m_pActionManager);
-        m_pActionManager = pActionManager;
-    }    
-}
-
-CCActionManager* CCDirector::getActionManager()
-{
-    return m_pActionManager;
-}
-
 void CCDirector::setTouchDispatcher(CCTouchDispatcher* pTouchDispatcher)
 {
     if (m_pTouchDispatcher != pTouchDispatcher)
@@ -933,16 +913,6 @@ void CCDirector::setAccelerometer(CCAccelerometer* pAccelerometer)
 CCAccelerometer* CCDirector::getAccelerometer()
 {
     return m_pAccelerometer;
-}
-
-void CCDirector::setUpdateRate( float rate )
-{
-	m_fUpdateRate = rate;
-}
-
-float CCDirector::getUpdateRate() const
-{
-	return m_fUpdateRate;
 }
 
 /***************************************************

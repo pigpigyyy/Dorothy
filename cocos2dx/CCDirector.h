@@ -296,19 +296,11 @@ public:
     */
     void setContentScaleFactor(float scaleFactor);
     float getContentScaleFactor();
-
-	void setUpdateRate(float rate);
-	float getUpdateRate() const;
 public:
     /** CCScheduler associated with this director
      @since v2.0
      */
     CC_PROPERTY(CCScheduler*, m_pScheduler, Scheduler);
-
-    /** CCActionManager associated with this director
-     @since v2.0
-     */
-    CC_PROPERTY(CCActionManager*, m_pActionManager, ActionManager);
 
     /** CCTouchDispatcher associated with this director
      @since v2.0

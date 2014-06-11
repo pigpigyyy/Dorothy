@@ -510,7 +510,7 @@ bool CCLayerColor::initWithColor(const ccColor4B& color, GLfloat w, GLfloat h)
 		_displayedColor.r = _realColor.r = color.r;
 		_displayedColor.g = _realColor.g = color.g;
 		_displayedColor.b = _realColor.b = color.b;
-		_displayedOpacity = color.a/255.0f;
+		CCLayer::setOpacity(color.a/255.0f);
 
 		for (size_t i = 0; i < sizeof(m_pSquareVertices) / sizeof(m_pSquareVertices[0]); i++)
 		{

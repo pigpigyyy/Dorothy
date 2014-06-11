@@ -1,4 +1,4 @@
-local function oSelectionPanel(borderSize)
+local function oSelectionPanel(borderSize,noCliping)
 	local winSize = CCDirector.winSize
 	local halfBW = borderSize.width*0.5
 	local halfBH = borderSize.height*0.5
@@ -31,16 +31,20 @@ local function oSelectionPanel(borderSize)
 	border.opacity = 0
 	panel:addChild(border)
 
-	local stencil = CCDrawNode()
-	stencil:drawPolygon(
-	{
-		oVec2(-halfBW+1,-halfBH+1),
-		oVec2(halfBW-1,-halfBH+1),
-		oVec2(halfBW-1,halfBH-1),
-		oVec2(-halfBW+1,halfBH-1)
-	},ccColor4())
-
-	local view = CCClipNode(stencil)
+	local view
+	if noCliping then
+		view = CCNode()
+	else
+		local stencil = CCDrawNode()
+		stencil:drawPolygon(
+		{
+			oVec2(-halfBW+1,-halfBH+1),
+			oVec2(halfBW-1,-halfBH+1),
+			oVec2(halfBW-1,halfBH-1),
+			oVec2(-halfBW+1,halfBH-1)
+		},ccColor4())
+		view = CCClipNode(stencil)
+	end
 	border:addChild(view)
 
 	local menu = CCMenu(false)

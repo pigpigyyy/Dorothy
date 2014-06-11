@@ -1,9 +1,12 @@
 class CCScheduler: public CCObject
 {
 	tolua_property__common float timeScale;
-	
-	void scheduleScriptFunc @ shedule(tolua_function nHandler, float fInterval);
+
+	void scheduleUpdateForTarget @ shedule(CCScheduler* pTarget, int nPriority = 0, bool bPaused = false);
+	void scheduleScriptFunc @ shedule(tolua_function nHandler, float fInterval = 0);
+
+    void unscheduleUpdateForTarget @ unshedule(CCScheduler* pTarget);
 	void unscheduleScriptFunc @ unshedule(tolua_function nHandler);
-	
+
 	static CCScheduler* create();
 };

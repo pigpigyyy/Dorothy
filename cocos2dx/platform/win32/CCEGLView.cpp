@@ -495,12 +495,18 @@ LRESULT CCEGLView::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
             break;
         }
         break;
+	case WM_ENTERSIZEMOVE:
+		CCApplication::sharedApplication()->applicationDidEnterBackground();
+		break;
+	case WM_EXITSIZEMOVE:
+		CCApplication::sharedApplication()->applicationWillEnterForeground();
+		break;
     case WM_KEYDOWN:
-        if (wParam == VK_F1 || wParam == VK_F2)
+        if (wParam == VK_F1)
         {
             CCDirector* pDirector = CCDirector::sharedDirector();
             if (GetKeyState(VK_LSHIFT) < 0 ||  GetKeyState(VK_RSHIFT) < 0 || GetKeyState(VK_SHIFT) < 0)
-                pDirector->getKeypadDispatcher()->dispatchKeypadMSG(wParam == VK_F1 ? CCKeypad::Back : CCKeypad::Menu);
+                pDirector->getKeypadDispatcher()->dispatchKeypadMSG(CCKeypad::Menu);
         }
         else if (wParam == VK_ESCAPE)
         {
@@ -529,15 +535,6 @@ LRESULT CCEGLView::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
                 else if (VK_RETURN == wParam)
                 {
                     CCIMEDispatcher::sharedDispatcher()->dispatchInsertText("\n", 1);
-                }
-                else if (VK_TAB == wParam)
-                {
-                    // tab input
-                }
-                else if (VK_ESCAPE == wParam)
-                {
-                    // ESC input
-                    //CCDirector::sharedDirector()->end();
                 }
             }
             else if (wParam < 128)

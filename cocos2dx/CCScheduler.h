@@ -107,6 +107,7 @@ struct _hashSelectorEntry;
 struct _hashUpdateEntry;
 
 class CCArray;
+class CCActionManager;
 
 /** @brief Scheduler is responsible for triggering the scheduled callbacks.
 You should not use NSTimer. Instead use this class.
@@ -236,6 +237,8 @@ public:
       */
     void resumeTargets(CCSet* targetsToResume);
 
+	inline CCActionManager* getActionManager() const { return m_pActionManager; }
+
 	static CCScheduler* create();
 private:
     void removeHashElement(struct _hashSelectorEntry *pElement);
@@ -245,10 +248,9 @@ private:
 
     void priorityIn(struct _listEntry **ppList, CCObject *pTarget, int nPriority, bool bPaused);
     void appendIn(struct _listEntry **ppList, CCObject *pTarget, bool bPaused);
-
 protected:
     float m_fTimeScale;
-
+	CCActionManager* m_pActionManager;
     //
     // "updates with priority" stuff
     //

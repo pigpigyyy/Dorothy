@@ -1,4 +1,4 @@
-local oButton = require("Editor/Script/oButton")
+local oButton = require("ActionEditor/Script/oButton")
 
 local scene = CCScene()
 
@@ -9,7 +9,7 @@ local aiTag = 1
 oAI:add(aiTag,oAct(oAction.Idle))
 
 local unitDef = oUnitDef()
-unitDef.model = "Editor/Model/Output/xiaoli.model"
+unitDef.model = "ActionEditor/Model/Output/xiaoli.model"
 unitDef.static = false
 unitDef.move = 100
 unitDef.density = 1
@@ -66,4 +66,4 @@ btn = oButton("Attack",16,60,nil,150,10,
 btn.anchor = oVec2.zero
 menu:addChild(btn)
 
-CCDirector:run(scene)
+CCDirector:run(CCScene:progressCCW(1,scene))

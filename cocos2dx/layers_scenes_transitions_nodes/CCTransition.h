@@ -410,13 +410,8 @@ Fade out the outgoing scene and then fade in the incoming scene.'''
 class CC_DLL CCTransitionFade : public CCTransitionScene
 {
 protected:
-    ccColor4B    m_tColor;
-
+    ccColor4B m_tColor;
 public:
-
-    CCTransitionFade();
-    virtual ~CCTransitionFade();
-    
     /** creates the transition with a duration and with an RGB color
     * Example: FadeTransition::create(2, scene, ccc3(255,0,0); // red color
     */
@@ -428,24 +423,16 @@ public:
 
     virtual bool initWithDuration(float t,CCScene* scene); 
     virtual void onEnter();
-    virtual void onExit();
 };
 
-class CCRenderTexture;
 /**
 @brief CCTransitionCrossFade:
 Cross fades two scenes using the CCRenderTexture object.
 */
 class CC_DLL CCTransitionCrossFade : public CCTransitionScene
 {
-public :
-    CCTransitionCrossFade();
-    virtual ~CCTransitionCrossFade();
-
-    virtual void draw();
+public:
     virtual void onEnter();
-    virtual void onExit();
-
 public:
     static CCTransitionCrossFade* create(float t, CCScene* scene);
 };

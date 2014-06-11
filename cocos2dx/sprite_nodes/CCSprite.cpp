@@ -708,6 +708,7 @@ void CCSprite::setFlipX(bool bFlipX)
 	if (m_bFlipX != bFlipX)
 	{
 		m_bFlipX = bFlipX;
+		CCSprite::setTextureCoords(m_obRect);
 	}
 }
 
@@ -721,6 +722,7 @@ void CCSprite::setFlipY(bool bFlipY)
 	if (m_bFlipY != bFlipY)
 	{
 		m_bFlipY = bFlipY;
+		CCSprite::setTextureCoords(m_obRect);
 	}
 }
 

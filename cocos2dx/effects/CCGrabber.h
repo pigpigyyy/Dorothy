@@ -52,7 +52,8 @@ public:
 protected:
     GLuint m_FBO;
     GLint m_oldFBO;
-    GLfloat    m_oldClearColor[4];
+	GLuint m_depthRenderBuffer;
+    GLfloat m_oldClearColor[4];
 };
 
 // end of effects group

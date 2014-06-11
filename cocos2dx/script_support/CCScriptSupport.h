@@ -140,7 +140,7 @@ public:
      @return The integer value returned from the script function.
      */
     virtual int executeNodeEvent(CCNode* pNode, int nAction);
-    
+	virtual int executeAppEvent(int nHandler, int eventType);
     virtual int executeMenuItemEvent(int eventType, CCMenuItem* pMenuItem);
     /** Execute a notification event function */
     virtual int executeNotificationEvent(CCNotificationCenter* pNotificationCenter, const char* pszName);

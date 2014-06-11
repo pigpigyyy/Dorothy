@@ -1,9 +1,7 @@
 #**Dorothy**
-------
 Another branch of Cocos2d-x with Lua derived from Cocos2d-x version 2.1rc0. Its target is to make a much easier framework for building a game. This branch provides simpler API interfaces, removes unnecessary features, addes features, improves the Lua binding codes and fixes Cocos2d-x bugs.
 
 ##**Features**
-------
 
 ###**Removal**
 * Cocos2d-x as pure graphic engine (Remove lots of extensions)
@@ -23,7 +21,27 @@ Another branch of Cocos2d-x with Lua derived from Cocos2d-x version 2.1rc0. Its 
 * Improved Lua type systems with lower cost.
 * Small optimizations for Lua binding to run faster.
 
-##**Lisence**
+###**Issues**###
+* When using callbacks that call Lua functions from C++, cicular references may appear. For example:
+
+```lua
+	local layer = CCLayer()
+    layer:registerTouchHandler(
+    	function(eventType) -- layer references closure to invoke it
+    		if eventType == CCTouch.Began then
+    			layer.opacity = 1.0 -- closure references layer to access it
+    		elseif eventType == CCTouch.Ended then
+    			layer:runAction(oOpacity(0.3,0))
+    		end
+	    end)
+
+	-- Currently in the implementation, the Lua GC system can`t detect 
+	-- this kind of cicular reference. When you are done with the layer.
+	-- You should call layer:unregisterTouchHandler() manually to avoid 
+	-- memory leak.
+``` 
+
+##**Lisence**##
 This code is distributed under the MIT License. Here is the full license:
 
 Copyright (c) 2013 Jin Li, http://www.luv-fight.com
