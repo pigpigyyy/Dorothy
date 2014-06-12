@@ -80,11 +80,14 @@ Basically,it's only enabled in android
 
 It's new in cocos2d-x since v0.99.5
 */
+#define CC_ENABLE_CACHE_TEXTURE_DATA 0
+/*
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     #define CC_ENABLE_CACHE_TEXTURE_DATA       1
 #else
     #define CC_ENABLE_CACHE_TEXTURE_DATA       0
 #endif
+*/
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID) || (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
     /* Application will crash in glDrawElements function on some win32 computers and some android devices.
