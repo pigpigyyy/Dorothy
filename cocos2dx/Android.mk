@@ -22,7 +22,6 @@ actions/CCActionManager.cpp \
 actions/CCActionPageTurn3D.cpp \
 actions/CCActionProgressTimer.cpp \
 actions/CCActionTiledGrid.cpp \
-actions/CCActionTween.cpp \
 base_nodes/CCAtlasNode.cpp \
 base_nodes/CCNode.cpp \
 cocoa/CCAffineTransform.cpp \
@@ -100,12 +99,8 @@ shaders/ccShaders.cpp \
 shaders/CCGLProgram.cpp \
 shaders/ccGLStateCache.cpp \
 shaders/CCShaderCache.cpp \
-sprite_nodes/CCAnimation.cpp \
-sprite_nodes/CCAnimationCache.cpp \
 sprite_nodes/CCSprite.cpp \
 sprite_nodes/CCSpriteBatchNode.cpp \
-sprite_nodes/CCSpriteFrame.cpp \
-sprite_nodes/CCSpriteFrameCache.cpp \
 support/ccUTF8.cpp \
 support/CCNotificationCenter.cpp \
 support/CCProfiling.cpp \
@@ -115,6 +110,7 @@ support/user_default/CCUserDefaultAndroid.cpp \
 support/base64.cpp \
 support/ccUtils.cpp \
 support/CCVertex.cpp \
+support/CCZip.cpp \
 support/data_support/ccCArray.cpp \
 support/image_support/TGAlib.cpp \
 support/tinyxml2/tinyxml2.cpp \

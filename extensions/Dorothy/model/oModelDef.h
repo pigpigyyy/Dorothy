@@ -74,8 +74,8 @@ public:
 		CCTexture2D* texture,
 		oSpriteDef* root,
 		const vector<oVec2>& keys,
-		const hash_strmap<int>& animationIndex,
-		const hash_strmap<int>& lookIndex);
+		const unordered_map<string, int>& animationIndex,
+		const unordered_map<string, int>& lookIndex);
 	const string& getClipFile() const;
 	CCTexture2D* getTexture();
 	oSpriteDef* getRoot();
@@ -90,13 +90,12 @@ public:
 	string getAnimationNameByIndex(int index);
 	int getLookIndexByName(const string& name);
 	int getKeyPointCount() const;
-	const hash_strmap<int>& getAnimationIndexMap() const;
-	const hash_strmap<int>& getLookIndexMap() const;
+	const unordered_map<string, int>& getAnimationIndexMap() const;
+	const unordered_map<string, int>& getLookIndexMap() const;
 	oModel* toModel();
 	string toXml();
 	static oModelDef* create();
 private:
-	typedef hash_strmap<int> oIndexMap;
 	void setTexture(CCTexture2D* tex);
 	void setRoot(oSpriteDef* root);
 	bool _isBatchUsed;
@@ -106,8 +105,8 @@ private:
 	oRef<CCTexture2D> _texture;
 	oOwn<oSpriteDef> _root;
 	string _clip;
-	oIndexMap _animationIndex;
-	oIndexMap _lookIndex;
+	unordered_map<string, int> _animationIndex;
+	unordered_map<string, int> _lookIndex;
 	friend class oModelCache;
 };
 

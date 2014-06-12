@@ -428,7 +428,7 @@ struct hash_strmap_node<LinkTp, Value, ValueInline> {
 };
 
 //
-// hash_strmap<> hset; // just a set, can be used as a string pool
+// unordered_map<string, > hset; // just a set, can be used as a string pool
 //
 template< class Value = ValueOut // ValueOut means empty value, just like a set
 		, class HashFunc = fstring::IF_SP_ALIGN(hash_align, hash)
@@ -2593,8 +2593,8 @@ template<class Value
 		, class ValuePlace
 		, class CopyStrategy
 		, class LinkTp>
-void swap(hash_strmap<Value, HashFunc, KeyEqual, ValuePlace, CopyStrategy, LinkTp> &x,
-	 hash_strmap<Value, HashFunc, KeyEqual, ValuePlace, CopyStrategy, LinkTp> &y)
+void swap(unordered_map<string, Value, HashFunc, KeyEqual, ValuePlace, CopyStrategy, LinkTp> &x,
+	 unordered_map<string, Value, HashFunc, KeyEqual, ValuePlace, CopyStrategy, LinkTp> &y)
 {
 	x.swap(y);
 }

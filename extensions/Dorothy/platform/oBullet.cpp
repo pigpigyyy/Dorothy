@@ -47,7 +47,7 @@ _face(nullptr)
 	oBullet::setPosition(
 		ccpAdd(
 		unit->getPosition(),
-		(unit->isFaceRight() ? ccp(-offset.x, offset.y) : offset)));
+		(unit->isFaceRight() ? ccp(-offset.x, offset.y) : (CCPoint)offset)));
 	if (oBody::getBodyDef()->gravityScale != 0.0f)
 	{
 		oBullet::setRotation(-CC_RADIANS_TO_DEGREES(atan2f(v.y, unit->isFaceRight() ? v.x : -v.x)));

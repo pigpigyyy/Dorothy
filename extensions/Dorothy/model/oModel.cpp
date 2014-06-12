@@ -39,7 +39,7 @@ void oLook::unApply()
 	}
 }
 
-typedef hash_strmap<CCNode*> oNodeMap;
+typedef unordered_map<string, CCNode*> oNodeMap;
 
 oModel::oModel( oModelDef* def ):
 _isPlaying(false),

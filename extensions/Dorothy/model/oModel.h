@@ -128,7 +128,7 @@ public:
 protected:
 	oModel(oModelDef* def);
 private:
-	typedef hash_strmap<CCNode*> oNodeMap;
+	typedef unordered_map<string, CCNode*> oNodeMap;
 	void visit(oSpriteDef* parentDef, CCNode* parentNode);
 	void onResetAnimationEnd();
 	void addLook(int index, CCNode* node);

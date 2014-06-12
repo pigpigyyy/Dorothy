@@ -40,7 +40,7 @@ public class Dorothy extends Cocos2dxActivity{
     }
 
     static {
-        System.loadLibrary("Dorothy");
+        System.loadLibrary("dorothy");
     }
 }
 

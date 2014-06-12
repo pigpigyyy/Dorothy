@@ -565,7 +565,7 @@ void oMeleeAttack::onAttack()
 				oHit* hitAction = (oHit*)(target->getAction(oID::ActionHit));
 				if (hitAction)
 				{
-					oVec2 hitPoint = oUnitDef::usePreciseHit ? oAttack::getHitPoint(_owner, target, &_polygon) : target->getPosition();
+					oVec2 hitPoint = oUnitDef::usePreciseHit ? oAttack::getHitPoint(_owner, target, &_polygon) : oVec2(target->getPosition());
 					hitAction->setHitInfo(hitPoint, _owner->attackPower, !attackRight);
 				}
 				/* Make damage */
@@ -617,7 +617,7 @@ bool oRangeAttack::onHitTarget( oBullet* bullet, oUnit* target )
 	if (hitAction)
 	{
 		b2Shape* shape = bullet->getDetectSensor()->getFixture()->GetShape();
-		oVec2 hitPoint = oUnitDef::usePreciseHit ? oAttack::getHitPoint(_owner, target, shape) : target->getPosition();
+		oVec2 hitPoint = oUnitDef::usePreciseHit ? oAttack::getHitPoint(_owner, target, shape) : oVec2(target->getPosition());
 		bool attackRight = bullet->getVelocityX() > 0.0f;
 		hitAction->setHitInfo(hitPoint, _owner->attackPower, !attackRight);
 	}

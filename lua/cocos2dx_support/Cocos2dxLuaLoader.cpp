@@ -39,16 +39,16 @@ extern "C"
         }
         
         pos = filename.find_first_of(".");
-        while(pos != std::string::npos)
+        while (pos != std::string::npos)
         {
             filename.replace(pos, 1, "/");
             pos = filename.find_first_of(".");
         }
         filename.append(".lua");
-        
+
         unsigned long codeBufferSize = 0;
         unsigned char* codeBuffer = CCFileUtils::sharedFileUtils()->getFileData(filename.c_str(), "rb", &codeBufferSize);
-        
+
         if(codeBuffer)
         {
             if(luaL_loadbuffer(L,(char*)codeBuffer, codeBufferSize, filename.c_str()) != 0)

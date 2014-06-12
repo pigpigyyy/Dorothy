@@ -53,22 +53,13 @@ oSequence* oSequence::createWithTwoActions(CCFiniteTimeAction *pActionOne, CCFin
 
 oSequence* oSequence::create(CCFiniteTimeAction *pAction1, ...)
 {
-	va_list params;
-	va_start(params, pAction1);
+	va_list args;
 
-	oSequence *pRet = oSequence::createWithVariableList(pAction1, params);
-
-	va_end(params);
-
-	return pRet;
-}
-
-oSequence* oSequence::createWithVariableList(CCFiniteTimeAction *pAction1, va_list args)
-{
 	CCFiniteTimeAction *pNow;
 	CCFiniteTimeAction *pPrev = pAction1;
 	bool bOneAction = true;
 
+	va_start(args, pAction1);
 	while (pAction1)
 	{
 		pNow = va_arg(args, CCFiniteTimeAction*);
@@ -87,8 +78,35 @@ oSequence* oSequence::createWithVariableList(CCFiniteTimeAction *pAction1, va_li
 			break;
 		}
 	}
+	va_end(args);
 
-	return ((oSequence*)pPrev);
+	oSequence* pRet = (oSequence*)pPrev;
+
+	return pRet;
+}
+
+oSequence* oSequence::create(CCFiniteTimeAction* actions[], int count)
+{
+	oSequence* pRet = nullptr;
+	BLOCK_START
+	{
+		BREAK_IF(count == 0);
+		CCFiniteTimeAction* prev = actions[0];
+		if (count > 1)
+		{
+			for (int i = 1; i < count; ++i)
+			{
+				prev = createWithTwoActions(prev, actions[i]);
+			}
+		}
+		else
+		{
+			prev = createWithTwoActions(prev, ExtraAction::create());
+		}
+		pRet = (oSequence*)prev;
+	}
+	BLOCK_END
+	return pRet;
 }
 
 oSequence* oSequence::create(CCArray* arrayOfActions)
@@ -237,18 +255,9 @@ oMemoryPool<oSpawn> oSpawn::_memory;
 
 oSpawn* oSpawn::create(CCFiniteTimeAction *pAction1, ...)
 {
-	va_list params;
-	va_start(params, pAction1);
+	va_list args;
+	va_start(args, pAction1);
 
-	oSpawn *pRet = oSpawn::createWithVariableList(pAction1, params);
-
-	va_end(params);
-
-	return pRet;
-}
-
-oSpawn* oSpawn::createWithVariableList(CCFiniteTimeAction *pAction1, va_list args)
-{
 	CCFiniteTimeAction *pNow;
 	CCFiniteTimeAction *pPrev = pAction1;
 	bool bOneAction = true;
@@ -271,8 +280,35 @@ oSpawn* oSpawn::createWithVariableList(CCFiniteTimeAction *pAction1, va_list arg
 			break;
 		}
 	}
+	oSpawn* pRet = (oSpawn*)pPrev;
 
-	return ((oSpawn*)pPrev);
+	va_end(args);
+
+	return pRet;
+}
+
+oSpawn* oSpawn::create(CCFiniteTimeAction* actions[], int count)
+{
+	oSpawn* pRet = nullptr;
+	BLOCK_START
+	{
+		BREAK_IF(count == 0);
+		CCFiniteTimeAction* prev = actions[0];
+		if (count > 1)
+		{
+			for (int i = 1; i < count; ++i)
+			{
+				prev = createWithTwoActions(prev, actions[i]);
+			}
+		}
+		else
+		{
+			prev = createWithTwoActions(prev, ExtraAction::create());
+		}
+		pRet = (oSpawn*)prev;
+	}
+	BLOCK_END
+	return pRet;
 }
 
 oSpawn* oSpawn::create(CCArray *arrayOfActions)

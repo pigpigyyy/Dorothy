@@ -32,8 +32,6 @@ using std::ostringstream;
 using std::tuple;
 #include "Dorothy/other/AcfDelegate.h"
 using Acf::Delegate;
-#include "Dorothy/other/hash_strmap.hpp"
-using febird::hash_strmap;
 #include "Dorothy/other/Property.h"
 
 #define NS_DOROTHY_BEGIN namespace Dorothy {

@@ -6,5 +6,6 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="src" path="/libcocos2dx"/>
+	<classpathentry kind="lib" path="/libcocos2dx/bin/libcocos2dx.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

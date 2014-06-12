@@ -24,8 +24,8 @@ public:
 	virtual void update(float t);
 	virtual oActionDuration* reverse();
 	static oSequence* create(CCFiniteTimeAction* pAction1, ...);
+	static oSequence* create(CCFiniteTimeAction* pAction[], int count);
 	static oSequence* create(CCArray* arrayOfActions);
-	static oSequence* createWithVariableList(CCFiniteTimeAction* pAction1, va_list args);
 	static oSequence* createWithTwoActions(CCFiniteTimeAction* pActionOne, CCFiniteTimeAction* pActionTwo);
 protected:
 	CCFiniteTimeAction* m_pActions[2];
@@ -49,8 +49,8 @@ public:
 	virtual void update(float time);
 	virtual CCActionInterval* reverse();
 public:
-	static oSpawn* create(CCFiniteTimeAction *pAction1, ...);
-	static oSpawn* createWithVariableList(CCFiniteTimeAction *pAction1, va_list args);
+	static oSpawn* create(CCFiniteTimeAction* pAction1, ...);
+	static oSpawn* create(CCFiniteTimeAction* actions[], int count);
 	static oSpawn* create(CCArray *arrayOfActions);
 	static oSpawn* createWithTwoActions(CCFiniteTimeAction *pAction1, CCFiniteTimeAction *pAction2);
 protected:

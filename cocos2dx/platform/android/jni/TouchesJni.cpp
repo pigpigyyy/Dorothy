@@ -75,11 +75,11 @@ extern "C" {
         CCDirector* pDirector = CCDirector::sharedDirector();
         switch (keyCode) {
             case KEYCODE_BACK:
-                  if (pDirector->getKeypadDispatcher()->dispatchKeypadMSG(kTypeBackClicked))
+                  if (pDirector->getKeypadDispatcher()->dispatchKeypadMSG(CCKeypad::Back))
                     return JNI_TRUE;
                 break;
             case KEYCODE_MENU:
-                if (pDirector->getKeypadDispatcher()->dispatchKeypadMSG(kTypeMenuClicked))
+                if (pDirector->getKeypadDispatcher()->dispatchKeypadMSG(CCKeypad::Menu))
                     return JNI_TRUE;
                 break;
             default:

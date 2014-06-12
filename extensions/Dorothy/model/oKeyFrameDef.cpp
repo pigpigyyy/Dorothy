@@ -109,9 +109,9 @@ oActionDuration* oKeyAnimationDef::toAction()
 	}
 
 	int indexFrames = 0;
-	CCFiniteTimeAction** keyFrames = (CCFiniteTimeAction**)alloca(sizeof(CCFiniteTimeAction*)*(_keyFrameDefs.size() + 1));
+	CCFiniteTimeAction** keyFrames = (CCFiniteTimeAction**)alloca(sizeof(CCFiniteTimeAction*)*(_keyFrameDefs.size()));
 	int indexAttrs = 0;
-	CCFiniteTimeAction** keyAttrs = (CCFiniteTimeAction**)alloca(sizeof(CCFiniteTimeAction*)*(oKeyFrameDef::MaxKeyAttributes + 1));
+	CCFiniteTimeAction** keyAttrs = (CCFiniteTimeAction**)alloca(sizeof(CCFiniteTimeAction*)*(oKeyFrameDef::MaxKeyAttributes));
 
 	oKeyFrameDef* lastDef = _keyFrameDefs.front();
 	keyFrames[indexFrames++] = oKeyReset::create(lastDef);
@@ -149,8 +149,7 @@ oActionDuration* oKeyAnimationDef::toAction()
 		/* Add a new keyFrame */
 		if (indexAttrs > 1)// Multiple attributes animated
 		{
-			keyAttrs[indexAttrs++] = nullptr;
-			keyFrames[indexFrames++] = oSpawn::createWithVariableList(keyAttrs[0],(va_list)(keyAttrs+1));
+			keyFrames[indexFrames++] = oSpawn::create(keyAttrs, indexAttrs);
 		}
 		else if (indexAttrs == 1)// Single attribute animated
 		{
@@ -163,8 +162,7 @@ oActionDuration* oKeyAnimationDef::toAction()
 		indexAttrs = 0;
 		lastDef = def;
 	}
-	keyFrames[indexFrames++] = nullptr;
-	return oSequence::createWithVariableList(keyFrames[0],(va_list)(keyFrames+1));
+	return oSequence::create(keyFrames, indexFrames);
 }
 
 string oKeyAnimationDef::toXml()

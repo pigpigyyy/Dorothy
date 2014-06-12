@@ -22,7 +22,7 @@ oEvent::oEvent( const string& name ):
 _name(name)
 { }
 
-hash_strmap<oOwn<oEventType>> oEvent::_eventMap;
+unordered_map<string, oOwn<oEventType>> oEvent::_eventMap;
 
 void oEvent::addType( const string& name )
 {

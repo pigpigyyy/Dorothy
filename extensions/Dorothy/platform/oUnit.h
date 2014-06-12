@@ -28,7 +28,7 @@ class oInstinct;
 class oUnit: public oBody
 {
 	typedef unordered_map<int, oOwn<oAction>> oActionMap;
-	typedef hash_strmap<oProperty*> oPropertyMap;
+	typedef unordered_map<string, oProperty*> oPropertyMap;
 public:
 	//Class properties
 	PROPERTY_NAME(oModel*, Model);

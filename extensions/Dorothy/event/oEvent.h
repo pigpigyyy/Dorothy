@@ -64,7 +64,7 @@ public:
 private:
 	static void reg(oListener* listener);
 	static void unreg(oListener* listener);
-	static hash_strmap<oOwn<oEventType>> _eventMap;
+	static unordered_map<string, oOwn<oEventType>> _eventMap;
 	static oEvent _event;
 protected:
 	static void send(oEvent* event);

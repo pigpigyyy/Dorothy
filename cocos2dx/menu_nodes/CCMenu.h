@@ -76,9 +76,6 @@ public:
       * number of variables.
     */
 	static CCMenu* createWithItem(CCMenuItem* item, bool swallow = true);
-    
-    /** creates a CCMenu with CCMenuItem objects */
-	static CCMenu* createWithItems(CCMenuItem *firstItem, va_list args, bool swallow = true);
 
     /** initializes an empty CCMenu */
     bool init();

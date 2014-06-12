@@ -243,6 +243,7 @@ local function oFileChooser()
 				oEditor.viewPanel:clearSelection()
 				oEditor.viewPanel:updateImages(oEditor.data,model)
 				oEditor.viewArea:setModelSize(oEditor.data[oSd.size])
+				oEditor.editMenu.items.Size.visible = false
 				oEditor.editMenu:toSprite()
 			end
 		end)

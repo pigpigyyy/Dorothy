@@ -24,6 +24,10 @@
 					<key>LaunchConfigHandle</key>
 					<value>&lt;project&gt;/.externalToolBuilders/NDK Builder.launch</value>
 				</dictionary>
+				<dictionary>
+					<key>incclean</key>
+					<value>true</value>
+				</dictionary>
 			</arguments>
 		</buildCommand>
 		<buildCommand>
