@@ -45,8 +45,7 @@ targetAllow(unitDef->targetAllow),
 damageType(unitDef->damageType),
 defenceType(unitDef->defenceType),
 sensity(unitDef->sensity),
-_unitDef(unitDef),
-_reflexArcId(unitDef->reflexArc)
+_unitDef(unitDef)
 {
 	properties(this);
 	_instincts(this);
@@ -66,7 +65,7 @@ _reflexArcId(unitDef->reflexArc)
 	{
 		oUnit::attachInstinct(id);
 	}
-	_reflexArc = oAI::get(_reflexArcId);
+	oUnit::setReflexArc(unitDef->reflexArc);
 	this->scheduleUpdate();
 }
 

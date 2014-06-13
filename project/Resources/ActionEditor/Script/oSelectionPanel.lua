@@ -225,14 +225,14 @@ local function oSelectionPanel(borderSize,noCliping)
 				if isReseting() then
 					startReset()
 				else
-					if _v ~= oVec2.zero and deltaMoveLength > 20 then
+					if _v ~= oVec2.zero and deltaMoveLength > 10 then
 						panel:scheduleUpdate(updatePos)
 					end
 				end
 			elseif eventType == CCTouch.Moved then
 				deltaMoveLength = deltaMoveLength + touch.delta.length
 				_s = _s + touch.delta
-				if deltaMoveLength > 20 then
+				if deltaMoveLength > 10 then
 					menu.enabled = false
 					setOffset(touch.delta, true)
 				end

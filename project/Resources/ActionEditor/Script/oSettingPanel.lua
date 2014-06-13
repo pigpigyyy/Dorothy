@@ -345,7 +345,7 @@ local function oSettingPanel()
 				if isReseting() then
 					startReset()
 				else
-					if _v == oVec2.zero or deltaMoveLength <= 20 then
+					if _v == oVec2.zero or deltaMoveLength <= 10 then
 						panel:hide()
 					else
 						panel:scheduleUpdate(updatePos)
@@ -354,7 +354,7 @@ local function oSettingPanel()
 			elseif eventType == CCTouch.Moved then
 				deltaMoveLength = deltaMoveLength + touch.delta.length
 				_s = _s + touch.delta
-				if deltaMoveLength > 20 then
+				if deltaMoveLength > 10 then
 					menu.enabled = false
 					setOffset(touch.delta, true)
 				end

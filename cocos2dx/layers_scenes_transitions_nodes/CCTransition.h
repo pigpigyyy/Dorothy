@@ -82,7 +82,6 @@ protected:
     bool    m_bIsSendCleanupToScene;
 
 public:
-
     CCTransitionScene();
     virtual ~CCTransitionScene();
     virtual void visit();
@@ -405,7 +404,7 @@ public:
 };
 
 /** @brief CCTransitionFade:
-Fade out the outgoing scene and then fade in the incoming scene.'''
+Fade out the outgoing scene and then fade in the incoming scene.
 */
 class CC_DLL CCTransitionFade : public CCTransitionScene
 {
@@ -422,7 +421,8 @@ public:
     virtual bool initWithDuration(float t, CCScene*scene ,const ccColor3B& color);
 
     virtual bool initWithDuration(float t,CCScene* scene); 
-    virtual void onEnter();
+	virtual void onEnter();
+	virtual void onExit();
 };
 
 /**

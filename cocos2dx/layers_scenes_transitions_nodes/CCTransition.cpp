@@ -1175,6 +1175,8 @@ CCTransitionZoomFlipAngular* CCTransitionZoomFlipAngular::create(float t, CCScen
 //
 // Fade Transition
 //
+static const unsigned int kSceneFade = 0xFADEFADE;
+
 CCTransitionFade* CCTransitionFade::create(float duration, CCScene* scene, const ccColor3B& color)
 {
 	CCTransitionFade * pTransition = new CCTransitionFade();
@@ -1213,7 +1215,7 @@ void CCTransitionFade::onEnter()
 	m_pInScene->setVisible(false);
 	CCLayerColor* layer = CCLayerColor::create(m_tColor);
 	layer->setAnchorPoint(CCPoint::zero);
-	addChild(layer);
+	addChild(layer, 0, kSceneFade);
 	
 	layer->runAction(CCSequence::create(
 		CCFadeIn::create(m_fDuration*0.5f),
@@ -1221,6 +1223,12 @@ void CCTransitionFade::onEnter()
 		CCFadeOut::create(m_fDuration*0.5f),
 		CCCallFunc::create(this, callfunc_selector(CCTransitionScene::finish)),
 		NULL));
+}
+
+void CCTransitionFade::onExit()
+{
+	removeChildByTag(kSceneFade);
+	CCTransitionScene::onExit();
 }
 
 //

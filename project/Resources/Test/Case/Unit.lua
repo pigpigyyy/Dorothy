@@ -66,4 +66,4 @@ btn = oButton("Attack",16,60,nil,150,10,
 btn.anchor = oVec2.zero
 menu:addChild(btn)
 
-CCDirector:run(CCScene:progressCCW(1,scene))
+CCDirector:run(scene)
