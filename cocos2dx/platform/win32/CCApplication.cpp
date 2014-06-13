@@ -1,7 +1,6 @@
 #include "CCApplication.h"
 #include "CCEGLView.h"
 #include "CCDirector.h"
-#include "script_support/CCScriptSupport.h"
 #include <algorithm>
 #include "platform/CCFileUtils.h"
 /**
@@ -18,7 +17,6 @@ CCApplication * CCApplication::sm_pSharedApplication = 0;
 CCApplication::CCApplication()
 : m_hInstance(NULL)
 , m_hAccelTable(NULL)
-, m_scriptHandler(NULL)
 {
     m_hInstance    = GetModuleHandle(NULL);
     m_nAnimationInterval.QuadPart = 0;
@@ -107,34 +105,6 @@ CCApplication* CCApplication::sharedApplication()
 {
     CC_ASSERT(sm_pSharedApplication);
     return sm_pSharedApplication;
-}
-
-void CCApplication::registerEventHandler(int handler)
-{
-	CC_SAFE_RELEASE(m_scriptHandler);
-	m_scriptHandler = CCScriptHandlerEntry::create(handler);
-	m_scriptHandler->retain();
-}
-
-void CCApplication::unregisterEventHandler()
-{
-	CC_SAFE_RELEASE_NULL(m_scriptHandler);
-}
-
-void CCApplication::applicationDidEnterBackground()
-{
-	if (m_scriptHandler)
-	{
-		CCScriptEngine::sharedEngine()->executeAppEvent(m_scriptHandler->getHandler(), CCApplication::EnterBackground);
-	}
-}
-
-void CCApplication::applicationWillEnterForeground()
-{
-	if (m_scriptHandler)
-	{
-		CCScriptEngine::sharedEngine()->executeAppEvent(m_scriptHandler->getHandler(), CCApplication::EnterForeground);
-	}
 }
 
 ccLanguageType CCApplication::getCurrentLanguage()

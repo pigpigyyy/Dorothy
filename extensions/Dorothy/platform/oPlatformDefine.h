@@ -19,14 +19,14 @@ ENUM_START(oAttackType)
 	Melee = 0,
 	Range = 1
 }
-ENUM_END
+ENUM_END(oAttackType)
 
 ENUM_START(oAttackTarget)
 {
 	Single = 0,
 	Multi = 1
 }
-ENUM_END
+ENUM_END(oAttackTarget)
 
 ENUM_START(oRelation)
 {
@@ -36,7 +36,7 @@ ENUM_START(oRelation)
 	Enemy = 1<<2,
 	Any = Friend|Neutral|Enemy
 }
-ENUM_END
+ENUM_END(oRelation)
 
 /*
 Target Allow

@@ -160,8 +160,8 @@ oModelDef::oModelDef(
 	CCTexture2D* texture,
 	oSpriteDef* root,
 	const vector<oVec2>& keys,
-	const hash_strmap<int>& animationIndex,
-	const hash_strmap<int>& lookIndex):
+	const unordered_map<string, int>& animationIndex,
+	const unordered_map<string, int>& lookIndex):
 _texture(texture),
 _clip(clipFile),
 _isFaceRight(isFaceRight),
@@ -232,17 +232,17 @@ string oModelDef::toXml()
 		stream << ',' << s(_size.height) << "\" ";
 	}
 	stream << '>' << _root->toXml();
-	for (const oIndexMap::value_type& item: _animationIndex)
+	for (const auto& item: _animationIndex)
 	{
 		stream << '<' << char(oModelXml::AnimationName) << ' '
 			<< char(oModelXml::Index) << "=\"" << item.second << "\" "
-			<< char(oModelXml::Name) << "=\"" << item.first.p << "\"/>";
+			<< char(oModelXml::Name) << "=\"" << item.first << "\"/>";
 	}
-	for (const oIndexMap::value_type& item: _lookIndex)
+	for (const auto& item: _lookIndex)
 	{
 		stream << '<' << char(oModelXml::LookName) << ' '
 			<< char(oModelXml::Index) << "=\"" << item.second << "\" "
-			<< char(oModelXml::Name) << "=\"" << item.first.p << "\"/>";
+			<< char(oModelXml::Name) << "=\"" << item.first << "\"/>";
 	}
 	stream << "</" << char(oModelXml::Dorothy) << '>';
 	return stream.str();
@@ -265,7 +265,7 @@ int oModelDef::getAnimationIndexByName( const string& name )
 
 string oModelDef::getAnimationNameByIndex( int index )
 {
-	for (oIndexMap::value_type& item : _animationIndex)
+	for (const auto& item : _animationIndex)
 	{
 		if (item.second == index)
 		{
@@ -290,12 +290,12 @@ int oModelDef::getKeyPointCount() const
 	return _keys.size();
 }
 
-const hash_strmap<int>& oModelDef::getAnimationIndexMap() const
+const unordered_map<string, int>& oModelDef::getAnimationIndexMap() const
 {
 	return _animationIndex;
 }
 
-const hash_strmap<int>& oModelDef::getLookIndexMap() const
+const unordered_map<string, int>& oModelDef::getLookIndexMap() const
 {
 	return _lookIndex;
 }

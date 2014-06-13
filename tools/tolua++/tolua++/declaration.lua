@@ -299,7 +299,7 @@ function classDeclaration:builddeclaration (narg, cplusplus)
 	if self.def ~= '' then
 		def = self.def
 		if (ptr == '' or self.ptr == '&') and not t then
-			def = "(void*)&(const "..type..")"..def
+			def = "(void*)(&"..def..")"
 		end
 	end
 	if t then

@@ -91,7 +91,7 @@ public:
 	/** Singleton method. */
 	static oParticleCache* shared();
 protected:
-	hash_strmap<oRef<oParticleType>> _parDict;
+	unordered_map<string, oRef<oParticleType>> _parDict;
 private:
 	inline const char* valueForKey(const char* key, CCDictionary* dict)
 	{

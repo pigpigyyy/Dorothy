@@ -24,9 +24,9 @@ public:
 	}
 	bool insert(size_t where, T* item)
 	{
-		if (where >= 0 && where < size())
+		if (where >= 0 && where < vector<oWRef<T>>::size())
 		{
-			auto it = begin();
+			auto it = vector<oWRef<T>>::begin();
 			for (int i = 0; i < where; ++i, ++it);
 			vector<oWRef<T>>::insert(it, oWRefMake(item));
 			return true;
@@ -35,11 +35,11 @@ public:
 	}
 	bool remove(T* item)
 	{
-		for (auto it = begin();it != end();it++)
+		for (auto it = vector<oWRef<T>>::begin(); it != vector<oWRef<T>>::end(); it++)
 		{
 			if ((*it) == item)
 			{
-				erase(it);
+				vector<oWRef<T>>::erase(it);
 				return true;
 			}
 		}
@@ -47,14 +47,14 @@ public:
 	}
 	bool fast_remove(T* item)
 	{
-		int size = size();
+		int size = vector<oWRef<T>>::size();
 		oWRef<T>* data = data();
 		for (int i = 0; i < size; i++)
 		{
-			if (data[i] == body)
+			if (data[i] == item)
 			{
 				data[i] = data[size - 1];
-				pop_back();
+				vector<oWRef<T>>::pop_back();
 				return true;
 			}
 		}

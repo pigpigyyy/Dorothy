@@ -160,7 +160,7 @@ HANDLER_WRAP_START(oActionHandlerWrapper)
 	void call(oAction* action) const
 	{
 		void* params[] = {action};
-		char* paramNames[] = {"oAction"};
+		const char* paramNames[] = {"oAction"};
 		CCScriptEngine::sharedEngine()->executeFunction(getHandler(), 1, params, paramNames);
 	}
 HANDLER_WRAP_END
@@ -211,14 +211,14 @@ oAction(id, priority, owner)
 bool oScriptAction::isAvailable()
 {
 	void* params[] = {this};
-	char* paramNames[] = {"oAction"};
+	const char* paramNames[] = {"oAction"};
 	return CCScriptEngine::sharedEngine()->executeFunction(_available->get(), 1, params, paramNames) != 0;
 }
 
 void oScriptAction::run()
 {
 	void* params[] = {this};
-	char* paramNames[] = {"oAction"};
+	const char* paramNames[] = {"oAction"};
 	CCScriptEngine::sharedEngine()->executeFunction(_run->get(), 1, params, paramNames);
 	oAction::run();
 }
@@ -232,7 +232,7 @@ void oScriptAction::update( float dt )
 void oScriptAction::stop()
 {
 	void* params[] = {this};
-	char* paramNames[] = {"oAction"};
+	const char* paramNames[] = {"oAction"};
 	CCScriptEngine::sharedEngine()->executeFunction(_stop->get(), 1, params, paramNames);
 	oAction::stop();
 }
@@ -565,7 +565,7 @@ void oMeleeAttack::onAttack()
 				oHit* hitAction = (oHit*)(target->getAction(oID::ActionHit));
 				if (hitAction)
 				{
-					oVec2 hitPoint = oUnitDef::usePreciseHit ? oAttack::getHitPoint(_owner, target, &_polygon) : target->getPosition();
+					oVec2 hitPoint = oUnitDef::usePreciseHit ? oAttack::getHitPoint(_owner, target, &_polygon) : oVec2(target->getPosition());
 					hitAction->setHitInfo(hitPoint, _owner->attackPower, !attackRight);
 				}
 				/* Make damage */
@@ -617,7 +617,7 @@ bool oRangeAttack::onHitTarget( oBullet* bullet, oUnit* target )
 	if (hitAction)
 	{
 		b2Shape* shape = bullet->getDetectSensor()->getFixture()->GetShape();
-		oVec2 hitPoint = oUnitDef::usePreciseHit ? oAttack::getHitPoint(_owner, target, shape) : target->getPosition();
+		oVec2 hitPoint = oUnitDef::usePreciseHit ? oAttack::getHitPoint(_owner, target, shape) : oVec2(target->getPosition());
 		bool attackRight = bullet->getVelocityX() > 0.0f;
 		hitAction->setHitInfo(hitPoint, _owner->attackPower, !attackRight);
 	}

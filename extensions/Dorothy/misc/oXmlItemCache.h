@@ -21,7 +21,7 @@ NS_DOROTHY_BEGIN
 template<class T = CCObject>
 class oXmlItemCache: public CCSAXDelegator
 {
-	typedef typename hash_strmap<oRef<T>> dict;
+	typedef unordered_map<string, oRef<T>> dict;
 	typedef typename dict::iterator dict_iter;
 public:
 	/** Load a new xml file or get its data for cache. */

@@ -168,7 +168,9 @@ vector<string> oContent::getDirEntries(const char* path, bool isFolder)
 {
 	vector<string> files;
 	tinydir_dir dir;
-	if (tinydir_open(&dir, path) == 0)
+	string fullPath = CCFileUtils::sharedFileUtils()->fullPathForFilename(path);
+	int ret = tinydir_open(&dir, fullPath.c_str());
+	if (ret == 0)
 	{
 		while (dir.has_next)
 		{
@@ -181,6 +183,10 @@ vector<string> oContent::getDirEntries(const char* path, bool isFolder)
 			tinydir_next(&dir);
 		}
 		tinydir_close(&dir);
+	}
+	else
+	{
+		CCLOG("get entry error, code %d", errno);
 	}
 	return std::move(files);
 }

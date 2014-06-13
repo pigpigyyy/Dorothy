@@ -4,7 +4,7 @@
 template <
 	class T,
 	class Object,
-		typename T (Object::*_getter)()
+	T (Object::*_getter)()
 >
 class _RProperty
 {
@@ -15,7 +15,7 @@ public:
 	}
 	T get() const
 	{
-		return (_target->*_setter)(value);
+		return (_target->*_getter)();
 	}
 	operator T() const
 	{
@@ -28,7 +28,7 @@ private:
 template <
 	class T,
 	class Object,
-		typename const T& (Object::*_getter)()
+	const T& (Object::*_getter)()
 >
 class _RPropertyRef
 {
@@ -39,7 +39,7 @@ public:
 	}
 	const T& get() const
 	{
-		return (_target->*_setter)(value);
+		return (_target->*_getter)();
 	}
 	operator T() const
 	{
@@ -52,8 +52,8 @@ private:
 template <
 	class T,
 	class Object,
-		typename T (Object::*_setter)( T ),
-		typename T (Object::*_getter)()
+	T (Object::*_setter)( T ),
+	T (Object::*_getter)()
 >
 class _Property
 {
@@ -85,8 +85,8 @@ private:
 template <
 	class T,
 	class Object,
-		typename const T& (Object::*_setter)( T const & ),
-		typename const T& (Object::*_getter)()
+	const T& (Object::*_setter)( T const & ),
+	const T& (Object::*_getter)()
 >
 class _PropertyRef
 {
@@ -118,10 +118,10 @@ private:
 template <
 	class T,
 	class Object,
-		typename T (Object::*_setter)( T ),
-		typename T (Object::*_getter)(),
-		typename T (Object::*_inc)( T ),
-		typename T (Object::*_dec)( T )
+	T (Object::*_setter)( T ),
+	T (Object::*_getter)(),
+	T (Object::*_inc)( T ),
+	T (Object::*_dec)( T )
 >
 class _PropertyEx
 {
@@ -136,7 +136,7 @@ public:
 	} 
 	T get() const
 	{ 
-		return (_target->*_setter)(value); 
+		return (_target->*_getter)();
 	}
 	operator T() const
 	{ 
@@ -161,10 +161,10 @@ private:
 template <
 	class T,
 	class Object,
-		typename const T& (Object::*_setter)( T const & ),
-		typename const T& (Object::*_getter)(),
-		typename const T& (Object::*_inc)( T const & ),
-		typename const T& (Object::*_dec)( T const & )
+	const T& (Object::*_setter)( T const & ),
+	const T& (Object::*_getter)(),
+	const T& (Object::*_inc)( T const & ),
+	const T& (Object::*_dec)( T const & )
 >
 class _PropertyRefEx
 {
@@ -179,7 +179,7 @@ public:
 	} 
 	const T& get() const
 	{ 
-		return (_target->*_setter)(value); 
+		return (_target->*_getter)();
 	}
 	operator T() const
 	{ 

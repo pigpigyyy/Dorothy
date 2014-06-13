@@ -9,12 +9,10 @@
 NS_CC_BEGIN
 
 class CCRect;
-class CCScriptHandlerEntry;
 
 class CC_DLL CCApplication : public CCApplicationProtocol
 {
 public:
-	enum { EnterForeground, EnterBackground };
     CCApplication();
     virtual ~CCApplication();
 
@@ -22,10 +20,7 @@ public:
     @brief    Run the message loop.
     */
     int run();
-	void registerEventHandler(int handler);
-	void unregisterEventHandler();
-	virtual void applicationDidEnterBackground();
-	virtual void applicationWillEnterForeground();
+
     /* override functions */
     virtual void setAnimationInterval(double interval);
     virtual ccLanguageType getCurrentLanguage();
@@ -41,7 +36,6 @@ public:
 	*/
 	static CCApplication* sharedApplication();
 protected:
-	CCScriptHandlerEntry* m_scriptHandler;
     HINSTANCE           m_hInstance;
     HACCEL              m_hAccelTable;
     LARGE_INTEGER       m_nAnimationInterval;

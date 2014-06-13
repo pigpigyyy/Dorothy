@@ -161,7 +161,7 @@ int CCLuaEngine::executeFunction( int nHandler, int paramCount, CCObject* params
 	return lua_execute(nHandler, paramCount);
 }
 
-int CCLuaEngine::executeFunction( int nHandler, int paramCount, void* params[], char* paramNames[] )
+int CCLuaEngine::executeFunction( int nHandler, int paramCount, void* params[], const char* paramNames[] )
 {
 	for(int i = 0; i < paramCount; i++)
 	{
@@ -175,7 +175,7 @@ int CCLuaEngine::executeFunction(int nHandler, int paramCount)
 	return lua_execute(nHandler, paramCount);
 }
 
-int CCLuaEngine::executeActionUpdate( int nHandler, void* param, char* paramName, float deltaTime )
+int CCLuaEngine::executeActionUpdate( int nHandler, void* param, const char* paramName, float deltaTime )
 {
 	if(!nHandler) return 0;
 	tolua_pushusertype(L, param, paramName);

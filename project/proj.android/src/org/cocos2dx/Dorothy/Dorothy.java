@@ -31,6 +31,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 
 public class Dorothy extends Cocos2dxActivity{
+
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 	}
@@ -40,21 +41,12 @@ public class Dorothy extends Cocos2dxActivity{
     }
 
     static {
-        System.loadLibrary("Dorothy");
+        System.loadLibrary("dorothy");
     }
 }
 
 class LuaGLSurfaceView extends Cocos2dxGLSurfaceView{
-	
 	public LuaGLSurfaceView(Context context){
 		super(context);
 	}
-	
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-    	// exit program when key back is entered
-    	if (keyCode == KeyEvent.KEYCODE_BACK) {
-    		android.os.Process.killProcess(android.os.Process.myPid());
-    	}
-        return super.onKeyDown(keyCode, event);
-    }
 }

@@ -50,7 +50,7 @@ oRelation oData::getRelation( int groupA, int groupB ) const
 {
 	int key = groupA<<16 | groupB;
 	auto it = _relationMap.find(key);
-	return it != _relationMap.end() ? it->second : oRelation::Unkown;
+	return it != _relationMap.end() ? it->second : (oRelation)oRelation::Unkown;
 }
 
 oRelation oData::getRelation( oUnit* unitA, oUnit* unitB ) const

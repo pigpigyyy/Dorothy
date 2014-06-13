@@ -55,7 +55,7 @@ class oEvent
 public:
 	oEvent();
 	oEvent(const string& name);
-	inline const string& getName() const;
+	inline const string& getName() const { return _name; }
 public:
 	static void addType(const string& name);
 	static bool removeType(const string& name);
@@ -64,7 +64,7 @@ public:
 private:
 	static void reg(oListener* listener);
 	static void unreg(oListener* listener);
-	static hash_strmap<oOwn<oEventType>> _eventMap;
+	static unordered_map<string, oOwn<oEventType>> _eventMap;
 	static oEvent _event;
 protected:
 	static void send(oEvent* event);

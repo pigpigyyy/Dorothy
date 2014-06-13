@@ -14,7 +14,7 @@ using namespace CocosDenshion;
 
 NS_DOROTHY_BEGIN
 
-static hash_strmap<string> g_extracted;
+static unordered_map<string, string> g_extracted;
 
 bool isExtractNeeded(const char* filename, string*& extractedName)
 {

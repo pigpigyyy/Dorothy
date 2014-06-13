@@ -21,11 +21,11 @@ public:
 	explicit oOwn(Item* item):std::unique_ptr<Item>(item){}
 	inline operator Item*() const
 	{
-		return get();
+		return std::unique_ptr<Item, Del>::get();
 	}
 	inline const oOwn& operator=(oOwn&& own)
 	{
-		unique_ptr<Item, Del>::operator=(std::move(own));
+		std::unique_ptr<Item, Del>::operator=(std::move(own));
 		return *this;
 	}
 private:
@@ -42,7 +42,7 @@ public:
 	explicit oOwnArray(Item* item):oUPtr(item){}
 	inline operator Item*() const
 	{
-		return get();
+		return std::unique_ptr<Item, std::default_delete<Item[]>>::get();
 	}
 	inline const oOwnArray& operator=(oOwnArray&& own)
 	{

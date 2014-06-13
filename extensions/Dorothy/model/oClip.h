@@ -24,7 +24,7 @@ public:
 	/** Name of the texture file. Name only, not file path. */
 	string textureFile;
 	/** Different areas on this texture. */
-	hash_strmap<oOwn<CCRect>> rects;
+	unordered_map<string, oOwn<CCRect>> rects;
 	/** Get a sprite instance with an name. */
 	CCSprite* toSprite(const string& name);
 	string toXml();

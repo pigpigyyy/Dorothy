@@ -33,12 +33,7 @@ extern "C" {
 #include "tolua_fix.h"
 }
 
-#include "ccTypes.h"
-#include "cocoa/CCObject.h"
-#include "touch_dispatcher/CCTouch.h"
-#include "cocoa/CCSet.h"
-#include "base_nodes/CCNode.h"
-#include "script_support/CCScriptSupport.h"
+#include "cocos2d.h"
 
 NS_CC_BEGIN
 
@@ -83,10 +78,10 @@ public:
 	 */
 	virtual int executeGlobalFunction(const char* functionName);
 	virtual int executeFunction(int nHandler, int paramCount, CCObject* params[]);
-	virtual int executeFunction(int nHandler, int paramCount, void* params[], char* paramNames[]);
+	virtual int executeFunction(int nHandler, int paramCount, void* params[], const char* paramNames[]);
 	virtual int executeFunction(int nHandler, int paramCount = 0);
 
-	virtual int executeActionUpdate(int nHandler, void* param, char* paramName, float deltaTime);
+	virtual int executeActionUpdate(int nHandler, void* param, const char* paramName, float deltaTime);
 	virtual int executeNodeEvent(CCNode* pNode, int nAction);
 	virtual int executeAppEvent(int nHandler, int eventType);
 	virtual int executeMenuItemEvent(int eventType, CCMenuItem* pMenuItem);

@@ -131,7 +131,7 @@ void __oClipCache_getNames(const char* filename)
 	lua_State* L = CCLuaEngine::sharedEngine()->getState();
 	lua_createtable(L, clipDef->rects.size(), 0);
 	int i = 1;
-	for(auto& item : clipDef->rects)
+	for(const auto& item : clipDef->rects)
 	{
 		lua_pushstring(L,item.first.c_str());
 		lua_rawseti(L, -2, i++);
@@ -207,7 +207,7 @@ HANDLER_WRAP_START(oListenerHandlerWrapper)
 void call(oEvent* event) const
 {
 	void* params[] = { event };
-	char* names[] = { "oEvent" };
+	const char* names[] = { "oEvent" };
 	CCLuaEngine::sharedEngine()->executeFunction(getHandler(), 1, params, names);
 }
 HANDLER_WRAP_END
@@ -616,7 +616,7 @@ void __oModelCache_getData(const char* filename)
 		lua_rawseti(L, -2, 20);
 		/*["animationNames"]*/
 		lua_newtable(L);
-		for(auto& pair : modelDef->getAnimationIndexMap())
+		for(const auto& pair : modelDef->getAnimationIndexMap())
 		{
 			lua_pushstring(L, pair.first.c_str());
 			lua_pushinteger(L, pair.second);
@@ -625,7 +625,7 @@ void __oModelCache_getData(const char* filename)
 		lua_rawseti(L, -2, 21);
 		/*["lookNames"]*/
 		lua_newtable(L);
-		for(auto& pair : modelDef->getLookIndexMap())
+		for(const auto& pair : modelDef->getLookIndexMap())
 		{
 			lua_pushstring(L, pair.first.c_str());
 			lua_pushinteger(L, pair.second);
@@ -701,7 +701,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 	lua_pop(L, 1);// pop keys
 	/*["animationNames"]*/
 	lua_rawgeti(L, -1, 21);// push animationNames
-	hash_strmap<int> animationNames;
+	unordered_map<string, int> animationNames;
 	int top = lua_gettop(L);
 	for(lua_pushnil(L); lua_next(L, top) != 0; lua_pop(L, 1))
 	{
@@ -710,7 +710,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 	lua_pop(L, 1);// pop animationNames
 	/*["lookNames"]*/
 	lua_rawgeti(L, -1, 22);// push lookNames
-	hash_strmap<int> lookNames;
+	unordered_map<string, int> lookNames;
 	top = lua_gettop(L);
 	for(lua_pushnil(L); lua_next(L, top) != 0; lua_pop(L, 1))
 	{
@@ -943,4 +943,32 @@ void CCTextFieldTTF_unregisterInputHandler(CCTextFieldTTF* textField)
 CCRenderTexture* CCRenderTexture_create(int w, int h, bool withDepthStencil)
 {
 	return CCRenderTexture::create(w, h, kCCTexture2DPixelFormat_RGBA8888, withDepthStencil ? GL_DEPTH24_STENCIL8 : 0);
+}
+
+int __olua_loadfile(const char* filename)
+{
+	lua_State* L = CCLuaEngine::sharedEngine()->getState();
+	unsigned long codeBufferSize = 0;
+	unsigned char* codeBuffer = CCFileUtils::sharedFileUtils()->getFileData(filename, "rb", &codeBufferSize);
+	if (codeBuffer)
+	{
+		if (luaL_loadbuffer(L, (char*)codeBuffer, codeBufferSize, filename) != 0)
+		{
+			luaL_error(L, "error loading module %s from file %s :\n\t%s",
+				lua_tostring(L, 1), filename, lua_tostring(L, -1));
+		}
+		delete [] codeBuffer;
+		return 0;
+	}
+	else
+	{
+		CCLog("can not get file data of %s", filename);
+		return 1;
+	}
+}
+
+int __olua_dofile(const char* filename)
+{
+	lua_State* L = CCLuaEngine::sharedEngine()->getState();
+	return __olua_loadfile(filename) || lua_pcall(L, 0, LUA_MULTRET, 0);
 }

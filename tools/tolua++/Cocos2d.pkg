@@ -83,5 +83,6 @@ $pfile "oAction.h"
 $pfile "oAI.h"
 $pfile "oAINode.h"
 $pfile "oData.h"
+$pfile "oMisc.h"
 
 $pfile "Script.lua"

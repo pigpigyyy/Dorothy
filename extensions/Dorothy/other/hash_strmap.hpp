@@ -82,6 +82,7 @@ struct fstring {
 	const char* p;
 	ptrdiff_t   n;
 
+	fstring() : p(), n() {}
 	fstring(const std::string& x) : p(x.data()), n(x.size()) {}
 	fstring(const char* x)        : p(x), n(strlen(x)) {}
 	fstring(const char* x, ptrdiff_t l) : p(x), n(l)   {}
@@ -427,7 +428,7 @@ struct hash_strmap_node<LinkTp, Value, ValueInline> {
 };
 
 //
-// hash_strmap<> hset; // just a set, can be used as a string pool
+// unordered_map<string, > hset; // just a set, can be used as a string pool
 //
 template< class Value = ValueOut // ValueOut means empty value, just like a set
 		, class HashFunc = fstring::IF_SP_ALIGN(hash_align, hash)
@@ -2321,7 +2322,7 @@ private:
 public:
 	template<class ValueCompare>
 	void sort_by_value(ValueCompare comp) {
-		static_assert(!is_value_empty);
+		static_assert(!is_value_empty, "value_empty");
 		ptrdiff_t old_fastleng = fastleng;
 		if (nDeleted) {
 			if (freelist_disabled != old_fastleng)
@@ -2337,7 +2338,7 @@ public:
 		sort_flag = en_sort_by_val;
 	}
 	void sort_by_value() {
-		static_assert(!is_value_empty);
+		static_assert(!is_value_empty, "value_empty");
 		sort_by_value(std::less<Value>());
 	}
 	template<class KeyOfValue, class Compare>
@@ -2455,7 +2456,7 @@ private:
 public:
 	template<class KeyCmp3, class ValCmp2>
 	void sort_k3v2(KeyCmp3 kc, ValCmp2 vc) {
-		static_assert(!is_value_empty);
+		static_assert(!is_value_empty, "value_empty");
 		if (nDeleted)
 			revoke_deleted_no_relink();
 		if (nNodes >= 2) {
@@ -2562,7 +2563,7 @@ private:
 public:
 	template<class KeyCmp2, class ValCmp2>
 	void sort_v2k2(ValCmp2 vc, KeyCmp2 kc) {
-		static_assert(!is_value_empty);
+		static_assert(!is_value_empty, "value_empty");
 		if (nDeleted)
 			revoke_deleted_no_relink();
 		if (nNodes >= 2) {
@@ -2592,8 +2593,8 @@ template<class Value
 		, class ValuePlace
 		, class CopyStrategy
 		, class LinkTp>
-void swap(hash_strmap<Value, HashFunc, KeyEqual, ValuePlace, CopyStrategy, LinkTp> &x,
-	 hash_strmap<Value, HashFunc, KeyEqual, ValuePlace, CopyStrategy, LinkTp> &y)
+void swap(unordered_map<string, Value, HashFunc, KeyEqual, ValuePlace, CopyStrategy, LinkTp> &x,
+	 unordered_map<string, Value, HashFunc, KeyEqual, ValuePlace, CopyStrategy, LinkTp> &y)
 {
 	x.swap(y);
 }

@@ -32,8 +32,6 @@ using std::ostringstream;
 using std::tuple;
 #include "Dorothy/other/AcfDelegate.h"
 using Acf::Delegate;
-#include "Dorothy/other/hash_strmap.hpp"
-using febird::hash_strmap;
 #include "Dorothy/other/Property.h"
 
 #define NS_DOROTHY_BEGIN namespace Dorothy {
@@ -139,14 +137,16 @@ inline size_t oFNVHash(const string& str) { return oFNVHash(str.c_str()); }
 		FlagTwo,
 		FlagThree
 	}
-	ENUM_END
+	ENUM_END(MyFlag)
 
 	MyFlag flag = MyFlag::FlagTwo;
 */
 #define ENUM_START(x) struct x\
 {\
 public:\
-	enum xEnum;\
+	enum xEnum
+
+#define ENUM_END(x) ;\
 	inline x(){}\
 	inline x(const xEnum value):_value(value){}\
 	explicit inline x(int value):_value((xEnum)value){}\
@@ -160,10 +160,7 @@ public:\
 }\
 private:\
 	xEnum _value;\
-public:\
-	enum xEnum
-
-#define ENUM_END ;};
+};
 
 NS_DOROTHY_END
 

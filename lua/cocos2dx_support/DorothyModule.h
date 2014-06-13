@@ -29,7 +29,7 @@ ENUM_START(oSensorEvent)
 	Enter,
 	Leave
 }
-ENUM_END
+ENUM_END(oSensorEvent)
 void oSensor_addHandler(oSensor* sensor, uint32 flag, int nHandler);
 void oSensor_removeHandler(oSensor* sensor, uint32 flag, int nHandler);
 void oSensor_clearHandler(oSensor* sensor, uint32 flag);
@@ -144,11 +144,16 @@ ENUM_START(oTextFieldEvent)
 	Delete,
 	Deleted
 }
-ENUM_END
+ENUM_END(oTextFieldEvent)
 CCTextFieldTTF* CCTextFieldTTF_create(const char* placeholder, const char* fontName, float fontSize);
 void CCTextFieldTTF_registerInputHandler(CCTextFieldTTF* textField, int handler);
 void CCTextFieldTTF_unregisterInputHandler(CCTextFieldTTF* textField);
 
 CCRenderTexture* CCRenderTexture_create(int w, int h, bool withDepthStencil = false);
+
+int __olua_loadfile(const char* filename);
+#define olua_loadfile(filename) {__olua_loadfile(filename);return 1;}
+int __olua_dofile(const char* filename);
+#define olua_dofile(filename) {__olua_dofile(filename);return 1;}
 
 #endif // __DOROTHY_MODULE_H__

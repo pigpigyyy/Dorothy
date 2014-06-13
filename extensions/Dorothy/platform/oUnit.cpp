@@ -321,7 +321,7 @@ oProperty& oUnit::oPropertySet::operator[]( const string& name )
 }
 const oProperty& oUnit::oPropertySet::operator[]( const string& name ) const
 {
-	return *_items[name];
+	return *(_items.find(name)->second);
 }
 void oUnit::oPropertySet::remove( const string& name )
 {
