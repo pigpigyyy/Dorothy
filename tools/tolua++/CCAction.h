@@ -2,7 +2,6 @@ class CCAction: public CCObject
 {
 	tolua_readonly tolua_property__bool bool done;
 	tolua_readonly tolua_property__common CCNode* target;
-	tolua_property__common int tag;
 };
 
 class CCFiniteTimeAction: public CCAction

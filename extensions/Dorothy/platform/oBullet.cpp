@@ -131,12 +131,13 @@ void oBullet::onBodyEnter( oSensor* sensor, oBody* body )
 	{
 		return;
 	}
+	oUnit* unit = CCLuaCast<oUnit>(body->getOwner());
 	bool isHitTerrain = oSharedData.isTerrain(body) && oBullet::targetAllow.isTerrainAllowed();
-	bool isHitUnit = oSharedData.isPlayerUnit(body) && oBullet::targetAllow.isAllow(oSharedData.getRelation(_owner, (oUnit*)body));
-	bool isRangeDamage = _bulletDef->damageRadius > 0.0f;
+	bool isHitUnit = unit && oBullet::targetAllow.isAllow(oSharedData.getRelation(_owner, unit));
 	bool isHit = isHitTerrain || isHitUnit;
 	if (isHit && hitTarget)
 	{
+		bool isRangeDamage = _bulletDef->damageRadius > 0.0f;
 		if (isRangeDamage)
 		{
 			CCPoint pos = this->getPosition();
@@ -147,9 +148,10 @@ void oBullet::onBodyEnter( oSensor* sensor, oBody* body )
 				_bulletDef->damageRadius * 2);
 			_world->query(rect, [&](oBody* body)
 			{
-				if (oSharedData.isPlayerUnit(body) && targetAllow.isAllow(oSharedData.getRelation(_owner, (oUnit*)body)))
+				oUnit* unit = CCLuaCast<oUnit>(body->getOwner());
+				if (unit && targetAllow.isAllow(oSharedData.getRelation(_owner, unit)))
 				{
-					hitTarget(this, (oUnit*)body);
+					hitTarget(this, unit);
 				}
 				return false;
 			});
@@ -157,7 +159,7 @@ void oBullet::onBodyEnter( oSensor* sensor, oBody* body )
 		else if (isHitUnit)
 		{
 			/* hitTarget function may cancel this hit by returning false */
-			isHit = hitTarget(this, (oUnit*)body);
+			isHit = hitTarget(this, unit);
 		}
 	}
 	if (isHit)

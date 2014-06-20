@@ -209,6 +209,12 @@ local Dorothy =
 				description = "[int]",
 				type = "value",
 			},
+			data =
+			{
+				description = "[CCObject]",
+				typeName = "CCObject",
+				type = "value",
+			},
 			parent =
 			{
 				description = "[CCNode][readonly]",
@@ -330,21 +336,6 @@ local Dorothy =
 				args = "(action: CCAction)",
 				description = "",
 				returns = "()",
-				type = "method",
-			},
-			stopActionByTag =
-			{
-				args = "(tag: int)",
-				description = "",
-				returns = "()",
-				type = "method",
-			},
-			getActionByTag =
-			{
-				args = "(tag: int)",
-				description = "",
-				returns = "(action: CCAction)",
-				typeName = "CCAction",
 				type = "method",
 			},
 			getChildByTag =
@@ -3532,6 +3523,11 @@ local Dorothy =
 				description = "[float] When doing this action, the unit will take this extra reaction time\n\n in seconds to respond to the game world changes.",
 				type = "value"
 			},
+			recovery =
+			{
+				description = "[float]",
+				type = "value"
+			},
 			id =
 			{
 				description = "[int] Each action type has its unique id.",
@@ -3583,7 +3579,7 @@ local Dorothy =
 			},
 			add =
 			{
-				args = "(id: int, priority: int, reaction: float, available: function, run: function, update: function, stop: function)",
+				args = "(id: int, priority: int, reaction: float, recovery: float, available: function, run: function, update: function, stop: function)",
 				description = "[Class Method] Add a new action type with its own special id, properties and functions.\n\navailable -- isStarted: boolean function(self: oAction)\n\nrun -- function(self: oAction)\n\nupdate -- function(self: oAction, deltaTime: float)\n\nstop -- function(self: oAction)",
 				returns = "()",
 				static = true,
@@ -4011,6 +4007,13 @@ local Dorothy =
 				returns = "()",
 				type = "method",
 			},
+			cast =
+			{
+				args = "(start: oVec2, stop: oVec2, closest: bool, handler: function)",
+				description = " -- handler: bool function(body: oBody, point: oVec2, normal: oVec2)\n return true to stop query.",
+				returns = "()",
+				type = "method",
+			},
 			setIterations =
 			{
 				args = "(velocityIter: int, positionIter: int)",
@@ -4065,6 +4068,11 @@ local Dorothy =
 				typeName = "oBodyDef",
 				type = "value"
 			},
+			mass =
+			{
+				description = "[float][readonly]",
+				type = "value"
+			},
 			velocityX =
 			{
 				description = "[float]",
@@ -4099,6 +4107,12 @@ local Dorothy =
 			group =
 			{
 				description = "[int]\n\n [0] - Hide\n\n [1-12] - Player\n\n [13] - Sense player\n\n [14] - Terrain\n\n [15] - Contact all",
+				type = "value"
+			},
+			owner =
+			{
+				description = "[CCObject]",
+				typeName = "CCObject",
 				type = "value"
 			},
 			applyLinearImpulse =
@@ -4161,7 +4175,7 @@ local Dorothy =
 			},
 		},
 		parents = {"CCNode",},
-		description = "class oBody(CCNode).\n args -- (bodyDef: oBodyDef, world: oWorld)",
+		description = "class oBody(CCNode).\n args -- (bodyDef: oBodyDef, world: oWorld, pos: oVec2 = oVec2.zero, rot: float = 0)",
 		type = "class",
 		index = index()
 	},
@@ -4606,7 +4620,7 @@ local Dorothy =
 				static = true,
 				type = "method"
 			},
-			isPlayerUnit =
+			isPlayer =
 			{
 				args = "(body: oBody)",
 				description = "[Class Method]",
@@ -5631,7 +5645,7 @@ local Dorothy =
 				type = "method"
 			},
 		},
-		description = "class oUnit(oBody).\n args -- (unitDef: oUnitDef, world: oWorld)",
+		description = "class oUnit(oBody).\n args -- (unitDef: oUnitDef, world: oWorld, pos: oVec2 = oVec2.zero, rot: float = 0)",
 		parents = {"oBody",},
 		type = "class",
 		index = index()
@@ -5867,6 +5881,152 @@ local Dorothy =
 		description = "class oUnitDef(CCObject).\n args -- ()",
 		parents = {"CCObject",},
 		type = "class",
+		index = index()
+	},
+	oJoint =
+	{
+		childs =
+		{
+			world =
+			{
+				description = "[oWorld][readonly]",
+				typeName = "oWorld",
+				type = "value",
+			},
+			destroy =
+			{
+				args = "()",
+				description = "",
+				returns = "()",
+				type = "method",
+			},
+			distance =
+			{
+				args = "(bodyA: oBody, bodyB: oBody, anchorA: oVec2, anchorB: oVec2, frequency: float = 0, damping: float = 0)",
+				description = "",
+				typeName = "oJoint",
+				returns = "(joint: oJoint)",
+				static = true,
+				type = "method",
+			},
+			friction =
+			{
+				args = "(bodyA: oBody, bodyB: oBody, worldPos: oVec2, maxForce: float, maxTorque: float)",
+				description = "",
+				typeName = "oJoint",
+				returns = "(joint: oJoint)",
+				static = true,
+				type = "method",
+			},
+			spring =
+			{
+				args = "(bodyA: oBody, bodyB: oBody, linearOffset: oVec2, angularOffset: float, maxForce: float, maxTorque: float, correctionFactor: float = 1)",
+				description = "",
+				typeName = "oJoint",
+				returns = "(joint: oJoint)",
+				static = true,
+				type = "method",
+			},
+			move =
+			{
+				args = "(bodyA: oBody, bodyB: oBody, targetPos: oVec2, maxForce: float, frequency: float = 5.0, damping: float = 0.7)",
+				description = "",
+				typeName = "oMoveJoint",
+				returns = "(joint: oMoveJoint)",
+				static = true,
+				type = "method",
+			},
+			pulley =
+			{
+				args = "(bodyA: oBody, bodyB: oBody, anchorA: oVec2, anchorB: oVec2, groundAnchorA: oVec2, groundAnchorB: float, ratio: float = 1)",
+				description = "",
+				typeName = "oJoint",
+				returns = "(joint: oJoint)",
+				static = true,
+				type = "method",
+			},
+			prismatic =
+			{
+				args = "(bodyA: oBody, bodyB: oBody, worldPos: oVec2, axis: oVec2, lowerTranslation: float = 0, upperTranslation: float = 0, maxMotorForce: float = 0, motorSpeed: float = 0)",
+				description = "",
+				typeName = "oMotorJoint",
+				returns = "(joint: oMotorJoint)",
+				static = true,
+				type = "method",
+			},
+			revolute =
+			{
+				args = "(bodyA: oBody, bodyB: oBody, worldPos: oVec2, lowerAngle: float = 0, upperAngle: float = 0, maxMotorTorque: float = 0, motorSpeed: float = 0)",
+				description = "",
+				typeName = "oMotorJoint",
+				returns = "(joint: oMotorJoint)",
+				static = true,
+				type = "method",
+			},
+			rope =
+			{
+				args = "(bodyA: oBody, bodyB: oBody, anchorA: oVec2, anchorB: oVec2, maxLength: float)",
+				description = "",
+				typeName = "oJoint",
+				returns = "(joint: oJoint)",
+				static = true,
+				type = "method",
+			},
+			weld =
+			{
+				args = "(bodyA: oBody, bodyB: oBody, worldPos: oVec2, frequency: float = 0, damping: float = 0)",
+				description = "",
+				typeName = "oJoint",
+				returns = "(joint: oJoint)",
+				static = true,
+				type = "method",
+			},
+			wheel =
+			{
+				args = "(bodyA: oBody, bodyB: oBody, worldPos: oVec2, axis: oVec2, maxMotorTorque: float = 0, motorSpeed: float = 0, frequency: float = 2, damping: float = 0.7)",
+				description = "",
+				typeName = "oMotorJoint",
+				returns = "(joint: oMotorJoint)",
+				static = true,
+				type = "method",
+			},
+		},
+		description = "class oJoint(CCObject).",
+		parents = {"CCObject",},
+		type = "class",
+		index = index()
+	},
+	oMoveJoint =
+	{
+		childs =
+		{
+			target =
+			{
+				description = "[oVec2]",
+				typeName = "oVec2",
+				type = "value",
+			},
+		},
+		description = "class oMotorJoint(oJoint).",
+		parents = {"oJoint",},
+		type = "class",
+		hide = true,
+		index = index()
+	},
+	oMotorJoint =
+	{
+		childs =
+		{
+			motorEnabled =
+			{
+				description = "[bool]",
+				type = "value",
+			},
+		},
+		description = "class oMotorJoint(oJoint).",
+		parents = {"oJoint",},
+		type = "class",
+		hide = true,
 		index = index()
 	},
 	oEvent =

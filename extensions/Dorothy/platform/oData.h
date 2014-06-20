@@ -27,7 +27,7 @@ public:
 	PROPERTY_READONLY(int, GroupDetect);
 	void setDamageFactor(uint16 damageType, uint16 defenceType, float bounus);
 	float getDamageFactor(uint16 damageType, uint16 defenceType) const;
-	bool isPlayerUnit(oBody* body);
+	bool isPlayer(oBody* body);
 	bool isTerrain(oBody* body);
 	static oData* shared();
 private:

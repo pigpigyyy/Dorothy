@@ -15,8 +15,7 @@ local terrainDef = oBodyDef()
 terrainDef.type = oBodyDef.Static
 terrainDef:attachPolygon(800,10)
 
-local terrain = oBody(terrainDef,world)
-terrain.position = oVec2(400,5)
+local terrain = oBody(terrainDef,world,oVec2(400,5))
 terrain.group = groupTwo
 world:addChild(terrain)
 
@@ -31,19 +30,16 @@ polygonDef:attachPolygon({
 	oVec2(30,30),
 },1,0.4,0.4)
 
-local polygon = oBody(polygonDef,world)
+local polygon = oBody(polygonDef,world,oVec2(400,500),15)
 polygon.group = groupOne
-polygon.position = oVec2(400,500)
-polygon.rotation = 15
 world:addChild(polygon)
 
 local circleDef = oBodyDef()
 circleDef.type = oBodyDef.Dynamic
 circleDef:attachCircle(60,1,0.4,0.4)
 
-local circle = oBody(circleDef,world)
+local circle = oBody(circleDef,world,oVec2(450,800))
 circle.group = groupZero
-circle.position = oVec2(450,800)
 circle.angularRate = 90
 world:addChild(circle)
 

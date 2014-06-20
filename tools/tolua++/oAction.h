@@ -11,6 +11,7 @@ class oAction
 	#define oID::ActionHit @ Hit
 	#define oID::ActionDie @ Die
 	float reaction;
+	float recovery;
 	tolua_readonly tolua_property__common int id;
 	tolua_readonly tolua_property__common int priority;
 	tolua_readonly tolua_property__bool bool doing;
@@ -23,6 +24,7 @@ class oAction
 		int id,
 		int priority,
 		float reaction,
+		float recovery,
 		tolua_function available,
 		tolua_function run,
 		tolua_function update,

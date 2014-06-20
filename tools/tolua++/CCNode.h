@@ -30,6 +30,7 @@ class CCNode: public CCObject
 	tolua_property__common CCNode* transformTarget;
 	//tolua_property__common CCGLProgram* shaderProgram;
 	tolua_property__common CCScheduler* scheduler;
+	tolua_property__common CCObject* userObject @ data;
 	tolua_readonly tolua_property__common CCNode* parent;
 	tolua_readonly tolua_property__qt CCRect boundingBox;
 	tolua_readonly tolua_property__qt const char* description;
@@ -48,8 +49,6 @@ class CCNode: public CCObject
 	void stopAllActions();
 	void stopAction(CCAction* action);
 
-	void stopActionByTag(int tag);
-	CCAction* getActionByTag(int tag);
 	CCNode* getChildByTag(int tag);
 
 	void scheduleUpdateWithPriorityLua @ scheduleUpdate(tolua_function nHandler, int priority = 0);

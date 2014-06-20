@@ -43,6 +43,12 @@ int CCLuaType()
 	return type;
 }
 
+template <class T>
+T* CCLuaCast(CCObject* obj)
+{
+	return (obj && obj->getLuaType() == CCLuaType<T>()) ? (T*)obj : nullptr;
+}
+
 #define CC_LUA_TYPE(type) \
 public: virtual int getLuaType() const \
 { \

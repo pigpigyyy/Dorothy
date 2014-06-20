@@ -28,6 +28,8 @@ NS_DOROTHY_PLATFORM_BEGIN
 oAction* oActionDef::toAction(oUnit* unit)
 {
 	oScriptAction* action = new oScriptAction(id, priority, unit);
+	action->reaction = reaction;
+	action->recovery = recovery;
 	action->_available = available;
 	action->_run = run;
 	action->_update = update;
@@ -135,7 +137,7 @@ oAction* oAction::create( int id, oUnit* unit )
 	return nullptr;
 }
 
-void oAction::add( int id, int priority, float reaction, int available, int run, int update, int stop )
+void oAction::add( int id, int priority, float reaction, float recovery, int available, int run, int update, int stop )
 {
 	if (oAction::UserID <= id)
 	{
@@ -143,6 +145,7 @@ void oAction::add( int id, int priority, float reaction, int available, int run,
 		actionDef->id = id;
 		actionDef->priority = priority;
 		actionDef->reaction = reaction;
+		actionDef->recovery = recovery;
 		actionDef->available = oScriptHandler::create(available);
 		actionDef->run = oScriptHandler::create(run);
 		actionDef->update = oScriptHandler::create(update);
@@ -242,6 +245,7 @@ oWalk::oWalk( oUnit* unit ):
 oAction(oID::ActionWalk, oID::PriorityWalk, unit)
 {
 	oAction::reaction = oID::ReactionWalk;
+	oAction::recovery = oID::RecoveryWalk;
 }
 
 bool oWalk::isAvailable()
@@ -255,7 +259,7 @@ void oWalk::run()
 	model->setSpeed(_owner->moveSpeed);
 	model->setLoop(true);
 	model->setLook(oID::LookHappy);
-	model->setRecovery(0.1f);
+	model->setRecovery(oAction::recovery);
 	model->play(oID::AnimationWalk);
 	float move = _owner->move * _owner->moveSpeed;
 	_owner->setVelocityX(_owner->isFaceRight() ? move : -move);
@@ -314,6 +318,7 @@ oIdle::oIdle( oUnit* unit ):
 oAction(oID::ActionIdle, oID::PriorityIdle, unit)
 {
 	oAction::reaction = oID::ReactionIdle;
+	oAction::recovery = oID::RecoveryIdle;
 }
 
 void oIdle::run()
@@ -322,7 +327,7 @@ void oIdle::run()
 	model->setSpeed(1.0f);
 	model->setLoop(true);
 	model->setLook(oID::LookHappy);
-	model->setRecovery(0.2f);
+	model->setRecovery(oAction::recovery);
 	if (!_owner->isOnSurface())
 	{
 		oModel* model = _owner->getModel();
@@ -364,6 +369,7 @@ oJump::oJump( oUnit* unit ):
 oAction(oID::ActionJump, oID::PriorityJump, unit)
 {
 	oAction::reaction = oID::ReactionJump;
+	oAction::recovery = oID::RecoveryJump;
 }
 
 bool oJump::isAvailable()
@@ -377,7 +383,7 @@ void oJump::run()
 	model->setSpeed(1.0f);
 	model->setLoop(true);
 	model->setLook(oID::LookHappy);
-	model->setRecovery(0.2f);
+	model->setRecovery(oAction::recovery);
 	model->resume(oID::AnimationJump);
 	_current = 0.0f;
 	_owner->setVelocityY(_owner->jump);
@@ -438,6 +444,7 @@ oAction* oStop::create( oUnit* unit )
 oAttack::oAttack(int id, oUnit* unit ):
 oAction(id, oID::PriorityAttack, unit)
 {
+	oAction::recovery = oID::RecoveryAttack;
 	oModel* model = unit->getModel();
 	model->handlers[oID::AnimationAttack] += std::make_pair(this, &oMeleeAttack::onAnimationEnd);
 }
@@ -456,7 +463,7 @@ void oAttack::run()
 	oModel* model = _owner->getModel();
 	model->setLoop(false);
 	model->setLook(oID::LookFight);
-	model->setRecovery(0.2f);
+	model->setRecovery(oAction::recovery);
 	model->setSpeed(_owner->attackSpeed);
 	model->play(oID::AnimationAttack);
 	oAction::run();
@@ -553,9 +560,10 @@ void oMeleeAttack::onAttack()
 	{
 		CCARRAY_START(oBody, body, sensor->getSensedBodies())
 		{
-			oUnit* target = (oUnit*)body;
+			oUnit* target = CCLuaCast<oUnit>(body->getOwner());
 			BLOCK_START
 			{
+				BREAK_NOT(target);
 				bool attackRight = _owner->getPositionX() < target->getPositionX();
 				bool faceRight = _owner->isFaceRight();
 				BREAK_IF(attackRight != faceRight);//!(hitRight == faceRight || hitLeft == faceLeft)
@@ -638,6 +646,7 @@ _hitFromRight(true),
 _attackPower(),
 _hitPoint()
 {
+	oAction::recovery = oID::RecoveryHit;
 	int hitEffect = _owner->getUnitDef()->hitEffect;
 	if (hitEffect != oEffectType::None)
 	{
@@ -660,7 +669,7 @@ void oHit::run()
 	oModel* model = _owner->getModel();
 	model->setLook(oID::LookSad);
 	model->setLoop(false);
-	//model->setRecovery(0.05f);
+	model->setRecovery(oAction::recovery);
 	model->setSpeed(1.0f);
 	model->play(oID::AnimationHit);
 	oVec2 key = CCPointApplyAffineTransform(_hitPoint, _owner->parentToNodeTransform());
@@ -706,6 +715,7 @@ oAction* oHit::create( oUnit* unit )
 oDie::oDie( oUnit* unit ):
 oAction(oID::ActionDie, oID::PriorityDie, unit)
 {
+	oAction::recovery = oID::RecoveryDie;
 	oModel* model = unit->getModel();
 	model->handlers[oID::AnimationDie] += std::make_pair(this, &oDie::onAnimationEnd);
 }
@@ -721,7 +731,7 @@ void oDie::run()
 	oModel* model = _owner->getModel();
 	model->setLook(oID::LookDead);
 	model->setLoop(false);
-	//model->setRecovery(0.05f);
+	model->setRecovery(oAction::recovery);
 	model->setSpeed(1.0f);
 	model->play(oID::AnimationDie);
 	int hitEffect = _owner->getUnitDef()->hitEffect;
@@ -788,6 +798,13 @@ const int oID::PriorityDie = 5;
 const float oID::ReactionWalk = 0.05f;
 const float oID::ReactionIdle = 0.2f;
 const float oID::ReactionJump = 0.05f;
+
+const float oID::RecoveryWalk = 0.1f;
+const float oID::RecoveryAttack = 0.2f;
+const float oID::RecoveryIdle = 0.2f;
+const float oID::RecoveryJump = 0.2f;
+const float oID::RecoveryHit = 0.05f;
+const float oID::RecoveryDie = 0.05f;
 
 const string oID::LookHappy("happy");
 const string oID::LookFight("fight");

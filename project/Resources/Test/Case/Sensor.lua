@@ -21,8 +21,7 @@ terrainDef:attachLoop(vertices,0.4,0)
 
 local sensorTag = 1
 terrainDef:attachCircleSensor(sensorTag,oVec2(0,-270),30)
-local terrain = oBody(terrainDef,world)
-terrain.position = oVec2(400,300)
+local terrain = oBody(terrainDef,world,oVec2(400,300))
 world:addChild(terrain)
 
 local sensor = terrain:getSensorByTag(sensorTag)
@@ -38,8 +37,7 @@ local circleDef = oBodyDef()
 circleDef.type = oBodyDef.Dynamic
 circleDef:attachCircle(20,5,0.8,0)
 
-local circle = oBody(circleDef,world)
-circle.position = oVec2(180,500)
+local circle = oBody(circleDef,world,oVec2(180,500))
 circle.angularRate = -1800
 world:addChild(circle)
 

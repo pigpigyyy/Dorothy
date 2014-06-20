@@ -57,6 +57,7 @@ _unitDef(unitDef)
 	oModel* model = modelDef ? modelDef->toModel() : oModel::none();
 	_isFaceRight = modelDef->isFaceRight();
 	oUnit::setModel(model);
+	oBody::setOwner(this);
 	for (int id : unitDef->actions)
 	{
 		oUnit::attachAction(id);
@@ -113,8 +114,10 @@ oModel* oUnit::getModel() const
 	return _model;
 }
 
-oUnit* oUnit::create(oUnitDef* unitDef, oWorld* world)
+oUnit* oUnit::create(oUnitDef* unitDef, oWorld* world, const oVec2& pos, float rot)
 {
+	unitDef->getBodyDef()->position = oWorld::b2Val(pos);
+	unitDef->getBodyDef()->angle = -CC_DEGREES_TO_RADIANS(rot);
 	oUnit* unit = new oUnit(unitDef, world);
 	unit->autorelease();
 	return unit;

@@ -76,12 +76,12 @@ public:
 	 Use this rect query at any time without worrying Box2D`s callback limits.
 	 */
 	void query(const CCRect& rect, const function<bool(oBody*)>& callback);
+	void cast(const oVec2& start, const oVec2& end, bool closest, const function<bool(oBody*, const oVec2&, const oVec2&)>& callback);
 	void setShouldContact(int groupA, int groupB, bool contact);
 	bool getShouldContact(int groupA, int groupB) const;
 	const b2Filter& getFilter(int group) const;
 	static inline float oVal(float value){ return value * b2Factor; }
-	static inline b2Vec2 oVal(const b2Vec2& value){ return b2Vec2(value.x * b2Factor, value.y * b2Factor); }
-	static inline oVec2 oVal(const oVec2& value){ return value * b2Factor; }
+	static inline oVec2 oVal(const b2Vec2& value){ return oVec2(value.x * b2Factor, value.y * b2Factor); }
 	static inline float b2Val(float value){ return value / b2Factor; }
 	static inline b2Vec2 b2Val(const b2Vec2& value){ return b2Vec2(value.x / b2Factor, value.y / b2Factor); }
 	static inline b2Vec2 b2Val(const CCPoint& value){ return b2Vec2(value.x / b2Factor, value.y / b2Factor); }
@@ -95,13 +95,27 @@ public:
 	 */
 	static float b2Factor;
 	CREATE_FUNC(oWorld);
-protected:
+private:
 	class oQueryAABB: public b2QueryCallback
 	{
 	public:
 		vector<oBody*> results;
 		virtual bool ReportFixture( b2Fixture* fixture );
 	} _queryCallback;
+	class oRayCast: public b2RayCastCallback
+	{
+	public:
+		struct oRayCastData
+		{
+			oBody* body;
+			b2Vec2 point;
+			b2Vec2 normal;
+		} result;
+		vector<oRayCastData> results;
+		bool closest;
+		virtual float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point,
+			const b2Vec2& normal, float32 fraction);
+	} _rayCastCallBack;
 private:
 	b2Filter _filters[16];
 	b2World _world;

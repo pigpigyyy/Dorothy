@@ -71,7 +71,9 @@ bool oAI::conditionedReflex(oUnit* unit)
 	{
 		CCARRAY_START(oBody, body, seneor->getSensedBodies())
 		{
-			oUnit* aroundUnit = (oUnit*)body;
+			oUnit* aroundUnit = CCLuaCast<oUnit>(body->getOwner());
+			if (!aroundUnit) continue;
+
 			_detectedUnits->addObject(aroundUnit);
 
 			float newDistance = ccpDistanceSQ(unit->getPosition(), aroundUnit->getPosition());

@@ -101,7 +101,7 @@ float oData::getDamageFactor( uint16 damageType, uint16 defenceType ) const
 	return 0.0f;
 }
 
-bool oData::isPlayerUnit( oBody* body )
+bool oData::isPlayer( oBody* body )
 {
 	int16 index = body->getGroup();
 	return P1 <= index && index <= P12;

@@ -29,6 +29,7 @@ public:
 	int id;
 	int priority;
 	float reaction;
+	float recovery;
 	oRef<oScriptHandler> available;
 	oRef<oScriptHandler> run;
 	oRef<oScriptHandler> update;
@@ -44,6 +45,7 @@ public:
 	oAction(int id, int priority, oUnit* owner);
 	virtual ~oAction();
 	float reaction;
+	float recovery;
 	int getId() const;
 	int getPriority() const;
 	bool isDoing() const;
@@ -62,6 +64,7 @@ public:
 		int id,
 		int priority,
 		float reaction,
+		float recovery,
 		int available,
 		int run,
 		int update,
@@ -126,6 +129,13 @@ struct oID
 	static const float ReactionWalk;
 	static const float ReactionIdle;
 	static const float ReactionJump;
+
+	static const float RecoveryWalk;
+	static const float RecoveryAttack;
+	static const float RecoveryIdle;
+	static const float RecoveryJump;
+	static const float RecoveryHit;
+	static const float RecoveryDie;
 
 	static const string LookHappy;
 	static const string LookFight;

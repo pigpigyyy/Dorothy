@@ -25,10 +25,12 @@ public:
 	PROPERTY_NAME(float, LinearDamping);
 	PROPERTY_NAME(float, AngularDamping);
 	PROPERTY_NAME(float, AngularRate);
+	PROPERTY_NAME(CCObject*, Owner);
 	PROPERTY_READONLY(oWorld*, World);
 	PROPERTY_READONLY(oBodyDef*, BodyDef);
 	PROPERTY_READONLY(b2Body*, B2Body);
 	PROPERTY_READONLY(oVec2, Velocity);
+	PROPERTY_READONLY(float, Mass);
 	PROPERTY_NAME(float, VelocityX);
 	PROPERTY_NAME(float, VelocityY);
 	PROPERTY_VIRTUAL(int, _group, Group);
@@ -45,7 +47,7 @@ public:
 	b2Fixture* attach(b2FixtureDef* fixtureDef);
 	oSensor* attachSensor(int tag, b2FixtureDef* fixtureDef);
 	virtual void destroy();
-	static oBody* create(oBodyDef* bodyDef, oWorld* world);
+	static oBody* create(oBodyDef* bodyDef, oWorld* world, const oVec2& pos = oVec2::zero, float rot = 0);
 protected:
 	oBody(oBodyDef* bodyDef, oWorld* world);
 	virtual void updatePhysics();
@@ -55,6 +57,7 @@ protected:
 private:
 	oRef<oBodyDef> _bodyDef;
 	oRef<CCArray> _sensors;
+	oWRef<CCObject> _owner;
 	friend class oWorld;
 	CC_LUA_TYPE(oBody)
 };

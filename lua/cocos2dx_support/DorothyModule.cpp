@@ -100,6 +100,19 @@ void oWorld_query(oWorld* world, const CCRect& rect, int nHandler)
 	});
 }
 
+void oWorld_cast(oWorld* world, const oVec2& start, const oVec2& end, bool closest, int handler)
+{
+	lua_State* L = CCLuaEngine::sharedEngine()->getState();
+	world->cast(start, end, closest,
+		[&](oBody* body, const oVec2& point, const oVec2& normal)
+	{
+		tolua_pushccobject(L, body);
+		tolua_pushusertype(L, new oVec2(point), "oVec2");
+		tolua_pushusertype(L, new oVec2(normal), "oVec2");
+		return CCLuaEngine::sharedEngine()->executeFunction(handler, 3);
+	});
+}
+
 bool oAnimationCache_load(const char* filename)
 {
 	return oSharedAnimationCache.load(filename) != nullptr;

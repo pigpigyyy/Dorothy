@@ -41,6 +41,23 @@ bool oWorld::oQueryAABB::ReportFixture( b2Fixture* fixture )
 	return true;
 }
 
+float32 oWorld::oRayCast::ReportFixture(b2Fixture* fixture, const b2Vec2& point,
+	const b2Vec2& normal, float32 fraction)
+{
+	result.body = (oBody*)(fixture->GetBody()->GetUserData());
+	result.point = point;
+	result.normal = normal;
+	if (closest)
+	{
+		return fraction;
+	}
+	else
+	{
+		results.push_back(result);
+		return 1;
+	}
+}
+
 float oWorld::b2Factor = 100.0f;
 
 oWorld::oWorld():
@@ -195,6 +212,25 @@ void oWorld::query( const CCRect& rect, const function<bool(oBody*)>& callback )
 		if (callback(item)) break;
 	}
 	_queryCallback.results.clear();
+}
+
+void oWorld::cast(const oVec2& start, const oVec2& end, bool closest, const function<bool(oBody*, const oVec2&, const oVec2&)>& callback)
+{
+	_rayCastCallBack.closest = closest;
+	_world.RayCast(&_rayCastCallBack, oWorld::b2Val(start), oWorld::b2Val(end));
+	if (_rayCastCallBack.closest)
+	{
+		oRayCast::oRayCastData& data = _rayCastCallBack.result;
+		callback(data.body, data.point, data.normal);
+	}
+	else
+	{
+		for (auto& item : _rayCastCallBack.results)
+		{
+			if (callback(item.body, item.point, item.normal)) break;
+		}
+	}
+	_rayCastCallBack.results.clear();
 }
 
 void oWorld::setShouldContact( int groupA, int groupB, bool contact )

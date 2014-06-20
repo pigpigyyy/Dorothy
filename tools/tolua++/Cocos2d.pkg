@@ -67,6 +67,8 @@ $pfile "oWorld.h"
 $pfile "oBodyDef.h"
 $pfile "oBody.h"
 $pfile "oSensor.h"
+$pfile "oJoint.h"
+
 $pfile "oEase.h"
 $pfile "oKeyFrame.h"
 

@@ -9,8 +9,8 @@ class oData
 	oRelation getRelation(oUnit* unitA, oUnit* unitB);
 	void setDamageFactor(unsigned short damageType, unsigned short defenceType, float bounus);
 	float getDamageFactor(unsigned short damageType, unsigned short defenceType);
-	bool isPlayerUnit(oBody* body);
+	bool isPlayer(oBody* body);
 	bool isTerrain(oBody* body);
-	
+
 	static oData* shared @ create();
 };

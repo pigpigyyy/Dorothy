@@ -122,6 +122,7 @@
     <ClCompile Include="..\Dorothy\other\DebugDraw.cpp" />
     <ClCompile Include="..\Dorothy\physics\oBody.cpp" />
     <ClCompile Include="..\Dorothy\physics\oBodyDef.cpp" />
+    <ClCompile Include="..\Dorothy\physics\oJoint.cpp" />
     <ClCompile Include="..\Dorothy\physics\oSensor.cpp" />
     <ClCompile Include="..\Dorothy\physics\oWorld.cpp" />
     <ClCompile Include="..\Dorothy\platform\oAction.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="..\Dorothy\other\tinydir.h" />
     <ClInclude Include="..\Dorothy\physics\oBody.h" />
     <ClInclude Include="..\Dorothy\physics\oBodyDef.h" />
+    <ClInclude Include="..\Dorothy\physics\oJoint.h" />
     <ClInclude Include="..\Dorothy\physics\oSensor.h" />
     <ClInclude Include="..\Dorothy\physics\oWorld.h" />
     <ClInclude Include="..\Dorothy\platform\oAction.h" />

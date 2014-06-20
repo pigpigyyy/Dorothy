@@ -53,6 +53,9 @@ local ccobjects = {
 "oBullet",
 "oPlatformWorld",
 "oCamera",
+"oJoint",
+"oMoveJoint",
+"oMotorJoint",
 }
 _ccobject_types = {}
 

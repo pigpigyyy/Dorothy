@@ -103,7 +103,7 @@ public:
 	int getReflexArc() const;
 	oAILeaf* getReflexArcNode();
 
-	static oUnit* create(oUnitDef* unitDef, oWorld* world);
+	static oUnit* create(oUnitDef* unitDef, oWorld* world, const oVec2& pos = oVec2::zero, float rot = 0);
 protected:
 	oUnit(oUnitDef* unitDef, oWorld* world);
 	//Instinct

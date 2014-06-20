@@ -22,27 +22,24 @@ unitDef:setActions(
 	oAction.Stop,
 	oAction.Turn,
 	oAction.Idle,
-	oAction.MeleeAttack,
+	oAction.MeleeAttack
 })
 
-local unit = oUnit(unitDef,world)
+local unit = oUnit(unitDef,world,oVec2(400,300))
 unit.group = 1
-unit.position = oVec2(400,300)
 world:addChild(unit)
 
 local terrainDef = oBodyDef()
 terrainDef.type = oBodyDef.Static
 terrainDef:attachPolygon(800,10,1,1,0)
 
-local terrain = oBody(terrainDef,world)
+local terrain = oBody(terrainDef,world,oVec2(400,0))
 terrain.group = oData.GroupTerrain
-terrain.position = oVec2(400,0)
 world:addChild(terrain)
 
-local menu = CCMenu()
+local menu = CCMenu(false)
 menu.anchor = oVec2.zero
 world.UILayer:addChild(menu)
-
 local btn = oButton("Walk",16,60,nil,10,10,
 	function()
 		if unit.currentAction and unit.currentAction.id == oAction.Walk then
@@ -65,5 +62,37 @@ btn = oButton("Attack",16,60,nil,150,10,
 	end)
 btn.anchor = oVec2.zero
 menu:addChild(btn)
+
+local layer = CCLayer()
+layer.touchEnabled = true
+layer.anchor = oVec2.zero
+scene:addChild(layer)
+
+local joint = nil
+layer:registerTouchHandler(function(eventType, touch)
+	local pos = world:convertToNodeSpace(touch.location)
+	if eventType == CCTouch.Began then
+		world:query(CCRect(pos.x-0.5,pos.y-0.5,1,1),function(body)
+			if oData:isTerrain(body) then
+				return true
+			end
+			if joint then
+				joint:destroy()
+			end
+			joint = oJoint:move(terrain,body,pos,1000*body.mass)
+			return true
+		end)
+	elseif eventType == CCTouch.Moved then
+		if joint then
+			joint.target = pos
+		end
+	elseif eventType == CCTouch.Ended then
+		if joint then
+			joint:destroy()
+			joint = nil
+		end
+	end
+	return true
+end)
 
 CCDirector:run(scene)

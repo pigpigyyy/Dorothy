@@ -23,6 +23,7 @@ _isDestroyed(false)
 {
 	_bodyB2 = world->getB2World()->CreateBody(_bodyDef);
 	_bodyB2->SetUserData((void*)this);
+	CCNode::setPosition((CCPoint)oWorld::oVal(bodyDef->position));
 	for (b2FixtureDef* fixtureDef : _bodyDef->getFixtureDefs())
 	{
 		if (fixtureDef->isSensor)
@@ -62,8 +63,10 @@ oBodyDef* oBody::getBodyDef() const
 	return _bodyDef;
 }
 
-oBody* oBody::create(oBodyDef* bodyDef, oWorld* world)
+oBody* oBody::create(oBodyDef* bodyDef, oWorld* world, const oVec2& pos, float rot)
 {
+	bodyDef->position = oWorld::b2Val(pos);
+	bodyDef->angle = -CC_DEGREES_TO_RADIANS(rot);
 	oBody* body = new oBody(bodyDef, world);
 	body->autorelease();
 	return body;
@@ -153,6 +156,21 @@ void oBody::setAngularDamping(float var)
 float oBody::getAngularDamping() const
 {
 	return _bodyB2->GetAngularDamping();
+}
+
+void oBody::setOwner(CCObject* owner)
+{
+	_owner = owner;
+}
+
+CCObject* oBody::getOwner() const
+{
+	return _owner;
+}
+
+float oBody::getMass() const
+{
+	return _bodyB2->GetMass();
 }
 
 void oBody::setGroup( int group )
