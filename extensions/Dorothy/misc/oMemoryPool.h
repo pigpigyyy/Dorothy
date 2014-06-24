@@ -72,7 +72,7 @@ private:
 	struct Chunk
 	{
 		Chunk(Chunk* next = nullptr):
-		buffer(new char[CHUNK_CAPACITY - CHUNK_CAPACITY % ITEM_SIZE]),
+		buffer(new char[CHUNK_CAPACITY]),
 		size(0),
 		next(next)
 		{ }
