@@ -41,8 +41,6 @@ TOLUA_API void* tolua_touserdata(lua_State* L, int narg, void* def)
 	return tolua_tousertype(L, narg, def);
 }
 
-extern int push_table_instance(lua_State* L, int lo);
-
 TOLUA_API void* tolua_tousertype(lua_State* L, int narg, void* def)
 {
 	if(lua_gettop(L) < abs(narg))
@@ -51,14 +49,9 @@ TOLUA_API void* tolua_tousertype(lua_State* L, int narg, void* def)
 	}
 	else
 	{
-		void* u;
-		if(!lua_isuserdata(L, narg))
-		{
-			if(!push_table_instance(L, narg)) return NULL;
-		}
-		u = lua_touserdata(L, narg);
+		void* u = lua_touserdata(L, narg);
 		/* nil represents NULL */
-		return(u == NULL) ? NULL : *((void**)u);
+		return (u == NULL) ? NULL : *((void**)u);
 	}
 }
 
@@ -74,7 +67,7 @@ TOLUA_API int tolua_toboolean(lua_State* L, int narg, int def)
 
 TOLUA_API lua_Number tolua_tofieldnumber(lua_State* L, int lo, int index, lua_Number def)
 {
-	double v;
+	lua_Number v;
 	lua_pushnumber(L, index);
 	lua_gettable(L, lo);
 	v = lua_isnil(L, -1) ? def : lua_tonumber(L, -1);

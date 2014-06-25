@@ -41,7 +41,6 @@ extern "C" {
 #define TOLUA_PROTECTED_DESTRUCTOR
 #define TOLUA_PROPERTY_TYPE(p)
 
-#define TOLUA_C_INSTANCE 0
 #define MT_SELF 1
 #define MT_DEL 2
 #define MT_CALL 3

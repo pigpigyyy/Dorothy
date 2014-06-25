@@ -23,7 +23,7 @@ local function class(...)
 				end
 			end
 			return rawget(cls,name)--[[member method]]
-				or cls[name]--[[super method]]
+				or getmetatable(cls)[name]--[[super method]]
 				or rawget(self,name)--[[self field]]
 		end,
 		__newindex = function(self,name,value)
@@ -57,6 +57,11 @@ local function class(...)
 			rawset(cls,k,v)
 		end
 	end
+	if base then
+	for k,v in pairs(base) do
+		if k:sub(1,1) ~= "_" and not cls[k] then
+		end
+	end
 	setmetatable(cls,base or {__call=call})
 	return cls
 end
@@ -65,38 +70,4 @@ local function property(__get__,__set__)
 	return {__get__=__get__,__set__=__set__}
 end
 
---[[
-local A = class({
-	__init__ = function(self,name)
-		self._name = name
-	end,
-	name = property
-	(
-		function(self)
-			return self._name
-		end,
-		function(self,value)
-			self._name = value
-		end
-	),
-	show = function(self)
-		print(self._name,"Good")
-	end,
-})
-
-local B = class(A,{
-	__init__ = function(self)
-		A.__init__(self,"Dog")
-	end,
-	hide = function(self)
-		print("Bad")
-	end,
-})
-
-local C = class(B,{})
-
-local c = C()
-c.name = "apple"
-print(c.name)
-]]
 return {class,property}

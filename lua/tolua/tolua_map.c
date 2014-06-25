@@ -146,16 +146,6 @@ static int tolua_bnd_cast(lua_State* L)
 	return 1;
 }
 
-/* Inheritance
-*/
-static int tolua_bnd_inherit(lua_State* L)
-{
-	/* stack: lua object, c object */
-	lua_pushvalue(L, -1);
-	lua_rawseti(L, -3, TOLUA_C_INSTANCE);// l_obj[TOLUA_C_INSTANCE] = c_obj
-	return 0;
-};
-
 static int tolua_bnd_setpeer(lua_State* L)
 {
 	/* stack: userdata, table */
@@ -202,7 +192,6 @@ TOLUA_API void tolua_open(lua_State* L)
 		tolua_beginmodule(L, "tolua");
 		tolua_function(L, "type", tolua_bnd_type);
 		tolua_function(L, "cast", tolua_bnd_cast);
-		tolua_function(L, "inherit", tolua_bnd_inherit);
 		tolua_function(L, "setpeer", tolua_bnd_setpeer);
 		tolua_function(L, "getpeer", tolua_bnd_getpeer);
 		tolua_endmodule(L);
