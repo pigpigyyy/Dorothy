@@ -208,7 +208,7 @@ function classArray:register (pre)
 	if not self:check_public_access() then
 		return
 	end
-
+ error("[C array not supported]")
  pre = pre or ''
  if self.csetname then
   output(pre..'tolua_array(tolua_S,"'..self.lname..'",'..self.cgetname..','..self.csetname..');')

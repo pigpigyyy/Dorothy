@@ -1,14 +1,12 @@
 --require("Editor/Script/main")
-require("Test/Entry")
---[[
+--require("Test/Entry")
+
 local class,property = unpack(require("class"))
 
 local A = class({
 	--self=CCNode
-	__init__ = function(self,name)
+	__init = function(self,name)
 		self._name = name
-	end,
-	__new__ = function(self)
 		return CCNode()
 	end,
 	name = property(
@@ -20,7 +18,7 @@ local A = class({
 		end),
 
 	print = function(self)
-		print("Hello Pig")
+		print(self._name,"Hello Pig")
 	end,
 	
 	show = function(self)
@@ -30,23 +28,28 @@ local A = class({
 	hide = function(self)
 		self.visible = false
 	end,
+	
+	flag = "flag",
 })
 
 local B = class(A,{
 	--self=CCScene
-	__new__ = function(self)
+	__init = function(self,name)
+		A.__init(self,name)
 		return CCScene()
 	end,
-	print = function(self)
-		print("Hello World")
+	
+	--@static
+	inst = function(cls)
+		return "inst"
 	end,
 })
 
-local a = B("Pig")
-a:print()
-print(a.name)
-a:hide()
-print(a.visible)
+B.print = function(self)
+		print(self._name,"Hello World")
+	end
 
-CCDirector:run(a)
-]]
+local b = B("Pig")
+b:print()
+A("child"):print()
+CCDirector:run(b)
