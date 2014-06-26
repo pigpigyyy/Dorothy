@@ -1,5 +1,5 @@
 --require("Editor/Script/main")
---require("Test/Entry")
+require("Test/Entry")
 --[[
 local class,property = unpack(require("class"))
 
@@ -53,8 +53,4 @@ local b = B("Pig")
 b:print()
 A("child"):print()
 ]]
-print(oVec2.distance)
-for k,v in pairs(getmetatable(CCObject)) do
-	print(k)
-end
 --CCDirector:run(CCScene())
