@@ -15,10 +15,10 @@ local function __index(self,name)
 	local cls = getmetatable(self)
 	item = rawget(cls,name)
 	if item == nil then
-		local c = cls
+		local c = getmetatable(cls)
 		while c do
 			item = rawget(c,name)
-			if item then break end
+			if item ~= nil then break end
 			c = getmetatable(c)
 		end
 		if item then
@@ -41,10 +41,10 @@ local function __newindex(self,name,value)
 	local cls = getmetatable(self)
 	item = rawget(cls,name)
 	if item == nil then
-		local c = cls
+		local c = getmetatable(cls)
 		while c do
 			item = rawget(c,name)
-			if item then break end
+			if item ~= nil then break end
 			c = getmetatable(c)
 		end
 		if item then

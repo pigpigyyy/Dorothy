@@ -26,15 +26,15 @@
 	*/
 static int tolua_newmetatable(lua_State* L, const char* name)
 {
-	int r = luaL_newmetatable(L, name);
-	if(r)
+	int r = luaL_newmetatable(L, name); // mt
+	if (r)
 	{
-		lua_pushvalue(L, -1);
-		lua_pushstring(L, name);
-		lua_rawset(L, LUA_REGISTRYINDEX);// reg[mt] = type_name
+		lua_pushvalue(L, -1); // mt mt
+		lua_pushstring(L, name); // mt mt type_name
+		lua_rawset(L, LUA_REGISTRYINDEX);// reg[mt] = type_name, mt
 		tolua_classevents(L);// set meta events
 	}
-	lua_pop(L, 1);
+	lua_pop(L, 1); // empty
 	return r;
 }
 
@@ -254,7 +254,7 @@ TOLUA_API void tolua_endmodule(lua_State* L)
 	*/
 TOLUA_API void tolua_module(lua_State* L, const char* name, int hasvar)
 {
-	if(name)
+	if (name)
 	{
 		/* tolua module */
 		lua_pushstring(L, name);
@@ -367,38 +367,16 @@ TOLUA_API void tolua_constant(lua_State* L, const char* name, lua_Number value)
 	*/
 TOLUA_API void tolua_variable(lua_State* L, const char* name, lua_CFunction get, lua_CFunction set)
 {
-	/* get func */
-	lua_rawgeti(L, -1, MT_GET);
-	if(!lua_istable(L, -1))
+	lua_pushstring(L, name); // mt key
+	lua_createtable(L, set ? 2 : 1, 0); // mt key tb
+	lua_pushcfunction(L, get); // mt key tb get
+	lua_rawseti(L, -2, 1); // tb[1] = get, mt key tb
+	if (set)
 	{
-		/* create .get table, leaving it at the top */
-		lua_pop(L, 1);
-		lua_newtable(L);
-		lua_pushvalue(L, -1);
-		lua_rawseti(L, -3, MT_GET);
+		lua_pushcfunction(L, set); // mt key tb set
+		lua_rawseti(L, -2, 2); // tb[2] = set, mt key tb
 	}
-	lua_pushstring(L, name);
-	lua_pushcfunction(L, get);
-	lua_rawset(L, -3);// store variable
-	lua_pop(L, 1);// pop .get table
-
-	/* set func */
-	if(set)
-	{
-		lua_rawgeti(L, -1, MT_SET);
-		if(!lua_istable(L, -1))
-		{
-			/* create .set table, leaving it at the top */
-			lua_pop(L, 1);
-			lua_newtable(L);
-			lua_pushvalue(L, -1);
-			lua_rawseti(L, -3, MT_SET);
-		}
-		lua_pushstring(L, name);
-		lua_pushcfunction(L, set);
-		lua_rawset(L, -3);                  /* store variable */
-		lua_pop(L, 1);                      /* pop .set table */
-	}
+	lua_rawset(L, -3); // mt[key] = tb, mt
 }
 
 /* Access const array
@@ -415,31 +393,19 @@ static int const_array(lua_State* L)
 	*/
 TOLUA_API void tolua_array(lua_State* L, const char* name, lua_CFunction get, lua_CFunction set)
 {
-	lua_rawgeti(L, -1, MT_GET);
-	if(!lua_istable(L, -1))
-	{
-		/* create .get table, leaving it at the top */
-		lua_pop(L, 1);
-		lua_newtable(L);
-		lua_pushvalue(L, -1);
-		lua_rawseti(L, -3, MT_GET);
-	}
-	lua_pushstring(L, name);
-
+	lua_pushstring(L, name); // mt key
 	/* create array metatable */
-	lua_newtable(L);
-	lua_pushvalue(L, -1);
-	lua_setmetatable(L, -2);
+	lua_newtable(L); // mt key tb
+	lua_pushvalue(L, -1); // mt key tb tb
+	lua_setmetatable(L, -2); // tb<tb>, mt key tb
 	/* set the own table as metatable(for modules) */
-	lua_pushstring(L, "__index");
-	lua_pushcfunction(L, get);
-	lua_rawset(L, -3);
-	lua_pushstring(L, "__newindex");
-	lua_pushcfunction(L, set ? set : const_array);
-	lua_rawset(L, -3);
-
-	lua_rawset(L, -3);// store variable
-	lua_pop(L, 1);// pop .get table
+	lua_pushstring(L, "__index"); // mt key tb "__index"
+	lua_pushcfunction(L, get); // mt key tb "__index" get
+	lua_rawset(L, -3); // tb["__index"] = get, mt key tb
+	lua_pushstring(L, "__newindex"); // mt key tb "__newindex"
+	lua_pushcfunction(L, set ? set : const_array); // mt key tb "__newindex" set
+	lua_rawset(L, -3); // tb["__newindex"] = set, mt key tb
+	lua_rawset(L, -3); // mt[key] = tb, mt
 }
 
 TOLUA_API void tolua_dobuffer(lua_State* L, char* B, unsigned int size, const char* name)
