@@ -54,3 +54,8 @@ b:print()
 A("child"):print()
 ]]
 --CCDirector:run(CCScene())
+local arr = CCArray{CCNode(),CCDrawNode()}
+print(arr.count)
+arr[1] = CCClipNode()
+print(arr[1])
+print(arr[2])

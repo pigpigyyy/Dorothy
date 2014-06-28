@@ -85,7 +85,7 @@ local function oSelectionPanel(borderSize,noCliping)
 		end
 		
 		for i = 1, children.count do
-			local node = children:get(i)
+			local node = children[i]
 			node.position = node.position + oVec2(xVal and xVal or 0, yVal and yVal or 0)
 		end
 
@@ -166,7 +166,7 @@ local function oSelectionPanel(borderSize,noCliping)
 		totalDelta = totalDelta + deltaPos
 
 		for i = 1, children.count do
-			local node = children:get(i)
+			local node = children[i]
 			node.position = node.position + deltaPos
 		end
 		
@@ -305,7 +305,7 @@ local function oSelectionPanel(borderSize,noCliping)
 		local children = menu.children
 		if children then
 			for i = 1, children.count do
-				local item = tolua.cast(children:get(i),"CCMenuItem")
+				local item = tolua.cast(children[i],"CCMenuItem")
 				if item then
 					item:unregisterTapHandler()
 				end

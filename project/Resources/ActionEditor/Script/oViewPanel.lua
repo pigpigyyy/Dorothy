@@ -90,7 +90,7 @@ local function oViewPanel()
 		end
 		
 		for i = 1, children.count do
-			local node = children:get(i)
+			local node = children[i]
 			node.position = node.position + oVec2(xVal and xVal or 0, yVal and yVal or 0)
 		end
 		
@@ -138,7 +138,7 @@ local function oViewPanel()
 		totalDelta = totalDelta + delta
 
 		for i = 1, children.count do
-			local node = children:get(i)
+			local node = children[i]
 			node.position = node.position + delta
 		end
 	end
@@ -202,7 +202,7 @@ local function oViewPanel()
 		totalDelta = totalDelta + deltaPos
 
 		for i = 1, children.count do
-			local node = children:get(i)
+			local node = children[i]
 			node.position = node.position + deltaPos
 		end
 		
@@ -481,7 +481,7 @@ local function oViewPanel()
 		menu:addChild(drawNode)
 		local size = 60
 		local indent = 10
-		local root = model.children:get(1)
+		local root = model.children[1]
 		local function visitSprite(sp,x,y,node)
 			local clip = sp[oSd.clip]
 			local child = node
@@ -507,7 +507,7 @@ local function oViewPanel()
 					drawNode:drawSegment(oVec2(x+indent,y+nextY-size*0.5),oVec2(x+indent*2,y+nextY-size*0.5),0.5,ccColor4(0xffffffff))
 					children[i][oSd.parent] = sp
 					children[i][oSd.index] = i
-					local lenY, subLayer = visitSprite(children[i],x+indent*2,y+nextY,child.children:get(i))
+					local lenY, subLayer = visitSprite(children[i],x+indent*2,y+nextY,child.children[i])
 					nextY = nextY + lenY
 					if maxSubLayer < subLayer then maxSubLayer = subLayer end
 					if i == childrenSize then
@@ -666,10 +666,10 @@ local function oViewPanel()
 			local children = sp[oSd.children]
 			local childrenSize = #children
 			for i = 1, #children do
-				visitSprite(children[i],child.children:get(i))
+				visitSprite(children[i],child.children[i])
 			end
 		end
-		visitSprite(data,model.children:get(1))
+		visitSprite(data,model.children[1])
 		if selectedItem ~= nil then
 			local sp,node = selectedItem:getData()
 			local withFrame = node.contentSize ~= CCSize.zero

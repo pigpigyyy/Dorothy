@@ -8,10 +8,24 @@ ccmsg = function(title, ...)
 end
 
 CCArray.__index = (function()
-	local __index = CCArray.__index
+	local _index = CCArray.__index
+	local _get = CCArray.get
 	return function(self,key)
 		if type(key) == "number" then
-			
+			return _get(self,key)
+		end
+		return _index(self,key)
+	end
+end)()
+
+CCArray.__newindex = (function()
+	local _newindex = CCArray.__newindex
+	local _set = CCArray.set
+	return function(self,key,value)
+		if type(key) == "number" then
+			_set(self,key,value)
+		else
+			_newindex(self,key,value)
 		end
 	end
 end)()
