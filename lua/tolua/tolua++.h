@@ -41,21 +41,21 @@ extern "C" {
 #define TOLUA_PROTECTED_DESTRUCTOR
 #define TOLUA_PROPERTY_TYPE(p)
 
-#define MT_SELF 1
-#define MT_DEL 2
-#define MT_CALL 3
-#define MT_SUPER 4
-#define MT_GET 5
-#define MT_SET 6
-#define MT_GETI 7
-#define MT_SETI 8
-#define MT_EQ 9
-#define MT_ADD 10
-#define MT_SUB 11
-#define MT_MUL 12
-#define MT_DIV 13
-#define MT_LT 14
-#define MT_LE 15
+#define MT_SELF 0
+#define MT_DEL 1
+#define MT_CALL 2
+#define MT_SUPER 3
+#define MT_GET 4
+#define MT_SET 5
+#define MT_GETI 6
+#define MT_SETI 7
+#define MT_EQ 8
+#define MT_ADD 9
+#define MT_SUB 10
+#define MT_MUL 11
+#define MT_DIV 12
+#define MT_LT 13
+#define MT_LE 14
 
 #define TOLUA_UBOX 1
 #define TOLUA_CALLBACK 2

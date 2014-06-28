@@ -216,7 +216,7 @@ static int class_index_event(lua_State* L)
 					}
 				}
 			}
-			lua_settop(L, 4);
+			lua_settop(L, 4);// obj key mt basemt
 			loop++;
 		}
 		lua_pushnil(L);
@@ -297,6 +297,7 @@ static int class_newindex_event(lua_State* L)
 					lua_pop(L, 1);                          /* stack: t k v mt tset */
 				}
 				lua_pop(L, 1);/* stack: t k v mt */
+
 				if (!lua_getmetatable(L, -1))/* stack: t k v mt mt */
 				{
 					lua_pushnil(L);
