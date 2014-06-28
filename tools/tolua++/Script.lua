@@ -7,15 +7,24 @@ ccmsg = function(title, ...)
     CCMessageBox(string.format(...), title)
 end
 
+CCArray.__index = (function()
+	local __index = CCArray.__index
+	return function(self,key)
+		if type(key) == "number" then
+			
+		end
+	end
+end)()
+
 oEvent.args = {}
 
 oEvent.send = (function()
 	local send = oEvent.send
 	return function(self, name, args)
-			oEvent.args[name] = args
-			send(self, name)
-		end
-	end)()
+		oEvent.args[name] = args
+		send(self, name)
+	end
+end)()
 
 oListener = (function()
 	local listener = oListener
@@ -23,9 +32,9 @@ oListener = (function()
 		return listener(name,
 			function(event)
 				handler(oEvent.args[name], event)
-			end)
-		end
-	end)()
+		end)
+	end
+end)()
 
 CCView = CCView()
 CCFileUtils = CCFileUtils()

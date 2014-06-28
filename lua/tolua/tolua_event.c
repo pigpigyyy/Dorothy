@@ -114,9 +114,7 @@ static int module_newindex_event(lua_State* L)
 	*/
 static int class_index_event(lua_State* L)
 {
-	// 1 self
-	// 2 key
-	// 3 value
+	/* 1 self£¬2 key */
 	int t = lua_type(L, 1);
 	if (t == LUA_TUSERDATA)
 	{

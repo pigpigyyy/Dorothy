@@ -43,12 +43,6 @@ int CCLuaType()
 	return type;
 }
 
-template <class T>
-T* CCLuaCast(CCObject* obj)
-{
-	return (obj && obj->getLuaType() == CCLuaType<T>()) ? (T*)obj : nullptr;
-}
-
 #define CC_LUA_TYPE(type) \
 public: virtual int getLuaType() const \
 { \
@@ -106,6 +100,12 @@ private:
 	friend class CCAutoreleasePool;
 	CC_LUA_TYPE(CCObject)
 };
+
+template <class T>
+T* CCLuaCast(CCObject* obj)
+{
+	return (obj && obj->getLuaType() == CCLuaType<T>()) ? (T*)obj : nullptr;
+}
 
 typedef void (CCObject::*SEL_SCHEDULE)(float);
 typedef void (CCObject::*SEL_CallFunc)();
