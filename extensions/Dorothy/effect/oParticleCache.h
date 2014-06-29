@@ -95,7 +95,7 @@ protected:
 private:
 	inline const char* valueForKey(const char* key, CCDictionary* dict)
 	{
-		CCString* pString = (CCString*)dict->objectForKey(string(key));
+		CCString* pString = (CCString*)dict->objectForKey(key);
 		return pString ? pString->m_sString.c_str() : "";
 	}
 };

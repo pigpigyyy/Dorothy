@@ -52,6 +52,7 @@ public:
     }
 private:
     float m_fValue;
+	CC_LUA_TYPE(CCFloat)
 };
 
 // end of data_structure group

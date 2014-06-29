@@ -128,6 +128,7 @@ xcopy /Y /Q "$(ProjectDir)..\luajit\win32\*.*" "$(OutDir)"</Command>
     <ClCompile Include="..\cocos2dx_support\Cocos2dxLuaLoader.cpp" />
     <ClCompile Include="..\cocos2dx_support\DorothyModule.cpp" />
     <ClCompile Include="..\cocos2dx_support\LuaCocos2d.cpp" />
+    <ClCompile Include="..\cocos2dx_support\LuaCode.cpp" />
     <ClCompile Include="..\cocos2dx_support\tolua_fix.c" />
     <ClCompile Include="..\cocos2dx_support\tolua_extern.cpp" />
     <ClCompile Include="..\tolua\tolua_event.c" />

@@ -51,7 +51,8 @@ public:
         return pRet;
     }
 private:
-    double m_dValue;
+	double m_dValue;
+	CC_LUA_TYPE(CCDouble)
 };
 
 // end of data_structure group

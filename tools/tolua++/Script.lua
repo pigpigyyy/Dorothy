@@ -30,6 +30,23 @@ CCArray.__newindex = (function()
 	end
 end)()
 
+CCDictionary.__index = (function()
+	local _index = CCDictionary.__index
+	local _get = CCDictionary.get
+	return function(self,key)
+		local item = _get(self,key)
+		if item ~= nil then return item end
+		return _index(self,key)
+	end
+end)()
+
+CCDictionary.__newindex = (function()
+	local _set = CCDictionary.set
+	return function(self,key,value)
+		_set(self,key,value)
+	end
+end)()
+
 oEvent.args = {}
 
 oEvent.send = (function()

@@ -629,12 +629,12 @@ void CCTextureCache::removeTextureForKey(const char *textureKeyName)
     }
 
     string fullPath = CCFileUtils::sharedFileUtils()->fullPathForFilename(textureKeyName);
-    m_pTextures->removeObjectForKey(fullPath);
+    m_pTextures->removeObjectForKey(fullPath.c_str());
 }
 
 CCTexture2D* CCTextureCache::textureForKey(const char* key)
 {
-    return (CCTexture2D*)m_pTextures->objectForKey(CCFileUtils::sharedFileUtils()->fullPathForFilename(key));
+    return (CCTexture2D*)m_pTextures->objectForKey(CCFileUtils::sharedFileUtils()->fullPathForFilename(key).c_str());
 }
 
 void CCTextureCache::reloadAllTextures()

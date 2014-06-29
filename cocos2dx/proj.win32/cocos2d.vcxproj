@@ -268,7 +268,10 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
     <ClInclude Include="..\cocoa\CCAffineTransform.h" />
     <ClInclude Include="..\cocoa\CCArray.h" />
     <ClInclude Include="..\cocoa\CCAutoreleasePool.h" />
+    <ClInclude Include="..\cocoa\CCBool.h" />
     <ClInclude Include="..\cocoa\CCDictionary.h" />
+    <ClInclude Include="..\cocoa\CCDouble.h" />
+    <ClInclude Include="..\cocoa\CCFloat.h" />
     <ClInclude Include="..\cocoa\CCGeometry.h" />
     <ClInclude Include="..\cocoa\CCInteger.h" />
     <ClInclude Include="..\cocoa\CCNS.h" />

@@ -939,6 +939,55 @@ local Dorothy =
 		type = "class",
 		index = index()
 	},
+	CCDictionary =
+	{
+		childs =
+		{
+			count =
+			{
+				description = "[uint][readonly]",
+				type = "value",
+			},
+			keys =
+			{
+				description = "[CCArray][readonly]",
+				typeName = "CCArray",
+				type = "value",
+			},
+			randomObject =
+			{
+				description = "[CCObject][readonly]",
+				typeName = "CCObject",
+				type = "value",
+			},
+			get =
+			{
+				args = "(key: int|string)",
+				description = "",
+				typeName = "CCObject",
+				returns = "(object: CCObject)",
+				type = "method",
+			},
+			set =
+			{
+				args = "(key: int|string, value: number|bool|string|CCObject)",
+				description = "",
+				returns = "()",
+				type = "method",
+			},
+			clear =
+			{
+				args = "()",
+				description = "",
+				returns = "()",
+				type = "method",
+			},
+		},
+		description = "class CCDictionary(CCObject).\n args -- ()\n args1 -- (dict: CCDictionary)\n args2 -- (filename: string)",
+		parents = {"CCObject",},
+		type = "class",
+		index = index()
+	},
 	CCView =
 	{
 		childs =
@@ -5830,31 +5879,31 @@ local Dorothy =
 			name =
 			{
 				description = "[string]",
-				typaName = "string",
+				typeName = "string",
 				type = "value"
 			},
 			desc =
 			{
 				description = "[string]",
-				typaName = "string",
+				typeName = "string",
 				type = "value"
 			},
 			model =
 			{
 				description = "[string]",
-				typaName = "string",
+				typeName = "string",
 				type = "value"
 			},
 			sndAttack =
 			{
 				description = "[string]",
-				typaName = "string",
+				typeName = "string",
 				type = "value"
 			},
 			sndDeath =
 			{
 				description = "[string]",
-				typaName = "string",
+				typeName = "string",
 				type = "value"
 			},
 			setActions =

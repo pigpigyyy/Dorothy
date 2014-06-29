@@ -56,6 +56,8 @@ THE SOFTWARE.
 #include "support/CCProfiling.h"
 #include "CCEGLView.h"
 #include <string>
+#include <ctime>
+#include <cstdlib>
 
 /**
  Position of the FPS
@@ -95,6 +97,7 @@ CCDirector::CCDirector()
 
 bool CCDirector::init()
 {
+	srand((unsigned int)time(nullptr));
     CCLOG("cocos2d: %s", cocos2dVersion());
     // scenes
     m_pRunningScene = NULL;

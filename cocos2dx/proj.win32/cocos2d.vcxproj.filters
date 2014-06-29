@@ -470,9 +470,6 @@
     <ClInclude Include="..\cocoa\CCGeometry.h">
       <Filter>cocoa</Filter>
     </ClInclude>
-    <ClInclude Include="..\cocoa\CCInteger.h">
-      <Filter>cocoa</Filter>
-    </ClInclude>
     <ClInclude Include="..\cocoa\CCNS.h">
       <Filter>cocoa</Filter>
     </ClInclude>
@@ -896,6 +893,18 @@
     </ClInclude>
     <ClInclude Include="..\actions\CCActionEase.h">
       <Filter>actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocoa\CCBool.h">
+      <Filter>cocoa</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocoa\CCDouble.h">
+      <Filter>cocoa</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocoa\CCFloat.h">
+      <Filter>cocoa</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocoa\CCInteger.h">
+      <Filter>cocoa</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

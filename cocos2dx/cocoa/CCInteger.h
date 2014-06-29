@@ -24,7 +24,8 @@ public:
         return pRet;
     }
 private:
-    int m_nValue;
+	int m_nValue;
+	CC_LUA_TYPE(CCInteger)
 };
 
 // end of data_structure group

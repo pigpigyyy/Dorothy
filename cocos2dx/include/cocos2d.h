@@ -287,6 +287,12 @@ template int CC_DLL CCLuaType<CCTMXTiledMap>();
 template int CC_DLL CCLuaType<CCScheduler>();
 template int CC_DLL CCLuaType<CCClippingNode>();
 template int CC_DLL CCLuaType<CCSpeed>();
+template int CC_DLL CCLuaType<CCString>();
+template int CC_DLL CCLuaType<CCInteger>();
+template int CC_DLL CCLuaType<CCDouble>();
+template int CC_DLL CCLuaType<CCFloat>();
+template int CC_DLL CCLuaType<CCBool>();
+template int CC_DLL CCLuaType<CCDictionary>();
 
 NS_CC_END
 

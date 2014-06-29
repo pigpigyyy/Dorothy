@@ -52,6 +52,7 @@ public:
     }
 private:
     bool m_bValue;
+	CC_LUA_TYPE(CCBool)
 };
 
 // end of data_structure group

@@ -111,6 +111,7 @@ function classPackage:preamble ()
  output('** Generated automatically by '..TOLUA_VERSION..' on '..date()..'.\n')
  output('*/\n\n')
 
+--[[
  output('#include "string.h"\n')
  output('#include "tolua++.h"\n\n')
 
@@ -119,6 +120,7 @@ function classPackage:preamble ()
   output('TOLUA_API int  tolua_'..self.name..'_open (lua_State* tolua_S);')
   output('\n')
  end
+]]
 
  local i=1
  while self[i] do
@@ -176,14 +178,14 @@ function classPackage:register (pre)
  output(pre.." tolua_endmodule(tolua_S);")
  output(pre.." return 1;")
  output(pre.."}")
-
+--[[
  output("\n\n")
  output("#if defined(LUA_VERSION_NUM) && LUA_VERSION_NUM >= 501\n");
  output(pre.."TOLUA_API int luaopen_"..self.name.." (lua_State* tolua_S) {")
  output(pre.." return tolua_"..self.name.."_open(tolua_S);")
  output(pre.."};")
  output("#endif\n\n")
-
+]]
 	pop()
 end
 

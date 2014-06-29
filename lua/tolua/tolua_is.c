@@ -60,7 +60,7 @@ TOLUA_API const char* tolua_typename(lua_State* L, int lo)
 		}
 		else
 		{
-			if (tolua_isccobject(L, -1))
+			if (tolua_isccobject(L, lo))
 			{
 				lua_pop(L, 1);// empty
 				void* ptr = tolua_tousertype(L, lo, 0);
@@ -68,7 +68,7 @@ TOLUA_API const char* tolua_typename(lua_State* L, int lo)
 			}
 			else
 			{
-				lua_rawget(L, LUA_REGISTRYINDEX);// name
+				lua_rawget(L, LUA_REGISTRYINDEX);// reg[mt], name
 				if (!lua_isstring(L, -1))
 				{
 					lua_pop(L, 1);// empty

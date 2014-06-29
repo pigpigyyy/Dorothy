@@ -113,6 +113,11 @@ void CArray_set(CCArray* array, unsigned int uIndex, CCObject* pObject);
 
 CCTexture2D* CCTextureCache_add(CCTextureCache* self, CCRenderTexture* renderTexture, const char* name);
 
+int CCDictionary_get(lua_State* L);
+int CCDictionary_set(lua_State* L);
+int CCDictionary_keys(lua_State* L);
+int CCDictionary_randomObject(lua_State* L);
+
 void __oModelCache_getData(const char* filename);
 #define oModelCache_getData(filename) {__oModelCache_getData(filename);return 1;}
 oModelDef* oModelCache_loadData(const char* filename, int tableIndex);

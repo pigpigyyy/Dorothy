@@ -86,13 +86,18 @@ extern "C" void tolua_classname(lua_State* L, void* ccobject)
 	lua_rawgeti(L, LUA_REGISTRYINDEX, object->getLuaType());// mt
 	lua_rawget(L, LUA_REGISTRYINDEX);// reg[mt], name
 }
-extern "C" int tolua_isccobject(lua_State* L, int mt_idx)
+extern "C" int tolua_isccobject(lua_State* L, int lo)
 {
-	lua_rawgeti(L, mt_idx, MT_SUPER);// tb
-	lua_rawgeti(L, LUA_REGISTRYINDEX, CCLuaType<CCObject>());// tb ccobjmt
-	lua_rawget(L, LUA_REGISTRYINDEX);// tb "CCObject"
-	lua_rawget(L, -2);// tb["CCObject"], tb flag
-	int result = lua_toboolean(L, -1);
-	lua_pop(L, 2);
-	return result;
+	if (lua_isuserdata(L, lo))
+	{
+		lua_getmetatable(L, lo);// mt
+		lua_rawgeti(L, -1, MT_SUPER);// mt tb
+		lua_rawgeti(L, LUA_REGISTRYINDEX, CCLuaType<CCObject>());// mt tb ccobjmt
+		lua_rawget(L, LUA_REGISTRYINDEX);// mt tb "CCObject"
+		lua_rawget(L, -2);// tb["CCObject"], mt tb flag
+		int result = lua_toboolean(L, -1);
+		lua_pop(L, 3);// empty
+		return result;
+	}
+	return 0;
 }

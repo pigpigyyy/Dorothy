@@ -54,8 +54,15 @@ b:print()
 A("child"):print()
 ]]
 --CCDirector:run(CCScene())
-local arr = CCArray{CCNode(),CCDrawNode()}
-print(arr.count)
-arr[1] = CCClipNode()
+local arr = CCArray({CCNode(),CCDrawNode()})
+--arr[1] = CCClipNode()
 print(arr[1])
 print(arr[2])
+local dict = CCDictionary()
+dict.A = "A"
+dict.B = "B"
+dict.B = CCNode()
+print(dict.randomObject)
+print(dict.randomObject)
+print(dict.randomObject)
+

@@ -82,6 +82,15 @@ m_callFromLua(0)
 #endif
 	// add cocos2dx loader
 	addLuaLoader(cocos2dx_lua_loader);
+
+	tolua_beginmodule(L, "CCDictionary");
+	tolua_variable(L, "keys", CCDictionary_keys, nullptr);
+	tolua_variable(L, "randomObject", CCDictionary_randomObject, nullptr);
+	tolua_function(L, "set", CCDictionary_set);
+	tolua_function(L, "get", CCDictionary_get);
+	tolua_endmodule(L);
+
+	tolua_LuaCode_open(L);
 }
 
 CCLuaEngine* CCLuaEngine::sharedEngine()

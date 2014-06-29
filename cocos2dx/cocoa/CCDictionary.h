@@ -68,7 +68,7 @@ private:
      *  @param  pszKey    The string key of this element.
      *  @param  pObject   The object of this element.
      */
-    CCDictElement(const char* pszKey, CCObject* pObject);
+    CCDictElement(const char* pszKey, int iSize, CCObject* pObject);
 
     /**
      *  Constructor of CCDictElement. It's only for internal usage. CCDictionary is its friend class.
@@ -120,12 +120,9 @@ public:
     inline CCObject* getObject() const { return m_pObject; }
 
 private:
-    // The max length of string key.
-    #define   MAX_KEY_LEN   256
     // char array is needed for HASH_ADD_STR in UT_HASH.
-    // So it's a pain that all elements will allocate 256 bytes for this array.
-    char      m_szKey[MAX_KEY_LEN];     // hash key of string type
-    intptr_t  m_iKey;       // hash key of integer type
+    char* m_szKey;     // hash key of string type
+    intptr_t m_iKey;       // hash key of integer type
     CCObject* m_pObject;    // hash value
 public:
     UT_hash_handle hh;      // makes this class hashable
@@ -154,7 +151,7 @@ public:
  *  // Insert objects to dictionary
  *  CCString* pValue1 = CCString::create("100");
  *  CCString* pValue2 = CCString::create("120");
- *  CCInteger* pValue3 = CCInteger::create(200);
+ *  CCNumber* pValue3 = CCNumber::create(200);
  *  pDict->setObject(pValue1, "key1");
  *  pDict->setObject(pValue2, "key2");
  *  pDict->setObject(pValue3, "key3");
@@ -162,7 +159,7 @@ public:
  *  // Get the object for key
  *  CCString* pStr1 = (CCString*)pDict->objectForKey("key1");
  *  CCLog("{ key1: %s }", pStr1->getCString());
- *  CCInteger* pInteger = (CCInteger*)pDict->objectForKey("key3");
+ *  CCNumber* pInteger = (CCNumber*)pDict->objectForKey("key3");
  *  CCLog("{ key3: %d }", pInteger->getValue());
  *  @endcode
  *
@@ -220,7 +217,7 @@ public:
      *  @endcode
      *  @see objectForKey(int)
      */
-    CCObject* objectForKey(const std::string& key);
+    CCObject* objectForKey(const char* key);
     
     /**
      *  Get the object according to the specified integer key.
@@ -228,7 +225,7 @@ public:
      *  @note The dictionary needs to use integer as key. If string is passed, an assert will appear.
      *  @param key  The integer key for searching.
      *  @return The object matches the key.
-     *  @see objectForKey(const std::string&)
+     *  @see objectForKey(const char*)
      */
     CCObject* objectForKey(int key);
     
@@ -240,7 +237,7 @@ public:
      *          It will return an empty string if the objects aren't CCString pointer or the key wasn't found.
      *  @see valueForKey(int)
      */
-    const CCString* valueForKey(const std::string& key);
+    const CCString* valueForKey(const char* key);
     
     /** Get the value according to the specified integer key.
      *
@@ -263,7 +260,7 @@ public:
      *  @param key      The string key for searching.
      *  @see setObject(CCObject*, int)
      */
-    void setObject(CCObject* pObject, const std::string& key);
+    void setObject(CCObject* pObject, const char* key);
     
     /** Insert an object to dictionary, and match it with the specified string key.
      *
@@ -273,7 +270,7 @@ public:
      *        Then the new object will be inserted after that.
      *  @param pObject  The Object to be inserted.
      *  @param key      The string key for searching.
-     *  @see setObject(CCObject*, const std::string&)
+     *  @see setObject(CCObject*, const char*)
      */
     void setObject(CCObject* pObject, int key);
 
@@ -284,13 +281,13 @@ public:
      *  @see removeObjectForKey(int), removeObjectsForKeys(CCArray*),
      *       removeObjectForElememt(CCDictElement*), removeAllObjects().
      */
-    void removeObjectForKey(const std::string& key);
+    void removeObjectForKey(const char* key);
     
     /**
      *  Remove an object by the specified integer key.
      *
      *  @param key  The integer key for searching.
-     *  @see removeObjectForKey(const std::string&), removeObjectsForKeys(CCArray*),
+     *  @see removeObjectForKey(const char*), removeObjectsForKeys(CCArray*),
      *       removeObjectForElememt(CCDictElement*), removeAllObjects().
      */
     void removeObjectForKey(int key);
@@ -299,7 +296,7 @@ public:
      *  Remove objects by an array of keys.
      *
      *  @param pKeyArray  The array contains keys to be removed.
-     *  @see removeObjectForKey(const std::string&), removeObjectForKey(int),
+     *  @see removeObjectForKey(const char*), removeObjectForKey(int),
      *       removeObjectForElememt(CCDictElement*), removeAllObjects().
      */
     void removeObjectsForKeys(CCArray* pKeyArray);
@@ -308,7 +305,7 @@ public:
      *  Remove an object by an element.
      *
      *  @param pElement  The element need to be removed.
-     *  @see removeObjectForKey(const std::string&), removeObjectForKey(int),
+     *  @see removeObjectForKey(const char*), removeObjectForKey(int),
      *       removeObjectsForKeys(CCArray*), removeAllObjects().
      */
     void removeObjectForElememt(CCDictElement* pElement);
@@ -316,7 +313,7 @@ public:
     /**
      *  Remove all objects in the dictionary.
      *
-     *  @see removeObjectForKey(const std::string&), removeObjectForKey(int),
+     *  @see removeObjectForKey(const char*), removeObjectForKey(int),
      *       removeObjectsForKeys(CCArray*), removeObjectForElememt(CCDictElement*).
      */
     void removeAllObjects();
@@ -334,7 +331,7 @@ public:
      *  Return a random object in the dictionary.
      *
      *  @return The random object. 
-     *  @see objectForKey(int), objectForKey(const std::string&)
+     *  @see objectForKey(int), objectForKey(const char*)
      */
     CCObject* randomObject();
     
@@ -380,7 +377,7 @@ private:
     /** 
      *  For internal usage, invoked by setObject.
      */
-    void setObjectUnSafe(CCObject* pObject, const std::string& key);
+    void setObjectUnSafe(CCObject* pObject, const char* key);
     void setObjectUnSafe(CCObject* pObject, const int key);
     
 public:
@@ -404,6 +401,7 @@ private:
      *  The type of dictionary, it's assigned to kCCDictUnknown by default.
      */
     CCDictType m_eDictType;
+	CC_LUA_TYPE(CCDictionary)
 };
 
 // end of data_structure group

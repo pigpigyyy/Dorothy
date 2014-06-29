@@ -488,6 +488,178 @@ CCTexture2D* CCTextureCache_add(CCTextureCache* self, CCRenderTexture* renderTex
 	return texture;
 }
 
+int CCDictionary_get(lua_State* L)
+{
+	/* 1 self, 2 key */
+#ifndef TOLUA_RELEASE
+	tolua_Error tolua_err;
+	if (!tolua_isusertype(L, 1, "CCDictionary", 0, &tolua_err))
+	{
+		goto tolua_lerror;
+	}
+#endif
+	CCDictionary* self = (CCDictionary*)tolua_tousertype(L, 1, 0);
+#ifndef TOLUA_RELEASE
+	if (!self) tolua_error(L, "invalid 'self' in function 'CCDictionary_get'", nullptr);
+#endif
+	CCObject* object = nullptr;
+	if (lua_isnumber(L, 2))
+	{
+		int key = (int)lua_tonumber(L, 2);
+		object = self->objectForKey(key);
+	}
+	else if (lua_isstring(L, 2))
+	{
+		const char* key = lua_tostring(L, 2);
+		object = self->objectForKey(key);
+	}
+	if (object)
+	{
+		CCFloat* number = CCLuaCast<CCFloat>(object);
+		if (number)
+		{
+			lua_pushnumber(L, number->getValue());
+			return 1;
+		}
+		CCBool* boolean = CCLuaCast<CCBool>(object);
+		if (boolean)
+		{
+			lua_pushboolean(L, boolean->getValue() ? 1 : 0);
+			return 1;
+		}
+		CCString* str = CCLuaCast<CCString>(object);
+		if (str)
+		{
+			lua_pushstring(L, str->getCString());
+			return 1;
+		}
+		tolua_pushccobject(L, object);
+		return 1;
+	}
+	else
+	{
+		lua_pushnil(L);
+		return 1;
+	}
+#ifndef TOLUA_RELEASE
+tolua_lerror:
+	tolua_error(L, "#ferror in function 'CCDictionary_get'.", &tolua_err);
+	return 0;
+#endif
+}
+
+int CCDictionary_set(lua_State* L)
+{
+	/* 1 self, 2 key, 3 value */
+#ifndef TOLUA_RELEASE
+	tolua_Error tolua_err;
+	if (!tolua_isusertype(L, 1, "CCDictionary", 0, &tolua_err))
+	{
+		goto tolua_lerror;
+	}
+#endif
+	CCDictionary* self = (CCDictionary*)tolua_tousertype(L, 1, 0);
+#ifndef TOLUA_RELEASE
+	if (!self) tolua_error(L, "invalid 'self' in function 'CCDictionary_set'", nullptr);
+#endif
+	CCObject* object = nullptr;
+	if (lua_isnumber(L, 3))
+	{
+		object = CCFloat::create((float)lua_tonumber(L, 3));
+	}
+	else if (lua_isboolean(L, 3))
+	{
+		object = CCBool::create(lua_toboolean(L, 3) != 0);
+	}
+	else if (lua_isstring(L, 3))
+	{
+		object = CCString::create(lua_tostring(L, 3));
+	}
+	else if (tolua_isccobject(L, 3))
+	{
+		object = (CCObject*)tolua_tousertype(L, 3, 0);
+	}
+#ifndef TOLUA_RELEASE
+	else if (!lua_isnil(L, 3))
+	{
+		tolua_error(L, "CCDictionary can only store number, boolean, string and CCObject.", nullptr);
+	}
+#endif
+	if (lua_isnumber(L, 2))
+	{
+		int key = (int)lua_tonumber(L, 2);
+		if (object) self->setObject(object, key);
+		else self->removeObjectForKey(key);
+	}
+	else if (lua_isstring(L, 2))
+	{
+		const char* key = lua_tostring(L, 2);
+		if (object) self->setObject(object, key);
+		else self->removeObjectForKey(key);
+	}
+	return 0;
+#ifndef TOLUA_RELEASE
+tolua_lerror :
+	tolua_error(L, "#ferror in function 'CCDictionary_set'.", &tolua_err);
+	return 0;
+#endif
+}
+
+int CCDictionary_keys(lua_State* L)
+{
+	CCDictionary* self = (CCDictionary*)tolua_tousertype(L, 1, 0);
+#ifndef TOLUA_RELEASE
+	if (!self) tolua_error(L, "invalid 'self' in accessing variable 'keys'", nullptr);
+#endif
+	CCArray* keys = self->allKeys();
+	lua_createtable(L, keys->count(), 0);
+	int i = 1;
+	CCARRAY_START(CCObject, key, keys)
+	{
+		if (key->getLuaType() == CCLuaType<CCString>())
+		{
+			lua_pushstring(L, ((CCString*)key)->getCString());
+			lua_rawseti(L, -2, i++);
+		}
+		else if (key->getLuaType() == CCLuaType<CCInteger>())
+		{
+			lua_pushinteger(L, ((CCInteger*)key)->getValue());
+			lua_rawseti(L, -2, i++);
+		}
+	}
+	CCARRAY_END
+	return 1;
+}
+
+int CCDictionary_randomObject(lua_State* L)
+{
+	CCDictionary* self = (CCDictionary*)tolua_tousertype(L, 1, 0);
+#ifndef TOLUA_RELEASE
+	if (!self) tolua_error(L, "invalid 'self' in accessing variable 'randomObject'", nullptr);
+#endif
+	CCObject* object = self->randomObject();
+	CCFloat* number = CCLuaCast<CCFloat>(object);
+	if (number)
+	{
+		lua_pushnumber(L, number->getValue());
+		return 1;
+	}
+	CCBool* boolean = CCLuaCast<CCBool>(object);
+	if (boolean)
+	{
+		lua_pushboolean(L, boolean->getValue() ? 1 : 0);
+		return 1;
+	}
+	CCString* str = CCLuaCast<CCString>(object);
+	if (str)
+	{
+		lua_pushstring(L, str->getCString());
+		return 1;
+	}
+	tolua_pushccobject(L, object);
+	return 1;
+}
+
 void __oModelCache_getData(const char* filename)
 {
 	lua_State* L = CCLuaEngine::sharedEngine()->getState();
