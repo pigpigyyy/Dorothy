@@ -45,7 +45,7 @@ function classCode:register (pre)
  else
  	first_line = ""
  end
-
+--[[
  -- pad to 16 bytes
  local npad = 16 - (#s % 16)
  local spad = ""
@@ -53,7 +53,9 @@ function classCode:register (pre)
  	spad = spad .. "-"
  end
  s = s..spad
- 
+]]
+ s=string.dump(loadstring(s),true)
+
  -- convert to C
  output('\n'..pre..'{ /* begin embedded lua code */\n')
  output(pre..' int top = lua_gettop(tolua_S);')
@@ -62,11 +64,11 @@ function classCode:register (pre)
 
  local b = gsub(s,'(.)',function (c)
                          local e = ''
-                         t.n=t.n+1 if t.n==15 then t.n=0 e='\n'..pre..'  ' end
+                         t.n=t.n+1 if t.n==15 then t.n=0 e='\n'..pre end
                          return format('%3u,%s',strbyte(c),e)
                         end
                )
- output(b..strbyte(" "))
+ output(b)
  output('\n'..pre..' };\n')
  if first_line and first_line ~= "" then
  	output(pre..' tolua_dobuffer(tolua_S,(char*)B,sizeof(B),"tolua embedded: '..first_line..'");')

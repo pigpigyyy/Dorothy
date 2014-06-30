@@ -76,3 +76,4 @@ Device-Release/
 *.swp
 
 /lua/cocos2dx_support/LuaCocos2d.cpp
+/lua/cocos2dx_support/LuaCode.cpp

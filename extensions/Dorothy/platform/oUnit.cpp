@@ -137,6 +137,7 @@ void oUnit::update( float dt )
 	{
 		oAI::conditionedReflex(this);
 	}
+	oBody::update(dt);
 }
 
 void oUnit::setGroup( int group )

@@ -2,6 +2,7 @@ class CCDirector
 {
 	tolua_readonly tolua_property__common CCScene* runningScene @ currentScene;
 	tolua_readonly tolua_property__common double animationInterval;
+	tolua_readonly tolua_property__common float deltaTime;
 	tolua_readonly tolua_property__bool bool paused;
 	tolua_readonly tolua_property__common CCSize winSize;
 	tolua_readonly tolua_property__common CCSize visibleSize;

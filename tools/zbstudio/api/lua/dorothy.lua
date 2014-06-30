@@ -1331,6 +1331,12 @@ local Dorothy =
 			},
 			animationInterval =
 			{
+				description = "[double][readonly]",
+				static = true,
+				type = "value",
+			},
+			deltaTime =
+			{
 				description = "[float][readonly]",
 				static = true,
 				type = "value",

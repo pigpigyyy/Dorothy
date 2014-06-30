@@ -1,4 +1,5 @@
 local oButton = require("ActionEditor/Script/oButton")
+local sequencer,wait,seconds = unpack(require("action"))
 
 local scene = CCScene()
 
@@ -28,6 +29,13 @@ unitDef:setActions(
 local unit = oUnit(unitDef,world,oVec2(400,300))
 unit.group = 1
 world:addChild(unit)
+world:scheduleUpdate(
+	sequencer(function(deltaTime,self)
+		print("start")
+		wait(seconds(3))
+		print("end")
+		self:unscheduleUpdate()
+	end))
 
 local terrainDef = oBodyDef()
 terrainDef.type = oBodyDef.Static

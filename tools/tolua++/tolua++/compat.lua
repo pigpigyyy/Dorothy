@@ -177,17 +177,25 @@ end
 
 function read (...)
   local f = _INPUT
-  if rawtype(arg[1]) == 'userdata' then
-    f = tab.remove(arg, 1)
+  if rawtype(select(1,...)) == 'userdata' then
+    f = tab.remove(..., 1)
   end
-  return f:read(unpack(arg))
+  if select("#",...) <= 1 then
+	return f:read(...)
+  else
+    return f:read(unpack(...))
+  end
 end
 
 function write (...)
   local f = _OUTPUT
-  if rawtype(arg[1]) == 'userdata' then
-    f = tab.remove(arg, 1)
+  if rawtype(select(1,...)) == 'userdata' then
+    f = tab.remove(..., 1)
   end
-  return f:write(unpack(arg))
+  if select("#",...) <= 1 then
+	return f:write(...)
+  else
+    return f:write(unpack(...))
+  end
 end
 

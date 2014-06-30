@@ -252,18 +252,20 @@ end
 -- concatenate all parameters, following output rules
 function concatparam (line, ...)
  local i=1
- while i<=arg.n do
+ local n = select("#",...)
+ while i<=n do
+ local arg = select(i,...)
   if _cont and not strfind(_cont,'[%(,"]') and
-     strfind(arg[i],"^[%a_~]") then
+     strfind(arg,"^[%a_~]") then
 	    line = line .. ' '
   end
-  line = line .. arg[i]
-  if arg[i] ~= '' then
-   _cont = strsub(arg[i],-1,-1)
+  line = line .. arg
+  if arg ~= '' then
+   _cont = strsub(arg,-1,-1)
   end
   i = i+1
  end
- if strfind(arg[arg.n],"[%/%)%;%{%}]$") then
+ if strfind(select(n,...),"[%/%)%;%{%}]$") then
   _cont=nil line = line .. '\n'
  end
 	return line
@@ -272,18 +274,20 @@ end
 -- output line
 function output (...)
  local i=1
- while i<=arg.n do
+ local n = select("#",...)
+ while i<=n do
+ local arg = select(i,...)
   if _cont and not strfind(_cont,'[%(,"]') and
-     strfind(arg[i],"^[%a_~]") then
+     strfind(arg,"^[%a_~]") then
 	    write(' ')
   end
-  write(arg[i])
-  if arg[i] ~= '' then
-   _cont = strsub(arg[i],-1,-1)
+  write(arg)
+  if arg ~= '' then
+   _cont = strsub(arg,-1,-1)
   end
   i = i+1
  end
- if strfind(arg[arg.n],"[%/%)%;%{%}]$") then
+ if strfind(select(n,...),"[%/%)%;%{%}]$") then
   _cont=nil write('\n')
  end
 end

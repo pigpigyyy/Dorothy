@@ -85,6 +85,7 @@ CCNode::CCNode()
 , _cascadeOpacity(true)
 , _cascadeColor(true)
 , _transformTargetRef(NULL)
+, _isScheduled(false)
 {
 	// set default scheduler and actionManager
 	CCDirector *director = CCDirector::sharedDirector();
@@ -912,6 +913,7 @@ void CCNode::scheduleUpdate()
 
 void CCNode::scheduleUpdateWithPriority(int priority)
 {
+	_isScheduled = true;
 	m_pScheduler->scheduleUpdateForTarget(this, priority, !m_bRunning);
 }
 
@@ -919,12 +921,26 @@ void CCNode::scheduleUpdateWithPriorityLua(int nHandler, int priority)
 {
 	unscheduleUpdate();
 	m_nUpdateScriptHandler = nHandler;
-	m_pScheduler->scheduleUpdateForTarget(this, priority, !m_bRunning);
+	CCNode::scheduleUpdateWithPriority(priority);
 }
 
 void CCNode::unscheduleUpdate()
 {
+	_isScheduled = false;
 	m_pScheduler->unscheduleUpdateForTarget(this);
+	if (m_nUpdateScriptHandler)
+	{
+		CCScriptEngine::sharedEngine()->removeScriptHandler(m_nUpdateScriptHandler);
+		m_nUpdateScriptHandler = 0;
+	}
+}
+
+void CCNode::unscheduleUpdateLua()
+{
+	if (!_isScheduled)
+	{
+		m_pScheduler->unscheduleUpdateForTarget(this);
+	}
 	if (m_nUpdateScriptHandler)
 	{
 		CCScriptEngine::sharedEngine()->removeScriptHandler(m_nUpdateScriptHandler);

@@ -1160,6 +1160,8 @@ public:
 	void setTransformTarget(CCNode* target);
 	CCNode* getTransformTarget() const;
 
+	void unscheduleUpdateLua();
+
 	template<typename NodeFunc>
 	static void traverse(CCNode* root, const NodeFunc& func)
 	{
@@ -1199,14 +1201,21 @@ private:
     CCPoint convertToWindowSpace(const CCPoint& nodePoint);
 
 protected:
+	bool m_bRunning; ///< is running
+	bool m_bTransformDirty; ///< transform dirty flag
+	bool m_bInverseDirty; ///< transform dirty flag
+	bool m_bVisible; ///< is this node visible
+	bool m_bReorderChildDirty; ///< children order dirty flag
+	bool _isScheduled;
+	bool _cascadeOpacity;
+	bool _cascadeColor;
+
 	CCWeak* _transformTargetRef;
 
 	float _displayedOpacity;
 	float _realOpacity;
 	ccColor3B _displayedColor;
 	ccColor3B _realColor;
-	bool _cascadeOpacity;
-	bool _cascadeColor;
 
     float m_fRotation;                 ///< rotation angle on x-axis
     float m_fScaleX;                    ///< scaling factor on x-axis
@@ -1245,14 +1254,6 @@ protected:
     ccGLServerState m_eGLServerState;   ///< OpenGL servier side state
     
     CCScheduler *m_pScheduler;          ///< scheduler used to schedule timers and updates
-
-    bool m_bRunning;                    ///< is running
-    
-    bool m_bTransformDirty;             ///< transform dirty flag
-    bool m_bInverseDirty;               ///< transform dirty flag
-    bool m_bVisible;                    ///< is this node visible
-    
-    bool m_bReorderChildDirty;          ///< children order dirty flag
     
     int m_nScriptHandler;               ///< script handler for onEnter() & onExit(), used in Javascript binding and Lua binding.
     int m_nUpdateScriptHandler;         ///< script handler for update() callback per frame, which is invoked from lua & javascript.
