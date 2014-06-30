@@ -241,7 +241,7 @@ local function oViewArea()
 --[[
 	local renderTarget = CCRenderTarget(winSize.width,winSize.height)
 	renderTarget.position = oVec2(winSize.width*0.5,winSize.height*0.5)
-	renderTarget:scheduleUpdate(
+	renderTarget:schedule(
 		function()
 			renderTarget:beginPaint()
 			crossNode.opacity = 0
@@ -285,8 +285,8 @@ local function oViewArea()
 	crossNode:addChild(rotEditor)
 	rotEditor.setTarget = function(self,target)
 		if target then
-			self:scheduleUpdate(
-				function(deltaTime,self)
+			self:schedule(
+				function(self,deltaTime)
 					local rot = 0
 					local p = target
 					while p and p ~= crossNode do
@@ -296,7 +296,7 @@ local function oViewArea()
 					self.rotation = rot
 				end,-1)
 		else
-			self:unscheduleUpdate()
+			self:unschedule()
 		end
 	end
 
@@ -392,15 +392,15 @@ local function oViewArea()
 			local off = oVec2(
 					parent.contentSize.width*parent.anchor.x,
 					parent.contentSize.height*parent.anchor.y)
-			self:scheduleUpdate(
-				function(deltaTime,self)
+			self:schedule(
+				function(self,deltaTime)
 					self.position = crossNode:convertToNodeSpace(
 						parent:convertToWorldSpace(
 							target.position-off))
 				end,-2)
 			getEditorRot()
 		else
-			self:unscheduleUpdate()
+			self:unschedule()
 		end
 	end
 	

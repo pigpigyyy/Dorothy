@@ -51,8 +51,8 @@ class CCNode: public CCObject
 
 	CCNode* getChildByTag(int tag);
 
-	void scheduleUpdateWithPriorityLua @ scheduleUpdate(tolua_function nHandler, int priority = 0);
-	void unscheduleUpdateLua @ unscheduleUpdate();
+	void scheduleUpdateWithPriorityLua @ schedule(tolua_function nHandler, int priority = 0);
+	void unscheduleUpdateLua @ unschedule();
 
 	void registerScriptHandler @ registerEventHandler(tolua_function funcID);
 	void unregisterScriptHandler @ unregisterEventHandler();

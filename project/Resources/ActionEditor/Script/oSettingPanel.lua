@@ -71,7 +71,7 @@ local function oSettingPanel()
 	menu.positionY = borderSize.height
 	menu.visible = false
 
-	local function updateReset(deltaTime)
+	local function updateReset(self,deltaTime)
 		local children = menu.children
 		if not children then return end
 
@@ -96,7 +96,7 @@ local function oSettingPanel()
 		end
 		
 		if t == 1.0 then
-			panel:unscheduleUpdate()
+			panel:unschedule()
 			panel:hide()
 		end
 	end
@@ -111,7 +111,7 @@ local function oSettingPanel()
 	local function startReset()
 		startPos = totalDelta
 		time = 0
-		panel:scheduleUpdate(updateReset)
+		panel:schedule(updateReset)
 	end
 
 	local function setOffset(deltaPos, touching)
@@ -293,14 +293,14 @@ local function oSettingPanel()
 		self:runAction(opacity)
 	end
 
-	local function updateSpeed(deltaTime)
+	local function updateSpeed(self,deltaTime)
 		if _s == oVec2.zero then
 			return
 		end
 		_v = _s / deltaTime
 		_s = oVec2.zero
 	end
-	local function updatePos(deltaTime)
+	local function updatePos(self,deltaTime)
 		local val = winSize.height*2
 		local a = oVec2(_v.x > 0 and -val or val,_v.y > 0 and -val or val)
 		
@@ -319,7 +319,7 @@ local function oSettingPanel()
 				startReset()
 			else
 				panel:hide()
-				panel:unscheduleUpdate()
+				panel:unschedule()
 			end
 		end
 	end
@@ -339,7 +339,7 @@ local function oSettingPanel()
 
 				deltaMoveLength = 0
 				menu.enabled = true
-				panel:scheduleUpdate(updateSpeed)
+				panel:schedule(updateSpeed)
 			elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
 				menu.enabled = true
 				if isReseting() then
@@ -348,7 +348,7 @@ local function oSettingPanel()
 					if _v == oVec2.zero or deltaMoveLength <= 10 then
 						panel:hide()
 					else
-						panel:scheduleUpdate(updatePos)
+						panel:schedule(updatePos)
 					end
 				end
 			elseif eventType == CCTouch.Moved then

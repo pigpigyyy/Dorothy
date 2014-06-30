@@ -1,8 +1,13 @@
+local yield = coroutine.yield
+local wrap = coroutine.wrap
+local create = coroutine.create
+local resume = coroutine.resume
+
 local seconds = function(duration)
 	local time = 0
 	return function(deltaTime)
 		time = time + deltaTime
-		return time >= duration
+		return time < duration
 	end
 end
 
@@ -11,21 +16,38 @@ local minutes = function(duration)
 	local time = 0
 	return function(deltaTime)
 		time = time + deltaTime
-		return time >= duration
+		return time < duration
 	end
 end
 
 local wait = (function()
 	local director = CCDirector
 	return function(timer)
-		while not timer(director.deltaTime) do
-			coroutine.yield()
+		while timer(director.deltaTime) do
+			yield()
 		end
 	end
 end)()
 
-local sequencer = function(job)
-	return coroutine.wrap(job)
+local once = function(job)
+	return wrap(function()
+		job()
+		return true
+	end)
 end
 
-return {sequencer,wait,seconds,minutes}
+local loop = function(job)
+	return wrap(function(...)
+		local _job = job
+		local worker = create(_job)
+		repeat
+			local running,result = resume(worker,...)
+			if not running then
+				worker = create(_job)
+			end
+			yield(result)
+		until false
+	end)
+end
+
+return {wait,once,loop,seconds,minutes}

@@ -54,7 +54,7 @@ local function oSelectionPanel(borderSize,noCliping)
 	menu.anchor = oVec2(0,1)
 	menu.position = oVec2(-winSize.width*0.5,winSize.height*0.5)
 
-	local function updateReset(deltaTime)
+	local function updateReset(self,deltaTime)
 		local children = menu.children
 		if not children then return end
 
@@ -90,7 +90,7 @@ local function oSelectionPanel(borderSize,noCliping)
 		end
 
 		if t == 1.0 then
-			panel:unscheduleUpdate()
+			panel:unschedule()
 		end
 	end
 
@@ -104,7 +104,7 @@ local function oSelectionPanel(borderSize,noCliping)
 	local function startReset()
 		startPos = totalDelta
 		time = 0
-		panel:scheduleUpdate(updateReset)
+		panel:schedule(updateReset)
 	end
 
 	local function setOffset(deltaPos, touching)
@@ -176,7 +176,7 @@ local function oSelectionPanel(borderSize,noCliping)
 	end
 	view:addChild(menu)
 
-	local function updateSpeed(deltaTime)
+	local function updateSpeed(self,deltaTime)
 		if _s == oVec2.zero then
 			return
 		end
@@ -184,7 +184,7 @@ local function oSelectionPanel(borderSize,noCliping)
 		_s = oVec2.zero
 	end
 
-	local function updatePos(deltaTime)
+	local function updatePos(self,deltaTime)
 		local val = winSize.height*2
 		local a = oVec2(_v.x > 0 and -val or val,_v.y > 0 and -val or val)
 		
@@ -202,7 +202,7 @@ local function oSelectionPanel(borderSize,noCliping)
 			if isReseting() then
 				startReset()
 			else
-				panel:unscheduleUpdate()
+				panel:unschedule()
 			end
 		end
 	end
@@ -219,14 +219,14 @@ local function oSelectionPanel(borderSize,noCliping)
 				end
 				deltaMoveLength = 0
 				menu.enabled = true
-				panel:scheduleUpdate(updateSpeed)
+				panel:schedule(updateSpeed)
 			elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
 				menu.enabled = true
 				if isReseting() then
 					startReset()
 				else
 					if _v ~= oVec2.zero and deltaMoveLength > 10 then
-						panel:scheduleUpdate(updatePos)
+						panel:schedule(updatePos)
 					end
 				end
 			elseif eventType == CCTouch.Moved then
@@ -280,7 +280,7 @@ local function oSelectionPanel(borderSize,noCliping)
 					function()
 						panel:removeMenuItems()
 						panel:unregisterTouchHandler()
-						panel:unscheduleUpdate()
+						panel:unschedule()
 						panel.parent:removeChild(panel)
 					end)
 			}))

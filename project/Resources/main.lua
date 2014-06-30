@@ -1,5 +1,5 @@
 --require("Editor/Script/main")
-require("Test/Case/Unit")
+require("Test/Entry")
 --[[
 local class,property = unpack(require("class"))
 

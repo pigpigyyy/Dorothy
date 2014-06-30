@@ -210,11 +210,11 @@ logo:addChild(flower)
 oEditor.scene:addChild(bk,998)
 
 local time = 0
-oEditor.scene:scheduleUpdate(
-	function(deltaTime, self)
+oEditor.scene:schedule(
+	function(self,deltaTime)
 		time = time+deltaTime
 		if not coroutine.resume(thread) then
-			self:unscheduleUpdate()
+			self:unschedule()
 			oEvent:send("EditorLoaded")
 			if time < 1 then
 				logo:runAction(

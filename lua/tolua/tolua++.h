@@ -214,4 +214,8 @@ TOLUA_API void tolua_classname(lua_State *L, void* ccobject);
 }
 #endif
 
+#if COCOS2D_DEBUG == 0
+#define TOLUA_RELEASE
+#endif
+
 #endif

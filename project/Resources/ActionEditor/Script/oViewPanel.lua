@@ -59,7 +59,7 @@ local function oViewPanel()
 	menu.anchor = oVec2(0,1)
 	menu.positionY = borderSize.height
 
-	local function updateReset(deltaTime)
+	local function updateReset(self,deltaTime)
 		local children = menu.children
 		if not children then return end
 
@@ -95,7 +95,7 @@ local function oViewPanel()
 		end
 		
 		if t == 1 then
-			panel:unscheduleUpdate()
+			panel:unschedule()
 			--panel.touchEnabled = true
 			--menu.touchEnabled = true
 			panel:hide()
@@ -114,7 +114,7 @@ local function oViewPanel()
 		time = 0
 		--panel.touchEnabled = false
 		--menu.touchEnabled = false
-		panel:scheduleUpdate(updateReset)
+		panel:schedule(updateReset)
 	end
 
 	local function setPos(delta)
@@ -338,10 +338,10 @@ local function oViewPanel()
 						else
 							isFolding = true
 							local interval = 0
-							self:scheduleUpdate(function(deltaTime)
+							self:schedule(function(self,deltaTime)
 								interval = interval+deltaTime
 								if interval > 0.5 then
-									self:unscheduleUpdate()
+									self:unschedule()
 									isFolding = false
 								end
 							end)
@@ -352,7 +352,7 @@ local function oViewPanel()
 
 		menuItem.dispose = function(self)
 			self:unregisterTapHandler()
-			self:unscheduleUpdate()
+			self:unschedule()
 			local sp = self:getData()
 			sp[oSd.sprite] = nil
 		end
@@ -396,14 +396,14 @@ local function oViewPanel()
 		self:runAction(opacity)
 	end
 
-	local function updateSpeed(deltaTime)
+	local function updateSpeed(self,deltaTime)
 		if _s == oVec2.zero then
 			return
 		end
 		_v = _s / deltaTime
 		_s = oVec2.zero
 	end
-	local function updatePos(deltaTime)
+	local function updatePos(self,deltaTime)
 		local val = winSize.height*2
 		local a = oVec2(_v.x > 0 and -val or val,_v.y > 0 and -val or val)
 
@@ -422,7 +422,7 @@ local function oViewPanel()
 				startReset()
 			else
 				panel:hide()
-				panel:unscheduleUpdate()
+				panel:unschedule()
 			end
 		end
 	end
@@ -442,7 +442,7 @@ local function oViewPanel()
 
 				deltaMoveLength = 0
 				menu.enabled = true
-				panel:scheduleUpdate(updateSpeed)
+				panel:schedule(updateSpeed)
 			elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
 				menu.enabled = true
 				if isReseting() then
@@ -451,7 +451,7 @@ local function oViewPanel()
 					if _v == oVec2.zero or deltaMoveLength <= 10 then
 						panel:hide()
 					else
-						panel:scheduleUpdate(updatePos)
+						panel:schedule(updatePos)
 					end
 				end
 			elseif eventType == CCTouch.Moved then

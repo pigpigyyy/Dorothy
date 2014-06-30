@@ -65,8 +65,8 @@ local function oControlBar()
 		self._isUpdating = true
 		local i = lastSize
 		-- update ruler interval by step, not all at once
-		self:scheduleUpdate(
-			function(deltaTime)
+		self:schedule(
+			function(self,deltaTime)
 				if i <= self._size then
 					local posX = delta*i
 					if i == 0 or (i%10 == 0 and i ~= lastSize) then
@@ -86,7 +86,7 @@ local function oControlBar()
 					end
 					i = i + 1
 				else
-					self:unscheduleUpdate()
+					self:unschedule()
 					self._isUpdating = false
 				end
 			end)
@@ -240,12 +240,12 @@ local function oControlBar()
 				else
 					jumpPos = true
 					local interval = 0
-					controlBar:scheduleUpdate(
-						function(deltaTime)
+					controlBar:schedule(
+						function(self,deltaTime)
 							interval = interval + deltaTime
 							if interval >= 0.5 then
 								jumpPos = false
-								controlBar:unscheduleUpdate()
+								controlBar:unschedule()
 							end
 						end)
 				end

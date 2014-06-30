@@ -218,9 +218,9 @@ int CCLuaEngine::executeMenuItemEvent(int eventType, CCMenuItem* pMenuItem)
 
 int CCLuaEngine::executeSchedule(int nHandler, float dt, CCNode* pNode)
 {
-    if(!nHandler) return 0;
+	if (!nHandler) return 0;
+	if (pNode) tolua_pushccobject(L, pNode);
 	lua_pushnumber(L, dt);
-	if(pNode) tolua_pushccobject(L, pNode);
 	return lua_execute(nHandler, pNode ? 2 : 1);
 }
 
@@ -311,6 +311,7 @@ static int traceback(lua_State* L)
 
 int CCLuaEngine::lua_execute(int numArgs)
 {
+#ifndef TOLUA_RELEASE
 	int functionIndex = -(numArgs + 1);
 	int traceIndex = functionIndex - 1;
 	if (!lua_isfunction(L, functionIndex))
@@ -332,7 +333,9 @@ int CCLuaEngine::lua_execute(int numArgs)
 		lua_settop(L, 0);// stack clear
 		return 0;
 	}
-
+#else
+	lua_call(L, numArgs, 1);
+#endif
 	// get return value
 	int ret = 0;
 	if (lua_isnumber(L, -1))// traceback ret
@@ -358,6 +361,7 @@ int CCLuaEngine::lua_execute(int nHandler, int numArgs)
 		return 0;
 	}
 	if (numArgs > 0) lua_insert(L, -(numArgs + 1));// func args...
+
 	return lua_execute(numArgs);
 }
 

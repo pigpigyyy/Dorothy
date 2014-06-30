@@ -346,14 +346,14 @@ local Dorothy =
 				typeName = "CCNode",
 				type = "method",
 			},
-			scheduleUpdate =
+			schedule =
 			{
 				args = "(handler: function, priority: int)",
-				description = " -- handler: function(deltaTime: float, self: CCNode)",
+				description = " -- handler: function(self: CCNode, deltaTime: float)",
 				returns = "()",
 				type = "method",
 			},
-			unscheduleUpdate =
+			unschedule =
 			{
 				args = "()",
 				description = "",

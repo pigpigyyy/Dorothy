@@ -1002,7 +1002,10 @@ void CCNode::update(float fDelta)
 {
 	if (m_nUpdateScriptHandler)
 	{
-		CCScriptEngine::sharedEngine()->executeSchedule(m_nUpdateScriptHandler, fDelta, this);
+		if (CCScriptEngine::sharedEngine()->executeSchedule(m_nUpdateScriptHandler, fDelta, this) != 0)
+		{
+			CCNode::unscheduleUpdateLua();
+		}
 	}
 }
 

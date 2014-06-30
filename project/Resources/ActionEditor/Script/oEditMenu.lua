@@ -362,8 +362,8 @@ local function oEditMenu()
 						item.label.texture.antiAlias = false
 						model:resume(oEditor.animation)
 						-- update controlBar progress
-						item:scheduleUpdate(
-							function(deltaTime,self)
+						item:schedule(
+							function(self,deltaTime)
 								--model = oModel
 								if model.playing then
 									local time = model.time * model.duration
@@ -373,7 +373,7 @@ local function oEditMenu()
 									oEditor.isPlaying = false
 									item.label.text = "Play"
 									item.label.texture.antiAlias = false
-									self:unscheduleUpdate()
+									self:unschedule()
 									oEvent:send("PlayState","Stop")
 								end
 							end)
@@ -383,7 +383,7 @@ local function oEditMenu()
 						item.label.text = "Play"
 						item.label.texture.antiAlias = false
 						model:pause()
-						item:unscheduleUpdate()
+						item:unschedule()
 						oEvent:send("PlayState","Pause")
 					end
 				end
