@@ -2,6 +2,7 @@ local yield = coroutine.yield
 local wrap = coroutine.wrap
 local create = coroutine.create
 local resume = coroutine.resume
+local CCDirector = require("CCDirector")
 
 local seconds = function(duration)
 	local time = 0
@@ -11,19 +12,10 @@ local seconds = function(duration)
 	end
 end
 
-local minutes = function(duration)
-	duration = duration*60
-	local time = 0
-	return function(deltaTime)
-		time = time + deltaTime
-		return time < duration
-	end
-end
-
 local wait = (function()
 	local director = CCDirector
-	return function(timer)
-		while timer(director.deltaTime) do
+	return function(cond)
+		while cond(director.deltaTime) do
 			yield()
 		end
 	end
@@ -50,4 +42,4 @@ local loop = function(job)
 	end)
 end
 
-return {wait,once,loop,seconds,minutes}
+return {wait,once,loop,seconds}

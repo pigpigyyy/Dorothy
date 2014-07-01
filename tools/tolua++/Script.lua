@@ -1,11 +1,21 @@
 $[
-cclog = function(...)
+local CCArray = require("CCArray")
+local CCDictionary = require("CCDictionary")
+local oEvent = require("oEvent")
+local CCLuaLog = require("CCLuaLog")
+local CCMessageBox = require("CCMessageBox")
+
+local loaded = package.loaded
+
+loaded.cclog = function(...)
     CCLuaLog(string.format(...))
 end
+loaded.CCLuaLog = nil
 
-ccmsg = function(title, ...)
+loaded.ccmsg = function(title, ...)
     CCMessageBox(string.format(...), title)
 end
+loaded.CCMessageBox = nil
 
 CCArray.__index = (function()
 	local _index = CCArray.__index
@@ -47,9 +57,8 @@ CCDictionary.__newindex = (function()
 	end
 end)()
 
-oEvent.args = {}
-
 oEvent.send = (function()
+	oEvent.args = {}
 	local send = oEvent.send
 	return function(self, name, args)
 		oEvent.args[name] = args
@@ -57,8 +66,8 @@ oEvent.send = (function()
 	end
 end)()
 
-oListener = (function()
-	local listener = oListener
+loaded.oListener = (function()
+	local listener = loaded.oListener
 	return function(name, handler)
 		return listener(name,
 			function(event)
@@ -67,13 +76,13 @@ oListener = (function()
 	end
 end)()
 
-CCView = CCView()
-CCFileUtils = CCFileUtils()
-CCApplication = CCApplication()
-CCDirector = CCDirector()
-CCUserDefault = CCUserDefault()
-CCTextureCache = CCTextureCache()
+loaded.CCView = require("CCView")()
+loaded.CCFileUtils = require("CCFileUtils")()
+loaded.CCApplication = require("CCApplication")()
+loaded.CCDirector = require("CCDirector")()
+loaded.CCUserDefault = require("CCUserDefault")()
+loaded.CCTextureCache = require("CCTextureCache")()
 
-oContent = oContent()
-oData = oData()
+loaded.oContent= require("oContent")()
+loaded.oData= require("oData")()
 $]

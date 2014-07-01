@@ -2,6 +2,19 @@ local oButton = require("oButton")
 local oSelectionPanel = require("oSelectionPanel")
 local oFileChooser = require("oFileChooser")
 local oBox = require("oBox")
+local CCDirector = require("CCDirector")
+local CCSize = require("CCSize")
+local CCDrawNode = require("CCDrawNode")
+local oVec2 = require("oVec2")
+local ccColor4 = require("ccColor4")
+local CCMenu = require("CCMenu")
+local CCLabelTTF = require("CCLabelTTF")
+local ccColor3 = require("ccColor3")
+local oOpacity = require("oOpacity")
+local CCSequence = require("CCSequence")
+local CCDelay = require("CCDelay")
+local oSd = require("oEditor").oSd
+local oEditor = require("oEditor").oEditor
 
 local function oEditChooser(withCancel)
 	local winSize = CCDirector.winSize
@@ -75,7 +88,7 @@ local function oEditChooser(withCancel)
 	
 		local aNames = oEditor.data[oSd.animationNames]
 		local i = 0
-		for k,v in pairs(aNames) do
+		for k,_ in pairs(aNames) do
 			local name = #k > 10 and k:sub(1,7).."..." or k
 			y = yStart-45-math.floor(i/itemNum)*60
 			local button = oButton(name,17,
@@ -106,7 +119,7 @@ local function oEditChooser(withCancel)
 			itemWidth,50,
 			xStart+itemWidth*0.5+10+(i%itemNum)*(itemWidth+10),
 			y,
-			function(item)
+			function()
 				oBox("New Animation",
 					function(text)
 						if text == "" then
@@ -163,7 +176,7 @@ local function oEditChooser(withCancel)
 
 		local lNames = oEditor.data[oSd.lookNames]
 		i = 0
-		for k,v in pairs(lNames) do
+		for k,_ in pairs(lNames) do
 			local name = #k > 10 and k:sub(1,7).."..." or k
 			y = yStart-45-math.floor(i/itemNum)*60
 			local button = oButton(name,17,
@@ -196,7 +209,7 @@ local function oEditChooser(withCancel)
 			itemWidth,50,
 			xStart+itemWidth*0.5+10+(i%itemNum)*(itemWidth+10),
 			y,
-			function(item)
+			function()
 				oBox("New Look",
 					function(text)
 						if text == "" then
@@ -255,7 +268,7 @@ local function oEditChooser(withCancel)
 				itemWidth,50,
 				xStart+itemWidth*0.5+10,
 				y,
-				function(item)
+				function()
 					cancelButton:unregisterTapHandler()
 					opMenu.enabled = false
 					panel:hide()
@@ -290,7 +303,7 @@ local function oEditChooser(withCancel)
 			itemWidth,50,
 			xStart+itemWidth*0.5+10,
 			y,
-			function(item)
+			function()
 				cancelButton:unregisterTapHandler()
 				opMenu.enabled = false
 				panel:hide()

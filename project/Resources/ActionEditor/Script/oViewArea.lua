@@ -1,4 +1,30 @@
 local oButton = require("oButton")
+local CCDirector = require("CCDirector")
+local CCLayerColor = require("CCLayerColor")
+local ccColor4 = require("ccColor4")
+local oVec2 = require("oVec2")
+local CCNode = require("CCNode")
+local oLine = require("oLine")
+local CCTouch = require("CCTouch")
+local CCKeypad = require("CCKeypad")
+local oScale = require("oScale")
+local oEase = require("oEase")
+local oPos = require("oPos")
+local oCache = require("oCache")
+local oModel = require("oModel")
+local oListener = require("oListener")
+local CCDrawNode = require("CCDrawNode")
+local CCMenu = require("CCMenu")
+local CCSize = require("CCSize")
+local CCSpawn = require("CCSpawn")
+local oOpacity = require("oOpacity")
+local CCSequence = require("CCSequence")
+local CCCall = require("CCCall")
+local oEvent = require("oEvent")
+local ccColor3 = require("ccColor3")
+local oEditor = require("oEditor").oEditor
+local oKd = require("oEditor").oKd
+local oSd = require("oEditor").oSd
 
 local function oViewArea()
 	local winSize = CCDirector.winSize
@@ -286,7 +312,7 @@ local function oViewArea()
 	rotEditor.setTarget = function(self,target)
 		if target then
 			self:schedule(
-				function(self,deltaTime)
+				function(self)
 					local rot = 0
 					local p = target
 					while p and p ~= crossNode do
@@ -393,7 +419,7 @@ local function oViewArea()
 					parent.contentSize.width*parent.anchor.x,
 					parent.contentSize.height*parent.anchor.y)
 			self:schedule(
-				function(self,deltaTime)
+				function(self)
 					self.position = crossNode:convertToNodeSpace(
 						parent:convertToWorldSpace(
 							target.position-off))
@@ -1060,7 +1086,7 @@ local function oViewArea()
 	button = oButton("Cancel",17,100,50,
 		610+winSize.width*0.5-335,
 		35+winSize.height*0.5-185,
-		function(item)
+		function()
 			oEvent:send("SettingSelected",easeMenuItem)
 		end)
 	button.color = ccColor3(0xffffff)

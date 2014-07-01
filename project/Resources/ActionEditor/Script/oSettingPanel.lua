@@ -1,4 +1,26 @@
 local oTextField = require("oTextField")
+local CCDirector = require("CCDirector")
+local CCSize = require("CCSize")
+local oVec2 = require("oVec2")
+local CCLayer = require("CCLayer")
+local CCDrawNode = require("CCDrawNode")
+local ccColor4 = require("ccColor4")
+local oLine = require("oLine")
+local CCClipNode = require("CCClipNode")
+local CCMenu = require("CCMenu")
+local oEase = require("oEase")
+local CCMenuItem = require("CCMenuItem")
+local CCLabelTTF = require("CCLabelTTF")
+local ccColor3 = require("ccColor3")
+local oEvent = require("oEvent")
+local oOpacity = require("oOpacity")
+local CCTouch = require("CCTouch")
+local CCRect = require("CCRect")
+local oListener = require("oListener")
+local CCSequence = require("CCSequence")
+local oEditor = require("oEditor").oEditor
+local oSd = require("oEditor").oSd
+local oKd = require("oEditor").oKd
 
 local function oSettingPanel()
 	local winSize = CCDirector.winSize
@@ -189,7 +211,7 @@ local function oSettingPanel()
 		local isInput = false
 		if name == "Name :" then
 			label = oTextField(108,7,14,8,
-				function(item)
+				function()
 					oEvent:send("SettingSelected",nil)
 				end)
 			isInput = true

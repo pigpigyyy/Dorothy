@@ -70,6 +70,7 @@ m_callFromLua(0)
 	luaL_openlibs(L);
 	toluafix_open(L);
 	tolua_Cocos2d_open(L);
+
 	// Register our version of the global "print" function
 	const luaL_reg global_functions[] =
 	{
@@ -83,14 +84,18 @@ m_callFromLua(0)
 	// add cocos2dx loader
 	addLuaLoader(cocos2dx_lua_loader);
 
-	tolua_beginmodule(L, "CCDictionary");
-	tolua_variable(L, "keys", CCDictionary_keys, nullptr);
-	tolua_variable(L, "randomObject", CCDictionary_randomObject, nullptr);
-	tolua_function(L, "set", CCDictionary_set);
-	tolua_function(L, "get", CCDictionary_get);
+	tolua_beginmodule(L, 0);
+		tolua_beginmodule(L, "CCDictionary");
+			tolua_variable(L, "keys", CCDictionary_keys, nullptr);
+			tolua_variable(L, "randomObject", CCDictionary_randomObject, nullptr);
+			tolua_function(L, "set", CCDictionary_set);
+			tolua_function(L, "get", CCDictionary_get);
+		tolua_endmodule(L);
 	tolua_endmodule(L);
 
 	tolua_LuaCode_open(L);
+
+	lua_settop(L, 0); // clear stack
 }
 
 CCLuaEngine* CCLuaEngine::sharedEngine()

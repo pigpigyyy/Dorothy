@@ -1,3 +1,12 @@
+--[[local CCScene = require("CCScene")
+local oWorld = require("oWorld")
+local CCLabelTTF = require("CCLabelTTF")
+local oVec2 = require("oVec2")
+local oBodyDef = require("oBodyDef")
+local oBody = require("oBody")
+local oSensor = require("oSensor")
+local CCDirector = require("CCDirector")
+]]
 local scene = CCScene()
 
 local world = oWorld()

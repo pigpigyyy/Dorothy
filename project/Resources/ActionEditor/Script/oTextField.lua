@@ -1,3 +1,13 @@
+local CCTextFieldTTF = require("CCTextFieldTTF")
+local oVec2 = require("oVec2")
+local oLine = require("oLine")
+local ccColor4 = require("ccColor4")
+local CCRepeatForever = require("CCRepeatForever")
+local CCSequence = require("CCSequence")
+local CCShow = require("CCShow")
+local CCDelay = require("CCDelay")
+local CCHide = require("CCHide")
+
 local function oTextField(x,y,fontSize,limit,textChanged)
 	local textField = CCTextFieldTTF("","Arial",fontSize)
 	textField.anchor = oVec2(0.5,0)

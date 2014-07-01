@@ -45,6 +45,7 @@ function M.show_warnings(top_ast)
   local function index(f) -- build abc.def.xyz name recursively
     return (f[1].tag == 'Id' and f[1][1] or index(f[1])) .. '.' .. f[2][1] end
   local isseen, globseen = {}, {}
+  local globals = {}
   LA.walk(top_ast, function(ast)
     local line = ast.lineinfo and ast.lineinfo.first[1] or 0
     local path = ast.lineinfo and ast.lineinfo.first[4] or '?'
@@ -116,6 +117,7 @@ function M.show_warnings(top_ast)
         else
           warn("first use of unknown global variable '" .. name .. "'", line, path)
         end
+		table.insert(globals,name)
       end
     elseif ast.tag == 'Id' and not ast.localdefinition and ast.definedglobal then
       local parent = ast.parent and ast.parent.parent
@@ -141,6 +143,12 @@ function M.show_warnings(top_ast)
       warn("function '" .. name .. "': " .. note, line, path)
     end
   end)
+  if #globals > 0 then
+	  table.insert(warnings,"for first used globals, try add lines below at start of file:")
+	  for i = 1,#globals do
+		table.insert(warnings,"local "..globals[i].." = require(\""..globals[i].."\")")
+	  end
+  end
   return warnings
 end
 

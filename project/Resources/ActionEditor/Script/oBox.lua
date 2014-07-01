@@ -1,5 +1,23 @@
 local oButton = require("oButton")
 local oTextField = require("oTextField")
+local CCDirector = require("CCDirector")
+local CCNode = require("CCNode")
+local CCLayer = require("CCLayer")
+local oVec2 = require("oVec2")
+local CCMenu = require("CCMenu")
+local CCDrawNode = require("CCDrawNode")
+local ccColor4 = require("ccColor4")
+local CCLabelTTF = require("CCLabelTTF")
+local ccColor3 = require("ccColor3")
+local CCSize = require("CCSize")
+local CCMenuItem = require("CCMenuItem")
+local CCSequence = require("CCSequence")
+local CCSpawn = require("CCSpawn")
+local oOpacity = require("oOpacity")
+local oScale = require("oScale")
+local oEase = require("oEase")
+local CCCall = require("CCCall")
+local oEditor = require("oEditor").oEditor
 
 local function oBox(text,okHandler,isInput)
 	local w = CCDirector.winSize.width*0.5
@@ -94,7 +112,7 @@ local function oBox(text,okHandler,isInput)
 
 						local okButton = oButton("OK",17,60,false,
 							0,0,
-							function(item)
+							function()
 								opMenu:removeHandlers()
 								box:hide()
 								if isInput then
@@ -117,7 +135,7 @@ local function oBox(text,okHandler,isInput)
 
 						local cancelButton = oButton("Cancel",17,60,false,
 							70,0,
-							function(item)
+							function()
 								opMenu:removeHandlers()
 								box:hide()
 							end)

@@ -1,3 +1,10 @@
+local CCScene = require("CCScene")
+local oWorld = require("oWorld")
+local oBodyDef = require("oBodyDef")
+local oBody = require("oBody")
+local oVec2 = require("oVec2")
+local CCDirector = require("CCDirector")
+
 local scene = CCScene()
 
 local groupZero = 0

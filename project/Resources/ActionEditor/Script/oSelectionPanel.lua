@@ -1,3 +1,22 @@
+local CCDirector = require("CCDirector")
+local oVec2 = require("oVec2")
+local CCLayer = require("CCLayer")
+local CCMenu = require("CCMenu")
+local CCNode = require("CCNode")
+local CCDrawNode = require("CCDrawNode")
+local ccColor4 = require("ccColor4")
+local CCClipNode = require("CCClipNode")
+local CCSize = require("CCSize")
+local oEase = require("oEase")
+local CCTouch = require("CCTouch")
+local CCRect = require("CCRect")
+local CCSequence = require("CCSequence")
+local CCSpawn = require("CCSpawn")
+local oOpacity = require("oOpacity")
+local oScale = require("oScale")
+local CCCall = require("CCCall")
+local tolua = require("tolua")
+
 local function oSelectionPanel(borderSize,noCliping)
 	local winSize = CCDirector.winSize
 	local halfBW = borderSize.width*0.5

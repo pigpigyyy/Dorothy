@@ -1,5 +1,17 @@
 local oButton = require("oButton")
 local oSelectionPanel = require("oSelectionPanel")
+local CCDirector = require("CCDirector")
+local CCSize = require("CCSize")
+local CCDrawNode = require("CCDrawNode")
+local oVec2 = require("oVec2")
+local ccColor4 = require("ccColor4")
+local CCLabelTTF = require("CCLabelTTF")
+local ccColor3 = require("ccColor3")
+local oOpacity = require("oOpacity")
+local CCSequence = require("CCSequence")
+local CCDelay = require("CCDelay")
+local oEditor = require("oEditor").oEditor
+local oSd = require("oEditor").oSd
 
 local function oLookChooser()
 	local winSize = CCDirector.winSize
@@ -38,13 +50,13 @@ local function oLookChooser()
 		yStart = y-title.contentSize.height
 
 		local lNames = oEditor.data[oSd.lookNames]
-		i = 0
+		local i = 0
 		y = yStart-45-math.floor(i/itemNum)*60
 		local button = oButton("None",17,
 			itemWidth,50,
 			xStart+itemWidth*0.5+10+(i%itemNum)*(itemWidth+10),
 			y,
-			function(item)
+			function()
 				panel:hide()
 				oEditor.look = ""
 				oEditor.viewArea:getModel().look = ""
@@ -58,7 +70,7 @@ local function oLookChooser()
 				oOpacity(0.3,1)
 			}))
 		i = i+1
-		for k,v in pairs(lNames) do
+		for k,_ in pairs(lNames) do
 			local name = #k > 10 and k:sub(1,7).."..." or k
 			y = yStart-45-math.floor(i/itemNum)*60
 			local button = oButton(name,17,

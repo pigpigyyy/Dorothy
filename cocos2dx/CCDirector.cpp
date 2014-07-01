@@ -279,7 +279,7 @@ void CCDirector::calculateDeltaTime()
         m_fDeltaTime = MAX(0, m_fDeltaTime);
     }
 
-#ifdef DEBUG
+#if COCOS2D_DEBUG > 0
     // If we are debugging our code, prevent big delta time
     if(m_fDeltaTime > 0.2f)
     {

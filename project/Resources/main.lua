@@ -1,14 +1,32 @@
 --require("Editor/Script/main")
 require("Test/Entry")
+
+--require("Test/Case/Unit")
 --[[
-local class,property = unpack(require("class"))
+local CCNode = require("CCNode")
+local CCScene = require("CCScene")
+local CCDirector = require("CCDirector")
+local CCArray = require("CCArray")
+local CCDrawNode = require("CCDrawNode")
+local CCDictionary = require("CCDictionary")
+
+local class,property,classfield,classmethod = unpack(require("class"))
 
 local A = class({
 	--self=CCNode
+	__initc = function(cls)
+		cls._count = 0
+	end,
 	__init = function(self,name)
 		self._name = name
+		local cls = getmetatable(self)
+		cls._count = cls._count+1
 		return CCNode()
 	end,
+	objCount = classfield(
+		function(cls)
+			return cls._count
+		end),
 	name = property(
 		function(self)
 			return self._name
@@ -32,17 +50,19 @@ local A = class({
 	flag = "flag",
 })
 
+print(A.objCount)
+
 local B = class(A,{
 	--self=CCScene
 	__init = function(self,name)
 		A.__init(self,name)
 		return CCScene()
 	end,
-	
-	--@static
-	inst = function(cls)
-		return "inst"
-	end,
+
+	inst = classmethod(
+		function()
+			return "inst"
+		end),
 })
 
 B.print = function(self)
@@ -52,8 +72,9 @@ B.print = function(self)
 local b = B("Pig")
 b:print()
 A("child"):print()
-]]
---CCDirector:run(CCScene())
+print(A.objCount,B:inst())
+
+CCDirector:run(CCScene())
 local arr = CCArray({CCNode(),CCDrawNode()})
 --arr[1] = CCClipNode()
 print(arr[1])
@@ -62,7 +83,9 @@ local dict = CCDictionary()
 dict.A = "A"
 dict.B = "B"
 dict.B = CCNode()
+local node = CCNode()
+node.data = dict
 print(dict.randomObject)
 print(dict.randomObject)
 print(dict.randomObject)
-
+]]

@@ -171,7 +171,7 @@ static int tolua_bnd_getpeer(lua_State* L)
 	{
 		lua_pop(L, 1);
 		lua_pushnil(L);
-	};
+	}
 	return 1;
 };
 
@@ -188,13 +188,13 @@ TOLUA_API void tolua_open(lua_State* L)
 		tolua_newmetatable(L, "tolua_class");
 		tolua_module(L, NULL, 0);
 		tolua_beginmodule(L, NULL);
-		tolua_module(L, "tolua", 0);
-		tolua_beginmodule(L, "tolua");
-		tolua_function(L, "type", tolua_bnd_type);
-		tolua_function(L, "cast", tolua_bnd_cast);
-		tolua_function(L, "setpeer", tolua_bnd_setpeer);
-		tolua_function(L, "getpeer", tolua_bnd_getpeer);
-		tolua_endmodule(L);
+			tolua_module(L, "tolua", 0);
+			tolua_beginmodule(L, "tolua");
+				tolua_function(L, "type", tolua_bnd_type);
+				tolua_function(L, "cast", tolua_bnd_cast);
+				tolua_function(L, "setpeer", tolua_bnd_setpeer);
+				tolua_function(L, "getpeer", tolua_bnd_getpeer);
+			tolua_endmodule(L);
 		tolua_endmodule(L);
 	}
 	lua_settop(L, top);
@@ -238,7 +238,13 @@ TOLUA_API void tolua_beginmodule(lua_State* L, const char* name)
 		lua_pushstring(L, name);
 		lua_rawget(L, -2);
 	}
-	else lua_pushvalue(L, LUA_GLOBALSINDEX);
+	else
+	{
+		//lua_pushvalue(L, LUA_GLOBALSINDEX);
+		lua_getglobal(L, "package"); // package
+		lua_getfield(L, -1, "loaded"); // package loaded
+		lua_remove(L, -2); // loaded
+	}
 }
 
 /* End module
@@ -256,7 +262,7 @@ TOLUA_API void tolua_module(lua_State* L, const char* name, int hasvar)
 {
 	if (name)
 	{
-		/* tolua module */
+		/* global table */
 		lua_pushstring(L, name);
 		lua_rawget(L, -2);
 		/* check if module already exists */
@@ -272,8 +278,11 @@ TOLUA_API void tolua_module(lua_State* L, const char* name, int hasvar)
 	}
 	else
 	{
-		/* global table */
-		lua_pushvalue(L, LUA_GLOBALSINDEX);
+		/* get global table */
+		//lua_pushvalue(L, LUA_GLOBALSINDEX);
+		lua_getglobal(L, "package"); // package
+		lua_getfield(L, -1, "loaded"); // package loaded
+		lua_remove(L, -2); // loaded
 	}
 	if (hasvar)
 	{
@@ -446,4 +455,3 @@ TOLUA_API void tolua_dobuffer(lua_State* L, char* B, unsigned int size, const ch
 {
 	if (!luaL_loadbuffer(L, B, size, name)) lua_pcall(L, 0, 0, 0);
 }
-

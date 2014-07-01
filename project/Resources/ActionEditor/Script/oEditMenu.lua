@@ -4,6 +4,22 @@ local oSpriteChooser = require("oSpriteChooser")
 local oEditChooser = require("oEditChooser")
 local oLookChooser = require("oLookChooser")
 local oBox = require("oBox")
+local CCDirector = require("CCDirector")
+local CCMenu = require("CCMenu")
+local oVec2 = require("oVec2")
+local oCache = require("oCache")
+local ccColor3 = require("ccColor3")
+local oEvent = require("oEvent")
+local cclog = require("cclog")
+local CCObject = require("CCObject")
+local CCSequence = require("CCSequence")
+local CCDelay = require("CCDelay")
+local oOpacity = require("oOpacity")
+local oListener = require("oListener")
+local oSd = require("oEditor").oSd
+local oEditor = require("oEditor").oEditor
+local oAd = require("oEditor").oAd
+local oKd = require("oEditor").oKd
 
 local function removeAnimation(sp,index)
 	local aDefs = sp[oSd.animationDefs]
@@ -202,7 +218,6 @@ local function oEditMenu()
 				local pos = oEditor.controlBar:getPos()
 				if oEditor.sprite and pos == oEditor.currentFramePos and (oEditor.keyIndex ~= 2 or #oEditor.animationData == 2) then
 					oBox("Delete\nFrame",function()
-						local sprite = oEditor.sprite
 						local sp = oEditor.spriteData
 						local animationDef = oEditor.animationData
 						if animationDef then
@@ -264,7 +279,6 @@ local function oEditMenu()
 			function()
 				local pos = oEditor.controlBar:getPos()
 				if oEditor.sprite and pos ~= oEditor.currentFramePos then
-					local sprite = oEditor.sprite
 					local sp = oEditor.spriteData
 					local animationDef = oEditor.animationData
 					if not animationDef then
@@ -332,7 +346,7 @@ local function oEditMenu()
 				end
 			end),
 		Look = oButton("Look",16,50,50,winSize.width-205,215,
-			function(item)
+			function()
 				oLookChooser()
 			end),
 		Loop = oButton("Once",16,50,50,winSize.width-205,155,
@@ -363,7 +377,7 @@ local function oEditMenu()
 						model:resume(oEditor.animation)
 						-- update controlBar progress
 						item:schedule(
-							function(self,deltaTime)
+							function(self)
 								--model = oModel
 								if model.playing then
 									local time = model.time * model.duration
@@ -428,7 +442,7 @@ local function oEditMenu()
 				menu:markEditButton(true)
 			end),
 		Add = oButton("Add",16,50,50,winSize.width-205,95,
-			function(item)
+			function()
 				-- item = CCNode
 				if oEditor.spriteData then
 					local chooser = oSpriteChooser()
@@ -464,7 +478,7 @@ local function oEditMenu()
 				end
 			end),
 		Remove = oButton("Delete",16,50,50,winSize.width-205,35,
-			function(item)
+			function()
 				-- item = CCNode
 				if oEditor.spriteData and  oEditor.spriteData[oSd.parent] then
 					local name = oEditor.spriteData[oSd.name]
@@ -484,7 +498,7 @@ local function oEditMenu()
 				end
 			end),
 		Up = oButton("Up",16,50,50,winSize.width-205,215,
-			function(item)
+			function()
 				if oEditor.spriteData and  oEditor.spriteData[oSd.parent] then
 					local sp = oEditor.spriteData
 					local parent = oEditor.spriteData[oSd.parent]
@@ -505,7 +519,7 @@ oEditor.spriteData[oSd.index]
 				end
 			end),
 		Down = oButton("Down",16,50,50,winSize.width-205,155,
-			function(item)
+			function()
 				if oEditor.spriteData and  oEditor.spriteData[oSd.parent] then
 					local sp = oEditor.spriteData
 					local parent = oEditor.spriteData[oSd.parent]
@@ -526,7 +540,7 @@ oEditor.spriteData[oSd.index]
 			end),
 		
 		Change = oButton("Rep",16,50,50,winSize.width-205,275,
-			function(item)
+			function()
 				if oEditor.spriteData and oEditor.spriteData[oSd.parent] then
 					local sp = oEditor.spriteData
 					local chooser = oSpriteChooser()

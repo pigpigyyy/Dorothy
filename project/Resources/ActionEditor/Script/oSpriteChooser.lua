@@ -1,5 +1,21 @@
 local oButton = require("oButton")
 local oSelectionPanel = require("oSelectionPanel")
+local CCDirector = require("CCDirector")
+local CCSize = require("CCSize")
+local CCDrawNode = require("CCDrawNode")
+local oVec2 = require("oVec2")
+local ccColor4 = require("ccColor4")
+local CCMenu = require("CCMenu")
+local oCache = require("oCache")
+local CCSprite = require("CCSprite")
+local CCLabelTTF = require("CCLabelTTF")
+local ccColor3 = require("ccColor3")
+local CCSequence = require("CCSequence")
+local CCDelay = require("CCDelay")
+local oOpacity = require("oOpacity")
+local CCNode = require("CCNode")
+local oEditor = require("oEditor").oEditor
+local oSd = require("oEditor").oSd
 
 local function oSpriteChooser()
 	local winSize = CCDirector.winSize
@@ -42,7 +58,6 @@ local function oSpriteChooser()
 	
 	panel.sprites = {}
 	panel.init = function(self)
-		local i = 2
 		local y = 0
 		local clipFile = oEditor.data[oSd.clipFile]
 		local names = oCache.Clip:getNames(clipFile)
@@ -54,7 +69,7 @@ local function oSpriteChooser()
 				0,
 				100,100,
 				winSize.width*0.5-halfBW+60+((i-1)%6)*110,y,
-				function(item)
+				function()
 					if panel.selected then
 						cancelButton:unregisterTapHandler()
 						panel:hide()

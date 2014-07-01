@@ -1,3 +1,30 @@
+local CCDirector = require("CCDirector")
+local CCSize = require("CCSize")
+local oVec2 = require("oVec2")
+local CCLayer = require("CCLayer")
+local CCDrawNode = require("CCDrawNode")
+local ccColor4 = require("ccColor4")
+local CCClipNode = require("CCClipNode")
+local CCMenu = require("CCMenu")
+local oEase = require("oEase")
+local oLine = require("oLine")
+local CCMenuItem = require("CCMenuItem")
+local CCLabelTTF = require("CCLabelTTF")
+local ccColor3 = require("ccColor3")
+local CCSprite = require("CCSprite")
+local CCSequence = require("CCSequence")
+local oScale = require("oScale")
+local oEvent = require("oEvent")
+local oOpacity = require("oOpacity")
+local CCTouch = require("CCTouch")
+local CCRect = require("CCRect")
+local cclog = require("cclog")
+local tolua = require("tolua")
+local CCNode = require("CCNode")
+local oListener = require("oListener")
+local oSd = require("oEditor").oSd
+local oEditor = require("oEditor").oEditor
+
 local function oViewPanel()
 	local winSize = CCDirector.winSize
 	local borderSize = CCSize(160,310*(winSize.height-90)/510)
@@ -664,7 +691,6 @@ local function oViewPanel()
 			end
 			sp[oSd.sprite] = child
 			local children = sp[oSd.children]
-			local childrenSize = #children
 			for i = 1, #children do
 				visitSprite(children[i],child.children[i])
 			end

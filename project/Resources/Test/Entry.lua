@@ -1,11 +1,16 @@
 local oButton = require("ActionEditor/Script/oButton")
 local oSelectionPanel = require("ActionEditor/Script/oSelectionPanel")
 local Tests = require("Test/Tests")
+local CCDirector = require("CCDirector")
+local CCMenu = require("CCMenu")
+local CCSize = require("CCSize")
+local oVec2 = require("oVec2")
+local oOpacity = require("oOpacity")
+local CCScene = require("CCScene")
 
 local winSize = CCDirector.winSize
 local panel = oSelectionPanel(winSize,true)
 local menu = panel.menu
-local border = panel.border
 
 local opMenu = CCMenu()
 opMenu.contentSize = CCSize(60,60)

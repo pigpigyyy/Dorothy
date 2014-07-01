@@ -1,3 +1,16 @@
+local CCNode = require("CCNode")
+local CCDrawNode = require("CCDrawNode")
+local oVec2 = require("oVec2")
+local ccColor4 = require("ccColor4")
+local CCSize = require("CCSize")
+local oLine = require("oLine")
+local CCMenuItem = require("CCMenuItem")
+local CCLabelTTF = require("CCLabelTTF")
+local oScale = require("oScale")
+local oEase = require("oEase")
+local oOpacity = require("oOpacity")
+local ccColor3 = require("ccColor3")
+
 local function oButton(text, fontSize, width, height, x, y,tapped)
 	local node = CCNode()
 	node.cascadeColor = false
@@ -56,7 +69,7 @@ local function oButton(text, fontSize, width, height, x, y,tapped)
 	local scale = oScale(0.3,1.0,1.0,oEase.OutBack)
 	local fade = oOpacity(0.3,0.4,oEase.InExpo)
 	menuItem:registerTapHandler(
-		function(eventType, item)
+		function(eventType)
 			--item = CCMenuItem
 			if eventType == CCMenuItem.TapBegan then
 				if not fade.done then

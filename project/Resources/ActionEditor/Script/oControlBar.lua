@@ -1,3 +1,22 @@
+local CCDirector = require("CCDirector")
+local CCLayer = require("CCLayer")
+local oVec2 = require("oVec2")
+local CCSize = require("CCSize")
+local CCDrawNode = require("CCDrawNode")
+local ccColor4 = require("ccColor4")
+local oEvent = require("oEvent")
+local CCLabelTTF = require("CCLabelTTF")
+local CCNode = require("CCNode")
+local CCClipNode = require("CCClipNode")
+local oOpacity = require("oOpacity")
+local oEase = require("oEase")
+local oListener = require("oListener")
+local CCTouch = require("CCTouch")
+local CCRect = require("CCRect")
+local oEditor = require("oEditor").oEditor
+local oAd = require("oEditor").oAd
+local oKd = require("oEditor").oKd
+
 local function oControlBar()
     local winSize = CCDirector.winSize
 	local barDragPos = 50
@@ -66,7 +85,7 @@ local function oControlBar()
 		local i = lastSize
 		-- update ruler interval by step, not all at once
 		self:schedule(
-			function(self,deltaTime)
+			function(self)
 				if i <= self._size then
 					local posX = delta*i
 					if i == 0 or (i%10 == 0 and i ~= lastSize) then
@@ -300,7 +319,7 @@ local function oControlBar()
 		controlBar:setPos(pos)
 	end
 	
-	controlBar.getTime = function(self,time)
+	controlBar.getTime = function(self)
 		return bar:getPos()/60
 	end
 	
