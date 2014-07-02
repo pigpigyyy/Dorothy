@@ -85,4 +85,17 @@ loaded.CCTextureCache = require("CCTextureCache")()
 
 loaded.oContent= require("oContent")()
 loaded.oData= require("oData")()
+
+Dorothy = (function()
+	local tb
+	local function gettb()
+		tb = {}
+		for k,v in pairs(package.loaded) do
+			tb[k] = v
+		end
+		setmetatable(tb,{__index=_G})
+		return tb
+	end
+	return function() return tb or gettb() end
+end)()
 $]

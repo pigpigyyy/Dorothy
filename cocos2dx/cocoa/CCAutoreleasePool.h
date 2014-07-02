@@ -49,7 +49,7 @@ public:
 
 class CC_DLL CCPoolManager
 {
-    CCArray*    m_pReleasePoolStack;    
+    CCArray*    m_pReleasePoolStack;
     CCAutoreleasePool*                    m_pCurReleasePool;
 
     CCAutoreleasePool* getCurReleasePool();

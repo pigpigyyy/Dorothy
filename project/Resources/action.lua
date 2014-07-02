@@ -2,6 +2,7 @@ local yield = coroutine.yield
 local wrap = coroutine.wrap
 local create = coroutine.create
 local resume = coroutine.resume
+local status = coroutine.status
 local CCDirector = require("CCDirector")
 
 local seconds = function(duration)
@@ -22,8 +23,8 @@ local wait = (function()
 end)()
 
 local once = function(job)
-	return wrap(function()
-		job()
+	return wrap(function(...)
+		job(...)
 		return true
 	end)
 end
@@ -33,8 +34,8 @@ local loop = function(job)
 		local _job = job
 		local worker = create(_job)
 		repeat
-			local running,result = resume(worker,...)
-			if not running then
+			local _,result = resume(worker,...)
+			if status(worker) == "dead"then
 				worker = create(_job)
 			end
 			yield(result)
