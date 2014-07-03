@@ -6,6 +6,7 @@ local oVec2 = require("oVec2")
 setfenv(1,Dorothy())
 local wait,once,loop,seconds = unpack(require("action"))
 local oRoutine = require("oRoutine")
+local oTextField = require("ActionEditor/Script/oTextField")
 
 --[[
 local model = oModel("ActionEditor/Model/Output/xiaoli.model")
@@ -37,13 +38,14 @@ local unit = oUnit(unitDef,world,oVec2(400,300))
 unit.group = 1
 unit:doIt(oAction.Walk)
 
-
+--[[
 local routine = loop(function()
 	wait(seconds(5))
 	wait(function() return not unit.onSurface end)
 	unit:doIt(oAction.Walk)
 end)
 oRoutine(routine)
+--]]
 
 local bodyDef = oBodyDef()
 bodyDef:attachPolygon(800,10,1,0.4,0.4)
@@ -56,6 +58,20 @@ world:addChild(unit)
 world:addChild(body)
 --scene:addChild(model)
 --scene:addChild(model2)
+
+local textField = oTextField(120,18,17,10,
+	function(self)
+		print(self.text)
+		self.text = ""
+		oRoutine(once(function()
+			wait(seconds(0))
+			self:attachWithIME()
+		end))
+	end)
+textField.anchor = oVec2.zero
+textField.position = oVec2(2,1)
+textField:attachWithIME()
+scene:addChild(textField)
 
 CCDirector:run(scene)
 

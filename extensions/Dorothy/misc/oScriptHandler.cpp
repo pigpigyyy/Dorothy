@@ -27,6 +27,15 @@ oScriptHandler* oScriptHandler::create(int handler)
 	return scriptHandler;
 }
 
+void oScriptHandler::set(int handler)
+{
+	if (_handler)
+	{
+		CCScriptEngine::sharedEngine()->removeScriptHandler(_handler);
+	}
+	_handler = handler;
+}
+
 int oScriptHandler::get() const
 {
 	return _handler;

@@ -55,7 +55,7 @@ TOLUA_API int toluafix_isfunction(lua_State* L, int lo, tolua_Error* err)
     }
     err->index = lo;
     err->array = 0;
-    err->type = "[not function]";
+    err->type = "function";
     return 0;
 }
 

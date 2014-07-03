@@ -17,6 +17,7 @@ class oScriptHandler: public CCObject
 public:
 	~oScriptHandler();
 	static oScriptHandler* create(int handler);
+	void set(int handler);
 	int get() const;
 private:
 	oScriptHandler(int handler);
