@@ -20,6 +20,8 @@ model2.loop = true
 model2:play("attack")
 ]]
 
+oAction:add
+
 local world = oPlatformWorld()
 
 local unitDef = oUnitDef()

@@ -80,7 +80,8 @@ public:
 	virtual int executeFunction(int nHandler, int paramCount, CCObject* params[]);
 	virtual int executeFunction(int nHandler, int paramCount, void* params[], const char* paramNames[]);
 	virtual int executeFunction(int nHandler, int paramCount = 0);
-
+	
+	virtual int executeActionCreate(int nHandler);
 	virtual int executeActionUpdate(int nHandler, void* param, const char* paramName, float deltaTime);
 	virtual int executeNodeEvent(CCNode* pNode, int nAction);
 	virtual int executeAppEvent(int nHandler, int eventType);
@@ -97,6 +98,8 @@ public:
 	virtual bool scriptHandlerEqual(int nHandlerA, int nHandlerB);
 private:
 	CCLuaEngine();
+	int lua_invoke(int numArgs);
+	int lua_invoke(int nHandler, int numArgs);
 	int lua_execute(int numArgs);
 	int lua_execute(int nHandler, int numArgs);
 	lua_State* L;

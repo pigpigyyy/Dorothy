@@ -132,6 +132,7 @@ public:
 	virtual int executeFunction(int nHandler, int paramCount, void* params[], const char* paramNames[]);
 	virtual int executeFunction(int nHandler, int paramCount = 0);
 
+	virtual int executeActionCreate(int nHandler);
 	virtual int executeActionUpdate(int nHandler, void* param, const char* paramName, float deltaTime);
     /**
      @brief Execute a node event function
@@ -140,8 +141,7 @@ public:
      @return The integer value returned from the script function.
      */
     virtual int executeNodeEvent(CCNode* pNode, int nAction);
-	virtual int executeAppEvent(int nHandler, int eventType);
-    virtual int executeMenuItemEvent(int eventType, CCMenuItem* pMenuItem);
+	virtual int executeMenuItemEvent(int eventType, CCMenuItem* pMenuItem);
     /** Execute a notification event function */
     virtual int executeNotificationEvent(CCNotificationCenter* pNotificationCenter, const char* pszName);
     

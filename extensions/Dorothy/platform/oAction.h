@@ -31,8 +31,7 @@ public:
 	float reaction;
 	float recovery;
 	oRef<oScriptHandler> available;
-	oRef<oScriptHandler> run;
-	oRef<oScriptHandler> update;
+	oRef<oScriptHandler> create;
 	oRef<oScriptHandler> stop;
 	oAction* toAction(oUnit* unit);
 };
@@ -66,8 +65,7 @@ public:
 		float reaction,
 		float recovery,
 		int available,
-		int run,
-		int update,
+		int create,
 		int stop);
 	static void clear();
 	static const int UserID;
@@ -92,7 +90,7 @@ public:
 	virtual void stop();
 private:
 	oRef<oScriptHandler> _available;
-	oRef<oScriptHandler> _run;
+	oRef<oScriptHandler> _create;
 	oRef<oScriptHandler> _update;
 	oRef<oScriptHandler> _stop;
 	friend class oActionDef;

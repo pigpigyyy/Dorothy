@@ -3634,8 +3634,8 @@ local Dorothy =
 			},
 			add =
 			{
-				args = "(id: int, priority: int, reaction: float, recovery: float, available: function, run: function, update: function, stop: function)",
-				description = "[Class Method] Add a new action type with its own special id, properties and functions.\n\navailable -- isStarted: boolean function(self: oAction)\n\nrun -- function(self: oAction)\n\nupdate -- function(self: oAction, deltaTime: float)\n\nstop -- function(self: oAction)",
+				args = "(id: int, priority: int, reaction: float, recovery: float, available: function, create: function, stop: function)",
+				description = "[Class Method] Add a new action type with its own special id, properties and functions.\n\navailable -- isStarted: boolean function(self: oAction)\n\ncreate -- function()\n\nstop -- function(self: oAction)\n\ncreate -> return function(self: oAction)",
 				returns = "()",
 				static = true,
 				type = "method"

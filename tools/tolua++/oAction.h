@@ -26,8 +26,7 @@ class oAction
 		float reaction,
 		float recovery,
 		tolua_function available,
-		tolua_function run,
-		tolua_function update,
+		tolua_function create,
 		tolua_function stop);
 	static void clear();
 	static tolua_readonly const int UserID;

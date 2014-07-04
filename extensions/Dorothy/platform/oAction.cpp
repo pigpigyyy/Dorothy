@@ -31,8 +31,7 @@ oAction* oActionDef::toAction(oUnit* unit)
 	action->reaction = reaction;
 	action->recovery = recovery;
 	action->_available = available;
-	action->_run = run;
-	action->_update = update;
+	action->_create = create;
 	action->_stop = stop;
 	return action;
 }
@@ -137,7 +136,7 @@ oAction* oAction::create( int id, oUnit* unit )
 	return nullptr;
 }
 
-void oAction::add( int id, int priority, float reaction, float recovery, int available, int run, int update, int stop )
+void oAction::add( int id, int priority, float reaction, float recovery, int available, int create, int stop )
 {
 	if (oAction::UserID <= id)
 	{
@@ -147,8 +146,7 @@ void oAction::add( int id, int priority, float reaction, float recovery, int ava
 		actionDef->reaction = reaction;
 		actionDef->recovery = recovery;
 		actionDef->available = oScriptHandler::create(available);
-		actionDef->run = oScriptHandler::create(run);
-		actionDef->update = oScriptHandler::create(update);
+		actionDef->create = oScriptHandler::create(create);
 		actionDef->stop = oScriptHandler::create(stop);
 		_actionDefs[id] = oOwnMake(actionDef);
 	}
@@ -220,10 +218,10 @@ bool oScriptAction::isAvailable()
 
 void oScriptAction::run()
 {
-	void* params[] = {this};
-	const char* paramNames[] = {"oAction"};
-	CCScriptEngine::sharedEngine()->executeFunction(_run->get(), 1, params, paramNames);
 	oAction::run();
+	int handler = CCScriptEngine::sharedEngine()->executeActionCreate(_create->get());
+	_update = oScriptHandler::create(handler);
+	CCScriptEngine::sharedEngine()->executeActionUpdate(_update->get(), this, "oAction", 0);
 }
 
 void oScriptAction::update( float dt )
@@ -234,6 +232,7 @@ void oScriptAction::update( float dt )
 
 void oScriptAction::stop()
 {
+	_update = nullptr;
 	void* params[] = {this};
 	const char* paramNames[] = {"oAction"};
 	CCScriptEngine::sharedEngine()->executeFunction(_stop->get(), 1, params, paramNames);

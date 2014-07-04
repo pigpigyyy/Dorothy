@@ -314,7 +314,7 @@ static int traceback(lua_State* L)
 	return 1;
 }
 
-int CCLuaEngine::lua_execute(int numArgs)
+int CCLuaEngine::lua_invoke(int numArgs)
 {
 #ifndef TOLUA_RELEASE
 	int functionIndex = -(numArgs + 1);
@@ -341,18 +341,25 @@ int CCLuaEngine::lua_execute(int numArgs)
 #else
 	lua_call(L, numArgs, 1);
 #endif
-	// get return value
-	int ret = 0;
-	if (lua_isnumber(L, -1))// traceback ret
-	{
-		ret = lua_tointeger(L, -1);
-	}
-	else if (lua_isboolean(L, -1))
-	{
-		ret = lua_toboolean(L, -1);
-	}
+	return 1;
+}
 
-	lua_settop(L, 0);// stack clear
+int CCLuaEngine::lua_execute(int numArgs)
+{
+	int ret = 0;
+	if (lua_invoke(numArgs))
+	{
+		// get return value
+		if (lua_isnumber(L, -1))// traceback ret
+		{
+			ret = lua_tointeger(L, -1);
+		}
+		else if (lua_isboolean(L, -1))
+		{
+			ret = lua_toboolean(L, -1);
+		}
+		lua_settop(L, 0);// stack clear
+	}
 	return ret;
 }
 
@@ -368,6 +375,32 @@ int CCLuaEngine::lua_execute(int nHandler, int numArgs)
 	if (numArgs > 0) lua_insert(L, -(numArgs + 1));// func args...
 
 	return lua_execute(numArgs);
+}
+
+int CCLuaEngine::lua_invoke(int nHandler, int numArgs)
+{
+	toluafix_get_function_by_refid(L, nHandler);// args... func
+	if (!lua_isfunction(L, -1))
+	{
+		CCLOG("[LUA ERROR] function refid '%d' does not reference a Lua function", nHandler);
+		lua_pop(L, 1);
+		return 0;
+	}
+	if (numArgs > 0) lua_insert(L, -(numArgs + 1));// func args...
+
+	return lua_invoke(numArgs);
+}
+
+int CCLuaEngine::executeActionCreate(int nHandler)
+{
+	int handler = 0;
+	lua_invoke(nHandler,0);
+	if (lua_isfunction(L, -1))
+	{
+		handler = toluafix_ref_function(L, -1);
+	}
+	lua_settop(L, 0);
+	return handler;
 }
 
 NS_CC_END
