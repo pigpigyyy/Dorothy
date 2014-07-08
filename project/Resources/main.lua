@@ -1,26 +1,31 @@
---[[local CCScene = require("CCScene")
-local CCDirector = require("CCDirector")
-local oModel = require("oModel")
-local oVec2 = require("oVec2")
---]]
 setfenv(1,Dorothy())
-local wait,once,loop,seconds = unpack(require("action"))
-local oRoutine = require("oRoutine")
+local wait = oRoutine.wait
+local once = oRoutine.once
+local loop = oRoutine.loop
+local seconds = oRoutine.seconds
+local cycle = oRoutine.cycle
 local oTextField = require("ActionEditor/Script/oTextField")
 
---[[
-local model = oModel("ActionEditor/Model/Output/xiaoli.model")
-model.position = oVec2(400,300)
-model.loop = true
-model:play("walk")
-
-local model2 = oModel("ActionEditor/Model/Output/xiaoli.model")
-model2.position = oVec2(500,350)
-model2.loop = true
-model2:play("attack")
-]]
-
-oAction:add
+oAction:add(oAction.UserID,998,0,0,
+	--self=oAction
+	function(self)
+		return true
+	end,
+	function(self)
+		print("begin")
+		local owner = self.owner
+		wait(cycle(1,
+			function()
+				owner.velocityX = 100
+			end))
+		wait(cycle(1,
+			function()
+				owner.velocityX = -100
+			end))
+	end,
+	function(self)
+		print("end")
+	end)
 
 local world = oPlatformWorld()
 
@@ -34,11 +39,12 @@ unitDef.move = 40
 unitDef:setActions(
 {
 	oAction.Walk,
+	oAction.UserID
 })
 
 local unit = oUnit(unitDef,world,oVec2(400,300))
 unit.group = 1
-unit:doIt(oAction.Walk)
+unit:doIt(oAction.UserID)
 
 --[[
 local routine = loop(function()
@@ -90,4 +96,4 @@ local ClassA = class(
 local a = ClassA()
 print(a.name)
 a:show()
-]]
+--]]

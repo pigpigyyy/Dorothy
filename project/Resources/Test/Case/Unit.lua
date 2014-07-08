@@ -1,5 +1,7 @@
 local oButton = require("ActionEditor/Script/oButton")
-local wait,_,loop,seconds = unpack(require("action"))
+local wait = require("oRoutine").wait
+local loop = require("oRoutine").loop
+local seconds = require("oRoutine").seconds
 
 local oPlatformWorld = require("oPlatformWorld")
 local oAI = require("oAI")

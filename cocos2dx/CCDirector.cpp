@@ -130,6 +130,7 @@ bool CCDirector::init()
 	m_uTotalFrames = m_uFrames = 0;
 	m_pszFPS = new char[10];
 	
+	m_fDeltaTime = 0.0f;
 	m_fUpdateInterval = 0.0f;
 	m_fDrawInterval = 0.0f;
 	CCTime::gettimeofdayCocos2d(&s_obTickStart, NULL);

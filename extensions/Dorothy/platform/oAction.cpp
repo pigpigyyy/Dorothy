@@ -226,7 +226,10 @@ void oScriptAction::run()
 
 void oScriptAction::update( float dt )
 {
-	CCScriptEngine::sharedEngine()->executeActionUpdate(_update->get(), this, "oAction", dt);
+	if (CCScriptEngine::sharedEngine()->executeActionUpdate(_update->get(), this, "oAction", dt) != 0)
+	{
+		oScriptAction::stop();
+	}
 	oAction::update(dt);
 }
 

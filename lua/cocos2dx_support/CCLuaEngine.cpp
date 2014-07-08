@@ -366,6 +366,7 @@ int CCLuaEngine::lua_execute(int numArgs)
 int CCLuaEngine::lua_execute(int nHandler, int numArgs)
 {
 	toluafix_get_function_by_refid(L, nHandler);// args... func
+	int t = lua_type(L, -1);
 	if (!lua_isfunction(L, -1))
 	{
 		CCLOG("[LUA ERROR] function refid '%d' does not reference a Lua function", nHandler);
@@ -395,9 +396,10 @@ int CCLuaEngine::executeActionCreate(int nHandler)
 {
 	int handler = 0;
 	lua_invoke(nHandler,0);
-	if (lua_isfunction(L, -1))
+	int top = lua_gettop(L);
+	if (lua_isfunction(L, top))
 	{
-		handler = toluafix_ref_function(L, -1);
+		handler = toluafix_ref_function(L, top);
 	}
 	lua_settop(L, 0);
 	return handler;
