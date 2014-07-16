@@ -447,6 +447,9 @@
     <ClCompile Include="..\actions\CCActionEase.cpp">
       <Filter>actions</Filter>
     </ClCompile>
+    <ClCompile Include="..\platform\CCKeyboard.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\base_nodes\CCAtlasNode.h">
@@ -905,6 +908,9 @@
     </ClInclude>
     <ClInclude Include="..\cocoa\CCInteger.h">
       <Filter>cocoa</Filter>
+    </ClInclude>
+    <ClInclude Include="..\platform\CCKeyboard.h">
+      <Filter>platform</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

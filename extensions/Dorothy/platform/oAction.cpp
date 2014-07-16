@@ -44,7 +44,7 @@ _id(id),
 _priority(priority),
 _isDoing(false),
 _owner(owner),
-reaction(0.0f)
+reaction(-1.0f)
 { }
 
 oAction::~oAction()
@@ -89,12 +89,16 @@ void oAction::run()
 
 void oAction::update( float dt )
 {
-	_reflexDelta += dt;
-	if (_reflexDelta >= _owner->sensity + oAction::reaction)
+	float reactionTime = _owner->sensity * oAction::reaction;
+	if (reactionTime >= 0)
 	{
-		_reflexDelta = 0.0f;
-		//Check AI here
-		oAI::conditionedReflex(_owner);
+		_reflexDelta += dt;
+		if (_reflexDelta >= reactionTime)
+		{
+			_reflexDelta = 0.0f;
+			//Check AI here
+			oAI::conditionedReflex(_owner);
+		}
 	}
 }
 
@@ -262,9 +266,11 @@ void oWalk::run()
 	model->setLoop(true);
 	model->setLook(oID::LookHappy);
 	model->setRecovery(oAction::recovery);
-	model->play(oID::AnimationWalk);
-	float move = _owner->move * _owner->moveSpeed;
-	_owner->setVelocityX(_owner->isFaceRight() ? move : -move);
+	model->resume(oID::AnimationWalk);
+	_eclapsed = 0.0f;
+	_duration = model->getDuration() * _owner->moveSpeed * 0.25f;
+	//float move = _owner->move * _owner->moveSpeed;
+	//_owner->setVelocityX(_owner->isFaceRight() ? move : -move);
 	oAction::run();
 }
 
@@ -273,6 +279,11 @@ void oWalk::update(float dt)
 	if (_owner->isOnSurface())
 	{
 		float move = _owner->move * _owner->moveSpeed;
+		if (_eclapsed < _duration)
+		{
+			_eclapsed += dt;
+			move *= (_eclapsed / _duration);
+		}
 		_owner->setVelocityX(_owner->isFaceRight() ? move : -move);
 	}
 	else
@@ -285,7 +296,7 @@ void oWalk::update(float dt)
 void oWalk::stop()
 {
 	oAction::stop();
-	_owner->getModel()->stop();
+	_owner->getModel()->pause();
 }
 
 oAction* oWalk::create(oUnit* unit)
@@ -797,9 +808,9 @@ const int oID::PriorityStop = 2147483647;
 const int oID::PriorityHit = 4;
 const int oID::PriorityDie = 5;
 
-const float oID::ReactionWalk = 0.05f;
-const float oID::ReactionIdle = 0.2f;
-const float oID::ReactionJump = 0.05f;
+const float oID::ReactionWalk = 1.5f;
+const float oID::ReactionIdle = 2.0f;
+const float oID::ReactionJump = 1.5f;
 
 const float oID::RecoveryWalk = 0.1f;
 const float oID::RecoveryAttack = 0.2f;

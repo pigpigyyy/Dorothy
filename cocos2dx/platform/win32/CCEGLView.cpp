@@ -32,6 +32,7 @@ THE SOFTWARE.
 #include "keypad_dispatcher/CCKeypadDispatcher.h"
 #include "support/CCPointExtension.h"
 #include "CCApplication.h"
+#include "platform/CCKeyboard.h"
 
 NS_CC_BEGIN
 
@@ -517,12 +518,14 @@ LRESULT CCEGLView::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
         {
             (*m_lpfnAccelerometerKeyHook)( message,wParam,lParam );
         }
+		CCKeyboard::shared()->updateKey(wParam, true);
         break;
     case WM_KEYUP:
         if ( m_lpfnAccelerometerKeyHook!=NULL )
         {
             (*m_lpfnAccelerometerKeyHook)( message,wParam,lParam );
-        }
+		}
+		CCKeyboard::shared()->updateKey(wParam, false);
         break;
     case WM_CHAR:
         {

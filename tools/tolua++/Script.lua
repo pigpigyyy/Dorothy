@@ -7,6 +7,7 @@ loaded.CCApplication = require("CCApplication")()
 loaded.CCDirector = require("CCDirector")()
 loaded.CCUserDefault = require("CCUserDefault")()
 loaded.CCTextureCache = require("CCTextureCache")()
+loaded.CCKeyboard = require("CCKeyboard")()
 loaded.oContent= require("oContent")()
 loaded.oData= require("oData")()
 
