@@ -5001,6 +5001,39 @@ local Dorothy =
 		type = "class",
 		index = index()
 	},
+	CCKeyboard =
+	{
+		childs =
+		{
+			isKeyDown =
+			{
+				args = "(key: uint8)",
+				description = "",
+				returns = "(state: bool)",
+				static = true,
+				type = "method"
+			},
+			isKeyUp =
+			{
+				args = "(key: uint8)",
+				description = "",
+				returns = "(state: bool)",
+				static = true,
+				type = "method"
+			},
+			isKeyPressed =
+			{
+				args = "(key: uint8)",
+				description = "",
+				returns = "(state: bool)",
+				static = true,
+				type = "method"
+			},
+		},
+		description = "class CCKeyboard.\n [Only available in Win32]",
+		type = "class",
+		index = index()
+	},
 	oPos =
 	{
 		args = "(duration: float, posX: float, posY: float, easeId: uint8 = oEase.Linear)",
@@ -5785,6 +5818,11 @@ local Dorothy =
 			reflexArc =
 			{
 				description = "[int]",
+				type = "value"
+			},
+			scale =
+			{
+				description = "[float]",
 				type = "value"
 			},
 			sensity =

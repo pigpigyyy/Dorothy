@@ -14,6 +14,7 @@ class oUnitDef: public CCObject
 	};
 	
 	tolua_property__bool bool static;
+	tolua_property__common float scale;
 	tolua_property__common float density;
 	tolua_property__common float friction;
 	tolua_property__common float restitution;

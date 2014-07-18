@@ -49,6 +49,7 @@ $pfile "CCTileMapAtlas.h"
 $pfile "CCTMXLayer.h"
 $pfile "CCTMXTiledMap.h"
 $pfile "CCTouch.h"
+$pfile "CCKeyboard.h"
 
 $pfile "oModel.h"
 $pfile "oAnimation.h"

@@ -29,6 +29,7 @@ public:
 	PROPERTY_NAME(float, Density);
 	PROPERTY_NAME(float, Friction);
 	PROPERTY_NAME(float, Restitution);
+	PROPERTY(float, _scale, Scale);
 	PROPERTY_BOOL_NAME(Static);
 	PROPERTY_READONLY(oModelDef*, ModelDef);
 	PROPERTY_READONLY(oBodyDef*, BodyDef);
@@ -63,6 +64,7 @@ public:
 	static oUnitDef* create();
 protected:
 	oUnitDef();
+	void updateBodyDef();
 	oRef<oBodyDef> _bodyDef;
 	oRef<oModelDef> _modelDef;
 	float _density;

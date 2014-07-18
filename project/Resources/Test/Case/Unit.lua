@@ -30,7 +30,7 @@ local aiTag = 1
 oAI:add(aiTag,oAct(oAction.Idle))
 
 local unitDef = oUnitDef()
-unitDef.model = "ActionEditor/Model/Output/xiaoli.model"
+unitDef.model = "ActionEditor/Model/Output/jiandunA.model"
 unitDef.static = false
 unitDef.move = 100
 unitDef.density = 1
@@ -47,6 +47,7 @@ unitDef:setActions(
 })
 
 local unit = oUnit(unitDef,world,oVec2(400,300))
+unit.moveSpeed = 0.9
 unit.group = 1
 world:addChild(unit)
 unit:schedule(
