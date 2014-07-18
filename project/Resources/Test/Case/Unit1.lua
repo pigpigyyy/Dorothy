@@ -121,8 +121,6 @@ textField.position = oVec2(2,1)
 textField:attachWithIME()
 scene:addChild(textField)
 
-print("key",CCKeyboard:isKeyDown(string.byte("A")))
-
 CCDirector:run(scene)
 
 --[[local class,property,classfield,classmethod = unpack(require("class"))

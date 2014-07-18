@@ -5820,6 +5820,11 @@ local Dorothy =
 				description = "[int]",
 				type = "value"
 			},
+			scale =
+			{
+				description = "[float]",
+				type = "value"
+			},
 			sensity =
 			{
 				description = "[float]",

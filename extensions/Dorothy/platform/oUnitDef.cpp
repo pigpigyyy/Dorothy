@@ -29,6 +29,7 @@ bool oUnitDef::usePreciseHit = true;
 oUnitDef::oUnitDef() :
 type(0),
 reflexArc(oAI::None),
+_scale(1.0f),
 sensity(0),
 move(0),
 jump(0),
@@ -105,13 +106,23 @@ float oUnitDef::getRestitution() const
 	return _restitution;
 }
 
-void oUnitDef::setModel(const string& modelFile)
+void oUnitDef::setScale(float var)
 {
-	_model = modelFile;
-	if (!modelFile.empty())
+	_scale = var;
+	oUnitDef::updateBodyDef();
+}
+float oUnitDef::getScale() const
+{
+	return _scale;
+}
+
+void oUnitDef::updateBodyDef()
+{
+	if (_modelDef)
 	{
-		_modelDef = oSharedModelCache.load(modelFile.c_str());
 		CCSize size = _modelDef->getSize();
+		size.width *= _scale;
+		size.height *= _scale;
 		if (size != CCSize::zero)
 		{
 			_bodyDef->clearFixtures();
@@ -133,6 +144,16 @@ void oUnitDef::setModel(const string& modelFile)
 				b2Vec2(0, -hh - GROUND_SENSOR_HEIGHT * 0.5f),
 				0);
 		}
+	}
+}
+
+void oUnitDef::setModel(const string& modelFile)
+{
+	_model = modelFile;
+	if (!modelFile.empty())
+	{
+		_modelDef = oSharedModelCache.load(modelFile.c_str());
+		oUnitDef::updateBodyDef();
 	}
 }
 const string& oUnitDef::getModel() const

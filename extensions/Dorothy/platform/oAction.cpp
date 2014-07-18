@@ -269,8 +269,6 @@ void oWalk::run()
 	model->resume(oID::AnimationWalk);
 	_eclapsed = 0.0f;
 	_duration = model->getDuration() * _owner->moveSpeed * 0.25f;
-	//float move = _owner->move * _owner->moveSpeed;
-	//_owner->setVelocityX(_owner->isFaceRight() ? move : -move);
 	oAction::run();
 }
 
@@ -282,7 +280,7 @@ void oWalk::update(float dt)
 		if (_eclapsed < _duration)
 		{
 			_eclapsed += dt;
-			move *= (_eclapsed / _duration);
+			move *= MIN(_eclapsed / _duration, 1.0f);
 		}
 		_owner->setVelocityX(_owner->isFaceRight() ? move : -move);
 	}
