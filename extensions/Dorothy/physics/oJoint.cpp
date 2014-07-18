@@ -160,6 +160,7 @@ oMoveJoint* oJoint::move(
 	jointDef.maxForce = maxForce;
 	jointDef.frequencyHz = frequency;
 	jointDef.dampingRatio = damping;
+	jointDef.collideConnected = true;
 	oMoveJoint* joint = new oMoveJoint();
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);

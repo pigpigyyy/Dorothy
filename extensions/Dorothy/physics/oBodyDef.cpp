@@ -32,7 +32,7 @@ void oBodyDef::attachPolygon( const oVec2& center, float width, float height, fl
 	shape->SetAsBox(oWorld::b2Val(width * 0.5f),
 		oWorld::b2Val(height * 0.5f),
 		oWorld::b2Val(center),
-		angle);
+		-CC_DEGREES_TO_RADIANS(angle));
 	b2FixtureDef* fixtureDef = new b2FixtureDef();
 	fixtureDef->shape = shape;
 	fixtureDef->density = density;
@@ -176,7 +176,7 @@ void oBodyDef::attachPolygonSensor( int tag, float width, float height, const oV
 	shape->SetAsBox(oWorld::b2Val(width * 0.5f),
 		oWorld::b2Val(height * 0.5f),
 		oWorld::b2Val(center),
-		angle);
+		-CC_DEGREES_TO_RADIANS(angle));
 	b2FixtureDef* fixtureDef = new b2FixtureDef();
 	fixtureDef->shape = shape;
 	fixtureDef->isSensor = true;
@@ -232,7 +232,7 @@ void oBodyDef::attachCircleSensor( int tag, float radius )
 
 b2FixtureDef* oBodyDef::polygon( const oVec2& center, float width, float height, float angle, float density, float friction, float restitution )
 {
-	_polygenShape.SetAsBox(oWorld::b2Val(width * 0.5f), oWorld::b2Val(height * 0.5f), oWorld::b2Val(center), angle);
+	_polygenShape.SetAsBox(oWorld::b2Val(width * 0.5f), oWorld::b2Val(height * 0.5f), oWorld::b2Val(center), -CC_DEGREES_TO_RADIANS(angle));
 	_fixtureDef.shape = &_polygenShape;
 	_fixtureDef.density = density;
 	_fixtureDef.friction = friction;
