@@ -65,13 +65,14 @@ oAI:add(1,oSel({
 local world = oPlatformWorld()
 
 local unitDef = oUnitDef()
-unitDef.model = "ActionEditor/Model/Output/xiaoli.model"
+unitDef.model = "ActionEditor/Model/Output/doll.model"
 unitDef.static = false
 unitDef.density = 1
 unitDef.restitution = 0.4
 unitDef.friction = 0.4
-unitDef.move = 80
+unitDef.move = 100
 unitDef.sensity = 0
+--unitDef.scale = 0.5
 unitDef:setActions(
 {
 	oAction.Walk,
@@ -106,7 +107,7 @@ world:addChild(unit)
 world:addChild(body)
 --scene:addChild(model)
 --scene:addChild(model2)
-
+--[[
 local textField = oTextField(120,18,17,10,
 	function(self)
 		print(self.text)
@@ -120,6 +121,7 @@ textField.anchor = oVec2.zero
 textField.position = oVec2(2,1)
 textField:attachWithIME()
 scene:addChild(textField)
+--]]
 
 CCDirector:run(scene)
 

@@ -416,7 +416,7 @@ void oModel::visit( oSpriteDef* parentDef, CCNode* parentNode )
 		std::tie(animation, keyFrames) = nodeDef->toResetAction();
 		_resetAnimation.add(nodeDef, node, animation, keyFrames);
 
-		parentNode->addChild(node);
+		parentNode->addChild(node, nodeDef->front ? 0 : -1);
 		// Look
 		if (!nodeDef->looks.empty())
 		{

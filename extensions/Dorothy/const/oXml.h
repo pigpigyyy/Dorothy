@@ -83,6 +83,7 @@ struct oModelXml
 				Skew = 'G',
 				Name = 'H',
 				Clip = 'I',
+				Front = 'J',
 				//</a>
 
 				KeyAnimation = 'C',//2

@@ -108,6 +108,7 @@ local function oViewArea()
 	local EDIT_SIZEX = 17
 	local EDIT_SIZEY = 18
 	local EDIT_SIZEXY = 19
+	local EDIT_FRONT = 20
 	
 	local editState = EDIT_NONE
 	view.touchEnabled = true
@@ -981,6 +982,50 @@ local function oViewArea()
 		end
 	end
 
+	-- front
+	local frontEditor = CCMenu()
+	frontEditor.contentSize = CCSize(50,50)
+	frontEditor.anchor = oVec2.zero
+	frontEditor.position = oVec2(winSize.width-230,370)
+	local fButton = oButton("Front",16,50,50,0,0,
+		function(item)
+			local zOrder = editTarget.zOrder == 0 and -1 or 0
+			editTarget.parent:reorderChild(editTarget,zOrder)
+			local front = editTarget.zOrder == 0
+			item.label.text = front and "Front" or "Back"
+			item.label.texture.antiAlias = false
+			oEditor.settingPanel.items.Front:setValue(front)
+			if oEditor.state == oEditor.EDIT_SPRITE then
+				oEditor.spriteData[oSd.front] = front
+			end
+
+			oEditor.editMenu:markEditButton(true)
+			valueChanged = true
+		end)
+	fButton.anchor = oVec2.zero
+	frontEditor:addChild(fButton)
+	frontEditor.visible = false
+	view:addChild(frontEditor)
+
+	view.editFront = function(self)
+		if editState == EDIT_NONE then
+			editTarget = oEditor.sprite
+			frontEditor.visible = true
+			fButton.label.text = editTarget.zOrder == 0 and "Front" or "Back"
+			fButton.label.texture.antiAlias = false
+			editState = EDIT_FRONT
+		end
+	end
+
+	view.stopEditFront = function(self)
+		if editState == EDIT_FRONT then		
+			updateModel()
+			frontEditor.visible = false
+			editTarget = nil
+			editState = EDIT_NONE
+		end
+	end
+
 	local board = CCMenu(true)
 	board.contentSize = CCSize(winSize.width,winSize.height)
 	local border = CCDrawNode()
@@ -1414,6 +1459,7 @@ local function oViewArea()
 		view:stopEditPosY()
 		view:stopEditPosXY()
 		view:stopEditRot()
+		view:stopEditFront()
 	end
 
 	return view

@@ -1,0 +1,20 @@
+<A A="role.png">
+	<B A="body" B="256,0,54,119"/>
+	<B A="char" B="153,0,101,321"/>
+	<B A="face" B="240,423,65,50"/>
+	<B A="hairBack" B="0,152,142,187"/>
+	<B A="hairFront" B="0,341,124,148"/>
+	<B A="head" B="240,323,87,98"/>
+	<B A="leftArm" B="256,185,25,52"/>
+	<B A="leftFoot" B="308,239,19,73"/>
+	<B A="leftHand" B="256,121,32,62"/>
+	<B A="leftLeg" B="308,121,20,65"/>
+	<B A="rightArm" B="308,188,19,49"/>
+	<B A="rightFoot" B="312,0,17,74"/>
+	<B A="rightHand" B="283,253,23,63"/>
+	<B A="rightLeg" B="307,423,22,63"/>
+	<B A="shoeLeft" B="283,185,23,66"/>
+	<B A="shoeRight" B="256,239,25,68"/>
+	<B A="topBack" B="126,341,112,120"/>
+	<B A="topFront" B="0,0,151,150"/>
+</A>

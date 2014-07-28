@@ -56,6 +56,8 @@ _unitDef(unitDef)
 	oModelDef* modelDef = unitDef->getModelDef();
 	oModel* model = modelDef ? modelDef->toModel() : oModel::none();
 	_isFaceRight = modelDef->isFaceRight();
+	model->setScaleX(unitDef->getScale());
+	model->setScaleY(unitDef->getScale());
 	oUnit::setModel(model);
 	oBody::setOwner(this);
 	for (int id : unitDef->actions)

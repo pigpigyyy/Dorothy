@@ -738,21 +738,33 @@ void CCNode::visit()
 	}
 
 	this->transform();
-
-	// self draw
-	this->draw();
-
-	this->sortAllChildren();
-	CCObject* pObject;
-	CCARRAY_FOREACH(m_pChildren, pObject)
+	if (m_pChildren && m_pChildren->count() > 0)
 	{
-		CCNode* pNode = (CCNode*)pObject;
-		if (pNode)
+		this->sortAllChildren();
+		CCObject** arr = m_pChildren->data->arr;
+		unsigned int count = m_pChildren->data->num;
+		unsigned int i = 0;
+		for (; i < count; ++i)
 		{
-			pNode->visit();
+			CCNode* pNode = (CCNode*)arr[i];
+			if (pNode && pNode->m_nZOrder < 0)
+			{
+				pNode->visit();
+			}
+			else break;
+		}
+		this->draw();
+		for (; i < count; ++i)
+		{
+			CCNode* pNode = (CCNode*)arr[i];
+			if (pNode)
+			{
+				pNode->visit();
+			}
 		}
 	}
-
+	else this->draw();
+	
 	if (m_pGrid && m_pGrid->isActive())
 	{
 		m_pGrid->afterDraw(this);

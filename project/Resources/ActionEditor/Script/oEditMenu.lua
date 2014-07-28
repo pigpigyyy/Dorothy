@@ -466,6 +466,7 @@ local function oEditMenu()
 							{},--looks
 							{},--animationDefs
 							{},--children
+							true,--front
 						}
 						table.insert(children,sp)
 						oEditor.dirty = true

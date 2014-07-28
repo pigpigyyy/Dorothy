@@ -18,6 +18,7 @@ class oModel;
 class oSpriteDef
 {
 public:
+	bool front;
 	CCTexture2D* texture;
 	string clip;
 	float x;

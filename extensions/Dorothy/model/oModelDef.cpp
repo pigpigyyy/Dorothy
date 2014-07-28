@@ -41,6 +41,7 @@ void oSpriteDef::restore( CCSprite* sprite )
 }
 
 oSpriteDef::oSpriteDef():
+front(true),
 x(0.0f),
 y(0.0f),
 rotation(0.0f),
@@ -92,6 +93,10 @@ string oSpriteDef::toXml()
 	if (!clip.empty())
 	{
 		stream << ' ' << char(oModelXml::Clip) << "=\"" << clip << '\"';
+	}
+	if (!front)
+	{
+		stream << ' ' << char(oModelXml::Front) << "=\"0\"";
 	}
 	stream << '>';
 	for (oModelAnimationDef* actionDef : animationDefs)

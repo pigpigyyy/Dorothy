@@ -51,8 +51,8 @@ local function oControlBar()
 		oVec2(0,6)
 	},ccColor4(0xffffffff))
 	bar.setPos = function(self,pos)
-		pos = math.floor(pos+0.5)
 		self._pos = pos
+		pos = math.floor(pos+0.5)
 		self.scaleX = pos/60.0
 		oEvent:send("ControlBarPos",pos)
 	end

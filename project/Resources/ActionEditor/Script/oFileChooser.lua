@@ -151,13 +151,13 @@ local function oFileChooser()
 		end
 
 		local target = CCRenderTarget(w,h)
-		target:beginPaint(ccColor4(0))
+		target:beginPaint(ccColor4(255,255,255,0))
 		frame.visible = false
 		target:draw(node)
 		frame.visible = true
 		target:endPaint()
-		target:save(oEditor.output..file..".png",CCImage.PNG)
-		local xml = "<A A=\""..file..".png\">"
+		target:save(oEditor.output..file..".jpg",CCImage.JPG)
+		local xml = "<A A=\""..file..".jpg\">"
 		for i = 1,#blocks do
 			local block = blocks[i]
 			xml = xml.."<B A=\""..block.name.."\" B=\""..tostring(block.fit.x+2)..","..tostring(h-block.fit.y-2-block.h+4)..","..tostring(block.w-4)..","..tostring(block.h-4).."\"/>"

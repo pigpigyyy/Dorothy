@@ -473,7 +473,7 @@ local function oSettingPanel()
 						oEditor.viewArea:stopEditPosX()
 					end
 				end
-			end),--2
+			end),
 		PosY = oSettingItem("PosY :",0,getPosY(),
 			function(item)
 				if posItem and posItem ~= item then
@@ -508,7 +508,7 @@ local function oSettingPanel()
 						oEditor.viewArea:stopEditPosY()
 					end
 				end
-			end),--3
+			end),
 		ScaleX = oSettingItem("ScaleX :",0,getPosY(),
 			function(item)
 				if scaleItem and scaleItem ~= item then
@@ -543,7 +543,7 @@ local function oSettingPanel()
 						oEditor.viewArea:stopEditScaleX()
 					end
 				end
-			end),--4
+			end),
 		ScaleY = oSettingItem("ScaleY :",0,getPosY(),
 			function(item)
 				if scaleItem and scaleItem ~= item then
@@ -578,7 +578,7 @@ local function oSettingPanel()
 						oEditor.viewArea:stopEditScaleY()
 					end
 				end
-			end),--5
+			end),
 		Rotation = oSettingItem("Rotation :",0,getPosY(),--6
 			function()
 				oEditor.viewArea:editRot()
@@ -627,7 +627,7 @@ local function oSettingPanel()
 						oEditor.viewArea:stopEditSkewX()
 					end
 				end
-			end),--8
+			end),
 		SkewY = oSettingItem("SkewY :",0,getPosY(),
 			function(item)
 				if skewItem and skewItem ~= item then
@@ -662,49 +662,56 @@ local function oSettingPanel()
 						oEditor.viewArea:stopEditSkewY()
 					end
 				end
-			end),--9
+			end),
 		Visible = oSettingItem("Visible :",0,getPosY(),
 			function()
 				oEditor.viewArea:editVisible()
 			end,
 			function()
 				oEditor.viewArea:stopEditVisible()
-			end),--10
+			end),
+		Front = oSettingItem("Front :",0,getPosY(),
+			function()
+				oEditor.viewArea:editFront()
+			end,
+			function()
+				oEditor.viewArea:stopEditFront()
+			end),
 		EaseP = oSettingItem("EaseP :",0,getPosY(),
 			function(item)
 				oEditor.viewArea:editEase(oKd.easePos,item)
 			end,
 			function()
 				oEditor.viewArea:stopEditEase()
-			end),--11
+			end),
 		EaseS = oSettingItem("EaseS :",0,getPosY(),
 			function(item)
 				oEditor.viewArea:editEase(oKd.easeScale,item)
 			end,
 			function()
 				oEditor.viewArea:stopEditEase()
-			end),--12
+			end),
 		EaseK = oSettingItem("EaseK :",0,getPosY(),
 			function(item)
 				oEditor.viewArea:editEase(oKd.easeSkew,item)
 			end,
 			function()
 				oEditor.viewArea:stopEditEase()
-			end),--13
+			end),
 		EaseR = oSettingItem("EaseR :",0,getPosY(),
 			function(item)
 				oEditor.viewArea:editEase(oKd.easeRotation,item)
 			end,
 			function()
 				oEditor.viewArea:stopEditEase()
-			end),--14
+			end),
 		EaseO = oSettingItem("EaseO :",0,getPosY(),
 			function(item)
 				oEditor.viewArea:editEase(oKd.easeOpacity,item)
 			end,
 			function()
 				oEditor.viewArea:stopEditEase()
-			end),--15
+			end),
 		AnchorX = oSettingItem("AnchorX :",0,0,
 			function(item)
 				if anchorItem and anchorItem ~= item then
@@ -895,7 +902,8 @@ local function oSettingPanel()
 			keyItems.Rotation,
 			keyItems.Opacity,
 			keyItems.SkewX,
-			keyItems.SkewY
+			keyItems.SkewY,
+			keyItems.Front,
 		}
 		local posY = genPosY()
 		for i = 1,#items do
@@ -1174,6 +1182,7 @@ local function oSettingPanel()
 			keyItems.Opacity:setValue(sp[oSd.opacity])
 			keyItems.SkewX:setValue(sp[oSd.skewX])
 			keyItems.SkewY:setValue(sp[oSd.skewY])
+			keyItems.Front:setValue(sp[oSd.front])
 		end
 	end
 	

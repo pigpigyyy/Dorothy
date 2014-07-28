@@ -104,6 +104,9 @@ void oModelCache::startElement( void *ctx, const char *name, const char **atts )
 							}
 							break;
 						}
+					oCase::Front:
+						spriteDef->front = atoi(atts[++i]) != 0;
+						break;
 					}
 				}
 			}

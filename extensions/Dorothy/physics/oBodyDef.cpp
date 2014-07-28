@@ -371,6 +371,7 @@ void oBodyDef::clearFixtures()
 		delete fixtureDef->shape;
 		fixtureDef->shape = nullptr;
 	}
+	_fixtureDefs.clear();
 }
 
 void oBodyDef::setDensity(float var)
