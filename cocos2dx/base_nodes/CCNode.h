@@ -690,6 +690,8 @@ public:
      */
     virtual void setUserObject(CCObject *pUserObject);
     
+	inline void setUserData(void* ptr){ m_pUserData = ptr; }
+	inline void* getUserData() const{ return m_pUserData; }
     /// @} end of Tag & User Data
     
     
@@ -1248,7 +1250,8 @@ protected:
     int m_nTag;                         ///< a tag. Can be any number you assigned just to identify this node
     
     CCObject *m_pUserObject;            ///< A user assigned CCObject
-    
+	void* m_pUserData;					///< A user assigned pointer
+
     CCGLProgram *m_pShaderProgram;      ///< OpenGL shader
     
     ccGLServerState m_eGLServerState;   ///< OpenGL servier side state

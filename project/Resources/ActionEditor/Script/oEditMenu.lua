@@ -140,7 +140,7 @@ local function oEditMenu()
 		]]
 		New = oButton("New",16,50,50,35,95,
 			function()
-				local pos = oEditor.controlBar:getPos()
+				local pos = math.floor(oEditor.controlBar:getPos()+0.5)
 				if oEditor.sprite and pos ~= oEditor.currentFramePos and not oEditor.spriteData[oSd.animationNames] then
 					local sprite = oEditor.sprite
 					local sp = oEditor.spriteData
@@ -215,7 +215,7 @@ local function oEditMenu()
 			end),
 		Delete = oButton("Delete",16,50,50,95,95,
 			function()
-				local pos = oEditor.controlBar:getPos()
+				local pos = math.floor(oEditor.controlBar:getPos()+0.5)
 				if oEditor.sprite and pos == oEditor.currentFramePos and (oEditor.keyIndex ~= 2 or #oEditor.animationData == 2) then
 					oBox("Delete\nFrame",function()
 						local sp = oEditor.spriteData
@@ -251,7 +251,7 @@ local function oEditMenu()
 			end),
 		Copy = oButton("Copy",16,50,50,155,95,
 			function(item)
-				local pos = oEditor.controlBar:getPos()
+				local pos = math.floor(oEditor.controlBar:getPos()+0.5)
 				if oEditor.sprite and pos == oEditor.currentFramePos then
 					local frameDef = oEditor.animationData[oEditor.keyIndex]
 					frameCopy =
@@ -277,7 +277,7 @@ local function oEditMenu()
 			end),
 		Paste = oButton("Paste",16,50,50,215,95,
 			function()
-				local pos = oEditor.controlBar:getPos()
+				local pos = math.floor(oEditor.controlBar:getPos()+0.5)
 				if oEditor.sprite and pos ~= oEditor.currentFramePos then
 					local sp = oEditor.spriteData
 					local animationDef = oEditor.animationData
@@ -462,7 +462,6 @@ local function oEditMenu()
 							0,--skewY
 							0,--x
 							0,--y
-							true,--visible
 							{},--looks
 							{},--animationDefs
 							{},--children

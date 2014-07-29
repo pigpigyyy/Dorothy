@@ -1001,6 +1001,7 @@ local function oViewArea()
 
 			oEditor.editMenu:markEditButton(true)
 			valueChanged = true
+			oEditor.settingPanel:clearSelection()
 		end)
 	fButton.anchor = oVec2.zero
 	frontEditor:addChild(fButton)

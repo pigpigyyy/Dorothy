@@ -133,7 +133,7 @@ private:
 	void onResetAnimationEnd();
 	void addLook(int index, CCNode* node);
 	void addAnimation(int index, CCNode* node, oActionDuration* action);
-	void reset(oSpriteDef* parentDef, CCNode* parentNode);
+	void reset(CCNode* parentNode);
 	void setupCallback();
 	void onActionEnd();
 	oNodeMap& nodeMap();

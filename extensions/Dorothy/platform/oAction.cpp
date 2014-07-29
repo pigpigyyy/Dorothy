@@ -268,7 +268,6 @@ void oWalk::run()
 	model->setRecovery(oAction::recovery);
 	model->resume(oID::AnimationWalk);
 	_eclapsed = 0.0f;
-	_duration = model->getDuration() * _owner->moveSpeed * 0.25f;
 	oAction::run();
 }
 
@@ -277,10 +276,10 @@ void oWalk::update(float dt)
 	if (_owner->isOnSurface())
 	{
 		float move = _owner->move * _owner->moveSpeed;
-		if (_eclapsed < _duration)
+		if (_eclapsed < oAction::recovery)
 		{
 			_eclapsed += dt;
-			move *= MIN(_eclapsed / _duration, 1.0f);
+			move *= MIN(_eclapsed / oAction::recovery, 1.0f);
 		}
 		_owner->setVelocityX(_owner->isFaceRight() ? move : -move);
 	}

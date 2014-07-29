@@ -137,7 +137,7 @@ void oModel::play( uint32 index )
 	}
 	else
 	{
-		oModel::reset(_modelDef->getRoot(), _root);
+		oModel::reset(_root);
 		oModel::onResetAnimationEnd();
 	}
 }
@@ -151,7 +151,7 @@ void oModel::play( const string& name )
 void oModel::reset()
 {
 	oModel::stop();
-	oModel::reset(_modelDef->getRoot(), _root);
+	oModel::reset(_root);
 }
 
 void oModel::addAnimation( int index, CCNode* node, oActionDuration* action )
@@ -185,18 +185,18 @@ bool oModel::isPlaying() const
 	return _isPlaying;
 }
 
-void oModel::reset( oSpriteDef* parentDef, CCNode* parentNode )
+void oModel::reset( CCNode* parentNode )
 {
 	CCArray* children = parentNode->getChildren();
 	if (children)
 	{
-		const oOwnVector<oSpriteDef>& childrenDefs = parentDef->children;
-		for (uint32 n = 0; n < childrenDefs.size(); n++)
+		CCARRAY_START(CCSprite, child, children)
 		{
-			CCNode* childNode = (CCNode*)children->objectAtIndex(n);
-			childrenDefs[n]->restore((CCSprite*)childNode);
-			oModel::reset(childrenDefs[n], childNode);
+			oSpriteDef* childDef = (oSpriteDef*)child->getUserData();
+			childDef->restore(child);
+			oModel::reset(child);
 		}
+		CCARRAY_END
 	}
 }
 
@@ -404,6 +404,8 @@ void oModel::visit( oSpriteDef* parentDef, CCNode* parentNode )
 	{
 		oSpriteDef* nodeDef = childrenDefs[n];
 		CCSprite* node = nodeDef->toSprite();
+		node->setUserData((void*)nodeDef);
+
 		oModel::visit(nodeDef, node);
 
 		if (!_modelDef->isBatchUsed() && !nodeDef->name.empty())

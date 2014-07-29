@@ -69,6 +69,7 @@ CCNode::CCNode()
 // "whole screen" objects. like Scenes and Layers, should set m_bIgnoreAnchorPointForPosition to false
 , m_nTag(CCNode::InvalidTag)
 , m_pUserObject(NULL)
+, m_pUserData(NULL)
 , m_pShaderProgram(NULL)
 , m_eGLServerState(ccGLServerState(0))
 , m_bRunning(false)

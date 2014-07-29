@@ -220,9 +220,21 @@ local function oFileChooser()
 			item:unregisterTapHandler()
 			if item.editTarget then
 				oEditor.controlBar:clearCursors()
-				oEditor.model = oEditor.output..item.editTarget..".model"
+				local modelFile = item.editTarget..".model"
+				oEditor.model = oEditor.output..modelFile
 				oCache.clear()
 				CCTextureCache:removeUnused()
+				local files = oContent:getDirEntries(oEditor.output,false)
+				local fileExist = false
+				for i = 1,#files do
+					if files[i] == modelFile then
+						fileExist = true
+					end
+				end
+				if not fileExist then
+					local modelText = "<A A=\""..item.editTarget..".clip\" D=\"0,0\"><B></B></A>"
+					oContent:saveToFile(oEditor.model, modelText)
+				end
 				oEditor.data = oCache.Model:getData(oEditor.model)
 				oEditor.look = ""
 				oEditor.animation = ""

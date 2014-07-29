@@ -65,11 +65,11 @@ oAI:add(1,oSel({
 local world = oPlatformWorld()
 
 local unitDef = oUnitDef()
-unitDef.model = "ActionEditor/Model/Output/doll.model"
+unitDef.model = "ActionEditor/Model/Output/role.model"
 unitDef.static = false
 unitDef.density = 1
-unitDef.restitution = 0.4
-unitDef.friction = 0.4
+unitDef.restitution = 0
+unitDef.friction = 1
 unitDef.move = 100
 unitDef.sensity = 0
 --unitDef.scale = 0.5
@@ -85,6 +85,7 @@ unitDef.reflexArc = 1
 
 local unit = oUnit(unitDef,world,oVec2(400,300))
 unit.group = 1
+unit.moveSpeed = 1.5
 --unit:doIt(oAction.UserID)
 
 --[[
@@ -97,7 +98,7 @@ oRoutine(routine)
 --]]
 
 local bodyDef = oBodyDef()
-bodyDef:attachPolygon(800,10,1,0.4,0.4)
+bodyDef:attachPolygon(800,10,1,1,0)
 local body = oBody(bodyDef,world,oVec2(400,0))
 body.group = oData.GroupTerrain
 

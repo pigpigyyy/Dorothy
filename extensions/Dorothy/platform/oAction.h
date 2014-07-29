@@ -152,7 +152,6 @@ public:
 	static oAction* create(oUnit* unit);
 private:
 	float _eclapsed;
-	float _duration;
 };
 
 class oTurn: public oAction
