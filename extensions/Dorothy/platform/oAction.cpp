@@ -421,9 +421,22 @@ void oJump::update(float dt)
 	if (_current < 0.2f)//don`t check for ground for a while, for actor won`t lift immediately.
 	{
 		_current += dt;
-		oJump::stop();
 	}
-	oAction::update(dt);
+	else
+	{
+		if (_owner->isOnSurface())
+		{
+			oModel* model = _owner->getModel();
+			model->setRecovery(oAction::recovery*0.5f);
+			model->resume(oID::AnimationIdle);
+			if (_current < 0.2f + oAction::recovery*0.5f)
+			{
+				_current += dt;
+			}
+			else oJump::stop();
+		}
+		oAction::update(dt);
+	}
 }
 
 void oJump::stop()
@@ -811,7 +824,7 @@ const float oID::ReactionJump = 1.5f;
 
 const float oID::RecoveryWalk = 0.1f;
 const float oID::RecoveryAttack = 0.2f;
-const float oID::RecoveryIdle = 0.2f;
+const float oID::RecoveryIdle = 0.1f;
 const float oID::RecoveryJump = 0.2f;
 const float oID::RecoveryHit = 0.05f;
 const float oID::RecoveryDie = 0.05f;

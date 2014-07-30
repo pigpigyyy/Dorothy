@@ -74,6 +74,8 @@ static void pngReadCallback(png_structp png_ptr, png_bytep data, png_size_t leng
 // Implement CCImage
 //////////////////////////////////////////////////////////////////////////
 
+bool CCImage::isPngAlphaPremultiplied = true;
+
 CCImage::CCImage()
 : m_nWidth(0)
 , m_nHeight(0)
@@ -445,17 +447,19 @@ bool CCImage::_initWithPngData(void * pData, int nDatalen)
         if (channel == 4)
         {
             m_bHasAlpha = true;
-            unsigned int *tmp = (unsigned int *)m_pData;
-            for(unsigned short i = 0; i < m_nHeight; i++)
-            {
-                for(unsigned int j = 0; j < rowbytes; j += 4)
-                {
-                    *tmp++ = CC_RGB_PREMULTIPLY_ALPHA( row_pointers[i][j], row_pointers[i][j + 1], 
-                                                      row_pointers[i][j + 2], row_pointers[i][j + 3] );
-                }
-            }
-            
-            m_bPreMulti = true;
+			if (CCImage::isPngAlphaPremultiplied)
+			{
+				unsigned int *tmp = (unsigned int *)m_pData;
+				for (unsigned short i = 0; i < m_nHeight; i++)
+				{
+					for (unsigned int j = 0; j < rowbytes; j += 4)
+					{
+						*tmp++ = CC_RGB_PREMULTIPLY_ALPHA(row_pointers[i][j], row_pointers[i][j + 1],
+							row_pointers[i][j + 2], row_pointers[i][j + 3]);
+					}
+				}
+				m_bPreMulti = true;
+			}
         }
 
         CC_SAFE_FREE(row_pointers);

@@ -141,7 +141,7 @@ local function oEditMenu()
 		New = oButton("New",16,50,50,35,95,
 			function()
 				local pos = math.floor(oEditor.controlBar:getPos()+0.5)
-				if oEditor.sprite and pos ~= oEditor.currentFramePos and not oEditor.spriteData[oSd.animationNames] then
+				if oEditor.sprite and pos ~= oEditor.currentFramePos and oEditor.spriteData and not oEditor.spriteData[oSd.animationNames] then
 					local sprite = oEditor.sprite
 					local sp = oEditor.spriteData
 					local animationDef = oEditor.animationData
@@ -829,6 +829,8 @@ oEditor.spriteData[oSd.index]
 		oEditor.state = oEditor.EDIT_LOOK
 		oEditor.settingPanel.visible = false
 		oEditor.controlBar.visible = false
+		oEditor.dirty = true
+		oEditor.viewArea:getModel()
 		oEditor.viewPanel:updateItems(true)
 		oEditor.viewPanel:selectItem(oEditor.spriteData)
 	end

@@ -34,6 +34,12 @@ class ccColor4B @ ccColor4
 
 class ccBlendFunc
 {
+	#define GL_SRC_ALPHA @ Src
+	#define GL_ONE_MINUS_SRC_ALPHA @ OneMinSrc
+	#define GL_DST_ALPHA @ Dst
+	#define GL_ONE_MINUS_DST_ALPHA @ OneMinDst
+	#define GL_ONE @ One
+	#define GL_ZERO @ Zero
 	ccBlendFunc();
 	~ccBlendFunc();
 	static tolua_outside ccBlendFunc* ccBlendFuncNew @ create(GLenum src, GLenum dst);

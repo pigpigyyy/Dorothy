@@ -760,6 +760,7 @@ local function oViewPanel()
 		panel.position = oVec2(winSize.width-170,winSize.height-borderSize.height-10)
 		menu.contentSize = borderSize
 		menu.positionY = borderSize.height
+		oEditor.dirty = true
 		panel:updateImages(oEditor.data,oEditor.viewArea:getModel())
 		panel:glow()
 	end

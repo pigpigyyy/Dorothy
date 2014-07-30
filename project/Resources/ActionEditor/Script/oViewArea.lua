@@ -28,7 +28,7 @@ local oSd = require("oEditor").oSd
 
 local function oViewArea()
 	local winSize = CCDirector.winSize
-	local view = CCLayerColor(ccColor4(0xff1a1a1a), winSize.width, winSize.height)
+	local view = CCLayerColor(ccColor4(0xff1a1a1a),winSize.width, winSize.height)
 	view.anchor = oVec2.zero
 	view.cascadeOpacity = true
 

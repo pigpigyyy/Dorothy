@@ -1,12 +1,1 @@
-<A A="role.png">
-	<B A="body" B="0,100,54,119"/>
-	<B A="head" B="0,0,87,98"/>
-	<B A="leftArm" B="56,164,25,52"/>
-	<B A="leftFoot" B="108,132,19,73"/>
-	<B A="leftHand" B="56,100,32,62"/>
-	<B A="leftLeg" B="90,65,20,65"/>
-	<B A="rightArm" B="112,65,19,49"/>
-	<B A="rightFoot" B="129,116,17,74"/>
-	<B A="rightHand" B="83,164,23,63"/>
-	<B A="rightLeg" B="89,0,22,63"/>
-</A>
+<A A="role.png"><B A="hairBack" B="2,2,142,187"/><B A="topFront" B="148,2,151,150"/><B A="hairFront" B="303,2,124,148"/><B A="topBack" B="2,193,112,120"/><B A="body" B="118,193,54,119"/><B A="head" B="176,193,87,98"/><B A="face" B="267,193,87,98"/><B A="rightFoot" B="358,193,17,74"/><B A="leftFoot" B="379,193,19,73"/><B A="shoeLeft" B="402,193,23,72"/><B A="shoeRight" B="2,317,25,72"/><B A="leftLeg" B="31,317,20,65"/><B A="rightLeg" B="55,317,22,63"/><B A="rightHand" B="81,317,23,63"/><B A="leftHand" B="108,317,32,62"/><B A="leftArm" B="144,317,25,52"/><B A="rightArm" B="173,317,19,49"/></A>

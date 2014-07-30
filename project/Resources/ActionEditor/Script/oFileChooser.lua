@@ -24,6 +24,8 @@ local CCDelay = require("CCDelay")
 local CCCall = require("CCCall")
 local oEditor = require("oEditor").oEditor
 local oSd = require("oEditor").oSd
+local ccBlendFunc = require("ccBlendFunc")
+local tolua = require("tolua")
 
 local function oFileChooser()
 	local winSize = CCDirector.winSize
@@ -98,8 +100,12 @@ local function oFileChooser()
 		panel:removeMenuItems()
 		local blocks = {}
 		local images = oContent:getDirEntries(oEditor.input..file,false)
+		CCImage.isPngAlphaPremultiplied = false
+		local blendFunc = ccBlendFunc(ccBlendFunc.One,ccBlendFunc.Zero)
 		for i = 1,#images do
 			local sp = CCSprite(oEditor.input..file.."/"..images[i])
+			sp.texture.antiAlias = false
+			sp.blendFunc = blendFunc
 			sp.anchor = oVec2.zero
 			local block =
 			{
@@ -110,6 +116,7 @@ local function oFileChooser()
 			}
 			table.insert(blocks,block)
 		end
+		CCImage.isPngAlphaPremultiplied = true
 
 		oPacker:fit(blocks)
 		local w = oPacker.root.w
@@ -156,8 +163,8 @@ local function oFileChooser()
 		target:draw(node)
 		frame.visible = true
 		target:endPaint()
-		target:save(oEditor.output..file..".jpg",CCImage.JPG)
-		local xml = "<A A=\""..file..".jpg\">"
+		target:save(oEditor.output..file..".png",CCImage.PNG)
+		local xml = "<A A=\""..file..".png\">"
 		for i = 1,#blocks do
 			local block = blocks[i]
 			xml = xml.."<B A=\""..block.name.."\" B=\""..tostring(block.fit.x+2)..","..tostring(h-block.fit.y-2-block.h+4)..","..tostring(block.w-4)..","..tostring(block.h-4).."\"/>"
@@ -173,6 +180,17 @@ local function oFileChooser()
 		CCTextureCache:remove(texFile)
 		CCTextureCache:add(target,texFile)
 	
+		local children = node.children
+		if children then
+			local blendFunc = ccBlendFunc(ccBlendFunc.Src,ccBlendFunc.OneMinDst)
+			for i = 1,children.count do
+				local sprite = tolua.cast(children[i],"CCSprite")
+				if sprite then
+					sprite.texture.antiAlias = true
+					sprite.blendFunc = blendFunc
+				end
+			end
+		end
 		node.opacity = 0
 		node:runAction(oOpacity(0.3,1))
 		node.position = oVec2(winSize.width*0.5-borderSize.width*0.5+10,winSize.height*0.5-borderSize.height*0.5-h+borderSize.height-10)

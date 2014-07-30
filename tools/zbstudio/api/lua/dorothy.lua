@@ -765,6 +765,42 @@ local Dorothy =
 	{
 		childs =
 		{
+			Src =
+			{
+				description = "[uint]",
+				static = true,
+				type = "value",
+			},
+			OneMinSrc =
+			{
+				description = "[uint]",
+				static = true,
+				type = "value",
+			},
+			Dst =
+			{
+				description = "[uint]",
+				static = true,
+				type = "value",
+			},
+			OneMinDst =
+			{
+				description = "[uint]",
+				static = true,
+				type = "value",
+			},
+			One =
+			{
+				description = "[uint]",
+				static = true,
+				type = "value",
+			},
+			Zero =
+			{
+				description = "[uint]",
+				static = true,
+				type = "value",
+			},
 			src =
 			{
 				description = "[uint]",
@@ -776,7 +812,7 @@ local Dorothy =
 				type = "value",
 			},
 		},
-		description = "class ccBlendFunc.\n args -- (src: uint, dst: uint)",
+		description = "class ccBlendFunc.\n args -- (src: uint, dst: uint)\n -- src|dst: ccBlendFunc.[Src|Dst|OneMinSrc|OneMinDst|One|Zero]",
 		type = "class",
 		index = index()
 	},
@@ -1734,6 +1770,12 @@ local Dorothy =
 			PNG =
 			{
 				description = "[Const][int]",
+				static = true,
+				type = "value",
+			},
+			isPngAlphaPremultiplied =
+			{
+				description = "[bool]",
 				static = true,
 				type = "value",
 			},

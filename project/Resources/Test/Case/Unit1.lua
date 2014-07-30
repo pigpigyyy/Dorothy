@@ -38,12 +38,12 @@ CCKey =
 oAI:add(1,oSel({
 	oSeq({
 		oCon(function()
-			return CCKeyboard:isKeyDown(CCKey.Left) or CCKeyboard:isKeyDown(CCKey.Right)
+			return CCKeyboard:isKeyPressed(CCKey.Left) or CCKeyboard:isKeyPressed(CCKey.Right)
 		end),
 		oSel({
 			oSeq({
 				oCon(function()
-					return oAI.self.faceRight ~= CCKeyboard:isKeyDown(CCKey.Right)
+					return oAI.self.faceRight ~= CCKeyboard:isKeyPressed(CCKey.Right)
 				end),
 				oAct(oAction.Turn),
 			}),
@@ -59,6 +59,12 @@ oAI:add(1,oSel({
 		oAct(oAction.Stop),
 		oAct(oAction.Idle)
 	}),
+	oSeq({
+		oCon(function()
+			return CCKeyboard:isKeyDown(CCKey.Up)
+		end),
+		oAct(oAction.Jump),
+	}),
 	oAct(oAction.Idle),
 }))
 
@@ -70,14 +76,16 @@ unitDef.static = false
 unitDef.density = 1
 unitDef.restitution = 0
 unitDef.friction = 1
-unitDef.move = 100
+unitDef.move = 250
+unitDef.jump = 500
 unitDef.sensity = 0
---unitDef.scale = 0.5
+--unitDef.scale = 0.6
 unitDef:setActions(
 {
 	oAction.Walk,
 	oAction.Turn,
 	oAction.Stop,
+	oAction.Jump,
 	oAction.Idle,
 	oAction.UserID
 })
@@ -85,7 +93,7 @@ unitDef.reflexArc = 1
 
 local unit = oUnit(unitDef,world,oVec2(400,300))
 unit.group = 1
-unit.moveSpeed = 1.5
+unit:getAction(oAction.Idle).recovery = 0.1
 --unit:doIt(oAction.UserID)
 
 --[[
