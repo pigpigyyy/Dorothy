@@ -59,9 +59,9 @@ CCSprite* oClipCache::loadSprite( const char* clipStr )
 	char name[256];
 	strcpy(name, clipStr);
 	char* token = strtok(name, "|");
+	char* token2 = strtok(nullptr, "|");
 	oClipDef* clipDef = oClipCache::load(token);
-	token = strtok(nullptr, "|");
-	auto it = clipDef->rects.find(token);
+	auto it = clipDef->rects.find(token2);
 	if (it != clipDef->rects.end())
 	{
 		CCTexture2D* texture = oSharedContent.loadTexture(clipDef->textureFile.c_str());

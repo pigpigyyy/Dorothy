@@ -20,7 +20,7 @@ class oModel: public CCNode
 	void resume(const char* name);
 	void stop();
 	void reset();
-	CCNode* getNodeByName(const char* name);
+	CCNode* getNodeByName @ getChildByName(const char* name);
 	static oModel* create(const char* filename);
 	static oModel* none();
 };

@@ -3516,9 +3516,9 @@ local Dorothy =
 				returns = "()",
 				type = "method"
 			},
-			getNodeByName =
+			getChildByName =
 			{
-				args = "()",
+				args = "(name: string)",
 				description = "Get model`s node of certain name.",
 				returns = "(node: CCNode)",
 				typeName = "CCNode",
