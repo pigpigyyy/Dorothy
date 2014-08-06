@@ -1672,6 +1672,16 @@ local Dorothy =
 				description = "[bool]",
 				type = "value",
 			},
+			repeatX =
+			{
+				description = "[bool]",
+				type = "value",
+			},
+			repeatY =
+			{
+				description = "[bool]",
+				type = "value",
+			},
 			pixelFormat =
 			{
 				description = "[bool]",

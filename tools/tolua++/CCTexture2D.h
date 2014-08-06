@@ -17,7 +17,9 @@ class CCTexture2D: public CCObject
 	tolua_readonly tolua_property__common CCSize contentSizeInPixels @ size;
 	tolua_readonly tolua_property__qt bool hasMipmaps;
 
-	tolua_property__common bool antiAlias;
+	tolua_property__bool bool antiAlias;
+	tolua_property__bool bool repeatX;
+	tolua_property__bool bool repeatY;
 
 	static tolua_property__common CCTexture2DPixelFormat defaultAlphaPixelFormat @ pixelFormat;
 	

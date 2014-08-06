@@ -56,7 +56,6 @@ void oCamera::setPosition(const CCPoint& var)
 {
 	if (_camPos != var)
 	{
-		_camPos = var;
 		CCPoint pos(
 			-var.x + _view.width * 0.5f,
 			-var.y + _view.height * 0.5f);
@@ -68,6 +67,8 @@ void oCamera::setPosition(const CCPoint& var)
 		const CCPoint& lastPos = CCNode::getPosition();
 		float deltaX = (pos.x - lastPos.x) * _ratio.x;
 		float deltaY = (pos.y - lastPos.y) * _ratio.y;
+		_camPos.x += deltaX;
+		_camPos.x += deltaY;
 		if (moved)
 		{
 			moved(deltaX, deltaY);

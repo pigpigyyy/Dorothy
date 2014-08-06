@@ -70,7 +70,16 @@ oAI:add(1,oSel({
 }))
 
 local world = oPlatformWorld()
-world.showDebug = false
+world.showDebug = true
+world.camera.boudary = CCRect(0,0,20480,2048)
+world.camera.followRatio = oVec2(0.05,0.05)
+
+local bk = CCSprite("bk.jpg")
+bk.anchor = oVec2.zero
+bk.texture.repeatX = true
+bk.texture.repeatY = true
+bk.textureRect = CCRect(0,0,20480,2048)
+world:addChild(bk)
 
 local unitDef = oUnitDef()
 unitDef.model = "ActionEditor/Model/Output/role.model"
@@ -81,9 +90,8 @@ unitDef.friction = 1
 unitDef.move = 200
 unitDef.jump = 550
 unitDef.sensity = 0
---unitDef.scale = 0.6
-unitDef:setActions(
-{
+unitDef.scale = 0.6
+unitDef:setActions({
 	oAction.Walk,
 	oAction.Turn,
 	oAction.Stop,
@@ -95,7 +103,8 @@ unitDef.reflexArc = 1
 
 local unit = oUnit(unitDef,world,oVec2(400,300))
 unit.group = 1
-unit:getAction(oAction.Idle).recovery = 0.1
+world.camera:follow(unit)
+
 --unit:doIt(oAction.UserID)
 
 --[[
@@ -108,8 +117,8 @@ oRoutine(routine)
 --]]
 
 local bodyDef = oBodyDef()
-bodyDef:attachPolygon(800,10,1,1,0)
-local body = oBody(bodyDef,world,oVec2(400,0))
+bodyDef:attachPolygon(oVec2(10240,0),20480,10,0,1,1,0)
+local body = oBody(bodyDef,world,oVec2(0,0))
 body.group = oData.GroupTerrain
 
 local scene = CCScene()
@@ -144,15 +153,15 @@ local btn = oButton("Change",16,60,nil,10,10,
 			return
 		end
 		changed = true
-		local suit = loadfile("miku.lua")()
+		local suit = loadfile("girl.lua")()
 		for name,items in pairs(suit) do
 			local node = unit.model:getChildByName(name)
 			if items then
 				for i = 1,#items do
 					local item = items[i]
 					local sp = CCSprite(item[1])
-					for j = 2,#item do
-						sp[item[j][1]] = item[j][2]
+					for o = 2,#item do
+						sp[item[o][1]] = item[o][2]
 					end
 					node:addChild(sp)
 				end

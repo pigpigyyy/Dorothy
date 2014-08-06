@@ -172,7 +172,14 @@ public:
     void setAliasTexParameters();
 
 	void setAntiAlias(bool flag);
-	bool getAntiAlias() const;
+	bool isAntiAlias() const;
+
+	void setRepeatX(bool flag);
+	bool isRepeatX() const;
+
+	void setRepeatY(bool flag);
+	bool isRepeatY() const;
+
     /** Generates mipmap images for the texture.
     It only works if the texture size is POT (power of 2).
     @since v0.99.0
@@ -260,6 +267,8 @@ private:
     bool m_bHasPremultipliedAlpha;
 
     bool m_bHasMipmaps;
+
+	ccTexParams m_obTexParams;
 
     /** shader program used by drawAtPoint and drawInRect */
     CC_PROPERTY(CCGLProgram*, m_pShaderProgram, ShaderProgram);
