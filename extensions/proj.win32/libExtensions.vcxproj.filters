@@ -7,38 +7,38 @@
     <Filter Include="AssetsManager">
       <UniqueIdentifier>{49487dbe-5758-436a-b014-8e2edc6b33ae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Dorothy">
-      <UniqueIdentifier>{0a199095-ef13-42b6-ba8e-9999ed4b83e1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dorothy\const">
-      <UniqueIdentifier>{cf141816-7409-4452-b4d4-47d00ff3ef82}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dorothy\misc">
-      <UniqueIdentifier>{1eac39af-b8c1-4179-b4fd-6a62f4c36268}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dorothy\model">
-      <UniqueIdentifier>{7c3aadb3-98bb-4be8-9346-843c68447bc7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dorothy\other">
-      <UniqueIdentifier>{b41c3ada-ee5b-4cc8-aac7-5fef9cbdecec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dorothy\platform">
-      <UniqueIdentifier>{8d513c02-618e-4976-a49d-97a6ac68d518}</UniqueIdentifier>
-    </Filter>
     <Filter Include="network">
       <UniqueIdentifier>{373166ef-b514-4374-ae95-bc7d30a3cd52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Dorothy">
+      <UniqueIdentifier>{55d3ce82-0a71-49c4-9d96-cec2e4fb5037}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dorothy\const">
+      <UniqueIdentifier>{a7782218-c554-41d0-a32b-97efc1e42cec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dorothy\misc">
+      <UniqueIdentifier>{0a4b4912-9f36-4710-be3e-3c5651e79c83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dorothy\model">
+      <UniqueIdentifier>{4a8616ad-3755-4360-89f8-c56ab2fa9028}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dorothy\other">
+      <UniqueIdentifier>{3712affe-7da1-4855-89f8-7435a5f0e99b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dorothy\platform">
+      <UniqueIdentifier>{65bcc086-b61c-4a50-9707-7015b54ca7e9}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Dorothy\effect">
-      <UniqueIdentifier>{42097300-46fe-4aaf-96a4-9352f5d301f0}</UniqueIdentifier>
+      <UniqueIdentifier>{32b9e033-b9b1-46b5-8843-83507d1e0b74}</UniqueIdentifier>
     </Filter>
     <Filter Include="Dorothy\audio">
-      <UniqueIdentifier>{37d89f36-9d41-4360-844d-2d00c818198c}</UniqueIdentifier>
+      <UniqueIdentifier>{d10d6999-9939-46ae-b447-9f4549fca53e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Dorothy\physics">
-      <UniqueIdentifier>{109ab104-04ab-4894-bcc0-39a967f80bb2}</UniqueIdentifier>
+      <UniqueIdentifier>{b8f7dbe9-dd4e-4814-b43b-ebb270eb8f66}</UniqueIdentifier>
     </Filter>
     <Filter Include="Dorothy\event">
-      <UniqueIdentifier>{d7b37210-622d-4a6a-ae7e-c7d7d46575c3}</UniqueIdentifier>
+      <UniqueIdentifier>{cb9f81ad-5bdf-4440-b7dc-b91ed07a9191}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -48,74 +48,65 @@
     <ClCompile Include="..\AssetsManager\AssetsManager.cpp">
       <Filter>AssetsManager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Dorothy\model\oActionDuration.cpp">
-      <Filter>Dorothy\model</Filter>
+    <ClCompile Include="..\network\HttpClient.cpp">
+      <Filter>network</Filter>
     </ClCompile>
-    <ClCompile Include="..\Dorothy\model\oKeyFrame.cpp">
-      <Filter>Dorothy\model</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dorothy\model\oModel.cpp">
-      <Filter>Dorothy\model</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dorothy\model\oModelDef.cpp">
-      <Filter>Dorothy\model</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dorothy\physics\oBody.cpp">
-      <Filter>Dorothy\physics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dorothy\physics\oBodyDef.cpp">
-      <Filter>Dorothy\physics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dorothy\physics\oSensor.cpp">
-      <Filter>Dorothy\physics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dorothy\physics\oWorld.cpp">
-      <Filter>Dorothy\physics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dorothy\model\oSequence.cpp">
-      <Filter>Dorothy\model</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dorothy\model\oEase.cpp">
-      <Filter>Dorothy\model</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dorothy\model\oKeyFrameDef.cpp">
-      <Filter>Dorothy\model</Filter>
+    <ClCompile Include="..\Dorothy\const\oDefine.cpp">
+      <Filter>Dorothy\const</Filter>
     </ClCompile>
     <ClCompile Include="..\Dorothy\misc\oContent.cpp">
       <Filter>Dorothy\misc</Filter>
     </ClCompile>
-    <ClCompile Include="..\Dorothy\model\oClip.cpp">
+    <ClCompile Include="..\Dorothy\misc\oHelper.cpp">
+      <Filter>Dorothy\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\misc\oLine.cpp">
+      <Filter>Dorothy\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\misc\oNode3D.cpp">
+      <Filter>Dorothy\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\misc\oScriptHandler.cpp">
+      <Filter>Dorothy\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\misc\oVec2.cpp">
+      <Filter>Dorothy\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\model\oActionDuration.cpp">
       <Filter>Dorothy\model</Filter>
     </ClCompile>
     <ClCompile Include="..\Dorothy\model\oAnimation.cpp">
       <Filter>Dorothy\model</Filter>
     </ClCompile>
+    <ClCompile Include="..\Dorothy\model\oClip.cpp">
+      <Filter>Dorothy\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\model\oEase.cpp">
+      <Filter>Dorothy\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\model\oFace.cpp">
+      <Filter>Dorothy\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\model\oKeyFrame.cpp">
+      <Filter>Dorothy\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\model\oKeyFrameDef.cpp">
+      <Filter>Dorothy\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\model\oModel.cpp">
+      <Filter>Dorothy\model</Filter>
+    </ClCompile>
     <ClCompile Include="..\Dorothy\model\oModelCache.cpp">
       <Filter>Dorothy\model</Filter>
     </ClCompile>
-    <ClCompile Include="..\Dorothy\misc\oHelper.cpp">
-      <Filter>Dorothy\misc</Filter>
+    <ClCompile Include="..\Dorothy\model\oModelDef.cpp">
+      <Filter>Dorothy\model</Filter>
     </ClCompile>
-    <ClCompile Include="..\Dorothy\const\oDefine.cpp">
-      <Filter>Dorothy\const</Filter>
+    <ClCompile Include="..\Dorothy\model\oSequence.cpp">
+      <Filter>Dorothy\model</Filter>
     </ClCompile>
-    <ClCompile Include="..\Dorothy\platform\oCamera.cpp">
-      <Filter>Dorothy\platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dorothy\platform\oPlatformWorld.cpp">
-      <Filter>Dorothy\platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\network\HttpClient.cpp">
-      <Filter>network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dorothy\misc\oNode3D.cpp">
-      <Filter>Dorothy\misc</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dorothy\platform\oPlatformDefine.cpp">
-      <Filter>Dorothy\platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dorothy\effect\oParticleCache.cpp">
-      <Filter>Dorothy\effect</Filter>
+    <ClCompile Include="..\Dorothy\other\DebugDraw.cpp">
+      <Filter>Dorothy\other</Filter>
     </ClCompile>
     <ClCompile Include="..\Dorothy\platform\oAction.cpp">
       <Filter>Dorothy\platform</Filter>
@@ -132,7 +123,16 @@
     <ClCompile Include="..\Dorothy\platform\oBulletDef.cpp">
       <Filter>Dorothy\platform</Filter>
     </ClCompile>
+    <ClCompile Include="..\Dorothy\platform\oCamera.cpp">
+      <Filter>Dorothy\platform</Filter>
+    </ClCompile>
     <ClCompile Include="..\Dorothy\platform\oData.cpp">
+      <Filter>Dorothy\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\platform\oPlatformDefine.cpp">
+      <Filter>Dorothy\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\platform\oPlatformWorld.cpp">
       <Filter>Dorothy\platform</Filter>
     </ClCompile>
     <ClCompile Include="..\Dorothy\platform\oProperty.cpp">
@@ -144,20 +144,29 @@
     <ClCompile Include="..\Dorothy\platform\oUnitDef.cpp">
       <Filter>Dorothy\platform</Filter>
     </ClCompile>
-    <ClCompile Include="..\Dorothy\audio\oAudio.cpp">
-      <Filter>Dorothy\audio</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dorothy\misc\oScriptHandler.cpp">
-      <Filter>Dorothy\misc</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dorothy\misc\oVec2.cpp">
-      <Filter>Dorothy\misc</Filter>
-    </ClCompile>
     <ClCompile Include="..\Dorothy\effect\oEffectCache.cpp">
       <Filter>Dorothy\effect</Filter>
     </ClCompile>
-    <ClCompile Include="..\Dorothy\model\oFace.cpp">
-      <Filter>Dorothy\model</Filter>
+    <ClCompile Include="..\Dorothy\effect\oParticleCache.cpp">
+      <Filter>Dorothy\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\audio\oAudio.cpp">
+      <Filter>Dorothy\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\physics\oBody.cpp">
+      <Filter>Dorothy\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\physics\oBodyDef.cpp">
+      <Filter>Dorothy\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\physics\oJoint.cpp">
+      <Filter>Dorothy\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\physics\oSensor.cpp">
+      <Filter>Dorothy\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dorothy\physics\oWorld.cpp">
+      <Filter>Dorothy\physics</Filter>
     </ClCompile>
     <ClCompile Include="..\Dorothy\event\oEvent.cpp">
       <Filter>Dorothy\event</Filter>
@@ -167,15 +176,6 @@
     </ClCompile>
     <ClCompile Include="..\Dorothy\event\oListener.cpp">
       <Filter>Dorothy\event</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dorothy\misc\oLine.cpp">
-      <Filter>Dorothy\misc</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dorothy\other\DebugDraw.cpp">
-      <Filter>Dorothy\other</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dorothy\physics\oJoint.cpp">
-      <Filter>Dorothy\physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -187,82 +187,7 @@
     <ClInclude Include="..\AssetsManager\AssetsManager.h">
       <Filter>AssetsManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Dorothy\const\oDefine.h">
-      <Filter>Dorothy\const</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\model\oActionDuration.h">
-      <Filter>Dorothy\model</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\model\oKeyFrame.h">
-      <Filter>Dorothy\model</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\model\oModel.h">
-      <Filter>Dorothy\model</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\model\oModelDef.h">
-      <Filter>Dorothy\model</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\physics\oBody.h">
-      <Filter>Dorothy\physics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\physics\oBodyDef.h">
-      <Filter>Dorothy\physics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\physics\oSensor.h">
-      <Filter>Dorothy\physics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\physics\oWorld.h">
-      <Filter>Dorothy\physics</Filter>
-    </ClInclude>
     <ClInclude Include="..\Dorothy.h" />
-    <ClInclude Include="..\Dorothy\model\oSequence.h">
-      <Filter>Dorothy\model</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\model\oEase.h">
-      <Filter>Dorothy\model</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\misc\oXmlItemCache.h">
-      <Filter>Dorothy\misc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\misc\oContent.h">
-      <Filter>Dorothy\misc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\const\oXml.h">
-      <Filter>Dorothy\const</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\model\oClip.h">
-      <Filter>Dorothy\model</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\model\oAnimation.h">
-      <Filter>Dorothy\model</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\model\oModelAnimationDef.h">
-      <Filter>Dorothy\model</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\other\AcfDelegate.h">
-      <Filter>Dorothy\other</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\other\hash_common.hpp">
-      <Filter>Dorothy\other</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\other\hash_strmap.hpp">
-      <Filter>Dorothy\other</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\model\oModelCache.h">
-      <Filter>Dorothy\model</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\misc\oHelper.h">
-      <Filter>Dorothy\misc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\platform\oCamera.h">
-      <Filter>Dorothy\platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\platform\oPlatformWorld.h">
-      <Filter>Dorothy\platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\platform\oPlatformDefine.h">
-      <Filter>Dorothy\platform</Filter>
-    </ClInclude>
     <ClInclude Include="..\network\HttpClient.h">
       <Filter>network</Filter>
     </ClInclude>
@@ -272,10 +197,28 @@
     <ClInclude Include="..\network\HttpResponse.h">
       <Filter>network</Filter>
     </ClInclude>
-    <ClInclude Include="..\Dorothy\misc\oNode3D.h">
+    <ClInclude Include="..\Dorothy\const\oDefine.h">
+      <Filter>Dorothy\const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\const\oXml.h">
+      <Filter>Dorothy\const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oContent.h">
+      <Filter>Dorothy\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oHelper.h">
       <Filter>Dorothy\misc</Filter>
     </ClInclude>
     <ClInclude Include="..\Dorothy\misc\oIDisposable.h">
+      <Filter>Dorothy\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oLine.h">
+      <Filter>Dorothy\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oMemoryPool.h">
+      <Filter>Dorothy\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oNode3D.h">
       <Filter>Dorothy\misc</Filter>
     </ClInclude>
     <ClInclude Include="..\Dorothy\misc\oOwn.h">
@@ -290,14 +233,77 @@
     <ClInclude Include="..\Dorothy\misc\oRefVector.h">
       <Filter>Dorothy\misc</Filter>
     </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oScriptHandler.h">
+      <Filter>Dorothy\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oVec2.h">
+      <Filter>Dorothy\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oWRef.h">
+      <Filter>Dorothy\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oWRefVector.h">
+      <Filter>Dorothy\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oXmlItemCache.h">
+      <Filter>Dorothy\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\model\oActionDuration.h">
+      <Filter>Dorothy\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\model\oAnimation.h">
+      <Filter>Dorothy\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\model\oClip.h">
+      <Filter>Dorothy\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\model\oEase.h">
+      <Filter>Dorothy\model</Filter>
+    </ClInclude>
     <ClInclude Include="..\Dorothy\model\oFace.h">
       <Filter>Dorothy\model</Filter>
     </ClInclude>
-    <ClInclude Include="..\Dorothy\effect\oEffectCache.h">
-      <Filter>Dorothy\effect</Filter>
+    <ClInclude Include="..\Dorothy\model\oKeyFrame.h">
+      <Filter>Dorothy\model</Filter>
     </ClInclude>
-    <ClInclude Include="..\Dorothy\effect\oParticleCache.h">
-      <Filter>Dorothy\effect</Filter>
+    <ClInclude Include="..\Dorothy\model\oKeyFrameDef.h">
+      <Filter>Dorothy\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\model\oModel.h">
+      <Filter>Dorothy\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\model\oModelAnimationDef.h">
+      <Filter>Dorothy\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\model\oModelCache.h">
+      <Filter>Dorothy\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\model\oModelDef.h">
+      <Filter>Dorothy\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\model\oSequence.h">
+      <Filter>Dorothy\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\other\AcfDelegate.h">
+      <Filter>Dorothy\other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\other\AcfDelegateTemplate.h">
+      <Filter>Dorothy\other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\other\DebugDraw.h">
+      <Filter>Dorothy\other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\other\hash_common.hpp">
+      <Filter>Dorothy\other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\other\hash_strmap.hpp">
+      <Filter>Dorothy\other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\other\Property.h">
+      <Filter>Dorothy\other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\other\tinydir.h">
+      <Filter>Dorothy\other</Filter>
     </ClInclude>
     <ClInclude Include="..\Dorothy\platform\oAction.h">
       <Filter>Dorothy\platform</Filter>
@@ -314,7 +320,16 @@
     <ClInclude Include="..\Dorothy\platform\oBulletDef.h">
       <Filter>Dorothy\platform</Filter>
     </ClInclude>
+    <ClInclude Include="..\Dorothy\platform\oCamera.h">
+      <Filter>Dorothy\platform</Filter>
+    </ClInclude>
     <ClInclude Include="..\Dorothy\platform\oData.h">
+      <Filter>Dorothy\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\platform\oPlatformDefine.h">
+      <Filter>Dorothy\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\platform\oPlatformWorld.h">
       <Filter>Dorothy\platform</Filter>
     </ClInclude>
     <ClInclude Include="..\Dorothy\platform\oProperty.h">
@@ -326,29 +341,32 @@
     <ClInclude Include="..\Dorothy\platform\oUnitDef.h">
       <Filter>Dorothy\platform</Filter>
     </ClInclude>
-    <ClInclude Include="..\Dorothy\audio\oAudio.h">
-      <Filter>Dorothy\audio</Filter>
+    <ClInclude Include="..\Dorothy\effect\oEffectCache.h">
+      <Filter>Dorothy\effect</Filter>
     </ClInclude>
-    <ClInclude Include="..\Dorothy\misc\oScriptHandler.h">
-      <Filter>Dorothy\misc</Filter>
+    <ClInclude Include="..\Dorothy\effect\oParticleCache.h">
+      <Filter>Dorothy\effect</Filter>
     </ClInclude>
     <ClInclude Include="..\Dorothy\misc\oCallFunc.h">
       <Filter>Dorothy\effect</Filter>
     </ClInclude>
-    <ClInclude Include="..\Dorothy\misc\oVec2.h">
-      <Filter>Dorothy\misc</Filter>
+    <ClInclude Include="..\Dorothy\audio\oAudio.h">
+      <Filter>Dorothy\audio</Filter>
     </ClInclude>
-    <ClInclude Include="..\Dorothy\other\Property.h">
-      <Filter>Dorothy\other</Filter>
+    <ClInclude Include="..\Dorothy\physics\oBody.h">
+      <Filter>Dorothy\physics</Filter>
     </ClInclude>
-    <ClInclude Include="..\Dorothy\misc\oMemoryPool.h">
-      <Filter>Dorothy\misc</Filter>
+    <ClInclude Include="..\Dorothy\physics\oBodyDef.h">
+      <Filter>Dorothy\physics</Filter>
     </ClInclude>
-    <ClInclude Include="..\Dorothy\other\AcfDelegateTemplate.h">
-      <Filter>Dorothy\other</Filter>
+    <ClInclude Include="..\Dorothy\physics\oJoint.h">
+      <Filter>Dorothy\physics</Filter>
     </ClInclude>
-    <ClInclude Include="..\Dorothy\model\oKeyFrameDef.h">
-      <Filter>Dorothy\model</Filter>
+    <ClInclude Include="..\Dorothy\physics\oSensor.h">
+      <Filter>Dorothy\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\physics\oWorld.h">
+      <Filter>Dorothy\physics</Filter>
     </ClInclude>
     <ClInclude Include="..\Dorothy\event\oEvent.h">
       <Filter>Dorothy\event</Filter>
@@ -358,24 +376,6 @@
     </ClInclude>
     <ClInclude Include="..\Dorothy\event\oListener.h">
       <Filter>Dorothy\event</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\misc\oLine.h">
-      <Filter>Dorothy\misc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\other\tinydir.h">
-      <Filter>Dorothy\other</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\misc\oWRef.h">
-      <Filter>Dorothy\misc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\misc\oWRefVector.h">
-      <Filter>Dorothy\misc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\other\DebugDraw.h">
-      <Filter>Dorothy\other</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\physics\oJoint.h">
-      <Filter>Dorothy\physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

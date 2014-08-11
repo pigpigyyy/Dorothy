@@ -210,7 +210,8 @@ bool oUnit::doIt( int id )
 	if (it != _actions.end())
 	{
 		oAction* action = it->second;
-		if (!action->isDoing() && action->isAvailable())
+		if (action->isDoing()) return true;
+		if (action->isAvailable())
 		{
 			if (_currentAction != nullptr && _currentAction->isDoing())
 			{

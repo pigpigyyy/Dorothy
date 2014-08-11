@@ -48,6 +48,7 @@ void oData::setRelation( int groupA, int groupB, oRelation relation )
 
 oRelation oData::getRelation( int groupA, int groupB ) const
 {
+	if (groupA == groupB) return oRelation::Friend;
 	int key = groupA<<16 | groupB;
 	auto it = _relationMap.find(key);
 	return it != _relationMap.end() ? it->second : (oRelation)oRelation::Unkown;

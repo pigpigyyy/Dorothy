@@ -143,6 +143,7 @@
   <ItemGroup>
     <ClInclude Include="..\AssetsManager\AssetsManager.h" />
     <ClInclude Include="..\Dorothy.h" />
+    <ClInclude Include="..\cocos-ext.h" />
     <ClInclude Include="..\Dorothy\audio\oAudio.h" />
     <ClInclude Include="..\Dorothy\const\oDefine.h" />
     <ClInclude Include="..\Dorothy\const\oXml.h" />
@@ -203,7 +204,6 @@
     <ClInclude Include="..\Dorothy\platform\oProperty.h" />
     <ClInclude Include="..\Dorothy\platform\oUnit.h" />
     <ClInclude Include="..\Dorothy\platform\oUnitDef.h" />
-    <ClInclude Include="..\cocos-ext.h" />
     <ClInclude Include="..\ExtensionMacros.h" />
     <ClInclude Include="..\LocalStorage\LocalStorage.h" />
     <ClInclude Include="..\network\HttpClient.h" />
