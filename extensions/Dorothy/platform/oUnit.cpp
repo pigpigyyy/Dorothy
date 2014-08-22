@@ -127,6 +127,7 @@ oUnit* oUnit::create(oUnitDef* unitDef, oWorld* world, const oVec2& pos, float r
 
 void oUnit::update( float dt )
 {
+	if (!_bodyB2->IsActive()) return;
 	if (_currentAction != nullptr)
 	{
 		_currentAction->update(dt);

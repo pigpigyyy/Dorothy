@@ -141,8 +141,11 @@ void oWorld::update( float dt )
 	_world.Step(dt > maxDeltaTime ? maxDeltaTime : dt, _velocityIterations, _positionIterations);
 	for (b2Body* b = _world.GetBodyList();b;b = b->GetNext())
 	{
-		oBody* body = (oBody*)b->GetUserData();
-		body->updatePhysics();
+		if (b->IsActive())
+		{
+			oBody* body = (oBody*)b->GetUserData();
+			body->updatePhysics();
+		}
 	}
 	_contactListner->SolveSensors();
 	CCNode::update(dt);
