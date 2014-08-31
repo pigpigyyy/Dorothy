@@ -154,7 +154,7 @@ tuple<CCFiniteTimeAction*,CCArray*> oSpriteDef::toResetAction()
 oModelDef::oModelDef():
 _texture(nullptr),
 _isFaceRight(false),
-_isBatchUsed(true)
+_isBatchUsed(false)
 { }
 
 oModelDef::oModelDef(
@@ -227,9 +227,9 @@ string oModelDef::toXml()
 	{
 		stream << char(oModelXml::FaceRight) << "=\"1\" ";
 	}
-	if (!_isBatchUsed)
+	if (_isBatchUsed)
 	{
-		stream << char(oModelXml::UseBatch) << "=\"0\" ";
+		stream << char(oModelXml::UseBatch) << "=\"1\" ";
 	}
 	if (_size != CCSize::zero)
 	{

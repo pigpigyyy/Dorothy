@@ -343,24 +343,19 @@ oMotorJoint* oJoint::wheel(
 	return joint;
 }
 
-void oMoveJoint::setTarget(const oVec2& targetPos)
+void oMoveJoint::setPosition(const oVec2& targetPos)
 {
-	_target = targetPos;
+	_position = targetPos;
 	b2MouseJoint* joint = (b2MouseJoint*)_joint;
 	joint->SetTarget(oWorld::b2Val(targetPos));
 }
-const oVec2& oMoveJoint::getTarget() const
+const oVec2& oMoveJoint::getPosition() const
 {
-	return _target;
+	return _position;
 }
 
-oMotorJoint::oMotorJoint():
-_motorEnabled(false)
-{ }
-
-void oMotorJoint::setMotorEnabled(bool var)
+void oMotorJoint::setEnabled(bool var)
 {
-	_motorEnabled = var;
 	switch (_joint->GetType())
 	{
 	case e_prismaticJoint:
@@ -374,9 +369,47 @@ void oMotorJoint::setMotorEnabled(bool var)
 		break;
 	}
 }
-bool oMotorJoint::isMotorEnabled() const
+bool oMotorJoint::isEnabled() const
 {
-	return _motorEnabled;
+	switch (_joint->GetType())
+	{
+	case e_prismaticJoint:
+		return ((b2PrismaticJoint*)_joint)->IsMotorEnabled();
+	case e_revoluteJoint:
+		return ((b2RevoluteJoint*)_joint)->IsMotorEnabled();
+	case e_wheelJoint:
+		return ((b2WheelJoint*)_joint)->IsMotorEnabled();
+	}
+	return false;
+}
+
+void oMotorJoint::setSpeed(float var)
+{
+	switch (_joint->GetType())
+	{
+	case e_prismaticJoint:
+		((b2PrismaticJoint*)_joint)->SetMotorSpeed(var);
+		break;
+	case e_revoluteJoint:
+		((b2RevoluteJoint*)_joint)->SetMotorSpeed(var);
+		break;
+	case e_wheelJoint:
+		((b2WheelJoint*)_joint)->SetMotorSpeed(var);
+		break;
+	}
+}
+float oMotorJoint::getSpeed() const
+{
+	switch (_joint->GetType())
+	{
+	case e_prismaticJoint:
+		return ((b2PrismaticJoint*)_joint)->GetMotorSpeed();
+	case e_revoluteJoint:
+		return ((b2RevoluteJoint*)_joint)->GetMotorSpeed();
+	case e_wheelJoint:
+		return ((b2WheelJoint*)_joint)->GetMotorSpeed();
+	}
+	return 0.0f;
 }
 
 NS_DOROTHY_END

@@ -6,7 +6,7 @@ local seconds = oRoutine.seconds
 local cycle = oRoutine.cycle
 local oTextField = require("ActionEditor/Script/oTextField")
 local oButton = require("ActionEditor/Script/oButton")
-
+--[[
 oAction:add(oAction.UserID,998,0,0,
 	--self=oAction
 	function(self)
@@ -27,6 +27,7 @@ oAction:add(oAction.UserID,998,0,0,
 	function(self)
 		print("end")
 	end)
+--]]
 
 CCKey =
 {
@@ -330,7 +331,7 @@ unitDef:setActions({
 	oAction.Stop,
 	oAction.Jump,
 	oAction.Idle,
-	oAction.UserID
+	--oAction.UserID
 })
 unitDef.reflexArc = 1
 

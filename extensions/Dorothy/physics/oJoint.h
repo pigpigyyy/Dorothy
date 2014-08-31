@@ -112,15 +112,15 @@ protected:
 class oMoveJoint: public oJoint
 {
 public:
-	PROPERTY_REF(oVec2, _target, Target);
+	PROPERTY_REF(oVec2, _position, Position);
 	CC_LUA_TYPE(oMoveJoint)
 };
 
 class oMotorJoint: public oJoint
 {
 public:
-	oMotorJoint();
-	PROPERTY_BOOL(_motorEnabled, MotorEnabled);
+	PROPERTY_NAME(float, Speed);
+	PROPERTY_BOOL_NAME(Enabled);
 	CC_LUA_TYPE(oMotorJoint)
 };
 

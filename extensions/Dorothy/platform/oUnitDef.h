@@ -26,6 +26,7 @@ public:
 	enum {BulletKey = 0, AttackKey = 1, HitKey = 2};
 	//Most are static properties below.
 	PROPERTY_REF(string, _model, Model);
+	PROPERTY_REF(CCSize, _size, Size);
 	PROPERTY_NAME(float, Density);
 	PROPERTY_NAME(float, Friction);
 	PROPERTY_NAME(float, Restitution);
@@ -33,7 +34,6 @@ public:
 	PROPERTY_BOOL_NAME(Static);
 	PROPERTY_READONLY(oModelDef*, ModelDef);
 	PROPERTY_READONLY(oBodyDef*, BodyDef);
-	PROPERTY_READONLY_REF(CCSize, Size);
 	int type;
 	int reflexArc;
 	float sensity;

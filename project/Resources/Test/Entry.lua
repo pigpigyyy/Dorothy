@@ -7,6 +7,10 @@ local CCSize = require("CCSize")
 local oVec2 = require("oVec2")
 local oOpacity = require("oOpacity")
 local CCScene = require("CCScene")
+local oRoutine = require("oRoutine")
+local once = require("oRoutine").once
+local wait = require("oRoutine").wait
+local seconds = require("oRoutine").seconds
 
 local winSize = CCDirector.winSize
 local panel = oSelectionPanel(winSize,true)
@@ -38,21 +42,26 @@ panel.init = function(self)
 			200,50,
 			winSize.width*0.5,y,
 			function()
-				dofile(Tests[i][2])	
-				if i ~= 1 then
-					local opMenu = CCMenu()
-					opMenu.contentSize = CCSize(60,60)
-					opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
-					opMenu.position = oVec2(winSize.width-40,40)
-					CCDirector.currentScene:addChild(opMenu)
-					local endBtn = oButton("Back",17,60,false,
-						0,0,
-						function()
-							CCDirector:popToRootScene()
-						end)
-					endBtn.anchor = oVec2.zero
-					opMenu:addChild(endBtn)
-				end
+				oRoutine(once(function()
+					--menu=CCMenu
+					--wait(seconds(3))	
+					oRoutine:clear()
+					dofile(Tests[i][2])
+					if i ~= 1 then
+						local opMenu = CCMenu()
+						opMenu.contentSize = CCSize(60,60)
+						opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
+						opMenu.position = oVec2(winSize.width-40,40)
+						CCDirector.currentScene:addChild(opMenu)
+						local endBtn = oButton("Back",17,60,false,
+							0,0,
+							function()
+								CCDirector:popToRootScene()
+							end)
+						endBtn.anchor = oVec2.zero
+						opMenu:addChild(endBtn)
+					end
+				end))
 			end)
 		menu:addChild(button)
 	end

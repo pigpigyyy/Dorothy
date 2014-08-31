@@ -84,10 +84,11 @@ class oJoint: public CCObject
 
 class oMoveJoint: public oJoint
 {
-	tolua_property__common oVec2 target;
+	tolua_property__common oVec2 position;
 };
 
 class oMotorJoint: public oJoint
 {
-	tolua_property__bool bool motorEnabled;
+	tolua_property__bool bool enabled;
+	tolua_property__common float speed;
 };

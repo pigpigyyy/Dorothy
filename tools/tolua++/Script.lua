@@ -110,13 +110,13 @@ setmetatable(oRoutine,
 
 oRoutine.start = function(self)
 	CCDirector:schedule(function()
-		local i,count = 1,#oRoutine
+		local i,count = 1,#self
 		while i <= count do
-			if oRoutine[i]() then
-				if i ~= count then
-					oRoutine[i] = oRoutine[count]
+			if self[i]() then
+				if i < count then
+					self[i] = self[count]
 				end
-				table.remove(oRoutine)
+				table.remove(self,count)
 				i = i-1
 				count = count-1
 			end

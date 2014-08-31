@@ -112,9 +112,9 @@ layer:registerTouchHandler(function(eventType, touch)
 		end)
 	elseif eventType == CCTouch.Moved then
 		if joint then
-			joint.target = pos
+			joint.position = pos
 		end
-	elseif eventType == CCTouch.Ended then
+	elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
 		if joint then
 			joint:destroy()
 			joint = nil

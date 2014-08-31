@@ -55,7 +55,7 @@ _unitDef(unitDef)
 	oUnit::setRotation(-CC_RADIANS_TO_DEGREES(oBody::getBodyDef()->angle));
 	oModelDef* modelDef = unitDef->getModelDef();
 	oModel* model = modelDef ? modelDef->toModel() : oModel::none();
-	_isFaceRight = modelDef->isFaceRight();
+	_isFaceRight = !modelDef || modelDef->isFaceRight();
 	model->setScaleX(unitDef->getScale());
 	model->setScaleY(unitDef->getScale());
 	oUnit::setModel(model);

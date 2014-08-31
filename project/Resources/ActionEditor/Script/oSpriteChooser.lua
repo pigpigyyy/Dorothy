@@ -25,7 +25,7 @@ local function oSpriteChooser()
 	local border = panel.border
 	local halfBW = borderSize.width*0.5
 	local halfBH = borderSize.height*0.5
-	local background= CCDrawNode()
+	local background = CCDrawNode()
 	background:drawPolygon(
 	{
 		oVec2(-halfBW,-halfBH),

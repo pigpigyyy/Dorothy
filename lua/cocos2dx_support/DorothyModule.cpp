@@ -1134,15 +1134,15 @@ CCRenderTexture* CCRenderTexture_create(int w, int h, bool withDepthStencil)
 	return CCRenderTexture::create(w, h, kCCTexture2DPixelFormat_RGBA8888, withDepthStencil ? GL_DEPTH24_STENCIL8 : 0);
 }
 
-int __olua_loadfile(const char* filename)
+int __olua_loadfile(lua_State* L, const char* filename)
 {
-	lua_State* L = CCLuaEngine::sharedEngine()->getState();
 	unsigned long codeBufferSize = 0;
 	unsigned char* codeBuffer = CCFileUtils::sharedFileUtils()->getFileData(filename, "rb", &codeBufferSize);
 	if (codeBuffer)
 	{
 		if (luaL_loadbuffer(L, (char*)codeBuffer, codeBufferSize, filename) != 0)
 		{
+			delete[] codeBuffer;
 			luaL_error(L, "error loading module %s from file %s :\n\t%s",
 				lua_tostring(L, 1), filename, lua_tostring(L, -1));
 		}
@@ -1156,8 +1156,7 @@ int __olua_loadfile(const char* filename)
 	}
 }
 
-int __olua_dofile(const char* filename)
+int __olua_dofile(lua_State* L, const char* filename)
 {
-	lua_State* L = CCLuaEngine::sharedEngine()->getState();
-	return __olua_loadfile(filename) || lua_pcall(L, 0, LUA_MULTRET, 0);
+	return __olua_loadfile(L, filename) || lua_pcall(L, 0, LUA_MULTRET, 0);
 }

@@ -19,8 +19,8 @@ class oUnitDef: public CCObject
 	tolua_property__common float friction;
 	tolua_property__common float restitution;
 	tolua_property__common string model;
+	tolua_property__common CCSize size;
 	tolua_readonly tolua_property__common oBodyDef* bodyDef;
-	tolua_readonly tolua_property__common CCSize size;
 
 	int type;
 	int reflexArc;

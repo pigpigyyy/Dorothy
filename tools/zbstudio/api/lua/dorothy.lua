@@ -6145,7 +6145,7 @@ local Dorothy =
 	{
 		childs =
 		{
-			target =
+			position =
 			{
 				description = "[oVec2]",
 				typeName = "oVec2",
@@ -6162,9 +6162,14 @@ local Dorothy =
 	{
 		childs =
 		{
-			motorEnabled =
+			enabled =
 			{
 				description = "[bool]",
+				type = "value",
+			},
+			speed =
+			{
+				description = "[float]",
 				type = "value",
 			},
 		},

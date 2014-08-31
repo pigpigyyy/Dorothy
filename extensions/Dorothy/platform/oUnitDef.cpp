@@ -72,8 +72,13 @@ oModelDef* oUnitDef::getModelDef() const
 
 const CCSize& oUnitDef::getSize() const
 {
-	if (_modelDef) return _modelDef->getSize();
-	return CCSize::zero;
+	return _size;
+}
+
+void oUnitDef::setSize(const CCSize& size)
+{
+	_size = size;
+	oUnitDef::updateBodyDef();
 }
 
 void oUnitDef::setDensity(float density)
@@ -118,32 +123,30 @@ float oUnitDef::getScale() const
 
 void oUnitDef::updateBodyDef()
 {
-	if (_modelDef)
+	_bodyDef->clearFixtures();
+	_bodyDef->fixedRotation = false;
+	CCSize size = _size;
+	size.width *= _scale;
+	size.height *= _scale;
+	if (size.width != 0.0f && size.height != 0.0f)
 	{
-		CCSize size = _modelDef->getSize();
-		size.width *= _scale;
-		size.height *= _scale;
-		if (size != CCSize::zero)
+		_bodyDef->fixedRotation = true;
+		float hw = size.width * 0.5f;
+		float hh = size.height * 0.5f;
+		oVec2 vertices[] =
 		{
-			_bodyDef->clearFixtures();
-			_bodyDef->fixedRotation = true;
-			float hw = size.width * 0.5f;
-			float hh = size.height * 0.5f;
-			oVec2 vertices[] =
-			{
-				oVec2(-hw, hh),
-				oVec2(-hw + BOTTOM_OFFSET, -hh),
-				oVec2(hw - BOTTOM_OFFSET, -hh),
-				oVec2(hw, hh)
-			};
-			_bodyDef->attachPolygon(vertices, 4, _density, _friction, _restitution);
-			_bodyDef->attachPolygonSensor(
-				oUnitDef::GroundSensorTag,
-				size.width - BOTTOM_OFFSET * 2,
-				GROUND_SENSOR_HEIGHT,
-				b2Vec2(0, -hh - GROUND_SENSOR_HEIGHT * 0.5f),
-				0);
-		}
+			oVec2(-hw, hh),
+			oVec2(-hw + BOTTOM_OFFSET, -hh),
+			oVec2(hw - BOTTOM_OFFSET, -hh),
+			oVec2(hw, hh)
+		};
+		_bodyDef->attachPolygon(vertices, 4, _density, _friction, _restitution);
+		_bodyDef->attachPolygonSensor(
+			oUnitDef::GroundSensorTag,
+			size.width - BOTTOM_OFFSET * 2,
+			GROUND_SENSOR_HEIGHT,
+			b2Vec2(0, -hh - GROUND_SENSOR_HEIGHT * 0.5f),
+			0);
 	}
 }
 
@@ -153,7 +156,10 @@ void oUnitDef::setModel(const string& modelFile)
 	if (!modelFile.empty())
 	{
 		_modelDef = oSharedModelCache.load(modelFile.c_str());
-		oUnitDef::updateBodyDef();
+		if (_size == CCSize::zero)
+		{
+			oUnitDef::setSize(_modelDef->getSize());
+		}
 	}
 }
 const string& oUnitDef::getModel() const
