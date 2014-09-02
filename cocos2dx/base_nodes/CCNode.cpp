@@ -467,6 +467,10 @@ void CCNode::cleanup()
 	this->stopAllActions();
 	this->unscheduleAllSelectors();
 
+	// lua callbacks
+	this->unscheduleUpdateLua();
+	this->unregisterScriptHandler();
+
 	CCScriptEngine::sharedEngine()->executeNodeEvent(this, CCNode::Cleanup);
 
 	// timers

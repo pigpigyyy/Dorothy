@@ -259,6 +259,7 @@ local function oSelectionPanel(borderSize,noCliping)
 			return true
 		end, false, CCMenu.DefaultHandlerPriority-3, false)
 
+	panel.view = view
 	panel.border = border
 	panel.menu = menu
 

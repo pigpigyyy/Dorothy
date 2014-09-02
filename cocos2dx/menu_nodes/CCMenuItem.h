@@ -76,6 +76,7 @@ public:
     virtual void selected();
     /** The item was unselected */
     virtual void unselected();
+	virtual void cleanup();
     
     /** Register menu handler script function */
     virtual void registerScriptTapHandler(int nHandler);

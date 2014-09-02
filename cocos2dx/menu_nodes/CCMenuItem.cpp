@@ -68,6 +68,12 @@ CCMenuItem::~CCMenuItem()
     unregisterScriptTapHandler();
 }
 
+void CCMenuItem::cleanup()
+{
+	CCNode::cleanup();
+	unregisterScriptTapHandler();
+}
+
 void CCMenuItem::selected()
 {
 	m_bSelected = true;

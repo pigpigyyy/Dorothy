@@ -62,7 +62,8 @@ public:
 	CCLayer();
     virtual ~CCLayer();
     virtual bool init();
-    
+	virtual void cleanup();
+
     /** create one layer */
     static CCLayer *create();
 

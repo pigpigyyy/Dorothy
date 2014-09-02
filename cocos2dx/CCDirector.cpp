@@ -615,31 +615,24 @@ void CCDirector::popScene()
 void CCDirector::popToRootScene()
 {
 	CCAssert(m_pRunningScene != NULL, "A running Scene is needed");
-	unsigned int c = m_pobScenesStack->count();
-
-	if (c == 1)
+	unsigned int count = m_pobScenesStack->count();
+	while (count > 1)
 	{
-		m_pobScenesStack->removeLastObject();
-		this->end();
-	}
-	else
-	{
-		while (c > 1)
+		CCScene *current = (CCScene*)m_pobScenesStack->lastObject();
+		if (current->isRunning())
 		{
-			CCScene *current = (CCScene*)m_pobScenesStack->lastObject();
-			if (current->isRunning())
-			{
-				current->onExitTransitionDidStart();
-				current->onExit();
-			}
-			current->cleanup();
-
-			m_pobScenesStack->removeLastObject();
-			c--;
+			current->onExitTransitionDidStart();
+			current->onExit();
 		}
-		m_pNextScene = (CCScene*)m_pobScenesStack->lastObject();
-		m_bSendCleanupToScene = false;
+		current->cleanup();
+
+		m_pobScenesStack->removeLastObject();
+		count--;
 	}
+	m_pRunningScene->release();
+	m_pRunningScene = NULL;
+	m_pNextScene = (CCScene*)m_pobScenesStack->lastObject();
+	m_bSendCleanupToScene = false;
 }
 
 void CCDirector::end()

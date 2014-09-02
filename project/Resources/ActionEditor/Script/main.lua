@@ -9,16 +9,24 @@ local CCSequence = require("CCSequence")
 local CCDelay = require("CCDelay")
 local oOpacity = require("oOpacity")
 local CCCall = require("CCCall")
+local CCNode = require("CCNode")
 
 collectgarbage("setpause", 100)
 collectgarbage("setstepmul", 5000)
 
-require = (function()
-	local _require = require
-	return function(modulename)
-		return 	package.loaded[modulename] or _require("ActionEditor/Script/"..modulename)
+local _require = require
+local loaded = {}
+require = function(modulename)
+	local result = package.loaded[modulename]
+	if not result then
+		local name = "ActionEditor/Script/"..modulename
+		result = _require(name)
+		if result then
+			loaded[name] = true
+		end
 	end
-end)()
+	return result
+end
 
 local oEditor = require("oEditor").oEditor
 local oViewArea = require("oViewArea")
@@ -145,4 +153,13 @@ end
 ]]
 
 --CCDirector.displayStats = true
+oEditor.scene:registerEventHandler(function(eventType)
+	if eventType == CCNode.Exit then
+		require = _require
+		for k,_ in pairs(loaded) do
+			package.loaded[k] = nil
+		end
+		oEditor.scene:unregisterEventHandler()
+	end
+end)
 CCDirector:run(oEditor.scene)

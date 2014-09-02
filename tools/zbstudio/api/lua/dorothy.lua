@@ -7,6 +7,49 @@ local index = genIndex()
 
 local Dorothy =
 {
+	tolua =
+	{
+		childs =
+		{
+			type =
+			{
+				args = "(item: CCObject)",
+				description = "get tolua type of a CCObject",
+				typeName = "string",
+				returns = "(typename: string)",
+				static = true,
+				type = "function",
+			},
+			cast =
+			{
+				args = "(object: CCObject, typename: string)",
+				description = "type cast, if target type is not a super or base type, it returns null",
+				typeName = "CCObject",
+				returns = "(object: CCObject)",
+				static = true,
+				type = "function",
+			},
+			setpeer =
+			{
+				args = "(item: userdata, data: table)",
+				description = "",
+				returns = "()",
+				static = true,
+				type = "function",
+			},
+			getpeer =
+			{
+				args = "(item: userdata)",
+				description = "",
+				returns = "(data: table)",
+				static = true,
+				type = "function",
+			},
+		},
+		description = "tolua helper functions",
+		type = "class",
+		index = index()
+	},
 	CCObject =
 	{
 		childs =

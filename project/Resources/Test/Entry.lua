@@ -11,6 +11,8 @@ local oRoutine = require("oRoutine")
 local once = require("oRoutine").once
 local wait = require("oRoutine").wait
 local seconds = require("oRoutine").seconds
+local CCObject = require("CCObject")
+local cclog = require("cclog")
 
 local winSize = CCDirector.winSize
 local panel = oSelectionPanel(winSize,true)
@@ -21,7 +23,6 @@ opMenu.contentSize = CCSize(60,60)
 opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
 opMenu.position = oVec2(winSize.width-40,40)
 panel:addChild(opMenu)
-
 local endButton = oButton("Exit",17,60,false,
 	0,0,
 	function()
@@ -30,8 +31,26 @@ local endButton = oButton("Exit",17,60,false,
 endButton.anchor = oVec2.zero
 opMenu:addChild(endButton)
 
+opMenu = CCMenu()
+opMenu.contentSize = CCSize(60,60)
+opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
+opMenu.position = oVec2(40,40)
+panel:addChild(opMenu)
+endButton = oButton("Clean",17,60,false,
+	0,0,
+	function()
+		collectgarbage()
+		cclog("[LUA MEMORY USAGE] %d KB",collectgarbage("count"))
+		cclog("Object Count: %d",CCObject.count)
+		cclog("Lua Count: %d",CCObject.luaRefCount)
+		cclog("Callback Count: %d", CCObject.callRefCount)
+	end)
+endButton.anchor = oVec2.zero
+opMenu:addChild(endButton)
+
 panel.init = function(self)
 	menu.opacity = 0
+	menu.enabled = false
 	menu:runAction(oOpacity(0.3,1))
 	local y = 0
 	for i = 1,#Tests do
@@ -44,8 +63,12 @@ panel.init = function(self)
 			function()
 				oRoutine(once(function()
 					--menu=CCMenu
-					--wait(seconds(3))	
-					oRoutine:clear()
+					--panel=CCLayer
+					panel.touchEnabled = false
+					menu.enabled = false
+					wait(seconds(0.3))
+					panel.touchEnabled = true
+					menu.enabled = true
 					dofile(Tests[i][2])
 					if i ~= 1 then
 						local opMenu = CCMenu()
@@ -56,7 +79,11 @@ panel.init = function(self)
 						local endBtn = oButton("Back",17,60,false,
 							0,0,
 							function()
-								CCDirector:popToRootScene()
+								oRoutine(once(function()
+									opMenu.enabled = false
+									wait(seconds(0.3))
+									CCDirector:popToRootScene()
+								end))
 							end)
 						endBtn.anchor = oVec2.zero
 						opMenu:addChild(endBtn)

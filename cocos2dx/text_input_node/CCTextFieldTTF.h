@@ -106,7 +106,7 @@ class CC_DLL CCTextFieldTTF : public CCLabelTTF, public CCIMEDelegate
 public:
     CCTextFieldTTF();
     virtual ~CCTextFieldTTF();
-
+	virtual void cleanup();
     //char * description();
 
     /** creates a CCTextFieldTTF from a fontname, alignment, dimension and font size */

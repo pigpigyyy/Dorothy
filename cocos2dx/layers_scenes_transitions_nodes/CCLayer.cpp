@@ -78,6 +78,14 @@ bool CCLayer::init()
 	return bRet;
 }
 
+void CCLayer::cleanup()
+{
+	CCNode::cleanup();
+	CCLayer::unregisterScriptTouchHandler();
+	CCLayer::unregisterScriptKeypadHandler();
+	CCLayer::unregisterScriptAccelerateHandler();
+}
+
 CCLayer *CCLayer::create()
 {
 	CCLayer *pRet = new CCLayer();
