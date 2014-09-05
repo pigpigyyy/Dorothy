@@ -164,6 +164,9 @@ public:
     virtual bool executeAssert(bool cond, const char *msg = NULL);
 
 	virtual bool scriptHandlerEqual(int nHandlerA, int nHandlerB);
+	
+	virtual void removePeer(CCObject* object);
+
 	static void setEngine(CCScriptEngine* engine);
 	static CCScriptEngine* sharedEngine();
 private:

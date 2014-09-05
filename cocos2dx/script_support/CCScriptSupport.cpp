@@ -36,8 +36,7 @@ void CC_DLL cc_assert_script_compatible(bool cond, const char *msg)
 
 NS_CC_BEGIN
 
-// #pragma mark -
-// #pragma mark CCScriptHandlerEntry
+// CCScriptHandlerEntry
 
 CCScriptHandlerEntry* CCScriptHandlerEntry::create(int nHandler)
 {
@@ -60,8 +59,7 @@ int CCScriptHandlerEntry::getHandler()
 	return m_nHandler;
 }
 
-// #pragma mark -
-// #pragma mark CCSchedulerScriptHandlerEntry
+// CCSchedulerScriptHandlerEntry
 
 CCSchedulerScriptHandlerEntry* CCSchedulerScriptHandlerEntry::create(int nHandler, float fInterval, bool bPaused)
 {
@@ -114,8 +112,7 @@ bool CCSchedulerScriptHandlerEntry::isMarkedForDeletion()
 	return m_bMarkedForDeletion;
 }
 
-// #pragma mark -
-// #pragma mark CCTouchScriptHandlerEntry
+// CCTouchScriptHandlerEntry
 
 CCTouchScriptHandlerEntry* CCTouchScriptHandlerEntry::create(int nHandler,
 	bool bIsMultiTouches,
@@ -200,5 +197,6 @@ void CCScriptEngine::removeScriptHandler(int nHandler){}
 bool CCScriptEngine::scriptHandlerEqual(int nHandlerA, int nHandlerB){ return false; }
 int CCScriptEngine::executeActionCreate(int nHandler){ return 0; }
 int CCScriptEngine::executeActionUpdate(int nHandler, void* param, const char* paramName, float deltaTime){ return 0; }
+void CCScriptEngine::removePeer(CCObject* object){}
 
 NS_CC_END

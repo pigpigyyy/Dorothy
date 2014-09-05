@@ -98,6 +98,12 @@ void oBullet::onExit()
 	}
 }
 
+void oBullet::cleanup()
+{
+	oBody::cleanup();
+	oBullet::clearHandler();
+}
+
 oBullet* oBullet::create(oBulletDef* def, oUnit* unit)
 {
 	oBullet* bullet = new oBullet(def, unit);

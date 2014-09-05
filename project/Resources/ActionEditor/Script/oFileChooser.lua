@@ -354,22 +354,23 @@ local function oFileChooser()
 				itemWidth,50,
 				xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
 				function(item)
+					local file = item.file
 					cancelButton.label.text = "Edit"
 					cancelButton.label.texture.antiAlias = false
 					panel:removeMenuItems()
-					if item.file:sub(-5,-1) == ".clip" then
-						cancelButton.editTarget = item.file:sub(1,-6)
-						addClip(item.file)
+					if file:sub(-5,-1) == ".clip" then
+						cancelButton.editTarget = file:sub(1,-6)
+						addClip(file)
 					else
-						cancelButton.editTarget = item.file
-						if fileDict[item.file] then
-							updateButton.targetFile = item.file
-							addClip(item.file..".clip")
-							if #oContent:getDirEntries(oEditor.input..item.file,false) > 0 then
+						cancelButton.editTarget = file
+						if fileDict[file] then
+							updateButton.targetFile = file
+							addClip(file..".clip")
+							if #oContent:getDirEntries(oEditor.input..file,false) > 0 then
 								updateButton.visible = true
 							end
 						else
-							addImages(item.file)
+							addImages(file)
 						end
 					end
 				end)

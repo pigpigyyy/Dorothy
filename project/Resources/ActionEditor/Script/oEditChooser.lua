@@ -320,6 +320,42 @@ local function oEditChooser(withCancel)
 			}))
 		yStart = y-25
 
+		if CCDirector.sceneStackSize > 1 then
+			title = CCLabelTTF("Back to Menu","Arial",24)
+			title.texture.antiAlias = false
+			title.color = ccColor3(0x00ffff)
+			title.anchor = oVec2(0.5,1)
+			y = yStart-20
+			title.position = oVec2(winSize.width*0.5,y)
+			menu:addChild(title)
+			title.opacity = 0
+			title:runAction(oOpacity(0.3,0.5))
+			yStart = y-title.contentSize.height
+
+			y = yStart-45
+			newButton = oButton(
+				"Back",17,
+				itemWidth,50,
+				xStart+itemWidth*0.5+10,
+				y,
+				function()
+					cancelButton:unregisterTapHandler()
+					opMenu.enabled = false
+					panel:hide()
+					CCDirector:popScene()
+				end)
+			newButton.color = ccColor3(0xffcc88)
+			menu:addChild(newButton)
+			newButton.opacity = 0
+			newButton:runAction(
+				CCSequence(
+				{
+					CCDelay((i%itemNum)*0.05),
+					oOpacity(0.3,1)
+				}))
+			yStart = y-25
+		end
+
 		local yTo = winSize.height*0.5+halfBH-y+60
 		local viewHeight = yTo < borderSize.height and borderSize.height or yTo
 		local viewWidth = borderSize.width

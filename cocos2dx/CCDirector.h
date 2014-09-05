@@ -298,6 +298,7 @@ public:
 	float getContentScaleFactor();
 
 	float getEclapsedInterval();
+	unsigned int getSceneStackSize();
 
 	void scheduleUpdateLua(int handler);
 	void unscheduleUpdateLua();

@@ -33,6 +33,7 @@ public:
 	PROPERTY_READONLY(oSensor*, DetectSensor);
 	virtual void update(float dt);
 	virtual void onExit();
+	virtual void cleanup();
 	void onBodyEnter(oSensor* sensor, oBody* body);
 	void onFaceDisposed(oIDisposable* item);
 	oBulletDef* getBulletDef();

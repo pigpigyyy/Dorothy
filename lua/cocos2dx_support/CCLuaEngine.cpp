@@ -140,6 +140,22 @@ void CCLuaEngine::removeScriptHandler(int nHandler)
 	toluafix_remove_function_by_refid(L, nHandler);
 }
 
+void CCLuaEngine::removePeer(CCObject* object)
+{
+	if (object->isLuaRef())
+	{
+		int refid = object->getLuaRef();
+		lua_rawgeti(L, LUA_REGISTRYINDEX, TOLUA_UBOX);// ubox
+		lua_rawgeti(L, -1, refid);// ubox ud
+		if (!lua_isnil(L, -1))
+		{
+			lua_pushvalue(L, TOLUA_NOPEER);// ubox ud nopeer
+			lua_setfenv(L, -2);// ud<nopeer>, ubox ud
+		}
+		lua_pop(L, 2);// empty
+	}
+}
+
 int CCLuaEngine::executeString(const char *codes)
 {
 	luaL_loadstring(L, codes);

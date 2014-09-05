@@ -331,7 +331,7 @@ local function oSelectionPanel(borderSize,noCliping)
 				end
 			end
 		end
-		menu:removeAllChildren()
+		menu:removeAllChildrenWithCleanup()
 	end
 	
 	return panel

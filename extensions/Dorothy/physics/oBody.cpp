@@ -58,6 +58,17 @@ void oBody::onExit()
 	_bodyB2->SetActive(false);//Set active false to trigger sensor`s unit leave event.
 }
 
+void oBody::cleanup()
+{
+	CCNode::cleanup();
+	CCARRAY_START(oSensor, item, _sensors)
+	{
+		item->bodyEnter.Clear();
+		item->bodyLeave.Clear();
+	}
+	CCARRAY_END
+}
+
 oBodyDef* oBody::getBodyDef() const
 {
 	return _bodyDef;

@@ -182,6 +182,11 @@ unsigned int CCObject::getLuaRef()
 	return _luaRef;
 }
 
+bool CCObject::isLuaRef()
+{
+	return _luaRef != 0;
+}
+
 void CCWeak::release()
 {
 	--_refCount;

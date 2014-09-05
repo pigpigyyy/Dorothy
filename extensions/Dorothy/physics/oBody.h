@@ -22,6 +22,7 @@ public:
 	virtual ~oBody();
 	virtual void onEnter();
 	virtual void onExit();
+	virtual void cleanup();
 	PROPERTY_NAME(float, LinearDamping);
 	PROPERTY_NAME(float, AngularDamping);
 	PROPERTY_NAME(float, AngularRate);

@@ -463,17 +463,24 @@ CCNode* CCNode::create()
 
 void CCNode::cleanup()
 {
-	// actions
+	// trigger event
+	CCScriptEngine::sharedEngine()->executeNodeEvent(this, CCNode::Cleanup);
+
+	// clear actions
 	this->stopAllActions();
 	this->unscheduleAllSelectors();
 
-	// lua callbacks
+	// clear lua callbacks
 	this->unscheduleUpdateLua();
 	this->unregisterScriptHandler();
 
-	CCScriptEngine::sharedEngine()->executeNodeEvent(this, CCNode::Cleanup);
+	// clear user object
+	CC_SAFE_RELEASE(m_pUserObject);
 
-	// timers
+	// remove peer data
+	CCScriptEngine::sharedEngine()->removePeer(this);
+
+	// cleanup children
 	arrayMakeObjectsPerformSelector(m_pChildren, cleanup, CCNode*);
 }
 

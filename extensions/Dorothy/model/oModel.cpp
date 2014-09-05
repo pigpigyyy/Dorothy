@@ -366,6 +366,15 @@ float oModel::getDuration() const
 	return 0;
 }
 
+void oModel::cleanup()
+{
+	CCNode::cleanup();
+	for (oAnimationGroup* animationGroup : _animationGroups)
+	{
+		animationGroup->animationEnd.Clear();
+	}
+}
+
 oModel* oModel::none()
 {
 	return oModelDef::create()->toModel();

@@ -21,6 +21,7 @@ local CCSequence = require("CCSequence")
 local oEditor = require("oEditor").oEditor
 local oSd = require("oEditor").oSd
 local oKd = require("oEditor").oKd
+local CCDictionary = require("CCDictionary")
 
 local function oSettingPanel()
 	local winSize = CCDirector.winSize
@@ -54,6 +55,7 @@ local function oSettingPanel()
 	panel.opacity = 0.4
 	panel.touchEnabled = true
 	panel.position = oVec2(winSize.width-170,70)
+	panel.data = CCDictionary()
 
 	local border = CCDrawNode()
 	border:drawPolygon(
@@ -917,7 +919,7 @@ local function oSettingPanel()
 	end
 
 	local isShowingRoot = false
-	panel.selectListener = oListener("ImageSelected",
+	panel.data.selectListener = oListener("ImageSelected",
 		function(args)
 			if oEditor.state ~= oEditor.EDIT_LOOK and args then
 				local sp = args[1]
@@ -1057,7 +1059,7 @@ local function oSettingPanel()
 		keyItems.EaseO:setValue(oEditor.easeNames[frame[oKd.easeOpacity]])
 	end
 	
-	panel.posListener = oListener("ControlBarPos",
+	panel.data.posListener = oListener("ControlBarPos",
 		function(pos)
 			if not oEditor.animationData or not oEditor.sprite then
 				for _,item in pairs(keyItems) do
@@ -1093,7 +1095,7 @@ local function oSettingPanel()
 		end)
 
 	local selectedItem = nil
-	panel.listener = oListener("SettingSelected",
+	panel.data.listener = oListener("SettingSelected",
 		function(menuItem)
 			if selectedItem and selectedItem == menuItem then
 				selectedItem:select(false)

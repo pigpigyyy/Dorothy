@@ -24,6 +24,7 @@ local CCNode = require("CCNode")
 local oListener = require("oListener")
 local oSd = require("oEditor").oSd
 local oEditor = require("oEditor").oEditor
+local CCDictionary = require("CCDictionary")
 
 local function oViewPanel()
 	local winSize = CCDirector.winSize
@@ -57,6 +58,7 @@ local function oViewPanel()
 	panel.opacity = 0.4
 	panel.touchEnabled = true
 	panel.position = oVec2(winSize.width-170,winSize.height-borderSize.height-10)
+	panel.data = CCDictionary()
 
 	local border = CCDrawNode()
 	border:drawPolygon(
@@ -502,7 +504,7 @@ local function oViewPanel()
 		end
 		panel.items = {}
 		panel:showOutline(false)
-		menu:removeAllChildren()
+		menu:removeAllChildrenWithCleanup()
 		local clipFile = data[oSd.clipFile]
 		local drawNode = CCDrawNode()
 		menu:addChild(drawNode)
@@ -609,7 +611,7 @@ local function oViewPanel()
 
 	local selectedItem = nil
 	local outline = nil
-	panel.listener = oListener("ImageSelected",
+	panel.data.listener = oListener("ImageSelected",
 		function(args)
 			if not args then
 				if selectedItem then

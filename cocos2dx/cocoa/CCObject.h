@@ -74,6 +74,7 @@ public:
 	virtual ~CCObject();
 	unsigned int getObjectId() const;
 	unsigned int getLuaRef();
+	bool isLuaRef();
 	void addLuaRef();
 	void removeLuaRef();
 	void release();

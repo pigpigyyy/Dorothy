@@ -10,6 +10,7 @@ class CCDirector
 	tolua_readonly tolua_property__common CCSize winSize;
 	tolua_readonly tolua_property__common CCSize visibleSize;
 	tolua_readonly tolua_property__common oVec2 visibleOrigin;
+	tolua_readonly tolua_property__common int sceneStackSize;
 
 	tolua_property__bool bool displayStats;
 	tolua_property__common float contentScaleFactor;

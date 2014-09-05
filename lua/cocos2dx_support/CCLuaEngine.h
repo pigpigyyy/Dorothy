@@ -58,6 +58,8 @@ public:
 	 @brief Remove Lua function reference
 	 */
 	virtual void removeScriptHandler(int nHandler);
+
+	virtual void removePeer(CCObject* object);
 	/**
 	 @brief Execute script code contained in the given string.
 	 @param codes holding the valid script code that should be executed.

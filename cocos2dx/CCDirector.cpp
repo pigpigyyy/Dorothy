@@ -950,6 +950,11 @@ float CCDirector::getEclapsedInterval()
 	return CCDirector::getInterval(s_obTickStart);
 }
 
+unsigned int CCDirector::getSceneStackSize()
+{
+	return m_pobScenesStack->count();
+}
+
 float CCDirector::getUpdateInterval()
 {
 	return m_fUpdateInterval;

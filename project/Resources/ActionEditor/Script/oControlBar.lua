@@ -16,6 +16,7 @@ local CCRect = require("CCRect")
 local oEditor = require("oEditor").oEditor
 local oAd = require("oEditor").oAd
 local oKd = require("oEditor").oKd
+local CCDictionary = require("CCDictionary")
 
 local function oControlBar()
     local winSize = CCDirector.winSize
@@ -27,6 +28,7 @@ local function oControlBar()
 	controlBar.contentSize = CCSize(winSize.width,60)
 	controlBar.opacity = 0.4
 	controlBar.touchEnabled = true
+	controlBar.data = CCDictionary()
 	
 	-- border
 	local border = CCDrawNode()
@@ -70,7 +72,7 @@ local function oControlBar()
 	ruler.setSize = function(self,size)
 		local delta = barIterval
 		if size < self._size then
-			self:removeAllChildren(true)
+			self:removeAllChildrenWithCleanup()
 			self:clear()
 			self:drawSegment(oVec2.zero,oVec2(delta*size,0),0.5,ccColor4(0xffffffff))
 		else
@@ -184,7 +186,7 @@ local function oControlBar()
 	local offset = 0
 	local moveBar = false
 	local locLength = 0
-	controlBar.listener = oListener("PlayState",
+	controlBar.data.listener = oListener("PlayState",
 		function(state)
 			if state == "Play" then
 				controlBar.touchEnabled = false

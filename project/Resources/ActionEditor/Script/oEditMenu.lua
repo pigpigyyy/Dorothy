@@ -20,6 +20,7 @@ local oSd = require("oEditor").oSd
 local oEditor = require("oEditor").oEditor
 local oAd = require("oEditor").oAd
 local oKd = require("oEditor").oKd
+local CCDictionary = require("CCDictionary")
 
 local function removeAnimation(sp,index)
 	local aDefs = sp[oSd.animationDefs]
@@ -48,6 +49,7 @@ local function oEditMenu()
     local winSize = CCDirector.winSize
     local menu = CCMenu(false)
 	menu.anchor = oVec2.zero
+	menu.data = CCDictionary()
 	local frameCopy = nil
 	local items =
 	{
@@ -825,7 +827,7 @@ oEditor.spriteData[oSd.index]
 		end
 		items.Size.visible = false
 		items.Visible:setText("Visible")
-		menu.selectListener.enabled = true
+		menu.data.selectListener.enabled = true
 		oEditor.state = oEditor.EDIT_LOOK
 		oEditor.settingPanel.visible = false
 		oEditor.controlBar.visible = false
@@ -835,16 +837,16 @@ oEditor.spriteData[oSd.index]
 		oEditor.viewPanel:selectItem(oEditor.spriteData)
 	end
 	
-	menu.selectListener = oListener("ImageSelected",
+	menu.data.selectListener = oListener("ImageSelected",
 		function(args)
 			if not args then
 				return
 			end
 			items.Visible:setText(args[2].visible and "Hide" or "Show")
 		end)
-	menu.selectListener.enabled = false
+	menu.data.selectListener.enabled = false
 
-	menu.loadListener = oListener("EditorLoaded",
+	menu.data.loadListener = oListener("EditorLoaded",
 		function()
 			menu:toStart()
 		end)

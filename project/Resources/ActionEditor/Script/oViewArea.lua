@@ -25,12 +25,14 @@ local ccColor3 = require("ccColor3")
 local oEditor = require("oEditor").oEditor
 local oKd = require("oEditor").oKd
 local oSd = require("oEditor").oSd
+local CCDictionary = require("CCDictionary")
 
 local function oViewArea()
 	local winSize = CCDirector.winSize
 	local view = CCLayerColor(ccColor4(0xff1a1a1a),winSize.width, winSize.height)
 	view.anchor = oVec2.zero
 	view.cascadeOpacity = true
+	view.data = CCDictionary()
 
 	local crossNode = CCNode()
 	local origin = oVec2(
@@ -189,7 +191,7 @@ local function oViewArea()
 
 	view.setModel = function(self,model)
 		self._model = model
-		scrollNode:removeAllChildren(true)
+		scrollNode:removeAllChildrenWithCleanup()
 		if model ~= nil then
 			scrollNode:addChild(model)
 		end
@@ -218,7 +220,7 @@ local function oViewArea()
 		end
 		return self._model
 	end
-	view.loopListener = oListener("LoopState",
+	view.data.loopListener = oListener("LoopState",
 		function(loop)
 			if view._model then
 				view._model.loop = loop

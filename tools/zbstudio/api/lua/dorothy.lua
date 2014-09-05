@@ -346,9 +346,9 @@ local Dorothy =
 				returns = "()",
 				type = "method",
 			},
-			removeAllChildren =
+			removeAllChildrenWithCleanup =
 			{
-				args = "(cleanup: bool)",
+				args = "(cleanup: bool = true)",
 				description = "",
 				returns = "()",
 				type = "method",
@@ -368,6 +368,13 @@ local Dorothy =
 				type = "method",
 			},
 			stopAllActions =
+			{
+				args = "()",
+				description = "",
+				returns = "()",
+				type = "method",
+			},
+			cleanup =
 			{
 				args = "()",
 				description = "",
@@ -1444,6 +1451,12 @@ local Dorothy =
 			{
 				description = "[oVec2][readonly]",
 				typeName = "oVec2",
+				static = true,
+				type = "value",
+			},
+			sceneStackSize =
+			{
+				description = "[int][readonly]",
 				static = true,
 				type = "value",
 			},
