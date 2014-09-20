@@ -10,6 +10,8 @@ local CCDelay = require("CCDelay")
 local oOpacity = require("oOpacity")
 local CCCall = require("CCCall")
 local CCNode = require("CCNode")
+local oCache = require("oCache")
+local CCTextureCache = require("CCTextureCache")
 
 collectgarbage("setpause", 100)
 collectgarbage("setstepmul", 5000)
@@ -159,9 +161,11 @@ oEditor.scene:registerEventHandler(function(eventType)
 		for k,_ in pairs(loaded) do
 			package.loaded[k] = nil
 		end
-		for k,_ in pairs(oEditor) do
+		oCache:clear()
+		CCTextureCache:unload()
+		--[[for k,_ in pairs(oEditor) do
 			oEditor[k] = nil
-		end
+		end]]
 	end
 end)
 CCDirector:run(oEditor.scene)

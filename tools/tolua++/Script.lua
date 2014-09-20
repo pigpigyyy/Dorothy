@@ -54,14 +54,11 @@ local oRoutine =
 			table.remove(self)
 		end
 	end,
-	wait = (function()
-		local director = CCDirector
-		return function(cond)
-			while cond(director.deltaTime) do
-				yield()
-			end
+	wait = function(cond)
+		while cond(CCDirector.deltaTime) do
+			yield()
 		end
-	end)(),
+	end,
 	once = function(job)
 		return wrap(function(...)
 			job(...)
@@ -133,80 +130,78 @@ oRoutine:start()
 
 loaded.oRoutine = oRoutine
 
-CCArray.__index = (function()
-	local _index = CCArray.__index
-	local _get = CCArray.get
-	return function(self,key)
-		if type(key) == "number" then
-			return _get(self,key)
-		end
-		return _index(self,key)
+local CCArray_index = CCArray.__index
+local CCArray_get = CCArray.get
+CCArray.__index = function(self,key)
+	if type(key) == "number" then
+		return CCArray_get(self,key)
 	end
-end)()
+	return CCArray_index(self,key)
+end
 
-CCArray.__newindex = (function()
-	local _newindex = CCArray.__newindex
-	local _set = CCArray.set
-	return function(self,key,value)
-		if type(key) == "number" then
-			_set(self,key,value)
-		else
-			_newindex(self,key,value)
-		end
+local CCArray_newindex = CCArray.__newindex
+local CCArray_set = CCArray.set
+CCArray.__newindex = function(self,key,value)
+	if type(key) == "number" then
+		CCArray_set(self,key,value)
+	else
+		CCArray_newindex(self,key,value)
 	end
-end)()
+end
 
-CCDictionary.__index = (function()
-	local _index = CCDictionary.__index
-	local _get = CCDictionary.get
-	return function(self,key)
-		local item = _get(self,key)
-		if item ~= nil then return item end
-		return _index(self,key)
-	end
-end)()
+local CCDictionary_index = CCDictionary.__index
+local CCDictionary_get = CCDictionary.get
+CCDictionary.__index = function(self,key)
+	local item = CCDictionary_get(self,key)
+	if item ~= nil then return item end
+	return CCDictionary_index(self,key)
+end
 
-CCDictionary.__newindex = (function()
-	local _set = CCDictionary.set
-	return function(self,key,value)
-		_set(self,key,value)
-	end
-end)()
+local CCDictionary_set = CCDictionary.set
+CCDictionary.__newindex = function(self,key,value)
+	CCDictionary_set(self,key,value)
+end
 
-oEvent.send = (function()
-	oEvent.args = {}
-	local send = oEvent.send
-	return function(self, name, args)
-		oEvent.args[name] = args
-		send(self, name)
-	end
-end)()
+local oEvent_args = {}
+local oEvent_send = oEvent.send
+oEvent.send = function(self,name,args)
+	oEvent_args[name] = args
+	oEvent_send(self,name)
+end
 
-loaded.oListener = (function()
-	local listener = loaded.oListener
-	return function(name, handler)
-		return listener(name,
+local oEvent_remove = oEvent.remove
+oEvent.remove = function(self,name)
+	oEvent_args[name] = nil
+	oEvent_remove(self,name)
+end
+
+local oListener = loaded.oListener
+loaded.oListener = function(name,handler)
+	return oListener(name,
 			function(event)
-				handler(oEvent.args[name], event)
-		end)
-	end
-end)()
+				handler(oEvent_args[name],event)
+			end)
+end
 
-oAction.add = (function()
-	local _add = oAction.add
-	local _once = oRoutine.once
-	return function(self,id,priority,reaction,recovery,access,routine,stop)
-		_add(self,id,
-			priority,
-			reaction,
-			recovery,
-			access,
-			function()
-				return _once(routine)
-			end,
-			stop)
-	end
-end)()
+local oAction_add = oAction.add
+local oRoutine_once = oRoutine.once
+oAction.add = function(self,id,priority,reaction,recovery,access,routine,stop)
+	oAction_add(self,
+		id,
+		priority,
+		reaction,
+		recovery,
+		access,
+		function()
+			return oRoutine_once(routine)
+		end,
+		stop)
+end
+
+local oCache_clear = loaded.oCache.clear
+loaded.oCache.clear = function(self)
+	oCache_clear()
+end
 
 Dorothy = (function()
 	local tb
@@ -218,6 +213,6 @@ Dorothy = (function()
 		setmetatable(tb,{__index=_G})
 		return tb
 	end
-	return function() return tb or gettb() end
+	return function() return 1,tb or gettb() end
 end)()
 $]

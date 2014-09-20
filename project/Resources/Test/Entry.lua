@@ -7,10 +7,10 @@ local CCSize = require("CCSize")
 local oVec2 = require("oVec2")
 local oOpacity = require("oOpacity")
 local CCScene = require("CCScene")
-local oRoutine = require("oRoutine")
-local once = require("oRoutine").once
-local wait = require("oRoutine").wait
-local seconds = require("oRoutine").seconds
+--local oRoutine = require("oRoutine")
+--local once = require("oRoutine").once
+--local wait = require("oRoutine").wait
+--local seconds = require("oRoutine").seconds
 local CCObject = require("CCObject")
 local cclog = require("cclog")
 
@@ -36,7 +36,7 @@ opMenu.contentSize = CCSize(60,60)
 opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
 opMenu.position = oVec2(40,40)
 panel:addChild(opMenu)
-endButton = oButton("Clean",17,60,false,
+endButton = oButton("GC",17,60,false,
 	0,0,
 	function()
 		collectgarbage()
@@ -61,34 +61,21 @@ panel.init = function(self)
 			200,50,
 			winSize.width*0.5,y,
 			function()
-				oRoutine(once(function()
-					--menu=CCMenu
-					--panel=CCLayer
-					panel.touchEnabled = false
-					menu.enabled = false
-					wait(seconds(0.3))
-					panel.touchEnabled = true
-					menu.enabled = true
-					dofile(Tests[i][2])
-					if i ~= 1 then
-						local opMenu = CCMenu()
-						opMenu.contentSize = CCSize(60,60)
-						opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
-						opMenu.position = oVec2(winSize.width-40,40)
-						CCDirector.currentScene:addChild(opMenu)
-						local endBtn = oButton("Back",17,60,false,
-							0,0,
-							function()
-								oRoutine(once(function()
-									opMenu.enabled = false
-									wait(seconds(0.3))
-									CCDirector:popToRootScene()
-								end))
-							end)
-						endBtn.anchor = oVec2.zero
-						opMenu:addChild(endBtn)
-					end
-				end))
+				dofile(Tests[i][2])
+				if i ~= 1 then
+					local opMenu = CCMenu()
+					opMenu.contentSize = CCSize(60,60)
+					opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
+					opMenu.position = oVec2(winSize.width-40,40)
+					CCDirector.currentScene:addChild(opMenu)
+					local endBtn = oButton("Back",17,60,false,
+						0,0,
+						function()
+							CCDirector:popToRootScene()
+						end)
+					endBtn.anchor = oVec2.zero
+					opMenu:addChild(endBtn)
+				end
 			end)
 		menu:addChild(button)
 	end

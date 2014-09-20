@@ -1,4 +1,5 @@
-setfenv(1,Dorothy())
+setfenv(Dorothy())
+
 local wait = oRoutine.wait
 local once = oRoutine.once
 local loop = oRoutine.loop

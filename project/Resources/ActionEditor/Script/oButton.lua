@@ -44,11 +44,11 @@ local function oButton(text, fontSize, width, height, x, y,tapped)
 	else
 		face:addChild(oLine(
 		{
-			oVec2(0,0),
+			oVec2.zero,
 			oVec2(width,0),
 			oVec2(width,height),
 			oVec2(0,height),
-			oVec2(0,0)
+			oVec2.zero
 		},ccColor4()))
 	end
 

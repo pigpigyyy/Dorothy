@@ -59,7 +59,7 @@ static int lua_print(lua_State * luastate)
 		}
 		if (i != nargs) t += "\t";
 	}
-	CCLOG("%s",t.c_str());
+	CCLOG("%s", t.c_str());
 	return 0;
 }
 
@@ -85,12 +85,12 @@ m_callFromLua(0)
 	addLuaLoader(cocos2dx_lua_loader);
 
 	tolua_beginmodule(L, 0);
-		tolua_beginmodule(L, "CCDictionary");
-			tolua_variable(L, "keys", CCDictionary_keys, nullptr);
-			tolua_variable(L, "randomObject", CCDictionary_randomObject, nullptr);
-			tolua_function(L, "set", CCDictionary_set);
-			tolua_function(L, "get", CCDictionary_get);
-		tolua_endmodule(L);
+	tolua_beginmodule(L, "CCDictionary");
+	tolua_variable(L, "keys", CCDictionary_keys, nullptr);
+	tolua_variable(L, "randomObject", CCDictionary_randomObject, nullptr);
+	tolua_function(L, "set", CCDictionary_set);
+	tolua_function(L, "get", CCDictionary_get);
+	tolua_endmodule(L);
 	tolua_endmodule(L);
 
 	tolua_LuaCode_open(L);
@@ -101,7 +101,7 @@ m_callFromLua(0)
 CCLuaEngine* CCLuaEngine::sharedEngine()
 {
 	static CCLuaEngine engine;
-    return &engine;
+	return &engine;
 }
 
 void CCLuaEngine::addSearchPath(const char* path)
@@ -182,18 +182,18 @@ int CCLuaEngine::executeGlobalFunction(const char* functionName)
 	return lua_execute(0);
 }
 
-int CCLuaEngine::executeFunction( int nHandler, int paramCount, CCObject* params[] )
+int CCLuaEngine::executeFunction(int nHandler, int paramCount, CCObject* params[])
 {
-	for(int i = 0; i < paramCount; i++)
+	for (int i = 0; i < paramCount; i++)
 	{
 		tolua_pushccobject(L, params[i]);
 	}
 	return lua_execute(nHandler, paramCount);
 }
 
-int CCLuaEngine::executeFunction( int nHandler, int paramCount, void* params[], const char* paramNames[] )
+int CCLuaEngine::executeFunction(int nHandler, int paramCount, void* params[], const char* paramNames[])
 {
-	for(int i = 0; i < paramCount; i++)
+	for (int i = 0; i < paramCount; i++)
 	{
 		tolua_pushusertype(L, params[i], paramNames[i]);
 	}
@@ -205,9 +205,9 @@ int CCLuaEngine::executeFunction(int nHandler, int paramCount)
 	return lua_execute(nHandler, paramCount);
 }
 
-int CCLuaEngine::executeActionUpdate( int nHandler, void* param, const char* paramName, float deltaTime )
+int CCLuaEngine::executeActionUpdate(int nHandler, void* param, const char* paramName, float deltaTime)
 {
-	if(!nHandler) return 0;
+	if (!nHandler) return 0;
 	tolua_pushusertype(L, param, paramName);
 	lua_pushnumber(L, deltaTime);
 	return lua_execute(nHandler, 2);
@@ -215,8 +215,8 @@ int CCLuaEngine::executeActionUpdate( int nHandler, void* param, const char* par
 
 int CCLuaEngine::executeNodeEvent(CCNode* pNode, int nAction)
 {
-    int nHandler = pNode->getScriptHandler();
-    if(!nHandler) return 0;
+	int nHandler = pNode->getScriptHandler();
+	if (!nHandler) return 0;
 	lua_pushinteger(L, nAction);
 	return lua_execute(nHandler, 1);
 }
@@ -230,8 +230,8 @@ int CCLuaEngine::executeAppEvent(int nHandler, int eventType)
 
 int CCLuaEngine::executeMenuItemEvent(int eventType, CCMenuItem* pMenuItem)
 {
-    int nHandler = pMenuItem->getScriptTapHandler();
-	if(!nHandler) return 0;
+	int nHandler = pMenuItem->getScriptTapHandler();
+	if (!nHandler) return 0;
 	lua_pushinteger(L, eventType);
 	tolua_pushccobject(L, pMenuItem);
 	return lua_execute(nHandler, 2);
@@ -247,10 +247,10 @@ int CCLuaEngine::executeSchedule(int nHandler, float dt, CCNode* pNode)
 
 int CCLuaEngine::executeLayerTouchEvent(CCLayer* pLayer, int eventType, CCTouch *pTouch)
 {
-    CCTouchScriptHandlerEntry* pScriptHandlerEntry = pLayer->getScriptTouchHandlerEntry();
-    if(!pScriptHandlerEntry) return 0;
-    int nHandler = pScriptHandlerEntry->getHandler();
-	if(!nHandler) return 0;
+	CCTouchScriptHandlerEntry* pScriptHandlerEntry = pLayer->getScriptTouchHandlerEntry();
+	if (!pScriptHandlerEntry) return 0;
+	int nHandler = pScriptHandlerEntry->getHandler();
+	if (!nHandler) return 0;
 	lua_pushinteger(L, eventType);
 	tolua_pushccobject(L, pTouch);
 	return lua_execute(nHandler, 2);
@@ -258,39 +258,39 @@ int CCLuaEngine::executeLayerTouchEvent(CCLayer* pLayer, int eventType, CCTouch 
 
 int CCLuaEngine::executeLayerTouchesEvent(CCLayer* pLayer, int eventType, CCSet *pTouches)
 {
-    CCTouchScriptHandlerEntry* pScriptHandlerEntry = pLayer->getScriptTouchHandlerEntry();
-    if(!pScriptHandlerEntry) return 0;
-    int nHandler = pScriptHandlerEntry->getHandler();
-	if(!nHandler) return 0;
+	CCTouchScriptHandlerEntry* pScriptHandlerEntry = pLayer->getScriptTouchHandlerEntry();
+	if (!pScriptHandlerEntry) return 0;
+	int nHandler = pScriptHandlerEntry->getHandler();
+	if (!nHandler) return 0;
 	lua_pushinteger(L, eventType);
-    CCDirector* pDirector = CCDirector::sharedDirector();
+	CCDirector* pDirector = CCDirector::sharedDirector();
 	lua_createtable(L, pTouches->count(), 0);
-    int i = 1;
-    for(CCSetIterator it = pTouches->begin(); it != pTouches->end(); ++it)
-    {
-		CCTouch* pTouch =(CCTouch*)*it;
+	int i = 1;
+	for (CCSetIterator it = pTouches->begin(); it != pTouches->end(); ++it)
+	{
+		CCTouch* pTouch = (CCTouch*)*it;
 		tolua_pushccobject(L, pTouch);
-        lua_rawseti(L, -2, i++);
-    }
+		lua_rawseti(L, -2, i++);
+	}
 	return lua_execute(nHandler, 2);
 }
 
 int CCLuaEngine::executeLayerKeypadEvent(CCLayer* pLayer, int eventType)
 {
-    CCScriptHandlerEntry* pScriptHandlerEntry = pLayer->getScriptKeypadHandlerEntry();
-    if(!pScriptHandlerEntry) return 0;
-    int nHandler = pScriptHandlerEntry->getHandler();
-    if(!nHandler) return 0;
+	CCScriptHandlerEntry* pScriptHandlerEntry = pLayer->getScriptKeypadHandlerEntry();
+	if (!pScriptHandlerEntry) return 0;
+	int nHandler = pScriptHandlerEntry->getHandler();
+	if (!nHandler) return 0;
 	lua_pushinteger(L, eventType);
 	return lua_execute(nHandler, 1);
 }
 
 int CCLuaEngine::executeAccelerometerEvent(CCLayer* pLayer, CCAcceleration* pAccelerationValue)
 {
-    CCScriptHandlerEntry* pScriptHandlerEntry = pLayer->getScriptAccelerateHandlerEntry();
-    if(!pScriptHandlerEntry) return 0;
-    int nHandler = pScriptHandlerEntry->getHandler();
-    if(!nHandler) return 0;
+	CCScriptHandlerEntry* pScriptHandlerEntry = pLayer->getScriptAccelerateHandlerEntry();
+	if (!pScriptHandlerEntry) return 0;
+	int nHandler = pScriptHandlerEntry->getHandler();
+	if (!nHandler) return 0;
 	lua_pushnumber(L, pAccelerationValue->x);
 	lua_pushnumber(L, pAccelerationValue->y);
 	lua_pushnumber(L, pAccelerationValue->z);
@@ -300,7 +300,7 @@ int CCLuaEngine::executeAccelerometerEvent(CCLayer* pLayer, CCAcceleration* pAcc
 
 int CCLuaEngine::executeEvent(int nHandler, const char* pEventName, CCObject* pEventSource /* = NULL*/, const char* pEventSourceClassName /* = NULL*/)
 {
-    lua_pushstring(L, pEventName);
+	lua_pushstring(L, pEventName);
 	if (pEventSource) tolua_pushccobject(L, pEventSource);
 	return lua_execute(nHandler, pEventSource ? 2 : 1);
 }
@@ -313,7 +313,7 @@ bool CCLuaEngine::executeAssert(bool cond, const char *msg)
 	return true;
 }
 
-bool CCLuaEngine::scriptHandlerEqual( int nHandlerA, int nHandlerB )
+bool CCLuaEngine::scriptHandlerEqual(int nHandlerA, int nHandlerB)
 {
 	toluafix_get_function_by_refid(L, nHandlerA);
 	toluafix_get_function_by_refid(L, nHandlerB);
@@ -411,7 +411,7 @@ int CCLuaEngine::lua_invoke(int nHandler, int numArgs)
 int CCLuaEngine::executeActionCreate(int nHandler)
 {
 	int handler = 0;
-	lua_invoke(nHandler,0);
+	lua_invoke(nHandler, 0);
 	int top = lua_gettop(L);
 	if (lua_isfunction(L, top))
 	{

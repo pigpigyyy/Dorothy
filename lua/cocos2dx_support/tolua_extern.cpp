@@ -37,7 +37,7 @@ extern "C" void collect_ref_id(int refid)
 
 extern "C" int tolua_collect_ccobject(lua_State* L)
 {
-	CCObject* object =(CCObject*)tolua_tousertype(L, 1, 0);
+	CCObject* object = (CCObject*)tolua_tousertype(L, 1, 0);
 	object->removeLuaRef();
 	object->release();
 	return 0;
@@ -50,7 +50,7 @@ extern "C" void tolua_pushccobject(lua_State* L, void* ptr)
 		lua_pushnil(L);
 		return;
 	}
-	CCObject* object =(CCObject*)ptr;
+	CCObject* object = (CCObject*)ptr;
 	int refid = object->getLuaRef();
 
 	lua_rawgeti(L, LUA_REGISTRYINDEX, TOLUA_UBOX);// ubox
@@ -82,7 +82,7 @@ extern "C" void tolua_typeid(lua_State* L, int typeId, const char* className)
 }
 extern "C" void tolua_classname(lua_State* L, void* ccobject)
 {
-	CCObject* object =(CCObject*)ccobject;
+	CCObject* object = (CCObject*)ccobject;
 	lua_rawgeti(L, LUA_REGISTRYINDEX, object->getLuaType());// mt
 	lua_rawget(L, LUA_REGISTRYINDEX);// reg[mt], name
 }
