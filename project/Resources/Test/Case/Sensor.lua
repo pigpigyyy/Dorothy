@@ -1,4 +1,5 @@
---[[local CCScene = require("CCScene")
+--[[
+local CCScene = require("CCScene")
 local oWorld = require("oWorld")
 local CCLabelTTF = require("CCLabelTTF")
 local oVec2 = require("oVec2")
@@ -7,6 +8,8 @@ local oBody = require("oBody")
 local oSensor = require("oSensor")
 local CCDirector = require("CCDirector")
 ]]
+setfenv(Dorothy())
+
 local scene = CCScene()
 
 local world = oWorld()
@@ -29,25 +32,31 @@ end
 terrainDef:attachLoop(vertices,0.4,0)
 
 local sensorTag = 1
-terrainDef:attachCircleSensor(sensorTag,oVec2(0,-270),30)
+terrainDef:attachCircle(oVec2(0,-270),30,1,0,1.0)
 local terrain = oBody(terrainDef,world,oVec2(400,300))
 world:addChild(terrain)
-
+--[[
 local sensor = terrain:getSensorByTag(sensorTag)
-sensor:addHandler(oSensor.Enter,function(sensor,body)
-	label.text = "Enter"
-	body.angularRate = body.angularRate > 0 and 1000 or -1000
-end)
-sensor:addHandler(oSensor.Leave,function(sensor,body)
-	label.text = "Leave"
-end)
-
+--]]
 local circleDef = oBodyDef()
 circleDef.type = oBodyDef.Dynamic
-circleDef:attachCircle(20,5,0.8,0)
+circleDef:attachCircle(20,5,0.8,1)
 
 local circle = oBody(circleDef,world,oVec2(180,500))
 circle.angularRate = -1800
 world:addChild(circle)
+
+circle:addHandler(oContact.Start,function(body,contact)
+	--contact=oContact
+	local points = contact.points
+	if #points ~= 0 then
+		label.text = "Contact:["..string.format("%d",points[1].x)..","..string.format("%d",points[1].y).."]" 
+	else
+		print("No contact"..string.format("[%d,%d]",contact.normal.x,contact.normal.y))
+	end
+end)
+circle:addHandler(oContact.End,function(body,contact)
+	--label.text = "End"
+end)
 
 CCDirector:run(scene)

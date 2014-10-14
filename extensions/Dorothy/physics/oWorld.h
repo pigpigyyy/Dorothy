@@ -22,12 +22,10 @@ public:
 	 In subclass functions first call these functions from the base class,
 	 then do your extra works. 
 	 */
-	virtual void PostSolve( b2Contact* contact, const b2ContactImpulse* impulse );
-	virtual void PreSolve( b2Contact* contact, const b2Manifold* oldManifold );
 	virtual void BeginContact( b2Contact* contact );
 	virtual void EndContact( b2Contact* contact );
 	void SolveSensors();
-protected:
+
 	struct oSensorPair
 	{
 		oSensor* sensor;
@@ -35,8 +33,34 @@ protected:
 		void retain();
 		void release();
 	};
+	struct oContactPair
+	{
+		b2Fixture* fixtureA;
+		b2Fixture* fixtureB;
+		b2Manifold manifold;
+		oBody* getBodyA();
+		oBody* getBodyB();
+		void retain();
+		void release();
+	};
+protected:
 	vector<oSensorPair> _sensorEnters;
 	vector<oSensorPair> _sensorLeaves;
+	vector<oContactPair> _contactStarts;
+	vector<oContactPair> _contactEnds;
+};
+
+class oContact
+{
+public:
+	oContact(const oContactListener::oContactPair& contact);
+	const vector<oVec2>& getPoints();
+	const oVec2& getNormal();
+private:
+	void getData();
+	const oContactListener::oContactPair& _contact;
+	vector<oVec2> _points;
+	oVec2 _normal;
 };
 
 class oContactFilter: public b2ContactFilter

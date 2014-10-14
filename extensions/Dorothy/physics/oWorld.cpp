@@ -28,6 +28,32 @@ void oContactListener::oSensorPair::release()
 	body->release();
 }
 
+oBody* oContactListener::oContactPair::getBodyA()
+{
+	return (oBody*)fixtureA->GetBody()->GetUserData();
+}
+
+oBody* oContactListener::oContactPair::getBodyB()
+{
+	return (oBody*)fixtureB->GetBody()->GetUserData();
+}
+
+void oContactListener::oContactPair::retain()
+{
+	oBody* bodyA = (oBody*)fixtureA->GetBody()->GetUserData();
+	oBody* bodyB = (oBody*)fixtureB->GetBody()->GetUserData();
+	bodyA->retain();
+	bodyB->retain();
+}
+
+void oContactListener::oContactPair::release()
+{
+	oBody* bodyA = (oBody*)fixtureA->GetBody()->GetUserData();
+	oBody* bodyB = (oBody*)fixtureB->GetBody()->GetUserData();
+	bodyA->release();
+	bodyB->release();
+}
+
 bool oWorld::oQueryAABB::ReportFixture( b2Fixture* fixture )
 {
 	if (!fixture->IsSensor())
@@ -303,11 +329,43 @@ void oWorld::setContactFilter( oOwn<oContactFilter>& filter )
 	_contactFilter = std::move(filter);
 }
 
-void oContactListener::PostSolve( b2Contact* contact, const b2ContactImpulse* impulse )
+oContact::oContact(const oContactListener::oContactPair& contact):
+_contact(contact)
 { }
 
-void oContactListener::PreSolve( b2Contact* contact, const b2Manifold* oldManifold )
-{ }
+void oContact::getData()
+{
+	b2WorldManifold worldManifold;
+	const b2Body* bodyA = _contact.fixtureA->GetBody();
+	const b2Body* bodyB = _contact.fixtureB->GetBody();
+	const b2Shape* shapeA = _contact.fixtureA->GetShape();
+	const b2Shape* shapeB = _contact.fixtureB->GetShape();
+	worldManifold.Initialize(&_contact.manifold, bodyA->GetTransform(), shapeA->m_radius, bodyB->GetTransform(), shapeB->m_radius);
+	_points.resize(_contact.manifold.pointCount);
+	for (int32 i = 0; i < _contact.manifold.pointCount; i++)
+	{
+		_points[i] = oWorld::oVal(worldManifold.points[i]);
+	}
+	_normal = worldManifold.normal;
+}
+
+const vector<oVec2>& oContact::getPoints()
+{
+	if (_normal == oVec2::zero)
+	{
+		oContact::getData();
+	}
+	return _points;
+}
+
+const oVec2& oContact::getNormal()
+{
+	if (_normal == oVec2::zero)
+	{
+		oContact::getData();
+	}
+	return _normal;
+}
 
 void oContactListener::BeginContact( b2Contact* contact )
 {
@@ -339,16 +397,32 @@ void oContactListener::BeginContact( b2Contact* contact )
 			_sensorEnters.push_back(pair);
 		}
 	}
+	else 
+	{
+		if (!bodyA->contactStart.IsEmpty())
+		{
+			oContactPair pair = { fixtureA, fixtureB, *contact->GetManifold() };
+			pair.retain();
+			_contactStarts.push_back(pair);
+		}
+		else if (!bodyB->contactStart.IsEmpty())
+		{
+			oContactPair pair = { fixtureB, fixtureA, *contact->GetManifold() };
+			pair.retain();
+			_contactStarts.push_back(pair);
+		}
+	}
 }
 
 void oContactListener::EndContact( b2Contact* contact )
 {
 	b2Fixture* fixtureA = contact->GetFixtureA();
 	b2Fixture* fixtureB = contact->GetFixtureB();
+	oBody* bodyA = (oBody*)fixtureA->GetBody()->GetUserData();
+	oBody* bodyB = (oBody*)fixtureB->GetBody()->GetUserData();
 	if (fixtureA->IsSensor())
 	{
 		oSensor* sensor = (oSensor*)fixtureA->GetUserData();
-		oBody* bodyB = (oBody*)fixtureB->GetBody()->GetUserData();
 		if (sensor && bodyB && sensor->isEnabled() && !fixtureB->IsSensor())
 		{
 			oSensorPair pair = {sensor, bodyB};
@@ -359,13 +433,24 @@ void oContactListener::EndContact( b2Contact* contact )
 	else if (fixtureB->IsSensor())
 	{
 		oSensor* sensor = (oSensor*)fixtureB->GetUserData();
-		oBody* bodyA = (oBody*)fixtureA->GetBody()->GetUserData();
 		if (sensor && bodyA && sensor->isEnabled())
 		{
 			oSensorPair pair = {sensor, bodyA};
 			pair.retain();
 			_sensorLeaves.push_back(pair);
 		}
+	}
+	else if (!bodyA->contactEnd.IsEmpty())
+	{
+		oContactPair pair = { fixtureA, fixtureB, *contact->GetManifold() };
+		pair.retain();
+		_contactEnds.push_back(pair);
+	}
+	else if (!bodyB->contactEnd.IsEmpty())
+	{
+		oContactPair pair = { fixtureB, fixtureA, *contact->GetManifold() };
+		pair.retain();
+		_contactEnds.push_back(pair);
 	}
 }
 
@@ -394,6 +479,24 @@ void oContactListener::SolveSensors()
 			pair.release();
 		}
 		_sensorLeaves.clear();
+	}
+	if (!_contactStarts.empty())
+	{
+		for (oContactPair& pair : _contactStarts)
+		{
+			pair.getBodyA()->contactStart(pair.getBodyB(), &oContact(pair));
+			pair.release();
+		}
+		_contactStarts.clear();
+	}
+	if (!_contactEnds.empty())
+	{
+		for (oContactPair& pair : _contactEnds)
+		{
+			pair.getBodyA()->contactEnd(pair.getBodyB(), &oContact(pair));
+			pair.release();
+		}
+		_contactEnds.clear();
 	}
 }
 

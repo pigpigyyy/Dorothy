@@ -1,3 +1,11 @@
+class oContact
+{
+	#define oBodyEvent::ContactStart @ Start
+	#define oBodyEvent::ContactEnd @ End
+	tolua_outside tolua_readonly tolua_property__qt void oContact_getPoints @ points;
+	tolua_readonly tolua_property__common oVec2 normal;
+};
+
 class oWorld: public CCNode
 {
 	tolua_property__common oVec2 gravity;

@@ -19,5 +19,8 @@ class oBody: public CCNode
 	void attach(oFixtureDef* fixtureDef);
 	oSensor* attachSensor(int tag, oFixtureDef* fixtureDef);
 	void destroy();
+	tolua_outside void oBody_addHandler @ addHandler(unsigned int flag, tolua_function nHandler);
+	tolua_outside void oBody_removeHandler @ removeHandler(unsigned int flag, tolua_function nHandler);
+	tolua_outside void oBody_clearHandler @ clearHandler(unsigned int flag);
 	static oBody* create(oBodyDef* def, oWorld* world, oVec2 pos = oVec2::zero, float rot = 0);
 };

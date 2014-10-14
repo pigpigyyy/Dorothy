@@ -128,7 +128,7 @@ function classVariable:supcode ()
 
  -- declare self, if the case
  local _,_,static = strfind(self.mod,'^%s*(static)')
- if class and static==nil then
+ if (class or out) and static==nil then
   output(' ',self.parent.type,'*','self = ')
   output('(',self.parent.type,'*) ')
   local to_func = get_to_function(self.parent.type)
@@ -151,7 +151,9 @@ function classVariable:supcode ()
 	output('  ',push_func,'(tolua_S,(void*)static_cast<'..self.type..'*>(self), "',_userltype[self.type],'");')
  else
 	local t,ct = isbasic(self.type)
-	if t then
+	if t == "" and out then-- type void
+		output('  ',prop_get..'(self);')
+	elseif t then
 		output('  tolua_push'..t..'(tolua_S,(',ct,')'..self:getvalue(class,static,prop_get)..');')
 	else
 		local push_func = get_push_function(self.type)

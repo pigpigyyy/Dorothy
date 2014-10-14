@@ -35,6 +35,16 @@ void oSensor_addHandler(oSensor* sensor, uint32 flag, int nHandler);
 void oSensor_removeHandler(oSensor* sensor, uint32 flag, int nHandler);
 void oSensor_clearHandler(oSensor* sensor, uint32 flag);
 
+ENUM_START(oBodyEvent)
+{
+	ContactStart,
+	ContactEnd
+}
+ENUM_END(oBodyEvent)
+void oBody_addHandler(oBody* body, uint32 flag, int nHandler);
+void oBody_removeHandler(oBody* body, uint32 flag, int nHandler);
+void oBody_clearHandler(oBody* body, uint32 flag);
+
 bool oAnimationCache_load(const char* filename);
 bool oAnimationCache_update(const char* name, const char* content);
 bool oAnimationCache_unload(const char* filename = nullptr);
@@ -63,6 +73,8 @@ void oUnitDef_setActions(oUnitDef* def, int actions[], int count);
 void oUnitDef_setInstincts(oUnitDef* def, int instincts[], int count);
 
 oListener* oListener_create(const string& name, int handler);
+
+void oContact_getPoints(oContact* self);
 
 void __oContent_getDirEntries(oContent* self, const char* path, bool isFolder);
 #define oContent_getDirEntries(self,path,isFolder) {__oContent_getDirEntries(self,path,isFolder);return 1;}

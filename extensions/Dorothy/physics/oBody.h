@@ -14,10 +14,12 @@ NS_DOROTHY_BEGIN
 class oSensor;
 class oWorld;
 class oBodyDef;
+class oContact;
 typedef b2FixtureDef oFixtureDef;
 
 class oBody: public CCNode
 {
+	typedef Delegate<void(oBody*,oContact*)> oContactHandler;
 public:
 	virtual ~oBody();
 	virtual void onEnter();
@@ -35,6 +37,8 @@ public:
 	PROPERTY_NAME(float, VelocityX);
 	PROPERTY_NAME(float, VelocityY);
 	PROPERTY_VIRTUAL(int, _group, Group);
+	oContactHandler contactStart;
+	oContactHandler contactEnd;
 	void applyLinearImpulse(const oVec2& impulse, const oVec2& pos);
 	void applyAngularImpulse(float impulse);
 	void setVelocity(float x, float y);

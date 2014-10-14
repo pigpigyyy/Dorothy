@@ -4215,6 +4215,38 @@ local Dorothy =
 		type = "class",
 		index = index()
 	},
+	oContact =
+	{
+		childs =
+		{
+			Start =
+			{
+				description = "[Const][int]",
+				static = true,
+				type = "value"
+			},
+			End =
+			{
+				description = "[Const][int]",
+				static = true,
+				type = "value"
+			},
+			points =
+			{
+				description = "[table<oVec2>][readonly]",
+				type = "value",
+			},
+			normal =
+			{
+				description = "[oVec2][readonly]",
+				typeName = "oVec2",
+				type = "value",
+			},
+		},
+		description = "class oContact.",
+		type = "class",
+		index = index()
+	},
 	oBody =
 	{
 		childs =
@@ -4333,6 +4365,27 @@ local Dorothy =
 			{
 				args = "()",
 				description = "",
+				returns = "()",
+				type = "method"
+			},
+			addHandler =
+			{
+				args = "(flag: int, handler: function)",
+				description = " -- flag: Contact.Start | Contact.End\n\n -- handler: function(body: oBody, contact: oContact)",
+				returns = "()",
+				type = "method"
+			},
+			removeHandler =
+			{
+				args = "(flag: int, handler: function)",
+				description = " -- flag: Contact.Start | Contact.End\n\n -- handler: function(body: oBody, contact: oContact)",
+				returns = "()",
+				type = "method"
+			},
+			clearHandler =
+			{
+				args = "(flag: int)",
+				description = " -- flag: Contact.Start | Contact.End",
 				returns = "()",
 				type = "method"
 			},
@@ -5596,8 +5649,8 @@ local Dorothy =
 			},
 			clearHandler =
 			{
-				args = "()",
-				description = "",
+				args = "(flag: int)",
+				description = " -- flag: oSensor.Enter | oSensor.Leave",
 				returns = "()",
 				type = "method"
 			},

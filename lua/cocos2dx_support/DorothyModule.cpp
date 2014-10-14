@@ -90,6 +90,54 @@ void oSensor_clearHandler(oSensor* sensor, uint32 flag)
 	}
 }
 
+
+HANDLER_WRAP_START(oBodyHandlerWrapper)
+void call(oBody* body, oContact* contact) const
+{
+	lua_State* L = CCLuaEngine::sharedEngine()->getState();
+	tolua_pushccobject(L, body);
+	tolua_pushusertype(L, contact, "oContact");
+	CCLuaEngine::sharedEngine()->executeFunction(getHandler(), 2);
+}
+HANDLER_WRAP_END
+
+void oBody_addHandler(oBody* body, uint32 flag, int nHandler)
+{
+	switch (flag)
+	{
+	case oBodyEvent::ContactStart:
+		body->contactStart += std::make_pair(oBodyHandlerWrapper(nHandler), &oBodyHandlerWrapper::call);
+		break;
+	case oBodyEvent::ContactEnd:
+		body->contactEnd += std::make_pair(oBodyHandlerWrapper(nHandler), &oBodyHandlerWrapper::call);
+		break;
+	}
+}
+void oBody_removeHandler(oBody* body, uint32 flag, int nHandler)
+{
+	switch (flag)
+	{
+	case oBodyEvent::ContactStart:
+		body->contactStart -= std::make_pair(oBodyHandlerWrapper(nHandler), &oBodyHandlerWrapper::call);
+		break;
+	case oBodyEvent::ContactEnd:
+		body->contactEnd -= std::make_pair(oBodyHandlerWrapper(nHandler), &oBodyHandlerWrapper::call);
+		break;
+	}
+}
+void oBody_clearHandler(oBody* body, uint32 flag)
+{
+	switch (flag)
+	{
+	case oBodyEvent::ContactStart:
+		body->contactStart.Clear();
+		break;
+	case oBodyEvent::ContactEnd:
+		body->contactEnd.Clear();
+		break;
+	}
+}
+
 void oWorld_query(oWorld* world, const CCRect& rect, int nHandler)
 {
 	world->query(rect,
@@ -234,9 +282,21 @@ void __oContent_getDirEntries(oContent* self, const char* path, bool isFolder)
 	lua_State* L = CCLuaEngine::sharedEngine()->getState();
 	auto dirs = self->getDirEntries(path, isFolder);
 	lua_createtable(L, dirs.size(), 0);
-	for(size_t i = 0; i < dirs.size(); i++)
+	for (size_t i = 0; i < dirs.size(); i++)
 	{
 		lua_pushstring(L, dirs[i].c_str());
+		lua_rawseti(L, -2, i+1);
+	}
+}
+
+void oContact_getPoints(oContact* self)
+{
+	lua_State* L = CCLuaEngine::sharedEngine()->getState();
+	const auto& points = self->getPoints();
+	lua_createtable(L, points.size(), 0);
+	for (size_t i = 0; i < points.size(); i++)
+	{
+		tolua_pushusertype(L, new oVec2(points[i]), "oVec2");
 		lua_rawseti(L, -2, i+1);
 	}
 }
