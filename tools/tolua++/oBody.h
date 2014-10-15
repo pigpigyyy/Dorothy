@@ -1,5 +1,7 @@
 class oBody: public CCNode
 {
+	#define oBodyEvent::ContactStart @ ContactStart
+	#define oBodyEvent::ContactEnd @ ContactEnd
 	tolua_readonly tolua_property__common oWorld* world;
 	tolua_readonly tolua_property__common oBodyDef* bodyDef;
 	tolua_readonly tolua_property__common float mass;

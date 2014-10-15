@@ -19,7 +19,7 @@ typedef b2FixtureDef oFixtureDef;
 
 class oBody: public CCNode
 {
-	typedef Delegate<void(oBody*,oContact*)> oContactHandler;
+	typedef Delegate<void(oBody* body,const oVec2& point,const oVec2& normal)> oContactHandler;
 public:
 	virtual ~oBody();
 	virtual void onEnter();

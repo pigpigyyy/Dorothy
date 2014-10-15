@@ -35,11 +35,10 @@ public:
 	};
 	struct oContactPair
 	{
-		b2Fixture* fixtureA;
-		b2Fixture* fixtureB;
-		b2Manifold manifold;
-		oBody* getBodyA();
-		oBody* getBodyB();
+		oBody* bodyA;
+		oBody* bodyB;
+		oVec2 point;
+		oVec2 normal;
 		void retain();
 		void release();
 	};
@@ -48,19 +47,6 @@ protected:
 	vector<oSensorPair> _sensorLeaves;
 	vector<oContactPair> _contactStarts;
 	vector<oContactPair> _contactEnds;
-};
-
-class oContact
-{
-public:
-	oContact(const oContactListener::oContactPair& contact);
-	const vector<oVec2>& getPoints();
-	const oVec2& getNormal();
-private:
-	void getData();
-	const oContactListener::oContactPair& _contact;
-	vector<oVec2> _points;
-	oVec2 _normal;
 };
 
 class oContactFilter: public b2ContactFilter

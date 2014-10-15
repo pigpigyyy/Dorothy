@@ -74,8 +74,6 @@ void oUnitDef_setInstincts(oUnitDef* def, int instincts[], int count);
 
 oListener* oListener_create(const string& name, int handler);
 
-void oContact_getPoints(oContact* self);
-
 void __oContent_getDirEntries(oContent* self, const char* path, bool isFolder);
 #define oContent_getDirEntries(self,path,isFolder) {__oContent_getDirEntries(self,path,isFolder);return 1;}
 

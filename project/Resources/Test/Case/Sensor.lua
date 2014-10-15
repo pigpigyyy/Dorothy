@@ -45,17 +45,13 @@ circleDef:attachCircle(20,5,0.8,1)
 local circle = oBody(circleDef,world,oVec2(180,500))
 circle.angularRate = -1800
 world:addChild(circle)
-
-circle:addHandler(oContact.Start,function(body,contact)
-	--contact=oContact
-	local points = contact.points
-	if #points ~= 0 then
-		label.text = "Contact:["..string.format("%d",points[1].x)..","..string.format("%d",points[1].y).."]" 
-	else
-		print("No contact"..string.format("[%d,%d]",contact.normal.x,contact.normal.y))
-	end
+local drawNode = oLine({oVec2(-20,0),oVec2(20,0),oVec2.zero,oVec2(0,-20),oVec2(0,20)},ccColor4(0xff00ffff))
+world:addChild(drawNode)
+circle:addHandler(oBody.ContactStart,function(body,point)
+	drawNode.position = point
+	label.text = "Contact: "..string.format("[%d,%d]",point.x,point.y)
 end)
-circle:addHandler(oContact.End,function(body,contact)
+circle:addHandler(oBody.ContactEnd,function(body,point)
 	--label.text = "End"
 end)
 

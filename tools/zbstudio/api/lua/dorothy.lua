@@ -4215,42 +4215,22 @@ local Dorothy =
 		type = "class",
 		index = index()
 	},
-	oContact =
-	{
-		childs =
-		{
-			Start =
-			{
-				description = "[Const][int]",
-				static = true,
-				type = "value"
-			},
-			End =
-			{
-				description = "[Const][int]",
-				static = true,
-				type = "value"
-			},
-			points =
-			{
-				description = "[table<oVec2>][readonly]",
-				type = "value",
-			},
-			normal =
-			{
-				description = "[oVec2][readonly]",
-				typeName = "oVec2",
-				type = "value",
-			},
-		},
-		description = "class oContact.",
-		type = "class",
-		index = index()
-	},
 	oBody =
 	{
 		childs =
 		{
+			ContactStart =
+			{
+				description = "[Const][int]",
+				static = true,
+				type = "value"
+			},
+			ContactEnd =
+			{
+				description = "[Const][int]",
+				static = true,
+				type = "value"
+			},
 			world =
 			{
 				description = "[oWorld]",
@@ -4371,21 +4351,21 @@ local Dorothy =
 			addHandler =
 			{
 				args = "(flag: int, handler: function)",
-				description = " -- flag: Contact.Start | Contact.End\n\n -- handler: function(body: oBody, contact: oContact)",
+				description = " -- flag: oBody.ContactStart | oBody.ContactEnd\n\n -- handler: function(body: oBody, point: oVec2, normal: oVec2)",
 				returns = "()",
 				type = "method"
 			},
 			removeHandler =
 			{
 				args = "(flag: int, handler: function)",
-				description = " -- flag: Contact.Start | Contact.End\n\n -- handler: function(body: oBody, contact: oContact)",
+				description = " -- flag: oBody.ContactStart | oBody.ContactEnd\n\n -- handler: function(body: oBody, point: oVec2, normal: oVec2)",
 				returns = "()",
 				type = "method"
 			},
 			clearHandler =
 			{
 				args = "(flag: int)",
-				description = " -- flag: Contact.Start | Contact.End",
+				description = " -- flag: oBody.ContactStart | oBody.ContactEnd",
 				returns = "()",
 				type = "method"
 			},
