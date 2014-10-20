@@ -143,12 +143,6 @@ local Dorothy =
 	{
 		childs =
 		{
-			InvalidTag =
-			{
-				description = "[Const][int]",
-				static = true,
-				type = "value",
-			},
 			Enter =
 			{
 				description = "[Const][int]",
@@ -161,13 +155,13 @@ local Dorothy =
 				static = true,
 				type = "value",
 			},
-			EnterTransitionDidFinish =
+			Entered =
 			{
 				description = "[Const][int]",
 				static = true,
 				type = "value",
 			},
-			ExitTransitionDidStart =
+			Exited =
 			{
 				description = "[Const][int]",
 				static = true,
@@ -413,7 +407,7 @@ local Dorothy =
 			registerEventHandler =
 			{
 				args = "(handler: function)",
-				description = " -- handler: function(eventFlag: int)\n\neventFlag: [CCNode.Enter|CCNode.Exit|CCNode.EnterTransitionDidFinish|CCNode.ExitTransitionDidStart|CCNode.Cleanup]",
+				description = " -- handler: function(eventType: int)\n\n -- eventTypr: [CCNode.Enter|CCNode.Exit|CCNode.Entered|CCNode.Exited|CCNode.Cleanup]",
 				returns = "()",
 				type = "method",
 			},

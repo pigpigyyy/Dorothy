@@ -449,7 +449,7 @@ void oContactListener::SolveSensors()
 	{
 		for (oContactPair& pair : _contactEnds)
 		{
-			pair.bodyB->contactStart(pair.bodyA, pair.point, pair.normal);
+			pair.bodyA->contactStart(pair.bodyB, pair.point, pair.normal);
 			pair.release();
 		}
 		_contactEnds.clear();

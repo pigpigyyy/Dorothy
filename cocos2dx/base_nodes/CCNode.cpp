@@ -67,7 +67,7 @@ CCNode::CCNode()
 , m_pChildren(NULL)
 , m_pParent(NULL)
 // "whole screen" objects. like Scenes and Layers, should set m_bIgnoreAnchorPointForPosition to false
-, m_nTag(CCNode::InvalidTag)
+, m_nTag(0)
 , m_pUserObject(NULL)
 , m_pUserData(NULL)
 , m_pShaderProgram(NULL)
@@ -92,8 +92,6 @@ CCNode::CCNode()
 	CCDirector *director = CCDirector::sharedDirector();
 	m_pScheduler = director->getScheduler();
 	m_pScheduler->retain();
-
-	CCScriptEngine* pEngine = CCScriptEngine::sharedEngine();
 }
 
 CCNode::~CCNode()
@@ -499,7 +497,6 @@ void CCNode::childrenAlloc()
 
 CCNode* CCNode::getChildByTag(int aTag)
 {
-	CCAssert(aTag != CCNode::InvalidTag, "Invalid tag");
 	CCObject* child;
 	CCARRAY_FOREACH(m_pChildren, child)
 	{
@@ -596,15 +593,8 @@ void CCNode::removeChildByTag(int tag)
 
 void CCNode::removeChildByTag(int tag, bool cleanup)
 {
-	CCAssert(tag != CCNode::InvalidTag, "Invalid tag");
-
-	CCNode *child = this->getChildByTag(tag);
-
-	if (child == NULL)
-	{
-		CCLOG("cocos2d: removeChildByTag: child not found!");
-	}
-	else
+	CCNode* child = this->getChildByTag(tag);
+	if (child)
 	{
 		this->removeChild(child, cleanup);
 	}

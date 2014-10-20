@@ -67,6 +67,8 @@ void oBody::cleanup()
 		item->bodyLeave.Clear();
 	}
 	CCARRAY_END
+	contactStart.Clear();
+	contactEnd.Clear();
 }
 
 oBodyDef* oBody::getBodyDef() const

@@ -47,21 +47,19 @@ void oPlatformWorld::removeChild( CCNode* child, bool cleanup )
 
 CCNode* oPlatformWorld::getChildByTag( int tag )
 {
-	CCAssert( tag != CCNode::InvalidTag, "Invalid tag");
-	CCObject* layer;
-	CCARRAY_FOREACH(_camera->getChildren(), layer)
+	CCARRAY_START(CCNode, layer, _camera->getChildren())
 	{
-		CCObject* child;
-		CCARRAY_FOREACH(((CCNode*)layer)->getChildren(), child)
+		CCARRAY_START(CCNode, child, layer->getChildren())
 		{
-			CCNode* pNode = (CCNode*)child;
-			if(pNode && pNode->getTag() == tag)
+			if (child && child->getTag() == tag)
 			{
-				return pNode;
+				return child;
 			}
 		}
+		CCARRAY_END
 	}
-	return NULL;
+	CCARRAY_END
+	return nullptr;
 }
 
 void oPlatformWorld::draw()

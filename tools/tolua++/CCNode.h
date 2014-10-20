@@ -2,11 +2,10 @@ class CCNode: public CCObject
 {
 	enum
 	{
-		InvalidTag = -1,
 		Enter = 0,
-		Exit = 1,
-		EnterTransitionDidFinish = 2,
-		ExitTransitionDidStart = 3,
+		EnterTransitionDidFinish @ Entered = 2,
+		ExitTransitionDidStart @ Exit = 3,
+		Exit @ Exited = 1,
 		Cleanup = 4
 	};
 	tolua_readonly tolua_property__common int zOrder;

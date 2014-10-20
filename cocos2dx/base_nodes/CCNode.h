@@ -115,7 +115,6 @@ class CC_DLL CCNode : public CCObject
 public:
 	enum
 	{
-		InvalidTag = -1,
 		Enter = 0,
 		Exit = 1,
 		EnterTransitionDidFinish = 2,
