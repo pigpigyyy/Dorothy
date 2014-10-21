@@ -107,7 +107,7 @@ layer:registerTouchHandler(function(eventType, touch)
 			if joint then
 				joint:destroy()
 			end
-			joint = oJoint:move(terrain,body,pos,1000*body.mass)
+			joint = oJoint:collide(true):move(terrain,body,pos,1000*body.mass)
 			return true
 		end)
 	elseif eventType == CCTouch.Moved then

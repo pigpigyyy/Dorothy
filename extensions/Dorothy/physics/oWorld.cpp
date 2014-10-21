@@ -345,21 +345,20 @@ void oContactListener::BeginContact( b2Contact* contact )
 			_sensorEnters.push_back(pair);
 		}
 	}
-	else 
+	else if (!bodyA->contactStart.IsEmpty() || !bodyB->contactStart.IsEmpty())
 	{
+		b2WorldManifold worldManifold;
+		contact->GetWorldManifold(&worldManifold);
+		oVec2 point = oWorld::oVal(worldManifold.points[0]);
 		if (!bodyA->contactStart.IsEmpty())
 		{
-			b2WorldManifold worldManifold;
-			contact->GetWorldManifold(&worldManifold);
-			oContactPair pair = { bodyA, bodyB, oWorld::oVal(worldManifold.points[0]), worldManifold.normal };
+			oContactPair pair = { bodyA, bodyB, point, worldManifold.normal };
 			pair.retain();
 			_contactStarts.push_back(pair);
 		}
-		else if (!bodyB->contactStart.IsEmpty())
+		if (!bodyB->contactStart.IsEmpty())
 		{
-			b2WorldManifold worldManifold;
-			contact->GetWorldManifold(&worldManifold);
-			oContactPair pair = { bodyB, bodyA, oWorld::oVal(worldManifold.points[0]), worldManifold.normal };
+			oContactPair pair = { bodyB, bodyA, point, worldManifold.normal };
 			pair.retain();
 			_contactStarts.push_back(pair);
 		}
@@ -392,21 +391,23 @@ void oContactListener::EndContact( b2Contact* contact )
 			_sensorLeaves.push_back(pair);
 		}
 	}
-	else if (!bodyA->contactEnd.IsEmpty())
+	else if (!bodyA->contactEnd.IsEmpty() || !bodyB->contactEnd.IsEmpty())
 	{
 		b2WorldManifold worldManifold;
 		contact->GetWorldManifold(&worldManifold);
-		oContactPair pair = { bodyA, bodyB, oWorld::oVal(worldManifold.points[0]), worldManifold.normal };
-		pair.retain();
-		_contactEnds.push_back(pair);
-	}
-	else if (!bodyB->contactEnd.IsEmpty())
-	{
-		b2WorldManifold worldManifold;
-		contact->GetWorldManifold(&worldManifold);
-		oContactPair pair = { bodyB, bodyA, oWorld::oVal(worldManifold.points[0]), worldManifold.normal };
-		pair.retain();
-		_contactEnds.push_back(pair);
+		oVec2 point = oWorld::oVal(worldManifold.points[0]);
+		if (!bodyA->contactEnd.IsEmpty())
+		{
+			oContactPair pair = { bodyA, bodyB, point, worldManifold.normal };
+			pair.retain();
+			_contactEnds.push_back(pair);
+		}
+		if (!bodyB->contactEnd.IsEmpty())
+		{
+			oContactPair pair = { bodyB, bodyA, point, worldManifold.normal };
+			pair.retain();
+			_contactEnds.push_back(pair);
+		}
 	}
 }
 
@@ -449,7 +450,7 @@ void oContactListener::SolveSensors()
 	{
 		for (oContactPair& pair : _contactEnds)
 		{
-			pair.bodyA->contactStart(pair.bodyB, pair.point, pair.normal);
+			pair.bodyA->contactEnd(pair.bodyB, pair.point, pair.normal);
 			pair.release();
 		}
 		_contactEnds.clear();

@@ -289,6 +289,13 @@ void __oContent_getDirEntries(oContent* self, const char* path, bool isFolder)
 	}
 }
 
+void __oJoint_collision(bool flag)
+{
+	lua_State* L = CCLuaEngine::sharedEngine()->getState();
+	oJoint::enableCollision(flag);
+	lua_pushvalue(L, 1);
+}
+
 CCSprite* CCSprite_createWithClip(const char* clipStr)
 {
 	if(string(clipStr).find('|') != string::npos)

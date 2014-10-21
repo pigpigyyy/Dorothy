@@ -103,7 +103,9 @@ public:
 	b2Joint* getB2Joint();
 	oWorld* getWorld();
 	void destroy();
+	static void enableCollision(bool flag);
 protected:
+	static bool _enableCollideConnected;
 	oWRef<oWorld> _world;
 	b2Joint* _joint;
 	CC_LUA_TYPE(oJoint)

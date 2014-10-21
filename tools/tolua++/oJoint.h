@@ -79,6 +79,7 @@ class oJoint: public CCObject
 		float frequency = 2.0f,
 		float damping = 0.7f);
 	tolua_readonly tolua_property__common oWorld* world;
+	static tolua_outside void oJoint_collision @ collide(bool flag);
 	void destroy();
 };
 

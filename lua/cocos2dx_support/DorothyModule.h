@@ -77,6 +77,9 @@ oListener* oListener_create(const string& name, int handler);
 void __oContent_getDirEntries(oContent* self, const char* path, bool isFolder);
 #define oContent_getDirEntries(self,path,isFolder) {__oContent_getDirEntries(self,path,isFolder);return 1;}
 
+void __oJoint_collision(bool flag);
+#define oJoint_collision(flag) {__oJoint_collision(flag);return 1;}
+
 CCSprite* CCSprite_createWithClip(const char* clipStr);
 
 CCScene* CCScene_createOriented(float duration, CCScene* nextScene, tOrientation orientation);

@@ -6128,6 +6128,15 @@ local Dorothy =
 				returns = "()",
 				type = "method",
 			},
+			collide =
+			{
+				args = "(flag: bool)",
+				description = "",
+				typeName = "oJoint",
+				returns = "(oJoint)",
+				static = true,
+				type = "method",
+			},
 			distance =
 			{
 				args = "(bodyA: oBody, bodyB: oBody, anchorA: oVec2, anchorB: oVec2, frequency: float = 0, damping: float = 0)",
