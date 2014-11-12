@@ -144,8 +144,9 @@ void oWorld_query(oWorld* world, const CCRect& rect, int nHandler)
 		[&](oBody* body)
 	{
 		CCObject* params[] = { body };
-		return CCScriptEngine::sharedEngine()->executeFunction(nHandler, 1, params) != 0;
+		return CCLuaEngine::sharedEngine()->executeFunction(nHandler, 1, params) != 0;
 	});
+	CCLuaEngine::sharedEngine()->removeScriptHandler(nHandler);
 }
 
 void oWorld_cast(oWorld* world, const oVec2& start, const oVec2& end, bool closest, int handler)
@@ -159,6 +160,7 @@ void oWorld_cast(oWorld* world, const oVec2& start, const oVec2& end, bool close
 		tolua_pushusertype(L, new oVec2(normal), "oVec2");
 		return CCLuaEngine::sharedEngine()->executeFunction(handler, 3);
 	});
+	CCLuaEngine::sharedEngine()->removeScriptHandler(handler);
 }
 
 bool oAnimationCache_load(const char* filename)
@@ -1214,4 +1216,80 @@ int __olua_loadfile(lua_State* L, const char* filename)
 int __olua_dofile(lua_State* L, const char* filename)
 {
 	return __olua_loadfile(L, filename) || lua_pcall(L, 0, LUA_MULTRET, 0);
+}
+
+class oImageAsyncLoader: public CCObject
+{
+public:
+	void callback(CCObject* object)
+	{
+		if (_handler)
+		{
+			lua_State* L = CCLuaEngine::sharedEngine()->getState();
+			lua_pushstring(L, _name.c_str());
+			tolua_pushccobject(L, object);
+			CCLuaEngine::sharedEngine()->executeFunction(_handler->get(), 2);
+		}
+	}
+	static oImageAsyncLoader* create(const char* filename, int handler)
+	{
+		oImageAsyncLoader* loader = new oImageAsyncLoader();
+		loader->_name = filename;
+		if (handler)
+		{
+			loader->_handler = oScriptHandler::create(handler);
+		}
+		loader->autorelease();
+		return loader;
+	}
+private:
+	string _name;
+	oRef<oScriptHandler> _handler;
+};
+
+int CCTextureCache_loadAsync(lua_State* L)
+{
+	/* 1 self, 2 filename, 3 function */
+#ifndef TOLUA_RELEASE
+	tolua_Error tolua_err;
+	if (
+		!tolua_isusertype(L, 1, "CCTextureCache", 0, &tolua_err) ||
+		!(tolua_isstring(L, 2, 0, &tolua_err) || tolua_istable(L,2,0,&tolua_err)) ||
+		!(toluafix_isfunction(L, 3, &tolua_err) || tolua_isnoobj(L, 3, &tolua_err)) ||
+		!tolua_isnoobj(L, 4, &tolua_err)
+		)
+	{
+		goto tolua_lerror;
+	}
+#endif
+	CCTextureCache* self = (CCTextureCache*)tolua_tousertype(L, 1, 0);
+#ifndef TOLUA_RELEASE
+	if (!self) tolua_error(L, "invalid 'self' in function 'CCTextureCache_loadAsync'", nullptr);
+#endif
+	if (lua_isstring(L, 2))
+	{
+		const char* filename = ((const char*)tolua_tostring(L, 2, 0));
+		int nHandler = lua_gettop(L) < 3 ? 0 : toluafix_ref_function(L, 3);
+		oImageAsyncLoader* loader = oImageAsyncLoader::create(filename, nHandler);
+		self->addImageAsync(filename, loader, callfuncO_selector(oImageAsyncLoader::callback));
+	}
+	else if (lua_istable(L, 2))
+	{
+		int length = lua_objlen(L, 2);
+		for (int i = 0; i < length; i++)
+		{
+			lua_rawgeti(L, 2, i + 1);
+			const char* filename = lua_tostring(L, -1);
+			int nHandler = lua_gettop(L) < 3 ? 0 : toluafix_ref_function(L, 3);
+			oImageAsyncLoader* loader = oImageAsyncLoader::create(filename, nHandler);
+			self->addImageAsync(filename, loader, callfuncO_selector(oImageAsyncLoader::callback));
+			lua_pop(L, 1);
+		}
+	}
+	return 0;
+#ifndef TOLUA_RELEASE
+tolua_lerror :
+	tolua_error(L, "#ferror in function 'CCTextureCache_loadAsync'.", &tolua_err);
+	return 0;
+#endif
 }

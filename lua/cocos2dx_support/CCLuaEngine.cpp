@@ -84,13 +84,16 @@ m_callFromLua(0)
 	// add cocos2dx loader
 	addLuaLoader(cocos2dx_lua_loader);
 
-	tolua_beginmodule(L, 0);
-	tolua_beginmodule(L, "CCDictionary");
-	tolua_variable(L, "keys", CCDictionary_keys, nullptr);
-	tolua_variable(L, "randomObject", CCDictionary_randomObject, nullptr);
-	tolua_function(L, "set", CCDictionary_set);
-	tolua_function(L, "get", CCDictionary_get);
-	tolua_endmodule(L);
+	tolua_beginmodule(L, 0);//stack: package.loaded
+		tolua_beginmodule(L, "CCDictionary");//stack: package.loaded CCDictionary
+			tolua_variable(L, "keys", CCDictionary_keys, nullptr);
+			tolua_variable(L, "randomObject", CCDictionary_randomObject, nullptr);
+			tolua_function(L, "set", CCDictionary_set);
+			tolua_function(L, "get", CCDictionary_get);
+		tolua_endmodule(L);
+		tolua_beginmodule(L, "CCTextureCache");
+			tolua_function(L, "loadAsync", CCTextureCache_loadAsync);
+		tolua_endmodule(L);
 	tolua_endmodule(L);
 
 	tolua_LuaCode_open(L);
@@ -363,6 +366,12 @@ int CCLuaEngine::lua_invoke(int numArgs)
 int CCLuaEngine::lua_execute(int numArgs)
 {
 	int ret = 0;
+	int top = lua_gettop(L) - numArgs - 1;
+	if (top > 0)
+	{
+		int i = 0;
+		i++;
+	}
 	if (lua_invoke(numArgs))
 	{
 		// get return value
@@ -374,19 +383,18 @@ int CCLuaEngine::lua_execute(int numArgs)
 		{
 			ret = lua_toboolean(L, -1);
 		}
-		lua_settop(L, 0);// stack clear
 	}
+	lua_settop(L, top);// stack clear
 	return ret;
 }
 
 int CCLuaEngine::lua_execute(int nHandler, int numArgs)
 {
 	toluafix_get_function_by_refid(L, nHandler);// args... func
-	int t = lua_type(L, -1);
 	if (!lua_isfunction(L, -1))
 	{
 		CCLOG("[LUA ERROR] function refid '%d' does not reference a Lua function", nHandler);
-		lua_pop(L, 1);
+		lua_pop(L, 1 + numArgs);
 		return 0;
 	}
 	if (numArgs > 0) lua_insert(L, -(numArgs + 1));// func args...
@@ -400,7 +408,7 @@ int CCLuaEngine::lua_invoke(int nHandler, int numArgs)
 	if (!lua_isfunction(L, -1))
 	{
 		CCLOG("[LUA ERROR] function refid '%d' does not reference a Lua function", nHandler);
-		lua_pop(L, 1);
+		lua_pop(L, 1 + numArgs);
 		return 0;
 	}
 	if (numArgs > 0) lua_insert(L, -(numArgs + 1));// func args...

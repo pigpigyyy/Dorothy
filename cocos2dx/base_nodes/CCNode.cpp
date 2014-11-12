@@ -473,7 +473,7 @@ void CCNode::cleanup()
 	this->unregisterScriptHandler();
 
 	// clear user object
-	CC_SAFE_RELEASE(m_pUserObject);
+	CC_SAFE_RELEASE_NULL(m_pUserObject);
 
 	// remove peer data
 	CCScriptEngine::sharedEngine()->removePeer(this);

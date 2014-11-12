@@ -179,7 +179,7 @@ static void* loadImage(void* data)
         // put the image info into the queue
         pthread_mutex_lock(&s_ImageInfoMutex);
         s_pImageQueue->push(pImageInfo);
-        pthread_mutex_unlock(&s_ImageInfoMutex);    
+		pthread_mutex_unlock(&s_ImageInfoMutex);
     }
     
     if( s_pSem != NULL )

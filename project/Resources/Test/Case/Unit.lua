@@ -20,6 +20,7 @@ local CCRect = require("CCRect")
 local oJoint = require("oJoint")
 local CCDirector = require("CCDirector")
 local CCScene = require("CCScene")
+local CCTextureCache = require("CCTextureCache")
 
 local scene = CCScene()
 
@@ -50,13 +51,13 @@ local unit = oUnit(unitDef,world,oVec2(400,300))
 unit.moveSpeed = 0.9
 unit.group = 1
 world:addChild(unit)
-unit:schedule(
+--[[unit:schedule(
 	loop(function()
 		print("start")
 		wait(seconds(3))
 		print("end")
 	end))
-
+--]]
 local terrainDef = oBodyDef()
 terrainDef.type = oBodyDef.Static
 terrainDef:attachPolygon(800,10,1,1,0)
@@ -87,6 +88,15 @@ menu:addChild(btn)
 btn = oButton("Attack",16,60,nil,150,10,
 	function()
 		unit:doIt(oAction.MeleeAttack)
+		print("Begin load")
+		CCTextureCache:loadAsync(
+			{
+				"ActionEditor/Model/Output/jixienv.png",
+				"ActionEditor/Model/Output/boy.png",
+				"ActionEditor/Model/Output/doll.png",
+				"ActionEditor/Model/Output/flandre.png",
+				"ActionEditor/Model/Output/girl.png",
+			},function(filename, texture) print("Loaded", filename, texture) end)
 	end)
 btn.anchor = oVec2.zero
 menu:addChild(btn)

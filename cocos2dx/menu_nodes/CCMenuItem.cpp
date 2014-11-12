@@ -70,8 +70,8 @@ CCMenuItem::~CCMenuItem()
 
 void CCMenuItem::cleanup()
 {
-	CCNode::cleanup();
 	unregisterScriptTapHandler();
+	CCNode::cleanup();
 }
 
 void CCMenuItem::selected()

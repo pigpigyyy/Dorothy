@@ -32,7 +32,7 @@ public:
 	static void clear();
 	static oAILeaf* get(int id);
 private:
-	static oUnit* _self;
+	static oRef<oUnit> _self;
 
 	static oUnit* _nearestUnit;
 	static oUnit* _nearestFriend;

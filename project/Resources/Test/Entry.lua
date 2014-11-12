@@ -13,6 +13,10 @@ local CCScene = require("CCScene")
 --local seconds = require("oRoutine").seconds
 local CCObject = require("CCObject")
 local cclog = require("cclog")
+local CCTextureCache = require("CCTextureCache")
+local oCache = require("oCache")
+local oAI = require("oAI")
+local oAction = require("oAction")
 
 local winSize = CCDirector.winSize
 local panel = oSelectionPanel(winSize,true)
@@ -39,6 +43,10 @@ panel:addChild(opMenu)
 endButton = oButton("GC",17,60,false,
 	0,0,
 	function()
+		CCTextureCache:unload()
+		oCache:clear()
+		oAI:clear()
+		oAction:clear()
 		collectgarbage()
 		cclog("[LUA MEMORY USAGE] %d KB",collectgarbage("count"))
 		cclog("Object Count: %d",CCObject.count)

@@ -30,7 +30,7 @@ oAction:add(oAction.UserID,998,0,0,
 	end)
 --]]
 
-CCKey =
+local CCKey =
 {
 	Left = 0x25,
 	Up = 0x26,
@@ -80,6 +80,7 @@ oAI:add(1,oSel({
 	}),
 	oAct(oAction.Idle),
 }))
+
 
 oAI:add(2,oSel({
 	oSeq({
@@ -209,73 +210,10 @@ oAI:add(3,oSel({
 				}),
 				oAct(oAction.Walk)
 			}),
-		}),--[[
-		oSeq({
-			oCon(function()
-				local target = oAI:getNearestUnit(oRelation.Friend)
-				return target and target.currentAction and target.currentAction.id ~= oAction.Walk and oAI:getNearestUnitDistance(oRelation.Friend) < 80
-			end),
-			oCon(function()
-				local self = oAI.self
-				local units = oAI:getDetectedUnits()
-				local left,right = false,false
-				for i = 1,units.count do
-					local unit = units[i]
-					if unit.positionX > self.positionX and unit.positionX - self.positionX < 90 then
-						right = true
-					end
-					if unit.positionX < self.positionX and self.positionX - unit.positionX < 90 then
-						left = true
-					end
-				end
-				return not left or not right
-			end),
-			oSel({
-				oSeq({
-					oCon(function()
-						local target = oAI:getNearestUnit(oRelation.Friend)
-						local self = oAI.self
-						return target and (self.positionX < target.positionX) == self.faceRight
-					end),
-					oSel({
-						oSeq({
-							oCon(function()
-								local self = oAI.self
-								local target = self.data
-								if target and (self.positionX < target.positionX) ~= self.faceRight then
-									return self.position:distance(target.position) + 80 > 150
-								end
-							end),
-							oAct(oAction.Idle),
-						}),
-						oAct(oAction.Turn),
-					}),
-				}),
-				oSeq({
-					oCon(function()
-						local self = oAI.self
-						local target = self.data
-						if target and (self.positionX < target.positionX) ~= self.faceRight then
-							return self.position:distance(target.position) + 80 > 150
-						end
-					end),
-					oAct(oAction.Idle),
-				}),
-				oAct(oAction.Walk)
-			}),
-		}),--]]
+		}),
 		oSeq({
 			oCon(function() return oAI.self.currentAction and oAI.self.currentAction.id == oAction.Walk end),
-			oSel({--[[
-				oSeq({
-					oCon(function()
-						local self = oAI.self
-						local target = self.data
-						return target and target.faceRight ~= self.faceRight
-					end),
-					oAct(oAction.Stop),
-					oAct(oAction.Turn),
-				}),--]]
+			oSel({
 				oSeq({
 					oAct(oAction.Stop),
 					oAct(oAction.Idle)
@@ -339,7 +277,7 @@ unitDef.reflexArc = 1
 local unit = oUnit(unitDef,world,oVec2(200,300))
 unit.group = 1
 unit.tag = 998
-unit.reflexArc = 1
+--unit.reflexArc = 1
 suit(unit,"girl.lua")
 world:addChild(unit,1)
 world.camera:follow(unit)
@@ -400,7 +338,7 @@ scene:addChild(textField)
 local menu = CCMenu(false)
 menu.anchor = oVec2.zero
 world.UILayer:addChild(menu)
-local changed = false
+--[[local changed = false
 local btn = oButton("Change",16,60,nil,10,10,
 	function()
 		if changed then
@@ -411,7 +349,7 @@ local btn = oButton("Change",16,60,nil,10,10,
 	end)
 btn.anchor = oVec2.zero
 menu:addChild(btn)
-
+--]]
 CCDirector:run(scene)
 
 --[[local class,property,classfield,classmethod = unpack(require("class"))

@@ -15,7 +15,7 @@ NS_DOROTHY_BEGIN
 class oScriptHandler: public CCObject
 {
 public:
-	~oScriptHandler();
+	virtual ~oScriptHandler();
 	static oScriptHandler* create(int handler);
 	void set(int handler);
 	int get() const;

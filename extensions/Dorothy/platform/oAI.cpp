@@ -15,7 +15,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 NS_DOROTHY_PLATFORM_BEGIN
 
-oUnit* oAI::_self = nullptr;
 oUnit* oAI::_nearestUnit = nullptr;
 oUnit* oAI::_nearestFriend = nullptr;
 oUnit* oAI::_nearestEnemy = nullptr;
@@ -26,6 +25,7 @@ float oAI::_nearestFriendDistance;
 float oAI::_nearestEnemyDistance;
 float oAI::_nearestNeutralDistance;
 
+oRef<oUnit> oAI::_self;
 oRef<CCArray> oAI::_friends(CCArray::create());
 oRef<CCArray> oAI::_enemies(CCArray::create());
 oRef<CCArray> oAI::_neutrals(CCArray::create());
@@ -60,11 +60,6 @@ bool oAI::conditionedReflex(oUnit* unit)
 	float minFriendDistance = 0;
 	float minEnemyDistance = 0;
 	float minNeutralDistance = 0;
-
-	_friends->removeAllObjects();
-	_enemies->removeAllObjects();
-	_neutrals->removeAllObjects();
-	_detectedUnits->removeAllObjects();
 
 	oSensor* seneor = unit->getDetectSensor();
 	if (seneor)
@@ -119,7 +114,15 @@ bool oAI::conditionedReflex(oUnit* unit)
 		_nearestNeutralDistance = sqrtf(minNeutralDistance);
 	}
 	//Do the Conditioned Reflex
-	return reflexArc->doAction();
+	bool result = reflexArc->doAction();
+
+	_friends->removeAllObjects();
+	_enemies->removeAllObjects();
+	_neutrals->removeAllObjects();
+	_detectedUnits->removeAllObjects();
+	_self = nullptr;
+
+	return result;
 }
 
 CCArray* oAI::getUnitsByRelation( oRelation relation )

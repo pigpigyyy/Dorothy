@@ -186,6 +186,7 @@ oConNode* oConNode::create( int handler )
 {
 	oConNode* node = new oConNode();
 	node->_handler = oScriptHandler::create(handler);
+	node->autorelease();
 	return node;
 }
 
