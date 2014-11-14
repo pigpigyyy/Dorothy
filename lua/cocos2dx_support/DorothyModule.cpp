@@ -175,6 +175,10 @@ bool oAnimationCache_unload(const char* filename)
 {
 	return filename ? oSharedAnimationCache.unload(filename) : oSharedAnimationCache.unload();
 }
+void oAnimationCache_removeUnused()
+{
+	oSharedAnimationCache.removeUnused();
+}
 
 bool oClipCache_load(const char* filename)
 {
@@ -187,6 +191,10 @@ bool oClipCache_update(const char* name, const char* content)
 bool oClipCache_unload(const char* filename)
 {
 	return filename ? oSharedClipCache.unload(filename) : oSharedClipCache.unload();
+}
+void oClipCache_removeUnused()
+{
+	oSharedClipCache.removeUnused();
 }
 void __oClipCache_getNames(const char* filename)
 {
@@ -226,6 +234,10 @@ bool oParticleCache_unload(const char* filename)
 {
 	return filename ? oSharedParticleCache.unload(filename) : oSharedParticleCache.unload();
 }
+void oParticleCache_removeUnused()
+{
+	oSharedParticleCache.removeUnused();
+}
 
 bool oModelCache_load(const char* filename)
 {
@@ -239,6 +251,19 @@ bool oModelCache_unload(const char* filename)
 {
 	return filename ? oSharedModelCache.unload(filename) : oSharedModelCache.unload();
 }
+void oModelCache_removeUnused()
+{
+	oSharedModelCache.removeUnused();
+}
+
+void oCache_removeUnused()
+{
+	oSharedModelCache.removeUnused();
+	oSharedAnimationCache.removeUnused();
+	oSharedParticleCache.removeUnused();
+	oSharedClipCache.removeUnused();
+	CCTextureCache::sharedTextureCache()->removeUnusedTextures();
+}
 
 void oCache_clear()
 {
@@ -247,6 +272,8 @@ void oCache_clear()
 	oSharedEffectCache.unload();
 	oSharedParticleCache.unload();
 	oSharedClipCache.unload();
+	CCTextureCache::sharedTextureCache()->removeAllTextures();
+	oShareAudioEngine.unload();
 }
 
 void oUnitDef_setActions(oUnitDef* def, int actions[], int count)
@@ -1227,8 +1254,7 @@ public:
 		{
 			lua_State* L = CCLuaEngine::sharedEngine()->getState();
 			lua_pushstring(L, _name.c_str());
-			tolua_pushccobject(L, object);
-			CCLuaEngine::sharedEngine()->executeFunction(_handler->get(), 2);
+			CCLuaEngine::sharedEngine()->executeFunction(_handler->get(), 1);
 		}
 	}
 	static oImageAsyncLoader* create(const char* filename, int handler)

@@ -13,7 +13,6 @@ local CCScene = require("CCScene")
 --local seconds = require("oRoutine").seconds
 local CCObject = require("CCObject")
 local cclog = require("cclog")
-local CCTextureCache = require("CCTextureCache")
 local oCache = require("oCache")
 local oAI = require("oAI")
 local oAction = require("oAction")
@@ -43,7 +42,6 @@ panel:addChild(opMenu)
 endButton = oButton("GC",17,60,false,
 	0,0,
 	function()
-		CCTextureCache:unload()
 		oCache:clear()
 		oAI:clear()
 		oAction:clear()
@@ -52,6 +50,9 @@ endButton = oButton("GC",17,60,false,
 		cclog("Object Count: %d",CCObject.count)
 		cclog("Lua Count: %d",CCObject.luaRefCount)
 		cclog("Callback Count: %d", CCObject.callRefCount)
+		for i,item in pairs(ubox()) do
+			print(i,item)
+		end
 	end)
 endButton.anchor = oVec2.zero
 opMenu:addChild(endButton)

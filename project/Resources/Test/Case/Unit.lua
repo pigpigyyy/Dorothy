@@ -1,6 +1,8 @@
 local oButton = require("ActionEditor/Script/oButton")
+local oRoutine = require("oRoutine")
 local wait = require("oRoutine").wait
-local loop = require("oRoutine").loop
+local once = require("oRoutine").once
+--local loop = require("oRoutine").loop
 local seconds = require("oRoutine").seconds
 
 local oPlatformWorld = require("oPlatformWorld")
@@ -20,7 +22,8 @@ local CCRect = require("CCRect")
 local oJoint = require("oJoint")
 local CCDirector = require("CCDirector")
 local CCScene = require("CCScene")
-local CCTextureCache = require("CCTextureCache")
+local oCache = require("oCache")
+--local cclog = require("cclog")
 
 local scene = CCScene()
 
@@ -85,18 +88,25 @@ btn = oButton("Turn",16,60,nil,80,10,
 	end)
 btn.anchor = oVec2.zero
 menu:addChild(btn)
+
 btn = oButton("Attack",16,60,nil,150,10,
 	function()
-		unit:doIt(oAction.MeleeAttack)
-		print("Begin load")
-		CCTextureCache:loadAsync(
-			{
+		--unit:doIt(oAction.MeleeAttack)
+		oRoutine(once(function()
+			print("Begin loading")
+			wait(seconds(3))
+			oCache:loadAsync({
 				"ActionEditor/Model/Output/jixienv.png",
 				"ActionEditor/Model/Output/boy.png",
 				"ActionEditor/Model/Output/doll.png",
 				"ActionEditor/Model/Output/flandre.png",
 				"ActionEditor/Model/Output/girl.png",
-			},function(filename, texture) print("Loaded", filename, texture) end)
+				"ActionEditor/Model/Output/jixienv.model",
+				"ActionEditor/Model/Output/nothing",
+			},function(filename) print(filename) end)
+			wait(seconds(3))
+			print("End loading")
+		end))
 	end)
 btn.anchor = oVec2.zero
 menu:addChild(btn)

@@ -80,15 +80,15 @@ bool CCLayer::init()
 
 void CCLayer::cleanup()
 {
-	CCNode::cleanup();
 	CCLayer::unregisterScriptTouchHandler();
 	CCLayer::unregisterScriptKeypadHandler();
 	CCLayer::unregisterScriptAccelerateHandler();
+	CCNode::cleanup();
 }
 
-CCLayer *CCLayer::create()
+CCLayer* CCLayer::create()
 {
-	CCLayer *pRet = new CCLayer();
+	CCLayer* pRet = new CCLayer();
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();

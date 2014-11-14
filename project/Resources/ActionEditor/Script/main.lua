@@ -11,7 +11,6 @@ local oOpacity = require("oOpacity")
 local CCCall = require("CCCall")
 local CCNode = require("CCNode")
 local oCache = require("oCache")
-local CCTextureCache = require("CCTextureCache")
 
 collectgarbage("setpause", 100)
 collectgarbage("setstepmul", 5000)
@@ -162,7 +161,6 @@ oEditor.scene:registerEventHandler(function(eventType)
 			package.loaded[k] = nil
 		end
 		oCache:clear()
-		CCTextureCache:unload()
 		--[[for k,_ in pairs(oEditor) do
 			oEditor[k] = nil
 		end]]

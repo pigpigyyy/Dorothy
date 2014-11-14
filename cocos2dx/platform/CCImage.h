@@ -26,6 +26,7 @@ THE SOFTWARE.
 #define __CC_IMAGE_H__
 
 #include "cocoa/CCObject.h"
+#include <string>
 
 NS_CC_BEGIN
 
@@ -130,6 +131,7 @@ public:
     CC_SYNTHESIZE_READONLY(unsigned short,   m_nHeight,      Height);
     CC_SYNTHESIZE_READONLY(int,     m_nBitsPerComponent,   BitsPerComponent);
 	static bool isPngAlphaPremultiplied;
+	static CCImage::EImageFormat computeImageFormatType(const std::string& filename);
 protected:
     bool _initWithJpgData(void *pData, int nDatalen);
     bool _initWithPngData(void *pData, int nDatalen);

@@ -63,6 +63,12 @@ static int lua_print(lua_State * luastate)
 	return 0;
 }
 
+static int lua_ubox(lua_State* luastate)
+{
+	lua_rawgeti(luastate, LUA_REGISTRYINDEX, TOLUA_UBOX);// ubox
+	return 1;
+}
+
 CCLuaEngine::CCLuaEngine() :
 m_callFromLua(0)
 {
@@ -75,6 +81,7 @@ m_callFromLua(0)
 	const luaL_reg global_functions[] =
 	{
 		{ "print", lua_print },
+		{ "ubox", lua_ubox },
 		{ NULL, NULL }
 	};
 	luaL_register(L, "_G", global_functions);

@@ -1760,7 +1760,14 @@ local Dorothy =
 				description = "",
 				typeName = "CCTexture2D",
 				returns = "(texture: CCTexture2D)",
-				static = true,
+				type = "method",
+			},
+			loadAsync =
+			{
+				args = "(filename: string|filenames: table<string>, callback: function)",
+				description = " -- callback: function(filename)",
+				typeName = "",
+				returns = "()",
 				type = "method",
 			},
 			add =
@@ -1769,7 +1776,6 @@ local Dorothy =
 				description = "",
 				typeName = "CCTexture2D",
 				returns = "(texture: CCTexture2D)",
-				static = true,
 				type = "method",
 			},
 			unload =
@@ -1777,7 +1783,6 @@ local Dorothy =
 				args = "()",
 				description = "",
 				returns = "()",
-				static = true,
 				type = "method",
 			},
 			reload =
@@ -1785,7 +1790,6 @@ local Dorothy =
 				args = "()",
 				description = "",
 				returns = "()",
-				static = true,
 				type = "method",
 			},
 			removeUnused =
@@ -1793,7 +1797,6 @@ local Dorothy =
 				args = "()",
 				description = "",
 				returns = "()",
-				static = true,
 				type = "method",
 			},
 			remove =
@@ -1801,7 +1804,6 @@ local Dorothy =
 				args = "(texture: CCTexture2D)",
 				description = " args1 -- (filename: string)",
 				returns = "()",
-				static = true,
 				type = "method",
 			},
 			dumpInfo =
@@ -1809,11 +1811,11 @@ local Dorothy =
 				args = "()",
 				description = "",
 				returns = "()",
-				static = true,
 				type = "method",
 			},
 		},
 		description = "class CCTextureCache.",
+		hide = true,
 		type = "class",
 		index = index()
 	},
@@ -4059,6 +4061,14 @@ local Dorothy =
 				static = true,
 				type = "method"
 			},
+			unload =
+			{
+				args = "(filename: string)",
+				description = "[Class Method]",
+				returns = "()",
+				static = true,
+				type = "method"
+			},
 			play =
 			{
 				args = "(filename: string, nil|loop: boolean)",
@@ -4096,7 +4106,7 @@ local Dorothy =
 	{
 		childs =
 		{
-			load =
+			preload =
 			{
 				args = "(filename: string)",
 				description = "[Class Method] Preload music data into memory from source file.",
@@ -5268,6 +5278,13 @@ local Dorothy =
 				returns = "(loaded: boolean)",
 				type = "method"
 			},
+			removeUnused =
+			{
+				args = "()",
+				description = "[Class Method]",
+				returns = "()",
+				type = "method"
+			},
 			getNames =
 			{
 				args = "(filename: string)",
@@ -5305,7 +5322,14 @@ local Dorothy =
 				description = "[Class Method] Unload a frame action data item from .frame file.\n\n false - No such item in cache\n\n true - Item unloaded\n\nOr unload all frame action data when no parameters passed.\n\n false - No data in cache\n\n true - Data unloaded",
 				returns = "(loaded: boolean)",
 				type = "method"
-			}
+			},
+			removeUnused =
+			{
+				args = "()",
+				description = "[Class Method]",
+				returns = "()",
+				type = "method"
+			},
 		},
 		description = "class oAnimationCache.",
 		hide = true,
@@ -5336,7 +5360,14 @@ local Dorothy =
 				description = "[Class Method] Unload particle data item from .plist file.\n\n false - No such item in cache\n\n true - Item unloaded\n\nOr unload all particle data when no parameters passed.\n\n false - No data in cache\n\n true - Data unloaded",
 				returns = "(loaded: boolean)",
 				type = "method"
-			}
+			},
+			removeUnused =
+			{
+				args = "()",
+				description = "[Class Method]",
+				returns = "()",
+				type = "method"
+			},
 		},
 		description = "class oParticleCache.",
 		hide = true,
@@ -5367,7 +5398,7 @@ local Dorothy =
 				description = "[Class Method] Unload data of effects.\n\n false - No data in cache\n\n true - Data unloaded",
 				returns = "(loaded: boolean)",
 				type = "method"
-			}
+			},
 		},
 		description = "class oEffectCache.",
 		hide = true,
@@ -5397,6 +5428,13 @@ local Dorothy =
 				args = "(nil|filename: string)",
 				description = "[Class Method] Unload model data item from .model file.\n\n false - No such item in cache\n\n true - Item unloaded\n\nOr unload all model data when no parameters passed.\n\n false - No data in cache\n\n true - Data unloaded",
 				returns = "(loaded: boolean)",
+				type = "method"
+			},
+			removeUnused =
+			{
+				args = "()",
+				description = "[Class Method]",
+				returns = "()",
 				type = "method"
 			},
 			getData =
@@ -5466,10 +5504,34 @@ local Dorothy =
 				static = true,
 				type = "value"
 			},
+			Texture =
+			{
+				description = "[CCTextureCache]",
+				typeName = "CCTextureCache",
+				static = true,
+				type = "value"
+			},
 			clear =
 			{
 				args = "()",
 				description = "",
+				returns = "()",
+				static = true,
+				type = "method",
+			},
+			removeUnused =
+			{
+				args = "()",
+				description = "",
+				returns = "()",
+				static = true,
+				type = "method",
+			},
+			loadAsync =
+			{
+				args = "(filename: string|filenames: table<string>, callback: function)",
+				description = " -- callback: function(filename)",
+				typeName = "",
 				returns = "()",
 				static = true,
 				type = "method",

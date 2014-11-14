@@ -30,7 +30,7 @@ bool disposeChildren( CCNode* parent )
 	return result;
 }
 
-bool initParticleWithType( CCParticleSystem* par, oParticleType* type )
+bool initParticleWithDef( CCParticleSystem* par, oParticleDef* type )
 {
 	bool bRet = false;
 	unsigned char *buffer = nullptr;
@@ -187,10 +187,10 @@ oParticleSystemQuad::~oParticleSystemQuad()
 	}
 }
 
-oParticleSystemQuad* oParticleSystemQuad::createWithType( oParticleType* type )
+oParticleSystemQuad* oParticleSystemQuad::createWithDef( oParticleDef* type )
 {
 	oParticleSystemQuad *pRet = new oParticleSystemQuad();
-	if (pRet && initParticleWithType(pRet, type))
+	if (pRet && initParticleWithDef(pRet, type))
 	{
 		pRet->autorelease();
 		return pRet;

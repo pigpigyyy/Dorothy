@@ -929,5 +929,35 @@ bool CCImage::_saveImageToJPG(const char * pszFilePath)
     return bRet;
 }
 
+CCImage::EImageFormat CCImage::computeImageFormatType(const std::string& filename)
+{
+	CCImage::EImageFormat ret = CCImage::kFmtUnKnown;
+
+	if ((std::string::npos != filename.find(".jpg", filename.size() - 4, 4))
+		|| (std::string::npos != filename.find(".jpeg", filename.size() - 5, 5))
+		|| (std::string::npos != filename.find(".JPG", filename.size() - 4, 4))
+		|| (std::string::npos != filename.find(".JPEG", filename.size() - 5, 5)))
+	{
+		ret = CCImage::kFmtJpg;
+	}
+	else if ((std::string::npos != filename.find(".png", filename.size() - 4, 4))
+		|| (std::string::npos != filename.find(".PNG", filename.size() - 4, 4)))
+	{
+		ret = CCImage::kFmtPng;
+	}
+	else if ((std::string::npos != filename.find(".tiff", filename.size() - 5, 5))
+		|| (std::string::npos != filename.find(".TIFF", filename.size() - 5, 5)))
+	{
+		ret = CCImage::kFmtTiff;
+	}
+	else if ((std::string::npos != filename.find(".webp", filename.size() - 5, 5))
+		|| (std::string::npos != filename.find(".WEBP", filename.size() - 5, 5)))
+	{
+		ret = CCImage::kFmtWebp;
+	}
+
+	return ret;
+}
+
 NS_CC_END
 

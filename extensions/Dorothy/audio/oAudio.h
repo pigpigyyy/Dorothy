@@ -15,6 +15,7 @@ class oSound
 {
 public:
 	static void load(const char* filename);
+	static void unload(const char* filename);
 	static int play(const char* filename, bool loop = false);
 	static void stop(int id);
 	static void stop();
@@ -27,7 +28,7 @@ public:
 class oMusic
 {
 public:
-	static void load(const char* filename);
+	static void preload(const char* filename);
 	static void play(const char* filename, bool loop = false);
 	static void pause();
 	static void resume();
@@ -40,6 +41,7 @@ class oAudioEngine
 {
 public:
 	virtual void loadSound(const char* filename) = 0;
+	virtual void unloadSound(const char* filename) = 0;
 	virtual int playSound(const char* filename, bool loop = false) = 0;
 	virtual void stopSound(int id) = 0;
 	virtual void stopSound() = 0;

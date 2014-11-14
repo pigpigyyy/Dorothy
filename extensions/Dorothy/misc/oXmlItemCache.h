@@ -90,6 +90,20 @@ public:
 			return true;
 		}
 	}
+	void removeUnused()
+	{
+		if (!_dict.empty())
+		{
+			for (dict_iter it = _dict.begin(); it != _dict.end();)
+			{
+				if (it->second->isSingleReference())
+				{
+					it = _dict.erase(it);
+				}
+				else ++it;
+			}
+		}
+	}
 protected:
 	oXmlItemCache():_item(nullptr)
 	{

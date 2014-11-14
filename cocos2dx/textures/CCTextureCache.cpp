@@ -89,30 +89,6 @@ static bool need_quit = false;
 static std::queue<AsyncStruct*>* s_pAsyncStructQueue = NULL;
 static std::queue<ImageInfo*>*   s_pImageQueue = NULL;
 
-static CCImage::EImageFormat computeImageFormatType(string& filename)
-{
-    CCImage::EImageFormat ret = CCImage::kFmtUnKnown;
-
-    if ((std::string::npos != filename.find(".jpg")) || (std::string::npos != filename.find(".jpeg")))
-    {
-        ret = CCImage::kFmtJpg;
-    }
-    else if ((std::string::npos != filename.find(".png")) || (std::string::npos != filename.find(".PNG")))
-    {
-        ret = CCImage::kFmtPng;
-    }
-    else if ((std::string::npos != filename.find(".tiff")) || (std::string::npos != filename.find(".TIFF")))
-    {
-        ret = CCImage::kFmtTiff;
-    }
-    else if ((std::string::npos != filename.find(".webp")) || (std::string::npos != filename.find(".WEBP")))
-    {
-        ret = CCImage::kFmtWebp;
-    }
-   
-    return ret;
-}
-
 static void* loadImage(void* data)
 {
     AsyncStruct *pAsyncStruct = NULL;
@@ -152,12 +128,11 @@ static void* loadImage(void* data)
         const char *filename = pAsyncStruct->filename.c_str();
 
         // compute image type
-        CCImage::EImageFormat imageType = computeImageFormatType(pAsyncStruct->filename);
+        CCImage::EImageFormat imageType = CCImage::computeImageFormatType(pAsyncStruct->filename);
         if (imageType == CCImage::kFmtUnKnown)
         {
             CCLOG("unsupported format %s",filename);
             delete pAsyncStruct;
-            
             continue;
         }
         

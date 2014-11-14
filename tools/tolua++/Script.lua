@@ -1,15 +1,14 @@
 $[
 local loaded = package.loaded
 
-loaded.CCView = require("CCView")()
-loaded.CCFileUtils = require("CCFileUtils")()
-loaded.CCApplication = require("CCApplication")()
-loaded.CCDirector = require("CCDirector")()
-loaded.CCUserDefault = require("CCUserDefault")()
-loaded.CCTextureCache = require("CCTextureCache")()
-loaded.CCKeyboard = require("CCKeyboard")()
-loaded.oContent= require("oContent")()
-loaded.oData= require("oData")()
+loaded.CCView = loaded.CCView()
+loaded.CCFileUtils = loaded.CCFileUtils()
+loaded.CCApplication = loaded.CCApplication()
+loaded.CCDirector = loaded.CCDirector()
+loaded.CCUserDefault = loaded.CCUserDefault()
+loaded.CCKeyboard = loaded.CCKeyboard()
+loaded.oContent = loaded.oContent()
+loaded.oData = loaded.oData()
 
 local CCLuaLog = loaded.CCLuaLog
 loaded.cclog = function(...)
@@ -23,17 +22,61 @@ loaded.ccmsg = function(title, ...)
 end
 loaded.CCMessageBox = nil
 
-local CCArray = require("CCArray")
-local CCDictionary = require("CCDictionary")
-local oEvent = require("oEvent")
-local oAction = require("oAction")
-local CCDirector = require("CCDirector")
-
 local yield = coroutine.yield
 local wrap = coroutine.wrap
 local create = coroutine.create
 local resume = coroutine.resume
 local status = coroutine.status
+local CCDirector = loaded.CCDirector
+local table_insert = table.insert
+local table_remove = table.remove
+
+local function wait(cond)
+	while cond(CCDirector.deltaTime) do
+		yield()
+	end
+end
+
+local function once(job)
+	return wrap(function(...)
+		job(...)
+		return true
+	end)
+end
+
+local function loop(job)
+	return wrap(function(...)
+		local _job = job
+		local worker = create(_job)
+		repeat
+			local _,result = resume(worker,...)
+			if status(worker) == "dead"then
+				worker = create(_job)
+			end
+			yield(result)
+		until false
+	end)
+end
+
+local function seconds(duration)
+	local time = 0
+	return function(deltaTime)
+		time = time + deltaTime
+		return time < duration
+	end
+end
+
+local function cycle(duration,work)
+	local time = 0
+	return function(deltaTime)
+		time = time + deltaTime
+		if time < duration then
+			work(deltaTime)
+			return true
+		end
+		return false
+	end
+end
 
 local oRoutine =
 {
@@ -46,62 +89,25 @@ local oRoutine =
 			end
 		end
 		if pos then
-			table.remove(self,pos)
+			table_remove(self,pos)
 		end
 	end,
 	clear = function(self)
 		while #self > 0 do
-			table.remove(self)
+			table_remove(self)
 		end
 	end,
-	wait = function(cond)
-		while cond(CCDirector.deltaTime) do
-			yield()
-		end
-	end,
-	once = function(job)
-		return wrap(function(...)
-			job(...)
-			return true
-		end)
-	end,
-	loop = function(job)
-		return wrap(function(...)
-			local _job = job
-			local worker = create(_job)
-			repeat
-				local _,result = resume(worker,...)
-				if status(worker) == "dead"then
-					worker = create(_job)
-				end
-				yield(result)
-			until false
-		end)
-	end,
-	seconds = function(duration)
-		local time = 0
-		return function(deltaTime)
-			time = time + deltaTime
-			return time < duration
-		end
-	end,
-	cycle = function(duration,work)
-		local time = 0
-		return function(deltaTime)
-			time = time + deltaTime
-			if time < duration then
-				work(deltaTime)
-				return true
-			end
-			return false
-		end
-	end,
+	wait = wait,
+	once = once,
+	loop = loop,
+	seconds = seconds,
+	cycle = cycle,
 }
 
 setmetatable(oRoutine,
 {
 	__call = function(self,routine)
-		table.insert(self,routine)
+		table_insert(self,routine)
 	end,
 })
 
@@ -113,7 +119,7 @@ oRoutine.start = function(self)
 				if i < count then
 					self[i] = self[count]
 				end
-				table.remove(self,count)
+				table_remove(self,count)
 				i = i-1
 				count = count-1
 			end
@@ -130,6 +136,7 @@ oRoutine:start()
 
 loaded.oRoutine = oRoutine
 
+local CCArray = loaded.CCArray
 local CCArray_index = CCArray.__index
 local CCArray_get = CCArray.get
 CCArray.__index = function(self,key)
@@ -149,6 +156,7 @@ CCArray.__newindex = function(self,key,value)
 	end
 end
 
+local CCDictionary = loaded.CCDictionary
 local CCDictionary_index = CCDictionary.__index
 local CCDictionary_get = CCDictionary.get
 CCDictionary.__index = function(self,key)
@@ -162,11 +170,13 @@ CCDictionary.__newindex = function(self,key,value)
 	CCDictionary_set(self,key,value)
 end
 
+local oEvent = loaded.oEvent
 local oEvent_args = {}
 local oEvent_send = oEvent.send
 oEvent.send = function(self,name,args)
 	oEvent_args[name] = args
 	oEvent_send(self,name)
+	oEvent_args[name] = nil
 end
 
 local oEvent_remove = oEvent.remove
@@ -183,6 +193,7 @@ loaded.oListener = function(name,handler)
 			end)
 end
 
+local oAction = loaded.oAction
 local oAction_add = oAction.add
 local oRoutine_once = oRoutine.once
 oAction.add = function(self,id,priority,reaction,recovery,access,routine,stop)
@@ -198,10 +209,101 @@ oAction.add = function(self,id,priority,reaction,recovery,access,routine,stop)
 		stop)
 end
 
-local oCache_clear = loaded.oCache.clear
-loaded.oCache.clear = function(self)
+local oCache = loaded.oCache
+local oCache_clear = oCache.clear
+oCache.clear = function(self)
 	oCache_clear()
 end
+oCache.Texture = loaded.CCTextureCache()
+loaded.CCTextureCache = nil
+
+local function _loadTextureAsync(filename, loaded)
+	if type(filename) == "table" then
+		local length = #filename
+		local count = 0
+		oCache.Texture:loadAsync(filename,
+			function(name)
+				if loaded then
+					loaded(name)
+				end
+				count = count + 1
+			end)
+		return function()
+			return not (count == length)
+		end
+	elseif type(filename) == "string" then
+		local isloaded = false
+		oCache.Texture:loadAsync(filename,
+			function(name)
+				if loaded then
+					loaded(name)
+				end
+				isloaded = true
+			end)
+		return function()
+			return not isloaded
+		end
+	end
+end
+
+local oSound = require("oSound")
+local oMusic = require("oMusic")
+local function _loadAsync(filename, loaded)
+	local extension = string.match(filename, "%.([^%.\\/]*)$")
+	if extension then extension = string.lower(extension) end
+	local itemType = nil
+	if extension == "png" or extension == "jpg" or extension == "tiff" or extension == "webp" then
+		return _loadTextureAsync(filename, loaded)
+	else
+		local isLoaded = false
+		local function loader()
+			if not isLoaded then
+				isLoaded = true
+				if loaded then
+					loaded(filename)
+				end
+				return true
+			else
+				return false
+			end
+		end
+		if extension == "model" then
+			itemType = "Model"
+		elseif extension == "clip" then
+			itemType = "Clip"
+		elseif extension == "frame" then
+			itemType = "Animation"
+		elseif extension == "effect" then
+			itemType = "Effect"
+		elseif extension == "par" then
+			itemType = "Particle"
+		elseif extension == "wav" then
+			oSound:load(filename)
+			return loader
+		elseif extension == "mp3" then
+			oMusic:preload(filename)
+			return loader
+		else
+			CCLuaLog(string.format("[Error] Unsupported file: %s", filename))
+			loaded = nil
+			return loader
+		end
+		local cacheType = oCache[itemType]
+		cacheType["load"](cacheType, filename)
+		return loader
+	end
+end
+
+local function loadAsync(_, filename, loaded)
+	if type(filename) == "string" then
+		wait(_loadAsync(filename, loaded))
+	elseif type(filename) == "table" then
+		for _,item in ipairs(filename) do
+			wait(_loadAsync(item, loaded))
+		end
+	end
+end
+oCache.loadAsync = loadAsync
 
 Dorothy = (function()
 	local tb

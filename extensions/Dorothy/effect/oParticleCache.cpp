@@ -13,7 +13,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 NS_DOROTHY_BEGIN
 
-oParticleType* oParticleCache::load( const char* filename )
+oParticleDef* oParticleCache::load( const char* filename )
 {
 	auto it = _parDict.find(filename);
 	if (it != _parDict.end())
@@ -26,7 +26,7 @@ oParticleType* oParticleCache::load( const char* filename )
 		auto data = oSharedContent.loadFile(filename, size);
 		auto dictionary = CCDictionary::createWithContents(data, size);
 
-		oParticleType* type = new oParticleType();
+		oParticleDef* type = new oParticleDef();
 		type->autorelease();
 
 		type->maxParticles = atoi(valueForKey("maxParticles", dictionary));
@@ -96,7 +96,7 @@ oParticleType* oParticleCache::load( const char* filename )
 
 CCParticleSystem* oParticleCache::loadParticle( const char* filename )
 {
-	oParticleType* type = oParticleCache::load(filename);
+	oParticleDef* type = oParticleCache::load(filename);
 	return type->toParticle();
 }
 
@@ -124,15 +124,30 @@ bool oParticleCache::unload()
 	}
 }
 
+void oParticleCache::removeUnused()
+{
+	if (!_parDict.empty())
+	{
+		for (auto it = _parDict.begin(); it != _parDict.end();)
+		{
+			if (it->second->isSingleReference())
+			{
+				it = _parDict.erase(it);
+			}
+			else ++it;
+		}
+	}
+}
+
 oParticleCache* oParticleCache::shared()
 {
 	static oParticleCache particleCache;
 	return &particleCache;
 }
 
-CCParticleSystem* oParticleType::toParticle()
+CCParticleSystem* oParticleDef::toParticle()
 {
-	return oParticleSystemQuad::createWithType(this);
+	return oParticleSystemQuad::createWithDef(this);
 }
 
 NS_DOROTHY_END

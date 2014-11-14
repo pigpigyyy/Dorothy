@@ -48,10 +48,12 @@ void oBody_clearHandler(oBody* body, uint32 flag);
 bool oAnimationCache_load(const char* filename);
 bool oAnimationCache_update(const char* name, const char* content);
 bool oAnimationCache_unload(const char* filename = nullptr);
+void oAnimationCache_removeUnused();
 
 bool oClipCache_load(const char* filename);
 bool oClipCache_update(const char* name, const char* content);
 bool oClipCache_unload(const char* filename = nullptr);
+void oClipCache_removeUnused();
 void __oClipCache_getNames(const char* filename);
 #define oClipCache_getNames(filename) {__oClipCache_getNames(filename);return 1;}
 
@@ -62,11 +64,14 @@ bool oEffectCache_unload();
 bool oParticleCache_load(const char* filename);
 bool oParticleCache_update(const char* name, const char* content);
 bool oParticleCache_unload(const char* filename = nullptr);
+void oParticleCache_removeUnused();
 
 bool oModelCache_load(const char* filename);
 bool oModelCache_update(const char* name, const char* content);
 bool oModelCache_unload(const char* filename = nullptr);
+void oModelCache_removeUnused();
 
+void oCache_removeUnused();
 void oCache_clear();
 
 void oUnitDef_setActions(oUnitDef* def, int actions[], int count);

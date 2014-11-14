@@ -50,6 +50,25 @@ void oSound::load( const char* filename )
 		oShareAudioEngine.loadSound(filename);
 	}
 }
+void oSound::unload(const char* filename)
+{
+	if (oSharedContent.isUsingGameFile())
+	{
+		string* extractedName;
+		if (isExtractNeeded(filename, extractedName))
+		{
+			oShareAudioEngine.unloadSound(extractedName->c_str());
+		}
+		else
+		{
+			oShareAudioEngine.unloadSound(extractedName->c_str());
+		}
+	}
+	else
+	{
+		oShareAudioEngine.unloadSound(filename);
+	}
+}
 int oSound::play( const char* filename, bool loop )
 {
 	if (oSharedContent.isUsingGameFile())
@@ -94,7 +113,7 @@ bool oSound::isUseCache()
 	return g_useCache;
 }
 
-void oMusic::load( const char* filename )
+void oMusic::preload( const char* filename )
 {
 	if (oSharedContent.isUsingGameFile())
 	{
@@ -158,6 +177,10 @@ public:
 	virtual void loadSound( const char* filename )
 	{
 		SimpleAudioEngine::sharedEngine()->preloadEffect(filename);
+	}
+	virtual void unloadSound(const char* filename)
+	{
+		SimpleAudioEngine::sharedEngine()->unloadEffect(filename);
 	}
 	virtual int playSound( const char* filename, bool loop = false )
 	{

@@ -15,7 +15,6 @@ local CCNode = require("CCNode")
 local CCRect = require("CCRect")
 local CCRenderTarget = require("CCRenderTarget")
 local CCImage = require("CCImage")
-local CCTextureCache = require("CCTextureCache")
 local CCMenu = require("CCMenu")
 local CCLabelTTF = require("CCLabelTTF")
 local ccColor3 = require("ccColor3")
@@ -177,8 +176,8 @@ local function oFileChooser()
 		oContent:saveToFile(clipFile,xml)
 		oCache.Clip:update(clipFile,xml)
 		oCache.Model:unload(modelFile)
-		CCTextureCache:remove(texFile)
-		CCTextureCache:add(target,texFile)
+		oCache.Texture:remove(texFile)
+		oCache.Texture:add(target,texFile)
 	
 		local children = node.children
 		if children then
@@ -241,7 +240,7 @@ local function oFileChooser()
 				local modelFile = item.editTarget..".model"
 				oEditor.model = oEditor.output..modelFile
 				oCache.clear()
-				CCTextureCache:removeUnused()
+				oCache.Texture:removeUnused()
 				local files = oContent:getDirEntries(oEditor.output,false)
 				local fileExist = false
 				for i = 1,#files do

@@ -13,7 +13,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 NS_DOROTHY_BEGIN
 
-class oParticleType;
+class oParticleDef;
 
 /** @brief Particle which perform well when used as bullet. */
 class oParticleSystemQuad: public CCParticleSystemQuad, public oIDisposable
@@ -22,7 +22,7 @@ public:
 	virtual ~oParticleSystemQuad();
 	virtual void draw();
 	virtual bool dispose();
-	static oParticleSystemQuad* createWithType(oParticleType* type);
+	static oParticleSystemQuad* createWithDef(oParticleDef* def);
 	void childrenDisposed(oIDisposable* item);
 protected:
 	oParticleSystemQuad();

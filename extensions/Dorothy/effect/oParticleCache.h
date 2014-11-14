@@ -12,7 +12,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 NS_DOROTHY_BEGIN
 
 /** @brief Particle file is cached as a particle type. */
-class oParticleType: public CCObject
+class oParticleDef: public CCObject
 {
 public:
 	float angle;
@@ -81,17 +81,18 @@ class oParticleCache
 {
 public:
 	/** Load a new particle file and cache it or get it from cache. */
-	oParticleType* load(const char* filename);
+	oParticleDef* load(const char* filename);
 	/** Load a new particle file and cache it or get it from cache and return a new instance. */
 	CCParticleSystem* loadParticle(const char* filename);
 	/** Purge cached file in memory with given filename. */
 	bool unload(const char* filename);
 	/** Purge all cached file in memory. */
 	bool unload();
+	void removeUnused();
 	/** Singleton method. */
 	static oParticleCache* shared();
 protected:
-	unordered_map<string, oRef<oParticleType>> _parDict;
+	unordered_map<string, oRef<oParticleDef>> _parDict;
 private:
 	inline const char* valueForKey(const char* key, CCDictionary* dict)
 	{
