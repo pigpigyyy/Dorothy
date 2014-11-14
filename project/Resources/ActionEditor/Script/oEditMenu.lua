@@ -781,13 +781,14 @@ oEditor.spriteData[oSd.index]
 					oOpacity(0.3,1)
 				}))
 		end
+		local selectedSp = oEditor.spriteData
 		if oEditor.state == oEditor.EDIT_LOOK then
 			oEditor.viewPanel:updateItems(false)
 			oEditor.settingPanel.visible = true
 		end
 		oEditor.state = oEditor.EDIT_ANIMATION
 		oEditor.settingPanel:updateItems()
-		oEditor.viewPanel:selectItem(oEditor.spriteData)
+		oEditor.viewPanel:selectItem(selectedSp)
 		oEditor.viewPanel:glow()
 		oEditor.controlBar:updateCursors()
 		oEditor.controlBar:setTime(0)
@@ -833,8 +834,9 @@ oEditor.spriteData[oSd.index]
 		oEditor.controlBar.visible = false
 		oEditor.dirty = true
 		oEditor.viewArea:getModel()
+		local selectedSp = oEditor.spriteData
 		oEditor.viewPanel:updateItems(true)
-		oEditor.viewPanel:selectItem(oEditor.spriteData)
+		oEditor.viewPanel:selectItem(selectedSp)
 	end
 	
 	menu.data.selectListener = oListener("ImageSelected",

@@ -362,6 +362,7 @@ local function oViewPanel()
 							isFolding = false
 							sp[oSd.fold] = not sp[oSd.fold]
 							local model = oEditor.viewArea:getModel()
+							panel:clearSelection()
 							panel:updateImages(oEditor.data,model)
 							panel:selectItem(sp)
 						else
@@ -763,6 +764,7 @@ local function oViewPanel()
 		menu.contentSize = borderSize
 		menu.positionY = borderSize.height
 		oEditor.dirty = true
+		panel:clearSelection()
 		panel:updateImages(oEditor.data,oEditor.viewArea:getModel())
 		panel:glow()
 	end

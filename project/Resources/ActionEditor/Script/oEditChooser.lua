@@ -97,6 +97,8 @@ local function oEditChooser(withCancel)
 				y,
 				function(item)
 					cancelButton:unregisterTapHandler()
+					panel.touchEnabled = false
+					menu.enabled = false
 					opMenu.enabled = false
 					panel:hide()
 					oEditor.animation = item.name
@@ -185,6 +187,8 @@ local function oEditChooser(withCancel)
 				y,
 				function(item)
 					cancelButton:unregisterTapHandler()
+					panel.touchEnabled = false
+					menu.enabled = false
 					opMenu.enabled = false
 					panel:hide()
 					oEditor.look = item.name
@@ -270,6 +274,8 @@ local function oEditChooser(withCancel)
 				y,
 				function()
 					cancelButton:unregisterTapHandler()
+					panel.touchEnabled = false
+					menu.enabled = false
 					opMenu.enabled = false
 					panel:hide()
 					oEditor.editMenu:toSprite()
@@ -305,6 +311,8 @@ local function oEditChooser(withCancel)
 			y,
 			function()
 				cancelButton:unregisterTapHandler()
+				panel.touchEnabled = false
+				menu.enabled = false
 				opMenu.enabled = false
 				panel:hide()
 				oFileChooser()
@@ -340,6 +348,8 @@ local function oEditChooser(withCancel)
 				y,
 				function()
 					cancelButton:unregisterTapHandler()
+					panel.touchEnabled = false
+					menu.enabled = false
 					opMenu.enabled = false
 					panel:hide()
 					CCDirector:popScene()

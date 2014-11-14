@@ -53,6 +53,9 @@ endButton = oButton("GC",17,60,false,
 		for i,item in pairs(ubox()) do
 			print(i,item)
 		end
+		--[[for k,v in pairs(_G) do
+			print(k,v)
+		end--]]
 	end)
 endButton.anchor = oVec2.zero
 opMenu:addChild(endButton)

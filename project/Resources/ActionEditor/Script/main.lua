@@ -161,9 +161,9 @@ oEditor.scene:registerEventHandler(function(eventType)
 			package.loaded[k] = nil
 		end
 		oCache:clear()
-		--[[for k,_ in pairs(oEditor) do
+		for k,_ in pairs(oEditor) do
 			oEditor[k] = nil
-		end]]
+		end
 	end
 end)
 CCDirector:run(oEditor.scene)

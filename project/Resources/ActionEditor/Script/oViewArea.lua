@@ -220,6 +220,7 @@ local function oViewArea()
 		end
 		return self._model
 	end
+	
 	view.data.loopListener = oListener("LoopState",
 		function(loop)
 			if view._model then
