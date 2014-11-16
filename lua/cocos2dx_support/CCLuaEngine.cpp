@@ -391,6 +391,7 @@ int CCLuaEngine::lua_execute(int numArgs)
 			ret = lua_toboolean(L, -1);
 		}
 	}
+	else ret = 1;
 	lua_settop(L, top);// stack clear
 	return ret;
 }
@@ -402,7 +403,7 @@ int CCLuaEngine::lua_execute(int nHandler, int numArgs)
 	{
 		CCLOG("[LUA ERROR] function refid '%d' does not reference a Lua function", nHandler);
 		lua_pop(L, 1 + numArgs);
-		return 0;
+		return 1;
 	}
 	if (numArgs > 0) lua_insert(L, -(numArgs + 1));// func args...
 
