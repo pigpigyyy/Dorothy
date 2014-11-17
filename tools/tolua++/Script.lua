@@ -30,6 +30,7 @@ local status = coroutine.status
 local CCDirector = loaded.CCDirector
 local table_insert = table.insert
 local table_remove = table.remove
+local type = type
 
 local function wait(cond)
 	while cond(CCDirector.deltaTime) do
@@ -284,7 +285,7 @@ local function _loadAsync(filename, loaded)
 			oMusic:preload(filename)
 			return loader
 		else
-			CCLuaLog(string.format("[Error] Unsupported file: %s", filename))
+			CCLuaLog(string.format("[ERROR] Unsupported file to load: %s", filename))
 			loaded = nil
 			return loader
 		end
@@ -305,7 +306,65 @@ local function loadAsync(_, filename, loaded)
 end
 oCache.loadAsync = loadAsync
 
-Dorothy = (function()
+local function swapAsync(cache, listA, listB, loaded)
+	local removal_list = {}
+	for _,itemA in ipairs(listA) do
+		local found = false
+		for _,itemB in ipairs(listB) do
+			if itemA == itemB then
+				found = true
+				break
+			end
+		end
+		if not found then
+			table_insert(removal_list, itemA)
+		end
+	end
+	local added_list = {}
+	for _,itemB in ipairs(listB) do
+		local found = false
+		for _,itemA in ipairs(listA) do
+			if itemB == itemA then
+				found = true
+				break
+			end
+		end
+		if not found then
+			table_insert(added_list, itemB)
+		end
+	end
+	for _,item in ipairs(removal_list) do
+		local extension = string.match(item, "%.([^%.\\/]*)$")
+		if extension then extension = string.lower(extension) end
+		local itemType = nil
+		if extension == "png" or extension == "jpg" or extension == "tiff" or extension == "webp" then
+			itemType = "Texture"
+		elseif extension == "model" then
+			itemType = "Model"
+		elseif extension == "clip" then
+			itemType = "Clip"
+		elseif extension == "frame" then
+			itemType = "Animation"
+		elseif extension == "effect" then
+			itemType = "Effect"
+		elseif extension == "par" then
+			itemType = "Particle"
+		elseif extension == "wav" then
+			oSound:unload(item)
+		elseif extension == "mp3" then
+		else
+			CCLuaLog(string.format("[ERROR] Unsupported file to unload: %s", item))
+		end
+		if itemType ~= nil then
+			local cacheType = oCache[itemType]
+			cacheType["unload"](cacheType, item)
+		end
+	end
+	cache:loadAsync(added_list, loaded)
+end
+oCache.swapAsync = swapAsync
+
+_G["Dorothy"] = (function()
 	local tb
 	local function gettb()
 		tb = {}

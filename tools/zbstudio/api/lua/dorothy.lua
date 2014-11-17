@@ -1778,13 +1778,6 @@ local Dorothy =
 				returns = "(texture: CCTexture2D)",
 				type = "method",
 			},
-			unload =
-			{
-				args = "()",
-				description = "",
-				returns = "()",
-				type = "method",
-			},
 			reload =
 			{
 				args = "()",
@@ -1799,10 +1792,10 @@ local Dorothy =
 				returns = "()",
 				type = "method",
 			},
-			remove =
+			unload =
 			{
 				args = "(texture: CCTexture2D)",
-				description = " args1 -- (filename: string)",
+				description = " args1 -- (filename: string)\n\n args2 -- ()",
 				returns = "()",
 				type = "method",
 			},
@@ -5530,6 +5523,15 @@ local Dorothy =
 			loadAsync =
 			{
 				args = "(filename: string|filenames: table<string>, callback: function)",
+				description = " -- callback: function(filename)",
+				typeName = "",
+				returns = "()",
+				static = true,
+				type = "method",
+			},
+			swapAsync =
+			{
+				args = "(oldResourses: table<string>, newResourses: table<string>, callback: function)",
 				description = " -- callback: function(filename)",
 				typeName = "",
 				returns = "()",
