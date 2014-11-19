@@ -13,7 +13,7 @@ class CCArray: public CCObject
 	bool isEqualToArray @ equals(CCArray* pOtherArray);
 	bool containsObject @ contains(CCObject* object);
 	void addObject @ add(CCObject* object);
-	void addObjectsFromArray @ join(CCArray* otherArray);
+	void addObjectsFromArray @ addRange(CCArray* otherArray);
 	void removeLastObject @ removeLast();
 	void removeObject @ remove(CCObject* object);
 	void removeObjectsInArray @ removeFrom(CCArray* otherArray);

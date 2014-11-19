@@ -59,6 +59,11 @@ local Dorothy =
 				description = "[int][readonly] Every object is created with its own unique id.",
 				type = "value",
 			},
+			ref =
+			{
+				description = "[int][readonly] Every object accessed by lua has its own unique ref id.",
+				type = "value",
+			},
 			count =
 			{
 				description = "[int][readonly] Total CCObjects.",
@@ -922,7 +927,7 @@ local Dorothy =
 				returns = "()",
 				type = "method",
 			},
-			join =
+			addRange =
 			{
 				args = "(array: CCArray)",
 				description = "",
