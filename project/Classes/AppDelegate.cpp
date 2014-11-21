@@ -42,7 +42,7 @@ bool AppDelegate::applicationDidFinishLaunching()
 		entry = "main";
 	}
 	CCScriptEngine::sharedEngine()->executeScriptFile(entry.c_str());
-    return true;
+	return true;
 }
 
 // This function will be called when the app is inactive. When comes a phone call,it's be invoked too

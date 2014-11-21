@@ -215,6 +215,14 @@ local oCache_clear = oCache.clear
 oCache.clear = function(self)
 	oCache_clear()
 end
+local oCache_removeUnused = oCache.removeUnused
+oCache.removeUnused = function(self)
+	oCache_removeUnused()
+end
+local oCache_poolCollect = oCache.Pool.collect
+oCache.Pool.collect = function(self)
+	return oCache_poolCollect()
+end
 oCache.Texture = loaded.CCTextureCache()
 loaded.CCTextureCache = nil
 

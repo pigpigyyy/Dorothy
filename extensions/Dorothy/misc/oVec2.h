@@ -39,11 +39,7 @@ public:
 	float x;
 	float y;
 	static const oVec2 zero;
-public:
-	inline void* operator new(size_t size) { return _memory.alloc(); }
-	inline void operator delete(void* ptr, size_t size) { _memory.free(ptr); }
-private:
-	static oMemoryPool<oVec2> _memory;
+	USE_MEMORY_POOL(oVec2)
 };
 
 NS_DOROTHY_END

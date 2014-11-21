@@ -12,13 +12,13 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 NS_DOROTHY_BEGIN
 
-oMemoryPool<oKeyReset> oKeyReset::_memory;
-oMemoryPool<oKeyPos> oKeyPos::_memory;
-oMemoryPool<oKeyRoll> oKeyRoll::_memory;
-oMemoryPool<oKeyRotate> oKeyRotate::_memory;
-oMemoryPool<oKeyOpacity> oKeyOpacity::_memory;
-oMemoryPool<oKeySkew> oKeySkew::_memory;
-oMemoryPool<oKeyScale> oKeyScale::_memory;
+MEMORY_POOL(oKeyReset)
+MEMORY_POOL(oKeyRoll)
+MEMORY_POOL(oKeyPos)
+MEMORY_POOL(oKeyRotate)
+MEMORY_POOL(oKeyOpacity)
+MEMORY_POOL(oKeySkew)
+MEMORY_POOL(oKeyScale)
 
 void oKeyReset::update( float time )
 {

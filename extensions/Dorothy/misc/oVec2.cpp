@@ -11,8 +11,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 NS_DOROTHY_BEGIN
 
-oMemoryPool<oVec2> oVec2::_memory;
-
+MEMORY_POOL(oVec2)
 const oVec2 oVec2::zero;
 
 oVec2::oVec2(float x, float y):

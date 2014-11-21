@@ -5463,6 +5463,28 @@ local Dorothy =
 		type = "class",
 		index = index()
 	},
+	oPool =
+	{
+		childs =
+		{
+			collect =
+			{
+				args = "()",
+				description = "",
+				returns = "(collectedMemory: int)",
+				type = "method",
+			},
+			size =
+			{
+				description = "[int][readonly]",
+				type = "value",
+			},
+		},
+		description = "",
+		type = "class",
+		hide = true,
+		index = index()
+	},
 	oCache =
 	{
 		childs =
@@ -5506,6 +5528,13 @@ local Dorothy =
 			{
 				description = "[CCTextureCache]",
 				typeName = "CCTextureCache",
+				static = true,
+				type = "value"
+			},
+			Pool =
+			{
+				description = "[oPool]",
+				typeName = "oPool",
 				static = true,
 				type = "value"
 			},

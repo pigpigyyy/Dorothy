@@ -164,6 +164,27 @@ private:
 	}
 };
 
+#define USE_MEMORY_POOL(type) \
+public:\
+	inline void* operator new(size_t size){ return _memory.alloc(); }\
+	inline void operator delete(void* ptr, size_t size) { _memory.free(ptr); }\
+	static int poolCollect()\
+	{\
+		int oldSize = _memory.capacity();\
+		_memory.shrink();\
+		int newSize = _memory.capacity();\
+		return oldSize - newSize;\
+	}\
+	static int poolSize()\
+	{\
+		return _memory.capacity();\
+	}\
+private:\
+	static oMemoryPool<type> _memory;
+
+#define MEMORY_POOL(type) \
+oMemoryPool<type> type::_memory;
+
 NS_DOROTHY_END
 
 #endif // __DOROTHY_MISC_OMEMORYPOOL_H__

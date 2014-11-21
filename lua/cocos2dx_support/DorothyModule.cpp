@@ -276,6 +276,38 @@ void oCache_clear()
 	oShareAudioEngine.unload();
 }
 
+int oCache_poolCollect()
+{
+	int collect = 0;
+	collect += oVec2::poolCollect();
+	collect += oKeyReset::poolCollect();
+	collect += oKeyPos::poolCollect();
+	collect += oKeyScale::poolCollect();
+	collect += oKeyRotate::poolCollect();
+	collect += oKeyOpacity::poolCollect();
+	collect += oKeySkew::poolCollect();
+	collect += oKeyRoll::poolCollect();
+	collect += oSequence::poolCollect();
+	collect += oSpawn::poolCollect();
+	return collect;
+}
+
+int oCache_poolSize()
+{
+	int size = 0;
+	size += oVec2::poolSize();
+	size += oKeyReset::poolSize();
+	size += oKeyPos::poolSize();
+	size += oKeyScale::poolSize();
+	size += oKeyRotate::poolSize();
+	size += oKeyOpacity::poolSize();
+	size += oKeySkew::poolSize();
+	size += oKeyRoll::poolSize();
+	size += oSequence::poolSize();
+	size += oSpawn::poolSize();
+	return size;
+}
+
 void oUnitDef_setActions(oUnitDef* def, int actions[], int count)
 {
 	def->actions.clear();

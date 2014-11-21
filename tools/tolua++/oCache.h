@@ -45,4 +45,9 @@ module oCache
 	
 	void oCache_clear @ clear();
 	void oCache_removeUnused @ removeUnused();
+	module Pool
+	{
+		int oCache_poolCollect @ collect();
+		tolua_readonly tolua_property__qt int oCache_poolSize @ size;
+	}
 }

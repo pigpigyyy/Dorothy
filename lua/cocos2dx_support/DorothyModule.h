@@ -73,6 +73,10 @@ void oModelCache_removeUnused();
 
 void oCache_removeUnused();
 void oCache_clear();
+// return collected memory size in bytes
+int oCache_poolCollect();
+// return current allocated memory size
+int oCache_poolSize();
 
 void oUnitDef_setActions(oUnitDef* def, int actions[], int count);
 void oUnitDef_setInstincts(oUnitDef* def, int instincts[], int count);
