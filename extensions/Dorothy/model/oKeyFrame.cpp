@@ -12,6 +12,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 NS_DOROTHY_BEGIN
 
+oMemoryPool<oKeyReset> oKeyReset::_memory;
+oMemoryPool<oKeyPos> oKeyPos::_memory;
+oMemoryPool<oKeyRoll> oKeyRoll::_memory;
+oMemoryPool<oKeyRotate> oKeyRotate::_memory;
+oMemoryPool<oKeyOpacity> oKeyOpacity::_memory;
+oMemoryPool<oKeySkew> oKeySkew::_memory;
+oMemoryPool<oKeyScale> oKeyScale::_memory;
+
 void oKeyReset::update( float time )
 {
 	CC_UNUSED_PARAM(time);
@@ -61,7 +69,6 @@ oKeyReset* oKeyReset::create( oKeyFrameDef* def )
 	keyReset->autorelease();
 	return keyReset;
 }
-oMemoryPool<oKeyReset> oKeyReset::_memory;
 
 void oKeyPos::setEase( uint8 easeId )
 {
@@ -122,7 +129,6 @@ void oKeyPos::setValue( float endX, float endY )
 	_endPosX = endX;
 	_endPosY = endY;
 }
-oMemoryPool<oKeyPos> oKeyPos::_memory;
 
 void oKeyScale::setEase( uint8 easeId )
 {
@@ -186,7 +192,6 @@ void oKeyScale::setValue( float endScaleX, float endScaleY )
 	_endScaleX = endScaleX;
 	_endScaleY = endScaleY;
 }
-oMemoryPool<oKeyScale> oKeyScale::_memory;
 
 void oKeyRotate::setEase( uint8 easeId )
 {
@@ -241,7 +246,6 @@ void oKeyRotate::setValue( float endRotate )
 {
 	_endRotate = endRotate;
 }
-oMemoryPool<oKeyRotate> oKeyRotate::_memory;
 
 void oKeyOpacity::setEase( uint8 easeId )
 {
@@ -296,7 +300,6 @@ void oKeyOpacity::setValue(float endOpacity)
 {
 	_endOpacity = endOpacity;
 }
-oMemoryPool<oKeyOpacity> oKeyOpacity::_memory;
 
 void oKeySkew::setEase( uint8 easeId )
 {
@@ -356,7 +359,6 @@ void oKeySkew::setValue( float endSkewX, float endSkewY )
 	_endSkewX = endSkewX;
 	_endSkewY = endSkewY;
 }
-oMemoryPool<oKeySkew> oKeySkew::_memory;
 
 void oKeyRoll::setEase( uint8 easeId )
 {
@@ -427,6 +429,5 @@ void oKeyRoll::setValue( float endRoll )
 {
 	_endRoll = endRoll;
 }
-oMemoryPool<oKeyRoll> oKeyRoll::_memory;
 
 NS_DOROTHY_END

@@ -15,14 +15,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 NS_DOROTHY_BEGIN
 
-template<class Item, int CHUNK_CAPACITY = 4096>
+template<class Item, int CHUNK_CAPACITY = 4096, int WARNING_SIZE = 1024>// 4KB 1024KB
 class oMemoryPool
 {
 #define ITEM_SIZE sizeof(Item)
 public:
-	oMemoryPool():
-	_chunk(new Chunk()),
-	_freeList(nullptr)
+	oMemoryPool() :
+		_chunk(new Chunk()),
+		_freeList(nullptr)
 	{ }
 	~oMemoryPool()
 	{
@@ -41,6 +41,11 @@ public:
 			if (_chunk->size + ITEM_SIZE > CHUNK_CAPACITY)
 			{
 				_chunk = new Chunk(_chunk);
+				int consumption = oMemoryPool::capacity();
+				if (consumption >= WARNING_SIZE * 1024)
+				{
+					CCLOG("[WARNING] oMemoryPool consumes %d KB memory larger than %d KB for type %s", consumption / 1024, WARNING_SIZE, typeid(Item).name());
+				}
 			}
 			char* addr = _chunk->buffer + _chunk->size;
 			_chunk->size += ITEM_SIZE;
@@ -57,12 +62,78 @@ public:
 	Item* newItem(Args&&... args)
 	{
 		Item* mem = (Item*)oMemoryPool<Item, CHUNK_CAPACITY>::alloc();
-		return new (mem) Item(std::forward<Args>(args)...);
+		return new (mem)Item(std::forward<Args>(args)...);
 	}
 	void deleteItem(Item* item)
 	{
 		item->~Item();
 		oMemoryPool<Item, CHUNK_CAPACITY>::free((void*)item);
+	}
+	int capacity()
+	{
+		int chunkCount = 0;
+		for (Chunk* chunk = _chunk; chunk; chunk = chunk->next)
+		{
+			++chunkCount;
+		}
+		return chunkCount * CHUNK_CAPACITY;
+	}
+	void shrink()
+	{
+		Chunk* prevChunk = nullptr;
+		FreeList* sortedChunkList = nullptr;
+		FreeList* sortedChunkListTail = nullptr;
+		FreeList* prev = nullptr;
+		for (Chunk* chunk = _chunk; chunk;)
+		{
+			size_t begin = (size_t)chunk->buffer;
+			size_t end = begin + CHUNK_CAPACITY;
+			int count = 0;
+			FreeList* chunkList = nullptr;
+			FreeList* chunkListTail = nullptr;
+			prev = nullptr;
+			for (FreeList* list = _freeList; list;)
+			{
+				size_t loc = (size_t)list;
+				if (begin <= loc && loc < end)
+				{
+					++count;
+					FreeList* temp = list;
+					if (prev) prev->next = list->next;
+					else _freeList = list->next;
+					list = list->next;
+					temp->next = chunkList;
+					chunkList = temp;
+					if (!chunkList) chunkListTail = chunkList;
+				}
+				else
+				{
+					prev = list;
+					list = list->next;
+				}
+			}
+			if (count == (size_t)(CHUNK_CAPACITY / ITEM_SIZE))
+			{
+				Chunk* temp = chunk;
+				if (prevChunk) prevChunk->next = chunk->next;
+				else _chunk = chunk->next;
+				chunk = chunk->next;
+				delete temp;
+			}
+			else
+			{
+				if (sortedChunkListTail)
+				{
+					sortedChunkListTail->next = chunkList;
+				}
+				else sortedChunkList = chunkList;
+				sortedChunkListTail = chunkListTail;
+				prevChunk = chunk;
+				chunk = chunk->next;
+			}
+		}
+		if (prev) prev->next = sortedChunkList;
+		else _freeList = sortedChunkList;
 	}
 private:
 	struct FreeList
@@ -71,12 +142,12 @@ private:
 	};
 	struct Chunk
 	{
-		Chunk(Chunk* next = nullptr):
-		buffer(new char[CHUNK_CAPACITY]),
-		size(0),
-		next(next)
+		Chunk(Chunk* next = nullptr) :
+			buffer(new char[CHUNK_CAPACITY]),
+			size(0),
+			next(next)
 		{ }
-		~Chunk() { delete [] buffer; }
+		~Chunk() { delete[] buffer; }
 		int size;
 		char* buffer;
 		Chunk* next;
