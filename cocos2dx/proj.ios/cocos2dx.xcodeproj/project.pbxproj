@@ -209,18 +209,10 @@
 		1551A82B158F2ADF00E66CFE /* ccShaderEx_SwitchMask_frag.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A5D7158F2ADE00E66CFE /* ccShaderEx_SwitchMask_frag.h */; };
 		1551A82C158F2ADF00E66CFE /* ccShaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1551A5D8158F2ADE00E66CFE /* ccShaders.cpp */; };
 		1551A82D158F2ADF00E66CFE /* ccShaders.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A5D9158F2ADE00E66CFE /* ccShaders.h */; };
-		1551A82E158F2ADF00E66CFE /* CCAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1551A5DB158F2ADE00E66CFE /* CCAnimation.cpp */; };
-		1551A82F158F2ADF00E66CFE /* CCAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A5DC158F2ADE00E66CFE /* CCAnimation.h */; };
-		1551A830158F2ADF00E66CFE /* CCAnimationCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1551A5DD158F2ADE00E66CFE /* CCAnimationCache.cpp */; };
-		1551A831158F2ADF00E66CFE /* CCAnimationCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A5DE158F2ADE00E66CFE /* CCAnimationCache.h */; };
 		1551A832158F2ADF00E66CFE /* CCSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1551A5DF158F2ADE00E66CFE /* CCSprite.cpp */; };
 		1551A833158F2ADF00E66CFE /* CCSprite.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A5E0158F2ADE00E66CFE /* CCSprite.h */; };
 		1551A834158F2ADF00E66CFE /* CCSpriteBatchNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1551A5E1158F2ADE00E66CFE /* CCSpriteBatchNode.cpp */; };
 		1551A835158F2ADF00E66CFE /* CCSpriteBatchNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A5E2158F2ADE00E66CFE /* CCSpriteBatchNode.h */; };
-		1551A836158F2ADF00E66CFE /* CCSpriteFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1551A5E3158F2ADE00E66CFE /* CCSpriteFrame.cpp */; };
-		1551A837158F2ADF00E66CFE /* CCSpriteFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A5E4158F2ADE00E66CFE /* CCSpriteFrame.h */; };
-		1551A838158F2ADF00E66CFE /* CCSpriteFrameCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1551A5E5158F2ADE00E66CFE /* CCSpriteFrameCache.cpp */; };
-		1551A839158F2ADF00E66CFE /* CCSpriteFrameCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A5E6158F2ADE00E66CFE /* CCSpriteFrameCache.h */; };
 		1551A83A158F2ADF00E66CFE /* base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1551A5E8158F2ADE00E66CFE /* base64.cpp */; };
 		1551A83B158F2ADF00E66CFE /* base64.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A5E9158F2ADE00E66CFE /* base64.h */; };
 		1551A83C158F2ADF00E66CFE /* CCPointExtension.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1551A5EA158F2ADE00E66CFE /* CCPointExtension.cpp */; };
@@ -516,18 +508,10 @@
 		1551A5D7158F2ADE00E66CFE /* ccShaderEx_SwitchMask_frag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ccShaderEx_SwitchMask_frag.h; sourceTree = "<group>"; };
 		1551A5D8158F2ADE00E66CFE /* ccShaders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ccShaders.cpp; sourceTree = "<group>"; };
 		1551A5D9158F2ADE00E66CFE /* ccShaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ccShaders.h; sourceTree = "<group>"; };
-		1551A5DB158F2ADE00E66CFE /* CCAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCAnimation.cpp; sourceTree = "<group>"; };
-		1551A5DC158F2ADE00E66CFE /* CCAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAnimation.h; sourceTree = "<group>"; };
-		1551A5DD158F2ADE00E66CFE /* CCAnimationCache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCAnimationCache.cpp; sourceTree = "<group>"; };
-		1551A5DE158F2ADE00E66CFE /* CCAnimationCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAnimationCache.h; sourceTree = "<group>"; };
 		1551A5DF158F2ADE00E66CFE /* CCSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCSprite.cpp; sourceTree = "<group>"; };
 		1551A5E0158F2ADE00E66CFE /* CCSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCSprite.h; sourceTree = "<group>"; };
 		1551A5E1158F2ADE00E66CFE /* CCSpriteBatchNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCSpriteBatchNode.cpp; sourceTree = "<group>"; };
 		1551A5E2158F2ADE00E66CFE /* CCSpriteBatchNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCSpriteBatchNode.h; sourceTree = "<group>"; };
-		1551A5E3158F2ADE00E66CFE /* CCSpriteFrame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCSpriteFrame.cpp; sourceTree = "<group>"; };
-		1551A5E4158F2ADE00E66CFE /* CCSpriteFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCSpriteFrame.h; sourceTree = "<group>"; };
-		1551A5E5158F2ADE00E66CFE /* CCSpriteFrameCache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCSpriteFrameCache.cpp; sourceTree = "<group>"; };
-		1551A5E6158F2ADE00E66CFE /* CCSpriteFrameCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCSpriteFrameCache.h; sourceTree = "<group>"; };
 		1551A5E8158F2ADE00E66CFE /* base64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = base64.cpp; sourceTree = "<group>"; };
 		1551A5E9158F2ADE00E66CFE /* base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base64.h; sourceTree = "<group>"; };
 		1551A5EA158F2ADE00E66CFE /* CCPointExtension.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCPointExtension.cpp; sourceTree = "<group>"; };
@@ -1067,18 +1051,10 @@
 		1551A5DA158F2ADE00E66CFE /* sprite_nodes */ = {
 			isa = PBXGroup;
 			children = (
-				1551A5DB158F2ADE00E66CFE /* CCAnimation.cpp */,
-				1551A5DC158F2ADE00E66CFE /* CCAnimation.h */,
-				1551A5DD158F2ADE00E66CFE /* CCAnimationCache.cpp */,
-				1551A5DE158F2ADE00E66CFE /* CCAnimationCache.h */,
 				1551A5DF158F2ADE00E66CFE /* CCSprite.cpp */,
 				1551A5E0158F2ADE00E66CFE /* CCSprite.h */,
 				1551A5E1158F2ADE00E66CFE /* CCSpriteBatchNode.cpp */,
 				1551A5E2158F2ADE00E66CFE /* CCSpriteBatchNode.h */,
-				1551A5E3158F2ADE00E66CFE /* CCSpriteFrame.cpp */,
-				1551A5E4158F2ADE00E66CFE /* CCSpriteFrame.h */,
-				1551A5E5158F2ADE00E66CFE /* CCSpriteFrameCache.cpp */,
-				1551A5E6158F2ADE00E66CFE /* CCSpriteFrameCache.h */,
 			);
 			path = sprite_nodes;
 			sourceTree = "<group>";
@@ -1382,12 +1358,8 @@
 				1551A82A158F2ADF00E66CFE /* CCShaderCache.h in Headers */,
 				1551A82B158F2ADF00E66CFE /* ccShaderEx_SwitchMask_frag.h in Headers */,
 				1551A82D158F2ADF00E66CFE /* ccShaders.h in Headers */,
-				1551A82F158F2ADF00E66CFE /* CCAnimation.h in Headers */,
-				1551A831158F2ADF00E66CFE /* CCAnimationCache.h in Headers */,
 				1551A833158F2ADF00E66CFE /* CCSprite.h in Headers */,
 				1551A835158F2ADF00E66CFE /* CCSpriteBatchNode.h in Headers */,
-				1551A837158F2ADF00E66CFE /* CCSpriteFrame.h in Headers */,
-				1551A839158F2ADF00E66CFE /* CCSpriteFrameCache.h in Headers */,
 				1551A83B158F2ADF00E66CFE /* base64.h in Headers */,
 				1551A83D158F2ADF00E66CFE /* CCPointExtension.h in Headers */,
 				1551A83F158F2ADF00E66CFE /* CCProfiling.h in Headers */,
@@ -1576,12 +1548,8 @@
 				1551A81A158F2ADF00E66CFE /* ccGLStateCache.cpp in Sources */,
 				1551A829158F2ADF00E66CFE /* CCShaderCache.cpp in Sources */,
 				1551A82C158F2ADF00E66CFE /* ccShaders.cpp in Sources */,
-				1551A82E158F2ADF00E66CFE /* CCAnimation.cpp in Sources */,
-				1551A830158F2ADF00E66CFE /* CCAnimationCache.cpp in Sources */,
 				1551A832158F2ADF00E66CFE /* CCSprite.cpp in Sources */,
 				1551A834158F2ADF00E66CFE /* CCSpriteBatchNode.cpp in Sources */,
-				1551A836158F2ADF00E66CFE /* CCSpriteFrame.cpp in Sources */,
-				1551A838158F2ADF00E66CFE /* CCSpriteFrameCache.cpp in Sources */,
 				1551A83A158F2ADF00E66CFE /* base64.cpp in Sources */,
 				1551A83C158F2ADF00E66CFE /* CCPointExtension.cpp in Sources */,
 				1551A83E158F2ADF00E66CFE /* CCProfiling.cpp in Sources */,
@@ -1647,6 +1615,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				SDKROOT = iphoneos;
+				VALID_ARCHS = "armv7 armv7s";
 				WARNING_CFLAGS = "-fdiagnostics-show-option";
 			};
 			name = Debug;
@@ -1669,6 +1638,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "armv7 armv7s";
 				WARNING_CFLAGS = "-fdiagnostics-show-option";
 			};
 			name = Release;
@@ -1676,11 +1646,12 @@
 		1551A34D158F2AB200E66CFE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				DSTROOT = /tmp/cocos2dx.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "cocos2dx-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					COCOS2D_JAVASCRIPT,
 					USE_FILE32API,
 					CC_TARGET_OS_IPHONE,
 					"COCOS2D_DEBUG=1",
@@ -1703,11 +1674,12 @@
 		1551A34E158F2AB200E66CFE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				DSTROOT = /tmp/cocos2dx.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "cocos2dx-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					COCOS2D_JAVASCRIPT,
 					USE_FILE32API,
 					CC_TARGET_OS_IPHONE,
 				);
