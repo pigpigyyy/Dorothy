@@ -287,7 +287,6 @@ b2FixtureDef* oBodyDef::loop( const vector<oVec2>& vertices, float friction, flo
 	}
 	_chainShape.CreateLoop(vs, length);
 	delete [] vs;
-	b2FixtureDef* fixtureDef = new b2FixtureDef();
 	_fixtureDef.shape = &_chainShape;
 	_fixtureDef.friction = friction;
 	_fixtureDef.restitution = restitution;
@@ -302,7 +301,6 @@ b2FixtureDef* oBodyDef::loop(const oVec2 vertices[], int count, float friction, 
 	}
 	_chainShape.CreateLoop(vs, count);
 	delete[] vs;
-	b2FixtureDef* fixtureDef = new b2FixtureDef();
 	_fixtureDef.shape = &_chainShape;
 	_fixtureDef.friction = friction;
 	_fixtureDef.restitution = restitution;

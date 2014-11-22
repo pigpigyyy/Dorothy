@@ -105,6 +105,8 @@ bool oAI::conditionedReflex(oUnit* unit)
 					_nearestNeutral = aroundUnit;
 				}
 				break;
+			default:
+				break;
 			}
 		}
 		CCARRAY_END
@@ -139,6 +141,8 @@ CCArray* oAI::getUnitsByRelation( oRelation relation )
 	case oRelation::Neutral:
 		units = _neutrals;
 		break;
+	default:
+		break;
 	}
 	return units;
 }
@@ -158,8 +162,9 @@ oUnit* oAI::getNearestUnit( oRelation relation )
 		return _nearestEnemy;
 	case oRelation::Neutral:
 		return _nearestNeutral;
+	default:
+		return _nearestUnit;
 	}
-	return _nearestUnit;
 }
 
 float oAI::getNearestUnitDistance( oRelation relation )
@@ -172,8 +177,9 @@ float oAI::getNearestUnitDistance( oRelation relation )
 		return _nearestEnemyDistance;
 	case oRelation::Neutral:
 		return _nearestNeutralDistance;
+	default:
+		return _nearestUnitDistance;
 	}
-	return _nearestUnitDistance;
 }
 
 float oAI::getOldInstinctValue()

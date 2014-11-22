@@ -22,12 +22,6 @@ bool AppDelegate::applicationDidFinishLaunching()
 {
     // initialize director
 	CCDirector::sharedDirector()->setOpenGLView(CCEGLView::sharedOpenGLView());
-
-#if CC_TARGET_PLATFORM == CC_PLATFORM_BLACKBERRY
-    std::vector<std::string> searchPaths;
-    searchPaths.push_back("TestCppResources");
-    CCFileUtils::sharedFileUtils()->setSearchPaths(searchPaths);
-#endif
 	/*
 	oSharedContent.setGameFile("Resources.zip");
 	oSharedContent.setPassword("pigyypigy");

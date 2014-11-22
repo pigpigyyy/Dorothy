@@ -29,10 +29,6 @@
 #include "LuaCocos2d.h"
 #include "Cocos2dxLuaLoader.h"
 
-#if(CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
-#include "platform/ios/CCLuaObjcBridge.h"
-#endif
-
 NS_CC_BEGIN
 
 static int lua_print(lua_State * luastate)
@@ -85,9 +81,7 @@ m_callFromLua(0)
 		{ NULL, NULL }
 	};
 	luaL_register(L, "_G", global_functions);
-#if(CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
-	CCLuaObjcBridge::luaopen_luaoc(m_state);
-#endif
+
 	// add cocos2dx loader
 	addLuaLoader(cocos2dx_lua_loader);
 
@@ -273,7 +267,6 @@ int CCLuaEngine::executeLayerTouchesEvent(CCLayer* pLayer, int eventType, CCSet 
 	int nHandler = pScriptHandlerEntry->getHandler();
 	if (!nHandler) return 0;
 	lua_pushinteger(L, eventType);
-	CCDirector* pDirector = CCDirector::sharedDirector();
 	lua_createtable(L, pTouches->count(), 0);
 	int i = 1;
 	for (CCSetIterator it = pTouches->begin(); it != pTouches->end(); ++it)

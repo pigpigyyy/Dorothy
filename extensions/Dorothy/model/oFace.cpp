@@ -33,7 +33,6 @@ bool disposeChildren( CCNode* parent )
 bool initParticleWithDef( CCParticleSystem* par, oParticleDef* type )
 {
 	bool bRet = false;
-	unsigned char *buffer = nullptr;
 	BLOCK_START
 	{
 		if(par->initWithTotalParticles(type->maxParticles))

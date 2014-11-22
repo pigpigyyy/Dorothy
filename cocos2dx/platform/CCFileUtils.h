@@ -38,6 +38,7 @@ class CCArray;
 class CCDataSource
 {
 public:
+	virtual ~CCDataSource(){}
 	virtual unsigned char* getFileData(const char* pszFileName, const char* pszMode, unsigned long* pSize) = 0;
 };
 

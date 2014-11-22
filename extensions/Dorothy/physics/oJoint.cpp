@@ -383,6 +383,8 @@ void oMotorJoint::setEnabled(bool var)
 	case e_wheelJoint:
 		((b2WheelJoint*)_joint)->EnableMotor(var);
 		break;
+    default:
+        break;
 	}
 }
 bool oMotorJoint::isEnabled() const
@@ -395,6 +397,9 @@ bool oMotorJoint::isEnabled() const
 		return ((b2RevoluteJoint*)_joint)->IsMotorEnabled();
 	case e_wheelJoint:
 		return ((b2WheelJoint*)_joint)->IsMotorEnabled();
+    default:
+        break;
+
 	}
 	return false;
 }
@@ -411,7 +416,9 @@ void oMotorJoint::setSpeed(float var)
 		break;
 	case e_wheelJoint:
 		((b2WheelJoint*)_joint)->SetMotorSpeed(var);
-		break;
+        break;
+    default:
+        break;
 	}
 }
 float oMotorJoint::getSpeed() const
@@ -424,6 +431,8 @@ float oMotorJoint::getSpeed() const
 		return ((b2RevoluteJoint*)_joint)->GetMotorSpeed();
 	case e_wheelJoint:
 		return ((b2WheelJoint*)_joint)->GetMotorSpeed();
+    default:
+        break;
 	}
 	return 0.0f;
 }

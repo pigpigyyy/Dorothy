@@ -614,6 +614,7 @@ int CCDictionary_get(lua_State* L)
 		goto tolua_lerror;
 	}
 #endif
+    {
 	CCDictionary* self = (CCDictionary*)tolua_tousertype(L, 1, 0);
 #ifndef TOLUA_RELEASE
 	if (!self) tolua_error(L, "invalid 'self' in function 'CCDictionary_get'", nullptr);
@@ -657,6 +658,7 @@ int CCDictionary_get(lua_State* L)
 		lua_pushnil(L);
 		return 1;
 	}
+    }
 #ifndef TOLUA_RELEASE
 tolua_lerror:
 	tolua_error(L, "#ferror in function 'CCDictionary_get'.", &tolua_err);
@@ -674,6 +676,7 @@ int CCDictionary_set(lua_State* L)
 		goto tolua_lerror;
 	}
 #endif
+    {
 	CCDictionary* self = (CCDictionary*)tolua_tousertype(L, 1, 0);
 #ifndef TOLUA_RELEASE
 	if (!self) tolua_error(L, "invalid 'self' in function 'CCDictionary_set'", nullptr);
@@ -714,6 +717,7 @@ int CCDictionary_set(lua_State* L)
 		else self->removeObjectForKey(key);
 	}
 	return 0;
+    }
 #ifndef TOLUA_RELEASE
 tolua_lerror :
 	tolua_error(L, "#ferror in function 'CCDictionary_set'.", &tolua_err);
@@ -1320,6 +1324,7 @@ int CCTextureCache_loadAsync(lua_State* L)
 		goto tolua_lerror;
 	}
 #endif
+    {
 	CCTextureCache* self = (CCTextureCache*)tolua_tousertype(L, 1, 0);
 #ifndef TOLUA_RELEASE
 	if (!self) tolua_error(L, "invalid 'self' in function 'CCTextureCache_loadAsync'", nullptr);
@@ -1345,6 +1350,7 @@ int CCTextureCache_loadAsync(lua_State* L)
 		}
 	}
 	return 0;
+    }
 #ifndef TOLUA_RELEASE
 tolua_lerror :
 	tolua_error(L, "#ferror in function 'CCTextureCache_loadAsync'.", &tolua_err);

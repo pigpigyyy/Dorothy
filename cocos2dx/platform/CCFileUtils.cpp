@@ -32,8 +32,6 @@ THE SOFTWARE.
 
 using namespace std;
 
-#if (CC_TARGET_PLATFORM != CC_PLATFORM_IOS) && (CC_TARGET_PLATFORM != CC_PLATFORM_MAC)
-
 NS_CC_BEGIN
 
 typedef enum 
@@ -333,6 +331,8 @@ CCDictionary* CCFileUtils::createCCDictionaryWithContents(const char* data, unsi
 	return tMaker.dictionaryWithContents(data, length);
 }
 
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_IOS) && (CC_TARGET_PLATFORM != CC_PLATFORM_MAC)
+
 CCDictionary* CCFileUtils::createCCDictionaryWithContentsOfFile(const std::string& filename)
 {
     CCDictMaker tMaker;
@@ -346,7 +346,6 @@ CCArray* CCFileUtils::createCCArrayWithContentsOfFile(const std::string& filenam
 }
 
 #else
-NS_CC_BEGIN
 
 /* The subclass CCFileUtilsIOS and CCFileUtilsMac should override these two method. */
 CCDictionary* CCFileUtils::createCCDictionaryWithContentsOfFile(const std::string& filename) {return NULL;}
