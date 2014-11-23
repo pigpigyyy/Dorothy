@@ -648,7 +648,7 @@ void CCLabelBMFont::createFontChars()
         else
         {
             // New Sprite ? Set correct color, opacity, etc...
-            if( 0 )
+            if( /* DISABLES CODE */ (0) )
             {
 				/* WIP: Doesn't support many features yet.
 				 But this code is super fast. It doesn't create any sprite.

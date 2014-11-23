@@ -169,7 +169,7 @@ static void* loadImage(void* data)
         delete s_pAsyncStructQueue;
         delete s_pImageQueue;
     }
-    
+
     return 0;
 }
 

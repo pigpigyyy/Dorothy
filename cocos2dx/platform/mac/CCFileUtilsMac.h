@@ -40,6 +40,7 @@ NS_CC_BEGIN
 class CC_DLL CCFileUtilsMac : public CCFileUtils
 {
 public:
+	CCFileUtilsMac();
     /* override funtions */
     virtual std::string getWritablePath();
     virtual bool isFileExist(const std::string& strFilePath);
@@ -48,8 +49,6 @@ public:
     
     virtual CCDictionary* createCCDictionaryWithContentsOfFile(const std::string& filename);
     virtual CCArray* createCCArrayWithContentsOfFile(const std::string& filename);
-private:
-	CCFileUtilsMac();
 };
 
 // end of platform group

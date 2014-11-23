@@ -63,7 +63,7 @@ public:
     @return Current language config
     */
     virtual ccLanguageType getCurrentLanguage();
-		
+
     /**
      @brief Get target platform
      */

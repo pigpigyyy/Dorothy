@@ -5,16 +5,16 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>EDFE6877-41E1-49A7-8D4C-26839ECA3379</string>
+	<string>3C78B4C1-54DF-4E45-9371-AC9AD8CE9D83</string>
 	<key>IDESourceControlProjectName</key>
-	<string>TestLua</string>
+	<string>cocos2dx</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>DE8E5EB57019C0F1B7B28D70588C7BD7A9CD7722</key>
 		<string>https://git.oschina.net/pig/Dorothy.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>project/proj.ios/TestLua.xcodeproj</string>
+	<string>cocos2dx/proj.mac/cocos2dx.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>DE8E5EB57019C0F1B7B28D70588C7BD7A9CD7722</key>
