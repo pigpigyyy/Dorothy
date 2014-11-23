@@ -24,10 +24,8 @@
  ****************************************************************************/
 
 #import <UIKit/UIKit.h>
+#include <CoreMotion/CoreMotion.h>
 
-
-@interface RootViewController : UIViewController {
-
-}
+@interface RootViewController : UIViewController { }
 
 @end

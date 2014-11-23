@@ -25,11 +25,13 @@
 #import <Foundation/Foundation.h>
 #import "CCAccelerometerDelegate.h"
 #import <UIKit/UIKit.h>
+#import <CoreMotion/CoreMotion.h>
 
 @interface AccelerometerDispatcher : NSObject<UIAccelerometerDelegate>
 {
     cocos2d::CCAccelerometerDelegate *delegate_;
     cocos2d::CCAcceleration *acceleration_;
+	CMMotionManager* motionManager_;
 }
 
 @property(readwrite) cocos2d::CCAccelerometerDelegate *delegate_;

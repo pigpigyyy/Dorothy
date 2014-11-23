@@ -678,10 +678,10 @@
 				1551A42A158F2ADE00E66CFE /* menu_nodes */,
 				1551A42F158F2ADE00E66CFE /* misc_nodes */,
 				1551A436158F2ADE00E66CFE /* particle_nodes */,
+				1551A5DA158F2ADE00E66CFE /* sprite_nodes */,
 				1551A43F158F2ADE00E66CFE /* platform */,
 				1551A5C0158F2ADE00E66CFE /* script_support */,
 				1551A5C3158F2ADE00E66CFE /* shaders */,
-				1551A5DA158F2ADE00E66CFE /* sprite_nodes */,
 				1551A5E7158F2ADE00E66CFE /* support */,
 				1551A605158F2ADE00E66CFE /* text_input_node */,
 				1551A60B158F2ADE00E66CFE /* textures */,
@@ -953,6 +953,8 @@
 		1551A43F158F2ADE00E66CFE /* platform */ = {
 			isa = PBXGroup;
 			children = (
+				1551A47B158F2ADE00E66CFE /* ios */,
+				1A31912016C0DDE700207637 /* third_party */,
 				3CB40CED1A20DC1800D7A3A6 /* CCKeyboard.cpp */,
 				3CB40CEE1A20DC1800D7A3A6 /* CCKeyboard.h */,
 				3CB40CEF1A20DC1800D7A3A6 /* CCThread.cpp */,
@@ -971,10 +973,8 @@
 				1551A477158F2ADE00E66CFE /* CCSAXParser.cpp */,
 				1551A478158F2ADE00E66CFE /* CCSAXParser.h */,
 				1551A47A158F2ADE00E66CFE /* CCThread.h */,
-				1551A47B158F2ADE00E66CFE /* ios */,
 				1551A4A4158F2ADE00E66CFE /* platform.cpp */,
 				1551A4A5158F2ADE00E66CFE /* platform.h */,
-				1A31912016C0DDE700207637 /* third_party */,
 			);
 			path = platform;
 			sourceTree = "<group>";
@@ -1635,7 +1635,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				SDKROOT = iphoneos;
-				VALID_ARCHS = "armv7 armv7s";
+				VALID_ARCHS = "arm64 armv7 armv7s";
 				WARNING_CFLAGS = "-fdiagnostics-show-option";
 			};
 			name = Debug;
@@ -1658,7 +1658,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "armv7 armv7s";
+				VALID_ARCHS = "arm64 armv7 armv7s";
 				WARNING_CFLAGS = "-fdiagnostics-show-option";
 			};
 			name = Release;
@@ -1669,6 +1669,10 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				DSTROOT = /tmp/cocos2dx.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_DIR)/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "cocos2dx-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1698,6 +1702,10 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				DSTROOT = /tmp/cocos2dx.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_DIR)/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "cocos2dx-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (

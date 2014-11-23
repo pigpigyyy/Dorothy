@@ -315,10 +315,11 @@ std::vector<unsigned short> cc_utf16_vec_from_utf16_str(const unsigned short* st
  * Return value: number of bytes written
  **/
 int
-cc_unichar_to_utf8 (unsigned short c,
+cc_unichar_to_utf8 (unsigned short ci,
                    char   *outbuf)
 {
     unsigned int len = 0;
+	unsigned int c = (unsigned int)ci;
     int first;
     int i;
     
@@ -449,7 +450,7 @@ cc_utf16_to_utf8 (const unsigned short  *str,
         }
         
         /********** DIFFERENT for UTF8/UCS4 **********/
-        n_bytes += UTF8_LENGTH (wc);
+        n_bytes += UTF8_LENGTH ((unsigned int)wc);
         
     next1:
         in++;
@@ -564,7 +565,7 @@ void cc_utf16_to_utf8(const unsigned short* src,
         }
         
         /********** DIFFERENT for UTF8/UCS4 **********/
-        n_bytes += UTF8_LENGTH (wc);
+        n_bytes += UTF8_LENGTH ((unsigned int)wc);
         
     next1:
         in++;
