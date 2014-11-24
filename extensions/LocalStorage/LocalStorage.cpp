@@ -43,7 +43,7 @@ static sqlite3_stmt *_stmt_remove;
 static sqlite3_stmt *_stmt_update;
 
 
-static void localStorageLazyInit();
+//static void localStorageLazyInit();
 static void localStorageCreateTable();
 
 static void localStorageCreateTable()

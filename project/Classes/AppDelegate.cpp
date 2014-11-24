@@ -15,7 +15,7 @@ AppDelegate::AppDelegate()
 
 AppDelegate::~AppDelegate()
 {
-    SimpleAudioEngine::end();
+	SimpleAudioEngine::end();
 }
 
 bool AppDelegate::applicationDidFinishLaunching()
@@ -43,12 +43,12 @@ bool AppDelegate::applicationDidFinishLaunching()
 void AppDelegate::applicationDidEnterBackground()
 {
 	CCDirector::sharedDirector()->pause();
-    SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
+	SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
 }
 
 // this function will be called when the app is active again
 void AppDelegate::applicationWillEnterForeground()
 {
 	CCDirector::sharedDirector()->resume();
-    SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
+	SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
 }

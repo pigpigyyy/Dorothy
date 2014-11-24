@@ -550,6 +550,8 @@ bool isFileExists(const char* szFilePath)
 	return true;
 }
 
+bool CCImage::isPngAlphaPremultiplied = true;
+
 CCImage::CCImage()
 : m_nWidth(0)
 , m_nHeight(0)

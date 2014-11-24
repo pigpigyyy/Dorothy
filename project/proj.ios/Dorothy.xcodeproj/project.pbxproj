@@ -72,6 +72,7 @@
 		15C1569D1683138E00D239F2 /* Icon-114.png in Resources */ = {isa = PBXBuildFile; fileRef = 15C156961683138E00D239F2 /* Icon-114.png */; };
 		15C1569E1683138E00D239F2 /* Icon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = 15C156971683138E00D239F2 /* Icon-144.png */; };
 		1AA88D13171E35AA0023E7B2 /* libluajit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AA88D12171E35AA0023E7B2 /* libluajit.a */; };
+		3C504D8E1A237B97000C79D6 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C504D8D1A237B97000C79D6 /* libwebp.a */; };
 		3C5AC9FC1A21A71F006EDD2B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5AC9FB1A21A71F006EDD2B /* CoreMotion.framework */; };
 		3C89A6071A209CD3001D5009 /* DorothyModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C89A6041A209CD3001D5009 /* DorothyModule.cpp */; };
 		3C89A6081A209CD3001D5009 /* tolua_extern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C89A6061A209CD3001D5009 /* tolua_extern.cpp */; };
@@ -291,6 +292,7 @@
 		1AA88BA3171D30B00023E7B2 /* luaconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = luaconf.h; sourceTree = "<group>"; };
 		1AA88BA4171D30B00023E7B2 /* lualib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lualib.h; sourceTree = "<group>"; };
 		1AA88D12171E35AA0023E7B2 /* libluajit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libluajit.a; sourceTree = "<group>"; };
+		3C504D8D1A237B97000C79D6 /* libwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwebp.a; path = ../../cocos2dx/platform/third_party/mac/libraries/libwebp.a; sourceTree = "<group>"; };
 		3C5AC9FB1A21A71F006EDD2B /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreMotion.framework; sourceTree = DEVELOPER_DIR; };
 		3C89A6041A209CD3001D5009 /* DorothyModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DorothyModule.cpp; sourceTree = "<group>"; };
 		3C89A6051A209CD3001D5009 /* DorothyModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DorothyModule.h; sourceTree = "<group>"; };
@@ -440,6 +442,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C504D8E1A237B97000C79D6 /* libwebp.a in Frameworks */,
 				3CB40D261A20ECC500D7A3A6 /* libsqlite3.0.dylib in Frameworks */,
 				3C89A6C31A20C5B5001D5009 /* libcocos2dx.a in Frameworks */,
 				15C1568E1683131500D239F2 /* libcurl.a in Frameworks */,
@@ -985,6 +988,7 @@
 		F293B3CB15EB7BE500256477 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3C504D8D1A237B97000C79D6 /* libwebp.a */,
 				3CB40D251A20ECC500D7A3A6 /* libsqlite3.0.dylib */,
 				15C1568D1683131500D239F2 /* libcurl.a */,
 				3C5AC9FB1A21A71F006EDD2B /* CoreMotion.framework */,
@@ -1358,16 +1362,15 @@
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../../cocos2dx\"",
+					"\"$(SRCROOT)/../../cocos2dx/include\"",
 					"\"$(SRCROOT)/../../cocos2dx/kazmath/include\"",
+					"\"$(SRCROOT)/../../cocos2dx/platform/ios\"",
+					"\"$(SRCROOT)/../../cocos2dx/platform/third_party/ios\"",
+					"\"$(SRCROOT)/../../CocosDenshion/include\"",
 					"\"$(SRCROOT)/../../extensions\"",
+					"\"$(SRCROOT)/../../external\"",
 					"\"$(SRCROOT)/../../lua/tolua\"",
 					"\"$(SRCROOT)/../../lua/cocos2dx_support\"",
-					"\"$(SRCROOT)/../../cocos2dx/platform/ios\"",
-					"\"$(SRCROOT)/../../cocos2dx/include\"",
-					"\"$(SRCROOT)/../../CocosDenshion/include\"",
-					"\"$(SRCROOT)/../../external\"",
-					"\"$(SRCROOT)/../../cocos2dx/platform/third_party/ios\"",
-					"\"$(SRCROOT)/../../cocos2dx/platform/ios/Simulation\"",
 				);
 				INFOPLIST_FILE = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
@@ -1375,6 +1378,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/../../cocos2dx/platform/third_party/ios/libraries\"",
 					"\"$(SRCROOT)/../../lua/luajit/ios\"",
+					/Users/Jin/Workspace/Dorothy/cocos2dx/platform/third_party/mac/libraries,
 				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_NAME = Dorothy;
@@ -1407,16 +1411,15 @@
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../../cocos2dx\"",
+					"\"$(SRCROOT)/../../cocos2dx/include\"",
 					"\"$(SRCROOT)/../../cocos2dx/kazmath/include\"",
+					"\"$(SRCROOT)/../../cocos2dx/platform/ios\"",
+					"\"$(SRCROOT)/../../cocos2dx/platform/third_party/ios\"",
+					"\"$(SRCROOT)/../../CocosDenshion/include\"",
 					"\"$(SRCROOT)/../../extensions\"",
+					"\"$(SRCROOT)/../../external\"",
 					"\"$(SRCROOT)/../../lua/tolua\"",
 					"\"$(SRCROOT)/../../lua/cocos2dx_support\"",
-					"\"$(SRCROOT)/../../cocos2dx/platform/ios\"",
-					"\"$(SRCROOT)/../../cocos2dx/include\"",
-					"\"$(SRCROOT)/../../CocosDenshion/include\"",
-					"\"$(SRCROOT)/../../external\"",
-					"\"$(SRCROOT)/../../cocos2dx/platform/third_party/ios\"",
-					"\"$(SRCROOT)/../../cocos2dx/platform/ios/Simulation\"",
 				);
 				INFOPLIST_FILE = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
@@ -1424,6 +1427,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/../../cocos2dx/platform/third_party/ios/libraries\"",
 					"\"$(SRCROOT)/../../lua/luajit/ios\"",
+					/Users/Jin/Workspace/Dorothy/cocos2dx/platform/third_party/mac/libraries,
 				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_NAME = Dorothy;
