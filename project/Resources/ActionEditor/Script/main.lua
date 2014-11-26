@@ -20,7 +20,7 @@ local loaded = {}
 require = function(modulename)
 	local result = package.loaded[modulename]
 	if not result then
-		local name = "ActionEditor/Script/"..modulename
+		local name = “ActionEditor/Script/"..modulename
 		result = _require(name)
 		if result then
 			loaded[name] = true

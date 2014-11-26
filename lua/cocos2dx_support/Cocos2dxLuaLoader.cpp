@@ -49,7 +49,7 @@ extern "C"
         unsigned long codeBufferSize = 0;
         unsigned char* codeBuffer = CCFileUtils::sharedFileUtils()->getFileData(filename.c_str(), "rb", &codeBufferSize);
 
-        if(codeBuffer)
+        if (codeBuffer)
         {
             if(luaL_loadbuffer(L,(char*)codeBuffer, codeBufferSize, filename.c_str()) != 0)
             {
@@ -60,9 +60,17 @@ extern "C"
         }
         else
         {
-            CCLog("can not get file data of %s", filename.c_str());
+            luaL_error(L, "can not get file data of %s", filename.c_str());
         }
         
         return 1;
     }
+	
+	
+	extern int cocos2dx_lua_dofile(lua_State *L)
+	{
+		cocos2dx_lua_loader(L);
+		lua_pcall(L, 0, LUA_MULTRET, 0);
+		return 1;
+	}
 }

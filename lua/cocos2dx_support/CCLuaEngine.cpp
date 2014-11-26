@@ -55,7 +55,7 @@ static int lua_print(lua_State * luastate)
 		}
 		if (i != nargs) t += "\t";
 	}
-	CCLOG("%s", t.c_str());
+	CCLog("%s", t.c_str());
 	return 0;
 }
 
@@ -77,6 +77,9 @@ m_callFromLua(0)
 	const luaL_reg global_functions[] =
 	{
 		{ "print", lua_print },
+		{ "ubox", lua_ubox },
+		{ "loadfile", cocos2dx_lua_loader },
+		{ "dofile", cocos2dx_lua_dofile },
 		{ "ubox", lua_ubox },
 		{ NULL, NULL }
 	};

@@ -36,10 +36,6 @@ void CCKeyboard::clear()
 
 CCKeyboard* CCKeyboard::shared()
 {
-#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	static CCKeyboard keyboard;
 	return &keyboard;
-#else
-	return nullptr;
-#endif
 }

@@ -179,11 +179,6 @@ void CCTextFieldTTF_unregisterInputHandler(CCTextFieldTTF* textField);
 
 CCRenderTexture* CCRenderTexture_create(int w, int h, bool withDepthStencil = false);
 
-int __olua_loadfile(lua_State* L, const char* filename);
-#define olua_loadfile(filename) {__olua_loadfile(tolua_S,filename);return 1;}
-int __olua_dofile(lua_State* L, const char* filename);
-#define olua_dofile(filename) {__olua_dofile(tolua_S,filename);return 1;}
-
 int CCTextureCache_loadAsync(lua_State* L);
 
 #endif // __DOROTHY_MODULE_H__

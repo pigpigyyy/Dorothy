@@ -33,6 +33,7 @@ extern "C"
 #include "lauxlib.h"
 
 extern int cocos2dx_lua_loader(lua_State *L);
+extern int cocos2dx_lua_dofile(lua_State *L);
 }
 
 #endif // __COCOS2DX_LUA_LOADER_H__
