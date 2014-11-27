@@ -44,7 +44,7 @@ string oString::getFileName(const string& filename)
 char* oHelper::convert(float value, int precision, char* buf, int buflen)
 {
 	snprintf(buf, buflen, "%f", value);
-	int len = strlen(buf);
+	int len = (int)strlen(buf);
 	char* pos = buf + len;
 	pos -= (6 - precision);
 	*pos = '\0';

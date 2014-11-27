@@ -40,12 +40,12 @@ static inline void split(std::string src, const char* token, strArray& vect)
     int nbegin=0;
     while(nend != -1)
     {
-        nend = src.find(token, nbegin);
+        nend = (int)src.find(token, nbegin);
         if(nend == -1)
             vect.push_back(src.substr(nbegin, src.length()-nbegin));
         else
             vect.push_back(src.substr(nbegin, nend-nbegin));
-        nbegin = nend + strlen(token);
+        nbegin = nend + (int)strlen(token);
     }
 }
 
@@ -65,8 +65,8 @@ static bool splitWithForm(const char* pStr, strArray& strs)
         std::string content = pStr;
         CC_BREAK_IF(content.length() == 0);
 
-        int nPosLeft  = content.find('{');
-        int nPosRight = content.find('}');
+        int nPosLeft  = (int)content.find('{');
+        int nPosRight = (int)content.find('}');
 
         // don't have '{' and '}'
         CC_BREAK_IF(nPosLeft == (int)std::string::npos || nPosRight == (int)std::string::npos);
@@ -77,8 +77,8 @@ static bool splitWithForm(const char* pStr, strArray& strs)
         // nothing between '{' and '}'
         CC_BREAK_IF(pointStr.length() == 0);
 
-        int nPos1 = pointStr.find('{');
-        int nPos2 = pointStr.find('}');
+        int nPos1 = (int)pointStr.find('{');
+        int nPos2 = (int)pointStr.find('}');
         // contain '{' or '}' 
         CC_BREAK_IF(nPos1 != (int)std::string::npos || nPos2 != (int)std::string::npos);
 
@@ -107,22 +107,22 @@ CCRect CCRectFromString(const char* pszContent)
         std::string content = pszContent;
 
         // find the first '{' and the third '}'
-        int nPosLeft  = content.find('{');
-        int nPosRight = content.find('}');
+        int nPosLeft  = (int)content.find('{');
+        int nPosRight = (int)content.find('}');
         for (int i = 1; i < 3; ++i)
         {
             if (nPosRight == (int)std::string::npos)
             {
                 break;
             }
-            nPosRight = content.find('}', nPosRight + 1);
+            nPosRight = (int)content.find('}', nPosRight + 1);
         }
         CC_BREAK_IF(nPosLeft == (int)std::string::npos || nPosRight == (int)std::string::npos);
 
         content = content.substr(nPosLeft + 1, nPosRight - nPosLeft - 1);
-        int nPointEnd = content.find('}');
+        int nPointEnd = (int)content.find('}');
         CC_BREAK_IF(nPointEnd == (int)std::string::npos);
-        nPointEnd = content.find(',', nPointEnd);
+        nPointEnd = (int)content.find(',', nPointEnd);
         CC_BREAK_IF(nPointEnd == (int)std::string::npos);
 
         // get the point string and size string

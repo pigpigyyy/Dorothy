@@ -98,7 +98,7 @@ CCArray* CCDictionary::allKeys()
     {
         HASH_ITER(hh, m_pElements, pElement, tmp) 
         {
-			CCInteger* pOneKey = new CCInteger(pElement->m_iKey);
+			CCInteger* pOneKey = new CCInteger((int)(pElement->m_iKey));
             pArray->addObject(pOneKey);
             CC_SAFE_RELEASE(pOneKey);
         }
@@ -133,7 +133,7 @@ CCArray* CCDictionary::allKeysForObject(CCObject* object)
         {
             if (object == pElement->m_pObject)
             {
-				CCInteger* pOneKey = new CCInteger(pElement->m_iKey);
+				CCInteger* pOneKey = new CCInteger((int)(pElement->m_iKey));
                 pArray->addObject(pOneKey);
                 CC_SAFE_RELEASE(pOneKey);
             }
@@ -281,7 +281,7 @@ void CCDictionary::removeObjectForKey(int key)
 void CCDictionary::setObjectUnSafe(CCObject* pObject, const char* key)
 {
     pObject->retain();
-	int iSize = strlen(key);
+	int iSize = (int)strlen(key);
 	CCDictElement* pElement = new CCDictElement(key, iSize, pObject);
 	HASH_ADD_KEYPTR(hh, m_pElements, pElement->m_szKey, iSize, pElement);
 }
@@ -338,7 +338,7 @@ CCObject* CCDictionary::copyWithZone(CCZone* pZone)
         CCDICT_FOREACH(this, pElement)
         {
             pTmpObj = pElement->getObject()->copy();
-            pNewDict->setObject(pTmpObj, pElement->getIntKey());
+            pNewDict->setObject(pTmpObj, (int)(pElement->getIntKey()));
             pTmpObj->release();
         }
     }

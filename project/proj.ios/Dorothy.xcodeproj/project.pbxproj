@@ -446,6 +446,7 @@
 				3CB40D261A20ECC500D7A3A6 /* libsqlite3.0.dylib in Frameworks */,
 				3C89A6C31A20C5B5001D5009 /* libcocos2dx.a in Frameworks */,
 				15C1568E1683131500D239F2 /* libcurl.a in Frameworks */,
+				1AA88D13171E35AA0023E7B2 /* libluajit.a in Frameworks */,
 				F293B3CD15EB7BE500256477 /* QuartzCore.framework in Frameworks */,
 				F293B3CF15EB7BE500256477 /* OpenGLES.framework in Frameworks */,
 				F293B3D115EB7BE500256477 /* OpenAL.framework in Frameworks */,
@@ -455,7 +456,6 @@
 				F293B3D715EB7BE500256477 /* UIKit.framework in Frameworks */,
 				F293B3D915EB7BE500256477 /* Foundation.framework in Frameworks */,
 				F293B3DB15EB7BE500256477 /* CoreGraphics.framework in Frameworks */,
-				1AA88D13171E35AA0023E7B2 /* libluajit.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1343,6 +1343,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
@@ -1373,12 +1374,13 @@
 					"\"$(SRCROOT)/../../lua/cocos2dx_support\"",
 				);
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../cocos2dx/platform/third_party/ios/libraries\"",
 					"\"$(SRCROOT)/../../lua/luajit/ios\"",
 					/Users/Jin/Workspace/Dorothy/cocos2dx/platform/third_party/mac/libraries,
+					/Users/Jin/Workspace/Dorothy/lua/luajit/ios,
 				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_NAME = Dorothy;
@@ -1394,6 +1396,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
@@ -1422,12 +1425,13 @@
 					"\"$(SRCROOT)/../../lua/cocos2dx_support\"",
 				);
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../cocos2dx/platform/third_party/ios/libraries\"",
 					"\"$(SRCROOT)/../../lua/luajit/ios\"",
 					/Users/Jin/Workspace/Dorothy/cocos2dx/platform/third_party/mac/libraries,
+					/Users/Jin/Workspace/Dorothy/lua/luajit/ios,
 				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_NAME = Dorothy;

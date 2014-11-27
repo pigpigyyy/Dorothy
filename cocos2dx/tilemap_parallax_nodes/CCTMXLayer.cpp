@@ -383,7 +383,7 @@ CCSprite * CCTMXLayer::insertTileForGID(unsigned int gid, const CCPoint& pos)
     CCRect rect = m_pTileSet->rectForGID(gid);
     rect = CC_RECT_PIXELS_TO_POINTS(rect);
 
-    intptr_t z = (intptr_t)(pos.x + pos.y * m_tLayerSize.width);
+    unsigned int z = (unsigned int)(pos.x + pos.y * m_tLayerSize.width);
 
     CCSprite *tile = reusedTileWithRect(rect);
 
@@ -396,7 +396,7 @@ CCSprite * CCTMXLayer::insertTileForGID(unsigned int gid, const CCPoint& pos)
     this->insertQuadFromSprite(tile, indexForZ);
 
     // insert it into the local atlasindex array
-    ccCArrayInsertValueAtIndex(m_pAtlasIndexArray, (void*)z, indexForZ);
+    ccCArrayInsertValueAtIndex(m_pAtlasIndexArray, (void*)(unsigned long)z, indexForZ);
 
     // update possible children
     if (m_pChildren && m_pChildren->count()>0)
@@ -477,7 +477,7 @@ unsigned int CCTMXLayer::atlasIndexForExistantZ(unsigned int z)
 
     CCAssert(item, "TMX atlas index not found. Shall not happen");
 
-    int index = ((size_t)item - (size_t)m_pAtlasIndexArray->arr) / sizeof(void*);
+    int index = (int)(((size_t)item - (size_t)m_pAtlasIndexArray->arr) / sizeof(void*));
     return index;
 }
 unsigned int CCTMXLayer::atlasIndexForNewZ(int z)
@@ -486,7 +486,7 @@ unsigned int CCTMXLayer::atlasIndexForNewZ(int z)
     unsigned int i=0;
     for (i=0; i< m_pAtlasIndexArray->num ; i++) 
     {
-        int val = (size_t) m_pAtlasIndexArray->arr[i];
+        int val = (int)(unsigned long)m_pAtlasIndexArray->arr[i];
         if (z < val)
         {
             break;
@@ -568,7 +568,7 @@ void CCTMXLayer::removeChild(CCNode* node, bool cleanup)
     CCAssert(m_pChildren->containsObject(sprite), "Tile does not belong to TMXLayer");
 
     unsigned int atlasIndex = sprite->getAtlasIndex();
-    unsigned int zz = (size_t)m_pAtlasIndexArray->arr[atlasIndex];
+    unsigned int zz = (unsigned int)(unsigned long)m_pAtlasIndexArray->arr[atlasIndex];
     m_pTiles[zz] = 0;
     ccCArrayRemoveValueAtIndex(m_pAtlasIndexArray, atlasIndex);
     CCSpriteBatchNode::removeChild(sprite, cleanup);

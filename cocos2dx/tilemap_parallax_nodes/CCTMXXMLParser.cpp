@@ -278,7 +278,7 @@ void CCTMXMapInfo::setTileProperties(CCDictionary* tileProperties)
 
 bool CCTMXMapInfo::parseXMLString(const char *xmlString)
 {
-    int len = strlen(xmlString);
+    int len = (int)strlen(xmlString);
     if (xmlString == NULL || len <= 0) 
     {
         return false;
@@ -721,7 +721,7 @@ void CCTMXMapInfo::endElement(void *ctx, const char *name)
             int inflatedLen = ZipUtils::ccInflateMemoryWithHint(buffer, len, &deflated, sizeHint);
             CCAssert(inflatedLen == sizeHint, "");
 
-            inflatedLen = (size_t)&inflatedLen; // XXX: to avoid warnings in compiler
+            inflatedLen = (int)(unsigned long)&inflatedLen; // XXX: to avoid warnings in compiler
             
             delete [] buffer;
             buffer = NULL;

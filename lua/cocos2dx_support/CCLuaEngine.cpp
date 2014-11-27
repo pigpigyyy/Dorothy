@@ -27,7 +27,6 @@
 #include "cocoa/CCArray.h"
 #include "CCScheduler.h"
 #include "LuaCocos2d.h"
-#include "Cocos2dxLuaLoader.h"
 
 NS_CC_BEGIN
 
@@ -67,9 +66,45 @@ static int traceback(lua_State* L)
 	return 1;
 }
 
+static int lua_loadfile(lua_State *L)
+{
+	std::string filename(luaL_checkstring(L, 1));
+	size_t pos = filename.rfind(".lua");
+	if(pos != std::string::npos)
+	{
+		filename = filename.substr(0, pos);
+	}
+	pos = filename.find_first_of(".");
+	while (pos != std::string::npos)
+	{
+		filename.replace(pos, 1, "/");
+		pos = filename.find_first_of(".");
+	}
+	filename.append(".lua");
+
+	unsigned long codeBufferSize = 0;
+	unsigned char* codeBuffer = CCFileUtils::sharedFileUtils()->getFileData(filename.c_str(), "rb", &codeBufferSize);
+
+	if (codeBuffer)
+	{
+		if(luaL_loadbuffer(L,(char*)codeBuffer, codeBufferSize, filename.c_str()) != 0)
+		{
+			luaL_error(L, "error loading module %s from file %s :\n\t%s",
+				lua_tostring(L, 1), filename.c_str(), lua_tostring(L, -1));
+		}
+		delete []codeBuffer;
+	}
+	else
+	{
+		luaL_error(L, "can not get file data of %s", filename.c_str());
+	}
+
+	return 1;
+}
+
 static int lua_dofile(lua_State *L)
 {
-	cocos2dx_lua_loader(L);
+	lua_loadfile(L);
 	CCLuaEngine::sharedEngine()->call(0, LUA_MULTRET);
 	return 1;
 }
@@ -93,7 +128,7 @@ m_callFromLua(0)
 	{
 		{ "print", lua_print },
 		{ "ubox", lua_ubox },
-		{ "loadfile", cocos2dx_lua_loader },
+		{ "loadfile", lua_loadfile },
 		{ "dofile", lua_dofile },
 		{ "ubox", lua_ubox },
 		{ NULL, NULL }
@@ -101,7 +136,7 @@ m_callFromLua(0)
 	luaL_register(L, "_G", global_functions);
 
 	// add cocos2dx loader
-	addLuaLoader(cocos2dx_lua_loader);
+	addLuaLoader(lua_loadfile);
 
 	tolua_beginmodule(L, 0);//stack: package.loaded
 		tolua_beginmodule(L, "CCDictionary");//stack: package.loaded CCDictionary
@@ -145,7 +180,7 @@ void CCLuaEngine::addLuaLoader(lua_CFunction func)
 	lua_getfield(L, -1, "loaders");/* L: package, loaders */
 	// insert loader into index 2
 	lua_pushcfunction(L, func);/* L: package, loaders, func */
-	for (int i = lua_objlen(L, -2) + 1; i > 2; --i)
+	for (int i = (int)lua_objlen(L, -2) + 1; i > 2; --i)
 	{
 		lua_rawgeti(L, -2, i - 1);/* L: package, loaders, func, function */
 		// we call lua_rawgeti, so the loader table now is at -3
@@ -387,7 +422,7 @@ int CCLuaEngine::lua_execute(int numArgs)
 		// get return value
 		if (lua_isnumber(L, -1))// traceback ret
 		{
-			ret = lua_tointeger(L, -1);
+			ret = (int)(lua_tointeger(L, -1));
 		}
 		else if (lua_isboolean(L, -1))
 		{

@@ -202,7 +202,7 @@ std::set<unsigned int>* CCBMFontConfiguration::parseConfigFile(const char *contr
     std::string strLeft = contents->getCString();
     while (strLeft.length() > 0)
     {
-        int pos = strLeft.find('\n');
+        int pos = (int)strLeft.find('\n');
 
         if (pos != (int)std::string::npos)
         {
@@ -269,13 +269,13 @@ void CCBMFontConfiguration::parseImageFileName(std::string line, const char *fnt
     //////////////////////////////////////////////////////////////////////////
 
     // page ID. Sanity check
-    int index = line.find('=')+1;
-    int index2 = line.find(' ', index);
+    int index = (int)line.find('=')+1;
+    int index2 = (int)line.find(' ', index);
     std::string value = line.substr(index, index2-index);
     CCAssert(atoi(value.c_str()) == 0, "LabelBMFont file could not be found");
     // file 
-    index = line.find('"')+1;
-    index2 = line.find('"', index);
+    index = (int)line.find('"')+1;
+    index2 = (int)line.find('"', index);
     value = line.substr(index, index2-index);
 
     m_sAtlasName = CCFileUtils::sharedFileUtils()->fullPathFromRelativeFile(value.c_str(), fntFile);
@@ -290,8 +290,8 @@ void CCBMFontConfiguration::parseInfoArguments(std::string line)
     //////////////////////////////////////////////////////////////////////////
 
     // padding
-    int index = line.find("padding=");
-    int index2 = line.find(' ', index);
+    int index = (int)line.find("padding=");
+    int index2 = (int)line.find(' ', index);
     std::string value = line.substr(index, index2-index);
     sscanf(value.c_str(), "padding=%d,%d,%d,%d", &m_tPadding.top, &m_tPadding.right, &m_tPadding.bottom, &m_tPadding.left);
     CCLOG("cocos2d: padding: %d,%d,%d,%d", m_tPadding.left, m_tPadding.top, m_tPadding.right, m_tPadding.bottom);
@@ -305,23 +305,23 @@ void CCBMFontConfiguration::parseCommonArguments(std::string line)
     //////////////////////////////////////////////////////////////////////////
 
     // Height
-    int index = line.find("lineHeight=");
-    int index2 = line.find(' ', index);
+    int index = (int)line.find("lineHeight=");
+    int index2 = (int)line.find(' ', index);
     std::string value = line.substr(index, index2-index);
     sscanf(value.c_str(), "lineHeight=%d", &m_nCommonHeight);
     // scaleW. sanity check
-    index = line.find("scaleW=") + strlen("scaleW=");
-    index2 = line.find(' ', index);
+    index = (int)line.find("scaleW=") + strlen("scaleW=");
+    index2 = (int)line.find(' ', index);
     value = line.substr(index, index2-index);
     CCAssert(atoi(value.c_str()) <= CCConfiguration::sharedConfiguration()->getMaxTextureSize(), "CCLabelBMFont: page can't be larger than supported");
     // scaleH. sanity check
-    index = line.find("scaleH=") + strlen("scaleH=");
-    index2 = line.find(' ', index);
+    index = (int)line.find("scaleH=") + strlen("scaleH=");
+    index2 = (int)line.find(' ', index);
     value = line.substr(index, index2-index);
     CCAssert(atoi(value.c_str()) <= CCConfiguration::sharedConfiguration()->getMaxTextureSize(), "CCLabelBMFont: page can't be larger than supported");
     // pages. sanity check
-    index = line.find("pages=") + strlen("pages=");
-    index2 = line.find(' ', index);
+    index = (int)line.find("pages=") + strlen("pages=");
+    index2 = (int)line.find(' ', index);
     value = line.substr(index, index2-index);
     CCAssert(atoi(value.c_str()) == 1, "CCBitfontAtlas: only supports 1 page");
 
@@ -336,44 +336,44 @@ void CCBMFontConfiguration::parseCharacterDefinition(std::string line, ccBMFontD
     //////////////////////////////////////////////////////////////////////////
 
     // Character ID
-    int index = line.find("id=");
-    int index2 = line.find(' ', index);
+    int index = (int)line.find("id=");
+    int index2 = (int)line.find(' ', index);
     std::string value = line.substr(index, index2-index);
     sscanf(value.c_str(), "id=%u", &characterDefinition->charID);
 
     // Character x
-    index = line.find("x=");
-    index2 = line.find(' ', index);
+    index = (int)line.find("x=");
+    index2 = (int)line.find(' ', index);
     value = line.substr(index, index2-index);
     sscanf(value.c_str(), "x=%f", &characterDefinition->rect.origin.x);
     // Character y
-    index = line.find("y=");
-    index2 = line.find(' ', index);
+    index = (int)line.find("y=");
+    index2 = (int)line.find(' ', index);
     value = line.substr(index, index2-index);
     sscanf(value.c_str(), "y=%f", &characterDefinition->rect.origin.y);
     // Character width
-    index = line.find("width=");
-    index2 = line.find(' ', index);
+    index = (int)line.find("width=");
+    index2 = (int)line.find(' ', index);
     value = line.substr(index, index2-index);
     sscanf(value.c_str(), "width=%f", &characterDefinition->rect.size.width);
     // Character height
-    index = line.find("height=");
-    index2 = line.find(' ', index);
+    index = (int)line.find("height=");
+    index2 = (int)line.find(' ', index);
     value = line.substr(index, index2-index);
     sscanf(value.c_str(), "height=%f", &characterDefinition->rect.size.height);
     // Character xoffset
-    index = line.find("xoffset=");
-    index2 = line.find(' ', index);
+    index = (int)line.find("xoffset=");
+    index2 = (int)line.find(' ', index);
     value = line.substr(index, index2-index);
     sscanf(value.c_str(), "xoffset=%hd", &characterDefinition->xOffset);
     // Character yoffset
-    index = line.find("yoffset=");
-    index2 = line.find(' ', index);
+    index = (int)line.find("yoffset=");
+    index2 = (int)line.find(' ', index);
     value = line.substr(index, index2-index);
     sscanf(value.c_str(), "yoffset=%hd", &characterDefinition->yOffset);
     // Character xadvance
-    index = line.find("xadvance=");
-    index2 = line.find(' ', index);
+    index = (int)line.find("xadvance=");
+    index2 = (int)line.find(' ', index);
     value = line.substr(index, index2-index);
     sscanf(value.c_str(), "xadvance=%hd", &characterDefinition->xAdvance);
 }
@@ -387,22 +387,22 @@ void CCBMFontConfiguration::parseKerningEntry(std::string line)
 
     // first
     int first;
-    int index = line.find("first=");
-    int index2 = line.find(' ', index);
+    int index = (int)line.find("first=");
+    int index2 = (int)line.find(' ', index);
     std::string value = line.substr(index, index2-index);
     sscanf(value.c_str(), "first=%d", &first);
 
     // second
     int second;
-    index = line.find("second=");
-    index2 = line.find(' ', index);
+    index = (int)line.find("second=");
+    index2 = (int)line.find(' ', index);
     value = line.substr(index, index2-index);
     sscanf(value.c_str(), "second=%d", &second);
 
     // amount
     int amount;
-    index = line.find("amount=");
-    index2 = line.find(' ', index);
+    index = (int)line.find("amount=");
+    index2 = (int)line.find(' ', index);
     value = line.substr(index, index2-index);
     sscanf(value.c_str(), "amount=%d", &amount);
 
@@ -502,7 +502,7 @@ bool CCLabelBMFont::initWithString(const char *theString, const char *fntFile, f
         theString = "";
     }
 
-    if (CCSpriteBatchNode::initWithTexture(texture, strlen(theString)))
+    if (CCSpriteBatchNode::initWithTexture(texture, (unsigned int)strlen(theString)))
     {
         m_fWidth = width;
         m_pAlignment = alignment;
@@ -813,7 +813,7 @@ void CCLabelBMFont::updateLabel()
     {
         // Step 1: Make multiline
         vector<unsigned short> str_whole = cc_utf16_vec_from_utf16_str(m_sString);
-        unsigned int stringLength = str_whole.size();
+        unsigned int stringLength = (unsigned int)str_whole.size();
         vector<unsigned short> multiline_string;
         multiline_string.reserve( stringLength );
         vector<unsigned short> last_word;
@@ -964,7 +964,7 @@ void CCLabelBMFont::updateLabel()
 
         multiline_string.insert(multiline_string.end(), last_word.begin(), last_word.end());
 
-        int size = multiline_string.size();
+        int size = (int)multiline_string.size();
         unsigned short* str_new = new unsigned short[size + 1];
 
         for (int i = 0; i < size; ++i)
@@ -992,7 +992,7 @@ void CCLabelBMFont::updateLabel()
             if (m_sString[ctr] == '\n' || m_sString[ctr] == 0)
             {
                 float lineWidth = 0.0f;
-                unsigned int line_length = last_line.size();
+                unsigned int line_length = (unsigned int)last_line.size();
 				// if last line is empty we must just increase lineNumber and work with next line
                 if (line_length == 0)
                 {

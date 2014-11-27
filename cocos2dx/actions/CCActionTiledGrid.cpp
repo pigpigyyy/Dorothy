@@ -239,7 +239,7 @@ CCShuffleTiles* CCShuffleTiles::create(float duration, const CCSize& gridSize)
 
     if (pAction)
     {
-        if (pAction->initWithDuration(duration, gridSize, time(NULL)))
+        if (pAction->initWithDuration(duration, gridSize))
         {
             pAction->autorelease();
         }
@@ -252,11 +252,10 @@ CCShuffleTiles* CCShuffleTiles::create(float duration, const CCSize& gridSize)
     return pAction;    
 }
 
-bool CCShuffleTiles::initWithDuration(float duration, const CCSize& gridSize, unsigned int seed)
+bool CCShuffleTiles::initWithDuration(float duration, const CCSize& gridSize)
 {
     if (CCTiledGrid3DAction::initWithDuration(duration, gridSize))
     {
-        m_nSeed = seed;
         m_pTilesOrder = NULL;
         m_pTiles = NULL;
 
@@ -282,7 +281,7 @@ CCObject* CCShuffleTiles::copyWithZone(CCZone *pZone)
 
     CCTiledGrid3DAction::copyWithZone(pZone);
 
-    pCopy->initWithDuration(m_fDuration, m_sGridSize, m_nSeed);
+    pCopy->initWithDuration(m_fDuration, m_sGridSize);
 
     CC_SAFE_DELETE(pNewZone);
     return pCopy;
@@ -341,11 +340,6 @@ void CCShuffleTiles::placeTile(const CCPoint& pos, Tile *t)
 void CCShuffleTiles::startWithTarget(CCNode *pTarget)
 {
     CCTiledGrid3DAction::startWithTarget(pTarget);
-
-    if (m_nSeed != (unsigned int)-1)
-    {
-        srand(m_nSeed);
-    }
 
     m_nTilesCount = m_sGridSize.width * m_sGridSize.height;
     m_pTilesOrder = new unsigned int[m_nTilesCount];

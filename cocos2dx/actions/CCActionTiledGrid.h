@@ -83,7 +83,7 @@ class CC_DLL CCShuffleTiles : public CCTiledGrid3DAction
 public:
     ~CCShuffleTiles();
     /** initializes the action with a random seed, the grid size and the duration */
-    virtual bool initWithDuration(float duration, const CCSize& gridSize, unsigned int seed);
+    virtual bool initWithDuration(float duration, const CCSize& gridSize);
     void shuffle(unsigned int *pArray, unsigned int nLen);
     CCSize getDelta(const CCSize& pos);
     void placeTile(const CCPoint& pos, Tile *t);
@@ -96,7 +96,6 @@ public:
     /** creates the action with the grid size and the duration */
     static CCShuffleTiles* create(float duration, const CCSize& gridSize);
 protected:
-    unsigned int m_nSeed;
     unsigned int m_nTilesCount;
     unsigned int* m_pTilesOrder;
     Tile* m_pTiles;

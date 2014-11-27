@@ -54,7 +54,7 @@ void oBodyDef::attachPolygon( float width, float height, float density, float fr
 void oBodyDef::attachPolygon( const vector<oVec2>& vertices, float density, float friction, float restitution )
 {
 	b2PolygonShape* shape = new b2PolygonShape();
-	int length = vertices.size();
+	int length = (int)vertices.size();
 	b2Vec2 vs[b2_maxPolygonVertices];
 	for (int i = 0; i < length; i++)
 	{
@@ -87,7 +87,7 @@ void oBodyDef::attachPolygon( const oVec2 vertices[], int count, float density, 
 void oBodyDef::attachLoop( const vector<oVec2>& vertices, float friction, float restitution )
 {
 	b2ChainShape* shape = new b2ChainShape();
-	int length = vertices.size();
+	int length = (int)vertices.size();
 	b2Vec2* vs = new b2Vec2[length];
 	for (int i = 0; i < length; i++)
 	{
@@ -136,7 +136,7 @@ void oBodyDef::attachCircle( float radius, float density, float friction, float 
 void oBodyDef::attachChain( const vector<oVec2>& vertices, float friction, float restitution )
 {
 	b2ChainShape* shape = new b2ChainShape();
-	int length = vertices.size();
+	int length = (int)vertices.size();
 	b2Vec2* vs = new b2Vec2[length];
 	for (int i = 0; i < length; i++)
 	{
@@ -180,13 +180,13 @@ void oBodyDef::attachPolygonSensor( int tag, float width, float height, const oV
 	b2FixtureDef* fixtureDef = new b2FixtureDef();
 	fixtureDef->shape = shape;
 	fixtureDef->isSensor = true;
-	fixtureDef->userData = (void*)tag;
+	fixtureDef->userData = (void*)(long)tag;
 	_fixtureDefs.push_back(fixtureDef);
 }
 void oBodyDef::attachPolygonSensor( int tag, const vector<oVec2>& vertices )
 {
 	b2PolygonShape* shape = new b2PolygonShape();
-	int length = vertices.size();
+	int length = (int)vertices.size();
 	b2Vec2 vs[b2_maxPolygonVertices];
 	for (int i = 0; i < length; i++)
 	{
@@ -196,7 +196,7 @@ void oBodyDef::attachPolygonSensor( int tag, const vector<oVec2>& vertices )
 	b2FixtureDef* fixtureDef = new b2FixtureDef();
 	fixtureDef->shape = shape;
 	fixtureDef->isSensor = true;
-	fixtureDef->userData = (void*)tag;
+	fixtureDef->userData = (void*)(long)tag;
 	_fixtureDefs.push_back(fixtureDef);
 }
 void oBodyDef::attachPolygonSensor(int tag, const oVec2 vertices[], int count)
@@ -211,7 +211,7 @@ void oBodyDef::attachPolygonSensor(int tag, const oVec2 vertices[], int count)
 	b2FixtureDef* fixtureDef = new b2FixtureDef();
 	fixtureDef->shape = shape;
 	fixtureDef->isSensor = true;
-	fixtureDef->userData = (void*)tag;
+	fixtureDef->userData = (void*)(long)tag;
 	_fixtureDefs.push_back(fixtureDef);
 }
 void oBodyDef::attachCircleSensor( int tag, const oVec2& center, float radius )
@@ -222,7 +222,7 @@ void oBodyDef::attachCircleSensor( int tag, const oVec2& center, float radius )
 	b2FixtureDef* fixtureDef = new b2FixtureDef();
 	fixtureDef->shape = shape;
 	fixtureDef->isSensor = true;
-	fixtureDef->userData = (void*)tag;
+	fixtureDef->userData = (void*)(long)tag;
 	_fixtureDefs.push_back(fixtureDef);
 }
 void oBodyDef::attachCircleSensor( int tag, float radius )
@@ -250,7 +250,7 @@ b2FixtureDef* oBodyDef::polygon( float width, float height, float density, float
 }
 b2FixtureDef* oBodyDef::polygon( const vector<oVec2>& vertices, float density, float friction, float restitution )
 {
-	int length = vertices.size();
+	int length = (int)vertices.size();
 	b2Vec2 vs[b2_maxPolygonVertices];
 	for (int i = 0; i < length; i++)
 	{
@@ -279,7 +279,7 @@ b2FixtureDef* oBodyDef::polygon( const oVec2 vertices[], int count, float densit
 }
 b2FixtureDef* oBodyDef::loop( const vector<oVec2>& vertices, float friction, float restitution )
 {
-	int length = vertices.size();
+	int length = (int)vertices.size();
 	b2Vec2* vs = new b2Vec2[length];
 	for (int i = 0; i < length; i++)
 	{
@@ -322,7 +322,7 @@ b2FixtureDef* oBodyDef::circle( float radius, float density, float friction, flo
 }
 b2FixtureDef* oBodyDef::chain( const vector<oVec2>& vertices, float friction, float restitution )
 {
-	int length = vertices.size();
+	int length = (int)vertices.size();
 	b2Vec2* vs = new b2Vec2[length];
 	for (int i = 0; i < length; i++)
 	{

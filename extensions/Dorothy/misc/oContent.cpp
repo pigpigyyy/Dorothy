@@ -60,7 +60,7 @@ CCTexture2D* oContent::loadTexture( const char* filename )
 				_password.empty() ? nullptr : _password.c_str(),
 				size);
 			CCImage* image = new CCImage();
-			image->initWithImageData(buffer, size);
+			image->initWithImageData(buffer, (unsigned int)size);
 			texture = CCTextureCache::sharedTextureCache()->addUIImage(image, filename);
 			delete image;
 			delete buffer;

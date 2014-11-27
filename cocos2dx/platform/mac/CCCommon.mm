@@ -29,7 +29,6 @@
 #include <stdio.h>
 #import "EAGLView.h"
 
-
 NS_CC_BEGIN
 
 void CCLog(const char * pszFormat, ...)
@@ -64,10 +63,7 @@ void CCMessageBox(const char * pszMsg, const char * pszTitle)
 	[alert setAlertStyle:NSWarningAlertStyle];
 
 	NSWindow *window = [[EAGLView sharedEGLView] window];
-	[alert beginSheetModalForWindow:window
-					  modalDelegate:[window delegate]
-					 didEndSelector:nil
-						contextInfo:nil];
+	[alert beginSheetModalForWindow:window completionHandler: nil];
 }
 
 NS_CC_END

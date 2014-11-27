@@ -35,7 +35,7 @@ unsigned char* ccUZipReadFile( const char* filename, const char* password, unsig
 		CC_BREAK_IF(UNZ_OK != result);
 		pBuffer = new unsigned char[fileInfo.uncompressed_size];
 		int nSize = 0;
-		nSize = unzReadCurrentFile(g_file, pBuffer, fileInfo.uncompressed_size);
+		nSize = unzReadCurrentFile(g_file, pBuffer, (unsigned int)fileInfo.uncompressed_size);
 		CCAssert(nSize == 0 || nSize == (int)fileInfo.uncompressed_size, "the file size is wrong");
 		size = fileInfo.uncompressed_size;
 		unzCloseCurrentFile(g_file);

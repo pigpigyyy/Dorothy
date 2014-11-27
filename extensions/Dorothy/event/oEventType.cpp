@@ -26,7 +26,7 @@ void oEventType::add( oListener* listener )
 {
 	if (listener->_order == oListener::INVALID_ORDER)
 	{
-		listener->_order = _listeners.size();
+		listener->_order = (int)_listeners.size();
 		_listeners.push_back(listener);
 	}
 }
@@ -46,7 +46,7 @@ void oEventType::handle( oEvent* e )
 	{
 		if (_listeners[i] == nullptr)
 		{
-			int last = _listeners.size() - 1;
+			int last = (int)_listeners.size() - 1;
 			for (;last >= 0 && _listeners[last] == nullptr;_listeners.pop_back(), --last);
 			if (i > last)
 			{

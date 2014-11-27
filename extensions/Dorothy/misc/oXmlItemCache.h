@@ -40,7 +40,7 @@ public:
 			auto data = oSharedContent.loadFile(filename, size);
 			if (data)
 			{
-				_parser.parse(data, size);
+				_parser.parse(data, (unsigned int)size);
 				this->afterParse(filename);
 				_dict[filename] = _item;
 				T* item = _item;

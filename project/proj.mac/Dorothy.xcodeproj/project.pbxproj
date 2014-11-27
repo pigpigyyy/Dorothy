@@ -116,7 +116,6 @@
 		3C504FA61A237F8E000C79D6 /* b2Rope.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C504F771A237F8E000C79D6 /* b2Rope.cpp */; };
 		3C504FA91A23800B000C79D6 /* AppDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C504FA71A23800B000C79D6 /* AppDelegate.cpp */; };
 		3C504FE61A23802F000C79D6 /* CCLuaEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C504FAC1A23802F000C79D6 /* CCLuaEngine.cpp */; };
-		3C504FE71A23802F000C79D6 /* Cocos2dxLuaLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C504FAE1A23802F000C79D6 /* Cocos2dxLuaLoader.cpp */; };
 		3C504FE81A23802F000C79D6 /* DorothyModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C504FB01A23802F000C79D6 /* DorothyModule.cpp */; };
 		3C504FE91A23802F000C79D6 /* LuaCocos2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C504FB21A23802F000C79D6 /* LuaCocos2d.cpp */; };
 		3C504FEA1A23802F000C79D6 /* LuaCode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C504FB41A23802F000C79D6 /* LuaCode.cpp */; };
@@ -385,8 +384,6 @@
 		3C504FA81A23800B000C79D6 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../../Classes/AppDelegate.h; sourceTree = "<group>"; };
 		3C504FAC1A23802F000C79D6 /* CCLuaEngine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCLuaEngine.cpp; sourceTree = "<group>"; };
 		3C504FAD1A23802F000C79D6 /* CCLuaEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLuaEngine.h; sourceTree = "<group>"; };
-		3C504FAE1A23802F000C79D6 /* Cocos2dxLuaLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cocos2dxLuaLoader.cpp; sourceTree = "<group>"; };
-		3C504FAF1A23802F000C79D6 /* Cocos2dxLuaLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cocos2dxLuaLoader.h; sourceTree = "<group>"; };
 		3C504FB01A23802F000C79D6 /* DorothyModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DorothyModule.cpp; sourceTree = "<group>"; };
 		3C504FB11A23802F000C79D6 /* DorothyModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DorothyModule.h; sourceTree = "<group>"; };
 		3C504FB21A23802F000C79D6 /* LuaCocos2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LuaCocos2d.cpp; sourceTree = "<group>"; };
@@ -923,8 +920,6 @@
 			children = (
 				3C504FAC1A23802F000C79D6 /* CCLuaEngine.cpp */,
 				3C504FAD1A23802F000C79D6 /* CCLuaEngine.h */,
-				3C504FAE1A23802F000C79D6 /* Cocos2dxLuaLoader.cpp */,
-				3C504FAF1A23802F000C79D6 /* Cocos2dxLuaLoader.h */,
 				3C504FB01A23802F000C79D6 /* DorothyModule.cpp */,
 				3C504FB11A23802F000C79D6 /* DorothyModule.h */,
 				3C504FB21A23802F000C79D6 /* LuaCocos2d.cpp */,
@@ -1141,7 +1136,6 @@
 				3C504F831A237F8E000C79D6 /* b2EdgeShape.cpp in Sources */,
 				3C504FA41A237F8E000C79D6 /* b2WeldJoint.cpp in Sources */,
 				3C5050041A23802F000C79D6 /* tolua_to.c in Sources */,
-				3C504FE71A23802F000C79D6 /* Cocos2dxLuaLoader.cpp in Sources */,
 				3C504FA21A237F8E000C79D6 /* b2RevoluteJoint.cpp in Sources */,
 				3C504EFE1A237E5C000C79D6 /* oBulletDef.cpp in Sources */,
 				3C504EDC1A237E5C000C79D6 /* oAudio.cpp in Sources */,
@@ -1292,7 +1286,7 @@
 		3C504D721A23739B000C79D6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -1322,7 +1316,12 @@
 					"\"$(SRCROOT)/../../cocos2dx/platform/third_party/mac/libraries\"",
 					"\"$(SRCROOT)/../../lua/luajit/mac\"",
 				);
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-pagezero_size",
+					10000,
+					"-image_base",
+					100000000,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1330,7 +1329,7 @@
 		3C504D731A23739B000C79D6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -1359,7 +1358,12 @@
 					"\"$(SRCROOT)/../../cocos2dx/platform/third_party/mac/libraries\"",
 					"\"$(SRCROOT)/../../lua/luajit/mac\"",
 				);
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-pagezero_size",
+					10000,
+					"-image_base",
+					100000000,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

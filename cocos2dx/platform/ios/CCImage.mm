@@ -48,8 +48,8 @@ static bool _initWithImage(CGImageRef cgImage, tImageInfo *pImageinfo)
     
     // get image info
     
-    pImageinfo->width = CGImageGetWidth(cgImage);
-    pImageinfo->height = CGImageGetHeight(cgImage);
+    pImageinfo->width = (unsigned int)CGImageGetWidth(cgImage);
+    pImageinfo->height = (unsigned int)CGImageGetHeight(cgImage);
     
     CGImageAlphaInfo info = CGImageGetAlphaInfo(cgImage);
     pImageinfo->hasAlpha = (info == kCGImageAlphaPremultipliedLast) 
@@ -329,7 +329,7 @@ bool CCImage::initWithImageFile(const char * strPath, EImageFormat eImgFmt/* = e
 				
     if (pBuffer != NULL && nSize > 0)
     {
-        bRet = initWithImageData(pBuffer, nSize, eImgFmt);
+        bRet = initWithImageData(pBuffer, (int)nSize, eImgFmt);
     }
     CC_SAFE_DELETE_ARRAY(pBuffer);
     return bRet;
@@ -345,7 +345,7 @@ bool CCImage::initWithImageFileThreadSafe(const char *fullpath, EImageFormat ima
     unsigned char* pBuffer = CCFileUtils::sharedFileUtils()->getFileData(fullpath, "rb", &nSize);
     if (pBuffer != NULL && nSize > 0)
     {
-        bRet = initWithImageData(pBuffer, nSize, imageType);
+        bRet = initWithImageData(pBuffer, (int)nSize, imageType);
     }
     CC_SAFE_DELETE_ARRAY(pBuffer);
     return bRet;

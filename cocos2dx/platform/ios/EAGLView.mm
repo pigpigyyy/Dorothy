@@ -405,9 +405,9 @@ static EAGLView *view = 0;
     
     int i = 0;
     for (UITouch *touch in touches) {
-        ids[i] = (int)touch;
-        xs[i] = [touch locationInView: [touch view]].x * view.contentScaleFactor;;
-        ys[i] = [touch locationInView: [touch view]].y * view.contentScaleFactor;;
+        xs[i] = [touch locationInView: [touch view]].x * view.contentScaleFactor;
+        ys[i] = [touch locationInView: [touch view]].y * view.contentScaleFactor;
+		ids[i] = (int)((unsigned int)xs[i]<<16|(unsigned int)ys[i]);
         ++i;
     }
     cocos2d::CCEGLView::sharedOpenGLView()->handleTouchesBegin(i, ids, xs, ys);
@@ -425,9 +425,9 @@ static EAGLView *view = 0;
     
     int i = 0;
     for (UITouch *touch in touches) {
-        ids[i] = (int)touch;
-        xs[i] = [touch locationInView: [touch view]].x * view.contentScaleFactor;;
-        ys[i] = [touch locationInView: [touch view]].y * view.contentScaleFactor;;
+        xs[i] = [touch locationInView: [touch view]].x * view.contentScaleFactor;
+        ys[i] = [touch locationInView: [touch view]].y * view.contentScaleFactor;
+		ids[i] = (int)((unsigned int)xs[i]<<16|(unsigned int)ys[i]);
         ++i;
     }
     cocos2d::CCEGLView::sharedOpenGLView()->handleTouchesMove(i, ids, xs, ys);
@@ -446,9 +446,9 @@ static EAGLView *view = 0;
     
     int i = 0;
     for (UITouch *touch in touches) {
-        ids[i] = (int)touch;
-        xs[i] = [touch locationInView: [touch view]].x * view.contentScaleFactor;;
-        ys[i] = [touch locationInView: [touch view]].y * view.contentScaleFactor;;
+        xs[i] = [touch locationInView: [touch view]].x * view.contentScaleFactor;
+        ys[i] = [touch locationInView: [touch view]].y * view.contentScaleFactor;
+		ids[i] = (int)((unsigned int)xs[i]<<16|(unsigned int)ys[i]);
         ++i;
     }
     cocos2d::CCEGLView::sharedOpenGLView()->handleTouchesEnd(i, ids, xs, ys);
@@ -467,9 +467,9 @@ static EAGLView *view = 0;
     
     int i = 0;
     for (UITouch *touch in touches) {
-        ids[i] = (int)touch;
-        xs[i] = [touch locationInView: [touch view]].x * view.contentScaleFactor;;
-        ys[i] = [touch locationInView: [touch view]].y * view.contentScaleFactor;;
+        xs[i] = [touch locationInView: [touch view]].x * view.contentScaleFactor;
+        ys[i] = [touch locationInView: [touch view]].y * view.contentScaleFactor;
+		ids[i] = (int)((unsigned int)xs[i]<<16|(unsigned int)ys[i]);
         ++i;
     }
     cocos2d::CCEGLView::sharedOpenGLView()->handleTouchesCancel(i, ids, xs, ys);
@@ -519,7 +519,7 @@ static EAGLView *view = 0;
         markedText_ = nil;
     }
     const char * pszText = [text cStringUsingEncoding:NSUTF8StringEncoding];
-    cocos2d::CCIMEDispatcher::sharedDispatcher()->dispatchInsertText(pszText, strlen(pszText));
+    cocos2d::CCIMEDispatcher::sharedDispatcher()->dispatchInsertText(pszText, (int)strlen(pszText));
 }
 
 - (void)deleteBackward
@@ -627,7 +627,7 @@ static EAGLView *view = 0;
         return;
     }
     const char * pszText = [markedText_ cStringUsingEncoding:NSUTF8StringEncoding];
-    cocos2d::CCIMEDispatcher::sharedDispatcher()->dispatchInsertText(pszText, strlen(pszText));
+    cocos2d::CCIMEDispatcher::sharedDispatcher()->dispatchInsertText(pszText, (int)strlen(pszText));
     [markedText_ release];
     markedText_ = nil;
 }
