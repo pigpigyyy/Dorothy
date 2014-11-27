@@ -59,6 +59,21 @@ static int lua_print(lua_State * luastate)
 	return 0;
 }
 
+static int traceback(lua_State* L)
+{
+	luaL_traceback(L, L, lua_tostring(L, 1), 1);
+	CCLOG("[LUA ERROR] %s", lua_tostring(L, -1));
+	lua_pop(L, 1);
+	return 1;
+}
+
+static int lua_dofile(lua_State *L)
+{
+	cocos2dx_lua_loader(L);
+	CCLuaEngine::sharedEngine()->call(0, LUA_MULTRET);
+	return 1;
+}
+
 static int lua_ubox(lua_State* luastate)
 {
 	lua_rawgeti(luastate, LUA_REGISTRYINDEX, TOLUA_UBOX);// ubox
@@ -79,7 +94,7 @@ m_callFromLua(0)
 		{ "print", lua_print },
 		{ "ubox", lua_ubox },
 		{ "loadfile", cocos2dx_lua_loader },
-		{ "dofile", cocos2dx_lua_dofile },
+		{ "dofile", lua_dofile },
 		{ "ubox", lua_ubox },
 		{ NULL, NULL }
 	};
@@ -328,23 +343,15 @@ bool CCLuaEngine::scriptHandlerEqual(int nHandlerA, int nHandlerB)
 	return result != 0;
 }
 
-static int traceback(lua_State* L)
-{
-	luaL_traceback(L, L, lua_tostring(L, 1), 1);
-	CCLOG("[LUA ERROR] %s", lua_tostring(L, -1));
-	lua_pop(L, 1);
-	return 1;
-}
-
-int CCLuaEngine::lua_invoke(int numArgs)
+int CCLuaEngine::call(int paramCount, int returnCount)
 {
 #ifndef TOLUA_RELEASE
-	int functionIndex = -(numArgs + 1);
+	int functionIndex = -(paramCount + 1);
 	int traceIndex = functionIndex - 1;
 	if (!lua_isfunction(L, functionIndex))
 	{
 		CCLOG("value at stack [%d] is not function", functionIndex);
-		lua_pop(L, numArgs + 1); // remove function and arguments
+		lua_pop(L, paramCount + 1); // remove function and arguments
 		return 0;
 	}
 
@@ -352,7 +359,7 @@ int CCLuaEngine::lua_invoke(int numArgs)
 	lua_insert(L, traceIndex);// traceback func args...
 
 	++m_callFromLua;
-	int error = lua_pcall(L, numArgs, 1, traceIndex);// traceback error ret
+	int error = lua_pcall(L, paramCount, returnCount, traceIndex);// traceback error ret
 	--m_callFromLua;
 
 	if (error)// traceback error
@@ -361,7 +368,7 @@ int CCLuaEngine::lua_invoke(int numArgs)
 		return 0;
 	}
 #else
-	lua_call(L, numArgs, 1);
+	lua_call(L, paramCount, returnCount);
 #endif
 	return 1;
 }
@@ -375,7 +382,7 @@ int CCLuaEngine::lua_execute(int numArgs)
 		int i = 0;
 		i++;
 	}
-	if (lua_invoke(numArgs))
+	if (CCLuaEngine::call(numArgs, 1))
 	{
 		// get return value
 		if (lua_isnumber(L, -1))// traceback ret
@@ -406,7 +413,7 @@ int CCLuaEngine::lua_execute(int nHandler, int numArgs)
 	return lua_execute(numArgs);
 }
 
-int CCLuaEngine::lua_invoke(int nHandler, int numArgs)
+int CCLuaEngine::lua_invoke(int nHandler, int numArgs, int numRets)
 {
 	toluafix_get_function_by_refid(L, nHandler);// args... func
 	if (!lua_isfunction(L, -1))
@@ -417,13 +424,13 @@ int CCLuaEngine::lua_invoke(int nHandler, int numArgs)
 	}
 	if (numArgs > 0) lua_insert(L, -(numArgs + 1));// func args...
 
-	return lua_invoke(numArgs);
+	return CCLuaEngine::call(numArgs, numRets);
 }
 
 int CCLuaEngine::executeActionCreate(int nHandler)
 {
 	int handler = 0;
-	lua_invoke(nHandler, 0);
+	lua_invoke(nHandler, 0, 1);
 	int top = lua_gettop(L);
 	if (lua_isfunction(L, top))
 	{

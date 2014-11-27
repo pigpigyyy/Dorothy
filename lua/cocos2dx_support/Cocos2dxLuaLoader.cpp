@@ -65,12 +65,4 @@ extern "C"
         
         return 1;
     }
-	
-	
-	extern int cocos2dx_lua_dofile(lua_State *L)
-	{
-		cocos2dx_lua_loader(L);
-		lua_pcall(L, 0, LUA_MULTRET, 0);
-		return 1;
-	}
 }
