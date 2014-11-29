@@ -7,10 +7,10 @@
     <Filter Include="cocos2dx_support">
       <UniqueIdentifier>{bbe428ed-e8e5-4e3c-80c9-0e586814b884}</UniqueIdentifier>
     </Filter>
-    <Filter Include="luajit">
+    <Filter Include="lib">
       <UniqueIdentifier>{948e219e-763e-41d0-bc8d-6421dba8ad70}</UniqueIdentifier>
     </Filter>
-    <Filter Include="luajit\include">
+    <Filter Include="lib\include">
       <UniqueIdentifier>{b7025611-420a-4414-b567-f7496eec5f57}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -31,9 +31,6 @@
       <Filter>tolua</Filter>
     </ClCompile>
     <ClCompile Include="..\cocos2dx_support\CCLuaEngine.cpp">
-      <Filter>cocos2dx_support</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos2dx_support\Cocos2dxLuaLoader.cpp">
       <Filter>cocos2dx_support</Filter>
     </ClCompile>
     <ClCompile Include="..\cocos2dx_support\LuaCocos2d.cpp">
@@ -62,9 +59,6 @@
     <ClInclude Include="..\cocos2dx_support\CCLuaEngine.h">
       <Filter>cocos2dx_support</Filter>
     </ClInclude>
-    <ClInclude Include="..\cocos2dx_support\Cocos2dxLuaLoader.h">
-      <Filter>cocos2dx_support</Filter>
-    </ClInclude>
     <ClInclude Include="..\cocos2dx_support\LuaCocos2d.h">
       <Filter>cocos2dx_support</Filter>
     </ClInclude>
@@ -72,16 +66,16 @@
       <Filter>cocos2dx_support</Filter>
     </ClInclude>
     <ClInclude Include="..\luajit\include\lauxlib.h">
-      <Filter>luajit\include</Filter>
+      <Filter>lib\include</Filter>
     </ClInclude>
     <ClInclude Include="..\luajit\include\lua.h">
-      <Filter>luajit\include</Filter>
+      <Filter>lib\include</Filter>
     </ClInclude>
     <ClInclude Include="..\luajit\include\luaconf.h">
-      <Filter>luajit\include</Filter>
+      <Filter>lib\include</Filter>
     </ClInclude>
     <ClInclude Include="..\luajit\include\lualib.h">
-      <Filter>luajit\include</Filter>
+      <Filter>lib\include</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos2dx_support\DorothyModule.h">
       <Filter>cocos2dx_support</Filter>

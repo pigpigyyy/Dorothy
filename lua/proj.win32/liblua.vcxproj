@@ -65,7 +65,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\cocos2dx;$(ProjectDir)..\..\cocos2dx\include;$(ProjectDir)..\..\cocos2dx\kazmath\include;$(ProjectDir)..\..\cocos2dx\platform\win32;$(ProjectDir)..\..\cocos2dx\platform\third_party\win32\OGLES;$(ProjectDir)..\..\CocosDenshion\include;$(ProjectDir)..\tolua;$(ProjectDir)..\luajit\include;$(ProjectDir)..\..\external;$(ProjectDir)..\..\extensions;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\cocos2dx;$(ProjectDir)..\..\cocos2dx\include;$(ProjectDir)..\..\cocos2dx\kazmath\include;$(ProjectDir)..\..\cocos2dx\platform\win32;$(ProjectDir)..\..\cocos2dx\platform\third_party\win32\OGLES;$(ProjectDir)..\..\CocosDenshion\include;$(ProjectDir)..\tolua;$(ProjectDir)..\lib\include;$(ProjectDir)..\..\external;$(ProjectDir)..\..\extensions;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;COCOS2D_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -89,14 +89,14 @@
     </PreLinkEvent>
     <PreBuildEvent>
       <Command>if not exist "$(OutDir)" mkdir "$(OutDir)"
-xcopy /Y /Q "$(ProjectDir)..\luajit\win32\*.*" "$(OutDir)"</Command>
+xcopy /Y /Q "$(ProjectDir)..\lib\win32\*.*" "$(OutDir)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\cocos2dx;$(ProjectDir)..\..\cocos2dx\include;$(ProjectDir)..\..\cocos2dx\kazmath\include;$(ProjectDir)..\..\cocos2dx\platform\win32;$(ProjectDir)..\..\cocos2dx\platform\third_party\win32\OGLES;$(ProjectDir)..\..\CocosDenshion\include;$(ProjectDir)..\tolua;$(ProjectDir)..\luajit\include;$(ProjectDir)..\..\external;$(ProjectDir)..\..\extensions;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\cocos2dx;$(ProjectDir)..\..\cocos2dx\include;$(ProjectDir)..\..\cocos2dx\kazmath\include;$(ProjectDir)..\..\cocos2dx\platform\win32;$(ProjectDir)..\..\cocos2dx\platform\third_party\win32\OGLES;$(ProjectDir)..\..\CocosDenshion\include;$(ProjectDir)..\tolua;$(ProjectDir)..\lib\include;$(ProjectDir)..\..\external;$(ProjectDir)..\..\extensions;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;LIBLUA_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -120,12 +120,11 @@ xcopy /Y /Q "$(ProjectDir)..\luajit\win32\*.*" "$(OutDir)"</Command>
     </PreLinkEvent>
     <PreBuildEvent>
       <Command>if not exist "$(OutDir)" mkdir "$(OutDir)"
-xcopy /Y /Q "$(ProjectDir)..\luajit\win32\*.*" "$(OutDir)"</Command>
+xcopy /Y /Q "$(ProjectDir)..\lib\win32\*.*" "$(OutDir)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\cocos2dx_support\CCLuaEngine.cpp" />
-    <ClCompile Include="..\cocos2dx_support\Cocos2dxLuaLoader.cpp" />
     <ClCompile Include="..\cocos2dx_support\DorothyModule.cpp" />
     <ClCompile Include="..\cocos2dx_support\LuaCocos2d.cpp" />
     <ClCompile Include="..\cocos2dx_support\LuaCode.cpp" />
@@ -139,7 +138,6 @@ xcopy /Y /Q "$(ProjectDir)..\luajit\win32\*.*" "$(OutDir)"</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\cocos2dx_support\CCLuaEngine.h" />
-    <ClInclude Include="..\cocos2dx_support\Cocos2dxLuaLoader.h" />
     <ClInclude Include="..\cocos2dx_support\DorothyModule.h" />
     <ClInclude Include="..\cocos2dx_support\LuaCocos2d.h" />
     <ClInclude Include="..\cocos2dx_support\tolua_fix.h" />
