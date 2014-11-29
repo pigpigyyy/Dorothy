@@ -73,6 +73,10 @@
 		15C1569E1683138E00D239F2 /* Icon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = 15C156971683138E00D239F2 /* Icon-144.png */; };
 		3C504D8E1A237B97000C79D6 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C504D8D1A237B97000C79D6 /* libwebp.a */; };
 		3C5AC9FC1A21A71F006EDD2B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5AC9FB1A21A71F006EDD2B /* CoreMotion.framework */; };
+		3C7503991A2A4BFF0013A8BC /* oButton.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7503981A2A4BFF0013A8BC /* oButton.lua */; };
+		3C75039D1A2A4C530013A8BC /* xiaoli.clip in Resources */ = {isa = PBXBuildFile; fileRef = 3C75039A1A2A4C530013A8BC /* xiaoli.clip */; };
+		3C75039E1A2A4C530013A8BC /* xiaoli.model in Resources */ = {isa = PBXBuildFile; fileRef = 3C75039B1A2A4C530013A8BC /* xiaoli.model */; };
+		3C75039F1A2A4C530013A8BC /* xiaoli.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C75039C1A2A4C530013A8BC /* xiaoli.png */; };
 		3C89A6071A209CD3001D5009 /* DorothyModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C89A6041A209CD3001D5009 /* DorothyModule.cpp */; };
 		3C89A6081A209CD3001D5009 /* tolua_extern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C89A6061A209CD3001D5009 /* tolua_extern.cpp */; };
 		3C89A6811A209D1C001D5009 /* AssetsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C89A60A1A209D1C001D5009 /* AssetsManager.cpp */; };
@@ -288,6 +292,10 @@
 		15C156971683138E00D239F2 /* Icon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-144.png"; sourceTree = SOURCE_ROOT; };
 		3C504D8D1A237B97000C79D6 /* libwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwebp.a; path = ../../cocos2dx/platform/third_party/mac/libraries/libwebp.a; sourceTree = "<group>"; };
 		3C5AC9FB1A21A71F006EDD2B /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreMotion.framework; sourceTree = DEVELOPER_DIR; };
+		3C7503981A2A4BFF0013A8BC /* oButton.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = oButton.lua; sourceTree = SOURCE_ROOT; };
+		3C75039A1A2A4C530013A8BC /* xiaoli.clip */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xiaoli.clip; sourceTree = SOURCE_ROOT; };
+		3C75039B1A2A4C530013A8BC /* xiaoli.model */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xiaoli.model; sourceTree = SOURCE_ROOT; };
+		3C75039C1A2A4C530013A8BC /* xiaoli.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xiaoli.png; sourceTree = SOURCE_ROOT; };
 		3C89A6041A209CD3001D5009 /* DorothyModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DorothyModule.cpp; sourceTree = "<group>"; };
 		3C89A6051A209CD3001D5009 /* DorothyModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DorothyModule.h; sourceTree = "<group>"; };
 		3C89A6061A209CD3001D5009 /* tolua_extern.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tolua_extern.cpp; sourceTree = "<group>"; };
@@ -1011,6 +1019,9 @@
 		F293BC4615EB859D00256477 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3C75039A1A2A4C530013A8BC /* xiaoli.clip */,
+				3C75039B1A2A4C530013A8BC /* xiaoli.model */,
+				3C75039C1A2A4C530013A8BC /* xiaoli.png */,
 				15C156911683138E00D239F2 /* Default-568h@2x.png */,
 				15C156921683138E00D239F2 /* Default.png */,
 				15C156931683138E00D239F2 /* Default@2x.png */,
@@ -1018,6 +1029,7 @@
 				15C156951683138E00D239F2 /* Icon-72.png */,
 				15C156961683138E00D239F2 /* Icon-114.png */,
 				15C156971683138E00D239F2 /* Icon-144.png */,
+				3C7503981A2A4BFF0013A8BC /* oButton.lua */,
 				3CB40CFB1A20E72200D7A3A6 /* main.lua */,
 			);
 			name = Resources;
@@ -1099,7 +1111,11 @@
 				15C156981683138E00D239F2 /* Default-568h@2x.png in Resources */,
 				15C156991683138E00D239F2 /* Default.png in Resources */,
 				15C1569A1683138E00D239F2 /* Default@2x.png in Resources */,
+				3C7503991A2A4BFF0013A8BC /* oButton.lua in Resources */,
+				3C75039E1A2A4C530013A8BC /* xiaoli.model in Resources */,
 				15C1569B1683138E00D239F2 /* Icon-57.png in Resources */,
+				3C75039D1A2A4C530013A8BC /* xiaoli.clip in Resources */,
+				3C75039F1A2A4C530013A8BC /* xiaoli.png in Resources */,
 				15C1569C1683138E00D239F2 /* Icon-72.png in Resources */,
 				3CB40CFC1A20E72200D7A3A6 /* main.lua in Resources */,
 				15C1569D1683138E00D239F2 /* Icon-114.png in Resources */,

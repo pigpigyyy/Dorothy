@@ -216,18 +216,6 @@ void CCDirector::setGLDefaultValues()
 // Draw the Scene
 void CCDirector::drawScene()
 {
-	CCTime::gettimeofdayCocos2d(&s_obTickStart, NULL);
-
-	if (m_bPaused) return;
-
-	// calculate "global" dt
-	calculateDeltaTime();
-
-	//tick before glClear: issue #533
-	m_pScheduler->update(m_fDeltaTime);
-
-	m_fUpdateInterval = CCDirector::getInterval(s_obTickStart);
-
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClearDepth(0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -266,16 +254,6 @@ void CCDirector::drawScene()
 	if (m_pobOpenGLView)
 	{
 		m_pobOpenGLView->swapBuffers();
-	}
-
-	m_fDrawInterval = CCDirector::getInterval(s_obTickStart);
-
-	if (m_nHandler)
-	{
-		if (CCScriptEngine::sharedEngine()->executeFunction(m_nHandler, 0) != 0)
-		{
-			CCDirector::unscheduleUpdateLua();
-		}
 	}
 
 	if (m_bDisplayStats)
@@ -1007,12 +985,33 @@ void CCDisplayLinkDirector::mainLoop()
 		m_bPurgeDirecotorInNextLoop = false;
 		purgeDirector();
 	}
-	else if (!m_bInvalid)
+	else if (!m_bPaused)
 	{
-		drawScene();
-
-		// release the objects
-		CCPoolManager::sharedPoolManager()->pop();
+		// calculate "global" dt
+		calculateDeltaTime();
+		CCTime::gettimeofdayCocos2d(&s_obTickStart, NULL);
+		if (m_nHandler)
+		{
+			if (CCScriptEngine::sharedEngine()->executeFunction(m_nHandler, 0) != 0)
+			{
+				CCDirector::unscheduleUpdateLua();
+			}
+		}
+		if (!m_bInvalid)
+		{
+			//tick before glClear: issue #533
+			m_pScheduler->update(m_fDeltaTime);
+			m_fUpdateInterval = CCDirector::getInterval(s_obTickStart);
+			drawScene();
+			m_fDrawInterval = CCDirector::getInterval(s_obTickStart) - m_fUpdateInterval;
+			// release the objects
+			CCPoolManager::sharedPoolManager()->pop();
+		}
+		else
+		{
+			m_fUpdateInterval = 0;
+			m_fDrawInterval = 0;
+		}
 	}
 }
 
