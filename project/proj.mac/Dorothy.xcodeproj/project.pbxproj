@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3C45629C1A29931E00A3406E /* libluajit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C45629B1A29931E00A3406E /* libluajit.a */; };
 		3C504D5B1A23739B000C79D6 /* AppController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3C504D5A1A23739B000C79D6 /* AppController.mm */; };
 		3C504D5D1A23739B000C79D6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C504D5C1A23739B000C79D6 /* main.m */; };
 		3C504D5F1A23739B000C79D6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C504D5E1A23739B000C79D6 /* Images.xcassets */; };
@@ -15,7 +16,6 @@
 		3C504D861A237B0B000C79D6 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C504D851A237B0B000C79D6 /* libsqlite3.0.dylib */; };
 		3C504D881A237B29000C79D6 /* libcurl.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C504D871A237B29000C79D6 /* libcurl.4.dylib */; };
 		3C504D8B1A237B70000C79D6 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C504D8A1A237B70000C79D6 /* libwebp.a */; };
-		3C504D911A237CFA000C79D6 /* libluajit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C504D901A237CFA000C79D6 /* libluajit.a */; };
 		3C504E231A237D2A000C79D6 /* CDAudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C504DBD1A237D2A000C79D6 /* CDAudioManager.m */; };
 		3C504E241A237D2A000C79D6 /* CDOpenALSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C504DC01A237D2A000C79D6 /* CDOpenALSupport.m */; };
 		3C504E251A237D2A000C79D6 /* CDXMacOSXSupport.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3C504DC21A237D2A000C79D6 /* CDXMacOSXSupport.mm */; };
@@ -147,6 +147,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3C45629B1A29931E00A3406E /* libluajit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libluajit.a; path = ../../lua/lib/mac/libluajit.a; sourceTree = "<group>"; };
 		3C504D541A23739B000C79D6 /* Dorothy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dorothy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C504D581A23739B000C79D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3C504D591A23739B000C79D6 /* AppController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
@@ -409,8 +410,8 @@
 			files = (
 				3C504D861A237B0B000C79D6 /* libsqlite3.0.dylib in Frameworks */,
 				3C504E481A237E21000C79D6 /* libz.1.2.5.dylib in Frameworks */,
-				3C504D911A237CFA000C79D6 /* libluajit.a in Frameworks */,
 				3C504D8B1A237B70000C79D6 /* libwebp.a in Frameworks */,
+				3C45629C1A29931E00A3406E /* libluajit.a in Frameworks */,
 				3C504D881A237B29000C79D6 /* libcurl.4.dylib in Frameworks */,
 				3C504D7D1A237767000C79D6 /* libcocos2dx.a in Frameworks */,
 			);
@@ -476,6 +477,7 @@
 		3C504D891A237B32000C79D6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3C45629B1A29931E00A3406E /* libluajit.a */,
 				3C504E471A237E21000C79D6 /* libz.1.2.5.dylib */,
 				3C504D901A237CFA000C79D6 /* libluajit.a */,
 				3C504D8A1A237B70000C79D6 /* libwebp.a */,
@@ -1305,16 +1307,15 @@
 					"\"$(SRCROOT)/../../CocosDension/include\"",
 					"\"$(SRCROOT)/../../extensions\"",
 					"\"$(SRCROOT)/../../external\"",
-					"\"$(SRCROOT)/../../lua/luajit/include\"",
+					"\"$(SRCROOT)/../../lua/lib/include\"",
 					"\"$(SRCROOT)/../../lua/tolua\"",
 					"\"$(SRCROOT)/../../lua/cocos2d_support\"",
 				);
 				INFOPLIST_FILE = Dorothy/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
 					"\"$(SRCROOT)/../../cocos2dx/platform/third_party/mac/libraries\"",
-					"\"$(SRCROOT)/../../lua/luajit/mac\"",
+					"\"$(SRCROOT)/../../lua/lib/mac\"",
 				);
 				OTHER_LDFLAGS = (
 					"-pagezero_size",
@@ -1347,16 +1348,15 @@
 					"\"$(SRCROOT)/../../CocosDension/include\"",
 					"\"$(SRCROOT)/../../extensions\"",
 					"\"$(SRCROOT)/../../external\"",
-					"\"$(SRCROOT)/../../lua/luajit/include\"",
+					"\"$(SRCROOT)/../../lua/lib/include\"",
 					"\"$(SRCROOT)/../../lua/tolua\"",
 					"\"$(SRCROOT)/../../lua/cocos2d_support\"",
 				);
 				INFOPLIST_FILE = Dorothy/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
 					"\"$(SRCROOT)/../../cocos2dx/platform/third_party/mac/libraries\"",
-					"\"$(SRCROOT)/../../lua/luajit/mac\"",
+					"\"$(SRCROOT)/../../lua/lib/mac\"",
 				);
 				OTHER_LDFLAGS = (
 					"-pagezero_size",

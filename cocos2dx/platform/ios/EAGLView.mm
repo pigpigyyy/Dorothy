@@ -407,7 +407,7 @@ static EAGLView *view = 0;
     for (UITouch *touch in touches) {
         xs[i] = [touch locationInView: [touch view]].x * view.contentScaleFactor;
         ys[i] = [touch locationInView: [touch view]].y * view.contentScaleFactor;
-		ids[i] = (int)((unsigned int)xs[i]<<16|(unsigned int)ys[i]);
+		ids[i] = (int)(long)touch;
         ++i;
     }
     cocos2d::CCEGLView::sharedOpenGLView()->handleTouchesBegin(i, ids, xs, ys);
@@ -422,12 +422,12 @@ static EAGLView *view = 0;
     int ids[IOS_MAX_TOUCHES_COUNT] = {0};
     float xs[IOS_MAX_TOUCHES_COUNT] = {0.0f};
     float ys[IOS_MAX_TOUCHES_COUNT] = {0.0f};
-    
+
     int i = 0;
     for (UITouch *touch in touches) {
         xs[i] = [touch locationInView: [touch view]].x * view.contentScaleFactor;
         ys[i] = [touch locationInView: [touch view]].y * view.contentScaleFactor;
-		ids[i] = (int)((unsigned int)xs[i]<<16|(unsigned int)ys[i]);
+		ids[i] = (int)(long)touch;
         ++i;
     }
     cocos2d::CCEGLView::sharedOpenGLView()->handleTouchesMove(i, ids, xs, ys);
@@ -448,7 +448,7 @@ static EAGLView *view = 0;
     for (UITouch *touch in touches) {
         xs[i] = [touch locationInView: [touch view]].x * view.contentScaleFactor;
         ys[i] = [touch locationInView: [touch view]].y * view.contentScaleFactor;
-		ids[i] = (int)((unsigned int)xs[i]<<16|(unsigned int)ys[i]);
+		ids[i] = (int)(long)touch;
         ++i;
     }
     cocos2d::CCEGLView::sharedOpenGLView()->handleTouchesEnd(i, ids, xs, ys);
@@ -469,7 +469,7 @@ static EAGLView *view = 0;
     for (UITouch *touch in touches) {
         xs[i] = [touch locationInView: [touch view]].x * view.contentScaleFactor;
         ys[i] = [touch locationInView: [touch view]].y * view.contentScaleFactor;
-		ids[i] = (int)((unsigned int)xs[i]<<16|(unsigned int)ys[i]);
+		ids[i] = (int)(long)touch;
         ++i;
     }
     cocos2d::CCEGLView::sharedOpenGLView()->handleTouchesCancel(i, ids, xs, ys);

@@ -60,9 +60,14 @@ static int lua_print(lua_State * luastate)
 
 static int traceback(lua_State* L)
 {
-	luaL_traceback(L, L, lua_tostring(L, 1), 1);
 	CCLOG("[LUA ERROR] %s", lua_tostring(L, -1));
-	lua_pop(L, 1);
+	lua_getglobal(L, "debug");
+	lua_getfield(L, -1, "traceback");
+	lua_call(L, 0, 1);
+	CCLOG(lua_tostring(L, -1));
+	lua_pop(L, 2);
+	//luaL_traceback(L, L, lua_tostring(L, 1), 1);
+	//lua_pop(L, 1);
 	return 1;
 }
 
@@ -118,7 +123,7 @@ static int lua_ubox(lua_State* luastate)
 CCLuaEngine::CCLuaEngine() :
 m_callFromLua(0)
 {
-	L = lua_open();
+	L = luaL_newstate();
 	luaL_openlibs(L);
 	toluafix_open(L);
 	tolua_Cocos2d_open(L);
@@ -399,7 +404,6 @@ int CCLuaEngine::call(int paramCount, int returnCount)
 
 	if (error)// traceback error
 	{
-		lua_settop(L, 0);// stack clear
 		return 0;
 	}
 #else

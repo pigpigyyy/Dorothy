@@ -114,7 +114,7 @@ string oSpriteDef::toXml()
 	{
 		stream << '<' << char(oModelXml::Look) << ' '
 			<< char(oModelXml::Name) << "=\"";
-		int last = looks.size() - 1;
+		int last = (int)looks.size() - 1;
 		for (int i = 0;i < (int)looks.size();i++)
 		{
 			stream << looks[i];
@@ -292,7 +292,7 @@ int oModelDef::getLookIndexByName( const string& name )
 
 int oModelDef::getKeyPointCount() const
 {
-	return _keys.size();
+	return (int)_keys.size();
 }
 
 const unordered_map<string, int>& oModelDef::getAnimationIndexMap() const

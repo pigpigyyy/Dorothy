@@ -71,7 +71,6 @@
 		15C1569C1683138E00D239F2 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 15C156951683138E00D239F2 /* Icon-72.png */; };
 		15C1569D1683138E00D239F2 /* Icon-114.png in Resources */ = {isa = PBXBuildFile; fileRef = 15C156961683138E00D239F2 /* Icon-114.png */; };
 		15C1569E1683138E00D239F2 /* Icon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = 15C156971683138E00D239F2 /* Icon-144.png */; };
-		1AA88D13171E35AA0023E7B2 /* libluajit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AA88D12171E35AA0023E7B2 /* libluajit.a */; };
 		3C504D8E1A237B97000C79D6 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C504D8D1A237B97000C79D6 /* libwebp.a */; };
 		3C5AC9FC1A21A71F006EDD2B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5AC9FB1A21A71F006EDD2B /* CoreMotion.framework */; };
 		3C89A6071A209CD3001D5009 /* DorothyModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C89A6041A209CD3001D5009 /* DorothyModule.cpp */; };
@@ -123,11 +122,11 @@
 		3C89A6AD1A209D1C001D5009 /* LocalStorageAndroid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C89A6801A209D1C001D5009 /* LocalStorageAndroid.cpp */; };
 		3C89A6B21A20A48D001D5009 /* LuaCode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C89A6B11A20A48D001D5009 /* LuaCode.cpp */; };
 		3C89A6C31A20C5B5001D5009 /* libcocos2dx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C58D44E1A20951D0051AADE /* libcocos2dx.a */; };
+		3CA03A6F1A2900460008F80F /* libluajit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CA03A6E1A2900460008F80F /* libluajit.a */; };
 		3CB40CFA1A20E6C200D7A3A6 /* b2MotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CB40CF81A20E6C200D7A3A6 /* b2MotorJoint.cpp */; };
 		3CB40CFC1A20E72200D7A3A6 /* main.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3CB40CFB1A20E72200D7A3A6 /* main.lua */; };
 		3CB40D261A20ECC500D7A3A6 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CB40D251A20ECC500D7A3A6 /* libsqlite3.0.dylib */; };
 		46C1008D16BF786A00F74D54 /* CCLuaEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46C1007C16BF786A00F74D54 /* CCLuaEngine.cpp */; };
-		46C1009016BF786A00F74D54 /* Cocos2dxLuaLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46C1008216BF786A00F74D54 /* Cocos2dxLuaLoader.cpp */; };
 		46C1009116BF786A00F74D54 /* LuaCocos2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46C1008416BF786A00F74D54 /* LuaCocos2d.cpp */; };
 		46C1009316BF786A00F74D54 /* tolua_fix.c in Sources */ = {isa = PBXBuildFile; fileRef = 46C1008A16BF786A00F74D54 /* tolua_fix.c */; };
 		F293B3CD15EB7BE500256477 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F293B3CC15EB7BE500256477 /* QuartzCore.framework */; };
@@ -287,11 +286,6 @@
 		15C156951683138E00D239F2 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = SOURCE_ROOT; };
 		15C156961683138E00D239F2 /* Icon-114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-114.png"; sourceTree = SOURCE_ROOT; };
 		15C156971683138E00D239F2 /* Icon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-144.png"; sourceTree = SOURCE_ROOT; };
-		1AA88BA1171D30B00023E7B2 /* lauxlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lauxlib.h; sourceTree = "<group>"; };
-		1AA88BA2171D30B00023E7B2 /* lua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua.h; sourceTree = "<group>"; };
-		1AA88BA3171D30B00023E7B2 /* luaconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = luaconf.h; sourceTree = "<group>"; };
-		1AA88BA4171D30B00023E7B2 /* lualib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lualib.h; sourceTree = "<group>"; };
-		1AA88D12171E35AA0023E7B2 /* libluajit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libluajit.a; sourceTree = "<group>"; };
 		3C504D8D1A237B97000C79D6 /* libwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwebp.a; path = ../../cocos2dx/platform/third_party/mac/libraries/libwebp.a; sourceTree = "<group>"; };
 		3C5AC9FB1A21A71F006EDD2B /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreMotion.framework; sourceTree = DEVELOPER_DIR; };
 		3C89A6041A209CD3001D5009 /* DorothyModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DorothyModule.cpp; sourceTree = "<group>"; };
@@ -407,14 +401,18 @@
 		3C89A6801A209D1C001D5009 /* LocalStorageAndroid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LocalStorageAndroid.cpp; sourceTree = "<group>"; };
 		3C89A6AE1A209D56001D5009 /* Dorothy_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dorothy_Prefix.pch; sourceTree = "<group>"; };
 		3C89A6B11A20A48D001D5009 /* LuaCode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LuaCode.cpp; sourceTree = "<group>"; };
+		3CA03A161A289CFE0008F80F /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = ../../lua/luajit/ios/liblua.a; sourceTree = "<group>"; };
+		3CA03A671A28BD1F0008F80F /* lauxlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lauxlib.h; sourceTree = "<group>"; };
+		3CA03A681A28BD1F0008F80F /* lua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua.h; sourceTree = "<group>"; };
+		3CA03A6A1A28BD1F0008F80F /* lualib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lualib.h; sourceTree = "<group>"; };
+		3CA03A6B1A28BE4E0008F80F /* luaconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = luaconf.h; sourceTree = "<group>"; };
+		3CA03A6E1A2900460008F80F /* libluajit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libluajit.a; path = ../../lua/lib/ios/libluajit.a; sourceTree = "<group>"; };
 		3CB40CF81A20E6C200D7A3A6 /* b2MotorJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2MotorJoint.cpp; sourceTree = "<group>"; };
 		3CB40CF91A20E6C200D7A3A6 /* b2MotorJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2MotorJoint.h; sourceTree = "<group>"; };
 		3CB40CFB1A20E72200D7A3A6 /* main.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.lua; sourceTree = SOURCE_ROOT; };
 		3CB40D251A20ECC500D7A3A6 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		46C1007C16BF786A00F74D54 /* CCLuaEngine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCLuaEngine.cpp; sourceTree = "<group>"; };
 		46C1007D16BF786A00F74D54 /* CCLuaEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLuaEngine.h; sourceTree = "<group>"; };
-		46C1008216BF786A00F74D54 /* Cocos2dxLuaLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cocos2dxLuaLoader.cpp; sourceTree = "<group>"; };
-		46C1008316BF786A00F74D54 /* Cocos2dxLuaLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cocos2dxLuaLoader.h; sourceTree = "<group>"; };
 		46C1008416BF786A00F74D54 /* LuaCocos2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LuaCocos2d.cpp; sourceTree = "<group>"; };
 		46C1008516BF786A00F74D54 /* LuaCocos2d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaCocos2d.h; sourceTree = "<group>"; };
 		46C1008A16BF786A00F74D54 /* tolua_fix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tolua_fix.c; sourceTree = "<group>"; };
@@ -446,7 +444,7 @@
 				3CB40D261A20ECC500D7A3A6 /* libsqlite3.0.dylib in Frameworks */,
 				3C89A6C31A20C5B5001D5009 /* libcocos2dx.a in Frameworks */,
 				15C1568E1683131500D239F2 /* libcurl.a in Frameworks */,
-				1AA88D13171E35AA0023E7B2 /* libluajit.a in Frameworks */,
+				3CA03A6F1A2900460008F80F /* libluajit.a in Frameworks */,
 				F293B3CD15EB7BE500256477 /* QuartzCore.framework in Frameworks */,
 				F293B3CF15EB7BE500256477 /* OpenGLES.framework in Frameworks */,
 				F293B3D115EB7BE500256477 /* OpenAL.framework in Frameworks */,
@@ -685,7 +683,7 @@
 			isa = PBXGroup;
 			children = (
 				46C1007916BF786A00F74D54 /* cocos2dx_support */,
-				1AA88A50171D04FC0023E7B2 /* luajit */,
+				1AA88A50171D04FC0023E7B2 /* include */,
 				15C15650168311CB00D239F2 /* tolua */,
 			);
 			name = lua;
@@ -706,32 +704,16 @@
 			path = tolua;
 			sourceTree = "<group>";
 		};
-		1AA88A50171D04FC0023E7B2 /* luajit */ = {
+		1AA88A50171D04FC0023E7B2 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				1AA88BA0171D30B00023E7B2 /* include */,
-				1AA88D11171E35AA0023E7B2 /* ios */,
+				3CA03A6B1A28BE4E0008F80F /* luaconf.h */,
+				3CA03A671A28BD1F0008F80F /* lauxlib.h */,
+				3CA03A681A28BD1F0008F80F /* lua.h */,
+				3CA03A6A1A28BD1F0008F80F /* lualib.h */,
 			);
-			path = luajit;
-			sourceTree = "<group>";
-		};
-		1AA88BA0171D30B00023E7B2 /* include */ = {
-			isa = PBXGroup;
-			children = (
-				1AA88BA1171D30B00023E7B2 /* lauxlib.h */,
-				1AA88BA2171D30B00023E7B2 /* lua.h */,
-				1AA88BA3171D30B00023E7B2 /* luaconf.h */,
-				1AA88BA4171D30B00023E7B2 /* lualib.h */,
-			);
-			path = include;
-			sourceTree = "<group>";
-		};
-		1AA88D11171E35AA0023E7B2 /* ios */ = {
-			isa = PBXGroup;
-			children = (
-				1AA88D12171E35AA0023E7B2 /* libluajit.a */,
-			);
-			path = ios;
+			name = include;
+			path = lib/include;
 			sourceTree = "<group>";
 		};
 		3C58D44A1A20951C0051AADE /* Products */ = {
@@ -950,8 +932,6 @@
 				3C89A6061A209CD3001D5009 /* tolua_extern.cpp */,
 				46C1007C16BF786A00F74D54 /* CCLuaEngine.cpp */,
 				46C1007D16BF786A00F74D54 /* CCLuaEngine.h */,
-				46C1008216BF786A00F74D54 /* Cocos2dxLuaLoader.cpp */,
-				46C1008316BF786A00F74D54 /* Cocos2dxLuaLoader.h */,
 				46C1008416BF786A00F74D54 /* LuaCocos2d.cpp */,
 				46C1008516BF786A00F74D54 /* LuaCocos2d.h */,
 				3C89A6B11A20A48D001D5009 /* LuaCode.cpp */,
@@ -988,6 +968,8 @@
 		F293B3CB15EB7BE500256477 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3CA03A6E1A2900460008F80F /* libluajit.a */,
+				3CA03A161A289CFE0008F80F /* liblua.a */,
 				3C504D8D1A237B97000C79D6 /* libwebp.a */,
 				3CB40D251A20ECC500D7A3A6 /* libsqlite3.0.dylib */,
 				15C1568D1683131500D239F2 /* libcurl.a */,
@@ -1242,7 +1224,6 @@
 				3C89A6881A209D1C001D5009 /* oListener.cpp in Sources */,
 				46C1008D16BF786A00F74D54 /* CCLuaEngine.cpp in Sources */,
 				3C89A6891A209D1C001D5009 /* oContent.cpp in Sources */,
-				46C1009016BF786A00F74D54 /* Cocos2dxLuaLoader.cpp in Sources */,
 				46C1009116BF786A00F74D54 /* LuaCocos2d.cpp in Sources */,
 				46C1009316BF786A00F74D54 /* tolua_fix.c in Sources */,
 			);
@@ -1263,7 +1244,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1293,7 +1274,7 @@
 					"\"$(SRCROOT)/../../lua/cocos2dx_support\"",
 					"\"$(SRCROOT)/../../cocos2dx/platform/third_party/ios\"",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
@@ -1304,7 +1285,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1331,7 +1312,7 @@
 					"\"$(SRCROOT)/../../lua/cocos2dx_support\"",
 					"\"$(SRCROOT)/../../cocos2dx/platform/third_party/ios\"",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -1357,8 +1338,6 @@
 					"COCOS2D_DEBUG=1",
 					USE_FILE32API,
 					CC_TARGET_OS_IPHONE,
-					"CC_LUA_ENGINE_ENABLED=1",
-					"CC_ENABLE_BOX2D_INTEGRATION=1",
 				);
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				HEADER_SEARCH_PATHS = (
@@ -1372,15 +1351,13 @@
 					"\"$(SRCROOT)/../../external\"",
 					"\"$(SRCROOT)/../../lua/tolua\"",
 					"\"$(SRCROOT)/../../lua/cocos2dx_support\"",
+					"\"$(SRCROOT)/../../lua/lib/include\"",
 				);
 				INFOPLIST_FILE = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
 				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
 					"\"$(SRCROOT)/../../cocos2dx/platform/third_party/ios/libraries\"",
-					"\"$(SRCROOT)/../../lua/luajit/ios\"",
-					/Users/Jin/Workspace/Dorothy/cocos2dx/platform/third_party/mac/libraries,
-					/Users/Jin/Workspace/Dorothy/lua/luajit/ios,
+					"\"$(SRCROOT)/../../lua/lib/ios\"",
 				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_NAME = Dorothy;
@@ -1408,8 +1385,6 @@
 					NDEBUG,
 					USE_FILE32API,
 					CC_TARGET_OS_IPHONE,
-					"CC_LUA_ENGINE_ENABLED=1",
-					"CC_ENABLE_BOX2D_INTEGRATION=1",
 				);
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				HEADER_SEARCH_PATHS = (
@@ -1423,15 +1398,13 @@
 					"\"$(SRCROOT)/../../external\"",
 					"\"$(SRCROOT)/../../lua/tolua\"",
 					"\"$(SRCROOT)/../../lua/cocos2dx_support\"",
+					"\"$(SRCROOT)/../../lua/lib/include\"",
 				);
 				INFOPLIST_FILE = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
 				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
 					"\"$(SRCROOT)/../../cocos2dx/platform/third_party/ios/libraries\"",
-					"\"$(SRCROOT)/../../lua/luajit/ios\"",
-					/Users/Jin/Workspace/Dorothy/cocos2dx/platform/third_party/mac/libraries,
-					/Users/Jin/Workspace/Dorothy/lua/luajit/ios,
+					"\"$(SRCROOT)/../../lua/lib/ios\"",
 				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_NAME = Dorothy;
