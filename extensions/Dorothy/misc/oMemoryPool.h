@@ -84,7 +84,8 @@ public:
 		FreeList* sortedChunkList = nullptr;
 		FreeList* sortedChunkListTail = nullptr;
 		FreeList* prev = nullptr;
-		for (Chunk* chunk = _chunk; chunk;)
+		/* root chunk to be reserved */
+		for (Chunk* chunk = _chunk->next; chunk;)
 		{
 			size_t begin = (size_t)chunk->buffer;
 			size_t end = begin + CHUNK_CAPACITY;
@@ -116,7 +117,7 @@ public:
 			{
 				Chunk* temp = chunk;
 				if (prevChunk) prevChunk->next = chunk->next;
-				else _chunk = chunk->next;
+				else _chunk->next = chunk->next;
 				chunk = chunk->next;
 				delete temp;
 			}
