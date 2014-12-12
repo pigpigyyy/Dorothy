@@ -201,7 +201,7 @@
 		3C504E691A237E5C000C79D6 /* oIDisposable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oIDisposable.h; sourceTree = "<group>"; };
 		3C504E6A1A237E5C000C79D6 /* oLine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oLine.cpp; sourceTree = "<group>"; };
 		3C504E6B1A237E5C000C79D6 /* oLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oLine.h; sourceTree = "<group>"; };
-		3C504E6C1A237E5C000C79D6 /* oMemoryPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oMemoryPool.h; sourceTree = "<group>"; };
+		3C504E6C1A237E5C000C79D6 /* oMemoryPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = oMemoryPool.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		3C504E6D1A237E5C000C79D6 /* oNode3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oNode3D.cpp; sourceTree = "<group>"; };
 		3C504E6E1A237E5C000C79D6 /* oNode3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oNode3D.h; sourceTree = "<group>"; };
 		3C504E6F1A237E5C000C79D6 /* oOwn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oOwn.h; sourceTree = "<group>"; };
