@@ -159,7 +159,6 @@
 		3C504D851A237B0B000C79D6 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		3C504D871A237B29000C79D6 /* libcurl.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.4.dylib; path = usr/lib/libcurl.4.dylib; sourceTree = SDKROOT; };
 		3C504D8A1A237B70000C79D6 /* libwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwebp.a; path = ../../cocos2dx/platform/third_party/mac/libraries/libwebp.a; sourceTree = "<group>"; };
-		3C504D901A237CFA000C79D6 /* libluajit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libluajit.a; path = ../../lua/luajit/mac/libluajit.a; sourceTree = "<group>"; };
 		3C504DA91A237D2A000C79D6 /* Export.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Export.h; sourceTree = "<group>"; };
 		3C504DAA1A237D2A000C79D6 /* SimpleAudioEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleAudioEngine.h; sourceTree = "<group>"; };
 		3C504DBC1A237D2A000C79D6 /* CDAudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDAudioManager.h; sourceTree = "<group>"; };
@@ -479,7 +478,6 @@
 			children = (
 				3C45629B1A29931E00A3406E /* libluajit.a */,
 				3C504E471A237E21000C79D6 /* libz.1.2.5.dylib */,
-				3C504D901A237CFA000C79D6 /* libluajit.a */,
 				3C504D8A1A237B70000C79D6 /* libwebp.a */,
 				3C504D871A237B29000C79D6 /* libcurl.4.dylib */,
 				3C504D851A237B0B000C79D6 /* libsqlite3.0.dylib */,

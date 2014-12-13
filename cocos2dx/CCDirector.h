@@ -113,10 +113,7 @@ public:
 	/** Whether or not to display the FPS on the bottom-left corner */
 	inline bool isDisplayStats() { return m_bDisplayStats; }
 	/** Display the FPS on the bottom-left corner */
-	inline void setDisplayStats(bool bDisplayStats) { m_bDisplayStats = bDisplayStats; }
-
-	/** seconds per frame */
-	inline float getSecondsPerFrame() { return m_fSecondsPerFrame; }
+	void setDisplayStats(bool bDisplayStats);
 
 	/** Get the CCEGLView, where everything is rendered */
 	inline CCEGLView* getOpenGLView() { return m_pobOpenGLView; }
@@ -339,7 +336,6 @@ protected:
 	void setNextScene();
 	void showStats();
 	void createStatsLabel();
-	void calculateMPF();
 	void getFPSImageData(unsigned char** datapointer, unsigned int* length);
 
 	/** calculates delta time since last time it was called */
@@ -356,12 +352,16 @@ protected:
 
 	bool m_bDisplayStats;
 	float m_fAccumDt;
+	float m_fAccumUpdateDt;
+	float m_fAccumDrawDt;
 	float m_fFrameRate;
 	float m_fUpdateRate;
+	float m_fRealDeltaTime;
 
-	CCLabelTTF* m_pFPSLabel;
-	CCLabelTTF* m_pSPFLabel;
-	CCLabelTTF* m_pDrawsLabel;
+	CCLabelAtlas* m_pFPSLabel;
+	CCLabelAtlas* m_pUSPFLabel;
+	CCLabelAtlas* m_pDSPFLabel;
+	CCLabelAtlas* m_pDrawsLabel;
 
 	/** Whether or not the Director is paused */
 	bool m_bPaused;
@@ -369,7 +369,6 @@ protected:
 	/* How many frames were called since the director started */
 	unsigned int m_uTotalFrames;
 	unsigned int m_uFrames;
-	float m_fSecondsPerFrame;
 
 	/* The running scene */
 	CCScene* m_pRunningScene;

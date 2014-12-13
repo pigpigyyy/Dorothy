@@ -27,6 +27,7 @@ local oCache = require("oCache")
 
 local scene = CCScene()
 CCDirector:run(scene) --get director running first
+CCDirector.displayStats = true
 
 oRoutine(once(function()
 
