@@ -36,7 +36,7 @@ cocoa/CCZone.cpp \
 cocoa/CCArray.cpp \
 cocos2d.cpp \
 CCDirector.cpp \
-ccFPSImages \
+ccFPSImages.c \
 draw_nodes/CCDrawingPrimitives.cpp \
 draw_nodes/CCDrawNode.cpp \
 effects/CCGrabber.cpp \
