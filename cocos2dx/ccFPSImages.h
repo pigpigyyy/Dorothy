@@ -22,13 +22,12 @@
  * THE SOFTWARE.
  */
 
-extern unsigned char cc_fps_images_png[];
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-unsigned int cc_fps_images_len(void);
+extern unsigned char cc_fps_images_png[];
+extern unsigned int cc_fps_images_len(void);
 
 #ifdef __cplusplus
 }

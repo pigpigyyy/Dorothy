@@ -450,6 +450,7 @@
     <ClCompile Include="..\platform\CCKeyboard.cpp">
       <Filter>platform</Filter>
     </ClCompile>
+    <ClCompile Include="..\ccFPSImages.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\base_nodes\CCAtlasNode.h">
@@ -912,5 +913,6 @@
     <ClInclude Include="..\platform\CCKeyboard.h">
       <Filter>platform</Filter>
     </ClInclude>
+    <ClInclude Include="..\ccFPSImages.h" />
   </ItemGroup>
 </Project>

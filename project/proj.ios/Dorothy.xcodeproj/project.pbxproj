@@ -1053,7 +1053,7 @@
 				3C89A6C21A20C5A4001D5009 /* PBXTargetDependency */,
 			);
 			name = Dorothy;
-			productName = TestLua;
+			productName = Dorothy;
 			productReference = F293B3C815EB7BE500256477 /* Dorothy.app */;
 			productType = "com.apple.product-type.application";
 		};
