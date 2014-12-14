@@ -114,9 +114,7 @@ oRoutine.start = function(self)
 		local i,count = 1,#self
 		while i <= count do
 			if self[i]() then
-				if i < count then
-					self[i] = self[count]
-				end
+				self[i] = self[count]
 				table_remove(self,count)
 				i = i-1
 				count = count-1
