@@ -79,18 +79,15 @@ local function cycle(duration,work)
 	end
 end
 
+local function oRoutine_end() return true end
 local oRoutine =
 {
 	remove = function(self,routine)
-		local pos
 		for i = 1,#self do
 			if self[i] == routine then
-				pos = i
+				self[i] = oRoutine_end
 				break
 			end
-		end
-		if pos then
-			table_remove(self,pos)
 		end
 	end,
 	clear = function(self)
