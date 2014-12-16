@@ -283,6 +283,7 @@
 		3CB40CF31A20DC1800D7A3A6 /* CCThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CB40CEF1A20DC1800D7A3A6 /* CCThread.cpp */; };
 		3CB40CF61A20DC5400D7A3A6 /* CCZip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CB40CF41A20DC5400D7A3A6 /* CCZip.cpp */; };
 		3CB40CF71A20DC5400D7A3A6 /* CCZip.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CB40CF51A20DC5400D7A3A6 /* CCZip.h */; };
+		3CBD1C851A406A8F00602936 /* CCApplicationProtocol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD1C841A406A8F00602936 /* CCApplicationProtocol.cpp */; };
 		469A7DF316C24787006FFCB2 /* tinyxml2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 469A7DF116C24787006FFCB2 /* tinyxml2.cpp */; };
 		469A7DF416C24787006FFCB2 /* tinyxml2.h in Headers */ = {isa = PBXBuildFile; fileRef = 469A7DF216C24787006FFCB2 /* tinyxml2.h */; };
 		46A393F616E5D01B00210B16 /* CCUserDefault.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46A393F216E5D01B00210B16 /* CCUserDefault.cpp */; };
@@ -584,6 +585,7 @@
 		3CB40CEF1A20DC1800D7A3A6 /* CCThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCThread.cpp; sourceTree = "<group>"; };
 		3CB40CF41A20DC5400D7A3A6 /* CCZip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCZip.cpp; sourceTree = "<group>"; };
 		3CB40CF51A20DC5400D7A3A6 /* CCZip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCZip.h; sourceTree = "<group>"; };
+		3CBD1C841A406A8F00602936 /* CCApplicationProtocol.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCApplicationProtocol.cpp; sourceTree = "<group>"; };
 		469A7DF116C24787006FFCB2 /* tinyxml2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml2.cpp; sourceTree = "<group>"; };
 		469A7DF216C24787006FFCB2 /* tinyxml2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml2.h; sourceTree = "<group>"; };
 		46A393F216E5D01B00210B16 /* CCUserDefault.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCUserDefault.cpp; sourceTree = "<group>"; };
@@ -952,6 +954,7 @@
 				3CB40CEE1A20DC1800D7A3A6 /* CCKeyboard.h */,
 				3CB40CEF1A20DC1800D7A3A6 /* CCThread.cpp */,
 				1551A46C158F2ADE00E66CFE /* CCAccelerometerDelegate.h */,
+				3CBD1C841A406A8F00602936 /* CCApplicationProtocol.cpp */,
 				1551A46D158F2ADE00E66CFE /* CCApplicationProtocol.h */,
 				1551A46E158F2ADE00E66CFE /* CCCommon.h */,
 				1AA6226116CF6BDF0028C05E /* CCDevice.h */,
@@ -1489,6 +1492,7 @@
 				1551A65B158F2ADE00E66CFE /* CCNS.cpp in Sources */,
 				1551A65D158F2ADE00E66CFE /* CCObject.cpp in Sources */,
 				1551A65F158F2ADE00E66CFE /* CCSet.cpp in Sources */,
+				3CBD1C851A406A8F00602936 /* CCApplicationProtocol.cpp in Sources */,
 				1551A661158F2ADE00E66CFE /* CCString.cpp in Sources */,
 				1551A663158F2ADE00E66CFE /* CCZone.cpp in Sources */,
 				1551A665158F2ADE00E66CFE /* cocos2d.cpp in Sources */,
