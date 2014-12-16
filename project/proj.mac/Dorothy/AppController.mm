@@ -22,13 +22,14 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
 	[_view initWithFrame:
-		NSRect{NSPoint{0,0},[_window frame].size}
+		NSRect{NSPoint{0,0},[_window contentLayoutRect].size}
 		shareContext:(NSOpenGLContext *)[_view openGLContext]];
 	_app = new AppDelegate();
 	_app->run();
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
+	[[CCDirectorCaller sharedDirectorCaller] end];
 }
 
 - (BOOL) applicationShouldTerminateAfterLastWindowClosed: (NSApplication *) theApplication
@@ -38,7 +39,7 @@
 
 - (void)dealloc
 {
-	cocos2d::CCDirector::sharedDirector()->end();
+	delete _app;
 	[super dealloc];
 }
 
