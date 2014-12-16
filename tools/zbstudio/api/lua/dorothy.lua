@@ -14,7 +14,7 @@ local Dorothy =
 			type =
 			{
 				args = "(item: CCObject)",
-				description = "get tolua type of a CCObject",
+				description = "get tolua++ type of any object",
 				typeName = "string",
 				returns = "(typename: string)",
 				static = true,
@@ -23,7 +23,7 @@ local Dorothy =
 			cast =
 			{
 				args = "(object: CCObject, typename: string)",
-				description = "type cast, if target type is not a super or base type, it returns null",
+				description = "type cast, if typename is not a super or base type of object, it returns nil",
 				typeName = "CCObject",
 				returns = "(object: CCObject)",
 				static = true,
