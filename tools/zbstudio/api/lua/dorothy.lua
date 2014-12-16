@@ -1384,6 +1384,12 @@ local Dorothy =
 				static = true,
 				type = "value",
 			},
+			LowMemoryWarning =
+			{
+				description = "[Const][int]",
+				static = true,
+				type = "value",
+			},
 			registerEventHandler =
 			{
 				args = "(handler: function)",

@@ -44,4 +44,12 @@ void CCApplicationProtocol::applicationWillEnterForeground()
 	}
 }
 
+void CCApplicationProtocol::applicationDidReceiveMemoryWarning()
+{
+	if (_handler)
+	{
+		CCScriptEngine::sharedEngine()->executeApplicationEvent(_handler, CCApplicationProtocol::LowMemoryWarning);
+	}
+}
+
 NS_CC_END

@@ -23,7 +23,8 @@ public:
 	enum
 	{
 		EnterBackground,
-		EnterForeground
+		EnterForeground,
+		LowMemoryWarning,
 	};
 	CCApplicationProtocol();
 	virtual ~CCApplicationProtocol();
@@ -50,6 +51,7 @@ public:
     */
     virtual void applicationWillEnterForeground();
 
+	virtual void applicationDidReceiveMemoryWarning();
     /**
     @brief    Callback by CCDirector for limit FPS.
     @interval       The time, expressed in seconds, between current frame and next. 

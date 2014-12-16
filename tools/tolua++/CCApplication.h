@@ -30,7 +30,8 @@ class CCApplication
 	enum
 	{
 		EnterBackground,
-		EnterForeground
+		EnterForeground,
+		LowMemoryWarning
 	};
 	
 	tolua_readonly tolua_property__common ccLanguageType currentLanguage;
