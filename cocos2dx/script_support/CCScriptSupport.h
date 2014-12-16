@@ -158,13 +158,17 @@ public:
     /** execute a accelerometer event */
     virtual int executeAccelerometerEvent(CCLayer* pLayer, CCAcceleration* pAccelerationValue);
 
+	/** functions for application event */
+	virtual int executeApplicationEvent(int handler, int eventType);
+
     /** function for common event */
-    virtual int executeEvent(int nHandler, const char* pEventName, CCObject* pEventSource = NULL, const char* pEventSourceClassName = NULL);
-    /** function for assert test */
+    virtual int executeEvent(int nHandler, const char* pEventName, CCObject* pEventSource = NULL);
+
+	/** function for assert test */
     virtual bool executeAssert(bool cond, const char *msg = NULL);
 
 	virtual bool scriptHandlerEqual(int nHandlerA, int nHandlerB);
-	
+
 	virtual void removePeer(CCObject* object);
 
 	static void setEngine(CCScriptEngine* engine);
@@ -173,9 +177,6 @@ private:
 	static CCScriptEngine _none;
 	static CCScriptEngine* _engine;
 };
-
-// end of script_support group
-/// @}
 
 NS_CC_END
 

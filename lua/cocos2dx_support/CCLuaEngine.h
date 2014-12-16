@@ -93,10 +93,10 @@ public:
 	virtual int executeLayerTouchesEvent(CCLayer* pLayer, int eventType, CCSet* pTouches);
 	virtual int executeLayerTouchEvent(CCLayer* pLayer, int eventType, CCTouch* pTouch);
 	virtual int executeLayerKeypadEvent(CCLayer* pLayer, int eventType);
-
-	/** execute a accelerometer event */
 	virtual int executeAccelerometerEvent(CCLayer* pLayer, CCAcceleration* pAccelerationValue);
-	virtual int executeEvent(int nHandler, const char* pEventName, CCObject* pEventSource = NULL, const char* pEventSourceClassName = NULL);
+	virtual int executeApplicationEvent(int handler, int eventType);
+	
+	virtual int executeEvent(int nHandler, const char* pEventName, CCObject* pEventSource = NULL);
 	virtual bool executeAssert(bool cond, const char *msg = NULL);
 	virtual bool scriptHandlerEqual(int nHandlerA, int nHandlerB);
 private:

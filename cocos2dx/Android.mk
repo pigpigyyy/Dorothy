@@ -74,6 +74,7 @@ particle_nodes/CCParticleExamples.cpp \
 particle_nodes/CCParticleSystem.cpp \
 particle_nodes/CCParticleBatchNode.cpp \
 particle_nodes/CCParticleSystemQuad.cpp \
+platform/CCApplicationProtocol.cpp \
 platform/CCImageCommonWebp.cpp \
 platform/CCSAXParser.cpp \
 platform/CCThread.cpp \

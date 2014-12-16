@@ -19,17 +19,25 @@ enum TargetPlatform {};
 module CCTargetPlatform
 {
     #define kTargetWindows @ Windows
-    #define kTargetLinux @ Linux
     #define kTargetMacOS @ MacOS
     #define kTargetAndroid @ Android
     #define kTargetIphone @ Iphone
     #define kTargetIpad @ Ipad
-    #define kTargetBlackBerry @ BlackBerry
 }
 
 class CCApplication
 {
+	enum
+	{
+		EnterBackground,
+		EnterForeground
+	};
+	
 	tolua_readonly tolua_property__common ccLanguageType currentLanguage;
 	tolua_readonly tolua_property__common TargetPlatform targetPlatform;
+	
+	void registerScriptHandler @ registerEventHandler(tolua_function nHandler);
+	void unregisterScriptHandler @ unregisterEventHandler();
+	
 	static CCApplication* sharedApplication @ create();
 };

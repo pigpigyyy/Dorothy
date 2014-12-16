@@ -44,6 +44,7 @@ void AppDelegate::applicationDidEnterBackground()
 {
 	CCDirector::sharedDirector()->pause();
 	SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
+	CCApplication::applicationDidEnterBackground();
 }
 
 // this function will be called when the app is active again
@@ -51,4 +52,5 @@ void AppDelegate::applicationWillEnterForeground()
 {
 	CCDirector::sharedDirector()->resume();
 	SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
+	CCApplication::applicationWillEnterForeground();
 }

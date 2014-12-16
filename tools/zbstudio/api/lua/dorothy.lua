@@ -148,13 +148,13 @@ local Dorothy =
 	{
 		childs =
 		{
-			Enter =
+			Entering =
 			{
 				description = "[Const][int]",
 				static = true,
 				type = "value",
 			},
-			Exit =
+			Exiting =
 			{
 				description = "[Const][int]",
 				static = true,
@@ -412,7 +412,7 @@ local Dorothy =
 			registerEventHandler =
 			{
 				args = "(handler: function)",
-				description = " -- handler: function(eventType: int)\n\n -- eventTypr: [CCNode.Enter|CCNode.Exit|CCNode.Entered|CCNode.Exited|CCNode.Cleanup]",
+				description = " -- handler: function(eventType: int)\n\n -- eventType: [CCNode.Enter|CCNode.Exit|CCNode.Entered|CCNode.Exited|CCNode.Cleanup]",
 				returns = "()",
 				type = "method",
 			},
@@ -1157,7 +1157,7 @@ local Dorothy =
 			},
 			setDesignResolution =
 			{
-				args = "(width: float, height: float, resolutionPolicy: ResolutionPolicy)",
+				args = "(width: float, height: float, resolutionPolicy: int)",
 				description = " -- resolutionPolicy: CCView.ExactFit|CCView.NoBorder|CCView.ShowAll|CCView.UnKnown",
 				returns = "()",
 				static = true,
@@ -1339,12 +1339,6 @@ local Dorothy =
 				static = true,
 				type = "value",
 			},
-			Linux =
-			{
-				description = "[Const][int]",
-				static = true,
-				type = "value",
-			},
 			MacOS =
 			{
 				description = "[Const][int]",
@@ -1369,12 +1363,6 @@ local Dorothy =
 				static = true,
 				type = "value",
 			},
-			BlackBerry =
-			{
-				description = "[Const][int]",
-				static = true,
-				type = "value",
-			},
 		},
 		description = "enum CCTargetPlatform.",
 		type = "class",
@@ -1384,6 +1372,34 @@ local Dorothy =
 	{
 		childs =
 		{
+			EnterBackground =
+			{
+				description = "[Const][int]",
+				static = true,
+				type = "value",
+			},
+			EnterForeground =
+			{
+				description = "[Const][int]",
+				static = true,
+				type = "value",
+			},
+			registerEventHandler =
+			{
+				args = "(handler: function)",
+				description = " -- handler: function(eventType: int)\n\n -- eventType: CCApplication.[EnterBackground|EnterForeground]",
+				returns = "()",
+				static = true,
+				type = "method",
+			},
+			unregisterEventHandler =
+			{
+				args = "()",
+				description = "",
+				returns = "()",
+				static = true,
+				type = "method",
+			},
 			currentLanguage =
 			{
 				description = "[CCLanguageType]",

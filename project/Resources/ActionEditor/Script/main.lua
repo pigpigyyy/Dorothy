@@ -156,7 +156,7 @@ end
 
 --CCDirector.displayStats = true
 oEditor.scene:registerEventHandler(function(eventType)
-	if eventType == CCNode.Exit then
+	if eventType == CCNode.Exited then
 		require = _require
 		for k,_ in pairs(loaded) do
 			package.loaded[k] = nil

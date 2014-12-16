@@ -92,12 +92,12 @@ static int lua_loadfile(lua_State *L)
 
 	if (codeBuffer)
 	{
-		if(luaL_loadbuffer(L,(char*)codeBuffer, codeBufferSize, filename.c_str()) != 0)
+		if (luaL_loadbuffer(L,(char*)codeBuffer, codeBufferSize, filename.c_str()) != 0)
 		{
 			luaL_error(L, "error loading module %s from file %s :\n\t%s",
 				lua_tostring(L, 1), filename.c_str(), lua_tostring(L, -1));
 		}
-		delete []codeBuffer;
+		delete [] codeBuffer;
 	}
 	else
 	{
@@ -226,10 +226,8 @@ int CCLuaEngine::executeString(const char *codes)
 
 int CCLuaEngine::executeScriptFile(const char* filename)
 {
-	string code("require \"");
-	code.append(filename);
-	code.append("\"");
-	return CCLuaEngine::executeString(code.c_str());
+	lua_pushstring(L, filename);
+	return lua_dofile(L);
 }
 
 int CCLuaEngine::executeGlobalFunction(const char* functionName)
@@ -320,7 +318,7 @@ int CCLuaEngine::executeLayerTouchEvent(CCLayer* pLayer, int eventType, CCTouch 
 
 int CCLuaEngine::executeLayerTouchesEvent(CCLayer* pLayer, int eventType, CCSet *pTouches)
 {
-	CCTouchScriptHandlerEntry* pScriptHandlerEntry = pLayer->getScriptTouchHandlerEntry();
+	CCScriptHandlerEntry* pScriptHandlerEntry = pLayer->getScriptTouchHandlerEntry();
 	if (!pScriptHandlerEntry) return 0;
 	int nHandler = pScriptHandlerEntry->getHandler();
 	if (!nHandler) return 0;
@@ -359,7 +357,17 @@ int CCLuaEngine::executeAccelerometerEvent(CCLayer* pLayer, CCAcceleration* pAcc
 	return lua_execute(nHandler, 4);
 }
 
-int CCLuaEngine::executeEvent(int nHandler, const char* pEventName, CCObject* pEventSource /* = NULL*/, const char* pEventSourceClassName /* = NULL*/)
+int CCLuaEngine::executeApplicationEvent(int handler, int eventType)
+{
+	if (handler)
+	{
+		lua_pushinteger(L, eventType);
+		return lua_execute(handler, 1);
+	}
+	return 0;
+}
+
+int CCLuaEngine::executeEvent(int nHandler, const char* pEventName, CCObject* pEventSource)
 {
 	lua_pushstring(L, pEventName);
 	if (pEventSource) tolua_pushccobject(L, pEventSource);

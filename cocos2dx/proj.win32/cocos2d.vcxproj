@@ -188,6 +188,7 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
     <ClCompile Include="..\particle_nodes\CCParticleExamples.cpp" />
     <ClCompile Include="..\particle_nodes\CCParticleSystem.cpp" />
     <ClCompile Include="..\particle_nodes\CCParticleSystemQuad.cpp" />
+    <ClCompile Include="..\platform\CCApplicationProtocol.cpp" />
     <ClCompile Include="..\platform\CCEGLViewProtocol.cpp" />
     <ClCompile Include="..\platform\CCFileUtils.cpp" />
     <ClCompile Include="..\platform\CCImageCommonWebp.cpp" />

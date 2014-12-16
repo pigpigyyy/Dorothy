@@ -451,6 +451,9 @@
       <Filter>platform</Filter>
     </ClCompile>
     <ClCompile Include="..\ccFPSImages.c" />
+    <ClCompile Include="..\platform\CCApplicationProtocol.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\base_nodes\CCAtlasNode.h">
