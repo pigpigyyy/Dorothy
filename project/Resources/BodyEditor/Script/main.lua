@@ -31,14 +31,3 @@ scene:registerEventHandler(function(eventType)
 end)
 scene:addChild(layer)
 CCDirector:run(scene)
-
-local f = coroutine.wrap(function()
-	repeat
-		print(998)
-		error("Errors!!")
-		coroutine.yield()
-	until false
-end)
-
-print("PRINT:",f())
-print("PRINT:",f())

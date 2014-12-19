@@ -16,6 +16,7 @@ local cclog = require("cclog")
 local oCache = require("oCache")
 local oAI = require("oAI")
 local oAction = require("oAction")
+local CCKeypad = require("CCKeypad")
 
 local winSize = CCDirector.winSize
 local panel = oSelectionPanel(winSize,true)
@@ -54,12 +55,15 @@ endButton = oButton("GC",17,60,false,
 		cclog("Pool alloc : %.2f MB(%d KB)",size/1024/1024,size/1024)
 		size = oCache.Pool:collect()
 		cclog("Pool collect : %.2f MB(%d KB)",size/1024/1024,size/1024)
+		--[[
 		for i,item in pairs(ubox()) do
 			print(i,item)
 		end
+		--]]
 		--[[for k,v in pairs(_G) do
 			print(k,v)
-		end--]]
+		end
+		--]]
 	end)
 endButton.anchor = oVec2.zero
 opMenu:addChild(endButton)
@@ -107,5 +111,12 @@ panel:show()
 
 local scene = CCScene()
 scene:addChild(panel)
+
+panel:registerKeypadHandler(function(eventType)
+	if eventType == CCKeypad.Back then
+		CCDirector:stop() -- end is Lua keyword, so this function use name stop
+	end
+end)
+panel.keypadEnabled = true
 
 CCDirector:run(scene)

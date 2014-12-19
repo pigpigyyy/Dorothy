@@ -64,7 +64,7 @@ void CCKeypadDispatcher::removeDelegate(CCKeypadDelegate* pDelegate)
     {
         return;
     }
-    if (! m_bLocked)
+    if (!m_bLocked)
     {
         forceRemoveDelegate(pDelegate);
     }

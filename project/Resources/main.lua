@@ -1,4 +1,4 @@
---require("Test/Entry")
+require("Test/Entry")
 --[[setfenv(Dorothy())
 
 oRoutine:stop()
@@ -14,6 +14,3 @@ end
 CCDirector:run(CCScene())
 --]]
 
-setfenv(Dorothy())
-
-CCDirector:run(CCScene())

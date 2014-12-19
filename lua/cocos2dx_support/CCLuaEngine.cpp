@@ -424,11 +424,6 @@ int CCLuaEngine::lua_execute(int numArgs)
 {
 	int ret = 0;
 	int top = lua_gettop(L) - numArgs - 1;
-	if (top > 0)
-	{
-		int i = 0;
-		i++;
-	}
 	if (CCLuaEngine::call(numArgs, 1))
 	{
 		// get return value

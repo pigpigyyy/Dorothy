@@ -1,6 +1,7 @@
 local dorothy
 local win = ide.osname == "Windows"
 local mac = ide.osname == "Macintosh"
+local sep = win and ';' or ':'
 
 return {
 	name = "Dorothy",
@@ -10,7 +11,6 @@ return {
 		local mainPath = ide.editorFilename:gsub("[^/\\]+$","")
 		dorothy = dorothy or ide.config.path.dorothy -- check if the path is configured
 		if not dorothy then
-			local sep = win and ';' or ':'
 			local default =
 				win and ([[C:\Program Files\Dorothy]]..sep..[[D:\Program Files\Dorothy]]..sep..
 						[[C:\Program Files (x86)\Dorothy]]..sep..[[D:\Program Files (x86)\Dorothy]]..sep..mainPath..[[\..\..\Debug.win32]]..sep)
