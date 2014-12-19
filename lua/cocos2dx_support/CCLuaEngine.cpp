@@ -27,11 +27,6 @@
 #include "cocoa/CCArray.h"
 #include "CCScheduler.h"
 #include "LuaCocos2d.h"
-#include "Cocos2dxLuaLoader.h"
-
-#if(CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
-#include "platform/ios/CCLuaObjcBridge.h"
-#endif
 
 NS_CC_BEGIN
 
@@ -59,8 +54,64 @@ static int lua_print(lua_State * luastate)
 		}
 		if (i != nargs) t += "\t";
 	}
-	CCLOG("%s", t.c_str());
+	CCLog("%s", t.c_str());
 	return 0;
+}
+
+static int traceback(lua_State* L)
+{
+	CCLOG("[LUA ERROR] %s", lua_tostring(L, -1));
+	lua_getglobal(L, "debug");
+	lua_getfield(L, -1, "traceback");
+	lua_call(L, 0, 1);
+	CCLOG(lua_tostring(L, -1));
+	lua_pop(L, 2);
+	//luaL_traceback(L, L, lua_tostring(L, 1), 1);
+	//lua_pop(L, 1);
+	return 1;
+}
+
+static int lua_loadfile(lua_State *L)
+{
+	std::string filename(luaL_checkstring(L, 1));
+	size_t pos = filename.rfind(".lua");
+	if(pos != std::string::npos)
+	{
+		filename = filename.substr(0, pos);
+	}
+	pos = filename.find_first_of(".");
+	while (pos != std::string::npos)
+	{
+		filename.replace(pos, 1, "/");
+		pos = filename.find_first_of(".");
+	}
+	filename.append(".lua");
+
+	unsigned long codeBufferSize = 0;
+	unsigned char* codeBuffer = CCFileUtils::sharedFileUtils()->getFileData(filename.c_str(), "rb", &codeBufferSize);
+
+	if (codeBuffer)
+	{
+		if (luaL_loadbuffer(L,(char*)codeBuffer, codeBufferSize, filename.c_str()) != 0)
+		{
+			luaL_error(L, "error loading module %s from file %s :\n\t%s",
+				lua_tostring(L, 1), filename.c_str(), lua_tostring(L, -1));
+		}
+		delete [] codeBuffer;
+	}
+	else
+	{
+		luaL_error(L, "can not get file data of %s", filename.c_str());
+	}
+
+	return 1;
+}
+
+static int lua_dofile(lua_State *L)
+{
+	lua_loadfile(L);
+	CCLuaEngine::sharedEngine()->call(0, LUA_MULTRET);
+	return 1;
 }
 
 static int lua_ubox(lua_State* luastate)
@@ -72,7 +123,7 @@ static int lua_ubox(lua_State* luastate)
 CCLuaEngine::CCLuaEngine() :
 m_callFromLua(0)
 {
-	L = lua_open();
+	L = luaL_newstate();
 	luaL_openlibs(L);
 	toluafix_open(L);
 	tolua_Cocos2d_open(L);
@@ -82,14 +133,15 @@ m_callFromLua(0)
 	{
 		{ "print", lua_print },
 		{ "ubox", lua_ubox },
+		{ "loadfile", lua_loadfile },
+		{ "dofile", lua_dofile },
+		{ "ubox", lua_ubox },
 		{ NULL, NULL }
 	};
 	luaL_register(L, "_G", global_functions);
-#if(CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
-	CCLuaObjcBridge::luaopen_luaoc(m_state);
-#endif
+
 	// add cocos2dx loader
-	addLuaLoader(cocos2dx_lua_loader);
+	addLuaLoader(lua_loadfile);
 
 	tolua_beginmodule(L, 0);//stack: package.loaded
 		tolua_beginmodule(L, "CCDictionary");//stack: package.loaded CCDictionary
@@ -133,7 +185,7 @@ void CCLuaEngine::addLuaLoader(lua_CFunction func)
 	lua_getfield(L, -1, "loaders");/* L: package, loaders */
 	// insert loader into index 2
 	lua_pushcfunction(L, func);/* L: package, loaders, func */
-	for (int i = lua_objlen(L, -2) + 1; i > 2; --i)
+	for (int i = (int)lua_objlen(L, -2) + 1; i > 2; --i)
 	{
 		lua_rawgeti(L, -2, i - 1);/* L: package, loaders, func, function */
 		// we call lua_rawgeti, so the loader table now is at -3
@@ -174,10 +226,8 @@ int CCLuaEngine::executeString(const char *codes)
 
 int CCLuaEngine::executeScriptFile(const char* filename)
 {
-	string code("require \"");
-	code.append(filename);
-	code.append("\"");
-	return CCLuaEngine::executeString(code.c_str());
+	lua_pushstring(L, filename);
+	return lua_dofile(L);
 }
 
 int CCLuaEngine::executeGlobalFunction(const char* functionName)
@@ -268,12 +318,11 @@ int CCLuaEngine::executeLayerTouchEvent(CCLayer* pLayer, int eventType, CCTouch 
 
 int CCLuaEngine::executeLayerTouchesEvent(CCLayer* pLayer, int eventType, CCSet *pTouches)
 {
-	CCTouchScriptHandlerEntry* pScriptHandlerEntry = pLayer->getScriptTouchHandlerEntry();
+	CCScriptHandlerEntry* pScriptHandlerEntry = pLayer->getScriptTouchHandlerEntry();
 	if (!pScriptHandlerEntry) return 0;
 	int nHandler = pScriptHandlerEntry->getHandler();
 	if (!nHandler) return 0;
 	lua_pushinteger(L, eventType);
-	CCDirector* pDirector = CCDirector::sharedDirector();
 	lua_createtable(L, pTouches->count(), 0);
 	int i = 1;
 	for (CCSetIterator it = pTouches->begin(); it != pTouches->end(); ++it)
@@ -308,7 +357,17 @@ int CCLuaEngine::executeAccelerometerEvent(CCLayer* pLayer, CCAcceleration* pAcc
 	return lua_execute(nHandler, 4);
 }
 
-int CCLuaEngine::executeEvent(int nHandler, const char* pEventName, CCObject* pEventSource /* = NULL*/, const char* pEventSourceClassName /* = NULL*/)
+int CCLuaEngine::executeApplicationEvent(int handler, int eventType)
+{
+	if (handler)
+	{
+		lua_pushinteger(L, eventType);
+		return lua_execute(handler, 1);
+	}
+	return 0;
+}
+
+int CCLuaEngine::executeEvent(int nHandler, const char* pEventName, CCObject* pEventSource)
 {
 	lua_pushstring(L, pEventName);
 	if (pEventSource) tolua_pushccobject(L, pEventSource);
@@ -332,23 +391,15 @@ bool CCLuaEngine::scriptHandlerEqual(int nHandlerA, int nHandlerB)
 	return result != 0;
 }
 
-static int traceback(lua_State* L)
-{
-	luaL_traceback(L, L, lua_tostring(L, 1), 1);
-	CCLOG("[LUA ERROR] %s", lua_tostring(L, -1));
-	lua_pop(L, 1);
-	return 1;
-}
-
-int CCLuaEngine::lua_invoke(int numArgs)
+int CCLuaEngine::call(int paramCount, int returnCount)
 {
 #ifndef TOLUA_RELEASE
-	int functionIndex = -(numArgs + 1);
+	int functionIndex = -(paramCount + 1);
 	int traceIndex = functionIndex - 1;
 	if (!lua_isfunction(L, functionIndex))
 	{
 		CCLOG("value at stack [%d] is not function", functionIndex);
-		lua_pop(L, numArgs + 1); // remove function and arguments
+		lua_pop(L, paramCount + 1); // remove function and arguments
 		return 0;
 	}
 
@@ -356,16 +407,15 @@ int CCLuaEngine::lua_invoke(int numArgs)
 	lua_insert(L, traceIndex);// traceback func args...
 
 	++m_callFromLua;
-	int error = lua_pcall(L, numArgs, 1, traceIndex);// traceback error ret
+	int error = lua_pcall(L, paramCount, returnCount, traceIndex);// traceback error ret
 	--m_callFromLua;
 
 	if (error)// traceback error
 	{
-		lua_settop(L, 0);// stack clear
 		return 0;
 	}
 #else
-	lua_call(L, numArgs, 1);
+	lua_call(L, paramCount, returnCount);
 #endif
 	return 1;
 }
@@ -379,18 +429,19 @@ int CCLuaEngine::lua_execute(int numArgs)
 		int i = 0;
 		i++;
 	}
-	if (lua_invoke(numArgs))
+	if (CCLuaEngine::call(numArgs, 1))
 	{
 		// get return value
 		if (lua_isnumber(L, -1))// traceback ret
 		{
-			ret = lua_tointeger(L, -1);
+			ret = (int)(lua_tointeger(L, -1));
 		}
 		else if (lua_isboolean(L, -1))
 		{
 			ret = lua_toboolean(L, -1);
 		}
 	}
+	else ret = 1;
 	lua_settop(L, top);// stack clear
 	return ret;
 }
@@ -402,14 +453,14 @@ int CCLuaEngine::lua_execute(int nHandler, int numArgs)
 	{
 		CCLOG("[LUA ERROR] function refid '%d' does not reference a Lua function", nHandler);
 		lua_pop(L, 1 + numArgs);
-		return 0;
+		return 1;
 	}
 	if (numArgs > 0) lua_insert(L, -(numArgs + 1));// func args...
 
 	return lua_execute(numArgs);
 }
 
-int CCLuaEngine::lua_invoke(int nHandler, int numArgs)
+int CCLuaEngine::lua_invoke(int nHandler, int numArgs, int numRets)
 {
 	toluafix_get_function_by_refid(L, nHandler);// args... func
 	if (!lua_isfunction(L, -1))
@@ -420,13 +471,13 @@ int CCLuaEngine::lua_invoke(int nHandler, int numArgs)
 	}
 	if (numArgs > 0) lua_insert(L, -(numArgs + 1));// func args...
 
-	return lua_invoke(numArgs);
+	return CCLuaEngine::call(numArgs, numRets);
 }
 
 int CCLuaEngine::executeActionCreate(int nHandler)
 {
 	int handler = 0;
-	lua_invoke(nHandler, 0);
+	lua_invoke(nHandler, 0, 1);
 	int top = lua_gettop(L);
 	if (lua_isfunction(L, top))
 	{

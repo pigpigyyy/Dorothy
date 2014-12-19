@@ -60,7 +60,7 @@ CCTexture2D* oContent::loadTexture( const char* filename )
 				_password.empty() ? nullptr : _password.c_str(),
 				size);
 			CCImage* image = new CCImage();
-			image->initWithImageData(buffer, size);
+			image->initWithImageData(buffer, (unsigned int)size);
 			texture = CCTextureCache::sharedTextureCache()->addUIImage(image, filename);
 			delete image;
 			delete buffer;
@@ -166,9 +166,15 @@ void oContent::saveToFile(const string& filename, const string& content)
 
 vector<string> oContent::getDirEntries(const char* path, bool isFolder)
 {
+    std::string searchName = path;
+	char last = searchName[searchName.length()-1];
+	if (last == '/' || last == '\\')
+	{
+		searchName.erase(--searchName.end());
+	}
 	vector<string> files;
 	tinydir_dir dir;
-	string fullPath = CCFileUtils::sharedFileUtils()->fullPathForFilename(path);
+	string fullPath = CCFileUtils::sharedFileUtils()->fullPathForFilename(searchName.c_str());
 	int ret = tinydir_open(&dir, fullPath.c_str());
 	if (ret == 0)
 	{
@@ -186,7 +192,7 @@ vector<string> oContent::getDirEntries(const char* path, bool isFolder)
 	}
 	else
 	{
-		CCLOG("get entry error, code %d", errno);
+		CCLOG("oContent get entry error, code %d", errno);
 	}
 	return std::move(files);
 }

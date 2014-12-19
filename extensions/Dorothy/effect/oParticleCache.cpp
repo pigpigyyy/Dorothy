@@ -24,7 +24,7 @@ oParticleDef* oParticleCache::load( const char* filename )
 	{
 		unsigned long size;
 		auto data = oSharedContent.loadFile(filename, size);
-		auto dictionary = CCDictionary::createWithContents(data, size);
+		auto dictionary = CCDictionary::createWithContents(data, (unsigned int)size);
 
 		oParticleDef* type = new oParticleDef();
 		type->autorelease();

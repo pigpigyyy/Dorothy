@@ -82,7 +82,8 @@ public:
 	virtual int executeFunction(int nHandler, int paramCount, CCObject* params[]);
 	virtual int executeFunction(int nHandler, int paramCount, void* params[], const char* paramNames[]);
 	virtual int executeFunction(int nHandler, int paramCount = 0);
-	
+	int call(int paramCount, int returnCount);
+
 	virtual int executeActionCreate(int nHandler);
 	virtual int executeActionUpdate(int nHandler, void* param, const char* paramName, float deltaTime);
 	virtual int executeNodeEvent(CCNode* pNode, int nAction);
@@ -92,16 +93,15 @@ public:
 	virtual int executeLayerTouchesEvent(CCLayer* pLayer, int eventType, CCSet* pTouches);
 	virtual int executeLayerTouchEvent(CCLayer* pLayer, int eventType, CCTouch* pTouch);
 	virtual int executeLayerKeypadEvent(CCLayer* pLayer, int eventType);
-
-	/** execute a accelerometer event */
 	virtual int executeAccelerometerEvent(CCLayer* pLayer, CCAcceleration* pAccelerationValue);
-	virtual int executeEvent(int nHandler, const char* pEventName, CCObject* pEventSource = NULL, const char* pEventSourceClassName = NULL);
+	virtual int executeApplicationEvent(int handler, int eventType);
+	
+	virtual int executeEvent(int nHandler, const char* pEventName, CCObject* pEventSource = NULL);
 	virtual bool executeAssert(bool cond, const char *msg = NULL);
 	virtual bool scriptHandlerEqual(int nHandlerA, int nHandlerB);
 private:
 	CCLuaEngine();
-	int lua_invoke(int numArgs);
-	int lua_invoke(int nHandler, int numArgs);
+	int lua_invoke(int nHandler, int numArgs, int numRets);
 	int lua_execute(int numArgs);
 	int lua_execute(int nHandler, int numArgs);
 	lua_State* L;

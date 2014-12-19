@@ -48,8 +48,8 @@ static bool _initWithImage(CGImageRef cgImage, tImageInfo *pImageinfo)
     
     // get image info
     
-    pImageinfo->width = CGImageGetWidth(cgImage);
-    pImageinfo->height = CGImageGetHeight(cgImage);
+    pImageinfo->width = (unsigned int)CGImageGetWidth(cgImage);
+    pImageinfo->height = (unsigned int)CGImageGetHeight(cgImage);
     
     CGImageAlphaInfo info = CGImageGetAlphaInfo(cgImage);
     pImageinfo->hasAlpha = (info == kCGImageAlphaPremultipliedLast) 
@@ -248,7 +248,7 @@ static bool _initWithString(const char * pText, cocos2d::CCImage::ETextAlign eAl
         
         // draw text
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();    
-        CGContextRef context = CGBitmapContextCreate(data, dim.width, dim.height, 8, dim.width * 4, colorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+        CGContextRef context = CGBitmapContextCreate(data, dim.width, dim.height, 8, (int)dim.width * 4, colorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
         CGColorSpaceRelease(colorSpace);
         
         if (! context)
@@ -279,8 +279,8 @@ static bool _initWithString(const char * pText, cocos2d::CCImage::ETextAlign eAl
             [FontLabelStringDrawingHelper drawInRect:str rect:CGRectMake(0, startH, dim.width, dim.height) withZFont:font lineBreakMode:(UILineBreakMode)UILineBreakModeWordWrap alignment:align];
         }
          */
-        [str drawInRect:CGRectMake(0, startH, dim.width, dim.height) withFont:font lineBreakMode:(UILineBreakMode)UILineBreakModeWordWrap alignment:align];
-        
+        [str drawInRect:CGRectMake(0, startH, dim.width, dim.height) withFont:font lineBreakMode:NSLineBreakByWordWrapping alignment:(NSTextAlignment)align];
+
         UIGraphicsPopContext();
         
         CGContextRelease(context);
@@ -299,6 +299,8 @@ static bool _initWithString(const char * pText, cocos2d::CCImage::ETextAlign eAl
 }
 
 NS_CC_BEGIN
+
+bool CCImage::isPngAlphaPremultiplied = true;
 
 CCImage::CCImage()
 : m_nWidth(0)
@@ -327,7 +329,7 @@ bool CCImage::initWithImageFile(const char * strPath, EImageFormat eImgFmt/* = e
 				
     if (pBuffer != NULL && nSize > 0)
     {
-        bRet = initWithImageData(pBuffer, nSize, eImgFmt);
+        bRet = initWithImageData(pBuffer, (int)nSize, eImgFmt);
     }
     CC_SAFE_DELETE_ARRAY(pBuffer);
     return bRet;
@@ -343,7 +345,7 @@ bool CCImage::initWithImageFileThreadSafe(const char *fullpath, EImageFormat ima
     unsigned char* pBuffer = CCFileUtils::sharedFileUtils()->getFileData(fullpath, "rb", &nSize);
     if (pBuffer != NULL && nSize > 0)
     {
-        bRet = initWithImageData(pBuffer, nSize, imageType);
+        bRet = initWithImageData(pBuffer, (int)nSize, imageType);
     }
     CC_SAFE_DELETE_ARRAY(pBuffer);
     return bRet;
@@ -544,6 +546,36 @@ bool CCImage::saveToFile(const char *pszFilePath, bool bIsToRGB)
     }
     
     return true;
+}
+
+CCImage::EImageFormat CCImage::computeImageFormatType(const std::string& filename)
+{
+	CCImage::EImageFormat ret = CCImage::kFmtUnKnown;
+
+	if ((std::string::npos != filename.find(".jpg", filename.size() - 4, 4))
+		|| (std::string::npos != filename.find(".jpeg", filename.size() - 5, 5))
+		|| (std::string::npos != filename.find(".JPG", filename.size() - 4, 4))
+		|| (std::string::npos != filename.find(".JPEG", filename.size() - 5, 5)))
+	{
+		ret = CCImage::kFmtJpg;
+	}
+	else if ((std::string::npos != filename.find(".png", filename.size() - 4, 4))
+		|| (std::string::npos != filename.find(".PNG", filename.size() - 4, 4)))
+	{
+		ret = CCImage::kFmtPng;
+	}
+	else if ((std::string::npos != filename.find(".tiff", filename.size() - 5, 5))
+		|| (std::string::npos != filename.find(".TIFF", filename.size() - 5, 5)))
+	{
+		ret = CCImage::kFmtTiff;
+	}
+	else if ((std::string::npos != filename.find(".webp", filename.size() - 5, 5))
+		|| (std::string::npos != filename.find(".WEBP", filename.size() - 5, 5)))
+	{
+		ret = CCImage::kFmtWebp;
+	}
+
+	return ret;
 }
 
 NS_CC_END

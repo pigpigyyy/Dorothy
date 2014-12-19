@@ -28,7 +28,7 @@ _isDestroyed(false)
 	{
 		if (fixtureDef->isSensor)
 		{
-			oBody::attachSensor((int)fixtureDef->userData, fixtureDef);
+			oBody::attachSensor((int)(long)fixtureDef->userData, fixtureDef);
 		}
 		else
 		{

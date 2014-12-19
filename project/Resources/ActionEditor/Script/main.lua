@@ -114,7 +114,8 @@ local time = 0
 oEditor.scene:schedule(
 	function(self,deltaTime)
 		time = time+deltaTime
-		if not coroutine.resume(thread) then
+		local result = coroutine.resume(thread)
+		if not result then
 			self:unschedule()
 			oEvent:send("EditorLoaded")
 			if time < 1 then
@@ -155,15 +156,19 @@ end
 
 --CCDirector.displayStats = true
 oEditor.scene:registerEventHandler(function(eventType)
-	if eventType == CCNode.Exit then
+	if eventType == CCNode.Exited then
 		require = _require
 		for k,_ in pairs(loaded) do
 			package.loaded[k] = nil
 		end
-		oCache:clear()
+		for k,_ in pairs(oEditor.settingPanel.items) do
+			oEditor.settingPanel.items[k] = nil
+		end
 		for k,_ in pairs(oEditor) do
 			oEditor[k] = nil
 		end
+		oCache:clear()
 	end
 end)
+
 CCDirector:run(oEditor.scene)

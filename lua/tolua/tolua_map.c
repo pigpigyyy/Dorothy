@@ -453,5 +453,8 @@ TOLUA_API void tolua_array(lua_State* L, const char* name, lua_CFunction get, lu
 
 TOLUA_API void tolua_dobuffer(lua_State* L, char* B, unsigned int size, const char* name)
 {
-	if (!luaL_loadbuffer(L, B, size, name)) lua_pcall(L, 0, 0, 0);
+	if (!luaL_loadbuffer(L, B, size, name))
+	{
+		lua_pcall(L, 0, 0, 0);
+	}
 }

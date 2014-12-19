@@ -63,7 +63,7 @@ void oLine::draw()
 
 		ccGLEnableVertexAttribs(kCCVertexAttribFlag_Position);
 		glVertexAttribPointer(kCCVertexAttrib_Position, 2, GL_FLOAT, GL_FALSE, 0, _buffer);
-		glDrawArrays(GL_LINE_STRIP, 0, _count);
+		glDrawArrays(GL_LINE_STRIP, 0, (GLsizei)_count);
 
 		CC_INCREMENT_GL_DRAWS(1);
 	}

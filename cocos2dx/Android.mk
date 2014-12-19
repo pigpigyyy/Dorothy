@@ -36,6 +36,7 @@ cocoa/CCZone.cpp \
 cocoa/CCArray.cpp \
 cocos2d.cpp \
 CCDirector.cpp \
+ccFPSImages.c \
 draw_nodes/CCDrawingPrimitives.cpp \
 draw_nodes/CCDrawNode.cpp \
 effects/CCGrabber.cpp \
@@ -73,12 +74,14 @@ particle_nodes/CCParticleExamples.cpp \
 particle_nodes/CCParticleSystem.cpp \
 particle_nodes/CCParticleBatchNode.cpp \
 particle_nodes/CCParticleSystemQuad.cpp \
+platform/CCApplicationProtocol.cpp \
 platform/CCImageCommonWebp.cpp \
 platform/CCSAXParser.cpp \
 platform/CCThread.cpp \
 platform/CCFileUtils.cpp \
 platform/platform.cpp \
 platform/CCEGLViewProtocol.cpp \
+platform/CCKeyboard.cpp \
 platform/android/CCDevice.cpp \
 platform/android/CCEGLView.cpp \
 platform/android/CCAccelerometer.cpp \

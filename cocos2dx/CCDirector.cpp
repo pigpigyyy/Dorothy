@@ -40,6 +40,7 @@ THE SOFTWARE.
 #include "cocoa/CCAutoreleasePool.h"
 #include "platform/platform.h"
 #include "platform/CCFileUtils.h"
+#include "platform/CCImage.h"
 #include "CCApplication.h"
 #include "label_nodes/CCLabelBMFont.h"
 #include "label_nodes/CCLabelAtlas.h"
@@ -122,15 +123,19 @@ bool CCDirector::init()
 
 	// FPS
 	m_fAccumDt = 0.0f;
+	m_fAccumUpdateDt = 0.0f;
+	m_fAccumDrawDt = 0.0f;
 	m_fFrameRate = 0.0f;
 	m_pFPSLabel = NULL;
-	m_pSPFLabel = NULL;
+	m_pUSPFLabel = NULL;
+	m_pDSPFLabel = NULL;
 	m_pDrawsLabel = NULL;
 	m_bDisplayStats = false;
 	m_uTotalFrames = m_uFrames = 0;
 	m_pszFPS = new char[10];
 	
 	m_fDeltaTime = 0.0f;
+	m_fRealDeltaTime = 0.0f;
 	m_fUpdateInterval = 0.0f;
 	m_fDrawInterval = 0.0f;
 	CCTime::gettimeofdayCocos2d(&s_obTickStart, NULL);
@@ -173,7 +178,8 @@ CCDirector::~CCDirector()
 	CCLOG("cocos2d: deallocing CCDirector %p", this);
 
 	CC_SAFE_RELEASE(m_pFPSLabel);
-	CC_SAFE_RELEASE(m_pSPFLabel);
+	CC_SAFE_RELEASE(m_pUSPFLabel);
+	CC_SAFE_RELEASE(m_pDSPFLabel);
 	CC_SAFE_RELEASE(m_pDrawsLabel);
 
 	CC_SAFE_RELEASE(m_pRunningScene);
@@ -199,6 +205,28 @@ CCDirector::~CCDirector()
 	s_SharedDirector = NULL;
 }
 
+void CCDirector::setDisplayStats(bool bDisplayStats)
+{
+	if (m_bDisplayStats == bDisplayStats) return;
+	m_bDisplayStats = bDisplayStats;
+	if (bDisplayStats)
+	{
+		CCImage* image = new CCImage();
+		image->initWithImageData(cc_fps_images_png, cc_fps_images_len());
+		CCTextureCache::sharedTextureCache()->addUIImage(image, "cc_fps_images");
+    	CC_SAFE_DELETE(image);
+		CCDirector::createStatsLabel();
+	}
+	else
+	{
+		CC_SAFE_RELEASE_NULL(m_pFPSLabel);
+		CC_SAFE_RELEASE_NULL(m_pUSPFLabel);
+		CC_SAFE_RELEASE_NULL(m_pDSPFLabel);
+		CC_SAFE_RELEASE_NULL(m_pDrawsLabel);
+		CCTextureCache::sharedTextureCache()->removeTextureForKey("cc_fps_images");
+	}
+}
+
 void CCDirector::setGLDefaultValues()
 {
 	// This method SHOULD be called only after openGLView_ was initialized
@@ -216,18 +244,6 @@ void CCDirector::setGLDefaultValues()
 // Draw the Scene
 void CCDirector::drawScene()
 {
-	CCTime::gettimeofdayCocos2d(&s_obTickStart, NULL);
-
-	if (m_bPaused) return;
-
-	// calculate "global" dt
-	calculateDeltaTime();
-
-	//tick before glClear: issue #533
-	m_pScheduler->update(m_fDeltaTime);
-
-	m_fUpdateInterval = CCDirector::getInterval(s_obTickStart);
-
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClearDepth(0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -268,20 +284,7 @@ void CCDirector::drawScene()
 		m_pobOpenGLView->swapBuffers();
 	}
 
-	m_fDrawInterval = CCDirector::getInterval(s_obTickStart);
-
-	if (m_nHandler)
-	{
-		if (CCScriptEngine::sharedEngine()->executeFunction(m_nHandler, 0) != 0)
-		{
-			CCDirector::unscheduleUpdateLua();
-		}
-	}
-
-	if (m_bDisplayStats)
-	{
-		calculateMPF();
-	}
+	g_uNumberOfDraws = 0;
 }
 
 void CCDirector::calculateDeltaTime()
@@ -291,28 +294,23 @@ void CCDirector::calculateDeltaTime()
 	if (CCTime::gettimeofdayCocos2d(&now, NULL) != 0)
 	{
 		CCLOG("error in gettimeofday");
-		m_fDeltaTime = 0;
+		m_fDeltaTime = m_fRealDeltaTime = 0;
 		return;
 	}
 
 	// new delta time. Re-fixed issue #1277
 	if (m_bNextDeltaTimeZero)
 	{
-		m_fDeltaTime = 0;
+		m_fDeltaTime = m_fRealDeltaTime = 0;
 		m_bNextDeltaTimeZero = false;
 	}
 	else
 	{
-		m_fDeltaTime = (now.tv_sec - s_obLastUpdate.tv_sec) + (now.tv_usec - s_obLastUpdate.tv_usec) / 1000000.0f;
-		m_fDeltaTime = MAX(0, m_fDeltaTime);
+		m_fRealDeltaTime = (now.tv_sec - s_obLastUpdate.tv_sec)
+		 + (now.tv_usec - s_obLastUpdate.tv_usec) / 1000000.0f;
+		m_fRealDeltaTime = MAX(0, m_fRealDeltaTime);
+		m_fDeltaTime = MIN(1.0f/30.0f, m_fRealDeltaTime);
 	}
-#if COCOS2D_DEBUG > 0
-	// If we are debugging our code, prevent big delta time
-	if (m_fDeltaTime > 0.2f)
-	{
-		m_fDeltaTime = 1 / 60.0f;
-	}
-#endif
 	s_obLastUpdate = now;
 }
 
@@ -333,13 +331,10 @@ void CCDirector::setOpenGLView(CCEGLView *pobOpenGLView)
 
 		// set size
 		m_obWinSizeInPoints = m_pobOpenGLView->getDesignResolutionSize();
+		
+		if (m_bDisplayStats) createStatsLabel();
 
-		createStatsLabel();
-
-		if (m_pobOpenGLView)
-		{
-			setGLDefaultValues();
-		}
+		if (m_pobOpenGLView) setGLDefaultValues();
 
 		CHECK_GL_ERROR_DEBUG();
 
@@ -464,7 +459,7 @@ void CCDirector::setDepthTest(bool bOn)
 		glClearDepth(1.0f);
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
-		//        glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+		//glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	}
 	else
 	{
@@ -473,8 +468,7 @@ void CCDirector::setDepthTest(bool bOn)
 	CHECK_GL_ERROR_DEBUG();
 }
 
-static void
-GLToClipTransform(kmMat4 *transformOut)
+static void GLToClipTransform(kmMat4 *transformOut)
 {
 	kmMat4 projection;
 	kmGLGetMatrix(KM_GL_PROJECTION, &projection);
@@ -554,7 +548,6 @@ CCPoint CCDirector::getVisibleOrigin()
 }
 
 // scene management
-
 void CCDirector::runWithScene(CCScene *pScene)
 {
 	CCAssert(pScene != NULL, "This command can only be used to start the CCDirector. There is already a scene present.");
@@ -666,9 +659,7 @@ void CCDirector::purgeDirector()
 
 	stopAnimation();
 
-	CC_SAFE_RELEASE_NULL(m_pFPSLabel);
-	CC_SAFE_RELEASE_NULL(m_pSPFLabel);
-	CC_SAFE_RELEASE_NULL(m_pDrawsLabel);
+	CCDirector::setDisplayStats(false);
 
 	// purge bitmap cache
 	CCLabelBMFont::purgeCachedData();
@@ -757,7 +748,7 @@ void CCDirector::resume()
 	}
 
 	m_bPaused = false;
-	m_fDeltaTime = 0;
+	m_fDeltaTime = m_fRealDeltaTime = 0;
 }
 
 // display the FPS using a LabelAtlas
@@ -765,61 +756,59 @@ void CCDirector::resume()
 void CCDirector::showStats()
 {
 	m_uFrames++;
-	m_fAccumDt += m_fDeltaTime;
+	m_fAccumDt += m_fRealDeltaTime;
+	m_fAccumUpdateDt += m_fUpdateInterval;
+	m_fAccumDrawDt += m_fDrawInterval;
 
-	if (m_bDisplayStats)
+	if (m_fAccumDt > CC_DIRECTOR_STATS_INTERVAL)
 	{
-		if (m_pFPSLabel && m_pSPFLabel && m_pDrawsLabel)
-		{
-			if (m_fAccumDt > CC_DIRECTOR_STATS_INTERVAL)
-			{
-				sprintf(m_pszFPS, "%.3f", m_fSecondsPerFrame);
-				m_pSPFLabel->setText(m_pszFPS);
+		sprintf(m_pszFPS, "%.3f", m_fAccumUpdateDt/m_uFrames);
+		m_pUSPFLabel->setText(m_pszFPS);
 
-				m_fFrameRate = m_uFrames / m_fAccumDt;
-				m_uFrames = 0;
-				m_fAccumDt = 0;
+		sprintf(m_pszFPS, "%.3f", m_fAccumDrawDt/m_uFrames);
+		m_pDSPFLabel->setText(m_pszFPS);
 
-				sprintf(m_pszFPS, "%.1f", m_fFrameRate);
-				m_pFPSLabel->setText(m_pszFPS);
+		sprintf(m_pszFPS, "%.f", m_uFrames/m_fAccumDt);
+		m_pFPSLabel->setText(m_pszFPS);
 
-				sprintf(m_pszFPS, "%4lu", (unsigned long)g_uNumberOfDraws);
-				m_pDrawsLabel->setText(m_pszFPS);
-			}
+		sprintf(m_pszFPS, "%4lu", (unsigned long)g_uNumberOfDraws);
+		m_pDrawsLabel->setText(m_pszFPS);
 
-			m_pDrawsLabel->visit();
-			m_pFPSLabel->visit();
-			m_pSPFLabel->visit();
-		}
+		CCSize contentSize = m_pDrawsLabel->getContentSize();
+		m_pDrawsLabel->setPosition(
+			ccpAdd(ccp(contentSize.width * 0.5f, contentSize.height * 3.5f),
+					CC_DIRECTOR_STATS_POSITION));
+		contentSize = m_pUSPFLabel->getContentSize();
+		m_pUSPFLabel->setPosition(
+			ccpAdd(ccp(contentSize.width * 0.5f, contentSize.height * 2.5f),
+					CC_DIRECTOR_STATS_POSITION));
+		contentSize = m_pDSPFLabel->getContentSize();
+		m_pDSPFLabel->setPosition(
+			ccpAdd(ccp(contentSize.width * 0.5f, contentSize.height * 1.5f),
+					CC_DIRECTOR_STATS_POSITION));
+		contentSize = m_pFPSLabel->getContentSize();
+		m_pFPSLabel->setPosition(
+			ccpAdd(ccp(contentSize.width * 0.5f, contentSize.height * 0.5f),
+					CC_DIRECTOR_STATS_POSITION));
+		
+		m_uFrames = 0;
+		m_fAccumDt = 0;
+		m_fAccumUpdateDt = 0;
+		m_fAccumDrawDt = 0;
 	}
 
-	g_uNumberOfDraws = 0;
-}
-
-void CCDirector::calculateMPF()
-{
-	cc_timeval now;
-	CCTime::gettimeofdayCocos2d(&now, NULL);
-	m_fSecondsPerFrame = (now.tv_sec - s_obLastUpdate.tv_sec) + (now.tv_usec - s_obLastUpdate.tv_usec) / 1000000.0f;
-}
-
-// returns the FPS image data pointer and len
-void CCDirector::getFPSImageData(unsigned char** datapointer, unsigned int* length)
-{
-	// XXX fixed me if it should be used 
-	//    *datapointer = cc_fps_images_png;
-	//	*length = cc_fps_images_len();
+	m_pDrawsLabel->visit();
+	m_pUSPFLabel->visit();
+	m_pDSPFLabel->visit();
+	m_pFPSLabel->visit();
 }
 
 void CCDirector::createStatsLabel()
 {
-	if (m_pFPSLabel && m_pSPFLabel)
-	{
-		CC_SAFE_RELEASE_NULL(m_pFPSLabel);
-		CC_SAFE_RELEASE_NULL(m_pSPFLabel);
-		CC_SAFE_RELEASE_NULL(m_pDrawsLabel);
-		CCFileUtils::sharedFileUtils()->purgeCachedEntries();
-	}
+	CC_SAFE_RELEASE_NULL(m_pFPSLabel);
+	CC_SAFE_RELEASE_NULL(m_pDSPFLabel);
+	CC_SAFE_RELEASE_NULL(m_pUSPFLabel);
+	CC_SAFE_RELEASE_NULL(m_pDrawsLabel);
 
 	int fontSize = 0;
 	if (m_obWinSizeInPoints.width > m_obWinSizeInPoints.height)
@@ -831,19 +820,32 @@ void CCDirector::createStatsLabel()
 		fontSize = (int)(m_obWinSizeInPoints.width / 320.0f * 24);
 	}
 
-	m_pFPSLabel = CCLabelTTF::create("00.0", "Arial", fontSize);
-	m_pFPSLabel->retain();
-	m_pSPFLabel = CCLabelTTF::create("0.000", "Arial", fontSize);
-	m_pSPFLabel->retain();
-	m_pDrawsLabel = CCLabelTTF::create("000", "Arial", fontSize);
-	m_pDrawsLabel->retain();
+    CCTexture2D* texture = CCTextureCache::sharedTextureCache()->addImage("cc_fps_images");
 
+    m_pFPSLabel = new CCLabelAtlas();
+    m_pFPSLabel->initWithString("00.0", texture, 12, 32 , '.');
+	m_pFPSLabel->retain();
+
+    m_pUSPFLabel = new CCLabelAtlas();
+    m_pUSPFLabel->initWithString("0.000", texture, 12, 32, '.');
+	m_pUSPFLabel->retain();
+
+    m_pDSPFLabel = new CCLabelAtlas();
+    m_pDSPFLabel->initWithString("0.000", texture, 12, 32, '.');
+	m_pDSPFLabel->retain();
+
+    m_pDrawsLabel = new CCLabelAtlas();
+    m_pDrawsLabel->initWithString("000", texture, 12, 32, '.');
+	m_pDrawsLabel->retain();
+	
 	CCSize contentSize = m_pDrawsLabel->getContentSize();
-	m_pDrawsLabel->setPosition(ccpAdd(ccp(contentSize.width / 2, contentSize.height * 5 / 2), CC_DIRECTOR_STATS_POSITION));
-	contentSize = m_pSPFLabel->getContentSize();
-	m_pSPFLabel->setPosition(ccpAdd(ccp(contentSize.width / 2, contentSize.height * 3 / 2), CC_DIRECTOR_STATS_POSITION));
+	m_pDrawsLabel->setPosition(ccpAdd(ccp(contentSize.width * 0.5f, contentSize.height * 3.5f), CC_DIRECTOR_STATS_POSITION));
+	contentSize = m_pUSPFLabel->getContentSize();
+	m_pUSPFLabel->setPosition(ccpAdd(ccp(contentSize.width * 0.5f, contentSize.height * 2.5f), CC_DIRECTOR_STATS_POSITION));
+	contentSize = m_pDSPFLabel->getContentSize();
+	m_pDSPFLabel->setPosition(ccpAdd(ccp(contentSize.width * 0.5f, contentSize.height * 1.5f), CC_DIRECTOR_STATS_POSITION));
 	contentSize = m_pFPSLabel->getContentSize();
-	m_pFPSLabel->setPosition(ccpAdd(ccp(contentSize.width / 2, contentSize.height / 2), CC_DIRECTOR_STATS_POSITION));
+	m_pFPSLabel->setPosition(ccpAdd(ccp(contentSize.width * 0.5f, contentSize.height * 0.5f), CC_DIRECTOR_STATS_POSITION));
 }
 
 float CCDirector::getContentScaleFactor()
@@ -856,7 +858,7 @@ void CCDirector::setContentScaleFactor(float scaleFactor)
 	if (scaleFactor != m_fContentScaleFactor)
 	{
 		m_fContentScaleFactor = scaleFactor;
-		createStatsLabel();
+		if (m_bDisplayStats) createStatsLabel();
 	}
 }
 
@@ -940,8 +942,12 @@ CCAccelerometer* CCDirector::getAccelerometer()
 
 float CCDirector::getInterval(const struct cc_timeval& begin)
 {
-	cc_timeval now;
-	CCTime::gettimeofdayCocos2d(&now, NULL);
+	struct cc_timeval now;
+	if (CCTime::gettimeofdayCocos2d(&now, NULL) != 0)
+	{
+		CCLOG("error in gettimeofday");
+		return 0;
+	}
 	return (now.tv_sec - begin.tv_sec) + (now.tv_usec - begin.tv_usec) / 1000000.0f;
 }
 
@@ -1007,12 +1013,29 @@ void CCDisplayLinkDirector::mainLoop()
 		m_bPurgeDirecotorInNextLoop = false;
 		purgeDirector();
 	}
-	else if (!m_bInvalid)
+	else
 	{
-		drawScene();
-
-		// release the objects
-		CCPoolManager::sharedPoolManager()->pop();
+		if (!m_bPaused)
+		{
+			CCDirector::calculateDeltaTime();
+			CCTime::gettimeofdayCocos2d(&s_obTickStart, NULL);
+			if (m_nHandler)
+			{
+				if (CCScriptEngine::sharedEngine()->executeFunction(m_nHandler, 0) != 0)
+				{
+					CCDirector::unscheduleUpdateLua();
+				}
+			}
+			if (!m_bInvalid)
+			{
+				m_pScheduler->update(m_fDeltaTime);
+				m_fUpdateInterval = CCDirector::getInterval(s_obTickStart);
+				CCDirector::drawScene();
+				m_fDrawInterval = CCDirector::getInterval(s_obTickStart) - m_fUpdateInterval;
+				// release the objects
+				CCPoolManager::sharedPoolManager()->pop();
+			}
+		}
 	}
 }
 

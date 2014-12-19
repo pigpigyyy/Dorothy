@@ -41,16 +41,15 @@ NS_CC_BEGIN
 class CC_DLL CCFileUtilsIOS : public CCFileUtils
 {
 public:
+    CCFileUtilsIOS();
     /* override funtions */
     virtual std::string getWritablePath();
     virtual bool isFileExist(const std::string& strFilePath);
     virtual bool isAbsolutePath(const std::string& strPath);
     virtual std::string getFullPathForDirectoryAndFilename(const std::string& strDirectory, const std::string& strFilename);
-    
+
     virtual CCDictionary* createCCDictionaryWithContentsOfFile(const std::string& filename);
     virtual CCArray* createCCArrayWithContentsOfFile(const std::string& filename);
-private:
-	CCFileUtilsIOS();
 };
 
 // end of platform group

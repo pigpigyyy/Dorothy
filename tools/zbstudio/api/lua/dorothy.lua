@@ -14,7 +14,7 @@ local Dorothy =
 			type =
 			{
 				args = "(item: CCObject)",
-				description = "get tolua type of a CCObject",
+				description = "get tolua++ type of any object",
 				typeName = "string",
 				returns = "(typename: string)",
 				static = true,
@@ -23,7 +23,7 @@ local Dorothy =
 			cast =
 			{
 				args = "(object: CCObject, typename: string)",
-				description = "type cast, if target type is not a super or base type, it returns null",
+				description = "type cast, if typename is not a super or base type of object, it returns nil",
 				typeName = "CCObject",
 				returns = "(object: CCObject)",
 				static = true,
@@ -57,6 +57,11 @@ local Dorothy =
 			id =
 			{
 				description = "[int][readonly] Every object is created with its own unique id.",
+				type = "value",
+			},
+			ref =
+			{
+				description = "[int][readonly] Every object accessed by lua has its own unique ref id.",
 				type = "value",
 			},
 			count =
@@ -143,13 +148,13 @@ local Dorothy =
 	{
 		childs =
 		{
-			Enter =
+			Entering =
 			{
 				description = "[Const][int]",
 				static = true,
 				type = "value",
 			},
-			Exit =
+			Exiting =
 			{
 				description = "[Const][int]",
 				static = true,
@@ -407,7 +412,7 @@ local Dorothy =
 			registerEventHandler =
 			{
 				args = "(handler: function)",
-				description = " -- handler: function(eventType: int)\n\n -- eventTypr: [CCNode.Enter|CCNode.Exit|CCNode.Entered|CCNode.Exited|CCNode.Cleanup]",
+				description = " -- handler: function(eventType: int)\n\n -- eventType: [CCNode.Enter|CCNode.Exit|CCNode.Entered|CCNode.Exited|CCNode.Cleanup]",
 				returns = "()",
 				type = "method",
 			},
@@ -922,7 +927,7 @@ local Dorothy =
 				returns = "()",
 				type = "method",
 			},
-			join =
+			addRange =
 			{
 				args = "(array: CCArray)",
 				description = "",
@@ -1152,7 +1157,7 @@ local Dorothy =
 			},
 			setDesignResolution =
 			{
-				args = "(width: float, height: float, resolutionPolicy: ResolutionPolicy)",
+				args = "(width: float, height: float, resolutionPolicy: int)",
 				description = " -- resolutionPolicy: CCView.ExactFit|CCView.NoBorder|CCView.ShowAll|CCView.UnKnown",
 				returns = "()",
 				static = true,
@@ -1334,12 +1339,6 @@ local Dorothy =
 				static = true,
 				type = "value",
 			},
-			Linux =
-			{
-				description = "[Const][int]",
-				static = true,
-				type = "value",
-			},
 			MacOS =
 			{
 				description = "[Const][int]",
@@ -1364,12 +1363,6 @@ local Dorothy =
 				static = true,
 				type = "value",
 			},
-			BlackBerry =
-			{
-				description = "[Const][int]",
-				static = true,
-				type = "value",
-			},
 		},
 		description = "enum CCTargetPlatform.",
 		type = "class",
@@ -1379,6 +1372,40 @@ local Dorothy =
 	{
 		childs =
 		{
+			EnterBackground =
+			{
+				description = "[Const][int]",
+				static = true,
+				type = "value",
+			},
+			EnterForeground =
+			{
+				description = "[Const][int]",
+				static = true,
+				type = "value",
+			},
+			LowMemoryWarning =
+			{
+				description = "[Const][int]",
+				static = true,
+				type = "value",
+			},
+			registerEventHandler =
+			{
+				args = "(handler: function)",
+				description = " -- handler: function(eventType: int)\n\n -- eventType: CCApplication.[EnterBackground|EnterForeground]",
+				returns = "()",
+				static = true,
+				type = "method",
+			},
+			unregisterEventHandler =
+			{
+				args = "()",
+				description = "",
+				returns = "()",
+				static = true,
+				type = "method",
+			},
 			currentLanguage =
 			{
 				description = "[CCLanguageType]",
@@ -1778,13 +1805,6 @@ local Dorothy =
 				returns = "(texture: CCTexture2D)",
 				type = "method",
 			},
-			unload =
-			{
-				args = "()",
-				description = "",
-				returns = "()",
-				type = "method",
-			},
 			reload =
 			{
 				args = "()",
@@ -1799,10 +1819,10 @@ local Dorothy =
 				returns = "()",
 				type = "method",
 			},
-			remove =
+			unload =
 			{
 				args = "(texture: CCTexture2D)",
-				description = " args1 -- (filename: string)",
+				description = " args1 -- (filename: string)\n\n args2 -- ()",
 				returns = "()",
 				type = "method",
 			},
@@ -5465,6 +5485,28 @@ local Dorothy =
 		type = "class",
 		index = index()
 	},
+	oPool =
+	{
+		childs =
+		{
+			collect =
+			{
+				args = "()",
+				description = "",
+				returns = "(collectedMemory: int)",
+				type = "method",
+			},
+			size =
+			{
+				description = "[int][readonly]",
+				type = "value",
+			},
+		},
+		description = "",
+		type = "class",
+		hide = true,
+		index = index()
+	},
 	oCache =
 	{
 		childs =
@@ -5511,6 +5553,13 @@ local Dorothy =
 				static = true,
 				type = "value"
 			},
+			Pool =
+			{
+				description = "[oPool]",
+				typeName = "oPool",
+				static = true,
+				type = "value"
+			},
 			clear =
 			{
 				args = "()",
@@ -5530,6 +5579,15 @@ local Dorothy =
 			loadAsync =
 			{
 				args = "(filename: string|filenames: table<string>, callback: function)",
+				description = " -- callback: function(filename)",
+				typeName = "",
+				returns = "()",
+				static = true,
+				type = "method",
+			},
+			swapAsync =
+			{
+				args = "(oldResourses: table<string>, newResourses: table<string>, callback: function)",
 				description = " -- callback: function(filename)",
 				typeName = "",
 				returns = "()",

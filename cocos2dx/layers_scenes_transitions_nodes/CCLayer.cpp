@@ -139,6 +139,15 @@ void CCLayer::registerScriptTouchHandler(int nHandler, bool bIsMultiTouches, int
 	unregisterScriptTouchHandler();
 	m_pScriptTouchHandlerEntry = CCTouchScriptHandlerEntry::create(nHandler, bIsMultiTouches, nPriority, bSwallowsTouches);
 	m_pScriptTouchHandlerEntry->retain();
+	if (bIsMultiTouches != (m_eTouchMode == CCLayer::TouchesAllAtOnce))
+	{
+		m_eTouchMode = bIsMultiTouches ? CCLayer::TouchesAllAtOnce : CCLayer::TouchesOneByOne;
+		if (m_bTouchEnabled)
+		{
+			CCLayer::setTouchEnabled(false);
+			CCLayer::setTouchEnabled(true);
+		}
+	}
 }
 
 void CCLayer::unregisterScriptTouchHandler()

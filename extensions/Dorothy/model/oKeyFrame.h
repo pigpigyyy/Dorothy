@@ -32,11 +32,7 @@ private:
 	float _rotation;
 	float _skewX;
 	float _skewY;
-public:
-	inline void* operator new(size_t size){ return _memory.alloc(); }
-	inline void operator delete(void* ptr, size_t size) { _memory.free(ptr); }
-private:
-	static oMemoryPool<oKeyReset> _memory;
+	USE_MEMORY_POOL(oKeyReset)
 };
 
 class oKeyPos: public CCActionInterval
@@ -58,11 +54,7 @@ protected:
 	float _endPosY;
 	float _deltaPosX;
 	float _deltaPosY;
-public:
-	inline void* operator new(size_t size){ return _memory.alloc(); }
-	inline void operator delete(void* ptr, size_t size) { _memory.free(ptr); }
-private:
-	static oMemoryPool<oKeyPos> _memory;
+	USE_MEMORY_POOL(oKeyPos)
 };
 
 class oKeyScale: public CCActionInterval
@@ -85,11 +77,7 @@ protected:
 	float _endScaleY;
 	float _deltaScaleX;
 	float _deltaScaleY;
-public:
-	inline void* operator new(size_t size){ return _memory.alloc(); }
-	inline void operator delete(void* ptr, size_t size) { _memory.free(ptr); }
-private:
-	static oMemoryPool<oKeyScale> _memory;
+	USE_MEMORY_POOL(oKeyScale)
 };
 
 class oKeyRotate: public CCActionInterval
@@ -108,11 +96,7 @@ protected:
 	float _startRotate;
 	float _endRotate;
 	float _deltaRotate;
-public:
-	inline void* operator new(size_t size){ return _memory.alloc(); }
-	inline void operator delete(void* ptr, size_t size) { _memory.free(ptr); }
-private:
-	static oMemoryPool<oKeyRotate> _memory;
+	USE_MEMORY_POOL(oKeyRotate)
 };
 
 class oKeyOpacity: public CCActionInterval
@@ -131,11 +115,7 @@ protected:
 	float _startOpacity;
 	float _endOpacity;
 	float _deltaOpacity;
-public:
-	inline void* operator new(size_t size){ return _memory.alloc(); }
-	inline void operator delete(void* ptr, size_t size) { _memory.free(ptr); }
-private:
-	static oMemoryPool<oKeyOpacity> _memory;
+	USE_MEMORY_POOL(oKeyOpacity)
 };
 
 class oKeySkew: public CCActionInterval
@@ -157,11 +137,7 @@ protected:
 	float _endSkewY;
 	float _deltaSkewX;
 	float _deltaSkewY;
-public:
-	inline void* operator new(size_t size){ return _memory.alloc(); }
-	inline void operator delete(void* ptr, size_t size) { _memory.free(ptr); }
-private:
-	static oMemoryPool<oKeySkew> _memory;
+	USE_MEMORY_POOL(oKeySkew)
 };
 
 class oKeyRoll: public CCActionInterval
@@ -180,11 +156,7 @@ protected:
 	float _startRoll;
 	float _endRoll;
 	float _deltaRoll;
-public:
-	inline void* operator new(size_t size){ return _memory.alloc(); }
-	inline void operator delete(void* ptr, size_t size) { _memory.free(ptr); }
-private:
-	static oMemoryPool<oKeyRoll> _memory;
+	USE_MEMORY_POOL(oKeyRoll)
 };
 
 NS_DOROTHY_END

@@ -77,11 +77,21 @@ public: void set##funName(bool var)
 public: bool is##funName() const;\
 public: void set##funName(bool var)
 
-/** @brief Code block for condition check */
-#define BLOCK_START do
-#define BREAK_IF(cond) if(cond) break
-#define BREAK_NOT(cond) if(!cond) break
-#define BLOCK_END while(false);
+/** @brief Code block for condition check
+	@example as below
+
+	BLOCK_START
+	...
+	BREAK_IF(flag)
+	...
+	BREAK_NOT(flag2)
+	...
+	BLOCK_END
+*/
+#define BLOCK_START do{
+#define BREAK_IF(cond) if(cond) break;
+#define BREAK_NOT(cond) if(!cond) break;
+#define BLOCK_END }while(false);
 
 /** @brief A more efficient switch case for strings
 	@example Use it as below
@@ -116,7 +126,7 @@ inline size_t oFNVHash(const string& str) { return oFNVHash(str.c_str()); }
 
 	oUnit* unit = getUnit();
 	CCArray* units = getUnits();
-	CCARRAY_START(oBody, item, units)
+	CCARRAY_START(oUnit, item, units)
 	{
 		if (item == unit)
 		{

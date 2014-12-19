@@ -210,8 +210,8 @@ void oModelCache::startElement( void *ctx, const char *name, const char **atts )
 		break;
 	oCase::AnimationName:
 		{
-			int index;
-			const char* name;
+			int index = 0;
+			const char* name = nullptr;
 			for (int i = 0;atts[i] != nullptr;i++)
 			{
 				switch (atts[i][0])
@@ -229,8 +229,8 @@ void oModelCache::startElement( void *ctx, const char *name, const char **atts )
 		break;
 	oCase::LookName:
 		{
-			int index;
-			const char* name;
+			int index = 0;
+			const char* name = nullptr;
 			for (int i = 0;atts[i] != nullptr;i++)
 			{
 				switch (atts[i][0])

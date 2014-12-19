@@ -37,16 +37,16 @@ public:
     virtual ~CCEGLViewProtocol();
 
     /** Force destroying EGL view, subclass must implement this method. */
-    virtual void    end() = 0;
+    virtual void end() = 0;
 
     /** Get whether opengl render system is ready, subclass must implement this method. */
-    virtual bool    isOpenGLReady() = 0;
+    virtual bool isOpenGLReady() = 0;
 
     /** Exchanges the front and back buffers, subclass must implement this method. */
-    virtual void    swapBuffers() = 0;
+    virtual void swapBuffers() = 0;
 
     /** Open or close IME keyboard , subclass must implement this method. */
-    virtual void    setIMEKeyboardState(bool bOpen) = 0;
+    virtual void setIMEKeyboardState(bool bOpen) = 0;
 
     /**
      * Get the frame size of EGL view.
@@ -82,7 +82,7 @@ public:
     /** Get design resolution size.
      *  Default resolution size is the same as 'getFrameSize'.
      */
-    virtual const CCSize&  getDesignResolutionSize() const;
+    virtual const CCSize& getDesignResolutionSize() const;
 
     /** Set touch delegate */
     virtual void setTouchDelegate(EGLTouchDelegate * pDelegate);
@@ -134,10 +134,10 @@ protected:
     // the view port size
     CCRect m_obViewPortRect;
     // the view name
-    char   m_szViewName[50];
+    char m_szViewName[50];
 
-    float  m_fScaleX;
-    float  m_fScaleY;
+    float m_fScaleX;
+    float m_fScaleY;
     ResolutionPolicy m_eResolutionPolicy;
 };
 

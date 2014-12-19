@@ -27,7 +27,8 @@ static float OutQuad(float t, float b, float c)
 static float InOutQuad(float t, float b, float c)
 {
 	if ((t*=2) < 1) return (c/2)*t*t + b;
-	return (-c/2) * ((--t)*(t-2) - 1) + b;
+    --t;
+	return (-c/2) * (t*(t-2) - 1) + b;
 }
 static float InCubic(float t, float b, float c)
 {
@@ -40,7 +41,8 @@ static float OutCubic(float t, float b, float c)
 static float InOutCubic(float t, float b, float c)
 {
 	if ((t*=2) < 1) return (c/2)*t*t*t + b;
-	return (c/2)*((t-=2)*t*t + 2) + b;
+    t-=2;
+    return (c/2)*(t*t*t + 2) + b;
 }
 static float InQuart(float t, float b, float c)
 {
@@ -53,7 +55,8 @@ static float OutQuart(float t, float b, float c)
 static float InOutQuart(float t, float b, float c)
 {
 	if ((t*=2) < 1) return (c/2)*t*t*t*t + b;
-	return -(c/2) * ((t-=2)*t*t*t - 2) + b;
+    t-=2;
+    return -(c/2) * (t*t*t*t - 2) + b;
 }
 static float InQuint(float t, float b, float c)
 {
@@ -66,7 +69,8 @@ static float OutQuint(float t, float b, float c)
 static float InOutQuint(float t, float b, float c)
 {
 	if ((t*=2) < 1) return (c/2)*t*t*t*t*t + b;
-	return (c/2)*((t-=2)*t*t*t*t + 2) + b;
+    t-=2;
+	return (c/2)*(t*t*t*t*t + 2) + b;
 }
 static float InSine(float t, float b, float c)
 {
@@ -106,7 +110,8 @@ static float OutCirc(float t, float b, float c)
 static float InOutCirc(float t, float b, float c)
 {
 	if ((t/=1.0f/2) < 1) return -c/2 * (sqrtf(1 - t*t) - 1) + b;
-	return c/2 * (sqrtf(1 - (t-=2)*t) + 1) + b;
+    t-=2;
+    return c/2 * (sqrtf(1 - t*t) + 1) + b;
 }
 static float InElastic(float t, float b, float c)
 {
@@ -114,7 +119,8 @@ static float InElastic(float t, float b, float c)
 	if (t==0) return b;  if (t==1) return b+c;
 	if (a < abs(c)) { a=c; s=p/4; }
 	else s = p/(2*b2_pi) * asinf(c/a);
-	return -(a*powf(2,10*(t-=1)) * sinf( (t-s)*(2*b2_pi)/p )) + b;
+    t-=1;
+    return -(a*powf(2,10*t) * sinf( (t-s)*(2*b2_pi)/p )) + b;
 }
 static float OutElastic(float t, float b, float c)
 {
@@ -131,8 +137,13 @@ static float InOutElastic(float t, float b, float c)
 	if ((t*=2)==2) return b+c;
 	if (a < abs(c)) { a=c; s=p/4; }
 	else s = p/(2*b2_pi) * asinf(c/a);
-	if (t < 1) return -0.5f*(a*powf(2,10*(t-=1)) * sinf( (t-s)*(2*b2_pi)/p )) + b;
-	return a*powf(2,-10*(t-=1)) * sinf( (t-s)*(2*b2_pi)/p )*0.5f + c + b;
+	if (t < 1)
+    {
+        t-=1;
+        return -0.5f*(a*powf(2,10*t) * sinf( (t-s)*(2*b2_pi)/p )) + b;
+    }
+    t-=1;
+	return a*powf(2,-10*t) * sinf( (t-s)*(2*b2_pi)/p )*0.5f + c + b;
 }
 static float InBack(float t, float b, float c)
 {
@@ -148,8 +159,14 @@ static float OutBack(float t, float b, float c)
 static float InOutBack(float t, float b, float c)
 {
 	float s = 1.70158f;
-	if ((t*=2) < 1) return c/2*(t*t*(((s*=1.525f)+1)*t - s)) + b;
-	return c/2*((t-=2)*t*(((s*=1.525f)+1)*t + s) + 2) + b;
+	if ((t*=2) < 1)
+    {
+        s*=1.525f;
+        return c/2*(t*t*((s+1)*t - s)) + b;
+    }
+    t-=2;
+    s*=1.525f;
+    return c/2*(t*t*((s+1)*t + s) + 2) + b;
 }
 static float OutBounce(float t, float b, float c)
 {
@@ -159,15 +176,18 @@ static float OutBounce(float t, float b, float c)
 	}
 	else if (t < (2.0f/2.75f))
 	{
-		return c*(7.5625f*(t-=(1.5f/2.75f))*t + 0.75f) + b;
+        t-=(1.5f/2.75f);
+		return c*(7.5625f*t*t + 0.75f) + b;
 	}
 	else if (t < (2.5f/2.75f))
 	{
-		return c*(7.5625f*(t-=(2.25f/2.75f))*t + 0.9375f) + b;
+        t-=(2.25f/2.75f);
+		return c*(7.5625f*t*t + 0.9375f) + b;
 	}
 	else
 	{
-		return c*(7.5625f*(t-=(2.625f/2.75f))*t + 0.984375f) + b;
+        t-=(2.625f/2.75f);
+		return c*(7.5625f*t*t + 0.984375f) + b;
 	}
 }
 static float InBounce(float t, float b, float c)

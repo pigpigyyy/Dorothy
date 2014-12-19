@@ -32,8 +32,6 @@ THE SOFTWARE.
 
 using namespace std;
 
-#if (CC_TARGET_PLATFORM != CC_PLATFORM_IOS) && (CC_TARGET_PLATFORM != CC_PLATFORM_MAC)
-
 NS_CC_BEGIN
 
 typedef enum 
@@ -333,6 +331,8 @@ CCDictionary* CCFileUtils::createCCDictionaryWithContents(const char* data, unsi
 	return tMaker.dictionaryWithContents(data, length);
 }
 
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_IOS) && (CC_TARGET_PLATFORM != CC_PLATFORM_MAC)
+
 CCDictionary* CCFileUtils::createCCDictionaryWithContentsOfFile(const std::string& filename)
 {
     CCDictMaker tMaker;
@@ -346,7 +346,6 @@ CCArray* CCFileUtils::createCCArrayWithContentsOfFile(const std::string& filenam
 }
 
 #else
-NS_CC_BEGIN
 
 /* The subclass CCFileUtilsIOS and CCFileUtilsMac should override these two method. */
 CCDictionary* CCFileUtils::createCCDictionaryWithContentsOfFile(const std::string& filename) {return NULL;}
@@ -439,7 +438,7 @@ unsigned char* CCFileUtils::getFileDataFromZip(const char* pszZipFilePath, const
         CC_BREAK_IF(UNZ_OK != nRet);
 
         pBuffer = new unsigned char[FileInfo.uncompressed_size];
-        int CC_UNUSED nSize = unzReadCurrentFile(pFile, pBuffer, FileInfo.uncompressed_size);
+        int CC_UNUSED nSize = unzReadCurrentFile(pFile, pBuffer, (unsigned int)FileInfo.uncompressed_size);
         CCAssert(nSize == 0 || nSize == (int)FileInfo.uncompressed_size, "the file size is wrong");
 
         *pSize = FileInfo.uncompressed_size;
@@ -495,8 +494,7 @@ std::string CCFileUtils::getPathForFilename(const std::string& filename, const s
 std::string CCFileUtils::fullPathForFilename(const char* pszFileName)
 {
     CCAssert(pszFileName != NULL, "CCFileUtils: Invalid path");
-    
-    std::string strFileName = pszFileName;
+
     if (isAbsolutePath(pszFileName))
     {
         //CCLOG("Return absolute path( %s ) directly.", pszFileName);

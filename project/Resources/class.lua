@@ -4,9 +4,11 @@ local function __call(self,...)
 	local inst = {}
 	setmetatable(inst,self)
 	local c_inst
-	if self.__init then c_inst = self.__init(inst,...) end
+	if self.__super then c_inst = self.__super(inst,...) end
 	if c_inst then tolua.setpeer(c_inst,inst) end
-	return c_inst or inst
+	inst = c_inst or inst
+	if self.__init then self.__init(inst,...) end
+	return inst
 end
 
 local function __index(self,name)

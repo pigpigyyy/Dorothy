@@ -176,7 +176,7 @@ local function oFileChooser()
 		oContent:saveToFile(clipFile,xml)
 		oCache.Clip:update(clipFile,xml)
 		oCache.Model:unload(modelFile)
-		oCache.Texture:remove(texFile)
+		oCache.Texture:unload(texFile)
 		oCache.Texture:add(target,texFile)
 	
 		local children = node.children

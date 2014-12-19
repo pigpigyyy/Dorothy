@@ -14,7 +14,7 @@ static int g_ref_id = 0;
 static stack<int> g_available_ref_ids;
 extern "C" int toluafix_get_callback_ref_count()
 {
-	return g_ref_id - g_available_ref_ids.size();
+	return g_ref_id - (unsigned int)g_available_ref_ids.size();
 }
 extern "C" int alloc_ref_id()
 {

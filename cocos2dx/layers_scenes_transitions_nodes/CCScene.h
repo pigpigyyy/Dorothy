@@ -51,7 +51,7 @@ class CC_DLL CCScene : public CCNode
 public:
     CCScene();
     virtual ~CCScene();
-    bool init();
+    virtual bool init();
 
     static CCScene *create();
 	CC_LUA_TYPE(CCScene)

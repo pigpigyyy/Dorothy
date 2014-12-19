@@ -200,7 +200,7 @@ void __oClipCache_getNames(const char* filename)
 {
 	oClipDef* clipDef = oSharedClipCache.load(filename);
 	lua_State* L = CCLuaEngine::sharedEngine()->getState();
-	lua_createtable(L, clipDef->rects.size(), 0);
+	lua_createtable(L, (int)clipDef->rects.size(), 0);
 	int i = 1;
 	for(const auto& item : clipDef->rects)
 	{
@@ -276,6 +276,38 @@ void oCache_clear()
 	oShareAudioEngine.unload();
 }
 
+int oCache_poolCollect()
+{
+	int collect = 0;
+	collect += oVec2::poolCollect();
+	collect += oKeyReset::poolCollect();
+	collect += oKeyPos::poolCollect();
+	collect += oKeyScale::poolCollect();
+	collect += oKeyRotate::poolCollect();
+	collect += oKeyOpacity::poolCollect();
+	collect += oKeySkew::poolCollect();
+	collect += oKeyRoll::poolCollect();
+	collect += oSequence::poolCollect();
+	collect += oSpawn::poolCollect();
+	return collect;
+}
+
+int oCache_poolSize()
+{
+	int size = 0;
+	size += oVec2::poolSize();
+	size += oKeyReset::poolSize();
+	size += oKeyPos::poolSize();
+	size += oKeyScale::poolSize();
+	size += oKeyRotate::poolSize();
+	size += oKeyOpacity::poolSize();
+	size += oKeySkew::poolSize();
+	size += oKeyRoll::poolSize();
+	size += oSequence::poolSize();
+	size += oSpawn::poolSize();
+	return size;
+}
+
 void oUnitDef_setActions(oUnitDef* def, int actions[], int count)
 {
 	def->actions.clear();
@@ -310,8 +342,8 @@ void __oContent_getDirEntries(oContent* self, const char* path, bool isFolder)
 {
 	lua_State* L = CCLuaEngine::sharedEngine()->getState();
 	auto dirs = self->getDirEntries(path, isFolder);
-	lua_createtable(L, dirs.size(), 0);
-	for (size_t i = 0; i < dirs.size(); i++)
+	lua_createtable(L, (int)dirs.size(), 0);
+	for (int i = 0; i < (int)dirs.size(); i++)
 	{
 		lua_pushstring(L, dirs[i].c_str());
 		lua_rawseti(L, -2, i+1);
@@ -582,6 +614,7 @@ int CCDictionary_get(lua_State* L)
 		goto tolua_lerror;
 	}
 #endif
+    {
 	CCDictionary* self = (CCDictionary*)tolua_tousertype(L, 1, 0);
 #ifndef TOLUA_RELEASE
 	if (!self) tolua_error(L, "invalid 'self' in function 'CCDictionary_get'", nullptr);
@@ -625,6 +658,7 @@ int CCDictionary_get(lua_State* L)
 		lua_pushnil(L);
 		return 1;
 	}
+    }
 #ifndef TOLUA_RELEASE
 tolua_lerror:
 	tolua_error(L, "#ferror in function 'CCDictionary_get'.", &tolua_err);
@@ -642,6 +676,7 @@ int CCDictionary_set(lua_State* L)
 		goto tolua_lerror;
 	}
 #endif
+    {
 	CCDictionary* self = (CCDictionary*)tolua_tousertype(L, 1, 0);
 #ifndef TOLUA_RELEASE
 	if (!self) tolua_error(L, "invalid 'self' in function 'CCDictionary_set'", nullptr);
@@ -682,6 +717,7 @@ int CCDictionary_set(lua_State* L)
 		else self->removeObjectForKey(key);
 	}
 	return 0;
+    }
 #ifndef TOLUA_RELEASE
 tolua_lerror :
 	tolua_error(L, "#ferror in function 'CCDictionary_set'.", &tolua_err);
@@ -794,7 +830,7 @@ void __oModelCache_getData(const char* filename)
 		lua_setFloat(11, parent->x);
 		lua_setFloat(12, parent->y);
 		/*["looks"]*/
-		lua_createtable(L, parent->looks.size(), 0);
+		lua_createtable(L, (int)parent->looks.size(), 0);
 		for(int i = 0; i <(int)parent->looks.size(); i++)
 		{
 			lua_pushinteger(L, parent->looks[i]);
@@ -802,7 +838,7 @@ void __oModelCache_getData(const char* filename)
 		}
 		lua_rawseti(L, -2, 13);
 		/*["animationDefs"]*/
-		lua_createtable(L, parent->animationDefs.size(), 0);
+		lua_createtable(L, (int)parent->animationDefs.size(), 0);
 		for(int defIndex = 0; defIndex <(int)parent->animationDefs.size(); defIndex++)
 		{
 			oModelAnimationDef* def = parent->animationDefs[defIndex];
@@ -818,7 +854,7 @@ void __oModelCache_getData(const char* filename)
 			if(keyDef)
 			{
 				auto& frames = keyDef->getFrames();
-				lua_createtable(L, frames.size()+1, 0);
+				lua_createtable(L, (int)frames.size()+1, 0);
 				lua_setInt(1, 1);
 				for(int i = 0; i <(int)frames.size(); i++)
 				{
@@ -858,8 +894,8 @@ void __oModelCache_getData(const char* filename)
 		}
 		lua_rawseti(L, -2, 14);
 		/*["children"]*/
-		lua_createtable(L, parent->children.size(), 0);
-		for(int i = 0; i <(int)parent->children.size(); i++)
+		lua_createtable(L, (int)parent->children.size(), 0);
+		for(int i = 0; i < (int)parent->children.size(); i++)
 		{
 			visitSpriteDef(parent->children[i]);
 			lua_rawseti(L, -2, i + 1);
@@ -926,7 +962,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 	auto lua_getInt = [&](int index)->int
 	{
 		lua_rawgeti(L, -1, index);
-		int v = lua_tointeger(L, -1);
+		int v = (int)lua_tointeger(L, -1);
 		lua_pop(L, 1);
 		return v;
 	};
@@ -962,7 +998,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 	/*["keys"]*/
 	lua_rawgeti(L, -1, 21);// push keys
 	vector<oVec2> keys(lua_objlen(L, -1));
-	for(size_t i = 0; i < keys.size(); i++)
+	for(int i = 0; i < (int)keys.size(); i++)
 	{
 		lua_rawgeti(L, -1, i + 1);
 		oVec2* v =(*(oVec2**)(lua_touserdata(L, -1)));
@@ -976,7 +1012,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 	int top = lua_gettop(L);
 	for(lua_pushnil(L); lua_next(L, top) != 0; lua_pop(L, 1))
 	{
-		animationNames[lua_tostring(L, -2)] = lua_tointeger(L, -1);
+		animationNames[lua_tostring(L, -2)] = (int)lua_tointeger(L, -1);
 	}
 	lua_pop(L, 1);// pop animationNames
 	/*["lookNames"]*/
@@ -985,7 +1021,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 	top = lua_gettop(L);
 	for(lua_pushnil(L); lua_next(L, top) != 0; lua_pop(L, 1))
 	{
-		lookNames[lua_tostring(L, -2)] = lua_tointeger(L, -1);
+		lookNames[lua_tostring(L, -2)] = (int)lua_tointeger(L, -1);
 	}
 	lua_pop(L, 1);// pop lookNames
 	/*oSpriteDef*/
@@ -1008,16 +1044,16 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 		spriteDef->y = lua_getFloat(12);
 		/*["looks"]*/
 		lua_rawgeti(L, -1, 13);// puah looks
-		for(size_t i = 0, len = lua_objlen(L, -1); i < len; i++)
+		for(int i = 0, len = (int)lua_objlen(L, -1); i < len; i++)
 		{
 			lua_rawgeti(L, -1, i + 1);
-			spriteDef->looks.push_back(lua_tointeger(L, -1));
+			spriteDef->looks.push_back((int)lua_tointeger(L, -1));
 			lua_pop(L, 1);
 		}
 		lua_pop(L, 1);// pop looks
 		/*["animationDefs"]*/
 		lua_rawgeti(L, -1, 14);// push animationDefs
-		for(size_t defIndex = 0, len = lua_objlen(L, -1); defIndex < len; defIndex++)
+		for(int defIndex = 0, len = (int)lua_objlen(L, -1); defIndex < len; defIndex++)
 		{
 			lua_rawgeti(L, -1, defIndex + 1);// push animationDef or boolean
 			/* nullptr */
@@ -1032,7 +1068,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 			if(type == 1)
 			{
 				oKeyAnimationDef* keyAnimationDef = new oKeyAnimationDef();
-				for(size_t i = 0, len = lua_objlen(L, -1)-1; i < len; i++)
+				for(int i = 0, len = (int)lua_objlen(L, -1)-1; i < len; i++)
 				{
 					lua_rawgeti(L, -1, i + 2);// push frameDef
 					oKeyFrameDef* frameDef = new oKeyFrameDef();
@@ -1069,7 +1105,7 @@ oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
 		lua_pop(L, 1);// pop animationDefs
 		/* ["children"] */
 		lua_rawgeti(L, -1, 15);// push children
-		for(size_t i = 0, len = lua_objlen(L, -1); i < len; i++)
+		for(int i = 0, len = (int)lua_objlen(L, -1); i < len; i++)
 		{
 			lua_rawgeti(L, -1, i + 1);// push childDef
 			spriteDef->children.push_back(visitSpriteDef());
@@ -1218,33 +1254,6 @@ CCRenderTexture* CCRenderTexture_create(int w, int h, bool withDepthStencil)
 	return CCRenderTexture::create(w, h, kCCTexture2DPixelFormat_RGBA8888, withDepthStencil ? GL_DEPTH24_STENCIL8 : 0);
 }
 
-int __olua_loadfile(lua_State* L, const char* filename)
-{
-	unsigned long codeBufferSize = 0;
-	unsigned char* codeBuffer = CCFileUtils::sharedFileUtils()->getFileData(filename, "rb", &codeBufferSize);
-	if (codeBuffer)
-	{
-		if (luaL_loadbuffer(L, (char*)codeBuffer, codeBufferSize, filename) != 0)
-		{
-			delete[] codeBuffer;
-			luaL_error(L, "error loading module %s from file %s :\n\t%s",
-				lua_tostring(L, 1), filename, lua_tostring(L, -1));
-		}
-		delete [] codeBuffer;
-		return 0;
-	}
-	else
-	{
-		CCLog("can not get file data of %s", filename);
-		return 1;
-	}
-}
-
-int __olua_dofile(lua_State* L, const char* filename)
-{
-	return __olua_loadfile(L, filename) || lua_pcall(L, 0, LUA_MULTRET, 0);
-}
-
 class oImageAsyncLoader: public CCObject
 {
 public:
@@ -1288,6 +1297,7 @@ int CCTextureCache_loadAsync(lua_State* L)
 		goto tolua_lerror;
 	}
 #endif
+    {
 	CCTextureCache* self = (CCTextureCache*)tolua_tousertype(L, 1, 0);
 #ifndef TOLUA_RELEASE
 	if (!self) tolua_error(L, "invalid 'self' in function 'CCTextureCache_loadAsync'", nullptr);
@@ -1301,7 +1311,7 @@ int CCTextureCache_loadAsync(lua_State* L)
 	}
 	else if (lua_istable(L, 2))
 	{
-		int length = lua_objlen(L, 2);
+		int length = (int)lua_objlen(L, 2);
 		for (int i = 0; i < length; i++)
 		{
 			lua_rawgeti(L, 2, i + 1);
@@ -1313,6 +1323,7 @@ int CCTextureCache_loadAsync(lua_State* L)
 		}
 	}
 	return 0;
+    }
 #ifndef TOLUA_RELEASE
 tolua_lerror :
 	tolua_error(L, "#ferror in function 'CCTextureCache_loadAsync'.", &tolua_err);

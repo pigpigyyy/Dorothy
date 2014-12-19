@@ -250,7 +250,7 @@ struct b2SeparationFunction
 // by computing the largest time at which separation is maintained.
 void b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
 {
-	b2Timer timer;
+	//b2Timer timer;
 
 	output->state = b2TOIOutput::e_unknown;
 	output->t = input->tMax;
@@ -469,5 +469,5 @@ void b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
 		}
 	}
 	
-	float32 time = timer.GetMilliseconds();
+	//float32 time = timer.GetMilliseconds();
 }

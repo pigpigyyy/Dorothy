@@ -53,8 +53,8 @@ function classCode:register (pre)
  	spad = spad .. "-"
  end
  s = s..spad
-]]
- s=string.dump(loadstring(s),true)
+---]]
+ --s=string.dump(loadstring(s),true)
 
  -- convert to C
  output('\n'..pre..'{ /* begin embedded lua code */\n')

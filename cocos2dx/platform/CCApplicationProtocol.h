@@ -6,13 +6,10 @@ NS_CC_BEGIN
 enum TargetPlatform
 {
     kTargetWindows,
-    kTargetLinux,
     kTargetMacOS,
     kTargetAndroid,
     kTargetIphone,
     kTargetIpad,
-    kTargetBlackBerry,
-    kTargetNaCl,
 };
 
 /**
@@ -23,8 +20,17 @@ enum TargetPlatform
 class CC_DLL CCApplicationProtocol
 {
 public:
+	enum
+	{
+		EnterBackground,
+		EnterForeground,
+		LowMemoryWarning,
+	};
+	CCApplicationProtocol();
+	virtual ~CCApplicationProtocol();
 
-    virtual ~CCApplicationProtocol() {}
+	void registerScriptHandler(int handler);
+	void unregisterScriptHandler();
 
     /**
     @brief    Implement CCDirector and CCScene init code here.
@@ -37,14 +43,15 @@ public:
     @brief  The function be called when the application enter background
     @param  the pointer of the application
     */
-    virtual void applicationDidEnterBackground() = 0;
+    virtual void applicationDidEnterBackground();
 
     /**
     @brief  The function be called when the application enter foreground
     @param  the pointer of the application
     */
-    virtual void applicationWillEnterForeground() = 0;
+    virtual void applicationWillEnterForeground();
 
+	virtual void applicationDidReceiveMemoryWarning();
     /**
     @brief    Callback by CCDirector for limit FPS.
     @interval       The time, expressed in seconds, between current frame and next. 
@@ -61,6 +68,8 @@ public:
      @brief Get target platform
      */
     virtual TargetPlatform getTargetPlatform() = 0;
+private:
+	int _handler;
 };
 
 // end of platform group

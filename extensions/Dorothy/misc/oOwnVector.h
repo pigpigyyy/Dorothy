@@ -27,7 +27,7 @@ public:
 	{
 		vector<oOwn<T>>::push_back(oOwnMake(item));
 	}
-	inline void insert(size_t where, T* item)
+	inline bool insert(size_t where, T* item)
 	{
 		if (where >= 0 && where < vector<oOwn<T>>::size())
 		{

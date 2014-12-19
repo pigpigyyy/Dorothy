@@ -22,7 +22,7 @@ end
 local layer = require("oViewArea")()
 local scene = require("oEditor").scene
 scene:registerEventHandler(function(eventType)
-	if eventType == CCNode.Exit then
+	if eventType == CCNode.Exited then
 		require = _require
 		for k,_ in pairs(loaded) do
 			package.loaded[k] = nil
@@ -31,3 +31,14 @@ scene:registerEventHandler(function(eventType)
 end)
 scene:addChild(layer)
 CCDirector:run(scene)
+
+local f = coroutine.wrap(function()
+	repeat
+		print(998)
+		error("Errors!!")
+		coroutine.yield()
+	until false
+end)
+
+print("PRINT:",f())
+print("PRINT:",f())

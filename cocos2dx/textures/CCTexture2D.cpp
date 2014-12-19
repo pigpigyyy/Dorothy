@@ -321,10 +321,10 @@ bool CCTexture2D::initPremultipliedATextureWithImage(CCImage *image, unsigned in
             
             for(unsigned int i = 0; i < length; ++i, ++inPixel32)
             {
-                *outPixel16++ = 
-                ((((*inPixel32 >>  0) & 0xFF) >> 3) << 11) |  // R
-                ((((*inPixel32 >>  8) & 0xFF) >> 2) << 5)  |  // G
-                ((((*inPixel32 >> 16) & 0xFF) >> 3) << 0);    // B
+				unsigned int R = ((((*inPixel32 >>  0) & 0xFF) >> 3) << 11);
+				unsigned int G = ((((*inPixel32 >>  8) & 0xFF) >> 2) << 5);
+				unsigned int B = ((((*inPixel32 >> 16) & 0xFF) >> 3) << 0);
+                *outPixel16++ = R|G|B;
             }
         }
         else 
@@ -337,10 +337,10 @@ bool CCTexture2D::initPremultipliedATextureWithImage(CCImage *image, unsigned in
             
             for(unsigned int i = 0; i < length; ++i)
             {
-                *outPixel16++ = 
-                (((*inPixel8++ & 0xFF) >> 3) << 11) |  // R
-                (((*inPixel8++ & 0xFF) >> 2) << 5)  |  // G
-                (((*inPixel8++ & 0xFF) >> 3) << 0);    // B
+				unsigned int R = (((*inPixel8++ & 0xFF) >> 3) << 11);
+				unsigned int G = (((*inPixel8++ & 0xFF) >> 2) << 5);
+				unsigned int B = (((*inPixel8++ & 0xFF) >> 3) << 0);
+                *outPixel16++ = R|G|B;
             }
         }    
     }

@@ -32,7 +32,6 @@ ipch/
 *.opensdf
 
 # Ignore files build by ndk and eclipse
-libs/
 bin/
 obj/
 gen/
@@ -77,3 +76,4 @@ Device-Release/
 
 /lua/cocos2dx_support/LuaCocos2d.cpp
 /lua/cocos2dx_support/LuaCode.cpp
+

@@ -43,11 +43,49 @@ static AccelerometerDispatcher* s_pAccelerometerDispatcher;
 - (id) init
 {
     acceleration_ = new cocos2d::CCAcceleration();
+	motionManager_ = [[CMMotionManager alloc] init];
+	motionManager_.accelerometerUpdateInterval = 1.0/60;
+	[motionManager_ startAccelerometerUpdatesToQueue: [[NSOperationQueue alloc] init]
+		withHandler:^(CMAccelerometerData *data, NSError *error) {
+			dispatch_async(dispatch_get_main_queue(), ^{
+				if (!delegate_)
+				{
+					return;
+				}
+				acceleration_->x = data.acceleration.x;
+				acceleration_->y = data.acceleration.y;
+				acceleration_->z = data.acceleration.z;
+				acceleration_->timestamp = data.timestamp;
+				double tmp = acceleration_->x;
+				switch ([[UIApplication sharedApplication] statusBarOrientation])
+				{
+					case UIInterfaceOrientationLandscapeRight:
+						acceleration_->x = -acceleration_->y;
+						acceleration_->y = tmp;
+						break;
+					case UIInterfaceOrientationLandscapeLeft:
+						acceleration_->x = acceleration_->y;
+						acceleration_->y = -tmp;
+						break;
+					case UIInterfaceOrientationPortraitUpsideDown:
+						acceleration_->x = -acceleration_->y;
+						acceleration_->y = -tmp;
+						break;
+					case UIInterfaceOrientationPortrait:
+						break;
+					default:
+						break;
+				}
+				delegate_->didAccelerate(acceleration_);
+			});
+		}
+	];
     return self;
 }
 
 - (void) dealloc
 {
+	motionManager_ = 0;
     s_pAccelerometerDispatcher = 0;
     delegate_ = 0;
     delete acceleration_;
@@ -57,59 +95,11 @@ static AccelerometerDispatcher* s_pAccelerometerDispatcher;
 - (void) addDelegate: (cocos2d::CCAccelerometerDelegate *) delegate
 {
     delegate_ = delegate;
-    
-    if (delegate_)
-    {
-        [[UIAccelerometer sharedAccelerometer] setDelegate:self];
-    }
-    else 
-    {
-        [[UIAccelerometer sharedAccelerometer] setDelegate:nil];
-    }
 }
 
 -(void) setAccelerometerInterval:(float)interval
 {
-    [[UIAccelerometer sharedAccelerometer] setUpdateInterval:interval];
-}
-
-- (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration
-{   
-    if (! delegate_)
-    {
-        return;
-    }
-    
-    acceleration_->x = acceleration.x;
-    acceleration_->y = acceleration.y;
-    acceleration_->z = acceleration.z;
-    acceleration_->timestamp = acceleration.timestamp;
-    
-    double tmp = acceleration_->x;
-    
-    switch ([[UIApplication sharedApplication] statusBarOrientation]) 
-    {
-    case UIInterfaceOrientationLandscapeRight:
-        acceleration_->x = -acceleration_->y;
-        acceleration_->y = tmp;
-        break;
-        
-    case UIInterfaceOrientationLandscapeLeft:
-        acceleration_->x = acceleration_->y;
-        acceleration_->y = -tmp;
-        break;
-        
-    case UIInterfaceOrientationPortraitUpsideDown:
-        acceleration_->x = -acceleration_->y;
-        acceleration_->y = -tmp;
-        break;
-            
-    case UIInterfaceOrientationPortrait:
-        break;
-    }
-    
-    delegate_->didAccelerate(acceleration_);
+	motionManager_.accelerometerUpdateInterval = interval;
 }
 
 @end
-

@@ -40,7 +40,7 @@ public:
 	}
 };
 
-oMemoryPool<oSequence> oSequence::_memory;
+MEMORY_POOL(oSequence)
 
 oSequence* oSequence::createWithTwoActions(CCFiniteTimeAction *pActionOne, CCFiniteTimeAction *pActionTwo)
 {
@@ -251,7 +251,7 @@ oActionDuration* oSequence::reverse()
 	return oSequence::createWithTwoActions(m_pActions[1]->reverse(), m_pActions[0]->reverse());
 }
 
-oMemoryPool<oSpawn> oSpawn::_memory;
+MEMORY_POOL(oSpawn)
 
 oSpawn* oSpawn::create(CCFiniteTimeAction *pAction1, ...)
 {

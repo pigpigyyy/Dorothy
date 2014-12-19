@@ -85,7 +85,7 @@ static EAGLView *view;
 		eventDelegate_ = [CCEventDispatcher sharedDispatcher];
 	}
     
-    cocos2d::CCEGLView::sharedOpenGLView()->setFrameSize(frameRect.size);
+    cocos2d::CCEGLView::sharedOpenGLView()->setFrameSize(cocos2d::CCSize(frameRect.size.width,frameRect.size.height));
     
     frameZoomFactor_ = 1.0f;
 	
@@ -97,7 +97,7 @@ static EAGLView *view;
     // event delegate
     eventDelegate_ = [CCEventDispatcher sharedDispatcher];
     
-    cocos2d::CCEGLView::sharedOpenGLView()->setFrameSize(frameRect.size);
+    cocos2d::CCEGLView::sharedOpenGLView()->setFrameSize(cocos2d::CCSize(frameRect.size.width,frameRect.size.height));
     
     frameZoomFactor_ = 1.0f;
 	
@@ -331,7 +331,7 @@ static EAGLView *view;
     float xs[1] = {0.0f};
     float ys[1] = {0.0f};
     
-	ids[0] = [theEvent eventNumber];
+	ids[0] = (int)[theEvent eventNumber];
 	xs[0] = x / frameZoomFactor_;
 	ys[0] = y / frameZoomFactor_;
 
@@ -355,7 +355,7 @@ static EAGLView *view;
     float xs[1] = {0.0f};
     float ys[1] = {0.0f};
     
-	ids[0] = [theEvent eventNumber];
+	ids[0] = (int)[theEvent eventNumber];
 	xs[0] = x / frameZoomFactor_;
 	ys[0] = y / frameZoomFactor_;
 
@@ -374,7 +374,7 @@ static EAGLView *view;
     float xs[1] = {0.0f};
     float ys[1] = {0.0f};
     
-	ids[0] = [theEvent eventNumber];
+	ids[0] = (int)[theEvent eventNumber];
 	xs[0] = x / frameZoomFactor_;
 	ys[0] = y / frameZoomFactor_;
 

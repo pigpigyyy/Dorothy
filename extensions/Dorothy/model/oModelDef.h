@@ -54,7 +54,7 @@ public:
 	static void traverse(oSpriteDef* root, const NodeFunc& func)
 	{
 		func(root);
-		const oOwnVector<oSpriteDef>& childrenDef = root->children();
+		const oOwnVector<oSpriteDef>& childrenDef = root->children;
 		for (oSpriteDef* childDef: childrenDef)
 		{
 			oSpriteDef::traverse(childDef, func);

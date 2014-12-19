@@ -129,7 +129,7 @@ static const char *const g_utf8_skip = utf8_skip_data;
  * */
 unsigned int cc_utf8_find_last_not_char(std::vector<unsigned short> str, unsigned short c)
 {
-    int len = str.size();
+    int len = (int)str.size();
     
     int i = len - 1;
     for (; i >= 0; --i)
@@ -148,7 +148,7 @@ unsigned int cc_utf8_find_last_not_char(std::vector<unsigned short> str, unsigne
  * */
 static void cc_utf8_trim_from(std::vector<unsigned short>* str, int index)
 {
-    int size = str->size();
+    int size = (int)str->size();
     if (index >= size || index < 0)
         return;
     
@@ -171,7 +171,7 @@ bool isspace_unicode(unsigned short ch)
 
 void cc_utf8_trim_ws(std::vector<unsigned short>* str)
 {
-    int len = str->size();
+    int len = (int)str->size();
     
     if ( len <= 0 )
         return;
@@ -277,7 +277,7 @@ cc_utf8_get_char (const char * p)
 
 unsigned short* cc_utf8_to_utf16(const char* str_old)
 {
-    int len = cc_utf8_strlen(str_old, -1);
+    int len = (int)cc_utf8_strlen(str_old, -1);
     
     unsigned short* str_new = new unsigned short[len + 1];
     str_new[len] = 0;
@@ -315,10 +315,11 @@ std::vector<unsigned short> cc_utf16_vec_from_utf16_str(const unsigned short* st
  * Return value: number of bytes written
  **/
 int
-cc_unichar_to_utf8 (unsigned short c,
+cc_unichar_to_utf8 (unsigned short ci,
                    char   *outbuf)
 {
     unsigned int len = 0;
+	unsigned int c = (unsigned int)ci;
     int first;
     int i;
     
@@ -449,7 +450,7 @@ cc_utf16_to_utf8 (const unsigned short  *str,
         }
         
         /********** DIFFERENT for UTF8/UCS4 **********/
-        n_bytes += UTF8_LENGTH (wc);
+        n_bytes += UTF8_LENGTH ((unsigned int)wc);
         
     next1:
         in++;
@@ -564,7 +565,7 @@ void cc_utf16_to_utf8(const unsigned short* src,
         }
         
         /********** DIFFERENT for UTF8/UCS4 **********/
-        n_bytes += UTF8_LENGTH (wc);
+        n_bytes += UTF8_LENGTH ((unsigned int)wc);
         
     next1:
         in++;

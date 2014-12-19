@@ -15,19 +15,13 @@ AppDelegate::AppDelegate()
 
 AppDelegate::~AppDelegate()
 {
-    SimpleAudioEngine::end();
+	SimpleAudioEngine::end();
 }
 
 bool AppDelegate::applicationDidFinishLaunching()
 {
     // initialize director
 	CCDirector::sharedDirector()->setOpenGLView(CCEGLView::sharedOpenGLView());
-
-#if CC_TARGET_PLATFORM == CC_PLATFORM_BLACKBERRY
-    std::vector<std::string> searchPaths;
-    searchPaths.push_back("TestCppResources");
-    CCFileUtils::sharedFileUtils()->setSearchPaths(searchPaths);
-#endif
 	/*
 	oSharedContent.setGameFile("Resources.zip");
 	oSharedContent.setPassword("pigyypigy");
@@ -42,19 +36,21 @@ bool AppDelegate::applicationDidFinishLaunching()
 		entry = "main";
 	}
 	CCScriptEngine::sharedEngine()->executeScriptFile(entry.c_str());
-    return true;
+	return true;
 }
 
 // This function will be called when the app is inactive. When comes a phone call,it's be invoked too
 void AppDelegate::applicationDidEnterBackground()
 {
 	CCDirector::sharedDirector()->pause();
-    SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
+	SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
+	CCApplication::applicationDidEnterBackground();
 }
 
 // this function will be called when the app is active again
 void AppDelegate::applicationWillEnterForeground()
 {
 	CCDirector::sharedDirector()->resume();
-    SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
+	SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
+	CCApplication::applicationWillEnterForeground();
 }

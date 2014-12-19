@@ -66,7 +66,7 @@ _currentLookName(oString::Empty)
 
 void oModel::addLook( int index, CCNode* node )
 {
-	for (int n = _looks.size();n < index + 1;_looks.push_back(new oLook()), n++);
+	for (int n = (int)_looks.size();n < index + 1;_looks.push_back(new oLook()), n++);
 	_looks[index]->add(node);
 }
 
@@ -156,7 +156,7 @@ void oModel::reset()
 
 void oModel::addAnimation( int index, CCNode* node, oActionDuration* action )
 {
-	for (int n = _animationGroups.size();n < index + 1;_animationGroups.push_back(new oAnimationGroup()), n++);
+	for (int n = (int)_animationGroups.size();n < index + 1;_animationGroups.push_back(new oAnimationGroup()), n++);
 	_animationGroups[index]->animations.push_back(new oAnimation(node, action));
 }
 

@@ -7,12 +7,13 @@ return {
 	description = "Dorothy game engine",
 	api = {"baselib", "dorothy"},
 	frun = function(self,wfilename,rundebug)
+		local mainPath = ide.editorFilename:gsub("[^/\\]+$","")
 		dorothy = dorothy or ide.config.path.dorothy -- check if the path is configured
 		if not dorothy then
 			local sep = win and ';' or ':'
 			local default =
 				win and ([[C:\Program Files\Dorothy]]..sep..[[D:\Program Files\Dorothy]]..sep..
-						[[C:\Program Files (x86)\Dorothy]]..sep..[[D:\Program Files (x86)\Dorothy]]..sep)
+						[[C:\Program Files (x86)\Dorothy]]..sep..[[D:\Program Files (x86)\Dorothy]]..sep..mainPath..[[\..\..\Debug.win32]]..sep)
 				or mac and ('/Applications/dorothy.app/Contents/MacOS'..sep)
 				or ''
 			local path = default
@@ -35,15 +36,15 @@ return {
 			DisplayOutput("Can't find 'main.lua' file in the current project folder.\n")
 			return
 		end
-
+--[[
 		if rundebug then
 			DebuggerAttachDefault({runstart = ide.config.debugger.runonstart == true})
 		end
-
-		local cmd = ('"%s" "%s"%s'):format(dorothy,
-			self:fworkdir(wfilename), rundebug and ' -debug' or '')
+]]
+		local cmd = ('"%s" "%s"'):format(dorothy,
+			'main')
 		-- CommandLineRun(cmd,wdir,tooutput,nohide,stringcallback,uid,endcallback)
-		return CommandLineRun(cmd,self:fworkdir(wfilename),true,false,nil,nil,
+		return CommandLineRun(cmd,self:fworkdir(wfilename),false,true,nil,nil,
 			function() ide.debugger.pid = nil end)
 	end,
 	fprojdir = function(self,wfilename)

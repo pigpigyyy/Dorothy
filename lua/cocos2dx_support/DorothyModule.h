@@ -73,6 +73,10 @@ void oModelCache_removeUnused();
 
 void oCache_removeUnused();
 void oCache_clear();
+// return collected memory size in bytes
+int oCache_poolCollect();
+// return current allocated memory size
+int oCache_poolSize();
 
 void oUnitDef_setActions(oUnitDef* def, int actions[], int count);
 void oUnitDef_setInstincts(oUnitDef* def, int instincts[], int count);
@@ -174,11 +178,6 @@ void CCTextFieldTTF_registerInputHandler(CCTextFieldTTF* textField, int handler)
 void CCTextFieldTTF_unregisterInputHandler(CCTextFieldTTF* textField);
 
 CCRenderTexture* CCRenderTexture_create(int w, int h, bool withDepthStencil = false);
-
-int __olua_loadfile(lua_State* L, const char* filename);
-#define olua_loadfile(filename) {__olua_loadfile(tolua_S,filename);return 1;}
-int __olua_dofile(lua_State* L, const char* filename);
-#define olua_dofile(filename) {__olua_dofile(tolua_S,filename);return 1;}
 
 int CCTextureCache_loadAsync(lua_State* L);
 

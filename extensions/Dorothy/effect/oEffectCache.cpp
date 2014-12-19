@@ -66,7 +66,7 @@ bool oEffectCache::load( const char* filename )
 		return false;
 	}
 	_path = oString::getFilePath(filename);
-	return _parser.parse(data, size);
+	return _parser.parse(data, (unsigned int)size);
 }
 bool oEffectCache::update(const char* content)
 {
@@ -75,7 +75,7 @@ bool oEffectCache::update(const char* content)
 		oEffectCache::unload();
 	}
 	unsigned long size = ::strlen(content);
-	return _parser.parse(content, size);
+	return _parser.parse(content, (unsigned int)size);
 }
 bool oEffectCache::unload()
 {

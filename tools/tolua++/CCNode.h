@@ -2,9 +2,9 @@ class CCNode: public CCObject
 {
 	enum
 	{
-		Enter = 0,
+		Enter @ Entering = 0,
 		EnterTransitionDidFinish @ Entered = 2,
-		ExitTransitionDidStart @ Exit = 3,
+		ExitTransitionDidStart @ Exiting = 3,
 		Exit @ Exited = 1,
 		Cleanup = 4
 	};

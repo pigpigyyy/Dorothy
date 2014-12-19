@@ -178,7 +178,8 @@ CCScriptEngine* CCScriptEngine::sharedEngine()
 }
 
 bool CCScriptEngine::executeAssert(bool cond, const char *msg){ return true; }
-int CCScriptEngine::executeEvent(int nHandler, const char* pEventName, CCObject* pEventSource, const char* pEventSourceClassName){ return 0; }
+int CCScriptEngine::executeApplicationEvent(int handler, int eventType) { return true; }
+int CCScriptEngine::executeEvent(int nHandler, const char* pEventName, CCObject* pEventSource){ return 0; }
 int CCScriptEngine::executeAccelerometerEvent(CCLayer* pLayer, CCAcceleration* pAccelerationValue){ return 0; }
 int CCScriptEngine::executeLayerKeypadEvent(CCLayer* pLayer, int eventType){ return 0; }
 int CCScriptEngine::executeLayerTouchEvent(CCLayer* pLayer, int eventType, CCTouch *pTouch){ return 0; }

@@ -137,7 +137,7 @@ unsigned int CCObject::getObjectId() const
 
 unsigned int CCObject::getObjectCount()
 {
-	return g_maxObjectCount - g_availableObjectIds.size();
+	return g_maxObjectCount - (unsigned int)g_availableObjectIds.size();
 }
 
 unsigned int CCObject::getLuaRefCount()

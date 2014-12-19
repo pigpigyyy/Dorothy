@@ -31,11 +31,7 @@ protected:
 	CCFiniteTimeAction* m_pActions[2];
 	float m_split;
 	int m_last;
-public:
-	inline void* operator new(size_t size){ return _memory.alloc(); }
-	inline void operator delete(void* ptr, size_t size) { _memory.free(ptr); }
-private:
-	static oMemoryPool<oSequence> _memory;
+	USE_MEMORY_POOL(oSequence)
 };
 
 class oSpawn: public CCActionInterval
@@ -56,11 +52,7 @@ public:
 protected:
 	CCFiniteTimeAction* m_pOne;
 	CCFiniteTimeAction* m_pTwo;
-public:
-	inline void* operator new(size_t size){ return _memory.alloc(); }
-	inline void operator delete(void* ptr, size_t size) { _memory.free(ptr); }
-private:
-	static oMemoryPool<oSpawn> _memory;
+	USE_MEMORY_POOL(oSpawn)
 };
 
 NS_DOROTHY_END
