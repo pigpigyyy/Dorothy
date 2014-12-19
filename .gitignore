@@ -38,14 +38,8 @@ gen/
 assets/
 local.properties
 
-# Ignore files built by NaCl
-
-# Ignore python compiled files
-*.pyc
-
-# Ignore files build by airplay and marmalade
-build_*_xcode/
-build_*_vc10/
+# Ignore files built by Android
+/project/proj.android/libs/
 
 # Ignore files build by xcode
 *.mode*v*
@@ -60,16 +54,6 @@ build/
 ._.*
 xcuserdata/
 DerivedData/
-
-# Ignore files built by bada
-.Simulator-Debug/
-.Target-Debug/
-.Target-Release/
-
-# Ignore files built by blackberry
-Simulator/
-Device-Debug/
-Device-Release/
 
 # Ignore vim swaps
 *.swp
