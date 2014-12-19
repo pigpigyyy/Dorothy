@@ -387,8 +387,8 @@ local function oEditMenu()
 								else
 									oEditor.controlBar:setTime(model.duration)
 									oEditor.isPlaying = false
-									item.label.text = "Play"
-									item.label.texture.antiAlias = false
+									self.label.text = "Play"
+									self.label.texture.antiAlias = false
 									self:unschedule()
 									oEvent:send("PlayState","Stop")
 								end
