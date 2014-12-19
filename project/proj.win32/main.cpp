@@ -37,8 +37,23 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		CCUserDefault::sharedUserDefault()->setIntegerForKey("Height", height);
 	}
 	eglView->setFrameSize(CCSize(width, height));
+	
+	if (lpCmdLine && lpCmdLine[0])
+	{
+		string filename = lpCmdLine;
+		auto it = filename.begin();
+		while (it != filename.end())
+		{
+			if (*it == '\"')
+			{
+				filename.erase(it);
+			}
+			else it++;
+		}
+		CCUserDefault::sharedUserDefault()->setStringForKey("ScriptEntry", filename.c_str());
+	}
 
-    int ret = CCApplication::sharedApplication()->run();
+	int ret = CCApplication::sharedApplication()->run();
 
 #ifdef USE_WIN32_CONSOLE
     FreeConsole();

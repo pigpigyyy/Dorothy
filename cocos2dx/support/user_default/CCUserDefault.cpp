@@ -258,12 +258,7 @@ string CCUserDefault::getStringForKey(const char* pKey, const std::string & defa
 		value = (const char*)(node->FirstChild()->Value());
 	}
 
-	string ret = defaultValue;
-
-	if (value)
-	{
-		ret = string(value);
-	}
+	string ret = value ? string(value) : defaultValue;
 
 	if (doc) delete doc;
 
