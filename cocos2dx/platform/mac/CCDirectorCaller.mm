@@ -63,11 +63,6 @@ static id s_sharedDirectorCaller;
 	if (displayLink) {
 		CVDisplayLinkRelease(displayLink);
 	}
-    
-    CCLOG("--------------------------------------------------------------------------------");
-    CCLOG("");
-    CCLOG("");
-    CCLOG("");
 	[super dealloc];
 }
 
@@ -186,6 +181,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     [renderTimer invalidate];
 	renderTimer = nil;
     [self release];
+	exit(0);
 }
 
 -(void) setAnimationInterval:(double)intervalNew

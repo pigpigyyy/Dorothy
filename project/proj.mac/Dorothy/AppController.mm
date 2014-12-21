@@ -29,12 +29,17 @@
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
-	[[CCDirectorCaller sharedDirectorCaller] end];
 }
 
 - (BOOL) applicationShouldTerminateAfterLastWindowClosed: (NSApplication *) theApplication
 {
 	return YES;
+}
+
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender;
+{
+	[[CCDirectorCaller sharedDirectorCaller] end];
+	return NSTerminateNow;
 }
 
 - (void)dealloc

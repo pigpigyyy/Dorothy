@@ -126,7 +126,15 @@
 		3C5050021A23802F000C79D6 /* tolua_map.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C504FE31A23802F000C79D6 /* tolua_map.c */; };
 		3C5050031A23802F000C79D6 /* tolua_push.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C504FE41A23802F000C79D6 /* tolua_push.c */; };
 		3C5050041A23802F000C79D6 /* tolua_to.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C504FE51A23802F000C79D6 /* tolua_to.c */; };
-		3C5050071A238792000C79D6 /* main.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C5050061A238792000C79D6 /* main.lua */; };
+		3C7AA4CE1A47291F007836D2 /* ActionEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4C51A47291F007836D2 /* ActionEditor */; };
+		3C7AA4CF1A47291F007836D2 /* bk.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4C61A47291F007836D2 /* bk.jpg */; };
+		3C7AA4D01A47291F007836D2 /* BodyEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4C71A47291F007836D2 /* BodyEditor */; };
+		3C7AA4D11A47291F007836D2 /* boy.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4C81A47291F007836D2 /* boy.lua */; };
+		3C7AA4D21A47291F007836D2 /* class.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4C91A47291F007836D2 /* class.lua */; };
+		3C7AA4D31A47291F007836D2 /* girl.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4CA1A47291F007836D2 /* girl.lua */; };
+		3C7AA4D41A47291F007836D2 /* main.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4CB1A47291F007836D2 /* main.lua */; };
+		3C7AA4D51A47291F007836D2 /* miku.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4CC1A47291F007836D2 /* miku.lua */; };
+		3C7AA4D61A47291F007836D2 /* Test in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4CD1A47291F007836D2 /* Test */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -399,7 +407,15 @@
 		3C504FE31A23802F000C79D6 /* tolua_map.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tolua_map.c; sourceTree = "<group>"; };
 		3C504FE41A23802F000C79D6 /* tolua_push.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tolua_push.c; sourceTree = "<group>"; };
 		3C504FE51A23802F000C79D6 /* tolua_to.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tolua_to.c; sourceTree = "<group>"; };
-		3C5050061A238792000C79D6 /* main.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.lua; sourceTree = "<group>"; };
+		3C7AA4C51A47291F007836D2 /* ActionEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ActionEditor; sourceTree = "<group>"; };
+		3C7AA4C61A47291F007836D2 /* bk.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bk.jpg; sourceTree = "<group>"; };
+		3C7AA4C71A47291F007836D2 /* BodyEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BodyEditor; sourceTree = "<group>"; };
+		3C7AA4C81A47291F007836D2 /* boy.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = boy.lua; sourceTree = "<group>"; };
+		3C7AA4C91A47291F007836D2 /* class.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = class.lua; sourceTree = "<group>"; };
+		3C7AA4CA1A47291F007836D2 /* girl.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = girl.lua; sourceTree = "<group>"; };
+		3C7AA4CB1A47291F007836D2 /* main.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.lua; sourceTree = "<group>"; };
+		3C7AA4CC1A47291F007836D2 /* miku.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = miku.lua; sourceTree = "<group>"; };
+		3C7AA4CD1A47291F007836D2 /* Test */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Test; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -429,6 +445,7 @@
 				3C504E491A237E5C000C79D6 /* extensions */,
 				3C504D561A23739B000C79D6 /* Dorothy */,
 				3C504D891A237B32000C79D6 /* Frameworks */,
+				3C7AA4C41A4728FC007836D2 /* Resources */,
 				3C504D551A23739B000C79D6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -450,7 +467,6 @@
 				3C504D5A1A23739B000C79D6 /* AppController.mm */,
 				3C504D5E1A23739B000C79D6 /* Images.xcassets */,
 				3C504D601A23739B000C79D6 /* MainMenu.xib */,
-				3C5050061A238792000C79D6 /* main.lua */,
 				3C504D571A23739B000C79D6 /* Supporting Files */,
 			);
 			path = Dorothy;
@@ -946,6 +962,23 @@
 			path = tolua;
 			sourceTree = "<group>";
 		};
+		3C7AA4C41A4728FC007836D2 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				3C7AA4C51A47291F007836D2 /* ActionEditor */,
+				3C7AA4C61A47291F007836D2 /* bk.jpg */,
+				3C7AA4C71A47291F007836D2 /* BodyEditor */,
+				3C7AA4C81A47291F007836D2 /* boy.lua */,
+				3C7AA4C91A47291F007836D2 /* class.lua */,
+				3C7AA4CA1A47291F007836D2 /* girl.lua */,
+				3C7AA4CB1A47291F007836D2 /* main.lua */,
+				3C7AA4CC1A47291F007836D2 /* miku.lua */,
+				3C7AA4CD1A47291F007836D2 /* Test */,
+			);
+			name = Resources;
+			path = ../Resources;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1020,9 +1053,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C7AA4D61A47291F007836D2 /* Test in Resources */,
+				3C7AA4CF1A47291F007836D2 /* bk.jpg in Resources */,
+				3C7AA4D11A47291F007836D2 /* boy.lua in Resources */,
 				3C504D5F1A23739B000C79D6 /* Images.xcassets in Resources */,
-				3C5050071A238792000C79D6 /* main.lua in Resources */,
+				3C7AA4CE1A47291F007836D2 /* ActionEditor in Resources */,
+				3C7AA4D01A47291F007836D2 /* BodyEditor in Resources */,
+				3C7AA4D41A47291F007836D2 /* main.lua in Resources */,
+				3C7AA4D51A47291F007836D2 /* miku.lua in Resources */,
 				3C504D621A23739B000C79D6 /* MainMenu.xib in Resources */,
+				3C7AA4D31A47291F007836D2 /* girl.lua in Resources */,
+				3C7AA4D21A47291F007836D2 /* class.lua in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
