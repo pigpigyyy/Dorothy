@@ -193,7 +193,7 @@ void oModel::reset( CCNode* parentNode )
 		CCARRAY_START(CCSprite, child, children)
 		{
 			oSpriteDef* childDef = (oSpriteDef*)child->getUserData();
-			childDef->restore(child);
+			if (childDef) childDef->restore(child);
 			oModel::reset(child);
 		}
 		CCARRAY_END

@@ -39,7 +39,7 @@ local CCKey =
 }
 
 oAI.getUnitByTag = function(self,tag)
-	local units = oAI:getDetectedUnits()
+	local units = self:getDetectedUnits()
 	for i = 1,units.count do
 		if units[i].tag == 998 then
 			return units[i]
@@ -48,33 +48,41 @@ oAI.getUnitByTag = function(self,tag)
 	return nil
 end
 
+local function isJumpKeyDown()
+	return CCKeyboard:isKeyDown(CCKey.Up)
+end
+
+local function isWalkKeyPressed()
+	return CCKeyboard:isKeyPressed(CCKey.Left) or CCKeyboard:isKeyPressed(CCKey.Right)
+end
+
+local function isFaceDirectionChanged()
+	return oAI.self.faceRight ~= CCKeyboard:isKeyPressed(CCKey.Right)
+end
+
+local function needGoIdle()
+	return not CCKeyboard:isKeyPressed(CCKey.Left)
+		and not CCKeyboard:isKeyPressed(CCKey.Right)
+		and (oAI.self.currentAction and oAI.self.currentAction.id == oAction.Walk)
+end
+
 oAI:add(1,oSel({
 	oSeq({
-		oCon(function()
-			return CCKeyboard:isKeyDown(CCKey.Up)
-		end),
+		oCon(isJumpKeyDown),
 		oAct(oAction.Jump),
 	}),
 	oSeq({
-		oCon(function()
-			return CCKeyboard:isKeyPressed(CCKey.Left) or CCKeyboard:isKeyPressed(CCKey.Right)
-		end),
+		oCon(isWalkKeyPressed),
 		oSel({
 			oSeq({
-				oCon(function()
-					return oAI.self.faceRight ~= CCKeyboard:isKeyPressed(CCKey.Right)
-				end),
+				oCon(isFaceDirectionChanged),
 				oAct(oAction.Turn),
 			}),
 			oAct(oAction.Walk),
 		}),
 	}),
 	oSeq({
-		oCon(function()
-			return not CCKeyboard:isKeyPressed(CCKey.Left)
-				and not CCKeyboard:isKeyPressed(CCKey.Right)
-				and (oAI.self.currentAction and oAI.self.currentAction.id == oAction.Walk)
-		end),
+		oCon(needGoIdle),
 		oAct(oAction.Stop),
 		oAct(oAction.Idle)
 	}),

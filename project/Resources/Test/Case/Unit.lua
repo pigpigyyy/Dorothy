@@ -54,13 +54,7 @@ local unit = oUnit(unitDef,world,oVec2(400,300))
 unit.moveSpeed = 0.9
 unit.group = 1
 world:addChild(unit)
---[[unit:schedule(
-	loop(function()
-		print("start")
-		wait(seconds(3))
-		print("end")
-	end))
---]]
+
 local terrainDef = oBodyDef()
 terrainDef.type = oBodyDef.Static
 terrainDef:attachPolygon(800,10,1,1,0)

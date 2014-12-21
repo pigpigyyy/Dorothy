@@ -261,8 +261,9 @@ local function oFileChooser()
 				oEditor.sprite = nil
 				oEditor.spriteData = nil
 				oEditor.dirty = false
-				oEditor.needSave = false
+				--oEditor.needSave = false
 
+				oEditor.editMenu:markEditButton(not oEditor.data)
 				if not oEditor.data then
 					oEditor.data =
 					{
@@ -288,7 +289,6 @@ local function oFileChooser()
 						{},--animationNames
 						{}--lookNames
 					}
-					oEditor.editMenu:markEditButton(true)
 				end
 				oEditor.dirty = true
 				local model = oEditor.viewArea:getModel()
