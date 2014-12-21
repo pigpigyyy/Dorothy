@@ -73,10 +73,15 @@
 		15C1569E1683138E00D239F2 /* Icon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = 15C156971683138E00D239F2 /* Icon-144.png */; };
 		3C504D8E1A237B97000C79D6 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C504D8D1A237B97000C79D6 /* libwebp.a */; };
 		3C5AC9FC1A21A71F006EDD2B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5AC9FB1A21A71F006EDD2B /* CoreMotion.framework */; };
-		3C7503991A2A4BFF0013A8BC /* oButton.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7503981A2A4BFF0013A8BC /* oButton.lua */; };
-		3C75039D1A2A4C530013A8BC /* xiaoli.clip in Resources */ = {isa = PBXBuildFile; fileRef = 3C75039A1A2A4C530013A8BC /* xiaoli.clip */; };
-		3C75039E1A2A4C530013A8BC /* xiaoli.model in Resources */ = {isa = PBXBuildFile; fileRef = 3C75039B1A2A4C530013A8BC /* xiaoli.model */; };
-		3C75039F1A2A4C530013A8BC /* xiaoli.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C75039C1A2A4C530013A8BC /* xiaoli.png */; };
+		3C7AA4E11A4731AD007836D2 /* ActionEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4D81A4731AD007836D2 /* ActionEditor */; };
+		3C7AA4E21A4731AD007836D2 /* bk.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4D91A4731AD007836D2 /* bk.jpg */; };
+		3C7AA4E31A4731AD007836D2 /* BodyEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4DA1A4731AD007836D2 /* BodyEditor */; };
+		3C7AA4E41A4731AD007836D2 /* boy.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4DB1A4731AD007836D2 /* boy.lua */; };
+		3C7AA4E51A4731AD007836D2 /* class.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4DC1A4731AD007836D2 /* class.lua */; };
+		3C7AA4E61A4731AD007836D2 /* girl.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4DD1A4731AD007836D2 /* girl.lua */; };
+		3C7AA4E71A4731AD007836D2 /* main.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4DE1A4731AD007836D2 /* main.lua */; };
+		3C7AA4E81A4731AD007836D2 /* miku.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4DF1A4731AD007836D2 /* miku.lua */; };
+		3C7AA4E91A4731AD007836D2 /* Test in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4E01A4731AD007836D2 /* Test */; };
 		3C89A6071A209CD3001D5009 /* DorothyModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C89A6041A209CD3001D5009 /* DorothyModule.cpp */; };
 		3C89A6081A209CD3001D5009 /* tolua_extern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C89A6061A209CD3001D5009 /* tolua_extern.cpp */; };
 		3C89A6811A209D1C001D5009 /* AssetsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C89A60A1A209D1C001D5009 /* AssetsManager.cpp */; };
@@ -128,7 +133,6 @@
 		3C89A6C31A20C5B5001D5009 /* libcocos2dx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C58D44E1A20951D0051AADE /* libcocos2dx.a */; };
 		3CA03A6F1A2900460008F80F /* libluajit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CA03A6E1A2900460008F80F /* libluajit.a */; };
 		3CB40CFA1A20E6C200D7A3A6 /* b2MotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CB40CF81A20E6C200D7A3A6 /* b2MotorJoint.cpp */; };
-		3CB40CFC1A20E72200D7A3A6 /* main.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3CB40CFB1A20E72200D7A3A6 /* main.lua */; };
 		3CB40D261A20ECC500D7A3A6 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CB40D251A20ECC500D7A3A6 /* libsqlite3.0.dylib */; };
 		46C1008D16BF786A00F74D54 /* CCLuaEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46C1007C16BF786A00F74D54 /* CCLuaEngine.cpp */; };
 		46C1009116BF786A00F74D54 /* LuaCocos2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46C1008416BF786A00F74D54 /* LuaCocos2d.cpp */; };
@@ -292,10 +296,15 @@
 		15C156971683138E00D239F2 /* Icon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-144.png"; sourceTree = SOURCE_ROOT; };
 		3C504D8D1A237B97000C79D6 /* libwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwebp.a; path = ../../cocos2dx/platform/third_party/mac/libraries/libwebp.a; sourceTree = "<group>"; };
 		3C5AC9FB1A21A71F006EDD2B /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreMotion.framework; sourceTree = DEVELOPER_DIR; };
-		3C7503981A2A4BFF0013A8BC /* oButton.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = oButton.lua; sourceTree = SOURCE_ROOT; };
-		3C75039A1A2A4C530013A8BC /* xiaoli.clip */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xiaoli.clip; sourceTree = SOURCE_ROOT; };
-		3C75039B1A2A4C530013A8BC /* xiaoli.model */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xiaoli.model; sourceTree = SOURCE_ROOT; };
-		3C75039C1A2A4C530013A8BC /* xiaoli.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xiaoli.png; sourceTree = SOURCE_ROOT; };
+		3C7AA4D81A4731AD007836D2 /* ActionEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ActionEditor; path = ../../../Dorothy/project/Resources/ActionEditor; sourceTree = "<group>"; };
+		3C7AA4D91A4731AD007836D2 /* bk.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = bk.jpg; path = ../../../Dorothy/project/Resources/bk.jpg; sourceTree = "<group>"; };
+		3C7AA4DA1A4731AD007836D2 /* BodyEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; name = BodyEditor; path = ../../../Dorothy/project/Resources/BodyEditor; sourceTree = "<group>"; };
+		3C7AA4DB1A4731AD007836D2 /* boy.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = boy.lua; path = ../../../Dorothy/project/Resources/boy.lua; sourceTree = "<group>"; };
+		3C7AA4DC1A4731AD007836D2 /* class.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = class.lua; path = ../../../Dorothy/project/Resources/class.lua; sourceTree = "<group>"; };
+		3C7AA4DD1A4731AD007836D2 /* girl.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = girl.lua; path = ../../../Dorothy/project/Resources/girl.lua; sourceTree = "<group>"; };
+		3C7AA4DE1A4731AD007836D2 /* main.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.lua; path = ../../../Dorothy/project/Resources/main.lua; sourceTree = "<group>"; };
+		3C7AA4DF1A4731AD007836D2 /* miku.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = miku.lua; path = ../../../Dorothy/project/Resources/miku.lua; sourceTree = "<group>"; };
+		3C7AA4E01A4731AD007836D2 /* Test */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Test; path = ../../../Dorothy/project/Resources/Test; sourceTree = "<group>"; };
 		3C89A6041A209CD3001D5009 /* DorothyModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DorothyModule.cpp; sourceTree = "<group>"; };
 		3C89A6051A209CD3001D5009 /* DorothyModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DorothyModule.h; sourceTree = "<group>"; };
 		3C89A6061A209CD3001D5009 /* tolua_extern.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tolua_extern.cpp; sourceTree = "<group>"; };
@@ -417,7 +426,6 @@
 		3CA03A6E1A2900460008F80F /* libluajit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libluajit.a; path = ../../lua/lib/ios/libluajit.a; sourceTree = "<group>"; };
 		3CB40CF81A20E6C200D7A3A6 /* b2MotorJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2MotorJoint.cpp; sourceTree = "<group>"; };
 		3CB40CF91A20E6C200D7A3A6 /* b2MotorJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2MotorJoint.h; sourceTree = "<group>"; };
-		3CB40CFB1A20E72200D7A3A6 /* main.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.lua; sourceTree = SOURCE_ROOT; };
 		3CB40D251A20ECC500D7A3A6 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		46C1007C16BF786A00F74D54 /* CCLuaEngine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCLuaEngine.cpp; sourceTree = "<group>"; };
 		46C1007D16BF786A00F74D54 /* CCLuaEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLuaEngine.h; sourceTree = "<group>"; };
@@ -1019,9 +1027,15 @@
 		F293BC4615EB859D00256477 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				3C75039A1A2A4C530013A8BC /* xiaoli.clip */,
-				3C75039B1A2A4C530013A8BC /* xiaoli.model */,
-				3C75039C1A2A4C530013A8BC /* xiaoli.png */,
+				3C7AA4D81A4731AD007836D2 /* ActionEditor */,
+				3C7AA4D91A4731AD007836D2 /* bk.jpg */,
+				3C7AA4DA1A4731AD007836D2 /* BodyEditor */,
+				3C7AA4DB1A4731AD007836D2 /* boy.lua */,
+				3C7AA4DC1A4731AD007836D2 /* class.lua */,
+				3C7AA4DD1A4731AD007836D2 /* girl.lua */,
+				3C7AA4DE1A4731AD007836D2 /* main.lua */,
+				3C7AA4DF1A4731AD007836D2 /* miku.lua */,
+				3C7AA4E01A4731AD007836D2 /* Test */,
 				15C156911683138E00D239F2 /* Default-568h@2x.png */,
 				15C156921683138E00D239F2 /* Default.png */,
 				15C156931683138E00D239F2 /* Default@2x.png */,
@@ -1029,8 +1043,6 @@
 				15C156951683138E00D239F2 /* Icon-72.png */,
 				15C156961683138E00D239F2 /* Icon-114.png */,
 				15C156971683138E00D239F2 /* Icon-144.png */,
-				3C7503981A2A4BFF0013A8BC /* oButton.lua */,
-				3CB40CFB1A20E72200D7A3A6 /* main.lua */,
 			);
 			name = Resources;
 			path = ../../../Cpp/TestCpp/Resources;
@@ -1109,17 +1121,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				15C156981683138E00D239F2 /* Default-568h@2x.png in Resources */,
+				3C7AA4E11A4731AD007836D2 /* ActionEditor in Resources */,
 				15C156991683138E00D239F2 /* Default.png in Resources */,
+				3C7AA4E71A4731AD007836D2 /* main.lua in Resources */,
+				3C7AA4E91A4731AD007836D2 /* Test in Resources */,
+				3C7AA4E51A4731AD007836D2 /* class.lua in Resources */,
 				15C1569A1683138E00D239F2 /* Default@2x.png in Resources */,
-				3C7503991A2A4BFF0013A8BC /* oButton.lua in Resources */,
-				3C75039E1A2A4C530013A8BC /* xiaoli.model in Resources */,
 				15C1569B1683138E00D239F2 /* Icon-57.png in Resources */,
-				3C75039D1A2A4C530013A8BC /* xiaoli.clip in Resources */,
-				3C75039F1A2A4C530013A8BC /* xiaoli.png in Resources */,
 				15C1569C1683138E00D239F2 /* Icon-72.png in Resources */,
-				3CB40CFC1A20E72200D7A3A6 /* main.lua in Resources */,
+				3C7AA4E21A4731AD007836D2 /* bk.jpg in Resources */,
 				15C1569D1683138E00D239F2 /* Icon-114.png in Resources */,
+				3C7AA4E81A4731AD007836D2 /* miku.lua in Resources */,
+				3C7AA4E41A4731AD007836D2 /* boy.lua in Resources */,
 				15C1569E1683138E00D239F2 /* Icon-144.png in Resources */,
+				3C7AA4E61A4731AD007836D2 /* girl.lua in Resources */,
+				3C7AA4E31A4731AD007836D2 /* BodyEditor in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -805,6 +805,8 @@ void CCDirector::showStats()
 
 void CCDirector::createStatsLabel()
 {
+	if (!m_bDisplayStats) return;
+	
 	CC_SAFE_RELEASE_NULL(m_pFPSLabel);
 	CC_SAFE_RELEASE_NULL(m_pDSPFLabel);
 	CC_SAFE_RELEASE_NULL(m_pUSPFLabel);
