@@ -39,6 +39,8 @@ THE SOFTWARE.
 #import "CCWindow.h"
 #import "CCEventDispatcher.h"
 #import "CCEGLView.h"
+#import "CCKeyboard.h"
+#import "CCIMEDispatcher.h"
 
 
 //USING_NS_CC;
@@ -448,17 +450,45 @@ static EAGLView *view;
 - (void)keyDown:(NSEvent *)theEvent
 {
 	DISPATCH_EVENT(theEvent, _cmd);
-	
+  	NSString* characters = [theEvent characters];
+  	if ([characters length])
+	{
+		unichar ch = [characters characterAtIndex:0];
+		char key = (char)(0xff & ch);
+		if (ch == u'\r')
+		{
+			cocos2d::CCIMEDispatcher::sharedDispatcher()->dispatchInsertText("\n", 1);
+		}
+		else if (key == 0x7F)
+		{
+			cocos2d::CCIMEDispatcher::sharedDispatcher()->dispatchDeleteBackward();
+		}
+		else if (ch < 0xF780)
+		{
+			cocos2d::CCIMEDispatcher::sharedDispatcher()->dispatchInsertText((const char*)&key, 1);
+		}
+		else
+		{
+			const char* chars = [characters cStringUsingEncoding: NSUTF8StringEncoding];
+			cocos2d::CCIMEDispatcher::sharedDispatcher()->dispatchInsertText(chars, (int)strlen(chars));
+		}
+		cocos2d::CCKeyboard::sharedKeyboard()->updateKey((char)(0xFF & ch), true);
+	}
 	// pass the event along to the next responder (like your NSWindow subclass)
-	[super keyDown:theEvent];
+	//[super keyDown:theEvent];
 }
 
 - (void)keyUp:(NSEvent *)theEvent
 {
 	DISPATCH_EVENT(theEvent, _cmd);
-
+  	NSString* characters = [theEvent characters];
+  	if ([characters length])
+	{
+		unichar ch = [characters characterAtIndex:0];
+		cocos2d::CCKeyboard::sharedKeyboard()->updateKey((char)(0xFF & ch), false);
+	}
 	// pass the event along to the next responder (like your NSWindow subclass)
-	[super keyUp:theEvent];
+	//[super keyUp:theEvent];
 }
 
 - (void)flagsChanged:(NSEvent *)theEvent

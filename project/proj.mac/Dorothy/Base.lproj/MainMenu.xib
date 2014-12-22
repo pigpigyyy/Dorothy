@@ -669,16 +669,14 @@
         </menu>
         <window title="Dorothy" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
-            <rect key="contentRect" x="0.0" y="0.0" width="800" height="600"/>
+            <rect key="contentRect" x="0.0" y="0.0" width="1024" height="768"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
-            <value key="minSize" type="size" width="800" height="600"/>
-            <value key="maxSize" type="size" width="800" height="600"/>
             <view key="contentView" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
+                <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <openGLView colorSize="5bit_RGB_8bit_Alpha" depthSize="24bit" stencilSize="8bit" useAuxiliaryDepthBufferStencil="NO" useDoubleBufferingEnabled="YES" allowOffline="YES" id="MLB-T5-qhd" customClass="EAGLView">
-                        <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     </openGLView>
                 </subviews>

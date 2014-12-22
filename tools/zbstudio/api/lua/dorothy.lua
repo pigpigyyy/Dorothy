@@ -5170,6 +5170,14 @@ local Dorothy =
 	{
 		childs =
 		{
+			updateKey =
+			{
+				args = "(key: uint8, isDown: bool)",
+				description = "",
+				returns = "()",
+				static = true,
+				type = "method"
+			},
 			isKeyDown =
 			{
 				args = "(key: uint8)",

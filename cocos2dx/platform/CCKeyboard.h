@@ -1,6 +1,8 @@
 #ifndef __DOROTHY_MISC_CCKEYBOARD_H__
 #define __DOROTHY_MISC_CCKEYBOARD_H__
 
+NS_CC_BEGIN
+
 class CC_DLL CCKeyboard
 {
 public:
@@ -10,11 +12,13 @@ public:
 	bool isKeyUp(unsigned char key);
 	bool isKeyPressed(unsigned char key);
 	void clear();
-	static CCKeyboard* shared();
+	static CCKeyboard* sharedKeyboard();
 private:
 	CCKeyboard();
 	bool _oldKeyState[MAX_KEY];
 	bool _newKeyState[MAX_KEY];
 };
+
+NS_CC_END
 
 #endif // __DOROTHY_MISC_CCKEYBOARD_H__

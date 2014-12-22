@@ -518,14 +518,14 @@ LRESULT CCEGLView::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
         {
             (*m_lpfnAccelerometerKeyHook)( message,wParam,lParam );
         }
-		CCKeyboard::shared()->updateKey(wParam, true);
+		CCKeyboard::sharedKeyboard()->updateKey(wParam, true);
         break;
     case WM_KEYUP:
         if ( m_lpfnAccelerometerKeyHook!=NULL )
         {
             (*m_lpfnAccelerometerKeyHook)( message,wParam,lParam );
 		}
-		CCKeyboard::shared()->updateKey(wParam, false);
+		CCKeyboard::sharedKeyboard()->updateKey(wParam, false);
         break;
     case WM_CHAR:
         {

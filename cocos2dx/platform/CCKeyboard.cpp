@@ -2,6 +2,8 @@
 #include "CCKeyboard.h"
 #include <string.h>
 
+NS_CC_BEGIN
+
 CCKeyboard::CCKeyboard()
 {
 	CCKeyboard::clear();
@@ -34,8 +36,10 @@ void CCKeyboard::clear()
 	memset(_newKeyState, 0, sizeof(bool)*MAX_KEY);
 }
 
-CCKeyboard* CCKeyboard::shared()
+CCKeyboard* CCKeyboard::sharedKeyboard()
 {
 	static CCKeyboard keyboard;
 	return &keyboard;
 }
+
+NS_CC_END

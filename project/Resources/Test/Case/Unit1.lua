@@ -29,14 +29,23 @@ oAction:add(oAction.UserID,998,0,0,
 		print("end")
 	end)
 --]]
-
-local CCKey =
-{
-	Left = 0x25,
-	Up = 0x26,
-	Right = 0x27,
-	Down = 0x28,
-}
+local CCKey = {}
+if CCApplication.targetPlatform == CCTargetPlatform.Windows then
+	CCKey.Left = 0x25
+	CCKey.Up = 0x26
+	CCKey.Right = 0x27
+	CCKey.Down = 0x28
+elseif CCApplication.targetPlatform == CCTargetPlatform.MacOS then
+	CCKey.Up = 0x0
+	CCKey.Down = 0x1
+	CCKey.Left = 0x2
+	CCKey.Right = 0x3
+else
+	CCKey.Left = 0
+	CCKey.Up = 0
+	CCKey.Right = 0
+	CCKey.Down = 0
+end
 
 oAI.getUnitByTag = function(self,tag)
 	local units = self:getDetectedUnits()
