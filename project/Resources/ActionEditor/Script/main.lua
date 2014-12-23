@@ -69,11 +69,10 @@ local thread = coroutine.create(
 
 local bk = CCLayerColor(ccColor4(0xff000000),CCDirector.winSize.width,CCDirector.winSize.height)
 bk.anchor = oVec2.zero
-local logo = CCLabelTTF("Luv Fight","Arial",12)
+local logo = CCLabelTTF("Luv Fight","Arial",48)
 logo.texture.antiAlias = false
 logo.position = oVec2(CCDirector.winSize.width*0.5,CCDirector.winSize.height*0.5)
-logo.scaleX = 5
-logo.scaleY = 5
+
 bk:addChild(logo)
 local flower = CCDrawNode()
 flower:drawPolygon(
@@ -104,8 +103,8 @@ flower:drawPolygon(
 	oVec2(20,31),
 	oVec2(10,31),
 },ccColor4(0xff00ffff))
-flower.scaleX = 0.1
-flower.scaleY = 0.1
+flower.scaleX = 0.5
+flower.scaleY = 0.5
 flower.position = oVec2(logo.contentSize.width+2,logo.contentSize.height-2)
 logo:addChild(flower)
 oEditor.scene:addChild(bk,998)

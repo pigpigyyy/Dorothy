@@ -21,6 +21,8 @@
 @synthesize view = _view;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+	//[_window setContentSize:NSSize{800,600}];
+	//[_window center];
 	[_view initWithFrame:
 		NSRect{NSPoint{0,0},[_window contentLayoutRect].size}
 		shareContext:(NSOpenGLContext *)[_view openGLContext]];

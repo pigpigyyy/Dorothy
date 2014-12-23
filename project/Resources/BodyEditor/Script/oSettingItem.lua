@@ -24,20 +24,25 @@ local oSettingItem = class(
 
 	__init = function(self, name, x, y, isInput, toggled)
 		self._isInput = isInput
+		self._toggled = toggled
 		self.anchor = oVec2(0,1)
-		self.contentSize = CCSize(160,30)
+		self.contentSize = CCSize(180,30)
 		self.position = oVec2(x, y)
-		self.enabled = false
 		
-		local label
+		local label = CCLabelTTF(name,"Arial",14)
+		label.color = ccColor3(0xffffff)
+		label.position = oVec2(40,15)
+		label.texture.antiAlias = false
+		self:addChild(label)
+
 		if isInput then
-			label = oTextField(108,7,14,8,
+			label = oTextField(118,7,14,8,
 				function()
 					self.selected = false
 				end)
 		else
 			label = CCLabelTTF("","Arial",14)
-			label.position = oVec2(120,15)
+			label.position = oVec2(130,15)
 		end
 		label.color = ccColor3(0xffffff)
 		self:addChild(label)
@@ -46,8 +51,8 @@ local oSettingItem = class(
 		local border = oLine(
 		{
 			oVec2(0,0),
-			oVec2(150,0),
-			oVec2(150,30),
+			oVec2(170,0),
+			oVec2(170,30),
 			oVec2(0,30),
 			oVec2(0,0),
 		},ccColor4(0xff00ffff))
@@ -59,9 +64,7 @@ local oSettingItem = class(
 		self:registerTapHandler(
 			function(eventType,self)
 				if eventType == CCMenuItem.Tapped then
-					if not self._isInput then
-						self.selected = not self.selected
-					end
+					self.selected = not self.selected
 				end
 			end)
 	end,
@@ -104,6 +107,13 @@ local oSettingItem = class(
 		function(self,value)
 			self._selected = value
 			self.highlighted = value
+			if self._isInput then
+				if value then
+					self._label:attachWithIME()
+				else
+					self._label:detachWithIME()
+				end
+			end
 			if self._toggled then
 				self._toggled(self, value)
 			end

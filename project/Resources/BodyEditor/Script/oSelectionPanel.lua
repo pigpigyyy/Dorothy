@@ -17,7 +17,7 @@ local oScale = require("oScale")
 local CCCall = require("CCCall")
 local tolua = require("tolua")
 
-local function oSelectionPanel(borderSize,noCliping,noMask)
+local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 	local winSize = CCDirector.winSize
 	local halfBW = borderSize.width*0.5
 	local halfBH = borderSize.height*0.5
@@ -36,7 +36,8 @@ local function oSelectionPanel(borderSize,noCliping,noMask)
 	local panel = CCLayer()
 	panel.anchor = oVec2.zero
 	panel.touchEnabled = true
-	panel.visible = false
+
+	if fading then panel.opacity = 0.4 end
 	
 	if not noMask then
 		local mask = CCLayer()
@@ -49,9 +50,6 @@ local function oSelectionPanel(borderSize,noCliping,noMask)
 
 	local border = CCNode()
 	border.position = oVec2(winSize.width*0.5,winSize.height*0.5)
-	border.scaleX = 0.3
-	border.scaleY = 0.3
-	border.opacity = 0
 	panel:addChild(border)
 
 	local view
@@ -71,11 +69,10 @@ local function oSelectionPanel(borderSize,noCliping,noMask)
 	border:addChild(view)
 
 	local menu = CCMenu(false)
-	menu.contentSize = CCSize(winSize.width,winSize.height)
-	menu.enabled = false
+	menu.contentSize = CCSize(borderSize.width,borderSize.height)
 	menu.touchPriority = CCMenu.DefaultHandlerPriority-2
 	menu.anchor = oVec2(0,1)
-	menu.position = oVec2(-winSize.width*0.5,winSize.height*0.5)
+	menu.position = oVec2(-halfBW,halfBH)
 
 	local function updateReset(self,deltaTime)
 		local children = menu.children
@@ -114,6 +111,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask)
 
 		if t == 1.0 then
 			panel:unschedule()
+			if fading then panel:fadeOut() end
 		end
 	end
 
@@ -229,6 +227,20 @@ local function oSelectionPanel(borderSize,noCliping,noMask)
 			end
 		end
 	end
+	
+	if fading then
+		local opacity = oOpacity(0.5,0.4,oEase.InExpo)
+		panel.fadeIn = function(self)
+			if not opacity.done then
+				self:stopAction(opacity)
+			end
+			self.opacity = 1.0
+		end
+		panel.fadeOut = function(self)
+			self:stopAllActions()
+			self:runAction(opacity)
+		end
+	end
 
 	panel:registerTouchHandler(
 		function(eventType, touch)
@@ -240,6 +252,9 @@ local function oSelectionPanel(borderSize,noCliping,noMask)
 				if not CCRect(oVec2(winSize.width-borderSize.width,winSize.height-borderSize.height)*0.5, borderSize):containsPoint(panel:convertToNodeSpace(touch.location)) then
 					return false
 				end
+				
+				if fading then panel:fadeIn() end
+				
 				deltaMoveLength = 0
 				menu.enabled = true
 				panel:schedule(updateSpeed)
@@ -250,6 +265,8 @@ local function oSelectionPanel(borderSize,noCliping,noMask)
 				else
 					if _v ~= oVec2.zero and deltaMoveLength > 10 then
 						panel:schedule(updatePos)
+					elseif fading then
+						panel:fadeOut()
 					end
 				end
 			elseif eventType == CCTouch.Moved then
@@ -268,9 +285,10 @@ local function oSelectionPanel(borderSize,noCliping,noMask)
 	panel.menu = menu
 
 	panel.show = function(self)
-		menu.enabled = true
-		panel.visible = true
 		if panel.mask then panel.mask.touchEnabled = true end
+		border.scaleX = 0.3
+		border.scaleY = 0.3
+		border.opacity = 0
 		border:stopAllActions()
 		border:runAction(
 			CCSequence(
