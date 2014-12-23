@@ -1,7 +1,3 @@
-local CCScene = require("CCScene")
-local CCDirector = require("CCDirector")
-local CCNode = require("CCNode")
-
 collectgarbage("setpause", 100)
 collectgarbage("setstepmul", 5000)
 
@@ -19,9 +15,13 @@ require = function(modulename)
 	return result
 end
 
-local layer = require("oViewArea")()
-local scene = require("oEditor").scene
-scene:registerEventHandler(function(eventType)
+local CCDirector = require("CCDirector")
+local CCNode = require("CCNode")
+local oEditor = require("oEditor")
+local oRoutine = require("oRoutine")
+local once = oRoutine.once
+
+oEditor.scene:registerEventHandler(function(eventType)
 	if eventType == CCNode.Exited then
 		require = _require
 		for k,_ in pairs(loaded) do
@@ -29,5 +29,23 @@ scene:registerEventHandler(function(eventType)
 		end
 	end
 end)
-scene:addChild(layer)
-CCDirector:run(scene)
+
+local controls =
+{
+	"oViewArea",
+	"oEditMenu",
+	"oSettingPanel",
+}
+
+oRoutine(once(function()
+	for _,name in ipairs(controls) do
+		local createFunc = require(name)
+		coroutine.yield()
+		oEditor[name] = createFunc()
+		coroutine.yield()
+		oEditor.scene:addChild(oEditor[name])
+		coroutine.yield()
+	end
+end))
+
+CCDirector:run(oEditor.scene)

@@ -82,7 +82,7 @@ panel.init = function(self)
 			winSize.width*0.5,y,
 			function()
 				dofile(Tests[i][2])
-				if i ~= 1 then
+				if i >= 3 then
 					local opMenu = CCMenu()
 					opMenu.contentSize = CCSize(60,60)
 					opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3

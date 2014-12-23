@@ -29,7 +29,7 @@ static void storeatubox(lua_State* L, int lo)
 		lua_newtable(L);
 		lua_pushvalue(L, -1);
 		lua_setfenv(L, lo);/* stack: k,v,table  */
-	};
+	}
 	lua_insert(L, -3);
 	lua_settable(L, -3);/* on lua 5.1, we trade the "tolua_peers" lookup for a settable call */
 	lua_pop(L, 1);
@@ -114,33 +114,34 @@ static int module_newindex_event(lua_State* L)
 	*/
 static int class_index_event(lua_State* L)
 {
-	/* 1 self£¬2 key */
+	/* 1 ud£¬2 key */
 	int t = lua_type(L, 1);
-	if (t == LUA_TUSERDATA)
+	if (t == LUA_TUSERDATA)// __index for ud
 	{
-		/* Access alternative table */
-		lua_getfenv(L, 1);
+		/* access peer table */
+		lua_getfenv(L, 1);// peer
 		if (!lua_rawequal(L, -1, TOLUA_NOPEER))
 		{
-			lua_pushvalue(L, 2); /* key */
-			lua_gettable(L, -2); /* on lua 5.1, we trade the "tolua_peers" lookup for a gettable call */
-			if (!lua_isnil(L, -1))
+			lua_pushvalue(L, 2);// peer key
+			lua_gettable(L, -2);// peer[key], peer value
+			if (!lua_isnil(L, -1))// value != nil
 			{
 				return 1;
 			}
 		}
-		lua_settop(L, 2);/* stack: obj key */
-		lua_getmetatable(L, 1); // obj key mt
-		/* Try metatables */
-		lua_pushvalue(L, 1);/* stack: obj key mt obj */
+		lua_settop(L, 2);// ud key
+		lua_getmetatable(L, 1);// ud key mt
+		/* try metatables */
+		lua_pushvalue(L, 1);// ud key mt ud
 		int loop = 0;
 		while (lua_getmetatable(L, -1))
-		{   /* stack: obj key mt obj mt */
-			lua_remove(L, -2);/* stack: obj key mt mt */
-			if (lua_isnumber(L, 2))/* check if key is a numeric value */
+		{
+			/* ud key mt ud mt */
+			lua_remove(L, -2);// ud key mt mt
+			if (lua_isnumber(L, 2))// check if key is a numeric value
 			{
 				/* try operator[] */
-				lua_rawgeti(L, -1, MT_GETI);/* stack: obj key mt mt func */
+				lua_rawgeti(L, -1, MT_GETI);// ud key mt mt func
 				if (lua_isfunction(L, -1))
 				{
 					if (loop)
@@ -156,25 +157,25 @@ static int class_index_event(lua_State* L)
 			}
 			else
 			{
-				lua_pushvalue(L, 2);/* stack: obj key mt mt key */
-				lua_rawget(L, -2);/* stack: obj key mt mt value */
+				lua_pushvalue(L, 2);// ud key mt mt key
+				lua_rawget(L, -2);// mt[key], ud key mt mt value
 				if (!lua_isnil(L, -1))
 				{
 					if (loop)
 					{
-						lua_pushvalue(L, 2); // obj key mt mt value key
-						lua_pushvalue(L, -2); // obj key mt mt value key value
-						lua_rawset(L, 3); // mt[key] = value, obj key mt mt value
+						lua_pushvalue(L, 2); // ud key mt mt value key
+						lua_pushvalue(L, -2); // ud key mt mt value key value
+						lua_rawset(L, 3); // mt[key] = value, ud key mt mt value
 					}
 					return 1;
 				}
 				else lua_pop(L, 1);
 				/* try C/C++ variable */
-				lua_rawgeti(L, -1, MT_GET);/* stack: obj key mt mt tget */
+				lua_rawgeti(L, -1, MT_GET);// ud key mt mt tget
 				if (lua_istable(L, -1))
 				{
 					lua_pushvalue(L, 2);
-					lua_rawget(L, -2);/* stack: obj key mt mt value */
+					lua_rawget(L, -2);// ud key mt mt value
 					if (lua_iscfunction(L, -1))
 					{
 						if (loop)
@@ -220,7 +221,7 @@ static int class_index_event(lua_State* L)
 		lua_pushnil(L);
 		return 1;
 	}
-	else if (t == LUA_TTABLE)
+	else if (t == LUA_TTABLE)// __index for ud`s class
 	{
 		module_index_event(L);
 		return 1;
@@ -238,8 +239,25 @@ static int class_newindex_event(lua_State* L)
 {
 	/* 1 ud, 2 key, 3 value */
 	int t = lua_type(L, 1);
-	if (t == LUA_TUSERDATA)
+	if (t == LUA_TUSERDATA)// __newindex for ud
 	{
+		/* access peer table first */
+		lua_getfenv(L, 1);// peer
+		if (!lua_rawequal(L, -1, TOLUA_NOPEER))
+		{
+			lua_pushvalue(L, 2);// peer key
+			lua_gettable(L, -2);// peer[key], peer value
+			if (!lua_isnil(L, -1))
+			{
+				lua_pop(L, 1);// peer
+				lua_pushvalue(L, 2); // peer key
+				lua_pushvalue(L, 3); // peer key value
+				lua_settable(L, -3); // peer[key] = value, peer
+				lua_pop(L, 1);// local empty
+				return 1;
+			}
+		}
+		lua_settop(L, 3);// ud key value
 		int loop = 0;
 		lua_getmetatable(L, 1); // ud key value mt
 		lua_pushvalue(L, -1); // ud key value mt mt
@@ -309,7 +327,7 @@ static int class_newindex_event(lua_State* L)
 		/* then, store as a new field */
 		storeatubox(L, 1);
 	}
-	else if (t == LUA_TTABLE)
+	else if (t == LUA_TTABLE)// __newindex for ud`s class
 	{
 		module_newindex_event(L);
 	}
