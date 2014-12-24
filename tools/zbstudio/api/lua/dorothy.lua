@@ -2345,7 +2345,7 @@ local Dorothy =
 	},
 	CCRepeat =
 	{
-		args = "(action: CCFiniteTimeAction)",
+		args = "(action: CCFiniteTimeAction, times: int)",
 		description = "",
 		typeName = "CCActionInterval",
 		returns = "(action: CCActionInterval)",
@@ -2997,7 +2997,7 @@ local Dorothy =
 				type = "value",
 			},
 		},
-		description = "class CCLabelTTF(CCSprite).\n args -- (text: string, fontName: string, fontSize: float, dimensions: CSize, hAlignment: CCTextAlign, vAlignment: CCTextAlign = CCTextAlign.VCenter)\n args1 -- (text: string, fontName: string, fontSize: float)\n args2 -- ()",
+		description = "class CCLabelTTF(CCSprite).\n args -- (text: string, fontName: string, fontSize: float)\n args1 -- ()",
 		parents = {"CCSprite",},
 		type = "class",
 		index = index()

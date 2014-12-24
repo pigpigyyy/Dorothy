@@ -1779,7 +1779,7 @@ bool CCBlink::initWithDuration(float duration, unsigned int uBlinks)
 
 void CCBlink::stop()
 {
-	m_pTarget->setVisible(m_bOriginalState);
+	m_pOriginalTarget->setVisible(m_bOriginalState);
 	CCActionInterval::stop();
 }
 

@@ -68,7 +68,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 	end
 	border:addChild(view)
 
-	local menu = CCMenu(false)
+	local menu = CCMenu()
 	menu.contentSize = CCSize(borderSize.width,borderSize.height)
 	menu.touchPriority = CCMenu.DefaultHandlerPriority-2
 	menu.anchor = oVec2(0,1)
@@ -278,7 +278,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 				end
 			end
 			return true
-		end, false, CCMenu.DefaultHandlerPriority-3, true)
+		end, false, CCMenu.DefaultHandlerPriority-3, false)
 
 	panel.view = view
 	panel.border = border

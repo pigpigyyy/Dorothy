@@ -9,5 +9,4 @@ class CCLabelTTF: public CCSprite
 
 	static CCLabelTTF* create();
 	static CCLabelTTF* create(const char* str, const char* fontName, float fontSize);
-	static CCLabelTTF* create(const char* str, const char* fontName, float fontSize, CCSize& dimensions, CCTextAlignment hAlignment, CCVerticalTextAlignment vAlignment = kCCVerticalTextAlignmentCenter);
 };

@@ -6,6 +6,7 @@ local ccColor4 = require("ccColor4")
 local CCDirector = require("CCDirector")
 local oSettingItem = require("oSettingItem")
 local oSelectionPanel = require("oSelectionPanel")
+local oViewItem = require("oViewItem")
 
 local oViewPanel = class(
 {
@@ -37,21 +38,46 @@ local oViewPanel = class(
 			return function()
 				local v = index
 				index = index + 1
-				return self._borderSize.height-10-30*v
+				return self._borderSize.height-30-50*v
 			end
 		end
 		local getPosY = genPosY()
 		
 		local items =
 		{
-			Name = oSettingItem("Name :",0,getPosY(),true,
-				function(self, enabled)
+			Name = oViewItem("Rectangle","WWWWWWWW",90,getPosY(),
+				function(item)
+					return true
+				end),
+			Name1 = oViewItem("Polygon","WWWWWWWW",90,getPosY(),
+				function(item)
+				end),
+			Name2 = oViewItem("Circle"," ",90,getPosY(),
+				function(item)
+				end),
+			Name3 = oViewItem("Loop"," ",90,getPosY(),
+				function(item)
+				end),
+			Name4 = oViewItem("Chain"," ",90,getPosY(),
+				function(item)
+				end),
+			Name5 = oViewItem("Rectangle"," ",90,getPosY(),
+				function(item)
+				end),
+			Name6 = oViewItem("Circle"," ",90,getPosY(),
+				function(item)
+				end),
+			Name7 = oViewItem("Loop"," ",90,getPosY(),
+				function(item)
+				end),
+			Name8 = oViewItem("Chain"," ",90,getPosY(),
+				function(item)
 				end),
 		}
 		
-		local contentHeight = 20
+		local contentHeight = 10
 		for _,item in pairs(items) do
-			contentHeight = contentHeight + 30
+			contentHeight = contentHeight + 50
 			menu:addChild(item)
 		end
 		self:reset(self._borderSize.width,contentHeight,0,50)
