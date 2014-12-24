@@ -35,6 +35,7 @@ local controls =
 	"oViewArea",
 	"oEditMenu",
 	"oSettingPanel",
+	"oViewPanel",
 }
 
 oRoutine(once(function()

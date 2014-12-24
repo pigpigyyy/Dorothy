@@ -278,7 +278,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 				end
 			end
 			return true
-		end, false, CCMenu.DefaultHandlerPriority-3, false)
+		end, false, CCMenu.DefaultHandlerPriority-3, true)
 
 	panel.view = view
 	panel.border = border
@@ -329,6 +329,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 	end
 	
 	panel.reset = function(self,width,height,padX,padY)
+		if height < borderSize.height then height = borderSize.height end
 		viewWidth = width
 		viewHeight = height
 		moveY = viewHeight-borderSize.height

@@ -11,7 +11,7 @@ local oSettingPanel = class(
 {
 	__partial = function(self)
 		local winSize = CCDirector.winSize
-		self._borderSize = CCSize(180,310*winSize.height/600)
+		self._borderSize = CCSize(180,260*winSize.height/600)
 		return oSelectionPanel(self._borderSize,false,true,true)
 	end,
 
@@ -48,11 +48,13 @@ local oSettingPanel = class(
 				function(self, enabled)
 				end),
 		}
+		
+		local contentHeight = 20
 		for _,item in pairs(items) do
+			contentHeight = contentHeight + 30
 			menu:addChild(item)
 		end
-		--30*(#items)+20
-		self:reset(self._borderSize.width,self._borderSize.height,0,100)
+		self:reset(self._borderSize.width,contentHeight,0,50)
 	end,
 })
 
