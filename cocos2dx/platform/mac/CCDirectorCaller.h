@@ -22,17 +22,14 @@
  THE SOFTWARE.
  ****************************************************************************/
 #import <Foundation/Foundation.h>
-#import <QuartzCore/CVDisplayLink.h>
 
 @interface CCDirectorCaller : NSObject {
-        CVDisplayLinkRef displayLink;
-		NSTimer *renderTimer;
+		NSTimer* renderTimer;
         int interval;
 }
 @property (readwrite) int interval;
 -(void) startMainLoop;
 -(void) end;
--(void) doCaller: (id) sender;
 -(void) setAnimationInterval:(double)interval;
 
 +(id) sharedDirectorCaller;

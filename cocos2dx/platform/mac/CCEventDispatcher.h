@@ -266,12 +266,6 @@ struct _listEntry;
 /** Removes all touch delegates, releasing all the delegates */
 - (void)removeAllTouchDelegates;
 
-#pragma mark CCEventDispatcher - Dispatch Events
-
-#if CC_DIRECTOR_MAC_USE_DISPLAY_LINK_THREAD
--(void) dispatchQueuedEvents;
-#endif
-
 @end
 
 //NS_CC_END;

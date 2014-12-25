@@ -70,21 +70,6 @@ typedef struct _listEntry
 	NSUInteger			flags;
 } tListEntry;
 
-
-#if CC_DIRECTOR_MAC_USE_DISPLAY_LINK_THREAD
-
-#define QUEUE_EVENT_MAX 128
-struct _eventQueue {
-	SEL		selector;
-	NSEvent	*event;
-};
-
-static struct	_eventQueue eventQueue[QUEUE_EVENT_MAX];
-static int		eventQueueCount;
-
-#endif // CC_DIRECTOR_MAC_USE_DISPLAY_LINK_THREAD
-
-
 @implementation CCEventDispatcher
 
 @synthesize dispatchEvents=dispatchEvents_;
@@ -118,11 +103,7 @@ static int		eventQueueCount;
 		// delegates
 		keyboardDelegates_ = NULL;
 		mouseDelegates_ = NULL;
-                touchDelegates_ = NULL;
-		
-#if	CC_DIRECTOR_MAC_USE_DISPLAY_LINK_THREAD
-		eventQueueCount = 0;
-#endif
+		touchDelegates_ = NULL;
 	}
 	
 	return self;
@@ -605,39 +586,6 @@ static int		eventQueueCount;
 		}
 	}	
 }
-
-
-#pragma mark CCEventDispatcher - queue events
-
-#if CC_DIRECTOR_MAC_USE_DISPLAY_LINK_THREAD
--(void) queueEvent:(NSEvent*)event selector:(SEL)selector
-{
-	NSAssert( eventQueueCount < QUEUE_EVENT_MAX, @"CCEventDispatcher: recompile. Increment QUEUE_EVENT_MAX value");
-
-	@synchronized (self) {
-		eventQueue[eventQueueCount].selector = selector;
-		eventQueue[eventQueueCount].event = [event copy];
-		
-		eventQueueCount++;
-	}
-}
-
--(void) dispatchQueuedEvents
-{
-	@synchronized (self) {
-		for( int i=0; i < eventQueueCount; i++ ) {
-			SEL sel = eventQueue[i].selector;
-			NSEvent *event = eventQueue[i].event;
-			
-			[self performSelector:sel withObject:event];
-			
-			[event release];
-		}
-		
-		eventQueueCount = 0;
-	}
-}
-#endif // CC_DIRECTOR_MAC_USE_DISPLAY_LINK_THREAD
 
 //NS_CC_END;
 @end

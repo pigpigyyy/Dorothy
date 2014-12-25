@@ -58,10 +58,6 @@ THE SOFTWARE.
 - (void)touchesEndedWithEvent:(NSEvent *)event;
 - (void)touchesCancelledWithEvent:(NSEvent *)event;
 
-#if CC_DIRECTOR_MAC_USE_DISPLAY_LINK_THREAD
-- (void)queueEvent:(NSEvent*)event selector:(SEL)selector;
-#endif
-
 @end
 
 /** MacGLView
@@ -112,7 +108,8 @@ THE SOFTWARE.
 -(int) getHeight;
 -(void) swapBuffers;
 
--(void) setFullScreen:(BOOL)fullscreen;
+-(void) goFullScreen;
+-(void) closeAllWindows;
 
 @end
 #endif // __EAGLVIEW_MAC_H__

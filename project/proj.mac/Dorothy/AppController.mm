@@ -8,6 +8,7 @@
 
 #import "AppController.h"
 #import "CCDirectorCaller.h"
+#import "support/user_default/CCUserDefault.h"
 
 @interface AppController ()
 
@@ -20,28 +21,31 @@
 @synthesize window = _window;
 @synthesize view = _view;
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+{
 	//[_window setContentSize:NSSize{800,600}];
 	//[_window center];
 	[_view initWithFrame:
 		NSRect{NSPoint{0,0},[_window contentLayoutRect].size}
 		shareContext:(NSOpenGLContext *)[_view openGLContext]];
+	//[_view goFullScreen];
 	_app = new AppDelegate();
 	_app->run();
 }
 
-- (void)applicationWillTerminate:(NSNotification *)aNotification {
+- (void)applicationWillTerminate:(NSNotification *)aNotification
+{
+	//3
 }
 
-- (BOOL) applicationShouldTerminateAfterLastWindowClosed: (NSApplication *) theApplication
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed: (NSApplication *) theApplication
 {
-	return YES;
+	return YES;//1
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender;
 {
-	[[CCDirectorCaller sharedDirectorCaller] end];
-	return NSTerminateNow;
+	return NSTerminateNow;//2
 }
 
 - (void)dealloc

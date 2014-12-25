@@ -41,7 +41,7 @@ THE SOFTWARE.
 #import "CCEGLView.h"
 #import "CCKeyboard.h"
 #import "CCIMEDispatcher.h"
-
+#import "CCKeypadDispatcher.h"
 
 //USING_NS_CC;
 static EAGLView *view;
@@ -69,7 +69,6 @@ static EAGLView *view;
 //		NSOpenGLPFANoRecovery,
 		NSOpenGLPFADoubleBuffer,
 		NSOpenGLPFADepthSize, 24,
-		
 		0
     };
 	
@@ -220,104 +219,67 @@ static EAGLView *view;
 }
 
 -(void) swapBuffers
-{
-}
+{ }
 
 //
 // setFullScreen code taken from GLFullScreen example by Apple
 //
-- (void) setFullScreen:(BOOL)fullscreen
+- (void) goFullScreen
 {
 	// Mac OS X 10.6 and later offer a simplified mechanism to create full-screen contexts
 #if MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_5
 
-    if (isFullScreen_ == fullscreen)
+    if (isFullScreen_)
 		return;
 
 	EAGLView *openGLview = [[self class] sharedEGLView];
 
-    if( fullscreen ) {
-        originalWinRect_ = [openGLview frame];
+    originalWinRect_ = [openGLview frame];
 
-        // Cache normal window and superview of openGLView
-        if(!windowGLView_)
-            windowGLView_ = [[openGLview window] retain];
+	// Cache normal window and superview of openGLView
+	if (!windowGLView_) windowGLView_ = [[openGLview window] retain];
 
-        [superViewGLView_ release];
-        superViewGLView_ = [[openGLview superview] retain];
+	[superViewGLView_ release];
+	superViewGLView_ = [[openGLview superview] retain];
 
+	// Get screen size
+	NSRect displayRect = [[NSScreen mainScreen] frame];
 
-        // Get screen size
-        NSRect displayRect = [[NSScreen mainScreen] frame];
+	// Create a screen-sized window on the display you want to take over
+	fullScreenWindow_ = [[CCWindow alloc] initWithFrame:displayRect fullscreen:YES];
 
-        // Create a screen-sized window on the display you want to take over
-        fullScreenWindow_ = [[CCWindow alloc] initWithFrame:displayRect fullscreen:YES];
+	// Remove glView from window
+	[openGLview removeFromSuperview];
 
-        // Remove glView from window
-        [openGLview removeFromSuperview];
+	// Set new frame
+	[openGLview initWithFrame:displayRect];
 
-        // Set new frame
-        [openGLview setFrame:displayRect];
+	// Attach glView to fullscreen window
+	[fullScreenWindow_ setContentView:openGLview];
 
-        // Attach glView to fullscreen window
-        [fullScreenWindow_ setContentView:openGLview];
-
-        // Show the fullscreen window
-        [fullScreenWindow_ makeKeyAndOrderFront:self];
-		[fullScreenWindow_ makeMainWindow];
-		//[fullScreenWindow_ setNextResponder:superViewGLView_];
-
-    } else {
-
-        // Remove glView from fullscreen window
-        [openGLview removeFromSuperview];
-
-        // Release fullscreen window
-        [fullScreenWindow_ release];
-        fullScreenWindow_ = nil;
-
-        // Attach glView to superview
-        [superViewGLView_ addSubview:openGLview];
-
-        // Set new frame
-        [openGLview setFrame:originalWinRect_];
-
-        // Show the window
-        [windowGLView_ makeKeyAndOrderFront:self];
-		[windowGLView_ makeMainWindow];
-    }
-	
+	// Show the fullscreen window
+	[fullScreenWindow_ makeKeyAndOrderFront:self];
+	[fullScreenWindow_ makeMainWindow];
+	//[fullScreenWindow_ setNextResponder:superViewGLView_];
+		
 	// issue #1189
 	[windowGLView_ makeFirstResponder:openGLview];
 
-    isFullScreen_ = fullscreen;
-
-    //[openGLview retain]; // Retain +1
-
-	// is this necessary?
-    // re-configure glView
-	//cocos2d::CCDirector *director = cocos2d::CCDirector::sharedDirector();
-	//director->setOpenGLView(openGLview); //[self setView:openGLview];
-
-    //[openGLview release]; // Retain -1
+    isFullScreen_ = true;
 
     [openGLview setNeedsDisplay:YES];
 #else
-#error Full screen is not supported for Mac OS 10.5 or older yet
-#error If you don't want FullScreen support, you can safely remove these 2 lines
+	#error Full screen is not supported for Mac OS 10.5 or older yet
+	#error If you don't want FullScreen support, you can safely remove these 2 lines
 #endif
 }
 
-#if CC_DIRECTOR_MAC_USE_DISPLAY_LINK_THREAD
-#define DISPATCH_EVENT(__event__, __selector__) [eventDelegate_ queueEvent:__event__ selector:__selector__];
-#else
-#define DISPATCH_EVENT(__event__, __selector__)												\
-	id obj = eventDelegate_;																\
-	[obj performSelector:__selector__														\
-			onThread:[(cocos2d::CCDirector*)[CCDirector sharedDirector] runningThread]			\
-		  withObject:__event__																\
-	   waitUntilDone:NO];
-#endif
+- (void) closeAllWindows
+{
+	[[self window] close];
+	[windowGLView_ close];
+	[fullScreenWindow_ close];
+}
 
 #pragma mark EAGLView - Mouse events
 
@@ -342,7 +304,7 @@ static EAGLView *view;
 
 - (void)mouseMoved:(NSEvent *)theEvent
 {
-	DISPATCH_EVENT(theEvent, _cmd);
+	[super mouseMoved:theEvent];
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent
@@ -383,50 +345,49 @@ static EAGLView *view;
 	cocos2d::CCDirector::sharedDirector()->getOpenGLView()->handleTouchesEnd(1, ids, xs, ys);
 }
 
-- (void)rightMouseDown:(NSEvent *)theEvent {
-	DISPATCH_EVENT(theEvent, _cmd);
-
+- (void)rightMouseDown:(NSEvent *)theEvent
+{
 	// pass the event along to the next responder (like your NSWindow subclass)
 	[super rightMouseDown:theEvent];
 }
 
-- (void)rightMouseDragged:(NSEvent *)theEvent {
-	DISPATCH_EVENT(theEvent, _cmd);
+- (void)rightMouseDragged:(NSEvent *)theEvent
+{
 	[super rightMouseDragged:theEvent];
 }
 
-- (void)rightMouseUp:(NSEvent *)theEvent {
-	DISPATCH_EVENT(theEvent, _cmd);
+- (void)rightMouseUp:(NSEvent *)theEvent
+{
 	[super rightMouseUp:theEvent];
 }
 
-- (void)otherMouseDown:(NSEvent *)theEvent {
-	DISPATCH_EVENT(theEvent, _cmd);
+- (void)otherMouseDown:(NSEvent *)theEvent
+{
 	[super otherMouseDown:theEvent];
 }
 
-- (void)otherMouseDragged:(NSEvent *)theEvent {
-	DISPATCH_EVENT(theEvent, _cmd);
+- (void)otherMouseDragged:(NSEvent *)theEvent
+{
 	[super otherMouseDragged:theEvent];
 }
 
-- (void)otherMouseUp:(NSEvent *)theEvent {
-	DISPATCH_EVENT(theEvent, _cmd);
+- (void)otherMouseUp:(NSEvent *)theEvent
+{
 	[super otherMouseUp:theEvent];
 }
 
-- (void)mouseEntered:(NSEvent *)theEvent {
-	DISPATCH_EVENT(theEvent, _cmd);
+- (void)mouseEntered:(NSEvent *)theEvent
+{
 	[super mouseEntered:theEvent];
 }
 
-- (void)mouseExited:(NSEvent *)theEvent {
-	DISPATCH_EVENT(theEvent, _cmd);
+- (void)mouseExited:(NSEvent *)theEvent
+{
 	[super mouseExited:theEvent];
 }
 
--(void) scrollWheel:(NSEvent *)theEvent {
-	DISPATCH_EVENT(theEvent, _cmd);
+-(void) scrollWheel:(NSEvent *)theEvent
+{
 	[super scrollWheel:theEvent];
 }
 
@@ -449,7 +410,6 @@ static EAGLView *view;
 
 - (void)keyDown:(NSEvent *)theEvent
 {
-	DISPATCH_EVENT(theEvent, _cmd);
   	NSString* characters = [theEvent characters];
   	if ([characters length])
 	{
@@ -480,12 +440,24 @@ static EAGLView *view;
 
 - (void)keyUp:(NSEvent *)theEvent
 {
-	DISPATCH_EVENT(theEvent, _cmd);
   	NSString* characters = [theEvent characters];
   	if ([characters length])
 	{
 		unichar ch = [characters characterAtIndex:0];
-		cocos2d::CCKeyboard::sharedKeyboard()->updateKey((char)(0xFF & ch), false);
+		char key = (char)(0xff & ch);
+		cocos2d::CCKeyboard::sharedKeyboard()->updateKey(key, false);
+		if (key == 0x1B)
+		{
+			cocos2d::CCDirector::sharedDirector()->
+				getKeypadDispatcher()->
+				dispatchKeypadMSG(cocos2d::CCKeypad::Back);
+		}
+		else if (ch == NSF1FunctionKey)
+		{
+			cocos2d::CCDirector::sharedDirector()->
+				getKeypadDispatcher()->
+				dispatchKeypadMSG(cocos2d::CCKeypad::Menu);
+		}
 	}
 	// pass the event along to the next responder (like your NSWindow subclass)
 	//[super keyUp:theEvent];
@@ -493,27 +465,27 @@ static EAGLView *view;
 
 - (void)flagsChanged:(NSEvent *)theEvent
 {
-	DISPATCH_EVENT(theEvent, _cmd);
+	[super flagsChanged:theEvent];
 }
 
 #pragma mark EAGLView - Touch events
 - (void)touchesBeganWithEvent:(NSEvent *)theEvent
 {
-	DISPATCH_EVENT(theEvent, _cmd);
+	[super touchesBeganWithEvent:theEvent];
 }
 
 - (void)touchesMovedWithEvent:(NSEvent *)theEvent
 {
-	DISPATCH_EVENT(theEvent, _cmd);
+	[super touchesMovedWithEvent:theEvent];
 }
 
 - (void)touchesEndedWithEvent:(NSEvent *)theEvent
 {
-	DISPATCH_EVENT(theEvent, _cmd);
+	[super touchesEndedWithEvent:theEvent];
 }
 
 - (void)touchesCancelledWithEvent:(NSEvent *)theEvent
 {
-	DISPATCH_EVENT(theEvent, _cmd);
+	[super touchesCancelledWithEvent:theEvent];
 }
 @end
