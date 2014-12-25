@@ -121,6 +121,9 @@ local function oSettingPanel()
 		
 		if t == 1.0 then
 			panel:unschedule()
+		end
+		
+		if time >= 1.0 and not panel:isHiding() then
 			panel:hide()
 		end
 	end
@@ -315,6 +318,9 @@ local function oSettingPanel()
 	panel.hide = function(self)
 		self:stopAllActions()
 		self:runAction(opacity)
+	end
+	panel.isHiding = function(self)
+		return not opacity.done
 	end
 
 	local function updateSpeed(self,deltaTime)

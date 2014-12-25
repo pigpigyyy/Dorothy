@@ -11,6 +11,8 @@ local oScale = require("oScale")
 local oEase = require("oEase")
 local CCDictionary = require("CCDictionary")
 local oPos = require("oPos")
+local oRuler = require("oRuler")
+local oWorld = require("oWorld")
 
 local function oViewArea()
 	local winSize = CCDirector.winSize
@@ -52,16 +54,17 @@ local function oViewArea()
 		crossNode:runAction(oPos(0.5,origin.x,origin.y,oEase.OutQuad))
 	end)
 
-	-- init content node --
-	local content = CCNode()
-	crossNode:addChild(content)
-	view.content = content
+	-- init world node --
+	local world = oWorld()
+	crossNode:addChild(world)
+	view.world = world
 
 	-- register view touch event --
 	view:registerTouchHandler(
 		function(eventType, touches)
 			if eventType == CCTouch.Moved then
 				if #touches == 1 then -- move view
+					oEvent:send("viewArea.move",touches[1].delta)
 					crossNode.position = crossNode.position + touches[1].delta
 				elseif #touches >= 2 then -- scale view
 					local preDistance = touches[1].preLocation:distance(touches[2].preLocation)
@@ -83,7 +86,7 @@ local function oViewArea()
 	local CCDrawNode = require("CCDrawNode")
 	local drawNode = CCDrawNode()
 	drawNode:drawDot(oVec2.zero,100,ccColor4(0xff80ff00))
-	content:addChild(drawNode)
+	world:addChild(drawNode)
 
 	return view
 end

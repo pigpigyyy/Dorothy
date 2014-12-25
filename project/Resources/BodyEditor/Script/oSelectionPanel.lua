@@ -83,6 +83,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 		time = time + deltaTime
 		local t = time/4.0
 		if t > 1.0 then t = 1.0 end
+
 		if startPos.x > 0 then
 			xVal = totalDelta.x
 			totalDelta.x = oEase:func(oEase.OutExpo,t,startPos.x,0-startPos.x)
@@ -111,7 +112,10 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 
 		if t == 1.0 then
 			panel:unschedule()
-			if fading then panel:fadeOut() end
+		end
+		
+		if fading and time >= 1.0 and not panel:isFading() then
+			panel:fadeOut()
 		end
 	end
 
@@ -223,6 +227,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 			if isReseting() then
 				startReset()
 			else
+				if fading then panel:fadeOut() end
 				panel:unschedule()
 			end
 		end
@@ -239,6 +244,9 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 		panel.fadeOut = function(self)
 			self:stopAllActions()
 			self:runAction(opacity)
+		end
+		panel.isFading = function(self)
+			return not opacity.done
 		end
 	end
 

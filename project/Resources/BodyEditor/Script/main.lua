@@ -33,6 +33,7 @@ end)
 local controls =
 {
 	"oViewArea",
+	"oRuler",
 	"oEditMenu",
 	"oSettingPanel",
 	"oViewPanel",

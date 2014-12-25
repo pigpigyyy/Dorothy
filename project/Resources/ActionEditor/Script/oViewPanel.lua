@@ -127,6 +127,9 @@ local function oViewPanel()
 			panel:unschedule()
 			--panel.touchEnabled = true
 			--menu.touchEnabled = true
+		end
+		
+		if time >= 1.0 and not panel:isHiding() then
 			panel:hide()
 		end
 	end
@@ -424,6 +427,9 @@ local function oViewPanel()
 	panel.hide = function(self)
 		self:stopAllActions()
 		self:runAction(opacity)
+	end
+	panel.isHiding = function(self)
+		return not opacity.done
 	end
 
 	local function updateSpeed(self,deltaTime)

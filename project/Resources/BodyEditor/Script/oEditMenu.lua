@@ -25,6 +25,8 @@ local function oEditMenu()
 		Polygon = oButton("",0,50,50,35,winSize.height-215,function() end),
 		Chain = oButton("",0,50,50,35,winSize.height-275,function() end),
 		Loop = oButton("",0,50,50,35,winSize.height-335,function() end),
+		Face = oButton("Face",16,50,50,35,35,function() end),
+		Joint = oButton("",0,50,50,95,35,function() end),
 		Origin = oButton("Origin",16,50,50,winSize.width-285,winSize.height-35,
 			function()
 				oEvent:send("viewArea.toOrigin")
@@ -124,7 +126,37 @@ local function oEditMenu()
 	node.position = oVec2(25,25)
 	node:addChild(paint)
 	items.Loop.face:addChild(node)
-
+	
+	-- joint button --
+	node = CCNode()
+	node.cascadeColor = false
+	node.position = oVec2(25,25)
+	paint = oLine(
+	{
+		oVec2(-13,13),
+		oVec2(13,-13),
+	},ccColor4(0xffff0080))
+	node:addChild(paint)
+	paint = oLine(
+	{
+		oVec2(-16,16),
+		oVec2(-10,16),
+		oVec2(-10,10),
+		oVec2(-16,10),
+		oVec2(-16,16),
+	},ccColor4(0xff80ff00))
+	node:addChild(paint)
+	paint = oLine(
+	{
+		oVec2(16,-16),
+		oVec2(10,-16),
+		oVec2(10,-10),
+		oVec2(16,-10),
+		oVec2(16,-16),
+	},ccColor4(0xff80ff00))
+	node:addChild(paint)
+	items.Joint.face:addChild(node)
+	
 	-- update scale button --
 	items.Zoom.mode = 0
 	items.Zoom.data = oListener("viewArea.scale",function(scale)
