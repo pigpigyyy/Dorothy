@@ -224,7 +224,7 @@ local function oControlBar()
 				return false
 			end
 			local loc = controlBar:convertToNodeSpace(touch.location)
-			locLength = loc.x-10
+			locLength = loc.x-10-barIterval
 			if locLength < 0 then locLength = 0 end
 			if locLength > barLength then locLength = barLength end
 			
@@ -249,7 +249,7 @@ local function oControlBar()
 					oEditor.settingPanel:clearSelection()
 					local model = oEditor.viewArea:getModel()
 					if model then
-						local pos = (locLength-offset)*60/barLength-1
+						local pos = (locLength-offset)*60/barLength
 						if pos < 0 then pos = 0 end
 						if not model.doing then
 							model:play(oEditor.animation)

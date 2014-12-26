@@ -70,6 +70,11 @@ local function oBox(text,okHandler,isInput)
 			function(self)
 				frame.opacity = 0.3
 				self.opacity = 0.3
+				box:hide()
+				textField:detachWithIME()
+				if okHandler then
+					okHandler(textField.text)
+				end
 			end)
 		--textField=CCTextFieldTTF
 		textField.position = oVec2(0,-9)
