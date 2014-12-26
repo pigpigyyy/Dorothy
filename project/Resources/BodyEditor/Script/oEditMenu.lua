@@ -19,7 +19,10 @@ local function oEditMenu()
 	-- init menu items --
 	local items =
 	{
-		Edit = oButton("Edit",16,50,50,35,winSize.height-35,function() end),
+		Edit = oButton("Edit",16,50,50,35,winSize.height-35,function()
+			CCDirector:popToRootScene()
+		end),
+
 		Rectangle = oButton("",0,50,50,35,winSize.height-95,function() end),
 		Circle = oButton("",0,50,50,35,winSize.height-155,function() end),
 		Polygon = oButton("",0,50,50,35,winSize.height-215,function() end),
@@ -27,29 +30,29 @@ local function oEditMenu()
 		Loop = oButton("",0,50,50,35,winSize.height-335,function() end),
 		Face = oButton("Face",16,50,50,35,35,function() end),
 		Joint = oButton("",0,50,50,95,35,function() end),
-		Origin = oButton("Origin",16,50,50,winSize.width-285,winSize.height-35,
-			function()
-				oEvent:send("viewArea.toOrigin")
-			end),
-		Zoom = oButton("100%",16,50,50,winSize.width-225,winSize.height-35,
-			function(button)
-				local scale = 0
-				if button.mode == 0 then
-					scale = 2.0
-				elseif button.mode == 1 then
-					scale = 0.5
-				elseif button.mode == 2 then
-					scale = 1.0
-				end
-				button.mode = button.mode + 1
-				button.mode = button.mode % 3
-				button.text = tostring(scale*100).."%"
-				oEvent:send("viewArea.toScale",scale)
-			end),
-		Play = oPlayButton(50,winSize.width-225,35,
-			function(button)
-				oEditor.isPlaying = button.isPlaying
-			end),
+
+		Origin = oButton("Origin",16,50,50,winSize.width-285,winSize.height-35,function()
+			oEvent:send("viewArea.toOrigin")
+		end),
+
+		Zoom = oButton("100%",16,50,50,winSize.width-225,winSize.height-35,function(button)
+			local scale = 0
+			if button.mode == 0 then
+				scale = 2.0
+			elseif button.mode == 1 then
+				scale = 0.5
+			elseif button.mode == 2 then
+				scale = 1.0
+			end
+			button.mode = button.mode + 1
+			button.mode = button.mode % 3
+			button.text = tostring(scale*100).."%"
+			oEvent:send("viewArea.toScale",scale)
+		end),
+
+		Play = oPlayButton(50,winSize.width-225,35,function(button)
+			oEditor.isPlaying = button.isPlaying
+		end),
 	}
 
 	-- rectangle button --

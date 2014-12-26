@@ -1,7 +1,6 @@
 local CCScene = require("CCScene")
 
-local oEditor = {}
+local oEditor = CCScene()
 oEditor.isPlaying = false
 
-oEditor.scene = CCScene()
 return oEditor

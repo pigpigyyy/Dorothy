@@ -106,6 +106,7 @@ setmetatable(oRoutine,
 {
 	__call = function(self,routine)
 		table_insert(self,routine)
+		return routine
 	end,
 })
 

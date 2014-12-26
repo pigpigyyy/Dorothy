@@ -5053,8 +5053,8 @@ local Dorothy =
 			},
 			func =
 			{
-				args = "(time: float, begin: float, end: float)",
-				description = "time: [0.0 - 1.0]",
+				args = "(easeId: int, time: float, begin: float, end: float)",
+				description = " - time: [0.0 - 1.0]\n\n - easeId: oEase.[Linear|InQuad|...]",
 				returns = "(value: float)",
 				static = true,
 				type = "method"

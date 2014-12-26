@@ -11,8 +11,17 @@ local oScale = require("oScale")
 local oEase = require("oEase")
 local CCDictionary = require("CCDictionary")
 local oPos = require("oPos")
-local oRuler = require("oRuler")
 local oWorld = require("oWorld")
+local CCSequence = require("CCSequence")
+local CCCall = require("CCCall")
+
+--[[
+events:
+	viewArea.move
+	viewArea.toOrigin
+	viewArea.scale
+	viewArea.toScale
+--]]
 
 local function oViewArea()
 	local winSize = CCDirector.winSize
@@ -48,10 +57,28 @@ local function oViewArea()
 	-- listen reset events --
 	crossNode.data = CCDictionary()
 	crossNode.data.toScaleListener = oListener("viewArea.toScale",function(scale)
-		crossNode:runAction(oScale(0.5,scale,scale,oEase.OutQuad))
+		view.touchEnabled = false
+		crossNode:runAction(CCSequence(
+		{
+			oScale(0.5,scale,scale,oEase.OutQuad),
+			CCCall(function()
+				if crossNode.numberOfRunningActions == 1 then
+					view.touchEnabled = true
+				end
+			end),
+		}))
 	end)
 	crossNode.data.toOriginListener = oListener("viewArea.toOrigin",function()
-		crossNode:runAction(oPos(0.5,origin.x,origin.y,oEase.OutQuad))
+		view.touchEnabled = false
+		crossNode:runAction(CCSequence(
+		{
+			oPos(0.5,origin.x,origin.y,oEase.OutQuad),
+			CCCall(function()
+				if crossNode.numberOfRunningActions == 1 then
+					view.touchEnabled = true
+				end
+			end),
+		}))
 	end)
 
 	-- init world node --
