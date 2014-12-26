@@ -62,19 +62,7 @@ THE SOFTWARE.
 
 - (void) keyDown:(NSEvent *)event
 {
-	// exit fullscreen if user pressed esc
-	if([event keyCode] == 53)
-	{
-		EAGLView* eaglView = [EAGLView sharedEGLView];
-		
-		// cancel full screen
-		if( [eaglView isFullScreen] )
-			[eaglView setFullScreen:NO];
-
-		// let another responder take it
-		else
-			[super keyDown:event];
-	}
+	[super keyDown:event];
 }
 
 @end

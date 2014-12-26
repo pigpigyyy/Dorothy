@@ -36,7 +36,8 @@ static float InCubic(float t, float b, float c)
 }
 static float OutCubic(float t, float b, float c)
 {
-	return c*((t-1)*t*t + 1) + b;
+	--t;
+	return c*(t*t*t + 1) + b;
 }
 static float InOutCubic(float t, float b, float c)
 {
@@ -50,7 +51,8 @@ static float InQuart(float t, float b, float c)
 }
 static float OutQuart(float t, float b, float c)
 {
-	return -c * ((t-1)*t*t*t - 1) + b;
+	--t;
+	return -c * (t*t*t*t - 1) + b;
 }
 static float InOutQuart(float t, float b, float c)
 {
@@ -64,7 +66,8 @@ static float InQuint(float t, float b, float c)
 }
 static float OutQuint(float t, float b, float c)
 {
-	return c*((t-1)*t*t*t*t + 1) + b;
+	--t;
+	return c*(t*t*t*t*t+1) + b;
 }
 static float InOutQuint(float t, float b, float c)
 {
@@ -105,7 +108,8 @@ static float InCirc(float t, float b, float c)
 }
 static float OutCirc(float t, float b, float c)
 {
-	return c * sqrtf(1.0f - (t-1)*t) + b;
+	--t;
+	return c * sqrtf(1.0f - t*t) + b;
 }
 static float InOutCirc(float t, float b, float c)
 {
@@ -115,35 +119,33 @@ static float InOutCirc(float t, float b, float c)
 }
 static float InElastic(float t, float b, float c)
 {
-	float s=1.70158f, p=0.3f, a=c;
-	if (t==0) return b;  if (t==1) return b+c;
-	if (a < abs(c)) { a=c; s=p/4; }
-	else s = p/(2*b2_pi) * asinf(c/a);
-    t-=1;
-    return -(a*powf(2,10*t) * sinf( (t-s)*(2*b2_pi)/p )) + b;
+	if (t==0) return b; if (t==1) return b+c;
+	float p=0.3f;
+	float a=c; 
+	float s=p/4;
+	float postFix = a*powf(2,10*(t-=1)); // this is a fix, again, with post-increment operators
+	return -(postFix * sinf((t-s)*(2*b2_pi)/p )) + b;
 }
 static float OutElastic(float t, float b, float c)
 {
-	float s=1.70158f, p=0.3f, a=c;
-	if (t==0) return b;  if (t==1) return b+c;
-	if (a < abs(c)) { a=c; s=p/4; }
-	else s = p/(2*b2_pi) * asinf(c/a);
-	return a*powf(2,-10*t) * sinf( (t-s)*(2*b2_pi)/p ) + c + b;
+	if (t==0) return b; if (t==1) return b+c;
+	float p=0.3f;
+	float a=c; 
+	float s=p/4;
+	return (a*powf(2,-10*t) * sinf( (t-s)*(2*b2_pi)/p ) + c + b);
 }
 static float InOutElastic(float t, float b, float c)
 {
-	float s=1.70158f, p=(0.3f*1.5f), a=c;
-	if (t==0) return b;
-	if ((t*=2)==2) return b+c;
-	if (a < abs(c)) { a=c; s=p/4; }
-	else s = p/(2*b2_pi) * asinf(c/a);
-	if (t < 1)
-    {
-        t-=1;
-        return -0.5f*(a*powf(2,10*t) * sinf( (t-s)*(2*b2_pi)/p )) + b;
-    }
-    t-=1;
-	return a*powf(2,-10*t) * sinf( (t-s)*(2*b2_pi)/p )*0.5f + c + b;
+	if (t==0) return b; if ((t/=0.5f)==2) return b+c;
+	float p=0.3f*1.5f;
+	float a=c; 
+	float s=p/4;
+	if (t < 1) {
+		float postFix =a*powf(2,10*(t-=1)); // postIncrement is evil
+		return -0.5f*(postFix* sin( (t-s)*(2*b2_pi)/p )) + b;
+	} 
+	float postFix = a*powf(2,-10*(t-=1)); // postIncrement is evil
+	return postFix * sin( (t-s)*(2*b2_pi)/p )*.5f + c + b;
 }
 static float InBack(float t, float b, float c)
 {

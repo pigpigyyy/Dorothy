@@ -44,7 +44,13 @@ local oSettingPanel = class(
 		
 		local items =
 		{
-			Name = oSettingItem("Name :",0,getPosY(),true,
+			Name = oSettingItem("GravityScale :",0,getPosY(),5,true,
+				function(self, enabled)
+				end),
+			Name1 = oSettingItem("AngularOffset :",0,getPosY(),15,true,
+				function(self, enabled)
+				end),
+			Name2 = oSettingItem("LinearDamping :",0,getPosY(),20,true,
 				function(self, enabled)
 				end),
 		}

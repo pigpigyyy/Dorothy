@@ -22,7 +22,7 @@ local oSettingItem = class(
 		return CCMenuItem()
 	end,
 
-	__init = function(self, name, x, y, isInput, toggled)
+	__init = function(self, name, x, y, offsetX, isInput, toggled)
 		self._isInput = isInput
 		self._toggled = toggled
 		self.anchor = oVec2(0,1)
@@ -31,18 +31,18 @@ local oSettingItem = class(
 		
 		local label = CCLabelTTF(name,"Arial",14)
 		label.color = ccColor3(0xffffff)
-		label.position = oVec2(40,15)
+		label.position = oVec2(40+offsetX,15)
 		label.texture.antiAlias = false
 		self:addChild(label)
 
 		if isInput then
-			label = oTextField(118,7,14,8,
+			label = oTextField(118+offsetX,7,14,8,
 				function()
 					self.selected = false
 				end)
 		else
 			label = CCLabelTTF("","Arial",14)
-			label.position = oVec2(130,15)
+			label.position = oVec2(130+offsetX,15)
 		end
 		label.color = ccColor3(0xffffff)
 		self:addChild(label)

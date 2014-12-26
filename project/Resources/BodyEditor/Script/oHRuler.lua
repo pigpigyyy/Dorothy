@@ -69,7 +69,7 @@ local oHRuler = class(
 		end
 		
 		-- worker thread for intervals creation --
-		intervalNode:schedule(once(function()
+		self:schedule(once(function()
 			repeat
 				if nCurrentPart < nPart or pCurrentPart < pPart then
 					local start = math.floor(nPart/10)
