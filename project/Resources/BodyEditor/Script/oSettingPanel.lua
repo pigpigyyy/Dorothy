@@ -1,4 +1,4 @@
-local class,property = unpack(require("class"))
+local class = unpack(require("class"))
 local CCSize = require("CCSize")
 local CCDrawNode = require("CCDrawNode")
 local oVec2 = require("oVec2")
@@ -6,6 +6,11 @@ local ccColor4 = require("ccColor4")
 local CCDirector = require("CCDirector")
 local oSettingItem = require("oSettingItem")
 local oSelectionPanel = require("oSelectionPanel")
+local CCLabelTTF = require("CCLabelTTF")
+local ccColor3 = require("ccColor3")
+local CCDictionary = require("CCDictionary")
+local oEvent = require("oEvent")
+local oListener = require("oListener")
 
 local oSettingPanel = class(
 {
@@ -34,87 +39,416 @@ local oSettingPanel = class(
 		border:addChild(background,-1)
 		self.position = oVec2(winSize.width*0.5-100,-winSize.height*0.5+halfBH+10)
 		
+		local label = CCLabelTTF("","Arial",16)
+		label.position = oVec2(halfBW,self._borderSize.height-18)
+		label.color = ccColor3(0x00ffff)
+		menu:addChild(label)
+		
 		local function genPosY()
 			local index = 0
 			return function()
 				local v = index
 				index = index + 1
-				return self._borderSize.height-10-itemHeight*v
+				return self._borderSize.height-30-itemHeight*v
 			end
 		end
-		local getPosY = genPosY()
 
 		local itemNames =
 		{
 			-- text field
-			{"Name",function(self,enabled) end},
+			"Name",
 			-- body chooser
-			{"BodyA",function(self,enabled) end},
-			{"BodyB",function(self,enabled) end},
+			"BodyA",
+			"BodyB",
 			-- joint chooser
-			{"JointA",function(self,enabled) end},
-			{"JointB",function(self,enabled) end},
+			"JointA",
+			"JointB",
 			-- move point
-			{"WorldPos",function(self,enabled) end},
-			{"GroundAnchorA",function(self,enabled) end},
-			{"GroundAnchorB",function(self,enabled) end},
-			{"AnchorA",function(self,enabled) end},
-			{"AnchorB",function(self,enabled) end},
-			{"LinearOffset",function(self,enabled) end},
+			"WorldPos",
+			"GroundAnchorA",
+			"GroundAnchorB",
+			"AnchorA",
+			"AnchorB",
+			"LinearOffset",
 			-- move axis
-			{"Axis",function(self,enabled) end},
+			"Axis",
 			-- float
-			{"MaxForce",function(self,enabled) end},
-			{"MaxTorque",function(self,enabled) end},
-			{"Ratio",function(self,enabled) end},
-			{"AngularOffset", function(self,enabled) end},
-			{"CorrectionFactor",function(self,enabled) end},
-			{"LowerTranslation",function(self,enabled) end},
-			{"UpperTranslation",function(self,enabled) end},
-			{"MaxMotorForce",function(self,enabled) end},
-			{"MotorSpeed",function(self,enabled) end},
-			{"LowerAngle",function(self,enabled) end},
-			{"UpperAngle",function(self,enabled) end},
-			{"MaxMotorTorque",function(self,enabled) end},
-			{"MaxLength",function(self,enabled) end},
-			{"Frequency",function(self,enabled) end},
-			{"Damping",function(self,enabled) end},
-			{"Angle",function(self,enabled) end},
-			{"Radius",function(self,enabled) end},
-			{"GravityScale",function(self,enabled) end},
-			{"LinearDamping",function(self,enabled) end},
-			{"AngularDamping",function(self,enabled) end},
-			{"Density",function(self,enabled) end},
-			{"Friction",function(self,enabled) end},
-			{"Restitution",function(self,enabled) end},
+			"MaxForce",
+			"MaxTorque",
+			"Ratio",
+			"AngularOffset", 
+			"CorrectionFactor",
+			"LowerTranslation",
+			"UpperTranslation",
+			"MaxMotorForce",
+			"MotorSpeed",
+			"LowerAngle",
+			"UpperAngle",
+			"MaxMotorTorque",
+			"MaxLength",
+			"Frequency",
+			"Damping",
+			"Angle",
+			"Radius",
+			"GravityScale",
+			"LinearDamping",
+			"AngularDamping",
+			"Density",
+			"Friction",
+			"Restitution",
 			-- selector
-			{"Type",function(self,enabled) end},
+			"Type",
 			-- boolean
-			{"Bullet",function(self,enabled) end},
-			{"FixedRotation",function(self,enabled) end},
-			{"Collision",function(self,enabled) end},
+			"Bullet",
+			"FixedRotation",
+			"Collision",
 			-- rect maker
-			{"Size",function(self,enabled) end},
+			"Size",
 			-- move position
-			{"Position",function(self,enabled) end},
-			{"Center",function(self,enabled) end},
+			"Position",
+			"Center",
 			-- vertices editor
-			{"Vertices",function(self,enabled) end},
+			"Vertices",
+			-- face chooser
+			"Face",
+			-- move anchor
+			"FaceAnchor",
 		}
-		
-		local items = {}
-		items.Name = oSettingItem(itemNames[1][1].." :",itemWidth,itemHeight,0,getPosY(),true,itemNames[1][2])
-		for i = 2,#itemNames do
-			items[itemNames[i]] = oSettingItem(itemNames[i][1].." :",itemWidth,itemHeight,0,getPosY(),false,itemNames[i][2])
-		end
-		menu.items = items
 
-		local contentHeight = 20
+		local items = {}
+		local getPosY = genPosY()
+		local function editCallback(settingItem)
+			oEvent:send("settingPanel.edit",settingItem)
+		end
+		for i = 1,#itemNames do
+			items[itemNames[i]] = oSettingItem(itemNames[i].." :",itemWidth,itemHeight,0,getPosY(),i == 1,editCallback)
+			items[itemNames[i]].name = itemNames[i]
+		end
 		for _,item in pairs(items) do
-			contentHeight = contentHeight + itemHeight
+			item.visible = false
 			menu:addChild(item)
 		end
-		self:reset(self._borderSize.width,contentHeight,0,50)
+		self.items = items
+
+		local itemsRectangle =
+		{
+			items.Name,
+			items.Type,
+			items.Position,
+			items.Angle,
+			items.Center,
+			items.Size,
+			items.Density,
+			items.Friction,
+			items.Restitution,
+			items.LinearDamping,
+			items.AngularDamping,
+			items.FixedRotation,
+			items.GravityScale,
+			items.Bullet,
+			items.Face,
+			items.FaceAnchor,
+		}
+		self.Rectangle = itemsRectangle
+
+		local itemsCircle =
+		{
+			items.Name,
+			items.Type,
+			items.Position,
+			items.Angle,
+			items.Center,
+			items.Radius,
+			items.Density,
+			items.Friction,
+			items.Restitution,
+			items.LinearDamping,
+			items.AngularDamping,
+			items.FixedRotation,
+			items.GravityScale,
+			items.Bullet,
+			items.Face,
+			items.FaceAnchor,
+		}
+		self.Circle = itemsCircle
+
+		local itemsPolygon =
+		{
+			items.Name,
+			items.Type,
+			items.Position,
+			items.Angle,
+			items.Vertices,
+			items.Density,
+			items.Friction,
+			items.Restitution,
+			items.LinearDamping,
+			items.AngularDamping,
+			items.FixedRotation,
+			items.GravityScale,
+			items.Bullet,
+			items.Face,
+			items.FaceAnchor,
+		}
+		self.Polygon = itemsPolygon
+
+		local itemsChain =
+		{
+			items.Name,
+			items.Type,
+			items.Position,
+			items.Angle,
+			items.Vertices,
+			items.Friction,
+			items.Restitution,
+			items.LinearDamping,
+			items.AngularDamping,
+			items.FixedRotation,
+			items.GravityScale,
+			items.Bullet,
+			items.Face,
+			items.FaceAnchor,
+		}
+		self.Chain = itemsChain
+
+		local itemsLoop =
+		{
+			items.Name,
+			items.Type,
+			items.Position,
+			items.Angle,
+			items.Vertices,
+			items.Friction,
+			items.Restitution,
+			items.LinearDamping,
+			items.AngularDamping,
+			items.FixedRotation,
+			items.GravityScale,
+			items.Bullet,
+			items.Face,
+			items.FaceAnchor,
+		}
+		self.Loop = itemsLoop
+
+		local itemsSubRectangle =
+		{
+			items.Center,
+			items.Angle,
+			items.Size,
+			items.Density,
+			items.Friction,
+			items.Restitution,
+		}
+		self.SubRectangle = itemsSubRectangle
+
+		local itemsSubCircle =
+		{
+			items.Center,
+			items.Radius,
+			items.Density,
+			items.Friction,
+			items.Restitution,
+		}
+		self.SubCircle = itemsSubCircle
+
+		local itemsSubPolygon =
+		{
+			items.Vertices,
+			items.Density,
+			items.Friction,
+			items.Restitution,
+		}
+		self.SubPolygon = itemsSubPolygon
+
+		local itemsSubChain =
+		{
+			items.Vertices,
+			items.Friction,
+			items.Restitution,
+		}
+		self.SubChain = itemsSubChain
+
+		local itemsSubLoop =
+		{
+			items.Vertices,
+			items.Friction,
+			items.Restitution,
+		}
+		self.SubLoop = itemsSubLoop
+
+		local itemsDistance =
+		{
+			items.Name,
+			items.Collision,
+			items.BodyA,
+			items.BodyB,
+			items.AnchorA,
+			items.AnchorB,
+			items.Frequency,
+			items.Damping,
+		}
+		self.Distance = itemsDistance
+
+		local itemsFriction =
+		{
+			items.Name,
+			items.Collision,
+			items.BodyA,
+			items.BodyB,
+			items.WorldPos,
+			items.MaxForce,
+			items.MaxTorque,
+		}
+		self.Friction = itemsFriction
+
+		local itemsGear =
+		{
+			items.Name,
+			items.Collision,
+			items.JointA,
+			items.JointB,
+			items.Ratio,
+		}
+		self.Gear = itemsGear
+
+		local itemsSpring =
+		{
+			items.Name,
+			items.Collision,
+			items.BodyA,
+			items.BodyB,
+			items.LinearOffset,
+			items.AngularOffset,
+			items.MaxForce,
+			items.MaxTorque,
+			items.CorrectionFactor,
+		}
+		self.Spring = itemsSpring
+
+		local itemsPrismatic =
+		{
+			items.Name,
+			items.Collision,
+			items.BodyA,
+			items.BodyB,
+			items.WorldPos,
+			items.Axis,
+			items.LowerTranslation,
+			items.UpperTranslation,
+			items.MaxMotorForce,
+			items.MotorSpeed,
+		}
+		self.Prismatic = itemsPrismatic
+
+		local itemsPulley =
+		{
+			items.Name,
+			items.Collision,
+			items.BodyA,
+			items.BodyB,
+			items.AnchorA,
+			items.AnchorB,
+			items.GroundAnchorA,
+			items.GroundAnchorB,
+			items.Ratio,
+		}
+		self.Pulley = itemsPulley
+
+		local itemsRevolute =
+		{
+			items.Name,
+			items.Collision,
+			items.BodyA,
+			items.BodyB,
+			items.WorldPos,
+			items.LowerAngle,
+			items.UpperAngle,
+			items.MaxMotorTorque,
+			items.MotorSpeed,
+		}
+		self.Revolute = itemsRevolute
+
+		local itemsRope =
+		{
+			items.Name,
+			items.Collision,
+			items.BodyA,
+			items.BodyB,
+			items.AnchorA,
+			items.AnchorB,
+			items.MaxLength,
+		}
+		self.Rope = itemsRope
+
+		local itemsWeld =
+		{
+			items.Name,
+			items.Collision,
+			items.BodyA,
+			items.BodyB,
+			items.WorldPos,
+			items.Frequency,
+			items.Damping,
+		}
+		self.Weld = itemsWeld
+
+		local itemsWheel =
+		{
+			items.Name,
+			items.Collision,
+			items.BodyA,
+			items.BodyB,
+			items.WorldPos,
+			items.Axis,
+			items.MaxMotorTorque,
+			items.MotorSpeed,
+			items.Frequency,
+			items.Damping,
+		}
+		self.Wheel = itemsWheel
+
+		local currentGroup = nil
+		local function selectGroup(groupName)
+			if currentGroup then
+				for _,item in ipairs(currentGroup) do
+					item.visible = false
+				end
+			end
+			label.text = groupName
+			label.texture.antiAlias = false
+			label.position = oVec2(halfBW,self._borderSize.height-18)
+			currentGroup = self[groupName]
+			local getPosY = genPosY()
+			local contentHeight = 40
+			for _,item in ipairs(currentGroup) do
+				item.visible = true
+				item.positionY = getPosY()
+				contentHeight = contentHeight + itemHeight
+			end
+			self:reset(self._borderSize.width,contentHeight,0,50)
+		end
+
+		self.data = CCDictionary()
+		self.data.toStateListener = oListener("settingPanel.toState",function(state)
+			oEvent:send("settingPanel.edit",nil)
+			selectGroup(state)
+		end)
+		local currentItem = nil
+		self.data.editListener = oListener("settingPanel.edit",function(item)
+			if item == nil then
+				if currentItem then
+					currentItem.selected = false
+				end
+				currentItem = nil
+			elseif item.selected then
+				if currentItem then
+					currentItem.selected = false
+				end
+				currentItem = item
+			else
+				currentItem = nil
+			end
+		end)
 	end,
 })
 

@@ -16,6 +16,7 @@ local oOpacity = require("oOpacity")
 local oScale = require("oScale")
 local CCCall = require("CCCall")
 local tolua = require("tolua")
+local CCDelay = require("CCDelay")
 
 local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 	local winSize = CCDirector.winSize
@@ -112,10 +113,6 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 
 		if t == 1.0 then
 			panel:unschedule()
-		end
-		
-		if fading and time >= 1.0 and not panel:isFading() then
-			panel:fadeOut()
 		end
 	end
 
@@ -234,7 +231,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 	end
 	
 	if fading then
-		local opacity = oOpacity(0.5,0.4,oEase.InExpo)
+		local opacity = CCSequence({CCDelay(1),oOpacity(0.5,0.4,oEase.InExpo)})
 		panel.fadeIn = function(self)
 			if not opacity.done then
 				self:stopAction(opacity)
@@ -270,6 +267,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 				menu.enabled = true
 				if isReseting() then
 					startReset()
+					if fading then panel:fadeOut() end
 				else
 					if _v ~= oVec2.zero and deltaMoveLength > 10 then
 						panel:schedule(updatePos)

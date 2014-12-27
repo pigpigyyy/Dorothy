@@ -24,15 +24,21 @@ local oViewItem = class({
 		self._nameLabel = nil -- CCLabelTTF
 		return CCMenuItem()
 	end,
-	
+
 	__init = function(self,typename,name,x,y,tapped)
+		local isSub = typename:sub(1,3) == "Sub"
+		local width = isSub and 130 or 160
+		local height = 40
+		local halfW = width*0.5
+		local halfH = height*0.5
+		
 		self._tapped = tapped
-		self.contentSize = CCSize(160,40)
-		self.position = oVec2(x,y)
+		self.contentSize = CCSize(width,height)
+		self.position = oVec2(x+(isSub and 15 or 0),y)
 		self:registerTapHandler(function(eventType) self:tapped(eventType) end)
 
 		local node = CCNode()
-		node.position = oVec2(80,20)
+		node.position = oVec2(halfW,halfH)
 		self:addChild(node)
 		self._node = node
 
@@ -40,10 +46,10 @@ local oViewItem = class({
 		typeLabel.cascadeColor = false
 		typeLabel.scaleX = 0.6
 		typeLabel.scaleY = 0.6
-		typeLabel.positionX = -60
+		typeLabel.positionX = -halfW+20
 		node:addChild(typeLabel)
 
-		if typename == "Rectangle" then
+		if typename == "Rectangle" or typename == "SubRectangle" then
 			typeLabel:addChild(oLine(
 			{
 				oVec2(-15,15),
@@ -52,7 +58,7 @@ local oViewItem = class({
 				oVec2(-15,-15),
 				oVec2(-15,15),
 			},ccColor4(0xffff0080)))
-		elseif typename == "Circle" then
+		elseif typename == "Circle" or typename == "SubCircle" then
 			local vs = {}
 			local num = 20
 			for i = 0, num do
@@ -60,7 +66,7 @@ local oViewItem = class({
 				table.insert(vs,oVec2(18*math.cos(angle),18*math.sin(angle)))
 			end
 			typeLabel:addChild(oLine(vs,ccColor4(0xffff0080)))
-		elseif typename == "Polygon" then
+		elseif typename == "Polygon" or typename == "SubPolygon" then
 			typeLabel:addChild(oLine(
 			{
 				oVec2(0,18),
@@ -68,7 +74,7 @@ local oViewItem = class({
 				oVec2(-18,-18),
 				oVec2(0,18),
 			},ccColor4(0xffff0080)))
-		elseif typename == "Chain" then
+		elseif typename == "Chain" or typename == "SubChain" then
 			typeLabel:addChild(oLine(
 			{
 				oVec2(-15,15),
@@ -76,7 +82,7 @@ local oViewItem = class({
 				oVec2(0,-15),
 				oVec2(15,-15),
 			},ccColor4(0xffff0080)))
-		elseif typename == "Loop" then
+		elseif typename == "Loop" or typename == "SubLoop" then
 			typeLabel:addChild(oLine(
 			{
 				oVec2(-16,0),
@@ -88,21 +94,54 @@ local oViewItem = class({
 				oVec2(-8,-16),
 				oVec2(-16,0),
 			},ccColor4(0xffff0080)))
+		else
+			typeLabel.scaleX = 0.7
+			typeLabel.scaleY = 0.7
+			typeLabel:addChild(oLine(
+			{
+				oVec2(-13,13),
+				oVec2(13,-13),
+			},ccColor4(0xffff0080)))
+			typeLabel:addChild(oLine(
+			{
+				oVec2(-16,16),
+				oVec2(-10,16),
+				oVec2(-10,10),
+				oVec2(-16,10),
+				oVec2(-16,16),
+			},ccColor4(0xff80ff00)))
+			typeLabel:addChild(oLine(
+			{
+				oVec2(16,-16),
+				oVec2(10,-16),
+				oVec2(10,-10),
+				oVec2(16,-10),
+				oVec2(16,-16),
+			},ccColor4(0xff80ff00)))
 		end
 
-		local nameLabel = CCLabelTTF(name,"Arial",14)
-		nameLabel.positionX = 20
-		nameLabel.texture.antiAlias = false
-		node:addChild(nameLabel)
-		self._nameLabel = nameLabel
+		if isSub then
+			self:addChild(oLine(
+			{
+				oVec2(-15,height+(name == 1 and 10 or (10+halfH))),
+				oVec2(-15,halfH),
+				oVec2(0,halfH),
+			},ccColor4()))
+		else
+			local nameLabel = CCLabelTTF(name,"Arial",14)
+			nameLabel.positionX = 20
+			nameLabel.texture.antiAlias = false
+			node:addChild(nameLabel)
+			self._nameLabel = nameLabel
+		end
 
 		local border = oLine(
 		{
-			oVec2(-80,20),
-			oVec2(80,20),
-			oVec2(80,-20),
-			oVec2(-80,-20),
-			oVec2(-80,20),
+			oVec2(-halfW,halfH),
+			oVec2(halfW,halfH),
+			oVec2(halfW,-halfH),
+			oVec2(-halfW,-halfH),
+			oVec2(-halfW,halfH),
 		},ccColor4())
 		node:addChild(border)
 		self._border = border
@@ -110,10 +149,10 @@ local oViewItem = class({
 		local borderBold = CCDrawNode()
 		borderBold:drawPolygon(
 		{
-			oVec2(-80,20),
-			oVec2(80,20),
-			oVec2(80,-20),
-			oVec2(-80,-20)
+			oVec2(-halfW,halfH),
+			oVec2(halfW,halfH),
+			oVec2(halfW,-halfH),
+			oVec2(-halfW,-halfH)
 		},ccColor4(0),1,ccColor4())
 		borderBold.opacity = 0
 		node:addChild(borderBold)
@@ -125,14 +164,21 @@ local oViewItem = class({
 	
 	tapped = function(self,eventType)
 		if eventType ~= CCMenuItem.Tapped then return end
-		local enableTap = true
+		self.selected = not self.selected
 		if self._tapped then
-			enableTap = self._tapped(self, not self._selected)
+			self._tapped(self)
 		end
-		if enableTap then
-			self._selected = not self._selected
-			self._border.visible = not self._selected
-			if self._selected then
+	end,
+	
+	selected = property(
+		function(self)
+			return self._selected
+		end,
+		function(self,value)
+			if self._selected == value then return end
+			self._selected = value
+			self._border.visible = not value
+			if value then
 				self._node.color = ccColor3(0x00ffff)
 				self._node.cascadeOpacity = false
 				self._borderBold:stopAllActions()
@@ -145,16 +191,23 @@ local oViewItem = class({
 				self._node.cascadeOpacity = true
 				self._borderBold:runAction(self._fade)
 			end
-		end
-	end,
+		end),
 
 	name = property(
 		function(self)
-			return self._nameLabel.text
+			if self._nameLabel then
+				return self._nameLabel.text
+			else
+				return self._name
+			end
 		end,
 		function(self,value)
-			self._nameLabel.text = value
-			self._nameLabel.texture.antiAlias = false
+			if self._nameLabel then
+				self._nameLabel.text = value
+				self._nameLabel.texture.antiAlias = false
+			else
+				self._name = value
+			end
 		end),
 })
 

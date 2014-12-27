@@ -231,7 +231,7 @@ local function oEditMenu()
 							local curDef = animationDef[oEditor.keyIndex]
 							if prevDef then
 								if nextDef then
-									nextDef[oKd.duration] = 								nextDef[oKd.duration]+curDef[oKd.duration]
+									nextDef[oKd.duration] = nextDef[oKd.duration]+curDef[oKd.duration]
 								end
 								table.remove(animationDef, oEditor.keyIndex)
 								oEditor.keyIndex = oEditor.keyIndex-1

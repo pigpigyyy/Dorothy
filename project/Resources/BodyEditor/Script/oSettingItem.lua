@@ -114,6 +114,7 @@ local oSettingItem = class(
 			return self._selected
 		end,
 		function(self,value)
+			if self._selected == value then return end
 			self._selected = value
 			self.highlighted = value
 			if self._isInput then
@@ -124,7 +125,7 @@ local oSettingItem = class(
 				end
 			end
 			if self._toggled then
-				self._toggled(self, value)
+				self._toggled(self)
 			end
 		end),
 

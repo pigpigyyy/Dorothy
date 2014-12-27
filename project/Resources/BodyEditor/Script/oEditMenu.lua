@@ -22,12 +22,21 @@ local function oEditMenu()
 		Edit = oButton("Edit",16,50,50,35,winSize.height-35,function()
 			CCDirector:popToRootScene()
 		end),
-
-		Rectangle = oButton("",0,50,50,35,winSize.height-95,function() end),
-		Circle = oButton("",0,50,50,35,winSize.height-155,function() end),
-		Polygon = oButton("",0,50,50,35,winSize.height-215,function() end),
-		Chain = oButton("",0,50,50,35,winSize.height-275,function() end),
-		Loop = oButton("",0,50,50,35,winSize.height-335,function() end),
+		Rectangle = oButton("",0,50,50,35,winSize.height-95,function()
+			oEvent:send("settingPanel.toState","Rectangle")
+		end),
+		Circle = oButton("",0,50,50,35,winSize.height-155,function()
+			oEvent:send("settingPanel.toState","Circle")
+		end),
+		Polygon = oButton("",0,50,50,35,winSize.height-215,function()
+			oEvent:send("settingPanel.toState","Polygon")
+		end),
+		Chain = oButton("",0,50,50,35,winSize.height-275,function()
+			oEvent:send("settingPanel.toState","Chain")
+		end),
+		Loop = oButton("",0,50,50,35,winSize.height-335,function()
+			oEvent:send("settingPanel.toState","Loop")
+		end),
 		Face = oButton("Face",16,50,50,35,35,function() end),
 		Joint = oButton("",0,50,50,95,35,function() end),
 
