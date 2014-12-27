@@ -22,27 +22,37 @@ local oSettingItem = class(
 		return CCMenuItem()
 	end,
 
-	__init = function(self, name, x, y, offsetX, isInput, toggled)
+	-- self = CCMenuItem
+	__init = function(self,name,width,height, x, y, isInput, toggled)
+		local halfW = width*0.5
+		local halfH = height*0.5
+		
 		self._isInput = isInput
 		self._toggled = toggled
 		self.anchor = oVec2(0,1)
-		self.contentSize = CCSize(180,30)
+		self.contentSize = CCSize(width,height)
 		self.position = oVec2(x, y)
 		
 		local label = CCLabelTTF(name,"Arial",14)
 		label.color = ccColor3(0xffffff)
-		label.position = oVec2(40+offsetX,15)
+		label.position = oVec2(10+label.contentSize.width*0.5,halfH)
 		label.texture.antiAlias = false
 		self:addChild(label)
 
+		local nextCenterX = label.position.x + label.contentSize.width*0.5
+		nextCenterX = (width-10-nextCenterX)*0.5+nextCenterX
 		if isInput then
-			label = oTextField(118+offsetX,7,14,8,
+			local fontSize = 14
+			local limit = 8
+			local x = nextCenterX
+			local y = halfH-fontSize*0.5-2
+			label = oTextField(x,y,fontSize,limit,
 				function()
 					self.selected = false
 				end)
 		else
 			label = CCLabelTTF("","Arial",14)
-			label.position = oVec2(130+offsetX,15)
+			label.position = oVec2(nextCenterX,halfH)
 		end
 		label.color = ccColor3(0xffffff)
 		self:addChild(label)
@@ -51,9 +61,9 @@ local oSettingItem = class(
 		local border = oLine(
 		{
 			oVec2(0,0),
-			oVec2(170,0),
-			oVec2(170,30),
-			oVec2(0,30),
+			oVec2(width-10,0),
+			oVec2(width-10,height),
+			oVec2(0,height),
 			oVec2(0,0),
 		},ccColor4(0xff00ffff))
 		border.positionX = 5
@@ -61,12 +71,11 @@ local oSettingItem = class(
 		self:addChild(border)
 		self._border = border
 		
-		self:registerTapHandler(
-			function(eventType,self)
-				if eventType == CCMenuItem.Tapped then
-					self.selected = not self.selected
-				end
-			end)
+		self:registerTapHandler(function(eventType,item)
+			if eventType == CCMenuItem.Tapped then
+				item.selected = not item.selected
+			end
+		end)
 	end,
 
 	-- string

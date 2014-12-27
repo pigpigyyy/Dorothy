@@ -8,7 +8,6 @@ class CCMenuItem: public CCNode
 	};
 
 	tolua_readonly tolua_property__qt CCRect rect @ hitArea;
-	tolua_readonly tolua_property__bool bool selected;
 	tolua_property__bool bool enabled;
 	
 	void registerScriptTapHandler @ registerTapHandler(tolua_function funcID);

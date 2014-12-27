@@ -241,23 +241,6 @@ static int class_newindex_event(lua_State* L)
 	int t = lua_type(L, 1);
 	if (t == LUA_TUSERDATA)// __newindex for ud
 	{
-		/* access peer table first */
-		lua_getfenv(L, 1);// peer
-		if (!lua_rawequal(L, -1, TOLUA_NOPEER))
-		{
-			lua_pushvalue(L, 2);// peer key
-			lua_gettable(L, -2);// peer[key], peer value
-			if (!lua_isnil(L, -1))
-			{
-				lua_pop(L, 1);// peer
-				lua_pushvalue(L, 2); // peer key
-				lua_pushvalue(L, 3); // peer key value
-				lua_settable(L, -3); // peer[key] = value, peer
-				lua_pop(L, 1);// local empty
-				return 1;
-			}
-		}
-		lua_settop(L, 3);// ud key value
 		int loop = 0;
 		lua_getmetatable(L, 1); // ud key value mt
 		lua_pushvalue(L, -1); // ud key value mt mt

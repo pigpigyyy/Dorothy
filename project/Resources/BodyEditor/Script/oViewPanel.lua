@@ -12,7 +12,7 @@ local oViewPanel = class(
 {
 	__partial = function(self)
 		local winSize = CCDirector.winSize
-		self._borderSize = CCSize(180,310*winSize.height/600)
+		self._borderSize = CCSize(180,310*(winSize.height-30)/(600-30))
 		return oSelectionPanel(self._borderSize,false,true,true)
 	end,
 

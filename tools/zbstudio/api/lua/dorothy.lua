@@ -3072,11 +3072,6 @@ local Dorothy =
 				typeName = "CCRect",
 				type = "value",
 			},
-			selected =
-			{
-				description = "[bool][readonly]",
-				type = "value",
-			},
 			enabled =
 			{
 				description = "[bool]",

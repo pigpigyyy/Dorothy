@@ -124,7 +124,7 @@ static float InElastic(float t, float b, float c)
 	float a=c; 
 	float s=p/4;
 	float postFix = a*powf(2,10*(t-=1)); // this is a fix, again, with post-increment operators
-	return -(postFix * sinf((t-s)*(2*b2_pi)/p )) + b;
+	return -(postFix * sinf((t-s)*(2*b2_pi)/p)) + b;
 }
 static float OutElastic(float t, float b, float c)
 {
@@ -141,11 +141,11 @@ static float InOutElastic(float t, float b, float c)
 	float a=c; 
 	float s=p/4;
 	if (t < 1) {
-		float postFix =a*powf(2,10*(t-=1)); // postIncrement is evil
-		return -0.5f*(postFix* sin( (t-s)*(2*b2_pi)/p )) + b;
+		float postFix=a*powf(2,10*(t-=1)); // postIncrement is evil
+		return -0.5f*(postFix*sin((t-s)*(2*b2_pi)/p)) + b;
 	} 
 	float postFix = a*powf(2,-10*(t-=1)); // postIncrement is evil
-	return postFix * sin( (t-s)*(2*b2_pi)/p )*.5f + c + b;
+	return postFix * sin((t-s)*(2*b2_pi)/p)*0.5f + c + b;
 }
 static float InBack(float t, float b, float c)
 {
