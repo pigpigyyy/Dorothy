@@ -16,6 +16,7 @@ local CCSequence = require("CCSequence")
 local CCCall = require("CCCall")
 local oRoutine = require("oRoutine")
 local once = oRoutine.once
+local oEditor = require("oEditor")
 
 local function oVRuler()
 	local winSize = CCDirector.winSize
@@ -200,7 +201,7 @@ local function oVRuler()
 			end
 		end
 		return true
-	end,false,-1,true)
+	end,false,oEditor.touchPriorityVRuler,true)
 	self.touchEnabled = true
 
 	return self

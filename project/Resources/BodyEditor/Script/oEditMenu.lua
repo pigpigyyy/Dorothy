@@ -14,6 +14,7 @@ local function oEditMenu()
 	local winSize = CCDirector.winSize
 	
 	local menu = CCMenu(false)
+	menu.touchPriority = oEditor.touchPriorityEditMenu
 	menu.anchor = oVec2.zero
 	
 	-- init menu items --

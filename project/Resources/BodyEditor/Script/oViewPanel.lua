@@ -8,12 +8,15 @@ local oViewItem = require("oViewItem")
 local oEvent = require("oEvent")
 local CCDictionary = require("CCDictionary")
 local oListener = require("oListener")
+local oEditor = require("oEditor")
 
 local function oViewPanel()
 	local winSize = CCDirector.winSize
 	local borderSize = CCSize(180,310*(winSize.height-30)/(600-30))
 	local self = oSelectionPanel(borderSize,false,true,true)
+	self.touchPriority = oEditor.touchPriorityViewPanel
 	local menu = self.menu
+	menu.touchPriority = oEditor.touchPriorityViewPanel+1
 	local border = self.border
 	local halfBW = borderSize.width*0.5
 	local halfBH = borderSize.height*0.5

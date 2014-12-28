@@ -14,6 +14,7 @@ local oPos = require("oPos")
 local oWorld = require("oWorld")
 local CCSequence = require("CCSequence")
 local CCCall = require("CCCall")
+local oEditor = require("oEditor")
 
 --[[
 events:
@@ -106,7 +107,7 @@ local function oViewArea()
 					oEvent:send("viewArea.scale",scale)
 				end
 			end
-		end, true)
+		end, true,oEditor.touchPriorityViewArea)
 	view.touchEnabled = true
 
 	-- test codes below

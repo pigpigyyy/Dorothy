@@ -10,12 +10,15 @@ local ccColor3 = require("ccColor3")
 local CCDictionary = require("CCDictionary")
 local oEvent = require("oEvent")
 local oListener = require("oListener")
+local oEditor = require("oEditor")
 
 local function oSettingPanel()
 	local winSize = CCDirector.winSize
 	local borderSize = CCSize(180,260*(winSize.height-30)/(600-30))
 	local self = oSelectionPanel(borderSize,false,true,true)
+	self.touchPriority = oEditor.touchPrioritySettingPanel
 	local menu = self.menu
+	menu.touchPriority = oEditor.touchPrioritySettingPanel+1
 	local border = self.border
 	local halfBW = borderSize.width*0.5
 	local halfBH = borderSize.height*0.5
@@ -106,6 +109,10 @@ local function oSettingPanel()
 		"Face",
 		-- move anchor
 		"FaceAnchor",
+		-- boolean
+		"Sensor",
+		-- int
+		"SensorTag",
 	}
 
 	local items = {}
@@ -139,6 +146,8 @@ local function oSettingPanel()
 		items.FixedRotation,
 		items.GravityScale,
 		items.Bullet,
+		items.Sensor,
+		items.SensorTag,
 		items.Face,
 		items.FaceAnchor,
 	}
@@ -160,6 +169,8 @@ local function oSettingPanel()
 		items.FixedRotation,
 		items.GravityScale,
 		items.Bullet,
+		items.Sensor,
+		items.SensorTag,
 		items.Face,
 		items.FaceAnchor,
 	}
@@ -180,6 +191,8 @@ local function oSettingPanel()
 		items.FixedRotation,
 		items.GravityScale,
 		items.Bullet,
+		items.Sensor,
+		items.SensorTag,
 		items.Face,
 		items.FaceAnchor,
 	}
@@ -231,6 +244,8 @@ local function oSettingPanel()
 		items.Density,
 		items.Friction,
 		items.Restitution,
+		items.Sensor,
+		items.SensorTag,
 	}
 	self.SubRectangle = itemsSubRectangle
 
@@ -241,6 +256,8 @@ local function oSettingPanel()
 		items.Density,
 		items.Friction,
 		items.Restitution,
+		items.Sensor,
+		items.SensorTag,
 	}
 	self.SubCircle = itemsSubCircle
 
@@ -250,6 +267,8 @@ local function oSettingPanel()
 		items.Density,
 		items.Friction,
 		items.Restitution,
+		items.Sensor,
+		items.SensorTag,
 	}
 	self.SubPolygon = itemsSubPolygon
 
