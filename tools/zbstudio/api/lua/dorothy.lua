@@ -2217,8 +2217,8 @@ local Dorothy =
 			},
 			shedule =
 			{
-				args = "(handler: function)",
-				description = " -- handler: function(deltaTime: float)\n\n args1 -- (target: CCScheduler, priority: int = 0, paused: bool = false)",
+				args = "(handler: function, interval: float = 0)",
+				description = " -- handler: function(deltaTime: float)\n\n args1 -- (target: CCScheduler, priority: int = 0)",
 				returns = "()",
 				type = "method",
 			},

@@ -149,16 +149,16 @@ public:
 
      @since v0.99.3, repeat and delay added in v1.1
      */
-    void scheduleSelector(SEL_SCHEDULE pfnSelector, CCObject *pTarget, float fInterval, unsigned int repeat, float delay, bool bPaused);
+    void scheduleSelector(SEL_SCHEDULE pfnSelector, CCObject *pTarget, float fInterval, unsigned int repeat, float delay, bool bPaused = false);
 
     /** calls scheduleSelector with kCCRepeatForever and a 0 delay */
-    void scheduleSelector(SEL_SCHEDULE pfnSelector, CCObject *pTarget, float fInterval, bool bPaused);
+    void scheduleSelector(SEL_SCHEDULE pfnSelector, CCObject *pTarget, float fInterval, bool bPaused = false);
     /** Schedules the 'update' selector for a given target with a given priority.
      The 'update' selector will be called every frame.
      The lower the priority, the earlier it is called.
      @since v0.99.3
      */
-    void scheduleUpdateForTarget(CCObject *pTarget, int nPriority, bool bPaused);
+    void scheduleUpdateForTarget(CCObject *pTarget, int nPriority, bool bPaused = false);
 
     /** Unschedule a selector for a given target.
      If you want to unschedule the "update", use unscheudleUpdateForTarget.
