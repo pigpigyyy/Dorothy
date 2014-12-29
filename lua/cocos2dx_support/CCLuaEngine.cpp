@@ -30,6 +30,8 @@
 
 NS_CC_BEGIN
 
+static int g_callFromLua = 0;
+
 static int lua_print(lua_State * luastate)
 {
 	int nargs = lua_gettop(luastate);
@@ -110,7 +112,7 @@ static int lua_loadfile(lua_State *L)
 static int lua_dofile(lua_State *L)
 {
 	lua_loadfile(L);
-	CCLuaEngine::sharedEngine()->call(0, LUA_MULTRET);
+	CCLuaEngine::call(L,0, LUA_MULTRET);
 	return 1;
 }
 
@@ -120,8 +122,7 @@ static int lua_ubox(lua_State* luastate)
 	return 1;
 }
 
-CCLuaEngine::CCLuaEngine() :
-m_callFromLua(0)
+CCLuaEngine::CCLuaEngine()
 {
 	L = luaL_newstate();
 	luaL_openlibs(L);
@@ -376,7 +377,7 @@ int CCLuaEngine::executeEvent(int nHandler, const char* pEventName, CCObject* pE
 
 bool CCLuaEngine::executeAssert(bool cond, const char *msg)
 {
-	if (m_callFromLua == 0) return false;
+	if (g_callFromLua == 0) return false;
 	lua_pushfstring(L, "ASSERT FAILED ON LUA EXECUTE: %s", msg ? msg : "unknown");
 	lua_error(L);
 	return true;
@@ -391,7 +392,7 @@ bool CCLuaEngine::scriptHandlerEqual(int nHandlerA, int nHandlerB)
 	return result != 0;
 }
 
-int CCLuaEngine::call(int paramCount, int returnCount)
+int CCLuaEngine::call(lua_State* L, int paramCount, int returnCount)
 {
 #ifndef TOLUA_RELEASE
 	int functionIndex = -(paramCount + 1);
@@ -406,9 +407,9 @@ int CCLuaEngine::call(int paramCount, int returnCount)
 	lua_pushcfunction(L, traceback);// func args... traceback
 	lua_insert(L, traceIndex);// traceback func args...
 
-	++m_callFromLua;
+	++g_callFromLua;
 	int error = lua_pcall(L, paramCount, returnCount, traceIndex);// traceback error ret
-	--m_callFromLua;
+	--g_callFromLua;
 
 	if (error)// traceback error
 	{
@@ -424,7 +425,7 @@ int CCLuaEngine::lua_execute(int numArgs)
 {
 	int ret = 0;
 	int top = lua_gettop(L) - numArgs - 1;
-	if (CCLuaEngine::call(numArgs, 1))
+	if (CCLuaEngine::call(L, numArgs, 1))
 	{
 		// get return value
 		if (lua_isnumber(L, -1))// traceback ret
@@ -466,7 +467,7 @@ int CCLuaEngine::lua_invoke(int nHandler, int numArgs, int numRets)
 	}
 	if (numArgs > 0) lua_insert(L, -(numArgs + 1));// func args...
 
-	return CCLuaEngine::call(numArgs, numRets);
+	return CCLuaEngine::call(L, numArgs, numRets);
 }
 
 int CCLuaEngine::executeActionCreate(int nHandler)

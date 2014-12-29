@@ -125,8 +125,7 @@ class CC_DLL CCScheduler : public CCObject
 public:
     CCScheduler();
     virtual ~CCScheduler();
-
-    inline float getTimeScale() { return m_fTimeScale; }
+	
     /** Modifies the time of all scheduled callbacks.
     You can use this property to create a 'slow motion' or 'fast forward' effect.
     Default is 1.0. To create a 'slow motion' effect, use values below 1.0.
@@ -134,7 +133,7 @@ public:
     @since v0.8
     @warning It will affect EVERY scheduled selector / action.
     */
-    inline void setTimeScale(float fTimeScale) { m_fTimeScale = fTimeScale; }
+	CC_PROPERTY(float, m_fTimeScale, TimeScale);
 
     /** 'update' the scheduler.
      You should NEVER call this method, unless you know what you are doing.
@@ -249,7 +248,6 @@ private:
     void priorityIn(struct _listEntry **ppList, CCObject *pTarget, int nPriority, bool bPaused);
     void appendIn(struct _listEntry **ppList, CCObject *pTarget, bool bPaused);
 protected:
-    float m_fTimeScale;
 	CCActionManager* m_pActionManager;
     //
     // "updates with priority" stuff

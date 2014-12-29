@@ -57,9 +57,9 @@ CCLayer::CCLayer()
 
 CCLayer::~CCLayer()
 {
-	unregisterScriptTouchHandler();
-	unregisterScriptKeypadHandler();
-	unregisterScriptAccelerateHandler();
+	CCLayer::unregisterScriptTouchHandler();
+	CCLayer::unregisterScriptKeypadHandler();
+	CCLayer::unregisterScriptAccelerateHandler();
 }
 
 bool CCLayer::init()

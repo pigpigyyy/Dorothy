@@ -66,7 +66,6 @@ CCNode::CCNode()
 , m_nZOrder(0)
 , m_pChildren(NULL)
 , m_pParent(NULL)
-// "whole screen" objects. like Scenes and Layers, should set m_bIgnoreAnchorPointForPosition to false
 , m_nTag(0)
 , m_pUserObject(NULL)
 , m_pUserData(NULL)
@@ -89,7 +88,7 @@ CCNode::CCNode()
 , _isScheduled(false)
 {
 	// set default scheduler and actionManager
-	CCDirector *director = CCDirector::sharedDirector();
+	CCDirector* director = CCDirector::sharedDirector();
 	m_pScheduler = director->getScheduler();
 	m_pScheduler->retain();
 }
@@ -98,16 +97,16 @@ CCNode::~CCNode()
 {
 	CCLOGINFO("cocos2d: deallocing");
 
+	// callbacks
 	unregisterScriptHandler();
 	if (m_nUpdateScriptHandler)
 	{
 		CCScriptEngine::sharedEngine()->removeScriptHandler(m_nUpdateScriptHandler);
 	}
 
-	CC_SAFE_RELEASE(m_pScheduler);
 	// attributes
+	CC_SAFE_RELEASE(m_pScheduler);
 	CC_SAFE_RELEASE(m_pCamera);
-
 	CC_SAFE_RELEASE(m_pGrid);
 	CC_SAFE_RELEASE(m_pShaderProgram);
 	CC_SAFE_RELEASE(m_pUserObject);
@@ -183,13 +182,11 @@ float CCNode::getPositionZ()
 	return m_fPositionZ;
 }
 
-
 /// vertexZ setter
 void CCNode::setPositionZ(float var)
 {
 	m_fPositionZ = var;
 }
-
 
 /// rotation getter
 float CCNode::getRotation()
@@ -465,12 +462,12 @@ void CCNode::cleanup()
 	CCScriptEngine::sharedEngine()->executeNodeEvent(this, CCNode::Cleanup);
 
 	// clear actions
-	this->stopAllActions();
-	this->unscheduleAllSelectors();
+	CCNode::stopAllActions();
+	CCNode::unscheduleAllSelectors();
 
 	// clear lua callbacks
-	this->unscheduleUpdateLua();
-	this->unregisterScriptHandler();
+	CCNode::unscheduleUpdateLua();
+	CCNode::unregisterScriptHandler();
 
 	// clear user object
 	CC_SAFE_RELEASE_NULL(m_pUserObject);
@@ -912,6 +909,10 @@ void CCNode::setScheduler(CCScheduler* scheduler)
 		CC_SAFE_RETAIN(scheduler);
 		CC_SAFE_RELEASE(m_pScheduler);
 		m_pScheduler = scheduler;
+		if (_isScheduled)
+		{
+			CCNode::scheduleUpdate();
+		}
 	}
 }
 

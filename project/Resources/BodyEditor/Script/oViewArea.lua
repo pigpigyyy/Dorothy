@@ -15,6 +15,8 @@ local oWorld = require("oWorld")
 local CCSequence = require("CCSequence")
 local CCCall = require("CCCall")
 local oEditor = require("oEditor")
+local oBodyDef = require("oBodyDef")
+local CCScheduler = require("CCScheduler")
 
 --[[
 events:
@@ -83,9 +85,7 @@ local function oViewArea()
 	end)
 
 	-- init world node --
-	local world = oWorld()
-	crossNode:addChild(world)
-	view.world = world
+	crossNode:addChild(oEditor.world)
 
 	-- register view touch event --
 	view:registerTouchHandler(
@@ -114,8 +114,22 @@ local function oViewArea()
 	local CCDrawNode = require("CCDrawNode")
 	local drawNode = CCDrawNode()
 	drawNode:drawDot(oVec2.zero,100,ccColor4(0xff80ff00))
-	world:addChild(drawNode)
+	oEditor.world:addChild(drawNode)
+	
+	local bodyData = oEditor:newCircle()
+	bodyData[oEditor.Circle.Center] = oVec2(100,0)
+	bodyData[oEditor.Circle.Sensor] = true
+	bodyData[oEditor.Circle.Radius] = 100
+	bodyData[oEditor.Circle.Type] = oBodyDef.Dynamic
+	bodyData[oEditor.Circle.SubShapes] = {oEditor:newSubRectangle(),oEditor:newSubPolygon()}
+	bodyData[oEditor.Circle.SubShapes][2][oEditor.SubPolygon.Vertices] = {oVec2(0,100),oVec2(100,0),oVec2(-100,0)}
 
+	oEditor:addData(bodyData)
+	oEditor:dumpData("test.lua")
+	oEditor:clearData()
+	oEditor:loadData("test.lua")
+	-- test codes abow
+	
 	return view
 end
 

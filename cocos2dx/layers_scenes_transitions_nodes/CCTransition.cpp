@@ -192,9 +192,10 @@ void CCTransitionScene::onExit()
 void CCTransitionScene::cleanup()
 {
 	CCScene::cleanup();
-
 	if (m_bIsSendCleanupToScene)
+	{
 		m_pOutScene->cleanup();
+	}
 }
 
 //

@@ -257,6 +257,15 @@ CCScheduler::~CCScheduler()
     CC_SAFE_RELEASE(m_pScriptHandlerEntries);
 }
 
+float CCScheduler::getTimeScale()
+{
+	return m_fTimeScale;
+}
+void CCScheduler::setTimeScale(float fTimeScale)
+{
+	m_fTimeScale = fTimeScale >= 0 ? fTimeScale : 0;
+}
+
 void CCScheduler::removeHashElement(_hashSelectorEntry *pElement)
 {
     ccArrayFree(pElement->timers);
@@ -776,6 +785,8 @@ void CCScheduler::resumeTargets(CCSet* pTargetsToResume)
 // main loop
 void CCScheduler::update(float dt)
 {
+	if (m_fTimeScale == 0.0f) return;
+
     m_bUpdateHashLocked = true;
 
     if (m_fTimeScale != 1.0f)

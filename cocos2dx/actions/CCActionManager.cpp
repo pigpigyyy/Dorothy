@@ -240,10 +240,6 @@ void CCActionManager::removeAllActionsFromTarget(CCObject *pTarget)
             deleteHashElement(pElement);
         }
     }
-    else
-    {
-//        CCLOG("cocos2d: removeAllActionsFromTarget: Target not found");
-    }
 }
 
 void CCActionManager::removeAction(CCAction *pAction)

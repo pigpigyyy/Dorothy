@@ -39,10 +39,12 @@ _isDestroyed(false)
 
 oBody::~oBody()
 {
+	_sensors->removeAllObjects();
+	contactStart.Clear();
+	contactEnd.Clear();
 	if (_bodyB2)
 	{
 		_world->getB2World()->DestroyBody(_bodyB2);
-		_bodyB2 = nullptr;
 	}
 }
 
@@ -61,14 +63,14 @@ void oBody::onExit()
 void oBody::cleanup()
 {
 	CCNode::cleanup();
-	CCARRAY_START(oSensor, item, _sensors)
-	{
-		item->bodyEnter.Clear();
-		item->bodyLeave.Clear();
-	}
-	CCARRAY_END
+	_sensors->removeAllObjects();
 	contactStart.Clear();
 	contactEnd.Clear();
+	if (_bodyB2)
+	{
+		_world->getB2World()->DestroyBody(_bodyB2);
+		_bodyB2 = nullptr;
+	}
 }
 
 oBodyDef* oBody::getBodyDef() const
