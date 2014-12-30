@@ -17,6 +17,7 @@ local CCCall = require("CCCall")
 local oEditor = require("oEditor")
 local oBodyDef = require("oBodyDef")
 local CCScheduler = require("CCScheduler")
+local CCSize = require("CCSize")
 
 --[[
 events:
@@ -107,7 +108,7 @@ local function oViewArea()
 					oEvent:send("viewArea.scale",scale)
 				end
 			end
-		end, true,oEditor.touchPriorityViewArea)
+		end,true,oEditor.touchPriorityViewArea)
 	view.touchEnabled = true
 
 	-- test codes below
@@ -115,21 +116,37 @@ local function oViewArea()
 	local drawNode = CCDrawNode()
 	drawNode:drawDot(oVec2.zero,100,ccColor4(0xff80ff00))
 	oEditor.world:addChild(drawNode)
-	
+
 	local bodyData = oEditor:newCircle()
 	bodyData[oEditor.Circle.Center] = oVec2(100,0)
 	bodyData[oEditor.Circle.Sensor] = true
 	bodyData[oEditor.Circle.Radius] = 100
+	bodyData[oEditor.Circle.Angle] = 25
 	bodyData[oEditor.Circle.Type] = oBodyDef.Dynamic
-	bodyData[oEditor.Circle.SubShapes] = {oEditor:newSubRectangle(),oEditor:newSubPolygon()}
-	bodyData[oEditor.Circle.SubShapes][2][oEditor.SubPolygon.Vertices] = {oVec2(0,100),oVec2(100,0),oVec2(-100,0)}
-
+	bodyData[oEditor.Circle.SubShapes] = {oEditor:newSubRectangle(),oEditor:newSubLoop()}
+	bodyData[oEditor.Circle.SubShapes][2][oEditor.SubLoop.Vertices] = 
+	{
+		oVec2(-160,0),
+		oVec2(-80,160),
+		oVec2(40,80),
+		oVec2(80,160),
+		oVec2(160,0),
+		oVec2(80,-160),
+		oVec2(-80,-160),
+		oVec2(-160,0),
+	}
 	oEditor:addData(bodyData)
+	
+	bodyData = oEditor:newRectangle()
+	bodyData[oEditor.Rectangle.Size] = CCSize(1024,100)
+	bodyData[oEditor.Rectangle.Type] = oBodyDef.Static
+	bodyData[oEditor.Rectangle.Position] = oVec2(0,-400)
+	oEditor:addData(bodyData)
+	
 	oEditor:dumpData("test.lua")
-	oEditor:clearData()
 	oEditor:loadData("test.lua")
 	-- test codes abow
-	
+
 	return view
 end
 

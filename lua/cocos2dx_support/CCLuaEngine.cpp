@@ -81,12 +81,6 @@ static int lua_loadfile(lua_State *L)
 	{
 		filename = filename.substr(0, pos);
 	}
-	pos = filename.find_first_of(".");
-	while (pos != std::string::npos)
-	{
-		filename.replace(pos, 1, "/");
-		pos = filename.find_first_of(".");
-	}
 	filename.append(".lua");
 
 	unsigned long codeBufferSize = 0;

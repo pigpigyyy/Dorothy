@@ -248,6 +248,7 @@ CCScheduler::CCScheduler()
 , m_pScriptHandlerEntries(NULL)
 , m_pActionManager(new CCActionManager())
 {
+	m_pActionManager->autorelease();
 	CCScheduler::scheduleUpdateForTarget(m_pActionManager, kCCPrioritySystem, false);
 }
 

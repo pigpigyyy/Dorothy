@@ -38,7 +38,7 @@ local function oEditMenu()
 		Loop = oButton("",0,50,50,35,winSize.height-335,function()
 			oEvent:send("settingPanel.toState","Loop")
 		end),
-		Face = oButton("Face",16,50,50,35,35,function() end),
+		Face = oButton("Face",16,50,50,35,35,function() oEditor:removeData(oEditor.bodyData[#(oEditor.bodyData)]) end),
 		Joint = oButton("",0,50,50,95,35,function() end),
 
 		Origin = oButton("Origin",16,50,50,winSize.width-285,winSize.height-35,function()

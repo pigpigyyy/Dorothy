@@ -1,6 +1,6 @@
-local oButton = require("Script/oButton")
-local oTextField = require("Script/oTextField")
-local class,property = unpack(require("Script/class"))
+local oButton = require("oButton")
+local oTextField = require("oTextField")
+local class,property = unpack(require("class"))
 local CCDirector = require("CCDirector")
 local CCNode = require("CCNode")
 local CCLayer = require("CCLayer")
@@ -76,9 +76,16 @@ local oBox = class({
 			self._menu = menu
 
 			local textField = oTextField(120,18,17,10,
-				function(self)
+				function(item)
 					frame.opacity = 0.3
-					self.opacity = 0.3
+					item.opacity = 0.3
+					if isInput then
+						item:detachWithIME()
+						if okHandler then
+							okHandler(item.text)
+						end
+						self:hide()
+					end
 				end)
 			textField.position = oVec2(0,-9)
 			textField:attachWithIME()

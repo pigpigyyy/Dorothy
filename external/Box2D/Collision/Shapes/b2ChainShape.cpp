@@ -24,27 +24,33 @@ using namespace std;
 
 b2ChainShape::~b2ChainShape()
 {
-	b2Free(m_vertices);
-	m_vertices = NULL;
-	m_count = 0;
+	b2ChainShape::ClearVertices();
 }
 
 void b2ChainShape::CreateLoop(const b2Vec2* vertices, int32 count)
 {
-	b2Assert(m_vertices == NULL && m_count == 0);
 	b2Assert(count >= 3);
+	b2ChainShape::ClearVertices();
+	m_vertices = (b2Vec2*)b2Alloc((count + 1) * sizeof(b2Vec2));
+	m_vertices[0] = vertices[0];
+	m_count = 1;
 	for (int32 i = 1; i < count; ++i)
 	{
-		b2Vec2 v1 = vertices[i-1];
+		b2Vec2 v1 = vertices[i - 1];
 		b2Vec2 v2 = vertices[i];
-		// If the code crashes here, it means your vertices are too close together.
-		b2Assert(b2DistanceSquared(v1, v2) > b2_linearSlop * b2_linearSlop);
+		// Your vertices can`t be too close together.
+		if (b2DistanceSquared(v1, v2) > b2_linearSlop * b2_linearSlop)
+		{
+			m_vertices[i] = v2;
+			++m_count;
+		}
 	}
-
-	m_count = count + 1;
-	m_vertices = (b2Vec2*)b2Alloc(m_count * sizeof(b2Vec2));
-	memcpy(m_vertices, vertices, count * sizeof(b2Vec2));
-	m_vertices[count] = m_vertices[0];
+	if (b2DistanceSquared(m_vertices[m_count - 1], m_vertices[0]) <= b2_linearSlop * b2_linearSlop)
+	{
+		--m_count;
+	}
+	++m_count;
+	m_vertices[m_count - 1] = m_vertices[0];
 	m_prevVertex = m_vertices[m_count - 2];
 	m_nextVertex = m_vertices[1];
 	m_hasPrevVertex = true;
@@ -53,22 +59,34 @@ void b2ChainShape::CreateLoop(const b2Vec2* vertices, int32 count)
 
 void b2ChainShape::CreateChain(const b2Vec2* vertices, int32 count)
 {
-	b2Assert(m_vertices == NULL && m_count == 0);
 	b2Assert(count >= 2);
+	b2ChainShape::ClearVertices();
+	m_vertices = (b2Vec2*)b2Alloc(count * sizeof(b2Vec2));
+	m_vertices[0] = vertices[0];
+	m_count = 1;
 	for (int32 i = 1; i < count; ++i)
 	{
-		b2Vec2 v1 = vertices[i-1];
+		b2Vec2 v1 = vertices[i - 1];
 		b2Vec2 v2 = vertices[i];
-		// If the code crashes here, it means your vertices are too close together.
-		b2Assert(b2DistanceSquared(v1, v2) > b2_linearSlop * b2_linearSlop);
+		// Your vertices can`t be too close together.
+		if (b2DistanceSquared(v1, v2) > b2_linearSlop * b2_linearSlop)
+		{
+			m_vertices[i] = v2;
+			++m_count;
+		}
 	}
-
-	m_count = count;
-	m_vertices = (b2Vec2*)b2Alloc(count * sizeof(b2Vec2));
-	memcpy(m_vertices, vertices, m_count * sizeof(b2Vec2));
-
 	m_hasPrevVertex = false;
 	m_hasNextVertex = false;
+}
+
+void b2ChainShape::ClearVertices()
+{
+	if (m_vertices)
+	{
+		b2Free(m_vertices);
+		m_vertices = NULL;
+		m_count = 0;
+	}
 }
 
 void b2ChainShape::SetPrevVertex(const b2Vec2& prevVertex)
@@ -86,7 +104,7 @@ void b2ChainShape::SetNextVertex(const b2Vec2& nextVertex)
 b2Shape* b2ChainShape::Clone(b2BlockAllocator* allocator) const
 {
 	void* mem = allocator->Allocate(sizeof(b2ChainShape));
-	b2ChainShape* clone = new (mem) b2ChainShape;
+	b2ChainShape* clone = new (mem)b2ChainShape;
 	clone->CreateChain(m_vertices, m_count);
 	clone->m_prevVertex = m_prevVertex;
 	clone->m_nextVertex = m_nextVertex;
@@ -141,7 +159,7 @@ bool b2ChainShape::TestPoint(const b2Transform& xf, const b2Vec2& p) const
 }
 
 bool b2ChainShape::RayCast(b2RayCastOutput* output, const b2RayCastInput& input,
-							const b2Transform& xf, int32 childIndex) const
+	const b2Transform& xf, int32 childIndex) const
 {
 	b2Assert(childIndex < m_count);
 

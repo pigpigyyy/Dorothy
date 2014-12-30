@@ -11,14 +11,28 @@ local tolua = require("tolua")
 local oContent = require("oContent")
 local CCFileUtils = require("CCFileUtils")
 local oWorld = require("oWorld")
+local CCScheduler = require("CCScheduler")
+local CCDirector = require("CCDirector")
 
 local oEditor = CCScene()
+
 oEditor.isPlaying = false
+
+local worldScheduler = CCScheduler()
+worldScheduler.timeScale = 0
+oEditor.worldScheduler = worldScheduler
+CCDirector.scheduler:shedule(oEditor.worldScheduler)
 oEditor.world = oWorld()
+oEditor.world.scheduler = oEditor.worldScheduler
 oEditor.world.showDebug = true
+oEditor.world:setShouldContact(0,0,true)
+oEditor.world:registerEventHandler(function(eventType)
+	CCDirector.scheduler:unshedule(oEditor.worldScheduler)
+end)
 
 oEditor.touchPriorityEditMenu = CCMenu.DefaultHandlerPriority
 oEditor.touchPriorityViewArea = CCMenu.DefaultHandlerPriority+1
+oEditor.touchPriorityEditControl = CCMenu.DefaultHandlerPriority+2
 oEditor.touchPrioritySettingPanel = CCMenu.DefaultHandlerPriority+3
 oEditor.touchPriorityViewPanel = CCMenu.DefaultHandlerPriority+4
 oEditor.touchPriorityVRuler = CCMenu.DefaultHandlerPriority+5
@@ -96,6 +110,7 @@ local defaultShapeData =
 					subShape:create(body)
 				end
 			end
+			body.scheduler = oEditor.worldScheduler
 			oEditor.world:addChild(body)
 			return body
 		end,
@@ -152,6 +167,7 @@ local defaultShapeData =
 					subShape:create(body)
 				end
 			end
+			body.scheduler = oEditor.worldScheduler
 			oEditor.world:addChild(body)
 			return body
 		end,
@@ -205,6 +221,7 @@ local defaultShapeData =
 					subShape:create(body)
 				end
 			end
+			body.scheduler = oEditor.worldScheduler
 			oEditor.world:addChild(body)
 			return body
 		end,
@@ -248,6 +265,7 @@ local defaultShapeData =
 					subShape:create(body)
 				end
 			end
+			body.scheduler = oEditor.worldScheduler
 			oEditor.world:addChild(body)
 			return body
 		end,
@@ -291,6 +309,7 @@ local defaultShapeData =
 					subShape:create(body)
 				end
 			end
+			body.scheduler = oEditor.worldScheduler
 			oEditor.world:addChild(body)
 			return body
 		end,
@@ -760,17 +779,25 @@ end
 oEditor.bodyData = {}
 oEditor.addData = function(self,data)
 	table.insert(self.bodyData,data)
+	oEvent:send("editor.bodyData",self.bodyData)
 end
 oEditor.removeData = function(self,data)
 	for i,v in ipairs(self.bodyData) do
 		if v == data then
 			table.remove(self.bodyData,i)
+			local item = oEditor.items[data[1]]
+			if item then
+				item:destroy()
+				oEditor.items[data[1]] = nil
+			end
+			oEvent:send("editor.bodyData",self.bodyData)
 			break
 		end
 	end
 end
 oEditor.clearData = function(self)
 	self.bodyData = {}
+	oEvent:send("editor.bodyData",self.bodyData)
 end
 
 oEditor.items = {}
@@ -882,10 +909,11 @@ oEditor.loadData = function(self,filename)
 				renameFunc(data,args.oldName,args.newName)
 			end)
 		end
-		data.create(data)
+		data[1] = oEditor:getUsableName(data[1])
+		local item = data.create(data)
+		self:addItem(data[1],item)
 	end
 	-- TODO
 end
-
 
 return oEditor

@@ -47,6 +47,7 @@ public:
 	/// @param count the vertex count
 	void CreateChain(const b2Vec2* vertices, int32 count);
 
+	void ClearVertices();
 	/// Establish connectivity to a vertex that precedes the first vertex.
 	/// Don't call this for loops.
 	void SetPrevVertex(const b2Vec2& prevVertex);

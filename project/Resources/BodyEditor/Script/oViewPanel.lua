@@ -39,30 +39,35 @@ local function oViewPanel()
 			return borderSize.height-30-50*v
 		end
 	end
-	local getPosY = genPosY()
 
 	local function selectCallback(item)
 		oEvent:send("viewPanel.choose",item)
 	end
-	local items =
-	{
-		Name = oViewItem("Rectangle","WWWWWWWW",90,getPosY(),selectCallback),
-		Name1 = oViewItem("SubPolygon",1,90,getPosY(),selectCallback),
-		Name2 = oViewItem("SubCircle",2,90,getPosY(),selectCallback),
-		Name3 = oViewItem("Loop","body2",90,getPosY(),selectCallback),
-		Name4 = oViewItem("Chain"," ",90,getPosY(),selectCallback),
-		Name5 = oViewItem("SubRectangle",1,90,getPosY(),selectCallback),
-		Name6 = oViewItem("Circle"," ",90,getPosY(),selectCallback),
-		Name7 = oViewItem("Pulley","joint1",90,getPosY(),selectCallback),
-		Name8 = oViewItem("Weld","joint2",90,getPosY(),selectCallback),
-	}
-
-	local contentHeight = 10
-	for _,item in pairs(items) do
-		contentHeight = contentHeight + 50
-		menu:addChild(item)
+	
+	local function updateViewItems(bodyData)
+		local items = {}
+		local getPosY = genPosY()
+		for _,data in ipairs(bodyData) do
+			table.insert(items,
+				oViewItem(data[0],data[1],90,getPosY(),selectCallback))
+			local subShapeIndex = oEditor[data[0]].SubShapes
+			if subShapeIndex and data[subShapeIndex] then
+				for index,subShape in ipairs(data[subShapeIndex]) do
+					table.insert(items,
+						oViewItem(subShape[0],index,90,getPosY(),selectCallback))
+				end
+			end
+		end
+		local contentHeight = 10
+		menu:removeAllChildrenWithCleanup()
+		for _,item in ipairs(items) do
+			contentHeight = contentHeight + 50
+			menu:addChild(item)
+		end
+		self.items = items
+		self:reset(borderSize.width,contentHeight,0,50)
 	end
-	self:reset(borderSize.width,contentHeight,0,50)
+	updateViewItems(oEditor.bodyData)
 
 	self.data = CCDictionary()
 	local currentItem = nil
@@ -80,6 +85,9 @@ local function oViewPanel()
 		else
 			currentItem = nil
 		end
+	end)
+	self.data.bodyDataListener = oListener("editor.bodyData",function(bodyData)
+		updateViewItems(bodyData)
 	end)
 
 	return self

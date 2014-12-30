@@ -22,11 +22,15 @@ local oViewItem = class({
 		self._scale = nil -- oScale
 		self._fade = nil -- oOpacity
 		self._nameLabel = nil -- CCLabelTTF
+		self._typeName = nil -- string
+		self._isSub = false -- boolean
 		return CCMenuItem()
 	end,
 
 	__init = function(self,typename,name,x,y,tapped)
 		local isSub = typename:sub(1,3) == "Sub"
+		self._isSub = isSub
+		self._typeName = typename
 		local width = isSub and 130 or 160
 		local height = 40
 		local halfW = width*0.5
@@ -208,6 +212,11 @@ local oViewItem = class({
 			else
 				self._name = value
 			end
+		end),
+	
+	typeName = property(
+		function(self)
+			return self._typeName
 		end),
 })
 

@@ -39,18 +39,7 @@ _isDestroyed(false)
 
 oBody::~oBody()
 {
-	if (_bodyB2)
-	{
-		CCARRAY_START(oSensor, sensor, _sensors)
-		{
-			sensor->bodyEnter.Clear();
-			sensor->bodyLeave.Clear();
-		}
-		CCARRAY_END
-		contactStart.Clear();
-		contactEnd.Clear();
-		_world->getB2World()->DestroyBody(_bodyB2);
-	}
+	oBody::cleanup();
 }
 
 void oBody::onEnter()
@@ -62,22 +51,22 @@ void oBody::onEnter()
 void oBody::onExit()
 {
 	CCNode::onExit();
-	_bodyB2->SetActive(false);//Set active false to trigger sensor`s unit leave event.
+	_bodyB2->SetActive(false);//Set active false to trigger sensor`s body leave event.
 }
 
 void oBody::cleanup()
 {
-	CCNode::cleanup();
-	CCARRAY_START(oSensor, sensor, _sensors)
-	{
-		sensor->bodyEnter.Clear();
-		sensor->bodyLeave.Clear();
-	}
-	CCARRAY_END
-	contactStart.Clear();
-	contactEnd.Clear();
 	if (_bodyB2)
 	{
+		CCNode::cleanup();
+		CCARRAY_START(oSensor, sensor, _sensors)
+		{
+			sensor->bodyEnter.Clear();
+			sensor->bodyLeave.Clear();
+		}
+		CCARRAY_END
+		contactStart.Clear();
+		contactEnd.Clear();
 		_world->getB2World()->DestroyBody(_bodyB2);
 		_bodyB2 = nullptr;
 	}
@@ -226,6 +215,12 @@ b2Fixture* oBody::attach( b2FixtureDef* fixtureDef )
 {
 	fixtureDef->filter = _world->getFilter(_group);
 	b2Fixture* fixture = _bodyB2->CreateFixture(fixtureDef);
+	/* cleanup temp vertices */
+	if (fixtureDef->shape->m_type == b2Shape::e_chain)
+	{
+		b2ChainShape* chain = (b2ChainShape*)fixtureDef->shape;
+		chain->ClearVertices();
+	}
 	return fixture;
 }
 

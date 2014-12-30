@@ -99,7 +99,7 @@ public:
     /**
     @brief Set string value by key.
     */
-    void    setStringForKey(const char* pKey, const std::string & value);
+    void setStringForKey(const char* pKey, const std::string & value);
 
     static CCUserDefault* sharedUserDefault();
     const static std::string& getXMLFilePath();

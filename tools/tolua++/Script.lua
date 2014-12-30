@@ -167,6 +167,19 @@ CCDictionary.__newindex = function(self,key,value)
 	CCDictionary_set(self,key,value)
 end
 
+local CCUserDefaultClass = getmetatable(loaded.CCUserDefault)
+local CCUserDefaultClass_index = CCUserDefaultClass.__index
+local CCUserDefaultClass_get = CCUserDefaultClass.get
+CCUserDefaultClass.__index = function(self,key)
+	local item = CCUserDefaultClass_get(self,key)
+	if item ~= nil then return item end
+	return CCUserDefaultClass_index(self,key)
+end
+local CCUserDefaultClass_set = CCUserDefaultClass.set
+CCUserDefaultClass.__newindex = function(self,key,value)
+	CCUserDefaultClass_set(self,key,value)
+end
+
 local oEvent = loaded.oEvent
 local oEvent_args = {}
 local oEvent_send = oEvent.send

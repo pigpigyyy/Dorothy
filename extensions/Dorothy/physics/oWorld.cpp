@@ -97,8 +97,7 @@ oWorld::~oWorld()
 		oBody* body = (oBody*)b->GetUserData();
 		if (body)
 		{
-			body->_bodyB2 = nullptr;
-			if (body->_sensors) body->_sensors->removeAllObjects();
+			body->cleanup();
 		}
 	}
 	b2Draw* draw = _world.GetDebugDraw();
@@ -149,8 +148,7 @@ oVec2 oWorld::getGravity() const
 
 void oWorld::update( float dt )
 {
-	const float maxDeltaTime = 1.0f/30;
-	_world.Step(dt > maxDeltaTime ? maxDeltaTime : dt, _velocityIterations, _positionIterations);
+	_world.Step(dt, _velocityIterations, _positionIterations);
 	for (b2Body* b = _world.GetBodyList();b;b = b->GetNext())
 	{
 		if (b->IsActive())
