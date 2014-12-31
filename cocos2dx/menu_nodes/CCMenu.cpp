@@ -161,7 +161,7 @@ void CCMenu::onExit()
 
 void CCMenu::removeChild(CCNode* child, bool cleanup)
 {
-    CCMenuItem *pMenuItem = dynamic_cast<CCMenuItem*>(child);
+    CCMenuItem* pMenuItem = dynamic_cast<CCMenuItem*>(child);
     
 	if (pMenuItem && m_pSelectedItem == pMenuItem)
     {
@@ -182,7 +182,7 @@ void CCMenu::setHandlerPriority(int newPriority)
 void CCMenu::registerWithTouchDispatcher()
 {
     CCDirector* pDirector = CCDirector::sharedDirector();
-    pDirector->getTouchDispatcher()->addTargetedDelegate(this, this->getTouchPriority(), m_bSwallowTouches);
+    pDirector->getTouchDispatcher()->addTargetedDelegate(this, this->getTouchPriority(), true);
 }
 
 bool CCMenu::ccTouchBegan(CCTouch* touch, CCEvent* event)
@@ -193,7 +193,7 @@ bool CCMenu::ccTouchBegan(CCTouch* touch, CCEvent* event)
         return false;
     }
 
-    for (CCNode *c = this->m_pParent; c != NULL; c = c->getParent())
+    for (CCNode* c = this->m_pParent; c != NULL; c = c->getParent())
     {
         if (c->isVisible() == false)
         {
