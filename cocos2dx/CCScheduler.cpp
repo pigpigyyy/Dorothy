@@ -248,7 +248,6 @@ CCScheduler::CCScheduler()
 , m_pScriptHandlerEntries(NULL)
 , m_pActionManager(new CCActionManager())
 {
-	m_pActionManager->autorelease();
 	CCScheduler::scheduleUpdateForTarget(m_pActionManager, kCCPrioritySystem, false);
 }
 
@@ -256,6 +255,7 @@ CCScheduler::~CCScheduler()
 {
     unscheduleAll();
     CC_SAFE_RELEASE(m_pScriptHandlerEntries);
+	CC_SAFE_RELEASE(m_pActionManager);
 }
 
 float CCScheduler::getTimeScale()
