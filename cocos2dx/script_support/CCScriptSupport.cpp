@@ -150,6 +150,10 @@ bool CCTouchScriptHandlerEntry::isMultiTouches()
 	return m_bIsMultiTouches;
 }
 
+void CCTouchScriptHandlerEntry::setPriority(int priority)
+{
+	m_nPriority = priority;
+}
 int CCTouchScriptHandlerEntry::getPriority()
 {
 	return m_nPriority;

@@ -85,6 +85,7 @@ public:
     static CCTouchScriptHandlerEntry* create(int nHandler, bool bIsMultiTouches, int nPriority, bool bSwallowsTouches);
 	virtual ~CCTouchScriptHandlerEntry();
     bool isMultiTouches();
+	void setPriority(int priority);
     int getPriority();
     bool getSwallowsTouches();
 private:

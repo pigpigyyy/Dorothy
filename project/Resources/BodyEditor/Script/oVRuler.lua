@@ -25,9 +25,7 @@ local function oVRuler()
 	local self = CCLayerColor(ccColor4(0),rulerWidth,rulerHeight)
 	local halfW = rulerWidth*0.5
 	local halfH = rulerHeight*0.5
-	local origin = oVec2(
-	60+(winSize.width-120-180)*0.5,
-	winSize.height*0.5)
+	local origin = oEditor.origin
 	
 	self.cascadeOpacity = true
 	self.opacity = 0.3

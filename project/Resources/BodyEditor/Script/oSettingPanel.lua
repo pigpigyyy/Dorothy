@@ -24,7 +24,7 @@ local function oSettingPanel()
 	local halfBH = borderSize.height*0.5
 	local itemWidth = borderSize.width
 	local itemHeight = 30
-	local background= CCDrawNode()
+	local background = CCDrawNode()
 	background:drawPolygon(
 	{
 		oVec2(-halfBW,-halfBH),

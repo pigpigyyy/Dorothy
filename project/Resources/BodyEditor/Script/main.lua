@@ -17,18 +17,8 @@ end
 
 local CCDirector = require("CCDirector")
 local CCNode = require("CCNode")
-local oEditor = require("oEditor")
 local oRoutine = require("oRoutine")
 local once = oRoutine.once
-
-oEditor:registerEventHandler(function(eventType)
-	if eventType == CCNode.Exited then
-		require = _require
-		for k,_ in pairs(loaded) do
-			package.loaded[k] = nil
-		end
-	end
-end)
 
 local controls =
 {
@@ -38,9 +28,21 @@ local controls =
 	"oEditMenu",
 	"oSettingPanel",
 	"oViewPanel",
+	"oEditControl",
 }
 
 oRoutine(once(function()
+	local oEditor = require("oEditor")
+	oEditor:registerEventHandler(function(eventType)
+		if eventType == CCNode.Exited then
+			require = _require
+			for k,_ in pairs(loaded) do
+				package.loaded[k] = nil
+			end
+		end
+	end)
+	CCDirector:run(oEditor)
+	coroutine.yield()
 	for _,name in ipairs(controls) do
 		local createFunc = require(name)
 		coroutine.yield()
@@ -50,5 +52,3 @@ oRoutine(once(function()
 		coroutine.yield()
 	end
 end))
-
-CCDirector:run(oEditor)

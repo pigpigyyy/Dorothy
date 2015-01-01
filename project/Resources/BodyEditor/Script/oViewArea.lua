@@ -36,9 +36,7 @@ local function oViewArea()
 	view.cascadeOpacity = true
 	
 	local crossNode = CCNode()
-	local origin = oVec2(
-		60+(winSize.width-120-180)*0.5,
-		winSize.height*0.5)
+	local origin = oEditor.origin
 	crossNode.position = origin
 	view:addChild(crossNode)
 
@@ -136,13 +134,13 @@ local function oViewArea()
 		oVec2(-160,0),
 	}
 	oEditor:addData(bodyData)
-	
+
 	bodyData = oEditor:newRectangle()
 	bodyData[oEditor.Rectangle.Size] = CCSize(1024,100)
 	bodyData[oEditor.Rectangle.Type] = oBodyDef.Static
 	bodyData[oEditor.Rectangle.Position] = oVec2(0,-400)
 	oEditor:addData(bodyData)
-	
+
 	oEditor:dumpData("test.lua")
 	oEditor:loadData("test.lua")
 	-- test codes abow

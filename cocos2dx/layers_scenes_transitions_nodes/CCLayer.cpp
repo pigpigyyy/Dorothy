@@ -210,7 +210,10 @@ void CCLayer::setTouchPriority(int priority)
 	if (m_nTouchPriority != priority)
 	{
 		m_nTouchPriority = priority;
-
+		if (m_pScriptTouchHandlerEntry)
+		{
+			m_pScriptTouchHandlerEntry->setPriority(priority);
+		}
 		if (m_bTouchEnabled)
 		{
 			setTouchEnabled(false);

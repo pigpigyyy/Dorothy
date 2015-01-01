@@ -14,9 +14,14 @@ local oWorld = require("oWorld")
 local CCScheduler = require("CCScheduler")
 local CCDirector = require("CCDirector")
 
+local winSize = CCDirector.winSize
+
 local oEditor = CCScene()
 
 oEditor.isPlaying = false
+oEditor.origin = oVec2(
+		60+(winSize.width-120-180)*0.5,
+		winSize.height*0.5)
 
 local worldScheduler = CCScheduler()
 worldScheduler.timeScale = 0
@@ -31,12 +36,12 @@ oEditor.world:registerEventHandler(function(eventType)
 end)
 
 oEditor.touchPriorityEditMenu = CCMenu.DefaultHandlerPriority
-oEditor.touchPriorityViewArea = CCMenu.DefaultHandlerPriority+1
-oEditor.touchPriorityEditControl = CCMenu.DefaultHandlerPriority+2
-oEditor.touchPrioritySettingPanel = CCMenu.DefaultHandlerPriority+3
-oEditor.touchPriorityViewPanel = CCMenu.DefaultHandlerPriority+4
-oEditor.touchPriorityVRuler = CCMenu.DefaultHandlerPriority+5
-oEditor.touchPriorityHRuler = CCMenu.DefaultHandlerPriority+6
+oEditor.touchPriorityEditControl = CCMenu.DefaultHandlerPriority+1
+oEditor.touchPrioritySettingPanel = CCMenu.DefaultHandlerPriority+2
+oEditor.touchPriorityViewPanel = CCMenu.DefaultHandlerPriority+3
+oEditor.touchPriorityVRuler = CCMenu.DefaultHandlerPriority+4
+oEditor.touchPriorityHRuler = CCMenu.DefaultHandlerPriority+5
+oEditor.touchPriorityViewArea = CCMenu.DefaultHandlerPriority+6
 
 local function Point(x,y)
 	return function()
