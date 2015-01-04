@@ -11,6 +11,8 @@ local CCDictionary = require("CCDictionary")
 local oEvent = require("oEvent")
 local oListener = require("oListener")
 local oEditor = require("oEditor")
+local tolua = require("tolua")
+local oBodyDef = require("oBodyDef")
 
 local function oSettingPanel()
 	local winSize = CCDirector.winSize
@@ -128,6 +130,7 @@ local function oSettingPanel()
 		item.visible = false
 		menu:addChild(item)
 	end
+	items.Vertices.value = ". . ."
 	self.items = items
 
 	local itemsRectangle =
@@ -438,6 +441,34 @@ local function oSettingPanel()
 			contentHeight = contentHeight + itemHeight
 		end
 		self:reset(borderSize.width,contentHeight,0,50)
+		local data = oEditor.currentData
+		if data and data[0] == groupName then
+			for k,v in pairs(oEditor[groupName]) do
+				if k ~= "SubShapes"
+					and k ~= "Vertices"
+					and k ~= "ItemType"
+					and k ~= "create"
+					and k ~= "rename"
+					and k ~= "Index" then
+					local value = data[v]
+					if tolua.type(value) == "oVec2" then
+						items[k].value = tostring(value.x)..","..tostring(value.y)
+					elseif tolua.type(value) == "CCSize" then
+						items[k].value = tostring(value.width)..","..tostring(value.height)
+					elseif k == "Type" then
+						if value == oBodyDef.Dynamic then
+							items[k].value = "Dynamic"
+						elseif value == oBodyDef.Static then
+							items[k].value = "Static"
+						elseif value == oBodyDef.Kinematic then
+							items[k].value = "Kinematic"
+						end
+					else
+						items[k].value = tostring(value)
+					end
+				end
+			end
+		end
 	end
 
 	self.data = CCDictionary()

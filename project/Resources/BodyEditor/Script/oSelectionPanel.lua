@@ -127,6 +127,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 		startPos = totalDelta
 		time = 0
 		panel:schedule(updateReset)
+		if fading then panel:fadeOut() end
 	end
 
 	local function setOffset(deltaPos, touching)
@@ -267,7 +268,6 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 				menu.enabled = true
 				if isReseting() then
 					startReset()
-					if fading then panel:fadeOut() end
 				else
 					if _v ~= oVec2.zero and deltaMoveLength > 10 then
 						panel:schedule(updatePos)

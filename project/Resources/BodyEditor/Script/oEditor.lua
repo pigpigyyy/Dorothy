@@ -22,6 +22,7 @@ oEditor.isPlaying = false
 oEditor.origin = oVec2(
 		60+(winSize.width-120-180)*0.5,
 		winSize.height*0.5)
+oEditor.currentData = nil
 
 local worldScheduler = CCScheduler()
 worldScheduler.timeScale = 0

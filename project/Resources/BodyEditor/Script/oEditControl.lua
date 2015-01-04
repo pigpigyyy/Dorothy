@@ -54,11 +54,14 @@ local function oEditControl()
 		switchMenu.visible = false
 	end
 	
+	-- init type selector --
+	-- typeSelector
 	local typeSize = CCSize(120,190)
 	local halfTW = typeSize.width*0.5
 	local halfTH = typeSize.height*0.5
 	local typeSelector = oSelectionPanel(typeSize)
 	typeSelector.position = oEditor.origin-oVec2(winSize.width*0.5,winSize.height*0.5)
+	typeSelector.visible = false
 	local typeBackground = CCDrawNode()
 	typeBackground:drawPolygon(
 	{
@@ -80,13 +83,16 @@ local function oEditControl()
 	typeSelector.menu:addChild(oButton("Kinematic",16,100,50,60,typeSize.height-155,typeCallback))
 	editControl:addChild(typeSelector)
 
+	-- show & hide type selector
 	editControl.showTypeSelector = function(self,callback)
+		editControl:hide()
 		typeSelector.mask.touchEnabled = true
 		typeSelector.visible = true
 		typeSelector:show()
 		typeSelected = callback
 	end
 	editControl.hideTypeSelector = function(self)
+		if not typeSelector.visible then return end
 		typeSelector.menu.enabled = false
 		typeSelector.border:stopAllActions()
 		typeSelector.border:runAction(
@@ -104,15 +110,15 @@ local function oEditControl()
 					end)
 			}))
 	end
-	
-	
-	editControl:showTypeSelector()
 
 	-- hide all controls
 	editControl.hide = function(self)
 		editControl:hideSwitch()
+		editControl:hideTypeSelector()
 	end
 
+	editControl:showTypeSelector()
+	
 	return editControl
 end
 

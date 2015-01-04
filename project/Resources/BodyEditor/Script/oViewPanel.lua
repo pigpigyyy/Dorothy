@@ -41,20 +41,25 @@ local function oViewPanel()
 	end
 
 	local function selectCallback(item)
+		oEditor.currentData = item.dataItem
 		oEvent:send("viewPanel.choose",item)
+		oEvent:send("settingPanel.toState",item.dataItem[0])
 	end
 	
 	local function updateViewItems(bodyData)
 		local items = {}
 		local getPosY = genPosY()
 		for _,data in ipairs(bodyData) do
-			table.insert(items,
-				oViewItem(data[0],data[1],90,getPosY(),selectCallback))
+			local item = oViewItem(data[0],data[1],90,getPosY(),selectCallback)
+			item.dataItem = data
+			table.insert(items,item)
 			local subShapeIndex = oEditor[data[0]].SubShapes
 			if subShapeIndex and data[subShapeIndex] then
 				for index,subShape in ipairs(data[subShapeIndex]) do
-					table.insert(items,
-						oViewItem(subShape[0],index,90,getPosY(),selectCallback))
+					local item = oViewItem(subShape[0],index,90,getPosY(),selectCallback)
+					item.dataItem = subShape
+					item.parentData = data
+					table.insert(items,item)
 				end
 			end
 		end
