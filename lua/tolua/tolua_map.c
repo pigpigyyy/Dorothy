@@ -410,47 +410,6 @@ TOLUA_API void tolua_variable(lua_State* L, const char* name, lua_CFunction get,
 	}
 }
 
-/* Access const array
-	* It reports an error when trying to write into a const array
-	*/
-static int const_array(lua_State* L)
-{
-	luaL_error(L, "value of const array cannot be changed");
-	return 0;
-}
-
-/* Map an array
-	* It assigns an array into the current module(or class)
-	*/
-TOLUA_API void tolua_array(lua_State* L, const char* name, lua_CFunction get, lua_CFunction set)
-{
-	lua_rawgeti(L, -1, MT_GET);
-	if (!lua_istable(L, -1))
-	{
-		/* create .get table, leaving it at the top */
-		lua_pop(L, 1);
-		lua_newtable(L);
-		lua_pushvalue(L, -1);
-		lua_rawseti(L, -3, MT_GET);
-	}
-	lua_pushstring(L, name);
-
-	/* create array metatable */
-	lua_newtable(L);
-	lua_pushvalue(L, -1);
-	lua_setmetatable(L, -2);
-	/* set the own table as metatable(for modules) */
-	lua_pushstring(L, "__index");
-	lua_pushcfunction(L, get);
-	lua_rawset(L, -3);
-	lua_pushstring(L, "__newindex");
-	lua_pushcfunction(L, set ? set : const_array);
-	lua_rawset(L, -3);
-
-	lua_rawset(L, -3);// store variable
-	lua_pop(L, 1);// pop .get table
-}
-
 TOLUA_API void tolua_dobuffer(lua_State* L, char* B, unsigned int size, const char* name)
 {
 	if (!luaL_loadbuffer(L, B, size, name))

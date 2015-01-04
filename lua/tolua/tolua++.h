@@ -41,21 +41,18 @@ extern "C" {
 #define TOLUA_PROTECTED_DESTRUCTOR
 #define TOLUA_PROPERTY_TYPE(p)
 
-#define MT_SELF 0
 #define MT_DEL 1
 #define MT_CALL 2
 #define MT_SUPER 3
 #define MT_GET 4
 #define MT_SET 5
-#define MT_GETI 6
-#define MT_SETI 7
-#define MT_EQ 8
-#define MT_ADD 9
-#define MT_SUB 10
-#define MT_MUL 11
-#define MT_DIV 12
-#define MT_LT 13
-#define MT_LE 14
+#define MT_EQ 6
+#define MT_ADD 7
+#define MT_SUB 8
+#define MT_MUL 9
+#define MT_DIV 10
+#define MT_LT 11
+#define MT_LE 12
 
 #define TOLUA_UBOX 1
 #define TOLUA_CALLBACK 2
@@ -118,7 +115,6 @@ TOLUA_API void tolua_function(lua_State* L, const char* name, lua_CFunction func
 TOLUA_API void tolua_call(lua_State* L, int index, lua_CFunction func);
 TOLUA_API void tolua_constant(lua_State* L, const char* name, lua_Number value);
 TOLUA_API void tolua_variable(lua_State* L, const char* name, lua_CFunction get, lua_CFunction set);
-TOLUA_API void tolua_array(lua_State* L,const char* name, lua_CFunction get, lua_CFunction set);
 
 /* TOLUA_API void tolua_set_call_event(lua_State* L, lua_CFunction func, char* type); */
 TOLUA_API void tolua_addbase(lua_State* L, char* name, char* base);

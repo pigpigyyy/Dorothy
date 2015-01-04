@@ -205,6 +205,7 @@ function classArray:supcode ()
 end
 
 function classArray:register (pre)
+  error("array is not supported !")
 	if not self:check_public_access() then
 		return
 	end

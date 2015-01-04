@@ -62,11 +62,11 @@ static int cclua_print(lua_State* L)
 
 static int cclua_traceback(lua_State* L)
 {
-	CCLOG("[LUA ERROR] %s", lua_tostring(L, -1));
+	CCLog("[LUA ERROR] %s", lua_tostring(L, -1));
 	lua_getglobal(L, "debug");
 	lua_getfield(L, -1, "traceback");
 	lua_call(L, 0, 1);
-	CCLOG(lua_tostring(L, -1));
+	CCLog(lua_tostring(L, -1));
 	lua_pop(L, 2);
 	//luaL_traceback(L, L, lua_tostring(L, 1), 1);
 	//lua_pop(L, 1);

@@ -18,8 +18,7 @@ oBody::oBody(oBodyDef* bodyDef, oWorld* world):
 _bodyB2(nullptr),
 _bodyDef(bodyDef),
 _world(world),
-_group(0),
-_isDestroyed(false)
+_group(0)
 {
 	_bodyB2 = world->getB2World()->CreateBody(_bodyDef);
 	_bodyB2->SetUserData((void*)this);
@@ -39,7 +38,19 @@ _isDestroyed(false)
 
 oBody::~oBody()
 {
-	oBody::cleanup();
+	if (_bodyB2)
+	{
+		_world->getB2World()->DestroyBody(_bodyB2);
+		_bodyB2 = nullptr;
+	}
+	CCARRAY_START(oSensor, sensor, _sensors)
+	{
+		sensor->bodyEnter.Clear();
+		sensor->bodyLeave.Clear();
+	}
+	CCARRAY_END
+	contactStart.Clear();
+	contactEnd.Clear();
 }
 
 void oBody::onEnter()
@@ -56,21 +67,22 @@ void oBody::onExit()
 
 void oBody::cleanup()
 {
+	CCNode::cleanup();
 	if (_bodyB2)
 	{
-		CCNode::cleanup();
-		CCARRAY_START(oSensor, sensor, _sensors)
-		{
-			sensor->bodyEnter.Clear();
-			sensor->bodyLeave.Clear();
-			sensor->setEnabled(false);
-		}
-		CCARRAY_END
-		contactStart.Clear();
-		contactEnd.Clear();
 		_world->getB2World()->DestroyBody(_bodyB2);
 		_bodyB2 = nullptr;
 	}
+	CCARRAY_START(oSensor, sensor, _sensors)
+	{
+		sensor->bodyEnter.Clear();
+		sensor->bodyLeave.Clear();
+		sensor->setEnabled(false);
+	}
+	CCARRAY_END
+	if (_sensors) _sensors->removeAllObjects();
+	contactStart.Clear();
+	contactEnd.Clear();
 }
 
 oBodyDef* oBody::getBodyDef() const
@@ -296,10 +308,13 @@ void oBody::updatePhysics()
 
 void oBody::destroy()
 {
-	if (!_isDestroyed)
+	if (m_pParent)
 	{
-		_isDestroyed = true;
 		m_pParent->removeChild(this, true);
+	}
+	else if (_bodyB2)
+	{
+		this->cleanup();
 	}
 }
 

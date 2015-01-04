@@ -58,7 +58,6 @@ protected:
 	virtual void updatePhysics();
 	b2Body* _bodyB2;// weak reference
 	oWorld* _world;
-	bool _isDestroyed;
 private:
 	oRef<oBodyDef> _bodyDef;
 	oRef<CCArray> _sensors;

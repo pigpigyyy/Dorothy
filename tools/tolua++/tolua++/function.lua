@@ -354,8 +354,6 @@ local _metaOps =
 	['.lt'] = 'MT_LT',
 	['.le'] = 'MT_LE',
 	['.eq'] = 'MT_EQ',
-	['.geti'] = 'MT_GETI',
-	['.seti'] = 'MT_SETI',
 }
 
 -- register function

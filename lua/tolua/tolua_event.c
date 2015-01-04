@@ -131,6 +131,7 @@ static int class_index_event(lua_State* L)
 		}
 		lua_settop(L, 2);// ud key
 		lua_getmetatable(L, 1);// ud key mt
+		/* 1 ud, 2 key, 3 mt */
 		/* try metatables */
 		lua_pushvalue(L, 1);// ud key mt ud
 		int loop = 0;
@@ -138,84 +139,48 @@ static int class_index_event(lua_State* L)
 		{
 			/* ud key mt ud mt */
 			lua_remove(L, -2);// ud key mt mt
-			if (lua_isnumber(L, 2))// check if key is a numeric value
+			lua_pushvalue(L, 2);// ud key mt mt key
+			lua_rawget(L, -2);// mt[key], ud key mt mt value
+			if (!lua_isnil(L, -1))
 			{
-				/* try operator[] */
-				lua_rawgeti(L, -1, MT_GETI);// ud key mt mt func
-				if (lua_isfunction(L, -1))
+				if (loop)
 				{
-					if (loop)
-					{
-						lua_pushvalue(L, -1);
-						lua_rawseti(L, 3, MT_GETI);
-					}
-					lua_pushvalue(L, 1);
-					lua_pushvalue(L, 2);
-					lua_call(L, 2, 1);
-					return 1;
+					lua_pushvalue(L, 2); // ud key mt mt value key
+					lua_pushvalue(L, -2); // ud key mt mt value key value
+					lua_rawset(L, 3); // mt[key] = value, ud key mt mt value
 				}
+				return 1;
 			}
-			else
+			else lua_pop(L, 1);
+			/* try C/C++ variable */
+			lua_rawgeti(L, -1, MT_GET);// ud key mt mt tget
+			if (lua_istable(L, -1))
 			{
 				lua_pushvalue(L, 2);// ud key mt mt key
-				lua_rawget(L, -2);// mt[key], ud key mt mt value
-				if (!lua_isnil(L, -1))
+				lua_rawget(L, -2);// mt[key], ud key mt mt cfunc
+				if (lua_iscfunction(L, -1))// check cfunc
 				{
-					if (loop)
+					if (loop)// is accessing base class
 					{
-						lua_pushvalue(L, 2); // ud key mt mt value key
-						lua_pushvalue(L, -2); // ud key mt mt value key value
-						lua_rawset(L, 3); // mt[key] = value, ud key mt mt value
+						lua_rawgeti(L, 3, MT_GET); // cfunc tget
+						if (lua_isnil(L, -1)) // tget == nil
+						{
+							lua_pop(L, 1); // cfunc
+							lua_newtable(L); // cfunc tb
+							lua_pushvalue(L, -1); // cfunc tb tb
+							lua_rawseti(L, 3, MT_GET); // mt[MT_GET] = tb, cfunc tb
+						}
+						lua_pushvalue(L, 2); // cfunc tget key
+						lua_pushvalue(L, -3); // cfunc tget key cfunc
+						lua_rawset(L, -3); // tget[key] = cfunc, cfunc tget
+						lua_pop(L, 1); // cfunc
 					}
+					lua_pushvalue(L, 1);// cfunc ud
+					lua_call(L, 1, 1);// return cfunc(ud)
 					return 1;
 				}
-				else lua_pop(L, 1);
-				/* try C/C++ variable */
-				lua_rawgeti(L, -1, MT_GET);// ud key mt mt tget
-				if (lua_istable(L, -1))
-				{
-					lua_pushvalue(L, 2);
-					lua_rawget(L, -2);// ud key mt mt value
-					if (lua_iscfunction(L, -1))
-					{
-						if (loop)
-						{
-							lua_rawgeti(L, 3, MT_GET); // cfunc get
-							if (lua_isnil(L, -1)) // get == nil
-							{
-								lua_pop(L, 1); // cfunc
-								lua_newtable(L); // cfunc tb
-								lua_pushvalue(L, -1); // cfunc tb tb
-								lua_rawseti(L, 3, MT_GET); // mt[MT_GET] = tb, cfunc tb
-							}
-							lua_pushvalue(L, 2); // cfunc get key
-							lua_pushvalue(L, -3); // cfunc get key cfunc
-							lua_rawset(L, -3); // set[key] = cfunc, cfunc get
-							lua_pop(L, 1); // cfunc
-						}
-						lua_pushvalue(L, 1);
-						lua_pushvalue(L, 2);
-						lua_call(L, 2, 1);
-						return 1;
-					}
-					else if (lua_istable(L, -1))
-					{
-						/* deal with array: create table to be returned and cache it in ubox */
-						void* u = *((void**)lua_touserdata(L, 1));
-						lua_newtable(L);/* stack: obj key mt value table */
-						lua_pushlightuserdata(L, u);
-						lua_rawseti(L, -2, MT_SELF);/* store usertype at index MT_SELF */
-						lua_insert(L, -2);/* stack: obj key mt table value */
-						lua_setmetatable(L, -2);/* set stored value as metatable */
-						lua_pushvalue(L, -1);/* stack: obj key met table table */
-						lua_pushvalue(L, 2);/* stack: obj key mt table table key */
-						lua_insert(L, -2);/*  stack: obj key mt table key table */
-						storeatubox(L, 1);/* stack: obj key mt table */
-						return 1;
-					}
-				}
 			}
-			lua_settop(L, 4);// obj key mt basemt
+			lua_settop(L, 4);// ud key mt basemt
 			loop++;
 		}
 		lua_pushnil(L);
@@ -246,64 +211,43 @@ static int class_newindex_event(lua_State* L)
 		lua_pushvalue(L, -1); // ud key value mt mt
 		while (lua_istable(L, -1)) // mt is table
 		{
-			if (lua_isnumber(L, 2)) // key is number
+			lua_rawgeti(L, -1, MT_SET);
+			if (lua_istable(L, -1))
 			{
-				/* try operator[] */
-				lua_rawgeti(L, -1, MT_SETI); // mt[MT_SETI], ud key value mt seti 
-				if (lua_isfunction(L, -1)) // seti is function
+				lua_pushvalue(L, 2);
+				lua_rawget(L, -2); /* stack: t k v mt tset func */
+				if (lua_iscfunction(L, -1))
 				{
 					if (loop)
 					{
-						lua_pushvalue(L, -1);
-						lua_rawseti(L, 4, MT_SETI);
+						lua_rawgeti(L, 4, MT_SET); // cfunc set
+						if (lua_isnil(L, -1)) // set == nil
+						{
+							lua_pop(L, 1); // cfunc
+							lua_newtable(L); // cfunc tb
+							lua_pushvalue(L, -1); // cfunc tb tb
+							lua_rawseti(L, 4, MT_SET); // mt[MT_SET] = tb, cfunc tb
+						}
+						lua_pushvalue(L, 2); // cfunc set key
+						lua_pushvalue(L, -3); // cfunc set key cfunc
+						lua_rawset(L, -3); // set[key] = cfunc, cfunc set
+						lua_pop(L, 1); // cfunc
 					}
-					lua_pushvalue(L, 1); // ud key value mt seti ud
-					lua_pushvalue(L, 2); // ud key value mt seti ud key
-					lua_pushvalue(L, 3); // ud key value mt seti ud key value
-					lua_call(L, 3, 0); // ud key value mt
+					lua_pushvalue(L, 1);
+					lua_pushvalue(L, 3);
+					lua_call(L, 2, 0);
 					return 0;
 				}
+				lua_pop(L, 1);/* stack: t k v mt tset */
 			}
-			else
-			{
-				lua_rawgeti(L, -1, MT_SET);
-				if (lua_istable(L, -1))
-				{
-					lua_pushvalue(L, 2);
-					lua_rawget(L, -2);                     /* stack: t k v mt tset func */
-					if (lua_iscfunction(L, -1))
-					{
-						if (loop)
-						{
-							lua_rawgeti(L, 4, MT_SET); // cfunc set
-							if (lua_isnil(L, -1)) // set == nil
-							{
-								lua_pop(L, 1); // cfunc
-								lua_newtable(L); // cfunc tb
-								lua_pushvalue(L, -1); // cfunc tb tb
-								lua_rawseti(L, 4, MT_SET); // mt[MT_SET] = tb, cfunc tb
-							}
-							lua_pushvalue(L, 2); // cfunc set key
-							lua_pushvalue(L, -3); // cfunc set key cfunc
-							lua_rawset(L, -3); // set[key] = cfunc, cfunc set
-							lua_pop(L, 1); // cfunc
-						}
-						lua_pushvalue(L, 1);
-						lua_pushvalue(L, 3);
-						lua_call(L, 2, 0);
-						return 0;
-					}
-					lua_pop(L, 1);                          /* stack: t k v mt tset */
-				}
-				lua_pop(L, 1);/* stack: t k v mt */
+			lua_pop(L, 1);/* stack: t k v mt */
 
-				if (!lua_getmetatable(L, -1))/* stack: t k v mt mt */
-				{
-					lua_pushnil(L);
-				}
-				lua_remove(L, -2);/* stack: t k v mt */
-				loop++;
+			if (!lua_getmetatable(L, -1))/* stack: t k v mt mt */
+			{
+				lua_pushnil(L);
 			}
+			lua_remove(L, -2);/* stack: t k v mt */
+			loop++;
 		}
 		lua_settop(L, 3);/* stack: t k v */
 

@@ -212,31 +212,27 @@ void oBullet::onFaceDisposed( oIDisposable* item )
 void oBullet::destroy()
 {
 	CCAssert(_detectSensor != nullptr, "Invoke it once only!");
-	if (!_isDestroyed)
+	_detectSensor->setEnabled(false);
+	_detectSensor = nullptr;
+	CCNode::unscheduleAllSelectors();
+	if (_bulletDef->endEffect != oEffectType::None)
 	{
-		_isDestroyed = true;
-		_detectSensor->setEnabled(false);
-		_detectSensor = nullptr;
-		CCNode::unscheduleAllSelectors();
-		if (_bulletDef->endEffect != oEffectType::None)
-		{
-			oEffect* effect = oEffect::create(_bulletDef->endEffect);
-			effect->setOffset(this->getPosition())
-				->attachTo(this->getParent())
-				->autoRemove()
-				->start();
-		}
-		oBody::setVelocity(0, 0);
-		hitTarget.Clear();
-		if (_face)
-		{
-			oIDisposable* item = dynamic_cast<oIDisposable*>(_face);
-			item->dispose();
-		}
-		else
-		{
-			oBody::destroy();
-		}
+		oEffect* effect = oEffect::create(_bulletDef->endEffect);
+		effect->setOffset(this->getPosition())
+			->attachTo(this->getParent())
+			->autoRemove()
+			->start();
+	}
+	oBody::setVelocity(0, 0);
+	hitTarget.Clear();
+	if (_face)
+	{
+		oIDisposable* item = dynamic_cast<oIDisposable*>(_face);
+		item->dispose();
+	}
+	else
+	{
+		oBody::destroy();
 	}
 }
 

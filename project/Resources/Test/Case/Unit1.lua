@@ -29,6 +29,16 @@ oAction:add(oAction.UserID,998,0,0,
 		print("end")
 	end)
 --]]
+oInstinct:add(1,"hp",oCon(function()
+	print(oAI.oldValue,oAI.newValue)
+	return true
+end))
+
+oInstinct:add(2,"hp",oCon(function()
+	print(2,oAI.oldValue,oAI.newValue)
+	return true
+end))
+
 local CCKey = {}
 if CCApplication.targetPlatform == CCTargetPlatform.Windows then
 	CCKey.Left = 0x25
@@ -211,7 +221,7 @@ oAI:add(3,oSel({
 			oCon(function()
 				local self = oAI.self
 				local target = self.data
-				if target then
+				if target and target:get("hp") > 0 then
 					return self.position:distance(target.position) > 150
 				end
 				return false
@@ -280,6 +290,7 @@ unitDef.move = 200
 unitDef.jump = 550
 unitDef.sensity = 0
 unitDef.scale = 0.8
+unitDef.maxHp = 10
 unitDef.detectDistance = 600
 unitDef:setActions({
 	oAction.Walk,
@@ -289,6 +300,7 @@ unitDef:setActions({
 	oAction.Idle,
 	--oAction.UserID
 })
+unitDef:setInstincts({1,2})
 unitDef.reflexArc = 1
 
 local unit = oUnit(unitDef,world,oVec2(200,300))
@@ -298,7 +310,8 @@ unit.tag = 998
 suit(unit,"girl.lua")
 world:addChild(unit,1)
 world.camera:follow(unit)
-
+unit:set("hp",0)
+oVec2(10,10):normalize()
 local lastUnit = unit
 unit = oUnit(unitDef,world,oVec2(600,300))
 unit.group = 1
@@ -306,6 +319,7 @@ unit.data = lastUnit
 unit.reflexArc = 3
 suit(unit,"miku.lua")
 world:addChild(unit)
+unit:set("hp",0)
 
 lastUnit = unit
 unit = oUnit(unitDef,world,oVec2(400,300))
