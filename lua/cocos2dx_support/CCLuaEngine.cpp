@@ -32,27 +32,27 @@ NS_CC_BEGIN
 
 static int g_callFromLua = 0;
 
-static int lua_print(lua_State * luastate)
+static int cclua_print(lua_State* L)
 {
-	int nargs = lua_gettop(luastate);
+	int nargs = lua_gettop(L);
 	string t;
 	for (int i = 1; i <= nargs; i++)
 	{
-		if (lua_isnone(luastate, i)) t += "none";
-		else if (lua_isnil(luastate, i)) t += "nil";
-		else if (lua_isboolean(luastate, i))
+		if (lua_isnone(L, i)) t += "none";
+		else if (lua_isnil(L, i)) t += "nil";
+		else if (lua_isboolean(L, i))
 		{
-			if (lua_toboolean(luastate, i) != 0) t += "true";
+			if (lua_toboolean(L, i) != 0) t += "true";
 			else t += "false";
 		}
-		else if (lua_isfunction(luastate, i)) t += "function";
-		else if (lua_islightuserdata(luastate, i)) t += "lightuserdata";
-		else if (lua_isthread(luastate, i)) t += "thread";
+		else if (lua_isfunction(L, i)) t += "function";
+		else if (lua_islightuserdata(L, i)) t += "lightuserdata";
+		else if (lua_isthread(L, i)) t += "thread";
 		else
 		{
-			const char * str = lua_tostring(luastate, i);
-			if (str) t += lua_tostring(luastate, i);
-			else t += tolua_typename(luastate, i);
+			const char* str = lua_tostring(L, i);
+			if (str) t += lua_tostring(L, i);
+			else t += tolua_typename(L, i);
 		}
 		if (i != nargs) t += "\t";
 	}
@@ -60,7 +60,7 @@ static int lua_print(lua_State * luastate)
 	return 0;
 }
 
-static int traceback(lua_State* L)
+static int cclua_traceback(lua_State* L)
 {
 	CCLOG("[LUA ERROR] %s", lua_tostring(L, -1));
 	lua_getglobal(L, "debug");
@@ -73,7 +73,7 @@ static int traceback(lua_State* L)
 	return 1;
 }
 
-static int lua_loadfile(lua_State *L)
+static int cclua_loadfile(lua_State* L)
 {
 	std::string filename(luaL_checkstring(L, 1));
 	size_t pos = filename.rfind(".lua");
@@ -103,40 +103,62 @@ static int lua_loadfile(lua_State *L)
 	return 1;
 }
 
-static int lua_dofile(lua_State *L)
+static int cclua_dofile(lua_State* L)
 {
-	lua_loadfile(L);
+	cclua_loadfile(L);
 	CCLuaEngine::call(L,0, LUA_MULTRET);
 	return 1;
 }
 
-static int lua_ubox(lua_State* luastate)
+static int cclua_ubox(lua_State* L)
 {
-	lua_rawgeti(luastate, LUA_REGISTRYINDEX, TOLUA_UBOX);// ubox
+	lua_rawgeti(L, LUA_REGISTRYINDEX, TOLUA_UBOX);// ubox
+	return 1;
+}
+
+static int cclua_loadlibs(lua_State* L)
+{
+	const luaL_Reg lualibs[] = {
+		{ "", luaopen_base },
+		{ LUA_LOADLIBNAME, luaopen_package },
+		{ LUA_TABLIBNAME, luaopen_table },
+		{ LUA_IOLIBNAME, luaopen_io },
+		{ LUA_OSLIBNAME, luaopen_os },
+		{ LUA_STRLIBNAME, luaopen_string },
+		{ LUA_MATHLIBNAME, luaopen_math },
+		{ LUA_DBLIBNAME, luaopen_debug },
+		{ NULL, NULL }
+	};
+	const luaL_Reg* lib = lualibs;
+	for (; lib->func; lib++)
+	{
+		lua_pushcfunction(L, lib->func);
+		lua_pushstring(L, lib->name);
+		lua_call(L, 1, 0);
+	}
 	return 1;
 }
 
 CCLuaEngine::CCLuaEngine()
 {
 	L = luaL_newstate();
-	luaL_openlibs(L);
+	cclua_loadlibs(L);
 	toluafix_open(L);
 	tolua_Cocos2d_open(L);
 
 	// Register our version of the global "print" function
 	const luaL_reg global_functions[] =
 	{
-		{ "print", lua_print },
-		{ "ubox", lua_ubox },
-		{ "loadfile", lua_loadfile },
-		{ "dofile", lua_dofile },
-		{ "ubox", lua_ubox },
+		{ "print", cclua_print },
+		{ "loadfile", cclua_loadfile },
+		{ "dofile", cclua_dofile },
+		{ "ubox", cclua_ubox },
 		{ NULL, NULL }
 	};
 	luaL_register(L, "_G", global_functions);
 
 	// add cocos2dx loader
-	addLuaLoader(lua_loadfile);
+	addLuaLoader(cclua_loadfile);
 
 	tolua_beginmodule(L, 0);//stack: package.loaded
 		tolua_beginmodule(L, "CCDictionary");//stack: package.loaded CCDictionary
@@ -222,7 +244,7 @@ int CCLuaEngine::executeString(const char *codes)
 int CCLuaEngine::executeScriptFile(const char* filename)
 {
 	lua_pushstring(L, filename);
-	return lua_dofile(L);
+	return cclua_dofile(L);
 }
 
 int CCLuaEngine::executeGlobalFunction(const char* functionName)
@@ -393,12 +415,12 @@ int CCLuaEngine::call(lua_State* L, int paramCount, int returnCount)
 	int traceIndex = functionIndex - 1;
 	if (!lua_isfunction(L, functionIndex))
 	{
-		CCLOG("value at stack [%d] is not function", functionIndex);
+		CCLOG("[LUA ERROR] value at stack [%d] is not function in CCLuaEngine::call", functionIndex);
 		lua_pop(L, paramCount + 1); // remove function and arguments
 		return 0;
 	}
 
-	lua_pushcfunction(L, traceback);// func args... traceback
+	lua_pushcfunction(L, cclua_traceback);// func args... traceback
 	lua_insert(L, traceIndex);// traceback func args...
 
 	++g_callFromLua;

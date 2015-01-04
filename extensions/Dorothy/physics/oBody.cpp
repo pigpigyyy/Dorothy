@@ -63,6 +63,7 @@ void oBody::cleanup()
 		{
 			sensor->bodyEnter.Clear();
 			sensor->bodyLeave.Clear();
+			sensor->setEnabled(false);
 		}
 		CCARRAY_END
 		contactStart.Clear();

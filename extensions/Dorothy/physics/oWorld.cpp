@@ -92,7 +92,8 @@ _contactFilter(new oContactFilter())
 
 oWorld::~oWorld()
 {
-	for (b2Body* b = _world.GetBodyList();b;b = b->GetNext())
+	b2Body* b = nullptr;
+	while (b = _world.GetBodyList())
 	{
 		oBody* body = (oBody*)b->GetUserData();
 		if (body)

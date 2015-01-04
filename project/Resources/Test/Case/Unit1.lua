@@ -50,7 +50,7 @@ end
 oAI.getUnitByTag = function(self,tag)
 	local units = self:getDetectedUnits()
 	for i = 1,units.count do
-		if units[i].tag == 998 then
+		if units[i].tag == tag then
 			return units[i]
 		end
 	end
