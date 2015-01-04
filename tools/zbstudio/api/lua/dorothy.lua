@@ -3899,13 +3899,13 @@ local Dorothy =
 				static = true,
 				type = "value"
 			},
-			oldInstinctValue =
+			oldValue =
 			{
 				description = "[Class Field][float] Get the old, last triggered instinct value.",
 				static = true,
 				type = "value"
 			},
-			newInstinctValue =
+			newValue =
 			{
 				description = "[Class Field][float] Get the new, last triggered instinct value.",
 				static = true,
