@@ -126,8 +126,8 @@ local function oEditControl()
 		editRuler:hide()
 	end
 
-	local value = 1
-	editControl:showEditRuler(value,1,1000,100,function(v) if v ~= value then value=v;print(value) end end)
+	local value = 0
+	editControl:showEditRuler(value,0,1000,100)
 
 	return editControl
 end

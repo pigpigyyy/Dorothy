@@ -23,8 +23,8 @@ local CCCall = require("CCCall")
 
 local function oEditRuler()
 	local winSize = CCDirector.winSize
-	local width = 60
-	local height = 400*winSize.height/600
+	local width = 100
+	local height = 460*winSize.height/600
 	local halfW = width*0.5
 	local halfH = height*0.5
 
@@ -138,15 +138,16 @@ local function oEditRuler()
 	end
 	ruler.data = CCDictionary()
 	ruler.data.scaleListener = oListener("viewArea.scale",function(scale)
+		if scale > 5 then scale = 5 end
 		intervalNode.scaleY = scale
 		-- unscale interval text --
 		updateIntervalTextScale(1/scale)
 		local posY = intervalNode.anchor.y*height
 		if posY >= 0 then
-			local newTop = math.ceil((posY+halfH)/interval)/scale
+			local newTop = math.ceil((posY+halfH/scale)/interval)
 			if top < newTop then top = newTop end
 		else
-			local newBottom = math.ceil((-posY+halfH)/interval)/scale
+			local newBottom = math.ceil((-posY+halfH/scale)/interval)
 			if bottom < newBottom then bottom = newBottom end
 		end
 	end)
@@ -162,9 +163,9 @@ local function oEditRuler()
 			end
 		end)
 		local posY = intervalNode.anchor.y*height
-		local newTop = math.ceil((posY+halfH)/scale/interval)
+		local newTop = math.ceil((posY+halfH/scale)/interval)
 		if top < newTop then top = newTop end
-		local newBottom = math.ceil((-posY+halfH)/scale/interval)
+		local newBottom = math.ceil((-posY+halfH/scale)/interval)
 		if bottom < newBottom then bottom = newBottom end
 	end)
 	
@@ -196,10 +197,10 @@ local function oEditRuler()
 		intervalNode.anchor = oVec2(0,posY/height)
 		local scale = intervalNode.scaleY
 		if posY >= 0 then
-			local newTop = math.ceil((posY+halfH)/scale/interval)
+			local newTop = math.ceil((posY+halfH/scale)/interval)
 			if top < newTop then top = newTop end
 		else
-			local newBottom = math.ceil((-posY+halfH)/scale/interval)
+			local newBottom = math.ceil((-posY+halfH/scale)/interval)
 			if bottom < newBottom then bottom = newBottom end
 		end
 	end
@@ -222,7 +223,7 @@ local function oEditRuler()
 		time = time + deltaTime
 		local t = time/1
 		if scale < 1 then
-			t = t/0.2
+			t = t/0.1
 		end
 		if t > 1.0 then t = 1.0 end
 
