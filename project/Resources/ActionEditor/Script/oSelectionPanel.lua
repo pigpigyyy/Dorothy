@@ -40,7 +40,7 @@ local function oSelectionPanel(borderSize,noCliping)
 	local mask = CCLayer()
 	mask.anchor = oVec2.zero
 	mask.touchEnabled = true
-	mask:registerTouchHandler(function()return true end,false,CCMenu.DefaultHandlerPriority-1,true)
+	mask:registerTouchHandler(function() return panel.visible end,false,CCMenu.DefaultHandlerPriority-1,true)
 	panel:addChild(mask)
 
 	local border = CCNode()

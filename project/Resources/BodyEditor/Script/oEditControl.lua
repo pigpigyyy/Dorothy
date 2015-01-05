@@ -16,6 +16,7 @@ local oOpacity = require("oOpacity")
 local oScale = require("oScale")
 local oEase = require("oEase")
 local CCCall = require("CCCall")
+local oEditRuler = require("oEditRuler")
 
 local function oEditControl()
 	local winSize = CCDirector.winSize
@@ -53,7 +54,7 @@ local function oEditControl()
 	editControl.hideSwitch = function(self)
 		switchMenu.visible = false
 	end
-	
+
 	-- init type selector --
 	-- typeSelector
 	local typeSize = CCSize(120,190)
@@ -111,14 +112,23 @@ local function oEditControl()
 			}))
 	end
 
+	local editRuler = oEditRuler()
+	editControl:addChild(editRuler)
+
+	editControl.showEditRuler = function(self,default,min,max,indent,callback)
+		editRuler:show(default,min,max,indent,callback)
+	end
+
 	-- hide all controls
 	editControl.hide = function(self)
 		editControl:hideSwitch()
 		editControl:hideTypeSelector()
+		editRuler:hide()
 	end
 
-	editControl:showTypeSelector()
-	
+	local value = 1
+	editControl:showEditRuler(value,1,1000,100,function(v) if v ~= value then value=v;print(value) end end)
+
 	return editControl
 end
 

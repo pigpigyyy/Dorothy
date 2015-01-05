@@ -170,13 +170,10 @@ local function oHRuler()
 			intervalNode:runAction(oScale(0.5,scale,1,oEase.OutQuad))
 			-- manually update and unscale interval text --
 			local time = 0
-			local begin = intervalNode.children[1].scaleX
-			local change = 1/scale-begin
 			intervalNode:schedule(function(self,deltaTime)
+				updateIntervalTextScale(1/intervalNode.scaleX)
 				time = time + deltaTime
-				local t = math.min(time/0.5,1)
-				updateIntervalTextScale(oEase:func(oEase.OutQuad,t,begin,change))
-				if t == 1 then
+				if math.min(time/0.5,1) == 1 then
 					self:unschedule()
 				end
 			end)

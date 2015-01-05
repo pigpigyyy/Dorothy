@@ -89,7 +89,8 @@ local function oSettingPanel()
 	local view = CCClipNode(stencil)
 	panel:addChild(view)
 
-	local menu = CCMenu(false)
+	local menu = CCMenu()
+	menu.touchPriority = CCMenu.DefaultHandlerPriority-1
 	menu.contentSize = borderSize
 	menu.anchor = oVec2(0,1)
 	menu.positionY = borderSize.height
@@ -390,7 +391,7 @@ local function oSettingPanel()
 				end
 			end
 			return true
-		end, false, 0, true)
+		end, false, CCMenu.DefaultHandlerPriority-2, false)
 	
 	local function genPosY()
 		local index = 0

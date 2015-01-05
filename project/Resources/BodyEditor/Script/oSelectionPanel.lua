@@ -44,7 +44,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 		local mask = CCLayer()
 		mask.anchor = oVec2.zero
 		mask.touchEnabled = true
-		mask:registerTouchHandler(function() return true end,false,CCMenu.DefaultHandlerPriority-1,true)
+		mask:registerTouchHandler(function() return panel.visible end,false,CCMenu.DefaultHandlerPriority-1,true)
 		panel:addChild(mask)
 		panel.mask = mask
 	end
@@ -263,6 +263,8 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 				
 				deltaMoveLength = 0
 				menu.enabled = true
+				_s = oVec2.zero
+				_v = oVec2.zero
 				panel:schedule(updateSpeed)
 			elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
 				menu.enabled = true
