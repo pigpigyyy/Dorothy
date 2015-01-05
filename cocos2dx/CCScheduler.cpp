@@ -786,14 +786,9 @@ void CCScheduler::resumeTargets(CCSet* pTargetsToResume)
 // main loop
 void CCScheduler::update(float dt)
 {
-	if (m_fTimeScale == 0.0f) return;
-
     m_bUpdateHashLocked = true;
 
-    if (m_fTimeScale != 1.0f)
-    {
-        dt *= m_fTimeScale;
-    }
+    dt *= m_fTimeScale;
 
     // Iterate over all the Updates' selectors
     tListEntry *pEntry, *pTmp;

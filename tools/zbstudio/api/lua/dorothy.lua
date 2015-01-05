@@ -3451,18 +3451,6 @@ local Dorothy =
 				typeName = "oVec2",
 				type = "value",
 			},
-			locationInView =
-			{
-				description = "[oVec2][readonly]",
-				typeName = "oVec2",
-				type = "value",
-			},
-			prelocationInView =
-			{
-				description = "[oVec2][readonly]",
-				typeName = "oVec2",
-				type = "value",
-			},
 			id =
 			{
 				description = "[int][readonly]",

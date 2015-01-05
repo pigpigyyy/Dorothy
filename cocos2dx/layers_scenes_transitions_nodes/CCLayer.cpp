@@ -410,6 +410,7 @@ void CCLayer::onEnterTransitionDidFinish()
 
 bool CCLayer::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
 {
+	if (!m_bVisible) return false;
 	return excuteScriptTouchHandler(CCTouch::Began, pTouch) == 0 ? false : true;
 }
 

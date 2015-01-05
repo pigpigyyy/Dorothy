@@ -31,7 +31,7 @@ NS_CC_BEGIN
 // returns the current touch location in screen coordinates
 CCPoint CCTouch::getLocationInView() const 
 { 
-    return m_point; 
+    return m_point;
 }
 
 // returns the previous touch location in screen coordinates

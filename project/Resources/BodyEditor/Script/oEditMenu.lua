@@ -62,6 +62,10 @@ local function oEditMenu()
 
 		Play = oPlayButton(50,winSize.width-225,35,function(button)
 			oEditor.isPlaying = button.isPlaying
+			oEditor.worldScheduler.timeScale = oEditor.isPlaying and 1 or 0
+			if not oEditor.isPlaying then
+				oEditor:resetItems()
+			end
 		end),
 	}
 

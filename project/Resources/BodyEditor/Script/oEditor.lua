@@ -13,6 +13,8 @@ local CCFileUtils = require("CCFileUtils")
 local oWorld = require("oWorld")
 local CCScheduler = require("CCScheduler")
 local CCDirector = require("CCDirector")
+local CCNode = require("CCNode")
+local CCDictionary = require("CCDictionary")
 
 local winSize = CCDirector.winSize
 
@@ -23,6 +25,11 @@ oEditor.origin = oVec2(
 		60+(winSize.width-120-180)*0.5,
 		winSize.height*0.5)
 oEditor.currentData = nil
+oEditor.isFixed = true
+oEditor.scale = 1
+oEditor.names = {}
+oEditor.bodyData = {}
+oEditor.items = {}
 
 local worldScheduler = CCScheduler()
 worldScheduler.timeScale = 0
@@ -33,16 +40,18 @@ oEditor.world.scheduler = oEditor.worldScheduler
 oEditor.world.showDebug = true
 oEditor.world:setShouldContact(0,0,true)
 oEditor.world:registerEventHandler(function(eventType)
-	CCDirector.scheduler:unshedule(oEditor.worldScheduler)
+	if eventType == CCNode.Exited then
+		CCDirector.scheduler:unshedule(oEditor.worldScheduler)
+	end
 end)
 
 oEditor.touchPriorityEditMenu = CCMenu.DefaultHandlerPriority
-oEditor.touchPriorityEditControl = CCMenu.DefaultHandlerPriority+1
-oEditor.touchPrioritySettingPanel = CCMenu.DefaultHandlerPriority+2
+oEditor.touchPrioritySettingPanel = CCMenu.DefaultHandlerPriority+1
 oEditor.touchPriorityViewPanel = CCMenu.DefaultHandlerPriority+3
-oEditor.touchPriorityVRuler = CCMenu.DefaultHandlerPriority+4
-oEditor.touchPriorityHRuler = CCMenu.DefaultHandlerPriority+5
-oEditor.touchPriorityViewArea = CCMenu.DefaultHandlerPriority+6
+oEditor.touchPriorityEditControl = CCMenu.DefaultHandlerPriority+5
+oEditor.touchPriorityVRuler = CCMenu.DefaultHandlerPriority+6
+oEditor.touchPriorityHRuler = CCMenu.DefaultHandlerPriority+7
+oEditor.touchPriorityViewArea = CCMenu.DefaultHandlerPriority+8
 
 local function Point(x,y)
 	return function()
@@ -782,15 +791,16 @@ for shapeName,shapeDefine in pairs(defaultShapeData) do
 	end
 end
 
-oEditor.bodyData = {}
 oEditor.addData = function(self,data)
 	table.insert(self.bodyData,data)
+	oEditor:checkName(data)
 	oEvent:send("editor.bodyData",self.bodyData)
 end
 oEditor.removeData = function(self,data)
 	for i,v in ipairs(self.bodyData) do
 		if v == data then
 			table.remove(self.bodyData,i)
+			oEditor.names[data[1]] = nil
 			local item = oEditor.items[data[1]]
 			if item then
 				item:destroy()
@@ -803,44 +813,69 @@ oEditor.removeData = function(self,data)
 end
 oEditor.clearData = function(self)
 	self.bodyData = {}
+	oEditor.names = {}
+	oEditor:clearItems{}
 	oEvent:send("editor.bodyData",self.bodyData)
 end
 
-oEditor.items = {}
-oEditor.addItem = function(self,name,item)
-	if name == "" then return end
-	self.items[name] = item
+oEditor.resetItem = function(self,data)
+	oEditor:removeItem(data)
+	oEditor.items[data[1]] = data:create()
 end
-oEditor.removeItem = function(self,name)
-	if name == "" then return end
+oEditor.resetItems = function(self)
+	self:clearItems()
+	for i,data in ipairs(self.bodyData) do
+		self:resetItem(data)
+	end
+end
+oEditor.removeItem = function(self,data)
+	local name = data[1]
+	local item = oEditor.items[name]
+	if item then item:destroy() end
 	self.items[name] = nil
 end
 oEditor.rename = function(self,oldName,newName)
-	if oldName == "" or newName == "" then return end
+	if oldName == "" or newName == "" or oldName == newName then return end
 	local item = self.items[oldName]
 	self.items[oldName] = nil
 	self.items[newName] = item
+	self.names[oldName] = nil
+	self.names[newName] = true
 	oEvent:send("editor.rename",{oldName=oldName,newName=newName})
 end
-oEditor.getItem = function(self,name)
-	if name == "" then return nil end
-	return self.items[name]
+oEditor.getItem = function(self,arg) -- arg: name or data
+	if type(arg) == "string" then
+		return self.items[arg]
+	else
+		return self.items[arg[1]]
+	end
 end
 oEditor.clearItems = function(self)
+	for _,item in pairs(self.items) do
+		item:destroy()
+	end
 	self.items = {}
 end
 oEditor.getUsableName = function(self,originalName)
-	if self.items[originalName] then
+	if self.names[originalName] then
 		local counter = 1
 		local nawName = nil
 		local usable = false
 		repeat
 			nawName = originalName..tostring(counter)
-			usable = (oEditor.items[nawName] == nil)
+			usable = (self.names[nawName] == nil)
 		until usable
 		return nawName
 	else
 		return originalName
+	end
+end
+oEditor.checkName = function(self,data)
+	local newName = oEditor:getUsableName(data[1])
+	oEditor.names[newName] = true
+	if newName ~= data[1] then
+		data[1] = newName
+		oEditor:rename(data[1],newName)
 	end
 end
 
@@ -899,6 +934,7 @@ end
 oEditor.loadData = function(self,filename)
 	self.bodyData = dofile(CCFileUtils.writablePath..filename)
 	if not self.bodyData then return end
+	oEditor.names = {}
 	for _,data in ipairs(self.bodyData) do
 		local shapeName = data[0]
 		local createFunc = oEditor[shapeName].create
@@ -915,11 +951,15 @@ oEditor.loadData = function(self,filename)
 				renameFunc(data,args.oldName,args.newName)
 			end)
 		end
-		data[1] = oEditor:getUsableName(data[1])
-		local item = data.create(data)
-		self:addItem(data[1],item)
+		oEditor:checkName(data)
 	end
+	oEvent:send("editor.bodyData",self.bodyData)
 	-- TODO
 end
+
+oEditor.data = CCDictionary()
+oEditor.data.bodyDataListener = oListener("editor.bodyData",function()
+	oEditor:resetItems()
+end)
 
 return oEditor

@@ -188,9 +188,9 @@ local function oEditRuler()
 				local val = _value
 				if val < _min then val = _min end
 				if val > _max then val = _max end
-				self.changed(val)
+				self.changed(oEditor.isFixed and math.floor(val/(indent/10)+0.5)*(indent/10) or val)
 			else
-				self.changed(_value)
+				self.changed(oEditor.isFixed and math.floor(_value/(indent/10)+0.5)*(indent/10) or _value)
 			end
 		end
 		local posY = (v*10*interval/indent)
@@ -277,7 +277,6 @@ local function oEditRuler()
 		local newValue = _value-ds*indent/(interval*10)
 		ruler:setValue((newValue-_value)/intervalNode.scaleY+_value)
 
-		local padding = 0.5*indent
 		if _v == 0 or (_min < _max and (_value < _min or _value > _max)) then
 			if isReseting() then
 				startReset()
@@ -321,7 +320,6 @@ local function oEditRuler()
 		end
 		return true
 	end,false,oEditor.touchPriorityEditControl,true)
-	ruler.touchEnabled = true
 
 	ruler.show = function(self,default,min,max,indent,callback)
 		self:setIndent(indent)
@@ -334,9 +332,11 @@ local function oEditRuler()
 		self.opacity = 0
 		self:stopAllActions()
 		self:runAction(CCSpawn({oScale(0.5,1,1,oEase.OutBack),oOpacity(0.5,0.8)}))
+		self.touchEnabled = true
 	end
 	ruler.hide = function(self)
 		if not ruler.visible then return end
+		self.touchEnabled = false
 		self:stopAllActions()
 		self:runAction(CCSequence(
 		{

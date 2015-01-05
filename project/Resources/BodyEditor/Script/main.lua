@@ -23,12 +23,12 @@ local once = oRoutine.once
 local controls =
 {
 	"oViewArea",
+	"oEditControl",
 	"oVRuler",
 	"oHRuler",
 	"oEditMenu",
 	"oSettingPanel",
 	"oViewPanel",
-	"oEditControl",
 }
 
 oRoutine(once(function()

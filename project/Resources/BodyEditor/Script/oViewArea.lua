@@ -59,6 +59,7 @@ local function oViewArea()
 	-- listen reset events --
 	crossNode.data = CCDictionary()
 	crossNode.data.toScaleListener = oListener("viewArea.toScale",function(scale)
+		oEditor.scale = scale
 		view.touchEnabled = false
 		crossNode:runAction(CCSequence(
 		{
@@ -103,6 +104,7 @@ local function oViewArea()
 					end
 					crossNode.scaleX = scale
 					crossNode.scaleY = scale
+					oEditor.scale = scale
 					oEvent:send("viewArea.scale",scale)
 				end
 			end
@@ -139,6 +141,7 @@ local function oViewArea()
 	bodyData[oEditor.Rectangle.Size] = CCSize(1024,100)
 	bodyData[oEditor.Rectangle.Type] = oBodyDef.Static
 	bodyData[oEditor.Rectangle.Position] = oVec2(0,-400)
+	bodyData[oEditor.Rectangle.Angle] = 45
 	oEditor:addData(bodyData)
 
 	oEditor:dumpData("test.lua")

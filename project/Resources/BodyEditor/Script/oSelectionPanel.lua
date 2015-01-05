@@ -294,6 +294,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 
 	panel.show = function(self)
 		if panel.mask then panel.mask.touchEnabled = true end
+		panel.visible = true
 		border.scaleX = 0.3
 		border.scaleY = 0.3
 		border.opacity = 0
@@ -328,10 +329,12 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 				}),
 				CCCall(
 					function()
-						panel:removeMenuItems()
-						panel:unregisterTouchHandler()
 						panel:unschedule()
-						panel.parent:removeChild(panel)
+						panel.visible = false
+						if panel.mask then panel.mask.touchEnabled = false end
+						if panel.ended then
+							panel:ended()
+						end
 					end)
 			}))
 	end
@@ -350,19 +353,6 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 		_s = oVec2.zero
 		_v = oVec2.zero
 		deltaMoveLength = 0
-	end
-
-	panel.removeMenuItems = function(self)
-		local children = menu.children
-		if children then
-			for i = 1, children.count do
-				local item = tolua.cast(children[i],"CCMenuItem")
-				if item then
-					item:unregisterTapHandler()
-				end
-			end
-		end
-		menu:removeAllChildrenWithCleanup()
 	end
 	
 	return panel
