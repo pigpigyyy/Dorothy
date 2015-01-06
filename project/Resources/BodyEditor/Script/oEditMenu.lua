@@ -24,7 +24,10 @@ local function oEditMenu()
 			CCDirector:popToRootScene()
 		end),
 		Rectangle = oButton("",0,50,50,35,winSize.height-95,function()
-			oEvent:send("settingPanel.toState","Rectangle")
+			local data = oEditor:newRectangle()
+			data:set("Position",oEditor.origin-oEditor.viewPosition)
+			oEditor:addData(data)
+			oEvent:send("viewPanel.choose",data)
 		end),
 		Circle = oButton("",0,50,50,35,winSize.height-155,function()
 			oEvent:send("settingPanel.toState","Circle")
@@ -66,6 +69,7 @@ local function oEditMenu()
 			if not oEditor.isPlaying then
 				oEditor:resetItems()
 			end
+			oEvent:send("editControl.hide")
 		end),
 	}
 

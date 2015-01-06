@@ -24,6 +24,7 @@ oEditor.isPlaying = false
 oEditor.origin = oVec2(
 		60+(winSize.width-120-180)*0.5,
 		winSize.height*0.5)
+oEditor.viewPosition = oEditor.origin
 oEditor.currentData = nil
 oEditor.isFixed = true
 oEditor.scale = 1
@@ -767,6 +768,16 @@ local defaultShapeData =
 	},
 }
 
+local function setFunc(data,name,value)
+	data[oEditor[data[0]][name]] = value
+end
+local function getFunc(data,name)
+	return data[oEditor[data[0]][name]]
+end
+local function hasFunc(data,name)
+	return oEditor[data[0]][name] ~= nil
+end
+
 for shapeName,shapeDefine in pairs(defaultShapeData) do
 	oEditor[shapeName] = {ItemType=0}
 	for index,property in ipairs(shapeDefine) do
@@ -781,6 +792,9 @@ for shapeName,shapeDefine in pairs(defaultShapeData) do
 				newData[i] = type(v[2]) == "function" and v[2]() or v[2]
 			end
 			newData.create = createFunc
+			newData.set = setFunc
+			newData.get = getFunc
+			newData.has = hasFunc
 			if renameFunc then
 				newData.renameListener = oListener("editor.rename",function(args)
 					renameFunc(newData,args.oldName,args.newName)
@@ -794,6 +808,15 @@ end
 oEditor.addData = function(self,data)
 	table.insert(self.bodyData,data)
 	oEditor:checkName(data)
+	local subShapes = data:get("SubShapes")
+	if subShapes then
+		for _,shape in ipairs(subShapes) do
+			shape.parent = data
+			shape.set = setFunc
+			shape.get = getFunc
+			shape.has = hasFunc
+		end
+	end
 	oEvent:send("editor.bodyData",self.bodyData)
 end
 oEditor.removeData = function(self,data)
@@ -819,16 +842,20 @@ oEditor.clearData = function(self)
 end
 
 oEditor.resetItem = function(self,data)
+	if data.parent then data = data.parent end
 	oEditor:removeItem(data)
-	oEditor.items[data[1]] = data:create()
+	local item = data:create()
+	oEditor.items[data[1]] = item
+	return item
 end
 oEditor.resetItems = function(self)
 	self:clearItems()
-	for i,data in ipairs(self.bodyData) do
+	for _,data in ipairs(self.bodyData) do
 		self:resetItem(data)
 	end
 end
 oEditor.removeItem = function(self,data)
+	if data.parent then data = data.parent end
 	local name = data[1]
 	local item = oEditor.items[name]
 	if item then item:destroy() end
@@ -847,6 +874,7 @@ oEditor.getItem = function(self,arg) -- arg: name or data
 	if type(arg) == "string" then
 		return self.items[arg]
 	else
+		if arg.parent then arg = arg.parent end
 		return self.items[arg[1]]
 	end
 end
@@ -864,6 +892,7 @@ oEditor.getUsableName = function(self,originalName)
 		repeat
 			nawName = originalName..tostring(counter)
 			usable = (self.names[nawName] == nil)
+			counter = counter+1
 		until usable
 		return nawName
 	else
@@ -940,10 +969,17 @@ oEditor.loadData = function(self,filename)
 		local createFunc = oEditor[shapeName].create
 		local renameFunc = oEditor[shapeName].rename
 		data.create = createFunc
+		data.set = setFunc
+		data.get = getFunc
+		data.has = hasFunc
 		local subShapes = data[oEditor[shapeName].SubShapes]
 		if subShapes then
 			for _,subShape in ipairs(subShapes) do
 				subShape.create = oEditor[subShape[0]].create
+				subShape.parent = data
+				subShape.set = setFunc
+				subShape.get = getFunc
+				subShape.has = hasFunc
 			end
 		end
 		if renameFunc then
@@ -961,5 +997,8 @@ oEditor.data = CCDictionary()
 oEditor.data.bodyDataListener = oListener("editor.bodyData",function()
 	oEditor:resetItems()
 end)
+
+-- bodyData[0]: ShapeName
+-- bodyData[1]: ItemName -- SubShapes don`t have names
 
 return oEditor

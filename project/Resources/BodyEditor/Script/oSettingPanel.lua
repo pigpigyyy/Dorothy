@@ -447,14 +447,17 @@ local function oSettingPanel()
 				if k ~= "SubShapes"
 					and k ~= "Vertices"
 					and k ~= "ItemType"
+					and k ~= "Index"
 					and k ~= "create"
 					and k ~= "rename"
-					and k ~= "Index" then
+					and k ~= "parent"
+					and k ~= "set"
+					and k ~= "get" then
 					local value = data[v]
 					if tolua.type(value) == "oVec2" then
-						items[k].value = tostring(value.x)..","..tostring(value.y)
+						items[k].value = string.format("%.2f",value.x)..","..string.format("%.2f",value.y)
 					elseif tolua.type(value) == "CCSize" then
-						items[k].value = tostring(value.width)..","..tostring(value.height)
+						items[k].value = string.format("%d",value.width)..","..string.format("%d",value.height)
 					elseif k == "Type" then
 						if value == oBodyDef.Dynamic then
 							items[k].value = "Dynamic"

@@ -12,11 +12,87 @@ local oEditRuler = require("oEditRuler")
 local CCLayer = require("CCLayer")
 local oLine = require("oLine")
 local CCTouch = require("CCTouch")
+local ccColor3 = require("ccColor3")
+local CCDictionary = require("CCDictionary")
+local oListener = require("oListener")
+local oBodyDef = require("oBodyDef")
 
 local function oEditControl()
 	local winSize = CCDirector.winSize
 
 	local editControl = CCNode()
+
+	-- init fix menu --
+	local fixMenu = CCMenu(false)
+	fixMenu.touchPriority = oEditor.touchPriorityEditControl-1
+	fixMenu.anchor = oVec2.zero
+	fixMenu.visible = false
+	fixMenu.touchEnabled = false
+	editControl:addChild(fixMenu)
+	local fixX = false
+	local fixY = false
+	local fixXButton,fixYButton
+	fixXButton = oButton("",0,50,50,winSize.width-405,winSize.height-35,function(button)
+		if fixY then
+			fixY = false
+			fixYButton.color = ccColor3(0x00ffff)
+		end
+		fixX = not fixX
+		button.color = fixX and ccColor3(0xff0080) or ccColor3(0x00ffff)
+	end)
+	fixMenu:addChild(fixXButton)
+	fixYButton = oButton("",0,50,50,winSize.width-345,winSize.height-35,function(button)
+		if fixX then
+			fixX = false
+			fixXButton.color = ccColor3(0x00ffff)
+		end
+		fixY = not fixY
+		button.color = fixY and ccColor3(0xff0080) or ccColor3(0x00ffff)
+	end)
+	fixMenu:addChild(fixYButton)
+	local function createArrowForButton(button,rotation)
+		local fixNode = CCNode()
+		fixNode.cascadeColor = false
+		fixNode:addChild(oLine(
+		{
+			oVec2(-15,0),
+			oVec2(15,0),
+			oVec2(10,5),
+			oVec2(15,0),
+			oVec2(10,-5),
+			oVec2(15,0),
+			oVec2(-15,0),
+		},ccColor4(0xaaff0080)))
+		button.face:addChild(oLine(
+		{
+			oVec2(25,25),
+			oVec2(20,30),
+			oVec2(25,25),
+			oVec2(30,30),
+			oVec2(25,25),
+			oVec2(30,20),
+			oVec2(25,25),
+			oVec2(20,20),
+			oVec2(25,25),
+		},ccColor4(0xaaffffff)))
+		fixNode.scaleX = 1.2
+		fixNode.scaleY = 1.2
+		fixNode.position = oVec2(25,25)
+		fixNode.rotation = rotation
+		button.face:addChild(fixNode)
+	end
+	createArrowForButton(fixXButton,0)
+	createArrowForButton(fixYButton,-90)
+	editControl.showFixButtons = function(self)
+		fixMenu.visible = true
+		fixMenu.touchEnabled = true
+	end
+	editControl.hideFixButtons = function(self)
+		if not fixMenu.visible then return end
+		fixMenu.visible = false
+		fixMenu.touchEnabled = false
+	end
+	coroutine.yield()
 
 	-- init switch --
 	-- switchMenu
@@ -24,6 +100,7 @@ local function oEditControl()
 	switchMenu.touchPriority = oEditor.touchPriorityEditControl
 	switchMenu.anchor = oVec2.zero
 	switchMenu.visible = false
+	switchMenu.touchEnabled = false
 	editControl:addChild(switchMenu)
 
 	-- switchButton
@@ -42,12 +119,15 @@ local function oEditControl()
 	editControl.showSwitch = function(self, defaultValue, callback)
 		editControl:hide()
 		switchMenu.visible = true
+		switchMenu.touchEnabled = true
 		switchValue = defaultValue
 		switchButton.text = switchValue and "Yes" or "No"
 		switched = callback
 	end
 	editControl.hideSwitch = function(self)
+		if not switchMenu.visible then return end
 		switchMenu.visible = false
+		switchMenu.touchEnabled = false
 	end
 	coroutine.yield()
 	
@@ -76,7 +156,7 @@ local function oEditControl()
 	local function typeCallback(button)
 		editControl:hideTypeSelector()
 		if typeSelected then
-			typeSelected(button.text)
+			typeSelected(oBodyDef[button.text])
 		end
 	end
 	typeSelector.menu:addChild(oButton("Dynamic",16,100,50,60,typeSize.height-35,typeCallback))
@@ -107,9 +187,14 @@ local function oEditControl()
 		editRuler:show(default,min,max,indent,callback)
 	end
 	editControl.hideEditRuler = function(self)
+		if not editRuler.visible then return end
 		editRuler:hide()
 	end
 	coroutine.yield()
+
+	-- world node --
+	local worldNode = CCNode()
+	oEditor.world:addChild(worldNode)
 
 	-- init position editor --
 	-- posEditor
@@ -125,7 +210,7 @@ local function oEditControl()
 		oVec2(20,150),
 		oVec2(0,150),
 		oVec2.zero
-	},ccColor4(0xffffffff)))
+	},ccColor4()))
 	posVisual:addChild(oLine(
 	{
 		oVec2.zero,
@@ -134,7 +219,8 @@ local function oEditControl()
 		oVec2(190,0),
 		oVec2(150,-20),
 		oVec2(150,0)
-	},ccColor4(0xffffffff)))
+	},ccColor4()))
+	posVisual.transformTarget = oEditor.world
 	posEditor:addChild(posVisual)
 
 	-- posEditor touch callback
@@ -142,41 +228,44 @@ local function oEditControl()
 	local posChanged = nil
 	posEditor:registerTouchHandler(function(eventType,touch)
 		if eventType == CCTouch.Moved then
-			local target = posVisual.transformTarget
-			if not target or not target.parent then return false end
+			local delta = touch.delta
+			if fixX then delta.x = 0 end
+			if fixY then delta.y = 0 end
 			if oEditor.isFixed then
-				totalDeltaPos = totalDeltaPos + touch.delta/oEditor.scale
+				totalDeltaPos = totalDeltaPos + delta/oEditor.scale
 				if totalDeltaPos.x > 1 or totalDeltaPos.x < -1 then
-					local posX = target.positionX+totalDeltaPos.x
-					target.positionX = posX > 0 and math.floor(posX+0.5) or math.ceil(posX-0.5)
+					local posX = posVisual.positionX+totalDeltaPos.x
+					posVisual.positionX = posX > 0 and math.floor(posX+0.5) or math.ceil(posX-0.5)
 					totalDeltaPos.x = 0
 				end
 				if totalDeltaPos.y > 1 or totalDeltaPos.y < -1 then
-					local posY = target.positionY+totalDeltaPos.y
-					target.positionY = posY > 0 and math.floor(posY+0.5) or math.ceil(posY-0.5)
+					local posY = posVisual.positionY+totalDeltaPos.y
+					posVisual.positionY = posY > 0 and math.floor(posY+0.5) or math.ceil(posY-0.5)
 					totalDeltaPos.y = 0
 				end
 			else
-				target.position = target.position + touch.delta/oEditor.scale
+				posVisual.position = posVisual.position + delta/oEditor.scale
 			end
 			if posChanged then
-				posChanged(target.position)
+				posChanged(posVisual.position)
 			end
 		end
 		return true
 	end,false,oEditor.touchPriorityEditControl,true)
 
 	-- show & hide position editor
-	editControl.showPosEditor = function(self,target,callback)
+	editControl.showPosEditor = function(self,pos,callback)
 		editControl:hide()
+		editControl:showFixButtons()
 		posChanged = callback
 		posEditor.visible = true
 		posEditor.touchEnabled = true
-		posVisual.transformTarget = target--oEditor:getItem("body")
-		posVisual.rotation = -target.rotation
+		posVisual.position = pos
 		totalDeltaPos = oVec2.zero
 	end
 	editControl.hidePosEditor = function(self)
+		if not posEditor.visible then return end
+		editControl:hideFixButtons()
 		posEditor.touchEnabled = false
 		posEditor.visible = false
 	end
@@ -197,6 +286,7 @@ local function oEditControl()
 	rotVisual:addChild(oLine(vs,ccColor4()))
 	rotVisual:addChild(oLine({oVec2(-200,0),oVec2(200,0)},ccColor4()))
 	rotVisual:addChild(oLine({oVec2(0,-200),oVec2(0,200)},ccColor4()))
+	rotVisual.transformTarget = worldNode
 	rotEditor:addChild(rotVisual)
 
 	-- rotEditor touch callback
@@ -205,10 +295,8 @@ local function oEditControl()
 	local totalRot = 0
 	rotEditor:registerTouchHandler(function(eventType,touch)
 		if eventType == CCTouch.Moved then
-			local target = rotVisual.transformTarget
-			if not target or not target.parent then return false end
-			local oldPos = touch.preLocation
-			local newPos = touch.location
+			local oldPos = worldNode:convertToNodeSpace(touch.preLocation)
+			local newPos = worldNode:convertToNodeSpace(touch.location)
 			local v1 = rotCenter - oldPos
 			local v2 = rotCenter - newPos
 			local len1 = v1.length
@@ -226,15 +314,15 @@ local function oEditControl()
 					else
 						delta = totalRot > 0 and math.floor(totalRot) or math.ceil(totalRot)
 						totalRot = 0
-						local rotation = target.rotation + delta
+						local rotation = rotVisual.rotation + delta
 						rotation = rotation > 0 and math.floor(rotation) or math.ceil(rotation)
-						target.rotation = rotation
+						rotVisual.rotation = rotation
 					end
 				else
-					target.rotation = target.rotation + delta
+					rotVisual.rotation = rotVisual.rotation + delta
 				end
 				if rotChanged then
-					rotChanged(target.rotation)
+					rotChanged(rotVisual.rotation)
 				end
 			end
 		end
@@ -242,16 +330,19 @@ local function oEditControl()
 	end,false,oEditor.touchPriorityEditControl,true)
 
 	-- show & hide rotation editor
-	editControl.showRotEditor = function(self,target,callback)
+	editControl.showRotEditor = function(self,data,callback)
 		editControl:hide()
 		rotChanged = callback
 		rotEditor.visible = true
 		rotEditor.touchEnabled = true
-		rotVisual.transformTarget = target--oEditor:getItem("body")
-		rotCenter = target:convertToWorldSpace(oVec2.zero)
+		worldNode.position = data.parent and data.parent:get("Position") or data:get("Position")
+		worldNode.rotation = data:get("Angle")
+		rotVisual.rotation = worldNode.rotation
+		rotCenter = (data.parent and data:has("Center")) and data:get("Center") or oVec2.zero
 		totalRot = 0
 	end
 	editControl.hideRotEditor = function(self)
+		if not rotEditor.visible then return end
 		rotEditor.touchEnabled = false
 		rotEditor.visible = false
 	end
@@ -281,6 +372,7 @@ local function oEditControl()
 		oVec2(150,-20),
 		oVec2(150,0)
 	},ccColor4()))
+	sizeVisual.transformTarget = worldNode
 	sizeEditor:addChild(sizeVisual)
 	
 	-- sizeEditor touch callback
@@ -290,16 +382,15 @@ local function oEditControl()
 	local sizeChanged = nil
 	sizeEditor:registerTouchHandler(function(eventType,touch)
 		if eventType == CCTouch.Moved then
-			local target = sizeVisual.transformTarget
-			if not target or not target.parent then return false end
 			local delta = touch.delta
 			if delta ~= oVec2.zero then
 				local x2 = delta.x
 				local y2 = delta.y
-				local r = target.rotation*math.pi/180
+				local r = sizeVisual.rotation*math.pi/180
 				local x3 = x2*math.cos(r)-y2*math.sin(r)
 				local y3 = x2*math.sin(r)+y2*math.cos(r)
-				
+				if fixX then x3 = 0 end
+				if fixY then y3 = 0 end
 				if oEditor.isFixed then
 					totalW = totalW + x3/oEditor.scale
 					totalH = totalH + y3/oEditor.scale
@@ -317,8 +408,10 @@ local function oEditControl()
 					totalSize.width = totalSize.width + x3/oEditor.scale
 					totalSize.height = totalSize.height + y3/oEditor.scale
 				end
+				if totalSize.width < 10 then totalSize.width = 10 end
+				if totalSize.height < 10 then totalSize.height = 10 end
 				if sizeChanged then
-					sizeChanged(sizeVisual)
+					sizeChanged(totalSize)
 				end
 			end
 		end
@@ -326,22 +419,177 @@ local function oEditControl()
 	end,false,oEditor.touchPriorityEditControl,true)
 	
 	-- show & hide size editor
-	editControl.showSizeEditor = function(self,target,size,callback)
+	editControl.showSizeEditor = function(self,target,center,size,callback)
 		editControl:hide()
+		editControl:showFixButtons()
 		totalSize = size
 		sizeChanged = callback
 		sizeEditor.visible = true
 		sizeEditor.touchEnabled = true
-		sizeVisual.transformTarget = target--oEditor:getItem("body")
+		worldNode.position = target.position
+		worldNode.rotation = target.rotation
+		sizeVisual.position = center
 		totalW = 0
 		totalH = 0
 	end
 	editControl.hideSizeEditor = function(self)
+		if not sizeEditor.visible then return end
+		editControl:hideFixButtons()
 		sizeEditor.touchEnabled = false
 		sizeEditor.visible = false
 	end
 	coroutine.yield()
 	
+	-- init center editor --
+	-- centerEditor
+	local centerEditor = CCLayer()
+	centerEditor.visible = false
+	editControl:addChild(centerEditor)
+	local centerVisual = CCNode()
+	centerVisual.transformTarget = oEditor.world
+	centerVisual:addChild(oLine(
+	{
+		oVec2(0,150),
+		oVec2(-20,150),
+		oVec2(0,190),
+		oVec2(20,150),
+		oVec2(0,150),
+		oVec2.zero
+	},ccColor4()))
+	centerVisual:addChild(oLine(
+	{
+		oVec2.zero,
+		oVec2(150,0),
+		oVec2(150,20),
+		oVec2(190,0),
+		oVec2(150,-20),
+		oVec2(150,0)
+	},ccColor4()))
+	centerEditor:addChild(centerVisual)
+	centerEditor.scaleX = 0.5
+	centerEditor.scaleY = 0.5
+
+	-- centerEditor touch callback
+	local totalDeltaCenter = oVec2.zero
+	local centerPos = oVec2.zero
+	local centerChanged = nil
+	centerEditor:registerTouchHandler(function(eventType,touch)
+		if eventType == CCTouch.Moved then
+			local delta = touch.delta
+			if fixX then delta.x = 0 end
+			if fixY then delta.y = 0 end
+			if oEditor.isFixed then
+				totalDeltaCenter = totalDeltaCenter + delta/oEditor.scale
+				if totalDeltaCenter.x > 1 or totalDeltaCenter.x < -1 then
+					local posX = centerPos.x+totalDeltaCenter.x
+					centerPos.x = posX > 0 and math.floor(posX+0.5) or math.ceil(posX-0.5)
+					totalDeltaCenter.x = 0
+				end
+				if totalDeltaCenter.y > 1 or totalDeltaCenter.y < -1 then
+					local posY = centerPos.y+totalDeltaCenter.y
+					centerPos.y = posY > 0 and math.floor(posY+0.5) or math.ceil(posY-0.5)
+					totalDeltaCenter.y = 0
+				end
+			else
+				centerPos = centerPos + delta/oEditor.scale
+			end
+			centerVisual.position = centerPos
+			if centerChanged then
+				centerChanged(worldNode:convertToNodeSpace(oEditor.world:convertToWorldSpace(centerPos)))
+			end
+		end
+		return true
+	end,false,oEditor.touchPriorityEditControl,true)
+
+	-- show & hide center editor
+	editControl.showCenterEditor = function(self,target,center,callback)
+		editControl:hide()
+		editControl:showFixButtons()
+		centerChanged = callback
+		centerEditor.visible = true
+		centerEditor.touchEnabled = true
+		worldNode.position = target.position
+		worldNode.rotation = target.rotation
+		centerPos = oEditor.world:convertToNodeSpace(target:convertToWorldSpace(center))
+		centerVisual.position = centerPos
+		totalDeltaCenter = oVec2.zero
+	end
+	editControl.hideCenterEditor = function(self)
+		if not centerEditor.visible then return end
+		editControl:hideFixButtons()
+		centerEditor.touchEnabled = false
+		centerEditor.visible = false
+	end
+	coroutine.yield()
+
+	-- init radius editor --
+	-- radiusEditor
+	local radiusEditor = CCLayer()
+	radiusEditor.visible = false
+	editControl:addChild(radiusEditor)
+	local radiusVisual = CCNode()
+	radiusVisual:addChild(oLine(
+	{
+		oVec2.zero,
+		oVec2(150,0),
+		oVec2(150,20),
+		oVec2(150,0),
+		oVec2(150,-20),
+		oVec2(150,0)
+	},ccColor4()))
+	radiusVisual.transformTarget = worldNode
+	radiusEditor:addChild(radiusVisual)
+	
+	-- radiusEditor touch callback
+	local radiusCenter = oVec2.zero
+	local totalDeltaRadius = 0
+	local totalRadius = 0
+	local radiusChanged = nil
+	radiusEditor:registerTouchHandler(function(eventType,touch)
+		if eventType == CCTouch.Moved then
+			local prevPos = touch.preLocation
+			local pos = touch.location
+			if pos ~= radiusCenter then
+				local delta = pos:distance(radiusCenter)-prevPos:distance(radiusCenter)
+				if oEditor.isFixed then
+					totalDeltaRadius = totalDeltaRadius + delta/oEditor.scale
+					if totalDeltaRadius > 1 or totalDeltaRadius < -1 then
+						local radius = totalRadius+totalDeltaRadius
+						totalRadius = radius > 0 and math.floor(radius+0.5) or math.ceil(radius-0.5)
+						totalDeltaRadius = 0
+					end
+				else
+					totalRadius = totalRadius + totalDeltaRadius/oEditor.scale
+				end
+				if totalRadius < 5 then totalRadius = 5 end
+				if radiusChanged then
+					radiusChanged(totalRadius)
+				end
+			end
+		end
+		return true
+	end,false,oEditor.touchPriorityEditControl,true)
+	
+	-- show & hide size editor
+	editControl.showRadiusEditor = function(self,target,center,radius,callback)
+		editControl:hide()
+		worldNode.position = target.position
+		worldNode.rotation = target.rotation
+		radiusVisual.position = center
+		radiusCenter = target:convertToWorldSpace(radiusVisual.position)
+		totalRadius = radius
+		radiusChanged = callback
+		radiusEditor.visible = true
+		radiusEditor.touchEnabled = true
+		totalDeltaRadius = 0
+	end
+	editControl.hideRadiusEditor = function(self)
+		if not radiusEditor.visible then return end
+		radiusEditor.touchEnabled = false
+		radiusEditor.visible = false
+	end
+	coroutine.yield()
+
 	-- hide all controls
 	editControl.hide = function(self)
 		editControl:hideSwitch()
@@ -350,16 +598,68 @@ local function oEditControl()
 		editControl:hidePosEditor()
 		editControl:hideRotEditor()
 		editControl:hideSizeEditor()
+		editControl:hideCenterEditor()
+		editControl:hideRadiusEditor()
 	end
-
-	--local value = 0
-	--editControl:showEditRuler(value,0,1000,10,function(val) if value ~= val then value=val;print(value) end end)
-	--editControl:showTypeSelector()
-	--editControl:showRotEditor(oEditor:getItem("body1"),function(rot) print(rot) end)
-	editControl:showSizeEditor(oEditor:getItem("body1"),oEditor.bodyData[2][oEditor.Rectangle.Size],function(visual)
-		oEditor:resetItem(oEditor.bodyData[2])
-		visual.transformTarget = oEditor:getItem("body1")
+	
+	editControl.data = CCDictionary()
+	editControl.data.hideListener = oListener("editControl.hide",function()
+		editControl:hide()
 	end)
+
+	--[[
+	local value = 0
+	editControl:showEditRuler(value,0,1000,10,function(val) if value ~= val then value=val;print(value) end end)
+	--]]
+	--[[
+	local data = oEditor.bodyData[1]
+	editControl:showTypeSelector(function(bodyType)
+		data:set("Type",bodyType)
+		oEditor:resetItem(data)
+	end)
+	--]]
+	--[[
+	local data = oEditor.bodyData[3]
+	editControl:showPosEditor(data:get("Position"),function(pos)
+		local item = oEditor:getItem(data)
+		if item then item.position = pos end
+		data:set("Position",pos)
+	end)
+	--]]
+	--[[
+	local data = oEditor.bodyData[2]
+	editControl:showRotEditor(data,function(rot)
+		data:set("Angle",rot)
+		if data.parent then
+			oEditor:resetItem(data)
+		else
+			oEditor:getItem(data).rotation = rot
+		end
+	end)
+	--]]
+	--[[
+	local data = oEditor.bodyData[1]:get("SubShapes")[1]
+	editControl:showSizeEditor(
+		oEditor:getItem(data),data:get("Center"),data:get("Size"),function(size)
+		data:set("Size",size)
+		oEditor:resetItem(data)
+	end)
+	--]]
+	--[[
+	local data = oEditor.bodyData[3]:get("SubShapes")[2]
+	editControl:showRadiusEditor(
+		oEditor:getItem(data),data:get("Center"),data:get("Radius"),function(radius)
+		data:set("Radius",radius)
+		oEditor:resetItem(data)
+	end)
+	--]]
+	--[[
+	local data = oEditor.bodyData[3]:get("SubShapes")[2]
+	editControl:showCenterEditor(oEditor:getItem(data),data:get("Center"),function(center)
+		data:set("Center",center)
+		oEditor:resetItem(data)
+	end)
+	--]]
 	return editControl
 end
 

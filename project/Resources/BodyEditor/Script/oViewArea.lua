@@ -73,6 +73,7 @@ local function oViewArea()
 	end)
 	crossNode.data.toOriginListener = oListener("viewArea.toOrigin",function()
 		view.touchEnabled = false
+		oEditor.viewPosition = origin
 		crossNode:runAction(CCSequence(
 		{
 			oPos(0.5,origin.x,origin.y,oEase.OutQuad),
@@ -94,6 +95,7 @@ local function oViewArea()
 				if #touches == 1 then -- move view
 					oEvent:send("viewArea.move",touches[1].delta)
 					crossNode.position = crossNode.position + touches[1].delta
+					oEditor.viewPosition = crossNode.position
 				elseif #touches >= 2 then -- scale view
 					local preDistance = touches[1].preLocation:distance(touches[2].preLocation)
 					local distance = touches[1].location:distance(touches[2].location)
@@ -138,10 +140,29 @@ local function oViewArea()
 	oEditor:addData(bodyData)
 
 	bodyData = oEditor:newRectangle()
+	bodyData[oEditor.Rectangle.Center] = oVec2(100,100)
 	bodyData[oEditor.Rectangle.Size] = CCSize(1024,100)
 	bodyData[oEditor.Rectangle.Type] = oBodyDef.Static
 	bodyData[oEditor.Rectangle.Position] = oVec2(0,-400)
 	bodyData[oEditor.Rectangle.Angle] = 45
+	oEditor:addData(bodyData)
+	
+	bodyData = oEditor:newLoop()
+	bodyData:set("Position",oVec2(0,300))
+	bodyData:set("Type",oBodyDef.Dynamic)
+	bodyData:set("Vertices",
+	{
+		oVec2(-160,0),
+		oVec2(-80,160),
+		oVec2(40,80),
+		oVec2(80,160),
+		oVec2(160,0),
+		oVec2(80,-160),
+		oVec2(-80,-160),
+		oVec2(-160,0),
+	})
+	bodyData:set("SubShapes",{oEditor:newSubRectangle(),oEditor:newSubCircle()})
+	bodyData:get("SubShapes")[2]:set("Center",oVec2(200,0))
 	oEditor:addData(bodyData)
 
 	oEditor:dumpData("test.lua")

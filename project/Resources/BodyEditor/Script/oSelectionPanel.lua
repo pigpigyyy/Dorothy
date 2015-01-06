@@ -15,7 +15,6 @@ local CCSpawn = require("CCSpawn")
 local oOpacity = require("oOpacity")
 local oScale = require("oScale")
 local CCCall = require("CCCall")
-local tolua = require("tolua")
 local CCDelay = require("CCDelay")
 
 local function oSelectionPanel(borderSize,noCliping,noMask,fading)
@@ -247,6 +246,33 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 			return not opacity.done
 		end
 	end
+
+	local function setPos(self,delta)
+		local children = menu.children
+		if not children then return end
+		local newPos = totalDelta+delta
+		if newPos.x > 0 then
+			newPos.x = 0 
+		elseif newPos.x-moveX < 0 then
+			newPos.x = moveX
+		end
+		if newPos.y < 0 then
+			newPos.y = 0
+		elseif moveY < newPos.y then
+			newPos.y = moveY
+		end
+		delta = newPos - totalDelta
+		if viewWidth < borderSize.width then delta.x = 0 end
+		if viewHeight < borderSize.height then delta.y = 0 end
+
+		totalDelta = totalDelta + delta
+
+		for i = 1, children.count do
+			local node = children[i]
+			node.position = node.position + delta
+		end
+	end
+	panel.setPos = setPos
 
 	panel:registerTouchHandler(
 		function(eventType, touch)

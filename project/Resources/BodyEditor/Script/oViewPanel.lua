@@ -76,7 +76,22 @@ local function oViewPanel()
 
 	self.data = CCDictionary()
 	local currentItem = nil
-	self.data.chooseListener = oListener("viewPanel.choose",function(item)
+	self.data.chooseListener = oListener("viewPanel.choose",function(arg)
+		local item
+		if type(arg) == "table" then
+			for _,v in ipairs(self.items) do
+				if not v.selected and arg == v.dataItem then
+					item = v
+					item.selected = true
+					oEditor.currentData = item.dataItem
+					oEvent:send("settingPanel.toState",item.dataItem[0])
+					self:setPos(oVec2(90-item.positionX,borderSize.height*0.5+30-item.positionY))
+					break
+				end
+			end
+		else
+			item = arg
+		end
 		if item == nil then
 			if currentItem then
 				currentItem.selected = false
