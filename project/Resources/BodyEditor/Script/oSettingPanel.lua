@@ -429,6 +429,7 @@ local function oSettingPanel()
 				item.visible = false
 			end
 		end
+		label.visible = true
 		label.text = groupName
 		label.texture.antiAlias = false
 		label.position = oVec2(halfBW,borderSize.height-18)
@@ -442,7 +443,7 @@ local function oSettingPanel()
 		end
 		self:reset(borderSize.width,contentHeight,0,50)
 		local data = oEditor.currentData
-		if data and data[0] == groupName then
+		if data and data[1] == groupName then
 			for k,v in pairs(oEditor[groupName]) do
 				if k ~= "SubShapes"
 					and k ~= "Vertices"
@@ -477,7 +478,16 @@ local function oSettingPanel()
 	self.data = CCDictionary()
 	self.data.toStateListener = oListener("settingPanel.toState",function(state)
 		oEvent:send("settingPanel.edit",nil)
-		selectGroup(state)
+		if state then
+			selectGroup(state)
+		else
+			label.visible = false
+			if currentGroup then
+				for _,item in ipairs(currentGroup) do
+					item.visible = false
+				end
+			end
+		end
 	end)
 	local currentItem = nil
 	self.data.editListener = oListener("settingPanel.edit",function(item)
@@ -495,7 +505,11 @@ local function oSettingPanel()
 			currentItem = nil
 		end
 	end)
-
+	self.data.enableListener = oListener("settingPanel.enable",function(enable)
+		for _,item in pairs(items) do
+			item.enabled = enable
+		end
+	end)
 	return self
 end
 

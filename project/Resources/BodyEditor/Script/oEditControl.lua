@@ -16,6 +16,7 @@ local ccColor3 = require("ccColor3")
 local CCDictionary = require("CCDictionary")
 local oListener = require("oListener")
 local oBodyDef = require("oBodyDef")
+local oEvent = require("oEvent")
 
 local function oEditControl()
 	local winSize = CCDirector.winSize
@@ -84,6 +85,10 @@ local function oEditControl()
 	createArrowForButton(fixXButton,0)
 	createArrowForButton(fixYButton,-90)
 	editControl.showFixButtons = function(self)
+		fixX = false
+		fixXButton.color = ccColor3(0x00ffff)
+		fixY = false
+		fixYButton.color = ccColor3(0x00ffff)
 		fixMenu.visible = true
 		fixMenu.touchEnabled = true
 	end
@@ -601,12 +606,126 @@ local function oEditControl()
 		editControl:hideCenterEditor()
 		editControl:hideRadiusEditor()
 	end
-	
+
 	editControl.data = CCDictionary()
 	editControl.data.hideListener = oListener("editControl.hide",function()
 		editControl:hide()
 	end)
-
+	local currentSetting = nil
+	editControl.data.settingListener = oListener("settingPanel.edit",function(item)
+		if not item then return end
+		local name = item.name
+		local value = item.value
+		local data = oEditor.currentData
+		if item.selected then
+			currentSetting = name
+			if name == "Type" then
+				editControl:showTypeSelector(function(bodyType)
+					if data:get("Type") ~= bodyType then
+						if bodyType == oBodyDef.Dynamic then
+							item.value = "Dynamic"
+						elseif bodyType == oBodyDef.Static then
+							item.value = "Static"
+						elseif bodyType == oBodyDef.Kinematic then
+							item.value = "Kinematic"
+						end
+						data:set("Type",bodyType)
+						oEditor:resetItem(data)
+					end
+					oEvent:send("settingPanel.edit",nil)
+				end)
+			elseif name == "Position" then
+				editControl:showPosEditor(data:get("Position"),function(pos)
+					item.value = string.format("%.2f",pos.x)..","..string.format("%.2f",pos.y)
+					local item = oEditor:getItem(data)
+					if item then item.position = pos end
+					data:set("Position",pos)
+				end)
+			elseif name == "Angle" then
+				editControl:showRotEditor(data,function(rot)
+					item.value = string.format("%.2f",rot)
+					data:set("Angle",rot)
+					if data.parent then
+						oEditor:resetItem(data)
+					else
+						oEditor:getItem(data).rotation = rot
+					end
+				end)
+			elseif name == "Center" then
+				editControl:showCenterEditor(oEditor:getItem(data),data:get("Center"),function(center)
+					item.value = string.format("%.2f",center.x)..","..string.format("%.2f",center.y)
+					data:set("Center",center)
+					oEditor:resetItem(data)
+				end)
+			elseif name == "Size" then
+				editControl:showSizeEditor(
+					oEditor:getItem(data),data:get("Center"),data:get("Size"),function(size)
+					item.value = string.format("%d",size.width)..","..string.format("%d",size.height)
+					data:set("Size",size)
+					oEditor:resetItem(data)
+				end)
+			elseif name == "Radius" then
+				editControl:showRadiusEditor(
+					oEditor:getItem(data),data:get("Center"),data:get("Radius"),function(radius)
+					item.value = string.format("%d",radius)
+					data:set("Radius",radius)
+					oEditor:resetItem(data)
+				end)
+			elseif name == "Density" then
+				editControl:showEditRuler(data:get("Density"),0,22.6,1,function(val)
+					item.value = string.format("%.1f",val)
+					data:set("Density",val)
+				end)
+			elseif name == "Restitution" or  name == "Friction" then
+				editControl:showEditRuler(data:get(name),0,1,0.1,function(val)
+					item.value = string.format("%.2f",val)
+					data:set(name,val)
+				end)
+			elseif name == "LinearDamping" or name ==  "AngularDamping" then
+				editControl:showEditRuler(data:get(name),0,10,1,function(val)
+					item.value = string.format("%.1f",val)
+					data:set(name,val)
+				end)
+			elseif name == "GravityScale" then
+				editControl:showEditRuler(data:get("GravityScale"),-10,10,1,function(val)
+					item.value = string.format("%.1f",val)
+					data:set("GravityScale",val)
+				end)
+			elseif name == "SensorTag" then
+				editControl:showEditRuler(data:get("SensorTag"),0,100,10,function(val)
+					item.value = string.format("%d",val)
+					data:set("SensorTag",val)
+				end)
+			elseif name == "FixedRotation" or name == "Bullet" or name == "Sensor" then
+				editControl:showSwitch(data:get(name), function(val)
+					item.value = tostring(val)
+					data:set(name,val)
+					oEditor:resetItem(data)
+				end)
+			end
+		else
+			if name == "Name" then
+				local oldName = data:get("Name")
+				if value ~= oldName then
+					value = oEditor:getUsableName(value)
+					item.value = value
+					data:set("Name",value)
+					oEditor:rename(oldName,value)
+				end
+			elseif currentSetting == name then
+				if name == "Density"
+					or name == "Friction"
+					or name == "Restitution"
+					or name == "LinearDamping"
+					or name ==  "AngularDamping"
+					or name == "GravityScale"
+					or name == "SensorTag" then
+					oEditor:resetItem(data)
+				end
+				editControl:hide()
+			end
+		end
+	end)
 	--[[
 	local value = 0
 	editControl:showEditRuler(value,0,1000,10,function(val) if value ~= val then value=val;print(value) end end)

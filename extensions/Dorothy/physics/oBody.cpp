@@ -227,6 +227,7 @@ void oBody::applyAngularImpulse(float impulse)
 b2Fixture* oBody::attach( b2FixtureDef* fixtureDef )
 {
 	fixtureDef->filter = _world->getFilter(_group);
+	fixtureDef->isSensor = false;
 	b2Fixture* fixture = _bodyB2->CreateFixture(fixtureDef);
 	/* cleanup temp vertices */
 	if (fixtureDef->shape->m_type == b2Shape::e_chain)

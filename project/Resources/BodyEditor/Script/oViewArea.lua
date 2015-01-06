@@ -114,10 +114,10 @@ local function oViewArea()
 	view.touchEnabled = true
 
 	-- test codes below
-	local CCDrawNode = require("CCDrawNode")
+	--[[local CCDrawNode = require("CCDrawNode")
 	local drawNode = CCDrawNode()
 	drawNode:drawDot(oVec2.zero,100,ccColor4(0xff80ff00))
-	oEditor.world:addChild(drawNode)
+	oEditor.world:addChild(drawNode)]]
 
 	local bodyData = oEditor:newCircle()
 	bodyData[oEditor.Circle.Center] = oVec2(100,0)

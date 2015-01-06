@@ -41,22 +41,27 @@ local function oViewPanel()
 	end
 
 	local function selectCallback(item)
-		oEditor.currentData = item.dataItem
+		oEvent:send("editControl.hide")
+		oEvent:send("settingPanel.edit",nil)
 		oEvent:send("viewPanel.choose",item)
-		oEvent:send("settingPanel.toState",item.dataItem[0])
+		if item.selected then
+			oEvent:send("settingPanel.toState",item.dataItem[1])
+		else
+			oEvent:send("settingPanel.toState",nil)
+		end
 	end
 	
 	local function updateViewItems(bodyData)
 		local items = {}
 		local getPosY = genPosY()
 		for _,data in ipairs(bodyData) do
-			local item = oViewItem(data[0],data[1],90,getPosY(),selectCallback)
+			local item = oViewItem(data[1],data[2],90,getPosY(),selectCallback)
 			item.dataItem = data
 			table.insert(items,item)
-			local subShapeIndex = oEditor[data[0]].SubShapes
+			local subShapeIndex = oEditor[data[1]].SubShapes
 			if subShapeIndex and data[subShapeIndex] then
 				for index,subShape in ipairs(data[subShapeIndex]) do
-					local item = oViewItem(subShape[0],index,90,getPosY(),selectCallback)
+					local item = oViewItem(subShape[1],index,90,getPosY(),selectCallback)
 					item.dataItem = subShape
 					item.parentData = data
 					table.insert(items,item)
@@ -84,8 +89,8 @@ local function oViewPanel()
 					item = v
 					item.selected = true
 					oEditor.currentData = item.dataItem
-					oEvent:send("settingPanel.toState",item.dataItem[0])
-					self:setPos(oVec2(90-item.positionX,borderSize.height*0.5+30-item.positionY))
+					oEvent:send("settingPanel.toState",item.dataItem[1])
+					self:setPos(oVec2(0,borderSize.height*0.5+30-item.positionY))
 					break
 				end
 			end
@@ -97,19 +102,30 @@ local function oViewPanel()
 				currentItem.selected = false
 			end
 			currentItem = nil
+			oEditor.currentData = nil
 		elseif item.selected then
 			if currentItem then
 				currentItem.selected = false
 			end
 			currentItem = item
+			oEditor.currentData = item.dataItem
 		else
 			currentItem = nil
+			oEditor.currentData = nil
 		end
 	end)
 	self.data.bodyDataListener = oListener("editor.bodyData",function(bodyData)
 		updateViewItems(bodyData)
 	end)
-
+	self.data.renameListener = oListener("editor.rename",function(args)
+		local newName = args.newName
+		for _,item in ipairs(self.items) do
+			if item.dataItem[2] == newName then
+				item.name = newName
+				break
+			end
+		end
+	end)
 	return self
 end
 

@@ -47,7 +47,8 @@ local oSettingItem = class(
 			local x = nextCenterX
 			local y = halfH-fontSize*0.5-2
 			label = oTextField(x,y,fontSize,limit,
-				function()
+				function(textField)
+					self._value = textField.text
 					self.selected = false
 				end)
 		else

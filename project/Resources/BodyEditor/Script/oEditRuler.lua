@@ -84,7 +84,7 @@ local function oEditRuler()
 						table.insert(vs,1,oVec2(-halfW+(i%10 == 0 and 16 or 8),posY))
 						table.insert(vs,1,oVec2(-halfW,posY))
 						if i%10 == 0 then
-							local label = CCLabelTTF(tostring(i*indent/10),"Arial",10)
+							local label = CCLabelTTF(tostring(i*indent/10),"Arial",12)
 							label.texture.antiAlias = false
 							label.scaleX = 1/intervalNode.scaleY
 							label.rotation = -90
@@ -104,7 +104,7 @@ local function oEditRuler()
 						table.insert(vs,oVec2(-halfW+(i%10 == 0 and 16 or 8),posY))
 						table.insert(vs,oVec2(-halfW,posY))
 						if i%10 == 0 then
-							local label = CCLabelTTF(tostring(-i*indent/10),"Arial",10)
+							local label = CCLabelTTF(tostring(-i*indent/10),"Arial",12)
 							label.texture.antiAlias = false
 							label.scaleX = 1/intervalNode.scaleY
 							label.rotation = -90
@@ -336,6 +336,7 @@ local function oEditRuler()
 	end
 	ruler.hide = function(self)
 		if not ruler.visible then return end
+		self.changed = nil
 		self.touchEnabled = false
 		self:stopAllActions()
 		self:runAction(CCSequence(

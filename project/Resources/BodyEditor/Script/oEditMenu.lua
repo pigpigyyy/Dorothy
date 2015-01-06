@@ -17,6 +17,20 @@ local function oEditMenu()
 	menu.touchPriority = oEditor.touchPriorityEditMenu
 	menu.anchor = oVec2.zero
 
+	local function createShape(name)
+		oEvent:send("editControl.hide")
+		local data
+		if oEditor.currentData and not oEditor.currentData.parent then
+			data = oEditor["newSub"..name](oEditor)
+			oEditor:addSubData(oEditor.currentData,data)
+		else
+			data = oEditor["new"..name](oEditor)
+			data:set("Position",oEditor.origin-oEditor.viewPosition)
+			oEditor:addData(data)
+		end
+		oEvent:send("viewPanel.choose",data)
+	end
+
 	-- init menu items --
 	local items =
 	{
@@ -24,22 +38,19 @@ local function oEditMenu()
 			CCDirector:popToRootScene()
 		end),
 		Rectangle = oButton("",0,50,50,35,winSize.height-95,function()
-			local data = oEditor:newRectangle()
-			data:set("Position",oEditor.origin-oEditor.viewPosition)
-			oEditor:addData(data)
-			oEvent:send("viewPanel.choose",data)
+			createShape("Rectangle")
 		end),
 		Circle = oButton("",0,50,50,35,winSize.height-155,function()
-			oEvent:send("settingPanel.toState","Circle")
+			createShape("Circle")
 		end),
 		Polygon = oButton("",0,50,50,35,winSize.height-215,function()
-			oEvent:send("settingPanel.toState","Polygon")
+			createShape("Polygon")
 		end),
 		Chain = oButton("",0,50,50,35,winSize.height-275,function()
-			oEvent:send("settingPanel.toState","Chain")
+			createShape("Chain")
 		end),
 		Loop = oButton("",0,50,50,35,winSize.height-335,function()
-			oEvent:send("settingPanel.toState","Loop")
+			createShape("Loop")
 		end),
 		Face = oButton("Face",16,50,50,35,35,function() oEditor:removeData(oEditor.bodyData[#(oEditor.bodyData)]) end),
 		Joint = oButton("",0,50,50,95,35,function() end),
@@ -70,6 +81,8 @@ local function oEditMenu()
 				oEditor:resetItems()
 			end
 			oEvent:send("editControl.hide")
+			oEvent:send("settingPanel.edit",nil)
+			oEvent:send("settingPanel.enable",not oEditor.isPlaying)
 		end),
 	}
 

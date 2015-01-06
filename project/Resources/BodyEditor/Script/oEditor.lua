@@ -70,25 +70,26 @@ local defaultShapeData =
 {
 	Rectangle =
 	{
-		{"Name","body"}, -- 1
-		{"Type",oBodyDef.Dynamic}, -- 2
-		{"Position",PointZero}, -- 3
-		{"Angle",0}, -- 4
-		{"Center",PointZero}, -- 5
-		{"Size",Size(100,100)}, -- 6
-		{"Density",1}, -- 7
-		{"Friction",0.4}, -- 8
-		{"Restitution",0.4}, -- 9
-		{"LinearDamping", 0}, -- 10
-		{"AngularDamping",0}, -- 11
-		{"FixedRotation",false}, -- 12
-		{"GravityScale",1}, -- 13
-		{"Bullet",false}, -- 14
-		{"Sensor",false}, -- 15
-		{"SensorTag",0}, -- 16
-		{"Face",""}, -- 17
-		{"FaceAnchor",PointZero}, -- 18
-		{"SubShapes",false}, -- 19
+		{"ItemType","Rectangle"}, -- 1
+		{"Name","body"}, -- 2
+		{"Type",oBodyDef.Dynamic}, -- 3
+		{"Position",PointZero}, -- 4
+		{"Angle",0}, -- 5
+		{"Center",PointZero}, -- 6
+		{"Size",Size(100,100)}, -- 7
+		{"Density",1}, -- 8
+		{"Friction",0.4}, -- 9
+		{"Restitution",0.4}, -- 10
+		{"LinearDamping", 0}, -- 11
+		{"AngularDamping",0}, -- 12
+		{"FixedRotation",false}, -- 13
+		{"GravityScale",1}, -- 14
+		{"Bullet",false}, -- 15
+		{"Sensor",false}, -- 16
+		{"SensorTag",0}, -- 17
+		{"Face",""}, -- 18
+		{"FaceAnchor",PointZero}, -- 19
+		{"SubShapes",false}, -- 20
 		create = function(self)
 			local Rectangle = oEditor.Rectangle
 			if self[Rectangle.Size].width <= 0 or self[Rectangle.Size].height <= 0 then
@@ -133,25 +134,26 @@ local defaultShapeData =
 	},
 	Circle =
 	{
-		{"Name","body"}, -- 1
-		{"Type",oBodyDef.Dynamic}, -- 2
-		{"Position",PointZero}, -- 3
-		{"Angle",0}, -- 4
-		{"Center",PointZero}, -- 5
-		{"Radius",50}, -- 6
-		{"Density",1}, -- 7
-		{"Friction",0.4}, -- 8
-		{"Restitution",0.4}, -- 9
-		{"LinearDamping",0}, -- 10
-		{"AngularDamping",0}, -- 11
-		{"FixedRotation",false}, -- 12
-		{"GravityScale",1}, -- 13
-		{"Bullet",false}, -- 14
-		{"Sensor",false}, -- 15
-		{"SensorTag",0}, -- 16
-		{"Face",""}, -- 17
-		{"FaceAnchor",PointZero}, -- 18
-		{"SubShapes",false}, -- 19
+		{"ItemType","Circle"}, -- 1
+		{"Name","body"}, -- 2
+		{"Type",oBodyDef.Dynamic}, -- 3
+		{"Position",PointZero}, -- 4
+		{"Angle",0}, -- 5
+		{"Center",PointZero}, -- 6
+		{"Radius",50}, -- 7
+		{"Density",1}, -- 8
+		{"Friction",0.4}, -- 9
+		{"Restitution",0.4}, -- 10
+		{"LinearDamping",0}, -- 11
+		{"AngularDamping",0}, -- 12
+		{"FixedRotation",false}, -- 13
+		{"GravityScale",1}, -- 14
+		{"Bullet",false}, -- 15
+		{"Sensor",false}, -- 16
+		{"SensorTag",0}, -- 17
+		{"Face",""}, -- 18
+		{"FaceAnchor",PointZero}, -- 19
+		{"SubShapes",false}, -- 20
 		create = function(self)
 			local Circle = oEditor.Circle
 			local bodyDef = oBodyDef()
@@ -190,24 +192,25 @@ local defaultShapeData =
 	},
 	Polygon =
 	{
-		{"Name","body"}, -- 1
-		{"Type",oBodyDef.Dynamic}, -- 2
-		{"Position",PointZero}, -- 3
-		{"Angle",0}, -- 4
-		{"Vertices",false},  -- 5
-		{"Density",1}, -- 6
-		{"Friction",0.4}, -- 7
-		{"Restitution",0.4}, -- 8
-		{"LinearDamping",0}, -- 9
-		{"AngularDamping",0}, -- 10
-		{"FixedRotation",false}, -- 11
-		{"GravityScale",1}, -- 12
-		{"Bullet",false}, -- 13
-		{"Sensor",false}, -- 14
-		{"SensorTag",0}, -- 15
-		{"Face",""}, -- 16
-		{"FaceAnchor",PointZero}, -- 17
-		{"SubShapes",false}, -- 18
+		{"ItemType","Polygon"}, -- 1
+		{"Name","body"}, -- 2
+		{"Type",oBodyDef.Dynamic}, -- 3
+		{"Position",PointZero}, -- 4
+		{"Angle",0}, -- 5
+		{"Vertices",false},  -- 6
+		{"Density",1}, -- 7
+		{"Friction",0.4}, -- 8
+		{"Restitution",0.4}, -- 9
+		{"LinearDamping",0}, -- 10
+		{"AngularDamping",0}, -- 11
+		{"FixedRotation",false}, -- 12
+		{"GravityScale",1}, -- 13
+		{"Bullet",false}, -- 14
+		{"Sensor",false}, -- 15
+		{"SensorTag",0}, -- 16
+		{"Face",""}, -- 17
+		{"FaceAnchor",PointZero}, -- 18
+		{"SubShapes",false}, -- 19
 		create = function(self)
 			local Polygon = oEditor.Polygon
 			local bodyDef = oBodyDef()
@@ -244,21 +247,22 @@ local defaultShapeData =
 	},
 	Chain =
 	{
-		{"Name","body"}, -- 1
-		{"Type",oBodyDef.Dynamic}, -- 2
-		{"Position",PointZero}, -- 3
-		{"Angle",0}, -- 4
-		{"Vertices",false}, -- 5
-		{"Friction",0.4}, -- 6
-		{"Restitution",0.4}, -- 7
-		{"LinearDamping",0}, -- 8
-		{"AngularDamping",0}, -- 9
-		{"FixedRotation",false}, -- 10
-		{"GravityScale",1}, -- 11
-		{"Bullet",false}, -- 12
-		{"Face",""}, -- 13
-		{"FaceAnchor",PointZero}, -- 14
-		{"SubShapes",false}, -- 15
+		{"ItemType","Chain"}, -- 1
+		{"Name","body"}, -- 2
+		{"Type",oBodyDef.Dynamic}, -- 3
+		{"Position",PointZero}, -- 4
+		{"Angle",0}, -- 5
+		{"Vertices",false}, -- 6
+		{"Friction",0.4}, -- 7
+		{"Restitution",0.4}, -- 8
+		{"LinearDamping",0}, -- 9
+		{"AngularDamping",0}, -- 10
+		{"FixedRotation",false}, -- 11
+		{"GravityScale",1}, -- 12
+		{"Bullet",false}, -- 13
+		{"Face",""}, -- 14
+		{"FaceAnchor",PointZero}, -- 15
+		{"SubShapes",false}, -- 16
 		create = function(self)
 			local Chain = oEditor.Chain
 			local bodyDef = oBodyDef()
@@ -288,21 +292,22 @@ local defaultShapeData =
 	},
 	Loop =
 	{
-		{"Name","body"}, -- 1
-		{"Type",oBodyDef.Dynamic}, -- 2
-		{"Position",PointZero}, -- 3
-		{"Angle",0}, -- 4
-		{"Vertices",false}, -- 5
-		{"Friction",0.4}, -- 6
-		{"Restitution",0.4}, -- 7
-		{"LinearDamping",0}, -- 8
-		{"AngularDamping",0}, -- 9
-		{"FixedRotation",false}, -- 10
-		{"GravityScale",1}, -- 11
-		{"Bullet",false}, -- 12
-		{"Face",""}, -- 13
-		{"FaceAnchor",PointZero}, -- 14
-		{"SubShapes",false}, -- 15
+		{"ItemType","Loop"}, -- 1
+		{"Name","body"}, -- 2
+		{"Type",oBodyDef.Dynamic}, -- 3
+		{"Position",PointZero}, -- 4
+		{"Angle",0}, -- 5
+		{"Vertices",false}, -- 6
+		{"Friction",0.4}, -- 7
+		{"Restitution",0.4}, -- 8
+		{"LinearDamping",0}, -- 9
+		{"AngularDamping",0}, -- 10
+		{"FixedRotation",false}, -- 11
+		{"GravityScale",1}, -- 12
+		{"Bullet",false}, -- 13
+		{"Face",""}, -- 14
+		{"FaceAnchor",PointZero}, -- 15
+		{"SubShapes",false}, -- 16
 		create = function(self)
 			local Loop = oEditor.Loop
 			local bodyDef = oBodyDef()
@@ -332,15 +337,16 @@ local defaultShapeData =
 	},
 	SubRectangle =
 	{
-		{"Center",PointZero}, -- 1
-		{"Angle",0}, -- 2
-		{"Size",Size(100,100)}, -- 3
-		{"Density",1}, -- 4
-		{"Friction",0.4}, -- 5
-		{"Restitution",0.4}, -- 6
-		{"Sensor",false}, -- 7
-		{"SensorTag",0}, -- 8
-		{"Index",0}, -- 9
+		{"ItemType","SubRectangle"}, -- 1
+		{"Center",PointZero}, -- 2
+		{"Angle",0}, -- 3
+		{"Size",Size(100,100)}, -- 4
+		{"Density",1}, -- 5
+		{"Friction",0.4}, -- 6
+		{"Restitution",0.4}, -- 7
+		{"Sensor",false}, -- 8
+		{"SensorTag",0}, -- 9
+		{"Index",0}, -- 10
 		create = function(self,body)
 			local SubRectangle = oEditor.SubRectangle
 			if self[SubRectangle.Size].width <= 0 or self[SubRectangle.Size].height <= 0 then
@@ -369,14 +375,15 @@ local defaultShapeData =
 	},
 	SubCircle =
 	{
-		{"Center",PointZero}, -- 1
-		{"Radius",50}, -- 2
-		{"Density",1}, -- 3
-		{"Friction",0.4}, -- 4
-		{"Restitution",0.4}, -- 5
-		{"Sensor",false}, -- 6
-		{"SensorTag",0}, -- 7
-		{"Index",0}, -- 6
+		{"ItemType","SubCircle"}, -- 1
+		{"Center",PointZero}, -- 2
+		{"Radius",50}, -- 3
+		{"Density",1}, -- 4
+		{"Friction",0.4}, -- 5
+		{"Restitution",0.4}, -- 6
+		{"Sensor",false}, -- 7
+		{"SensorTag",0}, -- 8
+		{"Index",0}, -- 9
 		create = function(self,body)
 			local SubCircle = oEditor.SubCircle
 			if self[SubCircle.Radius] <= 0 then
@@ -401,13 +408,14 @@ local defaultShapeData =
 	},
 	SubPolygon =
 	{
-		{"Vertices",false}, -- 1
-		{"Density",1}, -- 2
-		{"Friction",0.4}, -- 3
-		{"Restitution",0.4}, -- 4
-		{"Sensor",false}, -- 5
-		{"SensorTag",0}, -- 6
-		{"Index",0}, -- 7
+		{"ItemType","SubPolygon"}, -- 1
+		{"Vertices",false}, -- 2
+		{"Density",1}, -- 3
+		{"Friction",0.4}, -- 4
+		{"Restitution",0.4}, -- 5
+		{"Sensor",false}, -- 6
+		{"SensorTag",0}, -- 7
+		{"Index",0}, -- 8
 		create = function(self,body)
 			local SubPolygon = oEditor.SubPolygon
 			if not self[SubPolygon.Vertices] or #self[SubPolygon.Vertices] < 3 then
@@ -430,10 +438,11 @@ local defaultShapeData =
 	},
 	SubChain =
 	{
-		{"Vertices",false}, -- 1
-		{"Friction",0.4}, -- 2
-		{"Restitution",0.4}, -- 3
-		{"Index",0}, -- 4
+		{"ItemType","SubChain"}, -- 1
+		{"Vertices",false}, -- 2
+		{"Friction",0.4}, -- 3
+		{"Restitution",0.4}, -- 4
+		{"Index",0}, -- 5
 		create = function(self,body)
 			local SubChain = oEditor.SubChain
 			if not self[SubChain.Vertices] or #self[SubChain.Vertices] < 2 then
@@ -448,10 +457,11 @@ local defaultShapeData =
 	},
 	SubLoop =
 	{
-		{"Vertices",false}, -- 1
-		{"Friction",0.4}, -- 2
-		{"Restitution",0.4}, -- 3
-		{"Index",0}, -- 4
+		{"ItemType","SubLoop"}, -- 1
+		{"Vertices",false}, -- 2
+		{"Friction",0.4}, -- 3
+		{"Restitution",0.4}, -- 4
+		{"Index",0}, -- 5
 		create = function(self,body)
 			local SubLoop = oEditor.SubLoop
 			if not self[SubLoop.Vertices] or #self[SubLoop.Vertices] < 3 then
@@ -466,14 +476,15 @@ local defaultShapeData =
 	},
 	Distance =
 	{
-		{"Name","joint"}, -- 1
-		{"Collision",false}, -- 2
-		{"BodyA",""}, -- 3
-		{"BodyB",""}, -- 4
-		{"AnchorA",PointZero}, -- 5
-		{"AnchorB",PointZero}, -- 6
-		{"Frequency",0}, -- 7
-		{"Damping",0}, -- 8
+		{"ItemType","Distance"}, -- 1
+		{"Name","joint"}, -- 2
+		{"Collision",false}, -- 3
+		{"BodyA",""}, -- 4
+		{"BodyB",""}, -- 5
+		{"AnchorA",PointZero}, -- 6
+		{"AnchorB",PointZero}, -- 7
+		{"Frequency",0}, -- 8
+		{"Damping",0}, -- 9
 		create = function(self)
 			local Distance = oEditor.Distance
 			local bodyA = oEditor:getItem(self[Distance.BodyA])
@@ -496,13 +507,14 @@ local defaultShapeData =
 	},
 	Friction =
 	{
-		{"Name","joint"}, -- 1
-		{"Collision",false}, -- 2
-		{"BodyA",""}, -- 3
-		{"BodyB",""}, -- 4
-		{"WorldPos",PointZero}, -- 5
-		{"MaxForce",0}, -- 6
-		{"MaxTorque",0}, -- 7
+		{"ItemType","Friction"}, -- 1
+		{"Name","joint"}, -- 2
+		{"Collision",false}, -- 3
+		{"BodyA",""}, -- 4
+		{"BodyB",""}, -- 5
+		{"WorldPos",PointZero}, -- 6
+		{"MaxForce",0}, -- 7
+		{"MaxTorque",0}, -- 8
 		create = function(self)
 			local Friction = oEditor.Friction
 			local bodyA = oEditor:getItem(self[Friction.BodyA])
@@ -524,11 +536,12 @@ local defaultShapeData =
 	},
 	Gear =
 	{
-		{"Name","joint"}, -- 1
-		{"Collision",false}, -- 2
-		{"JointA",""}, -- 3
-		{"JointB",""}, -- 4
-		{"Ratio",1}, -- 5
+		{"ItemType","Gear"}, -- 1
+		{"Name","joint"}, -- 2
+		{"Collision",false}, -- 3
+		{"JointA",""}, -- 4
+		{"JointB",""}, -- 5
+		{"Ratio",1}, -- 6
 		create = function(self)
 			local Gear = oEditor.Gear
 			local jointA = oEditor:getItem(self[Gear.JointA])
@@ -548,15 +561,16 @@ local defaultShapeData =
 	},
 	Spring =
 	{
-		{"Name","joint"}, -- 1
-		{"Collision",false}, -- 2
-		{"BodyA",""}, -- 3
-		{"BodyB",""}, -- 4
-		{"LinearOffset",PointZero}, -- 5
-		{"AngularOffset",0}, -- 6
-		{"MaxForce",0}, -- 7
-		{"MaxTorque",0}, -- 8
-		{"CorrectionFactor",0.3}, -- 9
+		{"ItemType","Spring"}, -- 1
+		{"Name","joint"}, -- 2
+		{"Collision",false}, -- 3
+		{"BodyA",""}, -- 4
+		{"BodyB",""}, -- 5
+		{"LinearOffset",PointZero}, -- 6
+		{"AngularOffset",0}, -- 7
+		{"MaxForce",0}, -- 8
+		{"MaxTorque",0}, -- 9
+		{"CorrectionFactor",0.3}, -- 10
 		create = function(self)
 			local Spring = oEditor.Spring
 			local bodyA = oEditor:getItem(self[Spring.BodyA])
@@ -580,16 +594,17 @@ local defaultShapeData =
 	},
 	Prismatic =
 	{
-		{"Name","joint"}, -- 1
-		{"Collision",false}, -- 2
-		{"BodyA",""}, -- 3
-		{"BodyB",""}, -- 4
-		{"WorldPos",PointZero}, -- 5
-		{"Axis",Point(1,0)}, -- 6
-		{"LowerTranslation",0}, -- 7
-		{"UpperTranslation",0}, -- 8
-		{"MaxMotorForce",0}, -- 9
-		{"MotorSpeed",0}, -- 10
+		{"ItemType","Prismatic"}, -- 1
+		{"Name","joint"}, -- 2
+		{"Collision",false}, -- 3
+		{"BodyA",""}, -- 4
+		{"BodyB",""}, -- 5
+		{"WorldPos",PointZero}, -- 6
+		{"Axis",Point(1,0)}, -- 7
+		{"LowerTranslation",0}, -- 8
+		{"UpperTranslation",0}, -- 9
+		{"MaxMotorForce",0}, -- 10
+		{"MotorSpeed",0}, -- 11
 		create = function(self)
 			local Prismatic = oEditor.Prismatic
 			local bodyA = oEditor:getItem(self[Prismatic.BodyA])
@@ -614,14 +629,15 @@ local defaultShapeData =
 	},
 	Pulley =
 	{
-		{"Name","joint"}, -- 1
-		{"Collision",true}, -- 2
-		{"BodyA",""}, -- 3
-		{"BodyB",""}, -- 4
-		{"AnchorA",PointZero}, -- 5
-		{"AnchorB",PointZero}, -- 6
-		{"GroundAnchorA",Point(-100,100)}, -- 7
-		{"GroundAnchorB",Point(100,100)}, -- 8
+		{"ItemType","Pulley"}, -- 1
+		{"Name","joint"}, -- 2
+		{"Collision",true}, -- 3
+		{"BodyA",""}, -- 4
+		{"BodyB",""}, -- 5
+		{"AnchorA",PointZero}, -- 6
+		{"AnchorB",PointZero}, -- 7
+		{"GroundAnchorA",Point(-100,100)}, -- 8
+		{"GroundAnchorB",Point(100,100)}, -- 9
 		{"Ratio",1}, -- 9
 		create = function(self)
 			local Pulley = oEditor.Pulley
@@ -646,15 +662,16 @@ local defaultShapeData =
 	},
 	Revolute =
 	{
-		{"Name","joint"}, -- 1
-		{"Collision",false}, -- 2
-		{"BodyA",""}, -- 3
-		{"BodyB",""}, -- 4
-		{"WorldPos",PointZero}, -- 5
-		{"LowerAngle",0}, -- 6
-		{"UpperAngle",0}, -- 7
-		{"MaxMotorTorque",0}, -- 8
-		{"MotorSpeed",0}, -- 9
+		{"ItemType","Revolute"}, -- 1
+		{"Name","joint"}, -- 2
+		{"Collision",false}, -- 3
+		{"BodyA",""}, -- 4
+		{"BodyB",""}, -- 5
+		{"WorldPos",PointZero}, -- 6
+		{"LowerAngle",0}, -- 7
+		{"UpperAngle",0}, -- 8
+		{"MaxMotorTorque",0}, -- 9
+		{"MotorSpeed",0}, -- 10
 		create = function(self)
 			local Revolute = oEditor.Revolute
 			local bodyA = oEditor:getItem(self[Revolute.BodyA])
@@ -678,13 +695,14 @@ local defaultShapeData =
 	},
 	Rope =
 	{
-		{"Name","joint"},
-		{"Collision",false},
-		{"BodyA",""},
-		{"BodyB",""},
-		{"AnchorA",PointZero},
-		{"AnchorB",PointZero},
-		{"MaxLength",0},
+		{"ItemType","Rope"}, -- 1
+		{"Name","joint"}, -- 2
+		{"Collision",false}, -- 3
+		{"BodyA",""}, -- 4
+		{"BodyB",""}, -- 5
+		{"AnchorA",PointZero}, -- 6
+		{"AnchorB",PointZero}, -- 7
+		{"MaxLength",0}, -- 8
 		create = function(self)
 			local Rope = oEditor.Rope
 			local bodyA = oEditor:getItem(self[Rope.BodyA])
@@ -706,13 +724,14 @@ local defaultShapeData =
 	},
 	Weld =
 	{
-		{"Name","joint"}, -- 1
-		{"Collision",false}, -- 2
-		{"BodyA",""}, -- 3
-		{"BodyB",""}, -- 4
-		{"WorldPos",PointZero}, -- 5
-		{"Frequency",0}, -- 6
-		{"Damping",0}, -- 7
+		{"ItemType","Weld"}, -- 1
+		{"Name","joint"}, -- 2
+		{"Collision",false}, -- 3
+		{"BodyA",""}, -- 4
+		{"BodyB",""}, -- 5
+		{"WorldPos",PointZero}, -- 6
+		{"Frequency",0}, -- 7
+		{"Damping",0}, -- 8
 		create = function(self)
 			local Weld = oEditor.Weld
 			local bodyA = oEditor:getItem(self[Weld.BodyA])
@@ -734,16 +753,17 @@ local defaultShapeData =
 	},
 	Wheel =
 	{
-		{"Name","joint"}, -- 1
-		{"Collision",false}, -- 2
-		{"BodyA",""}, -- 3
-		{"BodyB",""}, -- 4
-		{"WorldPos",PointZero}, -- 5
-		{"Axis",Point(100,0)}, -- 6
-		{"MaxMotorTorque",0}, -- 7
-		{"MotorSpeed",0}, -- 8
-		{"Frequency",2}, -- 9
-		{"Damping",0.7}, -- 10
+		{"ItemType","Wheel"}, -- 1
+		{"Name","joint"}, -- 2
+		{"Collision",false}, -- 3
+		{"BodyA",""}, -- 4
+		{"BodyB",""}, -- 5
+		{"WorldPos",PointZero}, -- 6
+		{"Axis",Point(100,0)}, -- 7
+		{"MaxMotorTorque",0}, -- 8
+		{"MotorSpeed",0}, -- 9
+		{"Frequency",2}, -- 10
+		{"Damping",0.7}, -- 11
 		create = function(self)
 			local Wheel = oEditor.Wheel
 			local bodyA = oEditor:getItem(self[Wheel.BodyA])
@@ -769,17 +789,17 @@ local defaultShapeData =
 }
 
 local function setFunc(data,name,value)
-	data[oEditor[data[0]][name]] = value
+	data[oEditor[data[1]][name]] = value
 end
 local function getFunc(data,name)
-	return data[oEditor[data[0]][name]]
+	return data[oEditor[data[1]][name]]
 end
 local function hasFunc(data,name)
-	return oEditor[data[0]][name] ~= nil
+	return oEditor[data[1]][name] ~= nil
 end
 
 for shapeName,shapeDefine in pairs(defaultShapeData) do
-	oEditor[shapeName] = {ItemType=0}
+	oEditor[shapeName] = {}
 	for index,property in ipairs(shapeDefine) do
 		local createFunc = shapeDefine.create
 		local renameFunc = shapeDefine.rename
@@ -787,7 +807,7 @@ for shapeName,shapeDefine in pairs(defaultShapeData) do
 		oEditor[shapeName].create = createFunc
 		oEditor[shapeName].rename = renameFunc
 		oEditor["new"..shapeName] = function(self)
-			local newData = {[0]=shapeName}
+			local newData = {}
 			for i,v in ipairs(shapeDefine) do
 				newData[i] = type(v[2]) == "function" and v[2]() or v[2]
 			end
@@ -805,6 +825,24 @@ for shapeName,shapeDefine in pairs(defaultShapeData) do
 	end
 end
 
+oEditor.addSubData = function(self,data,subData)
+	local subShapes = data:get("SubShapes")
+	if not subShapes then
+		subShapes = {subData,}
+		data:set("SubShapes",subShapes)
+	else
+		table.insert(subShapes,subData)
+	end
+	for _,shape in ipairs(subShapes) do
+		shape.parent = data
+		shape.set = setFunc
+		shape.get = getFunc
+		shape.has = hasFunc
+	end
+	oEditor:resetItem(data)
+	oEvent:send("editor.bodyData",self.bodyData)
+end
+
 oEditor.addData = function(self,data)
 	table.insert(self.bodyData,data)
 	oEditor:checkName(data)
@@ -817,17 +855,29 @@ oEditor.addData = function(self,data)
 			shape.has = hasFunc
 		end
 	end
+	oEditor:resetItem(data)
 	oEvent:send("editor.bodyData",self.bodyData)
 end
 oEditor.removeData = function(self,data)
 	for i,v in ipairs(self.bodyData) do
 		if v == data then
 			table.remove(self.bodyData,i)
-			oEditor.names[data[1]] = nil
-			local item = oEditor.items[data[1]]
-			if item then
-				item:destroy()
-				oEditor.items[data[1]] = nil
+			if data.parent then
+				local subShapes = data.parent:get("SubShapes")
+				for index,sb in ipairs(subShapes) do
+					if sb == data then
+						table.remove(subShapes,index)
+						break
+					end
+				end
+				oEditor:resetItem(data.parent)
+			else
+				oEditor.names[data:get("Name")] = nil
+				local item = oEditor.items[data:get("Name")]
+				if item then
+					item:destroy()
+					oEditor.items[data:get("Name")] = nil
+				end
 			end
 			oEvent:send("editor.bodyData",self.bodyData)
 			break
@@ -837,7 +887,7 @@ end
 oEditor.clearData = function(self)
 	self.bodyData = {}
 	oEditor.names = {}
-	oEditor:clearItems{}
+	oEditor:clearItems()
 	oEvent:send("editor.bodyData",self.bodyData)
 end
 
@@ -845,7 +895,7 @@ oEditor.resetItem = function(self,data)
 	if data.parent then data = data.parent end
 	oEditor:removeItem(data)
 	local item = data:create()
-	oEditor.items[data[1]] = item
+	oEditor.items[data:get("Name")] = item
 	return item
 end
 oEditor.resetItems = function(self)
@@ -856,7 +906,7 @@ oEditor.resetItems = function(self)
 end
 oEditor.removeItem = function(self,data)
 	if data.parent then data = data.parent end
-	local name = data[1]
+	local name = data:get("Name")
 	local item = oEditor.items[name]
 	if item then item:destroy() end
 	self.items[name] = nil
@@ -875,7 +925,7 @@ oEditor.getItem = function(self,arg) -- arg: name or data
 		return self.items[arg]
 	else
 		if arg.parent then arg = arg.parent end
-		return self.items[arg[1]]
+		return self.items[arg:get("Name")]
 	end
 end
 oEditor.clearItems = function(self)
@@ -900,11 +950,11 @@ oEditor.getUsableName = function(self,originalName)
 	end
 end
 oEditor.checkName = function(self,data)
-	local newName = oEditor:getUsableName(data[1])
+	local oldName = data:get("Name")
+	local newName = oEditor:getUsableName(oldName)
 	oEditor.names[newName] = true
-	if newName ~= data[1] then
-		data[1] = newName
-		oEditor:rename(data[1],newName)
+	if newName ~= oldName then
+		data:set("Name",newName)
 	end
 end
 
@@ -938,7 +988,6 @@ end
 itemToString = function(item,pre)
 	local str = ""
 	str = str..pre.."{\n"
-	str = str..pre.."\t[0]=\""..item[0].."\",\n"
 	for _,v in ipairs(item) do
 		str = str..valueToString(v,pre.."\t")
 	end
@@ -965,7 +1014,7 @@ oEditor.loadData = function(self,filename)
 	if not self.bodyData then return end
 	oEditor.names = {}
 	for _,data in ipairs(self.bodyData) do
-		local shapeName = data[0]
+		local shapeName = data[1]
 		local createFunc = oEditor[shapeName].create
 		local renameFunc = oEditor[shapeName].rename
 		data.create = createFunc
@@ -975,7 +1024,7 @@ oEditor.loadData = function(self,filename)
 		local subShapes = data[oEditor[shapeName].SubShapes]
 		if subShapes then
 			for _,subShape in ipairs(subShapes) do
-				subShape.create = oEditor[subShape[0]].create
+				subShape.create = oEditor[subShape[1]].create
 				subShape.parent = data
 				subShape.set = setFunc
 				subShape.get = getFunc
@@ -989,16 +1038,12 @@ oEditor.loadData = function(self,filename)
 		end
 		oEditor:checkName(data)
 	end
+	oEditor:resetItems()
 	oEvent:send("editor.bodyData",self.bodyData)
 	-- TODO
 end
 
-oEditor.data = CCDictionary()
-oEditor.data.bodyDataListener = oListener("editor.bodyData",function()
-	oEditor:resetItems()
-end)
-
--- bodyData[0]: ShapeName
--- bodyData[1]: ItemName -- SubShapes don`t have names
+-- bodyData[1]: ShapeName
+-- bodyData[2]: ItemName -- SubShapes don`t have names
 
 return oEditor
