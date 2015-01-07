@@ -123,7 +123,7 @@ local function oViewArea()
 	view:registerTouchHandler(
 		function(eventType, touches)
 			if eventType == CCTouch.Began then
-				if shapeToCreate ~= nil then
+				if not oEditor.isPlaying and shapeToCreate ~= nil then
 					createShape(shapeToCreate,touches[1].location)
 					shapeToCreate = nil
 					return false
@@ -202,8 +202,8 @@ local function oViewArea()
 	bodyData:get("SubShapes")[2]:set("Center",oVec2(200,0))
 	oEditor:addData(bodyData)
 
-	oEditor:dumpData("test.lua")
-	oEditor:loadData("test.lua")
+	--oEditor:dumpData("test.lua")
+	--oEditor:loadData("test.lua")
 	-- test codes abow
 
 	return view

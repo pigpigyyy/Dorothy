@@ -9,6 +9,10 @@ local oEvent = require("oEvent")
 local CCDictionary = require("CCDictionary")
 local oListener = require("oListener")
 local oEditor = require("oEditor")
+local oLine = require("oLine")
+local CCSequence = require("CCSequence")
+local CCDelay = require("CCDelay")
+local oOpacity = require("oOpacity")
 
 local function oViewPanel()
 	local winSize = CCDirector.winSize
@@ -31,14 +35,20 @@ local function oViewPanel()
 	border:addChild(background,-1)
 	self.position = oVec2(winSize.width*0.5-100,winSize.height*0.5-halfBH-10)
 
-	local function genPosY()
-		local index = 0
-		return function()
-			local v = index
-			index = index + 1
-			return borderSize.height-30-50*v
-		end
-	end
+	local cross = oLine(
+	{
+		oVec2(-10,0),
+		oVec2(0,10),
+		oVec2(10,0),
+		oVec2(0,-10),
+		oVec2(-10,0),
+		oVec2(10,0),
+	},ccColor4(0xff00ffff))
+	cross:addChild(oLine({oVec2(0,10),oVec2(0,-10)},ccColor4(0xff00ffff)))
+	cross.opacity = 0
+	cross.transformTarget = oEditor.world
+	oEditor:addChild(cross,2)
+	local fadeOut = CCSequence({CCDelay(0.7),oOpacity(0.3,0)})
 
 	local function moveViewToItem(item)
 		if oEditor.isPlaying then return end
@@ -50,13 +60,18 @@ local function oViewPanel()
 				worldNode.rotation = data:has("Angle") and data:get("Angle") or 0
 				local pos = worldNode:convertToWorldSpace(data:get("Center"))
 				pos = oEditor.world:convertToNodeSpace(pos)
+				cross.position = pos
 				oEvent:send("viewArea.toPos",oEditor.origin-pos*oEditor.scale)
 			else
-				oEvent:send("viewArea.toPos",oEditor.origin-data:get("Position")*oEditor.scale)
+				local pos = data:get("Position")
+				cross.position = pos
+				oEvent:send("viewArea.toPos",oEditor.origin-pos*oEditor.scale)
 			end
 		elseif not data:has("Center") then
 			local parent = data.parent
-			oEvent:send("viewArea.toPos",oEditor.origin-parent:get("Position")*oEditor.scale)
+			local pos = parent:get("Position")
+			cross.position = pos
+			oEvent:send("viewArea.toPos",oEditor.origin-pos*oEditor.scale)
 		else
 			local parent = data.parent
 			local worldNode = oEditor.worldNode
@@ -64,9 +79,23 @@ local function oViewPanel()
 			worldNode.rotation = parent:has("Angle") and parent:get("Angle") or 0
 			local pos = worldNode:convertToWorldSpace(data:get("Center"))
 			pos = oEditor.world:convertToNodeSpace(pos)
+			cross.position = pos
 			oEvent:send("viewArea.toPos",oEditor.origin-pos*oEditor.scale)
 		end
+		cross:stopAllActions()
+		cross.opacity = 1
+		cross:runAction(fadeOut)
 	end
+
+	local function genPosY()
+		local index = 0
+		return function()
+			local v = index
+			index = index + 1
+			return borderSize.height-30-50*v
+		end
+	end
+
 	local function selectCallback(item)
 		oEvent:send("editControl.hide")
 		oEvent:send("settingPanel.edit",nil)
@@ -78,7 +107,7 @@ local function oViewPanel()
 			oEvent:send("settingPanel.toState",nil)
 		end
 	end
-	
+
 	local function updateViewItems(bodyData)
 		local items = {}
 		local getPosY = genPosY()

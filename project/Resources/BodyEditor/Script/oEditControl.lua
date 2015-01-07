@@ -17,6 +17,7 @@ local CCDictionary = require("CCDictionary")
 local oListener = require("oListener")
 local oBodyDef = require("oBodyDef")
 local oEvent = require("oEvent")
+local oVertexControl = require("oVertexControl")
 
 local function oEditControl()
 	local winSize = CCDirector.winSize
@@ -97,7 +98,6 @@ local function oEditControl()
 		fixMenu.visible = false
 		fixMenu.touchEnabled = false
 	end
-	coroutine.yield()
 
 	-- init switch --
 	-- switchMenu
@@ -111,9 +111,9 @@ local function oEditControl()
 	-- switchButton
 	local switched = nil
 	local switchValue = true
-	local switchButton = oButton("Yes",16,50,50,winSize.width-225,95,function(button)
+	local switchButton = oButton("true",16,50,50,winSize.width-345,winSize.height-35,function(button)
 		switchValue = not switchValue
-		button.text = switchValue and "Yes" or "No"
+		button.text = tostring(switchValue)
 		if switched then
 			switched(switchValue)
 		end
@@ -126,7 +126,7 @@ local function oEditControl()
 		switchMenu.visible = true
 		switchMenu.touchEnabled = true
 		switchValue = defaultValue
-		switchButton.text = switchValue and "Yes" or "No"
+		switchButton.text = tostring(switchValue)
 		switched = callback
 	end
 	editControl.hideSwitch = function(self)
@@ -134,7 +134,6 @@ local function oEditControl()
 		switchMenu.visible = false
 		switchMenu.touchEnabled = false
 	end
-	coroutine.yield()
 	
 	-- init type selector --
 	-- typeSelector
@@ -179,7 +178,6 @@ local function oEditControl()
 		if not typeSelector.visible then return end
 		typeSelector:hide()
 	end
-	coroutine.yield()
 
 	-- init edit ruler --
 	-- editRuler
@@ -195,7 +193,6 @@ local function oEditControl()
 		if not editRuler.visible then return end
 		editRuler:hide()
 	end
-	coroutine.yield()
 
 	-- world node --
 	local worldNode = oEditor.worldNode
@@ -273,7 +270,6 @@ local function oEditControl()
 		posEditor.touchEnabled = false
 		posEditor.visible = false
 	end
-	coroutine.yield()
 
 	-- init rotation editor --
 	-- rotEditor
@@ -350,7 +346,6 @@ local function oEditControl()
 		rotEditor.touchEnabled = false
 		rotEditor.visible = false
 	end
-	coroutine.yield()
 
 	-- init size editor --
 	-- sizeEditor
@@ -442,7 +437,6 @@ local function oEditControl()
 		sizeEditor.touchEnabled = false
 		sizeEditor.visible = false
 	end
-	coroutine.yield()
 	
 	-- init center editor --
 	-- centerEditor
@@ -524,7 +518,6 @@ local function oEditControl()
 		centerEditor.touchEnabled = false
 		centerEditor.visible = false
 	end
-	coroutine.yield()
 
 	-- init radius editor --
 	-- radiusEditor
@@ -592,7 +585,15 @@ local function oEditControl()
 		radiusEditor.touchEnabled = false
 		radiusEditor.visible = false
 	end
-	coroutine.yield()
+
+	-- init vertices --
+	local data = oEditor.bodyData[3]
+	local vertControl = oVertexControl()
+	vertControl.transformTarget = oEditor.world
+	vertControl.position = data:get("Position")
+	vertControl.rotation = data:get("Angle")
+	vertControl:setVertices(data:get("Vertices"))
+	editControl:addChild(vertControl)
 
 	-- hide all controls
 	editControl.hide = function(self)

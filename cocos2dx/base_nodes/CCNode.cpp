@@ -1097,7 +1097,8 @@ CCAffineTransform CCNode::nodeToWorldTransform()
 {
 	CCAffineTransform t = this->nodeToParentTransform();
 
-	for (CCNode *p = m_pParent; p != NULL; p = p->getParent())
+	CCNode* transformTarget = CCNode::getTransformTarget();
+	for (CCNode* p = transformTarget ? transformTarget : m_pParent; p != NULL; p = p->getParent())
 		t = CCAffineTransformConcat(t, p->nodeToParentTransform());
 
 	return t;
@@ -1119,7 +1120,8 @@ CCAffineTransform CCNode::gameParentToNodeTransform(void)
 CCAffineTransform CCNode::nodeToGameTransform(void)
 {
 	CCAffineTransform t = this->nodeToGameParentTransform();
-	for (CCNode *p = m_pParent; p != NULL; p = p->getParent())
+	CCNode* transformTarget = CCNode::getTransformTarget();
+	for (CCNode* p = transformTarget ? transformTarget : m_pParent; p != NULL; p = p->getParent())
 	{
 		t = CCAffineTransformConcat(t, p->nodeToGameParentTransform());
 	}

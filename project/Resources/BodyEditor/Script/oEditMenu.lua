@@ -48,6 +48,9 @@ local function oEditMenu()
 					oEvent:send("editMenu.create",self._name)
 				else
 					self.color = ccColor3(0x00ffff)
+					if lastSelected == self then
+						oEvent:send("editMenu.create",nil)
+					end
 					lastSelected = nil
 				end
 			end),
@@ -57,6 +60,7 @@ local function oEditMenu()
 	local items =
 	{
 		Edit = oButton("Edit",16,50,50,35,winSize.height-35,function()
+			oEditor:dumpData("test.lua")
 			CCDirector:popToRootScene()
 		end),
 		Rectangle = oShapeButton("Rectangle",35,winSize.height-95),
@@ -64,7 +68,13 @@ local function oEditMenu()
 		Polygon = oShapeButton("Polygon",35,winSize.height-215),
 		Chain = oShapeButton("Chain",35,winSize.height-275),
 		Loop = oShapeButton("Loop",35,winSize.height-335),
-		Face = oButton("Face",16,50,50,35,35,function() oEditor:removeData(oEditor.bodyData[#(oEditor.bodyData)]) end),
+		Face = oButton("Face",16,50,50,35,35,function()
+			if oEditor.currentData then
+				oEditor:removeData(oEditor.currentData)
+				oEditor.currentData = nil
+				oEvent:send("settingPanel.toState",nil)
+			end
+		end),
 		Joint = oButton("",0,50,50,95,35,function() end),
 
 		Origin = oButton("Origin",16,50,50,winSize.width-285,winSize.height-35,function()

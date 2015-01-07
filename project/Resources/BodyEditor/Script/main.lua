@@ -43,12 +43,12 @@ oRoutine(once(function()
 	end)
 	CCDirector:run(oEditor)
 	coroutine.yield()
-	for _,name in ipairs(controls) do
+	for index,name in ipairs(controls) do
 		local createFunc = require(name)
 		coroutine.yield()
 		oEditor[name] = createFunc() -- keep lua reference for control items
 		coroutine.yield()
-		oEditor:addChild(oEditor[name])
+		oEditor:addChild(oEditor[name],index)
 		coroutine.yield()
 	end
 end))

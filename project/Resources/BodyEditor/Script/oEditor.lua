@@ -861,19 +861,23 @@ oEditor.addData = function(self,data)
 	oEvent:send("editor.bodyData",self.bodyData)
 end
 oEditor.removeData = function(self,data)
+	local item = data.parent or data
 	for i,v in ipairs(self.bodyData) do
-		if v == data then
-			table.remove(self.bodyData,i)
+		if v == item then
 			if data.parent then
 				local subShapes = data.parent:get("SubShapes")
 				for index,sb in ipairs(subShapes) do
 					if sb == data then
 						table.remove(subShapes,index)
+						if #subShapes == 0 then
+							data.parent:set("SubShapes",false)
+						end
 						break
 					end
 				end
 				oEditor:resetItem(data.parent)
 			else
+				table.remove(self.bodyData,i)
 				oEditor.names[data:get("Name")] = nil
 				local item = oEditor.items[data:get("Name")]
 				if item then
@@ -970,16 +974,16 @@ valueToString = function(value,pre)
 		for _,v in ipairs(value) do
 			local typeName = tolua.type(v)
 			if typeName == "oVec2" then
-				str = str..pre.."\toVec2("..tostring(v.x)..","..tostring(v.y).."),\n"
+				str = str..pre.."\toVec2("..string.format("%.2f",v.x)..","..string.format("%.2f",v.y).."),\n"
 			elseif typeName == "table" then
 				str = str..itemToString(v,pre.."\t")
 			end
 		end
 		str = str..pre.."},\n"
 	elseif typeName == "oVec2" then
-		str = str.."oVec2("..tostring(value.x)..","..tostring(value.y).."),\n"
+		str = str.."oVec2("..string.format("%.2f",value.x)..","..string.format("%.2f",value.y).."),\n"
 	elseif typeName == "CCSize" then
-		str = str.."CCSize("..tostring(value.width)..","..tostring(value.height).."),\n"
+		str = str.."CCSize("..string.format("%d",value.width)..","..string.format("%d",value.height).."),\n"
 	elseif typeName == "string" then
 		str = str.."\""..value.."\",\n"
 	else
