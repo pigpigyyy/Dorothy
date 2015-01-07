@@ -118,7 +118,7 @@ local function oVertexControl()
 				return false
 			end
 		elseif eventType == CCTouch.Moved then
-			if selectedVert then
+			if touch.delta ~= oVec2.zero and selectedVert then
 				selectedVert.selected = false
 				selectedVert.position = selectedVert.position + menu:convertToNodeSpace(touch.location) - menu:convertToNodeSpace(touch.preLocation)
 				menu.vs[selectedVert.index] = selectedVert.position

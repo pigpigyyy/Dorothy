@@ -139,9 +139,11 @@ local oBox = class({
 							0,0,
 							function()
 								if self._isInput then
+									local handler = self._okHandler
+									self._okHandler = nil
 									self._textField:detachWithIME()
-									if self._okHandler then
-										self._okHandler(self._textField.text)
+									if handler then
+										handler(self._textField.text)
 									end
 								else
 									if self._okHandler then
