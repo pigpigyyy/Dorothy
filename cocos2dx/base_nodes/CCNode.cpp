@@ -1085,22 +1085,21 @@ CCAffineTransform CCNode::nodeToParentTransform()
 }
 CCAffineTransform CCNode::parentToNodeTransform()
 {
-	if (m_bInverseDirty) {
+	if (m_bInverseDirty)
+	{
 		m_sInverse = CCAffineTransformInvert(this->nodeToParentTransform());
 		m_bInverseDirty = false;
 	}
-
 	return m_sInverse;
 }
 
 CCAffineTransform CCNode::nodeToWorldTransform()
 {
 	CCAffineTransform t = this->nodeToParentTransform();
-
-	CCNode* transformTarget = CCNode::getTransformTarget();
-	for (CCNode* p = transformTarget ? transformTarget : m_pParent; p != NULL; p = p->getParent())
+	for (CCNode* p = this->getTargetParent(); p != NULL; p = p->getTargetParent())
+	{
 		t = CCAffineTransformConcat(t, p->nodeToParentTransform());
-
+	}
 	return t;
 }
 CCAffineTransform CCNode::worldToNodeTransform()
@@ -1120,8 +1119,7 @@ CCAffineTransform CCNode::gameParentToNodeTransform(void)
 CCAffineTransform CCNode::nodeToGameTransform(void)
 {
 	CCAffineTransform t = this->nodeToGameParentTransform();
-	CCNode* transformTarget = CCNode::getTransformTarget();
-	for (CCNode* p = transformTarget ? transformTarget : m_pParent; p != NULL; p = p->getParent())
+	for (CCNode* p = this->getTargetParent(); p != NULL; p = p->getTargetParent())
 	{
 		t = CCAffineTransformConcat(t, p->nodeToGameParentTransform());
 	}
@@ -1200,9 +1198,7 @@ void CCNode::setOpacity(float opacity)
 	if (opacity < 0.0f) opacity = 0.0f;
 	if (opacity > 1.0f) opacity = 1.0f;
 	_displayedOpacity = _realOpacity = opacity;
-	this->updateDisplayedOpacity(
-		m_pParent ? m_pParent->getDisplayedOpacity() :
-		1.0f);
+	this->updateDisplayedOpacity(m_pParent ? m_pParent->getDisplayedOpacity() : 1.0f);
 }
 
 void CCNode::updateDisplayedOpacity(float parentOpacity)
@@ -1259,9 +1255,7 @@ const ccColor3B& CCNode::getDisplayedColor()
 void CCNode::setColor(const ccColor3B& color)
 {
 	_displayedColor = _realColor = color;
-	this->updateDisplayedColor(
-		m_pParent ? m_pParent->getDisplayedColor() :
-		ccWHITE);
+	this->updateDisplayedColor(m_pParent ? m_pParent->getDisplayedColor() : ccWHITE);
 }
 
 void CCNode::updateDisplayedColor(const ccColor3B& parentColor)
@@ -1329,6 +1323,11 @@ CCNode* CCNode::getTransformTarget() const
 		return (CCNode*)_transformTargetRef->target;
 	}
 	return nullptr;
+}
+
+CCNode* CCNode::getTargetParent() const
+{
+	return _transformTargetRef ? (CCNode*)_transformTargetRef->target : m_pParent;
 }
 
 NS_CC_END

@@ -1160,6 +1160,8 @@ public:
 
 	void setTransformTarget(CCNode* target);
 	CCNode* getTransformTarget() const;
+	
+	CCNode* getTargetParent() const;
 
 	void unscheduleUpdateLua();
 

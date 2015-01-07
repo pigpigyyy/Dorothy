@@ -27,10 +27,28 @@ b2ChainShape::~b2ChainShape()
 	b2ChainShape::ClearVertices();
 }
 
+void b2ChainShape::CreateDummyLoop()
+{
+	m_count = 3;
+	m_vertices = (b2Vec2*)b2Alloc(4 * sizeof(b2Vec2));
+	m_vertices[0] = b2Vec2(0,0.005f);
+	m_vertices[1] = b2Vec2(-0.005f,0);
+	m_vertices[2] = b2Vec2(0.005f,0);
+	m_vertices[3] = m_vertices[0];
+	m_prevVertex = m_vertices[m_count - 2];
+	m_nextVertex = m_vertices[1];
+	m_hasPrevVertex = true;
+	m_hasNextVertex = true;
+}
+
 void b2ChainShape::CreateLoop(const b2Vec2* vertices, int32 count)
 {
-	b2Assert(count >= 3);
 	b2ChainShape::ClearVertices();
+	if (count < 3)
+	{
+		b2ChainShape::CreateDummyLoop();
+		return;
+	}
 	m_vertices = (b2Vec2*)b2Alloc((count + 1) * sizeof(b2Vec2));
 	m_vertices[0] = vertices[0];
 	m_count = 1;
@@ -50,6 +68,12 @@ void b2ChainShape::CreateLoop(const b2Vec2* vertices, int32 count)
 		--m_count;
 	}
 	++m_count;
+	if (m_count < 3)
+	{
+		b2ChainShape::ClearVertices();
+		b2ChainShape::CreateDummyLoop();
+		return;
+	}
 	m_vertices[m_count - 1] = m_vertices[0];
 	m_prevVertex = m_vertices[m_count - 2];
 	m_nextVertex = m_vertices[1];
@@ -57,10 +81,24 @@ void b2ChainShape::CreateLoop(const b2Vec2* vertices, int32 count)
 	m_hasNextVertex = true;
 }
 
+void b2ChainShape::CreateDummyChain()
+{
+	m_count = 2;
+	m_vertices = (b2Vec2*)b2Alloc(2 * sizeof(b2Vec2));
+	m_vertices[0] = b2Vec2(-0.005f,0);
+	m_vertices[1] = b2Vec2(0.005f,0);
+	m_hasPrevVertex = false;
+	m_hasNextVertex = false;
+}
+
 void b2ChainShape::CreateChain(const b2Vec2* vertices, int32 count)
 {
-	b2Assert(count >= 2);
 	b2ChainShape::ClearVertices();
+	if (count < 2)
+	{
+		b2ChainShape::CreateDummyChain();
+		return;
+	}
 	m_vertices = (b2Vec2*)b2Alloc(count * sizeof(b2Vec2));
 	m_vertices[0] = vertices[0];
 	m_count = 1;
@@ -74,6 +112,12 @@ void b2ChainShape::CreateChain(const b2Vec2* vertices, int32 count)
 			m_vertices[i] = v2;
 			++m_count;
 		}
+	}
+	if (m_count < 2)
+	{
+		b2ChainShape::ClearVertices();
+		b2ChainShape::CreateDummyChain();
+		return;
 	}
 	m_hasPrevVertex = false;
 	m_hasNextVertex = false;

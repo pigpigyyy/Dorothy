@@ -88,6 +88,9 @@ public:
 
 	b2Vec2 m_prevVertex, m_nextVertex;
 	bool m_hasPrevVertex, m_hasNextVertex;
+private:
+	void CreateDummyLoop();
+	void CreateDummyChain();
 };
 
 inline b2ChainShape::b2ChainShape()

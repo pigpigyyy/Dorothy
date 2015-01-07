@@ -18,6 +18,8 @@ local oListener = require("oListener")
 local oBodyDef = require("oBodyDef")
 local oEvent = require("oEvent")
 local oVertexControl = require("oVertexControl")
+local oScale = require("oScale")
+local oEase = require("oEase")
 
 local function oEditControl()
 	local winSize = CCDirector.winSize
@@ -88,8 +90,16 @@ local function oEditControl()
 	editControl.showFixButtons = function(self)
 		fixX = false
 		fixXButton.color = ccColor3(0x00ffff)
+		fixXButton:stopAllActions()
+		fixXButton.scaleX = 0
+		fixXButton.scaleY = 0
+		fixXButton:runAction(oScale(0.5,1,1,oEase.OutBack))
 		fixY = false
 		fixYButton.color = ccColor3(0x00ffff)
+		fixYButton:stopAllActions()
+		fixYButton.scaleX = 0
+		fixYButton.scaleY = 0
+		fixYButton:runAction(oScale(0.5,1,1,oEase.OutBack))
 		fixMenu.visible = true
 		fixMenu.touchEnabled = true
 	end
@@ -127,6 +137,10 @@ local function oEditControl()
 		switchMenu.touchEnabled = true
 		switchValue = defaultValue
 		switchButton.text = tostring(switchValue)
+		switchButton:stopAllActions()
+		switchButton.scaleX = 0
+		switchButton.scaleY = 0
+		switchButton:runAction(oScale(0.5,1,1,oEase.OutBack))
 		switched = callback
 	end
 	editControl.hideSwitch = function(self)
@@ -140,7 +154,7 @@ local function oEditControl()
 	local typeSize = CCSize(120,190)
 	local halfTW = typeSize.width*0.5
 	local halfTH = typeSize.height*0.5
-	local typeSelector = oSelectionPanel(typeSize)
+	local typeSelector = oSelectionPanel(typeSize,true,true,false)
 	typeSelector.position = oEditor.origin-oVec2(winSize.width*0.5,winSize.height*0.5)
 	typeSelector.visible = false
 	
@@ -587,14 +601,9 @@ local function oEditControl()
 	end
 
 	-- init vertices --
-	local data = oEditor.bodyData[3]
 	local vertControl = oVertexControl()
-	vertControl.transformTarget = oEditor.world
-	vertControl.position = data:get("Position")
-	vertControl.rotation = data:get("Angle")
-	vertControl:setVertices(data:get("Vertices"))
 	editControl:addChild(vertControl)
-
+	
 	-- hide all controls
 	editControl.hide = function(self)
 		editControl:hideSwitch()
@@ -605,6 +614,7 @@ local function oEditControl()
 		editControl:hideSizeEditor()
 		editControl:hideCenterEditor()
 		editControl:hideRadiusEditor()
+		vertControl:hide()
 	end
 
 	editControl.data = CCDictionary()
@@ -701,6 +711,13 @@ local function oEditControl()
 				editControl:showSwitch(data:get(name), function(val)
 					item.value = tostring(val)
 					data:set(name,val)
+					oEditor:resetItem(data)
+				end)
+			elseif name == "Vertices" then
+				editControl:hide()
+				local item = data.parent or data
+				vertControl:show(data:get("Vertices"),item:get("Position"),item:get("Angle"),function(vs)
+					data:set("Vertices",vs)
 					oEditor:resetItem(data)
 				end)
 			end

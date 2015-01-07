@@ -39,6 +39,7 @@ local function oEditMenu()
 			end,
 			function(self,value)
 				self._selected = value
+				oEvent:send("editControl.hide")
 				if value then
 					self.color = ccColor3(0xff0080)
 					if lastSelected then
@@ -60,22 +61,32 @@ local function oEditMenu()
 	local items =
 	{
 		Edit = oButton("Edit",16,50,50,35,winSize.height-35,function()
-			oEditor:dumpData("test.lua")
-			CCDirector:popToRootScene()
+			oEditor:addChild(require("oBox")("Name It",function(text)
+				if text ~= "" then
+					local oRoutine = require("oRoutine")
+					local once = oRoutine.once
+					oRoutine(once(function()
+						coroutine.yield()
+						oEditor:dumpData(text..".lua")
+						coroutine.yield()
+						CCDirector:popToRootScene()
+					end))
+				end
+			end,true),999)
 		end),
 		Rectangle = oShapeButton("Rectangle",35,winSize.height-95),
 		Circle = oShapeButton("Circle",35,winSize.height-155),
 		Polygon = oShapeButton("Polygon",35,winSize.height-215),
 		Chain = oShapeButton("Chain",35,winSize.height-275),
 		Loop = oShapeButton("Loop",35,winSize.height-335),
-		Face = oButton("Face",16,50,50,35,35,function()
+		Del = oButton("Delete",16,50,50,35,winSize.height-395,function()
 			if oEditor.currentData then
+				oEvent:send("settingPanel.toState",nil)
 				oEditor:removeData(oEditor.currentData)
 				oEditor.currentData = nil
-				oEvent:send("settingPanel.toState",nil)
 			end
 		end),
-		Joint = oButton("",0,50,50,95,35,function() end),
+		Joint = oButton("",0,50,50,35,35,function() end),
 
 		Origin = oButton("Origin",16,50,50,winSize.width-285,winSize.height-35,function()
 			oEvent:send("viewArea.toPos",oEditor.origin)

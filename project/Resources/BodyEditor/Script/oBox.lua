@@ -1,6 +1,6 @@
 local oButton = require("oButton")
 local oTextField = require("oTextField")
-local class,property = unpack(require("class"))
+local class = unpack(require("class"))
 local CCDirector = require("CCDirector")
 local CCNode = require("CCNode")
 local CCLayer = require("CCLayer")
@@ -20,7 +20,7 @@ local oEase = require("oEase")
 local CCCall = require("CCCall")
 
 local oBox = class({
-	__partial = function(self,text,okHandler,isInput)
+	__partial = function(self,_,okHandler,isInput)
 		self._isInput = isInput
 		self._okHandler = okHandler
 		self._border = nil
@@ -81,8 +81,8 @@ local oBox = class({
 					item.opacity = 0.3
 					if isInput then
 						item:detachWithIME()
-						if okHandler then
-							okHandler(item.text)
+						if self._okHandler then
+							self._okHandler(item.text)
 						end
 						self:hide()
 					end
@@ -162,6 +162,7 @@ local oBox = class({
 							70,0,
 							function()
 								if self._isInput then
+									self._okHandler = nil
 									self._textField:detachWithIME()
 								end
 								opMenu:removeHandlers()

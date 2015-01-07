@@ -52,9 +52,9 @@ oEditor.touchPriorityEditMenu = CCMenu.DefaultHandlerPriority
 oEditor.touchPrioritySettingPanel = CCMenu.DefaultHandlerPriority+1
 oEditor.touchPriorityViewPanel = CCMenu.DefaultHandlerPriority+3
 oEditor.touchPriorityEditControl = CCMenu.DefaultHandlerPriority+5
-oEditor.touchPriorityVRuler = CCMenu.DefaultHandlerPriority+6
-oEditor.touchPriorityHRuler = CCMenu.DefaultHandlerPriority+7
-oEditor.touchPriorityViewArea = CCMenu.DefaultHandlerPriority+8
+oEditor.touchPriorityVRuler = CCMenu.DefaultHandlerPriority+8
+oEditor.touchPriorityHRuler = CCMenu.DefaultHandlerPriority+9
+oEditor.touchPriorityViewArea = CCMenu.DefaultHandlerPriority+10
 
 local function Point(x,y)
 	return function()
@@ -1005,13 +1005,13 @@ oEditor.dumpData = function(self,filename)
 	local str = [[local oVec2 = require("oVec2")
 local CCSize = require("CCSize")
 
-local data =
+return
 {
 ]]
 	for _,data in ipairs(oEditor.bodyData) do
 		str = str..itemToString(data,"\t")
 	end
-	str = str.."}\n\nreturn data\n"
+	str = str.."}\n"
 	oContent:saveToFile(CCFileUtils.writablePath..filename,str)
 end
 

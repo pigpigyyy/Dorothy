@@ -119,18 +119,17 @@ static b2Vec2 ComputeCentroid(const b2Vec2* vs, int32 count)
 
 void b2PolygonShape::Set(const b2Vec2* vertices, int32 count)
 {
-	b2Assert(3 <= count && count <= b2_maxPolygonVertices);
 	if (count < 3)
 	{
-		SetAsBox(1.0f, 1.0f);
+		SetAsBox(0.01f, 0.01f);
 		return;
 	}
 	
-	int32 n = b2Min(count, b2_maxPolygonVertices);
+	count = b2Min(count, b2_maxPolygonVertices);
 
 	// Copy vertices into local buffer
 	b2Vec2 ps[b2_maxPolygonVertices];
-	for (int32 i = 0; i < n; ++i)
+	for (int32 i = 0; i < count; ++i)
 	{
 		ps[i] = vertices[i];
 	}
@@ -160,7 +159,7 @@ void b2PolygonShape::Set(const b2Vec2* vertices, int32 count)
 		hull[m] = ih;
 
 		int32 ie = 0;
-		for (int32 j = 1; j < n; ++j)
+		for (int32 j = 1; j < count; ++j)
 		{
 			if (ie == ih)
 			{
@@ -192,6 +191,11 @@ void b2PolygonShape::Set(const b2Vec2* vertices, int32 count)
 		}
 	}
 	
+	if (m < 3)
+	{
+		SetAsBox(0.01f, 0.01f);
+		return;
+	}
 	m_count = m;
 
 	// Copy vertices.
