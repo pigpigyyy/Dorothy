@@ -198,8 +198,7 @@ local function oEditControl()
 	coroutine.yield()
 
 	-- world node --
-	local worldNode = CCNode()
-	oEditor.world:addChild(worldNode)
+	local worldNode = oEditor.worldNode
 
 	-- init position editor --
 	-- posEditor
@@ -693,6 +692,7 @@ local function oEditControl()
 				end)
 			elseif name == "SensorTag" then
 				editControl:showEditRuler(data:get("SensorTag"),0,100,10,function(val)
+					val = math.floor(val)
 					item.value = string.format("%d",val)
 					data:set("SensorTag",val)
 				end)

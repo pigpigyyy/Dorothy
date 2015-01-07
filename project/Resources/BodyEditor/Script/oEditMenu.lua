@@ -4,11 +4,13 @@ local CCMenu = require("CCMenu")
 local oVec2 = require("oVec2")
 local oLine = require("oLine")
 local ccColor4 = require("ccColor4")
+local ccColor3 = require("ccColor3")
 local CCNode = require("CCNode")
 local oEditor = require("oEditor")
 local oPlayButton = require("oPlayButton")
 local oListener = require("oListener")
 local oEvent = require("oEvent")
+local class,property = unpack(require("class"))
 
 local function oEditMenu()
 	local winSize = CCDirector.winSize
@@ -16,20 +18,40 @@ local function oEditMenu()
 	local menu = CCMenu(false)
 	menu.touchPriority = oEditor.touchPriorityEditMenu
 	menu.anchor = oVec2.zero
-
-	local function createShape(name)
-		oEvent:send("editControl.hide")
-		local data
-		if oEditor.currentData and not oEditor.currentData.parent then
-			data = oEditor["newSub"..name](oEditor)
-			oEditor:addSubData(oEditor.currentData,data)
-		else
-			data = oEditor["new"..name](oEditor)
-			data:set("Position",oEditor.origin-oEditor.viewPosition)
-			oEditor:addData(data)
-		end
-		oEvent:send("viewPanel.choose",data)
-	end
+	
+	local lastSelected = nil
+	local oShapeButton = class(oButton,
+	{
+		__partial = function(self)
+			self._selected = false
+			return oButton.__partial(self)
+		end,
+		__init = function(self,name,x,y)
+			oButton.__init(self,"",0,50,50,x,y,self.onTapped)
+			self._name = name
+		end,
+		onTapped = function(self)
+			self.selected = not self.selected
+		end,
+		selected = property(
+			function(self)
+				return self._selected
+			end,
+			function(self,value)
+				self._selected = value
+				if value then
+					self.color = ccColor3(0xff0080)
+					if lastSelected then
+						lastSelected.selected = false
+					end
+					lastSelected = self
+					oEvent:send("editMenu.create",self._name)
+				else
+					self.color = ccColor3(0x00ffff)
+					lastSelected = nil
+				end
+			end),
+	})
 
 	-- init menu items --
 	local items =
@@ -37,26 +59,16 @@ local function oEditMenu()
 		Edit = oButton("Edit",16,50,50,35,winSize.height-35,function()
 			CCDirector:popToRootScene()
 		end),
-		Rectangle = oButton("",0,50,50,35,winSize.height-95,function()
-			createShape("Rectangle")
-		end),
-		Circle = oButton("",0,50,50,35,winSize.height-155,function()
-			createShape("Circle")
-		end),
-		Polygon = oButton("",0,50,50,35,winSize.height-215,function()
-			createShape("Polygon")
-		end),
-		Chain = oButton("",0,50,50,35,winSize.height-275,function()
-			createShape("Chain")
-		end),
-		Loop = oButton("",0,50,50,35,winSize.height-335,function()
-			createShape("Loop")
-		end),
+		Rectangle = oShapeButton("Rectangle",35,winSize.height-95),
+		Circle = oShapeButton("Circle",35,winSize.height-155),
+		Polygon = oShapeButton("Polygon",35,winSize.height-215),
+		Chain = oShapeButton("Chain",35,winSize.height-275),
+		Loop = oShapeButton("Loop",35,winSize.height-335),
 		Face = oButton("Face",16,50,50,35,35,function() oEditor:removeData(oEditor.bodyData[#(oEditor.bodyData)]) end),
 		Joint = oButton("",0,50,50,95,35,function() end),
 
 		Origin = oButton("Origin",16,50,50,winSize.width-285,winSize.height-35,function()
-			oEvent:send("viewArea.toOrigin")
+			oEvent:send("viewArea.toPos",oEditor.origin)
 		end),
 
 		Zoom = oButton("100%",16,50,50,winSize.width-225,winSize.height-35,function(button)
@@ -190,12 +202,18 @@ local function oEditMenu()
 	},ccColor4(0xff80ff00))
 	node:addChild(paint)
 	items.Joint.face:addChild(node)
-	
+
 	-- update scale button --
 	items.Zoom.mode = 0
 	items.Zoom.data = oListener("viewArea.scale",function(scale)
 		if scale ~= 1 then items.Zoom.mode = 2 end
 		items.Zoom.text = tostring(math.floor(scale*100)).."%"
+	end)
+	menu.data = oListener("editMenu.created",function()
+		if lastSelected then
+			lastSelected.selected = false
+			lastSelected = nil
+		end
 	end)
 
 	-- add buttons to menu --

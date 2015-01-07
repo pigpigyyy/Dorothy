@@ -40,12 +40,40 @@ local function oViewPanel()
 		end
 	end
 
+	local function moveViewToItem(item)
+		if oEditor.isPlaying then return end
+		local data = item.dataItem
+		if not data.parent then
+			if data:has("Center") then
+				local worldNode = oEditor.worldNode
+				worldNode.position = data:get("Position")
+				worldNode.rotation = data:has("Angle") and data:get("Angle") or 0
+				local pos = worldNode:convertToWorldSpace(data:get("Center"))
+				pos = oEditor.world:convertToNodeSpace(pos)
+				oEvent:send("viewArea.toPos",oEditor.origin-pos*oEditor.scale)
+			else
+				oEvent:send("viewArea.toPos",oEditor.origin-data:get("Position")*oEditor.scale)
+			end
+		elseif not data:has("Center") then
+			local parent = data.parent
+			oEvent:send("viewArea.toPos",oEditor.origin-parent:get("Position")*oEditor.scale)
+		else
+			local parent = data.parent
+			local worldNode = oEditor.worldNode
+			worldNode.position = parent:get("Position")
+			worldNode.rotation = parent:has("Angle") and parent:get("Angle") or 0
+			local pos = worldNode:convertToWorldSpace(data:get("Center"))
+			pos = oEditor.world:convertToNodeSpace(pos)
+			oEvent:send("viewArea.toPos",oEditor.origin-pos*oEditor.scale)
+		end
+	end
 	local function selectCallback(item)
 		oEvent:send("editControl.hide")
 		oEvent:send("settingPanel.edit",nil)
 		oEvent:send("viewPanel.choose",item)
 		if item.selected then
-			oEvent:send("settingPanel.toState",item.dataItem[1])
+			oEvent:send("settingPanel.toState",item.dataItem:get("ItemType"))
+			moveViewToItem(item)
 		else
 			oEvent:send("settingPanel.toState",nil)
 		end
@@ -91,6 +119,7 @@ local function oViewPanel()
 					oEditor.currentData = item.dataItem
 					oEvent:send("settingPanel.toState",item.dataItem[1])
 					self:setPos(oVec2(0,borderSize.height*0.5+30-item.positionY))
+					moveViewToItem(item)
 					break
 				end
 			end

@@ -71,12 +71,11 @@ local function oViewArea()
 			end),
 		}))
 	end)
-	crossNode.data.toOriginListener = oListener("viewArea.toOrigin",function()
+	crossNode.data.toPosListener = oListener("viewArea.toPos",function(pos)
 		view.touchEnabled = false
-		oEditor.viewPosition = origin
 		crossNode:runAction(CCSequence(
 		{
-			oPos(0.5,origin.x,origin.y,oEase.OutQuad),
+			oPos(0.5,pos.x,pos.y,oEase.OutQuad),
 			CCCall(function()
 				if crossNode.numberOfRunningActions == 1 then
 					view.touchEnabled = true
@@ -84,18 +83,56 @@ local function oViewArea()
 			end),
 		}))
 	end)
+	crossNode.data.moveListener = oListener("viewArea.move",function(delta)
+		crossNode.position = crossNode.position + delta
+	end)
 
+	local shapeToCreate = nil
+	crossNode.data.createListener = oListener("editMenu.create",function(name)
+		shapeToCreate = name
+	end)
+
+	local function createShape(name,pos)
+		oEvent:send("editControl.hide")
+		local data
+		if oEditor.currentData and not oEditor.currentData.parent then
+			data = oEditor["newSub"..name](oEditor)
+			if data:has("Center") then
+				local parent = oEditor.currentData
+				local worldNode = oEditor.worldNode
+				worldNode.position = parent:get("Position")
+				worldNode.rotation = parent:has("Angle") and parent:get("Angle") or 0
+				pos = worldNode:convertToNodeSpace(pos)
+				data:set("Center",pos)
+			end
+			oEditor:addSubData(oEditor.currentData,data)
+		else
+			data = oEditor["new"..name](oEditor)
+			pos = oEditor.world:convertToNodeSpace(pos)
+			data:set("Position",pos)
+			oEditor:addData(data)
+		end
+		oEvent:send("viewPanel.choose",data)
+		oEvent:send("editMenu.created")
+	end
+	
 	-- init world node --
 	crossNode:addChild(oEditor.world)
 
 	-- register view touch event --
 	view:registerTouchHandler(
 		function(eventType, touches)
-			if eventType == CCTouch.Moved then
+			if eventType == CCTouch.Began then
+				if shapeToCreate ~= nil then
+					createShape(shapeToCreate,touches[1].location)
+					shapeToCreate = nil
+					return false
+				else
+					return true
+				end
+			elseif eventType == CCTouch.Moved then
 				if #touches == 1 then -- move view
 					oEvent:send("viewArea.move",touches[1].delta)
-					crossNode.position = crossNode.position + touches[1].delta
-					oEditor.viewPosition = crossNode.position
 				elseif #touches >= 2 then -- scale view
 					local preDistance = touches[1].preLocation:distance(touches[2].preLocation)
 					local distance = touches[1].location:distance(touches[2].location)

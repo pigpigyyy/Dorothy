@@ -123,8 +123,9 @@ local function oHRuler()
 		updatePart(delta.x > 0 and intervalNode.positionX or 0,
 			delta.x < 0 and winSize.width-intervalNode.positionX or 0)
 	end)
-	intervalNode.data.toOriginListener = oListener("viewArea.toOrigin",function()
-		intervalNode:runAction(oPos(0.5,origin.x,halfH,oEase.OutQuad))
+	intervalNode.data.toPosListener = oListener("viewArea.toPos",function(pos)
+		intervalNode:runAction(oPos(0.5,pos.x,halfH,oEase.OutQuad))
+		updatePart(pos.x,winSize.width-pos.x)
 	end)
 
 	-- listen view scale event --

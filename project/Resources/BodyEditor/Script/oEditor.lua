@@ -24,7 +24,6 @@ oEditor.isPlaying = false
 oEditor.origin = oVec2(
 		60+(winSize.width-120-180)*0.5,
 		winSize.height*0.5)
-oEditor.viewPosition = oEditor.origin
 oEditor.currentData = nil
 oEditor.isFixed = true
 oEditor.scale = 1
@@ -45,6 +44,9 @@ oEditor.world:registerEventHandler(function(eventType)
 		CCDirector.scheduler:unshedule(oEditor.worldScheduler)
 	end
 end)
+local worldNode = CCNode()
+oEditor.world:addChild(worldNode)
+oEditor.worldNode = worldNode
 
 oEditor.touchPriorityEditMenu = CCMenu.DefaultHandlerPriority
 oEditor.touchPrioritySettingPanel = CCMenu.DefaultHandlerPriority+1
