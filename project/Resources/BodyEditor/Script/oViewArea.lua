@@ -103,12 +103,18 @@ local function oViewArea()
 				worldNode.position = parent:get("Position")
 				worldNode.rotation = parent:has("Angle") and parent:get("Angle") or 0
 				pos = worldNode:convertToNodeSpace(pos)
+				if oEditor.isFixed then 
+					pos = oEditor:round(pos)
+				end
 				data:set("Center",pos)
 			end
 			oEditor:addSubData(oEditor.currentData,data)
 		else
 			data = oEditor["new"..name](oEditor)
 			pos = oEditor.world:convertToNodeSpace(pos)
+			if oEditor.isFixed then 
+				pos = oEditor:round(pos)
+			end
 			data:set("Position",pos)
 			oEditor:addData(data)
 		end
@@ -155,7 +161,7 @@ local function oViewArea()
 	local drawNode = CCDrawNode()
 	drawNode:drawDot(oVec2.zero,100,ccColor4(0xff80ff00))
 	oEditor.world:addChild(drawNode)]]
-
+	--[[
 	local bodyData = oEditor:newCircle()
 	bodyData[oEditor.Circle.Center] = oVec2(100,0)
 	bodyData[oEditor.Circle.Sensor] = true
@@ -201,7 +207,7 @@ local function oViewArea()
 	bodyData:set("SubShapes",{oEditor:newSubRectangle(),oEditor:newSubCircle()})
 	bodyData:get("SubShapes")[2]:set("Center",oVec2(200,0))
 	oEditor:addData(bodyData)
-
+	--]]
 	--oEditor:dumpData("test.lua")
 	--oEditor:loadData("test.lua")
 	-- test codes abow

@@ -98,7 +98,7 @@ local function oFileChooser()
 	local function addImages(file)
 		panel:removeMenuItems()
 		local blocks = {}
-		local images = oContent:getDirEntries(oEditor.input..file,false)
+		local images = oContent:getEntries(oEditor.input..file,false)
 		CCImage.isPngAlphaPremultiplied = false
 		local blendFunc = ccBlendFunc(ccBlendFunc.One,ccBlendFunc.Zero)
 		for i = 1,#images do
@@ -134,7 +134,6 @@ local function oFileChooser()
 		},ccColor4(0x44ffffff))
 
 		local node = CCNode()
-		node:addChild(frame)
 		
 		for n = 1, #blocks do
 			local block = blocks[n]
@@ -158,9 +157,7 @@ local function oFileChooser()
 
 		local target = CCRenderTarget(w,h)
 		target:beginPaint(ccColor4(255,255,255,0))
-		frame.visible = false
 		target:draw(node)
-		frame.visible = true
 		target:endPaint()
 		target:save(oEditor.output..file..".png",CCImage.PNG)
 		local xml = "<A A=\""..file..".png\">"
@@ -177,23 +174,15 @@ local function oFileChooser()
 		oCache.Clip:update(clipFile,xml)
 		oCache.Model:unload(modelFile)
 		oCache.Texture:unload(texFile)
-		oCache.Texture:add(target,texFile)
-	
-		local children = node.children
-		if children then
-			local blendFunc = ccBlendFunc(ccBlendFunc.Src,ccBlendFunc.OneMinDst)
-			for i = 1,children.count do
-				local sprite = tolua.cast(children[i],"CCSprite")
-				if sprite then
-					sprite.texture.antiAlias = true
-					sprite.blendFunc = blendFunc
-				end
-			end
-		end
-		node.opacity = 0
-		node:runAction(oOpacity(0.3,1))
-		node.position = oVec2(winSize.width*0.5-borderSize.width*0.5+10,winSize.height*0.5-borderSize.height*0.5-h+borderSize.height-10)
-		menu:addChild(node)
+		local tex = oCache.Texture:add(target,texFile)
+
+		local displaySprite = CCSprite(tex)
+		displaySprite.anchor = oVec2.zero
+		displaySprite:addChild(frame)
+		displaySprite.opacity = 0
+		displaySprite:runAction(oOpacity(0.3,1))
+		displaySprite.position = oVec2(winSize.width*0.5-borderSize.width*0.5+10,winSize.height*0.5-borderSize.height*0.5-h+borderSize.height-10)
+		menu:addChild(displaySprite)
 
 		local yTo = h+20
 		local xTo = w+20
@@ -210,9 +199,10 @@ local function oFileChooser()
 	end
 
 	local opMenu = CCMenu()
-	opMenu.contentSize = CCSize(130,60)
+	opMenu.contentSize = CCSize(200,60)
+	opMenu.anchor = oVec2(1,0.5)
 	opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
-	opMenu.position = oVec2(winSize.width*0.5+borderSize.width*0.5-35,winSize.height*0.5+borderSize.height*0.5)
+	opMenu.position = oVec2(winSize.width*0.5+borderSize.width*0.5+35,winSize.height*0.5+borderSize.height*0.5)
 	panel:addChild(opMenu)
 
 	local updateButton = oButton("Update",17,60,false,
@@ -228,76 +218,90 @@ local function oFileChooser()
 	updateButton.visible = false
 	opMenu:addChild(updateButton)
 
-	local cancelButton = oButton("Cancel",17,60,false,
+	local editButton = oButton("Edit",17,60,false,
 		70,0,
 		function(item)
 			opMenu.enabled = false
 			panel:hide()
 			updateButton:unregisterTapHandler()
 			item:unregisterTapHandler()
-			if item.editTarget then
-				oEditor.controlBar:clearCursors()
-				local modelFile = item.editTarget..".model"
-				oEditor.model = oEditor.output..modelFile
-				oCache.clear()
-				oCache.Texture:removeUnused()
-				local files = oContent:getDirEntries(oEditor.output,false)
-				local fileExist = false
-				for i = 1,#files do
-					if files[i] == modelFile then
-						fileExist = true
-					end
+			oEditor.controlBar:clearCursors()
+			local modelFile = item.editTarget..".model"
+			oEditor.model = oEditor.output..modelFile
+			oCache.clear()
+			oCache.Texture:removeUnused()
+			local files = oContent:getEntries(oEditor.output,false)
+			local fileExist = false
+			for i = 1,#files do
+				if files[i] == modelFile then
+					fileExist = true
 				end
-				if not fileExist then
-					local modelText = "<A A=\""..item.editTarget..".clip\" D=\"0,0\"><B></B></A>"
-					oContent:saveToFile(oEditor.model, modelText)
-				end
-				oEditor.data = oCache.Model:getData(oEditor.model)
-				oEditor.look = ""
-				oEditor.animation = ""
-				oEditor.animationData = nil
-				oEditor.keyIndex = nil
-				oEditor.currentFramePos = nil
-				oEditor.sprite = nil
-				oEditor.spriteData = nil
-				oEditor.dirty = false
-				--oEditor.needSave = false
-
-				oEditor.editMenu:markEditButton(not oEditor.data)
-				if not oEditor.data then
-					oEditor.data =
-					{
-						0.5,--anchorX
-						0.5,--anchorY
-						"",--clip
-						"",--name
-						1,--opacity
-						0,--rotation
-						1,--scaleX
-						1,--scaleY
-						0,--skewX
-						0,--skewY
-						0,--x
-						0,--y
-						{},--looks
-						{},--animationDefs
-						{},--children
-						true,--isFaceRight
-						false,--isBatchUsed
-						oEditor.output..item.editTarget..".clip",--clipFile
-						{},--keys
-						{},--animationNames
-						{}--lookNames
-					}
-				end
-				oEditor.dirty = true
-				local model = oEditor.viewArea:getModel()
-				oEditor.viewPanel:clearSelection()
-				oEditor.viewPanel:updateImages(oEditor.data,model)
-				oEditor.viewArea:setModelSize(oEditor.data[oSd.size])
-				oEditor.editMenu.items.Size.visible = false
-				oEditor.editMenu:toSprite()
 			end
+			if not fileExist then
+				local modelText = "<A A=\""..item.editTarget..".clip\" D=\"0,0\"><B></B></A>"
+				oContent:saveToFile(oEditor.model, modelText)
+			end
+			oEditor.data = oCache.Model:getData(oEditor.model)
+			oEditor.look = ""
+			oEditor.animation = ""
+			oEditor.animationData = nil
+			oEditor.keyIndex = nil
+			oEditor.currentFramePos = nil
+			oEditor.sprite = nil
+			oEditor.spriteData = nil
+			oEditor.dirty = false
+			--oEditor.needSave = false
+
+			oEditor.editMenu:markEditButton(not oEditor.data)
+			if not oEditor.data then
+				oEditor.data =
+				{
+					0.5,--anchorX
+					0.5,--anchorY
+					"",--clip
+					"",--name
+					1,--opacity
+					0,--rotation
+					1,--scaleX
+					1,--scaleY
+					0,--skewX
+					0,--skewY
+					0,--x
+					0,--y
+					{},--looks
+					{},--animationDefs
+					{},--children
+					true,--isFaceRight
+					false,--isBatchUsed
+					oEditor.output..item.editTarget..".clip",--clipFile
+					{},--keys
+					{},--animationNames
+					{}--lookNames
+				}
+			end
+			oEditor.dirty = true
+			local model = oEditor.viewArea:getModel()
+			oEditor.viewPanel:clearSelection()
+			oEditor.viewPanel:updateImages(oEditor.data,model)
+			oEditor.viewArea:setModelSize(oEditor.data[oSd.size])
+			oEditor.editMenu.items.Size.visible = false
+			oEditor.editMenu:toSprite()
+		end)
+	editButton.anchor = oVec2.zero
+	editButton.visible = false
+	btnBk = CCDrawNode()
+	btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
+	btnBk.position = oVec2(30,30)
+	editButton:addChild(btnBk,-1)
+	opMenu:addChild(editButton)
+
+	local cancelButton = oButton("Cancel",17,60,false,
+		140,0,
+		function(item)
+			opMenu.enabled = false
+			panel:hide()
+			updateButton:unregisterTapHandler()
+			item:unregisterTapHandler()
 		end)
 	cancelButton.anchor = oVec2.zero
 	btnBk = CCDrawNode()
@@ -307,8 +311,8 @@ local function oFileChooser()
 	opMenu:addChild(cancelButton)
 
 	panel.init = function(self)
-		local dirs = oContent:getDirEntries(oEditor.input,true)
-		local files = oContent:getDirEntries(oEditor.output,false)
+		local dirs = oContent:getEntries(oEditor.input,true)
+		local files = oContent:getEntries(oEditor.output,false)
 		local dirDict = {}
 		for i = 1,#dirs do
 			dirDict[dirs[i]] = true
@@ -354,18 +358,17 @@ local function oFileChooser()
 				xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
 				function(item)
 					local file = item.file
-					cancelButton.label.text = "Edit"
-					cancelButton.label.texture.antiAlias = false
 					panel:removeMenuItems()
+					editButton.visible = true
 					if file:sub(-5,-1) == ".clip" then
-						cancelButton.editTarget = file:sub(1,-6)
+						editButton.editTarget = file:sub(1,-6)
 						addClip(file)
 					else
-						cancelButton.editTarget = file
+						editButton.editTarget = file
 						if fileDict[file] then
 							updateButton.targetFile = file
 							addClip(file..".clip")
-							if #oContent:getDirEntries(oEditor.input..file,false) > 0 then
+							if #oContent:getEntries(oEditor.input..file,false) > 0 then
 								updateButton.visible = true
 							end
 						else

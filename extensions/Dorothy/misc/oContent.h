@@ -42,6 +42,20 @@ public:
 	bool removeExtractedFile(const char* filename);
 	void saveToFile(const string& filename, const string& content);
 	vector<string> getDirEntries(const char* path, bool isFolder);
+	bool mkdir(const char* path);
+
+	/* from CCFileUtils */
+	PROPERTY_READONLY(string, WritablePath);
+	PROPERTY_BOOL_NAME(PopupNotify);
+
+	string getFullPath(char *pszFileName);
+	const char* getRelativeFullPath(char *pszFilename, char *pszRelativeFile);
+	void loadFileLookupInfo(const char* filename);
+
+	void addSearchPath(const char* path);
+	void addSearchResolutionsOrder(const char* order);
+	void purgeCachedEntries();
+
 	/** Singleton method. */
 	SHARED_FUNC(oContent);
 protected:

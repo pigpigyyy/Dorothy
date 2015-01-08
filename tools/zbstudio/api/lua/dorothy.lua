@@ -1176,78 +1176,6 @@ local Dorothy =
 		type = "class",
 		index = index()
 	},
-	CCFileUtils =
-	{
-		childs =
-		{
-			writablePath =
-			{
-				description = "[string][readonly]",
-				typeName = "string",
-				static = true,
-				type = "value",
-			},
-			popupNotify =
-			{
-				description = "[bool]",
-				static = true,
-				type = "value",
-			},
-			getFullPath =
-			{
-				args = "(filename: string)",
-				description = "",
-				typeName = "string",
-				returns = "(fullname: string)",
-				static = true,
-				type = "method",
-			},
-			getRelativeFullPath =
-			{
-				args = "(filename: string, relativeFile: string)",
-				description = "",
-				typeName = "string",
-				returns = "(relativeName: string)",
-				static = true,
-				type = "method",
-			},
-			loadFileLookupInfo =
-			{
-				args = "(filename: string)",
-				description = "",
-				returns = "()",
-				static = true,
-				type = "method",
-			},
-			addSearchPath =
-			{
-				args = "(path: string)",
-				description = "",
-				returns = "()",
-				static = true,
-				type = "method",
-			},
-			addSearchResolutionsOrder =
-			{
-				args = "(order: string)",
-				description = "",
-				returns = "()",
-				static = true,
-				type = "method",
-			},
-			purgeCachedEntries =
-			{
-				args = "()",
-				description = "",
-				returns = "()",
-				static = true,
-				type = "method",
-			},
-		},
-		description = "class CCFileUtils.",
-		type = "class",
-		index = index()
-	},
 	CCLanguageType =
 	{
 		childs =
@@ -4748,14 +4676,93 @@ local Dorothy =
 				returns = "()",
 				static = true,
 				type = "method"
+			},			
+			exist =
+			{
+				args = "(path: string)",
+				description = "[Class Method]",
+				returns = "(exist: bool)",
+				static = true,
+				type = "method"
 			},
-			getDirEntries =
+			getEntries =
 			{
 				args = "(path: string, isFolder: bool)",
 				description = "[Class Method]",
 				returns = "()",
 				static = true,
 				type = "method"
+			},
+			mkdir =
+			{
+				args = "(path: string)",
+				description = "[Class Method]",
+				returns = "(success: bool)",
+				static = true,
+				type = "method"
+			},
+			writablePath =
+			{
+				description = "[string][readonly]",
+				typeName = "string",
+				static = true,
+				type = "value",
+			},
+			popupNotify =
+			{
+				description = "[bool]",
+				static = true,
+				type = "value",
+			},
+			getFullPath =
+			{
+				args = "(filename: string)",
+				description = "",
+				typeName = "string",
+				returns = "(fullname: string)",
+				static = true,
+				type = "method",
+			},
+			getRelativeFullPath =
+			{
+				args = "(filename: string, relativeFile: string)",
+				description = "",
+				typeName = "string",
+				returns = "(relativeName: string)",
+				static = true,
+				type = "method",
+			},
+			loadFileLookupInfo =
+			{
+				args = "(filename: string)",
+				description = "",
+				returns = "()",
+				static = true,
+				type = "method",
+			},
+			addSearchPath =
+			{
+				args = "(path: string)",
+				description = "",
+				returns = "()",
+				static = true,
+				type = "method",
+			},
+			addSearchResolutionsOrder =
+			{
+				args = "(order: string)",
+				description = "",
+				returns = "()",
+				static = true,
+				type = "method",
+			},
+			purgeCachedEntries =
+			{
+				args = "()",
+				description = "",
+				returns = "()",
+				static = true,
+				type = "method",
 			},
 		},
 		description = "class oContent.",

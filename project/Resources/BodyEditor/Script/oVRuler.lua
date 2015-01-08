@@ -29,7 +29,7 @@ local function oVRuler()
 	
 	self.cascadeOpacity = true
 	self.opacity = 0.3
-	self.position = oVec2(winSize.width-190-halfW,halfH)
+	self.position = oVec2(winSize.width-200-halfW,halfH)
 
 	-- borders --
 	local border = oLine(

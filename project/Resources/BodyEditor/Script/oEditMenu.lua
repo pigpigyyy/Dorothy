@@ -11,6 +11,7 @@ local oPlayButton = require("oPlayButton")
 local oListener = require("oListener")
 local oEvent = require("oEvent")
 local class,property = unpack(require("class"))
+local oFileChooser = require("oFileChooser")
 
 local function oEditMenu()
 	local winSize = CCDirector.winSize
@@ -61,7 +62,8 @@ local function oEditMenu()
 	local items =
 	{
 		Edit = oButton("Edit",16,50,50,35,winSize.height-35,function()
-			oEditor:addChild(require("oBox")("Name It",function(text)
+			oEditor:addChild(oFileChooser(),oEditor.topMost)
+			--[[oEditor:addChild(require("oBox")("Name It",function(text)
 				if text ~= "" then
 					local oRoutine = require("oRoutine")
 					local once = oRoutine.once
@@ -72,7 +74,7 @@ local function oEditMenu()
 						CCDirector:popToRootScene()
 					end))
 				end
-			end,true),999)
+			end,true),999)]]
 		end),
 		Rectangle = oShapeButton("Rectangle",35,winSize.height-95),
 		Circle = oShapeButton("Circle",35,winSize.height-155),

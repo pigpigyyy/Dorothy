@@ -8,7 +8,6 @@ $pfile "CCArray.h"
 $pfile "CCDictionary.h"
 $pfile "CCEGLView.h"
 
-$pfile "CCFileUtils.h"
 $pfile "CCApplication.h"
 $pfile "CCDirector.h"
 $pfile "CCUserDefault.h"

@@ -2,7 +2,6 @@ $[
 local loaded = package.loaded
 
 loaded.CCView = loaded.CCView()
-loaded.CCFileUtils = loaded.CCFileUtils()
 loaded.CCApplication = loaded.CCApplication()
 loaded.CCDirector = loaded.CCDirector()
 loaded.CCUserDefault = loaded.CCUserDefault()
@@ -69,13 +68,17 @@ end
 
 local function cycle(duration,work)
 	local time = 0
-	return function(deltaTime)
+	local function worker()
+		local deltaTime = CCDirector.deltaTime
 		time = time + deltaTime
 		if time < duration then
 			work(deltaTime)
 			return true
 		end
 		return false
+	end
+	while worker() do
+		yield()
 	end
 end
 

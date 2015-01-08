@@ -54,8 +54,8 @@ bool oClipCache_load(const char* filename);
 bool oClipCache_update(const char* name, const char* content);
 bool oClipCache_unload(const char* filename = nullptr);
 void oClipCache_removeUnused();
-void __oClipCache_getNames(const char* filename);
-#define oClipCache_getNames(filename) {__oClipCache_getNames(filename);return 1;}
+void __oClipCache_getNames(lua_State* L,  const char* filename);
+#define oClipCache_getNames(filename) {__oClipCache_getNames(tolua_S,filename);return 1;}
 
 bool oEffectCache_load(const char* filename);
 bool oEffectCache_update(const char* content);
@@ -83,11 +83,11 @@ void oUnitDef_setInstincts(oUnitDef* def, int instincts[], int count);
 
 oListener* oListener_create(const string& name, int handler);
 
-void __oContent_getDirEntries(oContent* self, const char* path, bool isFolder);
-#define oContent_getDirEntries(self,path,isFolder) {__oContent_getDirEntries(self,path,isFolder);return 1;}
+void __oContent_getDirEntries(lua_State* L, oContent* self, const char* path, bool isFolder);
+#define oContent_getDirEntries(self,path,isFolder) {__oContent_getDirEntries(tolua_S,self,path,isFolder);return 1;}
 
-void __oJoint_collision(bool flag);
-#define oJoint_collision(flag) {__oJoint_collision(flag);return 1;}
+void __oJoint_collision(lua_State* L, bool flag);
+#define oJoint_collision(flag) {__oJoint_collision(tolua_S,flag);return 1;}
 
 CCSprite* CCSprite_createWithClip(const char* clipStr);
 
@@ -140,9 +140,10 @@ int CCDictionary_set(lua_State* L);
 int CCDictionary_keys(lua_State* L);
 int CCDictionary_randomObject(lua_State* L);
 
-void __oModelCache_getData(const char* filename);
-#define oModelCache_getData(filename) {__oModelCache_getData(filename);return 1;}
-oModelDef* oModelCache_loadData(const char* filename, int tableIndex);
+void __oModelCache_getData(lua_State* L,  const char* filename);
+#define oModelCache_getData(filename) {__oModelCache_getData(tolua_S,filename);return 1;}
+oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableIndex);
+#define oModelCache_loadData(filename,tableIndex) {__oModelCache_loadData(tolua_S,filename,tableIndex);}
 void oModelCache_save(const char* itemName, const char* targetName);
 
 inline ccBlendFunc* ccBlendFuncNew(GLenum src, GLenum dst)

@@ -12,6 +12,11 @@ local oButton = require("oButton")
 local ccColor3 = require("ccColor3")
 local oScale = require("oScale")
 local oEase = require("oEase")
+local CCLabelTTF = require("CCLabelTTF")
+local oListener = require("oListener")
+local oRoutine = require("oRoutine")
+local once = oRoutine.once
+local cycle = oRoutine.cycle
 
 local function oVertexControl()
 	local winSize = CCDirector.winSize
@@ -20,6 +25,38 @@ local function oVertexControl()
 	local vertices = nil
 	local vertChanged = nil
 	local selectedVert = nil
+	
+	local layer = CCLayer()
+	layer.contentSize = CCSize.zero
+	layer.visible = false
+
+	local label = CCLabelTTF("","Arial",16)
+	label.color = ccColor3(0x00ffff)
+	layer:addChild(label)
+	
+	local function setLabelPos(target)
+		local pos = target.position
+		label.text = string.format("%.2f",pos.x)..","..string.format("%.2f",pos.y)
+		label.texture.antiAlias = false
+		pos = target.parent:convertToWorldSpace(pos)
+		pos = layer:convertToNodeSpace(pos)
+		local scale = oEditor.world.parent.scaleX
+		scale = math.max(1,scale)
+		label.scaleX = scale
+		label.scaleY = scale
+		label.position = oVec2(pos.x,pos.y+45*scale)
+	end
+	
+	label.data = oListener("viewArea.toScale",function()
+		label:schedule(once(function()
+			cycle(0.5,function(dt)
+				if selectedVert then
+					setLabelPos(selectedVert)
+				end
+			end)
+		end))
+	end)
+	
 	local function itemTapped(eventType,item)
 		if eventType == CCMenuItem.TapBegan then
 			if selectedVert and item ~= selectedVert then
@@ -27,6 +64,7 @@ local function oVertexControl()
 				selectedVert.selected = false
 			end
 			selectedVert = item
+			setLabelPos(item)
 			if item.opacity == 0.5 then
 				item.selected = true
 			else
@@ -35,6 +73,7 @@ local function oVertexControl()
 		elseif eventType == CCMenuItem.Tapped then
 			item.selected = not item.selected
 			selectedVert = item.selected and item or nil
+			if not item.selected then label.text = "" end
 			item.opacity = item.selected and 0.5 or 0.2
 		end
 	end
@@ -52,10 +91,6 @@ local function oVertexControl()
 		return menuItem
 	end
 
-	local layer = CCLayer()
-	layer.contentSize = CCSize.zero
-	layer.visible = false
-
 	local menu = CCMenu(false)
 	menu.items = nil
 	menu.vs = nil
@@ -68,8 +103,7 @@ local function oVertexControl()
 	menu:addChild(oVertex(oVec2(-100,-100)))
 	menu:addChild(oVertex(oVec2(100,-100)))
 	layer:addChild(menu)
-	layer.menu = menu
-
+	
 	local function setVertices(vs)
 		menu:removeAllChildrenWithCleanup()
 		menu.vs = vs
@@ -89,6 +123,7 @@ local function oVertexControl()
 		if vertChanged then
 			vertChanged(menu.vs)
 		end
+		return item
 	end
 	
 	local function removeVertex()
@@ -109,21 +144,50 @@ local function oVertexControl()
 
 	local vertexToAdd = false
 	local addButton = nil
+	local totalDelta = oVec2.zero
 	layer:registerTouchHandler(function(eventType, touch)
 		if eventType == CCTouch.Began then
 			if vertexToAdd then
 				vertexToAdd = false
 				addButton.color = ccColor3(0x00ffff)
-				addVertex(menu:convertToNodeSpace(touch.location))
+				local pos = menu:convertToNodeSpace(touch.location)
+				if oEditor.isFixed then 
+					pos = oEditor:round(pos)
+				end
+				local item = addVertex(pos)
+				setLabelPos(item)
 				return false
 			end
+			totalDelta = oVec2.zero
 		elseif eventType == CCTouch.Moved then
 			if touch.delta ~= oVec2.zero and selectedVert then
 				selectedVert.selected = false
-				selectedVert.position = selectedVert.position + menu:convertToNodeSpace(touch.location) - menu:convertToNodeSpace(touch.preLocation)
-				menu.vs[selectedVert.index] = selectedVert.position
-				if vertChanged then
-					vertChanged(menu.vs)
+				local delta = menu:convertToNodeSpace(touch.location) - menu:convertToNodeSpace(touch.preLocation)
+				if oEditor.fixX then delta.x = 0 end
+				if oEditor.fixY then delta.y = 0 end
+				local pos = selectedVert.position
+				if oEditor.isFixed then
+					totalDelta = totalDelta + delta
+					if totalDelta.x > 1 or totalDelta.x < -1 then
+						local posX = pos.x+totalDelta.x
+						pos.x = oEditor:round(posX)
+						totalDelta.x = 0
+					end
+					if totalDelta.y > 1 or totalDelta.y < -1 then
+						local posY = pos.y+totalDelta.y
+						pos.y = oEditor:round(posY)
+						totalDelta.y = 0
+					end
+				else
+					pos = pos + delta
+				end
+				if pos ~= selectedVert.position then
+					selectedVert.position = pos
+					menu.vs[selectedVert.index] = pos
+					setLabelPos(selectedVert)
+					if vertChanged then
+						vertChanged(menu.vs)
+					end
 				end
 			end
 		end
@@ -140,16 +204,17 @@ local function oVertexControl()
 	editMenu.touchPriority = oEditor.touchPriorityEditControl
 	editMenu.touchEnabled = false
 	layer:addChild(editMenu)
-	local removeButton = oButton("-",20,50,50,winSize.width-405,winSize.height-35,function()
+	local removeButton = oButton("-",20,50,50,winSize.width-465,winSize.height-35,function()
 		removeVertex()
+		label.text = ""
 	end)
 	editMenu:addChild(removeButton)
-	addButton = oButton("+",20,50,50,winSize.width-345,winSize.height-35,function(button)
-		button.color = ccColor3(0xff0080)
-		vertexToAdd = true
+	addButton = oButton("+",20,50,50,winSize.width-525,winSize.height-35,function(button)
+		vertexToAdd = not vertexToAdd
+		button.color = vertexToAdd and ccColor3(0xff0080) or ccColor3(0x00ffff)
 	end)
 	editMenu:addChild(addButton)
-
+	
 	layer.show = function(self,vs,pos,angle,callback)
 		layer.touchEnabled = true
 		mask.touchEnabled = true
@@ -159,8 +224,10 @@ local function oVertexControl()
 		menu.position = pos
 		menu.rotation = angle
 		vs = vs or {}
+		label.text = ""
 		selectedVert = nil
 		vertexToAdd = false
+		totalDelta = oVec2.zero
 		addButton.color = ccColor3(0x00ffff)
 		setVertices(vs)
 		vertChanged = callback

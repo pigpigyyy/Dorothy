@@ -377,5 +377,8 @@
     <ClInclude Include="..\Dorothy\event\oListener.h">
       <Filter>Dorothy\event</Filter>
     </ClInclude>
+    <ClInclude Include="..\Dorothy\other\mkdir.h">
+      <Filter>Dorothy\other</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -39,19 +39,23 @@ local function oEditControl()
 	fixXButton = oButton("",0,50,50,winSize.width-405,winSize.height-35,function(button)
 		if fixY then
 			fixY = false
+			oEditor.fixY = fixY
 			fixYButton.color = ccColor3(0x00ffff)
 		end
 		fixX = not fixX
 		button.color = fixX and ccColor3(0xff0080) or ccColor3(0x00ffff)
+		oEditor.fixX = fixX
 	end)
 	fixMenu:addChild(fixXButton)
 	fixYButton = oButton("",0,50,50,winSize.width-345,winSize.height-35,function(button)
 		if fixX then
 			fixX = false
+			oEditor.fixX = false
 			fixXButton.color = ccColor3(0x00ffff)
 		end
 		fixY = not fixY
 		button.color = fixY and ccColor3(0xff0080) or ccColor3(0x00ffff)
+		oEditor.fixY = fixY
 	end)
 	fixMenu:addChild(fixYButton)
 	local function createArrowForButton(button,rotation)
@@ -89,12 +93,14 @@ local function oEditControl()
 	createArrowForButton(fixYButton,-90)
 	editControl.showFixButtons = function(self)
 		fixX = false
+		oEditor.fixX = false
 		fixXButton.color = ccColor3(0x00ffff)
 		fixXButton:stopAllActions()
 		fixXButton.scaleX = 0
 		fixXButton.scaleY = 0
 		fixXButton:runAction(oScale(0.5,1,1,oEase.OutBack))
 		fixY = false
+		oEditor.fixY = false
 		fixYButton.color = ccColor3(0x00ffff)
 		fixYButton:stopAllActions()
 		fixYButton.scaleX = 0
@@ -603,7 +609,15 @@ local function oEditControl()
 	-- init vertices --
 	local vertControl = oVertexControl()
 	editControl:addChild(vertControl)
-	
+	editControl.showVertEditor = function(self,...)			self:hide()
+		self:showFixButtons()
+		vertControl:show(...)
+	end
+	editControl.hideVertEditor = function(self)
+		self:hideFixButtons()
+		vertControl:hide()
+	end
+
 	-- hide all controls
 	editControl.hide = function(self)
 		editControl:hideSwitch()
@@ -614,7 +628,7 @@ local function oEditControl()
 		editControl:hideSizeEditor()
 		editControl:hideCenterEditor()
 		editControl:hideRadiusEditor()
-		vertControl:hide()
+		editControl:hideVertEditor()
 	end
 
 	editControl.data = CCDictionary()
@@ -658,7 +672,8 @@ local function oEditControl()
 					if data.parent then
 						oEditor:resetItem(data)
 					else
-						oEditor:getItem(data).rotation = rot
+						local item = oEditor:getItem(data)
+						if item then item.rotation = rot end
 					end
 				end)
 			elseif name == "Center" then
@@ -714,9 +729,8 @@ local function oEditControl()
 					oEditor:resetItem(data)
 				end)
 			elseif name == "Vertices" then
-				editControl:hide()
 				local item = data.parent or data
-				vertControl:show(data:get("Vertices"),item:get("Position"),item:get("Angle"),function(vs)
+				editControl:showVertEditor(data:get("Vertices"),item:get("Position"),item:get("Angle"),function(vs)
 					data:set("Vertices",vs)
 					oEditor:resetItem(data)
 				end)

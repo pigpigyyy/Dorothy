@@ -9,12 +9,10 @@ local oEvent = require("oEvent")
 local oListener = require("oListener")
 local tolua = require("tolua")
 local oContent = require("oContent")
-local CCFileUtils = require("CCFileUtils")
 local oWorld = require("oWorld")
 local CCScheduler = require("CCScheduler")
 local CCDirector = require("CCDirector")
 local CCNode = require("CCNode")
-local CCDictionary = require("CCDictionary")
 
 local winSize = CCDirector.winSize
 
@@ -30,6 +28,28 @@ oEditor.scale = 1
 oEditor.names = {}
 oEditor.bodyData = {}
 oEditor.items = {}
+oEditor.input = oContent.writablePath.."Body/Input/"
+oEditor.output = oContent.writablePath.."Body/Output/"
+oEditor.topMost = 9999
+oEditor.currentFile = nil
+oEditor.fixX = false
+oEditor.fixY = false
+
+oEditor.round = function(self,val)
+	if type(val) == "number" then
+		return val > 0 and math.floor(val+0.5) or math.ceil(val-0.5)
+	else
+		return oVec2(val.x > 0 and math.floor(val.x+0.5) or math.ceil(val.x-0.5),
+			val.y > 0 and math.floor(val.y+0.5) or math.ceil(val.y-0.5))
+	end
+end
+
+if not oContent:exist(oEditor.input) then
+	oContent:mkdir(oEditor.input)
+end
+if not oContent:exist(oEditor.output) then
+	oContent:mkdir(oEditor.output)
+end
 
 local worldScheduler = CCScheduler()
 worldScheduler.timeScale = 0
@@ -1012,11 +1032,11 @@ return
 		str = str..itemToString(data,"\t")
 	end
 	str = str.."}\n"
-	oContent:saveToFile(CCFileUtils.writablePath..filename,str)
+	oContent:saveToFile(oEditor.output..filename,str)
 end
 
 oEditor.loadData = function(self,filename)
-	self.bodyData = dofile(CCFileUtils.writablePath..filename)
+	self.bodyData = dofile(oEditor.output..filename)
 	if not self.bodyData then return end
 	oEditor.names = {}
 	for _,data in ipairs(self.bodyData) do

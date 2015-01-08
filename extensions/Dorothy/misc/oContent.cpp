@@ -9,8 +9,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "Dorothy/const/oDefine.h"
 #include "Dorothy/misc/oContent.h"
 #include "Dorothy/other/tinydir.h"
-#include <cstdio>
-#include <sys/stat.h>
+#include "Dorothy/other/mkdir.h"
 #include <fstream>
 using std::ofstream;
 
@@ -145,12 +144,7 @@ string oContent::getExtractedFullName( const char* filename )
 
 bool oContent::isFileExist(const char* filename)
 {
-	struct stat buf;
-	if (::stat(filename, &buf) != -1)
-	{
-		return true;
-	}
-	return false;
+	return ACCESS(filename, 0) == 0;
 }
 
 bool oContent::removeExtractedFile( const char* filename )
@@ -195,6 +189,51 @@ vector<string> oContent::getDirEntries(const char* path, bool isFolder)
 		CCLOG("oContent get entry error, code %d", errno);
 	}
 	return std::move(files);
+}
+
+bool oContent::mkdir(const char* path)
+{
+	return CreateDir(path) == 0;
+}
+
+string oContent::getWritablePath() const
+{
+	return CCFileUtils::sharedFileUtils()->getWritablePath();
+}
+
+void oContent::setPopupNotify(bool var)
+{
+	CCFileUtils::sharedFileUtils()->setPopupNotify(var);
+}
+bool oContent::isPopupNotify() const
+{
+	return CCFileUtils::sharedFileUtils()->isPopupNotify();
+}
+
+string oContent::getFullPath(char *pszFileName)
+{
+	return CCFileUtils::sharedFileUtils()->fullPathForFilename(pszFileName);
+}
+const char* oContent::getRelativeFullPath(char *pszFilename, char *pszRelativeFile)
+{
+	return CCFileUtils::sharedFileUtils()->fullPathFromRelativeFile(pszFilename, pszRelativeFile);
+}
+void oContent::loadFileLookupInfo(const char* filename)
+{
+	CCFileUtils::sharedFileUtils()->loadFilenameLookupDictionaryFromFile(filename);
+}
+
+void oContent::addSearchPath(const char* path)
+{
+	CCFileUtils::sharedFileUtils()->addSearchPath(path);
+}
+void oContent::addSearchResolutionsOrder(const char* order)
+{
+	CCFileUtils::sharedFileUtils()->addSearchResolutionsOrder(order);
+}
+void oContent::purgeCachedEntries()
+{
+	CCFileUtils::sharedFileUtils()->purgeCachedEntries();
 }
 
 NS_DOROTHY_END

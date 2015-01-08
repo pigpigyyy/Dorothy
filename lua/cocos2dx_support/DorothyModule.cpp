@@ -196,10 +196,9 @@ void oClipCache_removeUnused()
 {
 	oSharedClipCache.removeUnused();
 }
-void __oClipCache_getNames(const char* filename)
+void __oClipCache_getNames(lua_State* L, const char* filename)
 {
 	oClipDef* clipDef = oSharedClipCache.load(filename);
-	lua_State* L = CCLuaEngine::sharedEngine()->getState();
 	lua_createtable(L, (int)clipDef->rects.size(), 0);
 	int i = 1;
 	for(const auto& item : clipDef->rects)
@@ -338,9 +337,8 @@ oListener* oListener_create(const string& name, int handler)
 	return oListener::create(name, std::make_pair(oListenerHandlerWrapper(handler), &oListenerHandlerWrapper::call));
 }
 
-void __oContent_getDirEntries(oContent* self, const char* path, bool isFolder)
+void __oContent_getDirEntries(lua_State* L, oContent* self, const char* path, bool isFolder)
 {
-	lua_State* L = CCLuaEngine::sharedEngine()->getState();
 	auto dirs = self->getDirEntries(path, isFolder);
 	lua_createtable(L, (int)dirs.size(), 0);
 	for (int i = 0; i < (int)dirs.size(); i++)
@@ -350,9 +348,8 @@ void __oContent_getDirEntries(oContent* self, const char* path, bool isFolder)
 	}
 }
 
-void __oJoint_collision(bool flag)
+void __oJoint_collision(lua_State* L, bool flag)
 {
-	lua_State* L = CCLuaEngine::sharedEngine()->getState();
 	oJoint::enableCollision(flag);
 	lua_pushvalue(L, 1);
 }
@@ -780,9 +777,8 @@ int CCDictionary_randomObject(lua_State* L)
 	return 1;
 }
 
-void __oModelCache_getData(const char* filename)
+void __oModelCache_getData(lua_State* L, const char* filename)
 {
-	lua_State* L = CCLuaEngine::sharedEngine()->getState();
 	oModelDef* modelDef = oSharedModelCache.load(filename);
 	if(!modelDef)
 	{
@@ -948,10 +944,8 @@ void oModelCache_save(const char* itemName, const char* targetName)
 	oSharedContent.saveToFile(targetName, oSharedModelCache.load(itemName)->toXml());
 }
 
-oModelDef* oModelCache_loadData(const char* filename, int tableIndex)
-{
-	lua_State* L = CCLuaEngine::sharedEngine()->getState();
-	
+oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableIndex)
+{	
 	auto lua_getFloat = [&](int index)->float
 	{
 		lua_rawgeti(L, -1, index);
