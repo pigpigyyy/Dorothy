@@ -488,8 +488,6 @@ NS_CC_BEGIN
 
 static bool m_bEnabledScale = true;
 
-bool isFileExists(const char* szFilePath);
-
 bool isFileExists(const char* szFilePath)
 {
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
@@ -884,8 +882,7 @@ bool CCImage::initWithString(
 
 bool CCImage::saveToFile(const char *pszFilePath, bool bIsToRGB)
 {
-	assert(false);
-	return false;
+    return false;
 }
 
 CCImage::EImageFormat CCImage::computeImageFormatType(const std::string& filename)

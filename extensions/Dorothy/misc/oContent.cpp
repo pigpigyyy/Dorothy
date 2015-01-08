@@ -144,7 +144,7 @@ string oContent::getExtractedFullName( const char* filename )
 
 bool oContent::isFileExist(const char* filename)
 {
-	return ACCESS(filename, 0) == 0;
+	return FileExist(filename) == 0;
 }
 
 bool oContent::removeFile( const char* filename )

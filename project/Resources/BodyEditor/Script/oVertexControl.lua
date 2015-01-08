@@ -41,9 +41,6 @@ local function oVertexControl()
 		pos = target.parent:convertToWorldSpace(pos)
 		pos = layer:convertToNodeSpace(pos)
 		local scale = oEditor.world.parent.scaleX
-		scale = math.max(1,scale)
-		label.scaleX = scale
-		label.scaleY = scale
 		label.position = oVec2(pos.x,pos.y+45*scale)
 	end
 

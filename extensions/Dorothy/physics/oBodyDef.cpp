@@ -70,7 +70,7 @@ void oBodyDef::attachPolygon( const vector<oVec2>& vertices, float density, floa
 }
 void oBodyDef::attachPolygon( const oVec2 vertices[], int count, float density, float friction, float restitution )
 {
-	count = min(count, b2_maxPolygonVertices);
+	count = std::min(count, b2_maxPolygonVertices);
 	b2PolygonShape* shape = new b2PolygonShape();
 	b2Vec2 vs[b2_maxPolygonVertices];
 	for (int i = 0; i < count; i++)
