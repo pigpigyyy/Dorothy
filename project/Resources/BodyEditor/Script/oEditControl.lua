@@ -306,7 +306,7 @@ local function oEditControl()
 	rotVisual:addChild(oLine(vs,ccColor4()))
 	rotVisual:addChild(oLine({oVec2(-200,0),oVec2(200,0)},ccColor4()))
 	rotVisual:addChild(oLine({oVec2(0,-200),oVec2(0,200)},ccColor4()))
-	rotVisual.transformTarget = worldNode
+	rotVisual.transformTarget = oEditor.world
 	rotEditor:addChild(rotVisual)
 
 	-- rotEditor touch callback
@@ -315,8 +315,8 @@ local function oEditControl()
 	local totalRot = 0
 	rotEditor:registerTouchHandler(function(eventType,touch)
 		if eventType == CCTouch.Moved then
-			local oldPos = worldNode:convertToNodeSpace(touch.preLocation)
-			local newPos = worldNode:convertToNodeSpace(touch.location)
+			local oldPos = rotVisual:convertToNodeSpace(touch.preLocation)
+			local newPos = rotVisual:convertToNodeSpace(touch.location)
 			local v1 = rotCenter - oldPos
 			local v2 = rotCenter - newPos
 			local len1 = v1.length
@@ -355,9 +355,8 @@ local function oEditControl()
 		rotChanged = callback
 		rotEditor.visible = true
 		rotEditor.touchEnabled = true
-		worldNode.position = data.parent and data.parent:get("Position") or data:get("Position")
-		worldNode.rotation = data:get("Angle")
-		rotVisual.rotation = worldNode.rotation
+		rotVisual.position = data.parent and data.parent:get("Position") or data:get("Position")
+		rotVisual.rotation = data:get("Angle")
 		rotCenter = (data.parent and data:has("Center")) and data:get("Center") or oVec2.zero
 		totalRot = 0
 	end

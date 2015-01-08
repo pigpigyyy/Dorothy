@@ -147,7 +147,7 @@ bool oContent::isFileExist(const char* filename)
 	return ACCESS(filename, 0) == 0;
 }
 
-bool oContent::removeExtractedFile( const char* filename )
+bool oContent::removeFile( const char* filename )
 {
 	return ::remove(filename) == 0;
 }

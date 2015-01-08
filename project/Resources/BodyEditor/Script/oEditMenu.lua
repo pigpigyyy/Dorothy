@@ -12,6 +12,8 @@ local oListener = require("oListener")
 local oEvent = require("oEvent")
 local class,property = unpack(require("class"))
 local oFileChooser = require("oFileChooser")
+local CCDictionary = require("CCDictionary")
+local oBox = require("oBox")
 
 local function oEditMenu()
 	local winSize = CCDirector.winSize
@@ -40,18 +42,20 @@ local function oEditMenu()
 			end,
 			function(self,value)
 				self._selected = value
-				oEvent:send("editControl.hide")
 				if value then
+					oEvent:send("editControl.hide")
+					oEvent:send("settingPanel.toState",nil)
 					self.color = ccColor3(0xff0080)
 					if lastSelected then
 						lastSelected.selected = false
 					end
 					lastSelected = self
-					oEvent:send("editMenu.create",self._name)
+					oEvent:send("viewArea.create",self._name)
+					oEvent:send("viewPanel.choose",nil)
 				else
 					self.color = ccColor3(0x00ffff)
 					if lastSelected == self then
-						oEvent:send("editMenu.create",nil)
+						oEvent:send("viewArea.create",nil)
 					end
 					lastSelected = nil
 				end
@@ -61,31 +65,35 @@ local function oEditMenu()
 	-- init menu items --
 	local items =
 	{
-		Edit = oButton("Edit",16,50,50,35,winSize.height-35,function()
-			oEditor:addChild(oFileChooser(),oEditor.topMost)
-			--[[oEditor:addChild(require("oBox")("Name It",function(text)
-				if text ~= "" then
-					local oRoutine = require("oRoutine")
-					local once = oRoutine.once
-					oRoutine(once(function()
-						coroutine.yield()
-						oEditor:dumpData(text..".lua")
-						coroutine.yield()
-						CCDirector:popToRootScene()
-					end))
+		Edit = oButton("Edit",16,50,50,35,winSize.height-35,function(button)
+			if not oEditor.dirty then
+				oEditor:addChild(oFileChooser(),oEditor.topMost)
+			else
+				if oEditor.currentFile then
+					oEditor.dirty = false
+					button.text = "Edit"
+					oEditor:dumpData(oEditor.currentFile)
+				else
+					oEditor:addChild(oBox("New Name",function(name)
+						oEditor.dirty = false
+						button.text = "Edit"
+						oEditor.currentFile = name..".lua"
+						oEditor:dumpData(oEditor.currentFile)
+					end,true),oEditor.topMost)
 				end
-			end,true),999)]]
+			end
 		end),
 		Rectangle = oShapeButton("Rectangle",35,winSize.height-95),
 		Circle = oShapeButton("Circle",35,winSize.height-155),
 		Polygon = oShapeButton("Polygon",35,winSize.height-215),
 		Chain = oShapeButton("Chain",35,winSize.height-275),
 		Loop = oShapeButton("Loop",35,winSize.height-335),
-		Del = oButton("Delete",16,50,50,35,winSize.height-395,function()
+		Delete = oButton("Delete",16,50,50,35,winSize.height-395,function()
 			if oEditor.currentData then
 				oEvent:send("settingPanel.toState",nil)
 				oEditor:removeData(oEditor.currentData)
 				oEditor.currentData = nil
+				oEvent:send("editor.change")
 			end
 		end),
 		Joint = oButton("",0,50,50,35,35,function() end),
@@ -232,11 +240,21 @@ local function oEditMenu()
 		if scale ~= 1 then items.Zoom.mode = 2 end
 		items.Zoom.text = tostring(math.floor(scale*100)).."%"
 	end)
-	menu.data = oListener("editMenu.created",function()
+	menu.data = CCDictionary()
+	menu.data.createListener = oListener("editMenu.created",function()
 		if lastSelected then
 			lastSelected.selected = false
 			lastSelected = nil
 		end
+	end)
+	menu.data.changeListener = oListener("editor.change",function()
+		if not oEditor.dirty then
+			oEditor.dirty = true
+			items.Edit.text = "Save"
+		end
+	end)
+	menu.data.resetListener = oListener("editMenu.reset",function()
+		items.Play.isPlaying = false
 	end)
 
 	-- add buttons to menu --

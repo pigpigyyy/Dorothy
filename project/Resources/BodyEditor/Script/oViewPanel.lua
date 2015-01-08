@@ -142,7 +142,11 @@ local function oViewPanel()
 		local item
 		if type(arg) == "table" then
 			for _,v in ipairs(self.items) do
-				if not v.selected and arg == v.dataItem then
+				if arg == v.dataItem then
+					if currentItem == v then
+						moveViewToItem(v)
+						return
+					end
 					item = v
 					item.selected = true
 					oEditor.currentData = item.dataItem

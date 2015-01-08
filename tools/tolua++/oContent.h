@@ -7,7 +7,8 @@ class oContent
 	tolua_outside void oContent_getDirEntries @ getEntries(const char* path, bool isFolder);
 	bool isFileExist @ exist(const char* path);
 	bool mkdir(const char* path);
-	
+	bool removeFile @ remove(const char* path);
+
     tolua_readonly tolua_property__common string writablePath;
     tolua_property__bool bool popupNotify;
 	

@@ -18,6 +18,7 @@ local oEditor = require("oEditor")
 local oBodyDef = require("oBodyDef")
 local CCScheduler = require("CCScheduler")
 local CCSize = require("CCSize")
+local CCRect = require("CCRect")
 
 --[[
 events:
@@ -88,7 +89,7 @@ local function oViewArea()
 	end)
 
 	local shapeToCreate = nil
-	crossNode.data.createListener = oListener("editMenu.create",function(name)
+	crossNode.data.createListener = oListener("viewArea.create",function(name)
 		shapeToCreate = name
 	end)
 
@@ -120,12 +121,14 @@ local function oViewArea()
 		end
 		oEvent:send("viewPanel.choose",data)
 		oEvent:send("editMenu.created")
+		oEvent:send("editor.change")
 	end
 	
 	-- init world node --
 	crossNode:addChild(oEditor.world)
 
 	-- register view touch event --
+	local pick = false
 	view:registerTouchHandler(
 		function(eventType, touches)
 			if eventType == CCTouch.Began then
@@ -134,11 +137,16 @@ local function oViewArea()
 					shapeToCreate = nil
 					return false
 				else
+					pick = true
 					return true
 				end
 			elseif eventType == CCTouch.Moved then
 				if #touches == 1 then -- move view
-					oEvent:send("viewArea.move",touches[1].delta)
+					local delta = touches[1].delta
+					if delta ~= oVec2.zero then
+						pick = false
+						oEvent:send("viewArea.move",touches[1].delta)
+					end
 				elseif #touches >= 2 then -- scale view
 					local preDistance = touches[1].preLocation:distance(touches[2].preLocation)
 					local distance = touches[1].location:distance(touches[2].location)
@@ -151,6 +159,15 @@ local function oViewArea()
 					crossNode.scaleY = scale
 					oEditor.scale = scale
 					oEvent:send("viewArea.scale",scale)
+				end
+			elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
+				if pick then
+					local pos = oEditor.world:convertToNodeSpace(touches[1].location)
+					oEditor.world:query(CCRect(pos.x-0.5,pos.y-0.5,1,1),function(body)
+							local data = body.dataItem
+							oEvent:send("viewPanel.choose",data)
+						return true
+					end)
 				end
 			end
 		end,true,oEditor.touchPriorityViewArea)

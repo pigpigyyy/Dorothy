@@ -38,7 +38,7 @@ void oSound::load( const char* filename )
 		{
 			oSharedContent.extractGameFile(filename, extractedName->c_str());
 			oShareAudioEngine.loadSound(extractedName->c_str());
-			if (!g_useCache) oSharedContent.removeExtractedFile(extractedName->c_str());
+			if (!g_useCache) oSharedContent.removeFile(extractedName->c_str());
 		}
 		else
 		{
@@ -78,7 +78,7 @@ int oSound::play( const char* filename, bool loop )
 		{
 			oSharedContent.extractGameFile(filename, extractedName->c_str());
 			oShareAudioEngine.loadSound(extractedName->c_str());
-			if (!g_useCache) oSharedContent.removeExtractedFile(extractedName->c_str());
+			if (!g_useCache) oSharedContent.removeFile(extractedName->c_str());
 			return oShareAudioEngine.playSound(extractedName->c_str(), loop);
 		}
 		else

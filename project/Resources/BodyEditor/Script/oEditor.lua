@@ -812,6 +812,7 @@ local defaultShapeData =
 
 local function setFunc(data,name,value)
 	data[oEditor[data[1]][name]] = value
+	oEvent:send("editor.change")
 end
 local function getFunc(data,name)
 	return data[oEditor[data[1]][name]]
@@ -922,6 +923,7 @@ oEditor.resetItem = function(self,data)
 	oEditor:removeItem(data)
 	local item = data:create()
 	oEditor.items[data:get("Name")] = item
+	if item then item.dataItem = data end
 	return item
 end
 oEditor.resetItems = function(self)
@@ -1036,6 +1038,8 @@ return
 end
 
 oEditor.loadData = function(self,filename)
+	self:clearData()
+	oEditor.currentData = nil
 	self.bodyData = dofile(oEditor.output..filename)
 	if not self.bodyData then return end
 	oEditor.names = {}

@@ -17,27 +17,15 @@ local oPlayButton = class(oButton,
 	end,
 
 	__init = function(self,radius,x,y,tapped)
-		local scale = oScale(0.5,1,1,oEase.OutBack)
 		oButton.__init(self,"",0,radius,nil,x,y,
 			function(item)
-				self._isPlaying = not self._isPlaying
-				if self._isPlaying then
-					item._playIcon:stopAllActions()
-					item._pauseIcon.scaleX = 0
-					item._pauseIcon.scaleY = 0
-					item._pauseIcon:runAction(scale)
-				else
-					item._pauseIcon:stopAllActions()
-					item._playIcon.scaleX = 0
-					item._playIcon.scaleY = 0
-					item._playIcon:runAction(scale)
-				end
-				item._playIcon.visible = not item._playIcon.visible
-				item._pauseIcon.visible = not item._pauseIcon.visible
+				item.isPlaying = not item.isPlaying
 				if tapped then
 					tapped(item)
 				end
 			end)
+
+		self._scale = oScale(0.5,1,1,oEase.OutBack)
 
 		local node = CCNode()
 		node.position = oVec2(25,25)
@@ -75,7 +63,27 @@ local oPlayButton = class(oButton,
 		self._pauseIcon = pauseIcon
 	end,
 	
-	isPlaying = property(function(self) return self._isPlaying end),
+	isPlaying = property(
+		function(self)
+			return self._isPlaying
+		end,
+		function(self,value)
+			if value == self._isPlaying then return end
+			self._isPlaying = value
+				if value then
+					self._playIcon:stopAllActions()
+					self._pauseIcon.scaleX = 0
+					self._pauseIcon.scaleY = 0
+					self._pauseIcon:runAction(self._scale)
+				else
+					self._pauseIcon:stopAllActions()
+					self._playIcon.scaleX = 0
+					self._playIcon.scaleY = 0
+					self._playIcon:runAction(self._scale)
+				end
+				self._playIcon.visible = not self._playIcon.visible
+				self._pauseIcon.visible = not self._pauseIcon.visible
+		end),
 })
 
 return oPlayButton

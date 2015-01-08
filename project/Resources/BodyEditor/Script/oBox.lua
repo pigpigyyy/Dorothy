@@ -79,7 +79,8 @@ local oBox = class({
 				function(item)
 					frame.opacity = 0.3
 					item.opacity = 0.3
-					if isInput then
+					local text = item.text
+					if isInput and text ~= "" then
 						item:detachWithIME()
 						if self._okHandler then
 							self._okHandler(item.text)
@@ -139,6 +140,7 @@ local oBox = class({
 							0,0,
 							function()
 								if self._isInput then
+									if self._textField.text == "" then return end
 									local handler = self._okHandler
 									self._okHandler = nil
 									self._textField:detachWithIME()

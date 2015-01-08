@@ -4701,6 +4701,14 @@ local Dorothy =
 				static = true,
 				type = "method"
 			},
+			remove =
+			{
+				args = "(path: string)",
+				description = "[Class Method]",
+				returns = "(success: bool)",
+				static = true,
+				type = "method"
+			},
 			writablePath =
 			{
 				description = "[string][readonly]",

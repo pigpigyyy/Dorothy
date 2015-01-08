@@ -46,7 +46,7 @@ local function oVertexControl()
 		label.scaleY = scale
 		label.position = oVec2(pos.x,pos.y+45*scale)
 	end
-	
+
 	label.data = oListener("viewArea.toScale",function()
 		label:schedule(once(function()
 			cycle(0.5,function(dt)
@@ -56,7 +56,7 @@ local function oVertexControl()
 			end)
 		end))
 	end)
-	
+
 	local function itemTapped(eventType,item)
 		if eventType == CCMenuItem.TapBegan then
 			if selectedVert and item ~= selectedVert then
@@ -98,10 +98,6 @@ local function oVertexControl()
 	menu.contentSize = CCSize.zero
 	menu.transformTarget = oEditor.world
 	menu.touchEnabled = false
-	menu:addChild(oVertex(oVec2(-100,100)))
-	menu:addChild(oVertex(oVec2(100,100)))
-	menu:addChild(oVertex(oVec2(-100,-100)))
-	menu:addChild(oVertex(oVec2(100,-100)))
 	layer:addChild(menu)
 	
 	local function setVertices(vs)
@@ -148,15 +144,13 @@ local function oVertexControl()
 	layer:registerTouchHandler(function(eventType, touch)
 		if eventType == CCTouch.Began then
 			if vertexToAdd then
-				vertexToAdd = false
-				addButton.color = ccColor3(0x00ffff)
 				local pos = menu:convertToNodeSpace(touch.location)
 				if oEditor.isFixed then 
 					pos = oEditor:round(pos)
 				end
 				local item = addVertex(pos)
 				setLabelPos(item)
-				return false
+				return true
 			end
 			totalDelta = oVec2.zero
 		elseif eventType == CCTouch.Moved then

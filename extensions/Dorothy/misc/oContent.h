@@ -39,7 +39,7 @@ public:
 	/** Get the full path name of the file if it was extracted. */
 	string getExtractedFullName(const char* filename);
 	bool isFileExist(const char* filename);
-	bool removeExtractedFile(const char* filename);
+	bool removeFile(const char* filename);
 	void saveToFile(const string& filename, const string& content);
 	vector<string> getDirEntries(const char* path, bool isFolder);
 	bool mkdir(const char* path);
