@@ -1,13 +1,12 @@
 #ifndef __MKDIR__
 #define __MKDIR__
 
+#include <sys/stat.h>
 #ifdef _MSC_VER
 	#include <direct.h>
-	#include <io.h>
 	#pragma warning (disable : 4996)
 #else
 	#include <stdarg.h>
-	#include <sys/stat.h>
 #endif
 
 #ifdef _MSC_VER
