@@ -10,6 +10,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "Dorothy/physics/oWorld.h"
 #include "Dorothy/physics/oBody.h"
 #include "Dorothy/physics/oSensor.h"
+#include "Dorothy/physics/oJoint.h"
 #include "Dorothy/other/DebugDraw.h"
 
 NS_DOROTHY_BEGIN
@@ -77,10 +78,12 @@ _world(b2Vec2(0,-10)),
 _velocityIterations(1),
 _positionIterations(1),
 _contactListner(new oContactListener()),
-_contactFilter(new oContactFilter())
+_contactFilter(new oContactFilter()),
+_destructionListener(new oDestructionListener())
 {
 	_world.SetContactFilter(_contactFilter);
 	_world.SetContactListener(_contactListner);
+	_world.SetDestructionListener(_destructionListener);
 	for (int i = 0; i < 16; i++)
 	{
 		_filters[i].groupIndex = i;
@@ -474,5 +477,17 @@ bool oContactFilter::ShouldCollide( b2Fixture* fixtureA, b2Fixture* fixtureB )
 	const b2Filter& filterB = fixtureB->GetFilterData();
 	return (filterA.maskBits & filterB.categoryBits) && (filterA.categoryBits & filterB.maskBits);
 }
+
+void oDestructionListener::SayGoodbye(b2Joint* joint)
+{
+	oJoint* jointItem = (oJoint*)joint->GetUserData();
+	if (jointItem)
+	{
+		joint->SetUserData(nullptr);
+		jointItem->_joint = nullptr;
+	}
+}
+void oDestructionListener::SayGoodbye(b2Fixture* fixture)
+{ }
 
 NS_DOROTHY_END

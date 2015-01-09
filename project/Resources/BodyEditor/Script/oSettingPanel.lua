@@ -443,7 +443,7 @@ local function oSettingPanel()
 		end
 		self:reset(borderSize.width,contentHeight,0,50)
 		local data = oEditor.currentData
-		if data and data[1] == groupName then
+		if data and data:get("ItemType") == groupName then
 			for k,v in pairs(oEditor[groupName]) do
 				if k ~= "SubShapes"
 					and k ~= "Vertices"
@@ -451,6 +451,7 @@ local function oSettingPanel()
 					and k ~= "Index"
 					and k ~= "create"
 					and k ~= "rename"
+					and k ~= "reset"
 					and k ~= "parent"
 					and k ~= "set"
 					and k ~= "get" then

@@ -62,7 +62,7 @@ local function oViewPanel()
 				pos = oEditor.world:convertToNodeSpace(pos)
 				cross.position = pos
 				oEvent:send("viewArea.toPos",oEditor.origin-pos*oEditor.scale)
-			else
+			elseif data:has("Position") then
 				local pos = data:get("Position")
 				cross.position = pos
 				oEvent:send("viewArea.toPos",oEditor.origin-pos*oEditor.scale)

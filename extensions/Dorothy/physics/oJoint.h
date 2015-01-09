@@ -108,6 +108,7 @@ protected:
 	static bool _enableCollideConnected;
 	oWRef<oWorld> _world;
 	b2Joint* _joint;
+	friend class oDestructionListener;
 	CC_LUA_TYPE(oJoint)
 };
 

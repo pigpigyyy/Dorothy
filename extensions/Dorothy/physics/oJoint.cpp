@@ -58,6 +58,8 @@ oJoint* oJoint::distance(
 	b2Body* bB = bodyB->getB2Body();
 	b2Vec2 aA = oWorld::b2Val(anchorA);
 	b2Vec2 aB = oWorld::b2Val(anchorB);
+	aA = bA->GetWorldPoint(aA);
+	aB = bB->GetWorldPoint(aB);
 	b2DistanceJointDef jointDef;
 	jointDef.Initialize(bA, bB,
 		bA->GetWorldPoint(aA),
@@ -68,6 +70,7 @@ oJoint* oJoint::distance(
 	oJoint* joint = new oJoint();
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
+	joint->_joint->SetUserData((void*)joint);
 	joint->autorelease();
 	return joint;
 }
@@ -94,6 +97,7 @@ oJoint* oJoint::friction(
 	oJoint* joint = new oJoint();
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
+	joint->_joint->SetUserData((void*)joint);
 	joint->autorelease();
 	return joint;
 }
@@ -115,6 +119,7 @@ oJoint* oJoint::gear(
 	oJoint* joint = new oJoint();
 	joint->_world = jointA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
+	joint->_joint->SetUserData((void*)joint);
 	joint->autorelease();
 	return joint;
 }
@@ -145,6 +150,7 @@ oJoint* oJoint::spring(
 	oJoint* joint = new oJoint();
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
+	joint->_joint->SetUserData((void*)joint);
 	joint->autorelease();
 	return joint;
 }
@@ -174,6 +180,7 @@ oMoveJoint* oJoint::move(
 	oMoveJoint* joint = new oMoveJoint();
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
+	joint->_joint->SetUserData((void*)joint);
 	joint->autorelease();
 	return joint;
 }
@@ -206,6 +213,7 @@ oMotorJoint* oJoint::prismatic(
 	oMotorJoint* joint = new oMotorJoint();
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
+	joint->_joint->SetUserData((void*)joint);
 	joint->autorelease();
 	return joint;
 }
@@ -227,6 +235,8 @@ oJoint* oJoint::pulley(
 	b2Body* bB = bodyB->getB2Body();
 	b2Vec2 aA = oWorld::b2Val(anchorA);
 	b2Vec2 aB = oWorld::b2Val(anchorB);
+	aA = bA->GetWorldPoint(aA);
+	aB = bB->GetWorldPoint(aB);
 	b2Vec2 gA = oWorld::b2Val(groundAnchorA);
 	b2Vec2 gB = oWorld::b2Val(groundAnchorB);
 	b2PulleyJointDef jointDef;
@@ -235,6 +245,7 @@ oJoint* oJoint::pulley(
 	oJoint* joint = new oJoint();
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
+	joint->_joint->SetUserData((void*)joint);
 	joint->autorelease();
 	return joint;
 }
@@ -269,6 +280,7 @@ oMotorJoint* oJoint::revolute(
 	oMotorJoint* joint = new oMotorJoint();
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
+	joint->_joint->SetUserData((void*)joint);
 	joint->autorelease();
 	return joint;
 }
@@ -298,6 +310,7 @@ oJoint* oJoint::rope(
 	oJoint* joint = new oJoint();
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
+	joint->_joint->SetUserData((void*)joint);
 	joint->autorelease();
 	return joint;
 }
@@ -324,6 +337,7 @@ oJoint* oJoint::weld(
 	oJoint* joint = new oJoint();
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
+	joint->_joint->SetUserData((void*)joint);
 	joint->autorelease();
 	return joint;
 }
@@ -355,12 +369,14 @@ oMotorJoint* oJoint::wheel(
 	oMotorJoint* joint = new oMotorJoint();
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
+	joint->_joint->SetUserData((void*)joint);
 	joint->autorelease();
 	return joint;
 }
 
 void oMoveJoint::setPosition(const oVec2& targetPos)
 {
+	if (!_joint) return;
 	_position = targetPos;
 	b2MouseJoint* joint = (b2MouseJoint*)_joint;
 	joint->SetTarget(oWorld::b2Val(targetPos));
@@ -372,6 +388,7 @@ const oVec2& oMoveJoint::getPosition() const
 
 void oMotorJoint::setEnabled(bool var)
 {
+	if (!_joint) return;
 	switch (_joint->GetType())
 	{
 	case e_prismaticJoint:
@@ -389,6 +406,7 @@ void oMotorJoint::setEnabled(bool var)
 }
 bool oMotorJoint::isEnabled() const
 {
+	if (!_joint) return false;
 	switch (_joint->GetType())
 	{
 	case e_prismaticJoint:
@@ -406,6 +424,7 @@ bool oMotorJoint::isEnabled() const
 
 void oMotorJoint::setSpeed(float var)
 {
+	if (!_joint) return;
 	switch (_joint->GetType())
 	{
 	case e_prismaticJoint:
@@ -423,6 +442,7 @@ void oMotorJoint::setSpeed(float var)
 }
 float oMotorJoint::getSpeed() const
 {
+	if (!_joint) return 0.0f;
 	switch (_joint->GetType())
 	{
 	case e_prismaticJoint:

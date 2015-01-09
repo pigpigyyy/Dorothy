@@ -163,7 +163,7 @@ local function oEditControl()
 	local typeSelector = oSelectionPanel(typeSize,true,true,false)
 	typeSelector.position = oEditor.origin-oVec2(winSize.width*0.5,winSize.height*0.5)
 	typeSelector.visible = false
-	
+
 	-- typeBackground
 	local typeBackground = CCDrawNode()
 	typeBackground:drawPolygon(
@@ -174,7 +174,7 @@ local function oEditControl()
 		oVec2(-halfTW,halfTH)
 	},ccColor4(0xe5100000),0.5,ccColor4(0x88ffafaf))
 	typeSelector.border:addChild(typeBackground,-1)
-	
+
 	-- typeMenuItems
 	local typeSelected = nil
 	local function typeCallback(button)
@@ -715,13 +715,19 @@ local function oEditControl()
 					item.value = string.format("%.1f",val)
 					data:set("GravityScale",val)
 				end)
+			elseif name == "MaxLength" then
+				editControl:showEditRuler(data:get("MaxLength"),0,10000,100,function(val)
+					val = math.floor(val)
+					item.value = string.format("%d",val)
+					data:set("MaxLength",val)
+				end)
 			elseif name == "SensorTag" then
 				editControl:showEditRuler(data:get("SensorTag"),0,100,10,function(val)
 					val = math.floor(val)
 					item.value = string.format("%d",val)
 					data:set("SensorTag",val)
 				end)
-			elseif name == "FixedRotation" or name == "Bullet" or name == "Sensor" then
+			elseif name == "FixedRotation" or name == "Bullet" or name == "Sensor" or name == "Collision" then
 				editControl:showSwitch(data:get(name), function(val)
 					item.value = tostring(val)
 					data:set(name,val)
@@ -750,7 +756,8 @@ local function oEditControl()
 					or name == "LinearDamping"
 					or name ==  "AngularDamping"
 					or name == "GravityScale"
-					or name == "SensorTag" then
+					or name == "SensorTag"
+					or name == "MaxLength" then
 					oEditor:resetItem(data)
 				end
 				editControl:hide()

@@ -186,7 +186,7 @@ local function oVertexControl()
 		if eventType == CCTouch.Began then
 			if vertexToAdd then
 				local pos = menu:convertToNodeSpace(touch.location)
-				if oEditor.isFixed then 
+				if oEditor.isFixed then
 					pos = oEditor:round(pos)
 				end
 				if pos ~= menu.vs[#menu.vs] then

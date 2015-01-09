@@ -724,7 +724,7 @@ local defaultShapeData =
 		{"BodyB",""}, -- 5
 		{"AnchorA",PointZero}, -- 6
 		{"AnchorB",PointZero}, -- 7
-		{"MaxLength",0}, -- 8
+		{"MaxLength",100}, -- 8
 		create = function(self)
 			local Rope = oEditor.Rope
 			local bodyA = oEditor:getItem(self[Rope.BodyA])
@@ -740,8 +740,23 @@ local defaultShapeData =
 		end,
 		rename = function(self,oldName,newName)
 			local Rope = oEditor.Rope
-			if self[Rope.BodyA] == oldName then self[Rope.BodyA] = newName end
-			if self[Rope.BodyB] == oldName then self[Rope.BodyB] = newName end
+			local change = false
+			if self[Rope.BodyA] == oldName then
+				self[Rope.BodyA] = newName
+				change = true
+			elseif self[Rope.BodyB] == oldName then
+				self[Rope.BodyB] = newName
+				change = true
+			end
+			if change then
+				oEditor:resetItem(self)
+			end
+		end,
+		reset = function(self,name)
+			local Rope = oEditor.Rope
+			if self[Rope.BodyA] == name or self[Rope.BodyB] == name then
+				oEditor:resetItem(self)
+			end
 		end,
 	},
 	Weld =
@@ -826,9 +841,11 @@ for shapeName,shapeDefine in pairs(defaultShapeData) do
 	for index,property in ipairs(shapeDefine) do
 		local createFunc = shapeDefine.create
 		local renameFunc = shapeDefine.rename
+		local resetFunc = shapeDefine.reset
 		oEditor[shapeName][property[1]] = index
 		oEditor[shapeName].create = createFunc
 		oEditor[shapeName].rename = renameFunc
+		oEditor[shapeName].reset = resetFunc
 		oEditor["new"..shapeName] = function(self)
 			local newData = {}
 			for i,v in ipairs(shapeDefine) do
@@ -841,6 +858,11 @@ for shapeName,shapeDefine in pairs(defaultShapeData) do
 			if renameFunc then
 				newData.renameListener = oListener("editor.rename",function(args)
 					renameFunc(newData,args.oldName,args.newName)
+				end)
+			end
+			if resetFunc then
+				newData.resetListener = oListener("editor.body",function(name)
+					resetFunc(newData,name)
 				end)
 			end
 			return newData
@@ -898,12 +920,19 @@ oEditor.removeData = function(self,data)
 				end
 				oEditor:resetItem(data.parent)
 			else
+				local name = data:get("Name")
 				table.remove(self.bodyData,i)
-				oEditor.names[data:get("Name")] = nil
-				local item = oEditor.items[data:get("Name")]
+				if data.renameListener then
+					data.renameListener.enabled = false
+				end
+				if data.resetListener then
+					data.resetListener.enabled = false
+				end
+				oEditor.names[name] = nil
+				local item = oEditor.items[name]
 				if item then
 					item:destroy()
-					oEditor.items[data:get("Name")] = nil
+					oEditor.items[name] = nil
 				end
 			end
 			oEvent:send("editor.bodyData",self.bodyData)
@@ -922,8 +951,10 @@ oEditor.resetItem = function(self,data)
 	if data.parent then data = data.parent end
 	oEditor:removeItem(data)
 	local item = data:create()
-	oEditor.items[data:get("Name")] = item
+	local name = data:get("Name")
+	oEditor.items[name] = item
 	if item then item.dataItem = data end
+	oEvent:send("editor.body",name)
 	return item
 end
 oEditor.resetItems = function(self)
@@ -940,7 +971,7 @@ oEditor.removeItem = function(self,data)
 	self.items[name] = nil
 end
 oEditor.rename = function(self,oldName,newName)
-	if oldName == "" or newName == "" or oldName == newName then return end
+	if oldName == newName then return end
 	local item = self.items[oldName]
 	self.items[oldName] = nil
 	self.items[newName] = item
@@ -1047,6 +1078,7 @@ oEditor.loadData = function(self,filename)
 		local shapeName = data[1]
 		local createFunc = oEditor[shapeName].create
 		local renameFunc = oEditor[shapeName].rename
+		local resetFunc = oEditor[shapeName].reset
 		data.create = createFunc
 		data.set = setFunc
 		data.get = getFunc
@@ -1064,6 +1096,11 @@ oEditor.loadData = function(self,filename)
 		if renameFunc then
 			data.renameListener = oListener("editor.rename",function(args)
 				renameFunc(data,args.oldName,args.newName)
+			end)
+		end
+		if resetFunc then
+			data.resetListener = oListener("editor.body",function(name)
+				resetFunc(data,name)
 			end)
 		end
 		oEditor:checkName(data)

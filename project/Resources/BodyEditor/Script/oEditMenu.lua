@@ -14,6 +14,7 @@ local class,property = unpack(require("class"))
 local oFileChooser = require("oFileChooser")
 local CCDictionary = require("CCDictionary")
 local oBox = require("oBox")
+local oJointChooser = require("oJointChooser")
 
 local function oEditMenu()
 	local winSize = CCDirector.winSize
@@ -92,11 +93,14 @@ local function oEditMenu()
 			if oEditor.currentData then
 				oEvent:send("settingPanel.toState",nil)
 				oEditor:removeData(oEditor.currentData)
+				oEditor:rename(oEditor.currentData:get("Name"),"")
 				oEditor.currentData = nil
 				oEvent:send("editor.change")
 			end
 		end),
-		Joint = oButton("",0,50,50,35,35,function() end),
+		Joint = oButton("",0,50,50,35,35,function()
+			oEditor:addChild(oJointChooser(),oEditor.topMost)
+		end),
 
 		Origin = oButton("Origin",16,50,50,winSize.width-285,winSize.height-35,function()
 			oEvent:send("viewArea.toPos",oEditor.origin)

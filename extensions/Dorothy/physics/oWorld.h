@@ -54,6 +54,13 @@ class oContactFilter: public b2ContactFilter
 	virtual bool ShouldCollide( b2Fixture* fixtureA, b2Fixture* fixtureB );
 };
 
+class oDestructionListener: public b2DestructionListener
+{
+public:
+	virtual void SayGoodbye(b2Joint* joint);
+	virtual void SayGoodbye(b2Fixture* fixture);
+};
+
 class oWorld: public CCNode
 {
 public:
@@ -131,6 +138,7 @@ private:
 	b2World _world;
 	oOwn<oContactListener> _contactListner;
 	oOwn<oContactFilter> _contactFilter;
+	oOwn<oDestructionListener> _destructionListener;
 	int _velocityIterations;
 	int _positionIterations;
 	CC_LUA_TYPE(oWorld)
