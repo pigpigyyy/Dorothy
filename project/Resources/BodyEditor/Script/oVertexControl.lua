@@ -17,18 +17,33 @@ local oListener = require("oListener")
 local oRoutine = require("oRoutine")
 local once = oRoutine.once
 local cycle = oRoutine.cycle
+local CCSequence = require("CCSequence")
+local CCCall = require("CCCall")
 
 local function oVertexControl()
 	local winSize = CCDirector.winSize
 	local vertSize = 40
 	local halfSize = vertSize*0.5
-	local vertices = nil
 	local vertChanged = nil
 	local selectedVert = nil
-	
+	local vertexToAdd = false
+	local vertexToDel = false
+	local addButton = nil
+	local removeButton = nil
+	local lastCreateVertex = nil
+
 	local layer = CCLayer()
 	layer.contentSize = CCSize.zero
 	layer.visible = false
+
+	local menu = CCMenu(false)
+	menu.items = nil
+	menu.vs = nil
+	menu.touchPriority = oEditor.touchPriorityEditControl+1
+	menu.contentSize = CCSize.zero
+	menu.transformTarget = oEditor.world
+	menu.touchEnabled = false
+	layer:addChild(menu)
 
 	local label = CCLabelTTF("","Arial",16)
 	label.color = ccColor3(0x00ffff)
@@ -46,17 +61,54 @@ local function oVertexControl()
 
 	label.data = oListener("viewArea.toScale",function()
 		label:schedule(once(function()
-			cycle(0.5,function(dt)
+			cycle(0.5,function()
 				if selectedVert then
 					setLabelPos(selectedVert)
 				end
 			end)
 		end))
 	end)
+	
+	local function removeVertex()
+		if selectedVert then
+			local index = selectedVert.index
+			local item
+			local children = menu.children
+			for i = 1,children.count do
+				local child = children[i]
+				child.enabled = true
+				if child.index == index then
+					child.index = nil
+					item = child
+				end
+			end
+			item.enabled = false
+			item:runAction(CCSequence(
+			{
+				oScale(0.3,0,0,oEase.OutQuad),
+				CCCall(function()
+					item.parent:removeChild(item)
+				end)
+			}))
+			table.remove(menu.items,index)
+			for i = 1,#menu.items do
+				menu.items[i].index = i
+			end
+			table.remove(menu.vs,index)
+			selectedVert = nil
+			label.text = ""
+			if vertChanged then
+				vertChanged(menu.vs)
+			end
+		end
+	end
 
 	local function itemTapped(eventType,item)
 		if eventType == CCMenuItem.TapBegan then
 			if selectedVert and item ~= selectedVert then
+				if vertexToAdd and lastCreateVertex and lastCreateVertex ~= item then
+					return
+				end
 				selectedVert.opacity = 0.2
 				selectedVert.selected = false
 			end
@@ -67,11 +119,27 @@ local function oVertexControl()
 			else
 				item.opacity = 0.5
 			end
+			local children = menu.children
+			for i = 1,children.count do
+				children[i].enabled = false
+			end
+			item.enabled = true
 		elseif eventType == CCMenuItem.Tapped then
+			if vertexToAdd and lastCreateVertex and lastCreateVertex ~= item then
+				return
+			end
+			if vertexToDel then
+				removeVertex()
+				return
+			end
 			item.selected = not item.selected
 			selectedVert = item.selected and item or nil
 			if not item.selected then label.text = "" end
 			item.opacity = item.selected and 0.5 or 0.2
+			local children = menu.children
+			for i = 1,children.count do
+				children[i].enabled = true
+			end
 		end
 	end
 	local function oVertex(pos,index)
@@ -85,17 +153,11 @@ local function oVertexControl()
 		menuItem.position = pos
 		menuItem.opacity = 0.2
 		menuItem.index = index
+		circle.scaleX = 0
+		circle.scaleY = 0
+		circle:runAction(oScale(0.5,1,1,oEase.OutBack))
 		return menuItem
 	end
-
-	local menu = CCMenu(false)
-	menu.items = nil
-	menu.vs = nil
-	menu.touchPriority = oEditor.touchPriorityEditControl+1
-	menu.contentSize = CCSize.zero
-	menu.transformTarget = oEditor.world
-	menu.touchEnabled = false
-	layer:addChild(menu)
 	
 	local function setVertices(vs)
 		menu:removeAllChildrenWithCleanup()
@@ -118,25 +180,7 @@ local function oVertexControl()
 		end
 		return item
 	end
-	
-	local function removeVertex()
-		if selectedVert then
-			local index = selectedVert.index
-			menu:removeChild(menu.children[index])
-			table.remove(menu.items,index)
-			for i = 1,#menu.items do
-				menu.items[i].index = i
-			end
-			table.remove(menu.vs,index)
-			selectedVert = nil
-			if vertChanged then
-				vertChanged(menu.vs)
-			end
-		end
-	end
 
-	local vertexToAdd = false
-	local addButton = nil
 	local totalDelta = oVec2.zero
 	layer:registerTouchHandler(function(eventType, touch)
 		if eventType == CCTouch.Began then
@@ -145,9 +189,11 @@ local function oVertexControl()
 				if oEditor.isFixed then 
 					pos = oEditor:round(pos)
 				end
-				local item = addVertex(pos)
-				setLabelPos(item)
-				return true
+				if pos ~= menu.vs[#menu.vs] then
+					local item = addVertex(pos)
+					setLabelPos(item)
+					lastCreateVertex = item
+				end
 			end
 			totalDelta = oVec2.zero
 		elseif eventType == CCTouch.Moved then
@@ -195,14 +241,22 @@ local function oVertexControl()
 	editMenu.touchPriority = oEditor.touchPriorityEditControl
 	editMenu.touchEnabled = false
 	layer:addChild(editMenu)
-	local removeButton = oButton("-",20,50,50,winSize.width-465,winSize.height-35,function()
-		removeVertex()
-		label.text = ""
+	removeButton = oButton("-",20,50,50,winSize.width-465,winSize.height-35,function(button)	
+		vertexToDel = not vertexToDel
+		button.color = vertexToDel and ccColor3(0xff0080) or ccColor3(0x00ffff)
+		if vertexToAdd then
+			vertexToAdd = false
+			addButton.color = ccColor3(0x00ffff)
+		end
 	end)
 	editMenu:addChild(removeButton)
 	addButton = oButton("+",20,50,50,winSize.width-525,winSize.height-35,function(button)
 		vertexToAdd = not vertexToAdd
 		button.color = vertexToAdd and ccColor3(0xff0080) or ccColor3(0x00ffff)
+		if vertexToDel then
+			vertexToDel = false
+			removeButton.color = ccColor3(0x00ffff)
+		end
 	end)
 	editMenu:addChild(addButton)
 	
@@ -216,6 +270,7 @@ local function oVertexControl()
 		menu.rotation = angle
 		vs = vs or {}
 		label.text = ""
+		lastCreateVertex = nil
 		selectedVert = nil
 		vertexToAdd = false
 		totalDelta = oVec2.zero
