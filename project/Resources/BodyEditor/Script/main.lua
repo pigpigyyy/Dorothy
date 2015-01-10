@@ -29,7 +29,7 @@ local controls =
 	"oEditMenu",
 	"oSettingPanel",
 	"oViewPanel",
-	--"oFileChooser",
+	"oFileChooser",
 }
 
 oRoutine(once(function()

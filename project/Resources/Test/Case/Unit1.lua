@@ -7,37 +7,6 @@ local seconds = oRoutine.seconds
 local cycle = oRoutine.cycle
 local oTextField = require("ActionEditor/Script/oTextField")
 local oButton = require("ActionEditor/Script/oButton")
---[[
-oAction:add(oAction.UserID,998,0,0,
-	--self=oAction
-	function(self)
-		return true
-	end,
-	function(self)
-		print("begin")
-		local owner = self.owner
-		wait(cycle(1,
-			function()
-				owner.velocityX = 100
-			end))
-		wait(cycle(1,
-			function()
-				owner.velocityX = -100
-			end))
-	end,
-	function(self)
-		print("end")
-	end)
---]]
-oInstinct:add(1,"hp",oCon(function()
-	print(oAI.oldValue,oAI.newValue)
-	return true
-end))
-
-oInstinct:add(2,"hp",oCon(function()
-	print(2,oAI.oldValue,oAI.newValue)
-	return true
-end))
 
 local CCKey = {}
 if CCApplication.targetPlatform == CCTargetPlatform.Windows then
@@ -107,7 +76,6 @@ oAI:add(1,oSel({
 	}),
 	oAct(oAction.Idle),
 }))
-
 
 oAI:add(2,oSel({
 	oSeq({
@@ -298,20 +266,17 @@ unitDef:setActions({
 	oAction.Stop,
 	oAction.Jump,
 	oAction.Idle,
-	--oAction.UserID
 })
-unitDef:setInstincts({1,2})
 unitDef.reflexArc = 1
 
 local unit = oUnit(unitDef,world,oVec2(200,300))
 unit.group = 1
 unit.tag = 998
---unit.reflexArc = 1
+unit.reflexArc = 1
 suit(unit,"girl.lua")
 world:addChild(unit,1)
 world.camera:follow(unit)
-unit:set("hp",0)
-oVec2(10,10):normalize()
+
 local lastUnit = unit
 unit = oUnit(unitDef,world,oVec2(600,300))
 unit.group = 1
@@ -319,7 +284,6 @@ unit.data = lastUnit
 unit.reflexArc = 3
 suit(unit,"miku.lua")
 world:addChild(unit)
-unit:set("hp",0)
 
 lastUnit = unit
 unit = oUnit(unitDef,world,oVec2(400,300))
@@ -329,17 +293,6 @@ unit.reflexArc = 3
 suit(unit,"boy.lua")
 world:addChild(unit)
 
---unit:doIt(oAction.UserID)
-
---[[
-local routine = loop(function()
-	wait(seconds(5))
-	wait(function() return not unit.onSurface end)
-	unit:doIt(oAction.Walk)
-end)
-oRoutine(routine)
---]]
-
 local bodyDef = oBodyDef()
 bodyDef:attachPolygon(oVec2(10240,0),20480,10,0,1,1,0)
 local body = oBody(bodyDef,world,oVec2(0,0))
@@ -348,52 +301,11 @@ body.group = oData.GroupTerrain
 local scene = CCScene()
 scene:addChild(world)
 world:addChild(body)
---scene:addChild(model)
---scene:addChild(model2)
---[[
-local textField = oTextField(120,18,17,10,
-	function(self)
-		print(self.text)
-		self.text = ""
-		oRoutine(once(function()
-			wait(seconds(0))
-			self:attachWithIME()
-		end))
-	end)
-textField.anchor = oVec2.zero
-textField.position = oVec2(2,1)
-textField:attachWithIME()
-scene:addChild(textField)
---]]
 
 local menu = CCMenu(false)
 menu.anchor = oVec2.zero
 world.UILayer:addChild(menu)
---[[local changed = false
-local btn = oButton("Change",16,60,nil,10,10,
-	function()
-		if changed then
-			return
-		end
-		changed = true
-		suit(unit,"boy.lua")
-	end)
-btn.anchor = oVec2.zero
-menu:addChild(btn)
---]]
+
 CCDirector:run(scene)
 
---[[local class,property,classfield,classmethod = unpack(require("class"))
-
-local ClassA = class(
-{
-	name = "aaaa",
-	show = function(self)
-		print("XXX")
-	end,
-})
-
-local a = ClassA()
-print(a.name)
-a:show()
---]]
+print("Use arrow keys from keyboard to control character")
