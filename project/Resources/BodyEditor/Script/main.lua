@@ -30,7 +30,6 @@ local controls =
 	"oSettingPanel",
 	"oViewPanel",
 	"oFileChooser",
-	"oPointControl",
 }
 
 oRoutine(once(function()

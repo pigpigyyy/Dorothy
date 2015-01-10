@@ -83,6 +83,7 @@ local function oJointChooser()
 				local data = oEditor["new"..joint](oEditor)
 				oEditor:addData(data)
 				oEvent:send("viewPanel.choose",data)
+				oEvent:send("editor.change")
 				panel.ended = function()
 					panel.parent:removeChild(panel)
 				end

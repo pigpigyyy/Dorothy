@@ -51,6 +51,7 @@ local function oEditControl()
 		fixX = not fixX
 		button.color = fixX and ccColor3(0xff0080) or ccColor3(0x00ffff)
 		oEditor.fixX = fixX
+		oEvent:send("oEditor.fix",{fixX=fixX,fixY=fixY})
 	end)
 	fixMenu:addChild(fixXButton)
 	fixYButton = oButton("",0,50,50,winSize.width-345,winSize.height-35,function(button)
@@ -62,6 +63,7 @@ local function oEditControl()
 		fixY = not fixY
 		button.color = fixY and ccColor3(0xff0080) or ccColor3(0x00ffff)
 		oEditor.fixY = fixY
+		oEvent:send("oEditor.fix",{fixX=fixX,fixY=fixY})
 	end)
 	fixMenu:addChild(fixYButton)
 	local function createArrowForButton(button,rotation)
@@ -114,6 +116,7 @@ local function oEditControl()
 		fixYButton:runAction(oScale(0.5,1,1,oEase.OutBack))
 		fixMenu.visible = true
 		fixMenu.touchEnabled = true
+		oEvent:send("oEditor.fix",{fixX=false,fixY=false})
 	end
 	editControl.hideFixButtons = function(self)
 		if not fixMenu.visible then return end
@@ -249,6 +252,10 @@ local function oEditControl()
 	},ccColor4()))
 	posVisual.transformTarget = oEditor.world
 	posEditor:addChild(posVisual)
+	posVisual.data = oListener("oEditor.fix",function(args)
+		posVisual.children[1].visible = not args.fixY
+		posVisual.children[2].visible = not args.fixX
+	end)
 
 	-- posEditor touch callback
 	local totalDeltaPos = oVec2.zero
@@ -312,7 +319,7 @@ local function oEditControl()
 	rotVisual:addChild(oLine(vs,ccColor4()))
 	rotVisual:addChild(oLine({oVec2(-200,0),oVec2(200,0)},ccColor4()))
 	rotVisual:addChild(oLine({oVec2(0,-200),oVec2(0,200)},ccColor4()))
-	rotVisual.transformTarget = oEditor.world
+	rotVisual.transformTarget = worldNode
 	rotEditor:addChild(rotVisual)
 
 	-- rotEditor touch callback
@@ -356,14 +363,15 @@ local function oEditControl()
 	end,false,oEditor.touchPriorityEditControl,true)
 
 	-- show & hide rotation editor
-	editControl.showRotEditor = function(self,data,callback)
+	editControl.showRotEditor = function(self,position,angle,center,callback)
 		editControl:hide()
 		rotChanged = callback
 		rotEditor.visible = true
 		rotEditor.touchEnabled = true
-		rotVisual.position = data.parent and data.parent:get("Position") or data:get("Position")
-		rotVisual.rotation = data:get("Angle")
-		rotCenter = (data.parent and data:has("Center")) and data:get("Center") or oVec2.zero
+		worldNode.position = position 
+		rotVisual.rotation = angle
+		rotVisual.position = center
+		rotCenter = center
 		totalRot = 0
 	end
 	editControl.hideRotEditor = function(self)
@@ -398,6 +406,10 @@ local function oEditControl()
 	},ccColor4()))
 	sizeVisual.transformTarget = worldNode
 	sizeEditor:addChild(sizeVisual)
+	sizeVisual.data = oListener("oEditor.fix",function(args)
+		sizeVisual.children[1].visible = not args.fixY
+		sizeVisual.children[2].visible = not args.fixX
+	end)
 	
 	-- sizeEditor touch callback
 	local totalW = 0
@@ -406,18 +418,15 @@ local function oEditControl()
 	local sizeChanged = nil
 	sizeEditor:registerTouchHandler(function(eventType,touch)
 		if eventType == CCTouch.Moved then
-			local delta = touch.delta
+			local delta = sizeVisual:convertToNodeSpace(touch.location) - 
+				sizeVisual:convertToNodeSpace(touch.preLocation)
 			if delta ~= oVec2.zero then
-				local x2 = delta.x
-				local y2 = delta.y
-				local r = sizeVisual.rotation*math.pi/180
-				local x3 = x2*math.cos(r)-y2*math.sin(r)
-				local y3 = x2*math.sin(r)+y2*math.cos(r)
-				if fixX then x3 = 0 end
-				if fixY then y3 = 0 end
+				delta = delta*oEditor.scale
+				if fixX then delta.x = 0 end
+				if fixY then delta.y = 0 end
 				if oEditor.isFixed then
-					totalW = totalW + x3/oEditor.scale
-					totalH = totalH + y3/oEditor.scale
+					totalW = totalW + delta.x
+					totalH = totalH + delta.y
 					if totalW > 1 or totalW < -1 then
 						local w = totalSize.width+totalW
 						totalSize.width = w > 0 and math.floor(w+0.5) or math.ceil(w-0.5)
@@ -429,8 +438,8 @@ local function oEditControl()
 						totalH = 0
 					end
 				else
-					totalSize.width = totalSize.width + x3/oEditor.scale
-					totalSize.height = totalSize.height + y3/oEditor.scale
+					totalSize.width = totalSize.width + delta.x
+					totalSize.height = totalSize.height + delta.y
 				end
 				if totalSize.width < 10 then totalSize.width = 10 end
 				if totalSize.height < 10 then totalSize.height = 10 end
@@ -491,6 +500,10 @@ local function oEditControl()
 	centerEditor:addChild(centerVisual)
 	centerEditor.scaleX = 0.5
 	centerEditor.scaleY = 0.5
+	centerVisual.data = oListener("oEditor.fix",function(args)
+		centerVisual.children[1].visible = not args.fixY
+		centerVisual.children[2].visible = not args.fixX
+	end)
 
 	-- centerEditor touch callback
 	local totalDeltaCenter = oVec2.zero
@@ -705,7 +718,45 @@ local function oEditControl()
 	editControl.hidePointControl = function(self)
 		pointControl:hide()
 	end
-
+	
+	-- axis control --
+	local axisVisual = oLine(
+	{
+		oVec2(0,0),
+		oVec2(0,190),
+		oVec2(20,150),
+		oVec2(0,190),
+		oVec2(-20,150),
+	},ccColor4())
+	axisVisual.rotation = 90
+	rotVisual:addChild(axisVisual)
+	axisVisual.visible = false
+	
+	editControl.showAxisEditor = function(self,axis,pos,axisChanged)
+		axisVisual.visible = false
+		local angle = -math.deg(math.atan2(axis.y,axis.x))
+		editControl:showRotEditor(pos,angle,oVec2.zero,function(rot)
+			rot = -math.rad(rot)
+			local newAxis = oVec2(math.cos(rot),math.sin(rot))
+			newAxis:normalize()
+			if axisChanged then
+				axisChanged(newAxis)
+			end
+		end)
+		rotVisual.children[1].visible = false
+		rotVisual.children[2].visible = false
+		rotVisual.children[3].visible = false
+		axisVisual.visible = true
+	end
+	editControl.hideAxisEditor = function(self)
+		if not axisVisual.visible then return end
+		rotVisual.children[1].visible = true
+		rotVisual.children[2].visible = true
+		rotVisual.children[3].visible = true
+		axisVisual.visible = false
+		editControl:hideRotEditor()
+	end
+	
 	-- hide all controls
 	editControl.hide = function(self)
 		editControl:hideSwitch()
@@ -719,6 +770,7 @@ local function oEditControl()
 		editControl:hideVertEditor()
 		editControl:hideBodyChooser()
 		editControl:hidePointControl()
+		editControl:hideAxisEditor()
 	end
 
 	editControl.data = CCDictionary()
@@ -762,7 +814,10 @@ local function oEditControl()
 					data:set("Position",pos)
 				end)
 			elseif name == "Angle" then
-				editControl:showRotEditor(data,function(rot)
+				local pos = data.parent and data.parent:get("Position") or data:get("Position")
+				local angle = data:get("Angle")
+				local center = (data.parent and data:has("Center")) and data:get("Center") or oVec2.zero
+				editControl:showRotEditor(pos,angle,center,function(rot)
 					item.value = n2str(rot)
 					data:set("Angle",rot)
 					if data.parent then
@@ -820,8 +875,13 @@ local function oEditControl()
 				or name == "Lower"
 				or name == "Upper"
 				or name == "MaxMotorForce"
-				or name == "MotorSpeed" then
+				or name == "MaxMotorTorque" then
 				editControl:showEditRuler(data:get(name),0,10000,10,function(val)
+					item.value = n2str(val)
+					data:set(name,val)
+				end)
+			elseif name == "MotorSpeed" then
+				editControl:showEditRuler(data:get(name),0,0,10,function(val)
 					item.value = n2str(val)
 					data:set(name,val)
 				end)
@@ -883,6 +943,13 @@ local function oEditControl()
 					data:set(name,pos)
 					oEditor:resetItem(data)
 				end,oEditor:getItem(data:get("BodyA")))
+			elseif name == "Axis" then
+				local bodyA = oEditor:getItem(data:get("BodyA"))
+				editControl:showAxisEditor(data:get(name), bodyA and bodyA.position or oVec2.zero,function(axis)
+					item.value = n2str(axis.x)..","..n2str(axis.y)
+					data:set(name,axis)
+					oEditor:resetItem(data)
+				end)
 			end
 		else
 			if name == "Name" then
@@ -910,6 +977,7 @@ local function oEditControl()
 					or name == "Lower"
 					or name == "Upper"
 					or name == "MaxMotorForce"
+					or name == "MaxMotorTorque"
 					or name == "MotorSpeed" then
 					oEditor:resetItem(data)
 				end
@@ -917,59 +985,7 @@ local function oEditControl()
 			end
 		end
 	end)
-	--[[
-	local value = 0
-	editControl:showEditRuler(value,0,1000,10,function(val) if value ~= val then value=val;print(value) end end)
-	--]]
-	--[[
-	local data = oEditor.bodyData[1]
-	editControl:showTypeSelector(function(bodyType)
-		data:set("Type",bodyType)
-		oEditor:resetItem(data)
-	end)
-	--]]
-	--[[
-	local data = oEditor.bodyData[3]
-	editControl:showPosEditor(data:get("Position"),function(pos)
-		local item = oEditor:getItem(data)
-		if item then item.position = pos end
-		data:set("Position",pos)
-	end)
-	--]]
-	--[[
-	local data = oEditor.bodyData[2]
-	editControl:showRotEditor(data,function(rot)
-		data:set("Angle",rot)
-		if data.parent then
-			oEditor:resetItem(data)
-		else
-			oEditor:getItem(data).rotation = rot
-		end
-	end)
-	--]]
-	--[[
-	local data = oEditor.bodyData[1]:get("SubShapes")[1]
-	editControl:showSizeEditor(
-		oEditor:getItem(data),data:get("Center"),data:get("Size"),function(size)
-		data:set("Size",size)
-		oEditor:resetItem(data)
-	end)
-	--]]
-	--[[
-	local data = oEditor.bodyData[3]:get("SubShapes")[2]
-	editControl:showRadiusEditor(
-		oEditor:getItem(data),data:get("Center"),data:get("Radius"),function(radius)
-		data:set("Radius",radius)
-		oEditor:resetItem(data)
-	end)
-	--]]
-	--[[
-	local data = oEditor.bodyData[3]:get("SubShapes")[2]
-	editControl:showCenterEditor(oEditor:getItem(data),data:get("Center"),function(center)
-		data:set("Center",center)
-		oEditor:resetItem(data)
-	end)
-	--]]
+
 	return editControl
 end
 

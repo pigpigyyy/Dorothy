@@ -531,7 +531,7 @@ local defaultShapeData =
 			local Distance = oEditor.Distance
 			local bodyA = oEditor:getItem(self[Distance.BodyA])
 			local bodyB = oEditor:getItem(self[Distance.BodyB])
-			if not bodyA or not bodyB and bodyA ~= bodyB then
+			if not bodyA or not bodyB or bodyA == bodyB then
 				return nil
 			end
 			return oJoint:collide(self[Distance.Collision]):distance(
@@ -558,7 +558,7 @@ local defaultShapeData =
 			local Friction = oEditor.Friction
 			local bodyA = oEditor:getItem(self[Friction.BodyA])
 			local bodyB = oEditor:getItem(self[Friction.BodyB])
-			if not bodyA or not bodyB and bodyA ~= bodyB then
+			if not bodyA or not bodyB or bodyA == bodyB then
 				return nil
 			end
 			return oJoint:collide(self[Friction.Collision]):friction(
@@ -611,7 +611,7 @@ local defaultShapeData =
 			local Spring = oEditor.Spring
 			local bodyA = oEditor:getItem(self[Spring.BodyA])
 			local bodyB = oEditor:getItem(self[Spring.BodyB])
-			if not bodyA or not bodyB and bodyA ~= bodyB then
+			if not bodyA or not bodyB or bodyA == bodyB then
 				return nil
 			end
 			return oJoint:collide(self[Spring.Collision]):spring(
@@ -642,10 +642,10 @@ local defaultShapeData =
 			local Prismatic = oEditor.Prismatic
 			local bodyA = oEditor:getItem(self[Prismatic.BodyA])
 			local bodyB = oEditor:getItem(self[Prismatic.BodyB])
-			if not bodyA or not bodyB and bodyA ~= bodyB then
+			if not bodyA or not bodyB or bodyA == bodyB then
 				return nil
 			end
-			local joint = oJoint:collide(self[Prismatic.Collision]):prismatic(
+			return oJoint:collide(self[Prismatic.Collision]):prismatic(
 				bodyA,bodyB,
 				self[Prismatic.WorldPos],
 				self[Prismatic.Axis],
@@ -653,8 +653,6 @@ local defaultShapeData =
 				self[Prismatic.Upper],
 				self[Prismatic.MaxMotorForce],
 				self[Prismatic.MotorSpeed])
-			joint.enabled = true
-			return joint
 		end,
 		rename = rename,
 		reset = reset,
@@ -675,7 +673,7 @@ local defaultShapeData =
 			local Pulley = oEditor.Pulley
 			local bodyA = oEditor:getItem(self[Pulley.BodyA])
 			local bodyB = oEditor:getItem(self[Pulley.BodyB])
-			if not bodyA or not bodyB and bodyA ~= bodyB then
+			if not bodyA or not bodyB or bodyA == bodyB then
 				return nil
 			end
 			return oJoint:collide(self[Pulley.Collision]):pulley(
@@ -705,7 +703,7 @@ local defaultShapeData =
 			local Revolute = oEditor.Revolute
 			local bodyA = oEditor:getItem(self[Revolute.BodyA])
 			local bodyB = oEditor:getItem(self[Revolute.BodyB])
-			if not bodyA or not bodyB and bodyA ~= bodyB then
+			if not bodyA or not bodyB or bodyA == bodyB then
 				return nil
 			end
 			return oJoint:collide(self[Revolute.Collision]):revolute(
@@ -733,7 +731,7 @@ local defaultShapeData =
 			local Rope = oEditor.Rope
 			local bodyA = oEditor:getItem(self[Rope.BodyA])
 			local bodyB = oEditor:getItem(self[Rope.BodyB])
-			if not bodyA or not bodyB and bodyA ~= bodyB then
+			if not bodyA or not bodyB or bodyA == bodyB then
 				return nil
 			end
 			return oJoint:collide(self[Rope.Collision]):rope(
@@ -759,7 +757,7 @@ local defaultShapeData =
 			local Weld = oEditor.Weld
 			local bodyA = oEditor:getItem(self[Weld.BodyA])
 			local bodyB = oEditor:getItem(self[Weld.BodyB])
-			if not bodyA or not bodyB and bodyA ~= bodyB then
+			if not bodyA or not bodyB or bodyA == bodyB then
 				return nil
 			end
 			return oJoint:collide(self[Weld.Collision]):weld(
@@ -788,7 +786,7 @@ local defaultShapeData =
 			local Wheel = oEditor.Wheel
 			local bodyA = oEditor:getItem(self[Wheel.BodyA])
 			local bodyB = oEditor:getItem(self[Wheel.BodyB])
-			if not bodyA or not bodyB and bodyA ~= bodyB then
+			if not bodyA or not bodyB or bodyA == bodyB then
 				return nil
 			end
 			return oJoint:collide(self[Wheel.Collision]):wheel(
