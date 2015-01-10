@@ -919,6 +919,14 @@ oEditor.removeData = function(self,data)
 	end
 end
 oEditor.clearData = function(self)
+	for _,data in ipairs(oEditor.bodyData) do
+		if data.renameListener then
+			data.renameListener.enabled = false
+		end
+		if data.resetListener then
+			data.resetListener.enabled = false
+		end
+	end
 	self.bodyData = {}
 	oEditor.names = {}
 	oEditor:clearItems()
