@@ -424,6 +424,7 @@
 		3CA03A6A1A28BD1F0008F80F /* lualib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lualib.h; sourceTree = "<group>"; };
 		3CA03A6B1A28BE4E0008F80F /* luaconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = luaconf.h; sourceTree = "<group>"; };
 		3CA03A6E1A2900460008F80F /* libluajit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libluajit.a; path = ../../lua/lib/ios/libluajit.a; sourceTree = "<group>"; };
+		3CA6A7591A60C226007C4503 /* mkdir.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mkdir.h; sourceTree = "<group>"; };
 		3CB40CF81A20E6C200D7A3A6 /* b2MotorJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2MotorJoint.cpp; sourceTree = "<group>"; };
 		3CB40CF91A20E6C200D7A3A6 /* b2MotorJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2MotorJoint.h; sourceTree = "<group>"; };
 		3CB40D251A20ECC500D7A3A6 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
@@ -870,6 +871,7 @@
 		3C89A64F1A209D1C001D5009 /* other */ = {
 			isa = PBXGroup;
 			children = (
+				3CA6A7591A60C226007C4503 /* mkdir.h */,
 				3C89A6501A209D1C001D5009 /* AcfDelegate.h */,
 				3C89A6511A209D1C001D5009 /* AcfDelegateTemplate.h */,
 				3C89A6521A209D1C001D5009 /* DebugDraw.cpp */,

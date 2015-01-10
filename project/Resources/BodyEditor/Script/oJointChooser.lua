@@ -79,14 +79,10 @@ local function oJointChooser()
 			itemWidth,itemHeight,
 			xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
 			function(item)
-				-- TODO
 				local joint = item.joint
 				local data = oEditor["new"..joint](oEditor)
-				if joint == "Rope" then
-					data:set("BodyA","body")
-					data:set("BodyB","body1")
-				end
 				oEditor:addData(data)
+				oEvent:send("viewPanel.choose",data)
 				panel.ended = function()
 					panel.parent:removeChild(panel)
 				end

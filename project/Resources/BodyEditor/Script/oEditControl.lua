@@ -20,6 +20,12 @@ local oEvent = require("oEvent")
 local oVertexControl = require("oVertexControl")
 local oScale = require("oScale")
 local oEase = require("oEase")
+local CCRect = require("CCRect")
+local CCSequence = require("CCSequence")
+local CCDelay = require("CCDelay")
+local oOpacity = require("oOpacity")
+local CCCall = require("CCCall")
+local oPointControl = require("oPointControl")
 
 local function oEditControl()
 	local winSize = CCDirector.winSize
@@ -608,13 +614,96 @@ local function oEditControl()
 	-- init vertices --
 	local vertControl = oVertexControl()
 	editControl:addChild(vertControl)
-	editControl.showVertEditor = function(self,...)			self:hide()
+	editControl.showVertEditor = function(self,...)
+		self:hide()
 		self:showFixButtons()
 		vertControl:show(...)
 	end
 	editControl.hideVertEditor = function(self)
 		self:hideFixButtons()
 		vertControl:hide()
+	end
+
+	-- init body chooser --
+	local bodyChooser = CCLayer()
+	bodyChooser.visible = false
+	editControl:addChild(bodyChooser)
+	
+	local bodyChoosed = nil
+	bodyChooser:registerTouchHandler(function(eventType,touch)
+		if eventType == CCTouch.Ended then
+			local pos = oEditor.world:convertToNodeSpace(touch.location)
+			oEditor.world:query(CCRect(pos.x-0.5,pos.y-0.5,1,1),function(body)
+				local data = body.dataItem
+				if bodyChoosed and data:has("Name") then
+					bodyChoosed(data)
+				end
+				return true
+			end)
+		end
+		return true
+	end,false,oEditor.touchPriorityEditControl,true)
+	bodyChooser.touchEnabled = false
+
+	local function createCross(pos,long)
+		local cross = oLine(
+		{
+			oVec2(-10,0),
+			oVec2(0,10),
+			oVec2(10,0),
+			oVec2(0,-10),
+			oVec2(-10,0),
+			oVec2(10,0),
+		},ccColor4(0xff00ffff))
+		cross:addChild(oLine({oVec2(0,10),oVec2(0,-10)},ccColor4(0xff00ffff)))
+		cross.transformTarget = oEditor.world
+
+		local callAction = CCCall(function()
+			bodyChooser:removeChild(cross)
+		end)
+		if long then
+			cross.opacity = 1
+			cross:runAction(CCSequence({CCDelay(0.7),oOpacity(0.3,0),callAction}))
+		else
+			cross.opacity = 0
+			cross:runAction(CCSequence({oOpacity(0.3,1),oOpacity(0.3,0),callAction}))
+		end
+		cross.position = pos
+		bodyChooser:addChild(cross)
+	end
+
+	editControl.showBodyChooser = function(self,bodyName,callback)
+		self:hide()
+		bodyChooser:removeAllChildrenWithCleanup()
+		if bodyName == "" then
+			for _,data in ipairs(oEditor.bodyData) do
+				if data:has("Position") then
+					createCross(data:get("Position"),false)
+				end
+			end
+		else
+			createCross(oEditor:getItem(bodyName).position,true)
+		end
+		bodyChoosed = callback
+		bodyChooser.visible = true
+		bodyChooser.touchEnabled = true
+	end
+	editControl.hideBodyChooser = function(self)
+		if not bodyChooser.visible then return end
+		bodyChoosed = nil
+		bodyChooser.visible = false
+		bodyChooser.touchEnabled = false
+	end
+	
+	-- point control --
+	local pointControl = oPointControl()
+	editControl:addChild(pointControl)
+	editControl.showPointControl = function(self,...)
+		editControl:hide()
+		pointControl:show(...)
+	end
+	editControl.hidePointControl = function(self)
+		pointControl:hide()
 	end
 
 	-- hide all controls
@@ -628,6 +717,8 @@ local function oEditControl()
 		editControl:hideCenterEditor()
 		editControl:hideRadiusEditor()
 		editControl:hideVertEditor()
+		editControl:hideBodyChooser()
+		editControl:hidePointControl()
 	end
 
 	editControl.data = CCDictionary()
@@ -635,6 +726,7 @@ local function oEditControl()
 		editControl:hide()
 	end)
 	local currentSetting = nil
+	local n2str = function(num) return string.format("%.2f",num) end
 	editControl.data.settingListener = oListener("settingPanel.edit",function(item)
 		if not item then return end
 		local name = item.name
@@ -642,7 +734,9 @@ local function oEditControl()
 		local data = oEditor.currentData
 		if item.selected then
 			currentSetting = name
-			if name == "Type" then
+			if name == "Name" then
+				editControl:hide()
+			elseif name == "Type" then
 				editControl:showTypeSelector(function(bodyType)
 					if data:get("Type") ~= bodyType then
 						if bodyType == oBodyDef.Dynamic then
@@ -659,67 +753,87 @@ local function oEditControl()
 				end)
 			elseif name == "Position" then
 				editControl:showPosEditor(data:get("Position"),function(pos)
-					item.value = string.format("%.2f",pos.x)..","..string.format("%.2f",pos.y)
-					local item = oEditor:getItem(data)
-					if item then item.position = pos end
+					item.value = n2str(pos.x)..","..n2str(pos.y)
+					local body = oEditor:getItem(data)
+					if body then
+						body.position = pos
+						oEvent:send("editor.body",data:get("Name"))
+					end
 					data:set("Position",pos)
 				end)
 			elseif name == "Angle" then
 				editControl:showRotEditor(data,function(rot)
-					item.value = string.format("%.2f",rot)
+					item.value = n2str(rot)
 					data:set("Angle",rot)
 					if data.parent then
 						oEditor:resetItem(data)
 					else
-						local item = oEditor:getItem(data)
-						if item then item.rotation = rot end
+						local body = oEditor:getItem(data)
+						if body then
+							body.rotation = rot
+							oEvent:send("editor.body",data:get("Name"))
+						end
 					end
 				end)
 			elseif name == "Center" then
 				editControl:showCenterEditor(oEditor:getItem(data),data:get("Center"),function(center)
-					item.value = string.format("%.2f",center.x)..","..string.format("%.2f",center.y)
+					item.value = n2str(center.x)..","..n2str(center.y)
 					data:set("Center",center)
 					oEditor:resetItem(data)
 				end)
 			elseif name == "Size" then
 				editControl:showSizeEditor(
 					oEditor:getItem(data),data:get("Center"),data:get("Size"),function(size)
-					item.value = string.format("%d",size.width)..","..string.format("%d",size.height)
+					item.value = n2str(size.width)..","..n2str(size.height)
 					data:set("Size",size)
 					oEditor:resetItem(data)
 				end)
 			elseif name == "Radius" then
 				editControl:showRadiusEditor(
 					oEditor:getItem(data),data:get("Center"),data:get("Radius"),function(radius)
-					item.value = string.format("%d",radius)
+					item.value = n2str(radius)
 					data:set("Radius",radius)
 					oEditor:resetItem(data)
 				end)
 			elseif name == "Density" then
 				editControl:showEditRuler(data:get("Density"),0,22.6,1,function(val)
-					item.value = string.format("%.1f",val)
+					item.value = n2str(val)
 					data:set("Density",val)
 				end)
 			elseif name == "Restitution" or  name == "Friction" then
 				editControl:showEditRuler(data:get(name),0,1,0.1,function(val)
-					item.value = string.format("%.2f",val)
+					item.value = n2str(val)
 					data:set(name,val)
 				end)
-			elseif name == "LinearDamping" or name ==  "AngularDamping" then
+			elseif name == "LinearDamping" or name ==  "AngularDamping" or name == "CorrectionFactor" then
 				editControl:showEditRuler(data:get(name),0,10,1,function(val)
-					item.value = string.format("%.1f",val)
+					item.value = n2str(val)
 					data:set(name,val)
 				end)
 			elseif name == "GravityScale" then
-				editControl:showEditRuler(data:get("GravityScale"),-10,10,1,function(val)
-					item.value = string.format("%.1f",val)
-					data:set("GravityScale",val)
+				editControl:showEditRuler(data:get(name),-10,10,1,function(val)
+					item.value = n2str(val)
+					data:set(name,val)
 				end)
-			elseif name == "MaxLength" then
-				editControl:showEditRuler(data:get("MaxLength"),0,10000,100,function(val)
-					val = math.floor(val)
-					item.value = string.format("%d",val)
-					data:set("MaxLength",val)
+			elseif name == "MaxLength"
+				or name == "AngularOffset"
+				or name == "Lower"
+				or name == "Upper"
+				or name == "MaxMotorForce"
+				or name == "MotorSpeed" then
+				editControl:showEditRuler(data:get(name),0,10000,10,function(val)
+					item.value = n2str(val)
+					data:set(name,val)
+				end)
+			elseif name == "MaxForce" or name == "MaxTorque" then
+				editControl:showEditRuler(data:get(name),0,0,10,function(val)
+					item.value = n2str(val)
+					data:set(name,val)
+				end)
+			elseif name == "Ratio" then
+				editControl:showEditRuler(data:get(name),0.1,10,1,function(val)
+					item.value = n2str(val)
+					data:set(name,val)
 				end)
 			elseif name == "SensorTag" then
 				editControl:showEditRuler(data:get("SensorTag"),0,100,10,function(val)
@@ -739,6 +853,36 @@ local function oEditControl()
 					data:set("Vertices",vs)
 					oEditor:resetItem(data)
 				end)
+			elseif name == "BodyA" or name == "BodyB" then
+				editControl:showBodyChooser(data:get(name),function(body)
+					local bodyName = body:get("Name")
+					if data:get(name) ~= bodyName then
+						item.value = bodyName
+						data:set(name,bodyName)
+						oEditor:resetItem(data)
+						editControl:hideBodyChooser()
+						oEvent:send("viewArea.moveToData",body)
+						oEvent:send("settingPanel.edit",nil)
+					end
+				end)
+			elseif name == "WorldPos" or name == "GroundA" or name == "GroundB" then
+				editControl:showPointControl(data:get(name),function(pos)
+					item.value = n2str(pos.x)..","..n2str(pos.y)
+					data:set(name,pos)
+					oEditor:resetItem(data)
+				end)
+			elseif name == "AnchorA" or name == "AnchorB" then
+				editControl:showPointControl(data:get(name),function(pos)
+					item.value = n2str(pos.x)..","..n2str(pos.y)
+					data:set(name,pos)
+					oEditor:resetItem(data)
+				end, oEditor:getItem(data:get(name == "AnchorA" and "BodyA" or "BodyB")))
+			elseif name == "LinearOffset" then
+				editControl:showPointControl(data:get(name),function(pos)
+					item.value = n2str(pos.x)..","..n2str(pos.y)
+					data:set(name,pos)
+					oEditor:resetItem(data)
+				end,oEditor:getItem(data:get("BodyA")))
 			end
 		else
 			if name == "Name" then
@@ -757,7 +901,16 @@ local function oEditControl()
 					or name ==  "AngularDamping"
 					or name == "GravityScale"
 					or name == "SensorTag"
-					or name == "MaxLength" then
+					or name == "MaxLength"
+					or name == "MaxForce"
+					or name == "MaxTorque"
+					or name == "AngularOffset"
+					or name == "CorrectionFactor"
+					or name == "Ratio"
+					or name == "Lower"
+					or name == "Upper"
+					or name == "MaxMotorForce"
+					or name == "MotorSpeed" then
 					oEditor:resetItem(data)
 				end
 				editControl:hide()

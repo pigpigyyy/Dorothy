@@ -88,12 +88,32 @@ local function Size(width,height)
 	end
 end
 
+local function rename(self,oldName,newName)
+	local change = false
+	if self:get("BodyA") == oldName then
+		self:set("BodyA",newName)
+		change = true
+	elseif self:get("BodyB") == oldName then
+		self:set("BodyB",newName)
+		change = true
+	end
+	if change then
+		oEditor:resetItem(self)
+	end
+end
+
+local function reset(self,name)
+	if self:get("BodyA") == name or self:get("BodyB") == name then
+		oEditor:resetItem(self)
+	end
+end
+
 local defaultShapeData =
 {
 	Rectangle =
 	{
 		{"ItemType","Rectangle"}, -- 1
-		{"Name","body"}, -- 2
+		{"Name","rect"}, -- 2
 		{"Type",oBodyDef.Dynamic}, -- 3
 		{"Position",PointZero}, -- 4
 		{"Angle",0}, -- 5
@@ -157,7 +177,7 @@ local defaultShapeData =
 	Circle =
 	{
 		{"ItemType","Circle"}, -- 1
-		{"Name","body"}, -- 2
+		{"Name","circle"}, -- 2
 		{"Type",oBodyDef.Dynamic}, -- 3
 		{"Position",PointZero}, -- 4
 		{"Angle",0}, -- 5
@@ -215,7 +235,7 @@ local defaultShapeData =
 	Polygon =
 	{
 		{"ItemType","Polygon"}, -- 1
-		{"Name","body"}, -- 2
+		{"Name","poly"}, -- 2
 		{"Type",oBodyDef.Dynamic}, -- 3
 		{"Position",PointZero}, -- 4
 		{"Angle",0}, -- 5
@@ -270,7 +290,7 @@ local defaultShapeData =
 	Chain =
 	{
 		{"ItemType","Chain"}, -- 1
-		{"Name","body"}, -- 2
+		{"Name","chain"}, -- 2
 		{"Type",oBodyDef.Dynamic}, -- 3
 		{"Position",PointZero}, -- 4
 		{"Angle",0}, -- 5
@@ -315,7 +335,7 @@ local defaultShapeData =
 	Loop =
 	{
 		{"ItemType","Loop"}, -- 1
-		{"Name","body"}, -- 2
+		{"Name","loop"}, -- 2
 		{"Type",oBodyDef.Dynamic}, -- 3
 		{"Position",PointZero}, -- 4
 		{"Angle",0}, -- 5
@@ -499,7 +519,7 @@ local defaultShapeData =
 	Distance =
 	{
 		{"ItemType","Distance"}, -- 1
-		{"Name","joint"}, -- 2
+		{"Name","distance"}, -- 2
 		{"Collision",false}, -- 3
 		{"BodyA",""}, -- 4
 		{"BodyB",""}, -- 5
@@ -511,7 +531,7 @@ local defaultShapeData =
 			local Distance = oEditor.Distance
 			local bodyA = oEditor:getItem(self[Distance.BodyA])
 			local bodyB = oEditor:getItem(self[Distance.BodyB])
-			if not bodyA or not bodyB then
+			if not bodyA or not bodyB and bodyA ~= bodyB then
 				return nil
 			end
 			return oJoint:collide(self[Distance.Collision]):distance(
@@ -521,16 +541,13 @@ local defaultShapeData =
 				self[Distance.Frequency],
 				self[Distance.Damping])
 		end,
-		rename = function(self,oldName,newName)
-			local Distance = oEditor.Distance
-			if self[Distance.BodyA] == oldName then self[Distance.BodyA] = newName end
-			if self[Distance.BodyB] == oldName then self[Distance.BodyB] = newName end
-		end,
+		rename = rename,
+		reset = reset,
 	},
 	Friction =
 	{
 		{"ItemType","Friction"}, -- 1
-		{"Name","joint"}, -- 2
+		{"Name","friction"}, -- 2
 		{"Collision",false}, -- 3
 		{"BodyA",""}, -- 4
 		{"BodyB",""}, -- 5
@@ -541,7 +558,7 @@ local defaultShapeData =
 			local Friction = oEditor.Friction
 			local bodyA = oEditor:getItem(self[Friction.BodyA])
 			local bodyB = oEditor:getItem(self[Friction.BodyB])
-			if not bodyA or not bodyB then
+			if not bodyA or not bodyB and bodyA ~= bodyB then
 				return nil
 			end
 			return oJoint:collide(self[Friction.Collision]):friction(
@@ -550,16 +567,13 @@ local defaultShapeData =
 				self[Friction.MaxForce],
 				self[Friction.MaxTorque])
 		end,
-		rename = function(self,oldName,newName)
-			local Friction = oEditor.Friction
-			if self[Friction.BodyA] == oldName then self[Friction.BodyA] = newName end
-			if self[Friction.BodyB] == oldName then self[Friction.BodyB] = newName end
-		end,
+		rename = rename,
+		reset = reset,
 	},
 	Gear =
 	{
 		{"ItemType","Gear"}, -- 1
-		{"Name","joint"}, -- 2
+		{"Name","gear"}, -- 2
 		{"Collision",false}, -- 3
 		{"JointA",""}, -- 4
 		{"JointB",""}, -- 5
@@ -584,7 +598,7 @@ local defaultShapeData =
 	Spring =
 	{
 		{"ItemType","Spring"}, -- 1
-		{"Name","joint"}, -- 2
+		{"Name","spring"}, -- 2
 		{"Collision",false}, -- 3
 		{"BodyA",""}, -- 4
 		{"BodyB",""}, -- 5
@@ -597,7 +611,7 @@ local defaultShapeData =
 			local Spring = oEditor.Spring
 			local bodyA = oEditor:getItem(self[Spring.BodyA])
 			local bodyB = oEditor:getItem(self[Spring.BodyB])
-			if not bodyA or not bodyB then
+			if not bodyA or not bodyB and bodyA ~= bodyB then
 				return nil
 			end
 			return oJoint:collide(self[Spring.Collision]):spring(
@@ -608,84 +622,77 @@ local defaultShapeData =
 				self[Spring.MaxTorque],
 				self[Spring.CorrectionFactor])
 		end,
-		rename = function(self,oldName,newName)
-			local Spring = oEditor.Spring
-			if self[Spring.BodyA] == oldName then self[Spring.BodyA] = newName end
-			if self[Spring.BodyB] == oldName then self[Spring.BodyB] = newName end
-		end,
+		rename = rename,
+		reset = reset,
 	},
 	Prismatic =
 	{
 		{"ItemType","Prismatic"}, -- 1
-		{"Name","joint"}, -- 2
+		{"Name","prism"}, -- 2
 		{"Collision",false}, -- 3
 		{"BodyA",""}, -- 4
 		{"BodyB",""}, -- 5
 		{"WorldPos",PointZero}, -- 6
 		{"Axis",Point(1,0)}, -- 7
-		{"LowerTranslation",0}, -- 8
-		{"UpperTranslation",0}, -- 9
+		{"Lower",0}, -- 8
+		{"Upper",0}, -- 9
 		{"MaxMotorForce",0}, -- 10
 		{"MotorSpeed",0}, -- 11
 		create = function(self)
 			local Prismatic = oEditor.Prismatic
 			local bodyA = oEditor:getItem(self[Prismatic.BodyA])
 			local bodyB = oEditor:getItem(self[Prismatic.BodyB])
-			if not bodyA or not bodyB then
+			if not bodyA or not bodyB and bodyA ~= bodyB then
 				return nil
 			end
-			return oJoint:collide(self[Prismatic.Collision]):prismatic(
+			local joint = oJoint:collide(self[Prismatic.Collision]):prismatic(
 				bodyA,bodyB,
 				self[Prismatic.WorldPos],
 				self[Prismatic.Axis],
-				self[Prismatic.LowerTranslation],
-				self[Prismatic.UpperTranslation],
+				self[Prismatic.Lower],
+				self[Prismatic.Upper],
 				self[Prismatic.MaxMotorForce],
 				self[Prismatic.MotorSpeed])
+			joint.enabled = true
+			return joint
 		end,
-		rename = function(self,oldName,newName)
-			local Prismatic = oEditor.Prismatic
-			if self[Prismatic.BodyA] == oldName then self[Prismatic.BodyA] = newName end
-			if self[Prismatic.BodyB] == oldName then self[Prismatic.BodyB] = newName end
-		end,
+		rename = rename,
+		reset = reset,
 	},
 	Pulley =
 	{
 		{"ItemType","Pulley"}, -- 1
-		{"Name","joint"}, -- 2
+		{"Name","pulley"}, -- 2
 		{"Collision",true}, -- 3
 		{"BodyA",""}, -- 4
 		{"BodyB",""}, -- 5
 		{"AnchorA",PointZero}, -- 6
 		{"AnchorB",PointZero}, -- 7
-		{"GroundAnchorA",Point(-100,100)}, -- 8
-		{"GroundAnchorB",Point(100,100)}, -- 9
+		{"GroundA",Point(-100,100)}, -- 8
+		{"GroundB",Point(100,100)}, -- 9
 		{"Ratio",1}, -- 9
 		create = function(self)
 			local Pulley = oEditor.Pulley
 			local bodyA = oEditor:getItem(self[Pulley.BodyA])
 			local bodyB = oEditor:getItem(self[Pulley.BodyB])
-			if not bodyA or not bodyB then
+			if not bodyA or not bodyB and bodyA ~= bodyB then
 				return nil
 			end
 			return oJoint:collide(self[Pulley.Collision]):pulley(
 				bodyA,bodyB,
 				self[Pulley.AnchorA],
 				self[Pulley.AnchorB],
-				self[Pulley.GroundAnchorA],
-				self[Pulley.GroundAnchorB],
+				self[Pulley.GroundA],
+				self[Pulley.GroundB],
 				self[Pulley.Ratio])
 		end,
-		rename = function(self,oldName,newName)
-			local Pulley = oEditor.Pulley
-			if self[Pulley.BodyA] == oldName then self[Pulley.BodyA] = newName end
-			if self[Pulley.BodyB] == oldName then self[Pulley.BodyB] = newName end
-		end,
+		rename = rename,
+		reset = reset,
 	},
 	Revolute =
 	{
 		{"ItemType","Revolute"}, -- 1
-		{"Name","joint"}, -- 2
+		{"Name","revolute"}, -- 2
 		{"Collision",false}, -- 3
 		{"BodyA",""}, -- 4
 		{"BodyB",""}, -- 5
@@ -698,7 +705,7 @@ local defaultShapeData =
 			local Revolute = oEditor.Revolute
 			local bodyA = oEditor:getItem(self[Revolute.BodyA])
 			local bodyB = oEditor:getItem(self[Revolute.BodyB])
-			if not bodyA or not bodyB then
+			if not bodyA or not bodyB and bodyA ~= bodyB then
 				return nil
 			end
 			return oJoint:collide(self[Revolute.Collision]):revolute(
@@ -709,16 +716,13 @@ local defaultShapeData =
 				self[Revolute.MaxMotorTorque],
 				self[Revolute.MotorSpeed])
 		end,
-		rename = function(self,oldName,newName)
-			local Revolute = oEditor.Revolute
-			if self[Revolute.BodyA] == oldName then self[Revolute.BodyA] = newName end
-			if self[Revolute.BodyB] == oldName then self[Revolute.BodyB] = newName end
-		end,
+		rename = rename,
+		reset = reset,
 	},
 	Rope =
 	{
 		{"ItemType","Rope"}, -- 1
-		{"Name","joint"}, -- 2
+		{"Name","rope"}, -- 2
 		{"Collision",false}, -- 3
 		{"BodyA",""}, -- 4
 		{"BodyB",""}, -- 5
@@ -729,7 +733,7 @@ local defaultShapeData =
 			local Rope = oEditor.Rope
 			local bodyA = oEditor:getItem(self[Rope.BodyA])
 			local bodyB = oEditor:getItem(self[Rope.BodyB])
-			if not bodyA or not bodyB then
+			if not bodyA or not bodyB and bodyA ~= bodyB then
 				return nil
 			end
 			return oJoint:collide(self[Rope.Collision]):rope(
@@ -738,31 +742,13 @@ local defaultShapeData =
 				self[Rope.AnchorB],
 				self[Rope.MaxLength])
 		end,
-		rename = function(self,oldName,newName)
-			local Rope = oEditor.Rope
-			local change = false
-			if self[Rope.BodyA] == oldName then
-				self[Rope.BodyA] = newName
-				change = true
-			elseif self[Rope.BodyB] == oldName then
-				self[Rope.BodyB] = newName
-				change = true
-			end
-			if change then
-				oEditor:resetItem(self)
-			end
-		end,
-		reset = function(self,name)
-			local Rope = oEditor.Rope
-			if self[Rope.BodyA] == name or self[Rope.BodyB] == name then
-				oEditor:resetItem(self)
-			end
-		end,
+		rename = rename,
+		reset = reset,
 	},
 	Weld =
 	{
 		{"ItemType","Weld"}, -- 1
-		{"Name","joint"}, -- 2
+		{"Name","weld"}, -- 2
 		{"Collision",false}, -- 3
 		{"BodyA",""}, -- 4
 		{"BodyB",""}, -- 5
@@ -773,7 +759,7 @@ local defaultShapeData =
 			local Weld = oEditor.Weld
 			local bodyA = oEditor:getItem(self[Weld.BodyA])
 			local bodyB = oEditor:getItem(self[Weld.BodyB])
-			if not bodyA or not bodyB then
+			if not bodyA or not bodyB and bodyA ~= bodyB then
 				return nil
 			end
 			return oJoint:collide(self[Weld.Collision]):weld(
@@ -782,16 +768,13 @@ local defaultShapeData =
 				self[Weld.Frequency],
 				self[Weld.Damping])
 		end,
-		rename = function(self,oldName,newName)
-			local Weld = oEditor.Weld
-			if self[Weld.BodyA] == oldName then self[Weld.BodyA] = newName end
-			if self[Weld.BodyB] == oldName then self[Weld.BodyB] = newName end
-		end,
+		rename = rename,
+		reset = reset,
 	},
 	Wheel =
 	{
 		{"ItemType","Wheel"}, -- 1
-		{"Name","joint"}, -- 2
+		{"Name","wheel"}, -- 2
 		{"Collision",false}, -- 3
 		{"BodyA",""}, -- 4
 		{"BodyB",""}, -- 5
@@ -805,7 +788,7 @@ local defaultShapeData =
 			local Wheel = oEditor.Wheel
 			local bodyA = oEditor:getItem(self[Wheel.BodyA])
 			local bodyB = oEditor:getItem(self[Wheel.BodyB])
-			if not bodyA or not bodyB then
+			if not bodyA or not bodyB and bodyA ~= bodyB then
 				return nil
 			end
 			return oJoint:collide(self[Wheel.Collision]):wheel(
@@ -817,11 +800,8 @@ local defaultShapeData =
 				self[Wheel.Frequency],
 				self[Wheel.Damping])
 		end,
-		rename = function(self,oldName,newName)
-			local Wheel = oEditor.Wheel
-			if self[Wheel.BodyA] == oldName then self[Wheel.BodyA] = newName end
-			if self[Wheel.BodyB] == oldName then self[Wheel.BodyB] = newName end
-		end,
+		rename = rename,
+		reset = reset,
 	},
 }
 
@@ -954,7 +934,9 @@ oEditor.resetItem = function(self,data)
 	local name = data:get("Name")
 	oEditor.items[name] = item
 	if item then item.dataItem = data end
-	oEvent:send("editor.body",name)
+	if tolua.type(item) == "oBody" then
+		oEvent:send("editor.body",name)
+	end
 	return item
 end
 oEditor.resetItems = function(self)
@@ -994,6 +976,7 @@ oEditor.clearItems = function(self)
 	self.items = {}
 end
 oEditor.getUsableName = function(self,originalName)
+	if originalName == "" then originalName = "name" end
 	if self.names[originalName] then
 		local counter = 1
 		local nawName = nil

@@ -35,24 +35,49 @@ local function oViewPanel()
 	border:addChild(background,-1)
 	self.position = oVec2(winSize.width*0.5-100,winSize.height*0.5-halfBH-10)
 
-	local cross = oLine(
-	{
-		oVec2(-10,0),
-		oVec2(0,10),
-		oVec2(10,0),
-		oVec2(0,-10),
-		oVec2(-10,0),
-		oVec2(10,0),
-	},ccColor4(0xff00ffff))
-	cross:addChild(oLine({oVec2(0,10),oVec2(0,-10)},ccColor4(0xff00ffff)))
-	cross.opacity = 0
-	cross.transformTarget = oEditor.world
-	oEditor:addChild(cross,2)
-	local fadeOut = CCSequence({CCDelay(0.7),oOpacity(0.3,0)})
+	local function createCross()
+		local cross = oLine(
+		{
+			oVec2(-10,0),
+			oVec2(0,10),
+			oVec2(10,0),
+			oVec2(0,-10),
+			oVec2(-10,0),
+			oVec2(10,0),
+		},ccColor4(0xff00ffff))
+		cross:addChild(oLine({oVec2(0,10),oVec2(0,-10)},ccColor4(0xff00ffff)))
+		cross.opacity = 0
+		cross.transformTarget = oEditor.world
+		oEditor:addChild(cross,2)
+		local fadeOut = CCSequence({CCDelay(0.7),oOpacity(0.3,0)})
+		cross.fadeOut = function(self)
+			cross.opacity = 1
+			cross:stopAllActions()
+			cross:runAction(fadeOut)
+		end
+		return cross
+	end
 
-	local function moveViewToItem(item)
+	local crossA = createCross()
+	local crossB = createCross()
+	
+	local function moveViewToData(data)
 		if oEditor.isPlaying then return end
-		local data = item.dataItem
+		if data.resetListener then
+			if data:has("BodyA") and data:has("BodyB") then
+				local bodyA = oEditor:getItem(data:get("BodyA"))
+				local bodyB = oEditor:getItem(data:get("BodyB"))
+				if bodyA then
+					crossA.position = bodyA.position
+					crossA:fadeOut()
+				end
+				if bodyB then
+					crossB.position = bodyB.position
+					crossB:fadeOut()
+				end
+			end
+			return
+		end
 		if not data.parent then
 			if data:has("Center") then
 				local worldNode = oEditor.worldNode
@@ -60,17 +85,17 @@ local function oViewPanel()
 				worldNode.rotation = data:has("Angle") and data:get("Angle") or 0
 				local pos = worldNode:convertToWorldSpace(data:get("Center"))
 				pos = oEditor.world:convertToNodeSpace(pos)
-				cross.position = pos
+				crossA.position = pos
 				oEvent:send("viewArea.toPos",oEditor.origin-pos*oEditor.scale)
 			elseif data:has("Position") then
 				local pos = data:get("Position")
-				cross.position = pos
+				crossA.position = pos
 				oEvent:send("viewArea.toPos",oEditor.origin-pos*oEditor.scale)
 			end
 		elseif not data:has("Center") then
 			local parent = data.parent
 			local pos = parent:get("Position")
-			cross.position = pos
+			crossA.position = pos
 			oEvent:send("viewArea.toPos",oEditor.origin-pos*oEditor.scale)
 		else
 			local parent = data.parent
@@ -79,12 +104,10 @@ local function oViewPanel()
 			worldNode.rotation = parent:has("Angle") and parent:get("Angle") or 0
 			local pos = worldNode:convertToWorldSpace(data:get("Center"))
 			pos = oEditor.world:convertToNodeSpace(pos)
-			cross.position = pos
+			crossA.position = pos
 			oEvent:send("viewArea.toPos",oEditor.origin-pos*oEditor.scale)
 		end
-		cross:stopAllActions()
-		cross.opacity = 1
-		cross:runAction(fadeOut)
+		crossA:fadeOut()
 	end
 
 	local function genPosY()
@@ -102,7 +125,7 @@ local function oViewPanel()
 		oEvent:send("viewPanel.choose",item)
 		if item.selected then
 			oEvent:send("settingPanel.toState",item.dataItem:get("ItemType"))
-			moveViewToItem(item)
+			moveViewToData(item.dataItem)
 		else
 			oEvent:send("settingPanel.toState",nil)
 		end
@@ -144,7 +167,7 @@ local function oViewPanel()
 			for _,v in ipairs(self.items) do
 				if arg == v.dataItem then
 					if currentItem == v then
-						moveViewToItem(v)
+						moveViewToData(v.dataItem)
 						return
 					end
 					item = v
@@ -152,7 +175,7 @@ local function oViewPanel()
 					oEditor.currentData = item.dataItem
 					oEvent:send("settingPanel.toState",item.dataItem[1])
 					self:setPos(oVec2(0,borderSize.height*0.5+30-item.positionY))
-					moveViewToItem(item)
+					moveViewToData(item.dataItem)
 					break
 				end
 			end
@@ -187,6 +210,9 @@ local function oViewPanel()
 				break
 			end
 		end
+	end)
+	self.data.moveViewListener = oListener("viewArea.moveToData",function(data)
+		moveViewToData(data)
 	end)
 	return self
 end

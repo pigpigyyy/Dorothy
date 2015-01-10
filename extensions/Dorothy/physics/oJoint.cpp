@@ -58,8 +58,6 @@ oJoint* oJoint::distance(
 	b2Body* bB = bodyB->getB2Body();
 	b2Vec2 aA = oWorld::b2Val(anchorA);
 	b2Vec2 aB = oWorld::b2Val(anchorB);
-	aA = bA->GetWorldPoint(aA);
-	aB = bB->GetWorldPoint(aB);
 	b2DistanceJointDef jointDef;
 	jointDef.Initialize(bA, bB,
 		bA->GetWorldPoint(aA),
@@ -204,9 +202,9 @@ oMotorJoint* oJoint::prismatic(
 	b2Vec2 a = oWorld::b2Val(worldAnchor);
 	b2PrismaticJointDef jointDef;
 	jointDef.Initialize(bA, bB, a, axis);
-	jointDef.lowerTranslation = lowerTranslation;
-	jointDef.upperTranslation = upperTranslation;
-	jointDef.enableLimit = lowerTranslation || upperTranslation;
+	jointDef.lowerTranslation = oWorld::b2Val(lowerTranslation);
+	jointDef.upperTranslation = oWorld::b2Val(upperTranslation);
+	jointDef.enableLimit = (lowerTranslation || upperTranslation) && (lowerTranslation <= upperTranslation);
 	jointDef.maxMotorForce = maxMotorForce;
 	jointDef.motorSpeed = motorSpeed;
 	jointDef.collideConnected = _enableCollideConnected;
@@ -273,7 +271,7 @@ oMotorJoint* oJoint::revolute(
 	jointDef.Initialize(bA, bB, a);
 	jointDef.lowerAngle = lowerAngle;
 	jointDef.upperAngle = upperAngle;
-	jointDef.enableLimit = lowerAngle || upperAngle;
+	jointDef.enableLimit = (lowerAngle || upperAngle) && (lowerAngle <= upperAngle);
 	jointDef.maxMotorTorque = maxMotorTorque;
 	jointDef.motorSpeed = motorSpeed;
 	jointDef.collideConnected = _enableCollideConnected;

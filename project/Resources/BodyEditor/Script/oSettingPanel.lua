@@ -63,8 +63,8 @@ local function oSettingPanel()
 		"JointB",
 		-- move point
 		"WorldPos",
-		"GroundAnchorA",
-		"GroundAnchorB",
+		"GroundA",
+		"GroundB",
 		"AnchorA",
 		"AnchorB",
 		"LinearOffset",
@@ -76,8 +76,8 @@ local function oSettingPanel()
 		"Ratio",
 		"AngularOffset", 
 		"CorrectionFactor",
-		"LowerTranslation",
-		"UpperTranslation",
+		"Lower",
+		"Upper",
 		"MaxMotorForce",
 		"MotorSpeed",
 		"LowerAngle",
@@ -348,8 +348,8 @@ local function oSettingPanel()
 		items.BodyB,
 		items.WorldPos,
 		items.Axis,
-		items.LowerTranslation,
-		items.UpperTranslation,
+		items.Lower,
+		items.Upper,
 		items.MaxMotorForce,
 		items.MotorSpeed,
 	}
@@ -363,8 +363,8 @@ local function oSettingPanel()
 		items.BodyB,
 		items.AnchorA,
 		items.AnchorB,
-		items.GroundAnchorA,
-		items.GroundAnchorB,
+		items.GroundA,
+		items.GroundB,
 		items.Ratio,
 	}
 	self.Pulley = itemsPulley
