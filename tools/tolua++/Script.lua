@@ -187,9 +187,13 @@ local oEvent = loaded.oEvent
 local oEvent_args = {}
 local oEvent_send = oEvent.send
 oEvent.send = function(self,name,args)
-	oEvent_args[name] = args
+	local argsTable = oEvent_args[name] or {}
+	argsTable.n = (argsTable.n or 0)+1
+	table_insert(argsTable,args)
+	oEvent_args[name] = argsTable
 	oEvent_send(self,name)
-	oEvent_args[name] = nil
+	table_remove(argsTable,argsTable.n)
+	argsTable.n = argsTable.n-1
 end
 
 local oEvent_remove = oEvent.remove
@@ -198,11 +202,18 @@ oEvent.remove = function(self,name)
 	oEvent_remove(self,name)
 end
 
+local oEvent_clear = oEvent.clear
+oEvent.clear = function(self)
+	oEvent_clear()
+	oEvent_args = {}
+end
+
 local oListener = loaded.oListener
 loaded.oListener = function(name,handler)
 	return oListener(name,
 			function(event)
-				handler(oEvent_args[name],event)
+				local argsTable = oEvent_args[name]
+				handler(argsTable[argsTable.n],event)
 			end)
 end
 

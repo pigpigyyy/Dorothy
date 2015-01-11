@@ -146,10 +146,7 @@ oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableI
 #define oModelCache_loadData(filename,tableIndex) {__oModelCache_loadData(tolua_S,filename,tableIndex);}
 void oModelCache_save(const char* itemName, const char* targetName);
 
-inline ccBlendFunc* ccBlendFuncNew(GLenum src, GLenum dst)
-{
-	return new ccBlendFunc{ src, dst };
-}
+#define ccBlendFuncNew(src, dst) new ccBlendFunc{ src, dst }
 
 class CCCall: public CCActionInstant
 {

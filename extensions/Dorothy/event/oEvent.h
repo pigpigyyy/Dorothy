@@ -61,6 +61,7 @@ public:
 	static bool removeType(const string& name);
 	static oListener* addListener(const string& name, const oEventHandler& handler);
 	static void send(const string& name);
+	static void clear();
 private:
 	static void reg(oListener* listener);
 	static void unreg(oListener* listener);

@@ -4,5 +4,6 @@ class oEvent
 
 	static void addType @ add(string& name);
 	static bool removeType @ remove(string& name);
+	static void clear();
 	static void send(string& name);
 };

@@ -102,8 +102,9 @@ local function rename(self,oldName,newName)
 	end
 end
 
-local function reset(self,name)
-	if self:get("BodyA") == name or self:get("BodyB") == name then
+local resetEnable = false
+local function reset(self,args)
+	if resetEnable and args.type == "Body" and (self:get("BodyA") == args.name or self:get("BodyB") == args.name) then
 		oEditor:resetItem(self)
 	end
 end
@@ -594,8 +595,8 @@ local defaultShapeData =
 			if self[Gear.JointA] == oldName then self[Gear.JointA] = newName end
 			if self[Gear.JointB] == oldName then self[Gear.JointB] = newName end
 		end,
-		reset = function(self,name)
-			if self:get("JointA") == name or self:get("JointB") == name then
+		reset = function(self,args)
+			if resetEnable and args.type == "Joint" and (self:get("JointA") == args.name or self:get("JointB")) == args.name then
 				oEditor:resetItem(self)
 			end
 		end,
@@ -844,8 +845,8 @@ for shapeName,shapeDefine in pairs(defaultShapeData) do
 				end)
 			end
 			if resetFunc then
-				newData.resetListener = oListener("editor.reset",function(name)
-					resetFunc(newData,name)
+				newData.resetListener = oListener("editor.reset",function(args)
+					resetFunc(newData,args)
 				end)
 			end
 			return newData
@@ -874,11 +875,15 @@ end
 oEditor.addData = function(self,data)
 	if not data.resetListener then
 		local bodyData = self.bodyData
-		for i = #bodyData,1,-1 do
-			if not bodyData[i].resetListener then
-				table.insert(bodyData,i+1,data)
-				break
+		if #bodyData > 0 then
+			for i = #bodyData,1,-1 do
+				if not bodyData[i].resetListener then
+					table.insert(bodyData,i+1,data)
+					break
+				end
 			end
+		else
+			table.insert(bodyData,data)
 		end
 	else
 		table.insert(self.bodyData,data)
@@ -965,14 +970,16 @@ oEditor.resetItem = function(self,data)
 	local name = data:get("Name")
 	oEditor.items[name] = item
 	if item then item.dataItem = data end
-	oEvent:send("editor.reset",name)
+	oEvent:send("editor.reset",{name=name,type=(data.resetListener and "Joint" or "Body")})
 	return item
 end
 oEditor.resetItems = function(self)
 	self:clearItems()
+	resetEnable = false
 	for _,data in ipairs(self.bodyData) do
 		self:resetItem(data)
 	end
+	resetEnable = true
 end
 oEditor.removeItem = function(self,data)
 	if data.parent then data = data.parent end
@@ -1111,8 +1118,8 @@ oEditor.loadData = function(self,filename)
 			end)
 		end
 		if resetFunc then
-			data.resetListener = oListener("editor.reset",function(name)
-				resetFunc(data,name)
+			data.resetListener = oListener("editor.reset",function(args)
+				resetFunc(data,args)
 			end)
 		end
 		oEditor:checkName(data)

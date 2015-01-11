@@ -44,6 +44,11 @@ bool oEvent::removeType( const string& name )
 	return false;
 }
 
+void oEvent::clear()
+{
+	_eventMap.clear();
+}
+
 void oEvent::unreg( oListener* listener )
 {
 	auto it = _eventMap.find(listener->getName());

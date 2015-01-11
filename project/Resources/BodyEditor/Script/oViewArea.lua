@@ -96,7 +96,7 @@ local function oViewArea()
 	local function createShape(name,pos)
 		oEvent:send("editControl.hide")
 		local data
-		if oEditor.currentData and not oEditor.currentData.parent then
+		if oEditor.currentData and not oEditor.currentData.parent and not oEditor.currentData.resetListener then
 			data = oEditor["newSub"..name](oEditor)
 			if data:has("Center") then
 				local parent = oEditor.currentData
