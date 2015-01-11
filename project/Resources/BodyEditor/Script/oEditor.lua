@@ -607,7 +607,7 @@ local defaultShapeData =
 		{"Collision",false}, -- 3
 		{"BodyA",""}, -- 4
 		{"BodyB",""}, -- 5
-		{"LinearOffset",PointZero}, -- 6
+		{"Offset",PointZero}, -- 6
 		{"AngularOffset",0}, -- 7
 		{"MaxForce",0}, -- 8
 		{"MaxTorque",0}, -- 9
@@ -621,7 +621,7 @@ local defaultShapeData =
 			end
 			return oJoint:collide(self[Spring.Collision]):spring(
 				bodyA,bodyB,
-				self[Spring.LinearOffset],
+				self[Spring.Offset],
 				self[Spring.AngularOffset],
 				self[Spring.MaxForce],
 				self[Spring.MaxTorque],
@@ -945,9 +945,11 @@ oEditor.clearData = function(self)
 	for _,data in ipairs(oEditor.bodyData) do
 		if data.renameListener then
 			data.renameListener.enabled = false
+			data.renameListener = nil
 		end
 		if data.resetListener then
 			data.resetListener.enabled = false
+			data.resetListener = nil
 		end
 	end
 	self.bodyData = {}

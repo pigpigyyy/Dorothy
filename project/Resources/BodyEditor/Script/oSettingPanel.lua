@@ -67,7 +67,7 @@ local function oSettingPanel()
 		"GroundB",
 		"AnchorA",
 		"AnchorB",
-		"LinearOffset",
+		"Offset",
 		-- move axis
 		"Axis",
 		-- float
@@ -332,7 +332,7 @@ local function oSettingPanel()
 		items.Collision,
 		items.BodyA,
 		items.BodyB,
-		items.LinearOffset,
+		items.Offset,
 		items.AngularOffset,
 		items.MaxForce,
 		items.MaxTorque,

@@ -202,14 +202,14 @@ local function oFileChooser()
 	panel:reset(viewWidth,viewHeight,paddingX,paddingY)
 	
 	local opMenu = CCMenu()
-	opMenu.contentSize = CCSize(60,60)
+	opMenu.contentSize = CCSize(130,60)
 	opMenu.anchor = oVec2(1,0.5)
 	opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
-	opMenu.position = oVec2(winSize.width*0.5+borderSize.width*0.5+35,winSize.height*0.5+borderSize.height*0.5)
+	opMenu.position = oVec2(winSize.width*0.5+borderSize.width*0.5+30,winSize.height*0.5+borderSize.height*0.5)
 	panel:addChild(opMenu)
 
 	local cancelButton = oButton("Cancel",17,60,false,
-		0,0,
+		70,0,
 		function(item)
 			opMenu.enabled = false
 			panel:hide()
@@ -221,6 +221,22 @@ local function oFileChooser()
 	btnBk.position = oVec2(30,30)
 	cancelButton:addChild(btnBk,-1)
 	opMenu:addChild(cancelButton)
+
+	if CCDirector.sceneStackSize > 1 then
+		local backButton = oButton("Quit",17,60,false,
+			0,0,
+			function(item)
+				opMenu.enabled = false
+				item:unregisterTapHandler()
+				CCDirector:popToRootScene()
+			end)
+		backButton.anchor = oVec2.zero
+		local btnBk = CCDrawNode()
+		btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
+		btnBk.position = oVec2(30,30)
+		backButton:addChild(btnBk,-1)
+		opMenu:addChild(backButton)
+	end
 
 	panel:show()
 	return panel

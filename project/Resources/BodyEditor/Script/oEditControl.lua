@@ -905,7 +905,9 @@ local function oEditControl()
 					item.value = n2str(val)
 					data:set(name,val)
 				end)
-			elseif name == "MotorSpeed" then
+			elseif name == "MotorSpeed"
+				or name == "LowerAngle"
+				or name == "UpperAngle" then
 				editControl:showEditRuler(data:get(name),0,0,10,function(val)
 					item.value = n2str(val)
 					data:set(name,val)
@@ -985,7 +987,7 @@ local function oEditControl()
 					data:set(name,pos)
 					oEditor:resetItem(data)
 				end, oEditor:getItem(data:get(name == "AnchorA" and "BodyA" or "BodyB")))
-			elseif name == "LinearOffset" then
+			elseif name == "Offset" then
 				editControl:showPointControl(data:get(name),function(pos)
 					item.value = n2str(pos.x)..","..n2str(pos.y)
 					data:set(name,pos)
@@ -1028,7 +1030,9 @@ local function oEditControl()
 					or name == "MaxMotorTorque"
 					or name == "MotorSpeed"
 					or name == "Frequency"
-					or name == "Damping" then
+					or name == "Damping"
+					or name == "LowerAngle"
+					or name == "UpperAngle" then
 					oEditor:resetItem(data)
 				end
 				editControl:hide()

@@ -40,6 +40,8 @@ oRoutine(once(function()
 			for k,_ in pairs(loaded) do
 				package.loaded[k] = nil
 			end
+		elseif eventType == CCNode.Cleanup then
+			oEditor:clearData()
 		end
 	end)
 	CCDirector:run(oEditor)
