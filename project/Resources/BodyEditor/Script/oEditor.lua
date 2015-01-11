@@ -582,7 +582,7 @@ local defaultShapeData =
 			local Gear = oEditor.Gear
 			local jointA = oEditor:getItem(self[Gear.JointA])
 			local jointB = oEditor:getItem(self[Gear.JointB])
-			if not jointA or not jointB then
+			if not jointA or not jointB or jointA == jointB then
 				return nil
 			end
 			return oJoint:collide(self[Gear.Collision]):gear(
@@ -593,6 +593,11 @@ local defaultShapeData =
 			local Gear = oEditor.Gear
 			if self[Gear.JointA] == oldName then self[Gear.JointA] = newName end
 			if self[Gear.JointB] == oldName then self[Gear.JointB] = newName end
+		end,
+		reset = function(self,name)
+			if self:get("JointA") == name or self:get("JointB") == name then
+				oEditor:resetItem(self)
+			end
 		end,
 	},
 	Spring =
@@ -839,7 +844,7 @@ for shapeName,shapeDefine in pairs(defaultShapeData) do
 				end)
 			end
 			if resetFunc then
-				newData.resetListener = oListener("editor.body",function(name)
+				newData.resetListener = oListener("editor.reset",function(name)
 					resetFunc(newData,name)
 				end)
 			end
@@ -867,7 +872,17 @@ oEditor.addSubData = function(self,data,subData)
 end
 
 oEditor.addData = function(self,data)
-	table.insert(self.bodyData,data)
+	if not data.resetListener then
+		local bodyData = self.bodyData
+		for i = #bodyData,1,-1 do
+			if not bodyData[i].resetListener then
+				table.insert(bodyData,i+1,data)
+				break
+			end
+		end
+	else
+		table.insert(self.bodyData,data)
+	end
 	oEditor:checkName(data)
 	local subShapes = data:get("SubShapes")
 	if subShapes then
@@ -880,6 +895,14 @@ oEditor.addData = function(self,data)
 	end
 	oEditor:resetItem(data)
 	oEvent:send("editor.bodyData",self.bodyData)
+end
+oEditor.getData = function(self,name)
+	for _,data in ipairs(self.bodyData) do
+		if data:get("Name") == name then
+			return data
+		end
+	end
+	return nil
 end
 oEditor.removeData = function(self,data)
 	local item = data.parent or data
@@ -940,9 +963,7 @@ oEditor.resetItem = function(self,data)
 	local name = data:get("Name")
 	oEditor.items[name] = item
 	if item then item.dataItem = data end
-	if tolua.type(item) == "oBody" then
-		oEvent:send("editor.body",name)
-	end
+	oEvent:send("editor.reset",name)
 	return item
 end
 oEditor.resetItems = function(self)
@@ -1088,7 +1109,7 @@ oEditor.loadData = function(self,filename)
 			end)
 		end
 		if resetFunc then
-			data.resetListener = oListener("editor.body",function(name)
+			data.resetListener = oListener("editor.reset",function(name)
 				resetFunc(data,name)
 			end)
 		end

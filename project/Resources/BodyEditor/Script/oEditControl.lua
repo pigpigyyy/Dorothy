@@ -757,6 +757,29 @@ local function oEditControl()
 		editControl:hideRotEditor()
 	end
 	
+	-- init joint chooser --
+	local jointSelected = nil
+	local jointChooser = CCNode()
+	jointChooser.data = oListener("editControl.joint",function(joint)
+		if jointSelected then
+			jointSelected(joint)
+		end
+	end)
+	jointChooser.visible = false
+	
+	editControl.showJointChooser = function(self,gear,name,callback)
+		editControl:hide()
+		jointChooser.visible = true
+		jointSelected = callback
+		oEvent:send("viewPanel.selectJoint",gear)
+	end
+	editControl.hideJointChooser = function(self)
+		if not jointChooser.visible then return end
+		jointChooser.visible = false
+		jointSelected = nil
+		oEvent:send("viewPanel.selectJoint",nil)
+	end
+
 	-- hide all controls
 	editControl.hide = function(self)
 		editControl:hideSwitch()
@@ -771,6 +794,7 @@ local function oEditControl()
 		editControl:hideBodyChooser()
 		editControl:hidePointControl()
 		editControl:hideAxisEditor()
+		editControl:hideJointChooser()
 	end
 
 	editControl.data = CCDictionary()
@@ -809,7 +833,7 @@ local function oEditControl()
 					local body = oEditor:getItem(data)
 					if body then
 						body.position = pos
-						oEvent:send("editor.body",data:get("Name"))
+						oEvent:send("editor.reset",data:get("Name"))
 					end
 					data:set("Position",pos)
 				end)
@@ -826,7 +850,7 @@ local function oEditControl()
 						local body = oEditor:getItem(data)
 						if body then
 							body.rotation = rot
-							oEvent:send("editor.body",data:get("Name"))
+							oEvent:send("editor.reset",data:get("Name"))
 						end
 					end
 				end)
@@ -855,7 +879,7 @@ local function oEditControl()
 					item.value = n2str(val)
 					data:set("Density",val)
 				end)
-			elseif name == "Restitution" or  name == "Friction" then
+			elseif name == "Restitution" or  name == "Friction" or name == "Damping" then
 				editControl:showEditRuler(data:get(name),0,1,0.1,function(val)
 					item.value = n2str(val)
 					data:set(name,val)
@@ -875,7 +899,8 @@ local function oEditControl()
 				or name == "Lower"
 				or name == "Upper"
 				or name == "MaxMotorForce"
-				or name == "MaxMotorTorque" then
+				or name == "MaxMotorTorque"
+				or name == "Frequency" then
 				editControl:showEditRuler(data:get(name),0,10000,10,function(val)
 					item.value = n2str(val)
 					data:set(name,val)
@@ -914,9 +939,11 @@ local function oEditControl()
 					oEditor:resetItem(data)
 				end)
 			elseif name == "BodyA" or name == "BodyB" then
-				editControl:showBodyChooser(data:get(name),function(body)
+				local theOtherBody = data:get(name == "BodyA" and "BodyB" or "BodyA")
+				local oldName = data:get(name)
+				editControl:showBodyChooser(oldName,function(body)
 					local bodyName = body:get("Name")
-					if data:get(name) ~= bodyName then
+					if bodyName ~= theOtherBody and oldName ~= bodyName then
 						item.value = bodyName
 						data:set(name,bodyName)
 						oEditor:resetItem(data)
@@ -924,6 +951,27 @@ local function oEditControl()
 						oEvent:send("viewArea.moveToData",body)
 						oEvent:send("settingPanel.edit",nil)
 					end
+				end)
+			elseif name == "JointA" or name == "JointB" then
+				local theOtherJoint = data:get(name == "JointA" and "JointB" or "JointA")
+				editControl:showJointChooser(data:get("Name"),data:get(name),function(jointName)
+					if theOtherJoint == jointName then
+						return
+					end
+					local joint = oEditor:getData(jointName)
+					if joint then
+						local itemType = joint:get("ItemType")
+						if itemType ~= "Revolute" and itemType ~= "Prismatic" then
+							return
+						end
+					else
+						return
+					end
+					item.value = jointName
+					data:set(name,jointName)
+					oEditor:resetItem(data)
+					editControl:hideJointChooser()
+					oEvent:send("settingPanel.edit",nil)
 				end)
 			elseif name == "WorldPos" or name == "GroundA" or name == "GroundB" then
 				editControl:showPointControl(data:get(name),function(pos)
@@ -978,7 +1026,9 @@ local function oEditControl()
 					or name == "Upper"
 					or name == "MaxMotorForce"
 					or name == "MaxMotorTorque"
-					or name == "MotorSpeed" then
+					or name == "MotorSpeed"
+					or name == "Frequency"
+					or name == "Damping" then
 					oEditor:resetItem(data)
 				end
 				editControl:hide()

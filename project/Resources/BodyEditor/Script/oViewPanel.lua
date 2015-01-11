@@ -119,7 +119,27 @@ local function oViewPanel()
 		end
 	end
 
+	local baseJointName = nil
+	menu.data = oListener("viewPanel.selectJoint",function(joint)
+		baseJointName = joint
+	end)
+
 	local function selectCallback(item)
+		if baseJointName then
+			if item.dataItem.resetListener then
+				local data = item.dataItem
+				local name = data:get("Name")
+				if name ~= baseJointName then
+					oEvent:send("editControl.joint",name)
+					item.selected = false
+				else
+					item.selected = true
+				end
+			else -- not joint
+				item.selected = false
+			end
+			return
+		end
 		oEvent:send("editControl.hide")
 		oEvent:send("settingPanel.edit",nil)
 		oEvent:send("viewPanel.choose",item)

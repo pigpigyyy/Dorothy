@@ -112,6 +112,8 @@ oJoint* oJoint::gear(
 	b2GearJointDef jointDef;
 	jointDef.joint1 = jointA->getB2Joint();
 	jointDef.joint2 = jointB->getB2Joint();
+	jointDef.bodyA = jointDef.joint1->GetBodyB();
+	jointDef.bodyB = jointDef.joint2->GetBodyB();
 	jointDef.ratio = ratio;
 	jointDef.collideConnected = _enableCollideConnected;
 	oJoint* joint = new oJoint();
