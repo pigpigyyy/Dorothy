@@ -873,20 +873,39 @@ oEditor.addSubData = function(self,data,subData)
 end
 
 oEditor.addData = function(self,data)
+	local bodyData = self.bodyData
 	if not data.resetListener then
-		local bodyData = self.bodyData
 		if #bodyData > 0 then
+			local inserted = false
 			for i = #bodyData,1,-1 do
 				if not bodyData[i].resetListener then
+					inserted = true
 					table.insert(bodyData,i+1,data)
 					break
 				end
+			end
+			if not inserted then
+				table.insert(bodyData,1,data)
 			end
 		else
 			table.insert(bodyData,data)
 		end
 	else
-		table.insert(self.bodyData,data)
+		if #bodyData > 0 then
+			local inserted = false
+			for i = #bodyData,1,-1 do
+				if bodyData[i]:get("ItemType") ~= "Gear" then
+					inserted = true
+					table.insert(bodyData,i+1,data)
+					break
+				end
+			end
+			if not inserted then
+				table.insert(bodyData,1,data)
+			end
+		else
+			table.insert(bodyData,data)
+		end
 	end
 	oEditor:checkName(data)
 	local subShapes = data:get("SubShapes")
@@ -899,7 +918,7 @@ oEditor.addData = function(self,data)
 		end
 	end
 	oEditor:resetItem(data)
-	oEvent:send("editor.bodyData",self.bodyData)
+	oEvent:send("editor.bodyData",bodyData)
 end
 oEditor.getData = function(self,name)
 	for _,data in ipairs(self.bodyData) do
@@ -1038,52 +1057,49 @@ end
 
 local itemToString = nil
 local valueToString = nil
-valueToString = function(value,pre)
-	local str = pre
+valueToString = function(value)
+	local str = ""
 	local typeName = tolua.type(value)
 	if typeName == "table" then
-		str = str.."{\n"
+		str = str.."{"
 		for _,v in ipairs(value) do
 			local typeName = tolua.type(v)
 			if typeName == "oVec2" then
-				str = str..pre.."\toVec2("..string.format("%.2f",v.x)..","..string.format("%.2f",v.y).."),\n"
+				str = str..string.format("oVec2(%.2f,%.2f),",v.x,v.y)
 			elseif typeName == "table" then
-				str = str..itemToString(v,pre.."\t")
+				str = str..itemToString(v)
 			end
 		end
-		str = str..pre.."},\n"
+		str = str.."},"
 	elseif typeName == "oVec2" then
-		str = str.."oVec2("..string.format("%.2f",value.x)..","..string.format("%.2f",value.y).."),\n"
+		str = str..string.format("oVec2(%.2f,%.2f),",value.x,value.y)
 	elseif typeName == "CCSize" then
-		str = str.."CCSize("..string.format("%d",value.width)..","..string.format("%d",value.height).."),\n"
+		str = str..string.format("CCSize(%d,%d),",value.width,value.height)
 	elseif typeName == "string" then
-		str = str.."\""..value.."\",\n"
+		str = str.."\""..value.."\","
 	else
-		str = str..tostring(value)..",\n"
+		str = str..tostring(value)..","
 	end
 	return str
 end
-itemToString = function(item,pre)
+itemToString = function(item)
 	local str = ""
-	str = str..pre.."{\n"
+	str = str.."{"
 	for _,v in ipairs(item) do
-		str = str..valueToString(v,pre.."\t")
+		str = str..valueToString(v)
 	end
-	str = str..pre.."},\n"
+	str = str.."},"
 	return str
 end
 
 oEditor.dumpData = function(self,filename)
 	local str = [[local oVec2 = require("oVec2")
 local CCSize = require("CCSize")
-
-return
-{
-]]
+return {]]
 	for _,data in ipairs(oEditor.bodyData) do
-		str = str..itemToString(data,"\t")
+		str = str..itemToString(data)
 	end
-	str = str.."}\n"
+	str = str.."}"
 	oContent:saveToFile(oEditor.output..filename,str)
 end
 
