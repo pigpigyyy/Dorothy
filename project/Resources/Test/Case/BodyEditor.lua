@@ -14,7 +14,7 @@ world:setShouldContact(0,0,true)
 world.showDebug = true
 scene:addChild(world)
 
-local carDef = oBodyLoader:load(dofile("Test/Case/BodyData.lua"))
+local carDef = oBodyLoader:load("Test/Case/BodyData.lua")
 local car = oBodyLoader:create(carDef,world,oVec2.zero)
 car.data.wheel.enabled = true
 world:addChild(car)

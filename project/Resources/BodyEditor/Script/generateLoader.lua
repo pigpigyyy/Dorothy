@@ -37,7 +37,8 @@ local function loadData(data,item)
 	loadFuncs[itemType](data,item)
 end
 
-local function load(_,bodyData)
+local function load(_,filename)
+	local bodyData = dofile(filename)
 	local itemDict = CCDictionary()
 	for _,data in ipairs(bodyData) do
 		loadData(data,itemDict)
