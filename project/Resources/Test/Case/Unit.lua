@@ -23,7 +23,6 @@ local oJoint = require("oJoint")
 local CCDirector = require("CCDirector")
 local CCScene = require("CCScene")
 local oCache = require("oCache")
---local cclog = require("cclog")
 
 local scene = CCScene()
 
@@ -121,7 +120,7 @@ layer:registerTouchHandler(function(eventType, touch)
 			if joint then
 				joint:destroy()
 			end
-			joint = oJoint:collide(true):move(terrain,body,pos,1000*body.mass)
+			joint = oJoint:move(true,terrain,body,pos,1000*body.mass)
 			return true
 		end)
 	elseif eventType == CCTouch.Moved then

@@ -156,6 +156,8 @@ public:
 	void attachCircleSensor(
 		int tag,
 		float radius);
+	oVec2 offset;
+	float angleOffset;
 	PROPERTY_READONLY_REF(oOwnVector<b2FixtureDef>, FixtureDefs);
 	void clearFixtures();
 	void setDensity(float var);

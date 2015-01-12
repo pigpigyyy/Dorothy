@@ -38,6 +38,7 @@
 //physics
 #include "Dorothy/physics/oBodyDef.h"
 #include "Dorothy/physics/oBody.h"
+#include "Dorothy/physics/oJointDef.h"
 #include "Dorothy/physics/oJoint.h"
 #include "Dorothy/physics/oSensor.h"
 #include "Dorothy/physics/oWorld.h"

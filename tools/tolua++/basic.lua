@@ -54,6 +54,7 @@ local ccobjects = {
 "oBullet",
 "oPlatformWorld",
 "oCamera",
+"oJointDef",
 "oJoint",
 "oMoveJoint",
 "oMotorJoint",

@@ -15,6 +15,7 @@ NS_DOROTHY_BEGIN
 
 class oBody;
 class oWorld;
+class oJointDef;
 class oMoveJoint;
 class oMotorJoint;
 
@@ -23,6 +24,7 @@ class oJoint: public CCObject
 public:
 	virtual ~oJoint();
 	static oJoint* distance(
+		bool collideConnected,
 		oBody* bodyA,
 		oBody* bodyB,
 		const oVec2& anchorA,
@@ -30,16 +32,19 @@ public:
 		float frequency = 0.0f,
 		float damping = 0.0f);
 	static oJoint* friction(
+		bool collideConnected,
 		oBody* bodyA,
 		oBody* bodyB,
 		const oVec2& worldPos,
 		float maxForce,
 		float maxTorque);
 	static oJoint* gear(
+		bool collideConnected,
 		oJoint* jointA,
 		oJoint* jointB,
 		float ratio = 1.0f);
 	static oJoint* spring(
+		bool collideConnected,
 		oBody* bodyA,
 		oBody* bodyB,
 		oVec2 linearOffset,
@@ -48,6 +53,7 @@ public:
 		float maxTorque,
 		float correctionFactor = 1.0f);
 	static oMoveJoint* move(
+		bool collideConnected,
 		oBody* bodyA,
 		oBody* bodyB,
 		const oVec2& targetPos,
@@ -55,6 +61,7 @@ public:
 		float frequency = 5.0f,
 		float damping = 0.7f);
 	static oMotorJoint* prismatic(
+		bool collideConnected,
 		oBody* bodyA,
 		oBody* bodyB,
 		const oVec2& worldPos,
@@ -64,6 +71,7 @@ public:
 		float maxMotorForce = 0.0f,
 		float motorSpeed = 0.0f);
 	static oJoint* pulley(
+		bool collideConnected,
 		oBody* bodyA,
 		oBody* bodyB,
 		const oVec2& anchorA,
@@ -72,6 +80,7 @@ public:
 		const oVec2& groundAnchorB,
 		float32 ratio = 1.0f);
 	static oMotorJoint* revolute(
+		bool collideConnected,
 		oBody* bodyA,
 		oBody* bodyB,
 		const oVec2& worldPos,
@@ -80,18 +89,21 @@ public:
 		float maxMotorTorque = 0.0f,
 		float motorSpeed = 0.0f);
 	static oJoint* rope(
+		bool collideConnected,
 		oBody* bodyA,
 		oBody* bodyB,
 		const oVec2& anchorA,
 		const oVec2& anchorB,
 		float maxLength);
 	static oJoint* weld(
+		bool collideConnected,
 		oBody* bodyA,
 		oBody* bodyB,
 		const oVec2& worldPos, 
 		float frequency = 0.0f,
 		float damping = 0.0f);
 	static oMotorJoint* wheel(
+		bool collideConnected,
 		oBody* bodyA,
 		oBody* bodyB,
 		const oVec2& worldPos,
@@ -103,9 +115,8 @@ public:
 	b2Joint* getB2Joint();
 	oWorld* getWorld();
 	void destroy();
-	static void enableCollision(bool flag);
+	static oJoint* create(oJointDef* def, CCDictionary* itemDict);
 protected:
-	static bool _enableCollideConnected;
 	oWRef<oWorld> _world;
 	b2Joint* _joint;
 	friend class oDestructionListener;

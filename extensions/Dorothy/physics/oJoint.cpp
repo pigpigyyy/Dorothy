@@ -8,6 +8,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #include "Dorothy/const/oDefine.h"
 #include "Dorothy/physics/oJoint.h"
+#include "Dorothy/physics/oJointDef.h"
 #include "Dorothy/physics/oBody.h"
 #include "Dorothy/physics/oWorld.h"
 #include "Dorothy/physics/oSensor.h"
@@ -17,12 +18,6 @@ NS_DOROTHY_BEGIN
 oJoint::~oJoint()
 {
 	oJoint::destroy();
-}
-
-bool oJoint::_enableCollideConnected = false;
-void oJoint::enableCollision(bool flag)
-{
-	_enableCollideConnected = flag;
 }
 
 b2Joint* oJoint::getB2Joint()
@@ -45,7 +40,13 @@ void oJoint::destroy()
 	}
 }
 
+oJoint* oJoint::create(oJointDef* def, CCDictionary* itemDict)
+{
+	return def->toJoint(itemDict);
+}
+
 oJoint* oJoint::distance(
+	bool collideConnected,
 	oBody* bodyA, oBody* bodyB,
 	const oVec2& anchorA, const oVec2& anchorB,
 	float frequency, float damping)
@@ -64,7 +65,7 @@ oJoint* oJoint::distance(
 		bB->GetWorldPoint(aB));
 	jointDef.frequencyHz = frequency;
 	jointDef.dampingRatio = damping;
-	jointDef.collideConnected = _enableCollideConnected;
+	jointDef.collideConnected = collideConnected;
 	oJoint* joint = new oJoint();
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
@@ -74,6 +75,7 @@ oJoint* oJoint::distance(
 }
 
 oJoint* oJoint::friction(
+	bool collideConnected,
 	oBody* bodyA,
 	oBody* bodyB,
 	const oVec2& worldAnchor,
@@ -91,7 +93,7 @@ oJoint* oJoint::friction(
 	jointDef.Initialize(bA, bB, a);
 	jointDef.maxForce = maxForce;
 	jointDef.maxTorque = maxTorque;
-	jointDef.collideConnected = _enableCollideConnected;
+	jointDef.collideConnected = collideConnected;
 	oJoint* joint = new oJoint();
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
@@ -101,6 +103,7 @@ oJoint* oJoint::friction(
 }
 
 oJoint* oJoint::gear(
+	bool collideConnected,
 	oJoint* jointA,
 	oJoint* jointB,
 	float ratio)
@@ -115,7 +118,7 @@ oJoint* oJoint::gear(
 	jointDef.bodyA = jointDef.joint1->GetBodyB();
 	jointDef.bodyB = jointDef.joint2->GetBodyB();
 	jointDef.ratio = ratio;
-	jointDef.collideConnected = _enableCollideConnected;
+	jointDef.collideConnected = collideConnected;
 	oJoint* joint = new oJoint();
 	joint->_world = jointA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
@@ -125,6 +128,7 @@ oJoint* oJoint::gear(
 }
 
 oJoint* oJoint::spring(
+	bool collideConnected,
 	oBody* bodyA,
 	oBody* bodyB,
 	oVec2 linearOffset,
@@ -146,7 +150,7 @@ oJoint* oJoint::spring(
 	jointDef.maxForce = maxForce;
 	jointDef.maxTorque = maxTorque;
 	jointDef.correctionFactor = correctionFactor;
-	jointDef.collideConnected = _enableCollideConnected;
+	jointDef.collideConnected = collideConnected;
 	oJoint* joint = new oJoint();
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
@@ -156,6 +160,7 @@ oJoint* oJoint::spring(
 }
 
 oMoveJoint* oJoint::move(
+	bool collideConnected,
 	oBody* bodyA,
 	oBody* bodyB,
 	const oVec2& target,
@@ -176,7 +181,7 @@ oMoveJoint* oJoint::move(
 	jointDef.maxForce = maxForce;
 	jointDef.frequencyHz = frequency;
 	jointDef.dampingRatio = damping;
-	jointDef.collideConnected = _enableCollideConnected;
+	jointDef.collideConnected = collideConnected;
 	oMoveJoint* joint = new oMoveJoint();
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
@@ -186,6 +191,7 @@ oMoveJoint* oJoint::move(
 }
 
 oMotorJoint* oJoint::prismatic(
+	bool collideConnected,
 	oBody* bodyA,
 	oBody* bodyB,
 	const oVec2& worldAnchor,
@@ -209,7 +215,7 @@ oMotorJoint* oJoint::prismatic(
 	jointDef.enableLimit = (lowerTranslation || upperTranslation) && (lowerTranslation <= upperTranslation);
 	jointDef.maxMotorForce = maxMotorForce;
 	jointDef.motorSpeed = motorSpeed;
-	jointDef.collideConnected = _enableCollideConnected;
+	jointDef.collideConnected = collideConnected;
 	oMotorJoint* joint = new oMotorJoint();
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
@@ -219,6 +225,7 @@ oMotorJoint* oJoint::prismatic(
 }
 
 oJoint* oJoint::pulley(
+	bool collideConnected,
 	oBody* bodyA,
 	oBody* bodyB,
 	const oVec2& anchorA,
@@ -241,7 +248,7 @@ oJoint* oJoint::pulley(
 	b2Vec2 gB = oWorld::b2Val(groundAnchorB);
 	b2PulleyJointDef jointDef;
 	jointDef.Initialize(bA, bB, gA, gB, aA, aB, ratio);
-	jointDef.collideConnected = _enableCollideConnected;
+	jointDef.collideConnected = collideConnected;
 	oJoint* joint = new oJoint();
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
@@ -251,6 +258,7 @@ oJoint* oJoint::pulley(
 }
 
 oMotorJoint* oJoint::revolute(
+	bool collideConnected,
 	oBody* bodyA,
 	oBody* bodyB,
 	const oVec2& worldPos,
@@ -271,12 +279,12 @@ oMotorJoint* oJoint::revolute(
 	motorSpeed = -CC_DEGREES_TO_RADIANS(motorSpeed);
 	b2RevoluteJointDef jointDef;
 	jointDef.Initialize(bA, bB, a);
-	jointDef.lowerAngle = lowerAngle;
-	jointDef.upperAngle = upperAngle;
-	jointDef.enableLimit = (lowerAngle || upperAngle) && (lowerAngle <= upperAngle);
+	jointDef.lowerAngle = upperAngle;
+	jointDef.upperAngle = lowerAngle;
+	jointDef.enableLimit = (lowerAngle || upperAngle) && (lowerAngle >= upperAngle);
 	jointDef.maxMotorTorque = maxMotorTorque;
 	jointDef.motorSpeed = motorSpeed;
-	jointDef.collideConnected = _enableCollideConnected;
+	jointDef.collideConnected = collideConnected;
 	oMotorJoint* joint = new oMotorJoint();
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
@@ -286,6 +294,7 @@ oMotorJoint* oJoint::revolute(
 }
 
 oJoint* oJoint::rope(
+	bool collideConnected,
 	oBody* bodyA,
 	oBody* bodyB,
 	const oVec2& anchorA,
@@ -306,7 +315,7 @@ oJoint* oJoint::rope(
 	jointDef.localAnchorA = aA;
 	jointDef.localAnchorB = aB;
 	jointDef.maxLength = oWorld::b2Val(maxLength);
-	jointDef.collideConnected = _enableCollideConnected;
+	jointDef.collideConnected = collideConnected;
 	oJoint* joint = new oJoint();
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
@@ -316,6 +325,7 @@ oJoint* oJoint::rope(
 }
 
 oJoint* oJoint::weld(
+	bool collideConnected,
 	oBody* bodyA,
 	oBody* bodyB,
 	const oVec2& worldPos,
@@ -333,7 +343,7 @@ oJoint* oJoint::weld(
 	jointDef.Initialize(bA, bB, a);
 	jointDef.frequencyHz = frequency;
 	jointDef.dampingRatio = damping;
-	jointDef.collideConnected = _enableCollideConnected;
+	jointDef.collideConnected = collideConnected;
 	oJoint* joint = new oJoint();
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
@@ -343,6 +353,7 @@ oJoint* oJoint::weld(
 }
 
 oMotorJoint* oJoint::wheel(
+	bool collideConnected,
 	oBody* bodyA,
 	oBody* bodyB,
 	const oVec2& worldPos,
@@ -365,7 +376,7 @@ oMotorJoint* oJoint::wheel(
 	jointDef.motorSpeed = oWorld::b2Val(motorSpeed);
 	jointDef.frequencyHz = frequency;
 	jointDef.dampingRatio = damping;
-	jointDef.collideConnected = _enableCollideConnected;
+	jointDef.collideConnected = collideConnected;
 	oMotorJoint* joint = new oMotorJoint();
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);

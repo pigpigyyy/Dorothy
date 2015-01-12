@@ -18,7 +18,8 @@ b2CircleShape oBodyDef::_circleShape;
 b2PolygonShape oBodyDef::_polygenShape;
 b2FixtureDef oBodyDef::_fixtureDef;
 
-oBodyDef::oBodyDef()
+oBodyDef::oBodyDef():
+angleOffset(0)
 { }
 
 oBodyDef::~oBodyDef()

@@ -13,6 +13,8 @@ public:
 	bool fixedRotation;
 	bool bullet @ isBullet;
 	float gravityScale;
+	oVec2 offset @ position;
+	float angleOffset @ angle;
 	static oFixtureDef* polygon(
 		oVec2& center,
 		float width,

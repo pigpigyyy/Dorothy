@@ -54,4 +54,6 @@ oRoutine(once(function()
 		oEditor:addChild(oEditor[name],index)
 		coroutine.yield()
 	end
+
+	dofile("BodyEditor/Script/generateLoader.lua")
 end))

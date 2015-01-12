@@ -4369,6 +4369,17 @@ local Dorothy =
 				description = "[float]",
 				type = "value"
 			},
+			position =
+			{
+				description = "[oVec2]",
+				typeName = "oVec2",
+				type = "value"
+			},
+			angle =
+			{
+				description = "[float]",
+				type = "value"
+			},
 			polygon =
 			{
 				args = "(center: oVec2, width: float, height: float, angle: float, density: float, friction: float, restitution: float)",
@@ -6237,6 +6248,97 @@ local Dorothy =
 		type = "class",
 		index = index()
 	},
+	oJointDef =
+	{
+		childs =
+		{
+			distance =
+			{
+				args = "(collision: bool, bodyA: oBody, bodyB: oBody, anchorA: oVec2, anchorB: oVec2, frequency: float = 0, damping: float = 0)",
+				description = "",
+				typeName = "oJointDef",
+				returns = "(jointDef: oJointDef)",
+				static = true,
+				type = "method",
+			},
+			friction =
+			{
+				args = "(collision: bool, bodyA: oBody, bodyB: oBody, worldPos: oVec2, maxForce: float, maxTorque: float)",
+				description = "",
+				typeName = "oJointDef",
+				returns = "(jointDef: oJointDef)",
+				static = true,
+				type = "method",
+			},
+			spring =
+			{
+				args = "(collision: bool, bodyA: oBody, bodyB: oBody, linearOffset: oVec2, angularOffset: float, maxForce: float, maxTorque: float, correctionFactor: float = 1)",
+				description = "",
+				typeName = "oJointDef",
+				returns = "(jointDef: oJointDef)",
+				static = true,
+				type = "method",
+			},
+			pulley =
+			{
+				args = "(collision: bool, bodyA: oBody, bodyB: oBody, anchorA: oVec2, anchorB: oVec2, groundAnchorA: oVec2, groundAnchorB: float, ratio: float = 1)",
+				description = "",
+				typeName = "oJointDef",
+				returns = "(jointDef: oJointDef)",
+				static = true,
+				type = "method",
+			},
+			prismatic =
+			{
+				args = "(collision: bool, bodyA: oBody, bodyB: oBody, worldPos: oVec2, axis: oVec2, lowerTranslation: float = 0, upperTranslation: float = 0, maxMotorForce: float = 0, motorSpeed: float = 0)",
+				description = "",
+				typeName = "oJointDef",
+				returns = "(jointDef: oJointDef)",
+				static = true,
+				type = "method",
+			},
+			revolute =
+			{
+				args = "(collision: bool, bodyA: oBody, bodyB: oBody, worldPos: oVec2, lowerAngle: float = 0, upperAngle: float = 0, maxMotorTorque: float = 0, motorSpeed: float = 0)",
+				description = "",
+				typeName = "oJointDef",
+				returns = "(jointDef: oJointDef)",
+				static = true,
+				type = "method",
+			},
+			rope =
+			{
+				args = "(collision: bool, bodyA: oBody, bodyB: oBody, anchorA: oVec2, anchorB: oVec2, maxLength: float)",
+				description = "",
+				typeName = "oJointDef",
+				returns = "(jointDef: oJointDef)",
+				static = true,
+				type = "method",
+			},
+			weld =
+			{
+				args = "(collision: bool, bodyA: oBody, bodyB: oBody, worldPos: oVec2, frequency: float = 0, damping: float = 0)",
+				description = "",
+				typeName = "oJointDef",
+				returns = "(jointDef: oJointDef)",
+				static = true,
+				type = "method",
+			},
+			wheel =
+			{
+				args = "(collision: bool, bodyA: oBody, bodyB: oBody, worldPos: oVec2, axis: oVec2, maxMotorTorque: float = 0, motorSpeed: float = 0, frequency: float = 2, damping: float = 0.7)",
+				description = "",
+				typeName = "oJointDef",
+				returns = "(jointDef: oJointDef)",
+				static = true,
+				type = "method",
+			},
+		},
+		description = "class oJointDef(CCObject).",
+		parents = {"CCObject",},
+		type = "class",
+		index = index()
+	},
 	oJoint =
 	{
 		childs =
@@ -6254,18 +6356,9 @@ local Dorothy =
 				returns = "()",
 				type = "method",
 			},
-			collide =
-			{
-				args = "(flag: bool)",
-				description = "",
-				typeName = "oJoint",
-				returns = "(oJoint)",
-				static = true,
-				type = "method",
-			},
 			distance =
 			{
-				args = "(bodyA: oBody, bodyB: oBody, anchorA: oVec2, anchorB: oVec2, frequency: float = 0, damping: float = 0)",
+				args = "(collision: bool, bodyA: oBody, bodyB: oBody, anchorA: oVec2, anchorB: oVec2, frequency: float = 0, damping: float = 0)",
 				description = "",
 				typeName = "oJoint",
 				returns = "(joint: oJoint)",
@@ -6274,7 +6367,7 @@ local Dorothy =
 			},
 			friction =
 			{
-				args = "(bodyA: oBody, bodyB: oBody, worldPos: oVec2, maxForce: float, maxTorque: float)",
+				args = "(collision: bool, bodyA: oBody, bodyB: oBody, worldPos: oVec2, maxForce: float, maxTorque: float)",
 				description = "",
 				typeName = "oJoint",
 				returns = "(joint: oJoint)",
@@ -6283,7 +6376,7 @@ local Dorothy =
 			},
 			spring =
 			{
-				args = "(bodyA: oBody, bodyB: oBody, linearOffset: oVec2, angularOffset: float, maxForce: float, maxTorque: float, correctionFactor: float = 1)",
+				args = "(collision: bool, bodyA: oBody, bodyB: oBody, linearOffset: oVec2, angularOffset: float, maxForce: float, maxTorque: float, correctionFactor: float = 1)",
 				description = "",
 				typeName = "oJoint",
 				returns = "(joint: oJoint)",
@@ -6292,7 +6385,7 @@ local Dorothy =
 			},
 			move =
 			{
-				args = "(bodyA: oBody, bodyB: oBody, targetPos: oVec2, maxForce: float, frequency: float = 5.0, damping: float = 0.7)",
+				args = "(collision: bool, bodyA: oBody, bodyB: oBody, targetPos: oVec2, maxForce: float, frequency: float = 5.0, damping: float = 0.7)",
 				description = "",
 				typeName = "oMoveJoint",
 				returns = "(joint: oMoveJoint)",
@@ -6301,7 +6394,7 @@ local Dorothy =
 			},
 			pulley =
 			{
-				args = "(bodyA: oBody, bodyB: oBody, anchorA: oVec2, anchorB: oVec2, groundAnchorA: oVec2, groundAnchorB: float, ratio: float = 1)",
+				args = "(collision: bool, bodyA: oBody, bodyB: oBody, anchorA: oVec2, anchorB: oVec2, groundAnchorA: oVec2, groundAnchorB: float, ratio: float = 1)",
 				description = "",
 				typeName = "oJoint",
 				returns = "(joint: oJoint)",
@@ -6310,7 +6403,7 @@ local Dorothy =
 			},
 			prismatic =
 			{
-				args = "(bodyA: oBody, bodyB: oBody, worldPos: oVec2, axis: oVec2, lowerTranslation: float = 0, upperTranslation: float = 0, maxMotorForce: float = 0, motorSpeed: float = 0)",
+				args = "(collision: bool, bodyA: oBody, bodyB: oBody, worldPos: oVec2, axis: oVec2, lowerTranslation: float = 0, upperTranslation: float = 0, maxMotorForce: float = 0, motorSpeed: float = 0)",
 				description = "",
 				typeName = "oMotorJoint",
 				returns = "(joint: oMotorJoint)",
@@ -6319,7 +6412,7 @@ local Dorothy =
 			},
 			revolute =
 			{
-				args = "(bodyA: oBody, bodyB: oBody, worldPos: oVec2, lowerAngle: float = 0, upperAngle: float = 0, maxMotorTorque: float = 0, motorSpeed: float = 0)",
+				args = "(collision: bool, bodyA: oBody, bodyB: oBody, worldPos: oVec2, lowerAngle: float = 0, upperAngle: float = 0, maxMotorTorque: float = 0, motorSpeed: float = 0)",
 				description = "",
 				typeName = "oMotorJoint",
 				returns = "(joint: oMotorJoint)",
@@ -6328,7 +6421,7 @@ local Dorothy =
 			},
 			rope =
 			{
-				args = "(bodyA: oBody, bodyB: oBody, anchorA: oVec2, anchorB: oVec2, maxLength: float)",
+				args = "(collision: bool, bodyA: oBody, bodyB: oBody, anchorA: oVec2, anchorB: oVec2, maxLength: float)",
 				description = "",
 				typeName = "oJoint",
 				returns = "(joint: oJoint)",
@@ -6337,7 +6430,7 @@ local Dorothy =
 			},
 			weld =
 			{
-				args = "(bodyA: oBody, bodyB: oBody, worldPos: oVec2, frequency: float = 0, damping: float = 0)",
+				args = "(collision: bool, bodyA: oBody, bodyB: oBody, worldPos: oVec2, frequency: float = 0, damping: float = 0)",
 				description = "",
 				typeName = "oJoint",
 				returns = "(joint: oJoint)",
@@ -6346,7 +6439,7 @@ local Dorothy =
 			},
 			wheel =
 			{
-				args = "(bodyA: oBody, bodyB: oBody, worldPos: oVec2, axis: oVec2, maxMotorTorque: float = 0, motorSpeed: float = 0, frequency: float = 2, damping: float = 0.7)",
+				args = "(collision: bool, bodyA: oBody, bodyB: oBody, worldPos: oVec2, axis: oVec2, maxMotorTorque: float = 0, motorSpeed: float = 0, frequency: float = 2, damping: float = 0.7)",
 				description = "",
 				typeName = "oMotorJoint",
 				returns = "(joint: oMotorJoint)",
@@ -6354,7 +6447,7 @@ local Dorothy =
 				type = "method",
 			},
 		},
-		description = "class oJoint(CCObject).",
+		description = "class oJoint(CCObject).\n args -- (def: oJointDef, itemDict: CCDictionary)",
 		parents = {"CCObject",},
 		type = "class",
 		index = index()

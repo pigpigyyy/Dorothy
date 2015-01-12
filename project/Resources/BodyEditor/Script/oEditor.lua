@@ -535,7 +535,8 @@ local defaultShapeData =
 			if not bodyA or not bodyB or bodyA == bodyB then
 				return nil
 			end
-			return oJoint:collide(self[Distance.Collision]):distance(
+			return oJoint:distance(
+				self[Distance.Collision],
 				bodyA,bodyB,
 				self[Distance.AnchorA],
 				self[Distance.AnchorB],
@@ -562,7 +563,8 @@ local defaultShapeData =
 			if not bodyA or not bodyB or bodyA == bodyB then
 				return nil
 			end
-			return oJoint:collide(self[Friction.Collision]):friction(
+			return oJoint:friction(
+				self[Friction.Collision],
 				bodyA,bodyB,
 				self[Friction.WorldPos],
 				self[Friction.MaxForce],
@@ -586,7 +588,8 @@ local defaultShapeData =
 			if not jointA or not jointB or jointA == jointB then
 				return nil
 			end
-			return oJoint:collide(self[Gear.Collision]):gear(
+			return oJoint:gear(
+				self[Gear.Collision],
 				jointA,jointB,
 				self[Gear.Ratio])
 		end,
@@ -620,7 +623,8 @@ local defaultShapeData =
 			if not bodyA or not bodyB or bodyA == bodyB then
 				return nil
 			end
-			return oJoint:collide(self[Spring.Collision]):spring(
+			return oJoint:spring(
+				self[Spring.Collision],
 				bodyA,bodyB,
 				self[Spring.Offset],
 				self[Spring.AngularOffset],
@@ -651,7 +655,8 @@ local defaultShapeData =
 			if not bodyA or not bodyB or bodyA == bodyB then
 				return nil
 			end
-			return oJoint:collide(self[Prismatic.Collision]):prismatic(
+			return oJoint:prismatic(
+				self[Prismatic.Collision],
 				bodyA,bodyB,
 				self[Prismatic.WorldPos],
 				self[Prismatic.Axis],
@@ -682,7 +687,8 @@ local defaultShapeData =
 			if not bodyA or not bodyB or bodyA == bodyB then
 				return nil
 			end
-			return oJoint:collide(self[Pulley.Collision]):pulley(
+			return oJoint:pulley(
+				self[Pulley.Collision],
 				bodyA,bodyB,
 				self[Pulley.AnchorA],
 				self[Pulley.AnchorB],
@@ -712,7 +718,8 @@ local defaultShapeData =
 			if not bodyA or not bodyB or bodyA == bodyB then
 				return nil
 			end
-			return oJoint:collide(self[Revolute.Collision]):revolute(
+			return oJoint:revolute(
+				self[Revolute.Collision],
 				bodyA,bodyB,
 				self[Revolute.WorldPos],
 				self[Revolute.LowerAngle],
@@ -740,7 +747,8 @@ local defaultShapeData =
 			if not bodyA or not bodyB or bodyA == bodyB then
 				return nil
 			end
-			return oJoint:collide(self[Rope.Collision]):rope(
+			return oJoint:rope(
+				self[Rope.Collision],
 				bodyA,bodyB,
 				self[Rope.AnchorA],
 				self[Rope.AnchorB],
@@ -766,7 +774,8 @@ local defaultShapeData =
 			if not bodyA or not bodyB or bodyA == bodyB then
 				return nil
 			end
-			return oJoint:collide(self[Weld.Collision]):weld(
+			return oJoint:weld(
+				self[Weld.Collision],
 				bodyA,bodyB,
 				self[Weld.WorldPos],
 				self[Weld.Frequency],
@@ -795,7 +804,8 @@ local defaultShapeData =
 			if not bodyA or not bodyB or bodyA == bodyB then
 				return nil
 			end
-			return oJoint:collide(self[Wheel.Collision]):wheel(
+			return oJoint:wheel(
+				self[Wheel.Collision],
 				bodyA,bodyB,
 				self[Wheel.WorldPos],
 				self[Wheel.Axis],
@@ -949,9 +959,11 @@ oEditor.removeData = function(self,data)
 				table.remove(self.bodyData,i)
 				if data.renameListener then
 					data.renameListener.enabled = false
+					data.renameListener = nil
 				end
 				if data.resetListener then
 					data.resetListener.enabled = false
+					data.resetListener = nil
 				end
 				oEditor.names[name] = nil
 				local item = oEditor.items[name]

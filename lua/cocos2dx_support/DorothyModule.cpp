@@ -348,12 +348,6 @@ void __oContent_getDirEntries(lua_State* L, oContent* self, const char* path, bo
 	}
 }
 
-void __oJoint_collision(lua_State* L, bool flag)
-{
-	oJoint::enableCollision(flag);
-	lua_pushvalue(L, 1);
-}
-
 CCSprite* CCSprite_createWithClip(const char* clipStr)
 {
 	if(string(clipStr).find('|') != string::npos)

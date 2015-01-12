@@ -177,6 +177,9 @@
     <ClCompile Include="..\Dorothy\event\oListener.cpp">
       <Filter>Dorothy\event</Filter>
     </ClCompile>
+    <ClCompile Include="..\Dorothy\physics\oJointDef.cpp">
+      <Filter>Dorothy\physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\cocos-ext.h" />
@@ -379,6 +382,9 @@
     </ClInclude>
     <ClInclude Include="..\Dorothy\other\mkdir.h">
       <Filter>Dorothy\other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\physics\oJointDef.h">
+      <Filter>Dorothy\physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

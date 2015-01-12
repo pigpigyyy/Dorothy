@@ -92,8 +92,8 @@ oBodyDef* oBody::getBodyDef() const
 
 oBody* oBody::create(oBodyDef* bodyDef, oWorld* world, const oVec2& pos, float rot)
 {
-	bodyDef->position = oWorld::b2Val(pos);
-	bodyDef->angle = -CC_DEGREES_TO_RADIANS(rot);
+	bodyDef->position = oWorld::b2Val(pos + bodyDef->offset);
+	bodyDef->angle = -CC_DEGREES_TO_RADIANS(rot + bodyDef->angleOffset);
 	oBody* body = new oBody(bodyDef, world);
 	body->autorelease();
 	return body;
