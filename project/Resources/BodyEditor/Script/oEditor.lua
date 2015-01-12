@@ -130,9 +130,9 @@ local defaultShapeData =
 		{"Bullet",false}, -- 15
 		{"Sensor",false}, -- 16
 		{"SensorTag",0}, -- 17
-		{"Face",""}, -- 18
-		{"FaceAnchor",PointZero}, -- 19
-		{"SubShapes",false}, -- 20
+		{"SubShapes",false}, -- 18
+		{"Face",""}, -- 19
+		{"FaceAnchor",PointZero}, -- 20
 		create = function(self)
 			local Rectangle = oEditor.Rectangle
 			if self[Rectangle.Size].width <= 0 or self[Rectangle.Size].height <= 0 then
@@ -194,13 +194,13 @@ local defaultShapeData =
 		{"Bullet",false}, -- 15
 		{"Sensor",false}, -- 16
 		{"SensorTag",0}, -- 17
-		{"Face",""}, -- 18
-		{"FaceAnchor",PointZero}, -- 19
-		{"SubShapes",false}, -- 20
+		{"SubShapes",false}, -- 18
+		{"Face",""}, -- 19
+		{"FaceAnchor",PointZero}, -- 20
 		create = function(self)
 			local Circle = oEditor.Circle
-			local bodyDef = oBodyDef()
 			if self[Circle.Radius] <= 0 then return nil end
+			local bodyDef = oBodyDef()
 			if self[Circle.Sensor] then
 				bodyDef:attachCircleSensor(
 					self[Circle.SensorTag],
@@ -251,13 +251,13 @@ local defaultShapeData =
 		{"Bullet",false}, -- 14
 		{"Sensor",false}, -- 15
 		{"SensorTag",0}, -- 16
-		{"Face",""}, -- 17
-		{"FaceAnchor",PointZero}, -- 18
-		{"SubShapes",false}, -- 19
+		{"SubShapes",false}, -- 17
+		{"Face",""}, -- 18
+		{"FaceAnchor",PointZero}, -- 19
 		create = function(self)
 			local Polygon = oEditor.Polygon
-			local bodyDef = oBodyDef()
 			if not self[Polygon.Vertices] or #self[Polygon.Vertices] < 3 then return nil end
+			local bodyDef = oBodyDef()
 			if self[Polygon.Sensor] then
 				bodyDef:attachPolygonSensor(
 					self[Polygon.SensorTag],
@@ -303,13 +303,13 @@ local defaultShapeData =
 		{"FixedRotation",false}, -- 11
 		{"GravityScale",1}, -- 12
 		{"Bullet",false}, -- 13
-		{"Face",""}, -- 14
-		{"FaceAnchor",PointZero}, -- 15
-		{"SubShapes",false}, -- 16
+		{"SubShapes",false}, -- 14
+		{"Face",""}, -- 15
+		{"FaceAnchor",PointZero}, -- 16
 		create = function(self)
 			local Chain = oEditor.Chain
-			local bodyDef = oBodyDef()
 			if not self[Chain.Vertices] or #self[Chain.Vertices] < 2 then return nil end
+			local bodyDef = oBodyDef()
 			bodyDef:attachChain(
 				self[Chain.Vertices],
 				self[Chain.Friction],
@@ -348,13 +348,13 @@ local defaultShapeData =
 		{"FixedRotation",false}, -- 11
 		{"GravityScale",1}, -- 12
 		{"Bullet",false}, -- 13
-		{"Face",""}, -- 14
-		{"FaceAnchor",PointZero}, -- 15
-		{"SubShapes",false}, -- 16
+		{"SubShapes",false}, -- 14
+		{"Face",""}, -- 15
+		{"FaceAnchor",PointZero}, -- 16
 		create = function(self)
 			local Loop = oEditor.Loop
-			local bodyDef = oBodyDef()
 			if not self[Loop.Vertices] or #self[Loop.Vertices] < 3 then return nil end
+			local bodyDef = oBodyDef()
 			bodyDef:attachLoop(
 				self[Loop.Vertices],
 				self[Loop.Friction],
@@ -389,7 +389,6 @@ local defaultShapeData =
 		{"Restitution",0.4}, -- 7
 		{"Sensor",false}, -- 8
 		{"SensorTag",0}, -- 9
-		{"Index",0}, -- 10
 		create = function(self,body)
 			local SubRectangle = oEditor.SubRectangle
 			if self[SubRectangle.Size].width <= 0 or self[SubRectangle.Size].height <= 0 then
@@ -426,7 +425,6 @@ local defaultShapeData =
 		{"Restitution",0.4}, -- 6
 		{"Sensor",false}, -- 7
 		{"SensorTag",0}, -- 8
-		{"Index",0}, -- 9
 		create = function(self,body)
 			local SubCircle = oEditor.SubCircle
 			if self[SubCircle.Radius] <= 0 then
@@ -458,7 +456,6 @@ local defaultShapeData =
 		{"Restitution",0.4}, -- 5
 		{"Sensor",false}, -- 6
 		{"SensorTag",0}, -- 7
-		{"Index",0}, -- 8
 		create = function(self,body)
 			local SubPolygon = oEditor.SubPolygon
 			if not self[SubPolygon.Vertices] or #self[SubPolygon.Vertices] < 3 then
@@ -485,7 +482,6 @@ local defaultShapeData =
 		{"Vertices",false}, -- 2
 		{"Friction",0.4}, -- 3
 		{"Restitution",0.4}, -- 4
-		{"Index",0}, -- 5
 		create = function(self,body)
 			local SubChain = oEditor.SubChain
 			if not self[SubChain.Vertices] or #self[SubChain.Vertices] < 2 then
@@ -504,7 +500,6 @@ local defaultShapeData =
 		{"Vertices",false}, -- 2
 		{"Friction",0.4}, -- 3
 		{"Restitution",0.4}, -- 4
-		{"Index",0}, -- 5
 		create = function(self,body)
 			local SubLoop = oEditor.SubLoop
 			if not self[SubLoop.Vertices] or #self[SubLoop.Vertices] < 3 then

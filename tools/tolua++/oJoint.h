@@ -176,6 +176,7 @@ class oJoint: public CCObject
 		float damping = 0.7f);
 	tolua_readonly tolua_property__common oWorld* world;
 	void destroy();
+	static oJoint* create(oJointDef* def, CCDictionary* itemDict);
 };
 
 class oMoveJoint: public oJoint

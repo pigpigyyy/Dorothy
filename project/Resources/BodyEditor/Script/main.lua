@@ -55,5 +55,5 @@ oRoutine(once(function()
 		coroutine.yield()
 	end
 
-	dofile("BodyEditor/Script/generateLoader.lua")
+	--dofile("BodyEditor/Script/generateLoader.lua")
 end))

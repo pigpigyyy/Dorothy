@@ -131,6 +131,7 @@
 		3C89A6AD1A209D1C001D5009 /* LocalStorageAndroid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C89A6801A209D1C001D5009 /* LocalStorageAndroid.cpp */; };
 		3C89A6B21A20A48D001D5009 /* LuaCode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C89A6B11A20A48D001D5009 /* LuaCode.cpp */; };
 		3C89A6C31A20C5B5001D5009 /* libcocos2dx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C58D44E1A20951D0051AADE /* libcocos2dx.a */; };
+		3C90CD1C1A64104600C29402 /* oJointDef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C90CD1A1A64104600C29402 /* oJointDef.cpp */; };
 		3CA03A6F1A2900460008F80F /* libluajit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CA03A6E1A2900460008F80F /* libluajit.a */; };
 		3CB40CFA1A20E6C200D7A3A6 /* b2MotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CB40CF81A20E6C200D7A3A6 /* b2MotorJoint.cpp */; };
 		3CB40D261A20ECC500D7A3A6 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CB40D251A20ECC500D7A3A6 /* libsqlite3.0.dylib */; };
@@ -418,6 +419,8 @@
 		3C89A6801A209D1C001D5009 /* LocalStorageAndroid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LocalStorageAndroid.cpp; sourceTree = "<group>"; };
 		3C89A6AE1A209D56001D5009 /* Dorothy_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dorothy_Prefix.pch; sourceTree = "<group>"; };
 		3C89A6B11A20A48D001D5009 /* LuaCode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LuaCode.cpp; sourceTree = "<group>"; };
+		3C90CD1A1A64104600C29402 /* oJointDef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oJointDef.cpp; sourceTree = "<group>"; };
+		3C90CD1B1A64104600C29402 /* oJointDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oJointDef.h; sourceTree = "<group>"; };
 		3CA03A161A289CFE0008F80F /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = ../../lua/luajit/ios/liblua.a; sourceTree = "<group>"; };
 		3CA03A671A28BD1F0008F80F /* lauxlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lauxlib.h; sourceTree = "<group>"; };
 		3CA03A681A28BD1F0008F80F /* lua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua.h; sourceTree = "<group>"; };
@@ -887,6 +890,8 @@
 		3C89A6581A209D1C001D5009 /* physics */ = {
 			isa = PBXGroup;
 			children = (
+				3C90CD1A1A64104600C29402 /* oJointDef.cpp */,
+				3C90CD1B1A64104600C29402 /* oJointDef.h */,
 				3C89A6591A209D1C001D5009 /* oBody.cpp */,
 				3C89A65A1A209D1C001D5009 /* oBody.h */,
 				3C89A65B1A209D1C001D5009 /* oBodyDef.cpp */,
@@ -1260,6 +1265,7 @@
 				3C89A6891A209D1C001D5009 /* oContent.cpp in Sources */,
 				46C1009116BF786A00F74D54 /* LuaCocos2d.cpp in Sources */,
 				46C1009316BF786A00F74D54 /* tolua_fix.c in Sources */,
+				3C90CD1C1A64104600C29402 /* oJointDef.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

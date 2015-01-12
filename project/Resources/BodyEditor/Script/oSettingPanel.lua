@@ -448,7 +448,6 @@ local function oSettingPanel()
 				if k ~= "SubShapes"
 					and k ~= "Vertices"
 					and k ~= "ItemType"
-					and k ~= "Index"
 					and k ~= "create"
 					and k ~= "rename"
 					and k ~= "reset"
