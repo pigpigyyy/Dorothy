@@ -1,4 +1,4 @@
-/* Copyright (c) 2013 Jin Li, http://www.luv-fight.com
+/* Copyright (c) 2013 Jin Li, http://www.luvfight.me
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -36,6 +36,8 @@ public:
 	 Extracting files with same name but different extensions causes errors.
 	*/
 	void extractGameFile(const char* filename, const char* targetFullName);
+	void extractGameFileAsync(const char* filename, const char* targetFullName, const function<void(const char* filename)>& callback);
+	
 	/** Get the full path name of the file if it was extracted. */
 	string getExtractedFullName(const char* filename);
 	bool isFileExist(const char* filename);
@@ -56,6 +58,10 @@ public:
 	void addSearchResolutionsOrder(const char* order);
 	void purgeCachedEntries();
 
+	void loadFileAsync(const char* filename, const function<void(oOwnArray<char>,unsigned long)>& callback);
+
+	char* loadFileUnsafe(const char* filename, unsigned long& size);
+	void loadFileAsyncUnsafe(const char* filename, const function<void(char*,unsigned long)>& callback);
 	/** Singleton method. */
 	SHARED_FUNC(oContent);
 protected:

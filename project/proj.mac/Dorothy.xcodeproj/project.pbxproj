@@ -137,6 +137,7 @@
 		3C7AA4D61A47291F007836D2 /* Test in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4CD1A47291F007836D2 /* Test */; };
 		3C90CD181A640F9A00C29402 /* oJointDef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C90CD161A640F9A00C29402 /* oJointDef.cpp */; };
 		3C90CD1F1A64483300C29402 /* oBodyLoader.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C90CD1E1A64483300C29402 /* oBodyLoader.lua */; };
+		3C90CD241A65847400C29402 /* oAsync.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C90CD221A65847400C29402 /* oAsync.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -421,6 +422,8 @@
 		3C90CD161A640F9A00C29402 /* oJointDef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oJointDef.cpp; sourceTree = "<group>"; };
 		3C90CD171A640F9A00C29402 /* oJointDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oJointDef.h; sourceTree = "<group>"; };
 		3C90CD1E1A64483300C29402 /* oBodyLoader.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = oBodyLoader.lua; sourceTree = "<group>"; };
+		3C90CD221A65847400C29402 /* oAsync.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oAsync.cpp; sourceTree = "<group>"; };
+		3C90CD231A65847400C29402 /* oAsync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oAsync.h; sourceTree = "<group>"; };
 		3CA6A7571A60C1E7007C4503 /* mkdir.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mkdir.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -631,6 +634,8 @@
 		3C504E631A237E5C000C79D6 /* misc */ = {
 			isa = PBXGroup;
 			children = (
+				3C90CD221A65847400C29402 /* oAsync.cpp */,
+				3C90CD231A65847400C29402 /* oAsync.h */,
 				3C504E641A237E5C000C79D6 /* oCallFunc.h */,
 				3C504E651A237E5C000C79D6 /* oContent.cpp */,
 				3C504E661A237E5C000C79D6 /* oContent.h */,
@@ -1183,6 +1188,7 @@
 				3C504EDD1A237E5C000C79D6 /* oDefine.cpp in Sources */,
 				3C504EDB1A237E5C000C79D6 /* AssetsManager.cpp in Sources */,
 				3C504EEC1A237E5C000C79D6 /* oEase.cpp in Sources */,
+				3C90CD241A65847400C29402 /* oAsync.cpp in Sources */,
 				3C504EF31A237E5C000C79D6 /* oSequence.cpp in Sources */,
 				3C504F981A237F8E000C79D6 /* b2PolygonAndCircleContact.cpp in Sources */,
 				3C504EF01A237E5C000C79D6 /* oModel.cpp in Sources */,

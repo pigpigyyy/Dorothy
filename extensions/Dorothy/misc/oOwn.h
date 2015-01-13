@@ -1,4 +1,4 @@
-/* Copyright (c) 2013 Jin Li, http://www.luv-fight.com
+/* Copyright (c) 2013 Jin Li, http://www.luvfight.me
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -61,6 +61,13 @@ inline oOwn<T> __oOwnMake(T* item)
 }
 #define oOwnMake(item) std::move(__oOwnMake(item))
 #define oOwnNew(type) std::move(oOwn<type>(new type()))
+
+template<class T>
+inline oOwnArray<T> __oOwnArrayMake(T* item)
+{
+	return oOwnArray<T>(item);
+}
+#define oOwnArrayMake(item) std::move(__oOwnArrayMake(item))
 
 NS_DOROTHY_END
 

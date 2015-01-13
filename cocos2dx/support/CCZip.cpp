@@ -1,12 +1,15 @@
 #include "CCZip.h"
 #include "ccMacros.h"
 #include "support/zip_support/unzip.h"
+#include <pthread.h>
 #include <fstream>
 using std::ofstream;
 
 NS_CC_BEGIN
 
 static unzFile g_file = NULL;
+
+static pthread_mutex_t s_zipMutex;
 
 bool ccUZipOpen( const char* zipname )
 {
@@ -15,6 +18,7 @@ bool ccUZipOpen( const char* zipname )
 	{
 		return false;
 	}
+	pthread_mutex_init(&s_zipMutex, nullptr);
 	return true;
 }
 
@@ -25,6 +29,7 @@ unsigned char* ccUZipReadFile( const char* filename, const char* password, unsig
 	int result;
 	do
 	{
+		pthread_mutex_lock(&s_zipMutex);
 		result = unzLocateFile(g_file, filename, 1);
 		CC_BREAK_IF(UNZ_OK != result);
 		char szFilePathA[260];
@@ -39,6 +44,7 @@ unsigned char* ccUZipReadFile( const char* filename, const char* password, unsig
 		CCAssert(nSize == 0 || nSize == (int)fileInfo.uncompressed_size, "the file size is wrong");
 		size = fileInfo.uncompressed_size;
 		unzCloseCurrentFile(g_file);
+		pthread_mutex_unlock(&s_zipMutex);
 	}
 	while (0);
 	if (result == UNZ_OK)
@@ -70,6 +76,7 @@ bool ccUZipExtract( const char* filename, const char* password, const char* targ
 		ofstream stream(targetfile, ofstream::binary|ofstream::trunc);
 		CC_BREAK_IF(!stream);
 
+		pthread_mutex_lock(&s_zipMutex);
 		result = unzLocateFile(g_file, filename, 1);
 		CC_BREAK_IF(UNZ_OK != result);
 
@@ -86,6 +93,8 @@ bool ccUZipExtract( const char* filename, const char* password, const char* targ
 		} while (nSize > 0);
 
 		unzCloseCurrentFile(g_file);
+		pthread_mutex_unlock(&s_zipMutex);
+
 		stream.close();
 
 		return true;

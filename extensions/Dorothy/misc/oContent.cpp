@@ -1,4 +1,4 @@
-/* Copyright (c) 2013 Jin Li, http://www.luv-fight.com
+/* Copyright (c) 2013 Jin Li, http://www.luvfight.me
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -8,6 +8,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #include "Dorothy/const/oDefine.h"
 #include "Dorothy/misc/oContent.h"
+#include "Dorothy/misc/oAsync.h"
 #include "Dorothy/other/tinydir.h"
 #include "Dorothy/other/mkdir.h"
 #include <fstream>
@@ -22,10 +23,7 @@ public:
 	{
 		if (oSharedContent.isUsingGameFile())
 		{
-			return ccUZipReadFile(
-				pszFileName,
-				oSharedContent.getPassword().empty() ? nullptr : oSharedContent.getPassword().c_str(),
-				*pSize);
+			return (unsigned char*)oSharedContent.loadFileUnsafe(pszFileName, *pSize);
 		}
 		return nullptr;
 	}
@@ -54,15 +52,10 @@ CCTexture2D* oContent::loadTexture( const char* filename )
 		if (!texture)
 		{
 			unsigned long size;
-			unsigned char* buffer = ccUZipReadFile(
-				filename,
-				_password.empty() ? nullptr : _password.c_str(),
-				size);
-			CCImage* image = new CCImage();
+			oOwnArray<char> buffer = oContent::loadFile(filename, size);
+			oOwn<CCImage> image(new CCImage());
 			image->initWithImageData(buffer, (unsigned int)size);
 			texture = CCTextureCache::sharedTextureCache()->addUIImage(image, filename);
-			delete image;
-			delete buffer;
 		}
 		return texture;
 	}
@@ -73,21 +66,48 @@ CCTexture2D* oContent::loadTexture( const char* filename )
 	}
 }
 
-oOwnArray<char> oContent::loadFile( const char* filename, unsigned long& size )
+char* oContent::loadFileUnsafe(const char* filename, unsigned long& size)
 {
 	if (_isUsingGameFile)
 	{
-		char* buffer = (char*)ccUZipReadFile(
-			filename,
+		return (char*)ccUZipReadFile(filename,
 			_password.empty() ? nullptr : _password.c_str(),
 			size);
-		return oOwnArray<char>(buffer);
 	}
 	else
 	{
-		char* buffer = (char*)CCFileUtils::sharedFileUtils()->getFileData(filename, "rt", &size);
-		return oOwnArray<char>(buffer);
+		return (char*)CCFileUtils::sharedFileUtils()->getFileData(filename, "rt", &size);
 	}
+}
+
+oOwnArray<char> oContent::loadFile(const char* filename, unsigned long& size)
+{
+	return oOwnArray<char>(oContent::loadFileUnsafe(filename,size));
+}
+
+void oContent::loadFileAsyncUnsafe(const char* filename, const function<void(char*,unsigned long)>& callback)
+{
+	string filenameStr = filename;
+	oAsync([filenameStr]
+	{
+		unsigned long size;
+		char* buffer = oSharedContent.loadFileUnsafe(filenameStr.c_str(), size);
+		return new std::tuple<char*,unsigned long>(buffer,size);
+	},
+	[callback](void* result)
+	{
+		char* buffer;
+		unsigned long size;
+		auto data = (std::tuple<char*,unsigned long>*)result;
+		std::tie(buffer,size) = *data;
+		delete data;
+		callback(buffer,size);
+	});
+}
+
+void oContent::loadFileAsync(const char* filename, const function<void(oOwnArray<char>,unsigned long)>& callback)
+{
+	oContent::loadFileAsyncUnsafe(filename, [callback](char* buffer,unsigned long size){callback(oOwnArrayMake(buffer),size);});
 }
 
 bool oContent::setGameFile(const string& var)
@@ -129,11 +149,24 @@ void oContent::extractGameFile(const char* filename, const char* targetFullName)
 {
 	if (!_gameFileName.empty())
 	{
-		ccUZipExtract(
-			filename,
+		ccUZipExtract(filename,
 			_password.empty() ? nullptr : _password.c_str(),
 			targetFullName);
 	}
+}
+
+void oContent::extractGameFileAsync(const char* file, const char* target, const function<void(const char* filename)>& callback)
+{
+	string filename = file, targetName = target;
+	oAsync([filename,targetName]
+	{
+		oSharedContent.extractGameFile(filename.c_str(), targetName.c_str());
+		return nullptr;
+	},
+	[callback,targetName](void* result)
+	{
+		callback(targetName.c_str());
+	});
 }
 
 string oContent::getExtractedFullName( const char* filename )

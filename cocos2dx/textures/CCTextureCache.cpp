@@ -70,7 +70,7 @@ static pthread_mutex_t      s_ImageInfoMutex;
 static sem_t* s_pSem = NULL;
 static unsigned long s_nAsyncRefCount = 0;
 
-#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
+#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC
     #define CC_ASYNC_TEXTURE_CACHE_USE_NAMED_SEMAPHORE 1
 #else
     #define CC_ASYNC_TEXTURE_CACHE_USE_NAMED_SEMAPHORE 0

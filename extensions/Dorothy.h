@@ -8,6 +8,7 @@
 #include "Dorothy/audio/oAudio.h"
 
 //misc
+#include "Dorothy/misc/oAsync.h"
 #include "Dorothy/misc/oContent.h"
 #include "Dorothy/misc/oHelper.h"
 #include "Dorothy/misc/oNode3D.h"
