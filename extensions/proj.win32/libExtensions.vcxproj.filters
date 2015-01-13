@@ -180,6 +180,9 @@
     <ClCompile Include="..\Dorothy\physics\oJointDef.cpp">
       <Filter>Dorothy\physics</Filter>
     </ClCompile>
+    <ClCompile Include="..\Dorothy\misc\oAsync.cpp">
+      <Filter>Dorothy\misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\cocos-ext.h" />
@@ -385,6 +388,9 @@
     </ClInclude>
     <ClInclude Include="..\Dorothy\physics\oJointDef.h">
       <Filter>Dorothy\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dorothy\misc\oAsync.h">
+      <Filter>Dorothy\misc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

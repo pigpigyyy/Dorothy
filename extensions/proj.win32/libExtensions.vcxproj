@@ -102,6 +102,7 @@
     <ClCompile Include="..\Dorothy\event\oEvent.cpp" />
     <ClCompile Include="..\Dorothy\event\oEventType.cpp" />
     <ClCompile Include="..\Dorothy\event\oListener.cpp" />
+    <ClCompile Include="..\Dorothy\misc\oAsync.cpp" />
     <ClCompile Include="..\Dorothy\misc\oContent.cpp" />
     <ClCompile Include="..\Dorothy\misc\oHelper.cpp" />
     <ClCompile Include="..\Dorothy\misc\oLine.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="..\Dorothy\event\oEvent.h" />
     <ClInclude Include="..\Dorothy\event\oEventType.h" />
     <ClInclude Include="..\Dorothy\event\oListener.h" />
+    <ClInclude Include="..\Dorothy\misc\oAsync.h" />
     <ClInclude Include="..\Dorothy\misc\oCallFunc.h" />
     <ClInclude Include="..\Dorothy\misc\oContent.h" />
     <ClInclude Include="..\Dorothy\misc\oHelper.h" />
