@@ -694,7 +694,6 @@ oEditor.spriteData[oSd.index]
 	end
 
 	menu.toSprite = function(self)
-		--oEditor.tip:show("Editing Sprites")
 		local function updateBF()
 			items.Batch:setText(oEditor.data[oSd.isBatchUsed] and "Batch\nUsed" or "Batch\nUnused")
 			items.Face:setText(oEditor.data[oSd.isFaceRight] and "Face\nRight" or "Face\nLeft")
@@ -753,7 +752,6 @@ oEditor.spriteData[oSd.index]
 	end
 
 	menu.toAnimation = function(self)
-		--oEditor.tip:show("Editing Animation "..oEditor.animation)
 		if oEditor.state == oEditor.EDIT_ANIMATION then
 			oEditor.viewPanel:clearSelection()
 			local model = oEditor.viewArea:getModel()
@@ -812,7 +810,6 @@ oEditor.spriteData[oSd.index]
 	end
 
 	menu.toLook = function(self)
-		--oEditor.tip:show("Editing Look "..oEditor.look)
 		if oEditor.state == oEditor.EDIT_LOOK then
 			if oEditor.sprite then
 				items.Visible:setText(oEditor.sprite.visible and "Hide" or "Show")

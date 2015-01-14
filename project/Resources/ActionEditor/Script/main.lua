@@ -41,7 +41,6 @@ local controls =
 	"oViewPanel",
 	"oControlBar",
 	"oSettingPanel",
-	--"oTip",
 }
 
 local controlNames =
@@ -51,7 +50,6 @@ local controlNames =
 	"viewPanel",
 	"controlBar",
 	"settingPanel",
-	--"tip",
 }
 
 local thread = coroutine.create(
