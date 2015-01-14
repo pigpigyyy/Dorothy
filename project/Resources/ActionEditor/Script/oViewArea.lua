@@ -1047,7 +1047,7 @@ local function oViewArea()
 	board.scaleX = 0.3
 	board.scaleY = 0.3
 	board.opacity = 0
-	board.touchPriority = CCMenu.DefaultHandlerPriority-1
+	board.touchPriority = CCMenu.DefaultHandlerPriority-10
 
 	-- oKd.easePos
 	-- oKd.easeScale

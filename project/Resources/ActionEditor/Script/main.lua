@@ -11,6 +11,8 @@ local oOpacity = require("oOpacity")
 local CCCall = require("CCCall")
 local CCNode = require("CCNode")
 local oCache = require("oCache")
+local oScale = require("oScale")
+local oEase = require("oEase")
 
 collectgarbage("setpause", 100)
 collectgarbage("setstepmul", 5000)
@@ -30,20 +32,16 @@ require = function(modulename)
 end
 
 local oEditor = require("oEditor").oEditor
-local oViewArea = require("oViewArea")
-local oEditMenu = require("oEditMenu")
-local oViewPanel = require("oViewPanel")
-local oControlBar = require("oControlBar")
-local oSettingPanel = require("oSettingPanel")
 
 local controls =
 {
 	-- Animation oEditor
-	oViewArea,
-	oEditMenu,
-	oViewPanel,
-	oControlBar,
-	oSettingPanel,
+	"oViewArea",
+	"oEditMenu",
+	"oViewPanel",
+	"oControlBar",
+	"oSettingPanel",
+	--"oTip",
 }
 
 local controlNames =
@@ -53,25 +51,34 @@ local controlNames =
 	"viewPanel",
 	"controlBar",
 	"settingPanel",
+	--"tip",
 }
 
 local thread = coroutine.create(
 	function()
 		for i = 1,#controls do
+			controls[i] = require(controls[i])
+			coroutine.yield()
 			controls[i] = controls[i]()
 			oEditor[controlNames[i]] = controls[i]
 			coroutine.yield()
 		end
 		for i = 1,#controls do
 			oEditor.scene:addChild(controls[i])
+			coroutine.yield()
 		end
 	end)
 
 local bk = CCLayerColor(ccColor4(0xff000000),CCDirector.winSize.width,CCDirector.winSize.height)
 bk.anchor = oVec2.zero
-local logo = CCLabelTTF("Luv Fight","Arial",48)
+local logo = CCLabelTTF("Luv & Fight","Arial",48)
 logo.texture.antiAlias = false
 logo.position = oVec2(CCDirector.winSize.width*0.5,CCDirector.winSize.height*0.5)
+logo.scaleX = 0.3
+logo.scaleY = 0.3
+logo.opacity= 0
+logo:runAction(oScale(0.3,1,1,oEase.OutBack))
+logo:runAction(oOpacity(0.3,1,oEase.OutQuad))
 
 bk:addChild(logo)
 local flower = CCDrawNode()
