@@ -221,17 +221,17 @@ string oContent::getExtractedFullName( const char* filename )
 
 bool oContent::isFileExist(const char* filename)
 {
-	return FileExist(filename) == 0;
+	return FileExist(oContent::getFullPath(filename).c_str()) == 0;
 }
 
 bool oContent::removeFile( const char* filename )
 {
-	return ::remove(filename) == 0;
+	return ::remove(oContent::getFullPath(filename).c_str()) == 0;
 }
 
 void oContent::saveToFile(const string& filename, const string& content)
 {
-	ofstream stream(filename, std::ios::trunc);
+	ofstream stream(oContent::getFullPath(filename.c_str()), std::ios::trunc);
 	stream.write(content.c_str(), content.size());
 }
 
