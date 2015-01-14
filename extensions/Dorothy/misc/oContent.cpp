@@ -88,10 +88,10 @@ oOwnArray<char> oContent::loadFile(const char* filename, unsigned long& size)
 void oContent::loadFileAsyncUnsafe(const char* filename, const function<void(char*,unsigned long)>& callback)
 {
 	string filenameStr = filename;
-	oAsync([filenameStr]
+	oAsync([filenameStr,this]
 	{
 		unsigned long size;
-		char* buffer = oSharedContent.loadFileUnsafe(filenameStr.c_str(), size);
+		char* buffer = this->loadFileUnsafe(filenameStr.c_str(), size);
 		return new std::tuple<char*,unsigned long>(buffer,size);
 	},
 	[callback](void* result)
@@ -158,9 +158,9 @@ void oContent::extractGameFile(const char* filename, const char* targetFullName)
 void oContent::extractGameFileAsync(const char* file, const char* target, const function<void(const char* filename)>& callback)
 {
 	string filename = file, targetName = target;
-	oAsync([filename,targetName]
+	oAsync([filename,targetName,this]
 	{
-		oSharedContent.extractGameFile(filename.c_str(), targetName.c_str());
+		this->extractGameFile(filename.c_str(), targetName.c_str());
 		return nullptr;
 	},
 	[callback,targetName](void* result)
@@ -203,9 +203,9 @@ void oContent::copyFile(const char* src, const char* dst)
 void oContent::copyFileAsync(const char* src, const char* dst, const function<void()>& callback)
 {
 	string srcFile = src, dstFile = dst;
-	oAsync([srcFile,dstFile]
+	oAsync([srcFile,dstFile,this]
 	{
-		oSharedContent.copyFile(srcFile.c_str(), dstFile.c_str());
+		this->copyFile(srcFile.c_str(), dstFile.c_str());
 		return nullptr;
 	},
 	[callback](void* result)
