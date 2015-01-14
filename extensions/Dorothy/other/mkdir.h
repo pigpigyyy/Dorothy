@@ -2,13 +2,13 @@
 #define __MKDIR__
 
 #include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
 #include <cstdio>
 #ifdef _MSC_VER
 	#include <direct.h>
 	#pragma warning (disable : 4996)
 #else
+	#include <fcntl.h>
+	#include <unistd.h>
 	#include <stdarg.h>
 #endif
 
@@ -23,6 +23,16 @@ static void CopyFile(const char* src, const char* dst)
 	char buf[BUFSIZ];
     size_t size;
 
+#ifdef _MSC_VER
+	FILE* source = fopen(src, "rb");
+	FILE* dest = fopen(dst,"wb");
+	while (size = fread(buf,1,BUFSIZ,source))
+	{
+		fwrite(buf,1,size,dest);
+	}
+	fclose(source);
+	fclose(dest);
+#else
     int source = open(src, O_RDONLY, 0);
     int dest = open(dst, O_WRONLY | O_CREAT, 0644);
 
@@ -33,13 +43,17 @@ static void CopyFile(const char* src, const char* dst)
 
     close(source);
     close(dest);
+#endif
 }
 
 static bool IsFolder(const char* filename)
 {
 	struct stat buf;
-	lstat(filename, &buf);
-	return S_ISDIR(buf.st_mode);
+	if (::stat(filename, &buf) == 0)
+	{
+		return (buf.st_mode & S_IFDIR) != 0;
+	}
+	return false;
 }
 
 static int FileExist(const char* filename)
@@ -64,10 +78,9 @@ static int CreateDir(const char* dir)
 
 	for (int i = 0; i < iLen + 1; i++)
 	{
-		if (i != 0 && (pszDir[i] == '\\' || pszDir[i] == '/'))
+		if (i != 0 && (pszDir[i] == '\\' || pszDir[i] == '/') && pszDir[i - 1] != ':')
 		{
 			pszDir[i] = '\0';
-
 			int iRet = FileExist(pszDir);
 			if (iRet != 0)
 			{
