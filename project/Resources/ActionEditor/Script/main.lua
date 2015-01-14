@@ -13,6 +13,7 @@ local CCNode = require("CCNode")
 local oCache = require("oCache")
 local oScale = require("oScale")
 local oEase = require("oEase")
+local oContent = require("oContent")
 
 collectgarbage("setpause", 100)
 collectgarbage("setstepmul", 5000)
@@ -64,6 +65,11 @@ local thread = coroutine.create(
 		for i = 1,#controls do
 			oEditor.scene:addChild(controls[i])
 			coroutine.yield()
+		end
+		local resPath = "ActionEditor/Model"
+		local writePath = oContent.writablePath.."Model"
+		if not oContent:exist(oContent.writablePath.."Model") and oContent:exist("ActionEditor/Model") then
+			oContent:copyAsync(resPath,writePath)
 		end
 	end)
 

@@ -38,6 +38,9 @@ public:
 	void extractGameFile(const char* filename, const char* targetFullName);
 	void extractGameFileAsync(const char* filename, const char* targetFullName, const function<void(const char* filename)>& callback);
 	
+	void copyFile(const char* src, const char* dst);
+	void copyFileAsync(const char* src, const char* dst, const function<void()>& callback);
+	
 	/** Get the full path name of the file if it was extracted. */
 	string getExtractedFullName(const char* filename);
 	bool isFileExist(const char* filename);
@@ -50,8 +53,8 @@ public:
 	PROPERTY_READONLY(string, WritablePath);
 	PROPERTY_BOOL_NAME(PopupNotify);
 
-	string getFullPath(char *pszFileName);
-	const char* getRelativeFullPath(char *pszFilename, char *pszRelativeFile);
+	string getFullPath(const char *pszFileName);
+	const char* getRelativeFullPath(const char *pszFilename, const char *pszRelativeFile);
 	void loadFileLookupInfo(const char* filename);
 
 	void addSearchPath(const char* path);

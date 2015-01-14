@@ -348,6 +348,15 @@ void __oContent_getDirEntries(lua_State* L, oContent* self, const char* path, bo
 	}
 }
 
+void oContent_copyFileAsync(oContent* self, const char* src, const char* dst, int handler)
+{
+	self->copyFileAsync(src, dst, [handler]()
+	{
+		CCLuaEngine::sharedEngine()->executeFunction(handler);
+		CCLuaEngine::sharedEngine()->removeScriptHandler(handler);
+	});
+}
+
 CCSprite* CCSprite_createWithClip(const char* clipStr)
 {
 	if(string(clipStr).find('|') != string::npos)

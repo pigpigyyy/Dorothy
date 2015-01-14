@@ -395,6 +395,16 @@ local function swapAsync(cache, listA, listB, loaded)
 end
 oCache.swapAsync = swapAsync
 
+local oContent = loaded.oContent
+local oContent_copyAsync = oContent.copyAsync
+oContent.copyAsync = function(self,src,dst)
+	local loaded  = false
+	oContent_copyAsync(self,src,dst,function()
+		loaded = true
+	end)
+	wait(function() return not loaded end)
+end
+
 _G["Dorothy"] = (function()
 	local tb
 	local function gettb()

@@ -169,10 +169,54 @@ void oContent::extractGameFileAsync(const char* file, const char* target, const 
 	});
 }
 
+void oContent::copyFile(const char* src, const char* dst)
+{
+	string srcPath = oContent::getFullPath(src);
+	if (IsFolder(srcPath.c_str()))
+	{
+		string dstPath = dst;
+		auto folders = oContent::getDirEntries(src, true);
+		for (const string& folder : folders)
+		{
+			if (folder != "." && folder != "..")
+			{
+				string dstFolder = dstPath+'/'+folder;
+				if (!oContent::isFileExist(dstFolder.c_str()))
+				{
+					oContent::mkdir(dstFolder.c_str());
+				}
+				oContent::copyFile((srcPath+'/'+folder).c_str(),dstFolder.c_str());
+			}
+		}
+		auto files = oContent::getDirEntries(src, false);
+		for (const string& file : files)
+		{
+			CopyFile((srcPath+'/'+file).c_str(), (dstPath+'/'+file).c_str());
+		}
+	}
+	else
+	{
+		CopyFile(src, dst);
+	}
+}
+
+void oContent::copyFileAsync(const char* src, const char* dst, const function<void()>& callback)
+{
+	string srcFile = src, dstFile = dst;
+	oAsync([srcFile,dstFile]
+	{
+		oSharedContent.copyFile(srcFile.c_str(), dstFile.c_str());
+		return nullptr;
+	},
+	[callback](void* result)
+	{
+		callback();
+	});
+}
+
 string oContent::getExtractedFullName( const char* filename )
 {
-	string file(filename);
-	return std::move(_writablePath + file);
+	return _writablePath + "Extracted/" + filename;
 }
 
 bool oContent::isFileExist(const char* filename)
@@ -243,11 +287,11 @@ bool oContent::isPopupNotify() const
 	return CCFileUtils::sharedFileUtils()->isPopupNotify();
 }
 
-string oContent::getFullPath(char *pszFileName)
+string oContent::getFullPath(const char *pszFileName)
 {
 	return CCFileUtils::sharedFileUtils()->fullPathForFilename(pszFileName);
 }
-const char* oContent::getRelativeFullPath(char *pszFilename, char *pszRelativeFile)
+const char* oContent::getRelativeFullPath(const char *pszFilename, const char *pszRelativeFile)
 {
 	return CCFileUtils::sharedFileUtils()->fullPathFromRelativeFile(pszFilename, pszRelativeFile);
 }

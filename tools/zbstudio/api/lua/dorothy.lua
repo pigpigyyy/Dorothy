@@ -4687,7 +4687,15 @@ local Dorothy =
 				returns = "()",
 				static = true,
 				type = "method"
-			},			
+			},
+			copyAsync =
+			{
+				args = "(src: string, dst: string)",
+				description = "[Class Method]",
+				returns = "()",
+				static = true,
+				type = "method"
+			},
 			exist =
 			{
 				args = "(path: string)",

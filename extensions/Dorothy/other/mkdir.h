@@ -2,6 +2,9 @@
 #define __MKDIR__
 
 #include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <cstdio>
 #ifdef _MSC_VER
 	#include <direct.h>
 	#pragma warning (disable : 4996)
@@ -14,6 +17,30 @@
 #else
 	#define MKDIR(a) mkdir((a),0755)
 #endif
+
+static void CopyFile(const char* src, const char* dst)
+{
+	char buf[BUFSIZ];
+    size_t size;
+
+    int source = open(src, O_RDONLY, 0);
+    int dest = open(dst, O_WRONLY | O_CREAT, 0644);
+
+    while ((size = read(source, buf, BUFSIZ)) > 0)
+	{
+        write(dest, buf, size);
+    }
+
+    close(source);
+    close(dest);
+}
+
+static bool IsFolder(const char* filename)
+{
+	struct stat buf;
+	lstat(filename, &buf);
+	return S_ISDIR(buf.st_mode);
+}
 
 static int FileExist(const char* filename)
 {

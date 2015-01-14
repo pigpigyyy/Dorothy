@@ -1,4 +1,5 @@
 local CCScene = require("CCScene")
+local oContent = require("oContent")
 
 local oSd =
 {
@@ -111,7 +112,7 @@ oEditor.easeNames =
 	"OutBounce",
 	"InOutBounce"
 }
-oEditor.res = "ActionEditor/Model/"
+oEditor.res = oContent.writablePath.."Model/"
 oEditor.input = oEditor.res.."Input/"
 oEditor.output = oEditor.res.."Output/"
 oEditor.EDIT_NONE = 0
