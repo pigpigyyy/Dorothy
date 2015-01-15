@@ -815,7 +815,7 @@ void __oModelCache_getData(lua_State* L, const char* filename)
 	};
 	function<void(oSpriteDef*)> visitSpriteDef = [&](oSpriteDef* parent)
 	{
-		lua_createtable(L, 17, 0);
+		lua_createtable(L, 16, 0);
 		lua_setFloat(1, parent->anchorX);
 		lua_setFloat(2, parent->anchorY);
 		lua_setString(3, parent->clip.c_str());

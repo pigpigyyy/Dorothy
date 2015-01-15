@@ -24,9 +24,8 @@ local CCCall = require("CCCall")
 local oEditor = require("oEditor").oEditor
 local oSd = require("oEditor").oSd
 local ccBlendFunc = require("ccBlendFunc")
-local tolua = require("tolua")
 
-local function oFileChooser()
+local function oFileChooser(withCancel)
 	local winSize = CCDirector.winSize
 	local itemWidth = 120
 	local itemNum = 3
@@ -205,8 +204,25 @@ local function oFileChooser()
 	opMenu.position = oVec2(winSize.width*0.5+borderSize.width*0.5+35,winSize.height*0.5+borderSize.height*0.5)
 	panel:addChild(opMenu)
 
+	local cancelButton 
+	if withCancel then
+		cancelButton = oButton("Cancel",17,60,false,
+			140,0,
+			function(item)
+				opMenu.enabled = false
+				panel:hide()
+				item:unregisterTapHandler()
+			end)
+		cancelButton.anchor = oVec2.zero
+		local btnBk = CCDrawNode()
+		btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
+		btnBk.position = oVec2(30,30)
+		cancelButton:addChild(btnBk,-1)
+		opMenu:addChild(cancelButton)
+	end
+
 	local updateButton = oButton("Update",17,60,false,
-		0,0,
+		70,0,
 		function(item)
 			addImages(item.targetFile)
 		end)
@@ -219,11 +235,10 @@ local function oFileChooser()
 	opMenu:addChild(updateButton)
 
 	local editButton = oButton("Edit",17,60,false,
-		70,0,
+		140,0,
 		function(item)
 			opMenu.enabled = false
 			panel:hide()
-			updateButton:unregisterTapHandler()
 			item:unregisterTapHandler()
 			oEditor.controlBar:clearCursors()
 			local modelFile = item.editTarget..".model"
@@ -256,27 +271,29 @@ local function oFileChooser()
 			if not oEditor.data then
 				oEditor.data =
 				{
-					0.5,--anchorX
-					0.5,--anchorY
-					"",--clip
-					"",--name
-					1,--opacity
-					0,--rotation
-					1,--scaleX
-					1,--scaleY
-					0,--skewX
-					0,--skewY
-					0,--x
-					0,--y
-					{},--looks
-					{},--animationDefs
-					{},--children
-					true,--isFaceRight
-					false,--isBatchUsed
-					oEditor.output..item.editTarget..".clip",--clipFile
-					{},--keys
-					{},--animationNames
-					{}--lookNames
+					0.5,--anchorX 1
+					0.5,--anchorY 2
+					"",--clip 3
+					"",--name 4
+					1,--opacity 5
+					0,--rotation 6
+					1,--scaleX 7
+					1,--scaleY 8
+					0,--skewX 9
+					0,--skewY 10
+					0,--x 11
+					0,--y 12
+					{},--looks 13
+					{},--animationDefs 14
+					{},--children 15
+					true,--front 16
+					true,--isFaceRight 17
+					false,--isBatchUsed 18
+					CCSize.zero, --size 19
+					oEditor.output..item.editTarget..".clip",--clipFile 20
+					{},--keys 21
+					{},--animationNames 22
+					{},--lookNames 23
 				}
 			end
 			oEditor.dirty = true
@@ -294,21 +311,6 @@ local function oFileChooser()
 	btnBk.position = oVec2(30,30)
 	editButton:addChild(btnBk,-1)
 	opMenu:addChild(editButton)
-
-	local cancelButton = oButton("Cancel",17,60,false,
-		140,0,
-		function(item)
-			opMenu.enabled = false
-			panel:hide()
-			updateButton:unregisterTapHandler()
-			item:unregisterTapHandler()
-		end)
-	cancelButton.anchor = oVec2.zero
-	btnBk = CCDrawNode()
-	btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
-	btnBk.position = oVec2(30,30)
-	cancelButton:addChild(btnBk,-1)
-	opMenu:addChild(cancelButton)
 
 	panel.init = function(self)
 		local dirs = oContent:getEntries(oEditor.input,true)
@@ -359,10 +361,12 @@ local function oFileChooser()
 				function(item)
 					local file = item.file
 					panel:removeMenuItems()
+					if cancelButton then cancelButton.positionX = 0 end
 					editButton.visible = true
 					if file:sub(-5,-1) == ".clip" then
 						editButton.editTarget = file:sub(1,-6)
 						addClip(file)
+						if cancelButton then cancelButton.positionX = 70 end
 					else
 						editButton.editTarget = file
 						if fileDict[file] then
@@ -371,8 +375,10 @@ local function oFileChooser()
 							if #oContent:getEntries(oEditor.input..file,false) > 0 then
 								updateButton.visible = true
 							end
+							if cancelButton then cancelButton.positionX = updateButton.visible and 0 or 70 end
 						else
 							addImages(file)
+							if cancelButton then cancelButton.positionX = 0 end
 						end
 					end
 				end)

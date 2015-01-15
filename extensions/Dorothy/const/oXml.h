@@ -133,6 +133,11 @@ struct oModelXml
 //				Index = 'C',
 //				Name = 'H'
 				//</a>
+
+			KeyPoint = 'K',//10
+				//<a>
+//				Key = 'A',
+				//</a>
 	};
 };
 

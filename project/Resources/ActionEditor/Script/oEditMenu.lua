@@ -66,7 +66,7 @@ local function oEditMenu()
 					menu.items.Play:tapped()
 				end
 				if oEditor.state == oEditor.EDIT_START then
-					oFileChooser()
+					oFileChooser(true)
 				elseif oEditor.state ~= oEditor.EDIT_NONE and oEditor.state ~= oEditor.EDIT_START then
 					oEditChooser(true)
 				end
@@ -274,13 +274,9 @@ local function oEditMenu()
 						frameDef[oKd.easeSkew],
 						0,
 					}
+					item:setText("Paste")
 					item.color = ccColor3(0xff88cc)
-				end
-			end),
-		Paste = oButton("Paste",16,50,50,215,95,
-			function()
-				local pos = math.floor(oEditor.controlBar:getPos()+0.5)
-				if oEditor.sprite and pos ~= oEditor.currentFramePos then
+				elseif oEditor.sprite and pos ~= oEditor.currentFramePos then
 					local sp = oEditor.spriteData
 					local animationDef = oEditor.animationData
 					if not animationDef then
@@ -325,10 +321,11 @@ local function oEditMenu()
 					oEditor.settingPanel:update()
 					menu:markEditButton(true)
 					frameCopy = nil
-					menu.items.Copy.color = ccColor3(0x00ffff)
+					item:setText("Copy")
+					item.color = ccColor3(0x00ffff)
 				end
 			end),
-		Clear = oButton("Clear",16,50,50,275,95,
+		Clear = oButton("Clear",16,50,50,215,95,
 			function()
 				if oEditor.sprite and oEditor.animationData then
 					oBox("Clear\nFrames",function()
@@ -452,22 +449,22 @@ local function oEditMenu()
 						local children = oEditor.spriteData[oSd.children]
 						local sp =
 						{
-							0.5,--anchorX
-							0.5,--anchorY
-							name,--clip
-							"",--name
-							1,--opacity
-							0,--rotation
-							1,--scaleX
-							1,--scaleY
-							0,--skewX
-							0,--skewY
-							0,--x
-							0,--y
-							{},--looks
-							{},--animationDefs
-							{},--children
-							true,--front
+							0.5,--anchorX 1
+							0.5,--anchorY 2
+							name,--clip 3
+							"",--name 4
+							1,--opacity 5
+							0,--rotation 6
+							1,--scaleX 7
+							1,--scaleY 8
+							0,--skewX 9
+							0,--skewY 10
+							0,--x 11
+							0,--y 12
+							{},--looks 13
+							{},--animationDefs 14
+							{},--children 15
+							true,--front 16
 						}
 						table.insert(children,sp)
 						oEditor.dirty = true
@@ -653,7 +650,6 @@ oEditor.spriteData[oSd.index]
 			items.New,
 			items.Delete,
 			items.Copy,
-			items.Paste,
 			items.Clear,
 			items.Loop,
 			items.Play,
@@ -768,7 +764,6 @@ oEditor.spriteData[oSd.index]
 			items.New,
 			items.Delete,
 			items.Copy,
-			items.Paste,
 			items.Clear,
 			items.Play,
 			items.Loop,

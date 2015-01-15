@@ -249,6 +249,10 @@ string oModelDef::toXml()
 			<< char(oModelXml::Index) << "=\"" << item.second << "\" "
 			<< char(oModelXml::Name) << "=\"" << item.first << "\"/>";
 	}
+	for (const auto& keyPoint : _keys)
+	{
+		stream << '<' << char(oModelXml::KeyPoint) << ' ' << char(oModelXml::Key) << "=\"" << s(keyPoint.x) << ',' << s(keyPoint.y) << "\"/>";
+	}
 	stream << "</" << char(oModelXml::Dorothy) << '>';
 	return stream.str();
 }

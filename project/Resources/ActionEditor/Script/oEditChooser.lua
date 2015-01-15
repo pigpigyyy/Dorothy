@@ -42,20 +42,21 @@ local function oEditChooser(withCancel)
 	opMenu.position = oVec2(winSize.width*0.5+borderSize.width*0.5,winSize.height*0.5+borderSize.height*0.5)
 	panel:addChild(opMenu)
 
-	local cancelButton = oButton("Cancel",17,60,false,
-		0,0,
-		function(item)
-			item:unregisterTapHandler()
-			opMenu.enabled = false
-			panel:hide()
-		end)
-	cancelButton.anchor = oVec2.zero
-	local btnBk = CCDrawNode()
-	btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
-	btnBk.position = oVec2(30,30)
-	cancelButton:addChild(btnBk,-1)
-	cancelButton.visible = withCancel
-	opMenu:addChild(cancelButton)
+	if withCancel then
+		local cancelButton = oButton("Cancel",17,60,false,
+			0,0,
+			function(item)
+				item:unregisterTapHandler()
+				opMenu.enabled = false
+				panel:hide()
+			end)
+		cancelButton.anchor = oVec2.zero
+		local btnBk = CCDrawNode()
+		btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
+		btnBk.position = oVec2(30,30)
+		cancelButton:addChild(btnBk,-1)
+		opMenu:addChild(cancelButton)
+	end
 
 	panel.sprites = {}
 	panel.init = function(self)
@@ -96,7 +97,6 @@ local function oEditChooser(withCancel)
 				xStart+itemWidth*0.5+10+(i%itemNum)*(itemWidth+10),
 				y,
 				function(item)
-					cancelButton:unregisterTapHandler()
 					panel.touchEnabled = false
 					menu.enabled = false
 					opMenu.enabled = false
@@ -142,7 +142,6 @@ local function oEditChooser(withCancel)
 								end
 							end
 						until flag
-						cancelButton:unregisterTapHandler()
 						aNames[text] = index
 						addNewAnimation(oEditor.data,index+1)
 						oEditor.dirty = true
@@ -186,7 +185,6 @@ local function oEditChooser(withCancel)
 				xStart+itemWidth*0.5+10+(i%itemNum)*(itemWidth+10),
 				y,
 				function(item)
-					cancelButton:unregisterTapHandler()
 					panel.touchEnabled = false
 					menu.enabled = false
 					opMenu.enabled = false
@@ -234,7 +232,6 @@ local function oEditChooser(withCancel)
 								end
 							end
 						until flag
-						cancelButton:unregisterTapHandler()
 						lNames[text] = index
 						oEditor.editMenu:markEditButton(true)
 						opMenu.enabled = false
@@ -273,7 +270,6 @@ local function oEditChooser(withCancel)
 				xStart+itemWidth*0.5+10,
 				y,
 				function()
-					cancelButton:unregisterTapHandler()
 					panel.touchEnabled = false
 					menu.enabled = false
 					opMenu.enabled = false
@@ -310,12 +306,11 @@ local function oEditChooser(withCancel)
 			xStart+itemWidth*0.5+10,
 			y,
 			function()
-				cancelButton:unregisterTapHandler()
 				panel.touchEnabled = false
 				menu.enabled = false
 				opMenu.enabled = false
 				panel:hide()
-				oFileChooser()
+				oFileChooser(true)
 			end)
 		newButton.color = ccColor3(0xffcc88)
 		menu:addChild(newButton)
@@ -347,7 +342,6 @@ local function oEditChooser(withCancel)
 				xStart+itemWidth*0.5+10,
 				y,
 				function()
-					cancelButton:unregisterTapHandler()
 					panel.touchEnabled = false
 					menu.enabled = false
 					opMenu.enabled = false

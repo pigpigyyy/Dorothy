@@ -1253,7 +1253,7 @@ local function oViewArea()
 	end
 
 	view.updateAnchor = function(self, delta)
-		if delta ~= oVec2.zero and editTarget.contentSize ~= CCSize.zero then
+		if delta ~= oVec2.zero then
 			--editTarget=CCNode
 			if editState == EDIT_ANCHORX then
 				delta.y = 0
@@ -1281,12 +1281,16 @@ local function oViewArea()
 				end
 			end
 
-			local r = -(editTarget.rotation-posRotFix)*math.pi/180
-			local x1 = x2*math.cos(r)-y2*math.sin(r)
-			local y1 = x2*math.sin(r)+y2*math.cos(r)
-			x1 = x1/editTarget.contentSize.width
-			y1 = y1/editTarget.contentSize.height
-			editTarget.anchor = editTarget.anchor - oVec2(x1,y1)
+			if editTarget.contentSize ~= CCSize.zero then
+				local r = -(editTarget.rotation-posRotFix)*math.pi/180
+				local x1 = x2*math.cos(r)-y2*math.sin(r)
+				local y1 = x2*math.sin(r)+y2*math.cos(r)
+				x1 = x1/editTarget.contentSize.width
+				y1 = y1/editTarget.contentSize.height
+				editTarget.anchor = editTarget.anchor - oVec2(x1,y1)
+			else
+				editTarget.anchor = oVec2.zero
+			end
 
 			local x = editTarget.anchor.x
 			local y = editTarget.anchor.y

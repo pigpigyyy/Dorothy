@@ -75,7 +75,7 @@ local thread = coroutine.create(
 
 local bk = CCLayerColor(ccColor4(0xff000000),CCDirector.winSize.width,CCDirector.winSize.height)
 bk.anchor = oVec2.zero
-local logo = CCLabelTTF("Luv & Fight","Arial",48)
+local logo = CCLabelTTF("LUV FIGHT","Arial",48)
 logo.texture.antiAlias = false
 logo.position = oVec2(CCDirector.winSize.width*0.5,CCDirector.winSize.height*0.5)
 logo.scaleX = 0.3

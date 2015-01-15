@@ -82,6 +82,7 @@ public:
 	oSpriteDef* getRoot();
 	void addKeyPoint(const oVec2& point);
 	const oVec2& getKeyPoint(uint32 index) const;
+	int getKeyPointCount() const;
 	bool isFaceRight() const;
 	bool isBatchUsed() const;
 	const CCSize& getSize() const;
@@ -90,7 +91,6 @@ public:
 	int getAnimationIndexByName(const string& name);
 	string getAnimationNameByIndex(int index);
 	int getLookIndexByName(const string& name);
-	int getKeyPointCount() const;
 	const unordered_map<string, int>& getAnimationIndexMap() const;
 	const unordered_map<string, int>& getLookIndexMap() const;
 	oModel* toModel();
