@@ -19,13 +19,6 @@ scene:addChild(world)
 
 local layer = CCLayerColor(ccColor4(0x22cccccc),CCDirector.winSize.width,CCDirector.winSize.height)
 layer.anchor = oVec2.zero
-layer:registerTouchHandler(function(eventType,touch)
-	if eventType == CCTouch.Ended then
-		collectgarbage()
-		print("GC!")
-	end
-end,true,CCMenu.DefaultHandlerPriority+99)
-layer.touchEnabled = true
 scene:addChild(layer)
 
 
@@ -62,7 +55,8 @@ world:addChild(circle)
 local drawNode = oLine({oVec2(-20,0),oVec2(20,0),oVec2.zero,oVec2(0,-20),oVec2(0,20)},ccColor4(0xff00ffff))
 world:addChild(drawNode)
 world.data = CCDictionary()
-world.data.joint = oJoint:collide(true):distance(terrain,circle,oVec2.zero,oVec2.zero,0,0.4)
+world.data.joint = oJoint:rope(
+	true,terrain,circle,oVec2.zero,oVec2.zero,300)
 
 circle:addHandler(oBody.ContactStart,function(body,point)
 	drawNode.position = point
