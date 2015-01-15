@@ -64,13 +64,6 @@
 		15C15688168311CB00D239F2 /* tolua_push.c in Sources */ = {isa = PBXBuildFile; fileRef = 15C15656168311CB00D239F2 /* tolua_push.c */; };
 		15C15689168311CB00D239F2 /* tolua_to.c in Sources */ = {isa = PBXBuildFile; fileRef = 15C15657168311CB00D239F2 /* tolua_to.c */; };
 		15C1568E1683131500D239F2 /* libcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15C1568D1683131500D239F2 /* libcurl.a */; };
-		15C156981683138E00D239F2 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 15C156911683138E00D239F2 /* Default-568h@2x.png */; };
-		15C156991683138E00D239F2 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 15C156921683138E00D239F2 /* Default.png */; };
-		15C1569A1683138E00D239F2 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 15C156931683138E00D239F2 /* Default@2x.png */; };
-		15C1569B1683138E00D239F2 /* Icon-57.png in Resources */ = {isa = PBXBuildFile; fileRef = 15C156941683138E00D239F2 /* Icon-57.png */; };
-		15C1569C1683138E00D239F2 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 15C156951683138E00D239F2 /* Icon-72.png */; };
-		15C1569D1683138E00D239F2 /* Icon-114.png in Resources */ = {isa = PBXBuildFile; fileRef = 15C156961683138E00D239F2 /* Icon-114.png */; };
-		15C1569E1683138E00D239F2 /* Icon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = 15C156971683138E00D239F2 /* Icon-144.png */; };
 		3C504D8E1A237B97000C79D6 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C504D8D1A237B97000C79D6 /* libwebp.a */; };
 		3C5AC9FC1A21A71F006EDD2B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5AC9FB1A21A71F006EDD2B /* CoreMotion.framework */; };
 		3C7AA4E11A4731AD007836D2 /* ActionEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4D81A4731AD007836D2 /* ActionEditor */; };
@@ -134,6 +127,8 @@
 		3C90CD1C1A64104600C29402 /* oJointDef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C90CD1A1A64104600C29402 /* oJointDef.cpp */; };
 		3C90CD281A65BC9800C29402 /* oAsync.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C90CD261A65BC9800C29402 /* oAsync.cpp */; };
 		3CA03A6F1A2900460008F80F /* libluajit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CA03A6E1A2900460008F80F /* libluajit.a */; };
+		3CAE8C4A1A685B1000D92541 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3CAE8C491A685B1000D92541 /* Images.xcassets */; };
+		3CAE8C4C1A68620700D92541 /* oBodyLoader.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3CAE8C4B1A68620700D92541 /* oBodyLoader.lua */; };
 		3CB40CFA1A20E6C200D7A3A6 /* b2MotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CB40CF81A20E6C200D7A3A6 /* b2MotorJoint.cpp */; };
 		3CB40D261A20ECC500D7A3A6 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CB40D251A20ECC500D7A3A6 /* libsqlite3.0.dylib */; };
 		46C1008D16BF786A00F74D54 /* CCLuaEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46C1007C16BF786A00F74D54 /* CCLuaEngine.cpp */; };
@@ -289,13 +284,6 @@
 		15C15656168311CB00D239F2 /* tolua_push.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tolua_push.c; sourceTree = "<group>"; };
 		15C15657168311CB00D239F2 /* tolua_to.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tolua_to.c; sourceTree = "<group>"; };
 		15C1568D1683131500D239F2 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = ../../cocos2dx/platform/third_party/ios/libraries/libcurl.a; sourceTree = "<group>"; };
-		15C156911683138E00D239F2 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
-		15C156921683138E00D239F2 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = SOURCE_ROOT; };
-		15C156931683138E00D239F2 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = SOURCE_ROOT; };
-		15C156941683138E00D239F2 /* Icon-57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-57.png"; sourceTree = SOURCE_ROOT; };
-		15C156951683138E00D239F2 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = SOURCE_ROOT; };
-		15C156961683138E00D239F2 /* Icon-114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-114.png"; sourceTree = SOURCE_ROOT; };
-		15C156971683138E00D239F2 /* Icon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-144.png"; sourceTree = SOURCE_ROOT; };
 		3C504D8D1A237B97000C79D6 /* libwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwebp.a; path = ../../cocos2dx/platform/third_party/mac/libraries/libwebp.a; sourceTree = "<group>"; };
 		3C5AC9FB1A21A71F006EDD2B /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreMotion.framework; sourceTree = DEVELOPER_DIR; };
 		3C7AA4D81A4731AD007836D2 /* ActionEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ActionEditor; path = ../../../Dorothy/project/Resources/ActionEditor; sourceTree = "<group>"; };
@@ -431,6 +419,8 @@
 		3CA03A6B1A28BE4E0008F80F /* luaconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = luaconf.h; sourceTree = "<group>"; };
 		3CA03A6E1A2900460008F80F /* libluajit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libluajit.a; path = ../../lua/lib/ios/libluajit.a; sourceTree = "<group>"; };
 		3CA6A7591A60C226007C4503 /* mkdir.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mkdir.h; sourceTree = "<group>"; };
+		3CAE8C491A685B1000D92541 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Dorothy/Images.xcassets; sourceTree = SOURCE_ROOT; };
+		3CAE8C4B1A68620700D92541 /* oBodyLoader.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = oBodyLoader.lua; path = ../../../Dorothy/project/Resources/oBodyLoader.lua; sourceTree = "<group>"; };
 		3CB40CF81A20E6C200D7A3A6 /* b2MotorJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2MotorJoint.cpp; sourceTree = "<group>"; };
 		3CB40CF91A20E6C200D7A3A6 /* b2MotorJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2MotorJoint.h; sourceTree = "<group>"; };
 		3CB40D251A20ECC500D7A3A6 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
@@ -1039,22 +1029,17 @@
 		F293BC4615EB859D00256477 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3CAE8C491A685B1000D92541 /* Images.xcassets */,
 				3C7AA4D81A4731AD007836D2 /* ActionEditor */,
-				3C7AA4D91A4731AD007836D2 /* bk.jpg */,
 				3C7AA4DA1A4731AD007836D2 /* BodyEditor */,
+				3C7AA4E01A4731AD007836D2 /* Test */,
 				3C7AA4DB1A4731AD007836D2 /* boy.lua */,
-				3C7AA4DC1A4731AD007836D2 /* class.lua */,
 				3C7AA4DD1A4731AD007836D2 /* girl.lua */,
 				3C7AA4DE1A4731AD007836D2 /* main.lua */,
 				3C7AA4DF1A4731AD007836D2 /* miku.lua */,
-				3C7AA4E01A4731AD007836D2 /* Test */,
-				15C156911683138E00D239F2 /* Default-568h@2x.png */,
-				15C156921683138E00D239F2 /* Default.png */,
-				15C156931683138E00D239F2 /* Default@2x.png */,
-				15C156941683138E00D239F2 /* Icon-57.png */,
-				15C156951683138E00D239F2 /* Icon-72.png */,
-				15C156961683138E00D239F2 /* Icon-114.png */,
-				15C156971683138E00D239F2 /* Icon-144.png */,
+				3C7AA4DC1A4731AD007836D2 /* class.lua */,
+				3CAE8C4B1A68620700D92541 /* oBodyLoader.lua */,
+				3C7AA4D91A4731AD007836D2 /* bk.jpg */,
 			);
 			name = Resources;
 			path = ../../../Cpp/TestCpp/Resources;
@@ -1132,20 +1117,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				15C156981683138E00D239F2 /* Default-568h@2x.png in Resources */,
 				3C7AA4E11A4731AD007836D2 /* ActionEditor in Resources */,
-				15C156991683138E00D239F2 /* Default.png in Resources */,
 				3C7AA4E71A4731AD007836D2 /* main.lua in Resources */,
 				3C7AA4E91A4731AD007836D2 /* Test in Resources */,
 				3C7AA4E51A4731AD007836D2 /* class.lua in Resources */,
-				15C1569A1683138E00D239F2 /* Default@2x.png in Resources */,
-				15C1569B1683138E00D239F2 /* Icon-57.png in Resources */,
-				15C1569C1683138E00D239F2 /* Icon-72.png in Resources */,
 				3C7AA4E21A4731AD007836D2 /* bk.jpg in Resources */,
-				15C1569D1683138E00D239F2 /* Icon-114.png in Resources */,
+				3CAE8C4A1A685B1000D92541 /* Images.xcassets in Resources */,
 				3C7AA4E81A4731AD007836D2 /* miku.lua in Resources */,
+				3CAE8C4C1A68620700D92541 /* oBodyLoader.lua in Resources */,
 				3C7AA4E41A4731AD007836D2 /* boy.lua in Resources */,
-				15C1569E1683138E00D239F2 /* Icon-144.png in Resources */,
 				3C7AA4E61A4731AD007836D2 /* girl.lua in Resources */,
 				3C7AA4E31A4731AD007836D2 /* BodyEditor in Resources */,
 			);
@@ -1371,6 +1351,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
@@ -1420,6 +1402,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
