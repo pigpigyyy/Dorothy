@@ -1,6 +1,7 @@
 #include "main.h"
 #include "AppDelegate.h"
 #include "cocos2d.h"
+#include "resource.h"
 
 USING_NS_CC;
 
@@ -27,6 +28,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     AppDelegate app;
     CCEGLView* eglView = CCEGLView::sharedOpenGLView();
     eglView->setViewName("Dorothy");
+	SetClassLong(eglView->getHWnd(), GCL_HICON, (long)LoadIcon(hInstance, MAKEINTRESOURCE(IDR_MAINFRAME)));
 	int width = CCUserDefault::sharedUserDefault()->getIntegerForKey("Width");
 	int height = CCUserDefault::sharedUserDefault()->getIntegerForKey("Height");
 	if (width == 0 || height == 0)

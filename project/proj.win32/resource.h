@@ -4,7 +4,8 @@
 //
 
 #define IDS_PROJNAME                100
-#define IDR_TESTLUA    100
+#define IDR_DOROTHY    100
+#define IDR_MAINFRAME                   128
 
 #define ID_FILE_NEW_WINDOW            32771
 
