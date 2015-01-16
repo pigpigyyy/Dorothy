@@ -42,7 +42,7 @@ void oModel_clearHandler(oModel* model, const string& name)
 }
 const oVec2& oModel_getKey(oModel* model, uint32 index)
 {
-	return model->getModelDef()->getKeyPoint(index);
+	return model->getModelDef()->getKeyPoint(index-1);
 }
 
 HANDLER_WRAP_START(oSensorHandlerWrapper)

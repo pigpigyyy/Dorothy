@@ -17,6 +17,7 @@ end
 
 local CCDirector = require("CCDirector")
 local CCNode = require("CCNode")
+local oContent = require("oContent")
 local oRoutine = require("oRoutine")
 local once = oRoutine.once
 
@@ -54,6 +55,10 @@ oRoutine(once(function()
 		oEditor:addChild(oEditor[name],index)
 		coroutine.yield()
 	end
-
+	local resPath = "BodyEditor/Body"
+	local writePath = oContent.writablePath.."Body"
+	if not oContent:exist(oContent.writablePath.."Body") and oContent:exist("BodyEditor/Body") then
+		oContent:copyAsync(resPath,writePath)
+	end
 	--dofile("BodyEditor/Script/generateLoader.lua")
 end))

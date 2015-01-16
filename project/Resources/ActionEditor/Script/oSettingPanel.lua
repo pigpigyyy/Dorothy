@@ -861,6 +861,16 @@ local function oSettingPanel()
 					end
 				end
 			end),
+		KeyPoint = oSettingItem("Keys :",0,getPosY(),
+			function()
+				oEditor.vertexControl:show(oEditor.data[oSd.keys],function(vs)
+					oEditor.data[oSd.keys] = vs
+					oEditor.editMenu:markEditButton(true)
+				end)
+			end,
+			function()
+				oEditor.vertexControl:hide()
+			end),
 	}
 	panel.items = keyItems
 	local group = {}
@@ -879,6 +889,8 @@ local function oSettingPanel()
 	keyItems.Height.visible = false
 	keyItems.AnchorX.positionX = keyItems.EaseP.positionX
 	keyItems.AnchorY.positionY = keyItems.EaseS.positionY
+	keyItems.KeyPoint.visible = false
+	keyItems.KeyPoint:setValue("...")
 
 	local keyCount = 0
 	for _,item in pairs(keyItems) do
@@ -893,6 +905,7 @@ local function oSettingPanel()
 		if not enable and oEditor.spriteData == oEditor.data then
 			keyItems.Width:setEnabled(true)
 			keyItems.Height:setEnabled(true)
+			keyItems.KeyPoint:setEnabled(true)
 		end
 	end
 	
@@ -924,6 +937,58 @@ local function oSettingPanel()
 		moveY = viewHeight-borderSize.height
 		moveX = borderSize.width-viewWidth
 	end
+	
+	local function updateAnimationItems()
+		initValues()
+		hideItems()
+		local items = 
+		{
+			keyItems.Time,
+			keyItems.PosX,
+			keyItems.PosY,
+			keyItems.ScaleX,
+			keyItems.ScaleY,
+			keyItems.Rotation,
+			keyItems.Opacity,
+			keyItems.SkewX,
+			keyItems.SkewY,
+			keyItems.Visible,
+			keyItems.EaseP,
+			keyItems.EaseS,
+			keyItems.EaseK,
+			keyItems.EaseR,
+			keyItems.EaseO
+		}
+		local posY = genPosY()
+		for i = 1,#items do
+			items[i].visible = true
+			items[i].positionY = posY()
+		end
+		viewHeight = 30*(#items)+20
+		viewWidth = borderSize.width
+		moveY = viewHeight-borderSize.height
+		moveX = borderSize.width-viewWidth
+	end
+	
+	local function updateRootItems()
+		initValues()
+		hideItems()
+		local items =
+		{
+			keyItems.Width,
+			keyItems.Height,
+			keyItems.KeyPoint,
+		}
+		local posY = genPosY()
+		for i = 1,#items do
+			items[i].visible = true
+			items[i].positionY = posY()
+		end
+		viewHeight = borderSize.height
+		viewWidth = borderSize.width
+		moveY = 0
+		moveX = 0
+	end
 
 	local isShowingRoot = false
 	panel.data.selectListener = oListener("ImageSelected",
@@ -940,32 +1005,21 @@ local function oSettingPanel()
 					end
 				end
 			end
-			if oEditor.state == oEditor.EDIT_SPRITE then
+			if oEditor.state == oEditor.EDIT_SPRITE or oEditor.state == oEditor.EDIT_ANIMATION then
 				if args then
 					local sp = args[1]
 					if sp[oSd.parent] and isShowingRoot then
 						isShowingRoot = false
-						updateSpriteItems()
+						if oEditor.state == oEditor.EDIT_ANIMATION then
+							updateAnimationItems()
+						else
+							updateSpriteItems()
+						end
 					end
 					if not sp[oSd.parent] then
 						if not isShowingRoot then
 							isShowingRoot = true
-							initValues()
-							hideItems()
-							local items =
-							{
-								keyItems.Width,
-								keyItems.Height,
-							}
-							local posY = genPosY()
-							for i = 1,#items do
-								items[i].visible = true
-								items[i].positionY = posY()
-							end
-							viewHeight = borderSize.height
-							viewWidth = borderSize.width
-							moveY = 0
-							moveX = 0
+							updateRootItems()
 						end
 						keyItems.Width:setValue(sp[oSd.size].width)
 						keyItems.Height:setValue(sp[oSd.size].height)
@@ -988,35 +1042,7 @@ local function oSettingPanel()
 			panel.contentSize = borderSize
 			menu.contentSize = borderSize
 			menu.positionY = borderSize.height
-			initValues()
-			hideItems()
-			local items = 
-			{
-				keyItems.Time,
-				keyItems.PosX,
-				keyItems.PosY,
-				keyItems.ScaleX,
-				keyItems.ScaleY,
-				keyItems.Rotation,
-				keyItems.Opacity,
-				keyItems.SkewX,
-				keyItems.SkewY,
-				keyItems.Visible,
-				keyItems.EaseP,
-				keyItems.EaseS,
-				keyItems.EaseK,
-				keyItems.EaseR,
-				keyItems.EaseO
-			}
-			local posY = genPosY()
-			for i = 1,#items do
-				items[i].visible = true
-				items[i].positionY = posY()
-			end
-			viewHeight = 30*(#items)+20
-			viewWidth = borderSize.width
-			moveY = viewHeight-borderSize.height
-			moveX = borderSize.width-viewWidth
+			updateAnimationItems()
 		else
 			panel.position = oVec2(winSize.width-170,10)
 			local borderH = 200*(winSize.height-90)/510
@@ -1039,6 +1065,9 @@ local function oSettingPanel()
 	end
 	
 	panel.updateValues = function(self,index)
+		if not oEditor.spriteData or not oEditor.spriteData[oSd.parent] then
+			return
+		end
 		if index == nil then
 			for _,item in pairs(keyItems) do
 				item:setValue(nil)

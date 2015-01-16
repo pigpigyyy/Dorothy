@@ -251,7 +251,8 @@ string oModelDef::toXml()
 	}
 	for (const auto& keyPoint : _keys)
 	{
-		stream << '<' << char(oModelXml::KeyPoint) << ' ' << char(oModelXml::Key) << "=\"" << s(keyPoint.x) << ',' << s(keyPoint.y) << "\"/>";
+		stream << '<' << char(oModelXml::KeyPoint) << ' ' << char(oModelXml::Key) << "=\"" << s(keyPoint.x) << ',';
+		stream << s(keyPoint.y) << "\"/>";
 	}
 	stream << "</" << char(oModelXml::Dorothy) << '>';
 	return stream.str();

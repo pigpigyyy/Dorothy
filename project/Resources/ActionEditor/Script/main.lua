@@ -71,6 +71,8 @@ local thread = coroutine.create(
 		if not oContent:exist(oContent.writablePath.."Model") and oContent:exist("ActionEditor/Model") then
 			oContent:copyAsync(resPath,writePath)
 		end
+		oEditor.vertexControl = require("oVertexControl")()
+		oEditor.scene:addChild(oEditor.vertexControl)
 	end)
 
 local bk = CCLayerColor(ccColor4(0xff000000),CCDirector.winSize.width,CCDirector.winSize.height)

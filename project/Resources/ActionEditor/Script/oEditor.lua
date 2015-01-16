@@ -1,5 +1,6 @@
 local CCScene = require("CCScene")
 local oContent = require("oContent")
+local oVec2 = require("oVec2")
 
 local oSd =
 {
@@ -122,5 +123,13 @@ oEditor.EDIT_ANIMTION = 3
 oEditor.EDIT_LOOK = 4
 oEditor.state = oEditor.EDIT_NONE
 oEditor.needSave = false
+oEditor.round = function(self,val)
+	if type(val) == "number" then
+		return val > 0 and math.floor(val+0.5) or math.ceil(val-0.5)
+	else
+		return oVec2(val.x > 0 and math.floor(val.x+0.5) or math.ceil(val.x-0.5),
+			val.y > 0 and math.floor(val.y+0.5) or math.ceil(val.y-0.5))
+	end
+end
 
 return {oEditor=oEditor,oSd=oSd,oAd=oAd,oKd=oKd,oFd=oFd}

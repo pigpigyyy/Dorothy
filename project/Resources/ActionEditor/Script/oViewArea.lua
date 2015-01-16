@@ -40,6 +40,7 @@ local function oViewArea()
 		120+(winSize.height-60-120)*0.5)
 	crossNode.position = origin
 	view:addChild(crossNode)
+	view.viewNode = crossNode
 
 	local cross = oLine(
 	{
@@ -1468,6 +1469,7 @@ local function oViewArea()
 		view:stopEditPosXY()
 		view:stopEditRot()
 		view:stopEditFront()
+		oEditor.vertexControl:hide()
 	end
 
 	return view
