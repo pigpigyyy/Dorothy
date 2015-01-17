@@ -14,7 +14,6 @@ local oSettingItem = class(
 {
 	__partial = function(self)
 		self._label = nil -- CCLabelTTF
-		self._value = nil -- string
 		self._border = nil -- oLine
 		self._isInput = false -- boolean
 		self._selected = false -- boolean
@@ -48,7 +47,6 @@ local oSettingItem = class(
 			local y = halfH-fontSize*0.5-2
 			label = oTextField(x,y,fontSize,limit,
 				function(textField)
-					self._value = textField.text
 					self.selected = false
 				end)
 		else
@@ -82,7 +80,7 @@ local oSettingItem = class(
 	-- string
 	value = property(
 		function(self)
-			return self._value
+			return self._label.text
 		end,
 		function(self,value)
 			if value ~= nil and value ~= "" then
@@ -92,10 +90,8 @@ local oSettingItem = class(
 					self._label.text = tostring(value)
 				end
 				self._label.texture.antiAlias = false
-				self._value = value
 			else
 				self._label.text = ""
-				self._value = nil
 			end
 		end),
 

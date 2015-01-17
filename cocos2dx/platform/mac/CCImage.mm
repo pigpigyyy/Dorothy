@@ -923,7 +923,7 @@ bool CCImage::saveToFile(const char* pszFilePath, bool bIsToRGB)
     int bytesPerRow = (bitsPerPixel/8) * m_nWidth;
     int myDataLength = bytesPerRow * m_nHeight;
     
-    unsigned char *pixels = m_pData;
+    unsigned char* pixels = m_pData;
     
     // The data has alpha channel, and want to save it with an RGB png file,
     // or want to save as jpg,  remove the alpha channel.
@@ -947,7 +947,7 @@ bool CCImage::saveToFile(const char* pszFilePath, bool bIsToRGB)
         
     // make data provider with data.
     CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault;
-    if (saveToPNG && m_bHasAlpha && (! bIsToRGB))
+    if (saveToPNG && m_bHasAlpha && !bIsToRGB)
     {
         bitmapInfo |= kCGImageAlphaPremultipliedLast;
     }
@@ -969,7 +969,7 @@ bool CCImage::saveToFile(const char* pszFilePath, bool bIsToRGB)
 	NSBitmapImageRep* newRep = [[NSBitmapImageRep alloc] initWithCGImage:cgRef];
 	[newRep setSize:[image size]];
 
-    NSData *data;
+    NSData* data;
     if (saveToPNG)
     {
    		data = [newRep representationUsingType:NSPNGFileType properties:nil];

@@ -103,17 +103,19 @@ local function oFileChooser(withCancel)
 		for i = 1,#images do
 			if images[i]:sub(1,1) ~= "." then
 				local sp = CCSprite(oEditor.input..file.."/"..images[i])
-				sp.texture.antiAlias = false
-				sp.blendFunc = blendFunc
-				sp.anchor = oVec2.zero
-				local block =
-				{
-					w = sp.contentSize.width+4,
-					h = sp.contentSize.height+4,
-					sp = sp,
-					name = images[i]:sub(1,images[i]:find("%.")-1)
-				}
-				table.insert(blocks,block)
+				if sp then
+					sp.texture.antiAlias = false
+					sp.blendFunc = blendFunc
+					sp.anchor = oVec2.zero
+					local block =
+					{
+						w = sp.contentSize.width+4,
+						h = sp.contentSize.height+4,
+						sp = sp,
+						name = images[i]:sub(1,images[i]:find("%.")-1)
+					}
+					table.insert(blocks,block)
+				end
 			end
 		end
 		CCImage.isPngAlphaPremultiplied = true

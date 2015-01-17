@@ -188,8 +188,9 @@ local oEvent_args = {}
 local oEvent_send = oEvent.send
 oEvent.send = function(self,name,args)
 	local argsTable = oEvent_args[name] or {}
-	argsTable.n = (argsTable.n or 0)+1
-	table_insert(argsTable,args)
+	local n = (argsTable.n or 0)+1
+	argsTable.n = n
+	argsTable[n] = args
 	oEvent_args[name] = argsTable
 	oEvent_send(self,name)
 	table_remove(argsTable,argsTable.n)

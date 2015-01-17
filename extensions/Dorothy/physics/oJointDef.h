@@ -18,6 +18,10 @@ class oJoint;
 class oJointDef : public CCObject
 {
 public:
+	oVec2 center;
+	oVec2 position;
+	float angle;
+	oJointDef();
 	static oJointDef* distance(
 		bool collision,
 		const string& bodyA,
@@ -100,6 +104,9 @@ public:
 		float frequency = 2.0f,
 		float damping = 0.7f);
 	virtual oJoint* toJoint(CCDictionary* itemDict) = 0;
+protected:
+	oVec2 r(const oVec2& target);
+	oVec2 t(const oVec2& target);
 	CC_LUA_TYPE(oJointDef)
 };
 

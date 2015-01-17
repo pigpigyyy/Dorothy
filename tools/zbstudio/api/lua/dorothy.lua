@@ -6260,6 +6260,17 @@ local Dorothy =
 	{
 		childs =
 		{
+			position =
+			{
+				description = "[oVec2]",
+				typeName = "oVec2",
+				type = "value"
+			},
+			angle =
+			{
+				description = "[float]",
+				type = "value"
+			},
 			distance =
 			{
 				args = "(collision: bool, bodyA: oBody, bodyB: oBody, anchorA: oVec2, anchorB: oVec2, frequency: float = 0, damping: float = 0)",

@@ -30,6 +30,10 @@ local oVec2 = require("oVec2")
 local oJoint = require("oJoint")
 local oBodyDef = require("oBodyDef")
 local oJointDef = require("oJointDef")
+local oCache = require("oCache")
+local type = tolua.type
+
+local bodyCache = CCDictionary()
 
 local loadFuncs = nil
 local function loadData(data,item)
@@ -38,28 +42,63 @@ local function loadData(data,item)
 end
 
 local function load(_,filename)
-	local bodyData = dofile(filename)
-	local itemDict = CCDictionary()
-	for _,data in ipairs(bodyData) do
-		loadData(data,itemDict)
+	local itemDict = bodyCache[filename]
+	if not itemDict then
+		local bodyData = dofile(filename)
+		itemDict = CCDictionary()
+		for _,data in ipairs(bodyData) do
+			loadData(data,itemDict)
+		end
+		bodyCache[filename] = itemDict
 	end
 	return itemDict
 end
 
-local function create(_,itemDict,world,pos)
+local function unload(_,filename)
+	if filename then
+		bodyCache[filename] = nil
+	else
+		bodyCache:clear()
+	end
+end
+
+local oCache_clear = oCache.clear
+oCache.clear = function(self)
+	oCache_clear(self)
+	bodyCache:clear()
+end
+oCache.Body = {load=load,unload=unload}
+
+local function create(itemDict,world,pos,angle)
 	local items = CCDictionary()
 	local node = CCNode()
 	node.data = items
-	local firstBodyPos = nil
+	local center = nil
 	local keys = itemDict.keys
 	for i = 1,#keys do
 		local key = keys[i]
 		local itemDef = itemDict[key]
-		if tolua.type(itemDef) == "oBodyDef" then
-			local body = oBody(itemDef,world,pos)
+		if type(itemDef) == "oBodyDef" then
+			local newPos = pos
+			if not center then
+				center = itemDef.position
+			elseif angle ~= 0 then
+				local oldPos = itemDef.position
+				newPos = oldPos - center
+				local realAngle = -math.rad(angle) + math.atan2(newPos.y, newPos.x)
+				local length = newPos.length
+				newPos = oVec2(length*math.cos(realAngle), length*math.sin(realAngle))
+				newPos = newPos + pos - oldPos
+			end
+			local body = oBody(itemDef,world,newPos,angle)
 			items[key] = body
 			node:addChild(body)
 		else
+			if center then
+				itemDef.center = center
+				itemDef.position = pos
+				itemDef.angle = angle
+			end
 			local joint = oJoint(itemDef,items)
 			if joint then
 				items[key] = joint
@@ -67,6 +106,19 @@ local function create(_,itemDict,world,pos)
 		end
 	end
 	return node
+end
+
+local oBody_create = oBody[2]
+oBody[2] = function(self,data,world,pos,angle)
+	pos = pos or oVec2.zero
+	angle = angle or 0
+	if type(data) == "oBodyDef" then
+		return oBody_create(self,data,world,pos,angle)
+	elseif type(data) == "string" then
+		return create(load(nil,data),world,pos,angle)
+	else
+		return create(data,world,pos,angle)
+	end
 end
 
 loadFuncs =
@@ -495,4 +547,4 @@ Wheel.Damping)..[[
 return {create=create,load=load}
 ]]
 
-oContent:saveToFile(oContent.writablePath.."oBodyLoader.lua",loaderCodes)
+oContent:saveToFile(oContent.writablePath.."oBodyEx.lua",loaderCodes)

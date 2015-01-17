@@ -1,5 +1,8 @@
 class oJointDef : public CCObject
 {
+	oVec2 center;
+	oVec2 position;
+	float angle;
 	static oJointDef* distance(
 		bool collision,
 		char* bodyA,

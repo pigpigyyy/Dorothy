@@ -76,12 +76,11 @@ static int cclua_traceback(lua_State* L)
 static int cclua_loadfile(lua_State* L)
 {
 	std::string filename(luaL_checkstring(L, 1));
-	size_t pos = filename.rfind(".lua");
-	if(pos != std::string::npos)
+	size_t pos = filename.rfind(".");
+	if(pos == std::string::npos)
 	{
-		filename = filename.substr(0, pos);
+		filename.append(".lua");
 	}
-	filename.append(".lua");
 
 	unsigned long codeBufferSize = 0;
 	unsigned char* codeBuffer = CCFileUtils::sharedFileUtils()->getFileData(filename.c_str(), "rb", &codeBufferSize);

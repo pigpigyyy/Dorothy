@@ -491,12 +491,7 @@ local function oSettingPanel()
 	end)
 	local currentItem = nil
 	self.data.editListener = oListener("settingPanel.edit",function(item)
-		if item == nil then
-			if currentItem then
-				currentItem.selected = false
-			end
-			currentItem = nil
-		elseif item.selected then
+		if not item or item.selected then
 			if currentItem then
 				currentItem.selected = false
 			end

@@ -1,7 +1,7 @@
 local CCScene = require("CCScene")
 local oPlatformWorld = require("oPlatformWorld")
 local oVec2 = require("oVec2")
-local oBodyLoader = require("oBodyLoader")
+local oBody = require("oBodyEx")
 local CCDirector = require("CCDirector")
 local CCRect = require("CCRect")
 
@@ -14,8 +14,7 @@ world:setShouldContact(0,0,true)
 world.showDebug = true
 scene:addChild(world)
 
-local carDef = oBodyLoader:load("Test/Case/BodyData.lua")
-local car = oBodyLoader:create(carDef,world,oVec2.zero)
+local car = oBody("BodyEditor/Body/Output/car.body",world)
 car.data.wheel.enabled = true
 world:addChild(car)
 world.camera:follow(car.children[1])

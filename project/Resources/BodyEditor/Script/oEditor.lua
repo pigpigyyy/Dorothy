@@ -44,13 +44,6 @@ oEditor.round = function(self,val)
 	end
 end
 
-if not oContent:exist(oEditor.input) then
-	oContent:mkdir(oEditor.input)
-end
-if not oContent:exist(oEditor.output) then
-	oContent:mkdir(oEditor.output)
-end
-
 local worldScheduler = CCScheduler()
 worldScheduler.timeScale = 0
 oEditor.worldScheduler = worldScheduler
@@ -787,7 +780,7 @@ local defaultShapeData =
 		{"BodyA",""}, -- 4
 		{"BodyB",""}, -- 5
 		{"WorldPos",PointZero}, -- 6
-		{"Axis",Point(100,0)}, -- 7
+		{"Axis",Point(1,0)}, -- 7
 		{"MaxMotorTorque",0}, -- 8
 		{"MotorSpeed",0}, -- 9
 		{"Frequency",2}, -- 10
@@ -1107,6 +1100,7 @@ return {]]
 		str = str..itemToString(data)
 	end
 	str = str.."}"
+	str = str:gsub("%.00","")
 	oContent:saveToFile(oEditor.output..filename,str)
 end
 

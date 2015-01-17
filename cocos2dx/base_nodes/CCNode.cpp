@@ -307,7 +307,6 @@ CCCamera* CCNode::getCamera()
 	return m_pCamera;
 }
 
-
 /// grid getter
 CCGridBase* CCNode::getGrid()
 {

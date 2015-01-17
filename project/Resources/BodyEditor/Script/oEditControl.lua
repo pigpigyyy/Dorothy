@@ -767,11 +767,11 @@ local function oEditControl()
 	end)
 	jointChooser.visible = false
 	
-	editControl.showJointChooser = function(self,gear,name,callback)
+	editControl.showJointChooser = function(self,gearName,callback)
 		editControl:hide()
 		jointChooser.visible = true
 		jointSelected = callback
-		oEvent:send("viewPanel.selectJoint",gear)
+		oEvent:send("viewPanel.selectJoint",gearName)
 	end
 	editControl.hideJointChooser = function(self)
 		if not jointChooser.visible then return end
@@ -833,7 +833,7 @@ local function oEditControl()
 					local body = oEditor:getItem(data)
 					if body then
 						body.position = pos
-						oEvent:send("editor.reset",data:get("Name"))
+						oEvent:send("editor.reset",{name=data:get("Name"),type="Body"})
 					end
 					data:set("Position",pos)
 				end)
@@ -850,7 +850,7 @@ local function oEditControl()
 						local body = oEditor:getItem(data)
 						if body then
 							body.rotation = rot
-							oEvent:send("editor.reset",data:get("Name"))
+							oEvent:send("editor.reset",{name=data:get("Name"),type="Body"})
 						end
 					end
 				end)
@@ -956,7 +956,7 @@ local function oEditControl()
 				end)
 			elseif name == "JointA" or name == "JointB" then
 				local theOtherJoint = data:get(name == "JointA" and "JointB" or "JointA")
-				editControl:showJointChooser(data:get("Name"),data:get(name),function(jointName)
+				editControl:showJointChooser(data:get("Name"),function(jointName)
 					if theOtherJoint == jointName then
 						return
 					end
@@ -994,8 +994,7 @@ local function oEditControl()
 					oEditor:resetItem(data)
 				end,oEditor:getItem(data:get("BodyA")))
 			elseif name == "Axis" then
-				local bodyA = oEditor:getItem(data:get("BodyA"))
-				editControl:showAxisEditor(data:get(name), bodyA and bodyA.position or oVec2.zero,function(axis)
+				editControl:showAxisEditor(data:get(name), data:get("WorldPos"),function(axis)
 					item.value = n2str(axis.x)..","..n2str(axis.y)
 					data:set(name,axis)
 					oEditor:resetItem(data)

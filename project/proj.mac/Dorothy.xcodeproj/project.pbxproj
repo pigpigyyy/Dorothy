@@ -136,8 +136,8 @@
 		3C7AA4D51A47291F007836D2 /* miku.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4CC1A47291F007836D2 /* miku.lua */; };
 		3C7AA4D61A47291F007836D2 /* Test in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4CD1A47291F007836D2 /* Test */; };
 		3C90CD181A640F9A00C29402 /* oJointDef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C90CD161A640F9A00C29402 /* oJointDef.cpp */; };
-		3C90CD1F1A64483300C29402 /* oBodyLoader.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C90CD1E1A64483300C29402 /* oBodyLoader.lua */; };
 		3C90CD241A65847400C29402 /* oAsync.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C90CD221A65847400C29402 /* oAsync.cpp */; };
+		3CD5BA3E1A6B029700567765 /* oBodyEx.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3CD5BA3C1A6B029700567765 /* oBodyEx.lua */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -421,10 +421,10 @@
 		3C7AA4CD1A47291F007836D2 /* Test */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Test; sourceTree = "<group>"; };
 		3C90CD161A640F9A00C29402 /* oJointDef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oJointDef.cpp; sourceTree = "<group>"; };
 		3C90CD171A640F9A00C29402 /* oJointDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oJointDef.h; sourceTree = "<group>"; };
-		3C90CD1E1A64483300C29402 /* oBodyLoader.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = oBodyLoader.lua; sourceTree = "<group>"; };
 		3C90CD221A65847400C29402 /* oAsync.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oAsync.cpp; sourceTree = "<group>"; };
 		3C90CD231A65847400C29402 /* oAsync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oAsync.h; sourceTree = "<group>"; };
 		3CA6A7571A60C1E7007C4503 /* mkdir.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mkdir.h; sourceTree = "<group>"; };
+		3CD5BA3C1A6B029700567765 /* oBodyEx.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = oBodyEx.lua; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -986,8 +986,8 @@
 				3C7AA4C91A47291F007836D2 /* class.lua */,
 				3C7AA4CA1A47291F007836D2 /* girl.lua */,
 				3C7AA4CB1A47291F007836D2 /* main.lua */,
-				3C90CD1E1A64483300C29402 /* oBodyLoader.lua */,
 				3C7AA4CC1A47291F007836D2 /* miku.lua */,
+				3CD5BA3C1A6B029700567765 /* oBodyEx.lua */,
 				3C7AA4CD1A47291F007836D2 /* Test */,
 			);
 			name = Resources;
@@ -1076,10 +1076,10 @@
 				3C7AA4D01A47291F007836D2 /* BodyEditor in Resources */,
 				3C7AA4D41A47291F007836D2 /* main.lua in Resources */,
 				3C7AA4D51A47291F007836D2 /* miku.lua in Resources */,
+				3CD5BA3E1A6B029700567765 /* oBodyEx.lua in Resources */,
 				3C504D621A23739B000C79D6 /* MainMenu.xib in Resources */,
 				3C7AA4D31A47291F007836D2 /* girl.lua in Resources */,
 				3C7AA4D21A47291F007836D2 /* class.lua in Resources */,
-				3C90CD1F1A64483300C29402 /* oBodyLoader.lua in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

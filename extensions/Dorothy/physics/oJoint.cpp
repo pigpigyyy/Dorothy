@@ -436,6 +436,7 @@ bool oMotorJoint::isEnabled() const
 void oMotorJoint::setSpeed(float var)
 {
 	if (!_joint) return;
+	var = -CC_DEGREES_TO_RADIANS(var);
 	switch (_joint->GetType())
 	{
 	case e_prismaticJoint:
@@ -454,18 +455,24 @@ void oMotorJoint::setSpeed(float var)
 float oMotorJoint::getSpeed() const
 {
 	if (!_joint) return 0.0f;
+	float speed = 0.0f;
 	switch (_joint->GetType())
 	{
 	case e_prismaticJoint:
-		return ((b2PrismaticJoint*)_joint)->GetMotorSpeed();
+		speed = ((b2PrismaticJoint*)_joint)->GetMotorSpeed();
 	case e_revoluteJoint:
-		return ((b2RevoluteJoint*)_joint)->GetMotorSpeed();
+		speed = ((b2RevoluteJoint*)_joint)->GetMotorSpeed();
 	case e_wheelJoint:
-		return ((b2WheelJoint*)_joint)->GetMotorSpeed();
+		speed = ((b2WheelJoint*)_joint)->GetMotorSpeed();
     default:
         break;
 	}
-	return 0.0f;
+	return -CC_RADIANS_TO_DEGREES(speed);
+}
+
+void oMotorJoint::reversePower()
+{
+	oMotorJoint::setSpeed(-oMotorJoint::getSpeed());
 }
 
 NS_DOROTHY_END

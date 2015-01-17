@@ -53,8 +53,8 @@ local function oFileChooser()
 	local files = {}
 	for i = 1,#entries do
 		local name = nil
-		if entries[i]:sub(-4,-1) == ".lua" then
-			name = entries[i]:sub(1,-5)
+		if entries[i]:sub(-5,-1) == ".body" then
+			name = entries[i]:sub(1,-6)
 		end
 		if name then
 			table.insert(files,name)
@@ -77,7 +77,7 @@ local function oFileChooser()
 	yStart = y-title.contentSize.height-(oEditor.currentFile and -10 or 20)
 
 	if oEditor.currentFile then
-		title = CCLabelTTF("(Current: "..oEditor.currentFile:sub(1,-5)..")","Arial",16)
+		title = CCLabelTTF("(Current: "..oEditor.currentFile:sub(1,-6)..")","Arial",16)
 		title.texture.antiAlias = false
 		title.color = ccColor3(0x00ffff)
 		title.anchor = oVec2(0.5,1)
@@ -107,7 +107,7 @@ local function oFileChooser()
 				end
 				panel:hide()
 			end)
-		button.file = files[i]..".lua"
+		button.file = files[i]..".body"
 		--button.color = ccColor3(0xffffff)
 		button.enabled = false
 		button.opacity = 0
@@ -137,7 +137,7 @@ local function oFileChooser()
 			panel:hide()
 			oEditor:addChild(oBox("New Body",function(name)
 				resetEditor()
-				oEditor.currentFile = name..".lua"
+				oEditor.currentFile = name..".body"
 				oEditor:clearData()
 				oEditor:dumpData(oEditor.currentFile)
 			end,true),oEditor.topMost)

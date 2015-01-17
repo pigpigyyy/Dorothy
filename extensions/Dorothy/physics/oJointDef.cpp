@@ -12,6 +12,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 NS_DOROTHY_BEGIN
 
+oJointDef::oJointDef(): angle(0) { }
+
 oJointDef* oJointDef::distance(
 	bool collision,
 	const string& bodyA,
@@ -224,6 +226,23 @@ oJointDef* oJointDef::wheel(
 	return def;
 }
 
+oVec2 oJointDef::r(const oVec2& target)
+{
+	if (angle)
+	{
+		float realAngle = -CC_DEGREES_TO_RADIANS(angle) + atan2f(target.y, target.x);
+		float length = target.length();
+		return oVec2(length * cosf(realAngle), length * sinf(realAngle));
+	}
+	return target;
+}
+
+oVec2 oJointDef::t(const oVec2& target)
+{
+	oVec2 pos = target - center;
+	return r(pos) + position;
+}
+
 oJoint* oDistanceDef::toJoint(CCDictionary* itemDict)
 {
 	oBody* bodyA = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyA.c_str()));
@@ -241,7 +260,7 @@ oJoint* oFrictionDef::toJoint(CCDictionary* itemDict)
 	oBody* bodyB = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyB.c_str()));
 	if (bodyA && bodyB)
 	{
-		return oJoint::friction(collision, bodyA, bodyB, worldPos, maxForce, maxTorque);
+		return oJoint::friction(collision, bodyA, bodyB, t(worldPos), maxForce, maxTorque);
 	}
 	return nullptr;
 }
@@ -274,7 +293,7 @@ oJoint* oPrismaticDef::toJoint(CCDictionary* itemDict)
 	oBody* bodyB = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyB.c_str()));
 	if (bodyA && bodyB)
 	{
-		return oJoint::prismatic(collision, bodyA, bodyB, worldPos, axis, lowerTranslation, upperTranslation, maxMotorForce, motorSpeed);
+		return oJoint::prismatic(collision, bodyA, bodyB, t(worldPos), r(axis), lowerTranslation, upperTranslation, maxMotorForce, motorSpeed);
 	}
 	return nullptr;
 }
@@ -285,7 +304,7 @@ oJoint* oPulleyDef::toJoint(CCDictionary* itemDict)
 	oBody* bodyB = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyB.c_str()));
 	if (bodyA && bodyB)
 	{
-		return oJoint::pulley(collision, bodyA, bodyB, anchorA, anchorB, groundAnchorA, groundAnchorB, ratio);
+		return oJoint::pulley(collision, bodyA, bodyB, anchorA, anchorB, t(groundAnchorA), t(groundAnchorB), ratio);
 	}
 	return nullptr;
 }
@@ -296,7 +315,7 @@ oJoint* oRevoluteDef::toJoint(CCDictionary* itemDict)
 	oBody* bodyB = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyB.c_str()));
 	if (bodyA && bodyB)
 	{
-		return oJoint::revolute(collision, bodyA, bodyB, worldPos, lowerAngle, upperAngle, maxMotorTorque, motorSpeed);
+		return oJoint::revolute(collision, bodyA, bodyB, t(worldPos), lowerAngle + angle, upperAngle + angle, maxMotorTorque, motorSpeed);
 	}
 	return nullptr;
 }
@@ -318,7 +337,7 @@ oJoint* oWeldDef::toJoint(CCDictionary* itemDict)
 	oBody* bodyB = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyB.c_str()));
 	if (bodyA && bodyB)
 	{
-		return oJoint::weld(collision, bodyA, bodyB, worldPos, frequency, damping);
+		return oJoint::weld(collision, bodyA, bodyB, t(worldPos), frequency, damping);
 	}
 	return nullptr;
 }
@@ -329,7 +348,7 @@ oJoint* oWheelDef::toJoint(CCDictionary* itemDict)
 	oBody* bodyB = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyB.c_str()));
 	if (bodyA && bodyB)
 	{
-		return oJoint::wheel(collision, bodyA, bodyB, worldPos, axis, maxMotorTorque, motorSpeed, frequency, damping);
+		return oJoint::wheel(collision, bodyA, bodyB, t(worldPos), r(axis), maxMotorTorque, motorSpeed, frequency, damping);
 	}
 	return nullptr;
 }
