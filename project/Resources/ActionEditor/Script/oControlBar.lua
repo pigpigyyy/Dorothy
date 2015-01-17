@@ -14,6 +14,7 @@ local oListener = require("oListener")
 local CCTouch = require("CCTouch")
 local CCRect = require("CCRect")
 local oEditor = require("oEditor").oEditor
+local oSd = require("oEditor").oSd
 local oAd = require("oEditor").oAd
 local oKd = require("oEditor").oKd
 local CCDictionary = require("CCDictionary")
@@ -146,7 +147,7 @@ local function oControlBar()
 			elseif animationDef[oAd.type] == 2 then
 				--TODO Frame animation
 			end
-		else
+		elseif oEditor.spriteData and oEditor.spriteData[oSd.parent] then
 			oEditor.controlBar:clearCursors()
 			oEditor.settingPanel:updateValues(nil)
 		end

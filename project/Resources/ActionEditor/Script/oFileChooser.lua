@@ -101,18 +101,20 @@ local function oFileChooser(withCancel)
 		CCImage.isPngAlphaPremultiplied = false
 		local blendFunc = ccBlendFunc(ccBlendFunc.One,ccBlendFunc.Zero)
 		for i = 1,#images do
-			local sp = CCSprite(oEditor.input..file.."/"..images[i])
-			sp.texture.antiAlias = false
-			sp.blendFunc = blendFunc
-			sp.anchor = oVec2.zero
-			local block =
-			{
-				w = sp.contentSize.width+4,
-				h = sp.contentSize.height+4,
-				sp = sp,
-				name = images[i]:sub(1,images[i]:find("%.")-1)
-			}
-			table.insert(blocks,block)
+			if images[i]:sub(1,1) ~= "." then
+				local sp = CCSprite(oEditor.input..file.."/"..images[i])
+				sp.texture.antiAlias = false
+				sp.blendFunc = blendFunc
+				sp.anchor = oVec2.zero
+				local block =
+				{
+					w = sp.contentSize.width+4,
+					h = sp.contentSize.height+4,
+					sp = sp,
+					name = images[i]:sub(1,images[i]:find("%.")-1)
+				}
+				table.insert(blocks,block)
+			end
 		end
 		CCImage.isPngAlphaPremultiplied = true
 
@@ -155,7 +157,7 @@ local function oFileChooser(withCancel)
 		end
 
 		local target = CCRenderTarget(w,h)
-		target:beginPaint(ccColor4(255,255,255,0))
+		target:beginPaint(ccColor4(0))
 		target:draw(node)
 		target:endPaint()
 		target:save(oEditor.output..file..".png",CCImage.PNG)
@@ -298,6 +300,7 @@ local function oFileChooser(withCancel)
 			end
 			oEditor.dirty = true
 			local model = oEditor.viewArea:getModel()
+			oEditor.settingPanel:resetItems()
 			oEditor.viewPanel:clearSelection()
 			oEditor.viewPanel:updateImages(oEditor.data,model)
 			oEditor.viewArea:setModelSize(oEditor.data[oSd.size])

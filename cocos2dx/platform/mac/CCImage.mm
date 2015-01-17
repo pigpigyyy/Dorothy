@@ -41,6 +41,7 @@ typedef struct
     bool        hasAlpha;
     bool        isPremultipliedAlpha;
     unsigned char*  data;
+	cocos2d::CCImage::EImageFormat fmt;
 } tImageInfo;
 
 static unsigned int nextPOT(unsigned int x)
@@ -288,22 +289,35 @@ static bool _initWithFile(const char* path, tImageInfo *pImageinfo)
 }
 
 // TODO: rename _initWithData, it also makes a draw call.
-static bool _initWithData(void * pBuffer, int length, tImageInfo *pImageinfo, double scaleX, double scaleY)
+static bool _initWithData(void* pBuffer, int length, tImageInfo* pImageinfo, double scaleX, double scaleY)
 {
     bool ret = false;
-    
     if (pBuffer) 
     {
         CGImageRef CGImage;
-        NSData *data;
-        
-        data = [NSData dataWithBytes:pBuffer length:length];
-		CGImageSourceRef source = CGImageSourceCreateWithData((CFDataRef)data, NULL);
-        CGImage = CGImageSourceCreateImageAtIndex(source, 0, NULL);
-        
+		if (pImageinfo->fmt == cocos2d::CCImage::kFmtRawData)
+		{
+			CGImage = [[[NSBitmapImageRep alloc] initWithBitmapDataPlanes:
+				(unsigned char**)&pBuffer
+				pixelsWide: pImageinfo->width
+				pixelsHigh: pImageinfo->height
+				bitsPerSample: pImageinfo->bitsPerComponent
+				samplesPerPixel: 4
+				hasAlpha: true
+				isPlanar: false
+				colorSpaceName: NSDeviceRGBColorSpace
+				bytesPerRow: 0
+				bitsPerPixel: 0] CGImage];
+		}
+		else
+		{
+			NSData* data = [NSData dataWithBytes:pBuffer length:length];
+			CGImageSourceRef source = CGImageSourceCreateWithData((CFDataRef)data, NULL);   
+			CGImage = CGImageSourceCreateImageAtIndex(source, 0, NULL);
+        	if (source) CFRelease(source);
+		}
         ret = _initWithImage(CGImage, pImageinfo, scaleX, scaleY);
         if (CGImage) CFRelease(CGImage);
-        if (source) CFRelease(source);
     }
     return ret;
 }
@@ -816,7 +830,16 @@ bool CCImage::initWithImageData(void * pData,
                            int nBitsPerComponent)
 {
     bool bRet = false;
-    tImageInfo info = {0};
+    tImageInfo info =
+	{
+		(unsigned int)nHeight,
+		(unsigned int)nWidth,
+		nBitsPerComponent,
+		true,
+		false,
+		NULL,
+		eFmt,
+	};
     do 
     {
         CC_BREAK_IF(! pData || nDataLen <= 0);
@@ -880,9 +903,92 @@ bool CCImage::initWithString(
     return true;
 }
 
-bool CCImage::saveToFile(const char *pszFilePath, bool bIsToRGB)
+bool CCImage::saveToFile(const char* pszFilePath, bool bIsToRGB)
 {
-    return false;
+    bool saveToPNG = false;
+    bool needToCopyPixels = false;
+    std::string filePath(pszFilePath);
+    if (std::string::npos != filePath.find(".png"))
+    {
+        saveToPNG = true;
+    }
+        
+    int bitsPerComponent = 8;            
+    int bitsPerPixel = m_bHasAlpha ? 32 : 24;
+    if ((! saveToPNG) || bIsToRGB)
+    {
+        bitsPerPixel = 24;
+    }            
+    
+    int bytesPerRow = (bitsPerPixel/8) * m_nWidth;
+    int myDataLength = bytesPerRow * m_nHeight;
+    
+    unsigned char *pixels = m_pData;
+    
+    // The data has alpha channel, and want to save it with an RGB png file,
+    // or want to save as jpg,  remove the alpha channel.
+    if ((saveToPNG && m_bHasAlpha && bIsToRGB)
+       || (! saveToPNG))
+    {
+        pixels = new unsigned char[myDataLength];
+        
+        for (int i = 0; i < m_nHeight; ++i)
+        {
+            for (int j = 0; j < m_nWidth; ++j)
+            {
+                pixels[(i * m_nWidth + j) * 3] = m_pData[(i * m_nWidth + j) * 4];
+                pixels[(i * m_nWidth + j) * 3 + 1] = m_pData[(i * m_nWidth + j) * 4 + 1];
+                pixels[(i * m_nWidth + j) * 3 + 2] = m_pData[(i * m_nWidth + j) * 4 + 2];
+            }
+        }
+        
+        needToCopyPixels = true;
+    }
+        
+    // make data provider with data.
+    CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault;
+    if (saveToPNG && m_bHasAlpha && (! bIsToRGB))
+    {
+        bitmapInfo |= kCGImageAlphaPremultipliedLast;
+    }
+    CGDataProviderRef provider = CGDataProviderCreateWithData(NULL, pixels, myDataLength, NULL);
+    CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
+    CGImageRef iref = CGImageCreate(m_nWidth, m_nHeight,
+							bitsPerComponent, bitsPerPixel, bytesPerRow,
+							colorSpaceRef, bitmapInfo, provider,
+							NULL, false,
+							kCGRenderingIntentDefault);
+	
+	NSImage* image = [[NSImage alloc] initWithCGImage:iref size:NSSize{(CGFloat)m_nWidth,(CGFloat)m_nHeight}];
+
+    CGImageRelease(iref);    
+    CGColorSpaceRelease(colorSpaceRef);
+    CGDataProviderRelease(provider);
+	
+	CGImageRef cgRef = [image CGImageForProposedRect:NULL context:nil hints:nil];
+	NSBitmapImageRep* newRep = [[NSBitmapImageRep alloc] initWithCGImage:cgRef];
+	[newRep setSize:[image size]];
+
+    NSData *data;
+    if (saveToPNG)
+    {
+   		data = [newRep representationUsingType:NSPNGFileType properties:nil];
+    }
+    else
+    {
+   		data = [newRep representationUsingType:NSJPEGFileType properties:nil];
+    }
+
+    [data writeToFile:[NSString stringWithUTF8String:pszFilePath] atomically:YES];
+	[newRep autorelease];
+    [image release];
+        
+    if (needToCopyPixels)
+    {
+        delete [] pixels;
+    }
+    
+    return true;
 }
 
 CCImage::EImageFormat CCImage::computeImageFormatType(const std::string& filename)
