@@ -1,9 +1,8 @@
 local oButton = require("ActionEditor/Script/oButton")
 local oRoutine = require("oRoutine")
-local wait = require("oRoutine").wait
-local once = require("oRoutine").once
---local loop = require("oRoutine").loop
-local seconds = require("oRoutine").seconds
+local wait = require("wait")
+local once = require("once")
+local seconds = require("seconds")
 
 local oPlatformWorld = require("oPlatformWorld")
 local oAI = require("oAI")
@@ -84,8 +83,8 @@ menu:addChild(btn)
 
 btn = oButton("Attack",16,60,nil,150,10,
 	function()
-		--unit:doIt(oAction.MeleeAttack)
-		oRoutine(once(function()
+		unit:doIt(oAction.MeleeAttack)
+		--[[oRoutine(once(function()
 			print("Begin loading")
 			wait(seconds(3))
 			oCache:loadAsync({
@@ -100,6 +99,7 @@ btn = oButton("Attack",16,60,nil,150,10,
 			wait(seconds(3))
 			print("End loading")
 		end))
+		--]]
 	end)
 btn.anchor = oVec2.zero
 menu:addChild(btn)

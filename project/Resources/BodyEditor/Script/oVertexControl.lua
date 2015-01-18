@@ -14,9 +14,8 @@ local oScale = require("oScale")
 local oEase = require("oEase")
 local CCLabelTTF = require("CCLabelTTF")
 local oListener = require("oListener")
-local oRoutine = require("oRoutine")
-local once = oRoutine.once
-local cycle = oRoutine.cycle
+local once = require("once")
+local cycle = require("cycle")
 local CCSequence = require("CCSequence")
 local CCCall = require("CCCall")
 

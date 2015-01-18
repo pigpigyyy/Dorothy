@@ -4,9 +4,9 @@ local CCDrawNode = require("CCDrawNode")
 local ccColor4 = require("ccColor4")
 local CCTouch = require("CCTouch")
 local oEditor = require("oEditor")
-local once = require("oRoutine").once
-local wait = require("oRoutine").wait
-local seconds = require("oRoutine").seconds
+local once = require("once")
+local wait = require("wait")
+local seconds = require("seconds")
 local oLine = require("oLine")
 
 local function oPointControl()

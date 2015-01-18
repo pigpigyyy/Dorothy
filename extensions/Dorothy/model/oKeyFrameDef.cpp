@@ -44,6 +44,10 @@ string oKeyFrameDef::toXml()
 	{
 		stream << ' ' << char(oModelXml::Duration) << "=\"" << (int)(duration*60.0f+0.5f) << '\"';
 	}
+	if (!visible)
+	{
+		stream << ' ' << char(oModelXml::Visible) << "=\"0\"";
+	}
 	if (x != 0.0f || y != 0.0f)
 	{
 		stream << ' ' << char(oModelXml::Position) << "=\"" << s(x);

@@ -967,7 +967,7 @@ oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableI
 	auto lua_getBool = [&](int index)->bool
 	{
 		lua_rawgeti(L, -1, index);
-		bool v =(lua_toboolean(L, -1) != 0);
+		bool v = (lua_toboolean(L, -1) != 0);
 		lua_pop(L, 1);
 		return v;
 	};

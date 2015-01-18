@@ -951,14 +951,12 @@ local function oViewArea()
 	visibleEditor.position = oVec2(winSize.width-230,250)
 	local vButton = oButton("Show",16,50,50,0,0,
 		function(item)
-			editTarget.visible = not editTarget.visible
-			item.label.text = editTarget.visible and "Show" or "Hide"
+			local visible = oEditor.animationData[oEditor.keyIndex][oKd.visible]
+			visible = not visible
+			item.label.text = visible and "Show" or "Hide"
 			item.label.texture.antiAlias = false
-			oEditor.settingPanel.items.Visible:setValue(editTarget.visible)
-			if oEditor.state == oEditor.EDIT_ANIMATION then
-				oEditor.animationData[oEditor.keyIndex][oKd.visible] = editTarget.visible
-			end
-
+			oEditor.settingPanel.items.Visible:setValue(visible)
+			oEditor.animationData[oEditor.keyIndex][oKd.visible] = visible
 			oEditor.editMenu:markEditButton(true)
 			valueChanged = true
 		end)
@@ -971,7 +969,8 @@ local function oViewArea()
 		if editState == EDIT_NONE then
 			editTarget = oEditor.sprite
 			visibleEditor.visible = true
-			vButton.label.text = editTarget.visible and "Show" or "Hide"
+			local visible = oEditor.animationData[oEditor.keyIndex][oKd.visible]
+			vButton.label.text = visible and "Show" or "Hide"
 			vButton.label.texture.antiAlias = false
 			editState = EDIT_VISIBLE
 		end

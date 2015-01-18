@@ -45,8 +45,7 @@ local function oFileChooser()
 		oEvent:send("settingPanel.toState",nil)
 		oEvent:send("settingPanel.enable",true)
 		oEvent:send("viewPanel.choose",nil)
-		oEditor.isPlaying = false
-		oEditor.worldScheduler.timeScale = 0
+		oEvent:send("editor.isPlaying",false)
 	end
 
 	local entries = oContent:getEntries(oEditor.output,false)

@@ -14,8 +14,7 @@ local CCLabelTTF = require("CCLabelTTF")
 local oPos = require("oPos")
 local CCSequence = require("CCSequence")
 local CCCall = require("CCCall")
-local oRoutine = require("oRoutine")
-local once = oRoutine.once
+local once = require("once")
 local oEditor = require("oEditor")
 
 local function oVRuler()

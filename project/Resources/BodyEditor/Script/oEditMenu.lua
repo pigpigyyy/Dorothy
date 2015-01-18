@@ -136,32 +136,7 @@ local function oEditMenu()
 			oEvent:send("editControl.hide")
 			oEvent:send("settingPanel.edit",nil)
 			oEvent:send("settingPanel.enable",not oEditor.isPlaying)
-			if oEditor.isPlaying then
-				local motorButtons = {}
-				local i = 0
-				local itemNum = math.floor((winSize.width-320-70)/100)
-				for name,item in pairs(oEditor.items) do
-					if tolua.type(item) == "oMotorJoint" then
-						local x = winSize.width-370-(i%itemNum)*110
-						local y = winSize.height-35-60*math.floor(i/itemNum)
-						local jointButton = oButton(name,16,100,50,x,y,function(btn)
-							item.enabled = not item.enabled
-							btn.color = item.enabled and ccColor3(0xff0080) or ccColor3(0x00ffff)
-						end)
-						jointButton.opacity = 0
-						jointButton:runAction(CCSequence({CCDelay(i*0.1),oOpacity(0.3,1)}))
-						table.insert(motorButtons,jointButton)
-						menu:addChild(jointButton)
-						i = i + 1
-					end
-					menu.motorButtons = motorButtons
-				end
-			else
-				for _,btn in ipairs(menu.motorButtons) do
-					menu:removeChild(btn)
-				end
-				menu.motorButtons = nil
-			end
+			oEvent:send("editor.isPlaying",oEditor.isPlaying)
 		end),
 	}
 
@@ -276,6 +251,35 @@ local function oEditMenu()
 		if scale ~= 1 then items.Zoom.mode = 2 end
 		items.Zoom.text = tostring(math.floor(scale*100)).."%"
 	end)
+	items.Play.data = oListener("editor.isPlaying",function(isPlaying)
+		if isPlaying then
+			local motorButtons = {}
+			local i = 0
+			local itemNum = math.floor((winSize.width-320-70)/100)
+			for name,item in pairs(oEditor.items) do
+				if tolua.type(item) == "oMotorJoint" then
+					local x = winSize.width-370-(i%itemNum)*110
+					local y = winSize.height-35-60*math.floor(i/itemNum)
+					local jointButton = oButton(name,16,100,50,x,y,function(btn)
+						item.enabled = not item.enabled
+						btn.color = item.enabled and ccColor3(0xff0080) or ccColor3(0x00ffff)
+					end)
+					jointButton.opacity = 0
+					jointButton:runAction(CCSequence({CCDelay(i*0.1),oOpacity(0.3,1)}))
+					table.insert(motorButtons,jointButton)
+					menu:addChild(jointButton)
+					i = i + 1
+				end
+				menu.motorButtons = motorButtons
+			end
+		elseif menu.motorButtons then
+			for _,btn in ipairs(menu.motorButtons) do
+				menu:removeChild(btn)
+			end
+			menu.motorButtons = nil
+		end
+	end)
+
 	menu.data = CCDictionary()
 	menu.data.createListener = oListener("editMenu.created",function()
 		if lastSelected then

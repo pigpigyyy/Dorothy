@@ -98,11 +98,6 @@ local oRoutine =
 			table_remove(self)
 		end
 	end,
-	wait = wait,
-	once = once,
-	loop = loop,
-	seconds = seconds,
-	cycle = cycle,
 }
 
 setmetatable(oRoutine,
@@ -135,6 +130,11 @@ end
 oRoutine:start()
 
 loaded.oRoutine = oRoutine
+loaded.wait = wait
+loaded.once = once
+loaded.loop = loop
+loaded.seconds = seconds
+loaded.cycle = cycle
 
 local CCArray = loaded.CCArray
 local CCArray_index = CCArray.__index

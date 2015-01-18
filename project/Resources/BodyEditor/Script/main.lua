@@ -19,7 +19,7 @@ local CCDirector = require("CCDirector")
 local CCNode = require("CCNode")
 local oContent = require("oContent")
 local oRoutine = require("oRoutine")
-local once = oRoutine.once
+local once = require("once")
 
 local controls =
 {
@@ -30,7 +30,6 @@ local controls =
 	"oEditMenu",
 	"oSettingPanel",
 	"oViewPanel",
-	"oFileChooser",
 }
 
 oRoutine(once(function()
@@ -60,5 +59,7 @@ oRoutine(once(function()
 	if not oContent:exist(oContent.writablePath.."Body") and oContent:exist("BodyEditor/Body") then
 		oContent:copyAsync(resPath,writePath)
 	end
+	local oFileChooser = require("oFileChooser")
+	oEditor:addChild(oFileChooser(),oEditor.topMost)
 	--dofile("BodyEditor/Script/generateLoader.lua")
 end))

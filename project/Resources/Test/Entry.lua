@@ -7,16 +7,14 @@ local CCSize = require("CCSize")
 local oVec2 = require("oVec2")
 local oOpacity = require("oOpacity")
 local CCScene = require("CCScene")
---local oRoutine = require("oRoutine")
---local once = require("oRoutine").once
---local wait = require("oRoutine").wait
---local seconds = require("oRoutine").seconds
 local CCObject = require("CCObject")
 local cclog = require("cclog")
 local oCache = require("oCache")
 local oAI = require("oAI")
 local oAction = require("oAction")
 local CCKeypad = require("CCKeypad")
+local CCApplication = require("CCApplication")
+local CCTargetPlatform = require("CCTargetPlatform")
 
 local winSize = CCDirector.winSize
 local panel = oSelectionPanel(winSize,true)
@@ -27,20 +25,22 @@ opMenu.contentSize = CCSize(60,60)
 opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
 opMenu.position = oVec2(winSize.width-40,40)
 panel:addChild(opMenu)
-local endButton = oButton("Exit",17,60,false,
-	0,0,
-	function()
-		CCDirector:stop()
-	end)
-endButton.anchor = oVec2.zero
-opMenu:addChild(endButton)
+if CCApplication.targetPlatform ~= CCTargetPlatform.Ipad and CCApplication.targetPlatform ~= CCTargetPlatform.Iphone then
+	local endButton = oButton("Exit",17,60,false,
+		0,0,
+		function()
+			CCDirector:stop()
+		end)
+	endButton.anchor = oVec2.zero
+	opMenu:addChild(endButton)
+end
 
 opMenu = CCMenu()
 opMenu.contentSize = CCSize(60,60)
 opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
 opMenu.position = oVec2(40,40)
 panel:addChild(opMenu)
-endButton = oButton("GC",17,60,false,
+local gcButton = oButton("GC",17,60,false,
 	0,0,
 	function()
 		oCache:clear()
@@ -65,8 +65,8 @@ endButton = oButton("GC",17,60,false,
 		end
 		--]]
 	end)
-endButton.anchor = oVec2.zero
-opMenu:addChild(endButton)
+gcButton.anchor = oVec2.zero
+opMenu:addChild(gcButton)
 
 panel.init = function(self)
 	menu.opacity = 0

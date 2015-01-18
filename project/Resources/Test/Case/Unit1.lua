@@ -1,10 +1,5 @@
 setfenv(Dorothy())
 
-local wait = oRoutine.wait
-local once = oRoutine.once
-local loop = oRoutine.loop
-local seconds = oRoutine.seconds
-local cycle = oRoutine.cycle
 local oTextField = require("ActionEditor/Script/oTextField")
 local oButton = require("ActionEditor/Script/oButton")
 
