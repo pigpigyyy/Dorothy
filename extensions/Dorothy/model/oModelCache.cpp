@@ -248,17 +248,21 @@ void oModelCache::startElement( void *ctx, const char *name, const char **atts )
 		break;
 	oCase::KeyPoint:
 		{
+			const char* key = nullptr;
 			oVec2 keyPoint;
 			for (int i = 0; atts[i] != nullptr; i++)
 			{
 				switch (atts[i][0])
 				{
 					oCase::Key:
-							oHelper::getPosFromStr(atts[++i], keyPoint.x, keyPoint.y);
+						key = atts[++i];
+						break;
+					oCase::Position:
+						oHelper::getPosFromStr(atts[++i], keyPoint.x, keyPoint.y);
 						break;
 				}
 			}
-			_item->addKeyPoint(keyPoint);
+			_item->addKeyPoint(key, keyPoint);
 		}
 		break;
 	}

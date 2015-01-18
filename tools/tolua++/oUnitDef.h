@@ -6,13 +6,9 @@ class oUnitDef: public CCObject
 		DetectSensorTag = 1,
 		AttackSensorTag = 2
 	};
-	enum
-	{
-		BulletKey = 0,
-		AttackKey = 1,
-		HitKey = 2
-	};
-	
+	tolua_readonly static const char* BulletKey;
+	tolua_readonly static const char* AttackKey;
+	tolua_readonly static const char* HitKey;
 	tolua_property__bool bool static;
 	tolua_property__common float scale;
 	tolua_property__common float density;

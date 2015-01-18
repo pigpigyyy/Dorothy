@@ -3468,8 +3468,8 @@ local Dorothy =
 			},
 			getKey =
 			{
-				args = "(uint: index)",
-				description = "Get model key point by index.",
+				args = "(key: string)",
+				description = "Get model key point by key name.",
 				returns = "(key: oVec2)",
 				typeName = "oVec2",
 				type = "method"
@@ -6074,19 +6074,19 @@ local Dorothy =
 			},
 			BulletKey =
 			{
-				description = "[Const][int]",
+				description = "[Const][string]",
 				static = true,
 				type = "value"
 			},
 			AttackKey =
 			{
-				description = "[Const][int]",
+				description = "[Const][string]",
 				static = true,
 				type = "value"
 			},
 			HitKey =
 			{
-				description = "[Const][int]",
+				description = "[Const][string]",
 				static = true,
 				type = "value"
 			},

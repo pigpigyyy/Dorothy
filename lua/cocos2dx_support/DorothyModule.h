@@ -20,7 +20,7 @@ void CCDrawNode_drawPolygon(
 void oModel_addHandler(oModel* model, const string& name, int nHandler);
 void oModel_removeHandler(oModel* model, const string& name, int nHandler);
 void oModel_clearHandler(oModel* model, const string& name);
-const oVec2& oModel_getKey(oModel* model, uint32 index);
+oVec2 oModel_getKey(oModel* model, const char* key);
 
 void oWorld_query(oWorld* world, const CCRect& rect, int nHandler);
 void oWorld_cast(oWorld* world, const oVec2& start, const oVec2& end, bool closest, int handler);

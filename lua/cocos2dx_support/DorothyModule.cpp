@@ -40,9 +40,9 @@ void oModel_clearHandler(oModel* model, const string& name)
 {
 	model->handlers[name].Clear();
 }
-const oVec2& oModel_getKey(oModel* model, uint32 index)
+oVec2 oModel_getKey(oModel* model, const char* key)
 {
-	return model->getModelDef()->getKeyPoint(index-1);
+	return model->getModelDef()->getKeyPoint(key);
 }
 
 HANDLER_WRAP_START(oSensorHandlerWrapper)
@@ -913,16 +913,17 @@ void __oModelCache_getData(lua_State* L, const char* filename)
 		lua_setUserType(19, new CCSize(modelDef->getSize()), "CCSize");
 		lua_setString(20, modelDef->getClipFile().c_str());
 		/*["keys"]*/
-		lua_createtable(L, modelDef->getKeyPointCount(), 0);
-		for(int i = 0; i < modelDef->getKeyPointCount(); i++)
+		lua_newtable(L);
+		for (const auto& pair : modelDef->getKeyPoints())
 		{
-			tolua_pushusertype(L, new oVec2(modelDef->getKeyPoint(i)), "oVec2");
-			lua_rawseti(L, -2, i + 1);
+			lua_pushstring(L, pair.first.c_str());
+			tolua_pushusertype(L, new oVec2(pair.second), "oVec2");
+			lua_rawset(L, -3);
 		}
 		lua_rawseti(L, -2, 21);
 		/*["animationNames"]*/
 		lua_newtable(L);
-		for(const auto& pair : modelDef->getAnimationIndexMap())
+		for (const auto& pair : modelDef->getAnimationIndexMap())
 		{
 			lua_pushstring(L, pair.first.c_str());
 			lua_pushinteger(L, pair.second);
@@ -994,19 +995,17 @@ oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableI
 	CCTexture2D* texture = oSharedContent.loadTexture(clipDef->textureFile.c_str());
 	/*["keys"]*/
 	lua_rawgeti(L, -1, 21);// push keys
-	vector<oVec2> keys(lua_objlen(L, -1));
-	for(int i = 0; i < (int)keys.size(); i++)
+	unordered_map<string,oVec2> keys;
+	int top = lua_gettop(L);
+	for(lua_pushnil(L); lua_next(L, top) != 0; lua_pop(L, 1))
 	{
-		lua_rawgeti(L, -1, i + 1);
-		oVec2* v =(*(oVec2**)(lua_touserdata(L, -1)));
-		keys[i] = *v;
-		lua_pop(L, 1);
+		keys[lua_tostring(L, -2)] = *(oVec2*)(*(void**)(lua_touserdata(L, -1)));
 	}
 	lua_pop(L, 1);// pop keys
 	/*["animationNames"]*/
 	lua_rawgeti(L, -1, 22);// push animationNames
 	unordered_map<string, int> animationNames;
-	int top = lua_gettop(L);
+	top = lua_gettop(L);
 	for(lua_pushnil(L); lua_next(L, top) != 0; lua_pop(L, 1))
 	{
 		animationNames[lua_tostring(L, -2)] = (int)lua_tointeger(L, -1);

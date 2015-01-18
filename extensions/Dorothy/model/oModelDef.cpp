@@ -164,9 +164,9 @@ oModelDef::oModelDef(
 	const string& clipFile,
 	CCTexture2D* texture,
 	oSpriteDef* root,
-	const vector<oVec2>& keys,
-	const unordered_map<string, int>& animationIndex,
-	const unordered_map<string, int>& lookIndex):
+	const unordered_map<string,oVec2>& keys,
+	const unordered_map<string,int>& animationIndex,
+	const unordered_map<string,int>& lookIndex):
 _texture(texture),
 _clip(clipFile),
 _isFaceRight(isFaceRight),
@@ -208,15 +208,6 @@ oModel* oModelDef::toModel()
 	return oModel::create(this);
 }
 
-const oVec2& oModelDef::getKeyPoint( uint32 index ) const
-{
-	if (index >= _keys.size())
-	{
-		return oVec2::zero;
-	}
-	return _keys[index];
-}
-
 string oModelDef::toXml()
 {
 	char buf[32];
@@ -249,10 +240,13 @@ string oModelDef::toXml()
 			<< char(oModelXml::Index) << "=\"" << item.second << "\" "
 			<< char(oModelXml::Name) << "=\"" << item.first << "\"/>";
 	}
-	for (const auto& keyPoint : _keys)
+	for (const auto& it : _keys)
 	{
-		stream << '<' << char(oModelXml::KeyPoint) << ' ' << char(oModelXml::Key) << "=\"" << s(keyPoint.x) << ',';
-		stream << s(keyPoint.y) << "\"/>";
+		const oVec2& point = it.second;
+		stream << '<' << char(oModelXml::KeyPoint) << ' '
+			<< char(oModelXml::Key) << "=\"" << it.first << "\" "
+			<< char(oModelXml::Position) << "=\"" << s(point.x) << ',';
+		stream << s(point.y) << "\"/>";
 	}
 	stream << "</" << char(oModelXml::Dorothy) << '>';
 	return stream.str();
@@ -295,11 +289,6 @@ int oModelDef::getLookIndexByName( const string& name )
 	return oLook::None;
 }
 
-int oModelDef::getKeyPointCount() const
-{
-	return (int)_keys.size();
-}
-
 const unordered_map<string, int>& oModelDef::getAnimationIndexMap() const
 {
 	return _animationIndex;
@@ -320,9 +309,20 @@ void oModelDef::setLookName( int index, const string& name )
 	_lookIndex[name] = index;
 }
 
-void oModelDef::addKeyPoint( const oVec2& point )
+void oModelDef::addKeyPoint(const string& key, const oVec2& point)
 {
-	_keys.push_back(point);
+	oModelDef::getKeyPoints()[key] = point;
+}
+
+oVec2 oModelDef::getKeyPoint(const string& key) const
+{
+	auto it = _keys.find(key);
+	return it != _keys.end() ? it->second : oVec2::zero;
+}
+
+unordered_map<string,oVec2>& oModelDef::getKeyPoints()
+{
+	return _keys;
 }
 
 oModelDef* oModelDef::create()

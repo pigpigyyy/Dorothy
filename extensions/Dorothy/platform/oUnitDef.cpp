@@ -25,6 +25,9 @@ NS_DOROTHY_PLATFORM_BEGIN
 const float oUnitDef::BOTTOM_OFFSET(4.0f);
 const float oUnitDef::GROUND_SENSOR_HEIGHT(4.0f);
 bool oUnitDef::usePreciseHit = true;
+const char* oUnitDef::BulletKey = "bullet";
+const char* oUnitDef::AttackKey = "attack";
+const char* oUnitDef::HitKey = "hit";
 
 oUnitDef::oUnitDef() :
 type(0),

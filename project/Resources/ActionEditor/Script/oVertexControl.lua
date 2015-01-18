@@ -16,6 +16,7 @@ local CCLabelTTF = require("CCLabelTTF")
 local CCSequence = require("CCSequence")
 local CCCall = require("CCCall")
 local oLine = require("oLine")
+local oBox = require("oBox")
 
 local function oVertexControl()
 	local winSize = CCDirector.winSize
@@ -45,14 +46,13 @@ local function oVertexControl()
 	
 	local function removeVertex()
 		if selectedVert then
-			local index = selectedVert.index
+			local name = selectedVert.name
 			local item
 			local children = menu.children
 			for i = 1,children.count do
 				local child = children[i]
 				child.enabled = true
-				if child.index == index then
-					child.index = nil
+				if child.name == name then
 					item = child
 				end
 			end
@@ -64,24 +64,8 @@ local function oVertexControl()
 					item.parent:removeChild(item)
 				end)
 			}))
-			table.remove(menu.items,index)
-			for i = 1,#menu.items do
-				local menuItem = menu.items[i]
-				menuItem.index = i
-				local text
-				if i == 1 then
-					text = "bullet"
-				elseif i == 2 then
-					text = "attack"
-				elseif i == 3 then
-					text = "hit"
-				else
-					text = tostring(i)
-				end
-				menuItem.label.text = text
-				menuItem.label.texture.antiAlias = false
-			end
-			table.remove(menu.vs,index)
+			menu.items[name] = nil
+			menu.vs[name] = nil
 			selectedVert = nil
 			if vertChanged then
 				vertChanged(menu.vs)
@@ -113,7 +97,7 @@ local function oVertexControl()
 			if vertexToAdd and lastCreateVertex and lastCreateVertex ~= item then
 				return
 			end
-			if vertexToDel and selectedVert and selectedVert.index == menu.items[#menu.items].index then
+			if vertexToDel then
 				removeVertex()
 				return
 			end
@@ -126,13 +110,13 @@ local function oVertexControl()
 			end
 		end
 	end
-	local function oVertex(pos,index)
+	local function oVertex(pos,name)
 		local menuItem = CCMenuItem()
 		menuItem:registerTapHandler(itemTapped)
 		menuItem.contentSize = CCSize(vertSize,vertSize)
 		menuItem.opacity = 0.4
 		menuItem.position = pos
-		menuItem.index = index
+		menuItem.name = name
 
 		local circle = CCDrawNode()
 		circle:drawDot(oVec2.zero,20,ccColor4(0xff00ffff))
@@ -144,17 +128,7 @@ local function oVertexControl()
 		circle:runAction(oScale(0.5,1,1,oEase.OutBack))
 		menuItem:addChild(circle)
 
-		local text
-		if index == 1 then
-			text = "bullet"
-		elseif index == 2 then
-			text = "attack"
-		elseif index == 3 then
-			text = "hit"
-		else
-			text = tostring(index)
-		end
-		local label = CCLabelTTF(text,"Arial",16)
+		local label = CCLabelTTF(name,"Arial",16)
 		label.texture.antiAlias = false
 		label.color = ccColor3(0x00ffff)
 		label.position = oVec2(0,45)
@@ -167,22 +141,39 @@ local function oVertexControl()
 		menu:removeAllChildrenWithCleanup()
 		menu.vs = vs
 		menu.items = {}
-		for i = 1,#vs do
-			local item = oVertex(vs[i],i)
-			table.insert(menu.items,item)
+		for name,pos in pairs(vs) do
+			local item = oVertex(pos,name)
+			menu.items[name] = item
 			menu:addChild(item)
 		end
 	end
 	
-	local function addVertex(v)
-		local item = oVertex(v,#(menu.items)+1)
-		table.insert(menu.items,item)
+	local function addVertex(v,name)
+		local item = oVertex(v,name)
+		menu.items[name] = item
 		menu:addChild(item)
-		table.insert(menu.vs,v)
+		menu.vs[name] = v
 		if vertChanged then
 			vertChanged(menu.vs)
 		end
 		return item
+	end
+
+	local getUsableName = function(originalName)
+		if originalName == "" then originalName = "name" end
+		if menu.vs[originalName] then
+			local counter = 1
+			local nawName = nil
+			local usable = false
+			repeat
+				nawName = originalName..tostring(counter)
+				usable = (menu.vs[nawName] == nil)
+				counter = counter+1
+			until usable
+			return nawName
+		else
+			return originalName
+		end
 	end
 
 	local totalDelta = oVec2.zero
@@ -193,9 +184,18 @@ local function oVertexControl()
 				if oEditor.viewArea.isValueFixed then
 					pos = oEditor:round(pos)
 				end
-				if pos ~= menu.vs[#menu.vs] then
-					local item = addVertex(pos)
-					lastCreateVertex = item
+				local addFlag = true
+				for _,v in pairs(menu.vs) do
+					if v == pos then
+						addFlag = false
+					end
+				end
+				if addFlag then
+					oBox("New Key",function(name)
+						name = getUsableName(name)
+						local item = addVertex(pos,name)
+						lastCreateVertex = item
+					end,true)
 				end
 			end
 			totalDelta = oVec2.zero
@@ -221,7 +221,7 @@ local function oVertexControl()
 				end
 				if pos ~= selectedVert.position then
 					selectedVert.position = pos
-					menu.vs[selectedVert.index] = pos
+					menu.vs[selectedVert.name] = pos
 					if vertChanged then
 						vertChanged(menu.vs)
 					end
@@ -270,8 +270,10 @@ local function oVertexControl()
 		lastCreateVertex = nil
 		selectedVert = nil
 		vertexToAdd = false
+		vertexToDel = false
 		totalDelta = oVec2.zero
 		addButton.color = ccColor3(0x00ffff)
+		removeButton.color = ccColor3(0x00ffff)
 		setVertices(vs)
 		vertChanged = callback
 		addButton:stopAllActions()

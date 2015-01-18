@@ -74,15 +74,15 @@ public:
 		const string& clipFile,
 		CCTexture2D* texture,
 		oSpriteDef* root,
-		const vector<oVec2>& keys,
-		const unordered_map<string, int>& animationIndex,
-		const unordered_map<string, int>& lookIndex);
+		const unordered_map<string,oVec2>& keys,
+		const unordered_map<string,int>& animationIndex,
+		const unordered_map<string,int>& lookIndex);
 	const string& getClipFile() const;
 	CCTexture2D* getTexture();
 	oSpriteDef* getRoot();
-	void addKeyPoint(const oVec2& point);
-	const oVec2& getKeyPoint(uint32 index) const;
-	int getKeyPointCount() const;
+	void addKeyPoint(const string& key, const oVec2& point);
+	oVec2 getKeyPoint(const string& key) const;
+	unordered_map<string,oVec2>& getKeyPoints();
 	bool isFaceRight() const;
 	bool isBatchUsed() const;
 	const CCSize& getSize() const;
@@ -102,12 +102,12 @@ private:
 	bool _isBatchUsed;
 	bool _isFaceRight;
 	CCSize _size;
-	vector<oVec2> _keys;
 	oRef<CCTexture2D> _texture;
 	oOwn<oSpriteDef> _root;
 	string _clip;
-	unordered_map<string, int> _animationIndex;
-	unordered_map<string, int> _lookIndex;
+	unordered_map<string,int> _animationIndex;
+	unordered_map<string,int> _lookIndex;
+	unordered_map<string,oVec2> _keys;
 	friend class oModelCache;
 };
 

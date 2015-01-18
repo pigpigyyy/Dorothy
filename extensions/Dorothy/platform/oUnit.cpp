@@ -201,13 +201,13 @@ void oUnit::removeAllActions()
 
 oAction* oUnit::getAction( int id ) const
 {
-	oActionMap::const_iterator it = _actions.find(id);
+	auto it = _actions.find(id);
 	return it == _actions.end() ? nullptr : it->second.get();
 }
 
 bool oUnit::doIt( int id )
 {
-	oActionMap::iterator it = _actions.find(id);
+	auto it = _actions.find(id);
 	if (it != _actions.end())
 	{
 		oAction* action = it->second;

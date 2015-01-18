@@ -23,7 +23,9 @@ class oUnitDef: public CCObject
 {
 public:
 	enum {GroundSensorTag = 0, DetectSensorTag = 1, AttackSensorTag = 2};
-	enum {BulletKey = 0, AttackKey = 1, HitKey = 2};
+	static const char* BulletKey;
+	static const char* AttackKey;
+	static const char* HitKey;
 	//Most are static properties below.
 	PROPERTY_REF(string, _model, Model);
 	PROPERTY_REF(CCSize, _size, Size);

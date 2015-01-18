@@ -273,8 +273,10 @@ local function oVertexControl()
 		lastCreateVertex = nil
 		selectedVert = nil
 		vertexToAdd = false
+		vertexToDel = false
 		totalDelta = oVec2.zero
 		addButton.color = ccColor3(0x00ffff)
+		removeButton.color = ccColor3(0x00ffff)
 		setVertices(vs)
 		vertChanged = callback
 		addButton:stopAllActions()
