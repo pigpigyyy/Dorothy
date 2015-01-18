@@ -60,6 +60,7 @@ oRoutine(once(function()
 		oContent:copyAsync(resPath,writePath)
 	end
 	local oFileChooser = require("oFileChooser")
+	coroutine.yield()
 	oEditor:addChild(oFileChooser(),oEditor.topMost)
 	--dofile("BodyEditor/Script/generateLoader.lua")
 end))

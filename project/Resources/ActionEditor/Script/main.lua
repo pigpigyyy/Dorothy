@@ -6,7 +6,6 @@ local CCLabelTTF = require("CCLabelTTF")
 local CCDrawNode = require("CCDrawNode")
 local oEvent = require("oEvent")
 local CCSequence = require("CCSequence")
-local CCDelay = require("CCDelay")
 local oOpacity = require("oOpacity")
 local CCCall = require("CCCall")
 local CCNode = require("CCNode")
@@ -14,6 +13,10 @@ local oCache = require("oCache")
 local oScale = require("oScale")
 local oEase = require("oEase")
 local oContent = require("oContent")
+local oRoutine = require("oRoutine")
+local once = require("once")
+local wait = require("wait")
+local seconds = require("seconds")
 
 collectgarbage("setpause", 100)
 collectgarbage("setstepmul", 5000)
@@ -33,47 +36,6 @@ require = function(modulename)
 end
 
 local oEditor = require("oEditor").oEditor
-
-local controls =
-{
-	-- Animation oEditor
-	"oViewArea",
-	"oEditMenu",
-	"oViewPanel",
-	"oControlBar",
-	"oSettingPanel",
-}
-
-local controlNames =
-{
-	"viewArea",
-	"editMenu",
-	"viewPanel",
-	"controlBar",
-	"settingPanel",
-}
-
-local thread = coroutine.create(
-	function()
-		for i = 1,#controls do
-			controls[i] = require(controls[i])
-			coroutine.yield()
-			controls[i] = controls[i]()
-			oEditor[controlNames[i]] = controls[i]
-			coroutine.yield()
-		end
-		for i = 1,#controls do
-			oEditor.scene:addChild(controls[i])
-			coroutine.yield()
-		end
-		local resPath = "ActionEditor/Model"
-		local writePath = oContent.writablePath.."Model"
-		if not oContent:exist(oContent.writablePath.."Model") and oContent:exist("ActionEditor/Model") then
-			oContent:copyAsync(resPath,writePath)
-		end
-		oEditor.vertexControl = require("oVertexControl")()
-		oEditor.scene:addChild(oEditor.vertexControl)
-	end)
 
 local bk = CCLayerColor(ccColor4(0xff000000),CCDirector.winSize.width,CCDirector.winSize.height)
 bk.anchor = oVec2.zero
@@ -122,36 +84,58 @@ flower.position = oVec2(logo.contentSize.width+2,logo.contentSize.height-2)
 logo:addChild(flower)
 oEditor.scene:addChild(bk,998)
 
-local time = 0
-oEditor.scene:schedule(
-	function(self,deltaTime)
-		time = time+deltaTime
-		local result = coroutine.resume(thread)
-		if not result then
-			self:unschedule()
-			oEvent:send("EditorLoaded")
-			if time < 1 then
-				logo:runAction(
-					CCSequence
-					{
-						CCDelay(1-time),
-						oOpacity(0.3,0),
-						CCCall(
-							function()
-								bk.visible = false
-								bk.parent:removeChild(bk)
-								oEditor.scene.opacity = 0
-								oEditor.scene:runAction(oOpacity(0.3,1))
-							end)
-					})
-			else
+local controls =
+{
+	"oViewArea",
+	"oEditMenu",
+	"oViewPanel",
+	"oControlBar",
+	"oSettingPanel",
+}
+
+local isUILoaded = false
+oRoutine(once(function() -- load UI asynchronously
+	for i = 1,#controls do
+		local controlName = controls[i]
+		controls[i] = require(controlName) -- load codes
+		coroutine.yield()
+		controls[i] = controls[i]() -- create instance
+		controlName = controlName:sub(2,2):lower()..controlName:sub(3,-1)
+		oEditor[controlName] = controls[i]
+		coroutine.yield()
+	end
+	for i = 1,#controls do
+		oEditor.scene:addChild(controls[i]) -- add to scene
+		coroutine.yield()
+	end
+	local resPath = "ActionEditor/Model"
+	local writePath = oContent.writablePath.."Model"
+	if not oContent:exist(oContent.writablePath.."Model") and oContent:exist("ActionEditor/Model") then
+		oContent:copyAsync(resPath,writePath) -- copy some prepared contents
+	end
+	coroutine.yield()
+	oEditor.vertexControl = require("oVertexControl")() -- one more control to load
+	coroutine.yield()
+	oEditor.scene:addChild(oEditor.vertexControl)
+	isUILoaded = true
+end))
+
+oRoutine(once(function() -- thread to wait UI loaded
+	wait(seconds(1)) -- wait 1 second and let UI load
+	wait(function() return not isUILoaded end) -- wait when UI has not been loaded yet
+	oEvent:send("EditorLoaded")
+	logo:runAction(CCSequence(
+	{
+		oOpacity(0.3,0),
+		CCCall(
+			function()
 				bk.visible = false
 				bk.parent:removeChild(bk)
 				oEditor.scene.opacity = 0
 				oEditor.scene:runAction(oOpacity(0.3,1))
-			end
-		end
-	end)
+			end),
+	}))
+end))
 
 --[[
 local names = oCache.Clip:getNames(oEditor.output.."nvjing.clip")
