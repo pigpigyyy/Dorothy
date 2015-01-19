@@ -98,6 +98,8 @@ local function oVertexControl()
 				return
 			end
 			if vertexToDel then
+				vertexToDel = false
+				removeButton.color = ccColor3(0x00ffff)
 				removeVertex()
 				return
 			end
@@ -196,6 +198,8 @@ local function oVertexControl()
 						local item = addVertex(pos,name)
 						lastCreateVertex = item
 					end,true)
+					vertexToAdd = false
+					addButton.color = ccColor3(0x00ffff)
 				end
 			end
 			totalDelta = oVec2.zero
