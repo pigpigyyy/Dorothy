@@ -29,8 +29,8 @@ public:
 	virtual oActionDuration* reverse();
 	static oActionDuration* create(float d);
 protected:
-	float _elapsed;
 	bool _pause;
+	float _elapsed;
 };
 
 NS_DOROTHY_END

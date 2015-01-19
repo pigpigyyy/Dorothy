@@ -56,7 +56,7 @@ extern "C" void tolua_pushccobject(lua_State* L, void* ptr)
 	lua_rawgeti(L, LUA_REGISTRYINDEX, TOLUA_UBOX);// ubox
 	lua_rawgeti(L, -1, refid);// ubox ud
 
-	if(lua_isnil(L, -1))// ud == nil
+	if (lua_isnil(L, -1))// ud == nil
 	{
 		lua_pop(L, 1);// ubox
 		*(void**)lua_newuserdata(L, sizeof(void *)) = ptr;// ubox newud

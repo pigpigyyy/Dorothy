@@ -193,7 +193,7 @@ void oSequence::startWithTarget(CCNode *pTarget)
 void oSequence::stop()
 {
 	// Issue #1305
-	if(m_last != -1)
+	if (m_last != -1)
 	{
 		m_pActions[m_last]->stop();
 		m_last = -1;
@@ -205,7 +205,7 @@ void oSequence::update(float t)
 {
 	int found = 0;
 	float new_t = 0.0f;
-	if(t < m_split)
+	if (t < m_split)
 	{
 		// action[0]
 		new_t = (m_split != 0.0f) ? (t/m_split) : 1.0f;

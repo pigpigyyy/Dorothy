@@ -80,13 +80,15 @@ local function oVertexControl()
 					return
 				end
 				selectedVert.opacity = 0.4
+				selectedVert.highlighted = false
 				selectedVert.selected = false
 			end
 			selectedVert = item
-			if item.opacity == 0.8 then
+			if item.highlighted then
 				item.selected = true
 			else
 				item.opacity = 0.8
+				item.highlighted = true
 			end
 			local children = menu.children
 			for i = 1,children.count do
@@ -106,6 +108,7 @@ local function oVertexControl()
 			item.selected = not item.selected
 			selectedVert = item.selected and item or nil
 			item.opacity = item.selected and 0.8 or 0.4
+			item.highlighted = item.selected
 			local children = menu.children
 			for i = 1,children.count do
 				children[i].enabled = true
@@ -117,6 +120,7 @@ local function oVertexControl()
 		menuItem:registerTapHandler(itemTapped)
 		menuItem.contentSize = CCSize(vertSize,vertSize)
 		menuItem.opacity = 0.4
+		menuItem.highlighted = false
 		menuItem.position = pos
 		menuItem.name = name
 

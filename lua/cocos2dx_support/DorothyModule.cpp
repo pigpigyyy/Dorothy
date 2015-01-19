@@ -55,7 +55,7 @@ HANDLER_WRAP_END
 
 void oSensor_addHandler(oSensor* sensor, uint32 flag, int nHandler)
 {
-	switch(flag)
+	switch (flag)
 	{
 	case oSensorEvent::Enter:
 		sensor->bodyEnter += std::make_pair(oSensorHandlerWrapper(nHandler), &oSensorHandlerWrapper::call);
@@ -67,7 +67,7 @@ void oSensor_addHandler(oSensor* sensor, uint32 flag, int nHandler)
 }
 void oSensor_removeHandler(oSensor* sensor, uint32 flag, int nHandler)
 {
-	switch(flag)
+	switch (flag)
 	{
 	case oSensorEvent::Enter:
 		sensor->bodyEnter -= std::make_pair(oSensorHandlerWrapper(nHandler), &oSensorHandlerWrapper::call);
@@ -79,7 +79,7 @@ void oSensor_removeHandler(oSensor* sensor, uint32 flag, int nHandler)
 }
 void oSensor_clearHandler(oSensor* sensor, uint32 flag)
 {
-	switch(flag)
+	switch (flag)
 	{
 	case oSensorEvent::Enter:
 		sensor->bodyEnter.Clear();
@@ -201,7 +201,7 @@ void __oClipCache_getNames(lua_State* L, const char* filename)
 	oClipDef* clipDef = oSharedClipCache.load(filename);
 	lua_createtable(L, (int)clipDef->rects.size(), 0);
 	int i = 1;
-	for(const auto& item : clipDef->rects)
+	for (const auto& item : clipDef->rects)
 	{
 		lua_pushstring(L,item.first.c_str());
 		lua_rawseti(L, -2, i++);
@@ -310,7 +310,7 @@ int oCache_poolSize()
 void oUnitDef_setActions(oUnitDef* def, int actions[], int count)
 {
 	def->actions.clear();
-	for(int i = 0; i < count; i++)
+	for (int i = 0; i < count; i++)
 	{
 		def->actions.push_back(actions[i]);
 	}
@@ -318,7 +318,7 @@ void oUnitDef_setActions(oUnitDef* def, int actions[], int count)
 void oUnitDef_setInstincts(oUnitDef* def, int instincts[], int count)
 {
 	def->instincts.clear();
-	for(int i = 0; i < count; i++)
+	for (int i = 0; i < count; i++)
 	{
 		def->instincts.push_back(instincts[i]);
 	}
@@ -359,11 +359,11 @@ void oContent_copyFileAsync(oContent* self, const char* src, const char* dst, in
 
 CCSprite* CCSprite_createWithClip(const char* clipStr)
 {
-	if(string(clipStr).find('|') != string::npos)
+	if (string(clipStr).find('|') != string::npos)
 	{
 		return oSharedClipCache.loadSprite(clipStr);
 	}
-	else if(oFileExt::check(clipStr,oFileExt::Clip))
+	else if (oFileExt::check(clipStr,oFileExt::Clip))
 	{
 		oClipDef* def = oSharedClipCache.load(clipStr);
 		return CCSprite::create(def->textureFile.c_str());
@@ -385,7 +385,7 @@ CCScene* CCScene_createJumpZoom(float duration, CCScene* nextScene)
 }
 CCScene* CCScene_createMove(float duration, CCScene* nextScene, tOrientation orientation)
 {
-	switch(orientation)
+	switch (orientation)
 	{
 	case kCCTransitionOrientationLeftOver:
 		return CCTransitionMoveInL::create(duration, nextScene);
@@ -400,7 +400,7 @@ CCScene* CCScene_createMove(float duration, CCScene* nextScene, tOrientation ori
 }
 CCScene* CCScene_createSlide(float duration, CCScene* nextScene, tOrientation orientation)
 {
-	switch(orientation)
+	switch (orientation)
 	{
 	case kCCTransitionOrientationLeftOver:
 		return CCTransitionSlideInL::create(duration, nextScene);
@@ -463,7 +463,7 @@ CCScene* CCScene_createSplitRows(float duration, CCScene* nextScene)
 }
 CCScene* CCScene_createFadeTiles(float duration, CCScene* nextScene, tOrientation orientation)
 {
-	switch(orientation)
+	switch (orientation)
 	{
 	case kCCTransitionOrientationLeftOver:
 		return CCTransitionFadeBL::create(duration, nextScene);
@@ -508,7 +508,7 @@ CCScene* CCScene_createProgressOI(float duration, CCScene* nextScene)
 CCCardinalSplineTo* CCCardinalSplineTo_create(float duration, const oVec2 points[], int count, float tension)
 {
 	CCPointArray* array = CCPointArray::create(count);
-	for(int i = 0; i < count; i++)
+	for (int i = 0; i < count; i++)
 	{
 		array->addControlPoint(points[i]);
 	}
@@ -517,7 +517,7 @@ CCCardinalSplineTo* CCCardinalSplineTo_create(float duration, const oVec2 points
 CCCardinalSplineBy* CCCardinalSplineBy_create(float duration, const oVec2 points[], int count, float tension)
 {
 	CCPointArray* array = CCPointArray::create(count);
-	for(int i = 0; i < count; i++)
+	for (int i = 0; i < count; i++)
 	{
 		array->addControlPoint(points[i]);
 	}
@@ -526,7 +526,7 @@ CCCardinalSplineBy* CCCardinalSplineBy_create(float duration, const oVec2 points
 CCCatmullRomTo* CCCatmullRomTo_create(float duration, const oVec2 points[], int count)
 {
 	CCPointArray* array = CCPointArray::create(count);
-	for(int i = 0; i < count; i++)
+	for (int i = 0; i < count; i++)
 	{
 		array->addControlPoint(points[i]);
 	}
@@ -535,7 +535,7 @@ CCCatmullRomTo* CCCatmullRomTo_create(float duration, const oVec2 points[], int 
 CCCatmullRomBy* CCCatmullRomBy_create(float duration, const oVec2 points[], int count)
 {
 	CCPointArray* array = CCPointArray::create(count);
-	for(int i = 0; i < count; i++)
+	for (int i = 0; i < count; i++)
 	{
 		array->addControlPoint(points[i]);
 	}
@@ -544,7 +544,7 @@ CCCatmullRomBy* CCCatmullRomBy_create(float duration, const oVec2 points[], int 
 
 CCActionInterval* CCTile_createFadeOut(float duration, CCSize gridSize, tOrientation orientation)
 {
-	switch(orientation)
+	switch (orientation)
 	{
 	case kCCTransitionOrientationLeftOver:
 		return CCFadeOutBLTiles::create(duration, gridSize);
@@ -561,7 +561,7 @@ CCActionInterval* CCTile_createFadeOut(float duration, CCSize gridSize, tOrienta
 CCArray* CCArray_create(CCObject* object[], int count)
 {
 	CCArray* array = CCArray::createWithCapacity(count);
-	for(int i = 0; i < count; i++)
+	for (int i = 0; i < count; i++)
 	{
 		array->addObject(object[i]);
 	}
@@ -783,7 +783,7 @@ int CCDictionary_randomObject(lua_State* L)
 void __oModelCache_getData(lua_State* L, const char* filename)
 {
 	oModelDef* modelDef = oSharedModelCache.load(filename);
-	if(!modelDef)
+	if (!modelDef)
 	{
 		lua_pushnil(L);
 		return;
@@ -830,7 +830,7 @@ void __oModelCache_getData(lua_State* L, const char* filename)
 		lua_setFloat(12, parent->y);
 		/*["looks"]*/
 		lua_createtable(L, (int)parent->looks.size(), 0);
-		for(int i = 0; i <(int)parent->looks.size(); i++)
+		for (int i = 0; i <(int)parent->looks.size(); i++)
 		{
 			lua_pushinteger(L, parent->looks[i]);
 			lua_rawseti(L, -2, i + 1);
@@ -838,11 +838,11 @@ void __oModelCache_getData(lua_State* L, const char* filename)
 		lua_rawseti(L, -2, 13);
 		/*["animationDefs"]*/
 		lua_createtable(L, (int)parent->animationDefs.size(), 0);
-		for(int defIndex = 0; defIndex <(int)parent->animationDefs.size(); defIndex++)
+		for (int defIndex = 0; defIndex <(int)parent->animationDefs.size(); defIndex++)
 		{
 			oModelAnimationDef* def = parent->animationDefs[defIndex];
 			/* nullptr */
-			if(!def)
+			if (!def)
 			{
 				lua_pushboolean(L, 0);
 				lua_rawseti(L, -2, defIndex + 1);
@@ -850,12 +850,12 @@ void __oModelCache_getData(lua_State* L, const char* filename)
 			}
 			/* oKeyAnimationDef */
 			oKeyAnimationDef* keyDef = dynamic_cast<oKeyAnimationDef*>(def);
-			if(keyDef)
+			if (keyDef)
 			{
 				auto& frames = keyDef->getFrames();
 				lua_createtable(L, (int)frames.size()+1, 0);
 				lua_setInt(1, 1);
-				for(int i = 0; i <(int)frames.size(); i++)
+				for (int i = 0; i <(int)frames.size(); i++)
 				{
 					oKeyFrameDef* frame = frames[i];
 					lua_createtable(L, 15, 0);
@@ -881,7 +881,7 @@ void __oModelCache_getData(lua_State* L, const char* filename)
 			}
 			/* oFrameAnimationDef */
 			oFrameAnimationDef* frameDef = dynamic_cast<oFrameAnimationDef*>(def);
-			if(frameDef)
+			if (frameDef)
 			{
 				lua_createtable(L, 4, 0);
 				lua_setInt(1, 2);
@@ -894,7 +894,7 @@ void __oModelCache_getData(lua_State* L, const char* filename)
 		lua_rawseti(L, -2, 14);
 		/*["children"]*/
 		lua_createtable(L, (int)parent->children.size(), 0);
-		for(int i = 0; i < (int)parent->children.size(); i++)
+		for (int i = 0; i < (int)parent->children.size(); i++)
 		{
 			visitSpriteDef(parent->children[i]);
 			lua_rawseti(L, -2, i + 1);
@@ -905,7 +905,7 @@ void __oModelCache_getData(lua_State* L, const char* filename)
 	};
 
 	oSpriteDef* root = modelDef->getRoot();
-	if(root)
+	if (root)
 	{
 		visitSpriteDef(root);
 		lua_setBool(17, modelDef->isFaceRight());
@@ -932,7 +932,7 @@ void __oModelCache_getData(lua_State* L, const char* filename)
 		lua_rawseti(L, -2, 22);
 		/*["lookNames"]*/
 		lua_newtable(L);
-		for(const auto& pair : modelDef->getLookIndexMap())
+		for (const auto& pair : modelDef->getLookIndexMap())
 		{
 			lua_pushstring(L, pair.first.c_str());
 			lua_pushinteger(L, pair.second);
@@ -997,7 +997,7 @@ oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableI
 	lua_rawgeti(L, -1, 21);// push keys
 	unordered_map<string,oVec2> keys;
 	int top = lua_gettop(L);
-	for(lua_pushnil(L); lua_next(L, top) != 0; lua_pop(L, 1))
+	for (lua_pushnil(L); lua_next(L, top) != 0; lua_pop(L, 1))
 	{
 		keys[lua_tostring(L, -2)] = *(oVec2*)(*(void**)(lua_touserdata(L, -1)));
 	}
@@ -1006,7 +1006,7 @@ oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableI
 	lua_rawgeti(L, -1, 22);// push animationNames
 	unordered_map<string, int> animationNames;
 	top = lua_gettop(L);
-	for(lua_pushnil(L); lua_next(L, top) != 0; lua_pop(L, 1))
+	for (lua_pushnil(L); lua_next(L, top) != 0; lua_pop(L, 1))
 	{
 		animationNames[lua_tostring(L, -2)] = (int)lua_tointeger(L, -1);
 	}
@@ -1015,7 +1015,7 @@ oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableI
 	lua_rawgeti(L, -1, 23);// push lookNames
 	unordered_map<string, int> lookNames;
 	top = lua_gettop(L);
-	for(lua_pushnil(L); lua_next(L, top) != 0; lua_pop(L, 1))
+	for (lua_pushnil(L); lua_next(L, top) != 0; lua_pop(L, 1))
 	{
 		lookNames[lua_tostring(L, -2)] = (int)lua_tointeger(L, -1);
 	}
@@ -1040,7 +1040,7 @@ oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableI
 		spriteDef->y = lua_getFloat(12);
 		/*["looks"]*/
 		lua_rawgeti(L, -1, 13);// puah looks
-		for(int i = 0, len = (int)lua_objlen(L, -1); i < len; i++)
+		for (int i = 0, len = (int)lua_objlen(L, -1); i < len; i++)
 		{
 			lua_rawgeti(L, -1, i + 1);
 			spriteDef->looks.push_back((int)lua_tointeger(L, -1));
@@ -1049,11 +1049,11 @@ oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableI
 		lua_pop(L, 1);// pop looks
 		/*["animationDefs"]*/
 		lua_rawgeti(L, -1, 14);// push animationDefs
-		for(int defIndex = 0, len = (int)lua_objlen(L, -1); defIndex < len; defIndex++)
+		for (int defIndex = 0, len = (int)lua_objlen(L, -1); defIndex < len; defIndex++)
 		{
 			lua_rawgeti(L, -1, defIndex + 1);// push animationDef or boolean
 			/* nullptr */
-			if(lua_isboolean(L, -1))
+			if (lua_isboolean(L, -1))
 			{
 				spriteDef->animationDefs.push_back(nullptr);
 				lua_pop(L, 1);// pop boolean
@@ -1061,10 +1061,10 @@ oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableI
 			}
 			int type = lua_getInt(1);
 			/* oKeyAnimationDef */
-			if(type == 1)
+			if (type == 1)
 			{
 				oKeyAnimationDef* keyAnimationDef = new oKeyAnimationDef();
-				for(int i = 0, len = (int)lua_objlen(L, -1)-1; i < len; i++)
+				for (int i = 0, len = (int)lua_objlen(L, -1)-1; i < len; i++)
 				{
 					lua_rawgeti(L, -1, i + 2);// push frameDef
 					oKeyFrameDef* frameDef = new oKeyFrameDef();
@@ -1089,7 +1089,7 @@ oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableI
 				spriteDef->animationDefs.push_back(keyAnimationDef);
 			}
 			/* oFrameAnimationDef */
-			else if(type == 2)
+			else if (type == 2)
 			{
 				oFrameAnimationDef* frameAnimationDef = new oFrameAnimationDef();
 				frameAnimationDef->setFile(lua_getString(2));
@@ -1101,7 +1101,7 @@ oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableI
 		lua_pop(L, 1);// pop animationDefs
 		/* ["children"] */
 		lua_rawgeti(L, -1, 15);// push children
-		for(int i = 0, len = (int)lua_objlen(L, -1); i < len; i++)
+		for (int i = 0, len = (int)lua_objlen(L, -1); i < len; i++)
 		{
 			lua_rawgeti(L, -1, i + 1);// push childDef
 			spriteDef->children.push_back(visitSpriteDef());
@@ -1128,7 +1128,7 @@ CCCall* CCCall::create(int nHandler)
 }
 CCCall::~CCCall()
 {
-	if(_scriptHandler)
+	if (_scriptHandler)
 	{
 		CCScriptEngine::sharedEngine()->removeScriptHandler(_scriptHandler);
 	}
@@ -1139,14 +1139,14 @@ CCObject* CCCall::copyWithZone(CCZone *pZone)
 }
 void CCCall::update(float time)
 {
-	if(time > 0.0f)
+	if (time > 0.0f)
 	{
 		this->execute();
 	}
 }
 void CCCall::execute()
 {
-	if(_scriptHandler)
+	if (_scriptHandler)
 	{
 		CCScriptEngine::sharedEngine()->executeFunction(_scriptHandler);
 	}
@@ -1158,7 +1158,7 @@ public:
 	oRef<oScriptHandler> handler;
 	virtual bool onTextFieldAttachWithIME(CCTextFieldTTF * sender)
 	{
-		if(handler)
+		if (handler)
 		{
 			lua_State* L = CCLuaEngine::sharedEngine()->getState();
 			tolua_pushccobject(L, sender);
@@ -1169,7 +1169,7 @@ public:
 	}
 	virtual bool onTextFieldDetachWithIME(CCTextFieldTTF * sender)
 	{
-		if(handler)
+		if (handler)
 		{
 			lua_State* L = CCLuaEngine::sharedEngine()->getState();
 			tolua_pushccobject(L, sender);
@@ -1180,7 +1180,7 @@ public:
 	}
 	virtual bool onTextFieldInsertText(CCTextFieldTTF * sender, const char * text, int nLen)
 	{
-		if(handler)
+		if (handler)
 		{
 			lua_State* L = CCLuaEngine::sharedEngine()->getState();
 			tolua_pushccobject(L, sender);
@@ -1192,7 +1192,7 @@ public:
 	}
 	virtual void onTextFieldInserted(CCTextFieldTTF* sender, const char* text)
 	{
-		if(handler)
+		if (handler)
 		{
 			lua_State* L = CCLuaEngine::sharedEngine()->getState();
 			tolua_pushccobject(L, sender);
@@ -1203,7 +1203,7 @@ public:
 	}
 	virtual bool onTextFieldDeleteBackward(CCTextFieldTTF * sender, const char * delText, int nLen)
 	{
-		if(handler)
+		if (handler)
 		{
 			lua_State* L = CCLuaEngine::sharedEngine()->getState();
 			tolua_pushccobject(L, sender);
@@ -1215,7 +1215,7 @@ public:
 	}
 	virtual void onTextFieldDeleted(CCTextFieldTTF* sender, const char* delText)
 	{
-		if(handler)
+		if (handler)
 		{
 			lua_State* L = CCLuaEngine::sharedEngine()->getState();
 			tolua_pushccobject(L, sender);
@@ -1294,31 +1294,31 @@ int CCTextureCache_loadAsync(lua_State* L)
 	}
 #endif
     {
-	CCTextureCache* self = (CCTextureCache*)tolua_tousertype(L, 1, 0);
+		CCTextureCache* self = (CCTextureCache*)tolua_tousertype(L, 1, 0);
 #ifndef TOLUA_RELEASE
-	if (!self) tolua_error(L, "invalid 'self' in function 'CCTextureCache_loadAsync'", nullptr);
+		if (!self) tolua_error(L, "invalid 'self' in function 'CCTextureCache_loadAsync'", nullptr);
 #endif
-	if (lua_isstring(L, 2))
-	{
-		const char* filename = ((const char*)tolua_tostring(L, 2, 0));
-		int nHandler = lua_gettop(L) < 3 ? 0 : toluafix_ref_function(L, 3);
-		oImageAsyncLoader* loader = oImageAsyncLoader::create(filename, nHandler);
-		self->addImageAsync(filename, loader, callfuncO_selector(oImageAsyncLoader::callback));
-	}
-	else if (lua_istable(L, 2))
-	{
-		int length = (int)lua_objlen(L, 2);
-		for (int i = 0; i < length; i++)
+		if (lua_isstring(L, 2))
 		{
-			lua_rawgeti(L, 2, i + 1);
-			const char* filename = lua_tostring(L, -1);
+			const char* filename = ((const char*)tolua_tostring(L, 2, 0));
 			int nHandler = lua_gettop(L) < 3 ? 0 : toluafix_ref_function(L, 3);
 			oImageAsyncLoader* loader = oImageAsyncLoader::create(filename, nHandler);
 			self->addImageAsync(filename, loader, callfuncO_selector(oImageAsyncLoader::callback));
-			lua_pop(L, 1);
 		}
-	}
-	return 0;
+		else if (lua_istable(L, 2))
+		{
+			int length = (int)lua_objlen(L, 2);
+			for (int i = 0; i < length; i++)
+			{
+				lua_rawgeti(L, 2, i + 1);
+				const char* filename = lua_tostring(L, -1);
+				int nHandler = lua_gettop(L) < 3 ? 0 : toluafix_ref_function(L, 3);
+				oImageAsyncLoader* loader = oImageAsyncLoader::create(filename, nHandler);
+				self->addImageAsync(filename, loader, callfuncO_selector(oImageAsyncLoader::callback));
+				lua_pop(L, 1);
+			}
+		}
+		return 0;
     }
 #ifndef TOLUA_RELEASE
 tolua_lerror :

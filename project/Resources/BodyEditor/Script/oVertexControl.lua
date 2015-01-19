@@ -109,14 +109,16 @@ local function oVertexControl()
 					return
 				end
 				selectedVert.opacity = 0.2
+				selectedVert.highlighted = false
 				selectedVert.selected = false
 			end
 			selectedVert = item
 			setLabelPos(item)
-			if item.opacity == 0.5 then
+			if item.highlighted then
 				item.selected = true
 			else
 				item.opacity = 0.5
+				item.highlighted = true
 			end
 			local children = menu.children
 			for i = 1,children.count do
@@ -135,6 +137,7 @@ local function oVertexControl()
 			selectedVert = item.selected and item or nil
 			if not item.selected then label.text = "" end
 			item.opacity = item.selected and 0.5 or 0.2
+			item.highlighted = item.selected
 			local children = menu.children
 			for i = 1,children.count do
 				children[i].enabled = true
@@ -151,6 +154,7 @@ local function oVertexControl()
 		menuItem:addChild(circle)
 		menuItem.position = pos
 		menuItem.opacity = 0.2
+		menuItem.selected = false
 		menuItem.index = index
 		circle.scaleX = 0
 		circle.scaleY = 0
