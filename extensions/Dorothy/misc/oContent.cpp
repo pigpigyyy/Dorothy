@@ -112,7 +112,7 @@ void oContent::loadFileAsync(const char* filename, const function<void(oOwnArray
 
 bool oContent::setGameFile(const string& var)
 {
-	_gameFileName = _writablePath + var;
+	_gameFileName = var;
 	if (ccUZipIsOpened())
 	{
 		ccUZipClose();
