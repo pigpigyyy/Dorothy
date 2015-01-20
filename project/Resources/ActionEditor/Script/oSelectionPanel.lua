@@ -40,7 +40,7 @@ local function oSelectionPanel(borderSize,noCliping)
 	local mask = CCLayer()
 	mask.anchor = oVec2.zero
 	mask.touchEnabled = true
-	mask:registerTouchHandler(function() return panel.visible end,false,CCMenu.DefaultHandlerPriority-1,true)
+	mask:registerTouchHandler(function() return panel.visible end,false,CCMenu.DefaultHandlerPriority-3,true)
 	panel:addChild(mask)
 
 	local border = CCNode()
@@ -69,7 +69,7 @@ local function oSelectionPanel(borderSize,noCliping)
 	local menu = CCMenu(false)
 	menu.contentSize = CCSize(winSize.width,winSize.height)
 	menu.enabled = false
-	menu.touchPriority = CCMenu.DefaultHandlerPriority-2
+	menu.touchPriority = CCMenu.DefaultHandlerPriority-4
 	menu.anchor = oVec2(0,1)
 	menu.position = oVec2(-winSize.width*0.5,winSize.height*0.5)
 
@@ -257,7 +257,7 @@ local function oSelectionPanel(borderSize,noCliping)
 				end
 			end
 			return true
-		end, false, CCMenu.DefaultHandlerPriority-3, false)
+		end, false, CCMenu.DefaultHandlerPriority-5, false)
 
 	panel.view = view
 	panel.border = border
