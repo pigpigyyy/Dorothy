@@ -67,7 +67,7 @@ public class Cocos2dxHelper {
 		Cocos2dxHelper.sCocos2dxHelperListener = pCocos2dxHelperListener;
 
 		Cocos2dxHelper.sPackageName = applicationInfo.packageName;
-		Cocos2dxHelper.sFileDirectory = pContext.getFilesDir().getAbsolutePath();
+		Cocos2dxHelper.sFileDirectory = pContext.getDir("data", Context.MODE_PRIVATE).getAbsolutePath();
 		Cocos2dxHelper.nativeSetApkPath(applicationInfo.sourceDir);
 
 		Cocos2dxHelper.sCocos2dxAccelerometer = new Cocos2dxAccelerometer(pContext);
