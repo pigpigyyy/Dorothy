@@ -1,3 +1,78 @@
+#**Dorothy的介绍**
+&emsp;&emsp;Dorothy是Cocos2d-x-Lua的另一个分支，基于原始版本2.1rc0版再次开发的框架。之所以开始在这个版本上做自定义的开发，是因为我在跟随原版的更新，持续做开发的过程中，发现它的功能渐渐变得又多又杂，吸纳了各式各样的扩展，光是骨骼动画的扩展就重复增加了两套代码。并且它的扩展的开发我觉得定制得也不够深入，除了引入更多bug坑以外，并没有简化太多的开发工作。此外原版的Lua接口是几乎完全依赖tolua++自动生成的，导出了很多没有意义的接口，并生成很多冗余的绑定代码，并且tolua++的绑定机制也太过于通用化，没有很好地利用Cocos2d-x的特性。  
+&emsp;&emsp;所以一方面为了精简核心框架，另一方面又提供更加深度定制的辅助框架，优化Lua绑定代码，我渐渐地竟然写出了这样一个分支版本来。  
+&emsp;&emsp;这个分支提供了更加精简的API接口。移除了原版中不是特别核心的扩展功能，添加了更有用的特性，修复了原版的一些bug，并且改善了Lua绑定的核心代码和tolua++生成的绑定代码。
+##**特性**
+
+###**移除部分**
+* 使Cocos2d-x只作为纯粹的图形引擎存在（几乎移除了全部扩展）
+* 使Box2D作为唯一的物理引擎（移除了chipmunk）
+* 使Lua作为唯一的脚本引擎（移除了Javascript）
+* 只将在编写脚本逻辑层面上有意义的接口导出到Lua（Lua的用户不应该需要知道C++层的实现细节来使用脚本接口，为了确定和精简应该导出的接口，我花了数月时间陆续通读了Cocos2d-x的每一个函数实现，最终筛选出一部分我认为真正有必要的类和接口）
+
+###**增加部分**
+* 具有物理特性的节点和类：oWorld，oBody，oSensor，oJoint，与Cocos2d-x框架整合并简化了Box2D的使用方法。
+```language-lua
+	-- 物理引擎的简单示例，创建一个旋转下落的矩形方块
+	-- 设置环境
+	setfenv(Dorothy())
+	-- 创建场景
+	local scene = CCScene()
+	-- 创建世界
+	local world = oWorld()
+	world.showDebug = true -- 显示调试图形
+	scene:addChild(world)
+	-- 创建方块的定义
+	local def = oBodyDef()
+	def.type = oBodyDef.Dynamic
+	def:attachPolygon(80,60) -- 宽高(80,60)
+	-- 创建方块
+	local body = oBody(def, world, oVec2(400,500)) -- 初始坐标(400,500)
+	body.angularRate = 360 -- 每秒旋转360度
+	world:addChild(body)
+	-- 运行程序
+	CCDirector:run(scene)
+    
+    -- 更多详情参考/project/Resources/Test/Case/Body.lua, Sensor.lua
+```
+* 自己实现的骨骼动画框架，在两个动画之间的切换增加平滑过渡效果的支持。
+* 自己实现的骨骼动画编辑器，界面简单，但是功能足以制作任意的骨骼动画。编辑器完全只使用Dorothy框架的功能，全部用Dorothy的Lua脚本编写，所以可以跨平台使用。现已测试能在Win32与Android上运行，iOS和Mac因为资源的读写路径还没彻底研究，设置好资源读写路径也就一样可以使用了。
+![Android上运行的图片](http://www.luvfight.me/content/images/2014/12/actioneditor.jpg)
+Android上运行的图片（充话费送的手机也能跑得很好哟）
+
+编辑器的源码在/project/Resources/ActionEditor/Script下面（不要看，暂时没有时间写注释）
+
+* 增加了横版2D游戏的框架，很容易就可以制作类似超级玛丽的游戏。包括的功能有游戏人物、飞弹、动作框架和AI树、多层背景的管理以及摄像机控制的功能。当然要用这些功能做成一个非横版的游戏也是可以的。详情可以参考/project/Resources/Test/Case/Unit.lua, Unit1.lua。
+* 自带一个增强版的Zerobrane Studio，是一个用来编写Lua脚本的IDE，在我的改进下对全套API都有代码补全的功能，而且也比较灵敏（没有它的帮助，我的动画编辑器也根本无法完成）。唯一的缺点就是极少的情况下会崩溃（没事它会自动保存备份的），还有代码超过1000行以后变得不太流畅（原版不会变卡，只是会不再自动补全...）。编辑器在/tools/zbstudio路径下有win版，在/tools/zbstudio/zbstudio下有mac版，使用前需要设置Project->Lua Interpreter为Dorothy。
+
+###**增强部分**
+* 在Lua环境下自动管理对象的生命周期，原版中竟然还要在Lua层面上手动去调用retain()和release()，脚本语言不应该用来做这么低级的事。但是在脚本语言层面，未被引用的对象会被自动清理的特性还是需要人工对对象生命做判断维护。过深的引用链偶尔也会导致Lua的GC无法完全清理无效对象（有加了一套简单的内存泄露检测的机制，简单提供存活的CCObject对象数量，和被Lua引用对象数量的接口）。
+* 改进的的Lua类型系统，去掉了tolua++中奇怪的const type的类型（脚本中没有const的对象一说），优化在Lua中获取C++对象类型信息的方式（原版是从获取对象的各接口参数来推导C++对象的类型，我改为在第一次获取C++对象时就tricky地通过一个数组下标值马上确定对象的真实类型）。详见我的《tolua++中的类型系统》一文中的介绍。
+* 修改了一些tolua++生成绑定代码的规则，去掉了一些冗余代码的生成。现在修改tolua++生成规则可以在/tools/tolua++/tolua++中修改源码（源码也为Lua）。
+* 提供了iOS 64位的支持，原版代码很少使用64位下有变化的数据类型，所以代码的迁移并没有很困难，主要解决的问题是luajit目前还没有iOS 64位下可以编译的版本，所以我把64位下luajit库换成了lua库，其他的环境仍然使用luajit库，luajit2.0.1和lua5.1.4的主要接口功能基本上是一致的。
+
+###**存在问题**###
+* 在C++中注册Lua函数的时候可能会导致无法释放的循环引用，比如下面的例子：
+
+```language-lua
+	local layer = CCLayer()
+    layer:registerTouchHandler(
+    	function(eventType) -- layer对象在C++实现内部引用了这个闭包对象
+    		if eventType == CCTouch.Began then
+    			layer.opacity = 1.0 -- 在闭包对象中又引用了layer对象
+    		elseif eventType == CCTouch.Ended then
+    			layer:runAction(oOpacity(0.3,0))
+    		end
+	    end)
+
+	-- 在当前的实现中，Lua的GC系统无法检测这样的循环引用。
+	-- 所以在使用完layer对象以后，需要手动调用layer:unregisterTouchHandler()
+    -- 来避免内存泄露。
+``` 
+
+&emsp;&emsp;目前针对这个问题暂时通过`CCNode.cleanup`方法来解决。这个方法会在彻底移除一个节点对象的时候被触发调用，当它被调用的时候，这个C++对象所引用的所有Lua对象都会被清理一遍（回掉函数和存在Lua Userdata的环境表里的对象）。  
+&emsp;`node:removeChild(child)`会在移除节点后遍历它和它的子节点树，把每一个子对象都执行一遍cleanup方法。但是用`node:removeChild(child, false)`的话就不会做对象的清理了。
+
 #**Dorothy**
 Another branch of Cocos2d-x with Lua derived from Cocos2d-x version 2.1rc0. Its target is to make a much easier framework for building a game. This branch provides simpler API interfaces, removes unnecessary features, addes features, improves the Lua binding codes and fixes Cocos2d-x bugs.
 
