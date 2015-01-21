@@ -73,6 +73,7 @@ local function oEditMenu()
 			end),
 		Del = oButton("Del",16,50,50,95,winSize.height-35,
 			function()
+				oEditor.settingPanel:clearSelection()
 				if oEditor.state == oEditor.EDIT_ANIMATION then
 					oBox("Delete\n"..oEditor.animation,function()
 						local aNames = oEditor.data[oSd.animationNames]
@@ -144,6 +145,7 @@ local function oEditMenu()
 			function()
 				local pos = math.floor(oEditor.controlBar:getPos()+0.5)
 				if oEditor.sprite and pos ~= oEditor.currentFramePos and oEditor.spriteData and not oEditor.spriteData[oSd.animationNames] then
+					oEditor.settingPanel:clearSelection()
 					local sprite = oEditor.sprite
 					local sp = oEditor.spriteData
 					local animationDef = oEditor.animationData
@@ -219,6 +221,7 @@ local function oEditMenu()
 			function()
 				local pos = math.floor(oEditor.controlBar:getPos()+0.5)
 				if oEditor.sprite and pos == oEditor.currentFramePos and (oEditor.keyIndex ~= 2 or #oEditor.animationData == 2) then
+					oEditor.viewPanel:clearSelection()
 					oBox("Delete\nFrame",function()
 						local sp = oEditor.spriteData
 						local animationDef = oEditor.animationData
@@ -444,6 +447,7 @@ local function oEditMenu()
 			function()
 				-- item = CCNode
 				if oEditor.spriteData then
+					oEditor.settingPanel:clearSelection()
 					local chooser = oSpriteChooser()
 					chooser.selected = function(self, name)
 						local children = oEditor.spriteData[oSd.children]

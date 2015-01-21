@@ -1282,7 +1282,7 @@ local function oViewArea()
 			end
 
 			if editTarget.contentSize ~= CCSize.zero then
-				local r = -(editTarget.rotation-posRotFix)*math.pi/180
+				local r = math.rad(posRotFix)
 				local x1 = x2*math.cos(r)-y2*math.sin(r)
 				local y1 = x2*math.sin(r)+y2*math.cos(r)
 				x1 = x1/editTarget.contentSize.width

@@ -82,7 +82,7 @@ local function oEditMenu()
 					oEditor:addChild(oBox("New Name",function(name)
 						oEditor.dirty = false
 						button.text = "Edit"
-						oEditor.currentFile = name..".lua"
+						oEditor.currentFile = name..".body"
 						oEditor:dumpData(oEditor.currentFile)
 					end,true),oEditor.topMost)
 				end
@@ -128,15 +128,10 @@ local function oEditMenu()
 		end),
 
 		Play = oPlayButton(50,winSize.width-225,35,function(button)
-			oEditor.isPlaying = button.isPlaying
-			oEditor.worldScheduler.timeScale = oEditor.isPlaying and 1 or 0
-			if not oEditor.isPlaying then
-				oEditor:resetItems()
-			end
 			oEvent:send("editControl.hide")
 			oEvent:send("settingPanel.edit",nil)
-			oEvent:send("settingPanel.enable",not oEditor.isPlaying)
-			oEvent:send("editor.isPlaying",oEditor.isPlaying)
+			oEvent:send("settingPanel.enable",not button.isPlaying)
+			oEvent:send("editor.isPlaying",button.isPlaying)
 		end),
 	}
 
@@ -252,6 +247,11 @@ local function oEditMenu()
 		items.Zoom.text = tostring(math.floor(scale*100)).."%"
 	end)
 	items.Play.data = oListener("editor.isPlaying",function(isPlaying)
+		oEditor.isPlaying = isPlaying
+		oEditor.worldScheduler.timeScale = isPlaying and 1 or 0
+		if not isPlaying then
+			oEditor:resetItems()
+		end
 		if isPlaying then
 			local motorButtons = {}
 			local i = 0
@@ -270,8 +270,8 @@ local function oEditMenu()
 					menu:addChild(jointButton)
 					i = i + 1
 				end
-				menu.motorButtons = motorButtons
 			end
+			menu.motorButtons = motorButtons
 		elseif menu.motorButtons then
 			for _,btn in ipairs(menu.motorButtons) do
 				menu:removeChild(btn)
