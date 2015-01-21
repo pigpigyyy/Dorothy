@@ -12,7 +12,7 @@
 
 ###**增加部分**
 * 具有物理特性的节点和类：oWorld，oBody，oSensor，oJoint，与Cocos2d-x框架整合并简化了Box2D的使用方法。
-```language-lua
+```lua
 	-- 物理引擎的简单示例，创建一个旋转下落的矩形方块
 	-- 设置环境
 	setfenv(Dorothy())
@@ -36,9 +36,11 @@
     -- 更多详情参考/project/Resources/Test/Case/Body.lua, Sensor.lua
 ```
 * 自己实现的骨骼动画框架，在两个动画之间的切换增加平滑过渡效果的支持。
-* 自己实现的骨骼动画编辑器，界面简单，但是功能足以制作任意的骨骼动画。编辑器完全只使用Dorothy框架的功能，全部用Dorothy的Lua脚本编写，所以可以跨平台使用。现已测试能在Win32与Android上运行，iOS和Mac因为资源的读写路径还没彻底研究，设置好资源读写路径也就一样可以使用了。
-![Android上运行的图片](http://www.luvfight.me/content/images/2014/12/actioneditor.jpg)
-Android上运行的图片（充话费送的手机也能跑得很好哟）
+* 自己实现的骨骼动画编辑器，界面简单，但是功能足以制作任意的骨骼动画。编辑器完全只使用Dorothy框架的功能，全部用Dorothy的Lua脚本编写，所以可以跨平台使用。现已测试能在Win32与Android上运行，iOS和Mac因为资源的读写路径还没彻底研究，设置好资源读写路径也就一样可以使用了。  
+
+![Android上运行的图片](http://www.luvfight.me/content/images/2014/12/actioneditor.jpg)  
+
+&emsp;&emsp;Android上运行的图片（充话费送的手机也能跑得很好哟）
 
 编辑器的源码在/project/Resources/ActionEditor/Script下面（不要看，暂时没有时间写注释）
 
@@ -54,7 +56,7 @@ Android上运行的图片（充话费送的手机也能跑得很好哟）
 ###**存在问题**###
 * 在C++中注册Lua函数的时候可能会导致无法释放的循环引用，比如下面的例子：
 
-```language-lua
+```lua
 	local layer = CCLayer()
     layer:registerTouchHandler(
     	function(eventType) -- layer对象在C++实现内部引用了这个闭包对象
