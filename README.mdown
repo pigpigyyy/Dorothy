@@ -75,6 +75,9 @@
 &emsp;&emsp;目前针对这个问题暂时通过`CCNode.cleanup`方法来解决。这个方法会在彻底移除一个节点对象的时候被触发调用，当它被调用的时候，这个C++对象所引用的所有Lua对象都会被清理一遍（回掉函数和存在Lua Userdata的环境表里的对象）。  
 &emsp;`node:removeChild(child)`会在移除节点后遍历它和它的子节点树，把每一个子对象都执行一遍cleanup方法。但是用`node:removeChild(child, false)`的话就不会做对象的清理了。
 
+###**联系和交流**###
+&emsp;&emsp;我的QQ：405682409，请作说明哦，谢谢，欢迎一起讨论技术。
+
 #**Dorothy**
 Another branch of Cocos2d-x with Lua derived from Cocos2d-x version 2.1rc0. Its target is to make a much easier framework for building a game. This branch provides simpler API interfaces, removes unnecessary features, addes features, improves the Lua binding codes and fixes Cocos2d-x bugs.
 
