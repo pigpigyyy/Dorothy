@@ -38,9 +38,9 @@
 * 自己实现的骨骼动画框架，在两个动画之间的切换增加平滑过渡效果的支持。
 * 自己实现的骨骼动画编辑器，界面简单，但是功能足以制作任意的骨骼动画。编辑器完全只使用Dorothy框架的功能，全部用Dorothy的Lua脚本编写，所以可以跨平台使用。现已测试能在Win32与Android上运行，iOS和Mac因为资源的读写路径还没彻底研究，设置好资源读写路径也就一样可以使用了。以下是在某安卓寨机上的运行截图。编辑器的PC版可执行程序可以通过编译该项目生成，或是从这里下载生成好的可执行版本：[http://git.oschina.net/pig/ActionEditor](http://git.oschina.net/pig/ActionEditor)  
 
-![Android上运行的图片](http://www.luvfight.me/content/images/2014/12/actioneditor.jpg)  
+![自带的骨骼动画编辑器](http://www.luvfight.me/content/images/2015/1/actionEdit.gif)  
 
-&emsp;&emsp;Android上运行的图片（充话费送的手机也能跑得很好哟）
+&emsp;&emsp;自带的骨骼动画编辑器运行的图片
 
 &emsp;&emsp;编辑器的源码在/project/Resources/ActionEditor/Script下面（不要看，暂时没有时间写注释）
 

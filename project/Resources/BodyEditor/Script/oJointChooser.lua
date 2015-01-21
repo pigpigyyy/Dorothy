@@ -105,7 +105,7 @@ local function oJointChooser()
 		menu:addChild(button)
 	end
 
-	local yTo = winSize.height*0.5+halfBH-y+(itemHeight*0.5+10)
+	local yTo = borderSize.height+itemHeight*0.5+10-y
 	local viewHeight = yTo < borderSize.height and borderSize.height or yTo
 	local viewWidth = borderSize.width
 	panel:reset(viewWidth,viewHeight,paddingX,paddingY)
