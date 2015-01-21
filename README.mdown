@@ -36,13 +36,13 @@
     -- 更多详情参考/project/Resources/Test/Case/Body.lua, Sensor.lua
 ```
 * 自己实现的骨骼动画框架，在两个动画之间的切换增加平滑过渡效果的支持。
-* 自己实现的骨骼动画编辑器，界面简单，但是功能足以制作任意的骨骼动画。编辑器完全只使用Dorothy框架的功能，全部用Dorothy的Lua脚本编写，所以可以跨平台使用。现已测试能在Win32与Android上运行，iOS和Mac因为资源的读写路径还没彻底研究，设置好资源读写路径也就一样可以使用了。  
+* 自己实现的骨骼动画编辑器，界面简单，但是功能足以制作任意的骨骼动画。编辑器完全只使用Dorothy框架的功能，全部用Dorothy的Lua脚本编写，所以可以跨平台使用。现已测试能在Win32与Android上运行，iOS和Mac因为资源的读写路径还没彻底研究，设置好资源读写路径也就一样可以使用了。以下是在某安卓寨机上的运行截图。编辑器的PC版可执行程序可以通过编译该项目生成，或是从这里下载生成好的可执行版本：[http://git.oschina.net/pig/ActionEditor](http://git.oschina.net/pig/ActionEditor)  
 
 ![Android上运行的图片](http://www.luvfight.me/content/images/2014/12/actioneditor.jpg)  
 
 &emsp;&emsp;Android上运行的图片（充话费送的手机也能跑得很好哟）
 
-编辑器的源码在/project/Resources/ActionEditor/Script下面（不要看，暂时没有时间写注释）
+&emsp;&emsp;编辑器的源码在/project/Resources/ActionEditor/Script下面（不要看，暂时没有时间写注释）
 
 * 增加了横版2D游戏的框架，很容易就可以制作类似超级玛丽的游戏。包括的功能有游戏人物、飞弹、动作框架和AI树、多层背景的管理以及摄像机控制的功能。当然要用这些功能做成一个非横版的游戏也是可以的。详情可以参考/project/Resources/Test/Case/Unit.lua, Unit1.lua。
 * 自带一个增强版的Zerobrane Studio，是一个用来编写Lua脚本的IDE，在我的改进下对全套API都有代码补全的功能，而且也比较灵敏（没有它的帮助，我的动画编辑器也根本无法完成）。唯一的缺点就是极少的情况下会崩溃（没事它会自动保存备份的），还有代码超过1000行以后变得不太流畅（原版不会变卡，只是会不再自动补全...）。编辑器在/tools/zbstudio路径下有win版，在/tools/zbstudio/zbstudio下有mac版，使用前需要设置Project->Lua Interpreter为Dorothy。
