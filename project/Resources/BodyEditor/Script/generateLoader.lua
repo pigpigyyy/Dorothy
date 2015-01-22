@@ -31,6 +31,8 @@ local oJoint = require("oJoint")
 local oBodyDef = require("oBodyDef")
 local oJointDef = require("oJointDef")
 local oCache = require("oCache")
+local CCSprite = require("CCSprite")
+local oModel = require("oModel")
 local type = tolua.type
 
 local bodyCache = CCDictionary()
@@ -91,6 +93,24 @@ local function create(itemDict,world,pos,angle)
 				newPos = newPos + pos - oldPos
 			end
 			local body = oBody(itemDef,world,newPos,angle)
+			local face = nil
+			local faceStr = itemDef.face
+			if faceStr ~= "" then
+				if faceStr:match("|") then
+					face = CCSprite(faceStr)
+				else
+					local extension = string.lower(string.match(faceStr,"%.([^%.\\/]*)$"))
+					if extension == "model" then
+						face = oModel(faceStr)
+					else
+						face = CCSprite(faceStr)
+					end
+				end
+			end
+			if face then
+				face.position = itemDef.facePos
+				body:addChild(face)
+			end
 			items[key] = body
 			node:addChild(body)
 		else
@@ -134,6 +154,8 @@ loadFuncs =
 		bodyDef.angularDamping = data[%d]
 		bodyDef.position = data[%d]
 		bodyDef.angle = data[%d]
+		bodyDef.face = data[%d]
+		bodyDef.facePos = data[%d]
 		if data[%d] then
 			bodyDef:attachPolygonSensor(data[%d],
 				data[%d].width,data[%d].height,data[%d],0)
@@ -158,6 +180,8 @@ Rectangle.LinearDamping,
 Rectangle.AngularDamping,
 Rectangle.Position,
 Rectangle.Angle,
+Rectangle.Face,
+Rectangle.FacePos,
 Rectangle.Sensor,
 Rectangle.SensorTag,
 Rectangle.Size,
@@ -182,6 +206,8 @@ Rectangle.Name)..string.format([[
 		bodyDef.angularDamping = data[%d]
 		bodyDef.position = data[%d]
 		bodyDef.angle = data[%d]
+		bodyDef.face = data[%d]
+		bodyDef.facePos = data[%d]
 		if data[%d] then
 			bodyDef:attachCircleSensor(data[%d],data[%d],data[%d])
 		else
@@ -203,6 +229,8 @@ Circle.LinearDamping,
 Circle.AngularDamping,
 Circle.Position,
 Circle.Angle,
+Circle.Face,
+Circle.FacePos,
 Circle.Sensor,
 Circle.SensorTag,
 Circle.Center,
@@ -226,6 +254,8 @@ Circle.Name)..string.format([[
 		bodyDef.angularDamping = data[%d]
 		bodyDef.position = data[%d]
 		bodyDef.angle = data[%d]
+		bodyDef.face = data[%d]
+		bodyDef.facePos = data[%d]
 		if data[%d] then
 			bodyDef:attachPolygonSensor(data[%d],data[%d])
 		else
@@ -249,6 +279,8 @@ Polygon.LinearDamping,
 Polygon.AngularDamping,
 Polygon.Position,
 Polygon.Angle,
+Polygon.Face,
+Polygon.FacePos,
 Polygon.Sensor,
 Polygon.SensorTag,
 Polygon.Vertices,
@@ -270,6 +302,8 @@ Polygon.Name)..string.format([[
 		bodyDef.angularDamping = data[%d]
 		bodyDef.position = data[%d]
 		bodyDef.angle = data[%d]
+		bodyDef.face = data[%d]
+		bodyDef.facePos = data[%d]
 		bodyDef:attachChain(data[%d],data[%d],data[%d])
 		if data[%d] then
 			for _,subShape in ipairs(data[%d]) do
@@ -289,6 +323,8 @@ Chain.LinearDamping,
 Chain.AngularDamping,
 Chain.Position,
 Chain.Angle,
+Chain.Face,
+Chain.FacePos,
 Chain.Vertices,
 Chain.Friction,
 Chain.Restitution,
@@ -306,6 +342,8 @@ Chain.Name)..string.format([[
 		bodyDef.angularDamping = data[%d]
 		bodyDef.position = data[%d]
 		bodyDef.angle = data[%d]
+		bodyDef.face = data[%d]
+		bodyDef.facePos = data[%d]
 		bodyDef:attachLoop(data[%d],data[%d],data[%d])
 		if data[%d] then
 			for _,subShape in ipairs(data[%d]) do
@@ -325,6 +363,8 @@ Loop.LinearDamping,
 Loop.AngularDamping,
 Loop.Position,
 Loop.Angle,
+Loop.Face,
+Loop.FacePos,
 Loop.Vertices,
 Loop.Friction,
 Loop.Restitution,
@@ -544,7 +584,7 @@ Wheel.Frequency,
 Wheel.Damping)..[[
 }
 
-return {create=create,load=load}
+return oBody
 ]]
 
 oContent:saveToFile(oContent.writablePath.."oBodyEx.lua",loaderCodes)

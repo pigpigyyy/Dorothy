@@ -31,7 +31,7 @@ _group(0)
 		}
 		else
 		{
-			oBody::attach(fixtureDef);
+			oBody::attachSelf(fixtureDef);
 		}
 	}
 }
@@ -224,11 +224,17 @@ void oBody::applyAngularImpulse(float impulse)
 	_bodyB2->ApplyAngularImpulse(impulse);
 }
 
-b2Fixture* oBody::attach( b2FixtureDef* fixtureDef )
+b2Fixture* oBody::attachSelf(b2FixtureDef* fixtureDef)
 {
 	fixtureDef->filter = _world->getFilter(_group);
 	fixtureDef->isSensor = false;
 	b2Fixture* fixture = _bodyB2->CreateFixture(fixtureDef);
+	return fixture;
+}
+
+b2Fixture* oBody::attach( b2FixtureDef* fixtureDef )
+{
+	b2Fixture* fixture = oBody::attachSelf(fixtureDef);
 	/* cleanup temp vertices */
 	if (fixtureDef->shape->m_type == b2Shape::e_chain)
 	{

@@ -55,6 +55,7 @@ public:
 	static oBody* create(oBodyDef* bodyDef, oWorld* world, const oVec2& pos = oVec2::zero, float rot = 0);
 protected:
 	oBody(oBodyDef* bodyDef, oWorld* world);
+	b2Fixture* attachSelf(b2FixtureDef* fixtureDef);
 	virtual void updatePhysics();
 	b2Body* _bodyB2;// weak reference
 	oWorld* _world;

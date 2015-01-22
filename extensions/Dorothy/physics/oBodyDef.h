@@ -158,6 +158,8 @@ public:
 		float radius);
 	oVec2 offset;
 	float angleOffset;
+	string face;
+	oVec2 facePos;
 	PROPERTY_READONLY_REF(oOwnVector<b2FixtureDef>, FixtureDefs);
 	void clearFixtures();
 	void setDensity(float var);

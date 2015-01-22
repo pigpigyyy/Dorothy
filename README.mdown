@@ -36,7 +36,7 @@
     -- 更多详情参考/project/Resources/Test/Case/Body.lua, Sensor.lua
 ```
 * 自己实现的骨骼动画框架，在两个动画之间的切换增加平滑过渡效果的支持。
-* 自己实现的骨骼动画编辑器，界面简单，但是功能足以制作任意的骨骼动画。编辑器完全只使用Dorothy框架的功能，全部用Dorothy的Lua脚本编写，所以可以跨平台使用。现已测试能在Win32与Android上运行，iOS和Mac因为资源的读写路径还没彻底研究，设置好资源读写路径也就一样可以使用了。以下是在某安卓寨机上的运行截图。编辑器的PC版可执行程序可以通过编译该项目生成，或是从这里下载生成好的可执行版本：[http://git.oschina.net/pig/ActionEditor](http://git.oschina.net/pig/ActionEditor)  
+* 自己实现的骨骼动画编辑器，界面简单，但是功能足以制作任意的骨骼动画。编辑器完全只使用Dorothy框架的功能，全部用Dorothy的Lua脚本编写，所以可以跨平台使用。以下是运行截图。编辑器的PC版可执行程序可以通过编译该项目生成，或是从这里下载生成好的可执行版本：[http://git.oschina.net/pig/ActionEditor](http://git.oschina.net/pig/ActionEditor)  
 
 ![自带的骨骼动画编辑器](http://www.luvfight.me/content/images/2015/1/actionEdit.gif)  
 
@@ -48,7 +48,7 @@
 * 自带一个增强版的Zerobrane Studio，是一个用来编写Lua脚本的IDE，在我的改进下对全套API都有代码补全的功能，而且也比较灵敏（没有它的帮助，我的动画编辑器也根本无法完成）。唯一的缺点就是极少的情况下会崩溃（没事它会自动保存备份的），还有代码超过1000行以后变得不太流畅（原版不会变卡，只是会不再自动补全...）。编辑器在/tools/zbstudio路径下有win版，在/tools/zbstudio/zbstudio下有mac版，使用前需要设置Project->Lua Interpreter为Dorothy。
 
 ###**增强部分**
-* 在Lua环境下自动管理对象的生命周期，原版中竟然还要在Lua层面上手动去调用retain()和release()，脚本语言不应该用来做这么低级的事。但是在脚本语言层面，未被引用的对象会被自动清理的特性还是需要人工对对象生命做判断维护。过深的引用链偶尔也会导致Lua的GC无法完全清理无效对象（有加了一套简单的内存泄露检测的机制，简单提供存活的CCObject对象数量，和被Lua引用对象数量的接口）。详见[“Cocos2d-x-Lua对象生命周期管理”](http://www.luvfight.me/lua-cpp-object-life-time/)文章中的介绍。
+* 在Lua环境下自动管理对象的生命周期，原版中竟然还要在Lua层面上手动去调用retain()和release()，脚本语言不应该用来做这么低级的事。但是在脚本语言层面，未被引用的对象会被自动清理的特性还是需要人工对对象生命做判断维护。过深的引用链偶尔也会导致Lua的GC无法完全清理无效对象（有加了一套简单的内存泄露检测的机制，简单提供存活的CCObject对象数量，和被Lua引用对象数量的接口）。Lua和C++之间对象的协同管理，详见[“Cocos2d-x-Lua对象生命周期管理”](http://www.luvfight.me/lua-cpp-object-life-time/)文章中的介绍。
 * 改进的的Lua类型系统，去掉了tolua++中奇怪的const type的类型（脚本中没有const的对象一说），优化在Lua中获取C++对象类型信息的方式（原版是从获取对象的各接口参数来推导C++对象的类型，我改为在第一次获取C++对象时就tricky地通过一个数组下标值马上确定对象的真实类型）。详见[“tolua++中的类型系统”](http://www.luvfight.me/tolua-type-system/)文章中的介绍。
 * 修改了一些tolua++生成绑定代码的规则，去掉了一些冗余代码的生成。现在修改tolua++生成规则可以在/tools/tolua++/tolua++中修改源码（源码也为Lua）。
 * 提供了iOS 64位的支持，原版代码很少使用64位下有变化的数据类型，所以代码的迁移并没有很困难，主要解决的问题是luajit目前还没有iOS 64位下可以编译的版本，所以我把64位下luajit库换成了lua库，其他的环境仍然使用luajit库，luajit2.0.1和lua5.1.4的主要接口功能基本上是一致的。
@@ -76,7 +76,7 @@
 &emsp;`node:removeChild(child)`会在移除节点后遍历它和它的子节点树，把每一个子对象都执行一遍cleanup方法。但是用`node:removeChild(child, false)`的话就不会做对象的清理了。
 
 ###**联系和交流**###
-&emsp;&emsp;我的QQ：405682409，请作说明哦，欢迎一起讨论技术。
+&emsp;&emsp;我的QQ：405682409，请作说明，欢迎一起作技术讨论。
 
 #**Dorothy**
 Another branch of Cocos2d-x with Lua derived from Cocos2d-x version 2.1rc0. Its target is to make a much easier framework for building a game. This branch provides simpler API interfaces, removes unnecessary features, addes features, improves the Lua binding codes and fixes Cocos2d-x bugs.

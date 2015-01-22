@@ -281,6 +281,7 @@ b2FixtureDef* oBodyDef::polygon( const oVec2 vertices[], int count, float densit
 }
 b2FixtureDef* oBodyDef::loop( const vector<oVec2>& vertices, float friction, float restitution )
 {
+	_chainShape.ClearVertices();
 	int length = (int)vertices.size();
 	b2Vec2* vs = new b2Vec2[length];
 	for (int i = 0; i < length; i++)
@@ -296,6 +297,7 @@ b2FixtureDef* oBodyDef::loop( const vector<oVec2>& vertices, float friction, flo
 }
 b2FixtureDef* oBodyDef::loop(const oVec2 vertices[], int count, float friction, float restitution)
 {
+	_chainShape.ClearVertices();
 	b2Vec2* vs = new b2Vec2[count];
 	for (int i = 0; i < count; i++)
 	{
@@ -324,6 +326,7 @@ b2FixtureDef* oBodyDef::circle( float radius, float density, float friction, flo
 }
 b2FixtureDef* oBodyDef::chain( const vector<oVec2>& vertices, float friction, float restitution )
 {
+	_chainShape.ClearVertices();
 	int length = (int)vertices.size();
 	b2Vec2* vs = new b2Vec2[length];
 	for (int i = 0; i < length; i++)
@@ -339,6 +342,7 @@ b2FixtureDef* oBodyDef::chain( const vector<oVec2>& vertices, float friction, fl
 }
 b2FixtureDef* oBodyDef::chain(const oVec2 vertices[], int count, float friction, float restitution)
 {
+	_chainShape.ClearVertices();
 	b2Vec2* vs = new b2Vec2[count];
 	for (int i = 0; i < count; i++)
 	{

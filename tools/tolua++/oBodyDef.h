@@ -15,6 +15,8 @@ public:
 	float gravityScale;
 	oVec2 offset @ position;
 	float angleOffset @ angle;
+	string face;
+	oVec2 facePos;
 	static oFixtureDef* polygon(
 		oVec2& center,
 		float width,

@@ -7,6 +7,8 @@ local oJoint = require("oJoint")
 local oBodyDef = require("oBodyDef")
 local oJointDef = require("oJointDef")
 local oCache = require("oCache")
+local CCSprite = require("CCSprite")
+local oModel = require("oModel")
 local type = tolua.type
 
 local bodyCache = CCDictionary()
@@ -67,6 +69,24 @@ local function create(itemDict,world,pos,angle)
 				newPos = newPos + pos - oldPos
 			end
 			local body = oBody(itemDef,world,newPos,angle)
+			local face = nil
+			local faceStr = itemDef.face
+			if faceStr ~= "" then
+				if faceStr:match("|") then
+					face = CCSprite(faceStr)
+				else
+					local extension = string.lower(string.match(faceStr,"%.([^%.\\/]*)$"))
+					if extension == "model" then
+						face = oModel(faceStr)
+					else
+						face = CCSprite(faceStr)
+					end
+				end
+			end
+			if face then
+				face.position = itemDef.facePos
+				body:addChild(face)
+			end
 			items[key] = body
 			node:addChild(body)
 		else
@@ -109,6 +129,8 @@ loadFuncs =
 		bodyDef.angularDamping = data[12]
 		bodyDef.position = data[4]
 		bodyDef.angle = data[5]
+		bodyDef.face = data[19]
+		bodyDef.facePos = data[20]
 		if data[16] then
 			bodyDef:attachPolygonSensor(data[17],
 				data[7].width,data[7].height,data[6],0)
@@ -134,6 +156,8 @@ loadFuncs =
 		bodyDef.angularDamping = data[12]
 		bodyDef.position = data[4]
 		bodyDef.angle = data[5]
+		bodyDef.face = data[19]
+		bodyDef.facePos = data[20]
 		if data[16] then
 			bodyDef:attachCircleSensor(data[17],data[6],data[7])
 		else
@@ -157,6 +181,8 @@ loadFuncs =
 		bodyDef.angularDamping = data[11]
 		bodyDef.position = data[4]
 		bodyDef.angle = data[5]
+		bodyDef.face = data[18]
+		bodyDef.facePos = data[19]
 		if data[15] then
 			bodyDef:attachPolygonSensor(data[16],data[6])
 		else
@@ -180,6 +206,8 @@ loadFuncs =
 		bodyDef.angularDamping = data[10]
 		bodyDef.position = data[4]
 		bodyDef.angle = data[5]
+		bodyDef.face = data[15]
+		bodyDef.facePos = data[16]
 		bodyDef:attachChain(data[6],data[7],data[8])
 		if data[14] then
 			for _,subShape in ipairs(data[14]) do
@@ -199,6 +227,8 @@ loadFuncs =
 		bodyDef.angularDamping = data[10]
 		bodyDef.position = data[4]
 		bodyDef.angle = data[5]
+		bodyDef.face = data[15]
+		bodyDef.facePos = data[16]
 		bodyDef:attachLoop(data[6],data[7],data[8])
 		if data[14] then
 			for _,subShape in ipairs(data[14]) do
