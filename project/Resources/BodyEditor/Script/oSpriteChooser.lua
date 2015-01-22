@@ -30,6 +30,7 @@ local function oSpriteChooser()
 	local itemNum = 5
 	local paddingX = 0
 	local paddingY = 100
+	panel:reset(borderSize.width,borderSize.height,paddingX,paddingY)
 	local background = CCDrawNode()
 	background:drawPolygon(
 	{
@@ -46,14 +47,12 @@ local function oSpriteChooser()
 	opMenu.position = oVec2(winSize.width*0.5+borderSize.width*0.5,winSize.height*0.5+borderSize.height*0.5)
 	panel:addChild(opMenu)
 
-	local cancelButton = oButton("Cancel",17,60,false,
-		0,0,
-		function(item)
-			item:unregisterTapHandler()
-			opMenu.enabled = false
-			panel:fadeSprites()
-			panel:hide()
-		end)
+	local cancelButton = oButton("Cancel",17,60,false,0,0,function(item)
+		item:unregisterTapHandler()
+		opMenu.enabled = false
+		panel:fadeSprites()
+		panel:hide()
+	end)
 	cancelButton.anchor = oVec2.zero
 	local btnBk = CCDrawNode()
 	btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
@@ -64,15 +63,46 @@ local function oSpriteChooser()
 	panel.sprites = {}
 	panel.init = function(self)
 		local y = 0
-		local files = oContent:getEntries(oEditor.input,false)
 		local n = 0
+		local files = oContent:getEntries(oEditor.input,false)
+		local orderedFiles = {}
+		local modelFiles = {}
 		for index = 1,#files do
 			files[index] = oEditor.input..files[index]
+			local extension = string.match(files[index],"%.([^%.\\/]*)$")
+			if extension then
+				extension = string.lower(extension)
+				if extension == "png" and not oContent:exist(files[index]:sub(1,-4).."clip") then
+					table.insert(orderedFiles,1,files[index])
+				elseif extension == "clip" then
+					table.insert(orderedFiles,files[index]:sub(1,-5).."png")
+					table.insert(orderedFiles,files[index])
+				elseif extension == "model" then
+					table.insert(modelFiles,files[index])
+				end
+			end
+		end
+		for index = 1,#modelFiles do
+			table.insert(orderedFiles,modelFiles[index])
 		end
 		local routine
+		n = n + 1
+		y = borderSize.height-10-itemHeight*0.5-math.floor((n-1)/itemNum)*(itemHeight+10)
+		local button = oButton("Empty",16,100,100,
+			itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
+			function()
+				if panel.selected then
+					cancelButton:unregisterTapHandler()
+					oRoutine:remove(routine)
+					panel:hide()
+					panel.selected("")
+				end
+			end)
+		menu:addChild(button)
 		routine = oRoutine(once(function()
-			oCache:loadAsync(files,function(filename)
-				local extension = string.match(filename, "%.([^%.\\/]*)$")
+			oCache:loadAsync(orderedFiles,function(filename)
+				if not panel.sprites then return end
+				local extension = string.match(filename,"%.([^%.\\/]*)$")
 				if extension then
 					extension = string.lower(extension)
 					if extension == "clip" then
@@ -89,7 +119,7 @@ local function oSpriteChooser()
 										cancelButton:unregisterTapHandler()
 										oRoutine:remove(routine)
 										panel:hide()
-										panel:selected(clipStr)
+										panel.selected(clipStr)
 									end
 								end)
 							local sprite = nil
@@ -102,23 +132,18 @@ local function oSpriteChooser()
 							end
 							sprite.position = oVec2(100*0.5,100*0.5)
 							sprite.opacity = 0
-							sprite:runAction(
-								CCSequence(
-								{
-									CCDelay(((n-1)%6)*0.05),
-									oOpacity(0.3,1)
-								}))
+							sprite:runAction(oOpacity(0.3,1))
 							local node = CCNode()
 							node.cascadeColor = false
 							node.cascadeOpacity = false
 							node:addChild(sprite)
 							table.insert(panel.sprites,node)
 							button.face:addChild(node)
+							button.position = button.position + panel:getTotalDelta()
 							menu:addChild(button)
 						end
 					elseif extension == "png" then
 						if not oContent:exist(filename:sub(1,-4).."clip") then
-							print(filename)
 							n = n + 1
 							y = borderSize.height-10-itemHeight*0.5-math.floor((n-1)/itemNum)*(itemHeight+10)
 							local button = oButton("",0,
@@ -129,7 +154,7 @@ local function oSpriteChooser()
 										cancelButton:unregisterTapHandler()
 										oRoutine:remove(routine)
 										panel:hide()
-										panel:selected(filename)
+										panel.selected(filename)
 									end
 								end)
 							local sprite = nil
@@ -142,26 +167,39 @@ local function oSpriteChooser()
 							end
 							sprite.position = oVec2(100*0.5,100*0.5)
 							sprite.opacity = 0
-							sprite:runAction(
-								CCSequence(
-								{
-									CCDelay(((n-1)%6)*0.05),
-									oOpacity(0.3,1)
-								}))
+							sprite:runAction(oOpacity(0.3,1))
 							local node = CCNode()
 							node.cascadeColor = false
 							node.cascadeOpacity = false
 							node:addChild(sprite)
 							table.insert(panel.sprites,node)
 							button.face:addChild(node)
+							button.position = button.position + panel:getTotalDelta()
 							menu:addChild(button)
 						end
+					elseif extension == "model" then
+						n = n + 1
+						y = borderSize.height-10-itemHeight*0.5-math.floor((n-1)/itemNum)*(itemHeight+10)
+						local name = "Model\n"..filename:match("[\\/](%a*)()%.[^%.\\/]*$")
+						local button = oButton(name,16,
+							100,100,
+							itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
+							function()
+								if panel.selected then
+									cancelButton:unregisterTapHandler()
+									oRoutine:remove(routine)
+									panel:hide()
+									panel.selected(filename)
+								end
+							end)
+						button.position = button.position + panel:getTotalDelta()
+						menu:addChild(button)
 					end
 				end
 				local yTo = borderSize.height+itemHeight*0.5+10-y
 				local viewHeight = yTo < borderSize.height and borderSize.height or yTo
 				local viewWidth = borderSize.width
-				panel:reset(viewWidth,viewHeight,paddingX,paddingY)
+				panel:updateSize(viewWidth,viewHeight)
 			end)
 		end))
 		menu.opacity = 0

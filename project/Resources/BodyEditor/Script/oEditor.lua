@@ -13,6 +13,8 @@ local oWorld = require("oWorld")
 local CCScheduler = require("CCScheduler")
 local CCDirector = require("CCDirector")
 local CCNode = require("CCNode")
+local CCSprite = require("CCSprite")
+local oModel = require("oModel")
 
 local winSize = CCDirector.winSize
 
@@ -125,7 +127,7 @@ local defaultShapeData =
 		{"SensorTag",0}, -- 17
 		{"SubShapes",false}, -- 18
 		{"Face",""}, -- 19
-		{"FaceAnchor",PointZero}, -- 20
+		{"FacePos",PointZero}, -- 20
 		create = function(self)
 			local Rectangle = oEditor.Rectangle
 			if self[Rectangle.Size].width <= 0 or self[Rectangle.Size].height <= 0 then
@@ -189,7 +191,7 @@ local defaultShapeData =
 		{"SensorTag",0}, -- 17
 		{"SubShapes",false}, -- 18
 		{"Face",""}, -- 19
-		{"FaceAnchor",PointZero}, -- 20
+		{"FacePos",PointZero}, -- 20
 		create = function(self)
 			local Circle = oEditor.Circle
 			if self[Circle.Radius] <= 0 then return nil end
@@ -246,7 +248,7 @@ local defaultShapeData =
 		{"SensorTag",0}, -- 16
 		{"SubShapes",false}, -- 17
 		{"Face",""}, -- 18
-		{"FaceAnchor",PointZero}, -- 19
+		{"FacePos",PointZero}, -- 19
 		create = function(self)
 			local Polygon = oEditor.Polygon
 			if not self[Polygon.Vertices] or #self[Polygon.Vertices] < 3 then return nil end
@@ -298,7 +300,7 @@ local defaultShapeData =
 		{"Bullet",false}, -- 13
 		{"SubShapes",false}, -- 14
 		{"Face",""}, -- 15
-		{"FaceAnchor",PointZero}, -- 16
+		{"FacePos",PointZero}, -- 16
 		create = function(self)
 			local Chain = oEditor.Chain
 			if not self[Chain.Vertices] or #self[Chain.Vertices] < 2 then return nil end
@@ -343,7 +345,7 @@ local defaultShapeData =
 		{"Bullet",false}, -- 13
 		{"SubShapes",false}, -- 14
 		{"Face",""}, -- 15
-		{"FaceAnchor",PointZero}, -- 16
+		{"FacePos",PointZero}, -- 16
 		create = function(self)
 			local Loop = oEditor.Loop
 			if not self[Loop.Vertices] or #self[Loop.Vertices] < 3 then return nil end
@@ -982,10 +984,52 @@ oEditor.clearData = function(self)
 	oEvent:send("editor.bodyData",self.bodyData)
 end
 
-oEditor.resetItem = function(self,data)
+oEditor.resetItem = function(self,data,resetFace)
 	if data.parent then data = data.parent end
-	oEditor:removeItem(data)
+	local face = oEditor:removeItem(data)
 	local item = data:create()
+	if not resetFace and face then
+		if item then
+			item:addChild(face)
+		else
+			item = face
+			item.position = data:get("Position")
+			item.rotation = data:get("Angle")
+			oEditor.world:addChild(item)
+		end
+	else
+		if data:has("Face") then
+			local faceStr = data:get("Face")
+			if faceStr ~= "" then
+				local filename = oEditor.input..faceStr
+				if faceStr:match("|") then
+					face = CCSprite(filename)
+				elseif oContent:exist(filename) then
+					local extension = string.lower(string.match(faceStr,"%.([^%.\\/]*)$"))
+					if extension == "png" then
+						face = CCSprite(filename)
+					elseif extension == "model" then
+						face = oModel(filename)
+					end
+				else
+					face = nil
+				end
+			else
+				face = nil
+			end
+			if face then
+				face.position = data:get("FacePos")
+				if item then
+					item:addChild(face)
+				else
+					item = face
+					item.position = data:get("Position")
+					item.rotation = data:get("Angle")
+					oEditor.world:addChild(item)
+				end
+			end
+		end
+	end
 	local name = data:get("Name")
 	oEditor.items[name] = item
 	if item then item.dataItem = data end
@@ -1004,8 +1048,22 @@ oEditor.removeItem = function(self,data)
 	if data.parent then data = data.parent end
 	local name = data:get("Name")
 	local item = oEditor.items[name]
-	if item then item:destroy() end
+	local face = nil
+	if item then
+		if item.children then
+			face = item.children[1]
+			if face then
+				item:removeChild(face)
+			end
+		end
+		if item.destroy then
+			item:destroy()
+		else
+			item.parent:removeChild(item)
+		end
+	end
 	self.items[name] = nil
+	return face
 end
 oEditor.rename = function(self,oldName,newName)
 	if oldName == newName then return end

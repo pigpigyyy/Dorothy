@@ -116,7 +116,7 @@ local function oBox(text,okHandler,isInput)
 						box:addChild(opMenu)
 
 						local okButton = oButton("OK",17,60,false,
-							0,0,
+							okHandler and 0 or 35,0,
 							function()
 								opMenu:removeHandlers()
 								box:hide()
@@ -137,22 +137,24 @@ local function oBox(text,okHandler,isInput)
 						btnBk.position = oVec2(30,30)
 						okButton:addChild(btnBk,-1)
 						opMenu:addChild(okButton)
-
-						local cancelButton = oButton("Cancel",17,60,false,
-							70,0,
-							function()
-								opMenu:removeHandlers()
-								box:hide()
-							end)
-						cancelButton.anchor = oVec2.zero
-						btnBk = CCDrawNode()
-						btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
-						btnBk.position = oVec2(30,30)
-						cancelButton:addChild(btnBk,-1)
-						opMenu:addChild(cancelButton)
+						local cancelButton
+						if okHandler then
+							local cancelButton = oButton("Cancel",17,60,false,
+								70,0,
+								function()
+									opMenu:removeHandlers()
+									box:hide()
+								end)
+							cancelButton.anchor = oVec2.zero
+							btnBk = CCDrawNode()
+							btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
+							btnBk.position = oVec2(30,30)
+							cancelButton:addChild(btnBk,-1)
+							opMenu:addChild(cancelButton)
+						end
 						opMenu.removeHandlers = function(self)
 							okButton:unregisterTapHandler()
-							cancelButton:unregisterTapHandler()
+							if cancelButton then cancelButton:unregisterTapHandler() end
 							if isInput then
 								textField:unregisterInputHandler()
 								menu.enabled = false

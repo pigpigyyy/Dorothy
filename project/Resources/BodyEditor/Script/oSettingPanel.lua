@@ -13,6 +13,7 @@ local oListener = require("oListener")
 local oEditor = require("oEditor")
 local tolua = require("tolua")
 local oBodyDef = require("oBodyDef")
+local CCTextAlign = require("CCTextAlign")
 
 local function oSettingPanel()
 	local winSize = CCDirector.winSize
@@ -109,8 +110,8 @@ local function oSettingPanel()
 		"Vertices",
 		-- face chooser
 		"Face",
-		-- move anchor
-		"FaceAnchor",
+		-- move position
+		"FacePos",
 		-- boolean
 		"Sensor",
 		-- int
@@ -131,6 +132,9 @@ local function oSettingPanel()
 		menu:addChild(item)
 	end
 	items.Vertices.value = ". . ."
+	items.Face._label.positionX = 54
+	items.Face._label.anchor = oVec2(0,0.5)
+	items.Face._label.horizontalAlignment = CCTextAlign.HLeft
 	self.items = items
 
 	local itemsRectangle =
@@ -152,7 +156,7 @@ local function oSettingPanel()
 		items.Sensor,
 		items.SensorTag,
 		items.Face,
-		items.FaceAnchor,
+		items.FacePos,
 	}
 	self.Rectangle = itemsRectangle
 
@@ -175,7 +179,7 @@ local function oSettingPanel()
 		items.Sensor,
 		items.SensorTag,
 		items.Face,
-		items.FaceAnchor,
+		items.FacePos,
 	}
 	self.Circle = itemsCircle
 
@@ -197,7 +201,7 @@ local function oSettingPanel()
 		items.Sensor,
 		items.SensorTag,
 		items.Face,
-		items.FaceAnchor,
+		items.FacePos,
 	}
 	self.Polygon = itemsPolygon
 
@@ -216,7 +220,7 @@ local function oSettingPanel()
 		items.GravityScale,
 		items.Bullet,
 		items.Face,
-		items.FaceAnchor,
+		items.FacePos,
 	}
 	self.Chain = itemsChain
 
@@ -235,7 +239,7 @@ local function oSettingPanel()
 		items.GravityScale,
 		items.Bullet,
 		items.Face,
-		items.FaceAnchor,
+		items.FacePos,
 	}
 	self.Loop = itemsLoop
 

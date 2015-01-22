@@ -30,7 +30,6 @@ local controls =
 	"oEditMenu",
 	"oSettingPanel",
 	"oViewPanel",
-	--"oSpriteChooser",
 }
 
 oRoutine(once(function()

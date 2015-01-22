@@ -26,6 +26,7 @@ local CCDelay = require("CCDelay")
 local oOpacity = require("oOpacity")
 local CCCall = require("CCCall")
 local oPointControl = require("oPointControl")
+local oSpriteChooser = require("oSpriteChooser")
 
 local function oEditControl()
 	local winSize = CCDirector.winSize
@@ -998,6 +999,26 @@ local function oEditControl()
 					item.value = n2str(axis.x)..","..n2str(axis.y)
 					data:set(name,axis)
 					oEditor:resetItem(data)
+				end)
+			elseif name == "Face" then
+				local spriteChooser = oSpriteChooser()
+				oEditor:addChild(spriteChooser,oEditor.topMost)
+				spriteChooser.selected = function(filename)
+					filename = filename:sub(#(oEditor.input)+1,-1)
+					item.value = filename
+					data:set("Face",filename)
+					oEditor:resetItem(data,true)
+					oEvent:send("settingPanel.edit",nil)
+				end
+			elseif name == "FacePos" then
+				local target = oEditor:getItem(data)
+				local face = target.children and target.children[1] or nil
+				editControl:showCenterEditor(oEditor:getItem(data),data:get("FacePos"),function(center)
+					item.value = n2str(center.x)..","..n2str(center.y)
+					data:set("FacePos",center)
+					if face then
+						face.position = center
+					end
 				end)
 			end
 		else

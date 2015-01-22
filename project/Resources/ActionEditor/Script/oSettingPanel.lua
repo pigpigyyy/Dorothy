@@ -890,7 +890,7 @@ local function oSettingPanel()
 	keyItems.AnchorX.positionX = keyItems.EaseP.positionX
 	keyItems.AnchorY.positionY = keyItems.EaseS.positionY
 	keyItems.KeyPoint.visible = false
-	keyItems.KeyPoint:setValue("...")
+	keyItems.KeyPoint:setValue(". . .")
 
 	local keyCount = 0
 	for _,item in pairs(keyItems) do
@@ -1012,7 +1012,7 @@ local function oSettingPanel()
 						end
 						keyItems.Width:setValue(sp[oSd.size].width)
 						keyItems.Height:setValue(sp[oSd.size].height)
-						keyItems.KeyPoint:setValue("...")
+						keyItems.KeyPoint:setValue(". . .")
 					end
 				end
 			end
@@ -1198,7 +1198,7 @@ local function oSettingPanel()
 				else
 					keyItems.Width:setValue(sp[oSd.size].width)
 					keyItems.Height:setValue(sp[oSd.size].height)
-					keyItems.KeyPoint:setValue("...")
+					keyItems.KeyPoint:setValue(". . .")
 				end
 			end
 		else

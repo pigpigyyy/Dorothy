@@ -87,6 +87,7 @@ void oModelCache::startElement( void *ctx, const char *name, const char **atts )
 						break;
 					oCase::Skew:
 						oHelper::getPosFromStr(atts[++i], spriteDef->skewX, spriteDef->skewY);
+						break;
 					oCase::Name:
 						spriteDef->name = atts[++i];
 						break;
@@ -102,8 +103,8 @@ void oModelCache::startElement( void *ctx, const char *name, const char **atts )
 							{
 								spriteDef->rect = *(it->second);
 							}
-							break;
 						}
+						break;
 					oCase::Front:
 						spriteDef->front = atoi(atts[++i]) != 0;
 						break;
