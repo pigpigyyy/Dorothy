@@ -21,7 +21,7 @@ local function __call(self,...)
 end
 
 local function __index(self,name)
-	local item = rawget(self,name)--self field
+	local item = rawget(self,name) -- self field
 	if item ~= nil then
 		return item
 	end
@@ -35,10 +35,10 @@ local function __index(self,name)
 			c = getmetatable(c)
 		end
 		if item then
-			rawset(cls,name,item)--cache item from super in self
+			rawset(cls,name,item) -- cache item from super in self
 		end
 	end
-	if type(item) == "table" then
+	if type(item) == "table" then -- item is property
 		return item[1](self[0] and self[0] or self)
 	else
 		return item
@@ -46,7 +46,7 @@ local function __index(self,name)
 end
 
 local function __newindex(self,name,value)
-	local item = rawget(self,name)--self field
+	local item = rawget(self,name) -- self field
 	if item ~= nil then
 		rawset(self,name,value)
 		return
@@ -61,7 +61,7 @@ local function __newindex(self,name,value)
 			c = getmetatable(c)
 		end
 		if item then
-			rawset(cls,name,item)--cache item from super in self
+			rawset(cls,name,item) -- cache item from super in self
 		end
 	end
 	if type(item) == "table" then

@@ -31,7 +31,7 @@ _group(0)
 		}
 		else
 		{
-			oBody::attachSelf(fixtureDef);
+			oBody::attachFixture(fixtureDef);
 		}
 	}
 }
@@ -157,12 +157,12 @@ oVec2 oBody::getVelocity() const
 
 void oBody::setAngularRate(float var)
 {
-	_bodyB2->SetAngularVelocity(CC_DEGREES_TO_RADIANS(var));
+	_bodyB2->SetAngularVelocity(-CC_DEGREES_TO_RADIANS(var));
 }
 
 float oBody::getAngularRate() const
 {
-	return CC_RADIANS_TO_DEGREES(_bodyB2->GetAngularVelocity());
+	return -CC_RADIANS_TO_DEGREES(_bodyB2->GetAngularVelocity());
 }
 
 void oBody::setLinearDamping(float var)
@@ -224,7 +224,7 @@ void oBody::applyAngularImpulse(float impulse)
 	_bodyB2->ApplyAngularImpulse(impulse);
 }
 
-b2Fixture* oBody::attachSelf(b2FixtureDef* fixtureDef)
+b2Fixture* oBody::attachFixture(b2FixtureDef* fixtureDef)
 {
 	fixtureDef->filter = _world->getFilter(_group);
 	fixtureDef->isSensor = false;
@@ -234,7 +234,7 @@ b2Fixture* oBody::attachSelf(b2FixtureDef* fixtureDef)
 
 b2Fixture* oBody::attach( b2FixtureDef* fixtureDef )
 {
-	b2Fixture* fixture = oBody::attachSelf(fixtureDef);
+	b2Fixture* fixture = oBody::attachFixture(fixtureDef);
 	/* cleanup temp vertices */
 	if (fixtureDef->shape->m_type == b2Shape::e_chain)
 	{
