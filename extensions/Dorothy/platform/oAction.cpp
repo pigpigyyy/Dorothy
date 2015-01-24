@@ -165,8 +165,8 @@ HANDLER_WRAP_START(oActionHandlerWrapper)
 	void call(oAction* action) const
 	{
 		void* params[] = {action};
-		const char* paramNames[] = {"oAction"};
-		CCScriptEngine::sharedEngine()->executeFunction(getHandler(), 1, params, paramNames);
+		int paramTypes[] = {CCLuaType<oAction>()};
+		CCScriptEngine::sharedEngine()->executeFunction(getHandler(), 1, params, paramTypes);
 	}
 HANDLER_WRAP_END
 
@@ -216,8 +216,8 @@ oAction(id, priority, owner)
 bool oScriptAction::isAvailable()
 {
 	void* params[] = {this};
-	const char* paramNames[] = {"oAction"};
-	return CCScriptEngine::sharedEngine()->executeFunction(_available->get(), 1, params, paramNames) != 0;
+	int paramTypes[] = {CCLuaType<oAction>()};
+	return CCScriptEngine::sharedEngine()->executeFunction(_available->get(), 1, params, paramTypes) != 0;
 }
 
 void oScriptAction::run()
@@ -225,12 +225,12 @@ void oScriptAction::run()
 	oAction::run();
 	int handler = CCScriptEngine::sharedEngine()->executeActionCreate(_create->get());
 	_update = oScriptHandler::create(handler);
-	CCScriptEngine::sharedEngine()->executeActionUpdate(_update->get(), this, "oAction", 0);
+	CCScriptEngine::sharedEngine()->executeActionUpdate(_update->get(), this, CCLuaType<oAction>(), 0);
 }
 
 void oScriptAction::update( float dt )
 {
-	if (CCScriptEngine::sharedEngine()->executeActionUpdate(_update->get(), this, "oAction", dt) != 0)
+	if (CCScriptEngine::sharedEngine()->executeActionUpdate(_update->get(), this, CCLuaType<oAction>(), dt) != 0)
 	{
 		oScriptAction::stop();
 	}
@@ -241,8 +241,8 @@ void oScriptAction::stop()
 {
 	_update = nullptr;
 	void* params[] = {this};
-	const char* paramNames[] = {"oAction"};
-	CCScriptEngine::sharedEngine()->executeFunction(_stop->get(), 1, params, paramNames);
+	int paramTypes[] = {CCLuaType<oAction>()};
+	CCScriptEngine::sharedEngine()->executeFunction(_stop->get(), 1, params, paramTypes);
 	oAction::stop();
 }
 

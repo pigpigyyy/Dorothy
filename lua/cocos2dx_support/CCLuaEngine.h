@@ -80,11 +80,11 @@ public:
 	 */
 	virtual int executeGlobalFunction(const char* functionName);
 	virtual int executeFunction(int nHandler, int paramCount, CCObject* params[]);
-	virtual int executeFunction(int nHandler, int paramCount, void* params[], const char* paramNames[]);
+	virtual int executeFunction(int nHandler, int paramCount, void* params[], int paramTypes[]);
 	virtual int executeFunction(int nHandler, int paramCount = 0);
 
 	virtual int executeActionCreate(int nHandler);
-	virtual int executeActionUpdate(int nHandler, void* param, const char* paramName, float deltaTime);
+	virtual int executeActionUpdate(int nHandler, void* param, int paramType, float deltaTime);
 	virtual int executeNodeEvent(CCNode* pNode, int nAction);
 	virtual int executeAppEvent(int nHandler, int eventType);
 	virtual int executeMenuItemEvent(int eventType, CCMenuItem* pMenuItem);

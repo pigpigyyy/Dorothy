@@ -193,7 +193,7 @@ int CCScriptEngine::executeNotificationEvent(CCNotificationCenter* pNotification
 int CCScriptEngine::executeMenuItemEvent(int eventType, CCMenuItem* pMenuItem){ return 0; }
 int CCScriptEngine::executeNodeEvent(CCNode* pNode, int nAction){ return 0; }
 int CCScriptEngine::executeFunction(int nHandler, int paramCount, CCObject* params[]){ return 0; }
-int CCScriptEngine::executeFunction(int nHandler, int paramCount, void* params[], const char* paramNames[]){ return 0; }
+int CCScriptEngine::executeFunction(int nHandler, int paramCount, void* params[], int paramTypes[]){ return 0; }
 int CCScriptEngine::executeFunction(int nHandler, int paramCount){ return 0; }
 int CCScriptEngine::executeGlobalFunction(const char* functionName){ return 0; }
 int CCScriptEngine::executeScriptFile(const char* filename){ return 0; }
@@ -201,7 +201,7 @@ int CCScriptEngine::executeString(const char* codes){ return 0; }
 void CCScriptEngine::removeScriptHandler(int nHandler){}
 bool CCScriptEngine::scriptHandlerEqual(int nHandlerA, int nHandlerB){ return false; }
 int CCScriptEngine::executeActionCreate(int nHandler){ return 0; }
-int CCScriptEngine::executeActionUpdate(int nHandler, void* param, const char* paramName, float deltaTime){ return 0; }
+int CCScriptEngine::executeActionUpdate(int nHandler, void* param, int paramType, float deltaTime){ return 0; }
 void CCScriptEngine::removePeer(CCObject* object){}
 
 NS_CC_END

@@ -236,10 +236,11 @@ void CCDrawNode::drawDot(const CCPoint& pos, float radius, const ccColor4B& colo
     unsigned int vertex_count = 2*3;
     ensureCapacity(vertex_count);
 	
-	ccV2F_C4F_T2F a = {{pos.x - radius, pos.y - radius}, ccc4f(color), {-1.0, -1.0} };
-	ccV2F_C4F_T2F b = {{pos.x - radius, pos.y + radius}, ccc4f(color), {-1.0,  1.0} };
-	ccV2F_C4F_T2F c = {{pos.x + radius, pos.y + radius}, ccc4f(color), { 1.0,  1.0} };
-	ccV2F_C4F_T2F d = {{pos.x + radius, pos.y - radius}, ccc4f(color), { 1.0, -1.0} };
+	ccColor4F colorf = ccc4f(color);
+	ccV2F_C4F_T2F a = {{pos.x - radius, pos.y - radius}, colorf, {-1.0, -1.0} };
+	ccV2F_C4F_T2F b = {{pos.x - radius, pos.y + radius}, colorf, {-1.0,  1.0} };
+	ccV2F_C4F_T2F c = {{pos.x + radius, pos.y + radius}, colorf, { 1.0,  1.0} };
+	ccV2F_C4F_T2F d = {{pos.x + radius, pos.y - radius}, colorf, { 1.0, -1.0} };
 	
 	ccV2F_C4F_T2F_Triangle *triangles = (ccV2F_C4F_T2F_Triangle *)(m_pBuffer + m_nBufferCount);
     ccV2F_C4F_T2F_Triangle triangle0 = {a, b, c};

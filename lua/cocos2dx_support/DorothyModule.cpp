@@ -328,7 +328,7 @@ HANDLER_WRAP_START(oListenerHandlerWrapper)
 void call(oEvent* event) const
 {
 	void* params[] = { event };
-	const char* names[] = { "oEvent" };
+	int names[] = {CCLuaType<oEvent>()};
 	CCLuaEngine::sharedEngine()->executeFunction(getHandler(), 1, params, names);
 }
 HANDLER_WRAP_END
