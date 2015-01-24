@@ -109,13 +109,15 @@ function classOperator:supcode_tmp()
 			output('    void* tolua_obj = Mtolua_new((',new_t,')(tolua_ret));')
 			output('    ',push_func,'(tolua_S,tolua_obj,"',t,'");')
 			output('   }')
-		elseif self.ptr == '&' then
-			output('   ',push_func,'(tolua_S,(void*)&tolua_ret,"',t,'");')
 		else
-			if local_constructor then
-				output('   ',push_func,'(tolua_S,(void *)tolua_ret,"',t,'");')
+			local ref = ""
+			if self.ptr == '&' then ref = "&" end
+			if push_func == "tolua_pushccobject" then
+				output(' ',push_func,'(tolua_S,(void*)'..ref.."tolua_ret);")
+			elseif push_func == "tolua_pushusertype" then
+				output(' ',push_func,'(tolua_S,(void*)'..ref.."tolua_ret,CCLuaType<"..t..">());")
 			else
-				output('   ',push_func,'(tolua_S,(void*)tolua_ret,"',t,'");')
+				output(' ',push_func,'(tolua_S,(void*)'..ref..'tolua_ret,"',t,'");')
 			end
 		end
 	end

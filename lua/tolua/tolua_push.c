@@ -38,27 +38,21 @@ TOLUA_API void tolua_pushstring(lua_State* L, const char* value)
 	else lua_pushstring(L, value);
 }
 
-TOLUA_API void tolua_pushuserdata(lua_State* L, void* value)
-{
-	if (value == NULL) lua_pushnil(L);
-	else lua_pushlightuserdata(L, value);
-}
-
-TOLUA_API void tolua_pushusertype(lua_State* L, void* value, const char* type)
+TOLUA_API void tolua_pushusertype(lua_State* L, void* value, int typeId)
 {
 	if (value == NULL)
 	{
 		lua_pushnil(L);
 		return;
 	}
-	luaL_getmetatable(L, type);// mt
+	lua_rawgeti(L, LUA_REGISTRYINDEX, typeId);// mt
 	if (lua_isnil(L, -1))// mt == nil
 	{
 		lua_pop(L, 1);
 		lua_pushnil(L);
 		return;
 	}
-	*(void**)lua_newuserdata(L, sizeof(void *)) = value;// mt newud
+	*(void**)lua_newuserdata(L, sizeof(void*)) = value;// mt newud
 	lua_insert(L, -2);// newud mt
 	lua_setmetatable(L, -2);// newud<mt>, newud
 	lua_pushvalue(L, TOLUA_NOPEER);
@@ -93,16 +87,9 @@ TOLUA_API void tolua_pushfieldstring(lua_State* L, int lo, int index, const char
 	lua_settable(L, lo);
 }
 
-TOLUA_API void tolua_pushfielduserdata(lua_State* L, int lo, int index, void* v)
+TOLUA_API void tolua_pushfieldusertype(lua_State* L, int lo, int index, void* v, int typeId)
 {
 	lua_pushnumber(L, index);
-	tolua_pushuserdata(L, v);
-	lua_settable(L, lo);
-}
-
-TOLUA_API void tolua_pushfieldusertype(lua_State* L, int lo, int index, void* v, const char* type)
-{
-	lua_pushnumber(L, index);
-	tolua_pushusertype(L, v, type);
+	tolua_pushusertype(L, v, typeId);
 	lua_settable(L, lo);
 }

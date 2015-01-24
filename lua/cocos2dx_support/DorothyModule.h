@@ -177,4 +177,39 @@ CCRenderTexture* CCRenderTexture_create(int w, int h, bool withDepthStencil = fa
 
 int CCTextureCache_loadAsync(lua_State* L);
 
+class ccColor3
+{
+public:
+	ccColor3():r(255), g(255), b(255){}
+	ccColor3(unsigned int value):
+	r((value&0x00FF0000)>>16),
+	g((value&0x0000FF00)>>8),
+	b(value&0x000000FF){}
+	ccColor3(GLubyte r, GLubyte g, GLubyte b):r(r), g(g), b(b){}
+	ccColor3(const ccColor3B& c):r(c.r), g(c.g), b(c.b){}
+	inline operator ccColor3B() const { return *(ccColor3B*)this; }
+    GLubyte r;
+    GLubyte g;
+    GLubyte b;
+};
+
+class ccColor4
+{
+public:
+	ccColor4():r(255), g(255), b(255), a(255){}
+	ccColor4(unsigned int value):
+	a(value >> 24),
+	r((value & 0x00FF0000) >> 16),
+	g((value & 0x0000FF00) >> 8),
+	b(value & 0x000000FF){}
+	ccColor4(GLubyte r, GLubyte g, GLubyte b, GLubyte a) :r(r), g(g), b(b), a(a){}
+	ccColor4(const ccColor3B& c, GLubyte a = 255) :r(c.r), g(c.g), b(c.b), a(a){}
+	ccColor4(const ccColor4B& c) :r(c.r), g(c.g), b(c.b), a(c.a){}
+    GLubyte r;
+    GLubyte g;
+    GLubyte b;
+    GLubyte a;
+	inline operator ccColor4B() const { return *(ccColor4B*)this; }
+};
+
 #endif // __DOROTHY_MODULE_H__

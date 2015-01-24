@@ -95,8 +95,8 @@ void call(oBody* body, const oVec2& point, const oVec2& normal) const
 {
 	lua_State* L = CCLuaEngine::sharedEngine()->getState();
 	tolua_pushccobject(L, body);
-	tolua_pushusertype(L, new oVec2(point), "oVec2");
-	tolua_pushusertype(L, new oVec2(normal), "oVec2");
+	tolua_pushusertype(L, new oVec2(point), CCLuaType<oVec2>());
+	tolua_pushusertype(L, new oVec2(normal), CCLuaType<oVec2>());
 	CCLuaEngine::sharedEngine()->executeFunction(getHandler(), 3);
 }
 HANDLER_WRAP_END
@@ -156,8 +156,8 @@ void oWorld_cast(oWorld* world, const oVec2& start, const oVec2& end, bool close
 		[&](oBody* body, const oVec2& point, const oVec2& normal)
 	{
 		tolua_pushccobject(L, body);
-		tolua_pushusertype(L, new oVec2(point), "oVec2");
-		tolua_pushusertype(L, new oVec2(normal), "oVec2");
+		tolua_pushusertype(L, new oVec2(point), CCLuaType<oVec2>());
+		tolua_pushusertype(L, new oVec2(normal), CCLuaType<oVec2>());
 		return CCLuaEngine::sharedEngine()->executeFunction(handler, 3);
 	});
 	CCLuaEngine::sharedEngine()->removeScriptHandler(handler);
@@ -808,9 +808,9 @@ void __oModelCache_getData(lua_State* L, const char* filename)
 		lua_pushstring(L, value);
 		lua_rawseti(L, -2, index);
 	};
-	auto lua_setUserType = [&](int index, void* value, const char* typeName)
+	auto lua_setUserType = [&](int index, void* value, int typeId)
 	{
-		tolua_pushusertype(L, value, typeName);
+		tolua_pushusertype(L, value, typeId);
 		lua_rawseti(L, -2, index);
 	};
 	function<void(oSpriteDef*)> visitSpriteDef = [&](oSpriteDef* parent)
@@ -910,14 +910,14 @@ void __oModelCache_getData(lua_State* L, const char* filename)
 		visitSpriteDef(root);
 		lua_setBool(17, modelDef->isFaceRight());
 		lua_setBool(18, modelDef->isBatchUsed());
-		lua_setUserType(19, new CCSize(modelDef->getSize()), "CCSize");
+		lua_setUserType(19, new CCSize(modelDef->getSize()), CCLuaType<CCSize>());
 		lua_setString(20, modelDef->getClipFile().c_str());
 		/*["keys"]*/
 		lua_newtable(L);
 		for (const auto& pair : modelDef->getKeyPoints())
 		{
 			lua_pushstring(L, pair.first.c_str());
-			tolua_pushusertype(L, new oVec2(pair.second), "oVec2");
+			tolua_pushusertype(L, new oVec2(pair.second), CCLuaType<oVec2>());
 			lua_rawset(L, -3);
 		}
 		lua_rawseti(L, -2, 21);

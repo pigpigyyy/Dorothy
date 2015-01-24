@@ -276,12 +276,23 @@ function classFunction:supcode(local_constructor)
     if self.ptr == '' then
      output('   {')
      output('    void* tolua_obj = Mtolua_new((',new_t,')(tolua_ret));')
-     output('    ',push_func,'(tolua_S,tolua_obj,"',t,'");')
+     if push_func == "tolua_pushccobject" then
+      output('    ',push_func,"(tolua_S,tolua_obj);")
+     elseif push_func == "tolua_pushusertype" then
+      output('    ',push_func,"(tolua_S,tolua_obj,CCLuaType<"..new_t..">());")
+     else
+      output('    ',push_func,'(tolua_S,tolua_obj,"',new_t,'");')
+     end
      output('   }')
-    elseif self.ptr == '&' then
-     output('   ',push_func,'(tolua_S,(void*)&tolua_ret,"',t,'");')
     else
-	 output('   ',push_func,'(tolua_S,(void*)tolua_ret,"',t,'");')
+     local ref = self.ptr == '&' and "&" or ""
+     if push_func == "tolua_pushccobject" then
+      output(' ',push_func,'(tolua_S,(void*)'..ref.."tolua_ret);")
+     elseif push_func == "tolua_pushusertype" then
+      output(' ',push_func,'(tolua_S,(void*)'..ref.."tolua_ret,CCLuaType<"..new_t..">());")
+     else
+      output(' ',push_func,'(tolua_S,(void*)'..ref..'tolua_ret,"',new_t,'");')
+     end
     end
    end
   end

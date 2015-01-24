@@ -20,8 +20,8 @@ public:
 	oVec2(const oVec2& vec);
 	oVec2(const b2Vec2& v);
 	oVec2(const CCPoint& p);
-	inline operator b2Vec2() const { return *((b2Vec2*)this); }
-	inline operator CCPoint() const { return *((CCPoint*)this); }
+	inline operator b2Vec2() const { return *(b2Vec2*)this; }
+	inline operator CCPoint() const { return *(CCPoint*)this; }
 	void set(float x, float y);
 	oVec2 operator+(const oVec2& vec) const;
 	oVec2 operator-(const oVec2& vec) const;

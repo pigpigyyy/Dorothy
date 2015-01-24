@@ -59,7 +59,7 @@ extern "C" void tolua_pushccobject(lua_State* L, void* ptr)
 	if (lua_isnil(L, -1))// ud == nil
 	{
 		lua_pop(L, 1);// ubox
-		*(void**)lua_newuserdata(L, sizeof(void *)) = ptr;// ubox newud
+		*(void**)lua_newuserdata(L, sizeof(void*)) = ptr;// ubox newud
 		lua_pushvalue(L, -1);// ubox newud newud
 		lua_insert(L, -3);// newud ubox newud
 		lua_rawseti(L, -2, refid);// ubox[refid] = newud, newud ubox

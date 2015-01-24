@@ -8,24 +8,24 @@ typedef float GLfloat;
 typedef short GLshort;
 typedef unsigned int GLenum;
 
-class ccColor3B @ ccColor3
+class ccColor3
 {
-	ccColor3B();
-	ccColor3B(unsigned int value);
-	ccColor3B(GLubyte r, GLubyte g, GLubyte b);
-	~ccColor3B();
+	ccColor3();
+	ccColor3(unsigned int value);
+	ccColor3(GLubyte r, GLubyte g, GLubyte b);
+	~ccColor3();
     GLubyte r;
     GLubyte g;
     GLubyte b;
 };
 
-class ccColor4B @ ccColor4
+class ccColor4
 {
-	ccColor4B();
-	ccColor4B(unsigned int value);
-	ccColor4B(ccColor3B c, GLubyte a = 255);
-	ccColor4B(GLubyte r, GLubyte g, GLubyte b, GLubyte a);
-	~ccColor4B();
+	ccColor4();
+	ccColor4(unsigned int value);
+	ccColor4(ccColor3 c, GLubyte a = 255);
+	ccColor4(GLubyte r, GLubyte g, GLubyte b, GLubyte a);
+	~ccColor4();
     GLubyte r;
     GLubyte g;
     GLubyte b;

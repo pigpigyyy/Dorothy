@@ -123,19 +123,16 @@ TOLUA_API void tolua_pushvalue(lua_State* L, int lo);
 TOLUA_API void tolua_pushboolean(lua_State* L, int value);
 TOLUA_API void tolua_pushnumber(lua_State* L, lua_Number value);
 TOLUA_API void tolua_pushstring(lua_State* L, const char* value);
-TOLUA_API void tolua_pushuserdata(lua_State* L, void* value);
-TOLUA_API void tolua_pushusertype(lua_State* L, void* value, const char* type);
+TOLUA_API void tolua_pushusertype(lua_State* L, void* value, int typeId);
 TOLUA_API void tolua_pushfieldvalue(lua_State* L, int lo, int index, int v);
 TOLUA_API void tolua_pushfieldboolean(lua_State* L, int lo, int index, int v);
 TOLUA_API void tolua_pushfieldnumber(lua_State* L, int lo, int index, lua_Number v);
 TOLUA_API void tolua_pushfieldstring(lua_State* L, int lo, int index, const char* v);
-TOLUA_API void tolua_pushfielduserdata(lua_State* L, int lo, int index, void* v);
-TOLUA_API void tolua_pushfieldusertype(lua_State* L, int lo, int index, void* v, const char* type);
+TOLUA_API void tolua_pushfieldusertype(lua_State* L, int lo, int index, void* v, int typeId);
 TOLUA_API void tolua_pushccobject(lua_State* L, void* ptr);
 
 TOLUA_API lua_Number tolua_tonumber(lua_State* L, int narg, lua_Number def);
 TOLUA_API const char* tolua_tostring(lua_State* L, int narg, const char* def);
-TOLUA_API void* tolua_touserdata(lua_State* L, int narg, void* def);
 TOLUA_API void* tolua_tousertype(lua_State* L, int narg, void* def);
 TOLUA_API int tolua_tovalue(lua_State* L, int narg, int def);
 TOLUA_API int tolua_toboolean(lua_State* L, int narg, int def);
@@ -201,10 +198,6 @@ TOLUA_API void tolua_classname(lua_State *L, void* ccobject);
 
 #ifndef Mtolua_typeid
 #define Mtolua_typeid(L,type,name) tolua_typeid(L,CCLuaType<type>(),name)
-#endif
-
-#ifndef tolua_push_ccobject
-#define tolua_push_ccobject(L,ptr,name) tolua_pushccobject(L,ptr)
 #endif
 
 #ifdef __cplusplus

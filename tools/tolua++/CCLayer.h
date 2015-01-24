@@ -29,21 +29,21 @@ class CCLayer: public CCNode
 class CCLayerColor: public CCLayer
 {
 	tolua_property__common ccBlendFunc blendFunc;
-	static CCLayerColor* create(ccColor4B color, float width, float height);
-	static CCLayerColor* create(ccColor4B color);
+	static CCLayerColor* create(ccColor4 color, float width, float height);
+	static CCLayerColor* create(ccColor4 color);
 };
 
 class CCLayerGradient: public CCLayer
 {
 	tolua_property__common ccBlendFunc blendFunc;
-	tolua_property__common ccColor3B startColor;
-	tolua_property__common ccColor3B endColor;
+	tolua_property__common ccColor3 startColor;
+	tolua_property__common ccColor3 endColor;
 	tolua_property__common float startOpacity;
 	tolua_property__common float endOpacity;
 	tolua_property__common oVec2 vector;
 	tolua_property__bool bool compressedInterpolation;
 
-	static CCLayerGradient* create(ccColor4B start, ccColor4B end, oVec2 v);
-	static CCLayerGradient* create(ccColor4B start, ccColor4B end);
+	static CCLayerGradient* create(ccColor4 start, ccColor4 end, oVec2 v);
+	static CCLayerGradient* create(ccColor4 start, ccColor4 end);
 	static CCLayerGradient* create();
 };

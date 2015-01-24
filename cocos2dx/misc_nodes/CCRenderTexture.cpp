@@ -401,7 +401,7 @@ void CCRenderTexture::begin()
 
 void CCRenderTexture::beginWithClear()
 {
-	beginWithClear(ccColor4B(0), 0, 0, GL_COLOR_BUFFER_BIT);
+	beginWithClear(ccColor4B{0}, 0, 0, GL_COLOR_BUFFER_BIT);
 }
 
 void CCRenderTexture::beginWithClear(const ccColor4B& color)
@@ -421,7 +421,7 @@ void CCRenderTexture::beginWithClear(const ccColor4B& color, float depthValue, i
 
 void CCRenderTexture::beginWithClear(const ccColor4B& color, float depthValue, int stencilValue, GLbitfield flags)
 {
-	ccColor4F fColor(color);
+	ccColor4F fColor = ccc4f(color);
     this->begin();
     
     if (flags & GL_COLOR_BUFFER_BIT)

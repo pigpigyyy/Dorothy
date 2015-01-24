@@ -1993,7 +1993,7 @@ bool CCTintTo::initWithDuration(float duration, unsigned int colorValue)
 {
 	if (CCActionInterval::initWithDuration(duration))
 	{
-		m_to = ccColor3B(colorValue);
+		m_to = ccc3(colorValue);
 		return true;
 	}
 	return false;
@@ -2042,7 +2042,7 @@ void CCTintTo::update(float time)
 CCTintBy* CCTintBy::create(float duration, unsigned int colorValue)
 {
 	CCTintBy *pTintBy = new CCTintBy();
-	ccColor3B color(colorValue);
+	ccColor3B color = ccc3(colorValue);
 	pTintBy->initWithDuration(duration, color.r, color.g, color.b);
 	pTintBy->autorelease();
 

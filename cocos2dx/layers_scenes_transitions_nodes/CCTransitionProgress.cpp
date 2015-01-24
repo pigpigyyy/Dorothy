@@ -78,7 +78,7 @@ void CCTransitionProgress::onEnter()
     texture->setAnchorPoint(ccp(0.5f,0.5f));
 
     // render outScene to its texturebuffer
-    texture->clear(ccColor4B(0,0,0,255));
+    texture->clear(ccColor4B{0,0,0,255});
     texture->begin();
     m_pSceneToBeModified->visit();
     texture->end();

@@ -58,7 +58,7 @@ void oLine::draw()
 		ccGLBlendFunc(CC_BLEND_SRC, CC_BLEND_DST);
 		m_pShaderProgram->use();
 		m_pShaderProgram->setUniformsForBuiltins();
-		ccColor4F color(_displayedColor, _displayedOpacity);
+		ccColor4F color = ccc4f(_displayedColor, _displayedOpacity);
 		m_pShaderProgram->setUniformLocationWith4fv(getColorLocation(), (GLfloat*)&color.r, 1);
 
 		ccGLEnableVertexAttribs(kCCVertexAttribFlag_Position);
@@ -81,7 +81,7 @@ oLine* oLine::create(oVec2 vecs[], int count, const ccColor4B& color)
 {
 	oLine* line = oLine::create();
 	line->set(vecs, count);
-	line->setColor(ccColor3B(color.r, color.g, color.b));
+	line->setColor(ccColor3B{color.r, color.g, color.b});
 	line->setOpacity(color.a / 255.0f);
 	return line;
 }

@@ -106,11 +106,15 @@ function classArray:supcode ()
   output(' tolua_push'..t..'(tolua_S,(',ct,')'..self:getvalue(class,static)..');')
  else
   t = _userltype[t]
-  if self.ptr == '&' or self.ptr == '' then
-   output(' ',push_func,'(tolua_S,(void*)&'..self:getvalue(class,static)..',"',t,'");')
-  else
-   output(' ',push_func,'(tolua_S,(void*)'..self:getvalue(class,static)..',"',t,'");')
-  end
+  local ref = ""
+  if self.ptr == '&' or self.ptr == '' then ref = "&" end
+   if push_func == "tolua_pushccobject" then
+    output(' ',push_func,'(tolua_S,(void*)'..ref..self:getvalue(class,static)..");")
+   elseif push_func == "tolua_pushusertype" then
+    output(' ',push_func,'(tolua_S,(void*)'..ref..self:getvalue(class,static)..",CCLuaType<"..t..">());")
+   else
+    output(' ',push_func,'(tolua_S,(void*)'..ref..self:getvalue(class,static)..',"',t,'");')
+   end
  end
  output(' return 1;')
  output('}')

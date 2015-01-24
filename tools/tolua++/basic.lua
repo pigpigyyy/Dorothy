@@ -59,13 +59,11 @@ local ccobjects = {
 "oMoveJoint",
 "oMotorJoint",
 }
-_ccobject_types = {}
 
 -- register CCObject types
 for i = 1, #ccobjects do
-    _push_functions[ccobjects[i]] = "tolua_push_ccobject"
+    _push_functions[ccobjects[i]] = "tolua_pushccobject"
 	_collect_functions[ccobjects[i]] = "tolua_collect_ccobject"
-	_ccobject_types[ccobjects[i]] = true
 end
 
 local toWrite = {}

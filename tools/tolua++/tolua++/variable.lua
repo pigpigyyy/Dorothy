@@ -146,30 +146,38 @@ function classVariable:supcode ()
  end
 
  -- return value
- if string.find(self.mod, 'tolua_inherits') then
+local t,ct = isbasic(self.type)
+if t == "" and out then-- type void
+	output('  ',prop_get..'(self);')
+elseif t then
+	output('  tolua_push'..t..'(tolua_S,(',ct,')'..self:getvalue(class,static,prop_get)..');')
+else
 	local push_func = get_push_function(self.type)
-	output('  ',push_func,'(tolua_S,(void*)static_cast<'..self.type..'*>(self), "',_userltype[self.type],'");')
- else
-	local t,ct = isbasic(self.type)
-	if t == "" and out then-- type void
-		output('  ',prop_get..'(self);')
-	elseif t then
-		output('  tolua_push'..t..'(tolua_S,(',ct,')'..self:getvalue(class,static,prop_get)..');')
-	else
-		local push_func = get_push_function(self.type)
-		t = self.type
-		local new_t = string.gsub(t, "const%s+", "")
-		t = _userltype[t]
-		if self.ptr == '&' then
-			output('  ',push_func,'(tolua_S,(void*)&'..self:getvalue(class,static,prop_get)..',"',t,'");')
-		elseif self.ptr == '' then
-			output('    void* tolua_obj = Mtolua_new((',new_t,')('..self:getvalue(class,static,prop_get)..'));')
-			output('    ',push_func,'(tolua_S,tolua_obj,"',t,'");')
+	t = self.type
+	local new_t = string.gsub(t, "const%s+", "")
+	t = _userltype[t]
+	if self.ptr == '' then
+		output('    void* tolua_obj = Mtolua_new((',new_t,')('..self:getvalue(class,static,prop_get)..'));')
+		if push_func == "tolua_pushccobject" then
+			output(' ',push_func,"(tolua_S,tolua_obj);")
+		elseif push_func == "tolua_pushusertype" then
+			output(' ',push_func,"(tolua_S,tolua_obj,CCLuaType<"..t..">());")
 		else
-			output('  ',push_func,'(tolua_S,(void*)'..self:getvalue(class,static,prop_get)..',"',t,'");')
+			output(' ',push_func,'(tolua_S,tolua_obj,"',t,'");')
+		end
+	else
+		local ref = self.ptr == '&' and "&" or ""
+		local value = self:getvalue(class,static,prop_get)
+		if push_func == "tolua_pushccobject" then
+			output(' ',push_func,'(tolua_S,(void*)'..ref..value..");")
+		elseif push_func == "tolua_pushusertype" then
+			output(' ',push_func,'(tolua_S,(void*)'..ref..value..",CCLuaType<"..t..">());")
+		else
+			output(' ',push_func,'(tolua_S,(void*)'..ref..value..',"',t,'");')
 		end
 	end
- end
+end
+
  output(' return 1;')
  output('}')
  output('#endif //#ifndef TOLUA_DISABLE\n')

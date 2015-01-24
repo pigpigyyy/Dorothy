@@ -26,7 +26,6 @@ THE SOFTWARE.
 #define __CCGEMETRY_H__
 
 #include "platform/CCPlatformMacros.h"
-#include "CCObject.h"
 
 NS_CC_BEGIN
 
@@ -40,7 +39,6 @@ class CC_DLL CCPoint
 public:
     float x;
     float y;
-
 public:
     CCPoint();
     CCPoint(float x, float y);
@@ -57,7 +55,6 @@ class CC_DLL CCSize
 public:
     float width;
     float height;
-
 public:
     CCSize();
     CCSize(float width, float height);
@@ -73,8 +70,7 @@ class CC_DLL CCRect
 {
 public:
     CCPoint origin;
-    CCSize  size;
-
+    CCSize size;
 public:
     CCRect();
 	CCRect(const CCPoint& origin, const CCSize& size);

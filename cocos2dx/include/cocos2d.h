@@ -256,6 +256,7 @@ NS_CC_BEGIN
 
 CC_DLL const char* cocos2dVersion();
 
+/* CCObject */
 template int CC_DLL CCLuaType<CCObject>();
 template int CC_DLL CCLuaType<CCTileMapAtlas>();
 template int CC_DLL CCLuaType<CCParallaxNode>();
@@ -294,6 +295,19 @@ template int CC_DLL CCLuaType<CCDouble>();
 template int CC_DLL CCLuaType<CCFloat>();
 template int CC_DLL CCLuaType<CCBool>();
 template int CC_DLL CCLuaType<CCDictionary>();
+
+/* Value Type */
+template int CC_DLL CCLuaType<ccBlendFunc>();
+template int CC_DLL CCLuaType<CCRect>();
+template int CC_DLL CCLuaType<CCSize>();
+
+/* Singleton Type */
+template int CC_DLL CCLuaType<CCApplication>();
+template int CC_DLL CCLuaType<CCDirector>();
+template int CC_DLL CCLuaType<CCEGLView>();
+template int CC_DLL CCLuaType<CCTextureCache>();
+template int CC_DLL CCLuaType<CCUserDefault>();
+template int CC_DLL CCLuaType<CCKeyboard>();
 
 NS_CC_END
 

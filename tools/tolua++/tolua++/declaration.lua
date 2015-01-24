@@ -421,7 +421,14 @@ function classDeclaration:retvalue ()
    output('   tolua_push'..t..'(tolua_S,(',ct,')'..self.name..');')
   else
    local push_func = get_push_function(self.type)
-   output('   ',push_func,'(tolua_S,(void*)'..self.name..',"',_userltype[self.type],'");')
+   local t = _userltype[self.type]
+   if push_func == "tolua_pushccobject" then
+    output(' ',push_func,'(tolua_S,(void*)'..self.name..");")
+   elseif push_func == "tolua_pushusertype" then
+    output(' ',push_func,'(tolua_S,(void*)'..self.name..",CCLuaType<"..t..">());")
+   else
+    output('   ',push_func,'(tolua_S,(void*)'..self.name..',"',t,'");')
+   end
   end
   return 1
  end

@@ -22,7 +22,7 @@ class CCNode: public CCObject
 	tolua_property__common oVec2 anchorPoint @ anchor;
 	tolua_property__common CCSize contentSize;
 	tolua_property__common int tag;
-	tolua_property__common ccColor3B color;
+	tolua_property__common ccColor3 color;
 	tolua_property__common float opacity;
 	tolua_property__bool bool cascadeOpacity;
 	tolua_property__bool bool cascadeColor;
