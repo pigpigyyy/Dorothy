@@ -39,7 +39,7 @@ local function __index(self,name)
 		end
 	end
 	if type(item) == "table" then -- item is property
-		return item[1](self[0] and self[0] or self)
+		return item[1](self[0] or self)
 	else
 		return item
 	end
@@ -65,7 +65,7 @@ local function __newindex(self,name,value)
 		end
 	end
 	if type(item) == "table" then
-		item[2](self[0] and self[0] or self,value)
+		item[2](self[0] or self,value)
 	else
 		rawset(self,name,value)
 	end
