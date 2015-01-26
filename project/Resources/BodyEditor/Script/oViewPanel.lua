@@ -86,17 +86,17 @@ local function oViewPanel()
 				local pos = worldNode:convertToWorldSpace(data:get("Center"))
 				pos = oEditor.world:convertToNodeSpace(pos)
 				crossA.position = pos
-				oEvent:send("viewArea.toPos",oEditor.origin-pos*oEditor.scale)
+				oEvent:send("viewArea.toPos",oEditor.origin-pos)
 			elseif data:has("Position") then
 				local pos = data:get("Position")
 				crossA.position = pos
-				oEvent:send("viewArea.toPos",oEditor.origin-pos*oEditor.scale)
+				oEvent:send("viewArea.toPos",oEditor.origin-pos)
 			end
 		elseif not data:has("Center") then
 			local parent = data.parent
 			local pos = parent:get("Position")
 			crossA.position = pos
-			oEvent:send("viewArea.toPos",oEditor.origin-pos*oEditor.scale)
+			oEvent:send("viewArea.toPos",oEditor.origin-pos)
 		else
 			local parent = data.parent
 			local worldNode = oEditor.worldNode
@@ -105,7 +105,7 @@ local function oViewPanel()
 			local pos = worldNode:convertToWorldSpace(data:get("Center"))
 			pos = oEditor.world:convertToNodeSpace(pos)
 			crossA.position = pos
-			oEvent:send("viewArea.toPos",oEditor.origin-pos*oEditor.scale)
+			oEvent:send("viewArea.toPos",oEditor.origin-pos)
 		end
 		crossA:fadeOut()
 	end

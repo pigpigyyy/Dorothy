@@ -21,9 +21,7 @@ local winSize = CCDirector.winSize
 local oEditor = CCScene()
 
 oEditor.isPlaying = false
-oEditor.origin = oVec2(
-		60+(winSize.width-120-180)*0.5,
-		winSize.height*0.5)
+oEditor.origin = oVec2(60+(-120-180)*0.5,0)
 oEditor.currentData = nil
 oEditor.isFixed = true
 oEditor.scale = 1

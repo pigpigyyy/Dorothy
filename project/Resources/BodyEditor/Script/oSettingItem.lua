@@ -70,9 +70,9 @@ local oSettingItem = class(
 		self:addChild(border)
 		self._border = border
 		
-		self:registerTapHandler(function(eventType,item)
+		self:registerTapHandler(function(eventType)
 			if eventType == CCMenuItem.Tapped then
-				item.selected = not item.selected
+				self.selected = not self.selected
 			end
 		end)
 	end,

@@ -62,5 +62,12 @@ oRoutine(once(function()
 	local oFileChooser = require("oFileChooser")
 	coroutine.yield()
 	oEditor:addChild(oFileChooser(),oEditor.topMost)
-	dofile("BodyEditor/Script/generateLoader.lua")
+	
+	local CCUserDefault = require("CCUserDefault")
+	local oVec2 = require("oVec2")
+	if CCUserDefault.G == "" then
+		CCUserDefault.G = -10
+	end
+	oEditor.world.gravity = oVec2(0,CCUserDefault.G)
+	--dofile("BodyEditor/Script/generateLoader.lua")
 end))

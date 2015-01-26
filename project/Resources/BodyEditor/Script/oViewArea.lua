@@ -11,13 +11,9 @@ local oScale = require("oScale")
 local oEase = require("oEase")
 local CCDictionary = require("CCDictionary")
 local oPos = require("oPos")
-local oWorld = require("oWorld")
 local CCSequence = require("CCSequence")
 local CCCall = require("CCCall")
 local oEditor = require("oEditor")
-local oBodyDef = require("oBodyDef")
-local CCScheduler = require("CCScheduler")
-local CCSize = require("CCSize")
 local CCRect = require("CCRect")
 
 --[[
@@ -30,16 +26,23 @@ events:
 
 local function oViewArea()
 	local winSize = CCDirector.winSize
+	local origin = oEditor.origin
 	
 	-- init view --
 	local view = CCLayerColor(ccColor4(0xff1a1a1a),winSize.width,winSize.height)
 	view.anchor = oVec2.zero
 	view.cascadeOpacity = true
-	
+
+	local scaleNode = CCNode()
+	scaleNode.contentSize = winSize
+	local scalePos = oVec2(winSize.width*0.5+origin.x,winSize.height*0.5+origin.y)
+	scaleNode.position = scalePos
+	scaleNode.anchor = oVec2(origin.x/winSize.width,origin.y/winSize.height)
+	view:addChild(scaleNode)
+
 	local crossNode = CCNode()
-	local origin = oEditor.origin
 	crossNode.position = origin
-	view:addChild(crossNode)
+	scaleNode:addChild(crossNode)
 
 	-- init cross --
 	local cross = oLine(
@@ -62,11 +65,11 @@ local function oViewArea()
 	crossNode.data.toScaleListener = oListener("viewArea.toScale",function(scale)
 		oEditor.scale = scale
 		view.touchEnabled = false
-		crossNode:runAction(CCSequence(
+		scaleNode:runAction(CCSequence(
 		{
 			oScale(0.5,scale,scale,oEase.OutQuad),
 			CCCall(function()
-				if crossNode.numberOfRunningActions == 1 then
+				if scaleNode.numberOfRunningActions+crossNode.numberOfRunningActions == 1 then
 					view.touchEnabled = true
 				end
 			end),
@@ -78,14 +81,14 @@ local function oViewArea()
 		{
 			oPos(0.5,pos.x,pos.y,oEase.OutQuad),
 			CCCall(function()
-				if crossNode.numberOfRunningActions == 1 then
+				if scaleNode.numberOfRunningActions+crossNode.numberOfRunningActions == 1 then
 					view.touchEnabled = true
 				end
 			end),
 		}))
 	end)
 	crossNode.data.moveListener = oListener("viewArea.move",function(delta)
-		crossNode.position = crossNode.position + delta
+		crossNode.position = crossNode.position + delta/scaleNode.scaleX
 	end)
 
 	local shapeToCreate = nil
@@ -151,12 +154,12 @@ local function oViewArea()
 					local preDistance = touches[1].preLocation:distance(touches[2].preLocation)
 					local distance = touches[1].location:distance(touches[2].location)
 					local delta = (distance - preDistance) * 4 / winSize.height
-					local scale = crossNode.scaleX + delta
+					local scale = scaleNode.scaleX + delta
 					if scale <= 0.5 then
 						scale = 0.5
 					end
-					crossNode.scaleX = scale
-					crossNode.scaleY = scale
+					scaleNode.scaleX = scale
+					scaleNode.scaleY = scale
 					oEditor.scale = scale
 					oEvent:send("viewArea.scale",scale)
 				end

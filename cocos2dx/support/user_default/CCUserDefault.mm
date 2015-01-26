@@ -124,7 +124,7 @@ std::string CCUserDefault::getStringForKey(const char* pKey)
 string CCUserDefault::getStringForKey(const char* pKey, const std::string & defaultValue)
 {
     NSString *str = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithUTF8String:pKey]];
-    if (! str)
+    if (!str)
     {
         return defaultValue;
     }

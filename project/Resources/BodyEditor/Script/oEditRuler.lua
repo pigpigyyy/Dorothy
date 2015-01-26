@@ -23,6 +23,7 @@ local CCCall = require("CCCall")
 
 local function oEditRuler()
 	local winSize = CCDirector.winSize
+	local center = oVec2(winSize.width*0.5,winSize.height*0.5)
 	local width = 100
 	local height = 460*winSize.height/600
 	local halfW = width*0.5
@@ -32,7 +33,7 @@ local function oEditRuler()
 	ruler.visible = false
 	ruler.opacity = 0.8
 	ruler.cascadeOpacity = true
-	ruler.position = oEditor.origin
+	ruler.position = oEditor.origin+center
 	
 	local border = oLine(
 	{
@@ -288,15 +289,10 @@ local function oEditRuler()
 
 	ruler:registerTouchHandler(function(eventType,touch)
 		--touch=CCTouch
-		if eventType == CCTouch.Began then -- check touch area
-			local loc = ruler:convertToNodeSpace(touch.location)
-			if not CCRect(-halfW,-halfH,width,height):containsPoint(loc) then
-				return false
-			end
+		if eventType == CCTouch.Began then
 			_s = 0
 			_v = 0
 			ruler:schedule(updateSpeed)
-			return true
 		elseif eventType == CCTouch.Moved then
 			local v = _value-touch.delta.y*indent/(interval*10)
 			local padding = 0.5*indent

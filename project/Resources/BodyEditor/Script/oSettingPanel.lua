@@ -14,6 +14,7 @@ local oEditor = require("oEditor")
 local tolua = require("tolua")
 local oBodyDef = require("oBodyDef")
 local CCTextAlign = require("CCTextAlign")
+local CCUserDefault = require("CCUserDefault")
 
 local function oSettingPanel()
 	local winSize = CCDirector.winSize
@@ -116,6 +117,7 @@ local function oSettingPanel()
 		"Sensor",
 		-- int
 		"SensorTag",
+		"G",
 	}
 
 	local items = {}
@@ -135,6 +137,7 @@ local function oSettingPanel()
 	items.Face._label.positionX = 54
 	items.Face._label.anchor = oVec2(0,0.5)
 	items.Face._label.horizontalAlignment = CCTextAlign.HLeft
+	items.G.value = CCUserDefault.G
 	self.items = items
 
 	local itemsRectangle =
@@ -157,6 +160,7 @@ local function oSettingPanel()
 		items.SensorTag,
 		items.Face,
 		items.FacePos,
+		items.G,
 	}
 	self.Rectangle = itemsRectangle
 
@@ -180,6 +184,7 @@ local function oSettingPanel()
 		items.SensorTag,
 		items.Face,
 		items.FacePos,
+		items.G,
 	}
 	self.Circle = itemsCircle
 
@@ -202,6 +207,7 @@ local function oSettingPanel()
 		items.SensorTag,
 		items.Face,
 		items.FacePos,
+		items.G,
 	}
 	self.Polygon = itemsPolygon
 
@@ -221,6 +227,7 @@ local function oSettingPanel()
 		items.Bullet,
 		items.Face,
 		items.FacePos,
+		items.G,
 	}
 	self.Chain = itemsChain
 
@@ -240,6 +247,7 @@ local function oSettingPanel()
 		items.Bullet,
 		items.Face,
 		items.FacePos,
+		items.G,
 	}
 	self.Loop = itemsLoop
 

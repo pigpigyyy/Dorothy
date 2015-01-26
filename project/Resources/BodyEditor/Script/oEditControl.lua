@@ -27,6 +27,7 @@ local oOpacity = require("oOpacity")
 local CCCall = require("CCCall")
 local oPointControl = require("oPointControl")
 local oSpriteChooser = require("oSpriteChooser")
+local CCUserDefault = require("CCUserDefault")
 
 local function oEditControl()
 	local winSize = CCDirector.winSize
@@ -171,7 +172,7 @@ local function oEditControl()
 	local halfTW = typeSize.width*0.5
 	local halfTH = typeSize.height*0.5
 	local typeSelector = oSelectionPanel(typeSize,true,true,false)
-	typeSelector.position = oEditor.origin-oVec2(winSize.width*0.5,winSize.height*0.5)
+	typeSelector.position = oEditor.origin
 	typeSelector.visible = false
 
 	-- typeBackground
@@ -1019,6 +1020,12 @@ local function oEditControl()
 					if face then
 						face.position = center
 					end
+				end)
+			elseif name == "G" then
+				editControl:showEditRuler(CCUserDefault.G,-100,0,10,function(val)
+					item.value = n2str(val)
+					CCUserDefault.G = val
+					oEditor.world.gravity = oVec2(0,val)
 				end)
 			end
 		else

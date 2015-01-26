@@ -19,12 +19,13 @@ local oEditor = require("oEditor")
 
 local function oVRuler()
 	local winSize = CCDirector.winSize
+	local center = oVec2(winSize.width*0.5,winSize.height*0.5)
 	local rulerWidth = 30
-	local rulerHeight = winSize.width
+	local rulerHeight = winSize.height
 	local self = CCLayerColor(ccColor4(0),rulerWidth,rulerHeight)
 	local halfW = rulerWidth*0.5
 	local halfH = rulerHeight*0.5
-	local origin = oEditor.origin
+	local origin = oEditor.origin+center
 	
 	self.cascadeOpacity = true
 	self.opacity = 0.3
@@ -73,7 +74,7 @@ local function oVRuler()
 						if i%10 == 0 then
 							local label = CCLabelTTF(tostring(i*10),"Arial",10)
 							label.texture.antiAlias = false
-							label.scaleY = 1/intervalNode.scaleY
+							label.scaleX = 1/self.scaleY
 							label.rotation = -90
 							label.position = oVec2(-halfW+18,posY)
 							intervalNode:addChild(label)
@@ -94,7 +95,7 @@ local function oVRuler()
 							if i%10 == 0 then
 								local label = CCLabelTTF(tostring(-i*10),"Arial",10)
 								label.texture.antiAlias = false
-								label.scaleY = 1/intervalNode.scaleY
+								label.scaleX = 1/self.scaleY
 								label.rotation = -90
 								label.position = oVec2(-halfW+18,posY)
 								intervalNode:addChild(label)
@@ -120,13 +121,14 @@ local function oVRuler()
 	
 	-- listen view move event --
 	intervalNode.data.moveListener = oListener("viewArea.move",function(delta)
-		intervalNode.positionY = intervalNode.positionY + delta.y
+		intervalNode.positionY = intervalNode.positionY + delta.y/self.scaleY
 		updatePart(delta.y < 0 and winSize.height-intervalNode.positionY or 0,
 			delta.y > 0 and intervalNode.positionY or 0)
 	end)
 	intervalNode.data.toPosListener = oListener("viewArea.toPos",function(pos)
+		pos = pos + center
 		intervalNode:runAction(oPos(0.5,halfW,pos.y,oEase.OutQuad))
-		updatePart(winSize.height-pos.y,pos.y)
+		updatePart(pos.y,winSize.height-pos.y)
 	end)
 
 	-- listen view scale event --
@@ -137,7 +139,7 @@ local function oVRuler()
 		end
 	end
 	local fadeOut = CCSequence({oOpacity(0.3,0),CCCall(function()
-		intervalNode.scaleY = 1
+		self.scaleY = 1
 		updateIntervalTextScale(1)
 	end)})
 	local fadeIn = oOpacity(0.3,0.3)
@@ -153,7 +155,7 @@ local function oVRuler()
 				self:stopAllActions()
 				self:runAction(fadeIn)
 			end
-			intervalNode.scaleY = scale
+			self.scaleY = scale
 			-- unscale interval text --
 			updateIntervalTextScale(1/scale)
 		end
@@ -169,14 +171,14 @@ local function oVRuler()
 			self:runAction(fadeIn)
 		end
 		if scale >= 1.0 then
-			intervalNode:runAction(oScale(0.5,1,scale,oEase.OutQuad))
+			self:runAction(oScale(0.5,1,scale,oEase.OutQuad))
 			-- manually update and unscale interval text --
 			local time = 0
-			intervalNode:schedule(function(self,deltaTime)
-				updateIntervalTextScale(1/intervalNode.scaleY)
+			intervalNode:schedule(function(node,deltaTime)
+				updateIntervalTextScale(1/self.scaleY)
 				time = time + deltaTime
 				if math.min(time/0.5,1) == 1 then
-					self:unschedule()
+					node:unschedule()
 				end
 			end)
 		end
