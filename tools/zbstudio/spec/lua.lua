@@ -166,7 +166,12 @@ return {
               end
               if (not added) then
                 -- let's hope autocomplete info can resolve this
-                assigns[var] = typ
+            		local oldType = assigns[var]
+            		if oldType and var.."." == typ:sub(1,#var+1) then
+            			assigns[var] = oldType..typ:sub(#var+1,-1)
+            		else
+               		assigns[var] = typ
+               	end
               end
             else
               assigns[var] = typ

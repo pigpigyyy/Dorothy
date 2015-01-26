@@ -230,7 +230,7 @@ local function resolveAssign(editor,tx)
 		if rest then
 			local nextKey, nextRest = rest:match("([%w_]+)[%.:](.*)")
 			--DisplayOutputLn("nextRest:",nextRest)
-			if nextRest then
+			if nextRest and tab.childs then
 				local keyTab = tab.childs[key]
 				if keyTab and keyTab.childs then
 					local itemTab = keyTab.childs[nextKey]
