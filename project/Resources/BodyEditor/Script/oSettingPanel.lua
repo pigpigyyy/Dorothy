@@ -137,7 +137,7 @@ local function oSettingPanel()
 	items.Face._label.positionX = 54
 	items.Face._label.anchor = oVec2(0,0.5)
 	items.Face._label.horizontalAlignment = CCTextAlign.HLeft
-	items.G.value = CCUserDefault.G
+	items.G.value = CCUserDefault.G == "" and -10 or CCUserDefault.G
 	self.items = items
 
 	local itemsRectangle =
