@@ -20,7 +20,9 @@ b2FixtureDef oBodyDef::_fixtureDef;
 
 oBodyDef::oBodyDef():
 angleOffset(0)
-{ }
+{
+	active = false;
+}
 
 oBodyDef::~oBodyDef()
 {
