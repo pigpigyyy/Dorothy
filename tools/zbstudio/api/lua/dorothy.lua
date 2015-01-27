@@ -6497,6 +6497,11 @@ local Dorothy =
 				description = "[bool]",
 				type = "value",
 			},
+			force =
+			{
+				description = "[float]",
+				type = "value",
+			},
 			speed =
 			{
 				description = "[float]",

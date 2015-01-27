@@ -587,7 +587,7 @@ local defaultShapeData =
 			if self[Gear.JointB] == oldName then self[Gear.JointB] = newName end
 		end,
 		reset = function(self,args)
-			if resetEnable and args.type == "Joint" and (self:get("JointA") == args.name or self:get("JointB")) == args.name then
+			if resetEnable and args.type == "Joint" and (self:get("JointA") == args.name or self:get("JointB") == args.name) then
 				oEditor:resetItem(self)
 			end
 		end,

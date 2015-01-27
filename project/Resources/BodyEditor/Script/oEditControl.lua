@@ -902,6 +902,8 @@ local function oEditControl()
 				or name == "Upper"
 				or name == "MaxMotorForce"
 				or name == "MaxMotorTorque"
+				or name == "MaxForce"
+				or name == "MaxTorque"
 				or name == "Frequency" then
 				editControl:showEditRuler(data:get(name),0,10000,10,function(val)
 					item.value = n2str(val)
@@ -910,11 +912,6 @@ local function oEditControl()
 			elseif name == "MotorSpeed"
 				or name == "LowerAngle"
 				or name == "UpperAngle" then
-				editControl:showEditRuler(data:get(name),0,0,10,function(val)
-					item.value = n2str(val)
-					data:set(name,val)
-				end)
-			elseif name == "MaxForce" or name == "MaxTorque" then
 				editControl:showEditRuler(data:get(name),0,0,10,function(val)
 					item.value = n2str(val)
 					data:set(name,val)

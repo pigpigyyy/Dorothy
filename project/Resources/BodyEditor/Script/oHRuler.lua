@@ -30,7 +30,8 @@ local function oHRuler()
 	self.cascadeOpacity = true
 	self.opacity = 0.3
 	self.position = oVec2(origin.x,halfH+10)
-
+	self.anchor = oVec2(origin.x/rulerWidth,0.5)
+	
 	-- borders --
 	local border = oLine(
 	{
@@ -112,8 +113,8 @@ local function oHRuler()
 	end))
 
 	-- set default interval negtive & positive part length --
-	updatePart(origin.x, winSize.width-origin.x)
-	intervalNode.position = oVec2(halfW,halfH)
+	updatePart(origin.x,winSize.width-origin.x)
+	intervalNode.position = oVec2(origin.x,halfH)
 	intervalNode.data = CCDictionary()
 	self:addChild(intervalNode)
 
@@ -123,9 +124,10 @@ local function oHRuler()
 		updatePart(delta.x > 0 and intervalNode.positionX or 0,
 			delta.x < 0 and winSize.width-intervalNode.positionX or 0)
 	end)
-	intervalNode.data.toPosListener = oListener("viewArea.toPos",function()
-		intervalNode:runAction(oPos(0.5,halfW,halfH,oEase.OutQuad))
-		updatePart(halfW,winSize.width-halfW)
+	intervalNode.data.toPosListener = oListener("viewArea.toPos",function(pos)
+		pos = pos+center
+		intervalNode:runAction(oPos(0.5,pos.x,halfH,oEase.OutQuad))
+		updatePart(pos.x,winSize.width-pos.x)
 	end)
 
 	-- listen view scale event --

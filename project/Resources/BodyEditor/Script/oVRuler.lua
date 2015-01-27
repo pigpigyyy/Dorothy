@@ -128,7 +128,7 @@ local function oVRuler()
 	intervalNode.data.toPosListener = oListener("viewArea.toPos",function(pos)
 		pos = pos + center
 		intervalNode:runAction(oPos(0.5,halfW,pos.y,oEase.OutQuad))
-		updatePart(pos.y,winSize.height-pos.y)
+		updatePart(winSize.height-pos.y,pos.y)
 	end)
 
 	-- listen view scale event --

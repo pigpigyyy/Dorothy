@@ -190,5 +190,6 @@ class oMoveJoint: public oJoint
 class oMotorJoint: public oJoint
 {
 	tolua_property__bool bool enabled;
+	tolua_property__common float force;
 	tolua_property__common float speed;
 };

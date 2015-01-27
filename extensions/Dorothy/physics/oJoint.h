@@ -133,6 +133,7 @@ public:
 class oMotorJoint: public oJoint
 {
 public:
+	PROPERTY_NAME(float, Force);
 	PROPERTY_NAME(float, Speed);
 	PROPERTY_BOOL_NAME(Enabled);
 	void reversePower();

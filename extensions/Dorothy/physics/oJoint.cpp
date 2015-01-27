@@ -433,6 +433,41 @@ bool oMotorJoint::isEnabled() const
 	return false;
 }
 
+void oMotorJoint::setForce(float var)
+{
+	if (!_joint) return;
+	var = MAX(var, 0);
+	switch (_joint->GetType())
+	{
+	case e_prismaticJoint:
+		((b2PrismaticJoint*)_joint)->SetMaxMotorForce(var);
+		break;
+	case e_revoluteJoint:
+		((b2RevoluteJoint*)_joint)->SetMaxMotorTorque(var);
+		break;
+	case e_wheelJoint:
+		((b2WheelJoint*)_joint)->SetMaxMotorTorque(var);
+        break;
+    default:
+        break;
+	}
+}
+float oMotorJoint::getForce() const
+{
+	if (!_joint) return 0.0f;
+	switch (_joint->GetType())
+	{
+	case e_prismaticJoint:
+		return ((b2PrismaticJoint*)_joint)->GetMaxMotorForce();
+	case e_revoluteJoint:
+		return ((b2RevoluteJoint*)_joint)->GetMaxMotorTorque();
+	case e_wheelJoint:
+		return ((b2WheelJoint*)_joint)->GetMaxMotorTorque();
+    default:
+		return 0.0f;
+	}
+}
+
 void oMotorJoint::setSpeed(float var)
 {
 	if (!_joint) return;
