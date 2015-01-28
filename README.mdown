@@ -37,7 +37,7 @@
 ```
 * 提供了自己实现的物理编辑器（BodyEditor），进一步简化物理引擎的使用，编辑器完全只使用Dorothy框架的功能，全部用Dorothy的Lua脚本编写，所以可以跨平台使用。编辑器的功能包括编辑几何图形，调节物理属性，编辑关节点和发动机，设置感应器、感应区域以及设置物理对象上挂载的图形。
 
-![自带的物理编辑器](http://www.luvfight.me/content/images/2015/1/bodyEditor.gif)  
+![自带的物理编辑器](http://www.luvfight.me/content/images/2015/1/bodyEditorUI.gif)  
 
 * 自己实现的骨骼动画框架，在两个动画之间的切换增加平滑过渡效果的支持。
 * 自己实现的骨骼动画编辑器，界面简单，但是功能足以制作任意的骨骼动画。编辑器完全只使用Dorothy框架的功能，全部用Dorothy的Lua脚本编写，所以可以跨平台使用。以下是运行截图。编辑器的PC版可执行程序可以通过编译该项目生成，或是从这里下载生成好的可执行版本：[http://git.oschina.net/pig/ActionEditor](http://git.oschina.net/pig/ActionEditor)  
@@ -101,7 +101,7 @@ Another branch of Cocos2d-x with Lua derived from Cocos2d-x version 2.1rc0. Its 
 * Improved Zerobrane Studio with much more powerful code autocompletion abilities. All framework APIs is supported.
 
 ###**Enhance**
-* C++ object\`s life circle is auto managed while writting in Lua codes. (No manually calling `retain()` or `release()` is needed for memory management).
+* C++ object\`s life cycle is auto managed while writting in Lua codes. (No manually calling `retain()` or `release()` is needed for memory management).
 * Improved Lua type systems with lower cost.
 * Small optimizations for Lua binding to run faster.
 
