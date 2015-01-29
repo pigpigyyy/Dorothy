@@ -60,7 +60,7 @@ local function oViewPanel()
 
 	local crossA = createCross()
 	local crossB = createCross()
-	
+
 	local function moveViewToData(data)
 		if oEditor.isPlaying then return end
 		if data.resetListener then

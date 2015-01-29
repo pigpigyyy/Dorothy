@@ -31,7 +31,7 @@ local function oHRuler()
 	self.opacity = 0.3
 	self.position = oVec2(origin.x,halfH+10)
 	self.anchor = oVec2(origin.x/rulerWidth,0.5)
-	
+
 	-- borders --
 	local border = oLine(
 	{

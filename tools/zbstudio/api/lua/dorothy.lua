@@ -2538,7 +2538,7 @@ local Dorothy =
 			},
 			ripple3D =
 			{
-				args = "(duration: float, gridSize: CCSize, position: CCPoint, radius: float, waves: uint, amplitude: float)",
+				args = "(duration: float, gridSize: CCSize, position: oVec2, radius: float, waves: uint, amplitude: float)",
 				description = "",
 				typeName = "CCActionInterval",
 				returns = "(action: CCActionInterval)",
@@ -3202,7 +3202,7 @@ local Dorothy =
 		{
 			setTile =
 			{
-				args = "(tile: ccColor3B, position: oVec2)",
+				args = "(tile: ccColor3, position: oVec2)",
 				description = "",
 				returns = "()",
 				type = "method",
@@ -3670,7 +3670,7 @@ local Dorothy =
 			add =
 			{
 				args = "(id: int, priority: int, reaction: float, recovery: float, available: function, create: function, stop: function)",
-				description = "[Class Method] Add a new action type with its own special id, properties and functions.\n\navailable -- isStarted: boolean function(self: oAction)\n\ncreate -- function()\n\nstop -- function(self: oAction)\n\ncreate -> return function(self: oAction)",
+				description = "[Class Method] Add a new action type with its own special id, properties and functions.\n\navailable -- isStarted: bool function(self: oAction)\n\ncreate -- function()\n\nstop -- function(self: oAction)\n\ncreate -> return function(self: oAction)",
 				returns = "()",
 				static = true,
 				type = "method"
@@ -3930,7 +3930,7 @@ local Dorothy =
 	},
 	oCon =
 	{
-		args = "(handler: boolean function())",
+		args = "(handler: bool function())",
 		description = "Create a condition node.",
 		returns = "(node: oAINode)",
 		typeName = "oAINode",
@@ -4002,7 +4002,7 @@ local Dorothy =
 			},
 			play =
 			{
-				args = "(filename: string, nil|loop: boolean)",
+				args = "(filename: string, nil|loop: bool)",
 				description = "[Class Method] Preload and play a sound effect and then returns a sound id.",
 				returns = "(soundId: int)",
 				static = true,
@@ -4047,7 +4047,7 @@ local Dorothy =
 			},
 			play =
 			{
-				args = "(filename: string, nil|loop: boolean)",
+				args = "(filename: string, nil|loop: bool)",
 				description = "[Class Method] Preload and play BGM.",
 				returns = "()",
 				static = true,
@@ -4251,14 +4251,14 @@ local Dorothy =
 			{
 				args = "(tag: int)",
 				description = "",
-				returns = "(removed: boolean)",
+				returns = "(removed: bool)",
 				type = "method"
 			},
 			removeSensor =
 			{
 				args = "(sensor: oSensor)",
 				description = "",
-				returns = "(removed: boolean)",
+				returns = "(removed: bool)",
 				type = "method"
 			},
 			attach =
@@ -4356,12 +4356,12 @@ local Dorothy =
 			},
 			fixedRotation =
 			{
-				description = "[boolean]",
+				description = "[bool]",
 				type = "value"
 			},
 			isBullet =
 			{
-				description = "[boolean]",
+				description = "[bool]",
 				type = "value"
 			},
 			gravityScale =
@@ -4480,7 +4480,7 @@ local Dorothy =
 			},
 			faceRight =
 			{
-				description = "[boolean][readonly]",
+				description = "[bool][readonly]",
 				type = "value"
 			},
 			owner =
@@ -4510,7 +4510,7 @@ local Dorothy =
 			addHandler =
 			{
 				args = "(handler: function)",
-				description = "handler -- moveOn: boolean function(bullet: oBullet, target: oUnit)",
+				description = "handler -- moveOn: bool function(bullet: oBullet, target: oUnit)",
 				returns = "()",
 				type = "method"
 			},
@@ -4567,7 +4567,7 @@ local Dorothy =
 			},
 			highSpeedFix =
 			{
-				description = "[boolean] When the defined bullet is going to run in wery high speed, set this flag with true to get accurate simulation",
+				description = "[bool] When the defined bullet is going to run in wery high speed, set this flag with true to get accurate simulation",
 				type = "value"
 			},
 			gravityScale =
@@ -4660,7 +4660,7 @@ local Dorothy =
 		{
 			useGameFile =
 			{
-				description = "[Class Field][boolean]",
+				description = "[Class Field][bool]",
 				static = true,
 				type = "value"
 			},
@@ -4861,7 +4861,7 @@ local Dorothy =
 			{
 				args = "(body: oBody)",
 				description = "[Class Method]",
-				returns = "(isPlayer: boolean)",
+				returns = "(isPlayer: bool)",
 				static = true,
 				type = "method"
 			},
@@ -4869,7 +4869,7 @@ local Dorothy =
 			{
 				args = "(body: oBody)",
 				description = "[Class Method]",
-				returns = "(isTerrain: boolean)",
+				returns = "(isTerrain: bool)",
 				static = true,
 				type = "method"
 			},
@@ -5149,7 +5149,7 @@ local Dorothy =
 			{
 				args = "(face: oFace)",
 				description = "",
-				returns = "(success: boolean)",
+				returns = "(success: bool)",
 				type = "method"
 			},
 			toNode =
@@ -5306,21 +5306,21 @@ local Dorothy =
 			{
 				args = "(filename: string)",
 				description = "[Class Method] Load new clip data item from .clip file.",
-				returns = "(loaded: boolean)",
+				returns = "(loaded: bool)",
 				type = "method"
 			},
 			update =
 			{
 				args = "(name: string, content: string)",
 				description = "",
-				returns = "(loaded: boolean)",
+				returns = "(loaded: bool)",
 				type = "method"
 			},
 			unload =
 			{
 				args = "(nil|filename: string)",
 				description = "[Class Method] Unload clip data item from .clip file.\n\n false - No such item in cache\n\n true - Item unloaded\n\nOr unload all clip data when no parameters passed.\n\n false - No data in cache\n\n true - Data unloaded",
-				returns = "(loaded: boolean)",
+				returns = "(loaded: bool)",
 				type = "method"
 			},
 			removeUnused =
@@ -5351,21 +5351,21 @@ local Dorothy =
 			{
 				args = "(filename: string)",
 				description = "[Class Method] Load a new frame action data item from .frame file.",
-				returns = "(loaded: boolean)",
+				returns = "(loaded: bool)",
 				type = "method"
 			},
 			update =
 			{
 				args = "(name: string, content: string)",
 				description = "",
-				returns = "(loaded: boolean)",
+				returns = "(loaded: bool)",
 				type = "method"
 			},
 			unload =
 			{
 				args = "(nil|filename: string)",
 				description = "[Class Method] Unload a frame action data item from .frame file.\n\n false - No such item in cache\n\n true - Item unloaded\n\nOr unload all frame action data when no parameters passed.\n\n false - No data in cache\n\n true - Data unloaded",
-				returns = "(loaded: boolean)",
+				returns = "(loaded: bool)",
 				type = "method"
 			},
 			removeUnused =
@@ -5389,21 +5389,21 @@ local Dorothy =
 			{
 				args = "(filename: string)",
 				description = "[Class Method] Load new particle data item from .plist file.",
-				returns = "(loaded: boolean)",
+				returns = "(loaded: bool)",
 				type = "method"
 			},
 			update =
 			{
 				args = "(name: string, content: string)",
 				description = "",
-				returns = "(loaded: boolean)",
+				returns = "(loaded: bool)",
 				type = "method"
 			},
 			unload =
 			{
 				args = "(nil|filename: string)",
 				description = "[Class Method] Unload particle data item from .plist file.\n\n false - No such item in cache\n\n true - Item unloaded\n\nOr unload all particle data when no parameters passed.\n\n false - No data in cache\n\n true - Data unloaded",
-				returns = "(loaded: boolean)",
+				returns = "(loaded: bool)",
 				type = "method"
 			},
 			removeUnused =
@@ -5427,21 +5427,21 @@ local Dorothy =
 			{
 				args = "(filename: string)",
 				description = "[Class Method] Load new data of effects item from .effect file.",
-				returns = "(loaded: boolean)",
+				returns = "(loaded: bool)",
 				type = "method"
 			},
 			update =
 			{
 				args = "(content: string)",
 				description = "",
-				returns = "(loaded: boolean)",
+				returns = "(loaded: bool)",
 				type = "method"
 			},
 			unload =
 			{
 				args = "(nil|filename: string)",
 				description = "[Class Method] Unload data of effects.\n\n false - No data in cache\n\n true - Data unloaded",
-				returns = "(loaded: boolean)",
+				returns = "(loaded: bool)",
 				type = "method"
 			},
 		},
@@ -5458,21 +5458,21 @@ local Dorothy =
 			{
 				args = "(filename: string)",
 				description = "[Class Method] Load new model data item from .model file.",
-				returns = "(loaded: boolean)",
+				returns = "(loaded: bool)",
 				type = "method"
 			},
 			update =
 			{
 				args = "(name: string, content: string)",
 				description = "",
-				returns = "(loaded: boolean)",
+				returns = "(loaded: bool)",
 				type = "method"
 			},
 			unload =
 			{
 				args = "(nil|filename: string)",
 				description = "[Class Method] Unload model data item from .model file.\n\n false - No such item in cache\n\n true - Item unloaded\n\nOr unload all model data when no parameters passed.\n\n false - No data in cache\n\n true - Data unloaded",
-				returns = "(loaded: boolean)",
+				returns = "(loaded: bool)",
 				type = "method"
 			},
 			removeUnused =
@@ -5727,7 +5727,7 @@ local Dorothy =
 			},
 			enabled =
 			{
-				description = "[boolean]",
+				description = "[bool]",
 				type = "value"
 			},
 			tag =
@@ -5743,7 +5743,7 @@ local Dorothy =
 			},
 			sensed =
 			{
-				description = "[boolean][readonly]",
+				description = "[bool][readonly]",
 				type = "value"
 			},
 			sensedBodies =
@@ -5777,7 +5777,7 @@ local Dorothy =
 			{
 				args = "(body: oBody)",
 				description = "",
-				returns = "(find: boolean)",
+				returns = "(find: bool)",
 				type = "method"
 			},
 		},
@@ -5899,7 +5899,7 @@ local Dorothy =
 			},	
 			onSurface =
 			{
-				description = "[boolean][readonly]",
+				description = "[bool][readonly]",
 				type = "value"
 			},
 			groundSensor =
@@ -5981,7 +5981,7 @@ local Dorothy =
 			{
 				args = "(id: int)",
 				description = "",
-				returns = "(success: boolean)",
+				returns = "(success: bool)",
 				type = "method"
 			},
 			set =
@@ -6051,7 +6051,7 @@ local Dorothy =
 			},
 			static =
 			{
-				description = "[boolean]",
+				description = "[bool]",
 				type = "value"
 			},
 			GroundSensorTag =
@@ -6600,4 +6600,4 @@ end
 
 makeDerivation(Dorothy)
 
-do return Dorothy end
+return Dorothy

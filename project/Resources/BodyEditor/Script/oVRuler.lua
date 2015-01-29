@@ -26,7 +26,7 @@ local function oVRuler()
 	local halfW = rulerWidth*0.5
 	local halfH = rulerHeight*0.5
 	local origin = oEditor.origin+center
-	
+
 	self.cascadeOpacity = true
 	self.opacity = 0.3
 	self.position = oVec2(winSize.width-200-halfW,halfH)
@@ -38,7 +38,7 @@ local function oVRuler()
 		oVec2(rulerWidth,0)
 	},ccColor4())
 	self:addChild(border)
-	
+
 	-- init interval --
 	local intervalNode = oLine()
 	local nPart = 0
@@ -57,7 +57,7 @@ local function oVRuler()
 			pPart = math.ceil(pLength/10)*10
 		end
 	end
-	
+
 	-- worker thread for intervals creation --
 	self:schedule(once(function()
 		repeat
@@ -118,7 +118,7 @@ local function oVRuler()
 	intervalNode.position = oVec2(halfW,origin.y)
 	intervalNode.data = CCDictionary()
 	self:addChild(intervalNode)
-	
+
 	-- listen view move event --
 	intervalNode.data.moveListener = oListener("viewArea.move",function(delta)
 		intervalNode.positionY = intervalNode.positionY + delta.y/self.scaleY
