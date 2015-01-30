@@ -46,7 +46,7 @@ local Dorothy =
 				type = "function",
 			},
 		},
-		description = "tolua helper functions",
+		description = "class tolua. \n helper class",
 		type = "class",
 		index = index()
 	},
@@ -56,29 +56,29 @@ local Dorothy =
 		{
 			id =
 			{
-				description = "[int][readonly] Every object is created with its own unique id.",
+				description = "[int][Readonly] Every object is created with its own unique id.",
 				type = "value",
 			},
 			ref =
 			{
-				description = "[int][readonly] Every object accessed by lua has its own unique ref id.",
+				description = "[int][Readonly] Every object accessed by lua has its own unique ref id.",
 				type = "value",
 			},
 			count =
 			{
-				description = "[int][readonly] Total CCObjects.",
+				description = "[int][Readonly] Total CCObjects.",
 				static = true,
 				type = "value",
 			},
 			luaRefCount =
 			{
-				description = "[int][readonly] Total CCObjects used by lua.",
+				description = "[int][Readonly] Total CCObjects used by lua.",
 				static = true,
 				type = "value",
 			},
 			callRefCount =
 			{
-				description = "[int][readonly] Total lua functions referenced by C++.",
+				description = "[int][Readonly] Total lua functions referenced by C++.",
 				static = true,
 				type = "value",
 			},
@@ -144,37 +144,241 @@ local Dorothy =
 		type = "class",
 		index = index()
 	},
+	CCSize =
+	{
+		childs =
+		{
+			width =
+			{
+				description = "[float]",
+				type = "value",
+			},
+			height =
+			{
+				description = "[float]",
+				type = "value",
+			},
+			zero =
+			{
+				description = "[CCSize][Readonly]",
+				static = true,
+				type = "value",
+			},
+		},
+		description = "class CCSize.\n args -- ()\n args1 -- (width: float, height: float)",
+		type = "class",
+		index = index()
+	},
+	CCRect =
+	{
+		childs =
+		{
+			origin =
+			{
+				description = "[oVec2]",
+				typeName = "oVec2",
+				type = "value",
+			},
+			size =
+			{
+				description = "[CCSize]",
+				typeName = "CCSize",
+				type = "value",
+			},
+			left =
+			{
+				description = "[float]",
+				type = "value",
+			},
+			right =
+			{
+				description = "[float]",
+				type = "value",
+			},
+			bottom =
+			{
+				description = "[float]",
+				type = "value",
+			},
+			up =
+			{
+				description = "[float]",
+				type = "value",
+			},
+			midX =
+			{
+				description = "[float]",
+				type = "value",
+			},
+			midY =
+			{
+				description = "[float]",
+				type = "value",
+			},
+			zero =
+			{
+				description = "[CCRect][Readonly]",
+				static = true,
+				type = "value",
+			},
+			containsPoint =
+			{
+				args = "(point: oVec2)",
+				description = "",
+				returns = "(result: bool)",
+				type = "method",
+			},
+			intersectsRect =
+			{
+				args = "(rect: CCRect)",
+				description = "",
+				returns = "(result: bool)",
+				type = "method",
+			},
+		},
+		description = "class CCRect.\n args -- ()\n args1 -- (x: float, y: float, width: float, height: float)\n args2 -- (origin: oVec2, size: CCSize)",
+		type = "class",
+		index = index()
+	},
+	ccColor3 =
+	{
+		childs =
+		{
+			r =
+			{
+				description = "[uint8]",
+				type = "value",
+			},
+			g =
+			{
+				description = "[uint8]",
+				type = "value",
+			},
+			b =
+			{
+				description = "[uint8]",
+				type = "value",
+			},
+		},
+		description = "class ccColor3.\n args -- ()\n args1 -- (rgb: uint)\n args2 -- (r: uint8, g: uint8, b: uint8)",
+		type = "class",
+		index = index()
+	},
+	ccColor4 =
+	{
+		childs =
+		{
+			r =
+			{
+				description = "[uint8]",
+				type = "value",
+			},
+			g =
+			{
+				description = "[uint8]",
+				type = "value",
+			},
+			b =
+			{
+				description = "[uint8]",
+				type = "value",
+			},
+			a =
+			{
+				description = "[uint8]",
+				type = "value",
+			},
+		},
+		description = "class ccColor4.\n args -- ()\n args1 -- (argb: uint)\n args2 -- (r: uint8, g: uint8, b: uint8, a: uint8)\n args3 -- (c: ccColor3, a: uint8 = 255)",
+		type = "class",
+		index = index()
+	},
+	ccBlendFunc =
+	{
+		childs =
+		{
+			Src =
+			{
+				description = "[uint][Const]",
+				static = true,
+				type = "value",
+			},
+			OneMinSrc =
+			{
+				description = "[uint][Const]",
+				static = true,
+				type = "value",
+			},
+			Dst =
+			{
+				description = "[uint][Const]",
+				static = true,
+				type = "value",
+			},
+			OneMinDst =
+			{
+				description = "[uint][Const]",
+				static = true,
+				type = "value",
+			},
+			One =
+			{
+				description = "[uint][Const]",
+				static = true,
+				type = "value",
+			},
+			Zero =
+			{
+				description = "[uint][Const]",
+				static = true,
+				type = "value",
+			},
+			src =
+			{
+				description = "[uint]",
+				type = "value",
+			},
+			dst =
+			{
+				description = "[uint]",
+				type = "value",
+			},
+		},
+		description = "class ccBlendFunc.\n args -- (src: uint, dst: uint)\n -- src|dst: ccBlendFunc.[Src|Dst|OneMinSrc|OneMinDst|One|Zero]",
+		type = "class",
+		index = index()
+	},
 	CCNode =
 	{
 		childs =
 		{
 			Entering =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Exiting =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Entered =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Exited =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Cleanup =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
@@ -259,7 +463,7 @@ local Dorothy =
 			},
 			parent =
 			{
-				description = "[CCNode][readonly]",
+				description = "[CCNode][Readonly]",
 				typeName = "CCNode",
 				type = "value",
 			},
@@ -298,30 +502,30 @@ local Dorothy =
 			},
 			boundingBox =
 			{
-				description = "[CCRect][readonly]",
+				description = "[CCRect][Readonly]",
 				typeName = "CCRect",
 				type = "value",
 			},
 			description =
 			{
-				description = "[string][readonly]",
+				description = "[string][Readonly]",
 				typeName = "string",
 				type = "value",
 			},
 			numberOfRunningActions =
 			{
-				description = "[int][readonly]",
+				description = "[int][Readonly]",
 				type = "value",
 			},
 			children =
 			{
-				description = "[CCArray][readonly]",
+				description = "[CCArray][Readonly]",
 				typeName = "CCArray",
 				type = "value",
 			},
 			running =
 			{
-				description = "[bool][readonly]",
+				description = "[bool][Readonly]",
 				type = "value",
 			},
 			addChild =
@@ -497,13 +701,13 @@ local Dorothy =
 		{
 			TouchesAllAtOnce =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			TouchesOneByOne =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
@@ -640,7 +844,7 @@ local Dorothy =
 				type = "value",
 			},
 		},
-		description = "class CCLayerGradient(CCLayer).\n args0 -- (start: ccColor4, end: ccColor4, v: oVec2)\n args1 -- (start: ccColor4, end: ccColor4)\n args2 -- ()",
+		description = "class CCLayerGradient(CCLayer).\n args -- (start: ccColor4, end: ccColor4, v: oVec2)\n args1 -- (start: ccColor4, end: ccColor4)\n args2 -- ()",
 		parents = {"CCLayer",},
 		type = "class",
 		index = index()
@@ -661,222 +865,18 @@ local Dorothy =
 		type = "function",
 		index = index()
 	},
-	CCSize =
-	{
-		childs =
-		{
-			width =
-			{
-				description = "[float]",
-				type = "value",
-			},
-			height =
-			{
-				description = "[float]",
-				type = "value",
-			},
-			zero =
-			{
-				description = "[CCSize][readonly]",
-				static = true,
-				type = "value",
-			},
-		},
-		description = " args0 -- ()\n args1 -- (width: float, height: float)",
-		type = "class",
-		index = index()
-	},
-	CCRect =
-	{
-		childs =
-		{
-			origin =
-			{
-				description = "[oVec2]",
-				typeName = "oVec2",
-				type = "value",
-			},
-			size =
-			{
-				description = "[CCSize]",
-				typeName = "CCSize",
-				type = "value",
-			},
-			left =
-			{
-				description = "[float]",
-				type = "value",
-			},
-			right =
-			{
-				description = "[float]",
-				type = "value",
-			},
-			bottom =
-			{
-				description = "[float]",
-				type = "value",
-			},
-			up =
-			{
-				description = "[float]",
-				type = "value",
-			},
-			midX =
-			{
-				description = "[float]",
-				type = "value",
-			},
-			midY =
-			{
-				description = "[float]",
-				type = "value",
-			},
-			zero =
-			{
-				description = "[CCRect][readonly]",
-				static = true,
-				type = "value",
-			},
-			containsPoint =
-			{
-				args = "(point: oVec2)",
-				description = "",
-				returns = "(result: bool)",
-				type = "method",
-			},
-			intersectsRect =
-			{
-				args = "(rect: CCRect)",
-				description = "",
-				returns = "(result: bool)",
-				type = "method",
-			},
-		},
-		description = " args -- ()\n args1 -- (x: float, y: float, width: float, height: float)\n args2 -- (origin: oVec2, size: CCSize)",
-		type = "class",
-		index = index()
-	},
-	ccColor3 =
-	{
-		childs =
-		{
-			r =
-			{
-				description = "[uint8]",
-				type = "value",
-			},
-			g =
-			{
-				description = "[uint8]",
-				type = "value",
-			},
-			b =
-			{
-				description = "[uint8]",
-				type = "value",
-			},
-		},
-		description = " args -- ()\n args1 -- (rgb: uint)\n args2 -- (r: uint8, g: uint8, b: uint8)",
-		type = "class",
-		index = index()
-	},
-	ccColor4 =
-	{
-		childs =
-		{
-			r =
-			{
-				description = "[uint8]",
-				type = "value",
-			},
-			g =
-			{
-				description = "[uint8]",
-				type = "value",
-			},
-			b =
-			{
-				description = "[uint8]",
-				type = "value",
-			},
-			a =
-			{
-				description = "[uint8]",
-				type = "value",
-			},
-		},
-		description = " args -- ()\n args1 -- (argb: uint)\n args2 -- (r: uint8, g: uint8, b: uint8, a: uint8)\n args3 -- (c: ccColor3, a: uint8 = 255)",
-		type = "class",
-		index = index()
-	},
-	ccBlendFunc =
-	{
-		childs =
-		{
-			Src =
-			{
-				description = "[uint]",
-				static = true,
-				type = "value",
-			},
-			OneMinSrc =
-			{
-				description = "[uint]",
-				static = true,
-				type = "value",
-			},
-			Dst =
-			{
-				description = "[uint]",
-				static = true,
-				type = "value",
-			},
-			OneMinDst =
-			{
-				description = "[uint]",
-				static = true,
-				type = "value",
-			},
-			One =
-			{
-				description = "[uint]",
-				static = true,
-				type = "value",
-			},
-			Zero =
-			{
-				description = "[uint]",
-				static = true,
-				type = "value",
-			},
-			src =
-			{
-				description = "[uint]",
-				type = "value",
-			},
-			dst =
-			{
-				description = "[uint]",
-				type = "value",
-			},
-		},
-		description = "class ccBlendFunc.\n args -- (src: uint, dst: uint)\n -- src|dst: ccBlendFunc.[Src|Dst|OneMinSrc|OneMinDst|One|Zero]",
-		type = "class",
-		index = index()
-	},
 	CCArray =
 	{
 		childs =
 		{
 			count =
 			{
-				description = "[uint][readonly]",
+				description = "[uint][Readonly]",
 				type = "value",
 			},
 			capacity =
 			{
-				description = "[int][readonly]",
+				description = "[int][Readonly]",
 				type = "value",
 			},
 			index =
@@ -896,13 +896,13 @@ local Dorothy =
 			},
 			last =
 			{
-				description = "[CCObject][readonly]",
+				description = "[CCObject][Readonly]",
 				typeName = "CCObject",
 				type = "value",
 			},
 			randomObject =
 			{
-				description = "[CCObject][readonly]",
+				description = "[CCObject][Readonly]",
 				typeName = "CCObject",
 				type = "value",
 			},
@@ -1030,18 +1030,18 @@ local Dorothy =
 		{
 			count =
 			{
-				description = "[uint][readonly]",
+				description = "[uint][Readonly]",
 				type = "value",
 			},
 			keys =
 			{
-				description = "[CCArray][readonly]",
+				description = "[CCArray][Readonly]",
 				typeName = "CCArray",
 				type = "value",
 			},
 			randomObject =
 			{
-				description = "[CCObject][readonly]",
+				description = "[CCObject][Readonly]",
 				typeName = "CCObject",
 				type = "value",
 			},
@@ -1079,57 +1079,57 @@ local Dorothy =
 		{
 			ExactFit =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			NoBorder =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			ShowAll =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			UnKnown =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			visibleSize =
 			{
-				description = "[CCSize][readonly]",
+				description = "[CCSize][Readonly]",
 				typeName = "CCSize",
 				static = true,
 				type = "value",
 			},
 			visibleOrigin =
 			{
-				description = "[oVec2][readonly]",
+				description = "[oVec2][Readonly]",
 				typeName = "oVec2",
 				static = true,
 				type = "value",
 			},
 			scaleX =
 			{
-				description = "[float][readonly]",
+				description = "[float][Readonly]",
 				static = true,
 				type = "value",
 			},
 			scaleY =
 			{
-				description = "[float][readonly]",
+				description = "[float][Readonly]",
 				static = true,
 				type = "value",
 			},
 			designResolutionSize =
 			{
-				description = "[CCSize][readonly]",
+				description = "[CCSize][Readonly]",
 				typeName = "CCSize",
 				static = true,
 				type = "value",
@@ -1150,8 +1150,8 @@ local Dorothy =
 			},
 			viewName =
 			{
-				description = "[String]",
-				typeName = "String",
+				description = "[string]",
+				typeName = "string",
 				static = true,
 				type = "value",
 			},
@@ -1182,73 +1182,73 @@ local Dorothy =
 		{
 			English =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Chinese =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			French =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Italian =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			German =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Spanish =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Russian =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Korean =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Japanese =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Hungarian =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Portuguese =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Arabic =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
@@ -1263,31 +1263,31 @@ local Dorothy =
 		{
 			Windows =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			MacOS =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Android =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Iphone =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Ipad =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
@@ -1302,19 +1302,19 @@ local Dorothy =
 		{
 			EnterBackground =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			EnterForeground =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			LowMemoryWarning =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
@@ -1359,53 +1359,53 @@ local Dorothy =
 		{
 			currentScene =
 			{
-				description = "[CCScene][readonly]",
+				description = "[CCScene][Readonly]",
 				typeName = "CCScene",
 				static = true,
 				type = "value",
 			},
 			animationInterval =
 			{
-				description = "[double][readonly]",
+				description = "[double][Readonly]",
 				static = true,
 				type = "value",
 			},
 			deltaTime =
 			{
-				description = "[float][readonly]",
+				description = "[float][Readonly]",
 				static = true,
 				type = "value",
 			},
 			paused =
 			{
-				description = "[bool][readonly]",
+				description = "[bool][Readonly]",
 				static = true,
 				type = "value",
 			},
 			winSize =
 			{
-				description = "[CCSize][readonly]",
+				description = "[CCSize][Readonly]",
 				typeName = "CCSize",
 				static = true,
 				type = "value",
 			},
 			visibleSize =
 			{
-				description = "[CCSize][readonly]",
+				description = "[CCSize][Readonly]",
 				typeName = "CCSize",
 				static = true,
 				type = "value",
 			},
 			visibleOrigin =
 			{
-				description = "[oVec2][readonly]",
+				description = "[oVec2][Readonly]",
 				typeName = "oVec2",
 				static = true,
 				type = "value",
 			},
 			sceneStackSize =
 			{
-				description = "[int][readonly]",
+				description = "[int][Readonly]",
 				static = true,
 				type = "value",
 			},
@@ -1544,7 +1544,7 @@ local Dorothy =
 		{
 			filePath =
 			{
-				description = "[string][readonly]",
+				description = "[string][Readonly]",
 				typeName = "string",
 				static = true,
 				type = "value",
@@ -1576,13 +1576,13 @@ local Dorothy =
 		{
 			Menu =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Back =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
@@ -1597,79 +1597,79 @@ local Dorothy =
 		{
 			RGB888 =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			RGB565 =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			A8 =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			I8 =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			AI88 =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			RGBA4444 =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			RGB5A1 =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			PVRTC4 =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			PVRTC2 =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Default =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			RGBA8888 =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			size =
 			{
-				description = "[CCSize][readonly]",
+				description = "[CCSize][Readonly]",
 				typeName = "CCSize",
 				type = "value",
 			},
 			hasMipmaps =
 			{
-				description = "[bool][readonly]",
+				description = "[bool][Readonly]",
 				type = "value",
 			},
 			antiAlias =
@@ -1773,13 +1773,13 @@ local Dorothy =
 		{
 			JPG =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			PNG =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
@@ -1791,12 +1791,12 @@ local Dorothy =
 			},
 			width =
 			{
-				description = "[float][readonly]",
+				description = "[float][Readonly]",
 				type = "value",
 			},
 			height =
 			{
-				description = "[float][readonly]",
+				description = "[float][Readonly]",
 				type = "value",
 			},
 		},
@@ -1897,25 +1897,25 @@ local Dorothy =
 		{
 			Left =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Right =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Up =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Down =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
@@ -2169,12 +2169,12 @@ local Dorothy =
 		{
 			done =
 			{
-				description = "[bool][readonly]",
+				description = "[bool][Readonly]",
 				type = "value",
 			},
 			target =
 			{
-				description = "[CCNode][readonly]",
+				description = "[CCNode][Readonly]",
 				typeName = "CCNode",
 				type = "value",
 			},
@@ -2196,7 +2196,7 @@ local Dorothy =
 		{
 			duration =
 			{
-				description = "[float][readonly]",
+				description = "[float][Readonly]",
 				type = "value",
 			},
 			reverse =
@@ -2220,7 +2220,7 @@ local Dorothy =
 		{
 			elapsed =
 			{
-				description = "[float][readonly]",
+				description = "[float][Readonly]",
 				type = "value",
 			},
 			reverse =
@@ -2796,7 +2796,7 @@ local Dorothy =
 		{
 			AutomaticWidth =
 			{
-				description = "[Const][float]",
+				description = "[float][Const]",
 				static = true,
 				type = "value",
 			},
@@ -2846,37 +2846,37 @@ local Dorothy =
 		{
 			HLeft =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			HCenter =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			HRight =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			VTop =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			VCenter =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			VBottom =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
@@ -2936,7 +2936,7 @@ local Dorothy =
 		{
 			DefaultHandlerPriority =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
@@ -2978,25 +2978,25 @@ local Dorothy =
 		{
 			TapBegan =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Tapped =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			TapEnded =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			hitArea =
 			{
-				description = "[CCRect][readonly]",
+				description = "[CCRect][Readonly]",
 				typeName = "CCRect",
 				type = "value",
 			},
@@ -3048,13 +3048,13 @@ local Dorothy =
 		{
 			Radial =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Bar =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
@@ -3110,37 +3110,37 @@ local Dorothy =
 		{
 			Attach =
 			{
-				description = "[int][const]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Detach =
 			{
-				description = "[int][const]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Insert =
 			{
-				description = "[int][const]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Inserted =
 			{
-				description = "[int][const]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Delete =
 			{
-				description = "[int][const]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Deleted =
 			{
-				description = "[int][const]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
@@ -3227,19 +3227,19 @@ local Dorothy =
 		{
 			layerSize =
 			{
-				description = "[CCSize][readonly]",
+				description = "[CCSize][Readonly]",
 				typeName = "CCSize",
 				type = "value",
 			},
 			mapTileSize =
 			{
-				description = "[CCSize][readonly]",
+				description = "[CCSize][Readonly]",
 				typeName = "CCSize",
 				type = "value",
 			},
 			layerName =
 			{
-				description = "[string][readonly]",
+				description = "[string][Readonly]",
 				typeName = "string",
 				type = "value",
 			},
@@ -3286,37 +3286,37 @@ local Dorothy =
 		{
 			Ortho =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Hex =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Iso =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			mapSize =
 			{
-				description = "[CCSize][readonly]",
+				description = "[CCSize][Readonly]",
 				typeName = "CCSize",
 				type = "value",
 			},
 			tileSize =
 			{
-				description = "[CCSize][readonly]",
+				description = "[CCSize][Readonly]",
 				typeName = "CCSize",
 				type = "value",
 			},
 			mapOrientation =
 			{
-				description = "[int][readonly]\n\nCCTMXTiledMap.Ortho|CCTMXTiledMap.Hex|CCTMXTiledMap.Iso",
+				description = "[int][Readonly]\n\nCCTMXTiledMap.Ortho|CCTMXTiledMap.Hex|CCTMXTiledMap.Iso",
 				type = "value",
 			},
 			getLayer =
@@ -3328,7 +3328,7 @@ local Dorothy =
 				type = "method",
 			},
 		},
-		description = "class CCTMXTiledMap(CCNode).\n args -- (tmxString: string, resourcePath: string)\n args1 -- (tmxFile: string)",
+		description = "class CCTMXTiledMap(CCNode).\n args -- (tmxstring: string, resourcePath: string)\n args1 -- (tmxFile: string)",
 		parents = {"CCNode",},
 		type = "class",
 		index = index()
@@ -3339,49 +3339,49 @@ local Dorothy =
 		{
 			Began =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Moved =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Ended =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			Cancelled =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value",
 			},
 			location =
 			{
-				description = "[oVec2][readonly]",
+				description = "[oVec2][Readonly]",
 				typeName = "oVec2",
 				type = "value",
 			},
 			preLocation =
 			{
-				description = "[oVec2][readonly]",
+				description = "[oVec2][Readonly]",
 				typeName = "oVec2",
 				type = "value",
 			},
 			delta =
 			{
-				description = "[oVec2][readonly]",
+				description = "[oVec2][Readonly]",
 				typeName = "oVec2",
 				type = "value",
 			},
 			id =
 			{
-				description = "[int][readonly]",
+				description = "[int][Readonly]",
 				type = "value",
 			},
 		},
@@ -3427,22 +3427,22 @@ local Dorothy =
 			},
 			duration =
 			{
-				description = "[float][readonly] Current model animation`s duration,\n\n 0.0 - begin, 1.0 - end.",
+				description = "[float][Readonly] Current model animation`s duration,\n\n 0.0 - begin, 1.0 - end.",
 				type = "value"
 			},
 			playing =
 			{
-				description = "[bool][readonly] Whether current model animation is playing.",
+				description = "[bool][Readonly] Whether current model animation is playing.",
 				type = "value"
 			},
 			paused =
 			{
-				description = "[bool][readonly] Whether current model animation is paused.",
+				description = "[bool][Readonly] Whether current model animation is paused.",
 				type = "value"
 			},
 			currentAnimation =
 			{
-				description = "[string][readonly] Current model animation`s name.",
+				description = "[string][Readonly] Current model animation`s name.",
 				type = "value"
 			},
 			addHandler =
@@ -3517,15 +3517,6 @@ local Dorothy =
 				typeName = "CCNode",
 				type = "method"
 			},
-			none =
-			{
-				args = "()",
-				description = "[Class Method]Create a new empty model without looks or animations.",
-				returns = "(model: oModel)",
-				typeName = "oModel",
-				static = true,
-				type = "method"
-			}
 		},
 		parents = {"CCNode",},
 		description = "class oModel(CCNode).\n args -- (filename: string)",
@@ -3538,73 +3529,73 @@ local Dorothy =
 		{
 			Start =
 			{
-				description = "[Const][int] Start event flag for action handler.",
+				description = "[int][Const] Start event flag for action handler.",
 				static = true,
 				type = "value"
 			},
 			End =
 			{
-				description = "[Const][int] End event flag for action handler.",
+				description = "[int][Const] End event flag for action handler.",
 				static = true,
 				type = "value"
 			},
 			Walk =
 			{
-				description = "[Const][int] Built in action id",
+				description = "[int][Const] Built in action id",
 				static = true,
 				type = "value"
 			},
 			Turn =
 			{
-				description = "[Const][int] Built in action id",
+				description = "[int][Const] Built in action id",
 				static = true,
 				type = "value"
 			},
 			MeleeAttack =
 			{
-				description = "[Const][int] Built in action id",
+				description = "[int][Const] Built in action id",
 				static = true,
 				type = "value"
 			},
 			RangeAttack =
 			{
-				description = "[Const][int] Built in action id",
+				description = "[int][Const] Built in action id",
 				static = true,
 				type = "value"
 			},
 			Idle =
 			{
-				description = "[Const][int] Built in action id",
+				description = "[int][Const] Built in action id",
 				static = true,
 				type = "value"
 			},
 			Stop =
 			{
-				description = "[Const][int] Built in action id",
+				description = "[int][Const] Built in action id",
 				static = true,
 				type = "value"
 			},
 			Jump =
 			{
-				description = "[Const][int] Built in action id",
+				description = "[int][Const] Built in action id",
 				static = true,
 				type = "value"
 			},
 			Hit =
 			{
-				description = "[Const][int] Built in action id",
+				description = "[int][Const] Built in action id",
 				static = true,
 				type = "value"
 			},
 			Die =
 			{
-				description = "[Const][int] Built in action id",
+				description = "[int][Const] Built in action id",
 				static = true,
 				type = "value"
 			},
 			UserID =
 			{
-				description = "[Const][int] Built in action id",
+				description = "[int][Const] Built in action id",
 				static = true,
 				type = "value"
 			},
@@ -3630,12 +3621,12 @@ local Dorothy =
 			},
 			doing =
 			{
-				description = "[bool][readonly] Telling whether the action is doing.",
+				description = "[bool][Readonly] Telling whether the action is doing.",
 				type = "value"
 			},
 			owner =
 			{
-				description = "[oUnit][readonly] Get the owner of the action.",
+				description = "[oUnit][Readonly] Get the owner of the action.",
 				typeName = "oUnit",
 				type = "value"
 			},
@@ -3685,7 +3676,7 @@ local Dorothy =
 			},
 			UserID =
 			{
-				description = "[Const][int] New action type id must start with the UserID.",
+				description = "[int][Const] New action type id must start with the UserID.",
 				static = true,
 				type = "value"
 			}
@@ -3700,13 +3691,13 @@ local Dorothy =
 		{
 			Melee =
 			{
-				description = "[Const][int] Flag stands for melee attack.",
+				description = "[int][Const] Flag stands for melee attack.",
 				static = true,
 				type = "value"
 			},
 			Range =
 			{
-				description = "[Const][int] Flag stands for ranged attack.",
+				description = "[int][Const] Flag stands for ranged attack.",
 				static = true,
 				type = "value"
 			}
@@ -3721,13 +3712,13 @@ local Dorothy =
 		{
 			Single =
 			{
-				description = "[Const][int] Flag stands for single attack target.",
+				description = "[int][Const] Flag stands for single attack target.",
 				static = true,
 				type = "value"
 			},
 			Multi =
 			{
-				description = "[Const][int] Flag stands for multiple attack targets.",
+				description = "[int][Const] Flag stands for multiple attack targets.",
 				static = true,
 				type = "value"
 			}
@@ -3742,31 +3733,31 @@ local Dorothy =
 		{
 			Unkown =
 			{
-				description = "[Const][int] Flag stands for unkown relationship.",
+				description = "[int][Const] Flag stands for unkown relationship.",
 				static = true,
 				type = "value"
 			},
 			Friend =
 			{
-				description = "[Const][int] Flag stands for allies.",
+				description = "[int][Const] Flag stands for allies.",
 				static = true,
 				type = "value"
 			},
 			Neutral =
 			{
-				description = "[Const][int] Flag stands for neutral relationship.",
+				description = "[int][Const] Flag stands for neutral relationship.",
 				static = true,
 				type = "value"
 			},
 			Enemy =
 			{
-				description = "[Const][int] Flag stands for opponents.",
+				description = "[int][Const] Flag stands for opponents.",
 				static = true,
 				type = "value"
 			},
 			Any =
 			{
-				description = "[Const][int] Flag stands for any relationship.",
+				description = "[int][Const] Flag stands for any relationship.",
 				static = true,
 				type = "value"
 			}
@@ -3810,20 +3801,20 @@ local Dorothy =
 		{
 			self =
 			{
-				description = "[Class Field][oUnit] Get the current AI unit.",
+				description = "[oUnit] Get the current AI unit.",
 				typeName = "oUnit",
 				static = true,
 				type = "value"
 			},
 			oldValue =
 			{
-				description = "[Class Field][float] Get the old, last triggered instinct value.",
+				description = "[float] Get the old, last triggered instinct value.",
 				static = true,
 				type = "value"
 			},
 			newValue =
 			{
-				description = "[Class Field][float] Get the new, last triggered instinct value.",
+				description = "[float] Get the new, last triggered instinct value.",
 				static = true,
 				type = "value"
 			},
@@ -4018,13 +4009,13 @@ local Dorothy =
 			},
 			volume =
 			{
-				description = "[Class Field][float] All playing sounds` volume, value from 0.0f to 1.0f.",
+				description = "[float] All playing sounds` volume, value from 0.0f to 1.0f.",
 				static = true,
 				type = "value"
 			},
 			useCache =
 			{
-				description = "[Class Field][bool]",
+				description = "[bool]",
 				static = true,
 				type = "value"
 			},
@@ -4079,7 +4070,7 @@ local Dorothy =
 			},
 			volume =
 			{
-				description = "[Class Field][float] BGM volume, value from 0.0f to 1.0f.",
+				description = "[float] BGM volume, value from 0.0f to 1.0f.",
 				static = true,
 				type = "value"
 			},
@@ -4156,13 +4147,13 @@ local Dorothy =
 		{
 			ContactStart =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			ContactEnd =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
@@ -4180,7 +4171,7 @@ local Dorothy =
 			},
 			mass =
 			{
-				description = "[float][readonly]",
+				description = "[float][Readonly]",
 				type = "value"
 			},
 			velocityX =
@@ -4216,7 +4207,7 @@ local Dorothy =
 			},
 			group =
 			{
-				description = "[int]\n\n [0] - Hide\n\n [1-12] - Player\n\n [13] - Sense player\n\n [14] - Terrain\n\n [15] - Contact all",
+				description = "[int]\n\n Value Range:\n\n (0) - Hide\n\n (1-12) - Player\n\n (13) - Sense player\n\n (14) - Terrain\n\n (15) - Contact all",
 				type = "value"
 			},
 			owner =
@@ -4323,19 +4314,19 @@ local Dorothy =
 		{
 			Static =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			Dynamic =
 				{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			Kinematic =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
@@ -4475,29 +4466,29 @@ local Dorothy =
 			},
 			targetAllow =
 			{
-				description = "[oTargetAllow][readonly]",
+				description = "[oTargetAllow][Readonly]",
 				type = "value"
 			},
 			faceRight =
 			{
-				description = "[bool][readonly]",
+				description = "[bool][Readonly]",
 				type = "value"
 			},
 			owner =
 			{
-				description = "[oBody][readonly]",
+				description = "[oBody][Readonly]",
 				typeName = "oBody",
 				type = "value"
 			},
 			detectSensor =
 			{
-				description = "[oSensor][readonly]",
+				description = "[oSensor][Readonly]",
 				typeName = "oSensor",
 				type = "value"
 			},
 			bulletDef =
 			{
-				description = "[oBulletDef][readonly]",
+				description = "[oBulletDef][Readonly]",
 				typeName = "oBulletDef",
 				type = "value"
 			},
@@ -4583,13 +4574,13 @@ local Dorothy =
 			},
 			bodyDef =
 			{
-				description = "[oBodyDef][readonly]",
+				description = "[oBodyDef][Readonly]",
 				typeName = "oBodyDef",
 				type = "value"
 			},
 			velocity =
 			{
-				description = "[oVec2][readonly] Bullet start velocity",
+				description = "[oVec2][Readonly] Bullet start velocity",
 				typeName = "oVec2",
 				type = "value"
 			},
@@ -4660,7 +4651,7 @@ local Dorothy =
 		{
 			useGameFile =
 			{
-				description = "[Class Field][bool]",
+				description = "[bool]",
 				static = true,
 				type = "value"
 			},
@@ -4730,7 +4721,7 @@ local Dorothy =
 			},
 			writablePath =
 			{
-				description = "[string][readonly]",
+				description = "[string][Readonly]",
 				typeName = "string",
 				static = true,
 				type = "value",
@@ -4802,25 +4793,25 @@ local Dorothy =
 		{
 			GroupHide =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			GroupDetectPlayer =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			GroupDetect =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			GroupTerrain =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
@@ -4884,187 +4875,187 @@ local Dorothy =
 		{
 			Linear =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			InQuad =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			OutQuad =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			InOutQuad =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			InCubic =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			OutCubic =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			InOutCubic =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			InQuart =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			OutQuart =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			InOutQuart =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			InQuint =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			OutQuint =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			InOutQuint =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			InSine =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			OutSine =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			InOutSine =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			InExpo =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			OutExpo =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			InOutExpo =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			InCirc =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			OutCirc =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			InOutCirc =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			InElastic =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			OutElastic =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			InOutElastic =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			InBack =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			OutBack =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			InOutBack =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			InBounce =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			OutBounce =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			InOutBounce =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
@@ -5087,7 +5078,7 @@ local Dorothy =
 		{
 			playing =
 			{
-				description = "[bool][readonly]",
+				description = "[bool][Readonly]",
 				type = "value"
 			},
 			start =
@@ -5523,7 +5514,7 @@ local Dorothy =
 			},
 			size =
 			{
-				description = "[int][readonly]",
+				description = "[int][Readonly]",
 				type = "value",
 			},
 		},
@@ -5641,13 +5632,13 @@ local Dorothy =
 		{
 			camera =
 			{
-				description = "[oCamera][readonly]",
+				description = "[oCamera][Readonly]",
 				typeName = "oCamera",
 				type = "value"
 			},
 			UILayer =
 			{
-				description = "[oLayer][readonly]",
+				description = "[oLayer][Readonly]",
 				typeName = "oLayer",
 				type = "value"
 			},
@@ -5715,13 +5706,13 @@ local Dorothy =
 		{
 			Enter =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			Leave =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
@@ -5732,23 +5723,23 @@ local Dorothy =
 			},
 			tag =
 			{
-				description = "[int][readonly]",
+				description = "[int][Readonly]",
 				type = "value"
 			},
 			owner =
 			{
-				description = "[oBody][readonly]",
+				description = "[oBody][Readonly]",
 				typeName = "oBody",
 				type = "value"
 			},
 			sensed =
 			{
-				description = "[bool][readonly]",
+				description = "[bool][Readonly]",
 				type = "value"
 			},
 			sensedBodies =
 			{
-				description = "[CCArray][readonly]",
+				description = "[CCArray][Readonly]",
 				typeName = "CCArray",
 				type = "value"
 			},
@@ -5899,47 +5890,47 @@ local Dorothy =
 			},	
 			onSurface =
 			{
-				description = "[bool][readonly]",
+				description = "[bool][Readonly]",
 				type = "value"
 			},
 			groundSensor =
 			{
-				description = "[oSensor][readonly]",
+				description = "[oSensor][Readonly]",
 				typeName = "oSensor",
 				type = "value"
 			},
 			detectSensor =
 			{
-				description = "[oSensor][readonly]",
+				description = "[oSensor][Readonly]",
 				typeName = "oSensor",
 				type = "value"
 			},
 			attackSensor =
 			{
-				description = "[oSensor][readonly]",
+				description = "[oSensor][Readonly]",
 				typeName = "oSensor",
 				type = "value"
 			},
 			unitDef =
 			{
-				description = "[oUnitDef][readonly]",
+				description = "[oUnitDef][Readonly]",
 				typeName = "oUnitDef",
 				type = "value"
 			},
 			currentAction =
 			{
-				description = "[oAction][readonly]",
+				description = "[oAction][Readonly]",
 				typeName = "oAction",
 				type = "value"
 			},
 			width =
 			{
-				description = "[float][readonly]",
+				description = "[float][Readonly]",
 				type = "value"
 			},
 			height =
 			{
-				description = "[float][readonly]",
+				description = "[float][Readonly]",
 				type = "value"
 			},
 			reflexArc =
@@ -6056,37 +6047,37 @@ local Dorothy =
 			},
 			GroundSensorTag =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			DetectSensorTag =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			AttackSensorTag =
 			{
-				description = "[Const][int]",
+				description = "[int][Const]",
 				static = true,
 				type = "value"
 			},
 			BulletKey =
 			{
-				description = "[Const][string]",
+				description = "[string][Const]",
 				static = true,
 				type = "value"
 			},
 			AttackKey =
 			{
-				description = "[Const][string]",
+				description = "[string][Const]",
 				static = true,
 				type = "value"
 			},
 			HitKey =
 			{
-				description = "[Const][string]",
+				description = "[string][Const]",
 				static = true,
 				type = "value"
 			},
@@ -6274,7 +6265,7 @@ local Dorothy =
 			distance =
 			{
 				args = "(collision: bool, bodyA: oBody, bodyB: oBody, anchorA: oVec2, anchorB: oVec2, frequency: float = 0, damping: float = 0)",
-				description = "",
+				description = "[Class Method]",
 				typeName = "oJointDef",
 				returns = "(jointDef: oJointDef)",
 				static = true,
@@ -6283,7 +6274,7 @@ local Dorothy =
 			friction =
 			{
 				args = "(collision: bool, bodyA: oBody, bodyB: oBody, worldPos: oVec2, maxForce: float, maxTorque: float)",
-				description = "",
+				description = "[Class Method]",
 				typeName = "oJointDef",
 				returns = "(jointDef: oJointDef)",
 				static = true,
@@ -6292,7 +6283,7 @@ local Dorothy =
 			spring =
 			{
 				args = "(collision: bool, bodyA: oBody, bodyB: oBody, linearOffset: oVec2, angularOffset: float, maxForce: float, maxTorque: float, correctionFactor: float = 1)",
-				description = "",
+				description = "[Class Method]",
 				typeName = "oJointDef",
 				returns = "(jointDef: oJointDef)",
 				static = true,
@@ -6301,7 +6292,7 @@ local Dorothy =
 			pulley =
 			{
 				args = "(collision: bool, bodyA: oBody, bodyB: oBody, anchorA: oVec2, anchorB: oVec2, groundAnchorA: oVec2, groundAnchorB: float, ratio: float = 1)",
-				description = "",
+				description = "[Class Method]",
 				typeName = "oJointDef",
 				returns = "(jointDef: oJointDef)",
 				static = true,
@@ -6310,7 +6301,7 @@ local Dorothy =
 			prismatic =
 			{
 				args = "(collision: bool, bodyA: oBody, bodyB: oBody, worldPos: oVec2, axis: oVec2, lowerTranslation: float = 0, upperTranslation: float = 0, maxMotorForce: float = 0, motorSpeed: float = 0)",
-				description = "",
+				description = "[Class Method]",
 				typeName = "oJointDef",
 				returns = "(jointDef: oJointDef)",
 				static = true,
@@ -6319,7 +6310,7 @@ local Dorothy =
 			revolute =
 			{
 				args = "(collision: bool, bodyA: oBody, bodyB: oBody, worldPos: oVec2, lowerAngle: float = 0, upperAngle: float = 0, maxMotorTorque: float = 0, motorSpeed: float = 0)",
-				description = "",
+				description = "[Class Method]",
 				typeName = "oJointDef",
 				returns = "(jointDef: oJointDef)",
 				static = true,
@@ -6328,7 +6319,7 @@ local Dorothy =
 			rope =
 			{
 				args = "(collision: bool, bodyA: oBody, bodyB: oBody, anchorA: oVec2, anchorB: oVec2, maxLength: float)",
-				description = "",
+				description = "[Class Method]",
 				typeName = "oJointDef",
 				returns = "(jointDef: oJointDef)",
 				static = true,
@@ -6337,7 +6328,7 @@ local Dorothy =
 			weld =
 			{
 				args = "(collision: bool, bodyA: oBody, bodyB: oBody, worldPos: oVec2, frequency: float = 0, damping: float = 0)",
-				description = "",
+				description = "[Class Method]",
 				typeName = "oJointDef",
 				returns = "(jointDef: oJointDef)",
 				static = true,
@@ -6346,7 +6337,7 @@ local Dorothy =
 			wheel =
 			{
 				args = "(collision: bool, bodyA: oBody, bodyB: oBody, worldPos: oVec2, axis: oVec2, maxMotorTorque: float = 0, motorSpeed: float = 0, frequency: float = 2, damping: float = 0.7)",
-				description = "",
+				description = "[Class Method]",
 				typeName = "oJointDef",
 				returns = "(jointDef: oJointDef)",
 				static = true,
@@ -6364,7 +6355,7 @@ local Dorothy =
 		{
 			world =
 			{
-				description = "[oWorld][readonly]",
+				description = "[oWorld][Readonly]",
 				typeName = "oWorld",
 				type = "value",
 			},
@@ -6378,7 +6369,7 @@ local Dorothy =
 			distance =
 			{
 				args = "(collision: bool, bodyA: oBody, bodyB: oBody, anchorA: oVec2, anchorB: oVec2, frequency: float = 0, damping: float = 0)",
-				description = "",
+				description = "[Class Method]",
 				typeName = "oJoint",
 				returns = "(joint: oJoint)",
 				static = true,
@@ -6387,7 +6378,7 @@ local Dorothy =
 			friction =
 			{
 				args = "(collision: bool, bodyA: oBody, bodyB: oBody, worldPos: oVec2, maxForce: float, maxTorque: float)",
-				description = "",
+				description = "[Class Method]",
 				typeName = "oJoint",
 				returns = "(joint: oJoint)",
 				static = true,
@@ -6396,7 +6387,7 @@ local Dorothy =
 			spring =
 			{
 				args = "(collision: bool, bodyA: oBody, bodyB: oBody, linearOffset: oVec2, angularOffset: float, maxForce: float, maxTorque: float, correctionFactor: float = 1)",
-				description = "",
+				description = "[Class Method]",
 				typeName = "oJoint",
 				returns = "(joint: oJoint)",
 				static = true,
@@ -6405,7 +6396,7 @@ local Dorothy =
 			move =
 			{
 				args = "(collision: bool, bodyA: oBody, bodyB: oBody, targetPos: oVec2, maxForce: float, frequency: float = 5.0, damping: float = 0.7)",
-				description = "",
+				description = "[Class Method]",
 				typeName = "oMoveJoint",
 				returns = "(joint: oMoveJoint)",
 				static = true,
@@ -6414,7 +6405,7 @@ local Dorothy =
 			pulley =
 			{
 				args = "(collision: bool, bodyA: oBody, bodyB: oBody, anchorA: oVec2, anchorB: oVec2, groundAnchorA: oVec2, groundAnchorB: float, ratio: float = 1)",
-				description = "",
+				description = "[Class Method]",
 				typeName = "oJoint",
 				returns = "(joint: oJoint)",
 				static = true,
@@ -6423,7 +6414,7 @@ local Dorothy =
 			prismatic =
 			{
 				args = "(collision: bool, bodyA: oBody, bodyB: oBody, worldPos: oVec2, axis: oVec2, lowerTranslation: float = 0, upperTranslation: float = 0, maxMotorForce: float = 0, motorSpeed: float = 0)",
-				description = "",
+				description = "[Class Method]",
 				typeName = "oMotorJoint",
 				returns = "(joint: oMotorJoint)",
 				static = true,
@@ -6432,7 +6423,7 @@ local Dorothy =
 			revolute =
 			{
 				args = "(collision: bool, bodyA: oBody, bodyB: oBody, worldPos: oVec2, lowerAngle: float = 0, upperAngle: float = 0, maxMotorTorque: float = 0, motorSpeed: float = 0)",
-				description = "",
+				description = "[Class Method]",
 				typeName = "oMotorJoint",
 				returns = "(joint: oMotorJoint)",
 				static = true,
@@ -6441,7 +6432,7 @@ local Dorothy =
 			rope =
 			{
 				args = "(collision: bool, bodyA: oBody, bodyB: oBody, anchorA: oVec2, anchorB: oVec2, maxLength: float)",
-				description = "",
+				description = "[Class Method]",
 				typeName = "oJoint",
 				returns = "(joint: oJoint)",
 				static = true,
@@ -6450,7 +6441,7 @@ local Dorothy =
 			weld =
 			{
 				args = "(collision: bool, bodyA: oBody, bodyB: oBody, worldPos: oVec2, frequency: float = 0, damping: float = 0)",
-				description = "",
+				description = "[Class Method]",
 				typeName = "oJoint",
 				returns = "(joint: oJoint)",
 				static = true,
@@ -6459,7 +6450,7 @@ local Dorothy =
 			wheel =
 			{
 				args = "(collision: bool, bodyA: oBody, bodyB: oBody, worldPos: oVec2, axis: oVec2, maxMotorTorque: float = 0, motorSpeed: float = 0, frequency: float = 2, damping: float = 0.7)",
-				description = "",
+				description = "[Class Method]",
 				typeName = "oMotorJoint",
 				returns = "(joint: oMotorJoint)",
 				static = true,
