@@ -1,5 +1,5 @@
 local function genIndex()
-	local i = -1
+	local i = 0
 	return function() i = i + 1 return i end
 end
 
@@ -14,7 +14,7 @@ local Dorothy =
 			type =
 			{
 				args = "(item: CCObject)",
-				description = "get tolua++ type of any object",
+				description = " get tolua++ type of any object",
 				typeName = "string",
 				returns = "(typename: string)",
 				static = true,
@@ -23,7 +23,7 @@ local Dorothy =
 			cast =
 			{
 				args = "(object: CCObject, typename: string)",
-				description = "type cast, if typename is not a super or base type of object, it returns nil",
+				description = " type cast, if typename is not a super or base type of object, it returns nil",
 				typeName = "CCObject",
 				returns = "(object: CCObject)",
 				static = true,
@@ -46,7 +46,7 @@ local Dorothy =
 				type = "function",
 			},
 		},
-		description = "class tolua. \n helper class",
+		description = "class tolua. \n A helper class",
 		type = "class",
 		index = index()
 	},
@@ -56,12 +56,12 @@ local Dorothy =
 		{
 			id =
 			{
-				description = "[int][Readonly] Every object is created with its own unique id.",
+				description = "[int][Readonly] Every CCObject is created with its own unique id.",
 				type = "value",
 			},
 			ref =
 			{
-				description = "[int][Readonly] Every object accessed by lua has its own unique ref id.",
+				description = "[int][Readonly] Any CCObject accessed by lua has its own unique ref id.",
 				type = "value",
 			},
 			count =
@@ -84,63 +84,6 @@ local Dorothy =
 			},
 		},
 		description = "class CCObject.",
-		type = "class",
-		index = index()
-	},
-	oVec2 =
-	{
-		childs =
-		{
-			x =
-			{
-				description = "[float]",
-				type = "value"
-			},
-			y =
-			{
-				description = "[float]",
-				type = "value"
-			},
-			zero =
-			{
-				description = "[oVec2]",
-				typeName = "oVec2",
-				static = true,
-				type = "value"
-			},
-			distance =
-			{
-				args = "(vec: oVec2)",
-				description = "",
-				returns = "(value: float)",
-				type = "method"
-			},
-			distanceSquared =
-			{
-				args = "(vec: oVec2)",
-				description = "",
-				returns = "(value: float)",
-				type = "method"
-			},
-			length =
-			{
-				description = "[float]",
-				type = "value"
-			},
-			lengthSquared =
-			{
-				description = "[float]",
-				type = "value"
-			},
-			normalize =
-			{
-				args = "()",
-				description = "",
-				returns = "()",
-				type = "method"
-			},
-		},
-		description = "class oVec2.\n args -- (x:  float = 0, y: float = 0))",
 		type = "class",
 		index = index()
 	},
@@ -344,7 +287,7 @@ local Dorothy =
 				type = "value",
 			},
 		},
-		description = "class ccBlendFunc.\n args -- (src: uint, dst: uint)\n -- src|dst: ccBlendFunc.[Src|Dst|OneMinSrc|OneMinDst|One|Zero]",
+		description = "class ccBlendFunc.\n args -- (src: uint, dst: uint)\n -- src and dst: ccBlendFunc.[Src|Dst|OneMinSrc|OneMinDst|One|Zero]",
 		type = "class",
 		index = index()
 	},
@@ -677,8 +620,8 @@ local Dorothy =
 			},
 			drawPolygon =
 			{
-				args = "(verts: table<oVec2>, fillColor: ccColor4, borderWidth: float, borderColor: ccColor4)",
-				description = " args1 -- (verts: table<oVec2>, fillColor: ccColor4)",
+				args = "(verts: table{oVec2}, fillColor: ccColor4, borderWidth: float, borderColor: ccColor4)",
+				description = " args1 -- (verts: table{oVec2}, fillColor: ccColor4)",
 				returns = "()",
 				type = "method",
 			},
@@ -739,7 +682,7 @@ local Dorothy =
 			registerTouchHandler =
 			{
 				args = "(handler: function, isMultiTouches: bool = false, priority: int = 0, swallowsTouches: bool = false)",
-				description = "If isMultiTouches\n\n true -- handler: function(eventType: int, touches: table<CCTouch>)\n\n false -- handler: function(eventType: int, touch: CCTouch)\n\n -- eventType: CCTouch.[Began|Moved|Ended|Cancelled]",
+				description = "If isMultiTouches\n\n true -- handler: function(eventType: int, touches: table{CCTouch})\n\n false -- handler: function(eventType: int, touch: CCTouch)\n\n -- eventType: CCTouch.[Began|Moved|Ended|Cancelled]",
 				returns = "()",
 				type = "method",
 			},
@@ -753,7 +696,7 @@ local Dorothy =
 			registerKeypadHandler =
 			{
 				args = "(handler: function)",
-				description = " -- handler: function(eventType: int)\n\n eventType: [CCKeypad.Back|CCKeypad.Menu]",
+				description = " -- handler: function(eventType: int)\n\n -- eventType: [CCKeypad.Back|CCKeypad.Menu]",
 				returns = "()",
 				type = "method",
 			},
@@ -851,7 +794,7 @@ local Dorothy =
 	},
 	cclog =
 	{
-		args = "(...)",
+		args = "(format: string, any: ...)",
 		description = "",
 		returns = "()",
 		type = "function",
@@ -859,7 +802,7 @@ local Dorothy =
 	},
 	ccmsg =
 	{
-		args = "(title: string, ...)",
+		args = "(title: string, any: ...)",
 		description = "",
 		returns = "()",
 		type = "function",
@@ -1019,7 +962,7 @@ local Dorothy =
 				type = "method",
 			},
 		},
-		description = "class CCArray(CCObject).\n args -- ()\n args1 -- (capacity: int)\n args2 -- (other: CCArray)\n args3 -- (objects: table<CCObject>)",
+		description = "class CCArray(CCObject).\n args -- ()\n args1 -- (capacity: int)\n args2 -- (other: CCArray)\n args3 -- (objects: table{CCObject})",
 		parents = {"CCObject",},
 		type = "class",
 		index = index()
@@ -1035,8 +978,7 @@ local Dorothy =
 			},
 			keys =
 			{
-				description = "[CCArray][Readonly]",
-				typeName = "CCArray",
+				description = "[table{int|string}][Readonly]",
 				type = "value",
 			},
 			randomObject =
@@ -1050,7 +992,7 @@ local Dorothy =
 				args = "(key: int|string)",
 				description = "",
 				typeName = "CCObject",
-				returns = "(object: CCObject)",
+				returns = "(item: number|bool|string|CCObject)",
 				type = "method",
 			},
 			set =
@@ -1321,7 +1263,7 @@ local Dorothy =
 			registerEventHandler =
 			{
 				args = "(handler: function)",
-				description = " -- handler: function(eventType: int)\n\n -- eventType: CCApplication.[EnterBackground|EnterForeground]",
+				description = " -- handler: function(eventType: int)\n\n -- eventType: CCApplication.[EnterBackground|EnterForeground|LowMemoryWarning]",
 				returns = "()",
 				static = true,
 				type = "method",
@@ -1719,7 +1661,7 @@ local Dorothy =
 			},
 			loadAsync =
 			{
-				args = "(filename: string|filenames: table<string>, callback: function)",
+				args = "(filename: string|table{string}: table{string}, callback: function)",
 				description = " -- callback: function(filename)",
 				typeName = "",
 				returns = "()",
@@ -2264,7 +2206,7 @@ local Dorothy =
 	},
 	CCSequence =
 	{
-		args = "(actions: table<CCFiniteTimeAction>)",
+		args = "(actions: table{CCFiniteTimeAction})",
 		description = "",
 		typeName = "CCActionInterval",
 		returns = "(action: CCActionInterval)",
@@ -2291,7 +2233,7 @@ local Dorothy =
 	},
 	CCSpawn =
 	{
-		args = "(actions: table<CCFiniteTimeAction>)",
+		args = "(actions: table{CCFiniteTimeAction})",
 		description = "",
 		typeName = "CCActionInterval",
 		returns = "(action: CCActionInterval)",
@@ -2444,7 +2386,7 @@ local Dorothy =
 	},
 	CCCardinalSplineTo =
 	{
-		args = "(duration: float, points: table<oVec2>, tensionv: float)",
+		args = "(duration: float, points: table{oVec2}, tensionv: float)",
 		description = "",
 		typeName = "CCActionInterval",
 		returns = "(action: CCActionInterval)",
@@ -2453,7 +2395,7 @@ local Dorothy =
 	},
 	CCCardinalSplineBy =
 	{
-		args = "(duration: float, points: table<oVec2>, tensionv: float)",
+		args = "(duration: float, points: table{oVec2}, tensionv: float)",
 		description = "",
 		typeName = "CCActionInterval",
 		returns = "(action: CCActionInterval)",
@@ -2462,7 +2404,7 @@ local Dorothy =
 	},
 	CCCatmullRomTo =
 	{
-		args = "(duration: float, points: table<oVec2>)",
+		args = "(duration: float, points: table{oVec2})",
 		description = "",
 		typeName = "CCActionInterval",
 		returns = "(action: CCActionInterval)",
@@ -2471,7 +2413,7 @@ local Dorothy =
 	},
 	CCCatmullRomBy =
 	{
-		args = "(duration: float, points: table<oVec2>)",
+		args = "(duration: float, points: table{oVec2})",
 		description = "",
 		typeName = "CCActionInterval",
 		returns = "(action: CCActionInterval)",
@@ -3390,7 +3332,105 @@ local Dorothy =
 		type = "class",
 		index = index()
 	},
+	CCKeyboard =
+	{
+		childs =
+		{
+			updateKey =
+			{
+				args = "(key: uint8, isDown: bool)",
+				description = "",
+				returns = "()",
+				static = true,
+				type = "method"
+			},
+			isKeyDown =
+			{
+				args = "(key: uint8)",
+				description = "",
+				returns = "(state: bool)",
+				static = true,
+				type = "method"
+			},
+			isKeyUp =
+			{
+				args = "(key: uint8)",
+				description = "",
+				returns = "(state: bool)",
+				static = true,
+				type = "method"
+			},
+			isKeyPressed =
+			{
+				args = "(key: uint8)",
+				description = "",
+				returns = "(state: bool)",
+				static = true,
+				type = "method"
+			},
+		},
+		description = "class CCKeyboard.\n [Only available in Win32]",
+		type = "class",
+		index = index()
+	},
 
+	oVec2 =
+	{
+		childs =
+		{
+			x =
+			{
+				description = "[float]",
+				type = "value"
+			},
+			y =
+			{
+				description = "[float]",
+				type = "value"
+			},
+			zero =
+			{
+				description = "[oVec2]",
+				typeName = "oVec2",
+				static = true,
+				type = "value"
+			},
+			distance =
+			{
+				args = "(vec: oVec2)",
+				description = "",
+				returns = "(value: float)",
+				type = "method"
+			},
+			distanceSquared =
+			{
+				args = "(vec: oVec2)",
+				description = "",
+				returns = "(value: float)",
+				type = "method"
+			},
+			length =
+			{
+				description = "[float]",
+				type = "value"
+			},
+			lengthSquared =
+			{
+				description = "[float]",
+				type = "value"
+			},
+			normalize =
+			{
+				args = "()",
+				description = "",
+				returns = "()",
+				type = "method"
+			},
+		},
+		description = "class oVec2.\n args -- (x:  float = 0, y: float = 0))",
+		type = "class",
+		index = index()
+	},
 	oModel =
 	{
 		childs =
@@ -3661,7 +3701,7 @@ local Dorothy =
 			add =
 			{
 				args = "(id: int, priority: int, reaction: float, recovery: float, available: function, create: function, stop: function)",
-				description = "[Class Method] Add a new action type with its own special id, properties and functions.\n\navailable -- isStarted: bool function(self: oAction)\n\ncreate -- function()\n\nstop -- function(self: oAction)\n\ncreate -> return function(self: oAction)",
+				description = "[Class Method] Add a new action type with its own special id, properties and functions.\n\navailable -- isStarted: bool function(self: oAction)\n\ncreate -- function()\n\nstop -- function(self: oAction)\n\ncreate - return function(self: oAction)",
 				returns = "()",
 				static = true,
 				type = "method"
@@ -3876,7 +3916,17 @@ local Dorothy =
 	},
 	oAINode =
 	{
-		childs = {},
+		childs =
+		{
+			DUMMY =
+			{
+				args = "()",
+				description = "",
+				returns = "()",
+				static = true,
+				type = "method",
+			},
+		},
 		parents = {"CCObject",},
 		description = "class oAINode(CCObject).",
 		type = "class",
@@ -4303,10 +4353,21 @@ local Dorothy =
 	},
 	oFixtureDef =
 	{
-		childs = {},
+		childs =
+		{
+			DUMMY =
+			{
+				args = "()",
+				description = "",
+				returns = "()",
+				static = true,
+				type = "method",
+			},
+		},
 		description = "class oFixtureDef.",
 		type = "class",
-		index = index()		
+		hide = true,
+		index = index()
 	},
 	oBodyDef =
 	{
@@ -4374,7 +4435,7 @@ local Dorothy =
 			polygon =
 			{
 				args = "(center: oVec2, width: float, height: float, angle: float, density: float, friction: float, restitution: float)",
-				description = "[Class Method]\n\n args1 -- (width: float, height: float, density: float, friction: float, restitution: float)\n\n args2 -- (vertices: table<oVec2>, density: float, friction: float, restitution: float)",
+				description = "[Class Method]\n\n args1 -- (width: float, height: float, density: float, friction: float, restitution: float)\n\n args2 -- (vertices: table{oVec2}, density: float, friction: float, restitution: float)",
 				returns = "(fixtureDef: oFixtureDef)",
 				typeName = "oFixtureDef",
 				static = true,
@@ -4382,7 +4443,7 @@ local Dorothy =
 			},
 			loop =
 			{
-				args = "(vertices: table<oVec2>, friction: float, restitution: float)",
+				args = "(vertices: table{oVec2}, friction: float, restitution: float)",
 				description = "[Class Method]",
 				returns = "(fixtureDef: oFixtureDef)",
 				typeName = "oFixtureDef",
@@ -4400,7 +4461,7 @@ local Dorothy =
 			},
 			chain =
 			{
-				args = "(vertices: table<oVec2>, friction: float, restitution: float)",
+				args = "(vertices: table{oVec2}, friction: float, restitution: float)",
 				description = "[Class Method]",
 				returns = "(fixtureDef: oFixtureDef)",
 				typeName = "oFixtureDef",
@@ -4410,13 +4471,13 @@ local Dorothy =
 			attachPolygon =
 			{
 				args = "(center: oVec2, width: float, height: float, angle: float, density: float, friction: float, restitution: float)",
-				description = " args1 -- (width: float, height: float, density: float, friction: float, restitution: float)\n\n args2 -- (vertices: table<oVec2>, density: float, friction: float, restitution: float)",
+				description = " args1 -- (width: float, height: float, density: float, friction: float, restitution: float)\n\n args2 -- (vertices: table{oVec2}, density: float, friction: float, restitution: float)",
 				returns = "()",
 				type = "method"
 			},
 			attachLoop =
 			{
-				args = "(vertices: table<oVec2>, friction: float, restitution: float)",
+				args = "(vertices: table{oVec2}, friction: float, restitution: float)",
 				description = "",
 				returns = "()",
 				type = "method"
@@ -4430,7 +4491,7 @@ local Dorothy =
 			},
 			attachChain =
 			{
-				args = "(vertices: table<oVec2>, friction: float, restitution: float)",
+				args = "(vertices: table{oVec2}, friction: float, restitution: float)",
 				description = "",
 				returns = "()",
 				type = "method"
@@ -4438,7 +4499,7 @@ local Dorothy =
 			attachPolygonSensor =
 			{
 				args = "(tag: int, width: float, height: float)",
-				description = " args1 -- (tag: float, width: float, height: float, center: oVec2, angle: float)\n\n args2 -- (tag: float, vertices: table<oVec2>)",
+				description = " args1 -- (tag: float, width: float, height: float, center: oVec2, angle: float)\n\n args2 -- (tag: float, vertices: table{oVec2})",
 				returns = "()",
 				type = "method"
 			},
@@ -5163,55 +5224,14 @@ local Dorothy =
 		{
 			set =
 			{
-				args = "(verts: table<oVec2>)",
+				args = "(verts: table{oVec2})",
 				description = "",
 				returns = "()",
 				type = "method"
 			},
 		},
 		parents = {"CCNode",},
-		description = "class oLine(CCNode).\n args -- (verts: table<oVec2>, color: ccColor4)\n args1 -- ()",
-		type = "class",
-		index = index()
-	},
-	CCKeyboard =
-	{
-		childs =
-		{
-			updateKey =
-			{
-				args = "(key: uint8, isDown: bool)",
-				description = "",
-				returns = "()",
-				static = true,
-				type = "method"
-			},
-			isKeyDown =
-			{
-				args = "(key: uint8)",
-				description = "",
-				returns = "(state: bool)",
-				static = true,
-				type = "method"
-			},
-			isKeyUp =
-			{
-				args = "(key: uint8)",
-				description = "",
-				returns = "(state: bool)",
-				static = true,
-				type = "method"
-			},
-			isKeyPressed =
-			{
-				args = "(key: uint8)",
-				description = "",
-				returns = "(state: bool)",
-				static = true,
-				type = "method"
-			},
-		},
-		description = "class CCKeyboard.\n [Only available in Win32]",
+		description = "class oLine(CCNode).\n args -- (verts: table{oVec2}, color: ccColor4)\n args1 -- ()",
 		type = "class",
 		index = index()
 	},
@@ -5325,7 +5345,7 @@ local Dorothy =
 			{
 				args = "(filename: string)",
 				description = "",
-				returns = "(names: table<string>)",
+				returns = "(names: table{string})",
 				type = "method"
 			}
 		},
@@ -5594,7 +5614,7 @@ local Dorothy =
 			},
 			loadAsync =
 			{
-				args = "(filename: string|filenames: table<string>, callback: function)",
+				args = "(filename: string|filenames: table{string}, callback: function)",
 				description = " -- callback: function(filename)",
 				typeName = "",
 				returns = "()",
@@ -5603,7 +5623,7 @@ local Dorothy =
 			},
 			swapAsync =
 			{
-				args = "(oldResourses: table<string>, newResourses: table<string>, callback: function)",
+				args = "(oldResourses: table{string}, newResourses: table{string}, callback: function)",
 				description = " -- callback: function(filename)",
 				typeName = "",
 				returns = "()",
@@ -6223,14 +6243,14 @@ local Dorothy =
 			},
 			setActions =
 			{
-				args = "(actionIds: table<int>)",
+				args = "(actionIds: table{int})",
 				description = "",
 				returns = "()",
 				type = "method"
 			},
 			setInstincts =
 			{
-				args = "(instinctIds: table<int>)",
+				args = "(instinctIds: table{int})",
 				description = "",
 				returns = "()",
 				type = "method"
@@ -6554,7 +6574,7 @@ local Dorothy =
 				type = "value",
 			},
 		},
-		description = "class oListener.\n args -- (args: table, event: oEvent)",
+		description = "class oListener.\n args -- (name: string, handler: function)\n -- handler: function{eventArgs: table, event: oEvent}",
 		parents = {"CCObject",},
 		type = "class",
 		index = index()
@@ -6566,7 +6586,7 @@ local function makeDerivation(pack)
 	for k,v in pairs(pack) do
 		classIndices[v.index] = k
 	end
-	for i = 0,#classIndices do
+	for i = 1,#classIndices do
 		local className = classIndices[i]
 		local class = pack[className]
 		class.level = 0
