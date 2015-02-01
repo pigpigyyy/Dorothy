@@ -66,3 +66,6 @@ DerivedData/
 /document/Dorothy/doc/
 !/document/Dorothy/bin/
 /document/Dorothy/bin/doc.lua
+
+# Ignore genareted Cocos2d-x doc files
+/document/Cocos2d-x-cpp/doc/

@@ -33,6 +33,13 @@ THE SOFTWARE.
 
 NS_CC_BEGIN
 
+/**
+ * @addtogroup GUI
+ * @{
+ * @addtogroup menu
+ * @{
+ */
+
 /** @brief CCMenuItem base class
  *
  *  Subclass CCMenuItem (or any subclass) to create your custom CCMenuItem objects.
@@ -97,6 +104,10 @@ protected:
     int m_nScriptTapHandler;
 	CC_LUA_TYPE(CCMenuItem)
 };
+
+// end of GUI group
+/// @}
+/// @}
 
 NS_CC_END
 
