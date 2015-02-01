@@ -184,7 +184,7 @@ for name,_ in pairs(types) do
 	write(name)
 end
 --]]
-local file = io.open("doc.lua","w+")
+local file = io.open("../../../../document/Dorothy/bin/doc.lua","w+")
 file:write(result)
 file:close()
 

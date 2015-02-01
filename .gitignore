@@ -58,6 +58,11 @@ DerivedData/
 # Ignore vim swaps
 *.swp
 
+# Ignore genareted lua binding source files
 /lua/cocos2dx_support/LuaCocos2d.cpp
 /lua/cocos2dx_support/LuaCode.cpp
 
+# Ignore genareted Dorothy lua doc files
+/document/Dorothy/doc/
+!/document/Dorothy/bin/
+/document/Dorothy/bin/doc.lua
