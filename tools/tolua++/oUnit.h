@@ -21,7 +21,7 @@ class oUnit: public oBody
 	tolua_property__common CCSize attackRange;
 	tolua_property__bool bool faceRight;
 	tolua_property__common oBulletDef* bulletDef;
-	tolua_property__common int reflexArc;
+	tolua_property__common string reflexArc;
 	
 	tolua_readonly tolua_property__bool bool onSurface;
 	
@@ -35,11 +35,14 @@ class oUnit: public oBody
 	tolua_readonly tolua_property__common float width;
 	tolua_readonly tolua_property__common float height;
 	
-	oAction* attachAction(int id);
-	void removeAction(int id);
+	oAction* attachAction(const char* name);
+	void removeAction(const char* name);
 	void removeAllActions();
-	oAction* getAction(int id);
-	bool doIt(int id);
+	oAction* getAction(const char* name);
+
+	bool start(const char* name);
+	void stop();
+	bool isDoing(const char* name);
 	
 	void attachInstinct(int id);
 	void removeInstinct(int id);

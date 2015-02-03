@@ -22,7 +22,7 @@ public:
 	virtual oEffect* setOffset(const oVec2& pos) = 0;
 	virtual oEffect* attachTo(CCNode* parent, int zOrder = 0) = 0;
 	virtual oEffect* autoRemove() = 0;
-	static oEffect* create(uint32 index);
+	static oEffect* create(const string& name);
 	CC_LUA_TYPE(oEffect)
 };
 
@@ -36,6 +36,7 @@ public:
 	virtual oEffect* attachTo( CCNode* parent, int zOrder = 0);
 	virtual oEffect* autoRemove();
 	static oParticleEffect* create(const char* filename);
+	oParticleSystemQuad* getParticle() const;
 private:
 	oRef<oParticleSystemQuad> _particle;
 };
@@ -51,6 +52,7 @@ public:
 	virtual oEffect* autoRemove();
 	void onDispose();
 	static oSpriteEffect* create(const char* filename);
+	oSprite* getSprite() const;
 private:
 	bool _isAutoRemoved;
 	oRef<oSprite> _sprite;
@@ -61,7 +63,7 @@ private:
 class oEffectType
 {
 public:
-	enum {None = -1, Particle = 0, Frame = 1};
+	enum {Particle = 0, Frame = 1};
 	oEffectType(const char* filename);
 	/** Get a running effect instance of this effect type. */
 	oEffect* toEffect();
@@ -84,7 +86,7 @@ public:
 	/** Clear all effect data from memory. */
 	bool unload();
 	/** Create a new effect instance. */
-	oEffect* create(uint32 type);
+	oEffect* create(const string& name);
 	/** Singleton method. */
 	static oEffectCache* shared();
 private:
@@ -92,7 +94,7 @@ private:
 	virtual void textHandler( void *ctx, const char *s, int len );
 	virtual void startElement( void *ctx, const char *name, const char **atts );
 	virtual void endElement( void *ctx, const char *name );
-	unordered_map<int, oOwn<oEffectType>> _effects;
+	unordered_map<string, oOwn<oEffectType>> _effects;
 	string _path;
 	CCSAXParser _parser;
 };

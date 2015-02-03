@@ -23,17 +23,16 @@ class oUnit;
 class oBulletDef: public CCObject
 {
 public:
-	enum { None = 0 };
 	void setVelocity(float angle, float speed);
 	PROPERTY_REF(oVec2, _velocity, Velocity);
 	void setHighSpeedFix(bool var);
 	bool isHighSpeedFix() const;
 	PROPERTY_NAME(float, GravityScale);
 	PROPERTY_NAME(oFace*, Face);
-	int type;
-	int endEffect;
+	int tag;
 	float lifeTime;
 	float damageRadius;
+	string endEffect;
 	static oBulletDef* create();
 	void setAsCircle(float radius);
 	oBodyDef* getBodyDef() const;

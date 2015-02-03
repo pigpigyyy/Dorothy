@@ -34,7 +34,7 @@ oRef<CCArray> oAI::_detectedUnits(CCArray::create());
 float oAI::_oldInstinctValue = 0;
 float oAI::_newInstinctValue = 0;
 
-unordered_map<int, oRef<oAILeaf>> oAI::_reflexArcs;
+unordered_map<string, oRef<oAILeaf>> oAI::_reflexArcs;
 
 oUnit* oAI::getSelf()
 {
@@ -192,11 +192,11 @@ float oAI::getNewInstinctValue()
 	return _newInstinctValue;
 }
 
-void oAI::add( int id, oAILeaf* leaf )
+void oAI::add( const string& name, oAILeaf* leaf )
 {
-	if (id != oAI::None)
+	if (!name.empty())
 	{
-		_reflexArcs[id] = leaf;
+		_reflexArcs[name] = leaf;
 	}
 }
 
@@ -205,9 +205,9 @@ void oAI::clear()
 	_reflexArcs.clear();
 }
 
-oAILeaf* oAI::get( int id )
+oAILeaf* oAI::get( const string& id )
 {
-	if (id != oAI::None)
+	if (!id.empty())
 	{
 		auto it = _reflexArcs.find(id);
 		if (it != _reflexArcs.end())

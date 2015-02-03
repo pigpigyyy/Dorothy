@@ -46,37 +46,37 @@ end
 local function needGoIdle()
 	return not CCKeyboard:isKeyPressed(CCKey.Left)
 		and not CCKeyboard:isKeyPressed(CCKey.Right)
-		and (oAI.self.currentAction and oAI.self.currentAction.id == oAction.Walk)
+		and oAI.self:isDoing("walk")
 end
 
 oAI:add(1,oSel({
 	oSeq({
 		oCon(isJumpKeyDown),
-		oAct(oAction.Jump),
+		oAct("jump"),
 	}),
 	oSeq({
 		oCon(isWalkKeyPressed),
 		oSel({
 			oSeq({
 				oCon(isFaceDirectionChanged),
-				oAct(oAction.Turn),
+				oAct("turn"),
 			}),
-			oAct(oAction.Walk),
+			oAct("walk"),
 		}),
 	}),
 	oSeq({
 		oCon(needGoIdle),
-		oAct(oAction.Stop),
-		oAct(oAction.Idle)
+		oAct("cancel"),
+		oAct("idle")
 	}),
-	oAct(oAction.Idle),
+	oAct("idle"),
 }))
 
 oAI:add(2,oSel({
 	oSeq({
 		oCon(function()
 			local target = oAI:getUnitByTag(998)
-			return target and target.currentAction and target.currentAction.id == oAction.Walk and oAI.self.position:distance(target.position) > 350
+			return target and target:isDoing("walk") and oAI.self.position:distance(target.position) > 350
 		end),
 		oSel({
 			oSeq({
@@ -85,15 +85,15 @@ oAI:add(2,oSel({
 					local target = oAI:getUnitByTag(998)
 					return target and (self.positionX < target.positionX) ~= self.faceRight
 				end),
-				oAct(oAction.Turn),
+				oAct("turn"),
 			}),
-			oAct(oAction.Walk)
+			oAct("walk")
 		}),
 	}),
 	oSeq({
 		oCon(function()
 			local target = oAI:getUnitByTag(998)
-			return target and oAI.self.position:distance(target.position) <= 350 and target.currentAction and target.currentAction.id == oAction.Walk
+			return target and oAI.self.position:distance(target.position) <= 350 and target:isDoing("walk")
 		end),
 		oSel({
 			oSeq({
@@ -102,16 +102,16 @@ oAI:add(2,oSel({
 					local target = oAI:getUnitByTag(998)
 					return target and (self.positionX < target.positionX) ~= self.faceRight
 				end),
-				oAct(oAction.Turn),
+				oAct("turn"),
 			}),
-			oAct(oAction.Walk)
+			oAct("walk")
 		}),
 	}),
 	oSeq({
 		oCon(function()
 			local self
 			local target = oAI:getNearestUnit(oRelation.Friend)
-			return target and target.currentAction and target.currentAction.id ~= oAction.Walk and oAI:getNearestUnitDistance(oRelation.Friend) < 80
+			return target and not target:isDoing("walk") and oAI:getNearestUnitDistance(oRelation.Friend) < 80
 		end),
 		oCon(function()
 			local self = oAI.self
@@ -148,9 +148,9 @@ oAI:add(2,oSel({
 								return self.position:distance(target.position) + 80 > 350
 							end
 						end),
-						oAct(oAction.Idle),
+						oAct("idle"),
 					}),
-					oAct(oAction.Turn),
+					oAct("turn"),
 				}),
 			}),
 			oSeq({
@@ -161,9 +161,9 @@ oAI:add(2,oSel({
 						return self.position:distance(target.position) + 80 > 350
 					end
 				end),
-				oAct(oAction.Idle),
+				oAct("idle"),
 			}),
-			oAct(oAction.Walk)
+			oAct("walk")
 		}),
 	}),
 	oSeq({
@@ -171,11 +171,11 @@ oAI:add(2,oSel({
 			local target = oAI:getUnitByTag(998)
 			return target and oAI.self.position:distance(target.position) <= 350
 		end),
-		oCon(function() return oAI.self.currentAction and oAI.self.currentAction.id == oAction.Walk end),
-		oAct(oAction.Stop),
-		oAct(oAction.Idle),
+		oCon(function() return oAI.self:isDoing("walk") end),
+		oAct("cancel"),
+		oAct("idle"),
 	}),
-	oAct(oAction.Idle),
+	oAct("idle"),
 }))
 
 oAI:add(3,oSel({
@@ -196,22 +196,22 @@ oAI:add(3,oSel({
 						local target = self.data
 						return target and (self.positionX < target.positionX) ~= self.faceRight
 					end),
-					oAct(oAction.Turn),
+					oAct("turn"),
 				}),
-				oAct(oAction.Walk)
+				oAct("walk")
 			}),
 		}),
 		oSeq({
-			oCon(function() return oAI.self.currentAction and oAI.self.currentAction.id == oAction.Walk end),
+			oCon(function() return oAI.self:isDoing("walk") end),
 			oSel({
 				oSeq({
-					oAct(oAction.Stop),
-					oAct(oAction.Idle)
+					oAct("cancel"),
+					oAct("idle")
 				}),
 			}),
 		}),
 	}),
-	oAct(oAction.Idle),
+	oAct("idle"),
 }))
 
 local function suit(unit,filename)
@@ -256,11 +256,11 @@ unitDef.scale = 0.8
 unitDef.maxHp = 10
 unitDef.detectDistance = 600
 unitDef:setActions({
-	oAction.Walk,
-	oAction.Turn,
-	oAction.Stop,
-	oAction.Jump,
-	oAction.Idle,
+	"walk",
+	"turn",
+	"cancel",
+	"jump",
+	"idle",
 })
 unitDef.reflexArc = 1
 

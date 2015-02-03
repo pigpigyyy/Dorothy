@@ -364,8 +364,6 @@
 		3C89A6511A209D1C001D5009 /* AcfDelegateTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AcfDelegateTemplate.h; sourceTree = "<group>"; };
 		3C89A6521A209D1C001D5009 /* DebugDraw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DebugDraw.cpp; sourceTree = "<group>"; };
 		3C89A6531A209D1C001D5009 /* DebugDraw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugDraw.h; sourceTree = "<group>"; };
-		3C89A6541A209D1C001D5009 /* hash_common.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = hash_common.hpp; sourceTree = "<group>"; };
-		3C89A6551A209D1C001D5009 /* hash_strmap.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = hash_strmap.hpp; sourceTree = "<group>"; };
 		3C89A6561A209D1C001D5009 /* Property.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Property.h; sourceTree = "<group>"; };
 		3C89A6571A209D1C001D5009 /* tinydir.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinydir.h; sourceTree = "<group>"; };
 		3C89A6591A209D1C001D5009 /* oBody.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oBody.cpp; sourceTree = "<group>"; };
@@ -874,8 +872,6 @@
 				3C89A6511A209D1C001D5009 /* AcfDelegateTemplate.h */,
 				3C89A6521A209D1C001D5009 /* DebugDraw.cpp */,
 				3C89A6531A209D1C001D5009 /* DebugDraw.h */,
-				3C89A6541A209D1C001D5009 /* hash_common.hpp */,
-				3C89A6551A209D1C001D5009 /* hash_strmap.hpp */,
 				3C89A6561A209D1C001D5009 /* Property.h */,
 				3C89A6571A209D1C001D5009 /* tinydir.h */,
 			);

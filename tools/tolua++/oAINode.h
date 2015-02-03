@@ -12,4 +12,4 @@ oAILeaf* oSeq(oAILeaf* nodes[tolua_len]);
 oAILeaf* oParSel(oAILeaf* nodes[tolua_len]);
 oAILeaf* oParSeq(oAILeaf* nodes[tolua_len]);
 oAILeaf* oCon(tolua_function handler);
-oAILeaf* oAct(int actionId);
+oAILeaf* oAct(const char* actionId);

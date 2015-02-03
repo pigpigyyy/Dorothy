@@ -1,8 +1,7 @@
 class oBulletDef: public CCObject
 {
-	enum { None = -1 };
-	int type;
-	int endEffect;
+	int tag;
+	string endEffect;
 	float lifeTime;
 	float damageRadius;
 	tolua_property__bool bool highSpeedFix;

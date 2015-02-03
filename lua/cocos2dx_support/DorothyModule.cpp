@@ -307,7 +307,7 @@ int oCache_poolSize()
 	return size;
 }
 
-void oUnitDef_setActions(oUnitDef* def, int actions[], int count)
+void oUnitDef_setActions(oUnitDef* def, char* actions[], int count)
 {
 	def->actions.clear();
 	for (int i = 0; i < count; i++)

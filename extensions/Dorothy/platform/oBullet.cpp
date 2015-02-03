@@ -23,7 +23,6 @@ NS_DOROTHY_PLATFORM_BEGIN
 
 oBullet::oBullet(oBulletDef* bulletDef, oUnit* unit) :
 oBody(bulletDef->getBodyDef(), unit->getWorld()),
-type(bulletDef->type),
 _bulletDef(bulletDef),
 _owner(unit),
 _current(0),
@@ -31,6 +30,7 @@ _lifeTime(bulletDef->lifeTime),
 _face(nullptr)
 {
 	oBullet::setFaceRight(unit->isFaceRight());
+	oBullet::setTag(bulletDef->tag);
 	_detectSensor = oBody::getSensorByTag(oBulletDef::SensorTag);
 	_detectSensor->bodyEnter += std::make_pair(this, &oBullet::onBodyEnter);
 	oVec2 v = _bulletDef->getVelocity();
@@ -138,8 +138,8 @@ void oBullet::onBodyEnter( oSensor* sensor, oBody* body )
 		return;
 	}
 	oUnit* unit = CCLuaCast<oUnit>(body->getOwner());
-	bool isHitTerrain = oSharedData.isTerrain(body) && oBullet::targetAllow.isTerrainAllowed();
-	bool isHitUnit = unit && oBullet::targetAllow.isAllow(oSharedData.getRelation(_owner, unit));
+	bool isHitTerrain = oSharedData.isTerrain(body) && targetAllow.isTerrainAllowed();
+	bool isHitUnit = unit && targetAllow.isAllow(oSharedData.getRelation(_owner, unit));
 	bool isHit = isHitTerrain || isHitUnit;
 	if (isHit && hitTarget)
 	{
@@ -215,7 +215,7 @@ void oBullet::destroy()
 	_detectSensor->setEnabled(false);
 	_detectSensor = nullptr;
 	CCNode::unscheduleAllSelectors();
-	if (_bulletDef->endEffect != oEffectType::None)
+	if (!_bulletDef->endEffect.empty())
 	{
 		oEffect* effect = oEffect::create(_bulletDef->endEffect);
 		effect->setOffset(this->getPosition())

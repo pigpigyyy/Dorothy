@@ -28,9 +28,9 @@ public:
 	static oUnit* getNearestUnit(oRelation relation);
 	static float getNearestUnitDistance(oRelation relation);
 
-	static void add(int id, oAILeaf* leaf);
+	static void add(const string& name, oAILeaf* leaf);
 	static void clear();
-	static oAILeaf* get(int id);
+	static oAILeaf* get(const string& name);
 private:
 	static oRef<oUnit> _self;
 
@@ -52,7 +52,7 @@ private:
 	static float _oldInstinctValue;
 	static float _newInstinctValue;
 
-	static unordered_map<int, oRef<oAILeaf>> _reflexArcs;
+	static unordered_map<string, oRef<oAILeaf>> _reflexArcs;
 	friend class oInstinct;
 };
 

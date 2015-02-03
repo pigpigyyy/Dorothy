@@ -51,6 +51,7 @@ _unitDef(unitDef)
 	_instincts(this);
 	oUnit::setDetectDistance(unitDef->detectDistance);
 	oUnit::setAttackRange(unitDef->attackRange);
+	oUnit:;setTag(unitDef->tag);
 	_groundSensor = oBody::getSensorByTag(oUnitDef::GroundSensorTag);
 	oUnit::setRotation(-CC_RADIANS_TO_DEGREES(oBody::getBodyDef()->angle));
 	oModelDef* modelDef = unitDef->getModelDef();
@@ -60,9 +61,9 @@ _unitDef(unitDef)
 	model->setScaleY(unitDef->getScale());
 	oUnit::setModel(model);
 	oBody::setOwner(this);
-	for (int id : unitDef->actions)
+	for (const string& name : unitDef->actions)
 	{
-		oUnit::attachAction(id);
+		oUnit::attachAction(name);
 	}
 	for (int id : unitDef->instincts)
 	{
@@ -170,24 +171,24 @@ float oUnit::getHeight() const
 	return _size.height;
 }
 
-oAction* oUnit::attachAction( int id )
+oAction* oUnit::attachAction( const string& name )
 {
-	auto it = _actions.find(id);
+	auto it = _actions.find(name);
 	if (it == _actions.end())
 	{
-		oAction* action = oAction::create(id, this);
+		oAction* action = oAction::create(name, this);
 		if (action)
 		{
-			_actions[id] = oOwnMake(action);
+			_actions[name] = oOwnMake(action);
 		}
 		return action;
 	}
 	return it->second;
 }
 
-void oUnit::removeAction( int id )
+void oUnit::removeAction( const string& name )
 {
-	auto it = _actions.find(id);
+	auto it = _actions.find(name);
 	if (it != _actions.end())
 	{
 		_actions.erase(it);
@@ -199,15 +200,15 @@ void oUnit::removeAllActions()
 	_actions.clear();
 }
 
-oAction* oUnit::getAction( int id ) const
+oAction* oUnit::getAction( const string& name ) const
 {
-	auto it = _actions.find(id);
+	auto it = _actions.find(name);
 	return it == _actions.end() ? nullptr : it->second.get();
 }
 
-bool oUnit::doIt( int id )
+bool oUnit::start( const string& name )
 {
-	auto it = _actions.find(id);
+	auto it = _actions.find(name);
 	if (it != _actions.end())
 	{
 		oAction* action = it->second;
@@ -235,6 +236,19 @@ bool oUnit::doIt( int id )
 		}
 	}
 	return false;
+}
+
+void oUnit::stop()
+{
+	if (_currentAction && _currentAction->isDoing())
+	{
+		_currentAction->stop();
+	}
+}
+
+bool oUnit::isDoing(const string &name)
+{
+	return _currentAction && _currentAction->getName() == name && _currentAction->isDoing();
 }
 
 bool oUnit::isOnSurface() const
@@ -404,20 +418,20 @@ void oUnit::oInstinctSet::reinstall()
 	}
 }
 
-void oUnit::setReflexArc( int id )
+void oUnit::setReflexArc( const string& name )
 {
-	oAILeaf* leaf = oAI::get(id);
+	_reflexArcName = name;
+	oAILeaf* leaf = oAI::get(name);
 	if (leaf)
 	{
-		_reflexArcId = id;
 		_reflexArc = leaf;
 		oAI::conditionedReflex(this);
 	}
 }
 
-int oUnit::getReflexArc() const
+const string& oUnit::getReflexArc() const
 {
-	return _reflexArcId;
+	return _reflexArcName;
 }
 
 oAILeaf* oUnit::getReflexArcNode()

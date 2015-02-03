@@ -27,7 +27,7 @@ NS_DOROTHY_PLATFORM_BEGIN
 
 oAction* oActionDef::toAction(oUnit* unit)
 {
-	oScriptAction* action = new oScriptAction(id, priority, unit);
+	oScriptAction* action = new oScriptAction(name, priority, unit);
 	action->reaction = reaction;
 	action->recovery = recovery;
 	action->_available = available;
@@ -37,10 +37,10 @@ oAction* oActionDef::toAction(oUnit* unit)
 }
 
 // oAction
-unordered_map<int, oOwn<oActionDef>> oAction::_actionDefs;
+unordered_map<string, oOwn<oActionDef>> oAction::_actionDefs;
 
-oAction::oAction(int id, int priority, oUnit* owner):
-_id(id),
+oAction::oAction(const string& name, int priority, oUnit* owner):
+_name(name),
 _priority(priority),
 _isDoing(false),
 _owner(owner),
@@ -52,9 +52,9 @@ oAction::~oAction()
 	_owner = nullptr;
 }
 
-int oAction::getId() const
+const string& oAction::getName() const
 {
-	return _id;
+	return _name;
 }
 
 int oAction::getPriority() const
@@ -111,49 +111,17 @@ void oAction::stop()
 	}
 }
 
-const oAction::oActionFunc oAction::_createFuncs[] = 
+void oAction::add( const string& name, int priority, float reaction, float recovery, int available, int create, int stop )
 {
-	&oWalk::create,
-	&oTurn::create,
-	&oMeleeAttack::create,
-	&oRangeAttack::create,
-	&oIdle::create,
-	&oStop::create,
-	&oJump::create,
-	&oHit::create,
-	&oDie::create
-};
-
-const int oAction::UserID = sizeof(_createFuncs) / sizeof(oActionFunc);
-
-oAction* oAction::create( int id, oUnit* unit )
-{
-	if (0 <= id && id < oAction::UserID)
-	{
-		return _createFuncs[id](unit);
-	}
-	auto it = _actionDefs.find(id);
-	if (it != _actionDefs.end())
-	{
-		return it->second->toAction(unit);
-	}
-	return nullptr;
-}
-
-void oAction::add( int id, int priority, float reaction, float recovery, int available, int create, int stop )
-{
-	if (oAction::UserID <= id)
-	{
-		oActionDef* actionDef = new oActionDef();
-		actionDef->id = id;
-		actionDef->priority = priority;
-		actionDef->reaction = reaction;
-		actionDef->recovery = recovery;
-		actionDef->available = oScriptHandler::create(available);
-		actionDef->create = oScriptHandler::create(create);
-		actionDef->stop = oScriptHandler::create(stop);
-		_actionDefs[id] = oOwnMake(actionDef);
-	}
+	oActionDef* actionDef = new oActionDef();
+	actionDef->name = name;
+	actionDef->priority = priority;
+	actionDef->reaction = reaction;
+	actionDef->recovery = recovery;
+	actionDef->available = oScriptHandler::create(available);
+	actionDef->create = oScriptHandler::create(create);
+	actionDef->stop = oScriptHandler::create(stop);
+	_actionDefs[name] = oOwnMake(actionDef);
 }
 
 void oAction::clear()
@@ -209,8 +177,8 @@ void oAction::clearHandler(int type)
 	}
 }
 
-oScriptAction::oScriptAction( int id, int priority, oUnit* owner ):
-oAction(id, priority, owner)
+oScriptAction::oScriptAction( const string& name, int priority, oUnit* owner ):
+oAction(name, priority, owner)
 { }
 
 bool oScriptAction::isAvailable()
@@ -450,22 +418,22 @@ oAction* oJump::create( oUnit* unit )
 	return new oJump(unit);
 }
 
-oStop::oStop( oUnit* unit ):
-oAction(oID::ActionStop, oID::PriorityStop, unit)
+oCancel::oCancel( oUnit* unit ):
+oAction(oID::ActionCancel, oID::PriorityCancel, unit)
 { }
 
-void oStop::run()
+void oCancel::run()
 { }
 
-oAction* oStop::create( oUnit* unit )
+oAction* oCancel::create( oUnit* unit )
 {
-	return new oStop(unit);
+	return new oCancel(unit);
 }
 
 // oAttack
 
-oAttack::oAttack(int id, oUnit* unit ):
-oAction(id, oID::PriorityAttack, unit)
+oAttack::oAttack(const string& name, oUnit* unit ):
+oAction(name, oID::PriorityAttack, unit)
 {
 	oAction::recovery = oID::RecoveryAttack;
 	oModel* model = unit->getModel();
@@ -507,8 +475,8 @@ void oAttack::update( float dt )
 	if (_attackEffectDelay >= 0 && _current >= _attackEffectDelay)
 	{
 		_attackEffectDelay = -1;
-		int attackEffect = _owner->getUnitDef()->attackEffect;
-		if (attackEffect != oEffectType::None)
+		const string& attackEffect = _owner->getUnitDef()->attackEffect;
+		if (!attackEffect.empty())
 		{
 			oVec2 key = _owner->getModel()->getModelDef()->getKeyPoint(oUnitDef::AttackKey);
 			if (_owner->getModel()->getModelDef()->isFaceRight() != _owner->isFaceRight())
@@ -670,8 +638,8 @@ _attackPower(),
 _hitPoint()
 {
 	oAction::recovery = oID::RecoveryHit;
-	int hitEffect = _owner->getUnitDef()->hitEffect;
-	if (hitEffect != oEffectType::None)
+	const string& hitEffect = _owner->getUnitDef()->hitEffect;
+	if (!hitEffect.empty())
 	{
 		_effect = oEffect::create(hitEffect);
 		_effect->attachTo(_owner);
@@ -757,8 +725,8 @@ void oDie::run()
 	model->setRecovery(oAction::recovery);
 	model->setSpeed(1.0f);
 	model->play(oID::AnimationDie);
-	int hitEffect = _owner->getUnitDef()->hitEffect;
-	if (hitEffect != oEffectType::None)
+	const string& hitEffect = _owner->getUnitDef()->hitEffect;
+	if (!hitEffect.empty())
 	{
 		oEffect* effect = oEffect::create(hitEffect);
 		effect->attachTo(_owner)->autoRemove()->start();
@@ -799,22 +767,54 @@ const string oID::AnimationJump("jump");
 const string oID::AnimationHit("hit");
 const string oID::AnimationDie("die");
 
-const int oID::ActionWalk = 0;
-const int oID::ActionTurn = 1;
-const int oID::ActionMeleeAttack = 2;
-const int oID::ActionRangeAttack = 3;
-const int oID::ActionIdle = 4;
-const int oID::ActionStop = 5;
-const int oID::ActionJump = 6;
-const int oID::ActionHit = 7;
-const int oID::ActionDie = 8;
+const string& oID::ActionWalk = "walk";
+const string& oID::ActionTurn = "turn";
+const string& oID::ActionMeleeAttack = "meleeAttack";
+const string& oID::ActionRangeAttack = "rangeAttack";
+const string& oID::ActionIdle = "idle";
+const string& oID::ActionCancel = "cancel";
+const string& oID::ActionJump = "jump";
+const string& oID::ActionHit = "hit";
+const string& oID::ActionDie = "die";
+
+typedef oAction* (*oActionFunc)(oUnit* unit);
+static const unordered_map<string,oActionFunc> g_createFuncs =
+{
+	{oID::ActionWalk, &oWalk::create},
+	{oID::ActionTurn, &oTurn::create},
+	{oID::ActionMeleeAttack, &oMeleeAttack::create},
+	{oID::ActionRangeAttack, &oRangeAttack::create},
+	{oID::ActionIdle, &oIdle::create},
+	{oID::ActionCancel, &oCancel::create},
+	{oID::ActionJump, &oJump::create},
+	{oID::ActionHit, &oHit::create},
+	{oID::ActionDie, &oDie::create}
+};
+
+oAction* oAction::create( const string& name, oUnit* unit )
+{
+	auto it = _actionDefs.find(name);
+	if (it != _actionDefs.end())
+	{
+		return it->second->toAction(unit);
+	}
+	else
+	{
+		auto it = g_createFuncs.find(name);
+		if (it != g_createFuncs.end())
+		{
+			return it->second(unit);
+		}
+	}
+	return nullptr;
+}
 
 const int oID::PriorityIdle = 0;
 const int oID::PriorityWalk = 1;
 const int oID::PriorityTurn = 2;
 const int oID::PriorityJump = 2;
 const int oID::PriorityAttack = 3;
-const int oID::PriorityStop = 2147483647;
+const int oID::PriorityCancel = 2147483647;
 const int oID::PriorityHit = 4;
 const int oID::PriorityDie = 5;
 

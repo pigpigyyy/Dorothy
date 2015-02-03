@@ -27,7 +27,7 @@ class oInstinct;
 
 class oUnit: public oBody
 {
-	typedef unordered_map<int, oOwn<oAction>> oActionMap;
+	typedef unordered_map<string, oOwn<oAction>> oActionMap;
 	typedef unordered_map<string, oProperty*> oPropertyMap;
 public:
 	//Class properties
@@ -47,11 +47,14 @@ public:
 	virtual void setGroup( int group );
 	virtual void update( float dt );
 	//Actions
-	oAction* attachAction(int id);
-	void removeAction(int id);
+	oAction* attachAction(const string& name);
+	void removeAction(const string& name);
 	void removeAllActions();
-	oAction* getAction(int id) const;
-	bool doIt(int id);
+	oAction* getAction(const string& name) const;
+
+	bool start(const string& name);
+	void stop();
+	bool isDoing(const string& name);
 	//
 	bool isOnSurface() const;
 	void onActionEnd(oAction* action);
@@ -99,8 +102,8 @@ public:
 	void removeInstinct(int id);
 	void removeAllInstincts();
 	//Conditioned Reflex
-	void setReflexArc(int id);
-	int getReflexArc() const;
+	void setReflexArc(const string& name);
+	const string& getReflexArc() const;
 	oAILeaf* getReflexArcNode();
 
 	static oUnit* create(oUnitDef* unitDef, oWorld* world, const oVec2& pos = oVec2::zero, float rot = 0);
@@ -121,7 +124,7 @@ protected:
 		friend class oUnit;
 	} _instincts;
 private:
-	int _reflexArcId;
+	string _reflexArcName;
 	oRef<oUnitDef> _unitDef;
 	oRef<oAILeaf> _reflexArc;
 	oRef<oBulletDef> _bulletDef;

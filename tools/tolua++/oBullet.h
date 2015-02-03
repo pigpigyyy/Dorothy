@@ -1,6 +1,5 @@
 class oBullet: public oBody
 {
-	int type;
 	oTargetAllow targetAllow;
 	tolua_readonly tolua_property__bool bool faceRight;
 	tolua_readonly tolua_property__common oUnit* owner;

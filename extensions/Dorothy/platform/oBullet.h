@@ -28,9 +28,9 @@ class oBullet: public oBody
 {
 public:
 	PROPERTY_READONLY(oUnit*, Owner);
+	PROPERTY_READONLY(oSensor*, DetectSensor);
 	PROPERTY_BOOL(_isFaceRight, FaceRight);
 	PROPERTY(CCNode*, _face, Face);
-	PROPERTY_READONLY(oSensor*, DetectSensor);
 	virtual void update(float dt);
 	virtual void onExit();
 	virtual void cleanup();
@@ -43,7 +43,6 @@ public:
 	void addHandler(int handler);
 	void removeHandler(int handler);
 	void clearHandler();
-	int type;
 	virtual void destroy();
 protected:
 	oBullet(oBulletDef* def, oUnit* unit);

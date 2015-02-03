@@ -3579,66 +3579,6 @@ local Dorothy =
 				static = true,
 				type = "value"
 			},
-			Walk =
-			{
-				description = "[int][Const] Built in action id",
-				static = true,
-				type = "value"
-			},
-			Turn =
-			{
-				description = "[int][Const] Built in action id",
-				static = true,
-				type = "value"
-			},
-			MeleeAttack =
-			{
-				description = "[int][Const] Built in action id",
-				static = true,
-				type = "value"
-			},
-			RangeAttack =
-			{
-				description = "[int][Const] Built in action id",
-				static = true,
-				type = "value"
-			},
-			Idle =
-			{
-				description = "[int][Const] Built in action id",
-				static = true,
-				type = "value"
-			},
-			Stop =
-			{
-				description = "[int][Const] Built in action id",
-				static = true,
-				type = "value"
-			},
-			Jump =
-			{
-				description = "[int][Const] Built in action id",
-				static = true,
-				type = "value"
-			},
-			Hit =
-			{
-				description = "[int][Const] Built in action id",
-				static = true,
-				type = "value"
-			},
-			Die =
-			{
-				description = "[int][Const] Built in action id",
-				static = true,
-				type = "value"
-			},
-			UserID =
-			{
-				description = "[int][Const] Built in action id",
-				static = true,
-				type = "value"
-			},
 			reaction =
 			{
 				description = "[float] When doing this action, the unit will take this extra reaction time\n\n in seconds to respond to the game world changes.",
@@ -3649,9 +3589,14 @@ local Dorothy =
 				description = "[float]",
 				type = "value"
 			},
-			id =
+			name =
 			{
-				description = "[int] Each action type has its unique id.",
+				description = "[string] Each action type has its unique name.",
+				type = "value"
+			},
+			doing =
+			{
+				description = "[bool][Readonly] Telling whether the action is doing.",
 				type = "value"
 			},
 			priority =
@@ -3669,13 +3614,6 @@ local Dorothy =
 				description = "[oUnit][Readonly] Get the owner of the action.",
 				typeName = "oUnit",
 				type = "value"
-			},
-			stop =
-			{
-				args = "()",
-				description = "Call it to immediately stop doing the current action.",
-				returns = "()",
-				type = "method"
 			},
 			addHandler =
 			{
@@ -3700,7 +3638,7 @@ local Dorothy =
 			},
 			add =
 			{
-				args = "(id: int, priority: int, reaction: float, recovery: float, available: function, create: function, stop: function)",
+				args = "(name: string, priority: int, reaction: float, recovery: float, available: function, create: function, stop: function)",
 				description = "[Class Method] Add a new action type with its own special id, properties and functions.\n\navailable -- isStarted: bool function(self: oAction)\n\ncreate -- function()\n\nstop -- function(self: oAction)\n\ncreate - return function(self: oAction)",
 				returns = "()",
 				static = true,
@@ -3714,12 +3652,6 @@ local Dorothy =
 				static = true,
 				type = "method"
 			},
-			UserID =
-			{
-				description = "[int][Const] New action type id must start with the UserID.",
-				static = true,
-				type = "value"
-			}
 		},
 		description = "class oAction.",
 		type = "class",
@@ -3980,7 +3912,7 @@ local Dorothy =
 	},
 	oAct =
 	{
-		args = "(actionId: int)",
+		args = "(actionName: string)",
 		description = "Create an action node.",
 		returns = "(node: oAINode)",
 		typeName = "oAINode",
@@ -4520,11 +4452,6 @@ local Dorothy =
 	{
 		childs =
 		{
-			type =
-			{
-				description = "[int]",
-				type = "value"
-			},
 			targetAllow =
 			{
 				description = "[oTargetAllow][Readonly]",
@@ -4597,14 +4524,14 @@ local Dorothy =
 	{
 		childs =
 		{
-			type =
+			tag =
 			{
 				description = "[int]",
 				type = "value"
 			},
 			endEffect =
 			{
-				description = "[int]",
+				description = "[string]",
 				type = "value"
 			},
 			lifeTime =
@@ -5182,7 +5109,7 @@ local Dorothy =
 			},
 		},
 		parents = {"CCObject",},
-		description = "class oEffect(CCObject).\n -- (index: uint)",
+		description = "class oEffect(CCObject).\n -- (name: string)",
 		type = "class",
 		index = index()
 	},
@@ -5955,12 +5882,12 @@ local Dorothy =
 			},
 			reflexArc =
 			{
-				description = "[int]",
+				description = "[string]",
 				type = "value"
 			},
 			attachAction =
 			{
-				args = "(id: int)",
+				args = "(name: string)",
 				description = "",
 				returns = "(action: oAction)",
 				typeName = "oAction",
@@ -5968,7 +5895,7 @@ local Dorothy =
 			},
 			removeAction =
 			{
-				args = "(id: int)",
+				args = "(name: string)",
 				description = "",
 				returns = "()",
 				type = "method"
@@ -5982,17 +5909,31 @@ local Dorothy =
 			},
 			getAction =
 			{
-				args = "(id: int)",
+				args = "(name: string)",
 				description = "",
 				returns = "(action: oAction)",
 				typeName = "oAction",
 				type = "method"
 			},
-			doIt =
+			start =
 			{
-				args = "(id: int)",
+				args = "(actionName: string)",
 				description = "",
 				returns = "(success: bool)",
+				type = "method"
+			},
+			stop =
+			{
+				args = "()",
+				description = "",
+				returns = "()",
+				type = "method"
+			},
+			isDoing =
+			{
+				args = "(actionName: string)",
+				description = "",
+				returns = "(doing: bool)",
 				type = "method"
 			},
 			set =
@@ -6101,14 +6042,14 @@ local Dorothy =
 				static = true,
 				type = "value"
 			},
-			type =
+			tag =
 			{
 				description = "[int]",
 				type = "value"
 			},
 			reflexArc =
 			{
-				description = "[int]",
+				description = "[string]",
 				type = "value"
 			},
 			scale =
@@ -6198,17 +6139,17 @@ local Dorothy =
 			},
 			bulletType =
 			{
-				description = "[int]",
+				description = "[string]",
 				type = "value"
 			},
 			attackEffect =
 			{
-				description = "[int]",
+				description = "[string]",
 				type = "value"
 			},
 			hitEffect =
 			{
-				description = "[int]",
+				description = "[string]",
 				type = "value"
 			},
 			name =

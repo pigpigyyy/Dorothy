@@ -89,9 +89,9 @@ bool oEffectCache::unload()
 		return true;
 	}
 }
-oEffect* oEffectCache::create( uint32 type )
+oEffect* oEffectCache::create( const string& name )
 {
-	auto it = _effects.find(type);
+	auto it = _effects.find(name);
 	if (it != _effects.end())
 	{
 		return it->second->toEffect();
@@ -111,21 +111,21 @@ void oEffectCache::startElement( void *ctx, const char *name, const char **atts 
 	{
 	oCase::Effect:
 		{
-			int index;
+			const char* name = nullptr;
 			string file;
 			for (int i = 0;atts[i] != nullptr;i++)
 			{
 				switch (atts[i][0])
 				{
-				oCase::Index:
-					index = atoi(atts[++i]);
+				oCase::Name:
+					name = atts[++i];
 					break;
 				oCase::File:
 					file = _path + atts[++i];
 					break;
 				}
 			}
-			_effects[index] = oOwnMake(new oEffectType(file.c_str()));
+			_effects[name] = oOwnMake(new oEffectType(file.c_str()));
 		}
 		break;
 	}
@@ -186,6 +186,10 @@ oEffect* oParticleEffect::setOffset( const oVec2& pos )
 bool oParticleEffect::isPlaying()
 {
 	return _particle->isActive();
+}
+oParticleSystemQuad* oParticleEffect::getParticle() const
+{
+	return _particle;
 }
 
 //oSpriteEffect
@@ -265,10 +269,14 @@ bool oSpriteEffect::isPlaying()
 {
 	return !_action->isDone();
 }
-
-oEffect* oEffect::create( uint32 index )
+oSprite* oSpriteEffect::getSprite() const
 {
-	return oSharedEffectCache.create(index);
+	return _sprite;
+}
+
+oEffect* oEffect::create( const string& name )
+{
+	return oSharedEffectCache.create(name);
 }
 
 NS_DOROTHY_END

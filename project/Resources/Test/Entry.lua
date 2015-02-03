@@ -119,4 +119,5 @@ panel:registerKeypadHandler(function(eventType)
 end)
 panel.keypadEnabled = true
 
+CCDirector.displayStats = true
 CCDirector:run(scene)

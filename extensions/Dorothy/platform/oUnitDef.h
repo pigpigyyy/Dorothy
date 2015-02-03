@@ -36,8 +36,7 @@ public:
 	PROPERTY_BOOL_NAME(Static);
 	PROPERTY_READONLY(oModelDef*, ModelDef);
 	PROPERTY_READONLY(oBodyDef*, BodyDef);
-	int type;
-	int reflexArc;
+	int tag;
 	float sensity;
 	float move;
 	float jump;
@@ -46,6 +45,7 @@ public:
 	float attackBase;
 	float attackDelay;
 	float attackEffectDelay;
+	string reflexArc;
 	CCSize attackRange;
 	oVec2 attackPower;
 	oAttackType attackType;
@@ -53,14 +53,14 @@ public:
 	oTargetAllow targetAllow;
 	uint16 damageType;
 	uint16 defenceType;
-	int bulletType;
-	int attackEffect;
-	int hitEffect;
+	string bulletType;
+	string attackEffect;
+	string hitEffect;
 	string name;
 	string desc;
 	string sndAttack;
 	string sndDeath;
-	vector<int> actions;
+	vector<string> actions;
 	vector<int> instincts;
 	static bool usePreciseHit;
 	static oUnitDef* create();

@@ -8,7 +8,7 @@ class oAI
 	static oUnit* getNearestUnit(oRelation relation);
 	static float getNearestUnitDistance(oRelation relation);
 
-	static void add(int id, oAILeaf* leaf);
+	static void add(const char* name, oAILeaf* leaf);
 	static void clear();
 };
 

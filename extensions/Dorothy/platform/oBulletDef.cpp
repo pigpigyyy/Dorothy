@@ -24,10 +24,10 @@ NS_DOROTHY_PLATFORM_BEGIN
 const int oBulletDef::SensorTag = 0;
 
 oBulletDef::oBulletDef():
-type(0),
+tag(0),
 lifeTime(0),
 damageRadius(0),
-endEffect(oEffectType::None),
+endEffect(),
 _bodyDef(oBodyDef::create())
 { }
 

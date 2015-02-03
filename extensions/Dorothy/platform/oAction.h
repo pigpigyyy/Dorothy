@@ -26,7 +26,7 @@ typedef Delegate<void (oUnit* source, oUnit* target, float damage)> oDamageHandl
 class oActionDef
 {
 public:
-	int id;
+	string name;
 	int priority;
 	float reaction;
 	float recovery;
@@ -38,14 +38,13 @@ public:
 
 class oAction
 {
-	typedef oAction* (*oActionFunc)(oUnit* unit);
 public:
 	enum { Start, End };
-	oAction(int id, int priority, oUnit* owner);
+	oAction(const string& name, int priority, oUnit* owner);
 	virtual ~oAction();
 	float reaction;
 	float recovery;
-	int getId() const;
+	const string& getName() const;
 	int getPriority() const;
 	bool isDoing() const;
 	oUnit* getOwner() const;
@@ -58,9 +57,9 @@ public:
 	virtual void run();
 	virtual void update(float dt);
 	virtual void stop();
-	static oAction* create(int id, oUnit* unit);
+	static oAction* create(const string& name, oUnit* unit);
 	static void add(
-		int id,
+		const string& name,
 		int priority,
 		float reaction,
 		float recovery,
@@ -68,22 +67,20 @@ public:
 		int create,
 		int stop);
 	static void clear();
-	static const int UserID;
 protected:
 	oUnit* _owner;
 private:
 	bool _isDoing;
-	int _id;
+	string _name;
 	int _priority;
 	float _reflexDelta;
-	static const oActionFunc _createFuncs[];
-	static unordered_map<int, oOwn<oActionDef>> _actionDefs;
+	static unordered_map<string, oOwn<oActionDef>> _actionDefs;
 };
 
 class oScriptAction: public oAction
 {
 public:
-	oScriptAction(int id, int priority, oUnit* owner);
+	oScriptAction(const string& name, int priority, oUnit* owner);
 	virtual bool isAvailable();
 	virtual void run();
 	virtual void update(float dt);
@@ -105,22 +102,22 @@ struct oID
 	static const string AnimationHit;
 	static const string AnimationDie;
 
-	static const int ActionWalk;
-	static const int ActionTurn;
-	static const int ActionMeleeAttack;
-	static const int ActionRangeAttack;
-	static const int ActionIdle;
-	static const int ActionStop;
-	static const int ActionJump;
-	static const int ActionHit;
-	static const int ActionDie;
+	static const string& ActionWalk;
+	static const string& ActionTurn;
+	static const string& ActionMeleeAttack;
+	static const string& ActionRangeAttack;
+	static const string& ActionIdle;
+	static const string& ActionCancel;
+	static const string& ActionJump;
+	static const string& ActionHit;
+	static const string& ActionDie;
 
 	static const int PriorityWalk;
 	static const int PriorityTurn;
 	static const int PriorityJump;
 	static const int PriorityAttack;
 	static const int PriorityIdle;
-	static const int PriorityStop;
+	static const int PriorityCancel;
 	static const int PriorityHit;
 	static const int PriorityDie;
 
@@ -165,7 +162,7 @@ public:
 class oAttack: public oAction
 {
 public:
-	oAttack(int id, oUnit* unit);
+	oAttack(const string& name, oUnit* unit);
 	virtual ~oAttack();
 	virtual void run();
 	virtual void update(float dt);
@@ -224,10 +221,10 @@ private:
 	float _current;
 };
 
-class oStop: public oAction
+class oCancel: public oAction
 {
 public:
-	oStop(oUnit* unit);
+	oCancel(oUnit* unit);
 	virtual void run();
 	static oAction* create(oUnit* unit);
 };

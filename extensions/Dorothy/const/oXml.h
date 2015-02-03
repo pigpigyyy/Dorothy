@@ -37,7 +37,7 @@ struct oEffectXml
 		Dorothy = 'A',//0
 			Effect = 'B',//1
 				//<a>
-				Index = 'A',
+				Name = 'A',
 				File = 'B'
 				//</a>
 	};

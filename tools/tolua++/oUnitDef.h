@@ -9,6 +9,8 @@ class oUnitDef: public CCObject
 	tolua_readonly static const char* BulletKey;
 	tolua_readonly static const char* AttackKey;
 	tolua_readonly static const char* HitKey;
+	tolua_readonly tolua_property__common oBodyDef* bodyDef;
+
 	tolua_property__bool bool static;
 	tolua_property__common float scale;
 	tolua_property__common float density;
@@ -16,10 +18,8 @@ class oUnitDef: public CCObject
 	tolua_property__common float restitution;
 	tolua_property__common string model;
 	tolua_property__common CCSize size;
-	tolua_readonly tolua_property__common oBodyDef* bodyDef;
 
-	int type;
-	int reflexArc;
+	int tag;
 	float sensity;
 	float move;
 	float jump;
@@ -35,15 +35,16 @@ class oUnitDef: public CCObject
 	oTargetAllow targetAllow;
 	unsigned short damageType;
 	unsigned short defenceType;
-	int bulletType;
-	int attackEffect;
-	int hitEffect;
+	string bulletType;
+	string attackEffect;
+	string hitEffect;
 	string name;
 	string desc;
 	string sndAttack;
 	string sndDeath;
+	string reflexArc;
 
-	tolua_outside void oUnitDef_setActions @ setActions(int actions[tolua_len]);
+	tolua_outside void oUnitDef_setActions @ setActions(const char* actions[tolua_len]);
 	tolua_outside void oUnitDef_setInstincts @ setInstincts(int instincts[tolua_len]);
 	
 	static bool usePreciseHit;

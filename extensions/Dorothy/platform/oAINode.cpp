@@ -192,13 +192,13 @@ oConNode* oConNode::create( int handler )
 
 bool oActNode::doAction()
 {
-	return oAI::getSelf()->doIt(_actionId);
+	return oAI::getSelf()->start(_actionName);
 }
 
-oActNode* oActNode::create(int actionId)
+oActNode* oActNode::create(const string& actionName)
 {
 	oActNode* node = new oActNode();
-	node->_actionId = actionId;
+	node->_actionName = actionName;
 	node->autorelease();
 	return node;
 }
@@ -243,9 +243,9 @@ oAILeaf* oCon(int handler)
 {
 	return oConNode::create(handler);
 }
-oAILeaf* oAct(int actionId)
+oAILeaf* oAct(const string& actionName)
 {
-	return oActNode::create(actionId);
+	return oActNode::create(actionName);
 }
 
 NS_DOROTHY_PLATFORM_END

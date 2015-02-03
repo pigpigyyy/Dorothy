@@ -78,7 +78,7 @@ int oCache_poolCollect();
 // return current allocated memory size
 int oCache_poolSize();
 
-void oUnitDef_setActions(oUnitDef* def, int actions[], int count);
+void oUnitDef_setActions(oUnitDef* def, char* actions[], int count);
 void oUnitDef_setInstincts(oUnitDef* def, int instincts[], int count);
 
 oListener* oListener_create(const string& name, int handler);

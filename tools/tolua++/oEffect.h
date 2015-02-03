@@ -6,5 +6,5 @@ class oEffect: public CCObject
 	oEffect* setOffset(oVec2& pos);
 	oEffect* attachTo(CCNode* parent, int zOrder = 0);
 	oEffect* autoRemove();
-	static oEffect* create(unsigned int index);
+	static oEffect* create(const char* name);
 };

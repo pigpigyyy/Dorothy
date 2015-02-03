@@ -102,9 +102,9 @@ class oActNode: public oAILeaf
 {
 public:
 	virtual bool doAction();
-	static oActNode* create(int actionId);
+	static oActNode* create(const string& actionName);
 private:
-	int _actionId;
+	string _actionName;
 };
 
 oAILeaf* oSel(oAILeaf* nodes[], int count);
@@ -112,7 +112,7 @@ oAILeaf* oSeq(oAILeaf* nodes[], int count);
 oAILeaf* oParSel(oAILeaf* nodes[], int count);
 oAILeaf* oParSeq(oAILeaf* nodes[], int count);
 oAILeaf* oCon(int handler);
-oAILeaf* oAct(int actionId);
+oAILeaf* oAct(const string& actionName);
 
 NS_DOROTHY_PLATFORM_END
 
