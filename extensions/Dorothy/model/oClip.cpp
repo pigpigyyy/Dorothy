@@ -107,16 +107,8 @@ void oClipCache::startElement( void *ctx, const char *name, const char **atts )
 					break;
 					oCase::Rect:
 					{
-						char rectStr[4 * 4 + 3];//四位数×4 + 3个","号
-						strcpy(rectStr, atts[++i]);
-						char* token = strtok(rectStr, ",");
-						int x = atoi(token);
-						token = strtok(nullptr, ",");
-						int y = atoi(token);
-						token = strtok(nullptr, ",");
-						int w = atoi(token);
-						token = strtok(nullptr, ",");
-						int h = atoi(token);
+						int x, y, w, h;
+						oHelper::getRectFromStr(atts[++i], x, y, w, h);
 						_item->rects[name] = oOwnMake(new CCRect((float)x, (float)y, (float)w, (float)h));
 					}
 					break;

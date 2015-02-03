@@ -23,6 +23,20 @@ void oHelper::getPosFromStr( const char* str, float& x, float& y )
 	y = (float)atof(token);
 }
 
+void oHelper::getRectFromStr(const char* str, int& x, int& y, int& w, int& h)
+{
+	char rectStr[4 * 4 + 3];//四位数×4 + 3个","号
+	strcpy(rectStr, str);
+	char* token = strtok(rectStr, ",");
+	x = atoi(token);
+	token = strtok(nullptr, ",");
+	y = atoi(token);
+	token = strtok(nullptr, ",");
+	w = atoi(token);
+	token = strtok(nullptr, ",");
+	h = atoi(token);
+}
+
 string oString::getFilePath(const string& filename)
 {
 	size_t pos = filename.find_last_of("/\\");

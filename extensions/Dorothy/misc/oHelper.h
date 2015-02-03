@@ -21,6 +21,7 @@ struct oString
 struct oHelper
 {
 	static void getPosFromStr(const char* str, float& x, float& y);
+	static void getRectFromStr(const char* str, int& x, int& y, int& width, int& height);
 	static char* convert(float value, int precision, char* buf, int len);
 };
 

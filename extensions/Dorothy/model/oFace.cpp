@@ -30,7 +30,7 @@ bool disposeChildren( CCNode* parent )
 	return result;
 }
 
-bool initParticleWithDef( CCParticleSystem* par, oParticleDef* type )
+bool initParticleWithDef( CCParticleSystemQuad* par, oParticleDef* type )
 {
 	bool bRet = false;
 	BLOCK_START
@@ -121,9 +121,13 @@ bool initParticleWithDef( CCParticleSystem* par, oParticleDef* type )
 			// texture
 			// Try to get the texture from the cache
 			const char* textureName = type->textureFileName.c_str();
-			CCTexture2D *tex = oSharedContent.loadTexture(textureName);
+			CCTexture2D* tex = oSharedContent.loadTexture(textureName);
 			CCAssert(tex != NULL, "CCParticleSystem: error loading the texture");
-			par->setTexture(tex);
+			if (type->textureRect != CCRect::zero)
+			{
+				par->setTextureWithRect(tex, type->textureRect);
+			}
+			else par->setTexture(tex);
 			bRet = true;
 		}
 	}
@@ -188,7 +192,7 @@ oParticleSystemQuad::~oParticleSystemQuad()
 
 oParticleSystemQuad* oParticleSystemQuad::createWithDef( oParticleDef* type )
 {
-	oParticleSystemQuad *pRet = new oParticleSystemQuad();
+	oParticleSystemQuad* pRet = new oParticleSystemQuad();
 	if (pRet && initParticleWithDef(pRet, type))
 	{
 		pRet->autorelease();

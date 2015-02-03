@@ -69,6 +69,7 @@ public:
 	float tangentialAccelVariance;
 	float tangentialAcceleration;
 	string textureFileName;
+	CCRect textureRect;
 	CCParticleSystem* toParticle();
 };
 

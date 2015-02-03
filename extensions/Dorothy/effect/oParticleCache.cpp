@@ -10,6 +10,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "Dorothy/effect/oParticleCache.h"
 #include "Dorothy/model/oFace.h"
 #include "Dorothy/misc/oContent.h"
+#include "Dorothy/misc/oHelper.h"
 
 NS_DOROTHY_BEGIN
 
@@ -69,7 +70,7 @@ oParticleDef* oParticleCache::load( const char* filename )
 		type->gravityy = (float)atof(valueForKey("gravityy", dictionary));
 		type->speed = (float)atof(valueForKey("speed", dictionary));
 		type->speedVariance = (float)atof(valueForKey("speedVariance", dictionary));
-		const char * pszTmp = nullptr;
+		const char* pszTmp = nullptr;
 		pszTmp = valueForKey("radialAcceleration", dictionary);
 		type->radialAcceleration = (pszTmp) ? (float)atof(pszTmp) : 0;
 		pszTmp = valueForKey("radialAccelVariance", dictionary);
@@ -88,7 +89,13 @@ oParticleDef* oParticleCache::load( const char* filename )
 		type->particleLifespanVariance = (float)atof(valueForKey("particleLifespanVariance", dictionary));
 		type->emissionRate = (float)(type->maxParticles) / type->particleLifespan;
 		type->textureFileName = (char*)valueForKey("textureFileName", dictionary);
-
+		const char* textRectStr = (char*)valueForKey("textureRect", dictionary);
+		if (textRectStr)
+		{
+			int x, y, w, h;
+			oHelper::getRectFromStr(textRectStr, x, y, w, h);
+			type->textureRect = CCRectMake(x, y, w, h);
+		}
 		_parDict[filename] = type;
 		return type;
 	}
