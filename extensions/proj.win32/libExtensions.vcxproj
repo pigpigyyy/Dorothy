@@ -186,8 +186,6 @@
     <ClInclude Include="..\Dorothy\other\AcfDelegate.h" />
     <ClInclude Include="..\Dorothy\other\AcfDelegateTemplate.h" />
     <ClInclude Include="..\Dorothy\other\DebugDraw.h" />
-    <ClInclude Include="..\Dorothy\other\hash_common.hpp" />
-    <ClInclude Include="..\Dorothy\other\hash_strmap.hpp" />
     <ClInclude Include="..\Dorothy\other\mkdir.h" />
     <ClInclude Include="..\Dorothy\other\Property.h" />
     <ClInclude Include="..\Dorothy\other\tinydir.h" />
