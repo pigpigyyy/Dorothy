@@ -760,22 +760,22 @@ oAction* oDie::create( oUnit* unit )
 	return new oDie(unit);
 }
 
-const string oID::AnimationWalk("walk");
-const string oID::AnimationAttack("attack");
-const string oID::AnimationIdle("idle");
-const string oID::AnimationJump("jump");
-const string oID::AnimationHit("hit");
-const string oID::AnimationDie("die");
+const char* oID::AnimationWalk = "walk";
+const char* oID::AnimationAttack = "attack";
+const char* oID::AnimationIdle = "idle";
+const char* oID::AnimationJump = "jump";
+const char* oID::AnimationHit = "hit";
+const char* oID::AnimationDie = "die";
 
-const string& oID::ActionWalk = "walk";
-const string& oID::ActionTurn = "turn";
-const string& oID::ActionMeleeAttack = "meleeAttack";
-const string& oID::ActionRangeAttack = "rangeAttack";
-const string& oID::ActionIdle = "idle";
-const string& oID::ActionCancel = "cancel";
-const string& oID::ActionJump = "jump";
-const string& oID::ActionHit = "hit";
-const string& oID::ActionDie = "die";
+const char* oID::ActionWalk = "walk";
+const char* oID::ActionTurn = "turn";
+const char* oID::ActionMeleeAttack = "meleeAttack";
+const char* oID::ActionRangeAttack = "rangeAttack";
+const char* oID::ActionIdle = "idle";
+const char* oID::ActionCancel = "cancel";
+const char* oID::ActionJump = "jump";
+const char* oID::ActionHit = "hit";
+const char* oID::ActionDie = "die";
 
 typedef oAction* (*oActionFunc)(oUnit* unit);
 static const unordered_map<string,oActionFunc> g_createFuncs =
@@ -829,9 +829,9 @@ const float oID::RecoveryJump = 0.2f;
 const float oID::RecoveryHit = 0.05f;
 const float oID::RecoveryDie = 0.05f;
 
-const string oID::LookHappy("happy");
-const string oID::LookFight("fight");
-const string oID::LookSad("sad");
-const string oID::LookDead("dead");
+const char* oID::LookHappy = "happy";
+const char* oID::LookFight = "fight";
+const char* oID::LookSad = "sad";
+const char* oID::LookDead = "dead";
 
 NS_DOROTHY_PLATFORM_END

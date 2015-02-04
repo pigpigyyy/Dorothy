@@ -95,22 +95,22 @@ private:
 
 struct oID
 {
-	static const string AnimationWalk;
-	static const string AnimationAttack;
-	static const string AnimationIdle;
-	static const string AnimationJump;
-	static const string AnimationHit;
-	static const string AnimationDie;
+	static const char* AnimationWalk;
+	static const char* AnimationAttack;
+	static const char* AnimationIdle;
+	static const char* AnimationJump;
+	static const char* AnimationHit;
+	static const char* AnimationDie;
 
-	static const string& ActionWalk;
-	static const string& ActionTurn;
-	static const string& ActionMeleeAttack;
-	static const string& ActionRangeAttack;
-	static const string& ActionIdle;
-	static const string& ActionCancel;
-	static const string& ActionJump;
-	static const string& ActionHit;
-	static const string& ActionDie;
+	static const char* ActionWalk;
+	static const char* ActionTurn;
+	static const char* ActionMeleeAttack;
+	static const char* ActionRangeAttack;
+	static const char* ActionIdle;
+	static const char* ActionCancel;
+	static const char* ActionJump;
+	static const char* ActionHit;
+	static const char* ActionDie;
 
 	static const int PriorityWalk;
 	static const int PriorityTurn;
@@ -132,10 +132,10 @@ struct oID
 	static const float RecoveryHit;
 	static const float RecoveryDie;
 
-	static const string LookHappy;
-	static const string LookFight;
-	static const string LookSad;
-	static const string LookDead;
+	static const char* LookHappy;
+	static const char* LookFight;
+	static const char* LookSad;
+	static const char* LookDead;
 };
 
 class oWalk: public oAction
