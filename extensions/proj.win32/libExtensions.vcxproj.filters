@@ -299,12 +299,6 @@
     <ClInclude Include="..\Dorothy\other\DebugDraw.h">
       <Filter>Dorothy\other</Filter>
     </ClInclude>
-    <ClInclude Include="..\Dorothy\other\hash_common.hpp">
-      <Filter>Dorothy\other</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dorothy\other\hash_strmap.hpp">
-      <Filter>Dorothy\other</Filter>
-    </ClInclude>
     <ClInclude Include="..\Dorothy\other\Property.h">
       <Filter>Dorothy\other</Filter>
     </ClInclude>

@@ -51,7 +51,7 @@ _unitDef(unitDef)
 	_instincts(this);
 	oUnit::setDetectDistance(unitDef->detectDistance);
 	oUnit::setAttackRange(unitDef->attackRange);
-	oUnit:;setTag(unitDef->tag);
+	oUnit::setTag(unitDef->tag);
 	_groundSensor = oBody::getSensorByTag(oUnitDef::GroundSensorTag);
 	oUnit::setRotation(-CC_RADIANS_TO_DEGREES(oBody::getBodyDef()->angle));
 	oModelDef* modelDef = unitDef->getModelDef();
