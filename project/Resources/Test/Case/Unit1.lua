@@ -31,154 +31,54 @@ oAI.getUnitByTag = function(self,tag)
 	return nil
 end
 
-local function isJumpKeyDown()
+local isJumpKeyDown = oCon(function()
 	return CCKeyboard:isKeyDown(CCKey.Up)
-end
+end)
 
-local function isWalkKeyPressed()
+local isWalkKeyPressed = oCon(function()
 	return CCKeyboard:isKeyPressed(CCKey.Left) or CCKeyboard:isKeyPressed(CCKey.Right)
-end
+end)
 
-local function isFaceDirectionChanged()
+local isFaceDirectionChanged = oCon(function()
 	return oAI.self.faceRight ~= CCKeyboard:isKeyPressed(CCKey.Right)
-end
+end)
 
-local function needGoIdle()
+local needGoIdle = oCon(function()
 	return not CCKeyboard:isKeyPressed(CCKey.Left)
 		and not CCKeyboard:isKeyPressed(CCKey.Right)
 		and oAI.self:isDoing("walk")
-end
+end)
 
-oAI:add(1,oSel({
+local walk = oAct("walk")
+local cancel = oAct("cancel")
+local idle = oAct("idle")
+local turn = oAct("turn")
+local jump = oAct("jump")
+
+oAI:add("keyboardControl",oSel({
 	oSeq({
-		oCon(isJumpKeyDown),
-		oAct("jump"),
+		isJumpKeyDown,
+		jump,
 	}),
 	oSeq({
-		oCon(isWalkKeyPressed),
+		isWalkKeyPressed,
 		oSel({
 			oSeq({
-				oCon(isFaceDirectionChanged),
-				oAct("turn"),
+				isFaceDirectionChanged,
+				turn,
 			}),
-			oAct("walk"),
+			walk,
 		}),
 	}),
 	oSeq({
-		oCon(needGoIdle),
-		oAct("cancel"),
-		oAct("idle")
+		needGoIdle,
+		cancel,
+		idle,
 	}),
-	oAct("idle"),
+	idle,
 }))
 
-oAI:add(2,oSel({
-	oSeq({
-		oCon(function()
-			local target = oAI:getUnitByTag(998)
-			return target and target:isDoing("walk") and oAI.self.position:distance(target.position) > 350
-		end),
-		oSel({
-			oSeq({
-				oCon(function()
-					local self = oAI.self
-					local target = oAI:getUnitByTag(998)
-					return target and (self.positionX < target.positionX) ~= self.faceRight
-				end),
-				oAct("turn"),
-			}),
-			oAct("walk")
-		}),
-	}),
-	oSeq({
-		oCon(function()
-			local target = oAI:getUnitByTag(998)
-			return target and oAI.self.position:distance(target.position) <= 350 and target:isDoing("walk")
-		end),
-		oSel({
-			oSeq({
-				oCon(function()
-					local self = oAI.self
-					local target = oAI:getUnitByTag(998)
-					return target and (self.positionX < target.positionX) ~= self.faceRight
-				end),
-				oAct("turn"),
-			}),
-			oAct("walk")
-		}),
-	}),
-	oSeq({
-		oCon(function()
-			local self
-			local target = oAI:getNearestUnit(oRelation.Friend)
-			return target and not target:isDoing("walk") and oAI:getNearestUnitDistance(oRelation.Friend) < 80
-		end),
-		oCon(function()
-			local self = oAI.self
-			local units = oAI:getDetectedUnits()
-			local target = nil
-			local left,right = false,false
-			for i = 1,units.count do
-				local unit = units[i]
-				if unit.tag == 998 then
-					target = units[i]
-				end
-				if unit.positionX > self.positionX and unit.positionX - self.positionX < 90 then
-					right = true
-				end
-				if unit.positionX < self.positionX and self.positionX - unit.positionX < 90 then
-					left = true
-				end
-			end
-			return not left or not right
-		end),
-		oSel({
-			oSeq({
-				oCon(function()
-					local target = oAI:getNearestUnit(oRelation.Friend)
-					local self = oAI.self
-					return target and (self.positionX < target.positionX) == self.faceRight
-				end),
-				oSel({
-					oSeq({
-						oCon(function()
-							local target = oAI:getUnitByTag(998)
-							local self = oAI.self
-							if target and (self.positionX < target.positionX) ~= self.faceRight then
-								return self.position:distance(target.position) + 80 > 350
-							end
-						end),
-						oAct("idle"),
-					}),
-					oAct("turn"),
-				}),
-			}),
-			oSeq({
-				oCon(function()
-					local target = oAI:getUnitByTag(998)
-					local self = oAI.self
-					if target and (self.positionX < target.positionX) ~= self.faceRight then
-						return self.position:distance(target.position) + 80 > 350
-					end
-				end),
-				oAct("idle"),
-			}),
-			oAct("walk")
-		}),
-	}),
-	oSeq({
-		oCon(function()
-			local target = oAI:getUnitByTag(998)
-			return target and oAI.self.position:distance(target.position) <= 350
-		end),
-		oCon(function() return oAI.self:isDoing("walk") end),
-		oAct("cancel"),
-		oAct("idle"),
-	}),
-	oAct("idle"),
-}))
-
-oAI:add(3,oSel({
+oAI:add("follow",oSel({
 	oSel({
 		oSeq({
 			oCon(function()
@@ -196,22 +96,22 @@ oAI:add(3,oSel({
 						local target = self.data
 						return target and (self.positionX < target.positionX) ~= self.faceRight
 					end),
-					oAct("turn"),
+					turn,
 				}),
-				oAct("walk")
+				walk,
 			}),
 		}),
 		oSeq({
 			oCon(function() return oAI.self:isDoing("walk") end),
 			oSel({
 				oSeq({
-					oAct("cancel"),
-					oAct("idle")
+					cancel,
+					idle
 				}),
 			}),
 		}),
 	}),
-	oAct("idle"),
+	idle,
 }))
 
 local function suit(unit,filename)
@@ -262,12 +162,11 @@ unitDef:setActions({
 	"jump",
 	"idle",
 })
-unitDef.reflexArc = 1
 
 local unit = oUnit(unitDef,world,oVec2(200,300))
 unit.group = 1
 unit.tag = 998
-unit.reflexArc = 1
+unit.reflexArc = "keyboardControl"
 suit(unit,"girl.lua")
 world:addChild(unit,1)
 world.camera:follow(unit)
@@ -276,7 +175,7 @@ local lastUnit = unit
 unit = oUnit(unitDef,world,oVec2(600,300))
 unit.group = 1
 unit.data = lastUnit
-unit.reflexArc = 3
+unit.reflexArc = "follow"
 suit(unit,"miku.lua")
 world:addChild(unit)
 
@@ -284,7 +183,7 @@ lastUnit = unit
 unit = oUnit(unitDef,world,oVec2(400,300))
 unit.group = 1
 unit.data = lastUnit
-unit.reflexArc = 3
+unit.reflexArc = "follow"
 suit(unit,"boy.lua")
 world:addChild(unit)
 
