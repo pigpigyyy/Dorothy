@@ -212,4 +212,7 @@ public:
 	inline operator ccColor4B() const { return *(ccColor4B*)this; }
 };
 
+void __oEffect_update(lua_State* L, int tableIndex);
+#define oEffect_update(tableIndex) {__oEffect_update(tolua_S,tableIndex);}
+
 #endif // __DOROTHY_MODULE_H__

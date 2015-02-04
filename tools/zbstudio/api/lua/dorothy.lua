@@ -5107,6 +5107,15 @@ local Dorothy =
 				typeName = "oEffect",
 				type = "method"
 			},
+			update =
+			{
+				args = "(particleEffect: oEffect, content: table)",
+				description = "Update an particle effect with a Lua table containing its attributes, used for editor.",
+				returns = "(self: oEffect)",
+				typeName = "oEffect",
+				static = true,
+				type = "method"
+			},
 		},
 		parents = {"CCObject",},
 		description = "class oEffect(CCObject).\n -- (name: string)",
@@ -5423,14 +5432,14 @@ local Dorothy =
 			getData =
 			{
 				args = "(filename: string)",
-				description = "[Class Method] Get model data with Lua table from .model file.",
+				description = "[Class Method] Get model data as Lua table from .model file, usable for editor.",
 				returns = "(content: table)",
 				type = "method"
 			},
 			loadData =
 			{
-				args = "(filename: string, content: table)",
-				description = "",
+				args = "(itemName: string, content: table)",
+				description = "Load a Lua table filled with model data, and convert it to a modelDef item with itemName, usable for editor",
 				typeName = "oModelDef",
 				returns = "(modelDef: oModelDef)",
 				type = "method"

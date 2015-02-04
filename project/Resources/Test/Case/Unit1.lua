@@ -21,16 +21,6 @@ else
 	CCKey.Down = 0
 end
 
-oAI.getUnitByTag = function(self,tag)
-	local units = self:getDetectedUnits()
-	for i = 1,units.count do
-		if units[i].tag == tag then
-			return units[i]
-		end
-	end
-	return nil
-end
-
 local isJumpKeyDown = oCon(function()
 	return CCKeyboard:isKeyDown(CCKey.Up)
 end)

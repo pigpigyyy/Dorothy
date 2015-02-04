@@ -953,7 +953,7 @@ oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableI
 	auto lua_getFloat = [&](int index)->float
 	{
 		lua_rawgeti(L, -1, index);
-		float v =(float)lua_tonumber(L, -1);
+		float v = (float)lua_tonumber(L, -1);
 		lua_pop(L, 1);
 		return v;
 	};
@@ -981,7 +981,7 @@ oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableI
 	auto lua_getUserType = [&](int index)->void*
 	{
 		lua_rawgeti(L, -1, index);
-		void* v =(*(void**)(lua_touserdata(L, -1)));
+		void* v = (*(void**)(lua_touserdata(L, -1)));
 		lua_pop(L, 1);
 		return v;
 	};
@@ -1324,5 +1324,140 @@ int CCTextureCache_loadAsync(lua_State* L)
 tolua_lerror :
 	tolua_error(L, "#ferror in function 'CCTextureCache_loadAsync'.", &tolua_err);
 	return 0;
+#endif
+}
+
+void __oEffect_update(lua_State* L, int tableIndex)
+{
+	/* 1 self */
+#ifndef TOLUA_RELEASE
+	tolua_Error tolua_err;
+	if (!tolua_isusertype(L, 1, "oEffect", 0, &tolua_err))
+	{
+		goto tolua_lerror;
+	}
+#endif
+    {
+		oEffect* self = (oEffect*)tolua_tousertype(L, 1, 0);
+#ifndef TOLUA_RELEASE
+		if (!self) tolua_error(L, "invalid 'self' in function 'oEffect_update'", nullptr);
+#endif
+		oParticleEffect* effect = dynamic_cast<oParticleEffect*>(self);
+		if (effect)
+		{
+			auto getFloat = [L](const char* name)->float
+			{
+				lua_getfield(L, -1, name);
+				float v = (float)lua_tonumber(L, -1);
+				lua_pop(L, 1);
+				return v;
+			};
+			auto getInt = [L](const char* name)->int
+			{
+				lua_getfield(L, -1, name);
+				int v = (int)lua_tointeger(L, -1);
+				lua_pop(L, 1);
+				return v;
+			};
+			auto getBool = [L](const char* name)->bool
+			{
+				lua_getfield(L, -1, name);
+				bool v = (lua_toboolean(L, -1) != 0);
+				lua_pop(L, 1);
+				return v;
+			};
+			auto getString = [L](const char* name)->const char*
+			{
+				lua_getfield(L, -1, name);
+				const char* v = lua_tostring(L, -1);
+				lua_pop(L, 1);
+				return v;
+			};
+			auto getUserType = [L](const char* name)->void*
+			{
+				lua_getfield(L, -1, name);
+				void* v = (*(void**)(lua_touserdata(L, -1)));
+				lua_pop(L, 1);
+				return v;
+			};
+			oParticleSystemQuad* particleSystem = effect->getParticle();
+			lua_pushvalue(L, tableIndex);
+			particleSystem->setTotalParticles(getInt("maxParticles"));
+			particleSystem->setAngle(getFloat("angle"));
+			particleSystem->setAngleVar(getFloat("angleVariance"));
+			particleSystem->setBlendAdditive(getBool("blendAdditive"));
+			particleSystem->setBlendFunc(ccBlendFunc{
+				(GLenum)getInt("blendFuncSource"),
+				(GLenum)getInt("blendFuncDestination")});
+			particleSystem->setDuration(getFloat("duration"));
+			particleSystem->setEmissionRate(getFloat("emissionRate"));
+			particleSystem->setEndColor(ccc4f(
+				getFloat("finishColorRed"),
+				getFloat("finishColorGreen"),
+				getFloat("finishColorBlue"),
+				getFloat("finishColorAlpha")));
+			particleSystem->setEndColorVar(ccc4f(
+				getFloat("finishColorVarianceRed"),
+				getFloat("finishColorVarianceGreen"),
+				getFloat("finishColorVarianceBlue"),
+				getFloat("finishColorVarianceAlpha")));
+			particleSystem->setStartSpin(getFloat("rotationStart"));
+			particleSystem->setStartSpin(getFloat("rotationStartVariance"));
+			particleSystem->setStartSpin(getFloat("rotationEnd"));
+			particleSystem->setStartSpin(getFloat("rotationEndVariance"));
+			particleSystem->setEndSize(getFloat("finishParticleSize"));
+			particleSystem->setEndSizeVar(getFloat("finishParticleSizeVariance"));
+			particleSystem->setLife(getFloat("particleLifespan"));
+			particleSystem->setLifeVar(getFloat("particleLifespanVariance"));
+			particleSystem->setPosition(oVec2(
+				getFloat("sourcePositionx"),
+				getFloat("sourcePositiony")));
+			particleSystem->setPosVar(oVec2(
+				getFloat("sourcePositionVariancex"),
+				getFloat("sourcePositionVariancey")));
+			particleSystem->setStartColor(ccc4f(
+				getFloat("startColorRed"),
+				getFloat("startColorGreen"),
+				getFloat("startColorBlue"),
+				getFloat("startColorAlpha")));
+			particleSystem->setStartColorVar(ccc4f(
+				getFloat("startColorVarianceRed"),
+				getFloat("startColorVarianceGreen"),
+				getFloat("startColorVarianceBlue"),
+				getFloat("startColorVarianceAlpha")));
+			particleSystem->setStartSize(getFloat("startParticleSize"));
+			particleSystem->setStartSizeVar(getFloat("startParticleSizeVariance"));
+			particleSystem->setEmitterMode(getInt("emitterType"));
+			if (particleSystem->getEmitterMode() == kCCParticleModeGravity)
+			{
+				particleSystem->setGravity(oVec2(
+					getFloat("gravityx"),
+					getFloat("gravityy")));
+				particleSystem->setSpeed(getFloat("speed"));
+				particleSystem->setSpeedVar(getFloat("speedVariance"));
+				particleSystem->setRadialAccel(getFloat("radialAcceleration"));
+				particleSystem->setRadialAccelVar(getFloat("radialAccelVariance"));
+				particleSystem->setTangentialAccel(getFloat("tangentialAcceleration"));
+				particleSystem->setTangentialAccelVar(getFloat("tangentialAccelVariance"));
+			}
+			else if (particleSystem->getEmitterMode() == kCCParticleModeRadius)
+			{
+				particleSystem->setStartRadius(getFloat("maxRadius"));
+				particleSystem->setStartRadiusVar(getFloat("maxRadiusVariance"));
+				particleSystem->setEndRadius(getFloat("minRadius"));
+				particleSystem->setEndRadiusVar(getFloat("minRadiusVariance"));
+				particleSystem->setRotatePerSecond(getFloat("rotatePerSecond"));
+				particleSystem->setRotatePerSecondVar(getFloat("rotatePerSecondVariance"));
+			}
+			particleSystem->setTextureWithRect(
+				oSharedContent.loadTexture(getString("textureFileName")),
+				*(CCRect*)getUserType("textureRect"));
+		}
+		return;
+    }
+#ifndef TOLUA_RELEASE
+tolua_lerror :
+	tolua_error(L, "#ferror in function 'oEffect_update'.", &tolua_err);
+	return;
 #endif
 }
