@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3C07A5EE1A6ED4830036E419 /* ActionEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C07A5E51A6ED4830036E419 /* ActionEditor */; };
 		3C07A5EF1A6ED4830036E419 /* bk.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3C07A5E61A6ED4830036E419 /* bk.jpg */; };
 		3C07A5F01A6ED4830036E419 /* BodyEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C07A5E71A6ED4830036E419 /* BodyEditor */; };
 		3C07A5F11A6ED4830036E419 /* boy.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C07A5E81A6ED4830036E419 /* boy.lua */; };
@@ -138,6 +137,8 @@
 		3C7AA4D41A47291F007836D2 /* main.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4CB1A47291F007836D2 /* main.lua */; };
 		3C90CD181A640F9A00C29402 /* oJointDef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C90CD161A640F9A00C29402 /* oJointDef.cpp */; };
 		3C90CD241A65847400C29402 /* oAsync.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C90CD221A65847400C29402 /* oAsync.cpp */; };
+		3CD77C591A83A990003B55A0 /* ActionEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3CD77C581A83A990003B55A0 /* ActionEditor */; };
+		3CD77C5B1A83A99E003B55A0 /* EffectEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3CD77C5A1A83A99E003B55A0 /* EffectEditor */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -158,7 +159,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3C07A5E51A6ED4830036E419 /* ActionEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ActionEditor; sourceTree = "<group>"; };
 		3C07A5E61A6ED4830036E419 /* bk.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bk.jpg; sourceTree = "<group>"; };
 		3C07A5E71A6ED4830036E419 /* BodyEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BodyEditor; sourceTree = "<group>"; };
 		3C07A5E81A6ED4830036E419 /* boy.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = boy.lua; sourceTree = "<group>"; };
@@ -423,6 +423,8 @@
 		3C90CD221A65847400C29402 /* oAsync.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oAsync.cpp; sourceTree = "<group>"; };
 		3C90CD231A65847400C29402 /* oAsync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oAsync.h; sourceTree = "<group>"; };
 		3CA6A7571A60C1E7007C4503 /* mkdir.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mkdir.h; sourceTree = "<group>"; };
+		3CD77C581A83A990003B55A0 /* ActionEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ActionEditor; sourceTree = "<group>"; };
+		3CD77C5A1A83A99E003B55A0 /* EffectEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = EffectEditor; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -975,8 +977,9 @@
 		3C7AA4C41A4728FC007836D2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				3C07A5E51A6ED4830036E419 /* ActionEditor */,
+				3CD77C581A83A990003B55A0 /* ActionEditor */,
 				3C07A5E71A6ED4830036E419 /* BodyEditor */,
+				3CD77C5A1A83A99E003B55A0 /* EffectEditor */,
 				3C07A5ED1A6ED4830036E419 /* Test */,
 				3C07A5E61A6ED4830036E419 /* bk.jpg */,
 				3C07A5E81A6ED4830036E419 /* boy.lua */,
@@ -1071,11 +1074,12 @@
 				3C07A5F11A6ED4830036E419 /* boy.lua in Resources */,
 				3C07A5F01A6ED4830036E419 /* BodyEditor in Resources */,
 				3C504D5F1A23739B000C79D6 /* Images.xcassets in Resources */,
+				3CD77C591A83A990003B55A0 /* ActionEditor in Resources */,
 				3C07A5F41A6ED4830036E419 /* miku.lua in Resources */,
+				3CD77C5B1A83A99E003B55A0 /* EffectEditor in Resources */,
 				3C7AA4D41A47291F007836D2 /* main.lua in Resources */,
 				3C07A5F51A6ED4830036E419 /* oBodyEx.lua in Resources */,
 				3C504D621A23739B000C79D6 /* MainMenu.xib in Resources */,
-				3C07A5EE1A6ED4830036E419 /* ActionEditor in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

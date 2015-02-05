@@ -1,8 +1,5 @@
 setfenv(Dorothy())
 
-local oTextField = require("ActionEditor/Script/oTextField")
-local oButton = require("ActionEditor/Script/oButton")
-
 local CCKey = {}
 if CCApplication.targetPlatform == CCTargetPlatform.Windows then
 	CCKey.Left = 0x25
@@ -122,6 +119,7 @@ local function suit(unit,filename)
 end
 
 local world = oPlatformWorld()
+world.gravity = oVec2(0,-20)
 world.showDebug = false
 world.camera.boudary = CCRect(0,0,20480,2048)
 world.camera.followRatio = oVec2(0.05,0.05)
@@ -136,7 +134,7 @@ world:addChild(bk)
 local unitDef = oUnitDef()
 unitDef.model = "ActionEditor/Model/Output/role.model"
 unitDef.static = false
-unitDef.density = 1
+unitDef.density = 0.5
 unitDef.restitution = 0
 unitDef.friction = 1
 unitDef.move = 200
