@@ -632,10 +632,22 @@ int CCDictionary_get(lua_State* L)
 	}
 	if (object)
 	{
-		CCFloat* number = CCLuaCast<CCFloat>(object);
-		if (number)
+		CCDouble* decimal64 = CCLuaCast<CCDouble>(object);
+		if (decimal64)
 		{
-			lua_pushnumber(L, number->getValue());
+			lua_pushnumber(L, decimal64->getValue());
+			return 1;
+		}
+		CCFloat* decimal32 = CCLuaCast<CCFloat>(object);
+		if (decimal32)
+		{
+			lua_pushnumber(L, decimal32->getValue());
+			return 1;
+		}
+		CCInteger* integer = CCLuaCast<CCInteger>(object);
+		if (integer)
+		{
+			lua_pushnumber(L, integer->getValue());
 			return 1;
 		}
 		CCBool* boolean = CCLuaCast<CCBool>(object);
@@ -682,26 +694,29 @@ int CCDictionary_set(lua_State* L)
 	if (!self) tolua_error(L, "invalid 'self' in function 'CCDictionary_set'", nullptr);
 #endif
 	CCObject* object = nullptr;
-	if (lua_isnumber(L, 3))
+	if (!lua_isnil(L, 3))
 	{
-		object = CCFloat::create((float)lua_tonumber(L, 3));
-	}
-	else if (lua_isboolean(L, 3))
-	{
-		object = CCBool::create(lua_toboolean(L, 3) != 0);
-	}
-	else if (lua_isstring(L, 3))
-	{
-		object = CCString::create(lua_tostring(L, 3));
-	}
-	else if (tolua_isccobject(L, 3))
-	{
-		object = (CCObject*)tolua_tousertype(L, 3, 0);
-	}
+		if (lua_isnumber(L, 3))
+		{
+			object = CCDouble::create(lua_tonumber(L, 3));
+		}
+		else if (lua_isboolean(L, 3))
+		{
+			object = CCBool::create(lua_toboolean(L, 3) != 0);
+		}
+		else if (lua_isstring(L, 3))
+		{
+			object = CCString::create(lua_tostring(L, 3));
+		}
+		else if (tolua_isccobject(L, 3))
+		{
+			object = (CCObject*)tolua_tousertype(L, 3, 0);
+		}
 #ifndef TOLUA_RELEASE
-	else if (!lua_isnil(L, 3))
-	{
-		tolua_error(L, "CCDictionary can only store number, boolean, string and CCObject.", nullptr);
+		else
+		{
+			tolua_error(L, "CCDictionary can only store number, boolean, string and CCObject.", nullptr);
+		}
 	}
 #endif
 	if (lua_isnumber(L, 2))
@@ -758,10 +773,22 @@ int CCDictionary_randomObject(lua_State* L)
 	if (!self) tolua_error(L, "invalid 'self' in accessing variable 'randomObject'", nullptr);
 #endif
 	CCObject* object = self->randomObject();
-	CCFloat* number = CCLuaCast<CCFloat>(object);
-	if (number)
+	CCDouble* decimal64 = CCLuaCast<CCDouble>(object);
+	if (decimal64)
 	{
-		lua_pushnumber(L, number->getValue());
+		lua_pushnumber(L, decimal64->getValue());
+		return 1;
+	}
+	CCFloat* decimal32 = CCLuaCast<CCFloat>(object);
+	if (decimal32)
+	{
+		lua_pushnumber(L, decimal32->getValue());
+		return 1;
+	}
+	CCInteger* integer = CCLuaCast<CCInteger>(object);
+	if (integer)
+	{
+		lua_pushnumber(L, integer->getValue());
 		return 1;
 	}
 	CCBool* boolean = CCLuaCast<CCBool>(object);
@@ -1380,7 +1407,7 @@ void __oEffect_update(lua_State* L, int tableIndex)
 				lua_pop(L, 1);
 				return v;
 			};
-			oParticleSystemQuad* particleSystem = effect->getParticle();
+			CCParticleSystemQuad* particleSystem = effect->getParticle();
 			lua_pushvalue(L, tableIndex);
 			particleSystem->setTotalParticles(getInt("maxParticles"));
 			particleSystem->setAngle(getFloat("angle"));

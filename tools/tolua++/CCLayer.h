@@ -31,6 +31,7 @@ class CCLayerColor: public CCLayer
 	tolua_property__common ccBlendFunc blendFunc;
 	static CCLayerColor* create(ccColor4 color, float width, float height);
 	static CCLayerColor* create(ccColor4 color);
+	void resetColor(ccColor4 color1,ccColor4 color2, ccColor4 color3, ccColor4 color4);
 };
 
 class CCLayerGradient: public CCLayer

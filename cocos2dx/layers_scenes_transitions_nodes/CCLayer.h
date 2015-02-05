@@ -216,6 +216,11 @@ public:
 	virtual void updateDisplayedOpacity(float parentOpacity);
 	virtual void updateDisplayedColor(const ccColor3B& parentColor);
 
+	void resetColor(
+		const ccColor4B& color1,
+		const ccColor4B& color2,
+		const ccColor4B& color3,
+		const ccColor4B& color4);
 protected:
     virtual void updateColor();
 	CC_LUA_TYPE(CCLayerColor)

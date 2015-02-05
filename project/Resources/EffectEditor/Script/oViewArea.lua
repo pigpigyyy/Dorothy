@@ -8,8 +8,10 @@ local function oViewArea()
 
 	local view = CCLayerColor(ccColor4(0xff1a1a1a),winSize.width,winSize.height)
 	view.anchor = oVec2.zero
-	view.cascadeOpacity = true
-
+	view:schedule(function()
+		--view:resetColor(ccColor4(0xff00ffff),ccColor4(0xff0000ff),ccColor4(0xff00ff00),ccColor4(0xff000000))
+		return true
+	end)
 	return view
 end
 

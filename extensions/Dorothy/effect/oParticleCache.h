@@ -70,13 +70,13 @@ public:
 	float tangentialAcceleration;
 	string textureFileName;
 	CCRect textureRect;
-	CCParticleSystem* toParticle();
+	CCParticleSystemQuad* toParticle();
 };
 
 /** @brief This class caches particle file in memory,
  so you won`t need to read the ".particle" file over again when you create a particle.
- In mostly the way of cocos2dx`s to load particle from .plist file.
- I`m not a perfectionist, so I do not replace the dirty way they load xml file with mine.
+ Use the cocos2dx`s method to load particle from .plist file.
+ I`m not a perfectionist, so I do not replace the dirty codes they load the xml file with mine.
 */
 class oParticleCache
 {
@@ -84,7 +84,7 @@ public:
 	/** Load a new particle file and cache it or get it from cache. */
 	oParticleDef* load(const char* filename);
 	/** Load a new particle file and cache it or get it from cache and return a new instance. */
-	CCParticleSystem* loadParticle(const char* filename);
+	CCParticleSystemQuad* loadParticle(const char* filename);
 	/** Purge cached file in memory with given filename. */
 	bool unload(const char* filename);
 	/** Purge all cached file in memory. */

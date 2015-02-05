@@ -101,7 +101,7 @@ oParticleDef* oParticleCache::load( const char* filename )
 	}
 }
 
-CCParticleSystem* oParticleCache::loadParticle( const char* filename )
+CCParticleSystemQuad* oParticleCache::loadParticle( const char* filename )
 {
 	oParticleDef* type = oParticleCache::load(filename);
 	return type->toParticle();
@@ -152,7 +152,7 @@ oParticleCache* oParticleCache::shared()
 	return &particleCache;
 }
 
-CCParticleSystem* oParticleDef::toParticle()
+CCParticleSystemQuad* oParticleDef::toParticle()
 {
 	return oParticleSystemQuad::createWithDef(this);
 }

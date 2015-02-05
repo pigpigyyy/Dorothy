@@ -24,7 +24,8 @@ local once = require("once")
 local controls =
 {
 	"oViewArea",
-	"oViewPanel",
+	"oEditMenu",
+	--"oViewPanel",
 	"oSettingPanel",
 	"oFileChooser",
 }
@@ -38,7 +39,7 @@ oRoutine(once(function()
 				package.loaded[k] = nil
 			end
 		elseif eventType == CCNode.Cleanup then
-			oEditor:clearData()
+			-- do editor cleanup
 		end
 	end)
 	CCDirector:run(oEditor)

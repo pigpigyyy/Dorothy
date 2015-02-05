@@ -580,6 +580,18 @@ void CCLayerColor::changeHeight(float h)
 	this->setContentSize(CCSizeMake(m_obContentSize.width, h));
 }
 
+void CCLayerColor::resetColor(
+		const ccColor4B& color1,
+		const ccColor4B& color2,
+		const ccColor4B& color3,
+		const ccColor4B& color4)
+{
+	m_pSquareColors[0] = ccc4f(color1);
+	m_pSquareColors[1] = ccc4f(color2);
+	m_pSquareColors[2] = ccc4f(color3);
+	m_pSquareColors[3] = ccc4f(color4);
+}
+
 void CCLayerColor::updateColor()
 {
 	for (unsigned int i = 0; i < 4; i++)

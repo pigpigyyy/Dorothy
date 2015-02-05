@@ -276,6 +276,7 @@
 		3C5ACB561A21CB0C006EDD2B /* CCBool.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C5ACB531A21CB0C006EDD2B /* CCBool.h */; };
 		3C5ACB571A21CB0C006EDD2B /* CCDouble.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C5ACB541A21CB0C006EDD2B /* CCDouble.h */; };
 		3C5ACB581A21CB0C006EDD2B /* CCFloat.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C5ACB551A21CB0C006EDD2B /* CCFloat.h */; };
+		3C7632411A83DE0D00FA0C16 /* firePngData.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7632401A83DE0D00FA0C16 /* firePngData.h */; };
 		3CBD1C881A40754E00602936 /* CCApplicationProtocol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD1C871A40754E00602936 /* CCApplicationProtocol.cpp */; };
 		41BC70B915BF7EA2006A0A6C /* CCThread.mm in Sources */ = {isa = PBXBuildFile; fileRef = 41BC70B815BF7EA2006A0A6C /* CCThread.mm */; };
 		41CD6C3515BF7382005E6F29 /* CCAccelerometer.h in Headers */ = {isa = PBXBuildFile; fileRef = 41CD6C2215BF7382005E6F29 /* CCAccelerometer.h */; };
@@ -576,6 +577,7 @@
 		3C5ACB531A21CB0C006EDD2B /* CCBool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCBool.h; sourceTree = "<group>"; };
 		3C5ACB541A21CB0C006EDD2B /* CCDouble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCDouble.h; sourceTree = "<group>"; };
 		3C5ACB551A21CB0C006EDD2B /* CCFloat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCFloat.h; sourceTree = "<group>"; };
+		3C7632401A83DE0D00FA0C16 /* firePngData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = firePngData.h; sourceTree = "<group>"; };
 		3CBD1C871A40754E00602936 /* CCApplicationProtocol.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCApplicationProtocol.cpp; sourceTree = "<group>"; };
 		41BC70B815BF7EA2006A0A6C /* CCThread.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CCThread.mm; sourceTree = "<group>"; };
 		41CD6C2215BF7382005E6F29 /* CCAccelerometer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAccelerometer.h; sourceTree = "<group>"; };
@@ -939,6 +941,7 @@
 		1551A436158F2ADE00E66CFE /* particle_nodes */ = {
 			isa = PBXGroup;
 			children = (
+				3C7632401A83DE0D00FA0C16 /* firePngData.h */,
 				1551A437158F2ADE00E66CFE /* CCParticleBatchNode.cpp */,
 				1551A438158F2ADE00E66CFE /* CCParticleBatchNode.h */,
 				1551A439158F2ADE00E66CFE /* CCParticleExamples.cpp */,
@@ -1302,6 +1305,7 @@
 				1551A6C5158F2ADE00E66CFE /* vec4.h in Headers */,
 				1551A6D4158F2ADE00E66CFE /* CCKeypadDelegate.h in Headers */,
 				1551A6D6158F2ADE00E66CFE /* CCKeypadDispatcher.h in Headers */,
+				3C7632411A83DE0D00FA0C16 /* firePngData.h in Headers */,
 				3C5ACAF61A21C709006EDD2B /* CCZip.h in Headers */,
 				1551A6D8158F2ADE00E66CFE /* CCLabelAtlas.h in Headers */,
 				1551A6DA158F2ADE00E66CFE /* CCLabelBMFont.h in Headers */,

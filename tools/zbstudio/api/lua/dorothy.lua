@@ -737,6 +737,13 @@ local Dorothy =
 				typeName = "ccBlendFunc",
 				type = "value",
 			},
+			resetColor =
+			{
+				args = "(color1: ccColor4, color2: ccColor4, color3: ccColor4, color4: ccColor4)",
+				description = "",
+				returns = "()",
+				type = "method",
+			},
 		},
 		description = "class CCLayerColor(CCLayer).\n args -- (color: ccColor4, width: float, height: float)",
 		parents = {"CCLayer",},

@@ -170,9 +170,9 @@ oEffect* oParticleEffect::autoRemove()
 oParticleEffect* oParticleEffect::create( const char* filename )
 {
 	oParticleEffect* effect = new oParticleEffect();
-	effect->_particle = (oParticleSystemQuad*)oSharedParticleCache.loadParticle(filename);
+	effect->_particle = (CCParticleSystemQuad*)oSharedParticleCache.loadParticle(filename);
 	effect->_particle->setPositionType(kCCPositionTypeFree);
-	effect->_particle->setPosition(CCPoint::zero);
+	effect->_particle->setPosition(oVec2::zero);
 	effect->_particle->setVisible(false);
 	effect->_particle->stopSystem();
 	effect->autorelease();
@@ -187,7 +187,7 @@ bool oParticleEffect::isPlaying()
 {
 	return _particle->isActive();
 }
-oParticleSystemQuad* oParticleEffect::getParticle() const
+CCParticleSystemQuad* oParticleEffect::getParticle() const
 {
 	return _particle;
 }

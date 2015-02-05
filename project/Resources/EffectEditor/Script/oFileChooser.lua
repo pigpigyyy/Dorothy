@@ -40,12 +40,10 @@ local function oFileChooser()
 	local entries = oContent:getEntries(oEditor.output,false)
 	local files = {}
 	for i = 1,#entries do
-		local name = nil
-		if entries[i]:sub(-5,-1) == ".effect" then
-			name = entries[i]:sub(1,-6)
-		end
-		if name then
-			table.insert(files,name)
+		local extension = string.match(entries[i], "%.([^%.\\/]*)$")
+		if extension then extension = string.lower(extension) end
+		if extension == "particle" or extension == "frame" then
+			table.insert(files,entries[i])
 		end
 	end
 	local n = 0
@@ -87,15 +85,13 @@ local function oFileChooser()
 			itemWidth,50,
 			xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
 			function(item)
-				resetEditor()
 				oEditor.currentFile = item.file
-				oEditor:loadData(item.file)
 				panel.ended = function()
 					panel.parent:removeChild(panel)
 				end
 				panel:hide()
 			end)
-		button.file = files[i]..".effect"
+		button.file = files[i]
 		--button.color = ccColor3(0xffffff)
 		button.enabled = false
 		button.opacity = 0
@@ -113,8 +109,8 @@ local function oFileChooser()
 	end
 	n = n+1
 	y = yStart-35-math.floor((n-1)/itemNum)*60
-	local newButton = oButton(
-		"<NEW>",
+	local newPButton = oButton(
+		"<PARTICLE>",
 		17,
 		itemWidth,50,
 		xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
@@ -123,24 +119,54 @@ local function oFileChooser()
 				panel.parent:removeChild(panel)
 			end
 			panel:hide()
-			oEditor:addChild(oBox("New Effect Group",function(name)
-				oEditor.currentFile = name..".effect"
+			oEditor:addChild(oBox("New Particle",function(name)
+				oEditor.currentFile = name..".particle"
 			end,true),oEditor.topMost)
 		end)
-	newButton.color = ccColor3(0x80ff00)
-	newButton.enabled = false
-	newButton.opacity = 0
-	newButton:runAction(
+	newPButton.color = ccColor3(0x80ff00)
+	newPButton.enabled = false
+	newPButton.opacity = 0
+	newPButton:runAction(
 		CCSequence(
 		{
 			CCDelay(n*0.05),
 			oOpacity(0.2,1),
 			CCCall(
 				function()
-					newButton.enabled = true
+					newPButton.enabled = true
 				end)
 		}))
-	menu:addChild(newButton)
+	menu:addChild(newPButton)
+	n = n+1
+	y = yStart-35-math.floor((n-1)/itemNum)*60
+	local newFButton = oButton(
+		"<FRAME>",
+		17,
+		itemWidth,50,
+		xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
+		function()
+			panel.ended = function()
+				panel.parent:removeChild(panel)
+			end
+			panel:hide()
+			oEditor:addChild(oBox("New Frame",function(name)
+				oEditor.currentFile = name..".frame"
+			end,true),oEditor.topMost)
+		end)
+	newFButton.color = ccColor3(0x80ff00)
+	newFButton.enabled = false
+	newFButton.opacity = 0
+	newFButton:runAction(
+		CCSequence(
+		{
+			CCDelay(n*0.05),
+			oOpacity(0.2,1),
+			CCCall(
+				function()
+					newFButton.enabled = true
+				end)
+		}))
+	menu:addChild(newFButton)
 
 	if oEditor.currentFile then
 		n = n+1

@@ -36,9 +36,9 @@ public:
 	virtual oEffect* attachTo( CCNode* parent, int zOrder = 0);
 	virtual oEffect* autoRemove();
 	static oParticleEffect* create(const char* filename);
-	oParticleSystemQuad* getParticle() const;
+	CCParticleSystemQuad* getParticle() const;
 private:
-	oRef<oParticleSystemQuad> _particle;
+	oRef<CCParticleSystemQuad> _particle;
 };
 
 class oSpriteEffect: public oEffect
