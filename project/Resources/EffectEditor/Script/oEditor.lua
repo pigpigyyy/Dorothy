@@ -15,4 +15,7 @@ oEditor.touchPriorityVRuler = CCMenu.DefaultHandlerPriority+8
 oEditor.touchPriorityHRuler = CCMenu.DefaultHandlerPriority+9
 oEditor.touchPriorityViewArea = CCMenu.DefaultHandlerPriority+10
 
+oEditor.EmitterGravity = 0
+oEditor.EmitterRadius = 1
+
 return oEditor

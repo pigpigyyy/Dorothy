@@ -55,69 +55,56 @@ local function oSettingPanel()
 
 	local itemNames =
 	{
-		-- text field
-		"Name",
-		-- body chooser
-		"BodyA",
-		"BodyB",
-		-- joint chooser
-		"JointA",
-		"JointB",
-		-- move point
-		"WorldPos",
-		"GroundA",
-		"GroundB",
-		"AnchorA",
-		"AnchorB",
-		"Offset",
-		-- move axis
-		"Axis",
-		-- float
-		"MaxForce",
-		"MaxTorque",
-		"Ratio",
-		"AngularOffset", 
-		"CorrectionFactor",
-		"Lower",
-		"Upper",
-		"MaxMotorForce",
-		"MotorSpeed",
-		"LowerAngle",
-		"UpperAngle",
-		"MaxMotorTorque",
-		"MaxLength",
-		"Frequency",
-		"Damping",
-		"Angle",
-		"Radius",
-		"GravityScale",
-		"LinearDamping",
-		"AngularDamping",
-		"Density",
-		"Friction",
-		"Restitution",
-		-- selector
-		"Type",
-		-- boolean
-		"Bullet",
-		"FixedRotation",
-		"Collision",
-		-- rect maker
-		"Size",
-		-- move position
-		"Position",
-		"Center",
-		-- vertices editor
-		"Vertices",
-		-- face chooser
-		"Face",
-		-- move position
-		"FacePos",
-		-- boolean
-		"Sensor",
-		-- int
-		"SensorTag",
-		"G",
+		"name",
+		"maxParticles",
+		"angle",
+		"angleVar",
+		"duration",
+		"blendAdditive",
+		"blendFuncSrc",
+		"blendFuncDst",
+		"startColor",
+		"startRedVar",
+		"startGreenVar",
+		"startBlueVar",
+		"startAlphaVar",
+		"finishColor",
+		"finishRedVar",
+		"finishGreenVar",
+		"finishBlueVar",
+		"finishAlphaVar",
+		"startSize",
+		"startSizeVar",
+		"finishSize",
+		"finishSizeVar",
+		"sourcePosition",
+		"sourcePosXVar",
+		"sourcePosYVar",
+		"rotationStart",
+		"rotationStartVar",
+		"rotationEnd",
+		"rotationEndVar",
+		"lifeTime",
+		"lifeTimeVar",
+		"emissionRate",
+		"textureFileName",
+		"textureRect",
+		"emitterType",
+		"gravityX",
+		"gravityY",
+		"speed",
+		"speedVar",
+		"radialAccel",
+		"radialAccelVar",
+		"tangentAccel",
+		"tangentAccelVar",
+		"startRadius",
+		"startRadiusVar",
+		"endRadius",
+		"endRadiusVar",
+		"angularSpeed",
+		"angularSpeedVar",
+		"interval",
 	}
 
 	local items = {}
@@ -130,14 +117,131 @@ local function oSettingPanel()
 		items[itemNames[i]].name = itemNames[i]
 	end
 	
-	local contentHeight = 40
+	local modeGravity =
+	{
+		items.name,
+		items.maxParticles,
+		items.angle,
+		items.angleVar,
+		items.duration,
+		items.blendAdditive,
+		items.blendFuncSrc,
+		items.blendFuncDst,
+		items.startColor,
+		items.startColorRVar,
+		items.startColorGVar,
+		items.startColorBVar,
+		items.startColorAVar,
+		items.finishColor,
+		items.finishColorRVar,
+		items.finishColorGVar,
+		items.finishColorBVar,
+		items.finishColorAVar,
+		items.startSize,
+		items.startSizeVar,
+		items.finishSize,
+		items.finishSizeVar,
+		items.sourcePosition,
+		items.sourcePosXVar,
+		items.sourcePosYVar,
+		items.rotationStart,
+		items.rotationStartVar,
+		items.rotationEnd,
+		items.rotationEndVar,
+		items.lifeTime,
+		items.lifeTimeVar,
+		items.emissionRate,
+		items.textureFileName,
+		items.textureRect,
+		items.emitterType,
+		items.gravityx,
+		items.gravityy,
+		items.speed,
+		items.speedVar,
+		items.radialAccel,
+		items.radialAccelVar,
+		items.tangentialAccel,
+		items.tangentialAccelVar,
+	}
+	
+	local modeRadius =
+	{
+		items.name,
+		items.maxParticles,
+		items.angle,
+		items.angleVar,
+		items.duration,
+		items.blendAdditive,
+		items.blendFuncSrc,
+		items.blendFuncDst,
+		items.startColor,
+		items.startColorRVar,
+		items.startColorGVar,
+		items.startColorBVar,
+		items.startColorAVar,
+		items.finishColor,
+		items.finishColorRVar,
+		items.finishColorGVar,
+		items.finishColorBVar,
+		items.finishColorAVar,
+		items.startSize,
+		items.startSizeVar,
+		items.finishSize,
+		items.finishSizeVar,
+		items.sourcePosition,
+		items.sourcePosXVar,
+		items.sourcePosYVar,
+		items.rotationStart,
+		items.rotationStartVar,
+		items.rotationEnd,
+		items.rotationEndVar,
+		items.lifeTime,
+		items.lifeTimeVar,
+		items.emissionRate,
+		items.textureFileName,
+		items.textureRect,
+		items.emitterType,
+		items.startRadius,
+		items.startRadiusVar,
+		items.endRadius,
+		items.endRadiusVar,
+		items.angularSpeed,
+		items.angularSpeedVar,
+	}
+	
+	local modeFrame =
+	{
+		items.name,
+		items.interval
+	}
+	
 	for _,item in pairs(items) do
+		item.visible = false
 		menu:addChild(item)
-		contentHeight = contentHeight + itemHeight
 	end
 	
-	self:reset(borderSize.width,contentHeight,0,50)
+	local function setGroup(group)
+		for _,item in pairs(items) do
+			item.visible = false
+		end
+		local contentHeight = 40
+		local getPosY = genPosY()
+		for _,item in pairs(group) do
+			item.positionY = getPosY()
+			item.visible = true
+			contentHeight = contentHeight + itemHeight
+		end
+		if group == modeFrame then
+			label.text = "Frame"
+			label.texture.antiAlias = false
+		else
+			label.text = "Particle"
+			label.texture.antiAlias = false
+		end
+		self:reset(borderSize.width,contentHeight,0,50)
+	end
 
+	setGroup(modeFrame)
 	return self
 end
 
