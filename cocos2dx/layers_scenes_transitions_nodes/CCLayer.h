@@ -222,6 +222,7 @@ public:
 		const ccColor4B& color3,
 		const ccColor4B& color4);
 protected:
+	bool _useAbsoluteColor;
     virtual void updateColor();
 	CC_LUA_TYPE(CCLayerColor)
 };

@@ -458,6 +458,7 @@ CCLayerColor::CCLayerColor()
 	m_tBlendFunc.dst = CC_BLEND_DST;
 	_cascadeColor = false;
 	_cascadeOpacity = false;
+	_useAbsoluteColor = false;
 }
 
 CCLayerColor::~CCLayerColor()
@@ -586,6 +587,7 @@ void CCLayerColor::resetColor(
 		const ccColor4B& color3,
 		const ccColor4B& color4)
 {
+	_useAbsoluteColor = true;
 	m_pSquareColors[0] = ccc4f(color1);
 	m_pSquareColors[1] = ccc4f(color2);
 	m_pSquareColors[2] = ccc4f(color3);
@@ -624,12 +626,14 @@ void CCLayerColor::draw()
 
 void CCLayerColor::setColor(const ccColor3B &color)
 {
+	_useAbsoluteColor = false;
 	CCLayer::setColor(color);
 	updateColor();
 }
 
 void CCLayerColor::setOpacity(float opacity)
 {
+	_useAbsoluteColor = false;
 	CCLayer::setOpacity(opacity);
 	updateColor();
 }
@@ -637,13 +641,13 @@ void CCLayerColor::setOpacity(float opacity)
 void CCLayerColor::updateDisplayedOpacity(float parentOpacity)
 {
 	CCLayer::updateDisplayedOpacity(parentOpacity);
-	updateColor();
+	if (!_useAbsoluteColor) updateColor();
 }
 
 void CCLayerColor::updateDisplayedColor(const ccColor3B& parentColor)
 {
 	CCLayer::updateDisplayedColor(parentColor);
-	updateColor();
+	if (!_useAbsoluteColor) updateColor();
 }
 
 //
@@ -652,7 +656,7 @@ void CCLayerColor::updateDisplayedColor(const ccColor3B& parentColor)
 
 CCLayerGradient* CCLayerGradient::create(const ccColor4B& start, const ccColor4B& end)
 {
-	CCLayerGradient * pLayer = new CCLayerGradient();
+	CCLayerGradient* pLayer = new CCLayerGradient();
 	if (pLayer && pLayer->initWithColor(start, end))
 	{
 		pLayer->autorelease();
@@ -664,7 +668,7 @@ CCLayerGradient* CCLayerGradient::create(const ccColor4B& start, const ccColor4B
 
 CCLayerGradient* CCLayerGradient::create(const ccColor4B& start, const ccColor4B& end, const CCPoint& v)
 {
-	CCLayerGradient * pLayer = new CCLayerGradient();
+	CCLayerGradient* pLayer = new CCLayerGradient();
 	if (pLayer && pLayer->initWithColor(start, end, v))
 	{
 		pLayer->autorelease();
