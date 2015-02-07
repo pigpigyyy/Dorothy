@@ -241,7 +241,7 @@ local function oSettingPanel()
 		self:reset(borderSize.width,contentHeight,0,50)
 	end
 
-	setGroup(modeFrame)
+	setGroup(modeRadius)
 	return self
 end
 
