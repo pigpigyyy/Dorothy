@@ -200,9 +200,6 @@ bool CCParticleSystem::initWithDictionary(CCDictionary *dictionary)
 bool CCParticleSystem::initWithDictionary(CCDictionary *dictionary, const char *dirname)
 {
     bool bRet = false;
-    unsigned char *buffer = NULL;
-    unsigned char *deflated = NULL;
-    CCImage *image = NULL;
     do 
     {
         int maxParticles = dictionary->valueForKey("maxParticles")->intValue();
@@ -338,7 +335,6 @@ bool CCParticleSystem::initWithDictionary(CCDictionary *dictionary, const char *
                 }
                 
                 CCTexture2D *tex = NULL;
-                
                 if (textureName.length() > 0)
                 {
                     // set not pop-up message box when load image failed
@@ -350,31 +346,8 @@ bool CCParticleSystem::initWithDictionary(CCDictionary *dictionary, const char *
                 }
                 if (!tex)
 				{
-                    const char *textureData = dictionary->valueForKey("textureImageData")->getCString();
-                    CCAssert(textureData, "");
-                    
-                    int dataLen = (int)strlen(textureData);
-                    if (dataLen != 0)
-                    {
-                        // if it fails, try to get it from the base64-gzipped data    
-                        int decodeLen = base64Decode((unsigned char*)textureData, (unsigned int)dataLen, &buffer);
-                        CCAssert( buffer != NULL, "CCParticleSystem: error decoding textureImageData");
-                        CC_BREAK_IF(!buffer);
-                        
-                        int deflatedLen = ZipUtils::ccInflateMemory(buffer, decodeLen, &deflated);
-                        CCAssert( deflated != NULL, "CCParticleSystem: error ungzipping textureImageData");
-                        CC_BREAK_IF(!deflated);
-                        
-                        // For android, we should retain it in VolatileTexture::addCCImage which invoked in CCTextureCache::sharedTextureCache()->addUIImage()
-                        image = new CCImage();
-                        bool isOK = image->initWithImageData(deflated, deflatedLen);
-                        CCAssert(isOK, "CCParticleSystem: error init image with Data");
-                        CC_BREAK_IF(!isOK);
-                        
-                        tex = CCTextureCache::sharedTextureCache()->addUIImage(image, textureName.c_str());
-
-                        image->release();
-                    }
+                    const char* textureData = dictionary->valueForKey("textureImageData")->getCString();
+                    tex = CCParticleSystem::dataToTexture(textureName.c_str(), textureData);
                 }
 				const char* textureRectStr = dictionary->valueForKey("textureRect")->getCString();
 				if (textureRectStr)
@@ -401,9 +374,44 @@ bool CCParticleSystem::initWithDictionary(CCDictionary *dictionary, const char *
             bRet = true;
         }
     } while (0);
+    return bRet;
+}
+
+CCTexture2D* CCParticleSystem::dataToTexture(const char* filename, const char* textureData)
+{
+	unsigned char* buffer = NULL;
+	unsigned char* deflated = NULL;
+	CCTexture2D* tex = NULL;
+	do
+	{
+		CCAssert(textureData, "");
+
+		int dataLen = (int)strlen(textureData);
+		if (dataLen != 0)
+		{
+			// if it fails, try to get it from the base64-gzipped data    
+			int decodeLen = base64Decode((unsigned char*)textureData, (unsigned int)dataLen, &buffer);
+			CCAssert(buffer != NULL, "CCParticleSystem: error decoding textureImageData");
+			CC_BREAK_IF(!buffer);
+
+			int deflatedLen = ZipUtils::ccInflateMemory(buffer, decodeLen, &deflated);
+			CCAssert(deflated != NULL, "CCParticleSystem: error ungzipping textureImageData");
+			CC_BREAK_IF(!deflated);
+
+			// For android, we should retain it in VolatileTexture::addCCImage which invoked in CCTextureCache::sharedTextureCache()->addUIImage()
+			CCImage* image = new CCImage();
+			bool isOK = image->initWithImageData(deflated, deflatedLen);
+			CCAssert(isOK, "CCParticleSystem: error init image with Data");
+			CC_BREAK_IF(!isOK);
+
+			tex = CCTextureCache::sharedTextureCache()->addUIImage(image, filename);
+
+			image->release();
+		}
+	} while (false);
     CC_SAFE_DELETE_ARRAY(buffer);
     CC_SAFE_DELETE_ARRAY(deflated);
-    return bRet;
+	return tex;
 }
 
 bool CCParticleSystem::initWithTotalParticles(unsigned int numberOfParticles)

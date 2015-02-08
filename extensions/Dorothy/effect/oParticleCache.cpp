@@ -94,34 +94,7 @@ oParticleDef* oParticleCache::load( const char* filename )
 		const char* textureData = dictionary->valueForKey("textureImageData")->getCString();
 		if (textureData)
 		{
-			int dataLen = (int)strlen(textureData);
-			if (dataLen != 0)
-            {
-				unsigned char* buffer = nullptr;
-			    unsigned char* deflated = nullptr;
-				BLOCK_START
-				{
-					int decodeLen = base64Decode((unsigned char*)textureData, (unsigned int)dataLen, &buffer);
-					CCAssert( buffer != nullptr, "CCParticleSystem: error decoding textureImageData");
-					BREAK_IF(!buffer);
-					
-					int deflatedLen = ZipUtils::ccInflateMemory(buffer, decodeLen, &deflated);
-					CCAssert(deflated != nullptr, "CCParticleSystem: error ungzipping textureImageData");
-					BREAK_IF(!deflated);
-					
-					// For android, we should retain it in VolatileTexture::addCCImage which invoked in CCTextureCache::sharedTextureCache()->addUIImage()
-					CCImage* image = new CCImage();
-					bool isOK = image->initWithImageData(deflated, deflatedLen);
-					CCAssert(isOK, "CCParticleSystem: error init image with Data");
-					BREAK_IF(!isOK);
-
-					CCTextureCache::sharedTextureCache()->addUIImage(image, type->textureFileName.c_str());
-					image->release();
-				}
-				BLOCK_END
-				CC_SAFE_DELETE_ARRAY(buffer);
-			    CC_SAFE_DELETE_ARRAY(deflated);
-			}
+			CCParticleSystem::dataToTexture(type->textureFileName.c_str(), textureData);
 		}
 		const char* textRectStr = (char*)valueForKey("textureRect", dictionary);
 		if (textRectStr)

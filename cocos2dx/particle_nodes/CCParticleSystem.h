@@ -428,7 +428,7 @@ public:
 	
 public:
 	static CCParticleSystem* fire(unsigned int totalParticle = 250);
-
+	static CCTexture2D* dataToTexture(const char* filename, const char* data);
 protected:
     virtual void updateBlendFunc();
 	CC_LUA_TYPE(CCParticleSystem)
