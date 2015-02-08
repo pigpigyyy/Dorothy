@@ -261,6 +261,8 @@ template int CC_DLL CCLuaType<CCDouble>();
 template int CC_DLL CCLuaType<CCFloat>();
 template int CC_DLL CCLuaType<CCBool>();
 template int CC_DLL CCLuaType<CCDictionary>();
+template int CC_DLL CCLuaType<CCParticleSystem>();
+template int CC_DLL CCLuaType<CCParticleBatchNode>();
 
 /* Value Type */
 template int CC_DLL CCLuaType<ccBlendFunc>();

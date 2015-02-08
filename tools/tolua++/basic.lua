@@ -37,6 +37,8 @@ local ccobjects = {
 "CCScheduler",
 "CCSpeed",
 "CCDictionary",
+"CCParticleSystem",
+"CCParticleBatchNode",
 "oNode3D",
 "oModel",
 "oListener",

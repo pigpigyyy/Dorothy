@@ -80,7 +80,7 @@ public:
     /** Sets a new texture with a rect. The rect is in Points.
     @since v0.99.4
     */
-    void setTextureWithRect(CCTexture2D *texture, const CCRect& rect);
+    virtual void setTextureWithRect(CCTexture2D *texture, const CCRect& rect);
     // super methods
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
     virtual void setTexture(CCTexture2D* texture);
@@ -94,8 +94,8 @@ public:
      */
     void listenBackToForeground(CCObject *obj);
 
-    static CCParticleSystemQuad * create();
-    static CCParticleSystemQuad * createWithTotalParticles(unsigned int numberOfParticles);
+    static CCParticleSystemQuad* create();
+    static CCParticleSystemQuad* createWithTotalParticles(unsigned int numberOfParticles);
 private:
 #if CC_TEXTURE_ATLAS_USE_VAO
     void setupVBOandVAO();

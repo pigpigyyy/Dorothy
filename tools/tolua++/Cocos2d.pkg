@@ -23,6 +23,8 @@ $pfile "CCSprite.h"
 $pfile "CCSpriteBatchNode.h"
 $pfile "CCLayer.h"
 $pfile "CCScene.h"
+$pfile "CCParticleSystem.h"
+$pfile "CCParticleBatchNode.h"
 
 $pfile "CCScheduler.h"
 

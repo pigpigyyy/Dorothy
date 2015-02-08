@@ -25,7 +25,7 @@ void oHelper::getPosFromStr( const char* str, float& x, float& y )
 
 void oHelper::getRectFromStr(const char* str, int& x, int& y, int& w, int& h)
 {
-	char rectStr[4 * 4 + 3];//四位数×4 + 3个","号
+	char rectStr[4 * 4 + 3];// 4 digits * 4 + 3 commas
 	strcpy(rectStr, str);
 	char* token = strtok(rectStr, ",");
 	x = atoi(token);

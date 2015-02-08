@@ -120,6 +120,7 @@ private:
 private:
     /** the blend function used for drawing the quads */
     ccBlendFunc m_tBlendFunc;
+	CC_LUA_TYPE(CCParticleBatchNode)
 };
 
 // end of particle_nodes group

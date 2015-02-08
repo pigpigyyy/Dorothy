@@ -377,7 +377,7 @@ public:
     http://particledesigner.71squared.com/
     @since v2.0
     */
-    static CCParticleSystem * create(const char *plistFile);
+    static CCParticleSystem* create(const char *plistFile);
 
     //! create a system with a fixed number of particles
     static CCParticleSystem* createWithTotalParticles(unsigned int numberOfParticles);
@@ -389,17 +389,17 @@ public:
     http://particledesigner.71squared.com/
     @since v0.99.3
     */
-    bool initWithFile(const char *plistFile);
+    bool initWithFile(const char* plistFile);
 
     /** initializes a CCQuadParticleSystem from a CCDictionary.
     @since v0.99.3
     */
-    bool initWithDictionary(CCDictionary *dictionary);
+    bool initWithDictionary(CCDictionary* dictionary);
     
     /** initializes a particle system from a NSDictionary and the path from where to load the png
      @since v2.1
      */
-    bool initWithDictionary(CCDictionary *dictionary, const char *dirname);
+    bool initWithDictionary(CCDictionary* dictionary, const char* dirname);
 
     //! Initializes a system with a fixed number of particles
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
@@ -421,10 +421,17 @@ public:
 
     virtual void update(float dt);
     virtual void updateWithNoTime();
+	
+    virtual void setTextureWithRect(CCTexture2D* texture, const CCRect& rect);
 
 	static CCTexture2D* getDefaultTexture();
+	
+public:
+	static CCParticleSystem* fire(unsigned int totalParticle = 250);
+
 protected:
     virtual void updateBlendFunc();
+	CC_LUA_TYPE(CCParticleSystem)
 };
 
 // end of particle_nodes group

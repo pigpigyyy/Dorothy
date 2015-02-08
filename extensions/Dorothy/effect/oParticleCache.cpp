@@ -11,6 +11,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "Dorothy/model/oFace.h"
 #include "Dorothy/misc/oContent.h"
 #include "Dorothy/misc/oHelper.h"
+#include "support/zip_support/ZipUtils.h"
+#include "support/base64.h"
 
 NS_DOROTHY_BEGIN
 
@@ -89,6 +91,38 @@ oParticleDef* oParticleCache::load( const char* filename )
 		type->particleLifespanVariance = (float)atof(valueForKey("particleLifespanVariance", dictionary));
 		type->emissionRate = (float)(type->maxParticles) / type->particleLifespan;
 		type->textureFileName = (char*)valueForKey("textureFileName", dictionary);
+		const char* textureData = dictionary->valueForKey("textureImageData")->getCString();
+		if (textureData)
+		{
+			int dataLen = (int)strlen(textureData);
+			if (dataLen != 0)
+            {
+				unsigned char* buffer = nullptr;
+			    unsigned char* deflated = nullptr;
+				BLOCK_START
+				{
+					int decodeLen = base64Decode((unsigned char*)textureData, (unsigned int)dataLen, &buffer);
+					CCAssert( buffer != nullptr, "CCParticleSystem: error decoding textureImageData");
+					BREAK_IF(!buffer);
+					
+					int deflatedLen = ZipUtils::ccInflateMemory(buffer, decodeLen, &deflated);
+					CCAssert(deflated != nullptr, "CCParticleSystem: error ungzipping textureImageData");
+					BREAK_IF(!deflated);
+					
+					// For android, we should retain it in VolatileTexture::addCCImage which invoked in CCTextureCache::sharedTextureCache()->addUIImage()
+					CCImage* image = new CCImage();
+					bool isOK = image->initWithImageData(deflated, deflatedLen);
+					CCAssert(isOK, "CCParticleSystem: error init image with Data");
+					BREAK_IF(!isOK);
+
+					CCTextureCache::sharedTextureCache()->addUIImage(image, type->textureFileName.c_str());
+					image->release();
+				}
+				BLOCK_END
+				CC_SAFE_DELETE_ARRAY(buffer);
+			    CC_SAFE_DELETE_ARRAY(deflated);
+			}
+		}
 		const char* textRectStr = (char*)valueForKey("textureRect", dictionary);
 		if (textRectStr)
 		{

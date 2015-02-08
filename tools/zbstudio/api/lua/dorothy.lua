@@ -3380,6 +3380,59 @@ local Dorothy =
 		type = "class",
 		index = index()
 	},
+	CCParticle =
+	{
+		childs =
+		{
+			autoRemove =
+			{
+				description = "[bool]",
+				type = "value",
+			},
+			defaultTexture =
+			{
+				description = "[CCTexture2D][Readonly]",
+				typeName = "CCTexture2D",
+				static = true,
+				type = "value",
+			},
+			start =
+			{
+				args = "()",
+				description = "",
+				returns = "()",
+				type = "method",
+			},
+			stop =
+			{
+				args = "()",
+				description = "",
+				returns = "()",
+				type = "method",
+			},
+			fire =
+			{
+				args = "(totalParticles: number = 250)",
+				description = "",
+				typeName = "CCParticle",
+				returns = "(particle: CCParticle)",
+				static = true,
+				type = "method",
+			},
+		},
+		description = "class CCParticle(CCNode).\n args -- (particleFile: string)",
+		parents = {"CCNode",},
+		type = "class",
+		index = index()
+	},
+	CCParticleBatchNode =
+	{
+		childs = { },
+		description = "class CCParticleBatchNode(CCNode).\n args -- (texture: CCTexture2D, capacity: int = 500)\n args1 -- (textureFile: string, capacity: int = 500)",
+		parents = {"CCNode",},
+		type = "class",
+		index = index()
+	},
 
 	oVec2 =
 	{
@@ -3434,7 +3487,7 @@ local Dorothy =
 				type = "method"
 			},
 		},
-		description = "class oVec2.\n args -- (x:  float = 0, y: float = 0))",
+		description = "class oVec2.\n args -- (x:  float = 0, y: float = 0)",
 		type = "class",
 		index = index()
 	},

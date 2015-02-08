@@ -43,15 +43,16 @@ THE SOFTWARE.
 
 #include "CCParticleSystem.h"
 #include "CCParticleBatchNode.h"
+#include "CCParticleExamples.h"
 #include "ccTypes.h"
 #include "textures/CCTextureCache.h"
 #include "textures/CCTextureAtlas.h"
+#include "support/zip_support/ZipUtils.h"
 #include "support/base64.h"
 #include "support/CCPointExtension.h"
 #include "platform/CCFileUtils.h"
 #include "platform/CCImage.h"
 #include "platform/platform.h"
-#include "support/zip_support/ZipUtils.h"
 #include "CCDirector.h"
 #include "support/CCProfiling.h"
 #include "firePngData.h"
@@ -347,18 +348,13 @@ bool CCParticleSystem::initWithDictionary(CCDictionary *dictionary, const char *
                     // reset the value of UIImage notify
                     CCFileUtils::sharedFileUtils()->setPopupNotify(bNotify);
                 }
-                
-                if (tex)
-                {
-                    setTexture(tex);
-                }
-                else
-                {                        
+                if (!tex)
+				{
                     const char *textureData = dictionary->valueForKey("textureImageData")->getCString();
                     CCAssert(textureData, "");
                     
                     int dataLen = (int)strlen(textureData);
-                    if(dataLen != 0)
+                    if (dataLen != 0)
                     {
                         // if it fails, try to get it from the base64-gzipped data    
                         int decodeLen = base64Decode((unsigned char*)textureData, (unsigned int)dataLen, &buffer);
@@ -375,11 +371,31 @@ bool CCParticleSystem::initWithDictionary(CCDictionary *dictionary, const char *
                         CCAssert(isOK, "CCParticleSystem: error init image with Data");
                         CC_BREAK_IF(!isOK);
                         
-                        setTexture(CCTextureCache::sharedTextureCache()->addUIImage(image, textureName.c_str()));
+                        tex = CCTextureCache::sharedTextureCache()->addUIImage(image, textureName.c_str());
 
                         image->release();
                     }
                 }
+				const char* textureRectStr = dictionary->valueForKey("textureRect")->getCString();
+				if (textureRectStr)
+				{
+					CCRect rect;
+					char rectStr[4 * 4 + 3];// 4 digits * 4 + 3 commas
+					strcpy(rectStr, textureRectStr);
+					char* token = strtok(rectStr, ",");
+					rect.origin.x = atoi(token);
+					token = strtok(nullptr, ",");
+					rect.origin.y = atoi(token);
+					token = strtok(nullptr, ",");
+					rect.size.width = atoi(token);
+					token = strtok(nullptr, ",");
+					rect.size.height = atoi(token);
+					setTextureWithRect(tex, rect);
+				}
+				else
+				{
+					setTexture(tex);
+				}
                 CCAssert( this->m_pTexture != NULL, "CCParticleSystem: error loading the texture");
             }
             bRet = true;
@@ -799,6 +815,10 @@ void CCParticleSystem::setTexture(CCTexture2D* var)
         m_pTexture = var;
         updateBlendFunc();
     }
+}
+void CCParticleSystem::setTextureWithRect(CCTexture2D* texture, const CCRect& rect)
+{
+    CCParticleSystem::setTexture(texture);
 }
 
 void CCParticleSystem::updateBlendFunc()
@@ -1373,6 +1393,11 @@ CCTexture2D* CCParticleSystem::getDefaultTexture()
 	CC_SAFE_RELEASE(pImage);
 
 	return pTexture;
+}
+
+CCParticleSystem* CCParticleSystem::fire(unsigned int totalParticle)
+{
+	return CCParticleFire::create(totalParticle);
 }
 
 NS_CC_END
