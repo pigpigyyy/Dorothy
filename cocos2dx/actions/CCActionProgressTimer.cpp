@@ -28,8 +28,6 @@ THE SOFTWARE.
 
 NS_CC_BEGIN
 
-#define kProgressTimerCast CCProgressTimer*
-
 // implementation of CCProgressTo
 
 CCProgressTo* CCProgressTo::create(float duration, float fPercent)
@@ -76,22 +74,28 @@ CCObject* CCProgressTo::copyWithZone(CCZone *pZone)
     return pCopy;
 }
 
-void CCProgressTo::startWithTarget(CCNode *pTarget)
+void CCProgressTo::startWithTarget(CCNode* pTarget)
 {
-    CCActionInterval::startWithTarget(pTarget);
-    m_fFrom = ((kProgressTimerCast)(pTarget))->getPercentage();
-
-    // XXX: Is this correct ?
-    // Adding it to support CCRepeat
-    if (m_fFrom == 100)
-    {
-        m_fFrom = 0;
-    }
+	CCProgressTimer* progressTimer = dynamic_cast<CCProgressTimer*>(pTarget);
+	if (progressTimer)
+	{
+    	CCActionInterval::startWithTarget(pTarget);
+	    m_fFrom = progressTimer->getPercentage();
+    	// XXX: Is this correct ?
+    	// Adding it to support CCRepeat
+    	if (m_fFrom == 100)
+    	{
+			m_fFrom = 0;
+    	}
+	}
 }
 
 void CCProgressTo::update(float time)
 {
-    ((kProgressTimerCast)(m_pTarget))->setPercentage(m_fFrom + (m_fTo - m_fFrom) * time);
+	if (m_pTarget)
+	{
+		((CCProgressTimer*)m_pTarget)->setPercentage(m_fFrom + (m_fTo - m_fFrom) * time);
+	}
 }
 
 // implementation of CCProgressFromTo
@@ -153,7 +157,10 @@ void CCProgressFromTo::startWithTarget(CCNode *pTarget)
 
 void CCProgressFromTo::update(float time)
 {
-    ((kProgressTimerCast)(m_pTarget))->setPercentage(m_fFrom + (m_fTo - m_fFrom) * time);
+	if (m_pTarget)
+	{
+		((CCProgressTimer*)m_pTarget)->setPercentage(m_fFrom + (m_fTo - m_fFrom) * time);
+	}
 }
 
 NS_CC_END

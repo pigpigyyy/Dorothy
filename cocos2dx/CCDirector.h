@@ -362,6 +362,7 @@ protected:
 	CCLabelAtlas* m_pUSPFLabel;
 	CCLabelAtlas* m_pDSPFLabel;
 	CCLabelAtlas* m_pDrawsLabel;
+	CCLabelAtlas* m_pObjectLabel;
 
 	/** Whether or not the Director is paused */
 	bool m_bPaused;

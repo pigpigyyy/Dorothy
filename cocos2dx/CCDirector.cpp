@@ -130,6 +130,7 @@ bool CCDirector::init()
 	m_pUSPFLabel = NULL;
 	m_pDSPFLabel = NULL;
 	m_pDrawsLabel = NULL;
+	m_pObjectLabel = NULL;
 	m_bDisplayStats = false;
 	m_uTotalFrames = m_uFrames = 0;
 	m_pszFPS = new char[10];
@@ -181,6 +182,7 @@ CCDirector::~CCDirector()
 	CC_SAFE_RELEASE(m_pUSPFLabel);
 	CC_SAFE_RELEASE(m_pDSPFLabel);
 	CC_SAFE_RELEASE(m_pDrawsLabel);
+	CC_SAFE_RELEASE(m_pObjectLabel);
 
 	CC_SAFE_RELEASE(m_pRunningScene);
 	CC_SAFE_RELEASE(m_pNotificationNode);
@@ -223,6 +225,7 @@ void CCDirector::setDisplayStats(bool bDisplayStats)
 		CC_SAFE_RELEASE_NULL(m_pUSPFLabel);
 		CC_SAFE_RELEASE_NULL(m_pDSPFLabel);
 		CC_SAFE_RELEASE_NULL(m_pDrawsLabel);
+		CC_SAFE_RELEASE_NULL(m_pObjectLabel);
 		CCTextureCache::sharedTextureCache()->removeTextureForKey("cc_fps_images");
 	}
 }
@@ -771,10 +774,17 @@ void CCDirector::showStats()
 		sprintf(m_pszFPS, "%.f", m_uFrames/m_fAccumDt);
 		m_pFPSLabel->setText(m_pszFPS);
 
-		sprintf(m_pszFPS, "%4lu", (unsigned long)g_uNumberOfDraws);
+		sprintf(m_pszFPS, "%lu", (unsigned long)g_uNumberOfDraws);
 		m_pDrawsLabel->setText(m_pszFPS);
+		
+		sprintf(m_pszFPS, "%d", CCObject::getObjectCount());
+		m_pObjectLabel->setText(m_pszFPS);
 
-		CCSize contentSize = m_pDrawsLabel->getContentSize();
+		CCSize contentSize = m_pObjectLabel->getContentSize();
+		m_pObjectLabel->setPosition(
+			ccpAdd(ccp(contentSize.width * 0.5f, contentSize.height * 4.5f),
+					CC_DIRECTOR_STATS_POSITION));
+		contentSize = m_pDrawsLabel->getContentSize();
 		m_pDrawsLabel->setPosition(
 			ccpAdd(ccp(contentSize.width * 0.5f, contentSize.height * 3.5f),
 					CC_DIRECTOR_STATS_POSITION));
@@ -796,7 +806,8 @@ void CCDirector::showStats()
 		m_fAccumUpdateDt = 0;
 		m_fAccumDrawDt = 0;
 	}
-
+	
+	m_pObjectLabel->visit();
 	m_pDrawsLabel->visit();
 	m_pUSPFLabel->visit();
 	m_pDSPFLabel->visit();
@@ -811,6 +822,7 @@ void CCDirector::createStatsLabel()
 	CC_SAFE_RELEASE_NULL(m_pDSPFLabel);
 	CC_SAFE_RELEASE_NULL(m_pUSPFLabel);
 	CC_SAFE_RELEASE_NULL(m_pDrawsLabel);
+	CC_SAFE_RELEASE_NULL(m_pObjectLabel);
 
 	int fontSize = 0;
 	if (m_obWinSizeInPoints.width > m_obWinSizeInPoints.height)
@@ -839,8 +851,14 @@ void CCDirector::createStatsLabel()
     m_pDrawsLabel = new CCLabelAtlas();
     m_pDrawsLabel->initWithString("000", texture, 12, 32, '.');
 	m_pDrawsLabel->retain();
-	
-	CCSize contentSize = m_pDrawsLabel->getContentSize();
+
+	m_pObjectLabel = new CCLabelAtlas();
+    m_pObjectLabel->initWithString("000", texture, 12, 32, '.');
+	m_pObjectLabel->retain();
+
+	CCSize contentSize = m_pObjectLabel->getContentSize();
+	m_pObjectLabel->setPosition(ccpAdd(ccp(contentSize.width * 0.5f, contentSize.height * 4.5f), CC_DIRECTOR_STATS_POSITION));
+	contentSize = m_pDrawsLabel->getContentSize();
 	m_pDrawsLabel->setPosition(ccpAdd(ccp(contentSize.width * 0.5f, contentSize.height * 3.5f), CC_DIRECTOR_STATS_POSITION));
 	contentSize = m_pUSPFLabel->getContentSize();
 	m_pUSPFLabel->setPosition(ccpAdd(ccp(contentSize.width * 0.5f, contentSize.height * 2.5f), CC_DIRECTOR_STATS_POSITION));

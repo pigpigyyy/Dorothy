@@ -2625,19 +2625,10 @@ local Dorothy =
 		type = "function",
 		index = index()
 	},
-	CCProgressTo =
+	CCProgress =
 	{
 		args = "(duration: float, percent: float)",
-		description = "",
-		typeName = "CCActionInterval",
-		returns = "(action: CCActionInterval)",
-		type = "function",
-		index = index()
-	},
-	CCProgressFromTo =
-	{
-		args = "(duration: float, fromPercentage: float, toPercentage: float)",
-		description = "",
+		description = " args -- (duration: float, fromPercentage: float, toPercentage: float)\n Returned action can only be executed by CCProgressTimer.",
 		typeName = "CCActionInterval",
 		returns = "(action: CCActionInterval)",
 		type = "function",

@@ -1,3 +1,2 @@
-CCActionInterval* CCProgressTo::create @ CCProgressTo(float duration, float fPercent);
-
-CCActionInterval* CCProgressFromTo::create @ CCProgressFromTo(float duration, float fFromPercentage, float fToPercentage);
+CCActionInterval* CCProgressTo::create @ CCProgress(float duration, float fPercent);
+CCActionInterval* CCProgressFromTo::create @ CCProgress(float duration, float fFromPercentage, float fToPercentage);
