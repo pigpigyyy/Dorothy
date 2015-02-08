@@ -422,6 +422,7 @@ public:
     virtual void update(float dt);
     virtual void updateWithNoTime();
 
+	static CCTexture2D* getDefaultTexture();
 protected:
     virtual void updateBlendFunc();
 };

@@ -27,53 +27,14 @@ THE SOFTWARE.
 #include "CCDirector.h"
 #include "textures/CCTextureCache.h"
 #include "support/CCPointExtension.h"
-#include "firePngData.h"
 #include "platform/CCImage.h"
 
 NS_CC_BEGIN
+
 //
 // ParticleFire
 //
-
-static CCTexture2D* getDefaultTexture()
-{
-    CCTexture2D* pTexture = NULL;
-    CCImage* pImage = NULL;
-    do 
-    {
-        bool bRet = false;
-        const char* key = "__firePngData";
-        pTexture = CCTextureCache::sharedTextureCache()->textureForKey(key);
-        CC_BREAK_IF(pTexture != NULL);
-
-        pImage = new CCImage();
-        CC_BREAK_IF(NULL == pImage);
-        bRet = pImage->initWithImageData((void*)__firePngData, sizeof(__firePngData), CCImage::kFmtPng);
-        CC_BREAK_IF(!bRet);
-
-        pTexture = CCTextureCache::sharedTextureCache()->addUIImage(pImage, key);
-    } while (0);
-
-    CC_SAFE_RELEASE(pImage);
-
-    return pTexture;
-}
-
-CCParticleFire* CCParticleFire::create()
-{
-    CCParticleFire* pRet = new CCParticleFire();
-    if (pRet && pRet->init())
-    {
-        pRet->autorelease();
-    }
-    else
-    {
-        CC_SAFE_DELETE(pRet);
-    }
-    return pRet;
-}
-
-CCParticleFire* CCParticleFire::createWithTotalParticles(unsigned int numberOfParticles)
+CCParticleFire* CCParticleFire::create(unsigned int numberOfParticles)
 {
     CCParticleFire* pRet = new CCParticleFire();
     if (pRet && pRet->initWithTotalParticles(numberOfParticles))
@@ -160,25 +121,11 @@ bool CCParticleFire::initWithTotalParticles(unsigned int numberOfParticles)
     }
     return false;
 }
+
 //
 // ParticleFireworks
 //
-
-CCParticleFireworks* CCParticleFireworks::create()
-{
-    CCParticleFireworks* pRet = new CCParticleFireworks();
-    if (pRet && pRet->init())
-    {
-        pRet->autorelease();
-    }
-    else
-    {
-        CC_SAFE_DELETE(pRet);
-    }
-    return pRet;
-}
-
-CCParticleFireworks* CCParticleFireworks::createWithTotalParticles(unsigned int numberOfParticles)
+CCParticleFireworks* CCParticleFireworks::create(unsigned int numberOfParticles)
 {
     CCParticleFireworks* pRet = new CCParticleFireworks();
     if (pRet && pRet->initWithTotalParticles(numberOfParticles))
@@ -262,24 +209,11 @@ bool CCParticleFireworks::initWithTotalParticles(unsigned int numberOfParticles)
     }
     return false;
 }
+
 //
 // ParticleSun
 //
-CCParticleSun* CCParticleSun::create()
-{
-    CCParticleSun* pRet = new CCParticleSun();
-    if (pRet && pRet->init())
-    {
-        pRet->autorelease();
-    }
-    else
-    {
-        CC_SAFE_DELETE(pRet);
-    }
-    return pRet;
-}
-
-CCParticleSun* CCParticleSun::createWithTotalParticles(unsigned int numberOfParticles)
+CCParticleSun* CCParticleSun::create(unsigned int numberOfParticles)
 {
     CCParticleSun* pRet = new CCParticleSun();
     if (pRet && pRet->initWithTotalParticles(numberOfParticles))
@@ -371,22 +305,7 @@ bool CCParticleSun::initWithTotalParticles(unsigned int numberOfParticles)
 //
 // ParticleGalaxy
 //
-
-CCParticleGalaxy* CCParticleGalaxy::create()
-{
-    CCParticleGalaxy* pRet = new CCParticleGalaxy();
-    if (pRet && pRet->init())
-    {
-        pRet->autorelease();
-    }
-    else
-    {
-        CC_SAFE_DELETE(pRet);
-    }
-    return pRet;
-}
-
-CCParticleGalaxy* CCParticleGalaxy::createWithTotalParticles(unsigned int numberOfParticles)
+CCParticleGalaxy* CCParticleGalaxy::create(unsigned int numberOfParticles)
 {
     CCParticleGalaxy* pRet = new CCParticleGalaxy();
     if (pRet && pRet->initWithTotalParticles(numberOfParticles))
@@ -480,22 +399,7 @@ bool CCParticleGalaxy::initWithTotalParticles(unsigned int numberOfParticles)
 //
 // ParticleFlower
 //
-
-CCParticleFlower* CCParticleFlower::create()
-{
-    CCParticleFlower* pRet = new CCParticleFlower();
-    if (pRet && pRet->init())
-    {
-        pRet->autorelease();
-    }
-    else
-    {
-        CC_SAFE_DELETE(pRet);
-    }
-    return pRet;
-}
-
-CCParticleFlower* CCParticleFlower::createWithTotalParticles(unsigned int numberOfParticles)
+CCParticleFlower* CCParticleFlower::create(unsigned int numberOfParticles)
 {
     CCParticleFlower* pRet = new CCParticleFlower();
     if (pRet && pRet->initWithTotalParticles(numberOfParticles))
@@ -588,22 +492,7 @@ bool CCParticleFlower::initWithTotalParticles(unsigned int numberOfParticles)
 //
 // ParticleMeteor
 //
-
-CCParticleMeteor * CCParticleMeteor::create()
-{
-    CCParticleMeteor *pRet = new CCParticleMeteor();
-    if (pRet && pRet->init())
-    {
-        pRet->autorelease();
-    }
-    else
-    {
-        CC_SAFE_DELETE(pRet);
-    }
-    return pRet;
-}
-
-CCParticleMeteor* CCParticleMeteor::createWithTotalParticles(unsigned int numberOfParticles)
+CCParticleMeteor* CCParticleMeteor::create(unsigned int numberOfParticles)
 {
     CCParticleMeteor* pRet = new CCParticleMeteor();
     if (pRet && pRet->initWithTotalParticles(numberOfParticles))
@@ -697,22 +586,7 @@ bool CCParticleMeteor::initWithTotalParticles(unsigned int numberOfParticles)
 //
 // ParticleSpiral
 //
-
-CCParticleSpiral* CCParticleSpiral::create()
-{
-    CCParticleSpiral* pRet = new CCParticleSpiral();
-    if (pRet && pRet->init())
-    {
-        pRet->autorelease();
-    }
-    else
-    {
-        CC_SAFE_DELETE(pRet);
-    }
-    return pRet;
-}
-
-CCParticleSpiral* CCParticleSpiral::createWithTotalParticles(unsigned int numberOfParticles)
+CCParticleSpiral* CCParticleSpiral::create(unsigned int numberOfParticles)
 {
     CCParticleSpiral* pRet = new CCParticleSpiral();
     if (pRet && pRet->initWithTotalParticles(numberOfParticles))
@@ -806,22 +680,7 @@ bool CCParticleSpiral::initWithTotalParticles(unsigned int numberOfParticles)
 //
 // ParticleExplosion
 //
-
-CCParticleExplosion* CCParticleExplosion::create()
-{
-    CCParticleExplosion* pRet = new CCParticleExplosion();
-    if (pRet && pRet->init())
-    {
-        pRet->autorelease();
-    }
-    else
-    {
-        CC_SAFE_DELETE(pRet);
-    }
-    return pRet;
-}
-
-CCParticleExplosion* CCParticleExplosion::createWithTotalParticles(unsigned int numberOfParticles)
+CCParticleExplosion* CCParticleExplosion::create(unsigned int numberOfParticles)
 {
     CCParticleExplosion* pRet = new CCParticleExplosion();
     if (pRet && pRet->initWithTotalParticles(numberOfParticles))
@@ -914,22 +773,7 @@ bool CCParticleExplosion::initWithTotalParticles(unsigned int numberOfParticles)
 //
 // ParticleSmoke
 //
-
-CCParticleSmoke* CCParticleSmoke::create()
-{
-    CCParticleSmoke* pRet = new CCParticleSmoke();
-    if (pRet && pRet->init())
-    {
-        pRet->autorelease();
-    }
-    else
-    {
-        CC_SAFE_DELETE(pRet);
-    }
-    return pRet;
-}
-
-CCParticleSmoke* CCParticleSmoke::createWithTotalParticles(unsigned int numberOfParticles)
+CCParticleSmoke* CCParticleSmoke::create(unsigned int numberOfParticles)
 {
     CCParticleSmoke* pRet = new CCParticleSmoke();
     if (pRet && pRet->initWithTotalParticles(numberOfParticles))
@@ -1019,22 +863,7 @@ bool CCParticleSmoke::initWithTotalParticles(unsigned int numberOfParticles)
 //
 // CCParticleSnow
 //
-
-CCParticleSnow* CCParticleSnow::create()
-{
-    CCParticleSnow* pRet = new CCParticleSnow();
-    if (pRet && pRet->init())
-    {
-        pRet->autorelease();
-    }
-    else
-    {
-        CC_SAFE_DELETE(pRet);
-    }
-    return pRet;
-}
-
-CCParticleSnow* CCParticleSnow::createWithTotalParticles(unsigned int numberOfParticles)
+CCParticleSnow* CCParticleSnow::create(unsigned int numberOfParticles)
 {
     CCParticleSnow* pRet = new CCParticleSnow();
     if (pRet && pRet->initWithTotalParticles(numberOfParticles))
@@ -1127,22 +956,7 @@ bool CCParticleSnow::initWithTotalParticles(unsigned int numberOfParticles)
 //
 // CCParticleRain
 //
-
-CCParticleRain* CCParticleRain::create()
-{
-    CCParticleRain* pRet = new CCParticleRain();
-    if (pRet && pRet->init())
-    {
-        pRet->autorelease();
-    }
-    else
-    {
-        CC_SAFE_DELETE(pRet);
-    }
-    return pRet;
-}
-
-CCParticleRain* CCParticleRain::createWithTotalParticles(unsigned int numberOfParticles)
+CCParticleRain* CCParticleRain::create(unsigned int numberOfParticles)
 {
     CCParticleRain* pRet = new CCParticleRain();
     if (pRet && pRet->initWithTotalParticles(numberOfParticles))

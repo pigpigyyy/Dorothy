@@ -41,11 +41,8 @@ class CC_DLL CCParticleFire : public CCParticleSystemQuad
 public:
     CCParticleFire(){}
     virtual ~CCParticleFire(){}
-    bool init(){ return initWithTotalParticles(250); }
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-    
-    static CCParticleFire* create();
-    static CCParticleFire* createWithTotalParticles(unsigned int numberOfParticles);
+	static CCParticleFire* create(unsigned int numberOfParticles = 250);
 };
 
 //! @brief A fireworks particle system
@@ -54,11 +51,8 @@ class CC_DLL CCParticleFireworks : public CCParticleSystemQuad
 public:
     CCParticleFireworks(){}
     virtual ~CCParticleFireworks(){}
-    bool init(){ return initWithTotalParticles(1500); }
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-    
-    static CCParticleFireworks* create();
-    static CCParticleFireworks* createWithTotalParticles(unsigned int numberOfParticles);
+	static CCParticleFireworks* create(unsigned int numberOfParticles = 1500);
 };
 
 //! @brief A sun particle system
@@ -67,11 +61,8 @@ class CC_DLL CCParticleSun : public CCParticleSystemQuad
 public:
     CCParticleSun(){}
     virtual ~CCParticleSun(){}
-    bool init(){ return initWithTotalParticles(350); }
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-    
-    static CCParticleSun* create();
-    static CCParticleSun* createWithTotalParticles(unsigned int numberOfParticles);
+    static CCParticleSun* create(unsigned int numberOfParticles = 350);
 };
 
 //! @brief A galaxy particle system
@@ -80,11 +71,8 @@ class CC_DLL CCParticleGalaxy : public CCParticleSystemQuad
 public:
     CCParticleGalaxy(){}
     virtual ~CCParticleGalaxy(){}
-    bool init(){ return initWithTotalParticles(200); }
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-    
-    static CCParticleGalaxy* create();
-    static CCParticleGalaxy* createWithTotalParticles(unsigned int numberOfParticles);
+	static CCParticleGalaxy* create(unsigned int numberOfParticles = 200);
 };
 
 //! @brief A flower particle system
@@ -93,11 +81,8 @@ class CC_DLL CCParticleFlower : public CCParticleSystemQuad
 public:
     CCParticleFlower(){}
     virtual ~CCParticleFlower(){}
-    bool init(){ return initWithTotalParticles(250); }
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-    
-    static CCParticleFlower* create();
-    static CCParticleFlower* createWithTotalParticles(unsigned int numberOfParticles);
+	static CCParticleFlower* create(unsigned int numberOfParticles = 250);
 };
 
 //! @brief A meteor particle system
@@ -106,11 +91,8 @@ class CC_DLL CCParticleMeteor : public CCParticleSystemQuad
 public:
     CCParticleMeteor(){}
     virtual ~CCParticleMeteor(){}
-    bool init(){ return initWithTotalParticles(150); }
-    virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-
-    static CCParticleMeteor * create();
-    static CCParticleMeteor* createWithTotalParticles(unsigned int numberOfParticles);
+	virtual bool initWithTotalParticles(unsigned int numberOfParticles);
+	static CCParticleMeteor* create(unsigned int numberOfParticles = 150);
 };
 
 //! @brief An spiral particle system
@@ -119,11 +101,8 @@ class CC_DLL CCParticleSpiral : public CCParticleSystemQuad
 public:
     CCParticleSpiral(){}
     virtual ~CCParticleSpiral(){}
-    bool init(){ return initWithTotalParticles(500); }
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-    
-    static CCParticleSpiral* create();
-    static CCParticleSpiral* createWithTotalParticles(unsigned int numberOfParticles);
+	static CCParticleSpiral* create(unsigned int numberOfParticles = 500);
 };
 
 //! @brief An explosion particle system
@@ -132,11 +111,8 @@ class CC_DLL CCParticleExplosion : public CCParticleSystemQuad
 public:
     CCParticleExplosion(){}
     virtual ~CCParticleExplosion(){}
-    bool init(){ return initWithTotalParticles(700); }
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-    
-    static CCParticleExplosion* create();
-    static CCParticleExplosion* createWithTotalParticles(unsigned int numberOfParticles);
+	static CCParticleExplosion* create(unsigned int numberOfParticles = 700);
 };
 
 //! @brief An smoke particle system
@@ -145,11 +121,8 @@ class CC_DLL CCParticleSmoke : public CCParticleSystemQuad
 public:
     CCParticleSmoke(){}
     virtual ~CCParticleSmoke(){}
-    bool init(){ return initWithTotalParticles(200); }
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-    
-    static CCParticleSmoke* create();
-    static CCParticleSmoke* createWithTotalParticles(unsigned int numberOfParticles);
+	static CCParticleSmoke* create(unsigned int numberOfParticles = 200);
 };
 
 //! @brief An snow particle system
@@ -158,11 +131,8 @@ class CC_DLL CCParticleSnow : public CCParticleSystemQuad
 public:
     CCParticleSnow(){}
     virtual ~CCParticleSnow(){}
-    bool init(){ return initWithTotalParticles(700); }
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-    
-    static CCParticleSnow* create();
-    static CCParticleSnow* createWithTotalParticles(unsigned int numberOfParticles);
+	static CCParticleSnow* create(unsigned int numberOfParticles = 700);
 };
 
 //! @brief A rain particle system
@@ -171,11 +141,8 @@ class CC_DLL CCParticleRain : public CCParticleSystemQuad
 public:
     CCParticleRain(){}
     virtual ~CCParticleRain(){}
-    bool init(){ return initWithTotalParticles(1000); }
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-    
-    static CCParticleRain* create();
-    static CCParticleRain* createWithTotalParticles(unsigned int numberOfParticles);
+	static CCParticleRain* create(unsigned int numberOfParticles = 1000);
 };
 
 // end of particle_nodes group

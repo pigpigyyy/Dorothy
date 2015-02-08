@@ -54,6 +54,7 @@ THE SOFTWARE.
 #include "support/zip_support/ZipUtils.h"
 #include "CCDirector.h"
 #include "support/CCProfiling.h"
+#include "firePngData.h"
 // opengl
 #include "CCGL.h"
 
@@ -397,7 +398,7 @@ bool CCParticleSystem::initWithTotalParticles(unsigned int numberOfParticles)
     
     m_pParticles = (tCCParticle*)calloc(m_uTotalParticles, sizeof(tCCParticle));
 
-    if( ! m_pParticles )
+    if (!m_pParticles)
     {
         CCLOG("Particle system: not enough memory");
         this->release();
@@ -550,9 +551,11 @@ void CCParticleSystem::initParticle(tCCParticle* particle)
         particle->modeA.tangentialAccel = modeA.tangentialAccel + modeA.tangentialAccelVar * CCRANDOM_MINUS1_1();
 
         // rotation is dir
-        if(modeA.rotationIsDir)
-            particle->rotation = -CC_RADIANS_TO_DEGREES(ccpToAngle(particle->modeA.dir));
-    }
+		if (modeA.rotationIsDir)
+		{
+			particle->rotation = -CC_RADIANS_TO_DEGREES(ccpToAngle(particle->modeA.dir));
+		}
+	}
 
     // Mode Radius: B
     else 
@@ -563,7 +566,7 @@ void CCParticleSystem::initParticle(tCCParticle* particle)
 
         particle->modeB.radius = startRadius;
 
-        if(modeB.endRadius == kCCParticleStartRadiusEqualToEndRadius)
+        if (modeB.endRadius == kCCParticleStartRadiusEqualToEndRadius)
         {
             particle->modeB.deltaRadius = 0;
         }
@@ -1348,6 +1351,29 @@ void CCParticleSystem::setScaleY(float newScaleY)
     CCNode::setScaleY(newScaleY);
 }
 
+CCTexture2D* CCParticleSystem::getDefaultTexture()
+{
+	CCTexture2D* pTexture = NULL;
+	CCImage* pImage = NULL;
+	do
+	{
+		bool bRet = false;
+		const char* key = "__firePngData";
+		pTexture = CCTextureCache::sharedTextureCache()->textureForKey(key);
+		CC_BREAK_IF(pTexture != NULL);
+
+		pImage = new CCImage();
+		CC_BREAK_IF(NULL == pImage);
+		bRet = pImage->initWithImageData((void*)__firePngData, sizeof(__firePngData), CCImage::kFmtPng);
+		CC_BREAK_IF(!bRet);
+
+		pTexture = CCTextureCache::sharedTextureCache()->addUIImage(pImage, key);
+	} while (0);
+
+	CC_SAFE_RELEASE(pImage);
+
+	return pTexture;
+}
 
 NS_CC_END
 
