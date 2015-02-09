@@ -3417,6 +3417,177 @@ local Dorothy =
 		type = "class",
 		index = index()
 	},
+	CCEase =
+	{
+		childs =
+		{
+			holdIn =
+			{
+				args = "(action: CCActionInterval, rate: float)",
+				description = "",
+				typeName = "CCActionInterval",
+				returns = "(action: CCActionInterval)",
+				static = true,
+				type = "method",
+			},
+			holdOut =
+			{
+				args = "(action: CCActionInterval, rate: float)",
+				description = "",
+				typeName = "CCActionInterval",
+				returns = "(action: CCActionInterval)",
+				static = true,
+				type = "method",
+			},
+			holdInOut =
+			{
+				args = "(action: CCActionInterval, rate: float)",
+				description = "",
+				typeName = "CCActionInterval",
+				returns = "(action: CCActionInterval)",
+				static = true,
+				type = "method",
+			},
+			exponentialIn =
+			{
+				args = "(action: CCActionInterval)",
+				description = "",
+				typeName = "CCActionInterval",
+				returns = "(action: CCActionInterval)",
+				static = true,
+				type = "method",
+			},
+			exponentialOut =
+			{
+				args = "(action: CCActionInterval)",
+				description = "",
+				typeName = "CCActionInterval",
+				returns = "(action: CCActionInterval)",
+				static = true,
+				type = "method",
+			},
+			exponentialInOut =
+			{
+				args = "(action: CCActionInterval)",
+				description = "",
+				typeName = "CCActionInterval",
+				returns = "(action: CCActionInterval)",
+				static = true,
+				type = "method",
+			},
+			sineIn =
+			{
+				args = "(action: CCActionInterval)",
+				description = "",
+				typeName = "CCActionInterval",
+				returns = "(action: CCActionInterval)",
+				static = true,
+				type = "method",
+			},
+			sineOut =
+			{
+				args = "(action: CCActionInterval)",
+				description = "",
+				typeName = "CCActionInterval",
+				returns = "(action: CCActionInterval)",
+				static = true,
+				type = "method",
+			},
+			sineInOut =
+			{
+				args = "(action: CCActionInterval)",
+				description = "",
+				typeName = "CCActionInterval",
+				returns = "(action: CCActionInterval)",
+				static = true,
+				type = "method",
+			},
+			elasticIn =
+			{
+				args = "(action: CCActionInterval, period: float = 0.3)",
+				description = "",
+				typeName = "CCActionInterval",
+				returns = "(action: CCActionInterval)",
+				static = true,
+				type = "method",
+			},
+			elasticOut =
+			{
+				args = "(action: CCActionInterval, period: float = 0.3)",
+				description = "",
+				typeName = "CCActionInterval",
+				returns = "(action: CCActionInterval)",
+				static = true,
+				type = "method",
+			},
+			elasticInOut =
+			{
+				args = "(action: CCActionInterval, period: float = 0.3)",
+				description = "",
+				typeName = "CCActionInterval",
+				returns = "(action: CCActionInterval)",
+				static = true,
+				type = "method",
+			},
+			bounceIn =
+			{
+				args = "(action: CCActionInterval)",
+				description = "",
+				typeName = "CCActionInterval",
+				returns = "(action: CCActionInterval)",
+				static = true,
+				type = "method",
+			},
+			bounceOut =
+			{
+				args = "(action: CCActionInterval)",
+				description = "",
+				typeName = "CCActionInterval",
+				returns = "(action: CCActionInterval)",
+				static = true,
+				type = "method",
+			},
+			bounceInOut =
+			{
+				args = "(action: CCActionInterval)",
+				description = "",
+				typeName = "CCActionInterval",
+				returns = "(action: CCActionInterval)",
+				static = true,
+				type = "method",
+			},
+			backIn =
+			{
+				args = "(action: CCActionInterval)",
+				description = "",
+				typeName = "CCActionInterval",
+				returns = "(action: CCActionInterval)",
+				static = true,
+				type = "method",
+			},
+			backOut =
+			{
+				args = "(action: CCActionInterval)",
+				description = "",
+				typeName = "CCActionInterval",
+				returns = "(action: CCActionInterval)",
+				static = true,
+				type = "method",
+			},
+			backInOut =
+			{
+				args = "(action: CCActionInterval)",
+				description = "",
+				typeName = "CCActionInterval",
+				returns = "(action: CCActionInterval)",
+				static = true,
+				type = "method",
+			},
+		},
+		description = "class oEase.",
+		type = "class",
+		index = index()
+	},
 
 	oVec2 =
 	{

@@ -58,10 +58,8 @@ public:
     virtual CCActionInterval* getInnerAction();
 
 public:
-
     /** creates the action */
     static CCActionEase* create(CCActionInterval *pAction);
-
 protected:
     /** The inner action */
     CCActionInterval *m_pInner;
@@ -86,12 +84,9 @@ public:
 
     virtual CCObject* copyWithZone(CCZone* pZone);
     virtual CCActionInterval* reverse();
-
 public:
-
     /** Creates the action with the inner action and the rate parameter */
     static CCEaseRateAction* create(CCActionInterval* pAction, float fRate);
-
 protected:
     float m_fRate;
 };
@@ -107,9 +102,9 @@ public:
     virtual CCActionInterval* reverse();
     virtual CCObject* copyWithZone(CCZone* pZone);
 public:
-
     /** Creates the action with the inner action and the rate parameter */
     static CCEaseIn* create(CCActionInterval* pAction, float fRate);
+	CC_LUA_TYPE(CCActionInterval)
 };
 
 /** 
@@ -122,11 +117,10 @@ public:
     virtual void update(float time);
     virtual CCActionInterval* reverse();
     virtual CCObject* copyWithZone(CCZone* pZone);
-
 public:
-
     /** Creates the action with the inner action and the rate parameter */
     static CCEaseOut* create(CCActionInterval* pAction, float fRate);
+	CC_LUA_TYPE(CCActionInterval)
 };
 
 /** 
@@ -139,11 +133,10 @@ public:
     virtual void update(float time);
     virtual CCObject* copyWithZone(CCZone* pZone);
     virtual CCActionInterval* reverse();
-
 public:
-
     /** Creates the action with the inner action and the rate parameter */
     static CCEaseInOut* create(CCActionInterval* pAction, float fRate);
+	CC_LUA_TYPE(CCActionInterval)
 };
 
 /** 
@@ -156,10 +149,10 @@ public:
     virtual void update(float time);
     virtual CCActionInterval* reverse();
     virtual CCObject* copyWithZone(CCZone* pZone);
-
 public:
     /** creates the action */
     static CCEaseExponentialIn* create(CCActionInterval* pAction);
+	CC_LUA_TYPE(CCActionInterval)
 };
 
 /** 
@@ -172,10 +165,10 @@ public:
     virtual void update(float time);
     virtual CCActionInterval* reverse();
     virtual CCObject* copyWithZone(CCZone* pZone);
-
 public:
     /** creates the action */
     static CCEaseExponentialOut* create(CCActionInterval* pAction);
+	CC_LUA_TYPE(CCActionInterval)
 };
 
 /** 
@@ -188,11 +181,10 @@ public:
     virtual void update(float time);
     virtual CCObject* copyWithZone(CCZone* pZone);
     virtual CCActionInterval* reverse();
-
 public:
-
     /** creates the action */
     static CCEaseExponentialInOut* create(CCActionInterval* pAction);
+	CC_LUA_TYPE(CCActionInterval)
 };
 
 /** 
@@ -205,10 +197,10 @@ public:
     virtual void update(float time);
     virtual CCActionInterval* reverse();
     virtual CCObject* copyWithZone(CCZone* pZone);
-
 public:
     /** creates the action */
     static CCEaseSineIn* create(CCActionInterval* pAction);
+	CC_LUA_TYPE(CCActionInterval)
 };
 
 /** 
@@ -221,11 +213,10 @@ public:
     virtual void update(float time);
     virtual CCActionInterval* reverse();
     virtual CCObject* copyWithZone(CCZone* pZone);
-
 public:
-
     /** creates the action */
     static CCEaseSineOut* create(CCActionInterval* pAction);
+	CC_LUA_TYPE(CCActionInterval)
 };
 
 /** 
@@ -238,11 +229,10 @@ public:
     virtual void update(float time);
     virtual CCObject* copyWithZone(CCZone* pZone);
     virtual CCActionInterval* reverse();
-
 public:
-
     /** creates the action */
     static CCEaseSineInOut* create(CCActionInterval* pAction);
+	CC_LUA_TYPE(CCActionInterval)
 };
 
 /** 
@@ -263,9 +253,7 @@ public:
 
     virtual CCActionInterval* reverse();
     virtual CCObject* copyWithZone(CCZone* pZone);
-
 public:
-
     /** Creates the action with the inner action and the period in radians (default is 0.3) */
     static CCEaseElastic* create(CCActionInterval *pAction, float fPeriod);
     static CCEaseElastic* create(CCActionInterval *pAction);
@@ -285,12 +273,11 @@ public:
     virtual void update(float time);
     virtual CCActionInterval* reverse();
     virtual CCObject* copyWithZone(CCZone* pZone);
-
 public:
-
     /** Creates the action with the inner action and the period in radians (default is 0.3) */
     static CCEaseElasticIn* create(CCActionInterval *pAction, float fPeriod);
     static CCEaseElasticIn* create(CCActionInterval *pAction);
+	CC_LUA_TYPE(CCActionInterval)
 };
 
 /** 
@@ -305,12 +292,11 @@ public:
     virtual void update(float time);
     virtual CCActionInterval* reverse();
     virtual CCObject* copyWithZone(CCZone* pZone);
-
 public:
-
     /** Creates the action with the inner action and the period in radians (default is 0.3) */
     static CCEaseElasticOut* create(CCActionInterval *pAction, float fPeriod);
     static CCEaseElasticOut* create(CCActionInterval *pAction);
+	CC_LUA_TYPE(CCActionInterval)
 };
 
 /** 
@@ -325,12 +311,11 @@ public:
     virtual void update(float time);
     virtual CCActionInterval* reverse();
     virtual CCObject* copyWithZone(CCZone* pZone);
-
 public:
-
     /** Creates the action with the inner action and the period in radians (default is 0.3) */
     static CCEaseElasticInOut* create(CCActionInterval *pAction, float fPeriod);
     static CCEaseElasticInOut* create(CCActionInterval *pAction);
+	CC_LUA_TYPE(CCActionInterval)
 };
 
 /** 
@@ -344,9 +329,7 @@ public:
     float bounceTime(float time);
     virtual CCObject* copyWithZone(CCZone* pZone);
     virtual CCActionInterval* reverse();
-
 public:
-
     /** creates the action */
     static CCEaseBounce* create(CCActionInterval* pAction);
 };
@@ -363,11 +346,10 @@ public:
     virtual void update(float time);
     virtual CCActionInterval* reverse();
     virtual CCObject* copyWithZone(CCZone* pZone);
-
 public:
-
     /** creates the action */
     static CCEaseBounceIn* create(CCActionInterval* pAction);
+	CC_LUA_TYPE(CCActionInterval)
 };
 
 /** 
@@ -382,11 +364,10 @@ public:
     virtual void update(float time);
     virtual CCActionInterval* reverse();
     virtual CCObject* copyWithZone(CCZone* pZone);
-
 public:
-
     /** creates the action */
     static CCEaseBounceOut* create(CCActionInterval* pAction);
+	CC_LUA_TYPE(CCActionInterval)
 };
 
 /** 
@@ -401,11 +382,10 @@ public:
     virtual void update(float time);
     virtual CCObject* copyWithZone(CCZone* pZone);
     virtual CCActionInterval* reverse();
-
 public:
-
     /** creates the action */
     static CCEaseBounceInOut* create(CCActionInterval* pAction);
+	CC_LUA_TYPE(CCActionInterval)
 };
 
 /** 
@@ -420,11 +400,10 @@ public:
     virtual void update(float time);
     virtual CCActionInterval* reverse();
     virtual CCObject* copyWithZone(CCZone* pZone);
-
 public:
-
     /** creates the action */
     static CCEaseBackIn* create(CCActionInterval* pAction);
+	CC_LUA_TYPE(CCActionInterval)
 };
 
 /** 
@@ -439,11 +418,10 @@ public:
     virtual void update(float time);
     virtual CCActionInterval* reverse();
     virtual CCObject* copyWithZone(CCZone* pZone);
-
 public:
-
     /** creates the action */
     static CCEaseBackOut* create(CCActionInterval* pAction);
+	CC_LUA_TYPE(CCActionInterval)
 };
 
 /** 
@@ -458,11 +436,10 @@ public:
     virtual void update(float time);
     virtual CCObject* copyWithZone(CCZone* pZone);
     virtual CCActionInterval* reverse();
-
 public:
-
     /** creates the action */
     static CCEaseBackInOut* create(CCActionInterval* pAction);
+	CC_LUA_TYPE(CCActionInterval)
 };
 
 // end of actions group

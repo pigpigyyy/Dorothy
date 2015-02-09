@@ -37,8 +37,6 @@
 		1551A63D158F2ADE00E66CFE /* CCActionProgressTimer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A36A158F2ADE00E66CFE /* CCActionProgressTimer.h */; };
 		1551A63E158F2ADE00E66CFE /* CCActionTiledGrid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1551A36B158F2ADE00E66CFE /* CCActionTiledGrid.cpp */; };
 		1551A63F158F2ADE00E66CFE /* CCActionTiledGrid.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A36C158F2ADE00E66CFE /* CCActionTiledGrid.h */; };
-		1551A640158F2ADE00E66CFE /* CCActionTween.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1551A36D158F2ADE00E66CFE /* CCActionTween.cpp */; };
-		1551A641158F2ADE00E66CFE /* CCActionTween.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A36E158F2ADE00E66CFE /* CCActionTween.h */; };
 		1551A642158F2ADE00E66CFE /* CCAtlasNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1551A371158F2ADE00E66CFE /* CCAtlasNode.cpp */; };
 		1551A643158F2ADE00E66CFE /* CCAtlasNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A372158F2ADE00E66CFE /* CCAtlasNode.h */; };
 		1551A644158F2ADE00E66CFE /* CCNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1551A373158F2ADE00E66CFE /* CCNode.cpp */; };
@@ -336,8 +334,6 @@
 		1551A36A158F2ADE00E66CFE /* CCActionProgressTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCActionProgressTimer.h; sourceTree = "<group>"; };
 		1551A36B158F2ADE00E66CFE /* CCActionTiledGrid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCActionTiledGrid.cpp; sourceTree = "<group>"; };
 		1551A36C158F2ADE00E66CFE /* CCActionTiledGrid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCActionTiledGrid.h; sourceTree = "<group>"; };
-		1551A36D158F2ADE00E66CFE /* CCActionTween.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCActionTween.cpp; sourceTree = "<group>"; };
-		1551A36E158F2ADE00E66CFE /* CCActionTween.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCActionTween.h; sourceTree = "<group>"; };
 		1551A371158F2ADE00E66CFE /* CCAtlasNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCAtlasNode.cpp; sourceTree = "<group>"; };
 		1551A372158F2ADE00E66CFE /* CCAtlasNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAtlasNode.h; sourceTree = "<group>"; };
 		1551A373158F2ADE00E66CFE /* CCNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCNode.cpp; sourceTree = "<group>"; };
@@ -723,8 +719,6 @@
 				1551A36A158F2ADE00E66CFE /* CCActionProgressTimer.h */,
 				1551A36B158F2ADE00E66CFE /* CCActionTiledGrid.cpp */,
 				1551A36C158F2ADE00E66CFE /* CCActionTiledGrid.h */,
-				1551A36D158F2ADE00E66CFE /* CCActionTween.cpp */,
-				1551A36E158F2ADE00E66CFE /* CCActionTween.h */,
 			);
 			path = actions;
 			sourceTree = "<group>";
@@ -1262,7 +1256,6 @@
 				1551A63B158F2ADE00E66CFE /* CCActionPageTurn3D.h in Headers */,
 				1551A63D158F2ADE00E66CFE /* CCActionProgressTimer.h in Headers */,
 				1551A63F158F2ADE00E66CFE /* CCActionTiledGrid.h in Headers */,
-				1551A641158F2ADE00E66CFE /* CCActionTween.h in Headers */,
 				1551A643158F2ADE00E66CFE /* CCAtlasNode.h in Headers */,
 				1551A645158F2ADE00E66CFE /* CCNode.h in Headers */,
 				1551A647158F2ADE00E66CFE /* CCCamera.h in Headers */,
@@ -1481,7 +1474,6 @@
 				1551A63A158F2ADE00E66CFE /* CCActionPageTurn3D.cpp in Sources */,
 				1551A63C158F2ADE00E66CFE /* CCActionProgressTimer.cpp in Sources */,
 				1551A63E158F2ADE00E66CFE /* CCActionTiledGrid.cpp in Sources */,
-				1551A640158F2ADE00E66CFE /* CCActionTween.cpp in Sources */,
 				1551A642158F2ADE00E66CFE /* CCAtlasNode.cpp in Sources */,
 				1551A644158F2ADE00E66CFE /* CCNode.cpp in Sources */,
 				1551A646158F2ADE00E66CFE /* CCCamera.cpp in Sources */,

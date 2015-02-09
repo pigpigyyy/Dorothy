@@ -1488,3 +1488,76 @@ tolua_lerror :
 	return;
 #endif
 }
+
+CCActionInterval* CCEase::holdIn(CCActionInterval* pAction, float fRate)
+{
+	return CCEaseIn::create(pAction, fRate);
+}
+CCActionInterval* CCEase::holdOut(CCActionInterval* pAction, float fRate)
+{
+	return CCEaseOut::create(pAction, fRate);
+}
+CCActionInterval* CCEase::holdInOut(CCActionInterval* pAction, float fRate)
+{
+	return CCEaseInOut::create(pAction, fRate);
+}
+CCActionInterval* CCEase::exponentialIn(CCActionInterval* pAction)
+{
+	return CCEaseExponentialIn::create(pAction);
+}
+CCActionInterval* CCEase::exponentialOut(CCActionInterval* pAction)
+{
+	return CCEaseExponentialOut::create(pAction);
+}
+CCActionInterval* CCEase::exponentialInOut(CCActionInterval* pAction)
+{
+	return CCEaseExponentialInOut::create(pAction);
+}
+CCActionInterval* CCEase::sineIn(CCActionInterval* pAction)
+{
+	return CCEaseSineIn::create(pAction);
+}
+CCActionInterval* CCEase::sineOut(CCActionInterval* pAction)
+{
+	return CCEaseSineOut::create(pAction);
+}
+CCActionInterval* CCEase::sineInOut(CCActionInterval* pAction)
+{
+	return CCEaseSineInOut::create(pAction);
+}
+CCActionInterval* CCEase::elasticIn(CCActionInterval* pAction, float fPeriod)
+{
+	return CCEaseElasticIn::create(pAction, fPeriod);
+}
+CCActionInterval* CCEase::elasticOut(CCActionInterval* pAction, float fPeriod)
+{
+	return CCEaseElasticOut::create(pAction, fPeriod);
+}
+CCActionInterval* CCEase::elasticInOut(CCActionInterval* pAction, float fPeriod)
+{
+	return CCEaseElasticInOut::create(pAction, fPeriod);
+}
+CCActionInterval* CCEase::bounceIn(CCActionInterval* pAction)
+{
+	return CCEaseBounceIn::create(pAction);
+}
+CCActionInterval* CCEase::bounceOut(CCActionInterval* pAction)
+{
+	return CCEaseBounceOut::create(pAction);
+}
+CCActionInterval* CCEase::bounceInOut(CCActionInterval* pAction)
+{
+	return CCEaseBounceInOut::create(pAction);
+}
+CCActionInterval* CCEase::backIn(CCActionInterval* pAction)
+{
+	return CCEaseBackIn::create(pAction);
+}
+CCActionInterval* CCEase::backOut(CCActionInterval* pAction)
+{
+	return CCEaseBackOut::create(pAction);
+}
+CCActionInterval* CCEase::backInOut(CCActionInterval* pAction)
+{
+	return CCEaseBackInOut::create(pAction);
+}

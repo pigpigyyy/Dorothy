@@ -12,6 +12,7 @@ local CCRepeatForever = require("CCRepeatForever")
 local CCSequence = require("CCSequence")
 local CCCall = require("CCCall")
 local CCDelay = require("CCDelay")
+local CCEase = require("CCEase")
 
 local function oViewArea()
 	local winSize = CCDirector.winSize
@@ -40,13 +41,13 @@ local function oViewArea()
 				CCCall(function()
 					progressTimer.reverseDirection = false
 				end),
-				CCProgress(10,0,100),
+				CCEase:sineInOut(CCProgress(1,0,100)),
 				CCCall(function()
 					progressTimer.reverseDirection = true
 					progressTimer.percentage = 0
 					progressTimer.percentage = 100
 				end),
-				CCProgress(10,100,0),
+				CCEase:sineInOut(CCProgress(1,100,0)),
 			}))
 	progressTimer.position = oVec2(winSize.width*0.5,winSize.height*0.5)
 	view:addChild(progressTimer)

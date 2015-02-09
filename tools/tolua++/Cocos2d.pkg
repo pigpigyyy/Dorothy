@@ -35,6 +35,7 @@ $pfile "CCActionGrid.h"
 $pfile "CCActionTiledGrid.h"
 $pfile "CCActionPageTurn3D.h"
 $pfile "CCActionProgressTimer.h"
+$pfile "CCActionEase.h"
 $pfile "CCMotionStreak.h"
 $pfile "CCClippingNode.h"
 

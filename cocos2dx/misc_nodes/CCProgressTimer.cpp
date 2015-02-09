@@ -143,6 +143,12 @@ void CCProgressTimer::setReverseDirection(bool reverse)
     if (m_bReverseDirection != reverse)
 	{
         m_bReverseDirection = reverse;
+		if (m_pVertexData)
+        {
+            CC_SAFE_FREE(m_pVertexData);
+            m_pVertexData = NULL;
+            m_nVertexDataCount = 0;
+        }
 		float percent = m_fPercentage;
 		CCProgressTimer::setPercentage(0.0f);
 		CCProgressTimer::setPercentage(percent);
