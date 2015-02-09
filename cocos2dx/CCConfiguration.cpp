@@ -63,7 +63,7 @@ bool CCConfiguration::init()
 #endif
 
     m_bSupportsPVRTC = checkForGLExtension("GL_IMG_texture_compression_pvrtc");
-    m_bSupportsNPOT = true;
+    m_bSupportsNPOT = checkForGLExtension("ARB_texture_non_power_of_two");
     m_bSupportsBGRA8888 = checkForGLExtension("GL_IMG_texture_format_BGRA888");
     m_bSupportsDiscardFramebuffer = checkForGLExtension("GL_EXT_discard_framebuffer");
 

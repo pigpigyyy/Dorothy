@@ -64,6 +64,7 @@
 		15C15688168311CB00D239F2 /* tolua_push.c in Sources */ = {isa = PBXBuildFile; fileRef = 15C15656168311CB00D239F2 /* tolua_push.c */; };
 		15C15689168311CB00D239F2 /* tolua_to.c in Sources */ = {isa = PBXBuildFile; fileRef = 15C15657168311CB00D239F2 /* tolua_to.c */; };
 		15C1568E1683131500D239F2 /* libcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15C1568D1683131500D239F2 /* libcurl.a */; };
+		3C3843001A890B9D0047E2DF /* EffectEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C3842FF1A890B9D0047E2DF /* EffectEditor */; };
 		3C504D8E1A237B97000C79D6 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C504D8D1A237B97000C79D6 /* libwebp.a */; };
 		3C5AC9FC1A21A71F006EDD2B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5AC9FB1A21A71F006EDD2B /* CoreMotion.framework */; };
 		3C7AA4E11A4731AD007836D2 /* ActionEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4D81A4731AD007836D2 /* ActionEditor */; };
@@ -284,6 +285,7 @@
 		15C15656168311CB00D239F2 /* tolua_push.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tolua_push.c; sourceTree = "<group>"; };
 		15C15657168311CB00D239F2 /* tolua_to.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tolua_to.c; sourceTree = "<group>"; };
 		15C1568D1683131500D239F2 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = ../../cocos2dx/platform/third_party/ios/libraries/libcurl.a; sourceTree = "<group>"; };
+		3C3842FF1A890B9D0047E2DF /* EffectEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; name = EffectEditor; path = ../../../Dorothy/project/Resources/EffectEditor; sourceTree = "<group>"; };
 		3C504D8D1A237B97000C79D6 /* libwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwebp.a; path = ../../cocos2dx/platform/third_party/mac/libraries/libwebp.a; sourceTree = "<group>"; };
 		3C5AC9FB1A21A71F006EDD2B /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreMotion.framework; sourceTree = DEVELOPER_DIR; };
 		3C7AA4D81A4731AD007836D2 /* ActionEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ActionEditor; path = ../../../Dorothy/project/Resources/ActionEditor; sourceTree = "<group>"; };
@@ -1028,6 +1030,7 @@
 				3CAE8C491A685B1000D92541 /* Images.xcassets */,
 				3C7AA4D81A4731AD007836D2 /* ActionEditor */,
 				3C7AA4DA1A4731AD007836D2 /* BodyEditor */,
+				3C3842FF1A890B9D0047E2DF /* EffectEditor */,
 				3C7AA4E01A4731AD007836D2 /* Test */,
 				3C7AA4DB1A4731AD007836D2 /* boy.lua */,
 				3C7AA4DD1A4731AD007836D2 /* girl.lua */,
@@ -1117,6 +1120,7 @@
 				3C7AA4E71A4731AD007836D2 /* main.lua in Resources */,
 				3C7AA4E91A4731AD007836D2 /* Test in Resources */,
 				3C7AA4E51A4731AD007836D2 /* class.lua in Resources */,
+				3C3843001A890B9D0047E2DF /* EffectEditor in Resources */,
 				3C7AA4E21A4731AD007836D2 /* bk.jpg in Resources */,
 				3CAE8C4A1A685B1000D92541 /* Images.xcassets in Resources */,
 				3C9ADB8C1A6BEF27000C9B40 /* oBodyEx.lua in Resources */,

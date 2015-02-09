@@ -615,7 +615,7 @@ CCImage* CCRenderTexture::newCCImage(bool flipImage)
     {
         CC_BREAK_IF(! (pBuffer = new GLubyte[nSavedBufferWidth * nSavedBufferHeight * 4]));
 
-        if(! (pTempData = new GLubyte[nSavedBufferWidth * nSavedBufferHeight * 4]))
+        if(!(pTempData = new GLubyte[nSavedBufferWidth * nSavedBufferHeight * 4]))
         {
             delete[] pBuffer;
             pBuffer = NULL;

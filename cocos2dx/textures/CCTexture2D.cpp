@@ -289,7 +289,7 @@ bool CCTexture2D::initPremultipliedATextureWithImage(CCImage *image, unsigned in
     size_t                    bpp = image->getBitsPerComponent();
 
     // compute pixel format
-    if(hasAlpha)
+    if (hasAlpha)
     {
         pixelFormat = g_defaultAlphaPixelFormat;
     }
@@ -319,7 +319,7 @@ bool CCTexture2D::initPremultipliedATextureWithImage(CCImage *image, unsigned in
             outPixel16 = (unsigned short*)tempData;
             inPixel32 = (unsigned int*)image->getData();
             
-            for(unsigned int i = 0; i < length; ++i, ++inPixel32)
+            for (unsigned int i = 0; i < length; ++i, ++inPixel32)
             {
 				unsigned int R = ((((*inPixel32 >>  0) & 0xFF) >> 3) << 11);
 				unsigned int G = ((((*inPixel32 >>  8) & 0xFF) >> 2) << 5);
@@ -335,7 +335,7 @@ bool CCTexture2D::initPremultipliedATextureWithImage(CCImage *image, unsigned in
             outPixel16 = (unsigned short*)tempData;
             inPixel8 = (unsigned char*)image->getData();
             
-            for(unsigned int i = 0; i < length; ++i)
+            for (unsigned int i = 0; i < length; ++i)
             {
 				unsigned int R = (((*inPixel8++ & 0xFF) >> 3) << 11);
 				unsigned int G = (((*inPixel8++ & 0xFF) >> 2) << 5);
@@ -352,7 +352,7 @@ bool CCTexture2D::initPremultipliedATextureWithImage(CCImage *image, unsigned in
         tempData = new unsigned char[width * height * 2];
         outPixel16 = (unsigned short*)tempData;
         
-        for(unsigned int i = 0; i < length; ++i, ++inPixel32)
+        for (unsigned int i = 0; i < length; ++i, ++inPixel32)
         {
             *outPixel16++ = 
             ((((*inPixel32 >> 0) & 0xFF) >> 4) << 12) | // R
@@ -368,7 +368,7 @@ bool CCTexture2D::initPremultipliedATextureWithImage(CCImage *image, unsigned in
         tempData = new unsigned char[width * height * 2];
         outPixel16 = (unsigned short*)tempData;
         
-        for(unsigned int i = 0; i < length; ++i, ++inPixel32)
+        for (unsigned int i = 0; i < length; ++i, ++inPixel32)
         {
             *outPixel16++ = 
             ((((*inPixel32 >> 0) & 0xFF) >> 3) << 11) | // R
@@ -384,7 +384,7 @@ bool CCTexture2D::initPremultipliedATextureWithImage(CCImage *image, unsigned in
         tempData = new unsigned char[width * height];
         unsigned char *outPixel8 = tempData;
         
-        for(unsigned int i = 0; i < length; ++i, ++inPixel32)
+        for (unsigned int i = 0; i < length; ++i, ++inPixel32)
         {
             *outPixel8++ = (*inPixel32 >> 24) & 0xFF;  // A
         }
@@ -397,7 +397,7 @@ bool CCTexture2D::initPremultipliedATextureWithImage(CCImage *image, unsigned in
         tempData = new unsigned char[width * height * 3];
         unsigned char *outPixel8 = tempData;
         
-        for(unsigned int i = 0; i < length; ++i, ++inPixel32)
+        for (unsigned int i = 0; i < length; ++i, ++inPixel32)
         {
             *outPixel8++ = (*inPixel32 >> 0) & 0xFF; // R
             *outPixel8++ = (*inPixel32 >> 8) & 0xFF; // G

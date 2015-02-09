@@ -105,7 +105,7 @@ static bool _initPremultipliedATextureWithImage(CGImageRef image, NSUInteger POT
     size_t bpp = CGImageGetBitsPerComponent(image);
     colorSpace = CGImageGetColorSpace(image);
     
-    if(colorSpace) 
+    if (colorSpace)
     {
         if(hasAlpha || bpp >= 8)
         {
@@ -241,13 +241,13 @@ static bool _initWithImage(CGImageRef CGImage, tImageInfo *pImageinfo, double sc
 {
     NSUInteger POTWide, POTHigh;
     
-    if(CGImage == NULL) 
+    if (CGImage == NULL)
     {
         return false;
     }
     
 	//if (cocos2d::CCImage::getIsScaleEnabled())
-	if( cocos2d::CCDirector::sharedDirector()->getContentScaleFactor() > 1.0f )
+	if (cocos2d::CCDirector::sharedDirector()->getContentScaleFactor() > 1.0f)
 	{
 		POTWide = CGImageGetWidth(CGImage) * scaleX;
 		POTHigh = CGImageGetHeight(CGImage) * scaleY;
@@ -306,8 +306,8 @@ static bool _initWithData(void* pBuffer, int length, tImageInfo* pImageinfo, dou
 				hasAlpha: true
 				isPlanar: false
 				colorSpaceName: NSDeviceRGBColorSpace
-				bytesPerRow: 0
-				bitsPerPixel: 0] CGImage];
+				bytesPerRow: pImageinfo->width*4
+				bitsPerPixel: pImageinfo->bitsPerComponent*4] CGImage];
 		}
 		else
 		{
