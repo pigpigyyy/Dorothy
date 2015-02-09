@@ -71,7 +71,6 @@ public:
     void setPercentage(float fPercentage);
     void setSprite(CCSprite *pSprite);
     void setType(CCProgressTimerType type);
-    void setReverseProgress(bool reverse);
 
     virtual void draw();
     void setAnchorPoint(CCPoint anchorPoint);
@@ -80,11 +79,11 @@ public:
     virtual bool isOpacityModifyRGB();
     
     inline bool isReverseDirection() { return m_bReverseDirection; };
-    inline void setReverseDirection(bool value) { m_bReverseDirection = value; };
+	void setReverseDirection(bool value);
 
 public:
     /** Creates a progress timer with the sprite as the shape the timer goes through */
-    static CCProgressTimer* create(CCSprite* sp);
+	static CCProgressTimer* create(CCSprite* sp, CCProgressTimerType type = kCCProgressTimerTypeRadial);
 protected:
     ccTex2F textureCoordFromAlphaPoint(CCPoint alpha);
     ccVertex2F vertexFromAlphaPoint(CCPoint alpha);

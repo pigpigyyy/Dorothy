@@ -11,8 +11,6 @@ class CCProgressTimer: public CCNode
 	tolua_property__common CCSprite* sprite;
 	tolua_property__common oVec2 barChangeRate;
 	tolua_property__bool bool reverseDirection;
-	
-	void setReverseProgress(bool reverse);
 
-	static CCProgressTimer* create(CCSprite* sp);
+	static CCProgressTimer* create(CCSprite* sp, CCProgressTimerType type = kCCProgressTimerTypeRadial);
 };

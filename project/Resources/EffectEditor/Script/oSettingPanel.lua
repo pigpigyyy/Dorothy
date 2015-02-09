@@ -219,7 +219,7 @@ local function oSettingPanel()
 		item.visible = false
 		menu:addChild(item)
 	end
-	
+
 	local function setGroup(group)
 		for _,item in pairs(items) do
 			item.visible = false

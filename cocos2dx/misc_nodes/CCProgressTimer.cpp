@@ -56,9 +56,9 @@ CCProgressTimer::CCProgressTimer()
 ,m_bReverseDirection(false)
 {}
 
-CCProgressTimer* CCProgressTimer::create(CCSprite* sp)
+CCProgressTimer* CCProgressTimer::create(CCSprite* sp, CCProgressTimerType type)
 {
-    CCProgressTimer *pProgressTimer = new CCProgressTimer();
+    CCProgressTimer* pProgressTimer = new CCProgressTimer();
     if (pProgressTimer->initWithSprite(sp))
     {
         pProgressTimer->autorelease();
@@ -68,7 +68,7 @@ CCProgressTimer* CCProgressTimer::create(CCSprite* sp)
         delete pProgressTimer;
         pProgressTimer = NULL;
     }        
-
+	pProgressTimer->setType(type);
     return pProgressTimer;
 }
 
@@ -138,14 +138,14 @@ void CCProgressTimer::setType(CCProgressTimerType type)
     }
 }
 
-void CCProgressTimer::setReverseProgress(bool reverse)
+void CCProgressTimer::setReverseDirection(bool reverse)
 {
-    if( m_bReverseDirection != reverse ) {
+    if (m_bReverseDirection != reverse)
+	{
         m_bReverseDirection = reverse;
-
-        //    release all previous information
-        CC_SAFE_FREE(m_pVertexData);
-        m_nVertexDataCount = 0;
+		float percent = m_fPercentage;
+		CCProgressTimer::setPercentage(0.0f);
+		CCProgressTimer::setPercentage(percent);
     }
 }
 

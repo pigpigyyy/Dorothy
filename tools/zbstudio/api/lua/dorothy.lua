@@ -3031,13 +3031,6 @@ local Dorothy =
 				description = "[bool]",
 				type = "value",
 			},
-			setReverseProgress =
-			{
-				args = "(reverse: bool)",
-				description = "",
-				returns = "()",
-				type = "method",
-			},
 		},
 		description = "class CCProgressTimer(CCNode).\n args -- (sprite: CCSprite)",
 		parents = {"CCNode",},
