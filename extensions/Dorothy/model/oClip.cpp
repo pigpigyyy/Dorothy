@@ -56,7 +56,9 @@ string oClipDef::toXml()
 
 CCSprite* oClipCache::loadSprite( const char* clipStr )
 {
-	char name[256];
+	const size_t MAX_CLIP_STR = 256 + 100;
+	CCAssert(strlen(clipStr) < MAX_CLIP_STR, "clip string too long");
+	char name[MAX_CLIP_STR];
 	strcpy(name, clipStr);
 	char* token = strtok(name, "|");
 	char* token2 = strtok(nullptr, "|");

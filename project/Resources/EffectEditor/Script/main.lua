@@ -52,4 +52,9 @@ oRoutine(once(function()
 		oEditor:addChild(oEditor[name],index)
 		coroutine.yield()
 	end
+	local resPath = "EffectEditor/Effect"
+	local writePath = oContent.writablePath.."Effect"
+	if not oContent:exist(oContent.writablePath.."Effect") and oContent:exist("EffectEditor/Effect") then
+		oContent:copyAsync(resPath,writePath)
+	end
 end))

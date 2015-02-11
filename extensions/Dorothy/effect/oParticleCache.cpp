@@ -92,12 +92,12 @@ oParticleDef* oParticleCache::load( const char* filename )
 		type->emissionRate = (float)(type->maxParticles) / type->particleLifespan;
 		type->textureFileName = (char*)valueForKey("textureFileName", dictionary);
 		const char* textureData = dictionary->valueForKey("textureImageData")->getCString();
-		if (textureData)
+		if (textureData[0])
 		{
 			CCParticleSystem::dataToTexture(type->textureFileName.c_str(), textureData);
 		}
 		const char* textRectStr = (char*)valueForKey("textureRect", dictionary);
-		if (textRectStr)
+		if (textRectStr[0])
 		{
 			int x, y, w, h;
 			oHelper::getRectFromStr(textRectStr, x, y, w, h);

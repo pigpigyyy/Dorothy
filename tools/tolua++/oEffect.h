@@ -7,5 +7,5 @@ class oEffect: public CCObject
 	oEffect* attachTo(CCNode* parent, int zOrder = 0);
 	oEffect* autoRemove();
 	static oEffect* create(const char* name);
-	static tolua_outside void oEffect_update @ update(tolua_table table_idx);
+	static tolua_outside void oEffect_update @ update(oEffect* effect, tolua_table table_idx);
 };

@@ -350,7 +350,7 @@ bool CCParticleSystem::initWithDictionary(CCDictionary *dictionary, const char *
                     tex = CCParticleSystem::dataToTexture(textureName.c_str(), textureData);
                 }
 				const char* textureRectStr = dictionary->valueForKey("textureRect")->getCString();
-				if (textureRectStr)
+				if (textureRectStr[0])
 				{
 					CCRect rect;
 					char rectStr[4 * 4 + 3];// 4 digits * 4 + 3 commas

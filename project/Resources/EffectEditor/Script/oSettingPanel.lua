@@ -43,7 +43,7 @@ local function oSettingPanel()
 	label.position = oVec2(halfBW,borderSize.height-18)
 	label.color = ccColor3(0x00ffff)
 	menu:addChild(label)
-	
+
 	local function genPosY()
 		local index = 0
 		return function()
@@ -116,7 +116,7 @@ local function oSettingPanel()
 		items[itemNames[i]] = oSettingItem(itemNames[i].." :",itemWidth,itemHeight,0,getPosY(),i == 1,editCallback)
 		items[itemNames[i]].name = itemNames[i]
 	end
-	
+
 	local modeGravity =
 	{
 		items.name,
@@ -163,7 +163,7 @@ local function oSettingPanel()
 		items.tangentialAccel,
 		items.tangentialAccelVar,
 	}
-	
+
 	local modeRadius =
 	{
 		items.name,
@@ -208,13 +208,13 @@ local function oSettingPanel()
 		items.angularSpeed,
 		items.angularSpeedVar,
 	}
-	
+
 	local modeFrame =
 	{
 		items.name,
 		items.interval
 	}
-	
+
 	for _,item in pairs(items) do
 		item.visible = false
 		menu:addChild(item)

@@ -586,8 +586,9 @@ void CCParticleSystemQuad::setBatchNode(CCParticleBatchNode * batchNode)
     }
 }
 
-CCParticleSystemQuad * CCParticleSystemQuad::create() {
-    CCParticleSystemQuad *pParticleSystemQuad = new CCParticleSystemQuad();
+CCParticleSystemQuad* CCParticleSystemQuad::create()
+{
+    CCParticleSystemQuad* pParticleSystemQuad = new CCParticleSystemQuad();
     if (pParticleSystemQuad && pParticleSystemQuad->init())
     {
         pParticleSystemQuad->autorelease();

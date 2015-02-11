@@ -65,7 +65,8 @@ bool oEffectCache::load( const char* filename )
 	{
 		return false;
 	}
-	_path = oString::getFilePath(filename);
+	string fullPath = oSharedContent.getFullPath(filename);
+	_path = oString::getFilePath(fullPath);
 	return _parser.parse(data, (unsigned int)size);
 }
 bool oEffectCache::update(const char* content)

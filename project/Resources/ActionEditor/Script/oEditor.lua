@@ -132,4 +132,11 @@ oEditor.round = function(self,val)
 	end
 end
 
+if not oContent:exist(oEditor.input) then
+	oContent:mkdir(oEditor.input)
+end
+if not oContent:exist(oEditor.output) then
+	oContent:mkdir(oEditor.output)
+end
+
 return {oEditor=oEditor,oSd=oSd,oAd=oAd,oKd=oKd,oFd=oFd}

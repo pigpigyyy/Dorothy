@@ -69,6 +69,13 @@ oEditor.touchPriorityVRuler = CCMenu.DefaultHandlerPriority+8
 oEditor.touchPriorityHRuler = CCMenu.DefaultHandlerPriority+9
 oEditor.touchPriorityViewArea = CCMenu.DefaultHandlerPriority+10
 
+if not oContent:exist(oEditor.input) then
+	oContent:mkdir(oEditor.input)
+end
+if not oContent:exist(oEditor.output) then
+	oContent:mkdir(oEditor.output)
+end
+
 local function Point(x,y)
 	return function()
 		return oVec2(x,y)
