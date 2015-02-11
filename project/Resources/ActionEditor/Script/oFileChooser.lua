@@ -377,7 +377,9 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 					else
 						if file:sub(-6,-1) == ".model" then
 							editButton.editTarget = file:sub(1,-7)
-							editButton.clipFile = io.open(oEditor.output..file,"r"):read("*a"):match("%b\"\""):gsub("\"","")
+							local clipFile = io.open(oEditor.output..file,"r")
+							editButton.clipFile = clipFile:read("*a"):match("%b\"\""):gsub("\"","")
+							clipFile:close()
 							editButton.clipName = editButton.clipFile:sub(1,-6)
 						else
 							editButton.editTarget = modelFile or file

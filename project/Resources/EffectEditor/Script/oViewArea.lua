@@ -177,7 +177,7 @@ local function oViewArea()
 			local line = item:gsub("%s","")
 			local name = line:match("A=\"(.-)\"")
 			local filename = line:match("B=\"(.-)\"")
-			print(name,filename)
+			oEditor.items[name] = filename
 		end
 	end
 	local defaultTexture = CCParticle.defaultTexture

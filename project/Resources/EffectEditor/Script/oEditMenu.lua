@@ -4,6 +4,7 @@ local oEditor = require("oEditor")
 local oVec2 = require("oVec2")
 local oButton = require("oButton")
 local oEvent = require("oEvent")
+local oFileChooser = require("oFileChooser")
 
 local function oEditMenu()
 	local winSize = CCDirector.winSize
@@ -16,6 +17,7 @@ local function oEditMenu()
 	local items =
 	{
 		Edit = oButton("Edit",16,50,50,35,winSize.height-35,function(button)
+			oEditor:addChild(oFileChooser(),oEditor.topMost)
 		end),
 
 		Zoom = oButton("100%",16,50,50,winSize.width-225,winSize.height-35,function(button)
