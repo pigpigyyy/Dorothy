@@ -1461,6 +1461,7 @@ void __oEffect_update(lua_State* L, oEffect* self, int tableIndex)
 			particleSystem->setRadialAccelVar(getFloat("radialAccelVariance"));
 			particleSystem->setTangentialAccel(getFloat("tangentialAcceleration"));
 			particleSystem->setTangentialAccelVar(getFloat("tangentialAccelVariance"));
+			particleSystem->setRotationIsDir(getFloat("rotationIsDir") != 0);
 		}
 		else if (particleSystem->getEmitterMode() == kCCParticleModeRadius)
 		{

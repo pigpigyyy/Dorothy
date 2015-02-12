@@ -162,6 +162,8 @@ local function oViewArea()
     <real>0</real>
     <key>tangentialAcceleration</key>
     <real>0</real>
+    <key>rotationIsDir</key>
+    <real>0</real>
     <key>textureFileName</key>
     <string>__firePngData</string>
   </dict>
@@ -180,13 +182,13 @@ local function oViewArea()
 			oEditor.items[name] = filename
 		end
 	end
-	local defaultTexture = CCParticle.defaultTexture
 	local dict = CCDictionary(oEditor.output.."fire.par")
 	local keys = dict.keys
 	local parData = {}
 	for _,v in ipairs(keys) do
 		parData[v] = dict[v]
 	end
+	oEditor.effectData = parData
 	oCache.Effect:load(oEditor.output.."main.effect")
 	parData.startColorRed = 1
 	parData.startColorGreen = 1

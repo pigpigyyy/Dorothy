@@ -68,6 +68,7 @@ public:
 	float startParticleSizeVariance;
 	float tangentialAccelVariance;
 	float tangentialAcceleration;
+	bool rotationIsDir;
 	string textureFileName;
 	CCRect textureRect;
 	CCParticleSystemQuad* toParticle();
@@ -94,12 +95,6 @@ public:
 	static oParticleCache* shared();
 protected:
 	unordered_map<string, oRef<oParticleDef>> _parDict;
-private:
-	inline const char* valueForKey(const char* key, CCDictionary* dict)
-	{
-		CCString* pString = (CCString*)dict->objectForKey(key);
-		return pString ? pString->m_sString.c_str() : "";
-	}
 };
 
 #define oSharedParticleCache (*oParticleCache::shared())

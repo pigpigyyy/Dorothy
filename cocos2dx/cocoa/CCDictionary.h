@@ -238,7 +238,9 @@ public:
      *  @see valueForKey(int)
      */
     const CCString* valueForKey(const char* key);
-    
+	double numberForKey(const char* key);
+	const char* stringForKey(const char* key);
+
     /** Get the value according to the specified integer key.
      *
      *  @note Be careful to use this function since it assumes the objects in the dictionary are CCString pointer.

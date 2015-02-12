@@ -202,104 +202,104 @@ bool CCParticleSystem::initWithDictionary(CCDictionary *dictionary, const char *
     bool bRet = false;
     do 
     {
-        int maxParticles = dictionary->valueForKey("maxParticles")->intValue();
+        int maxParticles = dictionary->numberForKey("maxParticles");
         // self, not super
         if(this->initWithTotalParticles(maxParticles))
         {
             // angle
-            m_fAngle = dictionary->valueForKey("angle")->floatValue();
-            m_fAngleVar = dictionary->valueForKey("angleVariance")->floatValue();
+			m_fAngle = (float)dictionary->numberForKey("angle");
+			m_fAngleVar = (float)dictionary->numberForKey("angleVariance");
 
             // duration
-            m_fDuration = dictionary->valueForKey("duration")->floatValue();
+			m_fDuration = (float)dictionary->numberForKey("duration");
 
             // blend function 
-            m_tBlendFunc.src = dictionary->valueForKey("blendFuncSource")->intValue();
-            m_tBlendFunc.dst = dictionary->valueForKey("blendFuncDestination")->intValue();
+			m_tBlendFunc.src = (GLenum)dictionary->numberForKey("blendFuncSource");
+			m_tBlendFunc.dst = (GLenum)dictionary->numberForKey("blendFuncDestination");
 
             // color
-            m_tStartColor.r = dictionary->valueForKey("startColorRed")->floatValue();
-            m_tStartColor.g = dictionary->valueForKey("startColorGreen")->floatValue();
-            m_tStartColor.b = dictionary->valueForKey("startColorBlue")->floatValue();
-            m_tStartColor.a = dictionary->valueForKey("startColorAlpha")->floatValue();
+			m_tStartColor.r = (GLfloat)dictionary->numberForKey("startColorRed");
+			m_tStartColor.g = (GLfloat)dictionary->numberForKey("startColorGreen");
+			m_tStartColor.b = (GLfloat)dictionary->numberForKey("startColorBlue");
+			m_tStartColor.a = (GLfloat)dictionary->numberForKey("startColorAlpha");
 
-            m_tStartColorVar.r = dictionary->valueForKey("startColorVarianceRed")->floatValue();
-            m_tStartColorVar.g = dictionary->valueForKey("startColorVarianceGreen")->floatValue();
-            m_tStartColorVar.b = dictionary->valueForKey("startColorVarianceBlue")->floatValue();
-            m_tStartColorVar.a = dictionary->valueForKey("startColorVarianceAlpha")->floatValue();
+			m_tStartColorVar.r = (GLfloat)dictionary->numberForKey("startColorVarianceRed");
+			m_tStartColorVar.g = (GLfloat)dictionary->numberForKey("startColorVarianceGreen");
+			m_tStartColorVar.b = (GLfloat)dictionary->numberForKey("startColorVarianceBlue");
+			m_tStartColorVar.a = (GLfloat)dictionary->numberForKey("startColorVarianceAlpha");
 
-            m_tEndColor.r = dictionary->valueForKey("finishColorRed")->floatValue();
-            m_tEndColor.g = dictionary->valueForKey("finishColorGreen")->floatValue();
-            m_tEndColor.b = dictionary->valueForKey("finishColorBlue")->floatValue();
-            m_tEndColor.a = dictionary->valueForKey("finishColorAlpha")->floatValue();
+			m_tEndColor.r = (GLfloat)dictionary->numberForKey("finishColorRed");
+			m_tEndColor.g = (GLfloat)dictionary->numberForKey("finishColorGreen");
+			m_tEndColor.b = (GLfloat)dictionary->numberForKey("finishColorBlue");
+			m_tEndColor.a = (GLfloat)dictionary->numberForKey("finishColorAlpha");
 
-            m_tEndColorVar.r = dictionary->valueForKey("finishColorVarianceRed")->floatValue();
-            m_tEndColorVar.g = dictionary->valueForKey("finishColorVarianceGreen")->floatValue();
-            m_tEndColorVar.b = dictionary->valueForKey("finishColorVarianceBlue")->floatValue();
-            m_tEndColorVar.a = dictionary->valueForKey("finishColorVarianceAlpha")->floatValue();
+			m_tEndColorVar.r = (GLfloat)dictionary->numberForKey("finishColorVarianceRed");
+			m_tEndColorVar.g = (GLfloat)dictionary->numberForKey("finishColorVarianceGreen");
+			m_tEndColorVar.b = (GLfloat)dictionary->numberForKey("finishColorVarianceBlue");
+			m_tEndColorVar.a = (GLfloat)dictionary->numberForKey("finishColorVarianceAlpha");
 
             // particle size
-            m_fStartSize = dictionary->valueForKey("startParticleSize")->floatValue();
-            m_fStartSizeVar = dictionary->valueForKey("startParticleSizeVariance")->floatValue();
-            m_fEndSize = dictionary->valueForKey("finishParticleSize")->floatValue();
-            m_fEndSizeVar = dictionary->valueForKey("finishParticleSizeVariance")->floatValue();
+            m_fStartSize = (float)dictionary->numberForKey("startParticleSize");
+			m_fStartSizeVar = (float)dictionary->numberForKey("startParticleSizeVariance");
+			m_fEndSize = (float)dictionary->numberForKey("finishParticleSize");
+			m_fEndSizeVar = (float)dictionary->numberForKey("finishParticleSizeVariance");
 
             // position
-            float x = dictionary->valueForKey("sourcePositionx")->floatValue();
-            float y = dictionary->valueForKey("sourcePositiony")->floatValue();
-            this->setPosition( ccp(x,y) );            
-            m_tPosVar.x = dictionary->valueForKey("sourcePositionVariancex")->floatValue();
-            m_tPosVar.y = dictionary->valueForKey("sourcePositionVariancey")->floatValue();
+			float x = (float)dictionary->numberForKey("sourcePositionx");
+			float y = (float)dictionary->numberForKey("sourcePositiony");
+            this->setPosition(ccp(x,y));
+			m_tPosVar.x = (float)dictionary->numberForKey("sourcePositionVariancex");
+			m_tPosVar.y = (float)dictionary->numberForKey("sourcePositionVariancey");
 
             // Spinning
-            m_fStartSpin = dictionary->valueForKey("rotationStart")->floatValue();
-            m_fStartSpinVar = dictionary->valueForKey("rotationStartVariance")->floatValue();
-            m_fEndSpin= dictionary->valueForKey("rotationEnd")->floatValue();
-            m_fEndSpinVar= dictionary->valueForKey("rotationEndVariance")->floatValue();
+			m_fStartSpin = (float)dictionary->numberForKey("rotationStart");
+			m_fStartSpinVar = (float)dictionary->numberForKey("rotationStartVariance");
+			m_fEndSpin = (float)dictionary->numberForKey("rotationEnd");
+			m_fEndSpinVar = (float)dictionary->numberForKey("rotationEndVariance");
 
-            m_nEmitterMode = dictionary->valueForKey("emitterType")->intValue();
+            m_nEmitterMode = (int)dictionary->numberForKey("emitterType");
 
             // Mode A: Gravity + tangential accel + radial accel
-            if( m_nEmitterMode == kCCParticleModeGravity ) 
+            if (m_nEmitterMode == kCCParticleModeGravity ) 
             {
                 // gravity
-                modeA.gravity.x = dictionary->valueForKey("gravityx")->floatValue();
-                modeA.gravity.y = dictionary->valueForKey("gravityy")->floatValue();
+				modeA.gravity.x = (float)dictionary->numberForKey("gravityx");
+				modeA.gravity.y = (float)dictionary->numberForKey("gravityy");
 
                 // speed
-                modeA.speed = dictionary->valueForKey("speed")->floatValue();
-                modeA.speedVar = dictionary->valueForKey("speedVariance")->floatValue();
+				modeA.speed = (float)dictionary->numberForKey("speed");
+				modeA.speedVar = (float)dictionary->numberForKey("speedVariance");
 
                 // radial acceleration
-                modeA.radialAccel = dictionary->valueForKey("radialAcceleration")->floatValue();
-                modeA.radialAccelVar = dictionary->valueForKey("radialAccelVariance")->floatValue();
+				modeA.radialAccel = (float)dictionary->numberForKey("radialAcceleration");
+				modeA.radialAccelVar = (float)dictionary->numberForKey("radialAccelVariance");
 
                 // tangential acceleration
-                modeA.tangentialAccel = dictionary->valueForKey("tangentialAcceleration")->floatValue();
-                modeA.tangentialAccelVar = dictionary->valueForKey("tangentialAccelVariance")->floatValue();
+				modeA.tangentialAccel = (float)dictionary->numberForKey("tangentialAcceleration");
+				modeA.tangentialAccelVar = (float)dictionary->numberForKey("tangentialAccelVariance");
                 
                 // rotation is dir
-                modeA.rotationIsDir = dictionary->valueForKey("rotationIsDir")->boolValue();
+				modeA.rotationIsDir = dictionary->numberForKey("rotationIsDir") != 0;
             }
-
             // or Mode B: radius movement
-            else if( m_nEmitterMode == kCCParticleModeRadius ) 
+            else if (m_nEmitterMode == kCCParticleModeRadius ) 
             {
-                modeB.startRadius = dictionary->valueForKey("maxRadius")->floatValue();
-                modeB.startRadiusVar = dictionary->valueForKey("maxRadiusVariance")->floatValue();
-                modeB.endRadius = dictionary->valueForKey("minRadius")->floatValue();
-                modeB.endRadiusVar = 0.0f;
-                modeB.rotatePerSecond = dictionary->valueForKey("rotatePerSecond")->floatValue();
-                modeB.rotatePerSecondVar = dictionary->valueForKey("rotatePerSecondVariance")->floatValue();
-
-            } else {
-                CCAssert( false, "Invalid emitterType in config file");
+				modeB.startRadius = (float)dictionary->numberForKey("maxRadius");
+				modeB.startRadiusVar = (float)dictionary->numberForKey("maxRadiusVariance");
+				modeB.endRadius = (float)dictionary->numberForKey("minRadius");
+				modeB.endRadiusVar = (float)dictionary->numberForKey("minRadiusVariance");
+				modeB.rotatePerSecond = (float)dictionary->numberForKey("rotatePerSecond");
+				modeB.rotatePerSecondVar = (float)dictionary->numberForKey("rotatePerSecondVariance");
+            }
+			else
+			{
+                CCAssert(false, "Invalid emitterType in config file");
                 CC_BREAK_IF(true);
             }
 
             // life span
-            m_fLife = dictionary->valueForKey("particleLifespan")->floatValue();
-            m_fLifeVar = dictionary->valueForKey("particleLifespanVariance")->floatValue();
+			m_fLife = (float)dictionary->numberForKey("particleLifespan");
+			m_fLifeVar = (float)dictionary->numberForKey("particleLifespanVariance");
 
             // emission Rate
             m_fEmissionRate = m_uTotalParticles / m_fLife;
@@ -312,29 +312,9 @@ bool CCParticleSystem::initWithDictionary(CCDictionary *dictionary, const char *
 
                 // texture        
                 // Try to get the texture from the cache
-                std::string textureName = dictionary->valueForKey("textureFileName")->getCString();
+                std::string textureName = dictionary->stringForKey("textureFileName");
                 
-                size_t rPos = textureName.rfind('/');
-               
-                if (rPos != string::npos)
-                {
-                    string textureDir = textureName.substr(0, rPos + 1);
-                    
-                    if (dirname != NULL && textureDir != dirname)
-                    {
-                        textureName = textureName.substr(rPos+1);
-                        textureName = string(dirname) + textureName;
-                    }
-                }
-                else
-                {
-                    if (dirname != NULL)
-                    {
-                        textureName = string(dirname) + textureName;
-                    }
-                }
-                
-                CCTexture2D *tex = NULL;
+                CCTexture2D* tex = NULL;
                 if (textureName.length() > 0)
                 {
                     // set not pop-up message box when load image failed
@@ -346,10 +326,10 @@ bool CCParticleSystem::initWithDictionary(CCDictionary *dictionary, const char *
                 }
                 if (!tex)
 				{
-                    const char* textureData = dictionary->valueForKey("textureImageData")->getCString();
+                    const char* textureData = dictionary->stringForKey("textureImageData");
                     tex = CCParticleSystem::dataToTexture(textureName.c_str(), textureData);
                 }
-				const char* textureRectStr = dictionary->valueForKey("textureRect")->getCString();
+				const char* textureRectStr = dictionary->stringForKey("textureRect");
 				if (textureRectStr[0])
 				{
 					CCRect rect;
@@ -369,7 +349,7 @@ bool CCParticleSystem::initWithDictionary(CCDictionary *dictionary, const char *
 				{
 					setTexture(tex);
 				}
-                CCAssert( this->m_pTexture != NULL, "CCParticleSystem: error loading the texture");
+                CCAssert(this->m_pTexture != NULL, "CCParticleSystem: error loading the texture");
             }
             bRet = true;
         }

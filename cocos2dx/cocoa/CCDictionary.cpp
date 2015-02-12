@@ -24,6 +24,10 @@
 
 #include "CCDictionary.h"
 #include "CCString.h"
+#include "CCDouble.h"
+#include "CCFloat.h"
+#include "CCInteger.h"
+#include "CCBool.h"
 #include "CCInteger.h"
 #include "platform/CCFileUtils.h"
 
@@ -180,22 +184,39 @@ CCObject* CCDictionary::objectForKey(int key)
 
 const CCString* CCDictionary::valueForKey(const char* key)
 {
-    CCString* pStr = dynamic_cast<CCString*>(objectForKey(key));
-    if (pStr == NULL)
-    {
-        pStr = CCString::create("");
-    }
-    return pStr;
+    CCString* pStr = CCLuaCast<CCString>(objectForKey(key));
+	if (pStr) return pStr;
+	return CCString::create("");
+}
+
+double CCDictionary::numberForKey(const char* key)
+{
+	CCObject* object = objectForKey(key);
+	if (object)
+	{
+		CCInteger* pInteger = CCLuaCast<CCInteger>(object);
+		if (pInteger) return pInteger->getValue();
+		CCDouble* pDouble = CCLuaCast<CCDouble>(object);
+		if (pDouble) return pDouble->getValue();
+		CCFloat* pFloat = CCLuaCast<CCFloat>(object);
+		if (pFloat) return pFloat->getValue();
+		CCBool* pBool = CCLuaCast<CCBool>(object);
+		if (pBool) return pBool->getValue() ? 1 : 0;
+	}
+	return 0;
+}
+
+const char* CCDictionary::stringForKey(const char* key)
+{
+	CCString* pString = CCLuaCast<CCString>(objectForKey(key));
+	return pString ? pString->m_sString.c_str() : "";
 }
 
 const CCString* CCDictionary::valueForKey(int key)
 {
-    CCString* pStr = dynamic_cast<CCString*>(objectForKey(key));
-    if (pStr == NULL)
-    {
-        pStr = CCString::create("");
-    }
-    return pStr;
+	CCString* pStr = CCLuaCast<CCString>(objectForKey(key));
+	if (pStr) return pStr;
+	return CCString::create("");
 }
 
 void CCDictionary::setObject(CCObject* pObject, const char* key)

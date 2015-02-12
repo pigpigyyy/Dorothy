@@ -20,7 +20,7 @@ local function oEditMenu()
 			oEditor:addChild(oFileChooser(),oEditor.topMost)
 		end),
 
-		Zoom = oButton("100%",16,50,50,winSize.width-225,winSize.height-35,function(button)
+		Zoom = oButton("100%",16,50,50,winSize.width-240-45,winSize.height-35,function(button)
 			local scale = 0
 			if button.mode == 0 then
 				scale = 2.0

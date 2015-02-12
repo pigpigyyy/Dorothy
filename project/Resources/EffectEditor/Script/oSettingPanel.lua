@@ -15,10 +15,11 @@ local tolua = require("tolua")
 local oBodyDef = require("oBodyDef")
 local CCTextAlign = require("CCTextAlign")
 local CCUserDefault = require("CCUserDefault")
+local ccBlendFunc = require("ccBlendFunc")
 
 local function oSettingPanel()
 	local winSize = CCDirector.winSize
-	local borderSize = CCSize(180,winSize.height-20)
+	local borderSize = CCSize(240,winSize.height-20)
 	local self = oSelectionPanel(borderSize,false,true,true)
 	self.touchPriority = oEditor.touchPrioritySettingPanel
 	local menu = self.menu
@@ -37,7 +38,7 @@ local function oSettingPanel()
 		oVec2(-halfBW,halfBH)
 	},ccColor4(0xe5100000),0.5,ccColor4(0x88ffafaf))
 	border:addChild(background,-1)
-	self.position = oVec2(winSize.width*0.5-100,0)
+	self.position = oVec2(winSize.width*0.5-halfBW-10,0)
 	
 	local label = CCLabelTTF("","Arial",16)
 	label.position = oVec2(halfBW,borderSize.height-18)
@@ -98,6 +99,7 @@ local function oSettingPanel()
 		"radialAccelVar",
 		"tangentAccel",
 		"tangentAccelVar",
+		"rotationIsDir",
 		"startRadius",
 		"startRadiusVar",
 		"endRadius",
@@ -113,9 +115,93 @@ local function oSettingPanel()
 		oEvent:send("settingPanel.edit",settingItem)
 	end
 	for i = 1,#itemNames do
-		items[itemNames[i]] = oSettingItem(itemNames[i].." :",itemWidth,itemHeight,0,getPosY(),i == 1,editCallback)
-		items[itemNames[i]].name = itemNames[i]
+		local itemName = itemNames[i]
+		local item = oSettingItem(itemName.." :",itemWidth,itemHeight,0,getPosY(),i == 1,editCallback)
+		item.name = itemName
+		item.data = oListener(itemName,function(value)
+			item.value = value
+		end)
+		items[itemName] = item
 	end
+	
+	local function getBlend(value)
+		if value == ccBlendFunc.Dst then
+			return "Dst"
+		elseif value == ccBlendFunc.One then
+			return "One"
+		elseif value == ccBlendFunc.OneMinDst then
+			return "OneMinDst"
+		elseif value == ccBlendFunc.OneMinSrc then
+			return "OneMinSrc"
+		elseif value == ccBlendFunc.Src then
+			return "Src"
+		elseif value == ccBlendFunc.Zero then
+			return "Zero"
+		end
+		return ""
+	end
+	items.blendFuncSrc.data = oListener("blendFuncSource",function(value)
+		items.blendFuncSrc.value = getBlend(value)
+	end)
+	items.blendFuncDst.data = oListener("blendFuncDestination",function(value)
+		items.blendFuncDst.value = getBlend(value)
+	end)
+	
+	local finishColorA = 0
+	local finishColorR = 0
+	local finishColorG = 0
+	local finishColorB = 0
+	items.finishColor.data = CCDictionary()
+	items.finishColor.data.alphaListenr = oListener("finishColorAlpha",function(a)
+		finishColorA = math.floor(a*255+0.5)*math.pow(2,24)
+		items.finishColor.value = string.format("0x%.8X",finishColorA+finishColorR+finishColorG+finishColorB)
+	end)
+	items.finishColor.data.redListenr = oListener("finishColorRed",function(r)
+		finishColorR = math.floor(r*255+0.5)*math.pow(2,16)
+		items.finishColor.value = string.format("0x%.8X",finishColorA+finishColorR+finishColorG+finishColorB)
+	end)
+	items.finishColor.data.greenListenr = oListener("finishColorGreen",function(g)
+		finishColorG = math.floor(g*255+0.5)*math.pow(2,8)
+		items.finishColor.value = string.format("0x%.8X",finishColorA+finishColorR+finishColorG+finishColorB)
+	end)
+	items.finishColor.data.blueListenr = oListener("finishColorBlue",function(b)
+		finishColorB = math.floor(b*255+0.5)
+		items.finishColor.value = string.format("0x%.8X",finishColorA+finishColorR+finishColorG+finishColorB)
+	end)
+
+	local startColorA = 0
+	local startColorR = 0
+	local startColorG = 0
+	local startColorB = 0
+	items.startColor.data = CCDictionary()
+	items.startColor.data.alphaListenr = oListener("startColorAlpha",function(a)
+		startColorA = math.floor(a*255+0.5)*math.pow(2,24)
+		items.startColor.value = string.format("0x%.8X",startColorA+startColorR+startColorG+startColorB)
+	end)
+	items.startColor.data.redListenr = oListener("startColorRed",function(r)
+		startColorR = math.floor(r*255+0.5)*math.pow(2,16)
+		items.startColor.value = string.format("0x%.8X",startColorA+startColorR+startColorG+startColorB)
+	end)
+	items.startColor.data.greenListenr = oListener("startColorGreen",function(g)
+		startColorG = math.floor(g*255+0.5)*math.pow(2,8)
+		items.startColor.value = string.format("0x%.8X",startColorA+startColorR+startColorG+startColorB)
+	end)
+	items.startColor.data.blueListenr = oListener("startColorBlue",function(b)
+		startColorB = math.floor(b*255+0.5)
+		items.startColor.value = string.format("0x%.8X",startColorA+startColorR+startColorG+startColorB)
+	end)
+
+	local srcPosX = 0
+	local srcPosY = 0
+	items.sourcePosition.data = CCDictionary()
+	items.sourcePosition.data.posXListner = oListener("sourcePositionx",function(posX)
+		srcPosX = posX
+		items.sourcePosition.value = string.format("%.2f,%.2f",srcPosX,srcPosY)
+	end)
+	items.sourcePosition.data.posYListner = oListener("sourcePositiony",function(posY)
+		srcPosY = posY
+		items.sourcePosition.value = string.format("%.2f,%.2f",srcPosX,srcPosY)
+	end)
 
 	local modeGravity =
 	{
@@ -242,6 +328,11 @@ local function oSettingPanel()
 	end
 
 	setGroup(modeRadius)
+
+	for k,v in pairs(oEditor.effectData) do
+		oEvent:send(k,v)
+	end
+
 	return self
 end
 

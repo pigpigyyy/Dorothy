@@ -26,6 +26,10 @@ THE SOFTWARE.
 #include "CCDirector.h"
 #include "cocoa/CCDictionary.h"
 #include "cocoa/CCString.h"
+#include "cocoa/CCInteger.h"
+#include "cocoa/CCFloat.h"
+#include "cocoa/CCDouble.h"
+#include "cocoa/CCBool.h"
 #include "CCSAXParser.h"
 #include "support/zip_support/unzip.h"
 #include <stack>
@@ -169,19 +173,19 @@ public:
             m_tStateStack.push(m_tState);
             m_tDictStack.push(m_pCurDict);
         }
-        else if(sName == "key")
+        else if (sName == "key")
         {
             m_tState = SAX_KEY;
         }
-        else if(sName == "integer")
+        else if (sName == "integer")
         {
             m_tState = SAX_INT;
         }
-        else if(sName == "real")
+        else if (sName == "real")
         {
             m_tState = SAX_REAL;
         }
-        else if(sName == "string")
+        else if (sName == "string")
         {
             m_tState = SAX_STRING;
         }
@@ -226,7 +230,7 @@ public:
         CC_UNUSED_PARAM(ctx);
         CCSAXState curState = m_tStateStack.empty() ? SAX_DICT : m_tStateStack.top();
         std::string sName((char*)name);
-        if( sName == "dict" )
+        if (sName == "dict")
         {
             m_tStateStack.pop();
             m_tDictStack.pop();
@@ -246,47 +250,72 @@ public:
         }
         else if (sName == "true")
         {
-            CCString *str = new CCString("1");
+            CCBool* boolObj = new CCBool(true);
             if (SAX_ARRAY == curState)
             {
-                m_pArray->addObject(str);
+				m_pArray->addObject(boolObj);
             }
             else if (SAX_DICT == curState)
             {
-                m_pCurDict->setObject(str, m_sCurKey.c_str());
+				m_pCurDict->setObject(boolObj, m_sCurKey.c_str());
             }
-            str->release();
+			boolObj->release();
         }
         else if (sName == "false")
         {
-            CCString *str = new CCString("0");
+			CCBool* boolValue = new CCBool(false);
             if (SAX_ARRAY == curState)
             {
-                m_pArray->addObject(str);
+				m_pArray->addObject(boolValue);
             }
             else if (SAX_DICT == curState)
             {
-                m_pCurDict->setObject(str, m_sCurKey.c_str());
+				m_pCurDict->setObject(boolValue, m_sCurKey.c_str());
             }
-            str->release();
+			boolValue->release();
         }
-        else if (sName == "string" || sName == "integer" || sName == "real")
+        else if (sName == "string")
         {
-            CCString* pStrValue = new CCString(m_sCurValue);
-
+            CCString* strValue = new CCString(m_sCurValue);
             if (SAX_ARRAY == curState)
             {
-                m_pArray->addObject(pStrValue);
+				m_pArray->addObject(strValue);
             }
             else if (SAX_DICT == curState)
             {
-                m_pCurDict->setObject(pStrValue, m_sCurKey.c_str());
+				m_pCurDict->setObject(strValue, m_sCurKey.c_str());
             }
-
-            pStrValue->release();
+			strValue->release();
             m_sCurValue.clear();
         }
-        
+		else if (sName == "integer")
+		{
+			CCInteger* intValue = new CCInteger(atoi(m_sCurValue.c_str()));
+			if (SAX_ARRAY == curState)
+			{
+				m_pArray->addObject(intValue);
+			}
+			else if (SAX_DICT == curState)
+			{
+				m_pCurDict->setObject(intValue, m_sCurKey.c_str());
+			}
+			intValue->release();
+			m_sCurValue.clear();
+		}
+		else if (sName == "real")
+		{
+			CCDouble* doubleValue = new CCDouble(atof(m_sCurValue.c_str()));
+			if (SAX_ARRAY == curState)
+			{
+				m_pArray->addObject(doubleValue);
+			}
+			else if (SAX_DICT == curState)
+			{
+				m_pCurDict->setObject(doubleValue, m_sCurKey.c_str());
+			}
+			doubleValue->release();
+			m_sCurValue.clear();
+		}
         m_tState = SAX_NONE;
     }
 
@@ -314,7 +343,6 @@ public:
                 {
                     CCAssert(!m_sCurKey.empty(), "key not found : <integer/real>");
                 }
-                
                 m_sCurValue.append(pText->getCString());
             }
             break;
