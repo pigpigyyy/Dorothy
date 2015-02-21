@@ -27,6 +27,8 @@ THE SOFTWARE.
 #include <string>
 #include <stack>
 #include "cocoa/CCString.h"
+#include "cocoa/CCDouble.h"
+#include "cocoa/CCBool.h"
 #include "CCFileUtils.h"
 #include "CCDirector.h"
 #include "CCSAXParser.h"
@@ -42,7 +44,6 @@ static void addItemToCCArray(id item, CCArray *pArray)
     // add string value into array
     if ([item isKindOfClass:[NSString class]]) {
         CCString* pValue = new CCString([item UTF8String]);
-        
         pArray->addObject(pValue);
         pValue->release();
         return;
@@ -50,9 +51,7 @@ static void addItemToCCArray(id item, CCArray *pArray)
     
     // add number value into array(such as int, float, bool and so on)
     if ([item isKindOfClass:[NSNumber class]]) {
-        NSString* pStr = [item stringValue];
-        CCString* pValue = new CCString([pStr UTF8String]);
-        
+        CCDouble* pValue = new CCDouble([item doubleValue]);
         pArray->addObject(pValue);
         pValue->release();
         return;
@@ -104,7 +103,6 @@ static void addValueToCCDict(id key, id value, CCDictionary* pDict)
     // the value is a string
     if ([value isKindOfClass:[NSString class]]) {
         CCString* pValue = new CCString([value UTF8String]);
-        
         pDict->setObject(pValue, pKey.c_str());
         pValue->release();
         return;
@@ -112,14 +110,12 @@ static void addValueToCCDict(id key, id value, CCDictionary* pDict)
     
     // the value is a number
     if ([value isKindOfClass:[NSNumber class]]) {
-        NSString* pStr = [value stringValue];
-        CCString* pValue = new CCString([pStr UTF8String]);
-        
+        CCDouble* pValue = new CCDouble([value doubleValue]);
         pDict->setObject(pValue, pKey.c_str());
         pValue->release();
         return;
     }
-    
+
     // the value is a array
     if ([value isKindOfClass:[NSArray class]]) {
         CCArray *pArray = new CCArray();

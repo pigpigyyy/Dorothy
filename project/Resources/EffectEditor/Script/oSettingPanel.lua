@@ -191,6 +191,14 @@ local function oSettingPanel()
 		items.startColor.value = string.format("0x%.8X",startColorA+startColorR+startColorG+startColorB)
 	end)
 
+	items.emitterType.data = oListener("emitterType",function(type)
+		if type == oEditor.EmitterGravity then
+			items.emitterType.value = "Gravity"
+		elseif type == oEditor.EmitterRadius then
+			items.emitterType.value = "Radius"
+		end
+	end)
+
 	local srcPosX = 0
 	local srcPosY = 0
 	items.sourcePosition.data = CCDictionary()

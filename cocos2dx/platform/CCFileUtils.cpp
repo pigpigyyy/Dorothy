@@ -250,7 +250,7 @@ public:
         }
         else if (sName == "true")
         {
-            CCBool* boolObj = new CCBool(true);
+            CCDouble* boolObj = new CCDouble(1);
             if (SAX_ARRAY == curState)
             {
 				m_pArray->addObject(boolObj);
@@ -263,7 +263,7 @@ public:
         }
         else if (sName == "false")
         {
-			CCBool* boolValue = new CCBool(false);
+			CCDouble* boolValue = new CCDouble(0);
             if (SAX_ARRAY == curState)
             {
 				m_pArray->addObject(boolValue);
@@ -288,21 +288,7 @@ public:
 			strValue->release();
             m_sCurValue.clear();
         }
-		else if (sName == "integer")
-		{
-			CCInteger* intValue = new CCInteger(atoi(m_sCurValue.c_str()));
-			if (SAX_ARRAY == curState)
-			{
-				m_pArray->addObject(intValue);
-			}
-			else if (SAX_DICT == curState)
-			{
-				m_pCurDict->setObject(intValue, m_sCurKey.c_str());
-			}
-			intValue->release();
-			m_sCurValue.clear();
-		}
-		else if (sName == "real")
+		else if (sName == "integer" || sName == "real")
 		{
 			CCDouble* doubleValue = new CCDouble(atof(m_sCurValue.c_str()));
 			if (SAX_ARRAY == curState)
