@@ -121,7 +121,15 @@ bool initParticleWithDef( CCParticleSystemQuad* par, oParticleDef* type )
 			// texture
 			// Try to get the texture from the cache
 			const char* textureName = type->textureFileName.c_str();
-			CCTexture2D* tex = oSharedContent.loadTexture(textureName);
+			CCTexture2D* tex = nullptr;
+			if (type->textureFileName == "__firePngData")
+			{
+				tex = CCParticleSystem::getDefaultTexture();
+			}
+			else
+			{
+				tex = oSharedContent.loadTexture(textureName);
+			}
 			CCAssert(tex != NULL, "CCParticleSystem: error loading the texture");
 			if (type->textureRect != CCRect::zero)
 			{

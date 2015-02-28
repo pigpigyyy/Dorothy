@@ -2,6 +2,10 @@ local CCScene = require("CCScene")
 local CCMenu = require("CCMenu")
 local oContent = require("oContent")
 local CCParticle = require("CCParticle")
+local CCDirector = require("CCDirector")
+local oVec2 = require("oVec2")
+
+local winSize = CCDirector.winSize
 
 local oEditor = CCScene()
 oEditor.effectData = nil
@@ -16,7 +20,7 @@ oEditor.touchPriorityEditControl = CCMenu.DefaultHandlerPriority+5
 oEditor.touchPriorityVRuler = CCMenu.DefaultHandlerPriority+8
 oEditor.touchPriorityHRuler = CCMenu.DefaultHandlerPriority+9
 oEditor.touchPriorityViewArea = CCMenu.DefaultHandlerPriority+10
-oEditor.defaultTexture = CCParticle.defaultTexture
+oEditor.origin = oVec2((winSize.width-240-10)*0.5,winSize.height*0.5)
 
 oEditor.EmitterGravity = 0
 oEditor.EmitterRadius = 1

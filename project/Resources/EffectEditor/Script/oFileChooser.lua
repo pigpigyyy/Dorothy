@@ -16,6 +16,9 @@ local CCCall = require("CCCall")
 local CCMenu = require("CCMenu")
 local oBox = require("oBox")
 local oEvent = require("oEvent")
+local oTemplateChooser = require("oTemplateChooser")
+local CCDictionary = require("CCDictionary")
+local oCache = require("oCache")
 
 local function oFileChooser(addExisted)
 	local winSize = CCDirector.winSize
@@ -73,6 +76,7 @@ local function oFileChooser(addExisted)
 		end
 	end
 	file:close()
+	oCache.Effect:load(oEditor.output.."main.effect")
 
 	local n = 0
 	local y = 0
@@ -199,7 +203,31 @@ local function oFileChooser(addExisted)
 					panel.parent:removeChild(panel)
 				end
 				panel:hide()
+				local extension = string.match(item.file, "%.([^%.\\/]*)$")
+				if extension == "par" then
+					local dict = CCDictionary(oEditor.output..item.file)
+					local keys = dict.keys
+					local parData = {}
+					for _,v in ipairs(keys) do
+						parData[v] = dict[v]
+					end
+					oEditor.effectData = parData
+					if not parData.textureRectx then
+						parData.textureRectx = 0
+						parData.textureRecty = 0
+						parData.textureRectw = 0
+						parData.textureRecth = 0
+					end
+					for k,v in pairs(oEditor.effectData) do
+						oEvent:send(k,v)
+					end
+					oEvent:send("name",item.name)
+				elseif extension == "frame" then
+					-- TODO
+				end
+				oEvent:send("viewArea.changeEffect",item.name)
 			end)
+		button.name = name
 		button.file = filename
 		button.enabled = false
 		button.opacity = 0
@@ -227,7 +255,7 @@ local function oFileChooser(addExisted)
 			end
 			panel:hide()
 			oEditor:addChild(oBox("New Particle",function(name)
-				oEditor.currentFile = name..".par"
+				oEditor:addChild(oTemplateChooser(oEditor:getUsableName(name)..".par"),oEditor.topMost)
 			end,true),oEditor.topMost)
 		end)
 	newPButton.color = ccColor3(0x80ff00)

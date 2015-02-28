@@ -1472,11 +1472,22 @@ void __oEffect_update(lua_State* L, oEffect* self, int tableIndex)
 			particleSystem->setRotatePerSecond(getFloat("rotatePerSecond"));
 			particleSystem->setRotatePerSecondVar(getFloat("rotatePerSecondVariance"));
 		}
-		if (has("textureRect"))
+		if (has("textureRectx"))
 		{
-			particleSystem->setTextureWithRect(
-				oSharedContent.loadTexture(getString("textureFileName")),
-				*(CCRect*)getUserType("textureRect"));
+			CCRect rect(getFloat("textureRectx"),
+				getFloat("textureRecty"),
+				getFloat("textureRectw"),
+				getFloat("textureRecth"));
+				if (rect != CCRect::zero)
+				{
+					particleSystem->setTextureWithRect(
+						oSharedContent.loadTexture(getString("textureFileName")),rect);
+				}
+				else
+				{
+					particleSystem->setTexture(
+						oSharedContent.loadTexture(getString("textureFileName")));
+				}
 		}
 		else
 		{

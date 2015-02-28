@@ -329,21 +329,14 @@ bool CCParticleSystem::initWithDictionary(CCDictionary *dictionary, const char *
                     const char* textureData = dictionary->stringForKey("textureImageData");
                     tex = CCParticleSystem::dataToTexture(textureName.c_str(), textureData);
                 }
-				const char* textureRectStr = dictionary->stringForKey("textureRect");
-				if (textureRectStr[0])
+				float textureRectx = (float)dictionary->numberForKey("textureRectx");
+				float textureRecty = (float)dictionary->numberForKey("textureRecty");
+				float textureRectw = (float)dictionary->numberForKey("textureRectw");
+				float textureRecth = (float)dictionary->numberForKey("textureRecth");
+				CCRect textureRect(textureRectx, textureRecty, textureRectw, textureRecth);
+				if (textureRect != CCRect::zero)
 				{
-					CCRect rect;
-					char rectStr[4 * 4 + 3];// 4 digits * 4 + 3 commas
-					strcpy(rectStr, textureRectStr);
-					char* token = strtok(rectStr, ",");
-					rect.origin.x = atoi(token);
-					token = strtok(nullptr, ",");
-					rect.origin.y = atoi(token);
-					token = strtok(nullptr, ",");
-					rect.size.width = atoi(token);
-					token = strtok(nullptr, ",");
-					rect.size.height = atoi(token);
-					setTextureWithRect(tex, rect);
+					setTextureWithRect(tex, textureRect);
 				}
 				else
 				{

@@ -67,10 +67,12 @@ oParticleDef* oParticleCache::load( const char* filename )
 		type->rotationStartVariance = (float)dict->numberForKey("rotationStartVariance");
 		type->rotationEnd = (float)dict->numberForKey("rotationEnd");
 		type->rotationEndVariance = (float)dict->numberForKey("rotationEndVariance");
+		type->emissionRate = (float)dict->numberForKey("emissionRate");
 		type->emitterType = (int)dict->numberForKey("emitterType");
 		type->gravityx = (float)dict->numberForKey("gravityx");
 		type->gravityy = (float)dict->numberForKey("gravityy");
 		type->speed = (float)dict->numberForKey("speed");
+		type->speedVariance = (float)dict->numberForKey("speedVariance");
 		type->radialAcceleration = (float)dict->numberForKey("radialAcceleration");
 		type->radialAccelVariance = (float)dict->numberForKey("radialAccelVariance");
 		type->tangentialAcceleration = (float)dict->numberForKey("tangentialAcceleration");
@@ -91,13 +93,12 @@ oParticleDef* oParticleCache::load( const char* filename )
 		{
 			CCParticleSystem::dataToTexture(type->textureFileName.c_str(), textureData);
 		}
-		const char* textRectStr = dict->stringForKey("textureRect");
-		if (textRectStr[0])
-		{
-			int x, y, w, h;
-			oHelper::getRectFromStr(textRectStr, x, y, w, h);
-			type->textureRect = CCRectMake(x, y, w, h);
-		}
+		float textureRectx = (float)dict->numberForKey("textureRectx");
+		float textureRecty = (float)dict->numberForKey("textureRecty");
+		float textureRectw = (float)dict->numberForKey("textureRectw");
+		float textureRecth = (float)dict->numberForKey("textureRecth");
+		CCRect textureRect(textureRectx, textureRecty, textureRectw, textureRecth);
+		type->textureRect = textureRect;
 		_parDict[filename] = type;
 		return type;
 	}
