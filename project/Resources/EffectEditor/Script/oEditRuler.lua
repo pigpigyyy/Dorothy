@@ -347,7 +347,6 @@ local function oEditRuler()
 		}))
 	end
 	ruler.rotation = 90
-	ruler:show(0,0,1000,1)
 	return ruler
 end
 

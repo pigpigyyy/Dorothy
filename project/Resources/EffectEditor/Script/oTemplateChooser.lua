@@ -227,6 +227,7 @@ local function oTemplateChooser(filename)
 				oContent:saveToFile(oEditor.output..filename,templates[templateName])
 				local name = filename:match("(.*)%.[^%.\\/]*$")
 				oEditor.items[name] = filename
+				oEditor.currentName = name
 				oEditor.currentFile = filename
 				oEditor:dumpEffectFile()
 				

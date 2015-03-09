@@ -11,6 +11,7 @@ local oEditor = CCScene()
 oEditor.effectData = nil
 oEditor.input = oContent.writablePath.."Effect/Input/"
 oEditor.output = oContent.writablePath.."Effect/Output/"
+oEditor.currentName = nil
 oEditor.currentFile = nil
 oEditor.topMost = 9999
 oEditor.touchPriorityEditMenu = CCMenu.DefaultHandlerPriority

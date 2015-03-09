@@ -131,6 +131,8 @@ local function oFileChooser(addExisted)
 					panel:hide()
 					local name = oEditor:getUsableName(item.file:match("(.*)%.[^%.\\/]*$"))
 					oEditor.items[name] = item.file
+					oEditor.currentName = name
+					oEditor.currentFile = item.file
 					oEditor:dumpEffectFile()
 				end)
 			button.file = files[i]
@@ -165,7 +167,7 @@ local function oFileChooser(addExisted)
 	yStart = y-title.contentSize.height-(oEditor.currentFile and -10 or 20)
 
 	if oEditor.currentFile then
-		title = CCLabelTTF("(Current: "..oEditor.currentFile:sub(1,-6)..")","Arial",16)
+		title = CCLabelTTF("(Current: "..oEditor.currentName..")","Arial",16)
 		title.texture.antiAlias = false
 		title.color = ccColor3(0x00ffff)
 		title.anchor = oVec2(0.5,1)
@@ -198,6 +200,7 @@ local function oFileChooser(addExisted)
 			itemWidth,50,
 			xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
 			function(item)
+				oEditor.currentName = item.name
 				oEditor.currentFile = item.file
 				panel.ended = function()
 					panel.parent:removeChild(panel)
