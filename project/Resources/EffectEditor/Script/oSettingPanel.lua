@@ -63,7 +63,6 @@ local function oSettingPanel()
 		"angle",
 		"angleVar",
 		"duration",
-		"blendAdditive",
 		"blendFuncSrc",
 		"blendFuncDst",
 		"startColor",
@@ -159,6 +158,10 @@ local function oSettingPanel()
 	listen("finishColor","finishColorRed",function(r) finishColorR = shiftColor(r,16);return getFinishColorStr() end,true)
 	listen("finishColor","finishColorGreen",function(g) finishColorG = shiftColor(g,8);return getFinishColorStr() end,true)
 	listen("finishColor","finishColorBlue",function(b) finishColorB = shiftColor(b,0);return getFinishColorStr() end,true)
+	listen("finishRedVar","finishColorVarianceRed")
+	listen("finishGreenVar","finishColorVarianceGreen")
+	listen("finishBlueVar","finishColorVarianceBlue")
+	listen("finishAlphaVar","finishColorVarianceAlpha")
 
 	local startColorA = 0
 	local startColorR = 0
@@ -171,6 +174,10 @@ local function oSettingPanel()
 	listen("startColor","startColorRed",function(r) startColorR = shiftColor(r,16);return getStartColorStr() end,true)
 	listen("startColor","startColorGreen",function(g) startColorG = shiftColor(g,8);return getStartColorStr() end,true)
 	listen("startColor","startColorBlue",function(b) startColorB = shiftColor(b,0);return getStartColorStr() end,true)
+	listen("startRedVar","startColorVarianceRed")
+	listen("startGreenVar","startColorVarianceGreen")
+	listen("startBlueVar","startColorVarianceBlue")
+	listen("startAlphaVar","startColorVarianceAlpha")
 
 	local srcPosX = 0
 	local srcPosY = 0
@@ -196,7 +203,7 @@ local function oSettingPanel()
 		end
 		return ""
 	end
-	listen("blendAdditive",function(var) return var == 0 and "No" or "Yes" end)
+	listen("maxParticles",function(var) return string.format("%d",var) end)
 	listen("blendFuncSrc","blendFuncSource",function(var) return getBlend(var) end)
 	listen("blendFuncDst","blendFuncDestination",function(var) return getBlend(var) end)
 	listen("duration",function(var) return var < 0 and "Infinite" or var end)
@@ -240,15 +247,15 @@ local function oSettingPanel()
 		items.blendFuncSrc,
 		items.blendFuncDst,
 		items.startColor,
-		items.startColorRVar,
-		items.startColorGVar,
-		items.startColorBVar,
-		items.startColorAVar,
+		items.startRedVar,
+		items.startGreenVar,
+		items.startBlueVar,
+		items.startAlphaVar,
 		items.finishColor,
-		items.finishColorRVar,
-		items.finishColorGVar,
-		items.finishColorBVar,
-		items.finishColorAVar,
+		items.finishRedVar,
+		items.finishGreenVar,
+		items.finishBlueVar,
+		items.finishAlphaVar,
 		items.startSize,
 		items.startSizeVar,
 		items.finishSize,
@@ -339,6 +346,10 @@ local function oSettingPanel()
 		for _,item in pairs(items) do
 			item.visible = false
 		end
+		label.visible = group ~= nil
+		if group == nil then
+			return
+		end
 		local contentHeight = 40
 		local getPosY = genPosY()
 		for _,item in pairs(group) do
@@ -349,13 +360,15 @@ local function oSettingPanel()
 		if group == modeFrame then
 			label.text = "Frame"
 			label.texture.antiAlias = false
+			oEvent:send("oEditor.frame")
 		else
 			label.text = "Particle"
 			label.texture.antiAlias = false
+			oEvent:send("oEditor.particle")
 		end
 		self:reset(borderSize.width,contentHeight,0,50)
 	end
-	
+
 	listen("emitterType",function(var)
 		if var == oEditor.EmitterGravity then
 			setGroup(modeGravity)
@@ -378,6 +391,17 @@ local function oSettingPanel()
 			end)
 		end
 	end
+
+	self.data = CCArray()
+	self.data:add(oListener("settingPanel.cancel",function()
+		if currentItem then
+			currentItem.selected = false
+		end
+	end))
+	self.data:add(oListener("settingPanel.hide",function()
+		setGroup(nil)
+		oEvent:send("settingPanel.cancel")
+	end))
 
 	return self
 end

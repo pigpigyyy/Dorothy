@@ -29,8 +29,6 @@ local templates =
     <real>90</real>
     <key>angleVariance</key>
     <real>360</real>
-    <key>blendAdditive</key>
-    <real>1</real>
     <key>blendFuncDestination</key>
     <integer>1</integer>
     <key>blendFuncSource</key>
@@ -74,7 +72,7 @@ local templates =
     <key>gravityy</key>
     <real>0</real>
     <key>maxParticles</key>
-    <real>100</real>
+    <real>1</real>
     <key>maxRadius</key>
     <real>0</real>
     <key>maxRadiusVariance</key>

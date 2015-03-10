@@ -17,7 +17,6 @@ class oParticleDef: public CCObject
 public:
 	float angle;
 	float angleVariance;
-	int blendAdditive;
 	int blendFuncDestination;
 	int blendFuncSource;
 	float duration;

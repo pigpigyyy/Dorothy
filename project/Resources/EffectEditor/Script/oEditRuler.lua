@@ -20,6 +20,7 @@ local oOpacity = require("oOpacity")
 local CCSequence = require("CCSequence")
 local CCCall = require("CCCall")
 local oPos = require("oPos")
+local oEvent = require("oEvent")
 
 local function oEditRuler()
 	local winSize = CCDirector.winSize
@@ -328,6 +329,7 @@ local function oEditRuler()
 		self.positionY = -10-width
 		self:runAction(CCSpawn({oPos(0.5,10,10,oEase.OutBack),oOpacity(0.5,0.8)}))
 		self.touchEnabled = true
+		oEvent:send("editMenu.place",true)
 	end
 	ruler.hide = function(self)
 		if not ruler.visible then return end
@@ -345,6 +347,7 @@ local function oEditRuler()
 				ruler.visible = false
 			end),
 		}))
+		oEvent:send("editMenu.place",false)
 	end
 	ruler.rotation = 90
 	return ruler

@@ -36,7 +36,6 @@ oParticleDef* oParticleCache::load( const char* filename )
 		type->angle = (float)dict->numberForKey("angle");
 		type->angleVariance = (float)dict->numberForKey("angleVariance");
 		type->duration = (float)dict->numberForKey("duration");
-		type->blendAdditive = (float)dict->numberForKey("blendAdditive");
 		type->blendFuncSource = (float)dict->numberForKey("blendFuncSource");
 		type->blendFuncDestination = (float)dict->numberForKey("blendFuncDestination");
 		type->startColorRed = (float)dict->numberForKey("startColorRed");

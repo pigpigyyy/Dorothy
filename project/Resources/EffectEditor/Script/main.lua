@@ -27,9 +27,8 @@ local controls =
 	"oEditMenu",
 	--"oViewPanel",
 	"oSettingPanel",
-	"oFileChooser",
-	--"oColorPicker",
 	"oEditControl",
+	"oFileChooser",
 }
 
 oRoutine(once(function()

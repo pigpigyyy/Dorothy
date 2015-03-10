@@ -347,7 +347,12 @@ local function oFileChooser(addExisted)
 				panel:hide()
 				oEditor:addChild(oBox("Delete "..oEditor.currentFile:sub(1,-5),function()
 					oContent:remove(oEditor.output..oEditor.currentFile)
+					oEditor.items[oEditor.currentName] = nil
+					oEditor.currentName = nil
 					oEditor.currentFile = nil
+					oEditor:dumpEffectFile()
+					oEvent:send("viewArea.changeEffect",nil)
+					oEvent:send("settingPanel.hide")
 					oEditor:addChild(oFileChooser(),oEditor.topMost)
 				end),oEditor.topMost)
 			end)
