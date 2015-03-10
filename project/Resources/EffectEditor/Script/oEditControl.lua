@@ -106,23 +106,43 @@ local function oEditControl()
 						oEvent:send("blendFuncDestination",value)
 					end
 				end)
-			elseif name == "startColor" then
+			elseif name == "startColor" or name == "finishColor" then
+				local isStart = name:sub(1,5) == "start"
+				local sr = isStart and "startColorRed" or "finishColorRed"
+				local sg = isStart and "startColorGreen" or "finishColorGreen"
+				local sb = isStart and "startColorBlue" or "finishColorBlue"
+				local sa = isStart and "startColorAlpha" or "finishColorAlpha"
 				local color = ccColor4(
-					oEditor.effectData.startColorRed*255,
-					oEditor.effectData.startColorGreen*255,
-					oEditor.effectData.startColorBlue*255,
-					oEditor.effectData.startColorAlpha*255)
+					oEditor.effectData[sr]*255,
+					oEditor.effectData[sg]*255,
+					oEditor.effectData[sb]*255,
+					oEditor.effectData[sa]*255)
 				control:addChild(oColorPicker(color,function(r,g,b,a)
-					oEditor.effectData.startColorRed = r/255
-					oEditor.effectData.startColorGreen = g/255
-					oEditor.effectData.startColorBlue = b/255
-					oEditor.effectData.startColorAlpha = a/255
-					oEvent:send("startColorRed",oEditor.effectData.startColorRed)
-					oEvent:send("startColorGreen",oEditor.effectData.startColorGreen)
-					oEvent:send("startColorBlue",oEditor.effectData.startColorBlue)
-					oEvent:send("startColorAlpha",oEditor.effectData.startColorAlpha)
+					oEditor.effectData[sr] = r/255
+					oEditor.effectData[sg] = g/255
+					oEditor.effectData[sb] = b/255
+					oEditor.effectData[sa] = a/255
+					oEvent:send(sr,oEditor.effectData[sr])
+					oEvent:send(sg,oEditor.effectData[sg])
+					oEvent:send(sb,oEditor.effectData[sb])
+					oEvent:send(sa,oEditor.effectData[sa])
 					oEvent:send("settingPanel.cancel")
 				end))
+			elseif name == "startRedVar"
+				or name == "startBlueVar"
+				or name == "startGreenVar"
+				or name == "startAlphaVar"
+				or name == "finishRedVar"
+				or name == "finishBlueVar"
+				or name == "finishGreenVar"
+				or name == "finishAlphaVar" then
+				local pos = name:sub(1,5) == "start" and 5 or 6
+				local valueName = name:sub(1,pos).."ColorVariance"..name:sub(pos+1,-4)
+				ruler:show(oEditor.effectData[valueName]*255,-255,255,10,function(value)
+					value = math.floor(value+0.5)
+					oEditor.effectData[valueName] = value/255
+					oEvent:send(valueName,value/255)
+				end)
 			end
 		else
 			if name == "name" then
@@ -132,12 +152,10 @@ local function oEditControl()
 				oEditor.currentName = newName
 				oEditor:dumpEffectFile()
 			else
-				if name == "blendFuncSrc" or name == "blendFuncDst" then
-					control:hideTypeSelector()
-				end
 				oEffect:update(oEditor.effect,oEditor.effectData)
 				oEditor.effect:start()
 				ruler:hide()
+				control:hideTypeSelector()
 			end
 		end
 	end)

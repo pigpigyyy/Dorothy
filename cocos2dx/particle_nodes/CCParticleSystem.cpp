@@ -212,7 +212,7 @@ bool CCParticleSystem::initWithDictionary(CCDictionary *dictionary, const char *
             // duration
 			m_fDuration = (float)dictionary->numberForKey("duration");
 
-            // blend additive
+            // blend function
 			m_tBlendFunc.src = (GLenum)dictionary->numberForKey("blendFuncSource");
 			m_tBlendFunc.dst = (GLenum)dictionary->numberForKey("blendFuncDestination");
 
