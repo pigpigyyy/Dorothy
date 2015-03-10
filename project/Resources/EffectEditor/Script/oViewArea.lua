@@ -1,30 +1,24 @@
-local CCDirector = require("CCDirector")
 local CCLayerColor = require("CCLayerColor")
 local ccColor4 = require("ccColor4")
 local oVec2 = require("oVec2")
-local oStar = require("oStar")
-local CCRenderTarget = require("CCRenderTarget")
-local oCache = require("oCache")
-local CCSprite = require("CCSprite")
-local CCProgressTimer = require("CCProgressTimer")
-local CCProgress = require("CCProgress")
-local CCRepeatForever = require("CCRepeatForever")
-local CCSequence = require("CCSequence")
-local CCCall = require("CCCall")
-local CCEase = require("CCEase")
-local oContent = require("oContent")
-local oEffect = require("oEffect")
-local CCParticle = require("CCParticle")
-local CCDictionary = require("CCDictionary")
+local CCNode = require("CCNode")
 local oEditor = require("oEditor")
+local CCTouch = require("CCTouch")
 local CCArray = require("CCArray")
 local oListener = require("oListener")
+local oEffect = require("oEffect")
+local oScale = require("oScale")
+local oEase = require("oEase")
+local oPos = require("oPos")
 
 local function oViewArea()
-	local winSize = CCDirector.winSize
-
 	local view = CCLayerColor(ccColor4(0xff1a1a1a))
 	view.anchor = oVec2.zero
+	
+	local scrollNode = CCNode()
+	view:addChild(scrollNode)
+	scrollNode.position = oEditor.origin
+
 --[[
 	local radius = 50
 	local star = oStar(radius,ccColor4(0x6600ffff),0.5,ccColor4(0xff00ffff))
@@ -53,18 +47,43 @@ local function oViewArea()
 	progressTimer.position = oVec2(winSize.width*0.5,winSize.height*0.5)
 	view:addChild(progressTimer)
 ]]
+
+	view:registerTouchHandler(function(eventType,touch)
+		if eventType == CCTouch.Moved then
+			scrollNode.position = scrollNode.position + touch.delta
+		end
+		return true
+	end)
+	view.touchEnabled = true
+
 	view.data = CCArray()
 	view.data:add(oListener("viewArea.changeEffect",function(effectName)
+		if not effectName and oEditor.effect then
+			oEditor.effect:autoRemove():stop()
+			oEditor.effect = nil
+			return
+		end
 		if oEditor.effect then
 			oEditor.effect:autoRemove():stop()
 		end
 		local extension = string.match(oEditor.items[effectName], "%.([^%.\\/]*)$")
 		if extension == "par" then
 			local effect = oEffect(effectName)
-			effect:attachTo(view):setOffset(oEditor.origin):start()
+			effect:attachTo(scrollNode):start()
 			oEditor.effect = effect
 		elseif extension == "frame" then
 			-- TODO
+		end
+	end))
+	view.data:add(oListener("viewArea.scroll",function(scale)
+		scrollNode:runAction(oScale(0.3,scale,scale,oEase.OutQuad))
+	end))
+	view.data:add(oListener("viewArea.toOrigin",function(origin)
+		scrollNode:runAction(oPos(0.3,origin.x,origin.y,oEase.OutQuad))
+	end))
+	view.data:add(oListener("viewArea.play",function()
+		if oEditor.effect then
+			oEditor.effect:start()
 		end
 	end))
 

@@ -43,7 +43,6 @@ bool initParticleWithDef( CCParticleSystemQuad* par, oParticleDef* type )
 			// duration
 			par->setDuration(type->duration);
 			// blend function 
-			par->setBlendAdditive(type->blendAdditive != 0);
 			ccBlendFunc blendFunc;
 			blendFunc.src = type->blendFuncSource;
 			blendFunc.dst = type->blendFuncDestination;

@@ -339,15 +339,6 @@ public:
     CC_PROPERTY(ccBlendFunc, m_tBlendFunc, BlendFunc)
     /** does the alpha value modify color */
     CC_PROPERTY(bool, m_bOpacityModifyRGB, OpacityModifyRGB)
-
-    /** whether or not the particles are using blend additive.
-    If enabled, the following blending function will be used.
-    @code
-    source blend function = GL_SRC_ALPHA;
-    dest blend function = GL_ONE;
-    @endcode
-    */
-    bool m_bIsBlendAdditive;
     /** particles movement type: Free or Grouped
     @since v0.8
     */

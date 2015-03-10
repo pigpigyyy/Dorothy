@@ -4,10 +4,14 @@ local CCSize = require("CCSize")
 local CCLabelTTF = require("CCLabelTTF")
 local ccColor3 = require("ccColor3")
 local oTextField = require("oTextField")
-local oEvent = require("oEvent")
 local oLine = require("oLine")
 local ccColor4 = require("ccColor4")
-local oEditor = require("oEditor")
+local oScale = require("oScale")
+local oEase = require("oEase")
+local CCSequence = require("CCSequence")
+local oOpacity = require("oOpacity")
+local CCHide = require("CCHide")
+
 local class,property = unpack(require("class"))
 
 local oSettingItem = class(
@@ -23,7 +27,6 @@ local oSettingItem = class(
 
 	-- self = CCMenuItem
 	__init = function(self,name,width,height, x, y, isInput, toggled)
-		local halfW = width*0.5
 		local halfH = height*0.5
 		
 		self._isInput = isInput
@@ -46,7 +49,7 @@ local oSettingItem = class(
 			local x = nextCenterX
 			local y = halfH-fontSize*0.5-2
 			label = oTextField(x,y,fontSize,limit,
-				function(textField)
+				function()
 					self.selected = false
 				end)
 		else
@@ -75,6 +78,8 @@ local oSettingItem = class(
 				self.selected = not self.selected
 			end
 		end)
+
+		self._fade = CCSequence({oOpacity(0.5, 0),CCHide()})
 	end,
 
 	-- string
@@ -101,8 +106,14 @@ local oSettingItem = class(
 			return self._border.visible
 		end,
 		function(self,value)
-			self._border.visible = value
 			self.cascadeOpacity = not value
+			if value then
+				self._border:stopAllActions()
+				self._border.visible = true
+				self._border.opacity = 1
+			else
+				self._border:runAction(self._fade)
+			end
 		end),
 
 	-- boolean

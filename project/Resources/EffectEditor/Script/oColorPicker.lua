@@ -302,7 +302,7 @@ local function oColorPicker(color,changed)
 	end,false,CCMenu.DefaultHandlerPriority-2)
 	alphaBar.touchEnabled = true
 
-	local function setColor(oldVal)
+	local function setColor(self,oldVal)
 		r,g,b,a = oldVal.r,oldVal.g,oldVal.b,oldVal.a
 		resetPanelColor()
 		resetBarColor()
@@ -313,7 +313,8 @@ local function oColorPicker(color,changed)
 		updateAlphaArrowPos()
 		updateDisplayColor()
 	end
-	setColor(color)
+	panel.setColor = setColor
+	panel:setColor(color)
 
 	panel:schedule(once(function()
 		panel.rotationX = -90
