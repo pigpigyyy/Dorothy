@@ -1395,13 +1395,6 @@ void __oEffect_update(lua_State* L, oEffect* self, int tableIndex)
 			lua_pop(L, 1);
 			return v;
 		};
-		auto getUserType = [L](const char* name)->void*
-		{
-			lua_getfield(L, -1, name);
-			void* v = (*(void**)(lua_touserdata(L, -1)));
-			lua_pop(L, 1);
-			return v;
-		};
 		CCParticleSystemQuad* particleSystem = effect->getParticle();
 		lua_pushvalue(L, tableIndex);
 		particleSystem->setTotalParticles(getInt("maxParticles"));

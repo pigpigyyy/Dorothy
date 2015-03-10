@@ -196,6 +196,7 @@ local function oSettingPanel()
 		end
 		return ""
 	end
+	listen("maxParticles",function(var) return string.format("%d",var) end)
 	listen("blendAdditive",function(var) return var == 0 and "No" or "Yes" end)
 	listen("blendFuncSrc","blendFuncSource",function(var) return getBlend(var) end)
 	listen("blendFuncDst","blendFuncDestination",function(var) return getBlend(var) end)
