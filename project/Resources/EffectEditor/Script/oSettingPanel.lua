@@ -79,7 +79,6 @@ local function oSettingPanel()
 		"startSizeVar",
 		"finishSize",
 		"finishSizeVar",
-		"sourcePosition",
 		"sourcePosXVar",
 		"sourcePosYVar",
 		"rotationStart",
@@ -89,7 +88,7 @@ local function oSettingPanel()
 		"lifeTime",
 		"lifeTimeVar",
 		"emissionRate",
-		"textureFileName",
+		"textureFile",
 		"textureRect",
 		"emitterType",
 		"gravityX",
@@ -182,14 +181,6 @@ local function oSettingPanel()
 	listen("startBlueVar","startColorVarianceBlue",getChanel)
 	listen("startAlphaVar","startColorVarianceAlpha",getChanel)
 
-	local srcPosX = 0
-	local srcPosY = 0
-	local function getPosStr()
-		return string.format("%.2f,%.2f",srcPosX,srcPosY)
-	end
-	listen("sourcePosition","sourcePositionx",function(posX) srcPosX = posX;return getPosStr() end,true)
-	listen("sourcePosition","sourcePositiony",function(posY) srcPosY = posY;return getPosStr() end,true)
-
 	local function getBlend(value)
 		if value == ccBlendFunc.Dst then
 			return "Dst"
@@ -230,6 +221,7 @@ local function oSettingPanel()
 	listen("speedVar","speedVariance")
 	listen("radialAccel","radialAcceleration")
 	listen("radialAccelVar","radialAccelVariance")
+	listen("textureFile","textureFileName")
 	local rc = CCRect()
 	local function getRectStr()
 		return rc == CCRect.zero and "Full" or string.format("%d,%d,%d,%d",rc.origin.x,rc.origin.y,rc.size.width,rc.size.height)
@@ -273,7 +265,7 @@ local function oSettingPanel()
 		items.lifeTime,
 		items.lifeTimeVar,
 		items.emissionRate,
-		items.textureFileName,
+		items.textureFile,
 		items.textureRect,
 		items.emitterType,
 		items.gravityx,
@@ -320,7 +312,7 @@ local function oSettingPanel()
 		items.lifeTime,
 		items.lifeTimeVar,
 		items.emissionRate,
-		items.textureFileName,
+		items.textureFile,
 		items.textureRect,
 		items.emitterType,
 		items.startRadius,

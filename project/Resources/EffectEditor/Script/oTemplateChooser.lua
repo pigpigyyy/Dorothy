@@ -64,7 +64,7 @@ local templates =
     <key>rotationEndVariance</key>
     <real>0</real>
     <key>finishParticleSize</key>
-    <real>-1</real>
+    <real>30</real>
     <key>finishParticleSizeVariance</key>
     <real>0</real>
     <key>gravityx</key>

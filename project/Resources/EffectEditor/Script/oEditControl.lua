@@ -69,30 +69,48 @@ local function oEditControl()
 		typeSelector:hide()
 	end
 
+	local varNames =
+	{
+		startSize = "startParticleSize",
+		startSizeVar = "startParticleSizeVariance",
+		finishSize = "finishParticleSize",
+		finishSizeVar = "finishParticleSizeVariance",
+		sourcePosXVar = "sourcePositionVariancex",
+		sourcePosYVar = "sourcePositionVariancey",
+		rotationStart = "rotationStart",
+		rotationEnd = "rotationEnd",
+		rotationStartVar = "rotationStartVariance",
+		rotationEndVar = "rotationEndVariance",
+		emissionRate = "emissionRate",
+	}
+
+	local lifeNames =
+	{
+		lifeTime = "particleLifespan",
+		lifeTimeVar = "particleLifespanVariance",
+	}
+	
 	control.data = oListener("settingPanel.edit",function(item)
 		local name = item.name
 		if item.selected then
 			if name == "maxParticles" then
 				ruler:show(oEditor.effectData.maxParticles,0,10000,10,function(value)
-					value = math.floor(value+0.5)
 					oEditor.effectData.maxParticles = value
 					oEvent:send("maxParticles",value)
 				end)
 			elseif name == "angle" then
 				ruler:show(oEditor.effectData.angle,0,360,10,function(value)
-					value = math.floor(value+0.5)
 					oEditor.effectData.angle = value
 					oEvent:send("angle",value)
 				end)
 			elseif name == "angleVar" then
-				ruler:show(oEditor.effectData.angleVariance,-360,360,10,function(value)
-					value = math.floor(value+0.5)
+				ruler:show(oEditor.effectData.angleVariance,0,360,10,function(value)
 					oEditor.effectData.angleVariance = value
 					oEvent:send("angleVariance",value)
 				end)
 			elseif name == "duration" then
 				ruler:show(oEditor.effectData.duration,-1,60,1,function(value)
-					value = value < 0 and -1 or math.floor(value*10+0.5)/10
+					value = value < 0 and -1 or value
 					oEditor.effectData.duration = value
 					oEvent:send("duration",value)
 				end)
@@ -138,10 +156,26 @@ local function oEditControl()
 				or name == "finishAlphaVar" then
 				local pos = name:sub(1,5) == "start" and 5 or 6
 				local valueName = name:sub(1,pos).."ColorVariance"..name:sub(pos+1,-4)
-				ruler:show(oEditor.effectData[valueName]*255,-255,255,10,function(value)
-					value = math.floor(value+0.5)
+				ruler:show(oEditor.effectData[valueName]*255,0,255,10,function(value)
 					oEditor.effectData[valueName] = value/255
 					oEvent:send(valueName,value/255)
+				end)
+			elseif name == "startSize" then
+				ruler:show(oEditor.effectData.startParticleSize,0,10000,10,function(value)
+					oEditor.effectData.startParticleSize = value
+					oEvent:send("startParticleSize",value)
+				end)
+			elseif varNames[name] then
+				local varName = varNames[name]
+				ruler:show(oEditor.effectData[varName],0,10000,10,function(value)
+					oEditor.effectData[varName] = value
+					oEvent:send(varName,value)
+				end)
+			elseif lifeNames[name] then
+				local varName = lifeNames[name]
+				ruler:show(oEditor.effectData[varName],0,1000,1,function(value)
+					oEditor.effectData[varName] = value
+					oEvent:send(varName,value)
 				end)
 			end
 		else
