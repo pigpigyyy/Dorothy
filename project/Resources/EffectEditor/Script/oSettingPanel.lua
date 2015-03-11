@@ -158,10 +158,13 @@ local function oSettingPanel()
 	listen("finishColor","finishColorRed",function(r) finishColorR = shiftColor(r,16);return getFinishColorStr() end,true)
 	listen("finishColor","finishColorGreen",function(g) finishColorG = shiftColor(g,8);return getFinishColorStr() end,true)
 	listen("finishColor","finishColorBlue",function(b) finishColorB = shiftColor(b,0);return getFinishColorStr() end,true)
-	listen("finishRedVar","finishColorVarianceRed")
-	listen("finishGreenVar","finishColorVarianceGreen")
-	listen("finishBlueVar","finishColorVarianceBlue")
-	listen("finishAlphaVar","finishColorVarianceAlpha")
+	local function getChanel(var)
+		return string.format("%d",var*255)
+	end
+	listen("finishRedVar","finishColorVarianceRed",getChanel)
+	listen("finishGreenVar","finishColorVarianceGreen",getChanel)
+	listen("finishBlueVar","finishColorVarianceBlue",getChanel)
+	listen("finishAlphaVar","finishColorVarianceAlpha",getChanel)
 
 	local startColorA = 0
 	local startColorR = 0
@@ -174,10 +177,10 @@ local function oSettingPanel()
 	listen("startColor","startColorRed",function(r) startColorR = shiftColor(r,16);return getStartColorStr() end,true)
 	listen("startColor","startColorGreen",function(g) startColorG = shiftColor(g,8);return getStartColorStr() end,true)
 	listen("startColor","startColorBlue",function(b) startColorB = shiftColor(b,0);return getStartColorStr() end,true)
-	listen("startRedVar","startColorVarianceRed")
-	listen("startGreenVar","startColorVarianceGreen")
-	listen("startBlueVar","startColorVarianceBlue")
-	listen("startAlphaVar","startColorVarianceAlpha")
+	listen("startRedVar","startColorVarianceRed",getChanel)
+	listen("startGreenVar","startColorVarianceGreen",getChanel)
+	listen("startBlueVar","startColorVarianceBlue",getChanel)
+	listen("startAlphaVar","startColorVarianceAlpha",getChanel)
 
 	local srcPosX = 0
 	local srcPosY = 0

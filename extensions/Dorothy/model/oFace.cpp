@@ -35,7 +35,7 @@ bool initParticleWithDef( CCParticleSystemQuad* par, oParticleDef* type )
 	bool bRet = false;
 	BLOCK_START
 	{
-		if(par->initWithTotalParticles(type->maxParticles))
+		if (par->initWithTotalParticles(type->maxParticles))
 		{
 			// angle
 			par->setAngle(type->angle);
