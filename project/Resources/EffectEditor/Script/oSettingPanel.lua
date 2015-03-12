@@ -221,6 +221,10 @@ local function oSettingPanel()
 	listen("speedVar","speedVariance")
 	listen("radialAccel","radialAcceleration")
 	listen("radialAccelVar","radialAccelVariance")
+	listen("gravityX","gravityx")
+	listen("gravityY","gravityy")
+	listen("tangentAccel","tangentialAcceleration")
+	listen("tangentAccelVar","tangentialAccelVariance")
 	listen("textureFile","textureFileName")
 	local rc = CCRect()
 	local function getRectStr()
@@ -268,14 +272,14 @@ local function oSettingPanel()
 		items.textureFile,
 		items.textureRect,
 		items.emitterType,
-		items.gravityx,
-		items.gravityy,
+		items.gravityX,
+		items.gravityY,
 		items.speed,
 		items.speedVar,
 		items.radialAccel,
 		items.radialAccelVar,
-		items.tangentialAccel,
-		items.tangentialAccelVar,
+		items.tangentAccel,
+		items.tangentAccelVar,
 	}
 
 	local modeRadius =
@@ -341,9 +345,11 @@ local function oSettingPanel()
 		for _,item in pairs(items) do
 			item.visible = false
 		end
-		label.visible = group ~= nil
 		if group == nil then
+			label.visible = false
 			return
+		else
+			label.visible = true
 		end
 		local contentHeight = 40
 		local getPosY = genPosY()

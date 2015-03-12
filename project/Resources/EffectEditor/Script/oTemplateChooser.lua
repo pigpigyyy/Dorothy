@@ -72,7 +72,7 @@ local templates =
     <key>gravityy</key>
     <real>0</real>
     <key>maxParticles</key>
-    <real>1</real>
+    <real>100</real>
     <key>maxRadius</key>
     <real>0</real>
     <key>maxRadiusVariance</key>
@@ -134,6 +134,128 @@ local templates =
     <key>textureFileName</key>
     <string>__firePngData</string>
   </dict>
+</plist>]],
+	rain = [[
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+	<key>textureRecth</key>
+	<real>0</real>
+	<key>gravityx</key>
+	<real>10</real>
+	<key>emitterType</key>
+	<real>0</real>
+	<key>sourcePositionx</key>
+	<real>0</real>
+	<key>maxParticles</key>
+	<real>400</real>
+	<key>finishColorVarianceRed</key>
+	<real>0</real>
+	<key>finishColorVarianceBlue</key>
+	<real>0</real>
+	<key>startColorRed</key>
+	<real>0</real>
+	<key>tangentialAccelVariance</key>
+	<real>0</real>
+	<key>radialAccelVariance</key>
+	<real>0</real>
+	<key>textureRecty</key>
+	<real>0</real>
+	<key>startColorBlue</key>
+	<real>1</real>
+	<key>startColorGreen</key>
+	<real>1</real>
+	<key>startColorVarianceAlpha</key>
+	<real>0.49019607843137</real>
+	<key>angle</key>
+	<real>-90</real>
+	<key>startColorVarianceBlue</key>
+	<real>0</real>
+	<key>finishColorVarianceGreen</key>
+	<real>0</real>
+	<key>tangentialAcceleration</key>
+	<real>0</real>
+	<key>maxRadiusVariance</key>
+	<real>0</real>
+	<key>angleVariance</key>
+	<real>0</real>
+	<key>speedVariance</key>
+	<real>30</real>
+	<key>particleLifespanVariance</key>
+	<real>0</real>
+	<key>particleLifespan</key>
+	<real>1.5</real>
+	<key>minRadius</key>
+	<real>0</real>
+	<key>rotationIsDir</key>
+	<real>0</real>
+	<key>finishColorGreen</key>
+	<real>1</real>
+	<key>textureRectw</key>
+	<real>0</real>
+	<key>rotationStartVariance</key>
+	<real>0</real>
+	<key>textureRectx</key>
+	<real>0</real>
+	<key>rotatePerSecondVariance</key>
+	<real>0</real>
+	<key>finishColorBlue</key>
+	<real>1</real>
+	<key>rotatePerSecond</key>
+	<real>0</real>
+	<key>gravityy</key>
+	<real>-10</real>
+	<key>sourcePositionVariancey</key>
+	<real>0</real>
+	<key>blendFuncSource</key>
+	<real>770</real>
+	<key>finishColorAlpha</key>
+	<real>0</real>
+	<key>finishParticleSizeVariance</key>
+	<real>0</real>
+	<key>startColorAlpha</key>
+	<real>0.70588235294118</real>
+	<key>startColorVarianceRed</key>
+	<real>0</real>
+	<key>minRadiusVariance</key>
+	<real>0</real>
+	<key>maxRadius</key>
+	<real>0</real>
+	<key>finishParticleSize</key>
+	<real>4</real>
+	<key>startParticleSizeVariance</key>
+	<real>2</real>
+	<key>sourcePositionVariancex</key>
+	<real>249</real>
+	<key>duration</key>
+	<real>-1</real>
+	<key>textureFileName</key>
+	<string>__firePngData</string>
+	<key>startColorVarianceGreen</key>
+	<real>0</real>
+	<key>sourcePositiony</key>
+	<real>0</real>
+	<key>rotationStart</key>
+	<real>0</real>
+	<key>blendFuncDestination</key>
+	<real>772</real>
+	<key>radialAcceleration</key>
+	<real>0</real>
+	<key>speed</key>
+	<real>400</real>
+	<key>rotationEndVariance</key>
+	<real>0</real>
+	<key>finishColorVarianceAlpha</key>
+	<real>0</real>
+	<key>finishColorRed</key>
+	<real>0</real>
+	<key>startParticleSize</key>
+	<real>4</real>
+	<key>emissionRate</key>
+	<real>80</real>
+	<key>rotationEnd</key>
+	<real>0</real>	</dict>
 </plist>]],
 }
 

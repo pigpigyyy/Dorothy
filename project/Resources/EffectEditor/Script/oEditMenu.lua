@@ -25,7 +25,15 @@ local function oEditMenu()
 	local items =
 	{
 		Edit = oButton("Edit",16,50,50,35,winSize.height-35,function(button)
-			oEditor:addChild(oFileChooser(),oEditor.topMost)
+			if not oEditor.dirty then
+				oEditor:addChild(oFileChooser(),oEditor.topMost)
+			else
+				if oEditor.currentFile then
+					oEditor.dirty = false
+					button.text = "Edit"
+					oEditor:dumpData(oEditor.currentFile)
+				end
+			end
 		end),
 
 		Origin = oButton("Origin",16,50,50,winSize.width-240-45-60,winSize.height-35,function(button)
@@ -84,6 +92,12 @@ local function oEditMenu()
 			items.Origin:runAction(oPos(0.3,winSize.width-240-45-60,winSize.height-35,oEase.InBack))
 			items.Zoom:stopAllActions()
 			items.Zoom:runAction(CCSequence({CCDelay(0.3),oScale(0.3,1,1,oEase.OutBackBack)}))
+		end
+	end))
+	menu.data:add(oListener("oEditor.change",function()
+		if not oEditor.dirty then
+			oEditor.dirty = true
+			items.Edit.text = "Save"
 		end
 	end))
 
