@@ -1,5 +1,4 @@
 local ccColor4 = require("ccColor4")
-local CCDirector = require("CCDirector")
 local oNode3D = require("oNode3D")
 local oVec2 = require("oVec2")
 local CCLayerColor = require("CCLayerColor")
@@ -16,11 +15,9 @@ local oEase = require("oEase")
 local CCTouch = require("CCTouch")
 local CCRect = require("CCRect")
 local oEditor = require("oEditor")
-local CCNode = require("CCNode")
 
 local function oColorPicker(color,changed)
 	color = color or ccColor4()
-	local winSize = CCDirector.winSize
 	local panelSize = 240
 	local barWidth = 20
 	local finalColorSize = 100
@@ -316,7 +313,7 @@ local function oColorPicker(color,changed)
 	end
 	panel.setColor = setColor
 	panel:setColor(color)
---[[
+
 	panel:schedule(once(function()
 		panel.rotationX = -90
 		local time = 0
@@ -326,21 +323,6 @@ local function oColorPicker(color,changed)
 		end)
 		panel.rotationX = 0
 	end))
---]]
-
-	CCNode.rotateBy = function(node,totalTime,deltaAngle)
-		node:schedule(once(function()
-			local beginAngle = node.rotation
-			local time = 0
-			cycle(totalTime,function(deltaTime)
-				time = time + deltaTime
-				node.rotation = oEase:func(oEase.OutBack,time/totalTime,beginAngle,deltaAngle)
-			end)
-			node.rotation = beginAngle + deltaAngle
-		end))
-	end
-	
-	panel:rotateBy(1,360)
 
 	return panel
 end
