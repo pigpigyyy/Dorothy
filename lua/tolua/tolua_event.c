@@ -39,33 +39,31 @@ static void storeatubox(lua_State* L, int lo)
 */
 static int module_index_event(lua_State* L)
 {
-	lua_rawgeti(L, -2, MT_GET);
-	if (lua_istable(L, -1))
+	// 1 tb, 2 key
+	lua_rawgeti(L, -2, MT_GET); // tb key get
+	if (lua_istable(L, -1)) // get is table
 	{
-		lua_pushvalue(L, 2);  /* key */
-		lua_rawget(L, -2);
-		if (lua_iscfunction(L, -1))
-		{
-			lua_call(L, 0, 1);
-			return 1;
-		}
-		else if (lua_istable(L, -1)) return 1;
+		lua_pushvalue(L, 2); // tb key get key
+		lua_rawget(L, -2); // get[key], tb key get key cfunc
+		lua_call(L, 0, 1); // cfunc(), tb key get key result
+		return 1;
 	}
-	/* call old index meta event */
-	if (lua_getmetatable(L, 1))
+	else lua_pop(L, 1);
+	/* act like old index meta event */
+	if (lua_getmetatable(L, 1)) // tb key mt
 	{
 		lua_pushstring(L, "__index");
-		lua_rawget(L, -2);
-		lua_pushvalue(L, 1);
-		lua_pushvalue(L, 2);
-		if (lua_isfunction(L, -1))
+		lua_rawget(L, -2); // mt["__index"], tb key mt index
+		if (lua_isfunction(L, -1)) // index is function
 		{
-			lua_call(L, 2, 1);
-			return 1;
+			lua_pushvalue(L, 1); // tb key mt index tb
+			lua_pushvalue(L, 2); // tb key mt index tb key
+			lua_call(L, 2, 1); // index(tb,key), tb key mt result
 		}
-		else if (lua_istable(L, -1))
+		else if (lua_istable(L, -1)) // index is table
 		{
-			lua_gettable(L, -3);
+			lua_pushvalue(L, 2); // tb key mt index key
+			lua_gettable(L, -2); // index[key], tb key mt index value
 			return 1;
 		}
 	}
@@ -77,33 +75,31 @@ static int module_index_event(lua_State* L)
 */
 static int module_newindex_event(lua_State* L)
 {
-	lua_rawgeti(L, -3, MT_SET);
+	// 1 self, 2 name, 3 value
+	lua_rawgeti(L, 1, MT_SET);// self name value cls set
 	if (lua_istable(L, -1))
 	{
-		lua_pushvalue(L, 2);  /* key */
-		lua_rawget(L, -2);
-		if (lua_iscfunction(L, -1))
-		{
-			lua_pushvalue(L, 1); /* only to be compatible with non-static vars */
-			lua_pushvalue(L, 3); /* value */
-			lua_call(L, 2, 0);
-			return 0;
-		}
-	}
-	/* call old newindex meta event */
-	if (lua_getmetatable(L, 1) && lua_getmetatable(L, -1))
-	{
-		lua_pushstring(L, "__newindex");
-		lua_rawget(L, -2);
+		lua_pushvalue(L, 2);
+		lua_rawget(L, -2);// self name value set item
 		if (lua_isfunction(L, -1))
 		{
 			lua_pushvalue(L, 1);
 			lua_pushvalue(L, 2);
 			lua_pushvalue(L, 3);
-			lua_call(L, 3, 0);
+			lua_call(L, 3, 0);// self name value set
+			return 0;
 		}
 	}
 	lua_settop(L, 3);
+	lua_pushvalue(L, 2);// self name value name
+	lua_rawget(L, 1);// self[name], self name value item
+	if (!lua_isnil(L, -1))// item != nil
+	{
+		lua_pop(L, 1);// self name value
+		lua_rawset(L, -3);// self[name] = value, self
+		return 0;
+	}
+	else lua_pop(L, 1);// self name value
 	lua_rawset(L, -3);
 	return 0;
 }

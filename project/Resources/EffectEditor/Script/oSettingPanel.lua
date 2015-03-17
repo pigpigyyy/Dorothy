@@ -7,14 +7,10 @@ local oSettingItem = require("oSettingItem")
 local oSelectionPanel = require("oSelectionPanel")
 local CCLabelTTF = require("CCLabelTTF")
 local ccColor3 = require("ccColor3")
-local CCDictionary = require("CCDictionary")
 local oEvent = require("oEvent")
 local oListener = require("oListener")
 local oEditor = require("oEditor")
 local tolua = require("tolua")
-local oBodyDef = require("oBodyDef")
-local CCTextAlign = require("CCTextAlign")
-local CCUserDefault = require("CCUserDefault")
 local ccBlendFunc = require("ccBlendFunc")
 local CCRect = require("CCRect")
 local CCArray = require("CCArray")
@@ -147,9 +143,7 @@ local function oSettingPanel()
 	local finishColorR = 0
 	local finishColorG = 0
 	local finishColorB = 0
-	local function shiftColor(v,bit)
-		return math.floor(v*255+0.5)*math.pow(2,bit)
-	end
+	local function shiftColor(v,bit) return math.floor(v*255+0.5)*math.pow(2,bit) end
 	local function getFinishColorStr()
 		return string.format("0x%.8X",finishColorA+finishColorR+finishColorG+finishColorB)
 	end
@@ -157,9 +151,7 @@ local function oSettingPanel()
 	listen("finishColor","finishColorRed",function(r) finishColorR = shiftColor(r,16);return getFinishColorStr() end,true)
 	listen("finishColor","finishColorGreen",function(g) finishColorG = shiftColor(g,8);return getFinishColorStr() end,true)
 	listen("finishColor","finishColorBlue",function(b) finishColorB = shiftColor(b,0);return getFinishColorStr() end,true)
-	local function getChanel(var)
-		return string.format("%d",var*255)
-	end
+	local function getChanel(var) return string.format("%d",var*255) end
 	listen("finishRedVar","finishColorVarianceRed",getChanel)
 	listen("finishGreenVar","finishColorVarianceGreen",getChanel)
 	listen("finishBlueVar","finishColorVarianceBlue",getChanel)
@@ -182,18 +174,10 @@ local function oSettingPanel()
 	listen("startAlphaVar","startColorVarianceAlpha",getChanel)
 
 	local function getBlend(value)
-		if value == ccBlendFunc.Dst then
-			return "Dst"
-		elseif value == ccBlendFunc.One then
-			return "One"
-		elseif value == ccBlendFunc.OneMinDst then
-			return "OneMinDst"
-		elseif value == ccBlendFunc.OneMinSrc then
-			return "OneMinSrc"
-		elseif value == ccBlendFunc.Src then
-			return "Src"
-		elseif value == ccBlendFunc.Zero then
-			return "Zero"
+		for k,v in pairs(ccBlendFunc) do
+			if v == value then
+				return k
+			end
 		end
 		return ""
 	end
@@ -348,9 +332,9 @@ local function oSettingPanel()
 		if group == nil then
 			label.visible = false
 			return
-		else
-			label.visible = true
 		end
+		label.visible = true
+		label.positionY = borderSize.height - 18
 		local contentHeight = 40
 		local getPosY = genPosY()
 		for _,item in pairs(group) do
