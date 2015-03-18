@@ -58,7 +58,9 @@ public:
 	void loadFileLookupInfo(const char* filename);
 
 	void addSearchPath(const char* path);
+	void setSearchPaths(const vector<string>& searchPaths);
 	void addSearchResolutionsOrder(const char* order);
+	void setSearchResolutionsOrder(const vector<string>& searchPaths);
 	void purgeCachedEntries();
 
 	void loadFileAsync(const char* filename, const function<void(oOwnArray<char>,unsigned long)>& callback);

@@ -213,7 +213,7 @@ public:
      *  @since v2.1
      */
     virtual const std::vector<std::string>& getSearchResolutionsOrder();
-    
+
     /** 
      *  Sets the array of search paths.
      * 

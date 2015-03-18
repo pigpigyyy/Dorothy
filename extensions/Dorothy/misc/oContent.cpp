@@ -304,9 +304,17 @@ void oContent::addSearchPath(const char* path)
 {
 	CCFileUtils::sharedFileUtils()->addSearchPath(path);
 }
+void oContent::setSearchPaths(const vector<string>& searchPaths)
+{
+	CCFileUtils::sharedFileUtils()->setSearchPaths(searchPaths);
+}
 void oContent::addSearchResolutionsOrder(const char* order)
 {
 	CCFileUtils::sharedFileUtils()->addSearchResolutionsOrder(order);
+}
+void oContent::setSearchResolutionsOrder(const vector<string>& searchOrders)
+{
+	CCFileUtils::sharedFileUtils()->setSearchResolutionsOrder(searchOrders);
 }
 void oContent::purgeCachedEntries()
 {

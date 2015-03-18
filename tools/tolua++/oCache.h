@@ -41,8 +41,9 @@ module oCache
 		static tolua_outside bool oClipCache_unload @ unload( const char* filename = nullptr );
 		static tolua_outside void oClipCache_removeUnused @ removeUnused();
 		static tolua_outside void oClipCache_getNames @ getNames(const char* filename);
+		static tolua_outside void oClipCache_getTextureFile @ getTextureFile(const char* filename);
 	};
-	
+
 	void oCache_clear @ clear();
 	void oCache_removeUnused @ removeUnused();
 	module Pool

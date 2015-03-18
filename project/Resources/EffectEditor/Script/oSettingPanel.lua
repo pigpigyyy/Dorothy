@@ -121,6 +121,7 @@ local function oSettingPanel()
 		item.name = itemName
 		items[itemName] = item
 	end
+	items.textureRect.enabled = false
 
 	local function listen(itemName,name,getter,multi)
 		if not getter and type(name) == "function" then
@@ -386,6 +387,9 @@ local function oSettingPanel()
 	self.data:add(oListener("settingPanel.hide",function()
 		setGroup(nil)
 		oEvent:send("settingPanel.cancel")
+	end))
+	self.data:add(oListener("settingPanel.moveToMode",function()
+		self:setPos(oVec2(0,borderSize.height*0.5+30-items.emitterType.positionY))
 	end))
 
 	return self

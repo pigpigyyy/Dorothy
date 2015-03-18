@@ -4961,17 +4961,17 @@ local Dorothy =
 				static = true,
 				type = "method",
 			},
-			addSearchPath =
+			setSearchPaths =
 			{
-				args = "(path: string)",
+				args = "(paths: string)",
 				description = "",
 				returns = "()",
 				static = true,
 				type = "method",
 			},
-			addSearchResolutionsOrder =
+			setSearchResolutionsOrder =
 			{
-				args = "(order: string)",
+				args = "(orders: string)",
 				description = "",
 				returns = "()",
 				static = true,
@@ -5497,6 +5497,13 @@ local Dorothy =
 				args = "(filename: string)",
 				description = "",
 				returns = "(names: table{string})",
+				type = "method"
+			},
+			getTextureFile =
+			{
+				args = "(filename: string)",
+				description = "",
+				returns = "(textureFile: string)",
 				type = "method"
 			}
 		},

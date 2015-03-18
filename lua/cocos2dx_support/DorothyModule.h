@@ -56,6 +56,8 @@ bool oClipCache_unload(const char* filename = nullptr);
 void oClipCache_removeUnused();
 void __oClipCache_getNames(lua_State* L,  const char* filename);
 #define oClipCache_getNames(filename) {__oClipCache_getNames(tolua_S,filename);return 1;}
+void __oClipCache_getTextureFile(lua_State* L, const char* filename);
+#define oClipCache_getTextureFile(filename) {__oClipCache_getTextureFile(tolua_S,filename);return 1;}
 
 bool oEffectCache_load(const char* filename);
 bool oEffectCache_update(const char* content);
@@ -86,6 +88,8 @@ oListener* oListener_create(const string& name, int handler);
 void __oContent_getDirEntries(lua_State* L, oContent* self, const char* path, bool isFolder);
 #define oContent_getDirEntries(self,path,isFolder) {__oContent_getDirEntries(tolua_S,self,path,isFolder);return 1;}
 void oContent_copyFileAsync(oContent* self, const char* src, const char* dst, int handler);
+void oContent_setSearchPaths(oContent* self, char* paths[], int length);
+void oContent_setSearchResolutionsOrder(oContent* self, char* paths[], int length);
 
 CCSprite* CCSprite_createWithClip(const char* clipStr);
 

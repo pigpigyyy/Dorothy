@@ -17,9 +17,10 @@ class oContent
     const char* getRelativeFullPath(const char* pszFilename, const char* pszRelativeFile);
     void loadFileLookupInfo(const char* filename);
 
-    void addSearchPath(const char* path);
-    void addSearchResolutionsOrder(const char* order);
-    void purgeCachedEntries();
+    tolua_outside void oContent_setSearchPaths @ setSearchPaths(char* paths[tolua_len]);
+    tolua_outside void oContent_setSearchResolutionsOrder @ setSearchResolutionsOrder(char* paths[tolua_len]);
+
+	void purgeCachedEntries();
 	
 	static oContent* shared @ create();
 };

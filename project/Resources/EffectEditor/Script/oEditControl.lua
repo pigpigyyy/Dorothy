@@ -7,17 +7,17 @@ local oEditor = require("oEditor")
 local CCDrawNode = require("CCDrawNode")
 local oVec2 = require("oVec2")
 local ccColor4 = require("ccColor4")
-local oBodyDef = require("oBodyDef")
 local oButton = require("oButton")
 local oListener = require("oListener")
 local oEvent = require("oEvent")
 local oEffect = require("oEffect")
 local ccBlendFunc = require("ccBlendFunc")
 local oColorPicker = require("oColorPicker")
+local oSpriteChooser = require("oSpriteChooser")
+local CCSprite = require("CCSprite")
+local oCache = require("oCache")
 
 local function oEditControl()
-	local winSize = CCDirector.winSize
-
 	local control = CCNode()
 
 	local ruler = oEditRuler()
@@ -96,6 +96,7 @@ local function oEditControl()
 			modeSelected(button.text == "Gravity" and oEditor.EmitterGravity or oEditor.EmitterRadius)
 		end
 		oEvent:send("settingPanel.cancel")
+		oEvent:send("settingPanel.moveToMode")
 	end
 	modeSelector.menu:addChild(oButton("Gravity",16,100,50,60,modeSize.height-35,modeCallback))
 	modeSelector.menu:addChild(oButton("Radius",16,100,50,60,modeSize.height-95,modeCallback))
@@ -131,7 +132,7 @@ local function oEditControl()
 		angularSpeed = "rotatePerSecond",
 		angularSpeedVar = "rotatePerSecondVariance",
 	}
-	
+
 	local anyNames =
 	{
 		gravityX = "gravityx",
@@ -149,7 +150,7 @@ local function oEditControl()
 		lifeTime = "particleLifespan",
 		lifeTimeVar = "particleLifespanVariance",
 	}
-	
+
 	control.data = oListener("settingPanel.edit",function(item)
 		local name = item.name
 		if item.selected then
@@ -256,6 +257,45 @@ local function oEditControl()
 					oEditor.effectData.emitterType = value
 					oEvent:send("emitterType",value)
 				end)
+			elseif name == "textureFile" then
+				local spriteChooser = oSpriteChooser()
+				spriteChooser.selected = function(filename)
+					oEvent:send("textureFileName",filename)
+					if filename == "__firePngData" then
+						oEditor.effectData.textureFileName = filename
+						oEditor.effectData.textureRectx = 0
+						oEditor.effectData.textureRecty = 0
+						oEditor.effectData.textureRectw = 0
+						oEditor.effectData.textureRecth = 0
+					else
+						if filename:match("|") then
+							local sprite = CCSprite(filename)
+							filename = filename:match("(.+)|")
+							filename = oCache.Clip:getTextureFile(filename)
+							oEditor.effectData.textureRectx = sprite.textureRect.origin.x
+							oEditor.effectData.textureRecty = sprite.textureRect.origin.y
+							oEditor.effectData.textureRectw = sprite.textureRect.size.width
+							oEditor.effectData.textureRecth = sprite.textureRect.size.height
+						else
+							oEditor.effectData.textureRectx = 0
+							oEditor.effectData.textureRecty = 0
+							oEditor.effectData.textureRectw = 0
+							oEditor.effectData.textureRecth = 0
+						end
+						oEditor.effectData.textureFileName = filename:match("[^\\/]*%.[^%.\\/]*$")
+					end
+					oEvent:send("textureFileName",oEditor.effectData.textureFileName)
+					oEvent:send("textureRectx",oEditor.effectData.textureRectx)
+					oEvent:send("textureRecty",oEditor.effectData.textureRecty)
+					oEvent:send("textureRectw",oEditor.effectData.textureRectw)
+					oEvent:send("textureRecth",oEditor.effectData.textureRecth)
+				end
+				local ended = spriteChooser.ended
+				spriteChooser.ended = function(self)
+					oEvent:send("settingPanel.cancel")
+					ended(self)
+				end
+				oEditor:addChild(spriteChooser,oEditor.topMost)
 			end
 		else
 			if name == "name" then

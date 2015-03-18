@@ -207,6 +207,11 @@ void __oClipCache_getNames(lua_State* L, const char* filename)
 		lua_rawseti(L, -2, i++);
 	}
 }
+void __oClipCache_getTextureFile(lua_State* L, const char* filename)
+{
+	oClipDef* clipDef = oSharedClipCache.load(filename);
+	lua_pushlstring(L, clipDef->textureFile.c_str(), clipDef->textureFile.size());
+}
 
 bool oEffectCache_load(const char* filename)
 {
@@ -355,6 +360,24 @@ void oContent_copyFileAsync(oContent* self, const char* src, const char* dst, in
 		CCLuaEngine::sharedEngine()->executeFunction(handler);
 		CCLuaEngine::sharedEngine()->removeScriptHandler(handler);
 	});
+}
+void oContent_setSearchPaths(oContent* self, char* paths[], int length)
+{
+	vector<string> searchPaths(length);
+	for (int i = 0; i < length; i++)
+	{
+		searchPaths[i] = paths[i];
+	}
+	self->setSearchPaths(searchPaths);
+}
+void oContent_setSearchResolutionsOrder(oContent* self, char* paths[], int length)
+{
+	vector<string> searchOrders(length);
+	for (int i = 0; i < length; i++)
+	{
+		searchOrders[i] = paths[i];
+	}
+	self->setSearchResolutionsOrder(searchOrders);
 }
 
 CCSprite* CCSprite_createWithClip(const char* clipStr)

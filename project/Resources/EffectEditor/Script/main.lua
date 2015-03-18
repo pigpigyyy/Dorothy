@@ -41,6 +41,7 @@ oRoutine(once(function()
 			end
 		elseif eventType == CCNode.Cleanup then
 			-- do editor cleanup
+			oContent:setSearchPaths({})
 		end
 	end)
 	CCDirector:run(oEditor)
@@ -58,4 +59,5 @@ oRoutine(once(function()
 	if not oContent:exist(oContent.writablePath.."Effect") and oContent:exist("EffectEditor/Effect") then
 		oContent:copyAsync(resPath,writePath)
 	end
+	oContent:setSearchPaths({oEditor.input})
 end))

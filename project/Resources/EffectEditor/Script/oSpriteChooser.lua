@@ -57,14 +57,13 @@ local function oSpriteChooser()
 	btnBk.position = oVec2(30,30)
 	cancelButton:addChild(btnBk,-1)
 	opMenu:addChild(cancelButton)
-	
+
 	panel.sprites = {}
 	panel.init = function(self)
 		local y = 0
 		local n = 0
 		local files = oContent:getEntries(oEditor.input,false)
 		local orderedFiles = {}
-		local modelFiles = {}
 		for index = 1,#files do
 			files[index] = oEditor.input..files[index]
 			local extension = string.match(files[index],"%.([^%.\\/]*)$")
@@ -75,25 +74,20 @@ local function oSpriteChooser()
 				elseif extension == "clip" then
 					table.insert(orderedFiles,files[index]:sub(1,-5).."png")
 					table.insert(orderedFiles,files[index])
-				elseif extension == "model" then
-					table.insert(modelFiles,files[index])
 				end
 			end
-		end
-		for index = 1,#modelFiles do
-			table.insert(orderedFiles,modelFiles[index])
 		end
 		local routine
 		n = n + 1
 		y = borderSize.height-10-itemHeight*0.5-math.floor((n-1)/itemNum)*(itemHeight+10)
-		local button = oButton("Empty",16,100,100,
+		local button = oButton("Built-In",16,100,100,
 			itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
 			function()
 				if panel.selected then
 					cancelButton:unregisterTapHandler()
 					oRoutine:remove(routine)
 					panel:hide()
-					panel.selected("")
+					panel.selected("__firePngData")
 				end
 			end)
 		menu:addChild(button)
@@ -175,23 +169,6 @@ local function oSpriteChooser()
 							button.position = button.position + panel:getTotalDelta()
 							menu:addChild(button)
 						end
-					elseif extension == "model" then
-						n = n + 1
-						y = borderSize.height-10-itemHeight*0.5-math.floor((n-1)/itemNum)*(itemHeight+10)
-						local name = "Model\n"..filename:match("[\\/](%a*)()%.[^%.\\/]*$")
-						local button = oButton(name,16,
-							100,100,
-							itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
-							function()
-								if panel.selected then
-									cancelButton:unregisterTapHandler()
-									oRoutine:remove(routine)
-									panel:hide()
-									panel.selected(filename)
-								end
-							end)
-						button.position = button.position + panel:getTotalDelta()
-						menu:addChild(button)
 					end
 				end
 				local yTo = borderSize.height+itemHeight*0.5+10-y
