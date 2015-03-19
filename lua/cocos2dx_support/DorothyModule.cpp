@@ -1488,27 +1488,31 @@ void __oEffect_update(lua_State* L, oEffect* self, int tableIndex)
 			particleSystem->setRotatePerSecond(getFloat("rotatePerSecond"));
 			particleSystem->setRotatePerSecondVar(getFloat("rotatePerSecondVariance"));
 		}
-		if (has("textureRectx"))
+		string textureName = getString("textureFileName");
+		CCTexture2D* tex;
+		if (textureName == "__firePngData")
 		{
-			CCRect rect(getFloat("textureRectx"),
-				getFloat("textureRecty"),
-				getFloat("textureRectw"),
-				getFloat("textureRecth"));
-				if (rect != CCRect::zero)
-				{
-					particleSystem->setTextureWithRect(
-						oSharedContent.loadTexture(getString("textureFileName")),rect);
-				}
-				else
-				{
-					particleSystem->setTexture(
-						oSharedContent.loadTexture(getString("textureFileName")));
-				}
+			tex = CCParticleSystem::getDefaultTexture();
 		}
 		else
 		{
-			particleSystem->setTexture(
-				oSharedContent.loadTexture(getString("textureFileName")));
+			tex = oSharedContent.loadTexture(textureName.c_str());
+		}
+		CCRect rect;
+		if (has("textureRectx"))
+		{
+			rect = CCRect(getFloat("textureRectx"),
+				getFloat("textureRecty"),
+				getFloat("textureRectw"),
+				getFloat("textureRecth"));
+		}
+		if (rect == CCRect::zero)
+		{
+			particleSystem->setTexture(tex);
+		}
+		else
+		{
+			particleSystem->setTextureWithRect(tex, rect);
 		}
 	}
 }

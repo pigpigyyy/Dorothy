@@ -316,13 +316,20 @@ bool CCParticleSystem::initWithDictionary(CCDictionary *dictionary, const char *
                 CCTexture2D* tex = NULL;
                 if (textureName.length() > 0)
                 {
-                    // set not pop-up message box when load image failed
-                    bool bNotify = CCFileUtils::sharedFileUtils()->isPopupNotify();
-                    CCFileUtils::sharedFileUtils()->setPopupNotify(false);
-                    tex = CCTextureCache::sharedTextureCache()->addImage(textureName.c_str());
-                    // reset the value of UIImage notify
-                    CCFileUtils::sharedFileUtils()->setPopupNotify(bNotify);
-                }
+					if (textureName == "__firePngData")
+					{
+						tex = CCParticleSystem::getDefaultTexture();
+					}
+					else
+					{
+						// set not pop-up message box when load image failed
+						bool bNotify = CCFileUtils::sharedFileUtils()->isPopupNotify();
+						CCFileUtils::sharedFileUtils()->setPopupNotify(false);
+						tex = CCTextureCache::sharedTextureCache()->addImage(textureName.c_str());
+						// reset the value of UIImage notify
+						CCFileUtils::sharedFileUtils()->setPopupNotify(bNotify);
+					}
+				}
                 if (!tex)
 				{
                     const char* textureData = dictionary->stringForKey("textureImageData");

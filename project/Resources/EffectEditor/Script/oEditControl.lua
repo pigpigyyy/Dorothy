@@ -260,7 +260,6 @@ local function oEditControl()
 			elseif name == "textureFile" then
 				local spriteChooser = oSpriteChooser()
 				spriteChooser.selected = function(filename)
-					oEvent:send("textureFileName",filename)
 					if filename == "__firePngData" then
 						oEditor.effectData.textureFileName = filename
 						oEditor.effectData.textureRectx = 0
