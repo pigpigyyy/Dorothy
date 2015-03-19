@@ -54,16 +54,16 @@ oRoutine(once(function()
 		oEditor:addChild(oEditor[name],index)
 		coroutine.yield()
 	end
-	if not oContent:exist(oEditor.input) then
-		oContent:mkdir(oEditor.input)
-	end
-	if not oContent:exist(oEditor.output) then
-		oContent:mkdir(oEditor.output)
-	end
 	local resPath = "BodyEditor/Body"
 	local writePath = oContent.writablePath.."Body"
 	if not oContent:exist(oContent.writablePath.."Body") and oContent:exist("BodyEditor/Body") then
 		oContent:copyAsync(resPath,writePath)
+		if not oContent:exist(oEditor.input) then
+			oContent:mkdir(oEditor.input)
+		end
+		if not oContent:exist(oEditor.output) then
+			oContent:mkdir(oEditor.output)
+		end
 	end
 	local oFileChooser = require("oFileChooser")
 	coroutine.yield()

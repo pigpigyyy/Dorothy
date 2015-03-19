@@ -112,6 +112,12 @@ oRoutine(once(function() -- load UI asynchronously
 	local writePath = oContent.writablePath.."Model"
 	if not oContent:exist(oContent.writablePath.."Model") and oContent:exist("ActionEditor/Model") then
 		oContent:copyAsync(resPath,writePath) -- copy some prepared contents
+		if not oContent:exist(oEditor.input) then
+			oContent:mkdir(oEditor.input)
+		end
+		if not oContent:exist(oEditor.output) then
+			oContent:mkdir(oEditor.output)
+		end
 	end
 	coroutine.yield()
 	oEditor.vertexControl = require("oVertexControl")() -- one more control to load
