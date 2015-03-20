@@ -118,6 +118,7 @@ local function oSpriteChooser()
 										oRoutine:remove(routine)
 										panel:hide()
 										panel.selected(clipStr)
+										panel.touchEnabled = false
 									end
 								end)
 							local sprite = nil

@@ -258,7 +258,11 @@ local function oFileChooser(addExisted)
 			end
 			panel:hide()
 			oEditor:addChild(oBox("New Particle",function(name)
-				oEditor:addChild(oTemplateChooser(oEditor:getUsableName(name)..".par"),oEditor.topMost)
+				if name == "" or name:match("[\\/|:*?<>\"%.]") then
+					oEditor:addChild(oBox("Invalid Name"),oEditor.topMost)
+				else
+					oEditor:addChild(oTemplateChooser(oEditor:getUsableName(name)..".par"),oEditor.topMost)
+				end
 			end,true),oEditor.topMost)
 		end)
 	newPButton.color = ccColor3(0x80ff00)
@@ -287,7 +291,11 @@ local function oFileChooser(addExisted)
 			end
 			panel:hide()
 			oEditor:addChild(oBox("New Frame",function(name)
-				oEditor.currentFile = name..".frame"
+				if name == "" or name:match("[\\/|:*?<>\"%.]") then
+					oEditor:addChild(oBox("Invalid Name"),oEditor.topMost)
+				else
+					oEditor.currentFile = name..".frame"
+				end
 			end,true),oEditor.topMost)
 		end)
 	newFButton.color = ccColor3(0x80ff00)

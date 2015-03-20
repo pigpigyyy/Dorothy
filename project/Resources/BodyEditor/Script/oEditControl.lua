@@ -999,6 +999,7 @@ local function oEditControl()
 					oEditor:resetItem(data)
 				end)
 			elseif name == "Face" then
+				editControl:hide()
 				local spriteChooser = oSpriteChooser()
 				oEditor:addChild(spriteChooser,oEditor.topMost)
 				spriteChooser.selected = function(filename)
@@ -1006,6 +1007,11 @@ local function oEditControl()
 					item.value = filename
 					data:set("Face",filename)
 					oEditor:resetItem(data,true)
+					oEvent:send("settingPanel.edit",nil)
+				end
+				local ended = spriteChooser.ended
+				spriteChooser.ended = function(self)
+					ended(self)
 					oEvent:send("settingPanel.edit",nil)
 				end
 			elseif name == "FacePos" then

@@ -266,6 +266,7 @@ local function oSelectionPanel(borderSize,noCliping)
 	panel.show = function(self)
 		menu.enabled = true
 		panel.visible = true
+		panel.touchEnabled = true
 		mask.touchEnabled = true
 		border:stopAllActions()
 		border:runAction(
@@ -287,6 +288,7 @@ local function oSelectionPanel(borderSize,noCliping)
 
 	panel.hide = function(self)
 		menu.enabled = false
+		panel.touchEnabled = false
 		border:stopAllActions()
 		border:runAction(
 			CCSequence(

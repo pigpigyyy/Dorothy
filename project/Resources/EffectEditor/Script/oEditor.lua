@@ -77,15 +77,9 @@ oEditor.dumpData = function(self,filename)
 </plist>]]
 		oContent:saveToFile(oEditor.output..filename,str)
 		oCache.Particle:unload(oEditor.output..filename)
-	else
+	elseif extension == "frame" then
+		-- TODO
 	end
-end
-
-if not oContent:exist(oEditor.input) then
-	oContent:mkdir(oEditor.input)
-end
-if not oContent:exist(oEditor.output) then
-	oContent:mkdir(oEditor.output)
 end
 
 return oEditor

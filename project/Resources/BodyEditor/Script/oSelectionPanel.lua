@@ -321,6 +321,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 	panel.show = function(self)
 		if panel.mask then panel.mask.touchEnabled = true end
 		panel.visible = true
+		panel.touchEnabled = true
 		border.scaleX = 0.3
 		border.scaleY = 0.3
 		border.opacity = 0
@@ -343,6 +344,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 	end
 
 	panel.hide = function(self)
+		panel.touchEnabled = false
 		menu.enabled = false
 		border:stopAllActions()
 		border:runAction(

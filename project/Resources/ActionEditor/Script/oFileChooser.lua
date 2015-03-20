@@ -209,6 +209,10 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 	opMenu.position = oVec2(winSize.width*0.5+borderSize.width*0.5+35,winSize.height*0.5+borderSize.height*0.5)
 	panel:addChild(opMenu)
 
+	if CCDirector.sceneStackSize > 1 then
+		
+	end
+
 	local cancelButton 
 	if withCancel then
 		cancelButton = oButton("Cancel",17,60,false,
@@ -425,7 +429,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 					panel:hide()
 					item:unregisterTapHandler()
 					oBox("New Model",function(name)
-						if name == "" then
+						if name == "" or name:match("[\\/|:*?<>\"%.]") then
 							oBox("Invalid Name")
 						elseif oContent:exist(oEditor.output..name..".model") then
 							oBox(name.." Exist")

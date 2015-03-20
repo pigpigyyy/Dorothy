@@ -80,10 +80,14 @@ local function oEditMenu()
 					oEditor:dumpData(oEditor.currentFile)
 				else
 					oEditor:addChild(oBox("New Name",function(name)
-						oEditor.dirty = false
-						button.text = "Edit"
-						oEditor.currentFile = name..".body"
-						oEditor:dumpData(oEditor.currentFile)
+						if name == "" or name:match("[\\/|:*?<>\"%.]") then
+							oEditor:addChild(oBox("Invalid Name"),oEditor.topMost)
+						else
+							oEditor.dirty = false
+							button.text = "Edit"
+							oEditor.currentFile = name..".body"
+							oEditor:dumpData(oEditor.currentFile)
+						end
 					end,true),oEditor.topMost)
 				end
 			end

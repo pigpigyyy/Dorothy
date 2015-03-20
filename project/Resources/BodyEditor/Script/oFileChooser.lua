@@ -135,10 +135,14 @@ local function oFileChooser()
 			end
 			panel:hide()
 			oEditor:addChild(oBox("New Body",function(name)
-				resetEditor()
-				oEditor.currentFile = name..".body"
-				oEditor:clearData()
-				oEditor:dumpData(oEditor.currentFile)
+				if name == "" or name:match("[\\/|:*?<>\"%.]") then
+					oEditor:addChild(oBox("Invalid Name"),oEditor.topMost)
+				else
+					resetEditor()
+					oEditor.currentFile = name..".body"
+					oEditor:clearData()
+					oEditor:dumpData(oEditor.currentFile)
+				end
 			end,true),oEditor.topMost)
 		end)
 	newButton.color = ccColor3(0x80ff00)
@@ -199,7 +203,7 @@ local function oFileChooser()
 	local paddingX = 0
 	local paddingY = 100
 	panel:reset(viewWidth,viewHeight,paddingX,paddingY)
-	
+
 	local opMenu = CCMenu()
 	opMenu.contentSize = CCSize(130,60)
 	opMenu.anchor = oVec2(1,0.5)
