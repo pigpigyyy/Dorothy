@@ -3,7 +3,7 @@ collectgarbage("setstepmul", 5000)
 
 local _require = require
 local loaded = {} -- save loaded module names for end clean up
-require = function(modulename)
+_G["require"] = function(modulename)
 	local result = package.loaded[modulename]
 	if not result then
 		local name = "EffectEditor/Script/"..modulename
@@ -35,7 +35,7 @@ oRoutine(once(function()
 	local oEditor = require("oEditor")
 	oEditor:registerEventHandler(function(eventType)
 		if eventType == CCNode.Exited then
-			require = _require
+			_G["require"] = _require
 			for k,_ in pairs(loaded) do
 				package.loaded[k] = nil
 			end

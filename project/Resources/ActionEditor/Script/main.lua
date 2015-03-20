@@ -23,7 +23,7 @@ collectgarbage("setstepmul", 5000)
 
 local _require = require
 local loaded = {}
-require = function(modulename)
+_G["require"] = function(modulename)
 	local result = package.loaded[modulename]
 	if not result then
 		local name = "ActionEditor/Script/"..modulename
@@ -159,7 +159,7 @@ end
 --CCDirector.displayStats = true
 oEditor.scene:registerEventHandler(function(eventType)
 	if eventType == CCNode.Exited then
-		require = _require
+		_G["require"] = _require
 		for k,_ in pairs(loaded) do
 			package.loaded[k] = nil
 		end
