@@ -220,7 +220,6 @@ end
 
 local oAction = loaded.oAction
 local oAction_add = oAction.add
-local oRoutine_once = oRoutine.once
 oAction.add = function(self,id,priority,reaction,recovery,access,routine,stop)
 	oAction_add(self,
 		id,
@@ -229,7 +228,7 @@ oAction.add = function(self,id,priority,reaction,recovery,access,routine,stop)
 		recovery,
 		access,
 		function()
-			return oRoutine_once(routine)
+			return once(routine)
 		end,
 		stop)
 end
