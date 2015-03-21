@@ -26,7 +26,7 @@ local oButton = class(
 
 		local node = CCNode()
 		node.cascadeColor = false
-		
+
 		local drawNode = CCDrawNode()
 		if not height then
 			drawNode:drawDot(oVec2(width*0.5,width*0.5),width*0.5,ccColor4(0x88000000))

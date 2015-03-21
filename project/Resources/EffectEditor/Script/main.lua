@@ -25,10 +25,8 @@ local controls =
 {
 	"oViewArea",
 	"oEditMenu",
-	--"oViewPanel",
 	"oSettingPanel",
 	"oEditControl",
-	"oFileChooser",
 }
 
 oRoutine(once(function()
@@ -58,12 +56,15 @@ oRoutine(once(function()
 	local writePath = oContent.writablePath.."Effect"
 	if not oContent:exist(oContent.writablePath.."Effect") and oContent:exist("EffectEditor/Effect") then
 		oContent:copyAsync(resPath,writePath)
-		if not oContent:exist(oEditor.input) then
-			oContent:mkdir(oEditor.input)
-		end
-		if not oContent:exist(oEditor.output) then
-			oContent:mkdir(oEditor.output)
-		end
+	end
+	if not oContent:exist(oEditor.input) then
+		oContent:mkdir(oEditor.input)
+	end
+	if not oContent:exist(oEditor.output) then
+		oContent:mkdir(oEditor.output)
 	end
 	oContent:setSearchPaths({oEditor.input})
+
+	local oFileChooser = require("oFileChooser")
+	oEditor:addChild(oFileChooser(),oEditor.topMost)
 end))
