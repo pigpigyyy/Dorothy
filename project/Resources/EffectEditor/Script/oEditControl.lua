@@ -303,6 +303,7 @@ local function oEditControl()
 				oEditor.items[newName] = oEditor.currentFile
 				oEditor.currentName = newName
 				oEditor:dumpEffectFile()
+				oEvent:send("name",newName)
 			else
 				oEffect:update(oEditor.effect,oEditor.effectData)
 				oEditor.effect:start()

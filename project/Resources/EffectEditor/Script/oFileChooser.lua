@@ -91,6 +91,33 @@ local function oFileChooser(addExisted)
 		panel:reset(viewWidth,viewHeight,paddingX,paddingY)
 	end
 
+	local function loadEffect(name,file)
+		oCache.Effect:load(oEditor.output.."main.effect")
+		local extension = string.match(file, "%.([^%.\\/]*)$")
+		if extension == "par" then
+			local dict = CCDictionary(oEditor.output..file)
+			local keys = dict.keys
+			local parData = {}
+			for _,v in ipairs(keys) do
+				parData[v] = dict[v]
+			end
+			oEditor.effectData = parData
+			if not parData.textureRectx then
+				parData.textureRectx = 0
+				parData.textureRecty = 0
+				parData.textureRectw = 0
+				parData.textureRecth = 0
+			end
+			for k,v in pairs(oEditor.effectData) do
+				oEvent:send(k,v)
+			end
+			oEvent:send("name",name)
+		elseif extension == "frame" then
+			-- TODO
+		end
+		oEvent:send("viewArea.changeEffect",name)
+	end
+
 	if addExisted then
 		local title = CCLabelTTF("Add  Effect","Arial",24)
 		title.texture.antiAlias = false
@@ -102,7 +129,7 @@ local function oFileChooser(addExisted)
 		title.opacity = 0
 		title:runAction(oOpacity(0.3,0.5))
 		yStart = y-title.contentSize.height-(oEditor.currentFile and -10 or 20)
-		
+
 		local entries = oContent:getEntries(oEditor.output,false)
 		local files = {}
 		for i = 1,#entries do
@@ -134,6 +161,7 @@ local function oFileChooser(addExisted)
 					oEditor.currentName = name
 					oEditor.currentFile = item.file
 					oEditor:dumpEffectFile()
+					loadEffect(name,item.file)
 				end)
 			button.file = files[i]
 			button.enabled = false
@@ -149,7 +177,7 @@ local function oFileChooser(addExisted)
 				}))
 			menu:addChild(button)
 		end
-		
+
 		resetPanel()
 		panel:show()
 		return panel
@@ -178,7 +206,7 @@ local function oFileChooser(addExisted)
 		title:runAction(oOpacity(0.3,0.5))
 		yStart = y-title.contentSize.height-10
 	end
-	
+
 	for item in io.open(oEditor.output.."main.effect","r"):read("*a"):gmatch("%b<>") do
 		if not item:sub(2,2):match("[A/]") then
 			local line = item:gsub("%s","")
@@ -206,29 +234,7 @@ local function oFileChooser(addExisted)
 					panel.parent:removeChild(panel)
 				end
 				panel:hide()
-				local extension = string.match(item.file, "%.([^%.\\/]*)$")
-				if extension == "par" then
-					local dict = CCDictionary(oEditor.output..item.file)
-					local keys = dict.keys
-					local parData = {}
-					for _,v in ipairs(keys) do
-						parData[v] = dict[v]
-					end
-					oEditor.effectData = parData
-					if not parData.textureRectx then
-						parData.textureRectx = 0
-						parData.textureRecty = 0
-						parData.textureRectw = 0
-						parData.textureRecth = 0
-					end
-					for k,v in pairs(oEditor.effectData) do
-						oEvent:send(k,v)
-					end
-					oEvent:send("name",item.name)
-				elseif extension == "frame" then
-					-- TODO
-				end
-				oEvent:send("viewArea.changeEffect",item.name)
+				loadEffect(item.name,item.file)
 			end)
 		button.name = name
 		button.file = filename
@@ -353,8 +359,16 @@ local function oFileChooser(addExisted)
 					panel.parent:removeChild(panel)
 				end
 				panel:hide()
-				oEditor:addChild(oBox("Delete "..oEditor.currentFile:sub(1,-5),function()
-					oContent:remove(oEditor.output..oEditor.currentFile)
+				oEditor:addChild(oBox("Delete "..oEditor.currentName,function()
+					local count = 0
+					for _,file in pairs(oEditor.items) do
+						if file == oEditor.currentFile then
+							count = count + 1
+						end
+					end
+					if count <= 1 then
+						oContent:remove(oEditor.output..oEditor.currentFile)
+					end
 					oEditor.items[oEditor.currentName] = nil
 					oEditor.currentName = nil
 					oEditor.currentFile = nil

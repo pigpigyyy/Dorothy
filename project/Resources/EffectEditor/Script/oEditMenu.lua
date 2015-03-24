@@ -16,7 +16,7 @@ local CCDelay = require("CCDelay")
 
 local function oEditMenu()
 	local winSize = CCDirector.winSize
-	
+
 	local menu = CCMenu(false)
 	menu.touchPriority = oEditor.touchPriorityEditMenu
 	menu.anchor = oVec2.zero
@@ -34,6 +34,7 @@ local function oEditMenu()
 					oEditor:dumpData(oEditor.currentFile)
 				end
 			end
+			oEvent:send("settingPanel.cancel")
 		end),
 
 		Origin = oButton("Origin",16,50,50,winSize.width-240-45-60,winSize.height-35,function(button)
