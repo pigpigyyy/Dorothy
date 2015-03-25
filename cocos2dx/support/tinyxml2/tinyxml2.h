@@ -150,6 +150,8 @@ public:
     }
 
     const char* GetStr();
+	const char* GetStart() { return _start; }
+	const char* GetEnd() { return _end; }
 
     bool Empty() const {
         return _start == _end;
@@ -449,7 +451,9 @@ public:
 class XMLUtil
 {
 public:
-    // Anything in the high order range of UTF-8 is assumed to not be whitespace. This isn't
+	static void PlaceCDataHeader(const char* mocdataLHeader);
+	static void PlaceHeaderHandler(void(*)(const char*, const char*));
+	// Anything in the high order range of UTF-8 is assumed to not be whitespace. This isn't
     // correct, but simple, and usually works.
     static const char* SkipWhiteSpace( const char* p )	{
         while( !IsUTF8Continuation(*p) && isspace( *reinterpret_cast<const unsigned char*>(p) ) ) {
@@ -1536,7 +1540,6 @@ public:
     virtual bool ShallowEqual( const XMLNode* /*compare*/ ) const	{
         return false;
     }
-
 private:
     XMLDocument( const XMLDocument& );	// not supported
     void operator=( const XMLDocument& );	// not supported

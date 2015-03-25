@@ -264,10 +264,17 @@ const char* StrPair::GetStr()
     return _start;
 }
 
-
-
-
 // --------- XMLUtil ----------- //
+static const char* g_cdataHeader;
+static void(*g_headerHandler)(const char*, const char*);
+void XMLUtil::PlaceCDataHeader(const char* mocdataLHeader)
+{
+	g_cdataHeader = mocdataLHeader;
+}
+void XMLUtil::PlaceHeaderHandler(void(*handler)(const char*, const char*))
+{
+	g_headerHandler = handler;
+}
 
 const char* XMLUtil::ReadBOM( const char* p, bool* bom )
 {
@@ -545,6 +552,11 @@ char* XMLDocument::Identify( char* p, XMLNode** node )
         returnNode->_memPool = &_textPool;
         p += cdataHeaderLen;
         text->SetCData( true );
+		// clear temporary used cdata header
+		if (g_cdataHeader)
+		{
+			g_cdataHeader = NULL;
+		}
     }
     else if ( XMLUtil::StringEqual( p, dtdHeader, dtdHeaderLen ) ) {
         returnNode = new (_commentPool.Alloc()) XMLUnknown( this );
@@ -863,7 +875,22 @@ char* XMLText::ParseDeep( char* p, StrPair* )
         }
         return p;
     }
-    else {
+	else if (g_cdataHeader) {
+		int flags = _document->ProcessEntities() ? StrPair::TEXT_ELEMENT : StrPair::TEXT_ELEMENT_LEAVE_ENTITIES;
+		if (_document->WhitespaceMode() == COLLAPSE_WHITESPACE) {
+			flags |= StrPair::COLLAPSE_WHITESPACE;
+		}
+		p = _value.ParseText(p, g_cdataHeader, flags);
+		if (!p) {
+			_document->SetError(XML_ERROR_PARSING_TEXT, start, 0);
+		}
+		if (p && *p) {
+			size_t len = strlen(g_cdataHeader);
+			g_cdataHeader = NULL;
+			return p - len;
+		}
+	}
+	else {
         int flags = _document->ProcessEntities() ? StrPair::TEXT_ELEMENT : StrPair::TEXT_ELEMENT_LEAVE_ENTITIES;
         if ( _document->WhitespaceMode() == COLLAPSE_WHITESPACE ) {
             flags |= StrPair::COLLAPSE_WHITESPACE;
@@ -1421,6 +1448,12 @@ char* XMLElement::ParseDeep( char* p, StrPair* strPair )
     }
 
     p = _value.ParseName( p );
+
+	if (g_headerHandler)
+	{
+		g_headerHandler(_value.GetStart(), _value.GetEnd());
+	}
+
     if ( _value.Empty() ) {
         return 0;
     }
@@ -1729,7 +1762,6 @@ void XMLDocument::PrintError() const
                 _errorID, buf1, buf2 );
     }
 }
-
 
 XMLPrinter::XMLPrinter( FILE* file, bool compact ) :
     _elementJustOpened( false ),

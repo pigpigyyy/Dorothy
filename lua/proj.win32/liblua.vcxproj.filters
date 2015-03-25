@@ -48,6 +48,9 @@
     <ClCompile Include="..\cocos2dx_support\LuaCode.cpp">
       <Filter>cocos2dx_support</Filter>
     </ClCompile>
+    <ClCompile Include="..\cocos2dx_support\DorothyXml.cpp">
+      <Filter>cocos2dx_support</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\tolua\tolua++.h">
@@ -78,6 +81,9 @@
       <Filter>lib\include</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos2dx_support\DorothyModule.h">
+      <Filter>cocos2dx_support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos2dx_support\DorothyXml.h">
       <Filter>cocos2dx_support</Filter>
     </ClInclude>
   </ItemGroup>

@@ -46,20 +46,24 @@ public:
 
 class CC_DLL CCSAXParser
 {
-    CCSAXDelegator*    m_pDelegator;
 public:
-
     CCSAXParser();
     ~CCSAXParser();
 
     bool init(const char *pszEncoding);
     bool parse(const char* pXMLData, unsigned int uDataLength);
     bool parse(const char *pszFile);
+
     void setDelegator(CCSAXDelegator* pDelegator);
 
     static void startElement(void *ctx, const CC_XML_CHAR *name, const CC_XML_CHAR **atts);
     static void endElement(void *ctx, const CC_XML_CHAR *name);
     static void textHandler(void *ctx, const CC_XML_CHAR *name, int len);
+
+	static void placeCDataHeader(const char* cdataHeader);
+	static void setHeaderHandler(void(*handler)(const char* start, const char* end));
+private:
+	CCSAXDelegator* m_pDelegator;
 };
 
 // end of platform group

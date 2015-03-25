@@ -2,6 +2,7 @@
 #include "CCEGLView.h"
 #include "AppDelegate.h"
 #include "CCLuaEngine.h"
+#include "DorothyXml.h"
 #include "SimpleAudioEngine.h"
 using namespace CocosDenshion;
 #include "Dorothy.h"
@@ -35,6 +36,7 @@ bool AppDelegate::applicationDidFinishLaunching()
 		CCUserDefault::sharedUserDefault()->setStringForKey("ScriptEntry", "main");
 		entry = "main";
 	}
+	CCLOG("%s",oSharedXMLLoader.load("codes.xml").c_str());
 	CCScriptEngine::sharedEngine()->executeScriptFile(entry.c_str());
 	return true;
 }

@@ -1,0 +1,55 @@
+<Scene>
+	<Layer>
+		<Sprite Source="fire.clip|apple" X="120" Y="360" ScaleX="1" ScaleY="0.5" Width="300"/>
+		<LabelTTF Name="label" Text="Add  Effect" Color="0x00ffff" AnchorX="0.5" AnchorY="1" X="{halfBW}" Y="{y}" AntiAlias="false">
+			<MenuItem Name="menuItem" ZOrder="999">
+				<Data>
+					<Sequence Key="scale">
+						<Scale Time="1" X="1" Y="2" Ease="InSine"/>
+						<Scale Time="1" X="1" Y="1" Ease="OutBack"/>
+					</Sequence>
+					<Listener Event="settingPanel.move">
+						function(pos)
+							if 0 > pos.x or pos.y < 998 then
+								label.position = pos
+							end
+						end
+					</Listener>
+				</Data>
+				<TapHandler>
+					function(item)
+						item:runAction(item.data["scale"])
+					end
+				</TapHandler>
+				<Schedule>
+					once(function()
+						wait(seconds(10))
+						print("hello")
+						wait(seconds(3))
+					end)
+				</Schedule>
+			</MenuItem>
+		</LabelTTF>
+		<Layer Name="" Width="100" Height="200">
+			<TouchHandler>
+				function(eventType, touch)
+					if eventType == CCTouch.Began then
+						layer.opacity = 1
+						label.text = "Touched"
+					elseif eventType == CCTouch.Ended then
+						layer.opacity = 0
+						label.text = "Touch Ended"
+					end
+				end
+			</TouchHandler>
+			<EventHandler>
+				function(eventType)
+					if eventType == CCNode.Entered then
+					elseif eventType == CCNode.Exited then
+					elseif eventType == CCNode.CleanUp then
+					end
+				end
+			</EventHandler>
+		</Layer>
+	</Layer>
+</Scene>

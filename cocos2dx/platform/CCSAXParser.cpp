@@ -53,19 +53,12 @@ private:
 
 bool XmlSaxHander::VisitEnter( const tinyxml2::XMLElement& element, const tinyxml2::XMLAttribute* firstAttribute )
 {
-	//CCLog(" VisitEnter %s",element.Value());
-
 	std::vector<const char*> attsVector;
 	for( const tinyxml2::XMLAttribute* attrib = firstAttribute; attrib; attrib = attrib->Next() )
 	{
-		//CCLog("%s", attrib->Name());
 		attsVector.push_back(attrib->Name());
-		//CCLog("%s",attrib->Value());
 		attsVector.push_back(attrib->Value());
 	}
-    
-    // nullptr is used in c++11
-	//attsVector.push_back(nullptr);
     attsVector.push_back(NULL);
 
 	CCSAXParser::startElement(m_ccsaxParserImp, (const CC_XML_CHAR *)element.Value(), (const CC_XML_CHAR **)(&attsVector[0]));
@@ -73,27 +66,22 @@ bool XmlSaxHander::VisitEnter( const tinyxml2::XMLElement& element, const tinyxm
 }
 bool XmlSaxHander::VisitExit( const tinyxml2::XMLElement& element )
 {
-	//CCLog("VisitExit %s",element.Value());
-
 	CCSAXParser::endElement(m_ccsaxParserImp, (const CC_XML_CHAR *)element.Value());
 	return true;
 }
 
 bool XmlSaxHander::Visit( const tinyxml2::XMLText& text )
 {
-	//CCLog("Visit %s",text.Value());
 	CCSAXParser::textHandler(m_ccsaxParserImp, (const CC_XML_CHAR *)text.Value(), (int)strlen(text.Value()));
 	return true;
 }
 
-CCSAXParser::CCSAXParser()
-{
-    m_pDelegator = NULL;
-}
+CCSAXParser::CCSAXParser():
+m_pDelegator(NULL)
+{ }
 
 CCSAXParser::~CCSAXParser()
-{
-}
+{ }
 
 bool CCSAXParser::init(const char *pszEncoding)
 {
@@ -115,7 +103,7 @@ bool CCSAXParser::parse(const char* pXMLData, unsigned int uDataLength)
 	}
 	XmlSaxHander printer;
 	printer.setCCSAXParserImp(this);
-	
+
 	return tinyDoc.Accept( &printer );	
 }
 
@@ -141,15 +129,25 @@ void CCSAXParser::endElement(void *ctx, const CC_XML_CHAR *name)
 {
     ((CCSAXParser*)(ctx))->m_pDelegator->endElement(ctx, (char*)name);
 }
+
 void CCSAXParser::textHandler(void *ctx, const CC_XML_CHAR *name, int len)
 {
     ((CCSAXParser*)(ctx))->m_pDelegator->textHandler(ctx, (char*)name, len);
 }
+
 void CCSAXParser::setDelegator(CCSAXDelegator* pDelegator)
 {
     m_pDelegator = pDelegator;
 }
 
+void CCSAXParser::placeCDataHeader(const char* cdataHeader)
+{
+	tinyxml2::XMLUtil::PlaceCDataHeader(cdataHeader);
+}
+
+void CCSAXParser::setHeaderHandler(void(*handler)(const char* start, const char* end))
+{
+	tinyxml2::XMLUtil::PlaceHeaderHandler(handler);
+}
+
 NS_CC_END
-
-
