@@ -79,6 +79,16 @@ static void oHandler(const char* begin, const char* end)
 #define Node_Finish \
 	Add_To_Parent
 
+#define Scene_Define \
+	Node_Define
+#define Scene_Check \
+	Node_Check
+#define Scene_Create \
+	stream << "local " << self << " = CCScene()\n";
+#define Scene_Handle \
+	Node_Handle
+#define Scene_Finish
+
 #define Sprite_Define \
 	Node_Define\
 	const char* source = nullptr;
@@ -129,6 +139,7 @@ public:
 	virtual void startElement(void* ctx, const char* name, const char** atts)
 	{
 		First_Item(Node, node)
+		Item(Scene, scene)
 		Item(Sprite, sprite)
 		Item(Layer, layer)
 		Item(Data, data)
@@ -142,10 +153,12 @@ public:
 		}
 		if (element_equal("Listener") && !stack.empty())
 		{
+			stream << "local " << currentName << " = oListener(\"" << currentEvent << "\","
+				<< codes << ")\n";
 			oItem& data = stack.top();
-			stream << data.name << "[\"" << (currentKey ? currentKey : currentName.c_str()) << "\"] = oListener(\"" 
-				<< currentEvent << "\"," << codes << ")\n";
+			stream << data.name << "[\"" << (currentKey ? currentKey : currentName.c_str()) << "\"] = " << currentName << '\n';
 		}
+		if (currentKey) currentKey = nullptr;
 	}
 	virtual void textHandler(void* ctx, const char* s, int len)
 	{
