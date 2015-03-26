@@ -10,7 +10,7 @@ class CCTextFieldTTF: public CCLabelTTF
 	bool attachWithIME();
 	bool detachWithIME();
 
-	tolua_property__common ccColor3 colorSpaceHolder;
+	tolua_property__common ccColor3 colorSpaceHolder @ colorPlaceHolder;
 	tolua_property__common char* text;
 	tolua_property__common char* placeHolder;
 

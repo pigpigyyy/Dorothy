@@ -2899,15 +2899,8 @@ local Dorothy =
 				returns = "()",
 				type = "method",
 			},
-			setHandlerPriority =
-			{
-				args = "(newPriority: int)",
-				description = "",
-				returns = "()",
-				type = "method",
-			},
 		},
-		description = "class CCMenu(CCLayer).\n args -- (menuItems: CCArray, swallowTouches: bool = true)\n args1 -- (swallowTouches: bool = true)",
+		description = "class CCMenu(CCLayer).\n args -- (swallowTouches: bool = true)",
 		parents = {"CCLayer",},
 		type = "class",
 		index = index()
@@ -3077,7 +3070,7 @@ local Dorothy =
 				static = true,
 				type = "value",
 			},
-			colorSpaceHolder =
+			colorPlaceHolder =
 			{
 				description = "[ccColor3]",
 				typeName = "ccColor3",
