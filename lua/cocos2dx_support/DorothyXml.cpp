@@ -17,45 +17,76 @@ static void oHandler(const char* begin, const char* end)
 	}
 }
 
-#define __equals(src,dst) strcmp(src,dst) == 0
-#define element_equal(dst) __equals(name,dst)
-#define attr_equal(dst) __equals(atts[i],dst)
-
 #define Self_Check(name) \
 	if (self.empty()) { self = getUsableName(#name);names.insert(self); }
 
 #define Schedule_Check \
-	if (attr_equal("Priority")) { priority = atts[++i]; }
+	CASE_STR(Priority) { priority = atts[++i]; break; }
 
 #define Object_Define \
 	string self;
 #define Object_Check \
-	if (attr_equal("Name")) { self = atts[++i]; }
+	CASE_STR(Name) { self = atts[++i]; break; }
 
 #define Speed_Define \
-	Object_Define
+	Object_Define\
+	const char* rate = nullptr;
 #define Speed_Check \
 	Object_Check\
-	if (attr_equal("Key") && !currentKey) { currentKey = atts[++i]; }\
-	else if (attr_equal("Rate")) { rate = atts[++i]; }
+	CASE_STR(Key) { if (!currentKey) currentKey = atts[++i]; break; }\
+	CASE_STR(Rate) { rate = atts[++i]; break; }
 #define Speed_Create
-#define Speed_Handle
+#define Speed_Handle \
+	oFunc func = {"CCSpeed(", (rate ? string(",")+rate+")" : ",1)")};\
+	funcs.push(func);\
+	items.push("nil");
 #define Speed_Finish
+
+#define Scale_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* x = nullptr;\
+	const char* y = nullptr;\
+	const char* ease = nullptr;
+#define Scale_Check \
+	Object_Check\
+	CASE_STR(Key) { if (!currentKey) currentKey = atts[++i]; break; }\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(X) { x = atts[++i]; break; }\
+	CASE_STR(Y) { y = atts[++i]; break; }\
+	CASE_STR(Ease) { ease = atts[++i]; break; }
+#define Scale_Create
+#define Scale_Handle \
+	string str("oScale(");\
+	if (time) str += time;else str += "0";\
+	str += ",";\
+	if (x) str += x;else str += "1";\
+	str += ",";\
+	if (y) str += y;else str += "1";\
+	if (ease) {str += ",oEase."; str += ease;}\
+	str += ")";\
+	oFunc func = {str,""};\
+	funcs.push(func);
+#define Scale_Finish
 
 #define Sequence_Define \
 	Object_Define
 #define Sequence_Check \
-	Object_Check
+	Object_Check\
+	CASE_STR(Key) { if (!currentKey) currentKey = atts[++i]; break; }
 #define Sequence_Create
-#define Sequence_Handle
+#define Sequence_Handle \
+	items.push("Sequence");
 #define Sequence_Finish
 
 #define Spawn_Define \
 	Object_Define
 #define Spawn_Check \
-	Object_Check
+	Object_Check\
+	CASE_STR(Key) { if (!currentKey) currentKey = atts[++i]; break; }
 #define Spawn_Create
-#define Spawn_Handle
+#define Spawn_Handle \
+	items.push("Spawn");
 #define Spawn_Finish
 
 #define Data_Define \
@@ -75,8 +106,8 @@ static void oHandler(const char* begin, const char* end)
 	Object_Define
 #define Listener_Check \
 	Object_Check\
-	else if (attr_equal("Key")) { currentKey = atts[++i]; }\
-	else if (attr_equal("Event")) { currentEvent = atts[++i]; }
+	CASE_STR(Key) { currentKey = atts[++i]; break; }\
+	CASE_STR(Event) { currentEvent = atts[++i]; break; }
 #define Listener_Create
 #define Listener_Handle
 #define Listener_Finish
@@ -118,27 +149,27 @@ static void oHandler(const char* begin, const char* end)
 	const char* visible = nullptr;
 #define Node_Check \
 	Object_Check\
-	else if (attr_equal("Width")) { width = atts[++i]; }\
-	else if (attr_equal("Height")) { height = atts[++i];}\
-	else if (attr_equal("X")) { x = atts[++i]; }\
-	else if (attr_equal("Y")) { y = atts[++i]; }\
-	else if (attr_equal("Z")) { z = atts[++i]; }\
-	else if (attr_equal("AnchorX")) { anchorX = atts[++i]; }\
-	else if (attr_equal("AnchorY")) { anchorY = atts[++i]; }\
-	else if (attr_equal("PassColor")) { passColor = atts[++i]; }\
-	else if (attr_equal("PassOpacity")) { passOpacity = atts[++i]; }\
-	else if (attr_equal("Color")) { color = atts[++i]; }\
-	else if (attr_equal("Opacity")) { opacity = atts[++i]; }\
-	else if (attr_equal("Angle")) { angle = atts[++i]; }\
-	else if (attr_equal("ScaleX")) { scaleX = atts[++i]; }\
-	else if (attr_equal("ScaleY")) { scaleY = atts[++i]; }\
-	else if (attr_equal("Scheduler")) { scheduler = atts[++i]; }\
-	else if (attr_equal("SkewX")) { skewX = atts[++i]; }\
-	else if (attr_equal("SkewY")) { skewY = atts[++i]; }\
-	else if (attr_equal("ZOrder")) { zOrder = atts[++i]; }\
-	else if (attr_equal("Tag")) { tag = atts[++i]; }\
-	else if (attr_equal("TransformTarget")) { transformTarget = atts[++i]; }\
-	else if (attr_equal("Visible")) { visible = atts[++i]; }
+	CASE_STR(Width) { width = atts[++i]; break; }\
+	CASE_STR(Height) { height = atts[++i]; break; }\
+	CASE_STR(X) { x = atts[++i]; break; }\
+	CASE_STR(Y) { y = atts[++i]; break; }\
+	CASE_STR(Z) { z = atts[++i]; break; }\
+	CASE_STR(AnchorX) { anchorX = atts[++i]; break; }\
+	CASE_STR(AnchorY) { anchorY = atts[++i]; break; }\
+	CASE_STR(PassColor) { passColor = atts[++i]; break; }\
+	CASE_STR(PassOpacity) { passOpacity = atts[++i]; break; }\
+	CASE_STR(Color) { color = atts[++i]; break; }\
+	CASE_STR(Opacity) { opacity = atts[++i]; break; }\
+	CASE_STR(Angle) { angle = atts[++i]; break; }\
+	CASE_STR(ScaleX) { scaleX = atts[++i]; break; }\
+	CASE_STR(ScaleY) { scaleY = atts[++i]; break; }\
+	CASE_STR(Scheduler) { scheduler = atts[++i]; break; }\
+	CASE_STR(SkewX) { skewX = atts[++i]; break; }\
+	CASE_STR(SkewY) { skewY = atts[++i]; break; }\
+	CASE_STR(ZOrder) { zOrder = atts[++i]; break; }\
+	CASE_STR(Tag) { tag = atts[++i]; break; }\
+	CASE_STR(TransformTarget) { transformTarget = atts[++i]; break; }\
+	CASE_STR(Visible) { visible = atts[++i]; break; }
 #define Node_Create \
 	stream << "local " << self << " = CCNode()\n";
 #define Node_Handle \
@@ -195,9 +226,9 @@ static void oHandler(const char* begin, const char* end)
 	const char* stencil = nullptr;
 #define ClipNode_Check \
 	Node_Check\
-	else if (attr_equal("AlphaThreshold")) { alphaThreshold = atts[++i]; }\
-	else if (attr_equal("Inverted")) { inverted = atts[++i]; }\
-	else if (attr_equal("Stencil")) { stencil = atts[++i]; }
+	CASE_STR(AlphaThreshold) { alphaThreshold = atts[++i]; break; }\
+	CASE_STR(Inverted) { inverted = atts[++i]; break; }\
+	CASE_STR(Stencil) { stencil = atts[++i]; break; }
 #define ClipNode_Create \
 	stream << "local " << self << " = CCClipNode(" << (stencil ? stencil : "Stencil") << ")\n";
 #define ClipNode_Handle \
@@ -213,8 +244,8 @@ static void oHandler(const char* begin, const char* end)
 	const char* fntFile = nullptr;
 #define LabelAtlas_Check \
 	Node_Check\
-	else if (attr_equal("Text")) { text = atts[++i]; }\
-	else if (attr_equal("File")) { fntFile = atts[++i]; }
+	CASE_STR(Text) { text = atts[++i]; break; }\
+	CASE_STR(File) { fntFile = atts[++i]; break; }
 #define LabelAtlas_Create \
 	stream << "local " << self << " = CCLabelAtlas(\"" << (text ? text : "\"") << ',';\
 	if (fntFile) stream << '\"' << fntFile << '\"';\
@@ -234,11 +265,11 @@ static void oHandler(const char* begin, const char* end)
 	const char* imageOffset = nullptr;
 #define LabelBMFont_Check \
 	Node_Check\
-	else if (attr_equal("Text")) { text = atts[++i]; }\
-	else if (attr_equal("File")) { fntFile = atts[++i]; }\
-	else if (attr_equal("FontWidth")) { fontWidth = atts[++i]; }\
-	else if (attr_equal("Alignment")) { alignment = atts[++i]; }\
-	else if (attr_equal("ImageOffset")) { imageOffset = atts[++i]; }
+	CASE_STR(Text) { text = atts[++i]; break; }\
+	CASE_STR(File) { fntFile = atts[++i]; break; }\
+	CASE_STR(FontWidth) { fontWidth = atts[++i]; break; }\
+	CASE_STR(Alignment) { alignment = atts[++i]; break; }\
+	CASE_STR(ImageOffset) { imageOffset = atts[++i]; break; }
 #define LabelBMFont_Create \
 	stream << "local " << self << " = CCLabelBMFont(\"" << (text ? text : "\"");\
 	if (fntFile) stream << "\"," << fntFile << '\"';\
@@ -256,9 +287,9 @@ static void oHandler(const char* begin, const char* end)
 	const char* fontSize = nullptr;
 #define LabelTTF_Check \
 	Node_Check\
-	else if (attr_equal("Text")) { text = atts[++i]; }\
-	else if (attr_equal("FontName")) { fontName = atts[++i]; }\
-	else if (attr_equal("FontSize")) { fontSize = atts[++i]; }
+	CASE_STR(Text) { text = atts[++i]; break; }\
+	CASE_STR(FontName) { fontName = atts[++i]; break; }\
+	CASE_STR(FontSize) { fontSize = atts[++i]; break; }
 #define LabelTTF_Create \
 	stream << "local " << self << " = CCLabelTTF(\"" << (text ? text : "") << "\",\"" << (fontName ? fontName : "Arial") << "\"," << (fontSize ? fontSize : "12") << ")\n";
 #define LabelTTF_Handle \
@@ -275,11 +306,11 @@ static void oHandler(const char* begin, const char* end)
 	const char* blendFuncDst = nullptr;
 #define Sprite_Check \
 	Node_Check\
-	else if (attr_equal("File")) { file = atts[++i]; }\
-	else if (attr_equal("FlipX")) { flipX = atts[++i]; }\
-	else if (attr_equal("FlipY")) { flipY = atts[++i]; }\
-	else if (attr_equal("BlendSrc")) { blendFuncSrc = atts[++i]; }\
-	else if (attr_equal("BlendDst")) { blendFuncDst = atts[++i]; }
+	CASE_STR(File) { file = atts[++i]; break; }\
+	CASE_STR(FlipX) { flipX = atts[++i]; break; }\
+	CASE_STR(FlipY) { flipY = atts[++i]; break; }\
+	CASE_STR(BlendSrc) { blendFuncSrc = atts[++i]; break; }\
+	CASE_STR(BlendDst) { blendFuncDst = atts[++i]; break; }
 #define Sprite_Create \
 	stream << "local " << self << " = CCSprite(";\
 	if (file) stream << '\"' << file << "\")\n";\
@@ -302,7 +333,7 @@ static void oHandler(const char* begin, const char* end)
 	const char* file = nullptr;
 #define SpriteBatch_Check \
 	Node_Check\
-	else if (attr_equal("File")) { file = atts[++i]; }
+	CASE_STR(File) { file = atts[++i]; break; }
 #define SpriteBatch_Create \
 	stream << "local " << self << " = CCSpriteBatchNode(\"" << (file ? file : "") << "\")\n";
 #define SpriteBatch_Handle \
@@ -318,13 +349,13 @@ static void oHandler(const char* begin, const char* end)
 	const char* touchMode = nullptr;
 #define Layer_Check \
 	Node_Check\
-	else if (attr_equal("AccelerometerEnabled")) { accelerometerEnabled = atts[++i]; }\
-	else if (attr_equal("KeypadEnabled")) { keypadEnabled = atts[++i]; }\
-	else if (attr_equal("TouchEnabled")) { touchEnabled = atts[++i]; }\
-	else if (attr_equal("TouchMode")) { touchMode = atts[++i]; }\
-	else if (attr_equal("TouchPriority")) { touchPriority = atts[++i]; }\
-	else if (attr_equal("MultiTouch")) { isMultiTouches = atts[++i]; }\
-	else if (attr_equal("SwallowTouch")) { swallowsTouches = atts[++i]; }
+	CASE_STR(AccelerometerEnabled) { accelerometerEnabled = atts[++i]; break; }\
+	CASE_STR(KeypadEnabled) { keypadEnabled = atts[++i]; break; }\
+	CASE_STR(TouchEnabled) { touchEnabled = atts[++i]; break; }\
+	CASE_STR(TouchMode) { touchMode = atts[++i]; break; }\
+	CASE_STR(TouchPriority) { touchPriority = atts[++i]; break; }\
+	CASE_STR(MultiTouch) { isMultiTouches = atts[++i]; break; }\
+	CASE_STR(SwallowTouch) { swallowsTouches = atts[++i]; break; }
 #define Layer_Create \
 	stream << "local " << self << " = CCLayer()\n";
 #define Layer_Handle \
@@ -342,8 +373,8 @@ static void oHandler(const char* begin, const char* end)
 	const char* blendFuncDst = nullptr;
 #define LayerColor_Check \
 	Layer_Check\
-	else if (attr_equal("BlendSrc")) { blendFuncSrc = atts[++i]; }\
-	else if (attr_equal("BlendDst")) { blendFuncDst = atts[++i]; }
+	CASE_STR(BlendSrc) { blendFuncSrc = atts[++i]; break; }\
+	CASE_STR(BlendDst) { blendFuncDst = atts[++i]; break; }
 #define LayerColor_Create \
 	stream << "local " << self << " = CCLayerColor()\n";
 #define LayerColor_Handle \
@@ -365,10 +396,10 @@ static void oHandler(const char* begin, const char* end)
 	const char* vectorY = nullptr;
 #define LayerGradient_Check \
 	LayerColor_Check\
-	else if (attr_equal("StartColor")) { start = atts[++i]; }\
-	else if (attr_equal("EndColor")) { end = atts[++i]; }\
-	else if (attr_equal("VectorX")) { vectorX = atts[++i]; }\
-	else if (attr_equal("VectorY")) { vectorY = atts[++i]; }
+	CASE_STR(StartColor) { start = atts[++i]; break; }\
+	CASE_STR(EndColor) { end = atts[++i]; break; }\
+	CASE_STR(VectorX) { vectorX = atts[++i]; break; }\
+	CASE_STR(VectorY) { vectorY = atts[++i]; break; }
 #define LayerGradient_Create \
 	stream << "local " << self << " = CCLayerGradient(";\
 	if (!start || !start[0]) start = "0xffffffff";\
@@ -386,7 +417,7 @@ static void oHandler(const char* begin, const char* end)
 	const char* enabled = nullptr;
 #define Menu_Check \
 	Layer_Check\
-	else if (attr_equal("Enabled")) { enabled = atts[++i]; }
+	CASE_STR(Enabled) { enabled = atts[++i]; break; }
 #define Menu_Create \
 	stream << "local " << self << " = CCMenu(" << (swallowsTouches ? swallowsTouches : "") << ")\n";\
 	swallowsTouches = nullptr;
@@ -401,7 +432,7 @@ static void oHandler(const char* begin, const char* end)
 	const char* enabled = nullptr;
 #define MenuItem_Check \
 	Node_Check\
-	else if (attr_equal("Enabled")) { enabled = atts[++i]; }
+	CASE_STR(Enabled) { enabled = atts[++i]; break; }
 #define MenuItem_Create \
 	stream << "local " << self << " = CCMenuItem()\n";
 #define MenuItem_Handle \
@@ -410,15 +441,22 @@ static void oHandler(const char* begin, const char* end)
 #define MenuItem_Finish \
 	Add_To_Parent
 
-#define Item_Equal(name) if (element_equal(#name))
 #define Item_Define(name) name##_Define
-#define Item_Loop(name) for (int i = 0; atts[i] != nullptr; i++) { name##_Check }
+#define Item_Loop(name) \
+	for (int i = 0; atts[i] != nullptr; i++)\
+	{\
+		SWITCH_STR_START(atts[i])\
+		{\
+			name##_Check\
+		}\
+		SWITCH_STR_END\
+	}
 #define Item_Create(name) name##_Create
 #define Item_Handle(name) name##_Handle
 #define Item_Push(name) name##_Finish;oItem item = {#name,self};stack.push(item);
 
-#define First_Item(name,var) \
-	Item_Equal(name)\
+#define Item(name,var) \
+	CASE_STR(name)\
 	{\
 		Item_Define(name)\
 		Item_Loop(name)\
@@ -426,9 +464,8 @@ static void oHandler(const char* begin, const char* end)
 		Item_Create(name)\
 		Item_Handle(name)\
 		Item_Push(name)\
+		break;\
 	}
-#define Item \
-	else First_Item
 
 class oXmlDelegate : public CCSAXDelegator
 {
@@ -440,34 +477,39 @@ public:
 	touchPriority(nullptr),
 	isMultiTouches(nullptr),
 	swallowsTouches(nullptr),
-	priority(nullptr),
-	rate(nullptr)
+	priority(nullptr)
 	{ }
     virtual void startElement(void *ctx, const char *name, const char **atts)
 	{
-		First_Item(Node, node)
-		Item(Scene, scene)
-		Item(DrawNode, drawNode)
-		Item(Sprite, sprite)
-		Item(SpriteBatch, spriteBatch)
-		Item(Layer, layer)
-		Item(LayerColor, layer)
-		Item(LayerGradient, layer)
-		Item(ClipNode, clipNode)
-		Item(LabelAtlas, label)
-		Item(LabelBMFont, label)
-		Item(LabelTTF, label)
-		Item(Menu, menu)
-		Item(MenuItem, menuItem)
-		Item(Data, data)
-		Item(Listener, listener)
-		Item(Speed, speed)
-		Item(Sequence, sequence)
-		Item(Spawn, spawn)
-		else if (element_equal("Schedule"))
+		SWITCH_STR_START(name)
 		{
-			Item_Loop(Schedule)
+			Item(Node, node)
+			Item(Scene, scene)
+			Item(DrawNode, drawNode)
+			Item(Sprite, sprite)
+			Item(SpriteBatch, spriteBatch)
+			Item(Layer, layer)
+			Item(LayerColor, layer)
+			Item(LayerGradient, layer)
+			Item(ClipNode, clipNode)
+			Item(LabelAtlas, label)
+			Item(LabelBMFont, label)
+			Item(LabelTTF, label)
+			Item(Menu, menu)
+			Item(MenuItem, menuItem)
+			Item(Data, data)
+			Item(Listener, listener)
+			Item(Speed, speed)
+			Item(Scale, scale)
+			Item(Sequence, sequence)
+			Item(Spawn, spawn)
+			CASE_STR(Schedule)
+			{
+				Item_Loop(Schedule)
+				break;
+			}
 		}
+		SWITCH_STR_END
 	}
     virtual void endElement(void *ctx, const char *name)
 	{
@@ -476,138 +518,175 @@ public:
 		{
 			stack.pop();
 		}
-		if (element_equal("Listener"))
+		SWITCH_STR_START(name)
 		{
-			if (!stack.empty())
+			CASE_STR(Listener)
 			{
-				stream << "local " << currentData.name << " = oListener(\"" << currentEvent << "\","
-					<< codes << ")\n";
+				stream << "local " << currentData.name << " = oListener(\"" << currentEvent << "\"," << codes << ")\n";
 				oItem& data = stack.top();
 				stream << data.name << "[\"" << (currentKey ? currentKey : currentData.name.c_str()) << "\"] = " << currentData.name << "\n\n";
+				codes = nullptr;
+				currentKey = nullptr;
+				currentEvent = nullptr;
+				break;
 			}
-			codes = nullptr;
-			currentKey = nullptr;
-			currentEvent = nullptr;
-		}
-		else if (element_equal("Script"))
-		{
-			stream << codes << '\n';
-			codes = nullptr;
-		}
-		else if (element_equal("TouchHandler"))
-		{
-			stream << currentData.name << ":registerTouchHandler(" << (codes ? codes : "")
-				<< ',' << (isMultiTouches ? isMultiTouches : "false")
-				<< ',' << (touchPriority ? touchPriority : "0")
-				<< ',' << (swallowsTouches ? swallowsTouches : "false") << ")\n";
-			codes = nullptr;
-			isMultiTouches = nullptr;
-			touchPriority = nullptr;
-			swallowsTouches = nullptr;
-		}
-		else if (element_equal("AccelerateHandler"))
-		{
-			stream << currentData.name << ":registerAccelerateHandler(" << (codes ? codes : "") << ")\n";
-			codes = nullptr;
-		}
-		else if (element_equal("KeypadHandler"))
-		{
-			stream << currentData.name << ":registerKeypadHandler(" << (codes ? codes : "") << ")\n";
-			codes = nullptr;
-		}
-		else if (element_equal("NodeHandler"))
-		{
-			stream << currentData.name << ":registerEventHandler(" << (codes ? codes : "") << ")\n";
-			codes = nullptr;
-		}
-		else if (element_equal("TapHandler"))
-		{
-			stream << currentData.name << ":registerTapHandler(" << (codes ? codes : "") << ")\n";
-			codes = nullptr;
-		}
-		else if (element_equal("Schedule"))
-		{
-			stream << currentData.name << ":schedule(" << (codes ? codes : "");
-			if (priority) stream << ',' << priority;
-			stream << ")\n";
-			codes = nullptr;
-			priority = nullptr;
-		}
-		else if (element_equal("Layer") || element_equal("LayerColor") || element_equal("LayerGradient"))
-		{
-			if (touchPriority)
+			CASE_STR(Script)
 			{
-				stream << currentData.name << ".touchPriority = " << touchPriority << '\n';
+				stream << codes << '\n';
+				codes = nullptr;
+				break;
+			}
+			CASE_STR(TouchHandler)
+			{
+				stream << currentData.name << ":registerTouchHandler(" << (codes ? codes : "")
+					<< ',' << (isMultiTouches ? isMultiTouches : "false")
+					<< ',' << (touchPriority ? touchPriority : "0")
+					<< ',' << (swallowsTouches ? swallowsTouches : "false") << ")\n";
+				codes = nullptr;
+				isMultiTouches = nullptr;
 				touchPriority = nullptr;
+				swallowsTouches = nullptr;
+				break;
 			}
-		}
-		else if (element_equal("Speed"))
-		{
-			ostringstream tempStream;
-			tempStream << "CCSpeed(";
-			if (!rate || !rate[0]) rate = "1";
-			if (!items.empty())
+			CASE_STR(AccelerateHandler)
 			{
-				tempStream << items.top();
-				items.pop();
+				stream << currentData.name << ":registerAccelerateHandler(" << (codes ? codes : "") << ")\n";
+				codes = nullptr;
+				break;
 			}
-			else
+			CASE_STR(KeypadHandler)
 			{
-				tempStream << "nil";
+				stream << currentData.name << ":registerKeypadHandler(" << (codes ? codes : "") << ")\n";
+				codes = nullptr;
+				break;
 			}
-			tempStream << ',' << rate << ")";
-			if (strcmp(stack.top().type, "Data") == 0)
+			CASE_STR(NodeHandler)
 			{
-				stream << "local " << currentData.name << " = " << tempStream.str() << '\n';
-				oItem& data = stack.top();
-				stream << data.name << "[\"" << (currentKey ? currentKey : currentData.name.c_str()) << "\"] = " << currentData.name << "\n\n";
+				stream << currentData.name << ":registerEventHandler(" << (codes ? codes : "") << ")\n";
+				codes = nullptr;
+				break;
 			}
-			else items.push(tempStream.str());
-		}
-		else if (element_equal("Sequence"))
-		{
-			ostringstream tempStream;
-			tempStream << "CCSequence({";
-			while (!items.empty())
+			CASE_STR(TapHandler)
 			{
-				tempStream << items.top();
-				items.pop();
-				if (!items.empty())
+				stream << currentData.name << ":registerTapHandler(" << (codes ? codes : "") << ")\n";
+				codes = nullptr;
+				break;
+			}
+			CASE_STR(Schedule)
+			{
+				stream << currentData.name << ":schedule(" << (codes ? codes : "");
+				if (priority) stream << ',' << priority;
+				stream << ")\n";
+				codes = nullptr;
+				priority = nullptr;
+				break;
+			}
+			CASE_STR(Layer) goto FLAG_LAYER;
+			CASE_STR(LayerColor) goto FLAG_LAYER;
+			CASE_STR(LayerGradient) goto FLAG_LAYER;
+			goto FLAG_LAYER_END;
+			FLAG_LAYER:
+			{
+				if (touchPriority)
 				{
-					tempStream << ",\n";
+					stream << currentData.name << ".touchPriority = " << touchPriority << '\n';
+					touchPriority = nullptr;
 				}
+				break;
 			}
-			tempStream << "})";
-			if (strcmp(stack.top().type, "Data") == 0)
+			FLAG_LAYER_END:
+			CASE_STR(Speed)
 			{
-				stream << "local " << currentData.name << " = " << tempStream.str() << '\n';
-				oItem& data = stack.top();
-				stream << data.name << "[\"" << (currentKey ? currentKey : currentData.name.c_str()) << "\"] = " << currentData.name << "\n\n";
-			}
-			else items.push(tempStream.str());
-		}
-		else if (element_equal("Spawn"))
-		{
-			ostringstream tempStream;
-			tempStream << "CCSpawn({";
-			while (!items.empty())
-			{
-				tempStream << items.top();
-				items.pop();
-				if (!items.empty())
+				ostringstream tempStream;
+				oFunc func = funcs.top();
+				funcs.pop();
+				tempStream << func.begin;
+				if (items.top() == "nil")
 				{
-					tempStream << ",\n";
+					tempStream << items.top();
 				}
+				else
+				{
+					tempStream << items.top();
+					items.pop();
+				}
+				items.pop();
+				tempStream << func.end;
+				if (strcmp(stack.top().type, "Data") == 0)
+				{
+					stream << "local " << currentData.name << " = " << tempStream.str() << '\n';
+					oItem& data = stack.top();
+					stream << data.name << "[\"" << (currentKey ? currentKey : currentData.name.c_str()) << "\"] = " << currentData.name << "\n\n";
+					currentKey = nullptr;
+				}
+				else
+				{
+					items.push(tempStream.str());
+					auto it = names.find(currentData.name);
+					if (it != names.end()) names.erase(it);
+				}
+				break;
 			}
-			tempStream << "})";
-			if (strcmp(stack.top().type, "Data") == 0)
+			CASE_STR(Scale)
 			{
-				stream << "local " << currentData.name << " = " << tempStream.str() << '\n';
-				oItem& data = stack.top();
-				stream << data.name << "[\"" << (currentKey ? currentKey : currentData.name.c_str()) << "\"] = " << currentData.name << "\n\n";
+				ostringstream tempStream;
+				oFunc func = funcs.top();
+				funcs.pop();
+				if (strcmp(stack.top().type, "Data") == 0)
+				{
+					stream << "local " << currentData.name << " = " << func.begin << '\n';
+					oItem& data = stack.top();
+					stream << data.name << "[\"" << (currentKey ? currentKey : currentData.name.c_str()) << "\"] = " << currentData.name << "\n\n";
+					currentKey = nullptr;
+				}
+				else
+				{
+					items.push(func.begin);
+					auto it = names.find(currentData.name);
+					if (it != names.end()) names.erase(it);
+				}
+				break;
 			}
-			else items.push(tempStream.str());
+			CASE_STR(Sequence) goto FLAG_ACTION_GROUP;
+			CASE_STR(Spawn) goto FLAG_ACTION_GROUP;
+			goto FLAG_ACTION_GROUP_END;
+			FLAG_ACTION_GROUP:
+			{
+				ostringstream tempStream;
+				tempStream << "CC" << name << "({";
+				::stack<string> tempStack;
+				while (items.top() != name)
+				{
+					tempStack.push(items.top());
+					items.pop();
+				}
+				items.pop();
+				while (!tempStack.empty())
+				{
+					tempStream << tempStack.top();
+					tempStack.pop();
+					if (!tempStack.empty()) tempStream << ',';
+				}
+				tempStream << "})";
+				if (strcmp(stack.top().type, "Data") == 0)
+				{
+					stream << "local " << currentData.name << " = " << tempStream.str() << '\n';
+					oItem& data = stack.top();
+					stream << data.name << "[\"" << (currentKey ? currentKey : currentData.name.c_str()) << "\"] = " << currentData.name << "\n\n";
+					currentKey = nullptr;
+				}
+				else
+				{
+					items.push(tempStream.str());
+					auto it = names.find(currentData.name);
+					if (it != names.end()) names.erase(it);
+				}
+				break;
+			}
+			FLAG_ACTION_GROUP_END:
+			break;
 		}
+		SWITCH_STR_END
 	}
     virtual void textHandler(void *ctx, const char *s, int len)
 	{
@@ -651,6 +730,11 @@ private:
 		const char* type;
 		string name;
 	};
+	struct oFunc
+	{
+		string begin;
+		string end;
+	};
 	// Listener
 	const char* codes;
 	const char* currentKey;
@@ -662,8 +746,8 @@ private:
 	// Schedule
 	const char* priority;
 	// Speed
-	const char* rate;
 	// Loader
+	stack<oFunc> funcs;
 	stack<string> items;
 	stack<oItem> stack;
 	unordered_set<string> names;

@@ -5,11 +5,17 @@
 		<LabelTTF Name="label" Text="Add  Effect" Color="0x00ffff" AnchorX="0.5" AnchorY="1" X="halfBW" Y="y" AntiAlias="false">
 			<MenuItem Name="menuItem" ZOrder="999">
 				<Data>
-					<Sequence Key="scale">
+					<Sequence Name="seq" Key="scale">
 						<Scale Time="1" X="1" Y="2" Ease="InSine"/>
 						<Speed Rate="2">
 							<Scale Time="1" X="1" Y="1" Ease="OutBack"/>
 						</Speed>
+						<Spawn>
+							<Scale/>
+							<Speed>
+								<Scale/>
+							</Speed>
+						</Spawn>
 					</Sequence>
 					<Listener Event="settingPanel.move">
 						function(pos)

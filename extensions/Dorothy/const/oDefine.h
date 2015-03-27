@@ -99,11 +99,11 @@ public: void set##funName(bool var)
 	string str = "abc";
 	SWITCH_STR_START(str)
 	{
-		CASE_STR("Pig")
+		CASE_STR(Pig)
 		{
 			break;
 		}
-		CASE_STR("Dog")
+		CASE_STR(Dog)
 		{
 			break;
 		}
@@ -113,9 +113,9 @@ public: void set##funName(bool var)
 size_t oFNVHash(const char* str);
 inline size_t oFNVHash(const string& str) { return oFNVHash(str.c_str()); }
 #define SWITCH_STR_START(x) { size_t __strHashCodeForSwitch = oFNVHash(x);string __targetStrForSwitch(x); do
-#define __CASE_STR0(x, name, line) static size_t name##line = oFNVHash(x);if (__strHashCodeForSwitch == name##line && __targetStrForSwitch == x)
-#define __CASE_STR1(x, line) __CASE_STR0(x, __strCase, line)
-#define CASE_STR(x) __CASE_STR1(x, __LINE__)
+#define __CASE_STR0(x, name, flag) static size_t name##flag = oFNVHash(x);if (__strHashCodeForSwitch == name##flag && __targetStrForSwitch == x)
+#define __CASE_STR1(x, flag) __CASE_STR0(x, __strCase, flag)
+#define CASE_STR(x) __CASE_STR1(#x, x)
 #define SWITCH_STR_END while (false); }
 
 /** @brief Simple singleton method */
