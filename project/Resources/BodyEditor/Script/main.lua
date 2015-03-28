@@ -1,6 +1,3 @@
-collectgarbage("setpause", 100)
-collectgarbage("setstepmul", 5000)
-
 local _require = require
 local loaded = {} -- save loaded module names for end clean up
 _G["require"] = function(modulename)

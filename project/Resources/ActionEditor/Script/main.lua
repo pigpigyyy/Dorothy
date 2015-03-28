@@ -18,9 +18,6 @@ local once = require("once")
 local wait = require("wait")
 local seconds = require("seconds")
 
-collectgarbage("setpause", 100)
-collectgarbage("setstepmul", 5000)
-
 local _require = require
 local loaded = {}
 _G["require"] = function(modulename)

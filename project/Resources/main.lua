@@ -1,6 +1,3 @@
-collectgarbage("setpause", 100)
-collectgarbage("setstepmul", 5000)
-
 require("Test/Entry")
 
 --[[setfenv(Dorothy())

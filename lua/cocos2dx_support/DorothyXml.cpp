@@ -7,18 +7,20 @@ static void oHandler(const char* begin, const char* end)
 	if (*(begin-1) != '/')
 	{
 		CHECK_CDATA(Listener)
-		ELSE_CHECK_CDATA(Schedule)
+		ELSE_CHECK_CDATA(Call)
 		ELSE_CHECK_CDATA(Script)
+		ELSE_CHECK_CDATA(Schedule)
 		ELSE_CHECK_CDATA(TapHandler)
-		ELSE_CHECK_CDATA(TouchHandler)
 		ELSE_CHECK_CDATA(NodeHandler)
-		ELSE_CHECK_CDATA(AccelerateHandler)
+		ELSE_CHECK_CDATA(TouchHandler)
 		ELSE_CHECK_CDATA(KeypadHandler)
+		ELSE_CHECK_CDATA(AccelerateHandler)
 	}
 }
 
 #define Self_Check(name) \
-	if (self.empty()) { self = getUsableName(#name);names.insert(self); }
+	if (self.empty()) { self = getUsableName(#name); names.insert(self); }\
+	if (firstItem.empty()) firstItem = self;
 
 #define Schedule_Check \
 	CASE_STR(Priority) { priority = atts[++i]; break; }
@@ -26,14 +28,13 @@ static void oHandler(const char* begin, const char* end)
 #define Object_Define \
 	string self;
 #define Object_Check \
-	CASE_STR(Name) { self = atts[++i]; break; }
-
+	CASE_STR(Name) { self = atts[++i]; break; }\
+	CASE_STR(Key) { if (strcmp(stack.top().type,"Data") == 0) currentKey = atts[++i]; break; }
 #define Speed_Define \
 	Object_Define\
 	const char* rate = nullptr;
 #define Speed_Check \
 	Object_Check\
-	CASE_STR(Key) { if (!currentKey) currentKey = atts[++i]; break; }\
 	CASE_STR(Rate) { rate = atts[++i]; break; }
 #define Speed_Create
 #define Speed_Handle \
@@ -41,6 +42,34 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);\
 	items.push("nil");
 #define Speed_Finish
+
+#define Loop_Define \
+	Object_Define\
+	const char* times = nullptr;
+#define Loop_Check \
+	Object_Check\
+	CASE_STR(Times) { times = atts[++i]; break; }
+#define Loop_Create
+#define Loop_Handle \
+	oFunc func = {(times ? "CCRepeat(" : "CCRepeatForever("), (times ? string(",")+times+")" : ")")};\
+	funcs.push(func);\
+	items.push("nil");
+#define Loop_Finish
+
+#define Delay_Define \
+	Object_Define\
+	const char* time = nullptr;
+#define Delay_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }
+#define Delay_Create
+#define Delay_Handle \
+	string str("CCDelay(");\
+	if (time) str += time; else str += "0";\
+	str += ")";\
+	oFunc func = {str,""};\
+	funcs.push(func);
+#define Delay_Finish
 
 #define Scale_Define \
 	Object_Define\
@@ -50,30 +79,247 @@ static void oHandler(const char* begin, const char* end)
 	const char* ease = nullptr;
 #define Scale_Check \
 	Object_Check\
-	CASE_STR(Key) { if (!currentKey) currentKey = atts[++i]; break; }\
 	CASE_STR(Time) { time = atts[++i]; break; }\
 	CASE_STR(X) { x = atts[++i]; break; }\
 	CASE_STR(Y) { y = atts[++i]; break; }\
 	CASE_STR(Ease) { ease = atts[++i]; break; }
 #define Scale_Create
 #define Scale_Handle \
-	string str("oScale(");\
-	if (time) str += time;else str += "0";\
-	str += ",";\
-	if (x) str += x;else str += "1";\
-	str += ",";\
-	if (y) str += y;else str += "1";\
-	if (ease) {str += ",oEase."; str += ease;}\
-	str += ")";\
-	oFunc func = {str,""};\
+	oFunc func = {string("oScale(")+(time ? time : "0")+","+(x ? x : "")+","+(y ? y : "")+(ease ? ",oEase." : "")+(ease ? ease : "")+")",""};\
 	funcs.push(func);
 #define Scale_Finish
+
+#define Move_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* x = nullptr;\
+	const char* y = nullptr;\
+	const char* ease = nullptr;
+#define Move_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(X) { x = atts[++i]; break; }\
+	CASE_STR(Y) { y = atts[++i]; break; }\
+	CASE_STR(Ease) { ease = atts[++i]; break; }
+#define Move_Create
+#define Move_Handle \
+	oFunc func = {string("oPos(")+(time ? time : "0")+","+(x ? x : "")+","+(y ? y : "")+(ease ? ",oEase." : "")+(ease ? ease : "")+")",""};\
+	funcs.push(func);
+#define Move_Finish
+
+#define Rotate_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* angle = nullptr;\
+	const char* ease = nullptr;
+#define Rotate_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(Angle) { angle = atts[++i]; break; }\
+	CASE_STR(Ease) { ease = atts[++i]; break; }
+#define Rotate_Create
+#define Rotate_Handle \
+	oFunc func = {string("oRotate(")+(time ? time : "0")+","+(angle ? angle : "")+(ease ? ",oEase." : "")+(ease ? ease : "")+")",""};\
+	funcs.push(func);
+#define Rotate_Finish
+
+#define Opacity_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* alpha = nullptr;\
+	const char* ease = nullptr;
+#define Opacity_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(Alpha) { alpha = atts[++i]; break; }\
+	CASE_STR(Ease) { ease = atts[++i]; break; }
+#define Opacity_Create
+#define Opacity_Handle \
+	oFunc func = {string("oOpacity(")+(time ? time : "0")+","+(alpha ? alpha : "")+(ease ? ",oEase." : "")+(ease ? ease : "")+")",""};\
+	funcs.push(func);
+#define Opacity_Finish
+
+#define Skew_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* x = nullptr;\
+	const char* y = nullptr;\
+	const char* ease = nullptr;
+#define Skew_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(X) { x = atts[++i]; break; }\
+	CASE_STR(Y) { y = atts[++i]; break; }\
+	CASE_STR(Ease) { ease = atts[++i]; break; }
+#define Skew_Create
+#define Skew_Handle \
+	oFunc func = {string("oSkew(")+(time ? time : "0")+","+(x ? x : "")+","+(y ? y : "")+(ease ? ",oEase." : "")+(ease ? ease : "")+")",""};\
+	funcs.push(func);
+#define Skew_Finish
+
+#define Roll_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* angle = nullptr;\
+	const char* ease = nullptr;
+#define Roll_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(Angle) { angle = atts[++i]; break; }\
+	CASE_STR(Ease) { ease = atts[++i]; break; }
+#define Roll_Create
+#define Roll_Handle \
+	oFunc func = {string("oRoll(")+(time ? time : "0")+","+(angle ? angle : "")+(ease ? ",oEase." : "")+(ease ? ease : "")+")",""};\
+	funcs.push(func);
+#define Roll_Finish
+
+#define Jump_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* x = nullptr;\
+	const char* y = nullptr;\
+	const char* height = nullptr;\
+	const char* jumps = nullptr;
+#define Jump_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(X) { x = atts[++i]; break; }\
+	CASE_STR(Y) { y = atts[++i]; break; }\
+	CASE_STR(Height) { height = atts[++i]; break; }\
+	CASE_STR(Jumps) { jumps = atts[++i]; break; }
+#define Jump_Create
+#define Jump_Handle \
+	oFunc func = {string("CCJumpTo(")+(time ? time : "0")+","+(x ? x : "")+","+(y ? y : "")+","+(height ? height : "")+","+(jumps ? jumps : "1")+")",""};\
+	funcs.push(func);
+#define Jump_Finish
+
+#define Bezier_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* x = nullptr;\
+	const char* y = nullptr;\
+	const char* firstX = nullptr;\
+	const char* firstY = nullptr;\
+	const char* secondX = nullptr;\
+	const char* secondY = nullptr;
+#define Bezier_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(X) { x = atts[++i]; break; }\
+	CASE_STR(Y) { y = atts[++i]; break; }\
+	CASE_STR(FirstX) { firstX = atts[++i]; break; }\
+	CASE_STR(FirstY) { firstY = atts[++i]; break; }\
+	CASE_STR(SecondX) { secondX = atts[++i]; break; }\
+	CASE_STR(SecondY) { secondY = atts[++i]; break; }
+#define Bezier_Create
+#define Bezier_Handle \
+	oFunc func = {string("CCBezierTo(")+(time ? time : "0")+",oVec2("+(x ? x : "")+","+(y ? y : "")+"),oVec2("+(firstX ? firstX : "")+","+(firstY ? firstY : "")+"),oVec2("+(secondX ? secondX : "")+","+(secondY ? secondY : "")+"))",""};\
+	funcs.push(func);
+#define Bezier_Finish
+
+#define Blink_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* blinks = nullptr;
+#define Blink_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(Blinks) { blinks = atts[++i]; break; }
+#define Blink_Create
+#define Blink_Handle \
+	oFunc func = {string("CCBlink(")+(time ? time : "0")+","+(blinks ? blinks : "1")+")",""};\
+	funcs.push(func);
+#define Blink_Finish
+
+#define Tint_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* color = nullptr;
+#define Tint_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(Color) { color = atts[++i]; break; }
+#define Tint_Create
+#define Tint_Handle \
+	oFunc func = {string("CCTintTo(")+(time ? time : "0")+","+(color ? color : "0xffffffff")+")",""};\
+	funcs.push(func);
+#define Tint_Finish
+
+#define Show_Define \
+	Object_Define
+#define Show_Check \
+	Object_Check
+#define Show_Create
+#define Show_Handle \
+	oFunc func = {"CCShow()",""};\
+	funcs.push(func);
+#define Show_Finish
+
+#define Hide_Define \
+	Object_Define
+#define Hide_Check \
+	Object_Check
+#define Hide_Create
+#define Hide_Handle \
+	oFunc func = {"CCHide()",""};\
+	funcs.push(func);
+#define Hide_Finish
+
+#define Flip_Define \
+	Object_Define\
+	const char* flipX = nullptr;\
+	const char* flipY = nullptr;
+#define Flip_Check \
+	Object_Check\
+	CASE_STR(X) { flipX = atts[++i]; break; }\
+	CASE_STR(Y) { flipY = atts[++i]; break; }
+#define Flip_Create
+#define Flip_Handle \
+	oFunc func;\
+	if (flipX && flipY) func.begin = string("CCSpawn({CCFlipX(")+flipX+"),CCFlipY("+flipY+")})";\
+	else if (flipX && !flipY) func.begin = string("CCFlipX(")+flipX+")";\
+	else if (!flipX && flipY) func.begin = string("CCFlipY(")+flipY+")";\
+	funcs.push(func);
+#define Flip_Finish
+
+#define Call_Define \
+	Object_Define
+#define Call_Check \
+	Object_Check
+#define Call_Create
+#define Call_Handle \
+	oFunc func = {"CCCall(",")"};\
+	funcs.push(func);
+#define Call_Finish
+
+#define Orbit_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* startRadius = nullptr;\
+	const char* deltaRadius = nullptr;\
+	const char* startAngleZ = nullptr;\
+	const char* deltaAngleZ = nullptr;\
+	const char* startAngleX = nullptr;\
+	const char* deltaAngleX = nullptr;
+#define Orbit_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(StartRadius) { startRadius = atts[++i]; break; }\
+	CASE_STR(DeltaRadius) { deltaRadius = atts[++i]; break; }\
+	CASE_STR(StartAngleZ) { startAngleZ = atts[++i]; break; }\
+	CASE_STR(DeltaAngleZ) { deltaAngleZ = atts[++i]; break; }\
+	CASE_STR(StartAngleX) { startAngleX = atts[++i]; break; }\
+	CASE_STR(DeltaAngleX) { deltaAngleX = atts[++i]; break; }
+#define Orbit_Create
+#define Orbit_Handle \
+	oFunc func = {string("CCOrbitCamera(")+(time ? time : "0")+","+(startRadius ? startRadius : "0")+","+(deltaRadius ? deltaRadius : "0")+","+(startAngleZ ? startAngleZ : "0")+","+(deltaAngleZ ? deltaAngleZ : "0")+","+(startAngleX ? startAngleX : "0")+","+(deltaAngleX ? deltaAngleX : "0")+")",""};\
+	funcs.push(func);
+#define Orbit_Finish
 
 #define Sequence_Define \
 	Object_Define
 #define Sequence_Check \
-	Object_Check\
-	CASE_STR(Key) { if (!currentKey) currentKey = atts[++i]; break; }
+	Object_Check
 #define Sequence_Create
 #define Sequence_Handle \
 	items.push("Sequence");
@@ -82,8 +328,7 @@ static void oHandler(const char* begin, const char* end)
 #define Spawn_Define \
 	Object_Define
 #define Spawn_Check \
-	Object_Check\
-	CASE_STR(Key) { if (!currentKey) currentKey = atts[++i]; break; }
+	Object_Check
 #define Spawn_Create
 #define Spawn_Handle \
 	items.push("Spawn");
@@ -103,13 +348,15 @@ static void oHandler(const char* begin, const char* end)
 	}
 
 #define Listener_Define \
-	Object_Define
+	Object_Define\
+	const char* event = nullptr;
 #define Listener_Check \
 	Object_Check\
-	CASE_STR(Key) { currentKey = atts[++i]; break; }\
-	CASE_STR(Event) { currentEvent = atts[++i]; break; }
+	CASE_STR(Event) { event = atts[++i]; break; }
 #define Listener_Create
-#define Listener_Handle
+#define Listener_Handle \
+	oFunc func = {string("oListener(\"") + event + "\",",")"};\
+	funcs.push(func);
 #define Listener_Finish
 
 #define Add_To_Parent \
@@ -376,7 +623,8 @@ static void oHandler(const char* begin, const char* end)
 	CASE_STR(BlendSrc) { blendFuncSrc = atts[++i]; break; }\
 	CASE_STR(BlendDst) { blendFuncDst = atts[++i]; break; }
 #define LayerColor_Create \
-	stream << "local " << self << " = CCLayerColor()\n";
+	stream << "local " << self << " = CCLayerColor(ccColor4(" << (color ? color : "") << "))\n";\
+	color = nullptr;
 #define LayerColor_Handle \
 	Layer_Handle\
 	if (blendFuncSrc && blendFuncDst) stream << self << ".blendFunc = ccBlendFunc(ccBlendFunc."\
@@ -473,7 +721,6 @@ public:
 	oXmlDelegate():
 	codes(nullptr),
 	currentKey(nullptr),
-	currentEvent(nullptr),
 	touchPriority(nullptr),
 	isMultiTouches(nullptr),
 	swallowsTouches(nullptr),
@@ -498,11 +745,31 @@ public:
 			Item(Menu, menu)
 			Item(MenuItem, menuItem)
 			Item(Data, data)
+
 			Item(Listener, listener)
 			Item(Speed, speed)
+
+			Item(Delay, delay)
 			Item(Scale, scale)
+			Item(Move, move)
+			Item(Rotate, rotate)
+			Item(Opacity, opacity)
+			Item(Skew, skew)
+			Item(Roll, roll)
+			Item(Jump, jump)
+			Item(Bezier, bezier)
+			Item(Blink, blink)
+			Item(Tint, tint)
+			Item(Show, show)
+			Item(Hide, hide)
+			Item(Flip, flip)
+			Item(Call, call)
+			Item(Orbit, orbit)
+
 			Item(Sequence, sequence)
 			Item(Spawn, spawn)
+			Item(Loop, loop)
+			
 			CASE_STR(Schedule)
 			{
 				Item_Loop(Schedule)
@@ -514,25 +781,22 @@ public:
     virtual void endElement(void *ctx, const char *name)
 	{
 		oItem currentData = stack.top();
-		if (!stack.empty() && strcmp(name, stack.top().type) == 0)
-		{
-			stack.pop();
-		}
+		if (strcmp(name, stack.top().type) == 0) stack.pop();
+		bool parentIsData = !stack.empty() && strcmp(stack.top().type, "Data") == 0;
+
 		SWITCH_STR_START(name)
 		{
 			CASE_STR(Listener)
 			{
-				stream << "local " << currentData.name << " = oListener(\"" << currentEvent << "\"," << codes << ")\n";
-				oItem& data = stack.top();
-				stream << data.name << "[\"" << (currentKey ? currentKey : currentData.name.c_str()) << "\"] = " << currentData.name << "\n\n";
+				oFunc func = funcs.top();
+				funcs.pop();
+				stream << "local " << currentData.name << " = " << func.begin << (codes ? codes : "") << func.end << '\n';
 				codes = nullptr;
-				currentKey = nullptr;
-				currentEvent = nullptr;
 				break;
 			}
 			CASE_STR(Script)
 			{
-				stream << codes << '\n';
+				stream << (codes ? codes : "") << '\n';
 				codes = nullptr;
 				break;
 			}
@@ -581,11 +845,28 @@ public:
 				priority = nullptr;
 				break;
 			}
-			CASE_STR(Layer) goto FLAG_LAYER;
-			CASE_STR(LayerColor) goto FLAG_LAYER;
-			CASE_STR(LayerGradient) goto FLAG_LAYER;
+			CASE_STR(Call)
+			{
+				oFunc func = funcs.top();
+				funcs.pop();
+				string tempItem = func.begin + (codes ? codes : "") + func.end;
+				if (parentIsData)
+				{
+					stream << "local " << currentData.name << " = " << tempItem << '\n';
+				}
+				else
+				{
+					items.push(tempItem);
+					auto it = names.find(currentData.name);
+					if (it != names.end()) names.erase(it);
+				}
+				break;
+			}
+			CASE_STR(Layer) goto FLAG_LAYER_BEGIN;
+			CASE_STR(LayerColor) goto FLAG_LAYER_BEGIN;
+			CASE_STR(LayerGradient) goto FLAG_LAYER_BEGIN;
 			goto FLAG_LAYER_END;
-			FLAG_LAYER:
+			FLAG_LAYER_BEGIN:
 			{
 				if (touchPriority)
 				{
@@ -595,49 +876,61 @@ public:
 				break;
 			}
 			FLAG_LAYER_END:
-			CASE_STR(Speed)
+			CASE_STR(Speed) goto FLAG_WRAP_ACTION_BEGIN;
+			CASE_STR(Loop) goto FLAG_WRAP_ACTION_BEGIN;
+			goto FLAG_WRAP_ACTION_END;
+			FLAG_WRAP_ACTION_BEGIN:
 			{
-				ostringstream tempStream;
 				oFunc func = funcs.top();
 				funcs.pop();
-				tempStream << func.begin;
+				string tempItem = func.begin;
 				if (items.top() == "nil")
 				{
-					tempStream << items.top();
+					tempItem += items.top();
 				}
 				else
 				{
-					tempStream << items.top();
+					tempItem += items.top();
 					items.pop();
 				}
 				items.pop();
-				tempStream << func.end;
-				if (strcmp(stack.top().type, "Data") == 0)
+				tempItem += func.end;
+				if (parentIsData)
 				{
-					stream << "local " << currentData.name << " = " << tempStream.str() << '\n';
-					oItem& data = stack.top();
-					stream << data.name << "[\"" << (currentKey ? currentKey : currentData.name.c_str()) << "\"] = " << currentData.name << "\n\n";
-					currentKey = nullptr;
+					stream << "local " << currentData.name << " = " << tempItem << '\n';
 				}
 				else
 				{
-					items.push(tempStream.str());
+					items.push(tempItem);
 					auto it = names.find(currentData.name);
 					if (it != names.end()) names.erase(it);
 				}
 				break;
 			}
-			CASE_STR(Scale)
+			FLAG_WRAP_ACTION_END:
+			CASE_STR(Delay) goto FLAG_ACTION_BEGIN;
+			CASE_STR(Scale) goto FLAG_ACTION_BEGIN;
+			CASE_STR(Move) goto FLAG_ACTION_BEGIN;
+			CASE_STR(Rotate) goto FLAG_ACTION_BEGIN;
+			CASE_STR(Opacity) goto FLAG_ACTION_BEGIN;
+			CASE_STR(Skew) goto FLAG_ACTION_BEGIN;
+			CASE_STR(Roll) goto FLAG_ACTION_BEGIN;
+			CASE_STR(Jump) goto FLAG_ACTION_BEGIN;
+			CASE_STR(Bezier) goto FLAG_ACTION_BEGIN;
+			CASE_STR(Blink) goto FLAG_ACTION_BEGIN;
+			CASE_STR(Tint) goto FLAG_ACTION_BEGIN;
+			CASE_STR(Show) goto FLAG_ACTION_BEGIN;
+			CASE_STR(Hide) goto FLAG_ACTION_BEGIN;
+			CASE_STR(Flip) goto FLAG_ACTION_BEGIN;
+			CASE_STR(Orbit) goto FLAG_ACTION_BEGIN;
+			goto FLAG_ACTION_END;
+			FLAG_ACTION_BEGIN:
 			{
-				ostringstream tempStream;
 				oFunc func = funcs.top();
 				funcs.pop();
-				if (strcmp(stack.top().type, "Data") == 0)
+				if (parentIsData)
 				{
 					stream << "local " << currentData.name << " = " << func.begin << '\n';
-					oItem& data = stack.top();
-					stream << data.name << "[\"" << (currentKey ? currentKey : currentData.name.c_str()) << "\"] = " << currentData.name << "\n\n";
-					currentKey = nullptr;
 				}
 				else
 				{
@@ -647,13 +940,13 @@ public:
 				}
 				break;
 			}
-			CASE_STR(Sequence) goto FLAG_ACTION_GROUP;
-			CASE_STR(Spawn) goto FLAG_ACTION_GROUP;
+			FLAG_ACTION_END:
+			CASE_STR(Sequence) goto FLAG_ACTION_GROUP_BEGIN;
+			CASE_STR(Spawn) goto FLAG_ACTION_GROUP_BEGIN;
 			goto FLAG_ACTION_GROUP_END;
-			FLAG_ACTION_GROUP:
+			FLAG_ACTION_GROUP_BEGIN:
 			{
-				ostringstream tempStream;
-				tempStream << "CC" << name << "({";
+				string tempItem = string("CC") + name + "({";
 				::stack<string> tempStack;
 				while (items.top() != name)
 				{
@@ -663,21 +956,18 @@ public:
 				items.pop();
 				while (!tempStack.empty())
 				{
-					tempStream << tempStack.top();
+					tempItem += tempStack.top();
 					tempStack.pop();
-					if (!tempStack.empty()) tempStream << ',';
+					if (!tempStack.empty()) tempItem += ",";
 				}
-				tempStream << "})";
-				if (strcmp(stack.top().type, "Data") == 0)
+				tempItem += "})";
+				if (parentIsData)
 				{
-					stream << "local " << currentData.name << " = " << tempStream.str() << '\n';
-					oItem& data = stack.top();
-					stream << data.name << "[\"" << (currentKey ? currentKey : currentData.name.c_str()) << "\"] = " << currentData.name << "\n\n";
-					currentKey = nullptr;
+					stream << "local " << currentData.name << " = " << tempItem << '\n';
 				}
 				else
 				{
-					items.push(tempStream.str());
+					items.push(tempItem);
 					auto it = names.find(currentData.name);
 					if (it != names.end()) names.erase(it);
 				}
@@ -687,6 +977,13 @@ public:
 			break;
 		}
 		SWITCH_STR_END
+
+		if (parentIsData)
+		{
+			const oItem& data = stack.top();
+			stream << data.name << "[\"" << (currentKey ? currentKey : currentData.name.c_str()) << "\"] = " << currentData.name << "\n\n";
+			currentKey = nullptr;
+		}
 	}
     virtual void textHandler(void *ctx, const char *s, int len)
 	{
@@ -696,11 +993,31 @@ public:
 	void clear()
 	{
 		currentKey = nullptr;
-		currentEvent = nullptr;
 		codes = nullptr;
 		for (; !stack.empty(); stack.pop());
+		for (; !funcs.empty(); funcs.pop());
+		for (; !items.empty(); items.pop());
 		stream.clear();
+		stream.str("");
 		names.clear();
+		firstItem.clear();
+	}
+	void begin()
+	{
+		oXmlDelegate::clear();
+		stream <<
+		"return function(data)\n"
+			"if data then\n"
+				"local _,dorothy = Dorothy()\n"
+				"setmetatable(data,{__index=dorothy})\n"
+				"setfenv(1,data)\n"
+			"else\n"
+				"setfenv(Dorothy())\n"
+			"end\n\n";
+	}
+	void end()
+	{
+		stream << "\nreturn " << firstItem << "\n\nend";
 	}
 	string getResult()
 	{
@@ -735,18 +1052,18 @@ private:
 		string begin;
 		string end;
 	};
-	// Listener
+	// Script
 	const char* codes;
+	// Data
 	const char* currentKey;
-	const char* currentEvent;
 	// Layer
 	const char* touchPriority;
 	const char* isMultiTouches;
 	const char* swallowsTouches;
 	// Schedule
 	const char* priority;
-	// Speed
 	// Loader
+	string firstItem;
 	stack<oFunc> funcs;
 	stack<string> items;
 	stack<oItem> stack;
@@ -764,9 +1081,20 @@ oXmlLoader::~oXmlLoader()
 
 string oXmlLoader::load(const char* filename)
 {
-	_delegate->clear();
+	_delegate->begin();
 	CCSAXParser::setHeaderHandler(oHandler);
 	bool result = _parser.parse(filename);
 	CCSAXParser::setHeaderHandler(nullptr);
+	_delegate->end();
+	return result ? _delegate->getResult() : string();
+}
+
+string oXmlLoader::load(const string& xml)
+{
+	_delegate->begin();
+	CCSAXParser::setHeaderHandler(oHandler);
+	bool result = _parser.parse(xml.c_str(), (unsigned int)xml.size());
+	CCSAXParser::setHeaderHandler(nullptr);
+	_delegate->end();
 	return result ? _delegate->getResult() : string();
 }

@@ -87,7 +87,7 @@ bool CCOrbitCamera::initWithDuration(float t, float radius, float deltaRadius, f
 {
     if ( CCActionInterval::initWithDuration(t) )
     {
-        m_fRadius = radius;
+        m_fRadius = radius == 0.0f ? FLT_EPSILON : radius;
         m_fDeltaRadius = deltaRadius;
         m_fAngleZ = angleZ;
         m_fDeltaAngleZ = deltaAngleZ;

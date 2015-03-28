@@ -140,7 +140,6 @@
 		3CD77C591A83A990003B55A0 /* ActionEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3CD77C581A83A990003B55A0 /* ActionEditor */; };
 		3CD77C5B1A83A99E003B55A0 /* EffectEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3CD77C5A1A83A99E003B55A0 /* EffectEditor */; };
 		3CECB1661AC3307000BA17F3 /* DorothyXml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CECB1641AC3307000BA17F3 /* DorothyXml.cpp */; };
-		3CECB1681AC3318300BA17F3 /* codes.xml in Resources */ = {isa = PBXBuildFile; fileRef = 3CECB1671AC3318300BA17F3 /* codes.xml */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -429,7 +428,6 @@
 		3CD77C5A1A83A99E003B55A0 /* EffectEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = EffectEditor; sourceTree = "<group>"; };
 		3CECB1641AC3307000BA17F3 /* DorothyXml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DorothyXml.cpp; sourceTree = "<group>"; };
 		3CECB1651AC3307000BA17F3 /* DorothyXml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DorothyXml.h; sourceTree = "<group>"; };
-		3CECB1671AC3318300BA17F3 /* codes.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = codes.xml; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -995,7 +993,6 @@
 				3C07A5EB1A6ED4830036E419 /* miku.lua */,
 				3C07A5EC1A6ED4830036E419 /* oBodyEx.lua */,
 				3C7AA4CB1A47291F007836D2 /* main.lua */,
-				3CECB1671AC3318300BA17F3 /* codes.xml */,
 			);
 			name = Resources;
 			path = ../Resources;
@@ -1079,7 +1076,6 @@
 				3C07A5F31A6ED4830036E419 /* girl.lua in Resources */,
 				3C07A5F21A6ED4830036E419 /* class.lua in Resources */,
 				3C07A5EF1A6ED4830036E419 /* bk.jpg in Resources */,
-				3CECB1681AC3318300BA17F3 /* codes.xml in Resources */,
 				3C07A5F11A6ED4830036E419 /* boy.lua in Resources */,
 				3C07A5F01A6ED4830036E419 /* BodyEditor in Resources */,
 				3C504D5F1A23739B000C79D6 /* Images.xcassets in Resources */,

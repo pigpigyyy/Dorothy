@@ -221,7 +221,7 @@ string oContent::getExtractedFullName( const char* filename )
 
 bool oContent::isFileExist(const char* filename)
 {
-	return FileExist(oContent::getFullPath(filename).c_str()) == 0;
+	return CCFileUtils::sharedFileUtils()->isFileExist(filename);
 }
 
 bool oContent::removeFile( const char* filename )

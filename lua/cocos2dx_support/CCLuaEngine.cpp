@@ -27,6 +27,7 @@
 #include "cocoa/CCArray.h"
 #include "CCScheduler.h"
 #include "LuaCocos2d.h"
+#include "DorothyXml.h"
 
 NS_CC_BEGIN
 
@@ -76,29 +77,77 @@ static int cclua_traceback(lua_State* L)
 static int cclua_loadfile(lua_State* L)
 {
 	std::string filename(luaL_checkstring(L, 1));
-	size_t pos = filename.rfind(".");
-	if(pos == std::string::npos)
+	bool isXml = false;
+	size_t pos = filename.rfind(".xml");
+	isXml = pos != std::string::npos;
+	if (!isXml)
 	{
-		filename.append(".lua");
+		pos = filename.rfind(".");
+		if (pos == std::string::npos)
+		{
+			string newFileName = filename + ".xml";
+			if (oSharedContent.isFileExist(newFileName.c_str()))
+			{
+				filename = std::move(newFileName);
+			}
+			else filename.append(".lua");
+		}
 	}
 
 	unsigned long codeBufferSize = 0;
-	unsigned char* codeBuffer = CCFileUtils::sharedFileUtils()->getFileData(filename.c_str(), "rb", &codeBufferSize);
-
+	const char* codeBuffer = nullptr;
+	string codes;
+	if (isXml)
+	{
+		codes = oSharedXMLLoader.load(filename.c_str());
+		if (codes.empty())
+		{
+			luaL_error(L, "error parsing xml file: %s\n", filename.c_str());
+		}
+		else
+		{
+			codeBuffer = codes.c_str();
+			codeBufferSize = codes.size();
+		}
+	}
+	else
+	{
+		codeBuffer = (const char*)CCFileUtils::sharedFileUtils()->getFileData(filename.c_str(), "rb", &codeBufferSize);
+	}
 	if (codeBuffer)
 	{
-		if (luaL_loadbuffer(L,(char*)codeBuffer, codeBufferSize, filename.c_str()) != 0)
+		if (luaL_loadbuffer(L, codeBuffer, codeBufferSize, filename.c_str()) != 0)
 		{
+			if (isXml) CCLOG("%s", codeBuffer);
+			else delete [] codeBuffer;
 			luaL_error(L, "error loading module %s from file %s :\n\t%s",
 				lua_tostring(L, 1), filename.c_str(), lua_tostring(L, -1));
 		}
-		delete [] codeBuffer;
+		if (!isXml) delete [] codeBuffer;
 	}
 	else
 	{
 		luaL_error(L, "can not get file data of %s", filename.c_str());
 	}
 
+	return 1;
+}
+
+static int cclua_doXml(lua_State* L)
+{
+	string codes(luaL_checkstring(L, 1));
+	codes = oSharedXMLLoader.load(codes);
+	if (codes.empty())
+	{
+		luaL_error(L, "error parsing local xml\n");
+	}
+	if (luaL_loadbuffer(L, codes.c_str(), codes.size(), "xml") != 0)
+	{
+		CCLOG("%s", codes.c_str());
+		luaL_error(L, "error loading module %s from file %s :\n\t%s",
+			lua_tostring(L, 1), "xml", lua_tostring(L, -1));
+	}
+	CCLuaEngine::call(L,0, LUA_MULTRET);
 	return 1;
 }
 
@@ -151,6 +200,7 @@ CCLuaEngine::CCLuaEngine()
 		{ "print", cclua_print },
 		{ "loadfile", cclua_loadfile },
 		{ "dofile", cclua_dofile },
+		{ "doXml", cclua_doXml },
 		{ "ubox", cclua_ubox },
 		{ NULL, NULL }
 	};

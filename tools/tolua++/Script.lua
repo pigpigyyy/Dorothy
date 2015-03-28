@@ -417,4 +417,7 @@ _G["Dorothy"] = (function()
 	end
 	return function() return 1,tb or gettb() end
 end)()
+
+collectgarbage("setpause", 100)
+collectgarbage("setstepmul", 5000)
 $]
