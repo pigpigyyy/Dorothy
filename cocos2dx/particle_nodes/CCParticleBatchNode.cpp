@@ -209,7 +209,7 @@ void CCParticleBatchNode::addChild(CCNode * child, int zOrder, int tag)
 // this helper is almost equivalent to CCNode's addChild, but doesn't make use of the lazy sorting
 unsigned int CCParticleBatchNode::addChildHelper(CCParticleSystem* child, int z, int aTag)
 {
-    CCAssert( child != NULL, "Argument must be non-nil");
+    CCAssert( child != NULL, "CCParticleBatchNode add child argument must be non-nil");
     CCAssert( child->getParent() == NULL, "child already added. It can't be added again");
 
     if( ! m_pChildren ) 

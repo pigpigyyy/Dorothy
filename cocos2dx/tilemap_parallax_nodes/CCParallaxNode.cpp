@@ -81,7 +81,7 @@ void CCParallaxNode::addChild(CCNode * child, unsigned int zOrder, int tag)
 }
 void CCParallaxNode::addChild(CCNode *child, unsigned int z, const CCPoint& ratio, const CCPoint& offset)
 {
-    CCAssert( child != NULL, "Argument must be non-nil");
+    CCAssert( child != NULL, "CCParallaxNode add child argument must be non-nil");
     CCPointObject *obj = CCPointObject::pointWithCCPoint(ratio, offset);
     obj->setChild(child);
     ccArrayAppendObjectWithResize(m_pParallaxArray, (CCObject*)obj);

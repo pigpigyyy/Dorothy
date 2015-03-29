@@ -511,7 +511,7 @@ CCNode* CCNode::getChildByTag(int aTag)
 */
 void CCNode::addChild(CCNode *child, int zOrder, int tag)
 {
-	CCAssert(child != NULL, "Argument must be non-nil");
+	CCAssert(child != NULL, "CCNode add child argument must be non-nil");
 	CCAssert(child->m_pParent == NULL, "child already added. It can't be added again");
 
 	if (!m_pChildren)
@@ -536,13 +536,13 @@ void CCNode::addChild(CCNode *child, int zOrder, int tag)
 
 void CCNode::addChild(CCNode *child, int zOrder)
 {
-	CCAssert(child != NULL, "Argument must be non-nil");
+	CCAssert(child != NULL, "CCNode add child argument must be non-nil");
 	this->addChild(child, zOrder, child->m_nTag);
 }
 
 void CCNode::addChild(CCNode *child)
 {
-	CCAssert(child != NULL, "Argument must be non-nil");
+	CCAssert(child != NULL, "CCNode add child argument must be non-nil");
 	this->addChild(child, child->m_nZOrder, child->m_nTag);
 }
 
@@ -865,7 +865,7 @@ void CCNode::unregisterScriptHandler()
 
 CCAction * CCNode::runAction(CCAction* action)
 {
-	CCAssert(action != NULL, "Argument must be non-nil");
+	CCAssert(action != NULL, "CCNode run action argument must be non-nil");
 	m_pScheduler->getActionManager()->addAction(action, this, !m_bRunning);
 	return action;
 }
@@ -974,7 +974,7 @@ void CCNode::schedule(SEL_SCHEDULE selector, float interval)
 
 void CCNode::schedule(SEL_SCHEDULE selector, float interval, unsigned int repeat, float delay)
 {
-	CCAssert(selector, "Argument must be non-nil");
+	CCAssert(selector, "CCNode schedule selector argument must be non-nil");
 	CCAssert(interval >= 0, "Argument must be positive");
 
 	m_pScheduler->scheduleSelector(selector, this, interval, repeat, delay, !m_bRunning);

@@ -714,7 +714,7 @@ void CCSpriteBatchNode::insertQuadFromSprite(CCSprite *sprite, unsigned int inde
 
 void CCSpriteBatchNode::updateQuadFromSprite(CCSprite *sprite, unsigned int index)
 {
-    CCAssert(sprite != NULL, "Argument must be non-nil");
+    CCAssert(sprite != NULL, "CCSpriteBatchNode add child argument must be non-nil");
     CCAssert(dynamic_cast<CCSprite*>(sprite) != NULL, "CCSpriteBatchNode only supports CCSprites as children");
     
 	// make needed room

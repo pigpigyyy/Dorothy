@@ -2364,15 +2364,6 @@ local Dorothy =
 		type = "function",
 		index = index()
 	},
-	CCPlace =
-	{
-		args = "(positiona: oVec2)",
-		description = "",
-		typeName = "CCFiniteTimeAction",
-		returns = "(action: CCFiniteTimeAction)",
-		type = "function",
-		index = index()
-	},
 	CCCall =
 	{
 		args = "(handler: function)",

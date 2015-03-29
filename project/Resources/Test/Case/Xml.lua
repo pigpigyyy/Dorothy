@@ -31,7 +31,6 @@ doXml([[
 		end)
 	</Schedule>
 	<Script>
-		print("exe")
 		CCDirector:run(scene)
 	</Script>
 </Scene>

@@ -59,6 +59,4 @@ CCFiniteTimeAction* CCFlipY::create @ CCFlipY(bool x);
 
 CCFiniteTimeAction* CCFlipY::create @ CCFlipY(bool y);
 
-CCFiniteTimeAction* CCPlace::create @ CCPlace(oVec2 pos);
-
 CCFiniteTimeAction* CCCall::create @ CCCall(tolua_function handler);
