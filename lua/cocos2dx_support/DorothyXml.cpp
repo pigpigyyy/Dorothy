@@ -25,6 +25,16 @@ static void oHandler(const char* begin, const char* end)
 #define Schedule_Check \
 	CASE_STR(Priority) { priority = atts[++i]; break; }
 
+#define Vec2_Define \
+	const char* x = nullptr;\
+	const char* y = nullptr;
+#define Vec2_Check \
+	CASE_STR(X) { x = atts[++i]; break; }\
+	CASE_STR(Y) { y = atts[++i]; break; }
+#define Vec2_Handle \
+	oFunc func = {string("oVec2(")+(x ? x : "0")+","+(y ? y : "0")+")",""};\
+	funcs.push(func);
+
 #define Object_Define \
 	string self;
 #define Object_Check \
@@ -704,7 +714,6 @@ static void oHandler(const char* begin, const char* end)
 #define Item_Push(name) name##_Finish;oItem item = {#name,self};stack.push(item);
 
 #define Item(name,var) \
-	{\
 	CASE_STR(name)\
 	{\
 		Item_Define(name)\
@@ -714,7 +723,6 @@ static void oHandler(const char* begin, const char* end)
 		Item_Handle(name)\
 		Item_Push(name)\
 		break;\
-	}\
 	}
 
 class oXmlDelegate : public CCSAXDelegator
@@ -857,6 +865,13 @@ void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
 		Item(Spawn, spawn)
 		Item(Loop, loop)
 
+		CASE_STR(Vec2)
+		{
+			Item_Define(Vec2)
+			Item_Loop(Vec2)
+			Item_Handle(Vec2)
+			break;
+		}
 		CASE_STR(Schedule)
 		{
 			Item_Loop(Schedule)
