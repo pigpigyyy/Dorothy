@@ -32,8 +32,7 @@ static void oHandler(const char* begin, const char* end)
 	CASE_STR(X) { x = atts[++i]; break; }\
 	CASE_STR(Y) { y = atts[++i]; break; }
 #define Vec2_Handle \
-	oFunc func = {string("oVec2(")+(x ? x : "0")+","+(y ? y : "0")+")",""};\
-	funcs.push(func);
+	items.push(string("oVec2(")+(x ? x : "0")+","+(y ? y : "0")+")");
 
 #define Object_Define \
 	string self;
@@ -325,6 +324,21 @@ static void oHandler(const char* begin, const char* end)
 	oFunc func = {string("CCOrbitCamera(")+(time ? time : "0")+","+(startRadius ? startRadius : "0")+","+(deltaRadius ? deltaRadius : "0")+","+(startAngleZ ? startAngleZ : "0")+","+(deltaAngleZ ? deltaAngleZ : "0")+","+(startAngleX ? startAngleX : "0")+","+(deltaAngleX ? deltaAngleX : "0")+")",""};\
 	funcs.push(func);
 #define Orbit_Finish
+
+#define CardinalSpline_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* tension = nullptr;
+#define CardinalSpline_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(Tension) { tension = atts[++i]; break; }
+#define CardinalSpline_Create
+#define CardinalSpline_Handle \
+	oFunc func = {string("CCCardinalSplineTo(")+(time ? time : 0)+",{",string("},")+(tension ? tension : "0")+")"};\
+	funcs.push(func);\
+	items.push("CardinalSpline");
+#define CardinalSpline_Finish
 
 #define Sequence_Define \
 	Object_Define
@@ -864,6 +878,7 @@ void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
 		Item(Sequence, sequence)
 		Item(Spawn, spawn)
 		Item(Loop, loop)
+		Item(CardinalSpline, cardinalSpline)
 
 		CASE_STR(Vec2)
 		{
@@ -1077,7 +1092,37 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 			break;
 		}
 		FLAG_ACTION_GROUP_END:
-		break;
+		CASE_STR(CardinalSpline)
+		{
+			oFunc func = funcs.top();
+			funcs.pop();
+			string tempItem = func.begin;
+			::stack<string> tempStack;
+			while (items.top() != name)
+			{
+				tempStack.push(items.top());
+				items.pop();
+			}
+			items.pop();
+			while (!tempStack.empty())
+			{
+				tempItem += tempStack.top();
+				tempStack.pop();
+				if (!tempStack.empty()) tempItem += ",";
+			}
+			tempItem += func.end;
+			if (parentIsData)
+			{
+				stream << "local " << currentData.name << " = " << tempItem << '\n';
+			}
+			else
+			{
+				items.push(tempItem);
+				auto it = names.find(currentData.name);
+				if (it != names.end()) names.erase(it);
+			}
+			break;
+		}
 	}
 	SWITCH_STR_END
 

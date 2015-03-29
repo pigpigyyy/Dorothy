@@ -89,6 +89,7 @@ static int cclua_loadfile(lua_State* L)
 			if (oSharedContent.isFileExist(newFileName.c_str()))
 			{
 				filename = std::move(newFileName);
+				isXml = true;
 			}
 			else filename.append(".lua");
 		}
