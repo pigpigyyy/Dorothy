@@ -704,6 +704,7 @@ static void oHandler(const char* begin, const char* end)
 #define Item_Push(name) name##_Finish;oItem item = {#name,self};stack.push(item);
 
 #define Item(name,var) \
+	{\
 	CASE_STR(name)\
 	{\
 		Item_Define(name)\
@@ -713,6 +714,7 @@ static void oHandler(const char* begin, const char* end)
 		Item_Handle(name)\
 		Item_Push(name)\
 		break;\
+	}\
 	}
 
 class oXmlDelegate : public CCSAXDelegator
@@ -726,269 +728,9 @@ public:
 	swallowsTouches(nullptr),
 	priority(nullptr)
 	{ }
-    virtual void startElement(void *ctx, const char *name, const char **atts)
-	{
-		SWITCH_STR_START(name)
-		{
-			Item(Node, node)
-			Item(Scene, scene)
-			Item(DrawNode, drawNode)
-			Item(Sprite, sprite)
-			Item(SpriteBatch, spriteBatch)
-			Item(Layer, layer)
-			Item(LayerColor, layer)
-			Item(LayerGradient, layer)
-			Item(ClipNode, clipNode)
-			Item(LabelAtlas, label)
-			Item(LabelBMFont, label)
-			Item(LabelTTF, label)
-			Item(Menu, menu)
-			Item(MenuItem, menuItem)
-			Item(Data, data)
-
-			Item(Listener, listener)
-			Item(Speed, speed)
-
-			Item(Delay, delay)
-			Item(Scale, scale)
-			Item(Move, move)
-			Item(Rotate, rotate)
-			Item(Opacity, opacity)
-			Item(Skew, skew)
-			Item(Roll, roll)
-			Item(Jump, jump)
-			Item(Bezier, bezier)
-			Item(Blink, blink)
-			Item(Tint, tint)
-			Item(Show, show)
-			Item(Hide, hide)
-			Item(Flip, flip)
-			Item(Call, call)
-			Item(Orbit, orbit)
-
-			Item(Sequence, sequence)
-			Item(Spawn, spawn)
-			Item(Loop, loop)
-			
-			CASE_STR(Schedule)
-			{
-				Item_Loop(Schedule)
-				break;
-			}
-		}
-		SWITCH_STR_END
-	}
-    virtual void endElement(void *ctx, const char *name)
-	{
-		oItem currentData = stack.top();
-		if (strcmp(name, stack.top().type) == 0) stack.pop();
-		bool parentIsData = !stack.empty() && strcmp(stack.top().type, "Data") == 0;
-
-		SWITCH_STR_START(name)
-		{
-			CASE_STR(Listener)
-			{
-				oFunc func = funcs.top();
-				funcs.pop();
-				stream << "local " << currentData.name << " = " << func.begin << (codes ? codes : "") << func.end << '\n';
-				codes = nullptr;
-				break;
-			}
-			CASE_STR(Script)
-			{
-				stream << (codes ? codes : "") << '\n';
-				codes = nullptr;
-				break;
-			}
-			CASE_STR(TouchHandler)
-			{
-				stream << currentData.name << ":registerTouchHandler(" << (codes ? codes : "")
-					<< ',' << (isMultiTouches ? isMultiTouches : "false")
-					<< ',' << (touchPriority ? touchPriority : "0")
-					<< ',' << (swallowsTouches ? swallowsTouches : "false") << ")\n";
-				codes = nullptr;
-				isMultiTouches = nullptr;
-				touchPriority = nullptr;
-				swallowsTouches = nullptr;
-				break;
-			}
-			CASE_STR(AccelerateHandler)
-			{
-				stream << currentData.name << ":registerAccelerateHandler(" << (codes ? codes : "") << ")\n";
-				codes = nullptr;
-				break;
-			}
-			CASE_STR(KeypadHandler)
-			{
-				stream << currentData.name << ":registerKeypadHandler(" << (codes ? codes : "") << ")\n";
-				codes = nullptr;
-				break;
-			}
-			CASE_STR(NodeHandler)
-			{
-				stream << currentData.name << ":registerEventHandler(" << (codes ? codes : "") << ")\n";
-				codes = nullptr;
-				break;
-			}
-			CASE_STR(TapHandler)
-			{
-				stream << currentData.name << ":registerTapHandler(" << (codes ? codes : "") << ")\n";
-				codes = nullptr;
-				break;
-			}
-			CASE_STR(Schedule)
-			{
-				stream << currentData.name << ":schedule(" << (codes ? codes : "");
-				if (priority) stream << ',' << priority;
-				stream << ")\n";
-				codes = nullptr;
-				priority = nullptr;
-				break;
-			}
-			CASE_STR(Call)
-			{
-				oFunc func = funcs.top();
-				funcs.pop();
-				string tempItem = func.begin + (codes ? codes : "") + func.end;
-				if (parentIsData)
-				{
-					stream << "local " << currentData.name << " = " << tempItem << '\n';
-				}
-				else
-				{
-					items.push(tempItem);
-					auto it = names.find(currentData.name);
-					if (it != names.end()) names.erase(it);
-				}
-				break;
-			}
-			CASE_STR(Layer) goto FLAG_LAYER_BEGIN;
-			CASE_STR(LayerColor) goto FLAG_LAYER_BEGIN;
-			CASE_STR(LayerGradient) goto FLAG_LAYER_BEGIN;
-			goto FLAG_LAYER_END;
-			FLAG_LAYER_BEGIN:
-			{
-				if (touchPriority)
-				{
-					stream << currentData.name << ".touchPriority = " << touchPriority << '\n';
-					touchPriority = nullptr;
-				}
-				break;
-			}
-			FLAG_LAYER_END:
-			CASE_STR(Speed) goto FLAG_WRAP_ACTION_BEGIN;
-			CASE_STR(Loop) goto FLAG_WRAP_ACTION_BEGIN;
-			goto FLAG_WRAP_ACTION_END;
-			FLAG_WRAP_ACTION_BEGIN:
-			{
-				oFunc func = funcs.top();
-				funcs.pop();
-				string tempItem = func.begin;
-				if (items.top() == "nil")
-				{
-					tempItem += items.top();
-				}
-				else
-				{
-					tempItem += items.top();
-					items.pop();
-				}
-				items.pop();
-				tempItem += func.end;
-				if (parentIsData)
-				{
-					stream << "local " << currentData.name << " = " << tempItem << '\n';
-				}
-				else
-				{
-					items.push(tempItem);
-					auto it = names.find(currentData.name);
-					if (it != names.end()) names.erase(it);
-				}
-				break;
-			}
-			FLAG_WRAP_ACTION_END:
-			CASE_STR(Delay) goto FLAG_ACTION_BEGIN;
-			CASE_STR(Scale) goto FLAG_ACTION_BEGIN;
-			CASE_STR(Move) goto FLAG_ACTION_BEGIN;
-			CASE_STR(Rotate) goto FLAG_ACTION_BEGIN;
-			CASE_STR(Opacity) goto FLAG_ACTION_BEGIN;
-			CASE_STR(Skew) goto FLAG_ACTION_BEGIN;
-			CASE_STR(Roll) goto FLAG_ACTION_BEGIN;
-			CASE_STR(Jump) goto FLAG_ACTION_BEGIN;
-			CASE_STR(Bezier) goto FLAG_ACTION_BEGIN;
-			CASE_STR(Blink) goto FLAG_ACTION_BEGIN;
-			CASE_STR(Tint) goto FLAG_ACTION_BEGIN;
-			CASE_STR(Show) goto FLAG_ACTION_BEGIN;
-			CASE_STR(Hide) goto FLAG_ACTION_BEGIN;
-			CASE_STR(Flip) goto FLAG_ACTION_BEGIN;
-			CASE_STR(Orbit) goto FLAG_ACTION_BEGIN;
-			goto FLAG_ACTION_END;
-			FLAG_ACTION_BEGIN:
-			{
-				oFunc func = funcs.top();
-				funcs.pop();
-				if (parentIsData)
-				{
-					stream << "local " << currentData.name << " = " << func.begin << '\n';
-				}
-				else
-				{
-					items.push(func.begin);
-					auto it = names.find(currentData.name);
-					if (it != names.end()) names.erase(it);
-				}
-				break;
-			}
-			FLAG_ACTION_END:
-			CASE_STR(Sequence) goto FLAG_ACTION_GROUP_BEGIN;
-			CASE_STR(Spawn) goto FLAG_ACTION_GROUP_BEGIN;
-			goto FLAG_ACTION_GROUP_END;
-			FLAG_ACTION_GROUP_BEGIN:
-			{
-				string tempItem = string("CC") + name + "({";
-				::stack<string> tempStack;
-				while (items.top() != name)
-				{
-					tempStack.push(items.top());
-					items.pop();
-				}
-				items.pop();
-				while (!tempStack.empty())
-				{
-					tempItem += tempStack.top();
-					tempStack.pop();
-					if (!tempStack.empty()) tempItem += ",";
-				}
-				tempItem += "})";
-				if (parentIsData)
-				{
-					stream << "local " << currentData.name << " = " << tempItem << '\n';
-				}
-				else
-				{
-					items.push(tempItem);
-					auto it = names.find(currentData.name);
-					if (it != names.end()) names.erase(it);
-				}
-				break;
-			}
-			FLAG_ACTION_GROUP_END:
-			break;
-		}
-		SWITCH_STR_END
-
-		if (parentIsData)
-		{
-			const oItem& data = stack.top();
-			stream << data.name << "[\"" << (currentKey ? currentKey : currentData.name.c_str()) << "\"] = " << currentData.name << "\n\n";
-			currentKey = nullptr;
-		}
-	}
-    virtual void textHandler(void *ctx, const char *s, int len)
-	{
-		codes = s;
-	}
+	virtual void startElement(void *ctx, const char *name, const char **atts);
+	virtual void endElement(void *ctx, const char *name);
+	virtual void textHandler(void *ctx, const char *s, int len);
 public:
 	void clear()
 	{
@@ -1070,6 +812,273 @@ private:
 	unordered_set<string> names;
 	ostringstream stream;
 };
+
+void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
+{
+	SWITCH_STR_START(name)
+	{
+		Item(Node, node)
+		Item(Scene, scene)
+		Item(DrawNode, drawNode)
+		Item(Sprite, sprite)
+		Item(SpriteBatch, spriteBatch)
+		Item(Layer, layer)
+		Item(LayerColor, layer)
+		Item(LayerGradient, layer)
+		Item(ClipNode, clipNode)
+		Item(LabelAtlas, label)
+		Item(LabelBMFont, label)
+		Item(LabelTTF, label)
+		Item(Menu, menu)
+		Item(MenuItem, menuItem)
+		Item(Data, data)
+
+		Item(Listener, listener)
+		Item(Speed, speed)
+
+		Item(Delay, delay)
+		Item(Scale, scale)
+		Item(Move, move)
+		Item(Rotate, rotate)
+		Item(Opacity, opacity)
+		Item(Skew, skew)
+		Item(Roll, roll)
+		Item(Jump, jump)
+		Item(Bezier, bezier)
+		Item(Blink, blink)
+		Item(Tint, tint)
+		Item(Show, show)
+		Item(Hide, hide)
+		Item(Flip, flip)
+		Item(Call, call)
+		Item(Orbit, orbit)
+
+		Item(Sequence, sequence)
+		Item(Spawn, spawn)
+		Item(Loop, loop)
+
+		CASE_STR(Schedule)
+		{
+			Item_Loop(Schedule)
+			break;
+		}
+	}
+	SWITCH_STR_END
+}
+
+void oXmlDelegate::endElement(void *ctx, const char *name)
+{
+	oItem currentData = stack.top();
+	if (strcmp(name, stack.top().type) == 0) stack.pop();
+	bool parentIsData = !stack.empty() && strcmp(stack.top().type, "Data") == 0;
+
+	SWITCH_STR_START(name)
+	{
+		CASE_STR(Listener)
+		{
+			oFunc func = funcs.top();
+			funcs.pop();
+			stream << "local " << currentData.name << " = " << func.begin << (codes ? codes : "") << func.end << '\n';
+			codes = nullptr;
+			break;
+		}
+		CASE_STR(Script)
+		{
+			stream << (codes ? codes : "") << '\n';
+			codes = nullptr;
+			break;
+		}
+		CASE_STR(TouchHandler)
+		{
+			stream << currentData.name << ":registerTouchHandler(" << (codes ? codes : "")
+				<< ',' << (isMultiTouches ? isMultiTouches : "false")
+				<< ',' << (touchPriority ? touchPriority : "0")
+				<< ',' << (swallowsTouches ? swallowsTouches : "false") << ")\n";
+			codes = nullptr;
+			isMultiTouches = nullptr;
+			touchPriority = nullptr;
+			swallowsTouches = nullptr;
+			break;
+		}
+		CASE_STR(AccelerateHandler)
+		{
+			stream << currentData.name << ":registerAccelerateHandler(" << (codes ? codes : "") << ")\n";
+			codes = nullptr;
+			break;
+		}
+		CASE_STR(KeypadHandler)
+		{
+			stream << currentData.name << ":registerKeypadHandler(" << (codes ? codes : "") << ")\n";
+			codes = nullptr;
+			break;
+		}
+		CASE_STR(NodeHandler)
+		{
+			stream << currentData.name << ":registerEventHandler(" << (codes ? codes : "") << ")\n";
+			codes = nullptr;
+			break;
+		}
+		CASE_STR(TapHandler)
+		{
+			stream << currentData.name << ":registerTapHandler(" << (codes ? codes : "") << ")\n";
+			codes = nullptr;
+			break;
+		}
+		CASE_STR(Schedule)
+		{
+			stream << currentData.name << ":schedule(" << (codes ? codes : "");
+			if (priority) stream << ',' << priority;
+			stream << ")\n";
+			codes = nullptr;
+			priority = nullptr;
+			break;
+		}
+		CASE_STR(Call)
+		{
+			oFunc func = funcs.top();
+			funcs.pop();
+			string tempItem = func.begin + (codes ? codes : "") + func.end;
+			if (parentIsData)
+			{
+				stream << "local " << currentData.name << " = " << tempItem << '\n';
+			}
+			else
+			{
+				items.push(tempItem);
+				auto it = names.find(currentData.name);
+				if (it != names.end()) names.erase(it);
+			}
+			break;
+		}
+		CASE_STR(Layer) goto FLAG_LAYER_BEGIN;
+		CASE_STR(LayerColor) goto FLAG_LAYER_BEGIN;
+		CASE_STR(LayerGradient) goto FLAG_LAYER_BEGIN;
+		goto FLAG_LAYER_END;
+		FLAG_LAYER_BEGIN:
+		{
+			if (touchPriority)
+			{
+				stream << currentData.name << ".touchPriority = " << touchPriority << '\n';
+				touchPriority = nullptr;
+			}
+			break;
+		}
+		FLAG_LAYER_END:
+		CASE_STR(Speed) goto FLAG_WRAP_ACTION_BEGIN;
+		CASE_STR(Loop) goto FLAG_WRAP_ACTION_BEGIN;
+		goto FLAG_WRAP_ACTION_END;
+		FLAG_WRAP_ACTION_BEGIN:
+		{
+			oFunc func = funcs.top();
+			funcs.pop();
+			string tempItem = func.begin;
+			if (items.top() == "nil")
+			{
+				tempItem += items.top();
+			}
+			else
+			{
+				tempItem += items.top();
+				items.pop();
+			}
+			items.pop();
+			tempItem += func.end;
+			if (parentIsData)
+			{
+				stream << "local " << currentData.name << " = " << tempItem << '\n';
+			}
+			else
+			{
+				items.push(tempItem);
+				auto it = names.find(currentData.name);
+				if (it != names.end()) names.erase(it);
+			}
+			break;
+		}
+		FLAG_WRAP_ACTION_END:
+		CASE_STR(Delay) goto FLAG_ACTION_BEGIN;
+		CASE_STR(Scale) goto FLAG_ACTION_BEGIN;
+		CASE_STR(Move) goto FLAG_ACTION_BEGIN;
+		CASE_STR(Rotate) goto FLAG_ACTION_BEGIN;
+		CASE_STR(Opacity) goto FLAG_ACTION_BEGIN;
+		CASE_STR(Skew) goto FLAG_ACTION_BEGIN;
+		CASE_STR(Roll) goto FLAG_ACTION_BEGIN;
+		CASE_STR(Jump) goto FLAG_ACTION_BEGIN;
+		CASE_STR(Bezier) goto FLAG_ACTION_BEGIN;
+		CASE_STR(Blink) goto FLAG_ACTION_BEGIN;
+		CASE_STR(Tint) goto FLAG_ACTION_BEGIN;
+		CASE_STR(Show) goto FLAG_ACTION_BEGIN;
+		CASE_STR(Hide) goto FLAG_ACTION_BEGIN;
+		CASE_STR(Flip) goto FLAG_ACTION_BEGIN;
+		CASE_STR(Orbit) goto FLAG_ACTION_BEGIN;
+		goto FLAG_ACTION_END;
+		FLAG_ACTION_BEGIN:
+		{
+			oFunc func = funcs.top();
+			funcs.pop();
+			if (parentIsData)
+			{
+				stream << "local " << currentData.name << " = " << func.begin << '\n';
+			}
+			else
+			{
+				items.push(func.begin);
+				auto it = names.find(currentData.name);
+				if (it != names.end()) names.erase(it);
+			}
+			break;
+		}
+		FLAG_ACTION_END:
+		CASE_STR(Sequence) goto FLAG_ACTION_GROUP_BEGIN;
+		CASE_STR(Spawn) goto FLAG_ACTION_GROUP_BEGIN;
+		goto FLAG_ACTION_GROUP_END;
+		FLAG_ACTION_GROUP_BEGIN:
+		{
+			string tempItem = string("CC") + name + "({";
+			::stack<string> tempStack;
+			while (items.top() != name)
+			{
+				tempStack.push(items.top());
+				items.pop();
+			}
+			items.pop();
+			while (!tempStack.empty())
+			{
+				tempItem += tempStack.top();
+				tempStack.pop();
+				if (!tempStack.empty()) tempItem += ",";
+			}
+			tempItem += "})";
+			if (parentIsData)
+			{
+				stream << "local " << currentData.name << " = " << tempItem << '\n';
+			}
+			else
+			{
+				items.push(tempItem);
+				auto it = names.find(currentData.name);
+				if (it != names.end()) names.erase(it);
+			}
+			break;
+		}
+		FLAG_ACTION_GROUP_END:
+		break;
+	}
+	SWITCH_STR_END
+
+	if (parentIsData)
+	{
+		const oItem& data = stack.top();
+		stream << data.name << "[\"" << (currentKey ? currentKey : currentData.name.c_str()) << "\"] = " << currentData.name << "\n\n";
+		currentKey = nullptr;
+	}
+}
+
+void oXmlDelegate::textHandler(void *ctx, const char *s, int len)
+{
+	codes = s;
+}
+
 
 oXmlLoader::oXmlLoader():_delegate(new oXmlDelegate())
 {
