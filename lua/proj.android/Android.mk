@@ -6,16 +6,17 @@ LOCAL_MODULE := cocos_lua_static
 LOCAL_MODULE_FILENAME := liblua
 
 LOCAL_SRC_FILES := ../cocos2dx_support/CCLuaEngine.cpp \
-          ../cocos2dx_support/LuaCocos2d.cpp \
-          ../cocos2dx_support/LuaCode.cpp \
-	  ../cocos2dx_support/DorothyModule.cpp \
-	  ../cocos2dx_support/tolua_extern.cpp \
-          ../cocos2dx_support/tolua_fix.c \
-          ../tolua/tolua_event.c \
-          ../tolua/tolua_is.c \
-          ../tolua/tolua_map.c \
-          ../tolua/tolua_push.c \
-          ../tolua/tolua_to.c
+		../cocos2dx_support/DorothyXml.cpp \
+		../cocos2dx_support/DorothyModule.cpp \
+		../cocos2dx_support/LuaCocos2d.cpp \
+		../cocos2dx_support/LuaCode.cpp \
+		../cocos2dx_support/tolua_extern.cpp \
+		../cocos2dx_support/tolua_fix.c \
+		../tolua/tolua_event.c \
+		../tolua/tolua_is.c \
+		../tolua/tolua_map.c \
+		../tolua/tolua_push.c \
+		../tolua/tolua_to.c
           
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/../lib/include \
                            $(LOCAL_PATH)/../tolua \
@@ -30,8 +31,8 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/ \
                     $(LOCAL_PATH)/../../cocos2dx/platform/android \
                     $(LOCAL_PATH)/../../cocos2dx/kazmath/include \
                     $(LOCAL_PATH)/../../CocosDenshion/include \
-					$(LOCAL_PATH)/../../extensions \
-					$(LOCAL_PATH)/../../external
+                    $(LOCAL_PATH)/../../extensions \
+                    $(LOCAL_PATH)/../../external
 
 LOCAL_WHOLE_STATIC_LIBRARIES := luajit_static
 

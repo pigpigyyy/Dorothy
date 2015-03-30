@@ -38,7 +38,7 @@ static void oHandler(const char* begin, const char* end)
 	string self;
 #define Object_Check \
 	CASE_STR(Name) { self = atts[++i]; break; }\
-	CASE_STR(Key) { if (strcmp(stack.top().type,"Data") == 0) currentKey = atts[++i]; break; }
+	CASE_STR(Key) { if (strcmp(elementStack.top().type,"Data") == 0) currentKey = atts[++i]; break; }
 #define Speed_Define \
 	Object_Define\
 	const char* rate = nullptr;
@@ -366,8 +366,8 @@ static void oHandler(const char* begin, const char* end)
 	stream << "local " << self << " = CCDictionary()\n";
 #define Data_Handle
 #define Data_Finish \
-	if (!stack.empty()) {\
-		const oItem& parent = stack.top();\
+	if (!elementStack.empty()) {\
+		const oItem& parent = elementStack.top();\
 		stream << parent.name << ".data = " << self << "\n\n";\
 	}
 
@@ -384,8 +384,8 @@ static void oHandler(const char* begin, const char* end)
 #define Listener_Finish
 
 #define Add_To_Parent \
-	if (!stack.empty()) {\
-		const oItem& parent = stack.top();\
+	if (!elementStack.empty()) {\
+		const oItem& parent = elementStack.top();\
 		stream << parent.name << ":addChild(" << self;\
 		if (zOrder) {\
 			stream << ',' << zOrder;\
@@ -725,7 +725,7 @@ static void oHandler(const char* begin, const char* end)
 	}
 #define Item_Create(name) name##_Create
 #define Item_Handle(name) name##_Handle
-#define Item_Push(name) name##_Finish;oItem item = {#name,self};stack.push(item);
+#define Item_Push(name) name##_Finish;oItem item = {#name,self};elementStack.push(item);
 
 #define Item(name,var) \
 	CASE_STR(name)\
@@ -758,7 +758,7 @@ public:
 	{
 		currentKey = nullptr;
 		codes = nullptr;
-		for (; !stack.empty(); stack.pop());
+		for (; !elementStack.empty(); elementStack.pop());
 		for (; !funcs.empty(); funcs.pop());
 		for (; !items.empty(); items.pop());
 		stream.clear();
@@ -830,7 +830,7 @@ private:
 	string firstItem;
 	stack<oFunc> funcs;
 	stack<string> items;
-	stack<oItem> stack;
+	stack<oItem> elementStack;
 	unordered_set<string> names;
 	ostringstream stream;
 };
@@ -898,9 +898,9 @@ void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
 
 void oXmlDelegate::endElement(void *ctx, const char *name)
 {
-	oItem currentData = stack.top();
-	if (strcmp(name, stack.top().type) == 0) stack.pop();
-	bool parentIsData = !stack.empty() && strcmp(stack.top().type, "Data") == 0;
+	oItem currentData = elementStack.top();
+	if (strcmp(name, elementStack.top().type) == 0) elementStack.pop();
+	bool parentIsData = !elementStack.empty() && strcmp(elementStack.top().type, "Data") == 0;
 
 	SWITCH_STR_START(name)
 	{
@@ -1065,7 +1065,7 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 		FLAG_ACTION_GROUP_BEGIN:
 		{
 			string tempItem = string("CC") + name + "({";
-			::stack<string> tempStack;
+			stack<string> tempStack;
 			while (items.top() != name)
 			{
 				tempStack.push(items.top());
@@ -1097,7 +1097,7 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 			oFunc func = funcs.top();
 			funcs.pop();
 			string tempItem = func.begin;
-			::stack<string> tempStack;
+			stack<string> tempStack;
 			while (items.top() != name)
 			{
 				tempStack.push(items.top());
@@ -1128,7 +1128,7 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 
 	if (parentIsData)
 	{
-		const oItem& data = stack.top();
+		const oItem& data = elementStack.top();
 		stream << data.name << "[\"" << (currentKey ? currentKey : currentData.name.c_str()) << "\"] = " << currentData.name << "\n\n";
 		currentKey = nullptr;
 	}
