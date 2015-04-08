@@ -2433,7 +2433,7 @@ local Dorothy =
 			},
 			reuse =
 			{
-				args = "()",
+				args = "(times: int)",
 				description = "",
 				typeName = "CCFiniteTimeAction",
 				returns = "(action: CCFiniteTimeAction)",

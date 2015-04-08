@@ -340,6 +340,370 @@ static void oHandler(const char* begin, const char* end)
 	items.push("CardinalSpline");
 #define CardinalSpline_Finish
 
+#define Grid_FlipX3D_Define \
+	Object_Define\
+	const char* time = nullptr;
+#define Grid_FlipX3D_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }
+#define Grid_FlipX3D_Create
+#define Grid_FlipX3D_Handle \
+	oFunc func = {string("CCGrid:flipX3D(")+(time ? time : "0")+")",""};\
+	funcs.push(func);
+#define Grid_FlipX3D_Finish
+
+#define Grid_FlipY3D_Define \
+	Object_Define\
+	const char* time = nullptr;
+#define Grid_FlipY3D_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }
+#define Grid_FlipY3D_Create
+#define Grid_FlipY3D_Handle \
+	oFunc func = {string("CCGrid:flipY3D(")+(time ? time : "0")+")",""};\
+	funcs.push(func);
+#define Grid_FlipY3D_Finish
+
+#define Grid_Lens3D_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* gridX = nullptr;\
+	const char* gridY = nullptr;\
+	const char* x = nullptr;\
+	const char* y = nullptr;\
+	const char* radius = nullptr;
+#define Grid_Lens3D_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(GridX) { gridX = atts[++i]; break; }\
+	CASE_STR(GridY) { gridY = atts[++i]; break; }\
+	CASE_STR(X) { x = atts[++i]; break; }\
+	CASE_STR(Y) { y = atts[++i]; break; }\
+	CASE_STR(Radius) { radius = atts[++i]; break; }
+#define Grid_Lens3D_Create
+#define Grid_Lens3D_Handle \
+	oFunc func = {string("CCGrid:lens3D(")+(time ? time : "0")+\
+	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),oVec2("+(x ? x : "0")+","+(y ? y : "0")+"),"+(radius ? radius : "0")+")",""};\
+	funcs.push(func);
+#define Grid_Lens3D_Finish
+
+#define Grid_Liquid_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* gridX = nullptr;\
+	const char* gridY = nullptr;\
+	const char* waves = nullptr;\
+	const char* amplitude = nullptr;
+#define Grid_Liquid_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(GridX) { gridX = atts[++i]; break; }\
+	CASE_STR(GridY) { gridY = atts[++i]; break; }\
+	CASE_STR(Waves) { waves = atts[++i]; break; }\
+	CASE_STR(Amplitude) { amplitude = atts[++i]; break; }
+#define Grid_Liquid_Create
+#define Grid_Liquid_Handle \
+	oFunc func = {string("CCGrid:liquid(")+(time ? time : "0")+\
+	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
+	(waves ? waves : "0")+","+(amplitude ? amplitude : "0")+")",""};\
+	funcs.push(func);
+#define Grid_Liquid_Finish
+
+#define Grid_Reuse_Define \
+	Object_Define\
+	const char* times = nullptr;
+#define Grid_Reuse_Check \
+	Object_Check\
+	CASE_STR(Times) { times = atts[++i]; break; }
+#define Grid_Reuse_Create
+#define Grid_Reuse_Handle \
+	oFunc func = {string("CCGrid:reuse(")+(times ? times : "0")+")",""};\
+	funcs.push(func);
+#define Grid_Reuse_Finish
+
+#define Grid_Ripple3D_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* gridX = nullptr;\
+	const char* gridY = nullptr;\
+	const char* x = nullptr;\
+	const char* y = nullptr;\
+	const char* radius = nullptr;\
+	const char* waves = nullptr;\
+	const char* amplitude = nullptr;
+#define Grid_Ripple3D_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(GridX) { gridX = atts[++i]; break; }\
+	CASE_STR(GridY) { gridY = atts[++i]; break; }\
+	CASE_STR(X) { x = atts[++i]; break; }\
+	CASE_STR(Y) { y = atts[++i]; break; }\
+	CASE_STR(Radius) { radius = atts[++i]; break; }\
+	CASE_STR(Waves) { waves = atts[++i]; break; }\
+	CASE_STR(Amplitude) { amplitude = atts[++i]; break; }
+#define Grid_Ripple3D_Create
+#define Grid_Ripple3D_Handle \
+	oFunc func = {string("CCGrid:ripple3D(")+(time ? time : "0")+\
+	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),oVec2("+(x ? x : "0")+","+(y ? y : "0")+"),"+(radius ? radius : "0")+","+\
+	(waves ? waves : "0")+","+(amplitude ? amplitude : "0")+")",""};\
+	funcs.push(func);
+#define Grid_Ripple3D_Finish
+
+#define Grid_Shaky3D_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* gridX = nullptr;\
+	const char* gridY = nullptr;\
+	const char* range = nullptr;\
+	const char* shakeZ = nullptr;
+#define Grid_Shaky3D_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(GridX) { gridX = atts[++i]; break; }\
+	CASE_STR(GridY) { gridY = atts[++i]; break; }\
+	CASE_STR(Range) { range = atts[++i]; break; }\
+	CASE_STR(ShakeZ) { shakeZ = atts[++i]; break; }
+#define Grid_Shaky3D_Create
+#define Grid_Shaky3D_Handle \
+	oFunc func = {string("CCGrid:shaky3D(")+(time ? time : "0")+\
+	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
+	(range ? range : "0")+","+(shakeZ ? shakeZ : "false")+")",""};\
+	funcs.push(func);
+#define Grid_Shaky3D_Finish
+
+#define Grid_Stop_Define \
+	Object_Define
+#define Grid_Stop_Check \
+	Object_Check
+#define Grid_Stop_Create
+#define Grid_Stop_Handle \
+	oFunc func = {"CCGrid:stop()",""};\
+	funcs.push(func);
+#define Grid_Stop_Finish
+
+#define Grid_Twirl_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* gridX = nullptr;\
+	const char* gridY = nullptr;\
+	const char* x = nullptr;\
+	const char* y = nullptr;\
+	const char* twirls = nullptr;\
+	const char* amplitude = nullptr;
+#define Grid_Twirl_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(GridX) { gridX = atts[++i]; break; }\
+	CASE_STR(GridY) { gridY = atts[++i]; break; }\
+	CASE_STR(X) { x = atts[++i]; break; }\
+	CASE_STR(Y) { y = atts[++i]; break; }\
+	CASE_STR(Twirls) { twirls = atts[++i]; break; }\
+	CASE_STR(Amplitude) { amplitude = atts[++i]; break; }
+#define Grid_Twirl_Create
+#define Grid_Twirl_Handle \
+	oFunc func = {string("CCGrid:twirl(")+(time ? time : "0")+\
+	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),oVec2("+(x ? x : "0")+","+(y ? y : "0")+"),"+\
+	(twirls ? twirls : "0")+","+(amplitude ? amplitude : "0")+")",""};\
+	funcs.push(func);
+#define Grid_Twirl_Finish
+
+#define Grid_Wave_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* gridX = nullptr;\
+	const char* gridY = nullptr;\
+	const char* waves = nullptr;\
+	const char* amplitude = nullptr;\
+	const char* horizontal = nullptr;\
+	const char* vertical = nullptr;
+#define Grid_Wave_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(GridX) { gridX = atts[++i]; break; }\
+	CASE_STR(GridY) { gridY = atts[++i]; break; }\
+	CASE_STR(Waves) { waves = atts[++i]; break; }\
+	CASE_STR(Amplitude) { amplitude = atts[++i]; break; }\
+	CASE_STR(Horizontal) { horizontal = atts[++i]; break; }\
+	CASE_STR(Vertical) { vertical = atts[++i]; break; }
+#define Grid_Wave_Create
+#define Grid_Wave_Handle \
+	oFunc func = {string("CCGrid:waves(")+(time ? time : "0")+\
+	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
+	(waves ? waves : "0")+","+(amplitude ? amplitude : "0")+","+\
+	(horizontal ? horizontal : "0")+","+(vertical ? vertical : "0")+")",""};\
+	funcs.push(func);
+#define Grid_Wave_Finish
+
+#define Grid_Wave3D_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* gridX = nullptr;\
+	const char* gridY = nullptr;\
+	const char* waves = nullptr;\
+	const char* amplitude = nullptr;
+#define Grid_Wave3D_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(GridX) { gridX = atts[++i]; break; }\
+	CASE_STR(GridY) { gridY = atts[++i]; break; }\
+	CASE_STR(Waves) { waves = atts[++i]; break; }\
+	CASE_STR(Amplitude) { amplitude = atts[++i]; break; }
+#define Grid_Wave3D_Create
+#define Grid_Wave3D_Handle \
+	oFunc func = {string("CCGrid:waves3D(")+(time ? time : "0")+\
+	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
+	(waves ? waves : "0")+","+(amplitude ? amplitude : "0")+")",""};\
+	funcs.push(func);
+#define Grid_Wave3D_Finish
+
+#define Tile_FadeOut_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* gridX = nullptr;\
+	const char* gridY = nullptr;\
+	const char* orientation = nullptr;
+#define Tile_FadeOut_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(GridX) { gridX = atts[++i]; break; }\
+	CASE_STR(GridY) { gridY = atts[++i]; break; }\
+	CASE_STR(Dir) { orientation = atts[++i]; break; }
+#define Tile_FadeOut_Create
+#define Tile_FadeOut_Handle \
+	oFunc func = {string("CCTile:fadeOut(")+(time ? time : "0")+\
+	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
+	"CCOrientation."+(orientation ? orientation : "Down")+")",""};\
+	funcs.push(func);
+#define Tile_FadeOut_Finish
+
+#define Tile_Jump3D_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* gridX = nullptr;\
+	const char* gridY = nullptr;\
+	const char* numberOfJumps = nullptr;\
+	const char* amplitude = nullptr;
+#define Tile_Jump3D_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(GridX) { gridX = atts[++i]; break; }\
+	CASE_STR(GridY) { gridY = atts[++i]; break; }\
+	CASE_STR(Jumps) { numberOfJumps = atts[++i]; break; }\
+	CASE_STR(Amplitude) { amplitude = atts[++i]; break; }
+#define Tile_Jump3D_Create
+#define Tile_Jump3D_Handle \
+	oFunc func = {string("CCTile:jump3D(")+(time ? time : "0")+\
+	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
+	(numberOfJumps ? numberOfJumps : "0")+","+(amplitude ? amplitude : "0")+")",""};\
+	funcs.push(func);
+#define Tile_Jump3D_Finish
+
+#define Tile_Shaky3D_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* gridX = nullptr;\
+	const char* gridY = nullptr;\
+	const char* range = nullptr;\
+	const char* shakeZ = nullptr;
+#define Tile_Shaky3D_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(GridX) { gridX = atts[++i]; break; }\
+	CASE_STR(GridY) { gridY = atts[++i]; break; }\
+	CASE_STR(Range) { range = atts[++i]; break; }\
+	CASE_STR(ShakeZ) { shakeZ = atts[++i]; break; }
+#define Tile_Shaky3D_Create
+#define Tile_Shaky3D_Handle \
+	oFunc func = {string("CCTile:shaky3D(")+(time ? time : "0")+\
+	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
+	(range ? range : "0")+","+(shakeZ ? shakeZ : "false")+")",""};\
+	funcs.push(func);
+#define Tile_Shaky3D_Finish
+
+#define Tile_Shuffle_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* gridX = nullptr;\
+	const char* gridY = nullptr;
+#define Tile_Shuffle_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(GridX) { gridX = atts[++i]; break; }\
+	CASE_STR(GridY) { gridY = atts[++i]; break; }
+#define Tile_Shuffle_Create
+#define Tile_Shuffle_Handle \
+	oFunc func = {string("CCTile:shuffle(")+(time ? time : "0")+\
+	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"))",""};\
+	funcs.push(func);
+#define Tile_Shuffle_Finish
+
+#define Tile_SplitCols_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* cols = nullptr;
+#define Tile_SplitCols_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(Columns) { cols = atts[++i]; break; }
+#define Tile_SplitCols_Create
+#define Tile_SplitCols_Handle \
+	oFunc func = {string("CCTile:splitCols(")+(time ? time : "0")+","+(cols ? cols : "0")+")",""};\
+	funcs.push(func);
+#define Tile_SplitCols_Finish
+
+#define Tile_SplitRows_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* rows = nullptr;
+#define Tile_SplitRows_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(Rows) { rows = atts[++i]; break; }
+#define Tile_SplitRows_Create
+#define Tile_SplitRows_Handle \
+	oFunc func = {string("CCTile:splitRows(")+(time ? time : "0")+","+(rows ? rows : "0")+")",""};\
+	funcs.push(func);
+#define Tile_SplitRows_Finish
+
+#define Tile_TurnOff_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* gridX = nullptr;\
+	const char* gridY = nullptr;
+#define Tile_TurnOff_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(GridX) { gridX = atts[++i]; break; }\
+	CASE_STR(GridY) { gridY = atts[++i]; break; }
+#define Tile_TurnOff_Create
+#define Tile_TurnOff_Handle \
+	oFunc func = {string("CCTile:turnOff(")+(time ? time : "0")+\
+	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"))",""};\
+	funcs.push(func);
+#define Tile_TurnOff_Finish
+
+#define Tile_Waves3D_Define \
+	Object_Define\
+	const char* time = nullptr;\
+	const char* gridX = nullptr;\
+	const char* gridY = nullptr;\
+	const char* waves = nullptr;\
+	const char* amplitude = nullptr;
+#define Tile_Waves3D_Check \
+	Object_Check\
+	CASE_STR(Time) { time = atts[++i]; break; }\
+	CASE_STR(GridX) { gridX = atts[++i]; break; }\
+	CASE_STR(GridY) { gridY = atts[++i]; break; }\
+	CASE_STR(Waves) { waves = atts[++i]; break; }\
+	CASE_STR(Amplitude) { amplitude = atts[++i]; break; }
+#define Tile_Waves3D_Create
+#define Tile_Waves3D_Handle \
+	oFunc func = {string("CCTile:waves3D(")+(time ? time : "0")+\
+	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
+	(waves ? waves : "0")+","+(amplitude ? amplitude : "0")+")",""};\
+	funcs.push(func);
+#define Tile_Waves3D_Finish
+
 #define Sequence_Define \
 	Object_Define
 #define Sequence_Check \
@@ -736,7 +1100,21 @@ static void oHandler(const char* begin, const char* end)
 		Item_Create(name)\
 		Item_Handle(name)\
 		Item_Push(name)\
-		break;\
+		return;\
+	}
+
+#define CASE_STR_DOT(prename,name) __CASE_STR1(#prename"."#name, prename##name)
+#define ItemDot_Push(prename,name) prename##_##name##_Finish;oItem item = {#prename"."#name,self};elementStack.push(item);
+#define ItemDot(prename,name,var) \
+	CASE_STR_DOT(prename,name)\
+	{\
+		Item_Define(prename##_##name)\
+		Item_Loop(prename##_##name)\
+		Self_Check(var)\
+		Item_Create(prename##_##name)\
+		Item_Handle(prename##_##name)\
+		ItemDot_Push(prename,name)\
+		return;\
 	}
 
 class oXmlDelegate : public CCSAXDelegator
@@ -832,6 +1210,7 @@ private:
 	stack<string> items;
 	stack<oItem> elementStack;
 	unordered_set<string> names;
+	unordered_map<const char*, const char*> params;
 	ostringstream stream;
 };
 
@@ -880,17 +1259,38 @@ void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
 		Item(Loop, loop)
 		Item(CardinalSpline, cardinalSpline)
 
+		ItemDot(Grid,FlipX3D, gridFlipX3D)
+		ItemDot(Grid,FlipY3D, gridFlipY3D)
+		ItemDot(Grid,Lens3D, gridLens3D)
+		ItemDot(Grid,Liquid, gridLiquid)
+		ItemDot(Grid,Reuse, gridReuse)
+		ItemDot(Grid,Ripple3D, gridRipple3D)
+		ItemDot(Grid,Shaky3D, gridShaky3D)
+		ItemDot(Grid,Stop, gridStop)
+		ItemDot(Grid,Twirl, gridTwirl)
+		ItemDot(Grid,Wave, gridWave)
+		ItemDot(Grid,Wave3D, gridWave3D)
+
+		ItemDot(Tile,FadeOut, tileFadeOut)
+		ItemDot(Tile,Jump3D, tileJump3D)
+		ItemDot(Tile,Shaky3D, tileShaky3D)
+		ItemDot(Tile,Shuffle, tileShuffle)
+		ItemDot(Tile,SplitCols, tileSplitCols)
+		ItemDot(Tile,SplitRows, tileSplitRows)
+		ItemDot(Tile,TurnOff, tileTurnOff)
+		ItemDot(Tile,Waves3D, tileWaves3D)
+
 		CASE_STR(Vec2)
 		{
 			Item_Define(Vec2)
 			Item_Loop(Vec2)
 			Item_Handle(Vec2)
-			break;
+			return;
 		}
 		CASE_STR(Schedule)
 		{
 			Item_Loop(Schedule)
-			break;
+			return;
 		}
 	}
 	SWITCH_STR_END
@@ -898,6 +1298,7 @@ void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
 
 void oXmlDelegate::endElement(void *ctx, const char *name)
 {
+	if (elementStack.empty()) return;
 	oItem currentData = elementStack.top();
 	if (strcmp(name, elementStack.top().type) == 0) elementStack.pop();
 	bool parentIsData = !elementStack.empty() && strcmp(elementStack.top().type, "Data") == 0;
@@ -1041,6 +1442,25 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 		CASE_STR(Hide) goto FLAG_ACTION_BEGIN;
 		CASE_STR(Flip) goto FLAG_ACTION_BEGIN;
 		CASE_STR(Orbit) goto FLAG_ACTION_BEGIN;
+		CASE_STR_DOT(Grid,FlipX3D) goto FLAG_ACTION_BEGIN;
+		CASE_STR_DOT(Grid,FlipY3D) goto FLAG_ACTION_BEGIN;
+		CASE_STR_DOT(Grid,Lens3D) goto FLAG_ACTION_BEGIN;
+		CASE_STR_DOT(Grid,Liquid) goto FLAG_ACTION_BEGIN;
+		CASE_STR_DOT(Grid,Reuse) goto FLAG_ACTION_BEGIN;
+		CASE_STR_DOT(Grid,Ripple3D) goto FLAG_ACTION_BEGIN;
+		CASE_STR_DOT(Grid,Shaky3D) goto FLAG_ACTION_BEGIN;
+		CASE_STR_DOT(Grid,Twirl) goto FLAG_ACTION_BEGIN;
+		CASE_STR_DOT(Grid,Stop) goto FLAG_ACTION_BEGIN;
+		CASE_STR_DOT(Grid,Wave) goto FLAG_ACTION_BEGIN;
+		CASE_STR_DOT(Grid,Wave3D) goto FLAG_ACTION_BEGIN;
+		CASE_STR_DOT(Tile,FadeOut) goto FLAG_ACTION_BEGIN;
+		CASE_STR_DOT(Tile,Jump3D) goto FLAG_ACTION_BEGIN;
+		CASE_STR_DOT(Tile,Shaky3D) goto FLAG_ACTION_BEGIN;
+		CASE_STR_DOT(Tile,Shuffle) goto FLAG_ACTION_BEGIN;
+		CASE_STR_DOT(Tile,SplitCols) goto FLAG_ACTION_BEGIN;
+		CASE_STR_DOT(Tile,SplitRows) goto FLAG_ACTION_BEGIN;
+		CASE_STR_DOT(Tile,TurnOff) goto FLAG_ACTION_BEGIN;
+		CASE_STR_DOT(Tile,Waves3D) goto FLAG_ACTION_BEGIN;
 		goto FLAG_ACTION_END;
 		FLAG_ACTION_BEGIN:
 		{
@@ -1138,7 +1558,6 @@ void oXmlDelegate::textHandler(void *ctx, const char *s, int len)
 {
 	codes = s;
 }
-
 
 oXmlLoader::oXmlLoader():_delegate(new oXmlDelegate())
 {

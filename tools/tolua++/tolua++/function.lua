@@ -55,6 +55,8 @@ function classFunction:supcode(local_constructor)
  local nret = 0      -- number of returned values
  local class = self:inclass()
  local _,_,static = strfind(self.mod,'^%s*(static)')
+ local out = string.find(self.mod, "tolua_outside")
+ 
  if class then
  	if self.name == 'new' and self.parent.flags.pure_virtual then
  		-- no constructor for classes with pure virtual methods
@@ -93,9 +95,10 @@ function classFunction:supcode(local_constructor)
 	end
 	output(' tolua_Error tolua_err;')
  output(' if (\n')
+ 
  -- check self
  local narg
- if class then narg=2 else narg=1 end
+ if class or (static and out) then narg=2 else narg=1 end
  if class then
 		local func = get_is_function(self.parent.type)
 		local type = self.parent.type
@@ -107,6 +110,8 @@ function classFunction:supcode(local_constructor)
 			type = "const "..type
 		end
 		output('     !'..func..'(tolua_S,1,"'.._userltype[self.parent.type]..'",0,&tolua_err) ||\n')
+ elseif (static and out) then
+		output('     !tolua_istable(tolua_S,1,0,&tolua_err) ||\n')
  end
  -- check args
  if self.args[1].type ~= 'void' then
@@ -134,7 +139,7 @@ function classFunction:supcode(local_constructor)
 
  -- declare self, if the case
  local narg
- if class then narg=2 else narg=1 end
+ if class or (static and out) then narg=2 else narg=1 end
  if class and self.name~='new' and static==nil then
   output(' ',self.const,self.parent.type,'*','self = ')
   output('(',self.const,self.parent.type,'*) ')
@@ -143,6 +148,7 @@ function classFunction:supcode(local_constructor)
  elseif static then
   _,_,self.mod = strfind(self.mod,'^%s*static%s%s*(.*)')
  end
+
  -- declare parameters
  if self.args[1].type ~= 'void' then
   local i=1
@@ -163,7 +169,7 @@ function classFunction:supcode(local_constructor)
  end
 
  -- get array element values
- if class then narg=2 else narg=1 end
+ if class or (static and out) then narg=2 else narg=1 end
  if self.args[1].type ~= 'void' then
   local i=1
   while self.args[i] do
@@ -175,7 +181,6 @@ function classFunction:supcode(local_constructor)
 
  pre_call_hook(self)
 
- local out = string.find(self.mod, "tolua_outside")
  -- call function
  if class and self.name=='delete' then
   output('  Mtolua_delete(self);')
@@ -304,7 +309,7 @@ function classFunction:supcode(local_constructor)
   output('  }')
 
   -- set array element values
-  if class then narg=2 else narg=1 end
+  if class or (static and out) then narg=2 else narg=1 end
   --[[if self.args[1].type ~= 'void' then
    local i=1
    while self.args[i] do

@@ -93,31 +93,9 @@ void oContent_setSearchResolutionsOrder(oContent* self, char* paths[], int lengt
 
 CCSprite* CCSprite_createWithClip(const char* clipStr);
 
-CCScene* CCScene_createOriented(float duration, CCScene* nextScene, tOrientation orientation);
-CCScene* CCScene_createRotoZoom(float duration, CCScene* nextScene);
-CCScene* CCScene_createJumpZoom(float duration, CCScene* nextScene);
 CCScene* CCScene_createMove(float duration, CCScene* nextScene, tOrientation orientation);
 CCScene* CCScene_createSlide(float duration, CCScene* nextScene, tOrientation orientation);
-CCScene* CCScene_createShrinkGrow(float duration, CCScene* nextScene);
-CCScene* CCScene_createFlipX(float duration, CCScene* nextScene, tOrientation orientation);
-CCScene* CCScene_createFlipY(float duration, CCScene* nextScene, tOrientation orientation);
-CCScene* CCScene_createFlipAngular(float duration, CCScene* nextScene, tOrientation orientation);
-CCScene* CCScene_createZoomFlipX(float duration, CCScene* nextScene, tOrientation orientation);
-CCScene* CCScene_createZoomFlipY(float duration, CCScene* nextScene, tOrientation orientation);
-CCScene* CCScene_createZoomFlipAngular(float duration, CCScene* nextScene, tOrientation orientation);
-CCScene* CCScene_createFade(float duration, CCScene* nextScene, const ccColor3B& color);
-CCScene* CCScene_createCrossFade(float duration, CCScene* nextScene);
-CCScene* CCScene_createTurnOffTiles(float duration, CCScene* nextScene);
-CCScene* CCScene_createSplitCols(float duration, CCScene* nextScene);
-CCScene* CCScene_createSplitRows(float duration, CCScene* nextScene);
 CCScene* CCScene_createFadeTiles(float duration, CCScene* nextScene, tOrientation orientation);
-CCScene* CCScene_createPageTurn(float duration, CCScene* nextScene, bool backward);
-CCScene* CCScene_createProgressCCW(float duration, CCScene* nextScene);
-CCScene* CCScene_createProgressCW(float duration, CCScene* nextScene);
-CCScene* CCScene_createProgressH(float duration, CCScene* nextScene);
-CCScene* CCScene_createProgressV(float duration, CCScene* nextScene);
-CCScene* CCScene_createProgressIO(float duration, CCScene* nextScene);
-CCScene* CCScene_createProgressOI(float duration, CCScene* nextScene);
 
 CCCardinalSplineTo* CCCardinalSplineTo_create(float duration, const oVec2 points[], int count, float tension);
 CCCardinalSplineBy* CCCardinalSplineBy_create(float duration, const oVec2 points[], int count, float tension);
@@ -218,28 +196,5 @@ public:
 
 void __oEffect_update(lua_State* L, oEffect* effect, int tableIndex);
 #define oEffect_update(effect, tableIndex) {__oEffect_update(tolua_S,effect,tableIndex);}
-
-class CCEase
-{
-public:
-	static CCActionInterval* holdIn(CCActionInterval* pAction, float fRate);
-	static CCActionInterval* holdOut(CCActionInterval* pAction, float fRate);
-	static CCActionInterval* holdInOut(CCActionInterval* pAction, float fRate);
-	static CCActionInterval* exponentialIn(CCActionInterval* pAction);
-	static CCActionInterval* exponentialOut(CCActionInterval* pAction);
-	static CCActionInterval* exponentialInOut(CCActionInterval* pAction);
-	static CCActionInterval* sineIn(CCActionInterval* pAction);
-	static CCActionInterval* sineOut(CCActionInterval* pAction);
-	static CCActionInterval* sineInOut(CCActionInterval* pAction);
-	static CCActionInterval* elasticIn(CCActionInterval *pAction, float fPeriod = 0.3);
-	static CCActionInterval* elasticOut(CCActionInterval *pAction, float fPeriod = 0.3);
-	static CCActionInterval* elasticInOut(CCActionInterval *pAction, float fPeriod = 0.3);
-	static CCActionInterval* bounceIn(CCActionInterval* pAction);
-	static CCActionInterval* bounceOut(CCActionInterval* pAction);
-	static CCActionInterval* bounceInOut(CCActionInterval* pAction);
-	static CCActionInterval* backIn(CCActionInterval* pAction);
-	static CCActionInterval* backOut(CCActionInterval* pAction);
-	static CCActionInterval* backInOut(CCActionInterval* pAction);
-};
 
 #endif // __DOROTHY_MODULE_H__

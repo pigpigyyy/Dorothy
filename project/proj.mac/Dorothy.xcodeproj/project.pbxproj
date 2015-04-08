@@ -19,7 +19,6 @@
 		3C504D5B1A23739B000C79D6 /* AppController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3C504D5A1A23739B000C79D6 /* AppController.mm */; };
 		3C504D5D1A23739B000C79D6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C504D5C1A23739B000C79D6 /* main.m */; };
 		3C504D5F1A23739B000C79D6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C504D5E1A23739B000C79D6 /* Images.xcassets */; };
-		3C504D621A23739B000C79D6 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C504D601A23739B000C79D6 /* MainMenu.xib */; };
 		3C504D7D1A237767000C79D6 /* libcocos2dx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C504D7C1A23775B000C79D6 /* libcocos2dx.a */; };
 		3C504D861A237B0B000C79D6 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C504D851A237B0B000C79D6 /* libsqlite3.0.dylib */; };
 		3C504D881A237B29000C79D6 /* libcurl.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C504D871A237B29000C79D6 /* libcurl.4.dylib */; };
@@ -1084,7 +1083,6 @@
 				3CD77C5B1A83A99E003B55A0 /* EffectEditor in Resources */,
 				3C7AA4D41A47291F007836D2 /* main.lua in Resources */,
 				3C07A5F51A6ED4830036E419 /* oBodyEx.lua in Resources */,
-				3C504D621A23739B000C79D6 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

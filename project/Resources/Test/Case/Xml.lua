@@ -7,6 +7,7 @@ doXml([[
 	<Data>
 		<Loop Name="fade">
 			<Sequence>
+				<Grid.Twirl Time="5" GridX="100" GridY="100" Twirls="1" Amplitude="0.5"/>
 				<Opacity Time="1" Alpha="0"/>
 				<Opacity Time="1" Alpha="1"/>
 			</Sequence>

@@ -394,18 +394,6 @@ CCSprite* CCSprite_createWithClip(const char* clipStr)
 	return CCSprite::create(clipStr);
 }
 
-CCScene* CCScene_createOriented(float duration, CCScene* nextScene, tOrientation orientation)
-{
-	return CCTransitionSceneOriented::create(duration, nextScene, orientation);
-}
-CCScene* CCScene_createRotoZoom(float duration, CCScene* nextScene)
-{
-	return CCTransitionRotoZoom::create(duration, nextScene);
-}
-CCScene* CCScene_createJumpZoom(float duration, CCScene* nextScene)
-{
-	return CCTransitionJumpZoom::create(duration, nextScene);
-}
 CCScene* CCScene_createMove(float duration, CCScene* nextScene, tOrientation orientation)
 {
 	switch (orientation)
@@ -436,54 +424,6 @@ CCScene* CCScene_createSlide(float duration, CCScene* nextScene, tOrientation or
 	}
 	return nullptr;
 }
-CCScene* CCScene_createShrinkGrow(float duration, CCScene* nextScene)
-{
-	return CCTransitionShrinkGrow::create(duration, nextScene);
-}
-CCScene* CCScene_createFlipX(float duration, CCScene* nextScene, tOrientation orientation)
-{
-	return CCTransitionFlipX::create(duration, nextScene);
-}
-CCScene* CCScene_createFlipY(float duration, CCScene* nextScene, tOrientation orientation)
-{
-	return CCTransitionFlipY::create(duration, nextScene);
-}
-CCScene* CCScene_createFlipAngular(float duration, CCScene* nextScene, tOrientation orientation)
-{
-	return CCTransitionFlipAngular::create(duration, nextScene);
-}
-CCScene* CCScene_createZoomFlipX(float duration, CCScene* nextScene, tOrientation orientation)
-{
-	return CCTransitionZoomFlipX::create(duration, nextScene, orientation);
-}
-CCScene* CCScene_createZoomFlipY(float duration, CCScene* nextScene, tOrientation orientation)
-{
-	return CCTransitionZoomFlipY::create(duration, nextScene, orientation);
-}
-CCScene* CCScene_createZoomFlipAngular(float duration, CCScene* nextScene, tOrientation orientation)
-{
-	return CCTransitionZoomFlipAngular::create(duration, nextScene, orientation);
-}
-CCScene* CCScene_createFade(float duration, CCScene* nextScene, const ccColor3B& color)
-{
-	return CCTransitionFade::create(duration, nextScene, color);
-}
-CCScene* CCScene_createCrossFade(float duration, CCScene* nextScene)
-{
-	return CCTransitionCrossFade::create(duration, nextScene);
-}
-CCScene* CCScene_createTurnOffTiles(float duration, CCScene* nextScene)
-{
-	return CCTransitionTurnOffTiles::create(duration, nextScene);
-}
-CCScene* CCScene_createSplitCols(float duration, CCScene* nextScene)
-{
-	return CCTransitionSplitCols::create(duration, nextScene);
-}
-CCScene* CCScene_createSplitRows(float duration, CCScene* nextScene)
-{
-	return CCTransitionSplitRows::create(duration, nextScene);
-}
 CCScene* CCScene_createFadeTiles(float duration, CCScene* nextScene, tOrientation orientation)
 {
 	switch (orientation)
@@ -498,34 +438,6 @@ CCScene* CCScene_createFadeTiles(float duration, CCScene* nextScene, tOrientatio
 		return CCTransitionFadeDown::create(duration, nextScene);
 	}
 	return nullptr;
-}
-CCScene* CCScene_createPageTurn(float duration, CCScene* nextScene, bool backward)
-{
-	return CCTransitionPageTurn::create(duration, nextScene, backward);
-}
-CCScene* CCScene_createProgressCCW(float duration, CCScene* nextScene)
-{
-	return CCTransitionProgressRadialCCW::create(duration, nextScene);
-}
-CCScene* CCScene_createProgressCW(float duration, CCScene* nextScene)
-{
-	return CCTransitionProgressRadialCW::create(duration, nextScene);
-}
-CCScene* CCScene_createProgressH(float duration, CCScene* nextScene)
-{
-	return CCTransitionProgressHorizontal::create(duration, nextScene);
-}
-CCScene* CCScene_createProgressV(float duration, CCScene* nextScene)
-{
-	return CCTransitionProgressVertical::create(duration, nextScene);
-}
-CCScene* CCScene_createProgressIO(float duration, CCScene* nextScene)
-{
-	return CCTransitionProgressInOut::create(duration, nextScene);
-}
-CCScene* CCScene_createProgressOI(float duration, CCScene* nextScene)
-{
-	return CCTransitionProgressOutIn::create(duration, nextScene);
 }
 
 CCCardinalSplineTo* CCCardinalSplineTo_create(float duration, const oVec2 points[], int count, float tension)
@@ -1515,77 +1427,4 @@ void __oEffect_update(lua_State* L, oEffect* self, int tableIndex)
 			particleSystem->setTextureWithRect(tex, rect);
 		}
 	}
-}
-
-CCActionInterval* CCEase::holdIn(CCActionInterval* pAction, float fRate)
-{
-	return CCEaseIn::create(pAction, fRate);
-}
-CCActionInterval* CCEase::holdOut(CCActionInterval* pAction, float fRate)
-{
-	return CCEaseOut::create(pAction, fRate);
-}
-CCActionInterval* CCEase::holdInOut(CCActionInterval* pAction, float fRate)
-{
-	return CCEaseInOut::create(pAction, fRate);
-}
-CCActionInterval* CCEase::exponentialIn(CCActionInterval* pAction)
-{
-	return CCEaseExponentialIn::create(pAction);
-}
-CCActionInterval* CCEase::exponentialOut(CCActionInterval* pAction)
-{
-	return CCEaseExponentialOut::create(pAction);
-}
-CCActionInterval* CCEase::exponentialInOut(CCActionInterval* pAction)
-{
-	return CCEaseExponentialInOut::create(pAction);
-}
-CCActionInterval* CCEase::sineIn(CCActionInterval* pAction)
-{
-	return CCEaseSineIn::create(pAction);
-}
-CCActionInterval* CCEase::sineOut(CCActionInterval* pAction)
-{
-	return CCEaseSineOut::create(pAction);
-}
-CCActionInterval* CCEase::sineInOut(CCActionInterval* pAction)
-{
-	return CCEaseSineInOut::create(pAction);
-}
-CCActionInterval* CCEase::elasticIn(CCActionInterval* pAction, float fPeriod)
-{
-	return CCEaseElasticIn::create(pAction, fPeriod);
-}
-CCActionInterval* CCEase::elasticOut(CCActionInterval* pAction, float fPeriod)
-{
-	return CCEaseElasticOut::create(pAction, fPeriod);
-}
-CCActionInterval* CCEase::elasticInOut(CCActionInterval* pAction, float fPeriod)
-{
-	return CCEaseElasticInOut::create(pAction, fPeriod);
-}
-CCActionInterval* CCEase::bounceIn(CCActionInterval* pAction)
-{
-	return CCEaseBounceIn::create(pAction);
-}
-CCActionInterval* CCEase::bounceOut(CCActionInterval* pAction)
-{
-	return CCEaseBounceOut::create(pAction);
-}
-CCActionInterval* CCEase::bounceInOut(CCActionInterval* pAction)
-{
-	return CCEaseBounceInOut::create(pAction);
-}
-CCActionInterval* CCEase::backIn(CCActionInterval* pAction)
-{
-	return CCEaseBackIn::create(pAction);
-}
-CCActionInterval* CCEase::backOut(CCActionInterval* pAction)
-{
-	return CCEaseBackOut::create(pAction);
-}
-CCActionInterval* CCEase::backInOut(CCActionInterval* pAction)
-{
-	return CCEaseBackInOut::create(pAction);
 }
