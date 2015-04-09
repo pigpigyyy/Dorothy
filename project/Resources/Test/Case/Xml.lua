@@ -1,6 +1,6 @@
 doXml([[
 <Scene Name="scene">
-	<LayerColor Name="layer" Color="0xff00ffff" AnchorX="0" AnchorY="0"/>
+	<LayerColor Name="layer" Angle="10" Color="0xff00ffff" AnchorX="0" AnchorY="0"/>
 	<LabelTTF Name="label" Text="Hello" FontName="Arial" FontSize="20" Color="0x000000"
 		X="layer.contentSize.width*0.5"
 		Y="layer.contentSize.height*0.5"/>

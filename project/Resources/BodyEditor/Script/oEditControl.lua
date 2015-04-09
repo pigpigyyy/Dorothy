@@ -68,7 +68,7 @@ local function oEditControl()
 		oEvent:send("oEditor.fix",{fixX=fixX,fixY=fixY})
 	end)
 	fixMenu:addChild(fixYButton)
-	local function createArrowForButton(button,rotation)
+	local function createArrowForButton(button,angle)
 		local fixNode = CCNode()
 		fixNode.cascadeColor = false
 		fixNode:addChild(oLine(
@@ -96,7 +96,7 @@ local function oEditControl()
 		fixNode.scaleX = 1.2
 		fixNode.scaleY = 1.2
 		fixNode.position = oVec2(25,25)
-		fixNode.rotation = rotation
+		fixNode.angle = angle
 		button.face:addChild(fixNode)
 	end
 	createArrowForButton(fixXButton,0)
@@ -306,7 +306,7 @@ local function oEditControl()
 		posEditor.visible = false
 	end
 
-	-- init rotation editor --
+	-- init angle editor --
 	-- rotEditor
 	local rotEditor = CCLayer()
 	rotEditor.visible = false
@@ -349,29 +349,29 @@ local function oEditControl()
 					else
 						delta = totalRot > 0 and math.floor(totalRot) or math.ceil(totalRot)
 						totalRot = 0
-						local rotation = rotVisual.rotation + delta
-						rotation = rotation > 0 and math.floor(rotation) or math.ceil(rotation)
-						rotVisual.rotation = rotation
+						local angle = rotVisual.angle + delta
+						angle = angle > 0 and math.floor(angle) or math.ceil(angle)
+						rotVisual.angle = angle
 					end
 				else
-					rotVisual.rotation = rotVisual.rotation + delta
+					rotVisual.angle = rotVisual.angle + delta
 				end
 				if rotChanged then
-					rotChanged(rotVisual.rotation)
+					rotChanged(rotVisual.angle)
 				end
 			end
 		end
 		return true
 	end,false,oEditor.touchPriorityEditControl,true)
 
-	-- show & hide rotation editor
+	-- show & hide angle editor
 	editControl.showRotEditor = function(self,position,angle,center,callback)
 		editControl:hide()
 		rotChanged = callback
 		rotEditor.visible = true
 		rotEditor.touchEnabled = true
 		worldNode.position = position 
-		rotVisual.rotation = angle
+		rotVisual.angle = angle
 		rotVisual.position = center
 		rotCenter = center
 		totalRot = 0
@@ -462,7 +462,7 @@ local function oEditControl()
 		sizeEditor.visible = true
 		sizeEditor.touchEnabled = true
 		worldNode.position = target.position
-		worldNode.rotation = target.rotation
+		worldNode.angle = target.angle
 		sizeVisual.position = center
 		totalW = 0
 		totalH = 0
@@ -547,7 +547,7 @@ local function oEditControl()
 		centerEditor.visible = true
 		centerEditor.touchEnabled = true
 		worldNode.position = target.position
-		worldNode.rotation = target.rotation
+		worldNode.angle = target.angle
 		centerPos = oEditor.world:convertToNodeSpace(target:convertToWorldSpace(center))
 		centerVisual.position = centerPos
 		totalDeltaCenter = oVec2.zero
@@ -611,7 +611,7 @@ local function oEditControl()
 	editControl.showRadiusEditor = function(self,target,center,radius,callback)
 		editControl:hide()
 		worldNode.position = target.position
-		worldNode.rotation = target.rotation
+		worldNode.angle = target.angle
 		radiusVisual.position = center
 		radiusCenter = target:convertToWorldSpace(radiusVisual.position)
 		totalRadius = radius
@@ -730,7 +730,7 @@ local function oEditControl()
 		oVec2(0,190),
 		oVec2(-20,150),
 	},ccColor4())
-	axisVisual.rotation = 90
+	axisVisual.angle = 90
 	rotVisual:addChild(axisVisual)
 	axisVisual.visible = false
 	
@@ -851,7 +851,7 @@ local function oEditControl()
 					else
 						local body = oEditor:getItem(data)
 						if body then
-							body.rotation = rot
+							body.angle = rot
 							oEvent:send("editor.reset",{name=data:get("Name"),type="Body"})
 						end
 					end

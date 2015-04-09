@@ -588,7 +588,7 @@ local function oSettingPanel()
 					end
 				end
 			end),
-		Rotation = oSettingItem("Rotation :",0,getPosY(),--6
+		Angle = oSettingItem("Angle :",0,getPosY(),--6
 			function()
 				oEditor.viewArea:editRot()
 			end,
@@ -707,9 +707,9 @@ local function oSettingPanel()
 			function()
 				oEditor.viewArea:stopEditEase()
 			end),
-		EaseR = oSettingItem("EaseR :",0,getPosY(),
+		EaseA = oSettingItem("EaseA :",0,getPosY(),
 			function(item)
-				oEditor.viewArea:editEase(oKd.easeRotation,item)
+				oEditor.viewArea:editEase(oKd.easeAngle,item)
 			end,
 			function()
 				oEditor.viewArea:stopEditEase()
@@ -918,7 +918,7 @@ local function oSettingPanel()
 		keyItems.PosY,
 		keyItems.ScaleX,
 		keyItems.ScaleY,
-		keyItems.Rotation,
+		keyItems.Angle,
 		keyItems.Opacity,
 		keyItems.SkewX,
 		keyItems.SkewY,
@@ -945,7 +945,7 @@ local function oSettingPanel()
 		keyItems.PosY,
 		keyItems.ScaleX,
 		keyItems.ScaleY,
-		keyItems.Rotation,
+		keyItems.Angle,
 		keyItems.Opacity,
 		keyItems.SkewX,
 		keyItems.SkewY,
@@ -953,7 +953,7 @@ local function oSettingPanel()
 		keyItems.EaseP,
 		keyItems.EaseS,
 		keyItems.EaseK,
-		keyItems.EaseR,
+		keyItems.EaseA,
 		keyItems.EaseO
 	}
 	local function updateAnimationItems()
@@ -1070,7 +1070,7 @@ local function oSettingPanel()
 		keyItems.PosY:setValue(frame[oKd.y])
 		keyItems.ScaleX:setValue(frame[oKd.scaleX])
 		keyItems.ScaleY:setValue(frame[oKd.scaleY])
-		keyItems.Rotation:setValue(frame[oKd.rotation])
+		keyItems.Angle:setValue(frame[oKd.angle])
 		keyItems.Opacity:setValue(frame[oKd.opacity])
 		keyItems.SkewX:setValue(frame[oKd.skewX])
 		keyItems.SkewY:setValue(frame[oKd.skewY])
@@ -1078,7 +1078,7 @@ local function oSettingPanel()
 		keyItems.EaseP:setValue(oEditor.easeNames[frame[oKd.easePos]])
 		keyItems.EaseS:setValue(oEditor.easeNames[frame[oKd.easeScale]])
 		keyItems.EaseK:setValue(oEditor.easeNames[frame[oKd.easeSkew]])
-		keyItems.EaseR:setValue(oEditor.easeNames[frame[oKd.easeRotation]])
+		keyItems.EaseA:setValue(oEditor.easeNames[frame[oKd.easeAngle]])
 		keyItems.EaseO:setValue(oEditor.easeNames[frame[oKd.easeOpacity]])
 	end
 	
@@ -1220,7 +1220,7 @@ local function oSettingPanel()
 			keyItems.PosY:setValue(sp[oSd.y])
 			keyItems.ScaleX:setValue(sp[oSd.scaleX])
 			keyItems.ScaleY:setValue(sp[oSd.scaleY])
-			keyItems.Rotation:setValue(sp[oSd.rotation])
+			keyItems.Angle:setValue(sp[oSd.angle])
 			keyItems.Opacity:setValue(sp[oSd.opacity])
 			keyItems.SkewX:setValue(sp[oSd.skewX])
 			keyItems.SkewY:setValue(sp[oSd.skewY])

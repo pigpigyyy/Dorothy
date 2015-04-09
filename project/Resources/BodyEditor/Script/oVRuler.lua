@@ -75,7 +75,7 @@ local function oVRuler()
 							local label = CCLabelTTF(tostring(i*10),"Arial",10)
 							label.texture.antiAlias = false
 							label.scaleX = 1/self.scaleY
-							label.rotation = -90
+							label.angle = -90
 							label.position = oVec2(-halfW+18,posY)
 							intervalNode:addChild(label)
 							coroutine.yield()
@@ -96,7 +96,7 @@ local function oVRuler()
 								local label = CCLabelTTF(tostring(-i*10),"Arial",10)
 								label.texture.antiAlias = false
 								label.scaleX = 1/self.scaleY
-								label.rotation = -90
+								label.angle = -90
 								label.position = oVec2(-halfW+18,posY)
 								intervalNode:addChild(label)
 								coroutine.yield()

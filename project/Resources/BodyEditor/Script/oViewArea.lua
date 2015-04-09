@@ -105,7 +105,7 @@ local function oViewArea()
 				local parent = oEditor.currentData
 				local worldNode = oEditor.worldNode
 				worldNode.position = parent:get("Position")
-				worldNode.rotation = parent:has("Angle") and parent:get("Angle") or 0
+				worldNode.angle = parent:has("Angle") and parent:get("Angle") or 0
 				pos = worldNode:convertToNodeSpace(pos)
 				if oEditor.isFixed then 
 					pos = oEditor:round(pos)

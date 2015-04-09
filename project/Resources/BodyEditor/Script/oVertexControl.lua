@@ -270,7 +270,7 @@ local function oVertexControl()
 		editMenu.touchEnabled = true
 		layer.visible = true
 		menu.position = pos
-		menu.rotation = angle
+		menu.angle = angle
 		vs = vs or {}
 		label.text = ""
 		lastCreateVertex = nil

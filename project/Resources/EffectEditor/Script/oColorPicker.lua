@@ -171,13 +171,13 @@ local function oColorPicker(color,changed)
 
 	menu:addChild(oButton("OK",16,finalColorSize,22,borderWidth-10-finalColorSize*0.5,10+11,function()
 		panel:schedule(once(function()
-			local begin = panel.rotationX
+			local begin = panel.angleX
 			local time = 0
 			cycle(0.3,function(deltaTime)
 				time = time + deltaTime
-				panel.rotationX = oEase:func(oEase.OutBack,time/0.3,begin,-90)
+				panel.angleX = oEase:func(oEase.OutBack,time/0.3,begin,-90)
 			end)
-			panel.rotationX = -90
+			panel.angleX = -90
 			panel.parent:removeChild(panel)
 			if changed then
 				changed(r,g,b,a)
@@ -315,13 +315,13 @@ local function oColorPicker(color,changed)
 	panel:setColor(color)
 
 	panel:schedule(once(function()
-		panel.rotationX = -90
+		panel.angleX = -90
 		local time = 0
 		cycle(0.3,function(deltaTime)
 			time = time + deltaTime
-			panel.rotationX = oEase:func(oEase.OutBack,time/0.3,-90,90)
+			panel.angleX = oEase:func(oEase.OutBack,time/0.3,-90,90)
 		end)
-		panel.rotationX = 0
+		panel.angleX = 0
 	end))
 
 	return panel

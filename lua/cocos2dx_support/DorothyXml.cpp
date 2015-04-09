@@ -54,7 +54,7 @@ static void oHandler(const char* begin, const char* end)
 #define Speed_Handle \
 	oFunc func = {"CCSpeed(", (rate ? string(",")+rate+")" : ",1)")};\
 	funcs.push(func);\
-	items.push("nil");
+	items.push("");
 #define Speed_Finish
 
 // Loop
@@ -68,7 +68,7 @@ static void oHandler(const char* begin, const char* end)
 #define Loop_Handle \
 	oFunc func = {(times ? "CCRepeat(" : "CCRepeatForever("), (times ? string(",")+times+")" : ")")};\
 	funcs.push(func);\
-	items.push("nil");
+	items.push("");
 #define Loop_Finish
 
 // Delay
@@ -864,7 +864,7 @@ static void oHandler(const char* begin, const char* end)
 	if (passOpacity) stream << self << ".cascadeOpacity = " << passOpacity << '\n';\
 	if (color) stream << self << ".color = ccColor3(" << color << ")\n";\
 	if (opacity) stream << self << ".opacity = " << opacity << '\n';\
-	if (angle) stream << self << ".rotation = " << angle << '\n';\
+	if (angle) stream << self << ".angle = " << angle << '\n';\
 	if (scaleX) stream << self << ".scaleX = " << scaleX << '\n';\
 	if (scaleY) stream << self << ".scaleY = " << scaleY << '\n';\
 	if (scheduler) stream << self << ".scheduler = " << scheduler << '\n';\
@@ -891,8 +891,8 @@ static void oHandler(const char* begin, const char* end)
 	stream << "local " << self << " = oNode3D()\n";
 #define Node3D_Handle \
 	Node_Handle\
-	if (angleX) stream << self << ".rotationX = " << angleX << '\n';\
-	if (angleY) stream << self << ".rotationY = " << angleY << '\n';
+	if (angleX) stream << self << ".angleX = " << angleX << '\n';\
+	if (angleY) stream << self << ".angleY = " << angleY << '\n';
 #define Node3D_Finish \
 	Add_To_Parent
 
@@ -1703,11 +1703,7 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 			oFunc func = funcs.top();
 			funcs.pop();
 			string tempItem = func.begin;
-			if (items.top() == "nil")
-			{
-				tempItem += items.top();
-			}
-			else
+			if (items.top() != "")
 			{
 				tempItem += items.top();
 				items.pop();

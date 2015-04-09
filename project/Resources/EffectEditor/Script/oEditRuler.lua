@@ -89,7 +89,7 @@ local function oEditRuler()
 							local label = CCLabelTTF(tostring(i*indent/10),"Arial",12)
 							label.texture.antiAlias = false
 							label.scaleX = 1/intervalNode.scaleY
-							label.rotation = -90
+							label.angle = -90
 							label.position = oVec2(-halfW+28,posY)
 							intervalNode:addChild(label)
 							labels[i/10] = label
@@ -109,7 +109,7 @@ local function oEditRuler()
 							local label = CCLabelTTF(tostring(-i*indent/10),"Arial",12)
 							label.texture.antiAlias = false
 							label.scaleX = 1/intervalNode.scaleY
-							label.rotation = -90
+							label.angle = -90
 							label.position = oVec2(-halfW+28,posY)
 							intervalNode:addChild(label)
 							labels[-i/10] = label
@@ -349,7 +349,7 @@ local function oEditRuler()
 		}))
 		oEvent:send("editMenu.place",false)
 	end
-	ruler.rotation = 90
+	ruler.angle = 90
 	return ruler
 end
 

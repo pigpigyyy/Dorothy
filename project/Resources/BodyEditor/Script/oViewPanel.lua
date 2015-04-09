@@ -82,7 +82,7 @@ local function oViewPanel()
 			if data:has("Center") then
 				local worldNode = oEditor.worldNode
 				worldNode.position = data:get("Position")
-				worldNode.rotation = data:has("Angle") and data:get("Angle") or 0
+				worldNode.angle = data:has("Angle") and data:get("Angle") or 0
 				local pos = worldNode:convertToWorldSpace(data:get("Center"))
 				pos = oEditor.world:convertToNodeSpace(pos)
 				crossA.position = pos
@@ -101,7 +101,7 @@ local function oViewPanel()
 			local parent = data.parent
 			local worldNode = oEditor.worldNode
 			worldNode.position = parent:get("Position")
-			worldNode.rotation = parent:has("Angle") and parent:get("Angle") or 0
+			worldNode.angle = parent:has("Angle") and parent:get("Angle") or 0
 			local pos = worldNode:convertToWorldSpace(data:get("Center"))
 			pos = oEditor.world:convertToNodeSpace(pos)
 			crossA.position = pos

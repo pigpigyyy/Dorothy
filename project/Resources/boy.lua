@@ -92,7 +92,7 @@ return
 			"ActionEditor/Model/Output/boy.clip|lFoot",
 			{"positionX",6},
 			{"positionY",6},
-			{"rotation",15},
+			{"angle",15},
 		},
 	},
 	rLeg =
@@ -114,7 +114,7 @@ return
 			"ActionEditor/Model/Output/boy.clip|lFoot",
 			{"positionX",5},
 			{"positionY",5},
-			{"rotation",15},
+			{"angle",15},
 		},
 	},
 }

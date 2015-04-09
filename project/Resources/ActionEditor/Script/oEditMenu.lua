@@ -166,7 +166,7 @@ local function oEditMenu()
 								sp[oSd.scaleY],
 								sp[oSd.skewX],
 								sp[oSd.skewY],
-								sp[oSd.rotation],
+								sp[oSd.angle],
 								sp[oSd.opacity],
 								true,
 								0,0,0,0,0,0
@@ -181,7 +181,7 @@ local function oEditMenu()
 							sp[oSd.scaleY],
 							sp[oSd.skewX],
 							sp[oSd.skewY],
-							sp[oSd.rotation],
+							sp[oSd.angle],
 							sp[oSd.opacity],
 							true,
 							0,0,0,0,0,
@@ -201,7 +201,7 @@ local function oEditMenu()
 							sprite.scaleY,
 							sprite.skewX,
 							sprite.skewY,
-							sprite.rotation,
+							sprite.angle,
 							sprite.opacity,
 							sprite.visible,
 							0,0,0,0,0,
@@ -221,7 +221,7 @@ local function oEditMenu()
 			function()
 				local pos = math.floor(oEditor.controlBar:getPos()+0.5)
 				if oEditor.sprite and pos == oEditor.currentFramePos and (oEditor.keyIndex ~= 2 or #oEditor.animationData == 2) then
-					oEditor.viewPanel:clearSelection()
+					oEditor.settingPanel:clearSelection()
 					oBox("Delete\nFrame",function()
 						local sp = oEditor.spriteData
 						local animationDef = oEditor.animationData
@@ -267,12 +267,12 @@ local function oEditMenu()
 						frameDef[oKd.scaleY],
 						frameDef[oKd.skewX],
 						frameDef[oKd.skewY],
-						frameDef[oKd.rotation],
+						frameDef[oKd.angle],
 						frameDef[oKd.opacity],
 						frameDef[oKd.visible],
 						frameDef[oKd.easeOpacity],
 						frameDef[oKd.easePos],
-						frameDef[oKd.easeRotation],
+						frameDef[oKd.easeAngle],
 						frameDef[oKd.easeScale],
 						frameDef[oKd.easeSkew],
 						0,
@@ -299,7 +299,7 @@ local function oEditMenu()
 								sp[oSd.scaleY],
 								sp[oSd.skewX],
 								sp[oSd.skewY],
-								sp[oSd.rotation],
+								sp[oSd.angle],
 								sp[oSd.opacity],
 								sp[oSd.visible],
 								0,0,0,0,0,0
@@ -458,7 +458,7 @@ local function oEditMenu()
 							name,--clip 3
 							"",--name 4
 							1,--opacity 5
-							0,--rotation 6
+							0,--angle 6
 							1,--scaleX 7
 							1,--scaleY 8
 							0,--skewX 9

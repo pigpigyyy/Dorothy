@@ -261,10 +261,10 @@ local function oViewArea()
 
 	local posRotFix = 0
 	local function getEditorRot()
-		posRotFix = editTarget.rotation
+		posRotFix = editTarget.angle
 		local p = editTarget.parent
 		while p and p ~= scrollNode do
-			posRotFix = posRotFix + p.rotation
+			posRotFix = posRotFix + p.angle
 			p = p.parent
 		end
 		return posRotFix
@@ -321,10 +321,10 @@ local function oViewArea()
 					local rot = 0
 					local p = target
 					while p and p ~= crossNode do
-						rot = rot + p.rotation
+						rot = rot + p.angle
 						p = p.parent
 					end
-					self.rotation = rot
+					self.angle = rot
 				end,-1)
 		else
 			self:unschedule()
@@ -372,16 +372,16 @@ local function oViewArea()
 					else
 						delta = totalRot > 0 and math.floor(totalRot) or math.ceil(totalRot)
 						totalRot = 0
-						editTarget.rotation = editTarget.rotation > 0 and math.floor(editTarget.rotation) or math.ceil(editTarget.rotation)
+						editTarget.angle = editTarget.angle > 0 and math.floor(editTarget.angle) or math.ceil(editTarget.angle)
 					end
 				end
-				local rotation = editTarget.rotation + delta
-				editTarget.rotation = rotation
-				oEditor.settingPanel.items.Rotation:setValue(rotation)
+				local angle = editTarget.angle + delta
+				editTarget.angle = angle
+				oEditor.settingPanel.items.Angle:setValue(angle)
 				if oEditor.state == oEditor.EDIT_ANIMATION then
-					oEditor.animationData[oEditor.keyIndex][oKd.rotation] = rotation
+					oEditor.animationData[oEditor.keyIndex][oKd.angle] = angle
 				elseif oEditor.state == oEditor.EDIT_SPRITE then
-					oEditor.spriteData[oSd.rotation] = rotation
+					oEditor.spriteData[oSd.angle] = angle
 				end
 				oEditor.editMenu:markEditButton(true)
 				valueChanged = true
@@ -530,7 +530,7 @@ local function oViewArea()
 				end
 			end
 
-			local r = -(editTarget.rotation-posRotFix)*math.pi/180
+			local r = -(editTarget.angle-posRotFix)*math.pi/180
 			local x1 = x2*math.cos(r)-y2*math.sin(r)
 			local y1 = x2*math.sin(r)+y2*math.cos(r)
 			editTarget.positionX = editTarget.positionX + x1
@@ -585,7 +585,7 @@ local function oViewArea()
 	crossNode:addChild(scaleEditor)
 	scaleEditor.setTarget = function(self,target)
 		if target then
-			self.rotation = getEditorRot()
+			self.angle = getEditorRot()
 		end
 	end
 
@@ -822,7 +822,7 @@ local function oViewArea()
 	crossNode:addChild(skewEditor)
 	skewEditor.setTarget = function(self,target)
 		if target then
-			self.rotation = getEditorRot()
+			self.angle = getEditorRot()
 		end
 	end
 
@@ -1052,7 +1052,7 @@ local function oViewArea()
 	-- oKd.easePos
 	-- oKd.easeScale
 	-- oKd.easeSkew
-	-- oKd.easeRotation
+	-- oKd.easeAngle
 	-- oKd.easeOpacity
 	local easeType = 0
 	local easeMenuItem = nil

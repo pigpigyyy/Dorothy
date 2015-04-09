@@ -992,7 +992,7 @@ oEditor.resetItem = function(self,data,resetFace)
 		else
 			item = face
 			item.position = data:get("Position")
-			item.rotation = data:get("Angle")
+			item.angle = data:get("Angle")
 			oEditor.world:addChild(item)
 		end
 	else
@@ -1022,7 +1022,7 @@ oEditor.resetItem = function(self,data,resetFace)
 				else
 					item = face
 					item.position = data:get("Position")
-					item.rotation = data:get("Angle")
+					item.angle = data:get("Angle")
 					oEditor.world:addChild(item)
 				end
 			end

@@ -9,7 +9,7 @@ class CCNode: public CCObject
 		Cleanup = 4
 	};
 	tolua_readonly tolua_property__common int zOrder;
-	tolua_property__common float rotation;
+	tolua_property__common float rotation @ angle;
 	tolua_property__common float scaleX;
 	tolua_property__common float scaleY;
 	tolua_property__common oVec2 position;

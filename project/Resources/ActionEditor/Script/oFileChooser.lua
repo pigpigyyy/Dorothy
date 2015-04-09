@@ -285,7 +285,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 					"",--clip 3
 					"",--name 4
 					1,--opacity 5
-					0,--rotation 6
+					0,--angle 6
 					1,--scaleX 7
 					1,--scaleY 8
 					0,--skewX 9
