@@ -330,7 +330,7 @@ local Dorothy =
 				description = "[int]",
 				type = "value",
 			},
-			rotation =
+			angle =
 			{
 				description = "[float]",
 				type = "value",
@@ -5428,12 +5428,12 @@ local Dorothy =
 	{
 		childs =
 		{
-			rotationX =
+			angleX =
 			{
 				description = "[float]",
 				type = "value"
 			},
-			rotationY =
+			angleY =
 			{
 				description = "[float]",
 				type = "value"
