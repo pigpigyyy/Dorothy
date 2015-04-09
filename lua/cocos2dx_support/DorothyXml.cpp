@@ -22,9 +22,11 @@ static void oHandler(const char* begin, const char* end)
 	if (self.empty()) { self = getUsableName(#name); names.insert(self); }\
 	if (firstItem.empty()) firstItem = self;
 
+// Schedule
 #define Schedule_Check \
 	CASE_STR(Priority) { priority = atts[++i]; break; }
 
+// Vec2
 #define Vec2_Define \
 	const char* x = nullptr;\
 	const char* y = nullptr;
@@ -34,11 +36,14 @@ static void oHandler(const char* begin, const char* end)
 #define Vec2_Handle \
 	items.push(string("oVec2(")+(x ? x : "0")+","+(y ? y : "0")+")");
 
+// Object
 #define Object_Define \
 	string self;
 #define Object_Check \
 	CASE_STR(Name) { self = atts[++i]; break; }\
 	CASE_STR(Key) { if (strcmp(elementStack.top().type,"Data") == 0) currentKey = atts[++i]; break; }
+
+// Speed
 #define Speed_Define \
 	Object_Define\
 	const char* rate = nullptr;
@@ -52,6 +57,7 @@ static void oHandler(const char* begin, const char* end)
 	items.push("nil");
 #define Speed_Finish
 
+// Loop
 #define Loop_Define \
 	Object_Define\
 	const char* times = nullptr;
@@ -65,6 +71,7 @@ static void oHandler(const char* begin, const char* end)
 	items.push("nil");
 #define Loop_Finish
 
+// Delay
 #define Delay_Define \
 	Object_Define\
 	const char* time = nullptr;
@@ -80,6 +87,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Delay_Finish
 
+// Scale
 #define Scale_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -98,6 +106,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Scale_Finish
 
+// Move
 #define Move_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -116,6 +125,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Move_Finish
 
+// Rotate
 #define Rotate_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -132,6 +142,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Rotate_Finish
 
+// Opacity
 #define Opacity_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -148,6 +159,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Opacity_Finish
 
+// Skew
 #define Skew_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -166,6 +178,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Skew_Finish
 
+// Roll
 #define Roll_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -182,6 +195,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Roll_Finish
 
+// Jump
 #define Jump_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -202,6 +216,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Jump_Finish
 
+// Bezier
 #define Bezier_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -216,16 +231,17 @@ static void oHandler(const char* begin, const char* end)
 	CASE_STR(Time) { time = atts[++i]; break; }\
 	CASE_STR(X) { x = atts[++i]; break; }\
 	CASE_STR(Y) { y = atts[++i]; break; }\
-	CASE_STR(FirstX) { firstX = atts[++i]; break; }\
-	CASE_STR(FirstY) { firstY = atts[++i]; break; }\
-	CASE_STR(SecondX) { secondX = atts[++i]; break; }\
-	CASE_STR(SecondY) { secondY = atts[++i]; break; }
+	CASE_STR(X1) { firstX = atts[++i]; break; }\
+	CASE_STR(Y1) { firstY = atts[++i]; break; }\
+	CASE_STR(X2) { secondX = atts[++i]; break; }\
+	CASE_STR(Y2) { secondY = atts[++i]; break; }
 #define Bezier_Create
 #define Bezier_Handle \
 	oFunc func = {string("CCBezierTo(")+(time ? time : "0")+",oVec2("+(x ? x : "")+","+(y ? y : "")+"),oVec2("+(firstX ? firstX : "")+","+(firstY ? firstY : "")+"),oVec2("+(secondX ? secondX : "")+","+(secondY ? secondY : "")+"))",""};\
 	funcs.push(func);
 #define Bezier_Finish
 
+// Blink
 #define Blink_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -240,6 +256,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Blink_Finish
 
+// Tint
 #define Tint_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -254,6 +271,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Tint_Finish
 
+// Show
 #define Show_Define \
 	Object_Define
 #define Show_Check \
@@ -264,6 +282,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Show_Finish
 
+// Hide
 #define Hide_Define \
 	Object_Define
 #define Hide_Check \
@@ -274,6 +293,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Hide_Finish
 
+// Flip
 #define Flip_Define \
 	Object_Define\
 	const char* flipX = nullptr;\
@@ -291,6 +311,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Flip_Finish
 
+// Call
 #define Call_Define \
 	Object_Define
 #define Call_Check \
@@ -301,6 +322,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Call_Finish
 
+// Orbit
 #define Orbit_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -325,6 +347,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Orbit_Finish
 
+// CardinalSpline
 #define CardinalSpline_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -340,6 +363,7 @@ static void oHandler(const char* begin, const char* end)
 	items.push("CardinalSpline");
 #define CardinalSpline_Finish
 
+// Grid.FlipX3D
 #define Grid_FlipX3D_Define \
 	Object_Define\
 	const char* time = nullptr;
@@ -352,6 +376,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Grid_FlipX3D_Finish
 
+// Grid.FlipY3D
 #define Grid_FlipY3D_Define \
 	Object_Define\
 	const char* time = nullptr;
@@ -364,6 +389,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Grid_FlipY3D_Finish
 
+// Grid.Lens3D
 #define Grid_Lens3D_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -387,6 +413,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Grid_Lens3D_Finish
 
+// Grid.Liquid
 #define Grid_Liquid_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -409,6 +436,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Grid_Liquid_Finish
 
+// Grid.Reuse
 #define Grid_Reuse_Define \
 	Object_Define\
 	const char* times = nullptr;
@@ -421,6 +449,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Grid_Reuse_Finish
 
+// Grid.Ripple3D
 #define Grid_Ripple3D_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -449,6 +478,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Grid_Ripple3D_Finish
 
+// Grid.Shaky3D
 #define Grid_Shaky3D_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -471,6 +501,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Grid_Shaky3D_Finish
 
+// Grid.Stop
 #define Grid_Stop_Define \
 	Object_Define
 #define Grid_Stop_Check \
@@ -481,6 +512,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Grid_Stop_Finish
 
+// Grid.Twirl
 #define Grid_Twirl_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -507,6 +539,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Grid_Twirl_Finish
 
+// Grid.Wave
 #define Grid_Wave_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -534,6 +567,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Grid_Wave_Finish
 
+// Grid.Wave3D
 #define Grid_Wave3D_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -556,6 +590,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Grid_Wave3D_Finish
 
+// Tile.FadeOut
 #define Tile_FadeOut_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -576,6 +611,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Tile_FadeOut_Finish
 
+// Tile.Jump3D
 #define Tile_Jump3D_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -598,6 +634,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Tile_Jump3D_Finish
 
+// Tile.Shaky3D
 #define Tile_Shaky3D_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -620,6 +657,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Tile_Shaky3D_Finish
 
+// Tile.Shuffle
 #define Tile_Shuffle_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -651,6 +689,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Tile_SplitCols_Finish
 
+// Tile.SplitRows
 #define Tile_SplitRows_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -665,6 +704,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Tile_SplitRows_Finish
 
+// Tile.TurnOff
 #define Tile_TurnOff_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -682,6 +722,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Tile_TurnOff_Finish
 
+// Tile.Waves3D
 #define Tile_Waves3D_Define \
 	Object_Define\
 	const char* time = nullptr;\
@@ -704,6 +745,7 @@ static void oHandler(const char* begin, const char* end)
 	funcs.push(func);
 #define Tile_Waves3D_Finish
 
+// Sequence
 #define Sequence_Define \
 	Object_Define
 #define Sequence_Check \
@@ -713,6 +755,7 @@ static void oHandler(const char* begin, const char* end)
 	items.push("Sequence");
 #define Sequence_Finish
 
+// Spawn
 #define Spawn_Define \
 	Object_Define
 #define Spawn_Check \
@@ -722,6 +765,7 @@ static void oHandler(const char* begin, const char* end)
 	items.push("Spawn");
 #define Spawn_Finish
 
+// Data
 #define Data_Define \
 	Object_Define
 #define Data_Check \
@@ -735,6 +779,7 @@ static void oHandler(const char* begin, const char* end)
 		stream << parent.name << ".data = " << self << "\n\n";\
 	}
 
+// Listener
 #define Listener_Define \
 	Object_Define\
 	const char* event = nullptr;
@@ -759,6 +804,7 @@ static void oHandler(const char* begin, const char* end)
 		stream << ")\n\n";\
 	}
 
+// Node
 #define Node_Define \
 	Object_Define\
 	const char* width = nullptr;\
@@ -832,6 +878,25 @@ static void oHandler(const char* begin, const char* end)
 #define Node_Finish \
 	Add_To_Parent
 
+// Node3D
+#define Node3D_Define \
+	Node_Define\
+	const char* angleX = nullptr;\
+	const char* angleY = nullptr;
+#define Node3D_Check \
+	Node_Check\
+	CASE_STR(AngleX) { angleX = atts[++i]; break; }\
+	CASE_STR(AngleY) { angleY = atts[++i]; break; }
+#define Node3D_Create \
+	stream << "local " << self << " = oNode3D()\n";
+#define Node3D_Handle \
+	Node_Handle\
+	if (angleX) stream << self << ".rotationX = " << angleX << '\n';\
+	if (angleY) stream << self << ".rotationY = " << angleY << '\n';
+#define Node3D_Finish \
+	Add_To_Parent
+
+// Scene
 #define Scene_Define \
 	Node_Define
 #define Scene_Check \
@@ -843,6 +908,7 @@ static void oHandler(const char* begin, const char* end)
 #define Scene_Finish \
 	stream << '\n';
 
+// DrawNode
 #define DrawNode_Define \
 	Node_Define
 #define DrawNode_Check \
@@ -854,6 +920,83 @@ static void oHandler(const char* begin, const char* end)
 #define DrawNode_Finish \
 	Add_To_Parent
 
+// DrawNode.Dot
+#define Dot_Define \
+	const char* x = nullptr;\
+	const char* y = nullptr;\
+	const char* radius = nullptr;\
+	const char* color = nullptr;
+#define Dot_Check \
+	CASE_STR(X) { x = atts[++i]; break; }\
+	CASE_STR(Y) { y = atts[++i]; break; }\
+	CASE_STR(Radius) { radius = atts[++i]; break; }\
+	CASE_STR(Color) { color = atts[++i]; break; }
+#define Dot_Finish \
+	if (!elementStack.empty())\
+	{\
+		stream << elementStack.top().name <<\
+		":drawDot(oVec2(" << (x ? x : "0") << ',' << (y ? y : "0") << ")," <<\
+		(radius ? radius : "0") << ",ccColor4(" << (color ? color : "") << "))\n\n";\
+	}
+
+// DrawNode.Polygon
+#define Polygon_Define \
+	const char* fillColor = nullptr;\
+	const char* borderWidth = nullptr;\
+	const char* borderColor = nullptr;
+#define Polygon_Check \
+	CASE_STR(Fill) { fillColor = atts[++i]; break; }\
+	CASE_STR(BorderWidth) { borderWidth = atts[++i]; break; }\
+	CASE_STR(BorderColor) { borderColor = atts[++i]; break; }
+#define Polygon_Finish \
+	if (!elementStack.empty())\
+	{\
+		oFunc func = {elementStack.top().name+":drawPolygon({",\
+		string("},ccColor4(")+(fillColor ? fillColor : "")+"),"+(borderWidth ? borderWidth : "0")+",ccColor4("+(borderColor ? borderColor : "")+"))\n\n"};\
+		funcs.push(func);\
+		items.push("Polygon");\
+	}
+
+// DrawNode.Segment
+#define Segment_Define \
+	const char* beginX = nullptr;\
+	const char* beginY = nullptr;\
+	const char* endX = nullptr;\
+	const char* endY = nullptr;\
+	const char* radius = nullptr;\
+	const char* color = nullptr;
+#define Segment_Check \
+	CASE_STR(X1) { beginX = atts[++i]; break; }\
+	CASE_STR(Y1) { beginY = atts[++i]; break; }\
+	CASE_STR(X2) { endX = atts[++i]; break; }\
+	CASE_STR(Y2) { endY = atts[++i]; break; }\
+	CASE_STR(Radius) { radius = atts[++i]; break; }\
+	CASE_STR(Color) { color = atts[++i]; break; }
+#define Segment_Finish \
+	if (!elementStack.empty())\
+	{\
+		stream << elementStack.top().name <<\
+		":drawSegment(oVec2(" << (beginX ? beginX : "0") << ',' << (beginY ? beginY : "0") << "),oVec2(" <<\
+		(endX ? endX : "0") << ',' << (endY ? endY : "0") << ")," << (radius ? radius : "0.5") << ",ccColor4(" <<\
+		(color ? color : "") << "))\n\n";\
+	}
+
+// Line
+#define Line_Define \
+	Node_Define
+#define Line_Check \
+	Node_Check
+#define Line_Create \
+	stream << "local " << self << " = oLine()\n";
+#define Line_Handle \
+	Node_Handle
+#define Line_Finish \
+	Add_To_Parent\
+	oFunc func = {string(self)+":set({","})\n\n"};\
+	funcs.push(func);\
+	items.push("Line");
+
+// ClipNode
 #define ClipNode_Define \
 	Node_Define\
 	const char* alphaThreshold = nullptr;\
@@ -873,6 +1016,7 @@ static void oHandler(const char* begin, const char* end)
 #define ClipNode_Finish \
 	Add_To_Parent
 
+// LabelAtlas
 #define LabelAtlas_Define \
 	Node_Define\
 	const char* text = nullptr;\
@@ -884,13 +1028,14 @@ static void oHandler(const char* begin, const char* end)
 #define LabelAtlas_Create \
 	stream << "local " << self << " = CCLabelAtlas(\"" << (text ? text : "\"") << ',';\
 	if (fntFile) stream << '\"' << fntFile << '\"';\
-	else stream << "nil";\
+	else stream << "";\
 	stream << ")\n";
 #define LabelAtlas_Handle \
 	Node_Handle
 #define LabelAtlas_Finish \
 	Add_To_Parent
 
+// LabelBMFont
 #define LabelBMFont_Define \
 	Node_Define\
 	const char* text = nullptr;\
@@ -908,13 +1053,14 @@ static void oHandler(const char* begin, const char* end)
 #define LabelBMFont_Create \
 	stream << "local " << self << " = CCLabelBMFont(\"" << (text ? text : "\"");\
 	if (fntFile) stream << "\"," << fntFile << '\"';\
-	else stream << ",nil";\
+	else stream << ",";\
 	stream << ',' << (fontWidth ? fontWidth : "CCLabelBMFont.AutomaticWidth") << ",CCTextAlign." << (alignment ? alignment : "HLeft") << ',' << (imageOffset ? imageOffset : "oVec2.zero") << ")\n";
 #define LabelBMFont_Handle \
 	Node_Handle
 #define LabelBMFont_Finish \
 	Add_To_Parent
 
+// LabelTTF
 #define LabelTTF_Define \
 	Node_Define\
 	const char* text = nullptr;\
@@ -932,6 +1078,7 @@ static void oHandler(const char* begin, const char* end)
 #define LabelTTF_Finish \
 	Add_To_Parent
 
+// Sprite
 #define Sprite_Define \
 	Node_Define\
 	const char* file = nullptr;\
@@ -963,6 +1110,7 @@ static void oHandler(const char* begin, const char* end)
 #define Sprite_Finish \
 	Add_To_Parent
 
+// SpriteBatch
 #define SpriteBatch_Define \
 	Node_Define\
 	const char* file = nullptr;
@@ -976,6 +1124,7 @@ static void oHandler(const char* begin, const char* end)
 #define SpriteBatch_Finish \
 	Add_To_Parent
 
+// Layer
 #define Layer_Define \
 	Node_Define\
 	const char* accelerometerEnabled = nullptr;\
@@ -1002,6 +1151,7 @@ static void oHandler(const char* begin, const char* end)
 #define Layer_Finish \
 	Add_To_Parent
 
+// LayerColor
 #define LayerColor_Define \
 	Layer_Define\
 	const char* blendFuncSrc = nullptr;\
@@ -1024,6 +1174,7 @@ static void oHandler(const char* begin, const char* end)
 #define LayerColor_Finish \
 	Add_To_Parent
 
+// LayerGradient
 #define LayerGradient_Define \
 	LayerColor_Define\
 	const char* start = nullptr;\
@@ -1048,6 +1199,7 @@ static void oHandler(const char* begin, const char* end)
 #define LayerGradient_Finish \
 	Add_To_Parent
 
+// Menu
 #define Menu_Define \
 	Layer_Define\
 	const char* enabled = nullptr;
@@ -1063,6 +1215,7 @@ static void oHandler(const char* begin, const char* end)
 #define Menu_Finish \
 	Add_To_Parent
 
+// MenuItem
 #define MenuItem_Define \
 	Node_Define\
 	const char* enabled = nullptr;
@@ -1075,6 +1228,117 @@ static void oHandler(const char* begin, const char* end)
 	Node_Handle\
 	if (enabled) stream << self << ".enabled = " << enabled << '\n';
 #define MenuItem_Finish \
+	Add_To_Parent
+
+// World
+#define World_Define \
+	Node_Define\
+	const char* gravityX = nullptr;\
+	const char* gravityY = nullptr;\
+	const char* showDebug = nullptr;\
+	const char* velocityIter = nullptr;\
+	const char* positionIter = nullptr;
+#define World_Check \
+	Node_Check\
+	CASE_STR(GravityX) { gravityX = atts[++i]; break; }\
+	CASE_STR(GravityY) { gravityY = atts[++i]; break; }\
+	CASE_STR(ShowDebug) { showDebug = atts[++i]; break; }\
+	CASE_STR(VelocityIter) { velocityIter = atts[++i]; break; }\
+	CASE_STR(PositionIter) { positionIter = atts[++i]; break; }
+#define World_Create \
+	stream << "local " << self << " = oWorld()\n";
+#define World_Handle \
+	Node_Handle\
+	if (gravityX && gravityY) stream << self << ".gravity = oVec2("\
+									<< gravityX << ',' << gravityY << ")\n";\
+	else if (gravityX && !gravityY) stream << self << ".gravity = oVec2("\
+									<< gravityX << ',' << self << ".gravity.y)\n";\
+	else if (!gravityX && gravityY) stream << self << ".gravity = oVec2(" << self\
+									<< ".gravity.x," << gravityY << ")\n";\
+	if (showDebug) stream << self << ".showDebug = " << showDebug << '\n';\
+	if (velocityIter || positionIter) stream << self << ":setIterations(" << (velocityIter ? velocityIter : "8")\
+											<< ',' << (positionIter ? positionIter : "3") << ")\n";
+#define World_Finish \
+	Add_To_Parent
+
+// PlatformWorld
+#define PlatformWorld_Define \
+	World_Define
+#define PlatformWorld_Check \
+	World_Check
+#define PlatformWorld_Create \
+	stream << "local " << self << " = oPlatformWorld()\n";
+#define PlatformWorld_Handle \
+	World_Handle
+#define PlatformWorld_Finish \
+	Add_To_Parent
+
+// World.Contact
+#define Contact_Define \
+	const char* groupA = nullptr;\
+	const char* groupB = nullptr;\
+	const char* enabled = nullptr;
+#define Contact_Check \
+	CASE_STR(GroupA) { groupA = atts[++i]; break; }\
+	CASE_STR(GroupB) { groupB = atts[++i]; break; }\
+	CASE_STR(Enabled) { enabled = atts[++i]; break; }
+#define Contact_Finish \
+	if (!elementStack.empty())\
+	{\
+		stream << elementStack.top().name <<\
+		":setShouldContact(" << (groupA ? groupA : "") << ',' << (groupB ? groupB : "") << ',' <<\
+		(enabled ? enabled : "") << ")\n\n";\
+	}
+
+// Model
+#define Model_Define \
+	Node_Define\
+	const char* filename = nullptr;\
+	const char* look = nullptr;\
+	const char* loop = nullptr;\
+	const char* play = nullptr;\
+	const char* faceRight = nullptr;\
+	const char* speed = nullptr;
+#define Model_Check \
+	Node_Check\
+	CASE_STR(File) { filename = atts[++i]; break; }\
+	CASE_STR(Look) { look = atts[++i]; break; }\
+	CASE_STR(Loop) { loop = atts[++i]; break; }\
+	CASE_STR(Play) { play = atts[++i]; break; }\
+	CASE_STR(FaceRight) { faceRight = atts[++i]; break; }\
+	CASE_STR(Speed) { speed = atts[++i]; break; }
+#define Model_Create \
+	stream << "local " << self << " = oModel(\"" << (filename ? filename : "") << "\")\n";
+#define Model_Handle \
+	Node_Handle\
+	if (look) stream << self << ".look = \"" << look << "\"\n";\
+	if (loop) stream << self << ".loop = " << loop << '\n';\
+	if (play) stream << self << ":play(\"" << play << "\")\n";\
+	if (faceRight) stream << self << ".faceRight = " << faceRight << '\n';\
+	if (speed) stream << self << ".speed = " << speed << '\n';
+#define Model_Finish \
+	Add_To_Parent
+
+// Body
+#define Body_Define \
+	Node_Define\
+	const char* filename = nullptr;\
+	const char* group = nullptr;\
+	const char* world = nullptr;
+#define Body_Check \
+	Node_Check\
+	CASE_STR(File) { filename = atts[++i]; break; }\
+	CASE_STR(Group) { group = atts[++i]; break; }\
+	CASE_STR(World) { world = atts[++i]; break; }
+#define Body_Create \
+	stream << "local " << self << " = oBody(\"" << (filename ? filename : "")\
+			<< "\"," << (world ? world : "") << ",oVec2(" << (x ? x : "0") << ',' << (y ? y : "0") << "),"\
+			<< (angle ? angle : "0") << ")\n";\
+	x = y = angle = nullptr;
+#define Body_Handle \
+	Node_Handle\
+	if (group) stream << self << ".group = " << group << '\n';
+#define Body_Finish \
 	Add_To_Parent
 
 #define Item_Define(name) name##_Define
@@ -1100,7 +1364,7 @@ static void oHandler(const char* begin, const char* end)
 		Item_Create(name)\
 		Item_Handle(name)\
 		Item_Push(name)\
-		return;\
+		break;\
 	}
 
 #define CASE_STR_DOT(prename,name) __CASE_STR1(#prename"."#name, prename##name)
@@ -1114,7 +1378,7 @@ static void oHandler(const char* begin, const char* end)
 		Item_Create(prename##_##name)\
 		Item_Handle(prename##_##name)\
 		ItemDot_Push(prename,name)\
-		return;\
+		break;\
 	}
 
 class oXmlDelegate : public CCSAXDelegator
@@ -1219,8 +1483,10 @@ void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
 	SWITCH_STR_START(name)
 	{
 		Item(Node, node)
+		Item(Node3D, node3D)
 		Item(Scene, scene)
 		Item(DrawNode, drawNode)
+		Item(Line, line)
 		Item(Sprite, sprite)
 		Item(SpriteBatch, spriteBatch)
 		Item(Layer, layer)
@@ -1232,6 +1498,12 @@ void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
 		Item(LabelTTF, label)
 		Item(Menu, menu)
 		Item(MenuItem, menuItem)
+
+		Item(World, world)
+		Item(PlatformWorld, world)
+		Item(Model, model)
+		Item(Body, body)
+
 		Item(Data, data)
 
 		Item(Listener, listener)
@@ -1285,12 +1557,40 @@ void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
 			Item_Define(Vec2)
 			Item_Loop(Vec2)
 			Item_Handle(Vec2)
-			return;
+			break;
 		}
 		CASE_STR(Schedule)
 		{
 			Item_Loop(Schedule)
-			return;
+			break;
+		}
+		CASE_STR(Dot)
+		{
+			Item_Define(Dot)
+			Item_Loop(Dot)
+			Dot_Finish
+			break;
+		}
+		CASE_STR(Polygon)
+		{
+			Item_Define(Polygon)
+			Item_Loop(Polygon)
+			Polygon_Finish
+			break;
+		}
+		CASE_STR(Segment)
+		{
+			Item_Define(Segment)
+			Item_Loop(Segment)
+			Segment_Finish
+			break;
+		}
+		CASE_STR(Contact)
+		{
+			Item_Define(Contact)
+			Item_Loop(Contact)
+			Contact_Finish
+			break;
 		}
 	}
 	SWITCH_STR_END
@@ -1543,6 +1843,32 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 			}
 			break;
 		}
+		CASE_STR(Polygon) goto FLAG_VEC2_CONTAINER_BEGIN;
+		CASE_STR(Line) goto FLAG_VEC2_CONTAINER_BEGIN;
+		goto FLAG_VEC2_CONTAINER_END;
+		FLAG_VEC2_CONTAINER_BEGIN:
+		{
+			oFunc func = funcs.top();
+			funcs.pop();
+			stream << func.begin;
+			stack<string> tempStack;
+			while (items.top() != name)
+			{
+				tempStack.push(items.top());
+				items.pop();
+			}
+			items.pop();
+			while (!tempStack.empty())
+			{
+				stream << tempStack.top();
+				tempStack.pop();
+				if (!tempStack.empty()) stream << ',';
+			}
+			stream << func.end;
+			break;
+		}
+		FLAG_VEC2_CONTAINER_END:
+		break;
 	}
 	SWITCH_STR_END
 
