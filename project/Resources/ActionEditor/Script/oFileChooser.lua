@@ -209,8 +209,21 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 	opMenu.position = oVec2(winSize.width*0.5+borderSize.width*0.5+35,winSize.height*0.5+borderSize.height*0.5)
 	panel:addChild(opMenu)
 
-	if CCDirector.sceneStackSize > 1 then
-		
+	local backButton
+	if CCDirector.sceneStackSize > 1 and not clipOnly then
+		backButton = oButton("Quit",17,60,false,
+			70,0,
+			function(item)
+				opMenu.enabled = false
+				item:unregisterTapHandler()
+				CCDirector:popToRootScene()
+			end)
+		backButton.anchor = oVec2.zero
+		local btnBk = CCDrawNode()
+		btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
+		btnBk.position = oVec2(30,30)
+		backButton:addChild(btnBk,-1)
+		opMenu:addChild(backButton)
 	end
 
 	local cancelButton 
@@ -373,6 +386,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 					panel:removeMenuItems()
 					if cancelButton then cancelButton.positionX = 0 end
 					editButton.visible = true
+					if backButton then backButton.visible = false end
 					if file:sub(-5,-1) == ".clip" then
 						editButton.editTarget = modelFile or file:sub(1,-6)
 						editButton.clipFile = file
