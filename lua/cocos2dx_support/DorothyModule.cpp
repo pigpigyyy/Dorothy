@@ -652,8 +652,8 @@ int CCDictionary_set(lua_State* L)
 		{
 			tolua_error(L, "CCDictionary can only store number, boolean, string and CCObject.", nullptr);
 		}
-	}
 #endif
+	}
 	if (lua_isnumber(L, 2))
 	{
 		int key = (int)lua_tonumber(L, 2);

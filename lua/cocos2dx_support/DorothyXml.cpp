@@ -945,7 +945,7 @@ static void oHandler(const char* begin, const char* end)
 	const char* borderWidth = nullptr;\
 	const char* borderColor = nullptr;
 #define Polygon_Check \
-	CASE_STR(Fill) { fillColor = atts[++i]; break; }\
+	CASE_STR(FillColor) { fillColor = atts[++i]; break; }\
 	CASE_STR(BorderWidth) { borderWidth = atts[++i]; break; }\
 	CASE_STR(BorderColor) { borderColor = atts[++i]; break; }
 #define Polygon_Finish \
