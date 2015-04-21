@@ -170,7 +170,6 @@ static inline const char* tolua_tofieldcppstring(lua_State* L, int lo, int index
 TOLUA_API int tolua_fast_isa(lua_State *L, int mt_indexa, int mt_indexb);
 TOLUA_API int tolua_isccobject(lua_State* L, int mt_idx);
 TOLUA_API void tolua_typeid(lua_State *L, int typeId, const char* className);
-TOLUA_API void tolua_classname(lua_State *L, void* ccobject);
 
 #ifndef Mtolua_new
 #define Mtolua_new(EXP) new EXP

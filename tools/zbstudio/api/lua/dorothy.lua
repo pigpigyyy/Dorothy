@@ -7,14 +7,22 @@ local index = genIndex()
 
 local Dorothy =
 {
+	doXml =
+	{
+		args = "(xml: string)",
+		description = "execute codes of Dorothy Xml format.",
+		returns = "(...)",
+		type = "function",
+		index = index()
+	},
 	tolua =
 	{
 		childs =
 		{
 			type =
 			{
-				args = "(item: CCObject)",
-				description = " get tolua++ type of any object",
+				args = "(...)",
+				description = " get tolua++ type string of any object",
 				typeName = "string",
 				returns = "(typename: string)",
 				static = true,
@@ -22,10 +30,18 @@ local Dorothy =
 			},
 			cast =
 			{
-				args = "(object: CCObject, typename: string)",
-				description = " type cast, if typename is not a super or base type of object, it returns nil",
+				args = "(object: CCObject, classname: string)",
+				description = " type cast, if classname is not a super or base class of object, it returns nil",
 				typeName = "CCObject",
 				returns = "(object: CCObject)",
+				static = true,
+				type = "function",
+			},
+			class =
+			{
+				args = "(classname: string)",
+				description = " get tolua++ type object of given classname",
+				returns = "(type: table)",
 				static = true,
 				type = "function",
 			},

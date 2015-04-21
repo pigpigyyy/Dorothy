@@ -29,10 +29,10 @@ TOLUA_API int tolua_fast_isa(lua_State *L, int mt_indexa, int mt_indexb)
 	}
 	else
 	{
-		lua_rawgeti(L, mt_indexa, MT_SUPER);// tb
-		lua_pushvalue(L, mt_indexb);// tb mtb
-		lua_rawget(L, LUA_REGISTRYINDEX);// tb typeb
-		lua_rawget(L, -2);// tb[typeb], tb flag
+		lua_rawgeti(L, mt_indexa, MT_SUPER);// super
+		lua_pushvalue(L, mt_indexb);// super mtb
+		lua_rawget(L, LUA_REGISTRYINDEX);// super typeb
+		lua_rawget(L, -2);// super[typeb], super flag
 		result = lua_toboolean(L, -1);
 		lua_pop(L, 2);
 	}
@@ -60,28 +60,19 @@ TOLUA_API const char* tolua_typename(lua_State* L, int lo)
 		}
 		else
 		{
-			if (tolua_isccobject(L, lo))
+			lua_rawget(L, LUA_REGISTRYINDEX);// reg[mt], name
+			if (!lua_isstring(L, -1))
 			{
 				lua_pop(L, 1);// empty
-				void* ptr = tolua_tousertype(L, lo, 0);
-				tolua_classname(L, ptr);// result
-			}
-			else
-			{
-				lua_rawget(L, LUA_REGISTRYINDEX);// reg[mt], name
-				if (!lua_isstring(L, -1))
-				{
-					lua_pop(L, 1);// empty
-					lua_pushstring(L, "[undefined]");// result
-				}
+				lua_pushstring(L, "[undefined]");// result
 			}
 		}
 	}
 	else// is table
 	{
 		lua_pushvalue(L, lo);// tb
-		lua_rawget(L, LUA_REGISTRYINDEX);// name
-		if (!lua_isstring(L, -1))
+		lua_rawget(L, LUA_REGISTRYINDEX);//reg[tb], name
+		if (!lua_isstring(L, -1))// name is string
 		{
 			lua_pop(L, 1);// empty
 			lua_pushstring(L, "table");// result

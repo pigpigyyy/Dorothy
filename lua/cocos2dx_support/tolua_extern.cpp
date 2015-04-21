@@ -18,7 +18,7 @@ extern "C" int toluafix_get_callback_ref_count()
 }
 extern "C" int alloc_ref_id()
 {
-	if(g_available_ref_ids.empty())
+	if (g_available_ref_ids.empty())
 	{
 		return ++g_ref_id;
 	}
@@ -80,12 +80,7 @@ extern "C" void tolua_typeid(lua_State* L, int typeId, const char* className)
 	lua_getfield(L, LUA_REGISTRYINDEX, className);// mt 
 	lua_rawseti(L, LUA_REGISTRYINDEX, typeId); // empty
 }
-extern "C" void tolua_classname(lua_State* L, void* ccobject)
-{
-	CCObject* object = (CCObject*)ccobject;
-	lua_rawgeti(L, LUA_REGISTRYINDEX, object->getLuaType());// mt
-	lua_rawget(L, LUA_REGISTRYINDEX);// reg[mt], name
-}
+
 extern "C" int tolua_isccobject(lua_State* L, int lo)
 {
 	if (lua_isuserdata(L, lo))

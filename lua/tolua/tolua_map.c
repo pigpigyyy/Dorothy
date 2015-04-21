@@ -175,6 +175,14 @@ static int tolua_bnd_getpeer(lua_State* L)
 	return 1;
 };
 
+static int tolua_bnd_class(lua_State* L)
+{
+	/* stack: classname */
+	lua_pushvalue(L, -1);// classname
+	lua_rawget(L, LUA_REGISTRYINDEX);// reg[classname], mt
+	return 1;
+}
+
 TOLUA_API void tolua_open(lua_State* L)
 {
 	int top = lua_gettop(L);
@@ -192,6 +200,7 @@ TOLUA_API void tolua_open(lua_State* L)
 			tolua_beginmodule(L, "tolua");
 				tolua_function(L, "type", tolua_bnd_type);
 				tolua_function(L, "cast", tolua_bnd_cast);
+				tolua_function(L, "class", tolua_bnd_class);
 				tolua_function(L, "setpeer", tolua_bnd_setpeer);
 				tolua_function(L, "getpeer", tolua_bnd_getpeer);
 			tolua_endmodule(L);
