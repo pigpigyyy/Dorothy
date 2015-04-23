@@ -71,6 +71,8 @@ oCache.clear = function(self)
 end
 oCache.Body = {load=load,unload=unload}
 
+local oBody_create = oBody[2]
+
 local function create(itemDict,world,pos,angle)
 	local items = CCDictionary()
 	local node = CCNode()
@@ -92,7 +94,7 @@ local function create(itemDict,world,pos,angle)
 				newPos = oVec2(length*math.cos(realAngle), length*math.sin(realAngle))
 				newPos = newPos + pos - oldPos
 			end
-			local body = oBody(itemDef,world,newPos,angle)
+			local body = oBody_create(itemDef,world,newPos,angle)
 			local face = nil
 			local faceStr = itemDef.face
 			if faceStr ~= "" then
@@ -128,7 +130,6 @@ local function create(itemDict,world,pos,angle)
 	return node
 end
 
-local oBody_create = oBody[2]
 oBody[2] = function(self,data,world,pos,angle)
 	pos = pos or oVec2.zero
 	angle = angle or 0

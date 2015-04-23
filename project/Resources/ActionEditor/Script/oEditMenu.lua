@@ -143,6 +143,7 @@ local function oEditMenu()
 		]]
 		New = oButton("New",16,50,50,35,95,
 			function()
+				if oEditor.isPlaying then return end
 				local pos = math.floor(oEditor.controlBar:getPos()+0.5)
 				if oEditor.sprite and pos ~= oEditor.currentFramePos and oEditor.spriteData and not oEditor.spriteData[oSd.animationNames] then
 					oEditor.settingPanel:clearSelection()
@@ -219,6 +220,7 @@ local function oEditMenu()
 			end),
 		Delete = oButton("Delete",16,50,50,95,95,
 			function()
+				if oEditor.isPlaying then return end
 				local pos = math.floor(oEditor.controlBar:getPos()+0.5)
 				if oEditor.sprite and pos == oEditor.currentFramePos and (oEditor.keyIndex ~= 2 or #oEditor.animationData == 2) then
 					oEditor.settingPanel:clearSelection()
@@ -256,6 +258,7 @@ local function oEditMenu()
 			end),
 		Copy = oButton("Copy",16,50,50,155,95,
 			function(item)
+				if oEditor.isPlaying then return end
 				local pos = math.floor(oEditor.controlBar:getPos()+0.5)
 				if oEditor.sprite and pos == oEditor.currentFramePos then
 					local frameDef = oEditor.animationData[oEditor.keyIndex]
@@ -330,7 +333,7 @@ local function oEditMenu()
 			end),
 		Clear = oButton("Clear",16,50,50,215,95,
 			function()
-				if oEditor.sprite and oEditor.animationData then
+				if not oEditor.isPlaying and oEditor.sprite and oEditor.animationData then
 					oBox("Clear\nFrames",function()
 						local sp = oEditor.spriteData
 						local aDefs = sp[oSd.animationDefs]

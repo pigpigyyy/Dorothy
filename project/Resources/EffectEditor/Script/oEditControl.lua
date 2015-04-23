@@ -111,6 +111,17 @@ local function oEditControl()
 		if not modeSelector.visible then return end
 		modeSelector:hide()
 	end
+	
+	-- show & hide color picker
+	local colorPicker = oColorPicker()
+	colorPicker.visible = false
+	control:addChild(colorPicker)
+	control.showColorPicker = function(self,color,callback)
+		colorPicker:show(color,callback)
+	end
+	control.hideColorPicker = function(self)
+		colorPicker:hide()
+	end
 
 	local varNames =
 	{
@@ -199,7 +210,8 @@ local function oEditControl()
 					oEditor.effectData[sg]*255,
 					oEditor.effectData[sb]*255,
 					oEditor.effectData[sa]*255)
-				control:addChild(oColorPicker(color,function(r,g,b,a)
+				control:showColorPicker(color,function(r,g,b,a)
+					print("color")
 					oEditor.effectData[sr] = r/255
 					oEditor.effectData[sg] = g/255
 					oEditor.effectData[sb] = b/255
@@ -209,7 +221,7 @@ local function oEditControl()
 					oEvent:send(sb,oEditor.effectData[sb])
 					oEvent:send(sa,oEditor.effectData[sa])
 					oEvent:send("settingPanel.cancel")
-				end))
+				end)
 			elseif name == "startRedVar"
 				or name == "startBlueVar"
 				or name == "startGreenVar"
@@ -305,10 +317,11 @@ local function oEditControl()
 				oEditor:dumpEffectFile()
 				oEvent:send("name",newName)
 			else
-				oEffect:update(oEditor.effect,oEditor.effectData)
-				oEditor.effect:start()
 				ruler:hide()
 				control:hideBlendSelector()
+				control:hideColorPicker()
+				oEffect:update(oEditor.effect,oEditor.effectData)
+				oEditor.effect:start()
 				oEvent:send("oEditor.change")
 			end
 		end

@@ -16,15 +16,17 @@ local CCTouch = require("CCTouch")
 local CCRect = require("CCRect")
 local oEditor = require("oEditor")
 
-local function oColorPicker(color,changed)
+local function oColorPicker(color,callback)
 	color = color or ccColor4()
-	local panelSize = 240
+	local changed = callback
+	local panelSize = 270
 	local barWidth = 20
-	local finalColorSize = 100
+	local finalColorSize = 140
 	local borderWidth = (panelSize+20)+(barWidth+20)+(finalColorSize+20)
-	local borderHeight = 260
+	local borderHeight = panelSize+20
 	local halfW = borderWidth*0.5
 	local halfH = borderHeight*0.5
+	local buttonWidth = finalColorSize-20
 
 	local panel = oNode3D()
 	panel.position = oEditor.origin
@@ -37,9 +39,17 @@ local function oColorPicker(color,changed)
 	background:addChild(border)
 
 	local mask = CCLayer()
+	mask.contentSize = background.contentSize
 	mask.anchor = oVec2.zero
 	mask.touchEnabled = true
-	mask:registerTouchHandler(function() return panel.visible end,false,CCMenu.DefaultHandlerPriority-1,true)
+	mask:registerTouchHandler(function(eventType, touch)
+		if eventType == CCTouch.Began then
+			if CCRect(oVec2.zero,mask.contentSize):containsPoint(mask:convertToNodeSpace(touch.location)) then
+				return panel.visible
+			end
+		end
+		return false
+	end,false,CCMenu.DefaultHandlerPriority-1,true)
 	background:addChild(mask)
 
 	local ChanelR,ChanelG,ChanelB = 1,2,3
@@ -149,7 +159,8 @@ local function oColorPicker(color,changed)
 
 	local alphaBar = CCLayerColor(ccColor4(),finalColorSize,barWidth)
 	alphaBar.anchor = oVec2.zero
-	alphaBar.position = oVec2(borderWidth-10-finalColorSize,borderHeight-20-finalColorSize-label.contentSize.height-10-barWidth)
+	local alphaBarY = borderHeight-20-finalColorSize-label.contentSize.height-barWidth-10
+	alphaBar.position = oVec2(borderWidth-finalColorSize-10,alphaBarY)
 	background:addChild(alphaBar)
 	local function resetAlphaColor()
 		local c0,c1 = ccColor4(r,g,b,255),ccColor4(r,g,b,0)
@@ -169,24 +180,15 @@ local function oColorPicker(color,changed)
 	menu.touchPriority = CCMenu.DefaultHandlerPriority-2
 	background:addChild(menu)
 
-	menu:addChild(oButton("OK",16,finalColorSize,22,borderWidth-10-finalColorSize*0.5,10+11,function()
-		panel:schedule(once(function()
-			local begin = panel.angleX
-			local time = 0
-			cycle(0.3,function(deltaTime)
-				time = time + deltaTime
-				panel.angleX = oEase:func(oEase.OutBack,time/0.3,begin,-90)
-			end)
-			panel.angleX = -90
-			panel.parent:removeChild(panel)
-			if changed then
-				changed(r,g,b,a)
-			end
-		end))
-	end))
-
+	local channelButtonWidth = buttonWidth/3
+	local channelButtonHeight = alphaBarY-30
+	local channelButtonY = alphaBarY-20-channelButtonHeight*0.5
 	local rButton,gButton,bButton
-	rButton = oButton("R",16,80/3,22,borderWidth-10-finalColorSize+80/6,10+24+10+11,function()
+	rButton = oButton("R",16,
+		channelButtonWidth,
+		channelButtonHeight,
+		borderWidth-10-finalColorSize+buttonWidth/6,
+		channelButtonY,function()
 		rButton.color = ccColor3(0xff88cc)
 		gButton.color = ccColor3(0x00ffff)
 		bButton.color = ccColor3(0x00ffff)
@@ -201,7 +203,11 @@ local function oColorPicker(color,changed)
 	rButton.color = ccColor3(0xff88cc)
 	menu:addChild(rButton)
 
-	gButton = oButton("G",16,80/3,22,borderWidth-10-finalColorSize*0.5,10+24+10+11,function()
+	gButton = oButton("G",16,
+		channelButtonWidth,
+		channelButtonHeight,
+		borderWidth-10-finalColorSize*0.5,
+		channelButtonY,function()
 		rButton.color = ccColor3(0x00ffff)
 		gButton.color = ccColor3(0xff88cc)
 		bButton.color = ccColor3(0x00ffff)
@@ -215,7 +221,11 @@ local function oColorPicker(color,changed)
 	end)
 	menu:addChild(gButton)
 
-	bButton = oButton("B",16,80/3,22,borderWidth-10-80/6,10+24+10+11,function()
+	bButton = oButton("B",16,
+		channelButtonWidth,
+		channelButtonHeight,
+		borderWidth-10-buttonWidth/6,
+		channelButtonY,function()
 		rButton.color = ccColor3(0x00ffff)
 		gButton.color = ccColor3(0x00ffff)
 		bButton.color = ccColor3(0xff88cc)
@@ -314,15 +324,37 @@ local function oColorPicker(color,changed)
 	panel.setColor = setColor
 	panel:setColor(color)
 
-	panel:schedule(once(function()
-		panel.angleX = -90
-		local time = 0
-		cycle(0.3,function(deltaTime)
-			time = time + deltaTime
-			panel.angleX = oEase:func(oEase.OutBack,time/0.3,-90,90)
-		end)
-		panel.angleX = 0
-	end))
+	panel.hide = function(self)
+		if changed then
+			changed(r,g,b,a)
+			changed = nil
+		end
+		self:schedule(once(function()
+			local begin = self.angleX
+			local time = 0
+			cycle(0.3,function(deltaTime)
+				time = time + deltaTime
+				self.angleX = oEase:func(oEase.OutBack,time/0.3,begin,-90)
+			end)
+			self.angleX = -90
+			self.visible = false
+		end))
+	end
+
+	panel.show = function(self,color,callback)
+		self.visible = true
+		self:setColor(color)
+		changed = callback
+		self:schedule(once(function()
+			self.angleX = -90
+			local time = 0
+			cycle(0.3,function(deltaTime)
+				time = time + deltaTime
+				self.angleX = oEase:func(oEase.OutBack,time/0.3,-90,90)
+			end)
+			self.angleX = 0
+		end))
+	end
 
 	return panel
 end
