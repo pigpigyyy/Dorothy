@@ -139,6 +139,7 @@
 		3CD77C591A83A990003B55A0 /* ActionEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3CD77C581A83A990003B55A0 /* ActionEditor */; };
 		3CD77C5B1A83A99E003B55A0 /* EffectEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3CD77C5A1A83A99E003B55A0 /* EffectEditor */; };
 		3CECB1661AC3307000BA17F3 /* DorothyXml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CECB1641AC3307000BA17F3 /* DorothyXml.cpp */; };
+		9F9E47EC1AE8FC6D00826626 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C504D601A23739B000C79D6 /* MainMenu.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1082,6 +1083,7 @@
 				3C07A5F41A6ED4830036E419 /* miku.lua in Resources */,
 				3CD77C5B1A83A99E003B55A0 /* EffectEditor in Resources */,
 				3C7AA4D41A47291F007836D2 /* main.lua in Resources */,
+				9F9E47EC1AE8FC6D00826626 /* MainMenu.xib in Resources */,
 				3C07A5F51A6ED4830036E419 /* oBodyEx.lua in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
