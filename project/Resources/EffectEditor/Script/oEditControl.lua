@@ -211,7 +211,6 @@ local function oEditControl()
 					oEditor.effectData[sb]*255,
 					oEditor.effectData[sa]*255)
 				control:showColorPicker(color,function(r,g,b,a)
-					print("color")
 					oEditor.effectData[sr] = r/255
 					oEditor.effectData[sg] = g/255
 					oEditor.effectData[sb] = b/255
