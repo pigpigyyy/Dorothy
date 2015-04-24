@@ -94,7 +94,7 @@ local function create(itemDict,world,pos,angle)
 				newPos = oVec2(length*math.cos(realAngle), length*math.sin(realAngle))
 				newPos = newPos + pos - oldPos
 			end
-			local body = oBody_create(itemDef,world,newPos,angle)
+			local body = oBody_create(oBody,itemDef,world,newPos,angle)
 			local face = nil
 			local faceStr = itemDef.face
 			if faceStr ~= "" then
