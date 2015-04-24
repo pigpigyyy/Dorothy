@@ -85,7 +85,7 @@ void CCTransitionPageTurn::onEnter()
 
     CCActionInterval *action  = this->actionWithSize(CCSizeMake(x,y));
 
-    if (! m_bBack )
+    if (!m_bBack)
     {
         m_pOutScene->runAction
         (
@@ -117,7 +117,7 @@ void CCTransitionPageTurn::onEnter()
 }
 
 
-CCActionInterval* CCTransitionPageTurn:: actionWithSize(const CCSize& vector)
+CCActionInterval* CCTransitionPageTurn::actionWithSize(const CCSize& vector)
 {
     if (m_bBack)
     {

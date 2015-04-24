@@ -439,6 +439,44 @@ CCScene* CCScene_createFadeTiles(float duration, CCScene* nextScene, tOrientatio
 	}
 	return nullptr;
 }
+CCScene* CCScene_createFlipAngular(float duration, CCScene* nextScene, bool rightOver)
+{
+	return CCTransitionFlipAngular::create(duration, nextScene, rightOver ? kCCTransitionOrientationRightOver : kCCTransitionOrientationLeftOver);
+}
+CCScene* CCScene_createFlip(float duration, CCScene* nextScene, tOrientation orientation)
+{
+	switch (orientation)
+	{
+	case kCCTransitionOrientationLeftOver:
+		return CCTransitionFlipX::create(duration, nextScene, orientation);
+	case kCCTransitionOrientationRightOver:
+		return CCTransitionFlipX::create(duration, nextScene, orientation);
+	case kCCTransitionOrientationUpOver:
+		return CCTransitionFlipY::create(duration, nextScene, orientation);
+	case kCCTransitionOrientationDownOver:
+		return CCTransitionFlipY::create(duration, nextScene, orientation);
+	}
+	return nullptr;
+}
+CCScene* CCScene_createZoomFlip(float duration, CCScene* nextScene, tOrientation orientation)
+{
+	switch (orientation)
+	{
+	case kCCTransitionOrientationLeftOver:
+		return CCTransitionZoomFlipX::create(duration, nextScene, orientation);
+	case kCCTransitionOrientationRightOver:
+		return CCTransitionZoomFlipX::create(duration, nextScene, orientation);
+	case kCCTransitionOrientationUpOver:
+		return CCTransitionZoomFlipY::create(duration, nextScene, orientation);
+	case kCCTransitionOrientationDownOver:
+		return CCTransitionZoomFlipY::create(duration, nextScene, orientation);
+	}
+	return nullptr;
+}
+CCScene* CCScene_createZoomFlipAngular(float duration, CCScene* nextScene, bool rightOver)
+{
+	return CCTransitionZoomFlipAngular::create(duration, nextScene, rightOver ? kCCTransitionOrientationRightOver : kCCTransitionOrientationLeftOver);
+}
 
 CCCardinalSplineTo* CCCardinalSplineTo_create(float duration, const oVec2 points[], int count, float tension)
 {

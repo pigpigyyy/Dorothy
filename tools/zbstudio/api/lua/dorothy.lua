@@ -1893,14 +1893,6 @@ local Dorothy =
 	{
 		childs =
 		{
-			oriented =
-			{
-				args = "(duration: float, nextScene: CCScene, orientation: CCOrientation)",
-				description = " -- orientation: CCOrientation.[Left|Right|Up|Down]",
-				returns = "()",
-				static = true,
-				type = "method",
-			},
 			rotoZoom =
 			{
 				args = "(duration: float, nextScene: CCScene)",
@@ -1941,15 +1933,7 @@ local Dorothy =
 				static = true,
 				type = "method",
 			},
-			flipX =
-			{
-				args = "(duration: float, nextScene: CCScene, orientation: CCOrientation)",
-				description = " -- orientation: CCOrientation.[Left|Right|Up|Down]",
-				returns = "()",
-				static = true,
-				type = "method",
-			},
-			flipY =
+			flip =
 			{
 				args = "(duration: float, nextScene: CCScene, orientation: CCOrientation)",
 				description = " -- orientation: CCOrientation.[Left|Right|Up|Down]",
@@ -1959,21 +1943,13 @@ local Dorothy =
 			},
 			flipAngular =
 			{
-				args = "(duration: float, nextScene: CCScene, orientation: CCOrientation)",
+				args = "(duration: float, nextScene: CCScene, rightOver: bool = true)",
 				description = " -- orientation: CCOrientation.[Left|Right|Up|Down]",
 				returns = "()",
 				static = true,
 				type = "method",
 			},
-			zoomFlipX =
-			{
-				args = "(duration: float, nextScene: CCScene, orientation: CCOrientation)",
-				description = " -- orientation: CCOrientation.[Left|Right|Up|Down]",
-				returns = "()",
-				static = true,
-				type = "method",
-			},
-			zoomFlipY =
+			zoomFlip =
 			{
 				args = "(duration: float, nextScene: CCScene, orientation: CCOrientation)",
 				description = " -- orientation: CCOrientation.[Left|Right|Up|Down]",
@@ -1983,7 +1959,7 @@ local Dorothy =
 			},
 			zoomFlipAngular =
 			{
-				args = "(duration: float, nextScene: CCScene, orientation: CCOrientation)",
+				args = "(duration: float, nextScene: CCScene, rightOver: bool = true)",
 				description = " -- orientation: CCOrientation.[Left|Right|Up|Down]",
 				returns = "()",
 				static = true,
@@ -2039,7 +2015,7 @@ local Dorothy =
 			},
 			pageTurn =
 			{
-				args = "(duration: float, nextScene: CCScene, backward: bool",
+				args = "(duration: float, nextScene: CCScene, backward: bool = false",
 				description = "",
 				returns = "()",
 				static = true,

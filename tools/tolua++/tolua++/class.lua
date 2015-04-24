@@ -55,7 +55,7 @@ function classClass:register (pre)
  local lastItem = nil
  while self[i] do
 	if lastItem ~= nil then
-		if lastItem.kind ~= 'func' or self[i].kind ~= 'func' or lastItem.lname:sub(1,-3) ~= self[i].lname:sub(1,-3) then
+		if lastItem.kind ~= 'func' or self[i].kind ~= 'func' or lastItem.lname ~= self[i].lname then
 			lastItem:register(pre..' ')
 		end
 	end

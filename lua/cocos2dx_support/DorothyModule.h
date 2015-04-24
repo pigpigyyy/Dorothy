@@ -96,6 +96,10 @@ CCSprite* CCSprite_createWithClip(const char* clipStr);
 CCScene* CCScene_createMove(float duration, CCScene* nextScene, tOrientation orientation);
 CCScene* CCScene_createSlide(float duration, CCScene* nextScene, tOrientation orientation);
 CCScene* CCScene_createFadeTiles(float duration, CCScene* nextScene, tOrientation orientation);
+CCScene* CCScene_createFlipAngular(float duration, CCScene* nextScene, bool rightOver = true);
+CCScene* CCScene_createFlip(float duration, CCScene* nextScene, tOrientation orientation);
+CCScene* CCScene_createZoomFlip(float duration, CCScene* nextScene, tOrientation orientation);
+CCScene* CCScene_createZoomFlipAngular(float duration, CCScene* nextScene, bool rightOver = true);
 
 CCCardinalSplineTo* CCCardinalSplineTo_create(float duration, const oVec2 points[], int count, float tension);
 CCCardinalSplineBy* CCCardinalSplineBy_create(float duration, const oVec2 points[], int count, float tension);
