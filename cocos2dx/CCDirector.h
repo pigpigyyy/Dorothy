@@ -103,7 +103,7 @@ public:
 	// attribute
 
 	/** Get current running Scene. Director can only run one Scene at the time */
-	inline CCScene* getRunningScene() { return m_pNextScene ? m_pNextScene : m_pRunningScene; }
+	CCScene* getRunningScene() const;
 
 	/** Get the FPS value */
 	inline double getAnimationInterval() { return m_dAnimationInterval; }

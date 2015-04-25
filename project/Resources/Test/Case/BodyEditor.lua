@@ -19,4 +19,4 @@ car.data.wheel.enabled = true
 world:addChild(car)
 world.camera:follow(car.children[1])
 
-CCDirector:run(scene)
+CCDirector:run(CCScene:crossFade(0.5,scene))

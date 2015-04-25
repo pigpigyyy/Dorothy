@@ -67,4 +67,4 @@ circle:addHandler(oBody.ContactEnd,function(body,point)
 	--label.text = "End"
 end)
 
-CCDirector:run(scene)
+CCDirector:run(CCScene:crossFade(0.5,scene))

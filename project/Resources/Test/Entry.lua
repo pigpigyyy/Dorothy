@@ -15,10 +15,19 @@ local oAction = require("oAction")
 local CCKeypad = require("CCKeypad")
 local CCApplication = require("CCApplication")
 local CCTargetPlatform = require("CCTargetPlatform")
+local CCOrientation = require("CCOrientation")
+local CCNode = require("CCNode")
+local CCLayerColor = require("CCLayerColor")
+local ccColor4 = require("ccColor4")
+
+local scene = CCScene()
 
 local winSize = CCDirector.winSize
 local panel = oSelectionPanel(winSize,true)
 local menu = panel.menu
+
+local background = CCLayerColor(ccColor4(0xff000000))
+panel.border:addChild(background,-1)
 
 local opMenu = CCMenu()
 opMenu.contentSize = CCSize(60,60)
@@ -91,7 +100,7 @@ panel.init = function(self)
 					local endBtn = oButton("Back",17,60,false,
 						0,0,
 						function()
-							CCDirector:popToRootScene()
+							CCDirector:run(CCScene:crossFade(0.5,scene))
 						end)
 					endBtn.anchor = oVec2.zero
 					opMenu:addChild(endBtn)
@@ -109,7 +118,6 @@ end
 
 panel:show()
 
-local scene = CCScene()
 scene:addChild(panel)
 
 panel:registerKeypadHandler(function(eventType)
@@ -120,4 +128,11 @@ end)
 panel.keypadEnabled = true
 
 CCDirector.displayStats = true
+
+scene:registerEventHandler(function(eventType)
+	if eventType == CCNode.Entered then
+		CCDirector:popToRootScene()
+	end
+end)
+
 CCDirector:run(scene)

@@ -135,4 +135,4 @@ layer:registerTouchHandler(function(eventType, touch)
 	return true
 end)
 
-CCDirector:run(scene)
+CCDirector:run(CCScene:crossFade(0.5,scene))

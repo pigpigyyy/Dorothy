@@ -188,6 +188,6 @@ local menu = CCMenu(false)
 menu.anchor = oVec2.zero
 world.UILayer:addChild(menu)
 
-CCDirector:run(scene)
+CCDirector:run(CCScene:crossFade(0.5,scene))
 
 print("Use arrow keys from keyboard to control character")

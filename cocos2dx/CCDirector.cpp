@@ -207,6 +207,17 @@ CCDirector::~CCDirector()
 	s_SharedDirector = NULL;
 }
 
+CCScene* CCDirector::getRunningScene() const
+{
+	CCScene* scene = m_pNextScene ? m_pNextScene : m_pRunningScene;
+	CCTransitionScene* transitionScene = dynamic_cast<CCTransitionScene*>(scene);
+	if (transitionScene)
+	{
+		scene = transitionScene->getTargetScene();
+	}
+	return scene;
+}
+
 void CCDirector::setDisplayStats(bool bDisplayStats)
 {
 	if (m_bDisplayStats == bDisplayStats) return;
@@ -553,11 +564,9 @@ CCPoint CCDirector::getVisibleOrigin()
 // scene management
 void CCDirector::runWithScene(CCScene *pScene)
 {
-	CCAssert(pScene != NULL, "This command can only be used to start the CCDirector. There is already a scene present.");
-	//CCAssert(m_pRunningScene == NULL, "m_pRunningScene should be null");
-
+	CCAssert(pScene != NULL, "the scene should not be null");
 	pushScene(pScene);
-	startAnimation();
+	if (m_pobScenesStack->count() == 1) startAnimation();
 }
 
 void CCDirector::replaceScene(CCScene *pScene)
@@ -611,24 +620,29 @@ void CCDirector::popScene()
 void CCDirector::popToRootScene()
 {
 	CCAssert(m_pRunningScene != NULL, "A running Scene is needed");
-	unsigned int count = m_pobScenesStack->count();
-	while (count > 1)
+	CCScene* rootScene = (CCScene*)m_pobScenesStack->objectAtIndex(0);
+	while (m_pobScenesStack->count() > 1)
 	{
-		CCScene *current = (CCScene*)m_pobScenesStack->lastObject();
-		if (current->isRunning())
+		CCScene* current = (CCScene*)m_pobScenesStack->lastObject();
+		if (current != rootScene)
 		{
-			current->onExitTransitionDidStart();
-			current->onExit();
+			if (current->isRunning())
+			{
+				current->onExitTransitionDidStart();
+				current->onExit();
+			}
+			current->cleanup();
 		}
-		current->cleanup();
-
 		m_pobScenesStack->removeLastObject();
-		count--;
 	}
-	m_pRunningScene->release();
-	m_pRunningScene = NULL;
-	m_pNextScene = (CCScene*)m_pobScenesStack->lastObject();
-	m_bSendCleanupToScene = false;
+	CCScene* nextScene = (CCScene*)m_pobScenesStack->lastObject();
+	if (m_pRunningScene != nextScene)
+	{
+		m_pRunningScene->release();
+		m_pRunningScene = NULL;
+		m_pNextScene = nextScene;
+		m_bSendCleanupToScene = false;
+	}
 }
 
 void CCDirector::end()

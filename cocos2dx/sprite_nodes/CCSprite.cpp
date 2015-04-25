@@ -827,7 +827,8 @@ void CCSprite::setBatchNode(CCSpriteBatchNode *pobSpriteBatchNode)
 	m_pobBatchNode = pobSpriteBatchNode; // weak reference
 
 	// self render
-	if (!m_pobBatchNode) {
+	if (!m_pobBatchNode)
+	{
 		m_uAtlasIndex = CCSpriteIndexNotInitialized;
 		setTextureAtlas(NULL);
 		m_bRecursiveDirty = false;
@@ -841,10 +842,9 @@ void CCSprite::setBatchNode(CCSpriteBatchNode *pobSpriteBatchNode)
 		m_sQuad.br.vertices = vertex3(x2, y1, 0);
 		m_sQuad.tl.vertices = vertex3(x1, y2, 0);
 		m_sQuad.tr.vertices = vertex3(x2, y2, 0);
-
 	}
-	else {
-
+	else
+	{
 		// using batch
 		m_transformToBatch = CCAffineTransformIdentity;
 		setTextureAtlas(m_pobBatchNode->getTextureAtlas()); // weak ref

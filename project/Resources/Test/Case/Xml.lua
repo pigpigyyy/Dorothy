@@ -32,7 +32,7 @@ doXml([[
 		end)
 	</Schedule>
 	<Script>
-		CCDirector:run(scene)
+		CCDirector:run(CCScene:crossFade(0.5,scene))
 	</Script>
 </Scene>
 ]])()

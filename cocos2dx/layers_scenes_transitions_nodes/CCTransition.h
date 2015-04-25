@@ -101,6 +101,8 @@ public:
     /** used by some transitions to hide the outer scene */
     void hideOutShowIn();
 
+	inline CCScene* getTargetScene() const { return m_pInScene; }
+
 protected:
     virtual void sceneOrder();
 private:

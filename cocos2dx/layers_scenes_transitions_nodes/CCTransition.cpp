@@ -540,7 +540,7 @@ CCActionInterval* CCTransitionSlideInL::action()
 
 CCActionInterval* CCTransitionSlideInL::easeActionWithAction(CCActionInterval* action)
 {
-	return CCEaseOut::create(action, 2.0f);
+	return CCEaseInOut::create(action, 2.0f);
 }
 
 CCTransitionSlideInL* CCTransitionSlideInL::create(float t, CCScene* scene)

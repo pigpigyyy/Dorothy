@@ -50,4 +50,4 @@ circle.group = groupZero
 circle.angularRate = 90
 world:addChild(circle)
 
-CCDirector:run(scene)
+CCDirector:run(CCScene:crossFade(0.5,scene))
