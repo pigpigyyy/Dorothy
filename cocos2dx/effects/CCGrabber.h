@@ -51,6 +51,7 @@ public:
 
 protected:
     GLuint m_FBO;
+	GLuint m_uDepthRenderBuffer;
     GLint m_oldFBO;
 	GLuint m_depthRenderBuffer;
     GLfloat m_oldClearColor[4];

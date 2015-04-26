@@ -136,3 +136,4 @@ scene:registerEventHandler(function(eventType)
 end)
 
 CCDirector:run(scene)
+

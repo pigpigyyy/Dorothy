@@ -47,7 +47,7 @@ NS_CC_BEGIN
 CCRenderTexture::CCRenderTexture()
 : m_pSprite(NULL)
 , m_uFBO(0)
-, m_uDepthRenderBufffer(0)
+, m_uDepthRenderBuffer(0)
 , m_nOldFBO(0)
 , m_pTexture(0)
 , m_pTextureCopy(0)
@@ -80,9 +80,9 @@ CCRenderTexture::~CCRenderTexture()
     CC_SAFE_RELEASE(m_pTextureCopy);
     
     glDeleteFramebuffers(1, &m_uFBO);
-    if (m_uDepthRenderBufffer)
+    if (m_uDepthRenderBuffer)
     {
-        glDeleteRenderbuffers(1, &m_uDepthRenderBufffer);
+        glDeleteRenderbuffers(1, &m_uDepthRenderBuffer);
     }
     CC_SAFE_DELETE(m_pUITextureImage);
 
@@ -316,15 +316,15 @@ bool CCRenderTexture::initWithWidthAndHeight(int w, int h, CCTexture2DPixelForma
         if (uDepthStencilFormat != 0)
         {
             //create and attach depth buffer
-            glGenRenderbuffers(1, &m_uDepthRenderBufffer);
-            glBindRenderbuffer(GL_RENDERBUFFER, m_uDepthRenderBufffer);
+            glGenRenderbuffers(1, &m_uDepthRenderBuffer);
+            glBindRenderbuffer(GL_RENDERBUFFER, m_uDepthRenderBuffer);
             glRenderbufferStorage(GL_RENDERBUFFER, uDepthStencilFormat, (GLsizei)powW, (GLsizei)powH);
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_uDepthRenderBufffer);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_uDepthRenderBuffer);
 
             // if depth format is the one with stencil part, bind same render buffer as stencil attachment
             if (uDepthStencilFormat == GL_DEPTH24_STENCIL8)
             {
-                glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_uDepthRenderBufffer);
+                glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_uDepthRenderBuffer);
             }
         }
 

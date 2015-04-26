@@ -37,14 +37,24 @@ CCGrabber::CCGrabber()
 
     // generate FBO
     glGenFramebuffers(1, &m_FBO);
+	//create and attach depth buffer
+	glGenRenderbuffers(1, &m_uDepthRenderBuffer);
 }
 
 void CCGrabber::grab(CCTexture2D *pTexture)
 {
-    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &m_oldFBO);
+    glDisable(GL_STENCIL_TEST);
+	glDisable(GL_DEPTH_TEST);
+
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &m_oldFBO);
 
     // bind
     glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
+
+	glBindRenderbuffer(GL_RENDERBUFFER, m_uDepthRenderBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, (GLsizei)pTexture->getPixelsWide(), (GLsizei)pTexture->getPixelsHigh());
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,m_uDepthRenderBuffer);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_uDepthRenderBuffer);
 
     // associate texture with FBO
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pTexture->getName(), 0);
@@ -96,6 +106,7 @@ CCGrabber::~CCGrabber()
 {
     CCLOGINFO("cocos2d: deallocing %p", this);
     glDeleteFramebuffers(1, &m_FBO);
+	glDeleteRenderbuffers(1, &m_uDepthRenderBuffer);
 }
 
 NS_CC_END

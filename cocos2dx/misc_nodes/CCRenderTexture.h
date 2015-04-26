@@ -163,7 +163,7 @@ private:
 
 protected:
     GLuint       m_uFBO;
-    GLuint       m_uDepthRenderBufffer;
+    GLuint       m_uDepthRenderBuffer;
     GLint        m_nOldFBO;
     CCTexture2D* m_pTexture;
     CCTexture2D* m_pTextureCopy;    // a copy of m_pTexture
