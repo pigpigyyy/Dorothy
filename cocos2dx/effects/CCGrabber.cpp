@@ -46,7 +46,9 @@ void CCGrabber::grab(CCTexture2D *pTexture)
     glDisable(GL_STENCIL_TEST);
 	glDisable(GL_DEPTH_TEST);
 
+    GLint oldDepthRenderBuffer;
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &m_oldFBO);
+	glGetIntegerv(GL_RENDERBUFFER_BINDING, &oldDepthRenderBuffer);
 
     // bind
     glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
@@ -67,6 +69,7 @@ void CCGrabber::grab(CCTexture2D *pTexture)
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, m_oldFBO);
+    glBindRenderbuffer(GL_RENDERBUFFER, oldDepthRenderBuffer);
 }
 
 void CCGrabber::beforeRender(CCTexture2D *pTexture)
