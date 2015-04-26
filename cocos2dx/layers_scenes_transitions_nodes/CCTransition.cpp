@@ -36,8 +36,7 @@ THE SOFTWARE.
 #include "actions/CCActionTiledGrid.h"
 #include "actions/CCActionGrid.h"
 #include "CCLayer.h"
-#include "misc_nodes/CCRenderTexture.h"
-
+#include "effects/CCGrid.h"
 
 NS_CC_BEGIN
 
@@ -100,15 +99,26 @@ void CCTransitionScene::sceneOrder()
 
 void CCTransitionScene::visit()
 {
-	if (m_bIsInSceneOnTop) {
+	if (m_pGrid && m_pGrid->isActive())
+	{
+		m_pGrid->beforeDraw();
+	}
+	
+	if (m_bIsInSceneOnTop)
+	{
 		m_pOutScene->visit();
 		m_pInScene->visit();
 	}
-	else {
+	else
+	{
 		m_pInScene->visit();
 		m_pOutScene->visit();
 	}
-	CCScene::visit();
+	
+	if (m_pGrid && m_pGrid->isActive())
+	{
+		m_pGrid->afterDraw(this);
+	}
 }
 
 void CCTransitionScene::finish()
