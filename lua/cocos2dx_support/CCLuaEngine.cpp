@@ -77,23 +77,19 @@ static int cclua_traceback(lua_State* L)
 static int cclua_loadfile(lua_State* L)
 {
 	std::string filename(luaL_checkstring(L, 1));
-	bool isXml = false;
-	size_t pos = filename.rfind(".xml");
-	isXml = pos != std::string::npos;
-	if (!isXml)
+	size_t pos = 0;
+	while ((pos = filename.find(".", pos)) != std::string::npos)
 	{
-		pos = filename.rfind(".");
-		if (pos == std::string::npos)
-		{
-			string newFileName = filename + ".xml";
-			if (oSharedContent.isFileExist(newFileName.c_str()))
-			{
-				filename = std::move(newFileName);
-				isXml = true;
-			}
-			else filename.append(".lua");
-		}
+		filename[pos] = '/';
 	}
+	bool isXml = false;
+	string newFileName = filename + ".xml";
+	if (oSharedContent.isFileExist(newFileName.c_str()))
+	{
+		filename = std::move(newFileName);
+		isXml = true;
+	}
+	else filename.append(".lua");
 
 	unsigned long codeBufferSize = 0;
 	const char* codeBuffer = nullptr;

@@ -7,13 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3C07A5EF1A6ED4830036E419 /* bk.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3C07A5E61A6ED4830036E419 /* bk.jpg */; };
 		3C07A5F01A6ED4830036E419 /* BodyEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C07A5E71A6ED4830036E419 /* BodyEditor */; };
-		3C07A5F11A6ED4830036E419 /* boy.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C07A5E81A6ED4830036E419 /* boy.lua */; };
-		3C07A5F21A6ED4830036E419 /* class.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C07A5E91A6ED4830036E419 /* class.lua */; };
-		3C07A5F31A6ED4830036E419 /* girl.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C07A5EA1A6ED4830036E419 /* girl.lua */; };
-		3C07A5F41A6ED4830036E419 /* miku.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C07A5EB1A6ED4830036E419 /* miku.lua */; };
-		3C07A5F51A6ED4830036E419 /* oBodyEx.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C07A5EC1A6ED4830036E419 /* oBodyEx.lua */; };
 		3C07A5F61A6ED4830036E419 /* Test in Resources */ = {isa = PBXBuildFile; fileRef = 3C07A5ED1A6ED4830036E419 /* Test */; };
 		3C45629C1A29931E00A3406E /* libluajit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C45629B1A29931E00A3406E /* libluajit.a */; };
 		3C504D5B1A23739B000C79D6 /* AppController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3C504D5A1A23739B000C79D6 /* AppController.mm */; };
@@ -136,6 +130,7 @@
 		3C7AA4D41A47291F007836D2 /* main.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4CB1A47291F007836D2 /* main.lua */; };
 		3C90CD181A640F9A00C29402 /* oJointDef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C90CD161A640F9A00C29402 /* oJointDef.cpp */; };
 		3C90CD241A65847400C29402 /* oAsync.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C90CD221A65847400C29402 /* oAsync.cpp */; };
+		3C9AF16B1AEFCC4500B649DC /* Lib in Resources */ = {isa = PBXBuildFile; fileRef = 3C9AF16A1AEFCC4500B649DC /* Lib */; };
 		3CD77C591A83A990003B55A0 /* ActionEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3CD77C581A83A990003B55A0 /* ActionEditor */; };
 		3CD77C5B1A83A99E003B55A0 /* EffectEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3CD77C5A1A83A99E003B55A0 /* EffectEditor */; };
 		3CECB1661AC3307000BA17F3 /* DorothyXml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CECB1641AC3307000BA17F3 /* DorothyXml.cpp */; };
@@ -160,13 +155,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3C07A5E61A6ED4830036E419 /* bk.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bk.jpg; sourceTree = "<group>"; };
 		3C07A5E71A6ED4830036E419 /* BodyEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BodyEditor; sourceTree = "<group>"; };
-		3C07A5E81A6ED4830036E419 /* boy.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = boy.lua; sourceTree = "<group>"; };
-		3C07A5E91A6ED4830036E419 /* class.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = class.lua; sourceTree = "<group>"; };
-		3C07A5EA1A6ED4830036E419 /* girl.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = girl.lua; sourceTree = "<group>"; };
-		3C07A5EB1A6ED4830036E419 /* miku.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = miku.lua; sourceTree = "<group>"; };
-		3C07A5EC1A6ED4830036E419 /* oBodyEx.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = oBodyEx.lua; sourceTree = "<group>"; };
 		3C07A5ED1A6ED4830036E419 /* Test */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Test; sourceTree = "<group>"; };
 		3C45629B1A29931E00A3406E /* libluajit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libluajit.a; path = ../../lua/lib/mac/libluajit.a; sourceTree = "<group>"; };
 		3C504D541A23739B000C79D6 /* Dorothy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dorothy.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -423,6 +412,7 @@
 		3C90CD171A640F9A00C29402 /* oJointDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oJointDef.h; sourceTree = "<group>"; };
 		3C90CD221A65847400C29402 /* oAsync.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oAsync.cpp; sourceTree = "<group>"; };
 		3C90CD231A65847400C29402 /* oAsync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oAsync.h; sourceTree = "<group>"; };
+		3C9AF16A1AEFCC4500B649DC /* Lib */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Lib; sourceTree = "<group>"; };
 		3CA6A7571A60C1E7007C4503 /* mkdir.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mkdir.h; sourceTree = "<group>"; };
 		3CD77C581A83A990003B55A0 /* ActionEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ActionEditor; sourceTree = "<group>"; };
 		3CD77C5A1A83A99E003B55A0 /* EffectEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = EffectEditor; sourceTree = "<group>"; };
@@ -982,16 +972,11 @@
 		3C7AA4C41A4728FC007836D2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3C9AF16A1AEFCC4500B649DC /* Lib */,
 				3CD77C581A83A990003B55A0 /* ActionEditor */,
 				3C07A5E71A6ED4830036E419 /* BodyEditor */,
 				3CD77C5A1A83A99E003B55A0 /* EffectEditor */,
 				3C07A5ED1A6ED4830036E419 /* Test */,
-				3C07A5E61A6ED4830036E419 /* bk.jpg */,
-				3C07A5E81A6ED4830036E419 /* boy.lua */,
-				3C07A5E91A6ED4830036E419 /* class.lua */,
-				3C07A5EA1A6ED4830036E419 /* girl.lua */,
-				3C07A5EB1A6ED4830036E419 /* miku.lua */,
-				3C07A5EC1A6ED4830036E419 /* oBodyEx.lua */,
 				3C7AA4CB1A47291F007836D2 /* main.lua */,
 			);
 			name = Resources;
@@ -1073,18 +1058,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C07A5F61A6ED4830036E419 /* Test in Resources */,
-				3C07A5F31A6ED4830036E419 /* girl.lua in Resources */,
-				3C07A5F21A6ED4830036E419 /* class.lua in Resources */,
-				3C07A5EF1A6ED4830036E419 /* bk.jpg in Resources */,
-				3C07A5F11A6ED4830036E419 /* boy.lua in Resources */,
 				3C07A5F01A6ED4830036E419 /* BodyEditor in Resources */,
+				3C9AF16B1AEFCC4500B649DC /* Lib in Resources */,
 				3C504D5F1A23739B000C79D6 /* Images.xcassets in Resources */,
 				3CD77C591A83A990003B55A0 /* ActionEditor in Resources */,
-				3C07A5F41A6ED4830036E419 /* miku.lua in Resources */,
 				3CD77C5B1A83A99E003B55A0 /* EffectEditor in Resources */,
 				3C7AA4D41A47291F007836D2 /* main.lua in Resources */,
 				9F9E47EC1AE8FC6D00826626 /* MainMenu.xib in Resources */,
-				3C07A5F51A6ED4830036E419 /* oBodyEx.lua in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

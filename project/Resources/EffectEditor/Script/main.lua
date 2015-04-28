@@ -1,13 +1,10 @@
 local _require = require
 local loaded = {} -- save loaded module names for end clean up
-_G["require"] = function(modulename)
-	local result = package.loaded[modulename]
+_G["require"] = function(name)
+	local result = package.loaded[name]
 	if not result then
-		local name = "EffectEditor/Script/"..modulename
 		result = _require(name)
-		if result then
-			loaded[name] = true
-		end
+		table.insert(loaded,name)
 	end
 	return result
 end
@@ -27,16 +24,18 @@ local controls =
 }
 
 oRoutine(once(function()
+	oContent:setSearchPaths({"Lib","EffectEditor/Script"})
+
 	local oEditor = require("oEditor")
 	oEditor:registerEventHandler(function(eventType)
 		if eventType == CCNode.Exited then
 			_G["require"] = _require
-			for k,_ in pairs(loaded) do
-				package.loaded[k] = nil
+			for _,name in ipairs(loaded) do
+				package.loaded[name] = nil
 			end
 		elseif eventType == CCNode.Cleanup then
 			-- do editor cleanup
-			oContent:setSearchPaths({})
+			oContent:setSearchPaths({"Lib"})
 		end
 	end)
 	CCDirector:run(oEditor)
@@ -60,8 +59,8 @@ oRoutine(once(function()
 	if not oContent:exist(oEditor.output) then
 		oContent:mkdir(oEditor.output)
 	end
-	oContent:setSearchPaths({oEditor.input})
-
+	oContent:setSearchPaths({"Lib","EffectEditor/Script",oEditor.input})
+	
 	local oFileChooser = require("oFileChooser")
 	oEditor:addChild(oFileChooser(),oEditor.topMost)
 end))

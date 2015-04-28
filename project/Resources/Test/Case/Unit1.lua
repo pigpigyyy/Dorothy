@@ -1,5 +1,7 @@
 setfenv(Dorothy())
 
+oContent:setSearchPaths({"Lib","Test/Case/Unit1"})
+
 local CCKey = {}
 if CCApplication.targetPlatform == CCTargetPlatform.Windows then
 	CCKey.Left = 0x25
@@ -187,6 +189,12 @@ world:addChild(body)
 local menu = CCMenu(false)
 menu.anchor = oVec2.zero
 world.UILayer:addChild(menu)
+
+scene:registerEventHandler(function(eventType)
+	if eventType == CCNode.Cleanup then
+		oContent:setSearchPaths({"Lib"})
+	end
+end)
 
 CCDirector:run(CCScene:crossFade(0.5,scene))
 

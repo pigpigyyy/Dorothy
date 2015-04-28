@@ -19,6 +19,7 @@ local CCOrientation = require("CCOrientation")
 local CCNode = require("CCNode")
 local CCLayerColor = require("CCLayerColor")
 local ccColor4 = require("ccColor4")
+local oContent = require("oContent")
 
 local scene = CCScene()
 
@@ -135,5 +136,6 @@ scene:registerEventHandler(function(eventType)
 	end
 end)
 
-CCDirector:run(scene)
+oContent:setSearchPaths({"Lib"})
 
+CCDirector:run(scene)

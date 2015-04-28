@@ -20,17 +20,16 @@ local seconds = require("seconds")
 
 local _require = require
 local loaded = {}
-_G["require"] = function(modulename)
-	local result = package.loaded[modulename]
+_G["require"] = function(name)
+	local result = package.loaded[name]
 	if not result then
-		local name = "ActionEditor/Script/"..modulename
 		result = _require(name)
-		if result then
-			loaded[name] = true
-		end
+		table.insert(loaded,name)
 	end
 	return result
 end
+
+oContent:setSearchPaths({"Lib","ActionEditor/Script"})
 
 local oEditor = require("oEditor").oEditor
 
@@ -157,8 +156,8 @@ end
 oEditor.scene:registerEventHandler(function(eventType)
 	if eventType == CCNode.Exited then
 		_G["require"] = _require
-		for k,_ in pairs(loaded) do
-			package.loaded[k] = nil
+		for _,name in ipairs(loaded) do
+			package.loaded[name] = nil
 		end
 		for k,_ in pairs(oEditor.settingPanel.items) do
 			oEditor.settingPanel.items[k] = nil
@@ -167,6 +166,8 @@ oEditor.scene:registerEventHandler(function(eventType)
 			oEditor[k] = nil
 		end
 		oCache:clear()
+	elseif eventType == CCNode.Cleanup then
+		oContent:setSearchPaths({"Lib"})
 	end
 end)
 

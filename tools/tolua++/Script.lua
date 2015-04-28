@@ -412,7 +412,9 @@ _G["Dorothy"] = (function()
 		for k,v in pairs(package.loaded) do
 			tb[k] = v
 		end
-		setmetatable(tb,{__index=_G})
+		for k,v in pairs(_G) do
+			tb[k] = v
+		end
 		return tb
 	end
 	return function() return 1,tb or gettb() end
