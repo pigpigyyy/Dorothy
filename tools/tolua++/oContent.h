@@ -17,6 +17,8 @@ class oContent
     const char* getRelativeFullPath(const char* pszFilename, const char* pszRelativeFile);
     void loadFileLookupInfo(const char* filename);
 
+	void addSearchPath(const char* path);
+	void removeSearchPath(const char* path);
     tolua_outside void oContent_setSearchPaths @ setSearchPaths(char* paths[tolua_len]);
     tolua_outside void oContent_setSearchResolutionsOrder @ setSearchResolutionsOrder(char* paths[tolua_len]);
 

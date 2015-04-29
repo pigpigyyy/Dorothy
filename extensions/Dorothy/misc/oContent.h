@@ -58,6 +58,7 @@ public:
 	void loadFileLookupInfo(const char* filename);
 
 	void addSearchPath(const char* path);
+	void removeSearchPath(const char* path);
 	void setSearchPaths(const vector<string>& searchPaths);
 	void addSearchResolutionsOrder(const char* order);
 	void setSearchResolutionsOrder(const vector<string>& searchPaths);

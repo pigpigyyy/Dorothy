@@ -649,6 +649,24 @@ void CCFileUtils::addSearchPath(const char* path_)
     m_searchPathArray.push_back(path);
 }
 
+void CCFileUtils::removeSearchPath(const char* path)
+{
+    std::string realPath = (isAbsolutePath(path) ? string() : m_strDefaultResRootPath) + path;
+    if (realPath.length() > 0 && realPath[realPath.length()-1] != '/')
+    {
+        realPath += "/";
+    }
+	for (std::vector<std::string>::iterator it = m_searchPathArray.begin(); it != m_searchPathArray.end();++it)
+	{
+		if (*it == realPath)
+		{
+			m_searchPathArray.erase(it);
+			m_fullPathCache.clear();
+			break;
+		}
+	}
+}
+
 void CCFileUtils::setFilenameLookupDictionary(CCDictionary* pFilenameLookupDict)
 {
 	m_fullPathCache.clear();

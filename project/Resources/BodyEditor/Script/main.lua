@@ -27,7 +27,7 @@ local controls =
 }
 
 oRoutine(once(function()
-	oContent:setSearchPaths({"Lib","BodyEditor/Script"})
+	oContent:addSearchPath("BodyEditor/Script")
 
 	local oEditor = require("oEditor")
 	oEditor:registerEventHandler(function(eventType)
@@ -38,7 +38,7 @@ oRoutine(once(function()
 			end
 		elseif eventType == CCNode.Cleanup then
 			oEditor:clearData()
-			oContent:setSearchPaths({"Lib"})
+			oContent:removeSearchPath("BodyEditor/Script")
 		end
 	end)
 	CCDirector:run(oEditor)

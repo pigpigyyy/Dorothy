@@ -4937,9 +4937,25 @@ local Dorothy =
 				static = true,
 				type = "method",
 			},
+			addSearchPath =
+			{
+				args = "(path: string)",
+				description = "",
+				returns = "()",
+				static = true,
+				type = "method",
+			},
+			removeSearchPath =
+			{
+				args = "(path: string)",
+				description = "",
+				returns = "()",
+				static = true,
+				type = "method",
+			},
 			setSearchPaths =
 			{
-				args = "(paths: string)",
+				args = "(paths: table{string})",
 				description = "",
 				returns = "()",
 				static = true,
@@ -4947,7 +4963,7 @@ local Dorothy =
 			},
 			setSearchResolutionsOrder =
 			{
-				args = "(orders: string)",
+				args = "(orders: table{string})",
 				description = "",
 				returns = "()",
 				static = true,

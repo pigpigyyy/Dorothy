@@ -24,7 +24,7 @@ local controls =
 }
 
 oRoutine(once(function()
-	oContent:setSearchPaths({"Lib","EffectEditor/Script"})
+	oContent:addSearchPath("EffectEditor/Script")
 
 	local oEditor = require("oEditor")
 	oEditor:registerEventHandler(function(eventType)
@@ -35,7 +35,8 @@ oRoutine(once(function()
 			end
 		elseif eventType == CCNode.Cleanup then
 			-- do editor cleanup
-			oContent:setSearchPaths({"Lib"})
+			oContent:removeSearchPath("EffectEditor/Script")
+			oContent:removeSearchPath(oEditor.input)
 		end
 	end)
 	CCDirector:run(oEditor)
@@ -59,8 +60,8 @@ oRoutine(once(function()
 	if not oContent:exist(oEditor.output) then
 		oContent:mkdir(oEditor.output)
 	end
-	oContent:setSearchPaths({"Lib","EffectEditor/Script",oEditor.input})
-	
+	oContent:addSearchPath(oEditor.input)
+
 	local oFileChooser = require("oFileChooser")
 	oEditor:addChild(oFileChooser(),oEditor.topMost)
 end))

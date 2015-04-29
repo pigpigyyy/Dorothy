@@ -304,6 +304,10 @@ void oContent::addSearchPath(const char* path)
 {
 	CCFileUtils::sharedFileUtils()->addSearchPath(path);
 }
+void oContent::removeSearchPath(const char* path)
+{
+	CCFileUtils::sharedFileUtils()->removeSearchPath(path);
+}
 void oContent::setSearchPaths(const vector<string>& searchPaths)
 {
 	CCFileUtils::sharedFileUtils()->setSearchPaths(searchPaths);

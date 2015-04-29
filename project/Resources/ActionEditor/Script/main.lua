@@ -29,7 +29,7 @@ _G["require"] = function(name)
 	return result
 end
 
-oContent:setSearchPaths({"Lib","ActionEditor/Script"})
+oContent:addSearchPath("ActionEditor/Script")
 
 local oEditor = require("oEditor").oEditor
 
@@ -167,7 +167,7 @@ oEditor.scene:registerEventHandler(function(eventType)
 		end
 		oCache:clear()
 	elseif eventType == CCNode.Cleanup then
-		oContent:setSearchPaths({"Lib"})
+		oContent:removeSearchPath("ActionEditor/Script")
 	end
 end)
 
