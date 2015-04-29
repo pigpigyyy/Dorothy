@@ -44,10 +44,10 @@ local layer = CCLayer()
 layer.touchEnabled = true
 layer.anchor = oVec2.zero
 layer:registerTouchHandler(function(eventType,touch)
-		if eventType == CCTouch.Moved then
-			model.position = model.position + touch.delta
-		end
-		return true
+	if eventType == CCTouch.Moved then
+		model.position = model.position + touch.delta
+	end
+	return true
 end)
 layer:addChild(model)
 

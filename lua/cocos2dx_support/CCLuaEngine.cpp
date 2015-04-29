@@ -71,25 +71,42 @@ static int cclua_traceback(lua_State* L)
 	lua_pop(L, 2);
 	//luaL_traceback(L, L, lua_tostring(L, 1), 1);
 	//lua_pop(L, 1);
-	return 1;
+	return 0;
 }
 
 static int cclua_loadfile(lua_State* L)
 {
 	std::string filename(luaL_checkstring(L, 1));
 	size_t pos = 0;
-	while ((pos = filename.find(".", pos)) != std::string::npos)
+	while ((pos = filename.find('.', pos)) != std::string::npos)
 	{
 		filename[pos] = '/';
 	}
 	bool isXml = false;
-	string newFileName = filename + ".xml";
-	if (oSharedContent.isFileExist(newFileName.c_str()))
+	string newFileName;
+	BLOCK_START
 	{
-		filename = std::move(newFileName);
-		isXml = true;
+		newFileName = filename + ".lua";
+		if (oSharedContent.isFileExist(newFileName.c_str()))
+		{
+			filename = std::move(newFileName);
+			break;
+		}
+		newFileName = filename + ".body";
+		if (oSharedContent.isFileExist(newFileName.c_str()))
+		{
+			filename = std::move(newFileName);
+			break;
+		}
+		newFileName = filename + ".xml";
+		if (oSharedContent.isFileExist(newFileName.c_str()))
+		{
+			filename = std::move(newFileName);
+			isXml = true;
+			break;
+		}
 	}
-	else filename.append(".lua");
+	BLOCK_END
 
 	unsigned long codeBufferSize = 0;
 	const char* codeBuffer = nullptr;
@@ -144,15 +161,19 @@ static int cclua_doXml(lua_State* L)
 		luaL_error(L, "error loading module %s from file %s :\n\t%s",
 			lua_tostring(L, 1), "xml", lua_tostring(L, -1));
 	}
+	int top = lua_gettop(L) - 1;
 	CCLuaEngine::call(L,0, LUA_MULTRET);
-	return 1;
+	int newTop = lua_gettop(L);
+	return newTop - top;
 }
 
 static int cclua_dofile(lua_State* L)
 {
 	cclua_loadfile(L);
-	CCLuaEngine::call(L,0, LUA_MULTRET);
-	return 1;
+	int top = lua_gettop(L) - 1;
+	CCLuaEngine::call(L, 0, LUA_MULTRET);
+	int newTop = lua_gettop(L);
+	return newTop - top;
 }
 
 static int cclua_ubox(lua_State* L)
@@ -458,7 +479,8 @@ int CCLuaEngine::call(lua_State* L, int paramCount, int returnCount)
 {
 #ifndef TOLUA_RELEASE
 	int functionIndex = -(paramCount + 1);
-	int traceIndex = functionIndex - 1;
+	int top = lua_gettop(L);
+	int traceIndex = functionIndex + top;
 	if (!lua_isfunction(L, functionIndex))
 	{
 		CCLOG("[LUA ERROR] value at stack [%d] is not function in CCLuaEngine::call", functionIndex);
@@ -472,6 +494,8 @@ int CCLuaEngine::call(lua_State* L, int paramCount, int returnCount)
 	++g_callFromLua;
 	int error = lua_pcall(L, paramCount, returnCount, traceIndex);// traceback error ret
 	--g_callFromLua;
+
+	lua_remove(L, traceIndex);
 
 	if (error)// traceback error
 	{

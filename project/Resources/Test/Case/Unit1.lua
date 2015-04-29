@@ -157,7 +157,7 @@ local unit = oUnit(unitDef,world,oVec2(200,300))
 unit.group = 1
 unit.tag = 998
 unit.reflexArc = "keyboardControl"
-suit(unit,"girl.lua")
+suit(unit,"girl")
 world:addChild(unit,1)
 world.camera:follow(unit)
 
@@ -166,7 +166,7 @@ unit = oUnit(unitDef,world,oVec2(600,300))
 unit.group = 1
 unit.data = lastUnit
 unit.reflexArc = "follow"
-suit(unit,"miku.lua")
+suit(unit,"miku")
 world:addChild(unit)
 
 lastUnit = unit
@@ -174,7 +174,7 @@ unit = oUnit(unitDef,world,oVec2(400,300))
 unit.group = 1
 unit.data = lastUnit
 unit.reflexArc = "follow"
-suit(unit,"boy.lua")
+suit(unit,"boy")
 world:addChild(unit)
 
 local bodyDef = oBodyDef()

@@ -44,6 +44,8 @@ local function loadData(data,item)
 end
 
 local function load(_,filename)
+	local tempStr = filename:sub(-5,-1)
+	tempStr = tempStr == ".body" and filename:sub(1,-6) or filename
 	local itemDict = bodyCache[filename]
 	if not itemDict then
 		local bodyData = dofile(filename)

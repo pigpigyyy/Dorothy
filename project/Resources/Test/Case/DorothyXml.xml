@@ -1,4 +1,3 @@
-doXml([[
 <Scene Name="scene">
 	<LayerColor Name="layer" Angle="10" Color="0xff00ffff" AnchorX="0" AnchorY="0"/>
 	<LabelTTF Name="label" Text="Hello" FontName="Arial" FontSize="20" Color="0x000000"
@@ -35,4 +34,3 @@ doXml([[
 		CCDirector:run(CCScene:crossFade(0.5,scene))
 	</Script>
 </Scene>
-]])()

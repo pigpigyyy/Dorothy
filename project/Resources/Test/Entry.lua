@@ -91,7 +91,8 @@ panel.init = function(self)
 			200,50,
 			winSize.width*0.5,y,
 			function()
-				dofile(Tests[i][2])
+				local result = dofile(Tests[i][2])
+				if type(result) == "function" then result() end
 				if not Tests[i][3] then
 					local opMenu = CCMenu()
 					opMenu.contentSize = CCSize(60,60)

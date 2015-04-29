@@ -8,6 +8,6 @@ return
 	{"Sensor","Test/Case/Sensor"},
 	{"Unit","Test/Case/Unit"},
 	{"Unit1","Test/Case/Unit1"},
-	{"Xml","Test/Case/Xml"},
+	{"Xml","Test/Case/DorothyXml"},
 	{"MoonScript","Test/Case/Moon"},
 }
