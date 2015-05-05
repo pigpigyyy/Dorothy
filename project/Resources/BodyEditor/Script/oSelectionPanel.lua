@@ -42,8 +42,10 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 	if not noMask then
 		local mask = CCLayer()
 		mask.anchor = oVec2.zero
+		mask.touchPriority = CCMenu.DefaultHandlerPriority-1
+		mask.swallowTouches = true
 		mask.touchEnabled = true
-		mask:registerTouchHandler(function() return panel.visible end,false,CCMenu.DefaultHandlerPriority-1,true)
+		mask.touchHandler = function() return panel.visible end
 		panel:addChild(mask)
 		panel.mask = mask
 	end
@@ -274,45 +276,45 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 	end
 	panel.setPos = setPos
 
-	panel:registerTouchHandler(
-		function(eventType, touch)
-			--touch=CCTouch
-			if touch.id ~= 0 then
+	panel.touchPriority = CCMenu.DefaultHandlerPriority-3
+	panel.touchHandler = function(eventType, touch)
+		--touch=CCTouch
+		if touch.id ~= 0 then
+			return false
+		end
+		if eventType == CCTouch.Began then
+			if not CCRect(oVec2(winSize.width-borderSize.width,winSize.height-borderSize.height)*0.5, borderSize):containsPoint(panel:convertToNodeSpace(touch.location)) then
 				return false
 			end
-			if eventType == CCTouch.Began then
-				if not CCRect(oVec2(winSize.width-borderSize.width,winSize.height-borderSize.height)*0.5, borderSize):containsPoint(panel:convertToNodeSpace(touch.location)) then
-					return false
-				end
-				
-				if fading then panel:fadeIn() end
-				
-				deltaMoveLength = 0
-				menu.enabled = true
-				_s = oVec2.zero
-				_v = oVec2.zero
-				panel:schedule(updateSpeed)
-			elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
-				menu.enabled = true
-				if isReseting() then
-					startReset()
-				else
-					if _v ~= oVec2.zero and deltaMoveLength > 10 then
-						panel:schedule(updatePos)
-					elseif fading then
-						panel:fadeOut()
-					end
-				end
-			elseif eventType == CCTouch.Moved then
-				deltaMoveLength = deltaMoveLength + touch.delta.length
-				_s = _s + touch.delta
-				if deltaMoveLength > 10 then
-					menu.enabled = false
-					setOffset(touch.delta, true)
+
+			if fading then panel:fadeIn() end
+
+			deltaMoveLength = 0
+			menu.enabled = true
+			_s = oVec2.zero
+			_v = oVec2.zero
+			panel:schedule(updateSpeed)
+		elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
+			menu.enabled = true
+			if isReseting() then
+				startReset()
+			else
+				if _v ~= oVec2.zero and deltaMoveLength > 10 then
+					panel:schedule(updatePos)
+				elseif fading then
+					panel:fadeOut()
 				end
 			end
-			return true
-		end, false, CCMenu.DefaultHandlerPriority-3, false)
+		elseif eventType == CCTouch.Moved then
+			deltaMoveLength = deltaMoveLength + touch.delta.length
+			_s = _s + touch.delta
+			if deltaMoveLength > 10 then
+				menu.enabled = false
+				setOffset(touch.delta, true)
+			end
+		end
+		return true
+	end
 
 	panel.view = view
 	panel.border = border

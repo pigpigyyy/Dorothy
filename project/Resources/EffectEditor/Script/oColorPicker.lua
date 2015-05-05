@@ -41,15 +41,17 @@ local function oColorPicker(color,callback)
 	local mask = CCLayer()
 	mask.contentSize = background.contentSize
 	mask.anchor = oVec2.zero
+	mask.touchPriority = CCMenu.DefaultHandlerPriority-1
+	mask.swallowTouches = true
 	mask.touchEnabled = true
-	mask:registerTouchHandler(function(eventType, touch)
+	mask.touchHandler = function(eventType, touch)
 		if eventType == CCTouch.Began then
 			if CCRect(oVec2.zero,mask.contentSize):containsPoint(mask:convertToNodeSpace(touch.location)) then
 				return panel.visible
 			end
 		end
 		return false
-	end,false,CCMenu.DefaultHandlerPriority-1,true)
+	end
 	background:addChild(mask)
 
 	local ChanelR,ChanelG,ChanelB = 1,2,3
@@ -239,7 +241,9 @@ local function oColorPicker(color,callback)
 	end)
 	menu:addChild(bButton)
 
-	colorPanel:registerTouchHandler(function(eventType,touch)
+	colorPanel.touchPriority = CCMenu.DefaultHandlerPriority-2
+	colorPanel.touchEnabled = true
+	colorPanel.touchHandler = function(eventType,touch)
 		if eventType == CCTouch.Began then
 			return CCRect(oVec2.zero,colorPanel.contentSize):containsPoint(colorPanel:convertToNodeSpace(touch.location))
 		elseif eventType == CCTouch.Moved then
@@ -262,10 +266,11 @@ local function oColorPicker(color,callback)
 			updateDisplayColor()
 		end
 		return true
-	end,false,CCMenu.DefaultHandlerPriority-2)
-	colorPanel.touchEnabled = true
+	end
 
-	redBar:registerTouchHandler(function(eventType,touch)
+	redBar.touchPriority = CCMenu.DefaultHandlerPriority-2
+	redBar.touchEnabled = true
+	redBar.touchHandler = function(eventType,touch)
 		if eventType == CCTouch.Began then
 			local size = redBar.contentSize
 			size.width = size.width+40
@@ -289,10 +294,11 @@ local function oColorPicker(color,callback)
 			updateDisplayColor()
 		end
 		return true
-	end,false,CCMenu.DefaultHandlerPriority-2)
-	redBar.touchEnabled = true
+	end
 
-	alphaBar:registerTouchHandler(function(eventType,touch)
+	alphaBar.touchEnabled = true
+	alphaBar.touchPriority = CCMenu.DefaultHandlerPriority-2
+	alphaBar.touchHandler = function(eventType,touch)
 		if eventType == CCTouch.Began then
 			local size = alphaBar.contentSize
 			size.width = size.width+20
@@ -307,8 +313,7 @@ local function oColorPicker(color,callback)
 			updateDisplayColor()
 		end
 		return true
-	end,false,CCMenu.DefaultHandlerPriority-2)
-	alphaBar.touchEnabled = true
+	end
 
 	local function setColor(self,oldVal)
 		r,g,b,a = oldVal.r,oldVal.g,oldVal.b,oldVal.a

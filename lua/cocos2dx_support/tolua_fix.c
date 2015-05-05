@@ -21,7 +21,7 @@ TOLUA_API int toluafix_ref_function(lua_State* L, int lo)
 {
 	/* function at lo */
 	int refid;
-    if(!lua_isfunction(L, lo)) return 0;
+    if (!lua_isfunction(L, lo)) return 0;
 	refid = alloc_ref_id();
 	lua_rawgeti(L, LUA_REGISTRYINDEX, TOLUA_CALLBACK);// funcMap
     lua_pushvalue(L, lo);// funcMap fun

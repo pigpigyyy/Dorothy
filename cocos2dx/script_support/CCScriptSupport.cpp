@@ -112,58 +112,6 @@ bool CCSchedulerScriptHandlerEntry::isMarkedForDeletion()
 	return m_bMarkedForDeletion;
 }
 
-// CCTouchScriptHandlerEntry
-
-CCTouchScriptHandlerEntry* CCTouchScriptHandlerEntry::create(int nHandler,
-	bool bIsMultiTouches,
-	int nPriority,
-	bool bSwallowsTouches)
-{
-	CCTouchScriptHandlerEntry* pEntry = new CCTouchScriptHandlerEntry(nHandler);
-	pEntry->init(bIsMultiTouches, nPriority, bSwallowsTouches);
-	pEntry->autorelease();
-	return pEntry;
-}
-
-bool CCTouchScriptHandlerEntry::init(bool bIsMultiTouches, int nPriority, bool bSwallowsTouches)
-{
-	m_bIsMultiTouches = bIsMultiTouches;
-	m_nPriority = nPriority;
-	m_bSwallowsTouches = bSwallowsTouches;
-	return true;
-}
-
-CCTouchScriptHandlerEntry::CCTouchScriptHandlerEntry(int nHandler)
-: CCScriptHandlerEntry(nHandler)
-, m_bIsMultiTouches(false)
-, m_nPriority(0)
-, m_bSwallowsTouches(false)
-{ }
-
-CCTouchScriptHandlerEntry::~CCTouchScriptHandlerEntry()
-{
-	LUALOG("[LUA] REMOVE touch script handler: %d", m_nHandler);
-}
-
-bool CCTouchScriptHandlerEntry::isMultiTouches()
-{
-	return m_bIsMultiTouches;
-}
-
-void CCTouchScriptHandlerEntry::setPriority(int priority)
-{
-	m_nPriority = priority;
-}
-int CCTouchScriptHandlerEntry::getPriority()
-{
-	return m_nPriority;
-}
-
-bool CCTouchScriptHandlerEntry::getSwallowsTouches()
-{
-	return m_bSwallowsTouches;
-}
-
 CCScriptEngine CCScriptEngine::_none;
 
 CCScriptEngine* CCScriptEngine::_engine = &CCScriptEngine::_none;

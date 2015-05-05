@@ -262,7 +262,9 @@ local function oEditControl()
 	-- posEditor touch callback
 	local totalDeltaPos = oVec2.zero
 	local posChanged = nil
-	posEditor:registerTouchHandler(function(eventType,touch)
+	posEditor.touchPriority = oEditor.touchPriorityEditControl
+	posEditor.swallowTouches = true
+	posEditor.touchHandler = function(eventType,touch)
 		if eventType == CCTouch.Moved then
 			local delta = touch.delta
 			if fixX then delta.x = 0 end
@@ -287,7 +289,7 @@ local function oEditControl()
 			end
 		end
 		return true
-	end,false,oEditor.touchPriorityEditControl,true)
+	end
 
 	-- show & hide position editor
 	editControl.showPosEditor = function(self,pos,callback)
@@ -328,7 +330,9 @@ local function oEditControl()
 	local rotCenter = oVec2.zero
 	local rotChanged = nil
 	local totalRot = 0
-	rotEditor:registerTouchHandler(function(eventType,touch)
+	rotEditor.touchPriority = oEditor.touchPriorityEditControl
+	rotEditor.swallowTouches = true
+	rotEditor.touchHandler = function(eventType,touch)
 		if eventType == CCTouch.Moved then
 			local oldPos = rotVisual:convertToNodeSpace(touch.preLocation)
 			local newPos = rotVisual:convertToNodeSpace(touch.location)
@@ -362,7 +366,7 @@ local function oEditControl()
 			end
 		end
 		return true
-	end,false,oEditor.touchPriorityEditControl,true)
+	end
 
 	-- show & hide angle editor
 	editControl.showRotEditor = function(self,position,angle,center,callback)
@@ -418,7 +422,9 @@ local function oEditControl()
 	local totalH = 0
 	local totalSize = CCSize.zero
 	local sizeChanged = nil
-	sizeEditor:registerTouchHandler(function(eventType,touch)
+	sizeEditor.touchPriority = oEditor.touchPriorityEditControl
+	sizeEditor.swallowTouches = true
+	sizeEditor.touchHandler = function(eventType,touch)
 		if eventType == CCTouch.Moved then
 			local delta = sizeVisual:convertToNodeSpace(touch.location) - 
 				sizeVisual:convertToNodeSpace(touch.preLocation)
@@ -451,8 +457,8 @@ local function oEditControl()
 			end
 		end
 		return true
-	end,false,oEditor.touchPriorityEditControl,true)
-	
+	end
+
 	-- show & hide size editor
 	editControl.showSizeEditor = function(self,target,center,size,callback)
 		editControl:hide()
@@ -511,7 +517,9 @@ local function oEditControl()
 	local totalDeltaCenter = oVec2.zero
 	local centerPos = oVec2.zero
 	local centerChanged = nil
-	centerEditor:registerTouchHandler(function(eventType,touch)
+	centerEditor.touchPriority = oEditor.touchPriorityEditControl
+	centerEditor.swallowTouches = true
+	centerEditor.touchHandler = function(eventType,touch)
 		if eventType == CCTouch.Moved then
 			local delta = touch.delta
 			if fixX then delta.x = 0 end
@@ -537,7 +545,7 @@ local function oEditControl()
 			end
 		end
 		return true
-	end,false,oEditor.touchPriorityEditControl,true)
+	end
 
 	-- show & hide center editor
 	editControl.showCenterEditor = function(self,target,center,callback)
@@ -582,7 +590,9 @@ local function oEditControl()
 	local totalDeltaRadius = 0
 	local totalRadius = 0
 	local radiusChanged = nil
-	radiusEditor:registerTouchHandler(function(eventType,touch)
+	radiusEditor.touchPriority = oEditor.touchPriorityEditControl
+	radiusEditor.swallowTouches = true
+	radiusEditor.touchHandler = function(eventType,touch)
 		if eventType == CCTouch.Moved then
 			local prevPos = touch.preLocation
 			local pos = touch.location
@@ -605,8 +615,8 @@ local function oEditControl()
 			end
 		end
 		return true
-	end,false,oEditor.touchPriorityEditControl,true)
-	
+	end
+
 	-- show & hide size editor
 	editControl.showRadiusEditor = function(self,target,center,radius,callback)
 		editControl:hide()
@@ -645,7 +655,10 @@ local function oEditControl()
 	editControl:addChild(bodyChooser)
 	
 	local bodyChoosed = nil
-	bodyChooser:registerTouchHandler(function(eventType,touch)
+	bodyChooser.touchPriority = oEditor.touchPriorityEditControl
+	bodyChooser.swallowTouches = true
+	bodyChooser.touchEnabled = false
+	bodyChooser.touchHandler = function(eventType,touch)
 		if eventType == CCTouch.Ended then
 			local pos = oEditor.world:convertToNodeSpace(touch.location)
 			oEditor.world:query(CCRect(pos.x-0.5,pos.y-0.5,1,1),function(body)
@@ -657,8 +670,7 @@ local function oEditControl()
 			end)
 		end
 		return true
-	end,false,oEditor.touchPriorityEditControl,true)
-	bodyChooser.touchEnabled = false
+	end
 
 	local function createCross(pos,long)
 		local cross = oLine(

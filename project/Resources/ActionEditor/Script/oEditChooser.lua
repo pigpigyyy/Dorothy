@@ -46,7 +46,7 @@ local function oEditChooser(withCancel)
 		local cancelButton = oButton("Cancel",17,60,false,
 			0,0,
 			function(item)
-				item:unregisterTapHandler()
+				item.tapHandler = nil
 				opMenu.enabled = false
 				panel:hide()
 			end)

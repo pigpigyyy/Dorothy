@@ -40,8 +40,6 @@ NS_CC_BEGIN
  * @{
  */
 
-class CCTouchScriptHandlerEntry;
-
 //
 // CCLayer
 //
@@ -54,113 +52,55 @@ All features from CCNode are valid, plus the following new features:
 class CC_DLL CCLayer : public CCNode, public CCTouchDelegate, public CCAccelerometerDelegate, public CCKeypadDelegate
 {
 public:
-	enum
-	{
-		TouchesAllAtOnce,
-		TouchesOneByOne
-	};
+	CC_PROPERTY(int, m_nTouchPriority, TouchPriority)
+	CC_PROPERTY_BOOL(m_bMultiTouches, MultiTouches)
+	CC_PROPERTY_BOOL(m_bSwallowTouches, SwallowTouches)
+	CC_PROPERTY_BOOL(m_bTouchEnabled, TouchEnabled)
+	CC_PROPERTY_BOOL(m_bKeypadEnabled, KeypadEnabled)
+	CC_PROPERTY_BOOL(m_bAccelerometerEnabled, AccelerometerEnabled)
+	CC_PROPERTY_NAME(int, ScriptAccelerateHandler)
+	CC_PROPERTY_NAME(int, ScriptTouchHandler)
+	CC_PROPERTY_NAME(int, ScriptKeypadHandler)
+
 	CCLayer();
-    virtual ~CCLayer();
-    virtual bool init();
+	virtual ~CCLayer();
+	virtual bool init();
 	virtual void cleanup();
 
-    /** create one layer */
-    static CCLayer *create();
+	/** create one layer */
+	static CCLayer* create();
 
-    virtual void onEnter();
-    virtual void onExit();
-    virtual void onEnterTransitionDidFinish();
-    
-    // default implements are used to call script callback if exist
-    virtual bool ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent);
-    virtual void ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent);
-    virtual void ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent);
-    virtual void ccTouchCancelled(CCTouch *pTouch, CCEvent *pEvent);
+	virtual void onEnter();
+	virtual void onExit();
 
-    // default implements are used to call script callback if exist
-    virtual void ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent);
-    virtual void ccTouchesMoved(CCSet *pTouches, CCEvent *pEvent);
-    virtual void ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent);
-    virtual void ccTouchesCancelled(CCSet *pTouches, CCEvent *pEvent);
-    
-    virtual void didAccelerate(CCAcceleration* pAccelerationValue);
-    void registerScriptAccelerateHandler(int nHandler);
-    void unregisterScriptAccelerateHandler();
+	// default implements are used to call script callback if exist
+	virtual bool ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent);
+	virtual void ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent);
+	virtual void ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent);
+	virtual void ccTouchCancelled(CCTouch *pTouch, CCEvent *pEvent);
 
-    /** If isTouchEnabled, this method is called onEnter. Override it to change the
-    way CCLayer receives touch events.
-    ( Default: CCTouchDispatcher::sharedDispatcher()->addStandardDelegate(this,0); )
-    Example:
-    void CCLayer::registerWithTouchDispatcher()
-    {
-    CCTouchDispatcher::sharedDispatcher()->addTargetedDelegate(this,INT_MIN+1,true);
-    }
-    @since v0.8.0
-    */
-    virtual void registerWithTouchDispatcher();
-    
-    /** Register script touch events handler */
-    virtual void registerScriptTouchHandler(int nHandler, bool bIsMultiTouches = false, int nPriority = INT_MIN, bool bSwallowsTouches = false);
-    /** Unregister script touch events handler */
-    virtual void unregisterScriptTouchHandler();
+	// default implements are used to call script callback if exist
+	virtual void ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent);
+	virtual void ccTouchesMoved(CCSet *pTouches, CCEvent *pEvent);
+	virtual void ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent);
+	virtual void ccTouchesCancelled(CCSet *pTouches, CCEvent *pEvent);
 
-    /** whether or not it will receive Touch events.
-    You can enable / disable touch events with this property.
-    Only the touches of this node will be affected. This "method" is not propagated to it's children.
-    @since v0.8.1
-    */
-    virtual bool isTouchEnabled();
-    virtual void setTouchEnabled(bool value);
-    
-    virtual void setTouchMode(int mode);
-    virtual int getTouchMode();
-    
-    /** priority of the touch events. Default is 0 */
-    virtual void setTouchPriority(int priority);
-    virtual int getTouchPriority();
+	void setAccelerometerInterval(double interval);
+	virtual void didAccelerate(CCAcceleration* pAccelerationValue);
 
-    /** whether or not it will receive Accelerometer events
-    You can enable / disable accelerometer events with this property.
-    @since v0.8.1
-    */
-    virtual bool isAccelerometerEnabled();
-    virtual void setAccelerometerEnabled(bool value);
-    virtual void setAccelerometerInterval(double interval);
+	virtual void keyBackClicked();
+	virtual void keyMenuClicked();
 
-    /** whether or not it will receive keypad events
-    You can enable / disable accelerometer events with this property.
-    it's new in cocos2d-x
-    */
-    virtual bool isKeypadEnabled();
-    virtual void setKeypadEnabled(bool value);
-
-    /** Register keypad events handler */
-    void registerScriptKeypadHandler(int nHandler);
-    /** Unregister keypad events handler */
-    void unregisterScriptKeypadHandler();
-
-    virtual void keyBackClicked();
-    virtual void keyMenuClicked();
-    
-    inline CCTouchScriptHandlerEntry* getScriptTouchHandlerEntry() { return m_pScriptTouchHandlerEntry; };
-    inline CCScriptHandlerEntry* getScriptKeypadHandlerEntry() { return m_pScriptKeypadHandlerEntry; };
-    inline CCScriptHandlerEntry* getScriptAccelerateHandlerEntry() { return m_pScriptAccelerateHandlerEntry; };
-protected:
-    bool m_bTouchEnabled;
-    bool m_bAccelerometerEnabled;
-    bool m_bKeypadEnabled;
-    
 private:
-    // Script touch events handler
-    CCTouchScriptHandlerEntry* m_pScriptTouchHandlerEntry;
-    CCScriptHandlerEntry* m_pScriptKeypadHandlerEntry;
-    CCScriptHandlerEntry* m_pScriptAccelerateHandlerEntry;
-    
-    int m_nTouchPriority;
-    int m_eTouchMode;
-    
-    int  excuteScriptTouchHandler(int nEventType, CCTouch *pTouch);
-    int  excuteScriptTouchHandler(int nEventType, CCSet *pTouches);
+	void registerWithTouchDispatcher();
+
+	// Script touch events handler
+	int m_pScriptTouchHandler;
+	int m_pScriptKeypadHandler;
+	int m_pScriptAccelerateHandler;
+
+	int excuteScriptTouchHandler(int nEventType, CCTouch* pTouch);
+	int excuteScriptTouchHandler(int nEventType, CCSet* pTouches);
 	CC_LUA_TYPE(CCLayer)
 };
 

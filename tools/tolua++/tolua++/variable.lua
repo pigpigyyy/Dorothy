@@ -145,9 +145,14 @@ function classVariable:supcode ()
 		output('#endif\n')
  end
 
+local is_function = self.type == "tolua_function"
  -- return value
 local t,ct = isbasic(self.type)
-if t == "" and out then-- type void
+if is_function then
+	output('  int handler = '..self:getvalue(class,static,prop_get)..';')
+	output('  if (handler) toluafix_get_function_by_refid(tolua_S, handler);')
+	output('  else lua_pushnil(tolua_S);')
+elseif t == "" and out then-- type void
 	output('  ',prop_get..'(self);')
 elseif t then
 	output('  tolua_push'..t..'(tolua_S,(',ct,')'..self:getvalue(class,static,prop_get)..');')
@@ -213,14 +218,20 @@ end
   end
 
   -- check variable type
-  output('  if ('..self:outchecktype(2)..')')
+  if is_function then
+    output('  if (!(toluafix_isfunction(tolua_S,2,&tolua_err) || lua_isnil(tolua_S, 2)))')
+  else
+    output('  if ('..self:outchecktype(2)..')')
+  end
   output('   tolua_error(tolua_S,"#vinvalid type in variable assignment.",&tolua_err);')
-		output('#endif\n')
-
+  output('#endif\n')
   -- assign value
 		local def = 0
 		if self.def ~= '' then def = self.def end
-		if self.type == 'char*' and self.dim ~= '' then -- is string
+		if is_function then
+			local name = prop_set or self.name
+			output('  self->'..name..'(toluafix_ref_function(tolua_S,2));')
+		elseif self.type == 'char*' and self.dim ~= '' then -- is string
 			output(' strncpy((char*)')
 			if class and static then
 				output(self.parent.type..'::'..self.name)

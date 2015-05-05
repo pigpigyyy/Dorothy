@@ -129,8 +129,8 @@ void CCTouchDispatcher::forceAddHandler(CCTouchHandler *pHandler, CCArray *pArra
 
 void CCTouchDispatcher::addStandardDelegate(CCTouchDelegate *pDelegate, int nPriority)
 {    
-    CCTouchHandler *pHandler = CCStandardTouchHandler::handlerWithDelegate(pDelegate, nPriority);
-    if (! m_bLocked)
+    CCTouchHandler* pHandler = CCStandardTouchHandler::handlerWithDelegate(pDelegate, nPriority);
+    if (!m_bLocked)
     {
         forceAddHandler(pHandler, m_pStandardHandlers);
     }
@@ -144,7 +144,6 @@ void CCTouchDispatcher::addStandardDelegate(CCTouchDelegate *pDelegate, int nPri
             ccCArrayRemoveValue(m_pHandlersToRemove, pDelegate);
             return;
         }
-
         m_pHandlersToAdd->addObject(pHandler);
         m_bToAdd = true;
     }
@@ -152,7 +151,7 @@ void CCTouchDispatcher::addStandardDelegate(CCTouchDelegate *pDelegate, int nPri
 
 void CCTouchDispatcher::addTargetedDelegate(CCTouchDelegate *pDelegate, int nPriority, bool bSwallowsTouches)
 {    
-    CCTouchHandler *pHandler = CCTargetedTouchHandler::handlerWithDelegate(pDelegate, nPriority, bSwallowsTouches);
+    CCTouchHandler* pHandler = CCTargetedTouchHandler::handlerWithDelegate(pDelegate, nPriority, bSwallowsTouches);
     if (! m_bLocked)
     {
         forceAddHandler(pHandler, m_pTargetedHandlers);
@@ -167,7 +166,6 @@ void CCTouchDispatcher::addTargetedDelegate(CCTouchDelegate *pDelegate, int nPri
             ccCArrayRemoveValue(m_pHandlersToRemove, pDelegate);
             return;
         }
-        
         m_pHandlersToAdd->addObject(pHandler);
         m_bToAdd = true;
     }

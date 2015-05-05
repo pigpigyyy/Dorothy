@@ -27,6 +27,7 @@ class CCNode: public CCObject
 	tolua_property__bool bool cascadeOpacity;
 	tolua_property__bool bool cascadeColor;
 	tolua_property__common CCNode* transformTarget;
+	tolua_property__common tolua_function scriptHandler @ nodeHandler;
 	//tolua_property__common CCGLProgram* shaderProgram;
 	tolua_property__common CCScheduler* scheduler;
 	tolua_property__common CCObject* userObject @ data;
@@ -54,12 +55,9 @@ class CCNode: public CCObject
 	void scheduleUpdateWithPriorityLua @ schedule(tolua_function nHandler, int priority = 0);
 	void unscheduleUpdateLua @ unschedule();
 
-	void registerScriptHandler @ registerEventHandler(tolua_function funcID);
-	void unregisterScriptHandler @ unregisterEventHandler();
-    
-    oVec2 convertToNodeSpaceAR @ convertToNodeSpace(oVec2& worldPoint);
-    oVec2 convertToWorldSpaceAR @ convertToWorldSpace(oVec2& nodePoint);
+	oVec2 convertToNodeSpaceAR @ convertToNodeSpace(oVec2& worldPoint);
+	oVec2 convertToWorldSpaceAR @ convertToWorldSpace(oVec2& nodePoint);
 	oVec2 convertToGameSpace(oVec2& nodePoint);
-	
+
 	static CCNode* create();
 };

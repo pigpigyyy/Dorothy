@@ -29,8 +29,8 @@ public:
 	CCApplicationProtocol();
 	virtual ~CCApplicationProtocol();
 
-	void registerScriptHandler(int handler);
-	void unregisterScriptHandler();
+	void setScriptHandler(int handler);
+	int getScriptHandler() const;
 
     /**
     @brief    Implement CCDirector and CCScene init code here.

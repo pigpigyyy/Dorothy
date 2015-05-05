@@ -15,7 +15,7 @@ model = with oModel "ActionEditor/Model/Output/xiaoli.model"
 layer = with CCLayer!
 	.touchEnabled = true
 	.anchor = oVec2.zero
-	\registerTouchHandler (eventType,touch)->
+	.touchHandler = (eventType,touch)->
 		if eventType == CCTouch.Moved
 			model.position += touch.delta
 		true
@@ -43,12 +43,12 @@ model:play("walk")
 local layer = CCLayer()
 layer.touchEnabled = true
 layer.anchor = oVec2.zero
-layer:registerTouchHandler(function(eventType,touch)
+layer.touchHandler = function(eventType,touch)
 	if eventType == CCTouch.Moved then
 		model.position = model.position + touch.delta
 	end
 	return true
-end)
+end
 layer:addChild(model)
 
 local scene = CCScene()

@@ -73,11 +73,11 @@ local oSettingItem = class(
 		self:addChild(border)
 		self._border = border
 		
-		self:registerTapHandler(function(eventType)
+		self.tapHandler = function(eventType)
 			if eventType == CCMenuItem.Tapped then
 				self.selected = not self.selected
 			end
-		end)
+		end
 
 		self._fade = CCSequence({oOpacity(0.5, 0),CCHide()})
 	end,

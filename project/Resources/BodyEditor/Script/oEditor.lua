@@ -52,11 +52,11 @@ oEditor.world = oWorld()
 oEditor.world.scheduler = oEditor.worldScheduler
 oEditor.world.showDebug = true
 oEditor.world:setShouldContact(0,0,true)
-oEditor.world:registerEventHandler(function(eventType)
+oEditor.world.nodeHandler = function(eventType)
 	if eventType == CCNode.Exited then
 		CCDirector.scheduler:unshedule(oEditor.worldScheduler)
 	end
-end)
+end
 local worldNode = CCNode()
 oEditor.world:addChild(worldNode)
 oEditor.worldNode = worldNode

@@ -236,6 +236,9 @@ CCLuaEngine::CCLuaEngine()
 		tolua_beginmodule(L, "CCTextureCache");
 			tolua_function(L, "loadAsync", CCTextureCache_loadAsync);
 		tolua_endmodule(L);
+		tolua_beginmodule(L, "CCTextFieldTTF");
+			tolua_variable(L, "inputHandler", CCTextFieldTTF_getInputHandler, CCTextFieldTTF_setInputHandler);
+		tolua_endmodule(L);
 	tolua_endmodule(L);
 
 	tolua_LuaCode_open(L);
@@ -390,9 +393,7 @@ int CCLuaEngine::executeSchedule(int nHandler, float dt, CCNode* pNode)
 
 int CCLuaEngine::executeLayerTouchEvent(CCLayer* pLayer, int eventType, CCTouch *pTouch)
 {
-	CCTouchScriptHandlerEntry* pScriptHandlerEntry = pLayer->getScriptTouchHandlerEntry();
-	if (!pScriptHandlerEntry) return 0;
-	int nHandler = pScriptHandlerEntry->getHandler();
+	int nHandler = pLayer->getScriptTouchHandler();
 	if (!nHandler) return 0;
 	lua_pushinteger(L, eventType);
 	tolua_pushccobject(L, pTouch);
@@ -401,9 +402,7 @@ int CCLuaEngine::executeLayerTouchEvent(CCLayer* pLayer, int eventType, CCTouch 
 
 int CCLuaEngine::executeLayerTouchesEvent(CCLayer* pLayer, int eventType, CCSet *pTouches)
 {
-	CCScriptHandlerEntry* pScriptHandlerEntry = pLayer->getScriptTouchHandlerEntry();
-	if (!pScriptHandlerEntry) return 0;
-	int nHandler = pScriptHandlerEntry->getHandler();
+	int nHandler = pLayer->getScriptTouchHandler();
 	if (!nHandler) return 0;
 	lua_pushinteger(L, eventType);
 	lua_createtable(L, pTouches->count(), 0);
@@ -419,9 +418,7 @@ int CCLuaEngine::executeLayerTouchesEvent(CCLayer* pLayer, int eventType, CCSet 
 
 int CCLuaEngine::executeLayerKeypadEvent(CCLayer* pLayer, int eventType)
 {
-	CCScriptHandlerEntry* pScriptHandlerEntry = pLayer->getScriptKeypadHandlerEntry();
-	if (!pScriptHandlerEntry) return 0;
-	int nHandler = pScriptHandlerEntry->getHandler();
+	int nHandler = pLayer->getScriptKeypadHandler();
 	if (!nHandler) return 0;
 	lua_pushinteger(L, eventType);
 	return lua_execute(nHandler, 1);
@@ -429,9 +426,7 @@ int CCLuaEngine::executeLayerKeypadEvent(CCLayer* pLayer, int eventType)
 
 int CCLuaEngine::executeAccelerometerEvent(CCLayer* pLayer, CCAcceleration* pAccelerationValue)
 {
-	CCScriptHandlerEntry* pScriptHandlerEntry = pLayer->getScriptAccelerateHandlerEntry();
-	if (!pScriptHandlerEntry) return 0;
-	int nHandler = pScriptHandlerEntry->getHandler();
+	int nHandler = pLayer->getScriptAccelerateHandler();
 	if (!nHandler) return 0;
 	lua_pushnumber(L, pAccelerationValue->x);
 	lua_pushnumber(L, pAccelerationValue->y);

@@ -39,8 +39,10 @@ local function oSelectionPanel(borderSize,noCliping)
 	panel.visible = false
 	local mask = CCLayer()
 	mask.anchor = oVec2.zero
+	mask.touchPriority = CCMenu.DefaultHandlerPriority-3
+	mask.swallowTouches = true
 	mask.touchEnabled = true
-	mask:registerTouchHandler(function() return panel.visible end,false,CCMenu.DefaultHandlerPriority-3,true)
+	mask.touchHandler = function() return panel.visible end
 	panel:addChild(mask)
 
 	local border = CCNode()
@@ -226,38 +228,38 @@ local function oSelectionPanel(borderSize,noCliping)
 		end
 	end
 
-	panel:registerTouchHandler(
-		function(eventType, touch)
-			--touch=CCTouch
-			if touch.id ~= 0 then
+	panel.touchPriority = CCMenu.DefaultHandlerPriority-5
+	panel.touchHandler = function(eventType, touch)
+		--touch=CCTouch
+		if touch.id ~= 0 then
+			return false
+		end
+		if eventType == CCTouch.Began then
+			if not CCRect(oVec2(winSize.width-borderSize.width,winSize.height-borderSize.height)*0.5, borderSize):containsPoint(panel:convertToNodeSpace(touch.location)) then
 				return false
 			end
-			if eventType == CCTouch.Began then
-				if not CCRect(oVec2(winSize.width-borderSize.width,winSize.height-borderSize.height)*0.5, borderSize):containsPoint(panel:convertToNodeSpace(touch.location)) then
-					return false
-				end
-				deltaMoveLength = 0
-				menu.enabled = true
-				panel:schedule(updateSpeed)
-			elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
-				menu.enabled = true
-				if isReseting() then
-					startReset()
-				else
-					if _v ~= oVec2.zero and deltaMoveLength > 10 then
-						panel:schedule(updatePos)
-					end
-				end
-			elseif eventType == CCTouch.Moved then
-				deltaMoveLength = deltaMoveLength + touch.delta.length
-				_s = _s + touch.delta
-				if deltaMoveLength > 10 then
-					menu.enabled = false
-					setOffset(touch.delta, true)
+			deltaMoveLength = 0
+			menu.enabled = true
+			panel:schedule(updateSpeed)
+		elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
+			menu.enabled = true
+			if isReseting() then
+				startReset()
+			else
+				if _v ~= oVec2.zero and deltaMoveLength > 10 then
+					panel:schedule(updatePos)
 				end
 			end
-			return true
-		end, false, CCMenu.DefaultHandlerPriority-5, false)
+		elseif eventType == CCTouch.Moved then
+			deltaMoveLength = deltaMoveLength + touch.delta.length
+			_s = _s + touch.delta
+			if deltaMoveLength > 10 then
+				menu.enabled = false
+				setOffset(touch.delta, true)
+			end
+		end
+		return true
+	end
 
 	panel.view = view
 	panel.border = border
@@ -301,7 +303,7 @@ local function oSelectionPanel(borderSize,noCliping)
 				CCCall(
 					function()
 						panel:removeMenuItems()
-						panel:unregisterTouchHandler()
+						panel.touchHandler = nil
 						panel:unschedule()
 						panel.parent:removeChild(panel)
 					end)
@@ -329,7 +331,7 @@ local function oSelectionPanel(borderSize,noCliping)
 			for i = 1, children.count do
 				local item = tolua.cast(children[i],"CCMenuItem")
 				if item then
-					item:unregisterTapHandler()
+					item.tapHandler = nil
 				end
 			end
 		end

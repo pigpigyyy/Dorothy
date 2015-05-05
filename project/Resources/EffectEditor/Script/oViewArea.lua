@@ -48,13 +48,13 @@ local function oViewArea()
 	view:addChild(progressTimer)
 ]]
 
-	view:registerTouchHandler(function(eventType,touch)
+	view.touchEnabled = true
+	view.touchHandler = function(eventType,touch)
 		if eventType == CCTouch.Moved then
 			scrollNode.position = scrollNode.position + touch.delta
 		end
 		return true
-	end)
-	view.touchEnabled = true
+	end
 
 	view.data = CCArray()
 	view.data:add(oListener("viewArea.changeEffect",function(effectName)

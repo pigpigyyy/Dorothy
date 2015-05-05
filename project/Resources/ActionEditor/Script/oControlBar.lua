@@ -215,89 +215,88 @@ local function oControlBar()
 	end
 
 	local jumpPos = false
-	controlBar:registerTouchHandler(
-		function(eventType, touch)
-			--touch = CCTouch
-			if not controlBar.visible or touch.id ~= 0 then
+	controlBar.swallowTouches = true
+	controlBar.touchHandler = function(eventType, touch)
+		--touch = CCTouch
+		if not controlBar.visible or touch.id ~= 0 then
+			return false
+		end
+		if not oEditor.viewArea:getModel() then
+			return false
+		end
+		local loc = controlBar:convertToNodeSpace(touch.location)
+		locLength = loc.x-10-barIterval
+		if locLength < 0 then locLength = 0 end
+		if locLength > barLength then locLength = barLength end
+
+		if eventType == CCTouch.Began then
+			if not CCRect(oVec2.zero, controlBar.contentSize):containsPoint(loc) then
 				return false
 			end
-			if not oEditor.viewArea:getModel() then
-				return false
+			controlBar:show()
+			--cclog("Start %d,%d",lastPos,offset)
+			if lastPos-barDragPos <= locLength and locLength <= lastPos+barDragPos then
+				moveBar = true
 			end
-			local loc = controlBar:convertToNodeSpace(touch.location)
-			locLength = loc.x-10-barIterval
-			if locLength < 0 then locLength = 0 end
-			if locLength > barLength then locLength = barLength end
-			
-			if eventType == CCTouch.Began then
-				if not CCRect(oVec2.zero, controlBar.contentSize):containsPoint(loc) then
-					return false
-				end
-				
-				controlBar:show()
-				--cclog("Start %d,%d",lastPos,offset)
-				if lastPos-barDragPos <= locLength and locLength <= lastPos+barDragPos then
-					moveBar = true
-				end
-			elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
-				controlBar:hide()
-				if moveBar then
-					lastPos = locLength
-					moveBar = false
-				end
-				if jumpPos then
-					jumpPos = false
-					oEditor.settingPanel:clearSelection()
-					local model = oEditor.viewArea:getModel()
-					if model then
-						local pos = (locLength-offset)*60/barLength
-						if pos < 0 then pos = 0 end
-						if not model.doing then
-							model:play(oEditor.animation)
-							model:pause()
-						end
-						model.time = (math.floor(pos+0.5)/60.0)/model.duration
-						controlBar:setPos(pos)
-					end
-				else
-					jumpPos = true
-					local interval = 0
-					controlBar:schedule(
-						function(self,deltaTime)
-							interval = interval + deltaTime
-							if interval >= 0.5 then
-								jumpPos = false
-								controlBar:unschedule()
-							end
-						end)
-				end
-				--cclog("End %d,%d",lastPos,offset)
-			elseif eventType == CCTouch.Moved then
-				if moveBar then
-					local model = oEditor.viewArea:getModel()
-					if model then
-						local pos = (locLength-offset)*60/barLength
-						if not model.doing then
-							model:play(oEditor.animation)
-							model:pause()
-						end
-						model.time = (math.floor(pos+0.5)/60.0)/model.duration
-						bar:setPos(pos)
-					end
-				else
-					local deltaX = touch.delta.x * 2
-					offset = offset + deltaX
-					if offset > 0 then
-						offset = 0
-					else
-						lastPos = lastPos + deltaX
-					end
-					controlNode:setOffset(offset)
-				end
+		elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
+			controlBar:hide()
+			if moveBar then
+				lastPos = locLength
+				moveBar = false
 			end
-			return true
-		end,false,0,true)
-	
+			if jumpPos then
+				jumpPos = false
+				oEditor.settingPanel:clearSelection()
+				local model = oEditor.viewArea:getModel()
+				if model then
+					local pos = (locLength-offset)*60/barLength
+					if pos < 0 then pos = 0 end
+					if not model.doing then
+						model:play(oEditor.animation)
+						model:pause()
+					end
+					model.time = (math.floor(pos+0.5)/60.0)/model.duration
+					controlBar:setPos(pos)
+				end
+			else
+				jumpPos = true
+				local interval = 0
+				controlBar:schedule(
+					function(self,deltaTime)
+						interval = interval + deltaTime
+						if interval >= 0.5 then
+							jumpPos = false
+							controlBar:unschedule()
+						end
+					end)
+			end
+			--cclog("End %d,%d",lastPos,offset)
+		elseif eventType == CCTouch.Moved then
+			if moveBar then
+				local model = oEditor.viewArea:getModel()
+				if model then
+					local pos = (locLength-offset)*60/barLength
+					if not model.doing then
+						model:play(oEditor.animation)
+						model:pause()
+					end
+					model.time = (math.floor(pos+0.5)/60.0)/model.duration
+					bar:setPos(pos)
+				end
+			else
+				local deltaX = touch.delta.x * 2
+				offset = offset + deltaX
+				if offset > 0 then
+					offset = 0
+				else
+					lastPos = lastPos + deltaX
+				end
+				controlNode:setOffset(offset)
+			end
+		end
+		return true
+	end
+
 	controlBar.setPos = function(self,pos)
 		local deltaX = barIterval * (pos - bar:getPos())
 		lastPos = lastPos + deltaX

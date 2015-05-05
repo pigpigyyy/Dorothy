@@ -109,7 +109,7 @@ layer.anchor = oVec2.zero
 scene:addChild(layer)
 
 local joint = nil
-layer:registerTouchHandler(function(eventType, touch)
+layer.touchHandler = function(eventType, touch)
 	local pos = world:convertToNodeSpace(touch.location)
 	if eventType == CCTouch.Began then
 		world:query(CCRect(pos.x-0.5,pos.y-0.5,1,1),function(body)
@@ -133,6 +133,6 @@ layer:registerTouchHandler(function(eventType, touch)
 		end
 	end
 	return true
-end)
+end
 
 CCDirector:run(CCScene:crossFade(0.5,scene))

@@ -153,7 +153,7 @@ end
 ]]
 
 --CCDirector.displayStats = true
-oEditor.scene:registerEventHandler(function(eventType)
+oEditor.scene.nodeHandler = function(eventType)
 	if eventType == CCNode.Exited then
 		_G["require"] = _require
 		for _,name in ipairs(loaded) do
@@ -169,6 +169,6 @@ oEditor.scene:registerEventHandler(function(eventType)
 	elseif eventType == CCNode.Cleanup then
 		oContent:removeSearchPath("ActionEditor/Script")
 	end
-end)
+end
 
 CCDirector:run(oEditor.scene)

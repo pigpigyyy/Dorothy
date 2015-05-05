@@ -68,31 +68,30 @@ local function oButton(text, fontSize, width, height, x, y,tapped)
 	face.opacity = 0.4
 	local scale = oScale(0.3,1.0,1.0,oEase.OutBack)
 	local fade = oOpacity(0.3,0.4,oEase.InExpo)
-	menuItem:registerTapHandler(
-		function(eventType)
-			--item = CCMenuItem
-			if eventType == CCMenuItem.TapBegan then
-				if not fade.done then
-					face:stopAction(fade)
-				end
-				if not scale.done then
-					face:stopAction(scale)
-				end
-				face.opacity = 1.0
-				face.scaleX = 0.3
-				face.scaleY = 0.3
-				face:runAction(scale)
-			elseif eventType == CCMenuItem.TapEnded then
-				if not fade.done then
-					face:stopAction(fade)
-				end
-				face:runAction(fade)
-			elseif eventType == CCMenuItem.Tapped then
-				if tapped then
-					tapped(menuItem)
-				end
+	menuItem.tapHandler = function(eventType)
+		--item = CCMenuItem
+		if eventType == CCMenuItem.TapBegan then
+			if not fade.done then
+				face:stopAction(fade)
 			end
-		end)
+			if not scale.done then
+				face:stopAction(scale)
+			end
+			face.opacity = 1.0
+			face.scaleX = 0.3
+			face.scaleY = 0.3
+			face:runAction(scale)
+		elseif eventType == CCMenuItem.TapEnded then
+			if not fade.done then
+				face:stopAction(fade)
+			end
+			face:runAction(fade)
+		elseif eventType == CCMenuItem.Tapped then
+			if tapped then
+				tapped(menuItem)
+			end
+		end
+	end
 	menuItem.face = face
 	menuItem.tapped = tapped
 	menuItem.position = oVec2(x,y)

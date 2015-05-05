@@ -14,9 +14,5 @@ class CCTextFieldTTF: public CCLabelTTF
 	tolua_property__common char* text;
 	tolua_property__common char* placeHolder;
 
-	tolua_outside void CCTextFieldTTF_registerInputHandler @ registerInputHandler(tolua_function handler);
-	
-	tolua_outside void CCTextFieldTTF_unregisterInputHandler @ unregisterInputHandler();
-
 	static tolua_outside CCTextFieldTTF* CCTextFieldTTF_create @ create(const char* placeholder, const char* fontName, float fontSize);
 };

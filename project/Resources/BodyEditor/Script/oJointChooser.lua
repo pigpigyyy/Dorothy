@@ -122,7 +122,7 @@ local function oJointChooser()
 		function(item)
 			opMenu.enabled = false
 			panel:hide()
-			item:unregisterTapHandler()
+			item.tapHandler = nil
 		end)
 	cancelButton.anchor = oVec2.zero
 	local btnBk = CCDrawNode()

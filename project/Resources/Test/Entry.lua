@@ -122,20 +122,20 @@ panel:show()
 
 scene:addChild(panel)
 
-panel:registerKeypadHandler(function(eventType)
+panel.keypadEnabled = true
+panel.keypadHandler = function(eventType)
 	if eventType == CCKeypad.Back then
 		CCDirector:stop() -- end is Lua keyword, so this function use name stop
 	end
-end)
-panel.keypadEnabled = true
+end
 
 CCDirector.displayStats = true
 
-scene:registerEventHandler(function(eventType)
+scene.nodeHandler = function(eventType)
 	if eventType == CCNode.Entered then
 		CCDirector:popToRootScene()
 	end
-end)
+end
 
 oContent:setSearchPaths({"Lib"})
 

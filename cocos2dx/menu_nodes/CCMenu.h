@@ -55,11 +55,8 @@ enum {
 */
 class CC_DLL CCMenu : public CCLayer
 {
-    /** whether or not the menu will receive events */
-    bool m_bEnabled;
-	bool m_bSwallowTouches;
 public:
-	CCMenu(bool swallow) : m_pSelectedItem(NULL), m_bSwallowTouches(swallow) {}
+	CCMenu(bool swallow) : m_pSelectedItem(NULL) { m_bSwallowTouches = swallow; }
     virtual ~CCMenu(){}
 
     /** creates an empty CCMenu */
@@ -135,7 +132,9 @@ public:
     virtual void setEnabled(bool value) { m_bEnabled = value; };
 
 protected:
-    CCMenuItem* itemForTouch(CCTouch * touch);
+	CCMenuItem* itemForTouch(CCTouch * touch);
+	/** whether or not the menu will receive events */
+	bool m_bEnabled;
     tCCMenuState m_eState;
     CCMenuItem *m_pSelectedItem;
 	CC_LUA_TYPE(CCMenu)

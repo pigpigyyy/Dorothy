@@ -33,12 +33,10 @@ class CCApplication
 		EnterForeground,
 		LowMemoryWarning
 	};
-	
+
 	tolua_readonly tolua_property__common ccLanguageType currentLanguage;
 	tolua_readonly tolua_property__common TargetPlatform targetPlatform;
-	
-	void registerScriptHandler @ registerEventHandler(tolua_function nHandler);
-	void unregisterScriptHandler @ unregisterEventHandler();
-	
+	tolua_property__common tolua_function scriptHandler @ eventHandler;
+
 	static CCApplication* sharedApplication @ create();
 };

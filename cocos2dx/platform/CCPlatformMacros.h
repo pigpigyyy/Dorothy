@@ -143,6 +143,15 @@ protected: varType varName;\
 public: virtual varType get##funName();\
 public: virtual void set##funName(varType var);
 
+#define CC_PROPERTY_BOOL(varName, funName)\
+protected: bool varName;\
+public: virtual bool is##funName();\
+public: virtual void set##funName(bool var);
+
+#define CC_PROPERTY_NAME(varType, funName)\
+public: virtual varType get##funName();\
+public: virtual void set##funName(varType var);
+
 #define CC_PROPERTY_PASS_BY_REF(varType, varName, funName)\
 protected: varType varName;\
 public: virtual const varType& get##funName();\

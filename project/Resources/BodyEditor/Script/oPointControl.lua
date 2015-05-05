@@ -26,7 +26,9 @@ local function oPointControl()
 	local posChanged = nil
 	local jump = false
 	local jumpNow = false
-	control:registerTouchHandler(function(eventType,touch)
+	control.touchPriority = oEditor.touchPriorityEditControl
+	control.swallowTouches = true
+	control.touchHandler = function(eventType,touch)
 		if eventType == CCTouch.Began then
 			if not jump then
 				jump = true
@@ -71,8 +73,8 @@ local function oPointControl()
 			end
 		end
 		return true
-	end,false,oEditor.touchPriorityEditControl,true)
-	
+	end
+
 	control.show = function(self,pos,callback,controlTarget)
 		control.visible = true
 		control.touchEnabled = true

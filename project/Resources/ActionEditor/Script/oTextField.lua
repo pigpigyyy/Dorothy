@@ -24,31 +24,30 @@ local function oTextField(x,y,fontSize,limit,textChanged)
 	cursor.visible = false
 	cursor.positionX = textField.contentSize.width
 	textField:addChild(cursor)
-	textField:registerInputHandler(
-		function(self,eventType,text)
-			if eventType == CCTextFieldTTF.Attach then
-				cursor.visible = true
-				cursor:stopAllActions()
-				cursor:runAction(blink)
-				cursor.positionX = textField.contentSize.width
-			elseif eventType == CCTextFieldTTF.Detach then
-				cursor.visible = false
-				cursor:stopAllActions()
-				if textChanged then
-					textChanged(self)
-				end
-			elseif eventType == CCTextFieldTTF.Insert then
-				if string.len(self.text) >= limit and text ~= "\n" then
-					return false
-				end
-			elseif eventType == CCTextFieldTTF.Inserted or eventType == CCTextFieldTTF.Deleted then
-				cursor:stopAction(blink)
-				cursor:runAction(blink)
-				cursor.positionX = textField.contentSize.width
-				self.texture.antiAlias = false
+	textField.inputHandler = function(self,eventType,text)
+		if eventType == CCTextFieldTTF.Attach then
+			cursor.visible = true
+			cursor:stopAllActions()
+			cursor:runAction(blink)
+			cursor.positionX = textField.contentSize.width
+		elseif eventType == CCTextFieldTTF.Detach then
+			cursor.visible = false
+			cursor:stopAllActions()
+			if textChanged then
+				textChanged(self)
 			end
-			return true
-		end)
+		elseif eventType == CCTextFieldTTF.Insert then
+			if string.len(self.text) >= limit and text ~= "\n" then
+				return false
+			end
+		elseif eventType == CCTextFieldTTF.Inserted or eventType == CCTextFieldTTF.Deleted then
+			cursor:stopAction(blink)
+			cursor:runAction(blink)
+			cursor.positionX = textField.contentSize.width
+			self.texture.antiAlias = false
+		end
+		return true
+	end
 	return textField
 end
 

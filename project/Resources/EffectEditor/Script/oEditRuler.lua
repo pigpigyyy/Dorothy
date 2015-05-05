@@ -288,7 +288,9 @@ local function oEditRuler()
 		end
 	end
 
-	ruler:registerTouchHandler(function(eventType,touch)
+	ruler.touchPriority = oEditor.touchPriorityEditControl
+	ruler.swallowTouches = true
+	ruler.touchHandler = function(eventType,touch)
 		--touch=CCTouch
 		if eventType == CCTouch.Began then
 			_s = 0
@@ -316,7 +318,7 @@ local function oEditRuler()
 			end
 		end
 		return true
-	end,false,oEditor.touchPriorityEditControl,true)
+	end
 
 	ruler.show = function(self,default,min,max,indent,callback)
 		self:setIndent(indent)

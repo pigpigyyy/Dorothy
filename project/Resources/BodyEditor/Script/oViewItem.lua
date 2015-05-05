@@ -39,7 +39,7 @@ local oViewItem = class({
 		self._tapped = tapped
 		self.contentSize = CCSize(width,height)
 		self.position = oVec2(x+(isSub and 15 or 0),y)
-		self:registerTapHandler(function(eventType) self:tapped(eventType) end)
+		self.tapHandler = function(eventType) self:tapped(eventType) end
 
 		local node = CCNode()
 		node.position = oVec2(halfW,halfH)

@@ -36,8 +36,10 @@ local oBox = class({
 
 		local mask = CCLayer()
 		mask.anchor = oVec2.zero
+		mask.touchPriority = CCMenu.DefaultHandlerPriority-4
+		mask.swallowTouches = true
 		mask.touchEnabled = true
-		mask:registerTouchHandler(function() return true end,false,CCMenu.DefaultHandlerPriority-4,true)
+		mask.touchHandler = function() return true end
 		self:addChild(mask)
 
 		local border = CCDrawNode()
@@ -96,22 +98,21 @@ local oBox = class({
 			local menuItem = CCMenuItem()
 			menuItem.contentSize = CCSize(120,50)
 			menuItem.anchor = oVec2.zero
-			menuItem:registerTapHandler(
-				function(eventType)
-					if eventType == CCMenuItem.Tapped then
-						textField:attachWithIME()
-						textField.opacity = 1
-						frame.opacity = 1
-					end
-				end)
+			menuItem.tapHandler = function(eventType)
+				if eventType == CCMenuItem.Tapped then
+					textField:attachWithIME()
+					textField.opacity = 1
+					frame.opacity = 1
+				end
+			end
 			menu:addChild(menuItem)
 		end
 
-		self:registerEventHandler(function(eventType)
+		self.nodeHandler = function(eventType)
 			if eventType == CCNode.Entered then
 				self:show()
 			end
-		end)
+		end
 	end,
 
 	show = function(self)
@@ -179,10 +180,10 @@ local oBox = class({
 						cancelButton:addChild(btnBk,-1)
 						opMenu:addChild(cancelButton)
 						opMenu.removeHandlers = function(self)
-							okButton:unregisterTapHandler()
-							cancelButton:unregisterTapHandler()
+							okButton.tapHandler = nil
+							cancelButton.tapHandler = nil
 							if self._isInput then
-								self._textField:unregisterInputHandler()
+								self._textField.inputHandler = nil
 								self._menu.enabled = false
 							end
 							opMenu.enabled = false

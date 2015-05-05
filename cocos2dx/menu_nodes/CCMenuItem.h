@@ -86,9 +86,8 @@ public:
 	virtual void cleanup();
     
     /** Register menu handler script function */
-    virtual void registerScriptTapHandler(int nHandler);
-    virtual void unregisterScriptTapHandler();
-    int getScriptTapHandler() { return m_nScriptTapHandler; };
+	void setScriptTapHandler(int handler);
+    int getScriptTapHandler() const { return m_nScriptTapHandler; };
 
     virtual bool isEnabled();
     //@note: It's 'setIsEnable' in cocos2d-iphone. 

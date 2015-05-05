@@ -459,6 +459,11 @@ local Dorothy =
 				description = "[bool]",
 				type = "value",
 			},
+			nodeHandler =
+			{
+				description = "[function]\n\n -- handler: function(eventType: int)\n\n -- eventType: {CCNode.Enter|CCNode.Exit|CCNode.Entered|CCNode.Exited|CCNode.Cleanup}",
+				type = "value",
+			},
 			boundingBox =
 			{
 				description = "[CCRect][Readonly]",
@@ -572,20 +577,6 @@ local Dorothy =
 				returns = "()",
 				type = "method",
 			},
-			registerEventHandler =
-			{
-				args = "(handler: function)",
-				description = " -- handler: function(eventType: int)\n\n -- eventType: [CCNode.Enter|CCNode.Exit|CCNode.Entered|CCNode.Exited|CCNode.Cleanup]",
-				returns = "()",
-				type = "method",
-			},
-			unregisterEventHandler =
-			{
-				args = "()",
-				description = "",
-				returns = "()",
-				type = "method",
-			},
 			convertToNodeSpace =
 			{
 				args = "(point: oVec2)",
@@ -658,18 +649,6 @@ local Dorothy =
 	{
 		childs =
 		{
-			TouchesAllAtOnce =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
-			TouchesOneByOne =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
 			touchEnabled =
 			{
 				description = "[bool]",
@@ -685,9 +664,14 @@ local Dorothy =
 				description = "[bool]",
 				type = "value",
 			},
-			touchMode =
+			multiTouches =
 			{
-				description = "[int]",
+				description = "[bool]",
+				type = "value",
+			},
+			swallowTouches =
+			{
+				description = "[bool]",
 				type = "value",
 			},
 			touchPriority =
@@ -695,47 +679,20 @@ local Dorothy =
 				description = "[int]",
 				type = "value",
 			},
-			registerTouchHandler =
+			touchHandler =
 			{
-				args = "(handler: function, isMultiTouches: bool = false, priority: int = 0, swallowsTouches: bool = false)",
-				description = "If isMultiTouches\n\n true -- handler: function(eventType: int, touches: table{CCTouch})\n\n false -- handler: function(eventType: int, touch: CCTouch)\n\n -- eventType: CCTouch.[Began|Moved|Ended|Cancelled]",
-				returns = "()",
-				type = "method",
+				description = "[function]\n\n If isMultiTouches\n\n true -- handler: function(eventType: int, touches: table{CCTouch})\n\n false -- handler: function(eventType: int, touch: CCTouch)\n\n -- eventType: CCTouch.{Began|Moved|Ended|Cancelled}",
+				type = "value",
 			},
-			unregisterTouchHandler =
+			keypadHandler =
 			{
-				args = "()",
-				description = "",
-				returns = "()",
-				type = "method",
+				description = "[function]\n\n -- handler: function(eventType: int)\n\n -- eventType: {CCKeypad.Back|CCKeypad.Menu}",
+				type = "value",
 			},
-			registerKeypadHandler =
+			accelerateHandler =
 			{
-				args = "(handler: function)",
-				description = " -- handler: function(eventType: int)\n\n -- eventType: [CCKeypad.Back|CCKeypad.Menu]",
-				returns = "()",
-				type = "method",
-			},
-			unregisterKeypadHandler =
-			{
-				args = "()",
-				description = "",
-				returns = "()",
-				type = "method",
-			},
-			registerAccelerateHandler =
-			{
-				args = "(handler: function)",
-				description = " -- handler: function(x: float, y: float, z: float, timestamp: float)",
-				returns = "()",
-				type = "method",
-			},
-			unregisterAccelerateHandler =
-			{
-				args = "()",
-				description = "",
-				returns = "()",
-				type = "method",
+				description = "[function]\n\n -- handler: function(x: float, y: float, z: float, timestamp: float)",
+				type = "value",
 			},
 		},
 		description = "class CCLayer(CCNode).\n args -- ()",
@@ -1283,21 +1240,11 @@ local Dorothy =
 				static = true,
 				type = "value",
 			},
-			registerEventHandler =
+			eventHandler =
 			{
-				args = "(handler: function)",
-				description = " -- handler: function(eventType: int)\n\n -- eventType: CCApplication.[EnterBackground|EnterForeground|LowMemoryWarning]",
-				returns = "()",
+				description = "[function]\n\n -- handler: function(eventType: int)\n\n -- eventType: CCApplication.{EnterBackground|EnterForeground|LowMemoryWarning}",
 				static = true,
-				type = "method",
-			},
-			unregisterEventHandler =
-			{
-				args = "()",
-				description = "",
-				returns = "()",
-				static = true,
-				type = "method",
+				type = "value",
 			},
 			currentLanguage =
 			{
@@ -2921,19 +2868,10 @@ local Dorothy =
 				description = "[bool]",
 				type = "value",
 			},
-			registerTapHandler =
+			tapHandler  =
 			{
-				args = "(handler: function)",
-				description = " -- handler: function(eventType: int, menuItem: CCMenuItem)\n -- eventType: CCMenuItem.[TapBegan|Tapped|TapEnded]",
-				returns = "()",
-				type = "method",
-			},
-			unregisterTapHandler =
-			{
-				args = "()",
-				description = "",
-				returns = "()",
-				type = "method",
+				description = "[function]\n\n -- handler: function(eventType: int, menuItem: CCMenuItem)\n -- eventType: CCMenuItem.{TapBegan|Tapped|TapEnded}",
+				type = "value",
 			},
 		},
 		description = "class CCMenuItem(CCNode).\n args -- ()",
@@ -3071,6 +3009,11 @@ local Dorothy =
 				typeName = "string",
 				type = "value",
 			},
+			inputHandler =
+			{
+				description = "[function]\n\n -- handler: function(self: CCTextFieldTTF, eventType: int, nil|text: string)\n\n -- eventType: CCTextFieldTTF.{Attach|Detach|Insert|Delete}",
+				type = "value",
+			},
 			attachWithIME =
 			{
 				args = "()",
@@ -3083,20 +3026,6 @@ local Dorothy =
 				args = "()",
 				description = "",
 				returns = "(result: bool)",
-				type = "method",
-			},
-			registerInputHandler =
-			{
-				args = "(handler: function)",
-				description = " handler -- function(self: CCTextFieldTTF, eventType: int, nil|text: string)\n\n -- eventType: CCTextFieldTTF.[Attach|Detach|Insert|Delete]",
-				returns = "()",
-				type = "method",
-			},
-			unregisterInputHandler =
-			{
-				args = "()",
-				description = "",
-				returns = "()",
 				type = "method",
 			},
 		},

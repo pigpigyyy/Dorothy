@@ -282,20 +282,19 @@ local function oSettingPanel()
 			end
 		end
 
-		menuItem:registerTapHandler(
-			function(eventType,self)
-				if eventType == CCMenuItem.Tapped then
-					if not isInput then
-						if enableFunc ~= nil and disableFunc ~= nil then
-							oEvent:send("SettingSelected",menuItem)
-						end
-					else
-						if oEditor.state == oEditor.EDIT_SPRITE and enableFunc ~= nil and disableFunc ~= nil then
-							oEvent:send("SettingSelected",menuItem)
-						end
+		menuItem.tapHandler = function(eventType,self)
+			if eventType == CCMenuItem.Tapped then
+				if not isInput then
+					if enableFunc ~= nil and disableFunc ~= nil then
+						oEvent:send("SettingSelected",menuItem)
+					end
+				else
+					if oEditor.state == oEditor.EDIT_SPRITE and enableFunc ~= nil and disableFunc ~= nil then
+						oEvent:send("SettingSelected",menuItem)
 					end
 				end
-			end)
+			end
+		end
 
 		menuItem.setEnabled = function(self,enabled)
 			menuItem.enabled = enabled
@@ -355,44 +354,44 @@ local function oSettingPanel()
 		end
 	end
 
-	panel:registerTouchHandler(
-		function(eventType, touch)
-			--touch=CCTouch
-			if touch.id ~= 0 or oEditor.isPlaying or not panel.visible then
+	panel.touchPriority = CCMenu.DefaultHandlerPriority-2
+	panel.touchHandler = function(eventType, touch)
+		--touch=CCTouch
+		if touch.id ~= 0 or oEditor.isPlaying or not panel.visible then
+			return false
+		end
+		if eventType == CCTouch.Began then
+			if not CCRect(oVec2.zero, panel.contentSize):containsPoint(panel:convertToNodeSpace(touch.location)) then
 				return false
 			end
-			if eventType == CCTouch.Began then
-				if not CCRect(oVec2.zero, panel.contentSize):containsPoint(panel:convertToNodeSpace(touch.location)) then
-					return false
-				end
 
-				panel:show()
+			panel:show()
 
-				deltaMoveLength = 0
-				menu.enabled = true
-				panel:schedule(updateSpeed)
-			elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
-				menu.enabled = true
-				if isReseting() then
-					startReset()
+			deltaMoveLength = 0
+			menu.enabled = true
+			panel:schedule(updateSpeed)
+		elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
+			menu.enabled = true
+			if isReseting() then
+				startReset()
+			else
+				if _v == oVec2.zero or deltaMoveLength <= 10 then
+					panel:hide()
 				else
-					if _v == oVec2.zero or deltaMoveLength <= 10 then
-						panel:hide()
-					else
-						panel:schedule(updatePos)
-					end
-				end
-			elseif eventType == CCTouch.Moved then
-				deltaMoveLength = deltaMoveLength + touch.delta.length
-				_s = _s + touch.delta
-				if deltaMoveLength > 10 then
-					menu.enabled = false
-					setOffset(touch.delta, true)
+					panel:schedule(updatePos)
 				end
 			end
-			return true
-		end, false, CCMenu.DefaultHandlerPriority-2, false)
-	
+		elseif eventType == CCTouch.Moved then
+			deltaMoveLength = deltaMoveLength + touch.delta.length
+			_s = _s + touch.delta
+			if deltaMoveLength > 10 then
+				menu.enabled = false
+				setOffset(touch.delta, true)
+			end
+		end
+		return true
+	end
+
 	local function genPosY()
 		local index = 0
 		return function()

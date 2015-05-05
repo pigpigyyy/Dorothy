@@ -9,9 +9,7 @@ class CCMenuItem: public CCNode
 
 	tolua_readonly tolua_property__qt CCRect rect @ hitArea;
 	tolua_property__bool bool enabled;
-	
-	void registerScriptTapHandler @ registerTapHandler(tolua_function funcID);
-	void unregisterScriptTapHandler @ unregisterTapHandler();
+	tolua_property__common tolua_function scriptTapHandler @ tapHandler;
 
-    static CCMenuItem* create();
+	static CCMenuItem* create();
 };

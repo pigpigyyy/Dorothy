@@ -1,27 +1,14 @@
 class CCLayer: public CCNode
 {
-	enum
-	{
-		TouchesAllAtOnce,
-		TouchesOneByOne
-	};
 	tolua_property__bool bool touchEnabled;
 	tolua_property__bool bool accelerometerEnabled;
 	tolua_property__bool bool keypadEnabled;
-	tolua_property__common int touchMode;
+	tolua_property__bool bool multiTouches;
+	tolua_property__bool bool swallowTouches;
 	tolua_property__common int touchPriority;
-
-	void registerScriptTouchHandler @ registerTouchHandler(tolua_function nHandler,
-									bool bIsMultiTouches = false,
-									int nPriority = 0,
-									bool bSwallowsTouches = false);
-	void unregisterScriptTouchHandler @ unregisterTouchHandler();
-
-	void registerScriptKeypadHandler @ registerKeypadHandler(tolua_function nHandler);
-	void unregisterScriptKeypadHandler @ unregisterKeypadHandler();
-
-	void registerScriptAccelerateHandler @ registerAccelerateHandler(tolua_function nHandler);
-	void unregisterScriptAccelerateHandler @ unregisterAccelerateHandler();
+	tolua_property__common tolua_function scriptAccelerateHandler @ accelerateHandler;
+	tolua_property__common tolua_function scriptTouchHandler @ touchHandler;
+	tolua_property__common tolua_function scriptKeypadHandler @ keypadHandler;
 
 	static CCLayer* create();
 };

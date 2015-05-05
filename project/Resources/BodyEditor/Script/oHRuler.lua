@@ -184,7 +184,10 @@ local function oHRuler()
 	end)
 
 	-- handle touch event --
-	self:registerTouchHandler(function(eventType,touch)
+	self.touchPriority = oEditor.touchPriorityHRuler
+	self.swallowTouches = true
+	self.touchEnabled = true
+	self.touchHandler = function(eventType,touch)
 		if eventType == CCTouch.Began then -- check touch area
 			local loc = self:convertToNodeSpace(touch.location)
 			return CCRect(-halfW,-halfH,rulerWidth,rulerHeight):containsPoint(loc)
@@ -197,8 +200,7 @@ local function oHRuler()
 			end
 		end
 		return true
-	end,false,oEditor.touchPriorityHRuler,true)
-	self.touchEnabled = true
+	end
 
 	return self
 end

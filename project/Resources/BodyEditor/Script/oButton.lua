@@ -67,19 +67,18 @@ local oButton = class(
 		self:addChild(face)
 		self.face = face
 	
-	if text ~= "" then
-		local label = CCLabelTTF(text,"Arial",fontSize)
-		label.position = oVec2(width*0.5, height and height*0.5 or width*0.5)
-		label.texture.antiAlias = false
-		face:addChild(label)
-		self._label = label
-	end
+		if text ~= "" then
+			local label = CCLabelTTF(text,"Arial",fontSize)
+			label.position = oVec2(width*0.5, height and height*0.5 or width*0.5)
+			label.texture.antiAlias = false
+			face:addChild(label)
+			self._label = label
+		end
 
-	face.opacity = 0.4
-	local scale = oScale(0.3,1.0,1.0,oEase.OutBack)
-	local fade = oOpacity(0.3,0.4,oEase.InExpo)
-	self:registerTapHandler(
-		function(eventType)
+		face.opacity = 0.4
+		local scale = oScale(0.3,1.0,1.0,oEase.OutBack)
+		local fade = oOpacity(0.3,0.4,oEase.InExpo)
+		self.tapHandler = function(eventType)
 			--item = CCMenuItem
 			if eventType == CCMenuItem.TapBegan then
 				if not fade.done then
@@ -102,7 +101,8 @@ local oButton = class(
 					tapped(self)
 				end
 			end
-		end)
+		end
+
 		self.face = face
 		self.tapped = tapped
 		self.position = oVec2(x,y)

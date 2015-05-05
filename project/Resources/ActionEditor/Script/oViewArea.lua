@@ -114,59 +114,59 @@ local function oViewArea()
 	local EDIT_FRONT = 20
 	
 	local editState = EDIT_NONE
+	view.multiTouches = true
 	view.touchEnabled = true
-	view:registerTouchHandler(
-		function(eventType, touches)
-			if eventType == CCTouch.Moved then
-				-- touch = CCTouch
-				if not view:isControlEnabled() then
-					return
-				end
-				if editState ~= EDIT_NONE then
-					if editState == EDIT_ROT then
-						view:updateRot(touches[1].preLocation,touches[1].location)
-					elseif editState == EDIT_POSX or editState == EDIT_POSY or editState == EDIT_POSXY then
-						view:updatePos(touches[1].delta)
-					elseif editState == EDIT_SCALEX or editState == EDIT_SCALEY or editState == EDIT_SCALEXY then
-						view:updateScale(touches[1].delta)
-					elseif editState == EDIT_OPACITY then
-						view:updateOpacity(touches[1].delta)
-					elseif editState == EDIT_SKEWX or editState == EDIT_SKEWY or editState == EDIT_SKEWXY then
-						view:updateSkew(touches[1].delta)
-					elseif editState == EDIT_ANCHORX or editState == EDIT_ANCHORY or editState == EDIT_ANCHORXY then
-						view:updateAnchor(touches[1].delta)
-					elseif editState == EDIT_SIZEX or editState == EDIT_SIZEY or editState == EDIT_SIZEXY then
-						view:updateSize(touches[1].delta)
-					end
-					return
-				end
-				if #touches == 1 then
-					crossNode.position = crossNode.position + touches[1].delta
-				elseif #touches >= 2 then
-					mode = 2
-					local preDistance = touches[1].preLocation:distance(touches[2].preLocation)
-					local distance = touches[1].location:distance(touches[2].location)
-					local delta = (distance - preDistance) * 4 / winSize.height
-					local scale = crossNode.scaleX + delta
-					if scale <= 0.5 then
-						scale = 0.5
-					end
-					crossNode.scaleX = scale
-					crossNode.scaleY = scale
-					
-					local zoomButton = oEditor.editMenu.items.Zoom
-					zoomButton.label.text = tostring(math.floor(scale*100)).."%"
-					zoomButton.label.texture.antiAlias = false
-				end
+	view.touchHandler = function(eventType, touches)
+		if eventType == CCTouch.Moved then
+			-- touch = CCTouch
+			if not view:isControlEnabled() then
+				return
 			end
-		end,true)
+			if editState ~= EDIT_NONE then
+				if editState == EDIT_ROT then
+					view:updateRot(touches[1].preLocation,touches[1].location)
+				elseif editState == EDIT_POSX or editState == EDIT_POSY or editState == EDIT_POSXY then
+					view:updatePos(touches[1].delta)
+				elseif editState == EDIT_SCALEX or editState == EDIT_SCALEY or editState == EDIT_SCALEXY then
+					view:updateScale(touches[1].delta)
+				elseif editState == EDIT_OPACITY then
+					view:updateOpacity(touches[1].delta)
+				elseif editState == EDIT_SKEWX or editState == EDIT_SKEWY or editState == EDIT_SKEWXY then
+					view:updateSkew(touches[1].delta)
+				elseif editState == EDIT_ANCHORX or editState == EDIT_ANCHORY or editState == EDIT_ANCHORXY then
+					view:updateAnchor(touches[1].delta)
+				elseif editState == EDIT_SIZEX or editState == EDIT_SIZEY or editState == EDIT_SIZEXY then
+					view:updateSize(touches[1].delta)
+				end
+				return
+			end
+			if #touches == 1 then
+				crossNode.position = crossNode.position + touches[1].delta
+			elseif #touches >= 2 then
+				mode = 2
+				local preDistance = touches[1].preLocation:distance(touches[2].preLocation)
+				local distance = touches[1].location:distance(touches[2].location)
+				local delta = (distance - preDistance) * 4 / winSize.height
+				local scale = crossNode.scaleX + delta
+				if scale <= 0.5 then
+					scale = 0.5
+				end
+				crossNode.scaleX = scale
+				crossNode.scaleY = scale
+
+				local zoomButton = oEditor.editMenu.items.Zoom
+				zoomButton.label.text = tostring(math.floor(scale*100)).."%"
+				zoomButton.label.texture.antiAlias = false
+			end
+		end
+	end
 
 	view.keypadEnabled = true
-	view:registerKeypadHandler(function(eventType)
+	view.keypadHandler = function(eventType)
 		if eventType == CCKeypad.Back then
 			CCDirector:stop()
 		end
-	end)
+	end
 
 	view.zoomReset = function(self)
 		local scale = 0

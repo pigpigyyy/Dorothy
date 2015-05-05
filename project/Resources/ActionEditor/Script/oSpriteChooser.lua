@@ -44,7 +44,7 @@ local function oSpriteChooser()
 	local cancelButton = oButton("Cancel",17,60,false,
 		0,0,
 		function(item)
-			item:unregisterTapHandler()
+			item.tapHandler = nil
 			opMenu.enabled = false
 			panel:fadeSprites()
 			panel:hide()
@@ -71,7 +71,7 @@ local function oSpriteChooser()
 				winSize.width*0.5-halfBW+60+((i-1)%6)*110,y,
 				function()
 					if panel.selected then
-						cancelButton:unregisterTapHandler()
+						cancelButton.tapHandler = nil
 						panel:hide()
 						panel:selected(names[i])
 					end

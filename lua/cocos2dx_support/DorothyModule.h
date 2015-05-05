@@ -156,8 +156,8 @@ ENUM_START(oTextFieldEvent)
 }
 ENUM_END(oTextFieldEvent)
 CCTextFieldTTF* CCTextFieldTTF_create(const char* placeholder, const char* fontName, float fontSize);
-void CCTextFieldTTF_registerInputHandler(CCTextFieldTTF* textField, int handler);
-void CCTextFieldTTF_unregisterInputHandler(CCTextFieldTTF* textField);
+int CCTextFieldTTF_setInputHandler(lua_State* L);
+int CCTextFieldTTF_getInputHandler(lua_State* L);
 
 CCRenderTexture* CCRenderTexture_create(int w, int h, bool withDepthStencil = false);
 

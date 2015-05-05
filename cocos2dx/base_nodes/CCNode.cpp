@@ -98,7 +98,7 @@ CCNode::~CCNode()
 	CCLOGINFO("cocos2d: deallocing");
 
 	// callbacks
-	unregisterScriptHandler();
+	CCNode::setScriptHandler(0);
 	if (m_nUpdateScriptHandler)
 	{
 		CCScriptEngine::sharedEngine()->removeScriptHandler(m_nUpdateScriptHandler);
@@ -199,13 +199,6 @@ void CCNode::setRotation(float newRotation)
 {
 	m_fRotation = newRotation;
 	m_bTransformDirty = m_bInverseDirty = true;
-}
-
-/// scale getter
-float CCNode::getScale()
-{
-	CCAssert(m_fScaleX == m_fScaleY, "CCNode#scale. ScaleX != ScaleY. Don't know which one to return");
-	return m_fScaleX;
 }
 
 /// scale setter
@@ -466,7 +459,7 @@ void CCNode::cleanup()
 
 	// clear lua callbacks
 	CCNode::unscheduleUpdateLua();
-	CCNode::unregisterScriptHandler();
+	CCNode::setScriptHandler(0);
 
 	// clear user object
 	CC_SAFE_RELEASE_NULL(m_pUserObject);
@@ -846,28 +839,20 @@ void CCNode::onExit()
 	CCScriptEngine::sharedEngine()->executeNodeEvent(this, CCNode::Exit);
 }
 
-void CCNode::registerScriptHandler(int nHandler)
-{
-	unregisterScriptHandler();
-	m_nScriptHandler = nHandler;
-	LUALOG("[LUA] Add CCNode event handler: %d", m_nScriptHandler);
-}
-
-void CCNode::unregisterScriptHandler()
-{
-	if (m_nScriptHandler)
-	{
-		CCScriptEngine::sharedEngine()->removeScriptHandler(m_nScriptHandler);
-		LUALOG("[LUA] Remove CCNode event handler: %d", m_nScriptHandler);
-		m_nScriptHandler = 0;
-	}
-}
-
-CCAction * CCNode::runAction(CCAction* action)
+CCAction* CCNode::runAction(CCAction* action)
 {
 	CCAssert(action != NULL, "CCNode run action argument must be non-nil");
 	m_pScheduler->getActionManager()->addAction(action, this, !m_bRunning);
 	return action;
+}
+
+void CCNode::setScriptHandler(int handler)
+{
+	if (m_nScriptHandler)
+	{
+		CCScriptEngine::sharedEngine()->removeScriptHandler(m_nScriptHandler);
+	}
+	m_nScriptHandler = handler;
 }
 
 void CCNode::stopAllActions()

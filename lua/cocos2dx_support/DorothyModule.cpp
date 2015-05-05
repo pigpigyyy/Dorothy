@@ -1234,15 +1234,31 @@ CCTextFieldTTF* CCTextFieldTTF_create(const char* placeholder, const char* fontN
 	textField->setDelegate(delegate);
 	return textField;
 }
-void CCTextFieldTTF_registerInputHandler(CCTextFieldTTF* textField, int handler)
+int CCTextFieldTTF_setInputHandler(lua_State* L)
 {
-	oTextFieldDelegate* delegate =(oTextFieldDelegate*)(textField->getDelegate());
-	delegate->handler = oScriptHandler::create(handler);
+	CCTextFieldTTF* self = (CCTextFieldTTF*)tolua_tousertype(L, 1, 0);
+#ifndef TOLUA_RELEASE
+	tolua_Error tolua_err;
+	if (!self) tolua_error(L, "invalid 'self' in accessing variable 'inputHandler'", NULL);
+	if (!(toluafix_isfunction(L, 2, &tolua_err) || lua_isnil(L, 2)))
+		tolua_error(L, "#vinvalid type in variable assignment.", &tolua_err);
+#endif
+	oTextFieldDelegate* delegate = (oTextFieldDelegate*)(self->getDelegate());
+	int handler = toluafix_ref_function(L, 2);
+	delegate->handler = handler ? oScriptHandler::create(handler) : nullptr;
+	return 0;
 }
-void CCTextFieldTTF_unregisterInputHandler(CCTextFieldTTF* textField)
+int CCTextFieldTTF_getInputHandler(lua_State* L)
 {
-	oTextFieldDelegate* delegate =(oTextFieldDelegate*)(textField->getDelegate());
-	delegate->handler = nullptr;
+	CCTextFieldTTF* self = (CCTextFieldTTF*)tolua_tousertype(L, 1, 0);
+#ifndef TOLUA_RELEASE
+	if (!self) tolua_error(L, "invalid 'self' in accessing variable 'inputHandler'", NULL);
+#endif
+	oTextFieldDelegate* delegate = (oTextFieldDelegate*)(self->getDelegate());
+	int handler = delegate->handler ? delegate->handler->get() : 0;
+	if (handler) toluafix_get_function_by_refid(L, handler);
+	else lua_pushnil(L);
+	return 1;
 }
 
 CCRenderTexture* CCRenderTexture_create(int w, int h, bool withDepthStencil)

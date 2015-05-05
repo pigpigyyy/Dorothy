@@ -10,22 +10,20 @@ _handler(0)
 
 CCApplicationProtocol::~CCApplicationProtocol()
 {
-	CCApplicationProtocol::unregisterScriptHandler();
+	CCApplicationProtocol::setScriptHandler(0);
 }
 
-void CCApplicationProtocol::registerScriptHandler(int handler)
-{
-	CCApplicationProtocol::unregisterScriptHandler();
-	_handler = handler;
-}
-
-void CCApplicationProtocol::unregisterScriptHandler()
+void CCApplicationProtocol::setScriptHandler(int handler)
 {
 	if (_handler)
 	{
 		CCScriptEngine::sharedEngine()->removeScriptHandler(_handler);
-		_handler = 0;
 	}
+	_handler = handler;
+}
+int CCApplicationProtocol::getScriptHandler() const
+{
+	return _handler;
 }
 
 void CCApplicationProtocol::applicationDidEnterBackground()

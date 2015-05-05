@@ -113,7 +113,6 @@ bool CCMenu::initWithArray(CCArray* pArrayOfItems)
     if (CCLayer::init())
     {
         setTouchPriority(kCCMenuHandlerPriority);
-        setTouchMode(CCLayer::TouchesOneByOne);
         setTouchEnabled(true);
 
         m_bEnabled = true;
@@ -323,7 +322,6 @@ void CCMenu::alignItemsHorizontally()
 
 void CCMenu::alignItemsHorizontallyWithPadding(float padding)
 {
-
     float width = -padding;
     if (m_pChildren && m_pChildren->count() > 0)
     {

@@ -117,7 +117,7 @@ local function oVertexControl()
 	end
 	local function oVertex(pos,name)
 		local menuItem = CCMenuItem()
-		menuItem:registerTapHandler(itemTapped)
+		menuItem.tapHandler = itemTapped
 		menuItem.contentSize = CCSize(vertSize,vertSize)
 		menuItem.opacity = 0.4
 		menuItem.highlighted = false
@@ -183,7 +183,8 @@ local function oVertexControl()
 	end
 
 	local totalDelta = oVec2.zero
-	layer:registerTouchHandler(function(eventType, touch)
+	layer.touchPriority = CCMenu.DefaultHandlerPriority
+	layer.touchHandler = function(eventType, touch)
 		if eventType == CCTouch.Began then
 			if vertexToAdd then
 				local pos = menu:convertToNodeSpace(touch.location)
@@ -237,11 +238,13 @@ local function oVertexControl()
 			end
 		end
 		return true
-	end,false,CCMenu.DefaultHandlerPriority,false)
-	
+	end
+
 	local mask = CCLayer()
 	mask.contentSize = CCSize.zero
-	mask:registerTouchHandler(function() return selectedVert ~= nil end,false,CCMenu.DefaultHandlerPriority+2,true)
+	mask.touchPriority = CCMenu.DefaultHandlerPriority+2
+	mask.swallowTouches = true
+	mask.touchHandler = function() return selectedVert ~= nil end
 	layer:addChild(mask)
 
 	local editMenu = CCMenu(false)

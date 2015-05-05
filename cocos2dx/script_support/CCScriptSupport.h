@@ -79,23 +79,6 @@ private:
     bool m_bMarkedForDeletion;
 };
 
-class CC_DLL CCTouchScriptHandlerEntry: public CCScriptHandlerEntry
-{
-public:
-    static CCTouchScriptHandlerEntry* create(int nHandler, bool bIsMultiTouches, int nPriority, bool bSwallowsTouches);
-	virtual ~CCTouchScriptHandlerEntry();
-    bool isMultiTouches();
-	void setPriority(int priority);
-    int getPriority();
-    bool getSwallowsTouches();
-private:
-    CCTouchScriptHandlerEntry(int nHandler);
-    bool init(bool bIsMultiTouches, int nPriority, bool bSwallowsTouches);
-    bool m_bIsMultiTouches;
-    int m_nPriority;
-    bool m_bSwallowsTouches;
-};
-
 // Don't make CCScriptEngineProtocol inherits from CCObject since setScriptEngine is invoked only once in AppDelegate.cpp,
 // It will affect the lifecycle of ScriptCore instance, the autorelease pool will be destroyed before destructing ScriptCore.
 // So a crash will appear on Win32 if you click the close button.
