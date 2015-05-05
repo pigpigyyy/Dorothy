@@ -1130,24 +1130,27 @@ static void oHandler(const char* begin, const char* end)
 	const char* accelerometerEnabled = nullptr;\
 	const char* keypadEnabled = nullptr;\
 	const char* touchEnabled = nullptr;\
-	const char* touchMode = nullptr;
+	const char* multiTouches = nullptr;\
+	const char* touchPriority = nullptr;\
+	const char* swallowTouches = nullptr;
 #define Layer_Check \
 	Node_Check\
 	CASE_STR(AccelerometerEnabled) { accelerometerEnabled = atts[++i]; break; }\
 	CASE_STR(KeypadEnabled) { keypadEnabled = atts[++i]; break; }\
 	CASE_STR(TouchEnabled) { touchEnabled = atts[++i]; break; }\
-	CASE_STR(TouchMode) { touchMode = atts[++i]; break; }\
+	CASE_STR(MultiTouches) { multiTouches = atts[++i]; break; }\
 	CASE_STR(TouchPriority) { touchPriority = atts[++i]; break; }\
-	CASE_STR(MultiTouch) { isMultiTouches = atts[++i]; break; }\
-	CASE_STR(SwallowTouch) { swallowsTouches = atts[++i]; break; }
+	CASE_STR(SwallowTouches) { swallowTouches = atts[++i]; break; }
 #define Layer_Create \
 	stream << "local " << self << " = CCLayer()\n";
 #define Layer_Handle \
 	Node_Handle\
 	if (accelerometerEnabled) stream << self << ".accelerometerEnabled = " << accelerometerEnabled << '\n';\
 	if (keypadEnabled) stream << self << ".keypadEnabled = " << keypadEnabled << '\n';\
-	if (touchEnabled) stream << self << ".touchEnabled = " << touchEnabled << '\n';\
-	if (touchMode) stream << self << ".touchMode = CCLayer.Touches" << touchMode << '\n';
+	if (multiTouches) stream << self << ".multiTouches = " << multiTouches << '\n';\
+	if (touchPriority) stream << self << ".touchPriority = " << touchPriority << '\n';\
+	if (swallowTouches) stream << self << ".swallowTouches = " << swallowTouches << '\n';\
+	if (touchEnabled) stream << self << ".touchEnabled = " << touchEnabled << '\n';
 #define Layer_Finish \
 	Add_To_Parent
 
@@ -1207,8 +1210,8 @@ static void oHandler(const char* begin, const char* end)
 	Layer_Check\
 	CASE_STR(Enabled) { enabled = atts[++i]; break; }
 #define Menu_Create \
-	stream << "local " << self << " = CCMenu(" << (swallowsTouches ? swallowsTouches : "") << ")\n";\
-	swallowsTouches = nullptr;
+	stream << "local " << self << " = CCMenu(" << (swallowTouches ? swallowTouches : "") << ")\n";\
+	swallowTouches = nullptr;
 #define Menu_Handle \
 	Layer_Handle\
 	if (enabled) stream << self << ".enabled = " << enabled << '\n';
@@ -1387,9 +1390,6 @@ public:
 	oXmlDelegate():
 	codes(nullptr),
 	currentKey(nullptr),
-	touchPriority(nullptr),
-	isMultiTouches(nullptr),
-	swallowsTouches(nullptr),
 	priority(nullptr)
 	{ }
 	virtual void startElement(void *ctx, const char *name, const char **atts);
@@ -1462,10 +1462,6 @@ private:
 	const char* codes;
 	// Data
 	const char* currentKey;
-	// Layer
-	const char* touchPriority;
-	const char* isMultiTouches;
-	const char* swallowsTouches;
 	// Schedule
 	const char* priority;
 	// Loader
@@ -1621,37 +1617,31 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 		}
 		CASE_STR(TouchHandler)
 		{
-			stream << currentData.name << ":registerTouchHandler(" << (codes ? codes : "")
-				<< ',' << (isMultiTouches ? isMultiTouches : "false")
-				<< ',' << (touchPriority ? touchPriority : "0")
-				<< ',' << (swallowsTouches ? swallowsTouches : "false") << ")\n";
+			stream << currentData.name << ".touchHandler = " << (codes ? codes : "") << '\n';
 			codes = nullptr;
-			isMultiTouches = nullptr;
-			touchPriority = nullptr;
-			swallowsTouches = nullptr;
 			break;
 		}
 		CASE_STR(AccelerateHandler)
 		{
-			stream << currentData.name << ":registerAccelerateHandler(" << (codes ? codes : "") << ")\n";
+			stream << currentData.name << ".accelerateHandler = " << (codes ? codes : "") << '\n';
 			codes = nullptr;
 			break;
 		}
 		CASE_STR(KeypadHandler)
 		{
-			stream << currentData.name << ":registerKeypadHandler(" << (codes ? codes : "") << ")\n";
+			stream << currentData.name << ".keypadHandler = " << (codes ? codes : "") << '\n';
 			codes = nullptr;
 			break;
 		}
 		CASE_STR(NodeHandler)
 		{
-			stream << currentData.name << ":registerEventHandler(" << (codes ? codes : "") << ")\n";
+			stream << currentData.name << ".nodeHandler = " << (codes ? codes : "") << '\n';
 			codes = nullptr;
 			break;
 		}
 		CASE_STR(TapHandler)
 		{
-			stream << currentData.name << ":registerTapHandler(" << (codes ? codes : "") << ")\n";
+			stream << currentData.name << ".tapHandler = " << (codes ? codes : "") << '\n';
 			codes = nullptr;
 			break;
 		}
@@ -1681,20 +1671,6 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 			}
 			break;
 		}
-		CASE_STR(Layer) goto FLAG_LAYER_BEGIN;
-		CASE_STR(LayerColor) goto FLAG_LAYER_BEGIN;
-		CASE_STR(LayerGradient) goto FLAG_LAYER_BEGIN;
-		goto FLAG_LAYER_END;
-		FLAG_LAYER_BEGIN:
-		{
-			if (touchPriority)
-			{
-				stream << currentData.name << ".touchPriority = " << touchPriority << '\n';
-				touchPriority = nullptr;
-			}
-			break;
-		}
-		FLAG_LAYER_END:
 		CASE_STR(Speed) goto FLAG_WRAP_ACTION_BEGIN;
 		CASE_STR(Loop) goto FLAG_WRAP_ACTION_BEGIN;
 		goto FLAG_WRAP_ACTION_END;

@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>423AB917-8068-4D94-96F8-0AAC8FAB7F72</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>Dorothy</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>DE8E5EB57019C0F1B7B28D70588C7BD7A9CD7722</key>
 		<string>https://git.oschina.net/pig/Dorothy.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>project/proj.mac/Dorothy.xcodeproj/project.xcworkspace</string>
+	<string>project/proj.mac/Dorothy.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>DE8E5EB57019C0F1B7B28D70588C7BD7A9CD7722</key>
