@@ -480,7 +480,7 @@ int CCLuaEngine::call(lua_State* L, int paramCount, int returnCount)
 #ifndef TOLUA_RELEASE
 	int functionIndex = -(paramCount + 1);
 	int top = lua_gettop(L);
-	int traceIndex = functionIndex + top;
+	int traceIndex = MAX(functionIndex + top, 1);
 	if (!lua_isfunction(L, functionIndex))
 	{
 		CCLOG("[LUA ERROR] value at stack [%d] is not function in CCLuaEngine::call", functionIndex);
