@@ -110,7 +110,7 @@ panel.init = function(self)
 			end)
 		menu:addChild(button)
 	end
-	local yTo = winSize.height*0.5-y+60
+	local yTo = winSize.height-y+60
 	local viewHeight = yTo < winSize.height and winSize.height or yTo
 	local viewWidth = winSize.width
 	local paddingX = 0
