@@ -74,12 +74,12 @@ static int cclua_traceback(lua_State* L)
 	return 0;
 }
 
-static int cclua_loadfile(lua_State* L)
+static int cclua_loadfile(lua_State* L, const string& file)
 {
-	std::string filename(luaL_checkstring(L, 1));
+	string filename(file);
 	bool isXml = false;
 	size_t pos = filename.rfind('.');
-	if (pos == std::string::npos)
+	if (pos == string::npos)
 	{
 		string newFileName = filename + ".xml";
 		if (oSharedContent.isFileExist(newFileName.c_str()))
@@ -125,6 +125,24 @@ static int cclua_loadfile(lua_State* L)
 	else luaL_error(L, "can not get file data of %s", filename.c_str());
 
 	return 1;
+
+}
+
+static int cclua_loadfile(lua_State* L)
+{
+	string filename(luaL_checkstring(L, 1));
+	return cclua_loadfile(L, filename);
+}
+
+static int cclua_loader(lua_State* L)
+{
+	string filename(luaL_checkstring(L, 1));
+	size_t pos = 0;
+	while ((pos = filename.find(".", pos)) != string::npos)
+	{
+		filename[pos] = '/';
+	}
+	return cclua_loadfile(L, filename);
 }
 
 static int cclua_doXml(lua_State* L)
@@ -149,7 +167,8 @@ static int cclua_doXml(lua_State* L)
 
 static int cclua_dofile(lua_State* L)
 {
-	cclua_loadfile(L);
+	string filename(luaL_checkstring(L, 1));
+	cclua_loadfile(L, filename);
 	int top = lua_gettop(L) - 1;
 	CCLuaEngine::call(L, 0, LUA_MULTRET);
 	int newTop = lua_gettop(L);
@@ -205,7 +224,7 @@ CCLuaEngine::CCLuaEngine()
 	luaL_register(L, "_G", global_functions);
 
 	// add cocos2dx loader
-	addLuaLoader(cclua_loadfile);
+	addLuaLoader(cclua_loader);
 
 	tolua_beginmodule(L, 0);//stack: package.loaded
 		tolua_beginmodule(L, "CCDictionary");//stack: package.loaded CCDictionary
