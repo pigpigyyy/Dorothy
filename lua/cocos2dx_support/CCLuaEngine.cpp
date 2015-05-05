@@ -77,36 +77,19 @@ static int cclua_traceback(lua_State* L)
 static int cclua_loadfile(lua_State* L)
 {
 	std::string filename(luaL_checkstring(L, 1));
-	size_t pos = 0;
-	while ((pos = filename.find('.', pos)) != std::string::npos)
-	{
-		filename[pos] = '/';
-	}
 	bool isXml = false;
-	string newFileName;
-	BLOCK_START
+	size_t pos = filename.rfind('.');
+	if (pos == std::string::npos)
 	{
-		newFileName = filename + ".lua";
-		if (oSharedContent.isFileExist(newFileName.c_str()))
-		{
-			filename = std::move(newFileName);
-			break;
-		}
-		newFileName = filename + ".body";
-		if (oSharedContent.isFileExist(newFileName.c_str()))
-		{
-			filename = std::move(newFileName);
-			break;
-		}
-		newFileName = filename + ".xml";
+		string newFileName = filename + ".xml";
 		if (oSharedContent.isFileExist(newFileName.c_str()))
 		{
 			filename = std::move(newFileName);
 			isXml = true;
-			break;
 		}
+		else filename.append(".lua");
 	}
-	BLOCK_END
+	else isXml = filename.substr(pos) == ".xml";
 
 	unsigned long codeBufferSize = 0;
 	const char* codeBuffer = nullptr;
@@ -139,10 +122,7 @@ static int cclua_loadfile(lua_State* L)
 		}
 		if (!isXml) delete [] codeBuffer;
 	}
-	else
-	{
-		luaL_error(L, "can not get file data of %s", filename.c_str());
-	}
+	else luaL_error(L, "can not get file data of %s", filename.c_str());
 
 	return 1;
 }
