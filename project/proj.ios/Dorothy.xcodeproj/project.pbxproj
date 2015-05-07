@@ -68,13 +68,8 @@
 		3C504D8E1A237B97000C79D6 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C504D8D1A237B97000C79D6 /* libwebp.a */; };
 		3C5AC9FC1A21A71F006EDD2B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5AC9FB1A21A71F006EDD2B /* CoreMotion.framework */; };
 		3C7AA4E11A4731AD007836D2 /* ActionEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4D81A4731AD007836D2 /* ActionEditor */; };
-		3C7AA4E21A4731AD007836D2 /* bk.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4D91A4731AD007836D2 /* bk.jpg */; };
 		3C7AA4E31A4731AD007836D2 /* BodyEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4DA1A4731AD007836D2 /* BodyEditor */; };
-		3C7AA4E41A4731AD007836D2 /* boy.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4DB1A4731AD007836D2 /* boy.lua */; };
-		3C7AA4E51A4731AD007836D2 /* class.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4DC1A4731AD007836D2 /* class.lua */; };
-		3C7AA4E61A4731AD007836D2 /* girl.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4DD1A4731AD007836D2 /* girl.lua */; };
 		3C7AA4E71A4731AD007836D2 /* main.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4DE1A4731AD007836D2 /* main.lua */; };
-		3C7AA4E81A4731AD007836D2 /* miku.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4DF1A4731AD007836D2 /* miku.lua */; };
 		3C7AA4E91A4731AD007836D2 /* Test in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4E01A4731AD007836D2 /* Test */; };
 		3C89A6071A209CD3001D5009 /* DorothyModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C89A6041A209CD3001D5009 /* DorothyModule.cpp */; };
 		3C89A6081A209CD3001D5009 /* tolua_extern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C89A6061A209CD3001D5009 /* tolua_extern.cpp */; };
@@ -127,11 +122,16 @@
 		3C89A6C31A20C5B5001D5009 /* libcocos2dx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C58D44E1A20951D0051AADE /* libcocos2dx.a */; };
 		3C90CD1C1A64104600C29402 /* oJointDef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C90CD1A1A64104600C29402 /* oJointDef.cpp */; };
 		3C90CD281A65BC9800C29402 /* oAsync.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C90CD261A65BC9800C29402 /* oAsync.cpp */; };
-		3C9ADB8C1A6BEF27000C9B40 /* oBodyEx.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C9ADB8B1A6BEF27000C9B40 /* oBodyEx.lua */; };
 		3CA03A6F1A2900460008F80F /* libluajit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CA03A6E1A2900460008F80F /* libluajit.a */; };
 		3CAE8C4A1A685B1000D92541 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3CAE8C491A685B1000D92541 /* Images.xcassets */; };
 		3CB40CFA1A20E6C200D7A3A6 /* b2MotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CB40CF81A20E6C200D7A3A6 /* b2MotorJoint.cpp */; };
 		3CB40D261A20ECC500D7A3A6 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CB40D251A20ECC500D7A3A6 /* libsqlite3.0.dylib */; };
+		3CDECC591AFC22A100AF8490 /* lpcap.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CDECC4E1AFC22A100AF8490 /* lpcap.c */; };
+		3CDECC5A1AFC22A100AF8490 /* lpcode.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CDECC501AFC22A100AF8490 /* lpcode.c */; };
+		3CDECC5B1AFC22A100AF8490 /* lpprint.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CDECC521AFC22A100AF8490 /* lpprint.c */; };
+		3CDECC5C1AFC22A100AF8490 /* lptree.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CDECC541AFC22A100AF8490 /* lptree.c */; };
+		3CDECC5D1AFC22A100AF8490 /* lpvm.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CDECC571AFC22A100AF8490 /* lpvm.c */; };
+		3CDECC5F1AFC274B00AF8490 /* Lib in Resources */ = {isa = PBXBuildFile; fileRef = 3CDECC5E1AFC274B00AF8490 /* Lib */; };
 		3CECB16C1AC331B300BA17F3 /* DorothyXml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CECB16A1AC331B300BA17F3 /* DorothyXml.cpp */; };
 		46C1008D16BF786A00F74D54 /* CCLuaEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46C1007C16BF786A00F74D54 /* CCLuaEngine.cpp */; };
 		46C1009116BF786A00F74D54 /* LuaCocos2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46C1008416BF786A00F74D54 /* LuaCocos2d.cpp */; };
@@ -290,13 +290,8 @@
 		3C504D8D1A237B97000C79D6 /* libwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwebp.a; path = ../../cocos2dx/platform/third_party/mac/libraries/libwebp.a; sourceTree = "<group>"; };
 		3C5AC9FB1A21A71F006EDD2B /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreMotion.framework; sourceTree = DEVELOPER_DIR; };
 		3C7AA4D81A4731AD007836D2 /* ActionEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ActionEditor; path = ../../../Dorothy/project/Resources/ActionEditor; sourceTree = "<group>"; };
-		3C7AA4D91A4731AD007836D2 /* bk.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = bk.jpg; path = ../../../Dorothy/project/Resources/bk.jpg; sourceTree = "<group>"; };
 		3C7AA4DA1A4731AD007836D2 /* BodyEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; name = BodyEditor; path = ../../../Dorothy/project/Resources/BodyEditor; sourceTree = "<group>"; };
-		3C7AA4DB1A4731AD007836D2 /* boy.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = boy.lua; path = ../../../Dorothy/project/Resources/boy.lua; sourceTree = "<group>"; };
-		3C7AA4DC1A4731AD007836D2 /* class.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = class.lua; path = ../../../Dorothy/project/Resources/class.lua; sourceTree = "<group>"; };
-		3C7AA4DD1A4731AD007836D2 /* girl.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = girl.lua; path = ../../../Dorothy/project/Resources/girl.lua; sourceTree = "<group>"; };
 		3C7AA4DE1A4731AD007836D2 /* main.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.lua; path = ../../../Dorothy/project/Resources/main.lua; sourceTree = "<group>"; };
-		3C7AA4DF1A4731AD007836D2 /* miku.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = miku.lua; path = ../../../Dorothy/project/Resources/miku.lua; sourceTree = "<group>"; };
 		3C7AA4E01A4731AD007836D2 /* Test */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Test; path = ../../../Dorothy/project/Resources/Test; sourceTree = "<group>"; };
 		3C89A6041A209CD3001D5009 /* DorothyModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DorothyModule.cpp; sourceTree = "<group>"; };
 		3C89A6051A209CD3001D5009 /* DorothyModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DorothyModule.h; sourceTree = "<group>"; };
@@ -413,7 +408,6 @@
 		3C90CD1B1A64104600C29402 /* oJointDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oJointDef.h; sourceTree = "<group>"; };
 		3C90CD261A65BC9800C29402 /* oAsync.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oAsync.cpp; sourceTree = "<group>"; };
 		3C90CD271A65BC9800C29402 /* oAsync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oAsync.h; sourceTree = "<group>"; };
-		3C9ADB8B1A6BEF27000C9B40 /* oBodyEx.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = oBodyEx.lua; path = ../../../Dorothy/project/Resources/oBodyEx.lua; sourceTree = "<group>"; };
 		3CA03A161A289CFE0008F80F /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = ../../lua/luajit/ios/liblua.a; sourceTree = "<group>"; };
 		3CA03A671A28BD1F0008F80F /* lauxlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lauxlib.h; sourceTree = "<group>"; };
 		3CA03A681A28BD1F0008F80F /* lua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua.h; sourceTree = "<group>"; };
@@ -425,6 +419,18 @@
 		3CB40CF81A20E6C200D7A3A6 /* b2MotorJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2MotorJoint.cpp; sourceTree = "<group>"; };
 		3CB40CF91A20E6C200D7A3A6 /* b2MotorJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2MotorJoint.h; sourceTree = "<group>"; };
 		3CB40D251A20ECC500D7A3A6 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
+		3CDECC4E1AFC22A100AF8490 /* lpcap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpcap.c; sourceTree = "<group>"; };
+		3CDECC4F1AFC22A100AF8490 /* lpcap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lpcap.h; sourceTree = "<group>"; };
+		3CDECC501AFC22A100AF8490 /* lpcode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpcode.c; sourceTree = "<group>"; };
+		3CDECC511AFC22A100AF8490 /* lpcode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lpcode.h; sourceTree = "<group>"; };
+		3CDECC521AFC22A100AF8490 /* lpprint.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpprint.c; sourceTree = "<group>"; };
+		3CDECC531AFC22A100AF8490 /* lpprint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lpprint.h; sourceTree = "<group>"; };
+		3CDECC541AFC22A100AF8490 /* lptree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lptree.c; sourceTree = "<group>"; };
+		3CDECC551AFC22A100AF8490 /* lptree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lptree.h; sourceTree = "<group>"; };
+		3CDECC561AFC22A100AF8490 /* lptypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lptypes.h; sourceTree = "<group>"; };
+		3CDECC571AFC22A100AF8490 /* lpvm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpvm.c; sourceTree = "<group>"; };
+		3CDECC581AFC22A100AF8490 /* lpvm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lpvm.h; sourceTree = "<group>"; };
+		3CDECC5E1AFC274B00AF8490 /* Lib */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Lib; path = ../../../Dorothy/project/Resources/Lib; sourceTree = "<group>"; };
 		3CECB16A1AC331B300BA17F3 /* DorothyXml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DorothyXml.cpp; sourceTree = "<group>"; };
 		3CECB16B1AC331B300BA17F3 /* DorothyXml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DorothyXml.h; sourceTree = "<group>"; };
 		46C1007C16BF786A00F74D54 /* CCLuaEngine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCLuaEngine.cpp; sourceTree = "<group>"; };
@@ -698,6 +704,7 @@
 		15C155FF168311CB00D239F2 /* lua */ = {
 			isa = PBXGroup;
 			children = (
+				3CDECC4D1AFC22A100AF8490 /* lpeg */,
 				46C1007916BF786A00F74D54 /* cocos2dx_support */,
 				1AA88A50171D04FC0023E7B2 /* include */,
 				15C15650168311CB00D239F2 /* tolua */,
@@ -943,6 +950,24 @@
 			path = LocalStorage;
 			sourceTree = "<group>";
 		};
+		3CDECC4D1AFC22A100AF8490 /* lpeg */ = {
+			isa = PBXGroup;
+			children = (
+				3CDECC4E1AFC22A100AF8490 /* lpcap.c */,
+				3CDECC4F1AFC22A100AF8490 /* lpcap.h */,
+				3CDECC501AFC22A100AF8490 /* lpcode.c */,
+				3CDECC511AFC22A100AF8490 /* lpcode.h */,
+				3CDECC521AFC22A100AF8490 /* lpprint.c */,
+				3CDECC531AFC22A100AF8490 /* lpprint.h */,
+				3CDECC541AFC22A100AF8490 /* lptree.c */,
+				3CDECC551AFC22A100AF8490 /* lptree.h */,
+				3CDECC561AFC22A100AF8490 /* lptypes.h */,
+				3CDECC571AFC22A100AF8490 /* lpvm.c */,
+				3CDECC581AFC22A100AF8490 /* lpvm.h */,
+			);
+			path = lpeg;
+			sourceTree = "<group>";
+		};
 		46C1007916BF786A00F74D54 /* cocos2dx_support */ = {
 			isa = PBXGroup;
 			children = (
@@ -1032,18 +1057,13 @@
 		F293BC4615EB859D00256477 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3CDECC5E1AFC274B00AF8490 /* Lib */,
 				3CAE8C491A685B1000D92541 /* Images.xcassets */,
 				3C7AA4D81A4731AD007836D2 /* ActionEditor */,
 				3C7AA4DA1A4731AD007836D2 /* BodyEditor */,
 				3C3842FF1A890B9D0047E2DF /* EffectEditor */,
 				3C7AA4E01A4731AD007836D2 /* Test */,
-				3C7AA4DB1A4731AD007836D2 /* boy.lua */,
-				3C7AA4DD1A4731AD007836D2 /* girl.lua */,
 				3C7AA4DE1A4731AD007836D2 /* main.lua */,
-				3C7AA4DF1A4731AD007836D2 /* miku.lua */,
-				3C7AA4DC1A4731AD007836D2 /* class.lua */,
-				3C7AA4D91A4731AD007836D2 /* bk.jpg */,
-				3C9ADB8B1A6BEF27000C9B40 /* oBodyEx.lua */,
 			);
 			name = Resources;
 			path = ../../../Cpp/TestCpp/Resources;
@@ -1121,17 +1141,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3CDECC5F1AFC274B00AF8490 /* Lib in Resources */,
 				3C7AA4E11A4731AD007836D2 /* ActionEditor in Resources */,
 				3C7AA4E71A4731AD007836D2 /* main.lua in Resources */,
 				3C7AA4E91A4731AD007836D2 /* Test in Resources */,
-				3C7AA4E51A4731AD007836D2 /* class.lua in Resources */,
 				3C3843001A890B9D0047E2DF /* EffectEditor in Resources */,
-				3C7AA4E21A4731AD007836D2 /* bk.jpg in Resources */,
 				3CAE8C4A1A685B1000D92541 /* Images.xcassets in Resources */,
-				3C9ADB8C1A6BEF27000C9B40 /* oBodyEx.lua in Resources */,
-				3C7AA4E81A4731AD007836D2 /* miku.lua in Resources */,
-				3C7AA4E41A4731AD007836D2 /* boy.lua in Resources */,
-				3C7AA4E61A4731AD007836D2 /* girl.lua in Resources */,
 				3C7AA4E31A4731AD007836D2 /* BodyEditor in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1156,6 +1171,7 @@
 				3C89A6941A209D1C001D5009 /* oKeyFrame.cpp in Sources */,
 				15C154231683112E00D239F2 /* HttpClient.cpp in Sources */,
 				15C1551F1683118600D239F2 /* b2BroadPhase.cpp in Sources */,
+				3CDECC5A1AFC22A100AF8490 /* lpcode.c in Sources */,
 				15C155201683118600D239F2 /* b2CollideCircle.cpp in Sources */,
 				15C155211683118600D239F2 /* b2CollideEdge.cpp in Sources */,
 				15C155221683118600D239F2 /* b2CollidePolygon.cpp in Sources */,
@@ -1167,10 +1183,12 @@
 				3C89A6861A209D1C001D5009 /* oEvent.cpp in Sources */,
 				3C89A69F1A209D1C001D5009 /* oWorld.cpp in Sources */,
 				15C155261683118600D239F2 /* b2TimeOfImpact.cpp in Sources */,
+				3CDECC591AFC22A100AF8490 /* lpcap.c in Sources */,
 				15C155271683118600D239F2 /* b2ChainShape.cpp in Sources */,
 				3C89A6961A209D1C001D5009 /* oModel.cpp in Sources */,
 				15C155281683118600D239F2 /* b2CircleShape.cpp in Sources */,
 				15C155291683118600D239F2 /* b2EdgeShape.cpp in Sources */,
+				3CDECC5D1AFC22A100AF8490 /* lpvm.c in Sources */,
 				15C1552A1683118600D239F2 /* b2PolygonShape.cpp in Sources */,
 				15C1552B1683118600D239F2 /* b2BlockAllocator.cpp in Sources */,
 				15C1552C1683118600D239F2 /* b2Draw.cpp in Sources */,
@@ -1236,6 +1254,8 @@
 				3C89A6951A209D1C001D5009 /* oKeyFrameDef.cpp in Sources */,
 				3C89A6AD1A209D1C001D5009 /* LocalStorageAndroid.cpp in Sources */,
 				3CB40CFA1A20E6C200D7A3A6 /* b2MotorJoint.cpp in Sources */,
+				3CDECC5C1AFC22A100AF8490 /* lptree.c in Sources */,
+				3CDECC5B1AFC22A100AF8490 /* lpprint.c in Sources */,
 				15C155DA168311AA00D239F2 /* CDAudioManager.m in Sources */,
 				15C155DB168311AA00D239F2 /* CDOpenALSupport.m in Sources */,
 				15C155DC168311AA00D239F2 /* CocosDenshion.m in Sources */,
@@ -1361,7 +1381,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Dorothy_Prefix.pch;
@@ -1411,7 +1431,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Dorothy_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (

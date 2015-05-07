@@ -131,6 +131,11 @@ xcopy /Y /Q "$(ProjectDir)..\lib\win32\*.*" "$(OutDir)"</Command>
     <ClCompile Include="..\cocos2dx_support\LuaCode.cpp" />
     <ClCompile Include="..\cocos2dx_support\tolua_fix.c" />
     <ClCompile Include="..\cocos2dx_support\tolua_extern.cpp" />
+    <ClCompile Include="..\lpeg\lpcap.c" />
+    <ClCompile Include="..\lpeg\lpcode.c" />
+    <ClCompile Include="..\lpeg\lpprint.c" />
+    <ClCompile Include="..\lpeg\lptree.c" />
+    <ClCompile Include="..\lpeg\lpvm.c" />
     <ClCompile Include="..\tolua\tolua_event.c" />
     <ClCompile Include="..\tolua\tolua_is.c" />
     <ClCompile Include="..\tolua\tolua_map.c" />
@@ -143,6 +148,12 @@ xcopy /Y /Q "$(ProjectDir)..\lib\win32\*.*" "$(OutDir)"</Command>
     <ClInclude Include="..\cocos2dx_support\DorothyXml.h" />
     <ClInclude Include="..\cocos2dx_support\LuaCocos2d.h" />
     <ClInclude Include="..\cocos2dx_support\tolua_fix.h" />
+    <ClInclude Include="..\lpeg\lpcap.h" />
+    <ClInclude Include="..\lpeg\lpcode.h" />
+    <ClInclude Include="..\lpeg\lpprint.h" />
+    <ClInclude Include="..\lpeg\lptree.h" />
+    <ClInclude Include="..\lpeg\lptypes.h" />
+    <ClInclude Include="..\lpeg\lpvm.h" />
     <ClInclude Include="..\luajit\include\lauxlib.h" />
     <ClInclude Include="..\luajit\include\lua.h" />
     <ClInclude Include="..\luajit\include\luaconf.h" />

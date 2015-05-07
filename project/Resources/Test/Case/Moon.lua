@@ -1,6 +1,6 @@
 local moon = require("moonscript")
 
-local codes,msg = moon.to_lua([[
+local codes = moon.to_lua([[
 
 setfenv Dorothy!
 
@@ -57,7 +57,5 @@ scene:addChild(layer)
 CCDirector:run(CCScene:crossFade(1,scene))
 
 ]]
-
-print(codes or msg)
 
 loadstring(codes)()

@@ -158,9 +158,9 @@ const char *match (lua_State *L, const char *o, const char *s, const char *e,
   for (;;) {
 #if defined(DEBUG)
       printf("s: |%s| stck:%d, dyncaps:%d, caps:%d  ",
-             s, stack - getstackbase(L, ptop), ndyncap, captop);
-      printinst(op, p);
-      printcaplist(capture, capture + captop);
+             s, (int)(stack - getstackbase(L, ptop)), ndyncap, captop);
+      //printinst(op, p);
+      //printcaplist(capture, capture + captop);
 #endif
     assert(stackidx(ptop) + ndyncap == lua_gettop(L) && ndyncap <= captop);
     switch ((Opcode)p->i.code) {

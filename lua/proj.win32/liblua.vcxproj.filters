@@ -13,6 +13,9 @@
     <Filter Include="lib\include">
       <UniqueIdentifier>{b7025611-420a-4414-b567-f7496eec5f57}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lpeg">
+      <UniqueIdentifier>{bdefa860-4b55-413f-9c3c-c3e0dce89fba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\tolua\tolua_event.c">
@@ -51,6 +54,21 @@
     <ClCompile Include="..\cocos2dx_support\DorothyXml.cpp">
       <Filter>cocos2dx_support</Filter>
     </ClCompile>
+    <ClCompile Include="..\lpeg\lpcap.c">
+      <Filter>lpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lpeg\lpcode.c">
+      <Filter>lpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lpeg\lpprint.c">
+      <Filter>lpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lpeg\lptree.c">
+      <Filter>lpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lpeg\lpvm.c">
+      <Filter>lpeg</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\tolua\tolua++.h">
@@ -85,6 +103,24 @@
     </ClInclude>
     <ClInclude Include="..\cocos2dx_support\DorothyXml.h">
       <Filter>cocos2dx_support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lpeg\lpcap.h">
+      <Filter>lpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lpeg\lpcode.h">
+      <Filter>lpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lpeg\lpprint.h">
+      <Filter>lpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lpeg\lptree.h">
+      <Filter>lpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lpeg\lptypes.h">
+      <Filter>lpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lpeg\lpvm.h">
+      <Filter>lpeg</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
