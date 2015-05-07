@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		3C07A5F01A6ED4830036E419 /* BodyEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C07A5E71A6ED4830036E419 /* BodyEditor */; };
 		3C07A5F61A6ED4830036E419 /* Test in Resources */ = {isa = PBXBuildFile; fileRef = 3C07A5ED1A6ED4830036E419 /* Test */; };
+		3C1663741AFBCF3300395AC1 /* lpcap.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C1663691AFBCF3300395AC1 /* lpcap.c */; };
+		3C1663751AFBCF3300395AC1 /* lpcode.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C16636B1AFBCF3300395AC1 /* lpcode.c */; };
+		3C1663761AFBCF3300395AC1 /* lpprint.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C16636D1AFBCF3300395AC1 /* lpprint.c */; };
+		3C1663771AFBCF3300395AC1 /* lptree.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C16636F1AFBCF3300395AC1 /* lptree.c */; };
+		3C1663781AFBCF3300395AC1 /* lpvm.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C1663721AFBCF3300395AC1 /* lpvm.c */; };
 		3C45629C1A29931E00A3406E /* libluajit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C45629B1A29931E00A3406E /* libluajit.a */; };
 		3C504D5B1A23739B000C79D6 /* AppController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3C504D5A1A23739B000C79D6 /* AppController.mm */; };
 		3C504D5D1A23739B000C79D6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C504D5C1A23739B000C79D6 /* main.m */; };
@@ -157,6 +162,17 @@
 /* Begin PBXFileReference section */
 		3C07A5E71A6ED4830036E419 /* BodyEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BodyEditor; sourceTree = "<group>"; };
 		3C07A5ED1A6ED4830036E419 /* Test */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Test; sourceTree = "<group>"; };
+		3C1663691AFBCF3300395AC1 /* lpcap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpcap.c; sourceTree = "<group>"; };
+		3C16636A1AFBCF3300395AC1 /* lpcap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lpcap.h; sourceTree = "<group>"; };
+		3C16636B1AFBCF3300395AC1 /* lpcode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpcode.c; sourceTree = "<group>"; };
+		3C16636C1AFBCF3300395AC1 /* lpcode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lpcode.h; sourceTree = "<group>"; };
+		3C16636D1AFBCF3300395AC1 /* lpprint.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpprint.c; sourceTree = "<group>"; };
+		3C16636E1AFBCF3300395AC1 /* lpprint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lpprint.h; sourceTree = "<group>"; };
+		3C16636F1AFBCF3300395AC1 /* lptree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lptree.c; sourceTree = "<group>"; };
+		3C1663701AFBCF3300395AC1 /* lptree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lptree.h; sourceTree = "<group>"; };
+		3C1663711AFBCF3300395AC1 /* lptypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lptypes.h; sourceTree = "<group>"; };
+		3C1663721AFBCF3300395AC1 /* lpvm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpvm.c; sourceTree = "<group>"; };
+		3C1663731AFBCF3300395AC1 /* lpvm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lpvm.h; sourceTree = "<group>"; };
 		3C45629B1A29931E00A3406E /* libluajit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libluajit.a; path = ../../lua/lib/mac/libluajit.a; sourceTree = "<group>"; };
 		3C504D541A23739B000C79D6 /* Dorothy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dorothy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C504D581A23739B000C79D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -437,6 +453,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3C1663681AFBCF3300395AC1 /* lpeg */ = {
+			isa = PBXGroup;
+			children = (
+				3C1663691AFBCF3300395AC1 /* lpcap.c */,
+				3C16636A1AFBCF3300395AC1 /* lpcap.h */,
+				3C16636B1AFBCF3300395AC1 /* lpcode.c */,
+				3C16636C1AFBCF3300395AC1 /* lpcode.h */,
+				3C16636D1AFBCF3300395AC1 /* lpprint.c */,
+				3C16636E1AFBCF3300395AC1 /* lpprint.h */,
+				3C16636F1AFBCF3300395AC1 /* lptree.c */,
+				3C1663701AFBCF3300395AC1 /* lptree.h */,
+				3C1663711AFBCF3300395AC1 /* lptypes.h */,
+				3C1663721AFBCF3300395AC1 /* lpvm.c */,
+				3C1663731AFBCF3300395AC1 /* lpvm.h */,
+			);
+			path = lpeg;
+			sourceTree = "<group>";
+		};
 		3C504D4B1A23739B000C79D6 = {
 			isa = PBXGroup;
 			children = (
@@ -929,6 +963,7 @@
 		3C504FAA1A23802F000C79D6 /* lua */ = {
 			isa = PBXGroup;
 			children = (
+				3C1663681AFBCF3300395AC1 /* lpeg */,
 				3C504FAB1A23802F000C79D6 /* cocos2dx_support */,
 				3C504FDE1A23802F000C79D6 /* tolua */,
 			);
@@ -1094,6 +1129,7 @@
 				3C504F9B1A237F8E000C79D6 /* b2FrictionJoint.cpp in Sources */,
 				3C504F051A237E5C000C79D6 /* oUnitDef.cpp in Sources */,
 				3C504EF81A237E5C000C79D6 /* oSensor.cpp in Sources */,
+				3C1663781AFBCF3300395AC1 /* lpvm.c in Sources */,
 				3C504F951A237F8E000C79D6 /* b2ContactSolver.cpp in Sources */,
 				3C504EF71A237E5C000C79D6 /* oJoint.cpp in Sources */,
 				3C504EF61A237E5C000C79D6 /* oBodyDef.cpp in Sources */,
@@ -1132,6 +1168,7 @@
 				3C504F061A237E5C000C79D6 /* LocalStorage.cpp in Sources */,
 				3C504EF21A237E5C000C79D6 /* oModelDef.cpp in Sources */,
 				3C504F931A237F8E000C79D6 /* b2CircleContact.cpp in Sources */,
+				3C1663771AFBCF3300395AC1 /* lptree.c in Sources */,
 				3C504F801A237F8E000C79D6 /* b2TimeOfImpact.cpp in Sources */,
 				3C504EF51A237E5C000C79D6 /* oBody.cpp in Sources */,
 				3C504F991A237F8E000C79D6 /* b2PolygonContact.cpp in Sources */,
@@ -1165,6 +1202,7 @@
 				3C504FE91A23802F000C79D6 /* LuaCocos2d.cpp in Sources */,
 				3C504E281A237D2A000C79D6 /* SimpleAudioEngine_objc.m in Sources */,
 				3C504F9C1A237F8E000C79D6 /* b2GearJoint.cpp in Sources */,
+				3C1663741AFBCF3300395AC1 /* lpcap.c in Sources */,
 				3C504F8C1A237F8E000C79D6 /* b2ContactManager.cpp in Sources */,
 				3C504F911A237F8E000C79D6 /* b2ChainAndCircleContact.cpp in Sources */,
 				3C504FA31A237F8E000C79D6 /* b2RopeJoint.cpp in Sources */,
@@ -1174,8 +1212,10 @@
 				3C504EDD1A237E5C000C79D6 /* oDefine.cpp in Sources */,
 				3C504EDB1A237E5C000C79D6 /* AssetsManager.cpp in Sources */,
 				3C504EEC1A237E5C000C79D6 /* oEase.cpp in Sources */,
+				3C1663751AFBCF3300395AC1 /* lpcode.c in Sources */,
 				3C90CD241A65847400C29402 /* oAsync.cpp in Sources */,
 				3C504EF31A237E5C000C79D6 /* oSequence.cpp in Sources */,
+				3C1663761AFBCF3300395AC1 /* lpprint.c in Sources */,
 				3C504F981A237F8E000C79D6 /* b2PolygonAndCircleContact.cpp in Sources */,
 				3C504EF01A237E5C000C79D6 /* oModel.cpp in Sources */,
 				3C504F831A237F8E000C79D6 /* b2EdgeShape.cpp in Sources */,

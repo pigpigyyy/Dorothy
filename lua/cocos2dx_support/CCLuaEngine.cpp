@@ -208,6 +208,7 @@ CCLuaEngine::CCLuaEngine()
 {
 	L = luaL_newstate();
 	cclua_loadlibs(L);
+	luaopen_lpeg(L);
 	toluafix_open(L);
 	tolua_Cocos2d_open(L);
 
