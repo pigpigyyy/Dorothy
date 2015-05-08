@@ -1,61 +1,36 @@
-local moon = require("moonscript")
-
-local codes = moon.to_lua([[
-
-setfenv Dorothy!
-
-{:width,:height} = CCDirector.winSize
-
-model = with oModel "ActionEditor/Model/Output/xiaoli.model"
-	.look = "happy"
-	.loop = true
-	.position = oVec2 width*0.5, height*0.5
-	\play "walk"
-
-layer = with CCLayer!
-	.touchEnabled = true
-	.anchor = oVec2.zero
-	.touchHandler = (eventType,touch)->
-		if eventType == CCTouch.Moved
-			model.position += touch.delta
-		true
-	\addChild model
-	
-scene = with CCScene!
-	\addChild layer
-
-CCDirector\run CCScene\crossFade 1,scene
-
-]])
-
---[[
-
 setfenv(Dorothy())
-
-local winSize = CCDirector.winSize
-
-local model = oModel("ActionEditor/Model/Output/xiaoli.model")
-model.look = "happy"
-model.loop = true
-model.position = oVec2(winSize.width*0.5, winSize.height*0.5)
-model:play("walk")
-
-local layer = CCLayer()
-layer.touchEnabled = true
-layer.anchor = oVec2.zero
-layer.touchHandler = function(eventType,touch)
-	if eventType == CCTouch.Moved then
-		model.position = model.position + touch.delta
-	end
-	return true
+local width, height
+do
+  local _obj_0 = CCDirector.winSize
+  width, height = _obj_0.width, _obj_0.height
 end
-layer:addChild(model)
-
-local scene = CCScene()
-scene:addChild(layer)
-
-CCDirector:run(CCScene:crossFade(1,scene))
-
-]]
-
-loadstring(codes)()
+local model
+do
+  local _with_0 = oModel("ActionEditor/Model/Output/xiaoli.model")
+  _with_0.look = "happy"
+  _with_0.loop = true
+  _with_0.position = oVec2(width * 0.5, height * 0.5)
+  _with_0:play("walk")
+  model = _with_0
+end
+local layer
+do
+  local _with_0 = CCLayer()
+  _with_0.touchEnabled = true
+  _with_0.anchor = oVec2.zero
+  _with_0.touchHandler = function(eventType, touch)
+    if eventType == CCTouch.Moved then
+      model.position = model.position + touch.delta
+    end
+    return true
+  end
+  _with_0:addChild(model)
+  layer = _with_0
+end
+local scene
+do
+  local _with_0 = CCScene()
+  _with_0:addChild(layer)
+  scene = _with_0
+end
+return CCDirector:run(CCScene:crossFade(1, scene))

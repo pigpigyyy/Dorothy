@@ -263,7 +263,7 @@ vector<string> oContent::getDirEntries(const char* path, bool isFolder)
 	}
 	else
 	{
-		CCLOG("oContent get entry error, code %d", errno);
+		CCLOG("oContent get entry error, %s, %s", strerror(errno), fullPath.c_str());
 	}
 	return std::move(files);
 }

@@ -46,9 +46,10 @@ if CCApplication.targetPlatform ~= CCTargetPlatform.Ipad and CCApplication.targe
 end
 
 opMenu = CCMenu()
-opMenu.contentSize = CCSize(60,60)
+opMenu.contentSize = CCSize(130,60)
 opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
-opMenu.position = oVec2(40,40)
+opMenu.anchor = oVec2.zero
+opMenu.position = oVec2(10,10)
 panel:addChild(opMenu)
 local gcButton = oButton("GC",17,60,false,
 	0,0,
@@ -77,6 +78,43 @@ local gcButton = oButton("GC",17,60,false,
 	end)
 gcButton.anchor = oVec2.zero
 opMenu:addChild(gcButton)
+
+local function compile(dir)
+	local entries = oContent:getEntries(dir,true)
+	for _,item in ipairs(entries) do
+		local entry = dir.."/"..item
+		print(entry)
+		if item ~= "." and item ~= ".." then
+			compile(entry)
+		end
+	end
+	entries = oContent:getEntries(dir,false)
+	for _,item in ipairs(entries) do
+		local name = item:match("(.*)%.[^%.\\/]*$")
+		local extension = string.match(item, "%.([^%.\\/]*)$")
+		if extension == "moon" then
+			local entry = dir.."/"..item
+			local moonscript = require("moonscript")
+			local file = io.open(entry,"r")
+			local moonCodes = file:read("*a")
+			local codes,err = moonscript.to_lua(moonCodes)
+			file:close()
+			if not codes then
+				print("Compile errors in "..entry)
+				print(err)
+			else
+				oContent:saveToFile(dir.."/"..name..".lua",codes)
+			end
+		end
+	end
+end
+local compileButton = oButton("Compile",12,60,false,
+	70,0,
+	function()
+		compile(".")
+	end)
+compileButton.anchor = oVec2.zero
+opMenu:addChild(compileButton)
 
 panel.init = function(self)
 	menu.opacity = 0
@@ -137,6 +175,6 @@ scene.nodeHandler = function(eventType)
 	end
 end
 
-oContent:setSearchPaths({"Lib"})
+oContent:setSearchPaths({"","Lib"})
 
 CCDirector:run(scene)
