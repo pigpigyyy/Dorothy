@@ -83,7 +83,6 @@ local function compile(dir)
 	local entries = oContent:getEntries(dir,true)
 	for _,item in ipairs(entries) do
 		local entry = dir.."/"..item
-		print(entry)
 		if item ~= "." and item ~= ".." then
 			compile(entry)
 		end
@@ -104,6 +103,7 @@ local function compile(dir)
 				print(err)
 			else
 				oContent:saveToFile(dir.."/"..name..".lua",codes)
+				print("Moon compiled: "..entry)
 			end
 		end
 	end

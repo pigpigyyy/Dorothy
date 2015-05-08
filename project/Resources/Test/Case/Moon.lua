@@ -16,8 +16,8 @@ end
 local layer
 do
   local _with_0 = CCLayer()
-  _with_0.touchEnabled = true
   _with_0.anchor = oVec2.zero
+  _with_0.touchEnabled = true
   _with_0.touchHandler = function(eventType, touch)
     if eventType == CCTouch.Moved then
       model.position = model.position + touch.delta
