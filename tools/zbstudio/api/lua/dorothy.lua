@@ -7,6 +7,71 @@ local index = genIndex()
 
 local Dorothy =
 {
+	oRoutine =
+	{
+		childs =
+		{
+			remove =
+			{
+				args = "(routine: thread)",
+				description = "",
+				returns = "()",
+				static = true,
+				type = "method",
+			},
+			start =
+			{
+				args = "()",
+				description = "",
+				returns = "()",
+				static = true,
+				type = "method",
+			},
+			stop =
+			{
+				args = "()",
+				description = "",
+				returns = "()",
+				static = true,
+				type = "method",
+			},
+		},
+		description = "class oRoutine.\n args -- (routine: thread)\n -- routine: created by once(function() end) or loop(function() end)",
+		type = "class",
+		index = index()
+	},
+	once =
+	{
+		args = "(action: function)",
+		description = "",
+		returns = "(routine: thread)",
+		type = "function",
+		index = index()
+	},
+	loop =
+	{
+		args = "(action: function)",
+		description = "",
+		returns = "(routine: thread)",
+		type = "function",
+		index = index()
+	},
+	wait =
+	{
+		args = "(action: function)",
+		description = "",
+		returns = "()",
+		type = "function",
+		index = index()
+	},
+	seconds =
+	{
+		args = "(time: float)",
+		description = "",
+		returns = "(action: function)",
+		type = "function",
+		index = index()
+	},
 	doXml =
 	{
 		args = "(xml: string)",

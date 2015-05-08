@@ -108,7 +108,7 @@ local function compile(dir)
 		end
 	end
 end
-local compileButton = oButton("Compile",12,60,false,
+local compileButton = oButton("Moon\nCompile",12,60,false,
 	70,0,
 	function()
 		compile(".")

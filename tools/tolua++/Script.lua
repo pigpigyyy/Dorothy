@@ -89,9 +89,11 @@ local oRoutine =
 		for i = 1,#self do
 			if self[i] == routine then
 				self[i] = oRoutine_end
+				return true
 				break
 			end
 		end
+		return false
 	end,
 	clear = function(self)
 		while #self > 0 do
