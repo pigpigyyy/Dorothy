@@ -90,7 +90,6 @@ local oRoutine =
 			if self[i] == routine then
 				self[i] = oRoutine_end
 				return true
-				break
 			end
 		end
 		return false
