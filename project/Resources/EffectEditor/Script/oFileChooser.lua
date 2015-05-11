@@ -83,7 +83,7 @@ local function oFileChooser(addExisted)
 	local xStart = 0 -- left
 	local yStart = borderSize.height -- top
 	local function resetPanel()
-		local yTo = winSize.height*0.5+halfBH-y+35
+		local yTo = winSize.height*0.5+halfBH-y-65
 		local viewHeight = yTo < borderSize.height and borderSize.height or yTo
 		local viewWidth = borderSize.width
 		local paddingX = 0
@@ -98,20 +98,35 @@ local function oFileChooser(addExisted)
 			local dict = CCDictionary(oEditor.output..file)
 			local keys = dict.keys
 			local parData = {}
+			local dataWrapper = {}
+			setmetatable(dataWrapper,
+			{
+				__newindex = function(_,name,value)
+					oEditor.dirty = rawget(parData,name) ~= value
+					rawset(parData,name,value)
+				end,
+				__index = function(_,name)
+					return rawget(parData,name)
+				end,
+				__call = function(_)
+					return parData
+				end
+			})
 			for _,v in ipairs(keys) do
 				parData[v] = dict[v]
 			end
-			oEditor.effectData = parData
+			oEditor.effectData = dataWrapper
 			if not parData.textureRectx then
 				parData.textureRectx = 0
 				parData.textureRecty = 0
 				parData.textureRectw = 0
 				parData.textureRecth = 0
 			end
-			for k,v in pairs(oEditor.effectData) do
+			for k,v in pairs(parData) do
 				oEvent:send(k,v)
 			end
 			oEvent:send("name",name)
+			oEvent:send("file",file)
 		elseif extension == "frame" then
 			-- TODO
 		end
@@ -119,7 +134,7 @@ local function oFileChooser(addExisted)
 	end
 
 	if addExisted then
-		local title = CCLabelTTF("Add  Effect","Arial",24)
+		local title = CCLabelTTF("Add  Effect  File","Arial",24)
 		title.texture.antiAlias = false
 		title.color = ccColor3(0x00ffff)
 		title.anchor = oVec2(0.5,1)
@@ -128,7 +143,7 @@ local function oFileChooser(addExisted)
 		menu:addChild(title)
 		title.opacity = 0
 		title:runAction(oOpacity(0.3,0.5))
-		yStart = y-title.contentSize.height-(oEditor.currentFile and -10 or 20)
+		yStart = y-title.contentSize.height-20
 
 		local entries = oContent:getEntries(oEditor.output,false)
 		local files = {}
@@ -183,7 +198,7 @@ local function oFileChooser(addExisted)
 		return panel
 	end
 
-	local title = CCLabelTTF("Choose  Effect","Arial",24)
+	local title = CCLabelTTF("Choose Effect","Arial",24)
 	title.texture.antiAlias = false
 	title.color = ccColor3(0x00ffff)
 	title.anchor = oVec2(0.5,1)
@@ -206,8 +221,9 @@ local function oFileChooser(addExisted)
 		title:runAction(oOpacity(0.3,0.5))
 		yStart = y-title.contentSize.height-10
 	end
-
-	for item in io.open(oEditor.output.."main.effect","r"):read("*a"):gmatch("%b<>") do
+	
+	local effectFile = io.open(oEditor.output.."main.effect","r")
+	for item in effectFile:read("*a"):gmatch("%b<>") do
 		if not item:sub(2,2):match("[A/]") then
 			local line = item:gsub("%s","")
 			local name = line:match("A=\"(.-)\"")
@@ -215,6 +231,7 @@ local function oFileChooser(addExisted)
 			oEditor.items[name] = filename
 		end
 	end
+	effectFile:close()
 
 	local i = 0
 	for itemName,filename in pairs(oEditor.items) do
@@ -301,6 +318,7 @@ local function oFileChooser(addExisted)
 					oEditor:addChild(oBox("Invalid Name"),oEditor.topMost)
 				else
 					oEditor.currentFile = name..".frame"
+					oEvent:send("interval",1)
 				end
 			end,true),oEditor.topMost)
 		end)
@@ -359,23 +377,33 @@ local function oFileChooser(addExisted)
 					panel.parent:removeChild(panel)
 				end
 				panel:hide()
-				oEditor:addChild(oBox("Delete "..oEditor.currentName,function()
+				oEditor:addChild(oBox("Remove "..oEditor.currentName,function()
 					local count = 0
 					for _,file in pairs(oEditor.items) do
 						if file == oEditor.currentFile then
 							count = count + 1
 						end
 					end
-					if count <= 1 then
-						oContent:remove(oEditor.output..oEditor.currentFile)
-					end
 					oEditor.items[oEditor.currentName] = nil
 					oEditor.currentName = nil
+					local lastFile = oEditor.currentFile
 					oEditor.currentFile = nil
 					oEditor:dumpEffectFile()
 					oEvent:send("viewArea.changeEffect",nil)
 					oEvent:send("settingPanel.hide")
-					oEditor:addChild(oFileChooser(),oEditor.topMost)
+
+					if count <= 1 then
+						local box = oBox("Delete "..lastFile,function()
+							oContent:remove(oEditor.output..lastFile)
+							oEditor:addChild(oFileChooser(),oEditor.topMost)
+						end)
+						box.cancelHandler = function()
+							oEditor:addChild(oFileChooser(),oEditor.topMost)
+						end
+						oEditor:addChild(box,oEditor.topMost)
+					else
+						oEditor:addChild(oFileChooser(),oEditor.topMost)
+					end
 				end),oEditor.topMost)
 			end)
 		delButton.color = ccColor3(0xff0080)

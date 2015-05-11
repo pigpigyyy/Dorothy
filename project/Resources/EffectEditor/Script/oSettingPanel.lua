@@ -14,6 +14,12 @@ local tolua = require("tolua")
 local ccBlendFunc = require("ccBlendFunc")
 local CCRect = require("CCRect")
 local CCArray = require("CCArray")
+local oPos = require("oPos")
+local oEase = require("oEase")
+local oRoutine = require("oRoutine")
+local once = require("once")
+local wait = require("wait")
+local seconds = require("seconds")
 
 local function oSettingPanel()
 	local winSize = CCDirector.winSize
@@ -28,15 +34,11 @@ local function oSettingPanel()
 	local itemWidth = borderSize.width
 	local itemHeight = 30
 	local background = CCDrawNode()
-	background:drawPolygon(
-	{
-		oVec2(-halfBW,-halfBH),
-		oVec2(halfBW,-halfBH),
-		oVec2(halfBW,halfBH),
-		oVec2(-halfBW,halfBH)
-	},ccColor4(0xe5100000),0.5,ccColor4(0x88ffafaf))
 	border:addChild(background,-1)
-	self.position = oVec2(winSize.width*0.5-halfBW-10,0)
+	local startPos = oVec2(winSize.width*0.5+halfBW,0)
+	local particlePos = oVec2(winSize.width*0.5-halfBW-10,0)
+	local framePos = oVec2(winSize.width*0.5-halfBW-10,-winSize.height+170)
+	self.position = startPos
 
 	local label = CCLabelTTF("","Arial",16)
 	label.position = oVec2(halfBW,borderSize.height-18)
@@ -55,6 +57,7 @@ local function oSettingPanel()
 	local itemNames =
 	{
 		"name",
+		"file",
 		"maxParticles",
 		"angle",
 		"angleVar",
@@ -122,6 +125,7 @@ local function oSettingPanel()
 		items[itemName] = item
 	end
 	items.textureRect.enabled = false
+	items.file.enabled = false
 
 	local function listen(itemName,name,getter,multi)
 		if not getter and type(name) == "function" then
@@ -210,7 +214,7 @@ local function oSettingPanel()
 	listen("gravityY","gravityy")
 	listen("tangentAccel","tangentialAcceleration")
 	listen("tangentAccelVar","tangentialAccelVariance")
-	listen("textureFile","textureFileName")
+	listen("textureFile","textureFileName",function(name) return name == "__firePngData" and "Built-In" or name end)
 	local rc = CCRect()
 	local function getRectStr()
 		return rc == CCRect.zero and "Full" or string.format("%d,%d,%d,%d",rc.origin.x,rc.origin.y,rc.size.width,rc.size.height)
@@ -223,6 +227,7 @@ local function oSettingPanel()
 	local modeGravity =
 	{
 		items.name,
+		items.file,
 		items.maxParticles,
 		items.angle,
 		items.angleVar,
@@ -270,6 +275,7 @@ local function oSettingPanel()
 	local modeRadius =
 	{
 		items.name,
+		items.file,
 		items.maxParticles,
 		items.angle,
 		items.angleVar,
@@ -315,6 +321,7 @@ local function oSettingPanel()
 	local modeFrame =
 	{
 		items.name,
+		items.file,
 		items.interval
 	}
 
@@ -326,7 +333,6 @@ local function oSettingPanel()
 	local currentGroup = nil
 	local function setGroup(group)
 		if group == currentGroup then return end
-		currentGroup = group
 		for _,item in pairs(items) do
 			item.visible = false
 		end
@@ -346,12 +352,65 @@ local function oSettingPanel()
 		if group == modeFrame then
 			label.text = "Frame"
 			label.texture.antiAlias = false
+			if not currentGroup then
+				background:drawPolygon(
+				{
+					oVec2(-halfBW,halfBH-150),
+					oVec2(halfBW,halfBH-150),
+					oVec2(halfBW,halfBH),
+					oVec2(-halfBW,halfBH)
+				},ccColor4(0xe5100000),0.5,ccColor4(0x88ffafaf))
+				self.position = oVec2(framePos.x+borderSize.width+10,framePos.y)
+				self:runAction(oPos(0.3,framePos.x,framePos.y,oEase.OutQuad))
+			else
+				oRoutine(once(function()
+					self:runAction(oPos(0.3,startPos.x,startPos.y,oEase.OutQuad))
+					wait(seconds(0.3))
+					background:clear()
+					background:drawPolygon(
+					{
+						oVec2(-halfBW,halfBH-150),
+						oVec2(halfBW,halfBH-150),
+						oVec2(halfBW,halfBH),
+						oVec2(-halfBW,halfBH)
+					},ccColor4(0xe5100000),0.5,ccColor4(0x88ffafaf))
+					self.position = oVec2(framePos.x+borderSize.width+10,framePos.y)
+					self:runAction(oPos(0.3,framePos.x,framePos.y,oEase.OutQuad))
+				end))
+			end
 			oEvent:send("oEditor.frame")
 		else
 			label.text = "Particle"
 			label.texture.antiAlias = false
+			background:clear()
+			if not currentGroup then
+				background:drawPolygon(
+				{
+					oVec2(-halfBW,-halfBH),
+					oVec2(halfBW,-halfBH),
+					oVec2(halfBW,halfBH),
+					oVec2(-halfBW,halfBH)
+				},ccColor4(0xe5100000),0.5,ccColor4(0x88ffafaf))
+				self:runAction(oPos(0.3,particlePos.x,particlePos.y,oEase.OutQuad))
+			else
+				oRoutine(once(function()
+					self:runAction(oPos(0.3,framePos.x+borderSize.width+10,framePos.y,oEase.OutQuad))
+					wait(seconds(0.3))
+					background:clear()
+					background:drawPolygon(
+					{
+						oVec2(-halfBW,-halfBH),
+						oVec2(halfBW,-halfBH),
+						oVec2(halfBW,halfBH),
+						oVec2(-halfBW,halfBH)
+					},ccColor4(0xe5100000),0.5,ccColor4(0x88ffafaf))
+					self.position = oVec2(startPos.x,startPos.y)
+					self:runAction(oPos(0.3,particlePos.x,particlePos.y,oEase.OutQuad))
+				end))
+			end
 			oEvent:send("oEditor.particle")
 		end
+		currentGroup = group
 		self:reset(borderSize.width,contentHeight,0,50)
 	end
 

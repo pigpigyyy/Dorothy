@@ -139,7 +139,7 @@ local templates =
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-	<dict>
+  <dict>
 	<key>textureRecth</key>
 	<real>0</real>
 	<key>gravityx</key>
@@ -255,7 +255,8 @@ local templates =
 	<key>emissionRate</key>
 	<real>80</real>
 	<key>rotationEnd</key>
-	<real>0</real>	</dict>
+	<real>0</real>
+  </dict>
 </plist>]],
 }
 
@@ -350,10 +351,25 @@ local function oTemplateChooser(filename)
 				oEditor.currentName = name
 				oEditor.currentFile = filename
 				oEditor:dumpEffectFile()
-				
+
 				local dict = CCDictionary(oEditor.output..filename)
 				local keys = dict.keys
 				local parData = {}
+				local dataWrapper = {}
+				setmetatable(dataWrapper,
+				{
+					__newindex = function(_,name,value)
+						oEditor.dirty = rawget(parData,name) ~= value
+						rawset(parData,name,value)
+					end,
+					__index = function(_,name)
+						return rawget(parData,name)
+					end,
+					__call = function(_)
+						return parData
+					end
+				})
+				oEditor.effectData = dataWrapper
 				for _,v in ipairs(keys) do
 					parData[v] = dict[v]
 				end
@@ -361,11 +377,11 @@ local function oTemplateChooser(filename)
 				parData.textureRecty = 0
 				parData.textureRectw = 0
 				parData.textureRecth = 0
-				oEditor.effectData = parData
-				for k,v in pairs(oEditor.effectData) do
+				for k,v in pairs(parData) do
 					oEvent:send(k,v)
 				end
 				oEvent:send("name",name)
+				oEvent:send("file",filename)
 				oCache.Effect:load(oEditor.output.."main.effect")
 				oEvent:send("viewArea.changeEffect",name)
 			end)
@@ -383,7 +399,7 @@ local function oTemplateChooser(filename)
 			}))
 		menu:addChild(button)
 	end
-		
+
 	resetPanel()
 	panel:show()
 	return panel

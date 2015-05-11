@@ -65,7 +65,7 @@ oEditor.dumpData = function(self,filename)
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 	<dict>]]
-		for k,v in pairs(oEditor.effectData) do
+		for k,v in pairs(oEditor.effectData()) do
 			if type(v) == "number" then
 				str = str.."\n\t<key>"..k.."</key>\n\t<real>"..tostring(v).."</real>"
 			elseif type(v) == "string" then

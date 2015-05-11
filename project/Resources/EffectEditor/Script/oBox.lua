@@ -138,7 +138,7 @@ local oBox = class({
 						self:addChild(opMenu)
 
 						local okButton = oButton("OK",17,60,false,
-							0,0,
+							self._okHandler and 0 or 35,0,
 							function()
 								if self._isInput then
 									if self._textField.text == "" then return end
@@ -162,26 +162,31 @@ local oBox = class({
 						btnBk.position = oVec2(30,30)
 						okButton:addChild(btnBk,-1)
 						opMenu:addChild(okButton)
-
-						local cancelButton = oButton("Cancel",17,60,false,
-							70,0,
-							function()
-								if self._isInput then
-									self._okHandler = nil
-									self._textField:detachWithIME()
-								end
-								opMenu:removeHandlers()
-								self:hide()
-							end)
-						cancelButton.anchor = oVec2.zero
-						btnBk = CCDrawNode()
-						btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
-						btnBk.position = oVec2(30,30)
-						cancelButton:addChild(btnBk,-1)
-						opMenu:addChild(cancelButton)
+						
+						local cancelButton
+						if self._okHandler then
+							cancelButton = oButton("Cancel",17,60,false,
+								70,0,
+								function()
+									if self._isInput then
+										self._okHandler = nil
+										self._textField:detachWithIME()
+									elseif self.cancelHandler then
+										self.cancelHandler()
+									end
+									opMenu:removeHandlers()
+									self:hide()
+								end)
+							cancelButton.anchor = oVec2.zero
+							btnBk = CCDrawNode()
+							btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
+							btnBk.position = oVec2(30,30)
+							cancelButton:addChild(btnBk,-1)
+							opMenu:addChild(cancelButton)
+						end
 						opMenu.removeHandlers = function(self)
 							okButton.tapHandler = nil
-							cancelButton.tapHandler = nil
+							if cancelButton then cancelButton.tapHandler = nil end
 							if self._isInput then
 								self._textField.inputHandler = nil
 								self._menu.enabled = false

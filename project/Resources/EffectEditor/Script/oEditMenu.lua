@@ -13,6 +13,7 @@ local CCSequence = require("CCSequence")
 local oScale = require("oScale")
 local CCHide = require("CCHide")
 local CCDelay = require("CCDelay")
+local CCShow = require("CCShow")
 
 local function oEditMenu()
 	local winSize = CCDirector.winSize
@@ -62,6 +63,7 @@ local function oEditMenu()
 			oEvent:send("viewArea.play")
 		end),
 	}
+	items.Play.visible = false
 
 	-- add buttons to menu --
 	for _,item in pairs(items) do
@@ -85,6 +87,12 @@ local function oEditMenu()
 			items.Zoom:stopAllActions()
 			items.Zoom:runAction(CCSequence({oScale(0.3,0,0,oEase.InBack),CCHide()}))
 		end
+		items.Play:stopAllActions()
+		if items.Play.visible then
+			items.Play:runAction(CCSequence({oPos(0.3,winSize.width-240-45,45+150,oEase.OutQuad),oPos(0.5,winSize.width-240-45,35,oEase.InBack)}))
+		else
+			items.Play:runAction(CCSequence({CCShow(),oScale(0,0,0),oScale(0.3,1,1,oEase.OutBack)}))
+		end
 	end))
 	menu.data:add(oListener("oEditor.frame",function()
 		if not items.Origin.visible then
@@ -93,6 +101,12 @@ local function oEditMenu()
 			items.Origin:runAction(oPos(0.3,winSize.width-240-45-60,winSize.height-35,oEase.InBack))
 			items.Zoom:stopAllActions()
 			items.Zoom:runAction(CCSequence({CCDelay(0.3),oScale(0.3,1,1,oEase.OutBackBack)}))
+		end
+		if items.Play.visible then
+			items.Play:runAction(CCSequence({oPos(0.5,winSize.width-240-45,45+150,oEase.OutBack),oPos(0.3,winSize.width-35,45+150,oEase.OutQuad)}))
+		else
+			items.Play.position = oVec2(winSize.width-35,45+150)
+			items.Play:runAction(CCSequence({CCShow(),oScale(0,0,0),oScale(0.3,1,1,oEase.OutBack)}))
 		end
 	end))
 	menu.data:add(oListener("oEditor.change",function()

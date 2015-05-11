@@ -111,7 +111,7 @@ local function oEditControl()
 		if not modeSelector.visible then return end
 		modeSelector:hide()
 	end
-	
+
 	-- show & hide color picker
 	local colorPicker = oColorPicker()
 	colorPicker.visible = false
@@ -317,11 +317,15 @@ local function oEditControl()
 				oEvent:send("name",newName)
 			else
 				ruler:hide()
+				control:hideModeSelector()
 				control:hideBlendSelector()
 				control:hideColorPicker()
-				oEffect:update(oEditor.effect,oEditor.effectData)
-				oEditor.effect:start()
-				oEvent:send("oEditor.change")
+				if oEditor.dirty then
+					oEditor.dirty = false
+					oEffect:update(oEditor.effect,oEditor.effectData)
+					oEditor.effect:start()
+					oEvent:send("oEditor.change")
+				end
 			end
 		end
 	end)
