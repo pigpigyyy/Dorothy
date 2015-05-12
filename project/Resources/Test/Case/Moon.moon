@@ -1,5 +1,5 @@
 Dorothy!
-
+ 
 {:width,:height} = CCDirector.winSize
 
 model = with oModel "ActionEditor/Model/Output/xiaoli.model"
