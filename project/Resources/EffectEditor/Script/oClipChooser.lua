@@ -51,8 +51,8 @@ local function oClipChooser(clipName)
 		opMenu.enabled = false
 		if panel.fadeSprites then
 			panel:fadeSprites()
-			panel:hide()
 		end
+		panel:hide()
 	end)
 	cancelButton.anchor = oVec2.zero
 	local btnBk = CCDrawNode()
