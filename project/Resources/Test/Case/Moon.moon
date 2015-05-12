@@ -1,4 +1,4 @@
-setfenv Dorothy!
+Dorothy!
 
 {:width,:height} = CCDirector.winSize
 

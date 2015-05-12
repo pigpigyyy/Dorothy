@@ -1,4 +1,4 @@
-setfenv(Dorothy())
+Dorothy()
 local width, height
 do
   local _obj_0 = CCDirector.winSize

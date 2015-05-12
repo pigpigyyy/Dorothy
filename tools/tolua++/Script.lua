@@ -406,7 +406,7 @@ oContent.copyAsync = function(self,src,dst)
 	wait(function() return not loaded end)
 end
 
-_G["Dorothy"] = (function()
+_G["Dorothy"] = (function(env)
 	local tb
 	local function gettb()
 		tb = {}
@@ -418,7 +418,17 @@ _G["Dorothy"] = (function()
 		end
 		return tb
 	end
-	return function() return 1,tb or gettb() end
+	return function()
+		local dorothy = tb or gettb()
+		if env then
+			local newEnv = {}
+			for k,v in pairs(env) do newEnv[k] = v end
+			setmetatable(newEnv,{__index=dorothy})
+			setfenv(2,newEnv)
+		else
+			setfenv(2,dorothy)
+		end
+	end
 end)()
 
 collectgarbage("setpause", 100)

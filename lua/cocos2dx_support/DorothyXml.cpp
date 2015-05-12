@@ -1413,13 +1413,7 @@ public:
 		oXmlDelegate::clear();
 		stream <<
 		"return function(data)\n"
-			"if data then\n"
-				"local _,dorothy = Dorothy()\n"
-				"setmetatable(data,{__index=dorothy})\n"
-				"setfenv(1,data)\n"
-			"else\n"
-				"setfenv(Dorothy())\n"
-			"end\n\n";
+			"Dorothy(data)\n\n";
 	}
 	void end()
 	{

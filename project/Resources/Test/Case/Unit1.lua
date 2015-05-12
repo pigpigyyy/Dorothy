@@ -1,4 +1,4 @@
-setfenv(Dorothy())
+Dorothy()
 
 oContent:setSearchPaths({"Lib","Test/Case/Unit1"})
 
