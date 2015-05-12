@@ -63,6 +63,8 @@ local function oEditMenu()
 			oEvent:send("viewArea.play")
 		end),
 	}
+	items.Origin.visible = false
+	items.Zoom.visible = false
 	items.Play.visible = false
 
 	-- add buttons to menu --
@@ -83,9 +85,13 @@ local function oEditMenu()
 	menu.data:add(oListener("oEditor.particle",function()
 		if items.Origin.visible then
 			items.Origin:stopAllActions()
-			items.Origin:runAction(CCSequence({CCDelay(0.3),oPos(0.3,winSize.width-240-45,winSize.height-35,oEase.OutBack)}))
+			items.Origin:runAction(CCSequence({CCDelay(0.3),oPos(0.3,winSize.width-240-45,winSize.height-35,oEase.OutQuad)}))
 			items.Zoom:stopAllActions()
 			items.Zoom:runAction(CCSequence({oScale(0.3,0,0,oEase.InBack),CCHide()}))
+		else
+			items.Origin.visible = true
+			items.Origin.position = oVec2(winSize.width-240-45,winSize.height-35)
+			items.Origin:runAction(CCSequence({oScale(0,0,0),oScale(0.3,1,1,oEase.OutBack)}))
 		end
 		items.Play:stopAllActions()
 		if items.Play.visible then
@@ -96,12 +102,28 @@ local function oEditMenu()
 	end))
 	menu.data:add(oListener("oEditor.frame",function()
 		if not items.Origin.visible then
+			if items.Zoom.visible then
+				items.Origin:stopAllActions()
+				items.Origin.visible = true
+				items.Origin:runAction(oPos(0.3,winSize.width-240-45-60,winSize.height-35,oEase.InBack))
+				items.Zoom:stopAllActions()
+				items.Zoom:runAction(CCSequence({CCDelay(0.3),oScale(0.3,1,1,oEase.OutBack)}))
+			else
+				items.Origin.visible = true
+				items.Origin.position = oVec2(winSize.width-95,winSize.height-35)
+				items.Origin:runAction(CCSequence({oScale(0,0,0),oScale(0.3,1,1,oEase.OutBack)}))
+				items.Zoom.visible = true
+				items.Zoom.position = oVec2(winSize.width-35,winSize.height-35)
+				items.Zoom:runAction(CCSequence({oScale(0,0,0),oScale(0.3,1,1,oEase.OutBack)}))
+			end
+		else
 			items.Origin:stopAllActions()
-			items.Origin.visible = true
-			items.Origin:runAction(oPos(0.3,winSize.width-240-45-60,winSize.height-35,oEase.InBack))
-			items.Zoom:stopAllActions()
-			items.Zoom:runAction(CCSequence({CCDelay(0.3),oScale(0.3,1,1,oEase.OutBackBack)}))
+			items.Origin:runAction(oPos(0.3,winSize.width-95,winSize.height-35,oEase.OutQuad))
+			items.Zoom.visible = true
+			items.Zoom.position = oVec2(winSize.width-35,winSize.height-35)
+			items.Zoom:runAction(CCSequence({oScale(0,0,0),oScale(0.3,1,1,oEase.OutBack)}))
 		end
+
 		if items.Play.visible then
 			items.Play:runAction(CCSequence({oPos(0.5,winSize.width-240-45,45+150,oEase.OutBack),oPos(0.3,winSize.width-35,45+150,oEase.OutQuad)}))
 		else

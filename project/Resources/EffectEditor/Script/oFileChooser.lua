@@ -317,6 +317,7 @@ local function oFileChooser(addExisted)
 				if name == "" or name:match("[\\/|:*?<>\"%.]") then
 					oEditor:addChild(oBox("Invalid Name"),oEditor.topMost)
 				else
+					oEditor.currentName = name
 					oEditor.currentFile = name..".frame"
 					oEvent:send("interval",1)
 				end

@@ -1,6 +1,7 @@
 require("Test/Entry")
 
---[[setfenv(Dorothy())
+--[[
+setfenv(Dorothy())
 
 oRoutine:stop()
 cclog("Object Count: %d",CCObject.count)
