@@ -12,9 +12,36 @@ local oOpacity = require("oOpacity")
 local CCNode = require("CCNode")
 local oContent = require("oContent")
 local oEditor = require("oEditor")
-local oRoutine = require("oRoutine")
-local once = require("once")
 local ccColor3 = require("ccColor3")
+local oLine = require("oLine")
+local CCLabelTTF = require("CCLabelTTF")
+local tolua = require("tolua")
+local oScale = require("oScale")
+local oEase = require("oEase")
+local CCSequence = require("CCSequence")
+local CCCall = require("CCCall")
+
+local function oCircle(number)
+	local width = 25
+	local vs = {}
+	local num = 50
+	for i = 0, num do
+		local angle = 2*math.pi*i/num
+		table.insert(vs,oVec2(width*0.5*math.cos(angle),width*0.5*math.sin(angle)))
+	end
+	local line = oLine(vs,ccColor4(0xff00ffff))
+	line.cascadeOpacity = false
+	line.cascadeColor = false
+	local drawNode = CCDrawNode()
+	drawNode:drawDot(oVec2.zero,width*0.5,ccColor4(0x2200ffff))
+	line:addChild(drawNode,-1)
+	line.position = oVec2(100-width*0.5-5,width*0.5+5)
+	local label = CCLabelTTF(tostring(number),"Arial",16)
+	label.color = ccColor3(0x00ffff)
+	label.texture.antiAlias = false
+	line:addChild(label)
+	return line
+end
 
 local function oClipChooser(clipName)
 	local winSize = CCDirector.winSize
@@ -41,12 +68,13 @@ local function oClipChooser(clipName)
 	border:addChild(background,-1)
 
 	local opMenu = CCMenu()
-	opMenu.contentSize = CCSize(60,60)
+	opMenu.contentSize = CCSize(130,60)
+	opMenu.anchor = oVec2(1,0.5)
 	opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
-	opMenu.position = oVec2(winSize.width*0.5+borderSize.width*0.5,winSize.height*0.5+borderSize.height*0.5)
+	opMenu.position = oVec2(winSize.width*0.5+borderSize.width*0.5+30,winSize.height*0.5+borderSize.height*0.5)
 	panel:addChild(opMenu)
 
-	local cancelButton = oButton("Cancel",17,60,false,0,0,function(item)
+	local cancelButton = oButton("Cancel",17,60,false,clipName and 0 or 70,0,function(item)
 		item.tapHandler = nil
 		opMenu.enabled = false
 		if panel.fadeSprites then
@@ -60,6 +88,23 @@ local function oClipChooser(clipName)
 	btnBk.position = oVec2(30,30)
 	cancelButton:addChild(btnBk,-1)
 	opMenu:addChild(cancelButton)
+	
+	if clipName then
+		local setButton = oButton("Set",17,60,false,70,0,function(item)
+			item.tapHandler = nil
+			opMenu.enabled = false
+			if panel.fadeSprites then
+				panel:fadeSprites()
+			end
+			panel:hide()
+		end)
+		setButton.anchor = oVec2.zero
+		local btnBk = CCDrawNode()
+		btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
+		btnBk.position = oVec2(30,30)
+		setButton:addChild(btnBk,-1)
+		opMenu:addChild(setButton)
+	end
 
 	panel.sprites = {}
 	panel.init = function(self)
@@ -88,6 +133,7 @@ local function oClipChooser(clipName)
 				end
 			end
 		else
+			panel.number = 1
 			panel.sprites = {}
 			local filename = oEditor.input..clipName
 			local names = oCache.Clip:getNames(filename)
@@ -101,7 +147,17 @@ local function oClipChooser(clipName)
 					itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
 					function(item)
 						sprite.opacity = 1
-				sprite.color = ccColor3()
+						sprite.color = ccColor3()
+						if not item.circle then
+							local circle = oCircle(panel.number)
+							circle.scaleX = 0
+							circle.scaleY = 0
+							circle:runAction(oScale(0.3,1,1,oEase.OutBack))
+							item.face.cascadeOpacity = false
+							item.node:addChild(circle)
+							item.circle = circle
+							panel.number = panel.number + 1
+						end
 					end)
 				sprite = CCSprite(clipStr)
 				local contentSize = sprite.contentSize
@@ -112,7 +168,7 @@ local function oClipChooser(clipName)
 				end
 				sprite.position = oVec2(100*0.5,100*0.5)
 				sprite.opacity = 0
-				sprite.color = ccColor3(0x888888)
+				sprite.color = ccColor3(0x666666)
 				sprite:runAction(oOpacity(0.3,0.4))
 				local node = CCNode()
 				node.cascadeColor = false
@@ -120,9 +176,35 @@ local function oClipChooser(clipName)
 				node:addChild(sprite)
 				table.insert(panel.sprites,node)
 				button.face:addChild(node)
+				button.node = node
 				button.position = button.position + panel:getTotalDelta()
 				menu:addChild(button)
 			end
+
+			n = n + 1
+			y = borderSize.height-10-itemHeight*0.5-math.floor((n-1)/itemNum)*(itemHeight+10)
+			local button = oButton("Clear\nSelection",17,
+				100,100,
+				itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
+				function()
+					for i = 1,menu.children.count do
+						local child = tolua.cast(menu.children[i],"CCMenuItem")
+						if child and child.circle then
+							child.face.cascadeOpacity = true
+							child.node.children[1].opacity = 0.4
+							child.node.children[1].color = ccColor3(0x666666)
+							local circle = child.circle
+							circle:runAction(CCSequence({oScale(0.3,0,0,oEase.OutQuad),CCCall(function()
+								circle.parent:removeChild(circle)
+							end)}))
+							child.circle = nil
+						end
+					end
+					panel.number = 1
+				end)
+			button.position = button.position + panel:getTotalDelta()
+			menu:addChild(button)
+
 			panel.fadeSprites = function(self)
 				local sprites = panel.sprites
 				for i = 1,#sprites do
@@ -131,7 +213,7 @@ local function oClipChooser(clipName)
 				panel.sprites = nil
 			end
 		end
-		
+
 		local yTo = borderSize.height+itemHeight*0.5+10-y
 		local viewHeight = yTo < borderSize.height and borderSize.height or yTo
 		local viewWidth = borderSize.width

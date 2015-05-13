@@ -14,4 +14,7 @@ for i,item in pairs(ubox()) do
 end
 
 CCDirector:run(CCScene())
+local oContent = require("oContent")
+oContent:setSearchPaths({"","Lib"})
+require("EffectEditor.Script.main")
 --]]

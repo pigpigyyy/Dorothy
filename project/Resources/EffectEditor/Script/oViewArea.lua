@@ -20,6 +20,7 @@ local function oViewArea()
 	scrollNode.position = oEditor.origin
 
 --[[
+	local winSize = CCDirector.winSize
 	local radius = 50
 	local star = oStar(radius,ccColor4(0x6600ffff),0.5,ccColor4(0xff00ffff))
 	star.position = oVec2(radius,radius)
@@ -46,7 +47,7 @@ local function oViewArea()
 			}))
 	progressTimer.position = oVec2(winSize.width*0.5,winSize.height*0.5)
 	view:addChild(progressTimer)
-]]
+--]]
 
 	view.touchEnabled = true
 	view.touchHandler = function(eventType,touch)
