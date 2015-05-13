@@ -174,11 +174,11 @@ local function oVRuler()
 			self:runAction(oScale(0.5,1,scale,oEase.OutQuad))
 			-- manually update and unscale interval text --
 			local time = 0
-			intervalNode:schedule(function(node,deltaTime)
+			intervalNode:schedule(function(deltaTime)
 				updateIntervalTextScale(1/self.scaleY)
 				time = time + deltaTime
 				if math.min(time/0.5,1) == 1 then
-					node:unschedule()
+					intervalNode:unschedule()
 				end
 			end)
 		end

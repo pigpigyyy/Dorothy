@@ -67,20 +67,18 @@ local function oViewArea()
 		if oEditor.effect then
 			oEditor.effect:autoRemove():stop()
 		end
-		local extension = string.match(oEditor.items[effectName], "%.([^%.\\/]*)$")
-		if extension == "par" then
-			local effect = oEffect(effectName)
-			effect:attachTo(scrollNode):start()
-			oEditor.effect = effect
-		elseif extension == "frame" then
-			-- TODO
-		end
+		local effect = oEffect(effectName)
+		effect:attachTo(scrollNode):start()
+		oEditor.effect = effect
 	end))
 	view.data:add(oListener("viewArea.scroll",function(scale)
 		scrollNode:runAction(oScale(0.3,scale,scale,oEase.OutQuad))
 	end))
 	view.data:add(oListener("viewArea.toOrigin",function(origin)
 		scrollNode:runAction(oPos(0.3,origin.x,origin.y,oEase.OutQuad))
+	end))
+	view.data:add(oListener("viewArea.pos",function(pos)
+		scrollNode.position = pos
 	end))
 	view.data:add(oListener("viewArea.play",function()
 		if oEditor.effect then

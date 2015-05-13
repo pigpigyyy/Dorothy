@@ -96,7 +96,7 @@ local function oSettingPanel()
 	menu.positionY = borderSize.height
 	menu.visible = false
 
-	local function updateReset(self,deltaTime)
+	local function updateReset(deltaTime)
 		local children = menu.children
 		if not children then return end
 
@@ -323,14 +323,14 @@ local function oSettingPanel()
 		return not opacity.done
 	end
 
-	local function updateSpeed(self,deltaTime)
+	local function updateSpeed(deltaTime)
 		if _s == oVec2.zero then
 			return
 		end
 		_v = _s / deltaTime
 		_s = oVec2.zero
 	end
-	local function updatePos(self,deltaTime)
+	local function updatePos(deltaTime)
 		local val = winSize.height*2
 		local a = oVec2(_v.x > 0 and -val or val,_v.y > 0 and -val or val)
 		

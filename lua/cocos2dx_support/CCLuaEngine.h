@@ -88,7 +88,7 @@ public:
 	virtual int executeNodeEvent(CCNode* pNode, int nAction);
 	virtual int executeAppEvent(int nHandler, int eventType);
 	virtual int executeMenuItemEvent(int eventType, CCMenuItem* pMenuItem);
-	virtual int executeSchedule(int nHandler, float dt, CCNode* pNode = NULL);
+	virtual int executeSchedule(int nHandler, float dt);
 	virtual int executeLayerTouchesEvent(CCLayer* pLayer, int eventType, CCSet* pTouches);
 	virtual int executeLayerTouchEvent(CCLayer* pLayer, int eventType, CCTouch* pTouch);
 	virtual int executeLayerKeypadEvent(CCLayer* pLayer, int eventType);

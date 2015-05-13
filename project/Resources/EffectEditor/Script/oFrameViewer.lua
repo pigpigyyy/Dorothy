@@ -12,7 +12,6 @@ local CCDelay = require("CCDelay")
 local oPos = require("oPos")
 local oEase = require("oEase")
 local CCHide = require("CCHide")
-local oButton = require("oButton")
 local CCSprite = require("CCSprite")
 local oLine = require("oLine")
 
@@ -31,9 +30,14 @@ local function oClipViewer(clipStr)
 		oVec2(width,0),
 		oVec2(width,width),
 		oVec2(0,width),
-		oVec2.zero
+		oVec2.zero,
 	},ccColor4(0xff00ffff))
-	
+	frame.cascadeColor = false
+	frame.contentSize = CCSize(width,width)
+	frame.anchor = oVec2.zero
+	sprite.position = oVec2(width*0.5,width*0.5)
+	frame:addChild(sprite)
+	return frame
 end
 
 local function oFrameViewer()
@@ -51,8 +55,6 @@ local function oFrameViewer()
 	local border = panel.border
 	local halfBW = borderSize.width*0.5
 	local halfBH = borderSize.height*0.5
-	local itemWidth = borderSize.width
-	local itemHeight = 30
 	local endPos = oVec2(10-halfW+borderW*0.5,10-halfH+borderH*0.5)
 	local startPos = oVec2(endPos.x,endPos.y-borderH-10)
 	local background = CCDrawNode()
@@ -67,15 +69,6 @@ local function oFrameViewer()
 	panel.position = startPos
 	panel.visible = false
 
-	local button = oButton("Button",17,130,130,0,0,function() print("tepped") end)
-	button.anchor = oVec2.zero
-	button.position = oVec2(10,10)
-	menu:addChild(button)
-
-	local viewHeight = 100
-	local viewWidth = borderSize.width+100
-	panel:reset(viewWidth,viewHeight,25,0)
-
 	panel.data = CCArray()
 	panel.data:add(oListener("oEditor.particle",function()
 		if panel.visible then
@@ -88,6 +81,18 @@ local function oFrameViewer()
 		panel.position = startPos
 		panel.visible = true
 		panel:runAction(oPos(0.5,endPos.x,endPos.y,oEase.OutBack))
+	end))
+	panel.data:add(oListener("oClipChooser.clips",function(clips)
+		menu:removeAllChildrenWithCleanup()
+		local width = 0
+		for i,clipStr in ipairs(clips) do
+			width = 10+140*(i-1)
+			local clip = oClipViewer(clipStr)
+			clip.position = oVec2(width,10)
+			menu:addChild(clip)
+		end
+		width = width + 140
+		panel:reset(width,borderSize.height,50,0)
 	end))
 
 	return panel

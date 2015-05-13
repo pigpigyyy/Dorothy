@@ -22,7 +22,6 @@ local controls =
 	"oSettingPanel",
 	"oEditControl",
 	"oFrameViewer",
-	"oClipChooser",
 }
 
 oRoutine(once(function()

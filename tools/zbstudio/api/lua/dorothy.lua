@@ -631,7 +631,7 @@ local Dorothy =
 			schedule =
 			{
 				args = "(handler: function, priority: int)",
-				description = " -- handler: function(self: CCNode, deltaTime: float)",
+				description = " -- handler: function(deltaTime: float)",
 				returns = "()",
 				type = "method",
 			},

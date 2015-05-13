@@ -219,7 +219,6 @@ local function oEditControl()
 					oEvent:send(sg,oEditor.effectData[sg])
 					oEvent:send(sb,oEditor.effectData[sb])
 					oEvent:send(sa,oEditor.effectData[sa])
-					oEvent:send("settingPanel.cancel")
 				end)
 			elseif name == "startRedVar"
 				or name == "startBlueVar"
@@ -322,7 +321,7 @@ local function oEditControl()
 				control:hideColorPicker()
 				if oEditor.dirty then
 					oEditor.dirty = false
-					oEffect:update(oEditor.effect,oEditor.effectData)
+					oEffect:update(oEditor.effect,oEditor.effectData())
 					oEditor.effect:start()
 					oEvent:send("oEditor.change")
 				end

@@ -75,7 +75,7 @@ local function oSelectionPanel(borderSize,noCliping)
 	menu.anchor = oVec2(0,1)
 	menu.position = oVec2(-winSize.width*0.5,winSize.height*0.5)
 
-	local function updateReset(self,deltaTime)
+	local function updateReset(deltaTime)
 		local children = menu.children
 		if not children then return end
 
@@ -133,7 +133,7 @@ local function oSelectionPanel(borderSize,noCliping)
 		if not children then return end
 
 		local newPos = totalDelta + deltaPos
-		
+
 		if touching then
 			if newPos.x > paddingX then
 				newPos.x = paddingX 
@@ -197,7 +197,7 @@ local function oSelectionPanel(borderSize,noCliping)
 	end
 	view:addChild(menu)
 
-	local function updateSpeed(self,deltaTime)
+	local function updateSpeed(deltaTime)
 		if _s == oVec2.zero then
 			return
 		end
@@ -205,7 +205,7 @@ local function oSelectionPanel(borderSize,noCliping)
 		_s = oVec2.zero
 	end
 
-	local function updatePos(self,deltaTime)
+	local function updatePos(deltaTime)
 		local val = winSize.height*2
 		local a = oVec2(_v.x > 0 and -val or val,_v.y > 0 and -val or val)
 		

@@ -14,6 +14,7 @@ local oScale = require("oScale")
 local CCHide = require("CCHide")
 local CCDelay = require("CCDelay")
 local CCShow = require("CCShow")
+local oClipChooser = require("oClipChooser")
 
 local function oEditMenu()
 	local winSize = CCDirector.winSize
@@ -38,7 +39,7 @@ local function oEditMenu()
 			oEvent:send("settingPanel.cancel")
 		end),
 
-		Origin = oButton("Origin",16,50,50,winSize.width-240-45-60,winSize.height-35,function(button)
+		Origin = oButton("Origin",16,50,50,winSize.width-240-45-60,winSize.height-35,function()
 			oEvent:send("viewArea.toOrigin",oEditor.origin)
 		end),
 
@@ -58,14 +59,19 @@ local function oEditMenu()
 			oEvent:send("viewArea.toScale",scale)
 		end),
 
-		Play = oButton("Play",16,50,50,winSize.width-240-45,35,function(button)
+		Play = oButton("Play",16,50,50,winSize.width-240-45,35,function()
 			oEvent:send("settingPanel.cancel")
 			oEvent:send("viewArea.play")
+		end),
+
+		Set = oButton("Set",16,50,50,35,45+150,function()
+			oEditor:addChild(oClipChooser(),oEditor.topMost)
 		end),
 	}
 	items.Origin.visible = false
 	items.Zoom.visible = false
 	items.Play.visible = false
+	items.Set.visible = false
 
 	-- add buttons to menu --
 	for _,item in pairs(items) do
@@ -99,6 +105,11 @@ local function oEditMenu()
 		else
 			items.Play:runAction(CCSequence({CCShow(),oScale(0,0,0),oScale(0.3,1,1,oEase.OutBack)}))
 		end
+		if items.Set.visible then
+			items.Set:runAction(CCSequence({oScale(0.3,0,0,oEase.InBack),CCHide()}))
+		end
+		
+		oEvent:send("viewArea.pos",oEditor.origin)
 	end))
 	menu.data:add(oListener("oEditor.frame",function()
 		if not items.Origin.visible then
@@ -130,6 +141,12 @@ local function oEditMenu()
 			items.Play.position = oVec2(winSize.width-35,45+150)
 			items.Play:runAction(CCSequence({CCShow(),oScale(0,0,0),oScale(0.3,1,1,oEase.OutBack)}))
 		end
+		
+		if not items.Set.visible then
+			items.Set:runAction(CCSequence({CCShow(),oScale(0,0,0),oScale(0.3,1,1,oEase.OutBack)}))
+		end
+
+		oEvent:send("viewArea.pos",oVec2(winSize.width*0.5,(winSize.height-150)*0.5+150))
 	end))
 	menu.data:add(oListener("oEditor.change",function()
 		if not oEditor.dirty then

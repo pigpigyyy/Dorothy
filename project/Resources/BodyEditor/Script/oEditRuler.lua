@@ -156,11 +156,11 @@ local function oEditRuler()
 		intervalNode:runAction(oScale(0.5,1,scale,oEase.OutQuad))
 		-- manually update and unscale interval text --
 		local time = 0
-		intervalNode:schedule(function(self,deltaTime)
+		intervalNode:schedule(function(deltaTime)
 			updateIntervalTextScale(1/intervalNode.scaleY)
 			time = time + deltaTime
 			if math.min(time/0.5,1) == 1 then
-				self:unschedule()
+				intervalNode:unschedule()
 			end
 		end)
 		local posY = intervalNode.anchor.y*height
@@ -216,7 +216,7 @@ local function oEditRuler()
 
 	local time = 0
 	local startPos = 0
-	local function updateReset(self,deltaTime)
+	local function updateReset(deltaTime)
 		if _min >= _max then return end
 
 		local scale = intervalNode.scaleY
@@ -256,7 +256,7 @@ local function oEditRuler()
 
 	local _v = 0
 	local _s = 0
-	local function updateSpeed(self,deltaTime)
+	local function updateSpeed(deltaTime)
 		if _s == 0 then
 			return
 		end
@@ -264,7 +264,7 @@ local function oEditRuler()
 		_s = 0
 	end
 
-	local function updatePos(self,deltaTime)
+	local function updatePos(deltaTime)
 		local val = winSize.height*2
 		local a = _v > 0 and -val or val
 

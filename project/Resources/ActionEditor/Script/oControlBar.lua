@@ -87,31 +87,30 @@ local function oControlBar()
 		self._isUpdating = true
 		local i = lastSize
 		-- update ruler interval by step, not all at once
-		self:schedule(
-			function(self)
-				if i <= self._size then
-					local posX = delta*i
-					if i == 0 or (i%10 == 0 and i ~= lastSize) then
-						local label = CCLabelTTF(tostring(i),"Arial",10)--CCLabelAtlas(tostring(i),"rulerNum.png",7,11,string.byte("0"))
-						label.texture.antiAlias = false
-						label.position = oVec2(posX, 14)
-						self:addChild(label)
-						self:drawSegment(
-							oVec2(posX,0),
-							oVec2(posX,6),
-							0.5,ccColor4(0xffffffff))
-					elseif i%10 ~= 0 then					
-						self:drawSegment(
-							oVec2(posX,0),
-							oVec2(posX,3),
-							0.5,ccColor4(0xffffffff))
-					end
-					i = i + 1
-				else
-					self:unschedule()
-					self._isUpdating = false
+		self:schedule(function()
+			if i <= self._size then
+				local posX = delta*i
+				if i == 0 or (i%10 == 0 and i ~= lastSize) then
+					local label = CCLabelTTF(tostring(i),"Arial",10)--CCLabelAtlas(tostring(i),"rulerNum.png",7,11,string.byte("0"))
+					label.texture.antiAlias = false
+					label.position = oVec2(posX, 14)
+					self:addChild(label)
+					self:drawSegment(
+						oVec2(posX,0),
+						oVec2(posX,6),
+						0.5,ccColor4(0xffffffff))
+				elseif i%10 ~= 0 then					
+					self:drawSegment(
+						oVec2(posX,0),
+						oVec2(posX,3),
+						0.5,ccColor4(0xffffffff))
 				end
-			end)
+				i = i + 1
+			else
+				self:unschedule()
+				self._isUpdating = false
+			end
+		end)
 	end
 	ruler.getSize = function(self)
 		return self._size
@@ -261,14 +260,13 @@ local function oControlBar()
 			else
 				jumpPos = true
 				local interval = 0
-				controlBar:schedule(
-					function(self,deltaTime)
-						interval = interval + deltaTime
-						if interval >= 0.5 then
-							jumpPos = false
-							controlBar:unschedule()
-						end
-					end)
+				controlBar:schedule(function(deltaTime)
+					interval = interval + deltaTime
+					if interval >= 0.5 then
+						jumpPos = false
+						controlBar:unschedule()
+					end
+				end)
 			end
 			--cclog("End %d,%d",lastPos,offset)
 		elseif eventType == CCTouch.Moved then

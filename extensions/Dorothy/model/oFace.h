@@ -40,6 +40,7 @@ public:
 	virtual void draw();
 	virtual bool dispose();
 	void childrenDisposed(oIDisposable* item);
+	static oSprite* create();
 	static oSprite* createWithTexture(CCTexture2D *pTexture);
 	static oSprite* createWithTexture(CCTexture2D *pTexture, const CCRect& rect);
 protected:

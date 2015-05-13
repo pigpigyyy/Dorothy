@@ -250,13 +250,20 @@ oSpriteEffect* oSpriteEffect::create( const char* filename )
 
 	oFrameActionDef* frameActionDef = oSharedAnimationCache.load(filename);
 
-	effect->_sprite = oSprite::createWithTexture(
-		oSharedContent.loadTexture(frameActionDef->textureFile.c_str()),
-		*frameActionDef->rects[0]);
-
-	effect->_action = CCSequence::createWithTwoActions(
-		frameActionDef->toAction(),
-	oCallFunc::create(effect, callfunc_selector(oSpriteEffect::onDispose)));
+	if (frameActionDef->textureFile.empty() || frameActionDef->rects.size() == 0)
+	{
+		effect->_sprite = oSprite::create();
+		effect->_action = CCSequence::create(oCallFunc::create(effect, callfunc_selector(oSpriteEffect::onDispose)),nullptr);
+	}
+	else
+	{
+		effect->_sprite = oSprite::createWithTexture(
+			oSharedContent.loadTexture(frameActionDef->textureFile.c_str()),
+			*frameActionDef->rects[0]);
+		effect->_action = CCSequence::createWithTwoActions(
+			frameActionDef->toAction(),
+			oCallFunc::create(effect, callfunc_selector(oSpriteEffect::onDispose)));
+	}
 
 	effect->autorelease();
 	return effect;

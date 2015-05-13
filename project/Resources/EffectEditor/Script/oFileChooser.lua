@@ -102,7 +102,9 @@ local function oFileChooser(addExisted)
 			setmetatable(dataWrapper,
 			{
 				__newindex = function(_,name,value)
-					oEditor.dirty = rawget(parData,name) ~= value
+					if not oEditor.dirty then
+						oEditor.dirty = rawget(parData,name) ~= value
+					end
 					rawset(parData,name,value)
 				end,
 				__index = function(_,name)
@@ -128,7 +130,15 @@ local function oFileChooser(addExisted)
 			oEvent:send("name",name)
 			oEvent:send("file",file)
 		elseif extension == "frame" then
-			-- TODO
+			local frameFile = io.open(oEditor.output..file)
+			local data = frameFile:read("*a")
+			frameFile:close()
+			local img = data:match("A%s*=%s*\"\"")
+			if img then img = "" else img = data:match("A%s*=%s*\"(.*)\"") end
+			local interval = data:match("B%s*=%s*\"(.*)\"")
+			oEvent:send("name",name)
+			oEvent:send("file",file)
+			oEvent:send("interval",interval)
 		end
 		oEvent:send("viewArea.changeEffect",name)
 	end
@@ -317,9 +327,16 @@ local function oFileChooser(addExisted)
 				if name == "" or name:match("[\\/|:*?<>\"%.]") then
 					oEditor:addChild(oBox("Invalid Name"),oEditor.topMost)
 				else
-					oEditor.currentName = name
-					oEditor.currentFile = name..".frame"
+					oEditor.currentName = oEditor:getUsableName(name)
+					oEditor.currentFile = oEditor.currentName..".frame"
+					oEditor.items[oEditor.currentName] = oEditor.currentFile
+					oEditor:dumpEffectFile()
+					oEvent:send("name",oEditor.currentName)
+					oEvent:send("file",oEditor.currentFile)
 					oEvent:send("interval",1)
+					oContent:saveToFile(oEditor.output..oEditor.currentFile,[[<A A="" B="1"></A>]])
+					oCache.Effect:load(oEditor.output.."main.effect")
+					oEvent:send("viewArea.changeEffect",oEditor.currentName)
 				end
 			end,true),oEditor.topMost)
 		end)

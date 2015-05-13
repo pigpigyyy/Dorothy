@@ -130,7 +130,7 @@ public:
     virtual int executeNotificationEvent(CCNotificationCenter* pNotificationCenter, const char* pszName);
     
     /** execute a schedule function */
-    virtual int executeSchedule(int nHandler, float dt, CCNode* pNode = NULL);
+    virtual int executeSchedule(int nHandler, float dt);
     
     /** functions for executing touch event */
     virtual int executeLayerTouchesEvent(CCLayer* pLayer, int eventType, CCSet *pTouches);

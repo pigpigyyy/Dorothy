@@ -264,6 +264,18 @@ oSprite::~oSprite()
 	}
 }
 
+oSprite* oSprite::create()
+{
+	oSprite* pobSprite = new oSprite();
+	if (pobSprite && pobSprite->init())
+	{
+		pobSprite->autorelease();
+		return pobSprite;
+	}
+	CC_SAFE_DELETE(pobSprite);
+	return nullptr;
+}
+
 oSprite* oSprite::createWithTexture( CCTexture2D *pTexture )
 {
 	oSprite* pobSprite = new oSprite();

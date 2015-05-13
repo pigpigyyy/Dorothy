@@ -316,16 +316,15 @@ local function oViewArea()
 	crossNode:addChild(rotEditor)
 	rotEditor.setTarget = function(self,target)
 		if target then
-			self:schedule(
-				function(self)
-					local rot = 0
-					local p = target
-					while p and p ~= crossNode do
-						rot = rot + p.angle
-						p = p.parent
-					end
-					self.angle = rot
-				end,-1)
+			self:schedule(function()
+				local rot = 0
+				local p = target
+				while p and p ~= crossNode do
+					rot = rot + p.angle
+					p = p.parent
+				end
+				self.angle = rot
+			end,-1)
 		else
 			self:unschedule()
 		end
@@ -423,12 +422,11 @@ local function oViewArea()
 			local off = oVec2(
 					parent.contentSize.width*parent.anchor.x,
 					parent.contentSize.height*parent.anchor.y)
-			self:schedule(
-				function(self)
-					self.position = crossNode:convertToNodeSpace(
-						parent:convertToWorldSpace(
-							target.position-off))
-				end,-2)
+			self:schedule(function()
+				self.position = crossNode:convertToNodeSpace(
+					parent:convertToWorldSpace(
+						target.position-off))
+			end,-2)
 			getEditorRot()
 		else
 			self:unschedule()

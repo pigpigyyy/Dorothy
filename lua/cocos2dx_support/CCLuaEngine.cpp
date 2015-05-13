@@ -384,12 +384,11 @@ int CCLuaEngine::executeMenuItemEvent(int eventType, CCMenuItem* pMenuItem)
 	return lua_execute(nHandler, 2);
 }
 
-int CCLuaEngine::executeSchedule(int nHandler, float dt, CCNode* pNode)
+int CCLuaEngine::executeSchedule(int nHandler, float dt)
 {
 	if (!nHandler) return 0;
-	if (pNode) tolua_pushccobject(L, pNode);
 	lua_pushnumber(L, dt);
-	return lua_execute(nHandler, pNode ? 2 : 1);
+	return lua_execute(nHandler, 1);
 }
 
 int CCLuaEngine::executeLayerTouchEvent(CCLayer* pLayer, int eventType, CCTouch *pTouch)

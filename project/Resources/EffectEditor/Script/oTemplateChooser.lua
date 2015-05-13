@@ -359,7 +359,9 @@ local function oTemplateChooser(filename)
 				setmetatable(dataWrapper,
 				{
 					__newindex = function(_,name,value)
-						oEditor.dirty = rawget(parData,name) ~= value
+						if not oEditor.dirty then
+							oEditor.dirty = rawget(parData,name) ~= value
+						end
 						rawset(parData,name,value)
 					end,
 					__index = function(_,name)

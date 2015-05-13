@@ -136,7 +136,7 @@ int CCScriptEngine::executeAccelerometerEvent(CCLayer* pLayer, CCAcceleration* p
 int CCScriptEngine::executeLayerKeypadEvent(CCLayer* pLayer, int eventType){ return 0; }
 int CCScriptEngine::executeLayerTouchEvent(CCLayer* pLayer, int eventType, CCTouch *pTouch){ return 0; }
 int CCScriptEngine::executeLayerTouchesEvent(CCLayer* pLayer, int eventType, CCSet *pTouches){ return 0; }
-int CCScriptEngine::executeSchedule(int nHandler, float dt, CCNode* pNode){ return 0; }
+int CCScriptEngine::executeSchedule(int nHandler, float dt){ return 0; }
 int CCScriptEngine::executeNotificationEvent(CCNotificationCenter* pNotificationCenter, const char* pszName){ return 0; }
 int CCScriptEngine::executeMenuItemEvent(int eventType, CCMenuItem* pMenuItem){ return 0; }
 int CCScriptEngine::executeNodeEvent(CCNode* pNode, int nAction){ return 0; }
