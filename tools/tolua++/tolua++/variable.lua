@@ -218,10 +218,11 @@ end
   end
 
   -- check variable type
+  local var_index = static and 3 or 2
   if is_function then
-    output('  if (!(toluafix_isfunction(tolua_S,2,&tolua_err) || lua_isnil(tolua_S, 2)))')
+    output('  if (!(toluafix_isfunction(tolua_S,'..tostring(var_index)..',&tolua_err) || lua_isnil(tolua_S, 2)))')
   else
-    output('  if ('..self:outchecktype(2)..')')
+    output('  if ('..self:outchecktype(var_index)..')')
   end
   output('   tolua_error(tolua_S,"#vinvalid type in variable assignment.",&tolua_err);')
   output('#endif\n')
@@ -230,7 +231,7 @@ end
 		if self.def ~= '' then def = self.def end
 		if is_function then
 			local name = prop_set or self.name
-			output('  self->'..name..'(toluafix_ref_function(tolua_S,2));')
+			output('  self->'..name..'(toluafix_ref_function(tolua_S,'..tostring(var_index)..'));')
 		elseif self.type == 'char*' and self.dim ~= '' then -- is string
 			output(' strncpy((char*)')
 			if class and static then
@@ -240,7 +241,7 @@ end
 			else
 				output(self.name)
 			end
-			output(',(const char*)tolua_tostring(tolua_S,2,',def,'),',self.dim,'-1);')
+			output(',(const char*)tolua_tostring(tolua_S,'..tostring(var_index)..',',def,'),',self.dim,'-1);')
 		else
 			local ptr = ''
 			if self.ptr~='' then ptr = '*' end
@@ -269,10 +270,10 @@ end
 				if isenum(self.type) then
 					output('(int) ')
 				end
-				output('tolua_to'..t,'(tolua_S,2,',def,'))')
+				output('tolua_to'..t,'(tolua_S,'..tostring(var_index)..',',def,'))')
 			else
 				local to_func = get_to_function(self.type)
-				output(to_func,'(tolua_S,2,',def,'))')
+				output(to_func,'(tolua_S,'..tostring(var_index)..',',def,'))')
 			end
 			if prop_set then
 				output(")")
