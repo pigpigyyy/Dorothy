@@ -12,6 +12,29 @@ local CCDelay = require("CCDelay")
 local oPos = require("oPos")
 local oEase = require("oEase")
 local CCHide = require("CCHide")
+local oButton = require("oButton")
+local CCSprite = require("CCSprite")
+local oLine = require("oLine")
+
+local function oClipViewer(clipStr)
+	local width = 130
+	local sprite = CCSprite(clipStr)
+	local contentSize = sprite.contentSize
+	if contentSize.width > width or contentSize.height > width then
+		local scale = contentSize.width > contentSize.height and (width-2)/contentSize.width or (width-2)/contentSize.height
+		sprite.scaleX = scale
+		sprite.scaleY = scale
+	end
+	local frame = oLine(
+	{
+		oVec2.zero,
+		oVec2(width,0),
+		oVec2(width,width),
+		oVec2(0,width),
+		oVec2.zero
+	},ccColor4(0xff00ffff))
+	
+end
 
 local function oFrameViewer()
 	local winSize = CCDirector.winSize
@@ -43,6 +66,15 @@ local function oFrameViewer()
 	border:addChild(background,-1)
 	panel.position = startPos
 	panel.visible = false
+
+	local button = oButton("Button",17,130,130,0,0,function() print("tepped") end)
+	button.anchor = oVec2.zero
+	button.position = oVec2(10,10)
+	menu:addChild(button)
+
+	local viewHeight = 100
+	local viewWidth = borderSize.width+100
+	panel:reset(viewWidth,viewHeight,25,0)
 
 	panel.data = CCArray()
 	panel.data:add(oListener("oEditor.particle",function()

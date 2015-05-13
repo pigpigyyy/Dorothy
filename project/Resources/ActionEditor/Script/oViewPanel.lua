@@ -157,12 +157,12 @@ local function oViewPanel()
 		if newPos.x > 0 then
 			newPos.x = 0 
 		elseif newPos.x-moveX < 0 then
-				newPos.x = moveX
+			newPos.x = moveX
 		end
 		if newPos.y < 0 then
 			newPos.y = 0
 		elseif moveY < newPos.y then
-				newPos.y = moveY
+			newPos.y = moveY
 		end
 		delta = newPos - totalDelta
 		if viewWidth < borderSize.width then delta.x = 0 end

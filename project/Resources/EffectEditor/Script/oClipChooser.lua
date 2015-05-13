@@ -20,6 +20,7 @@ local oScale = require("oScale")
 local oEase = require("oEase")
 local CCSequence = require("CCSequence")
 local CCCall = require("CCCall")
+local oEvent = require("oEvent")
 
 local function oCircle(number)
 	local width = 25
@@ -96,6 +97,7 @@ local function oClipChooser(clipName)
 			if panel.fadeSprites then
 				panel:fadeSprites()
 			end
+			oEvent:send("oClipChooser.clips",panel.clips)
 			panel:hide()
 		end)
 		setButton.anchor = oVec2.zero
@@ -135,6 +137,7 @@ local function oClipChooser(clipName)
 		else
 			panel.number = 1
 			panel.sprites = {}
+			panel.clips = {}
 			local filename = oEditor.input..clipName
 			local names = oCache.Clip:getNames(filename)
 			for index = 1,#names do
@@ -157,6 +160,7 @@ local function oClipChooser(clipName)
 							item.node:addChild(circle)
 							item.circle = circle
 							panel.number = panel.number + 1
+							table.insert(panel.clips,clipStr)
 						end
 					end)
 				sprite = CCSprite(clipStr)
@@ -193,6 +197,7 @@ local function oClipChooser(clipName)
 							child.face.cascadeOpacity = true
 							child.node.children[1].opacity = 0.4
 							child.node.children[1].color = ccColor3(0x666666)
+							panel.clips = {}
 							local circle = child.circle
 							circle:runAction(CCSequence({oScale(0.3,0,0,oEase.OutQuad),CCCall(function()
 								circle.parent:removeChild(circle)

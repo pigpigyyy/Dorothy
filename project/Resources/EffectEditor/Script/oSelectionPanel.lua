@@ -388,7 +388,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 	panel.getTotalDelta = function(self)
 		return totalDelta
 	end
-	
+
 	panel.updateSize = function(self,width,height)
 		if height < borderSize.height then height = borderSize.height end
 		viewWidth = width
