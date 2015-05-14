@@ -77,6 +77,7 @@ CCShaderCache::~CCShaderCache()
 
 bool CCShaderCache::init()
 {
+	if (!CCObject::init()) return false;
     m_pPrograms = new CCDictionary();
     loadDefaultShaders();
     return true;

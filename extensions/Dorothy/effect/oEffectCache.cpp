@@ -171,6 +171,7 @@ oEffect* oParticleEffect::autoRemove()
 oParticleEffect* oParticleEffect::create( const char* filename )
 {
 	oParticleEffect* effect = new oParticleEffect();
+	INIT(effect);
 	effect->_particle = (CCParticleSystemQuad*)oSharedParticleCache.loadParticle(filename);
 	effect->_particle->setPositionType(kCCPositionTypeFree);
 	effect->_particle->setPosition(oVec2::zero);
@@ -213,6 +214,10 @@ void oSpriteEffect::stop()
 		_sprite->stopAllActions();
 		this->release();
 	}
+	if (_isAutoRemoved)
+	{
+		_sprite->getParent()->removeChild(_sprite, true);
+	}
 }
 oEffect* oSpriteEffect::attachTo( CCNode* parent, int zOrder )
 {
@@ -233,19 +238,20 @@ oEffect* oSpriteEffect::autoRemove()
 	_isAutoRemoved = true;
 	return this;
 }
-void oSpriteEffect::onDispose()
+void oSpriteEffect::onActionEnd()
 {
+	this->release();
 	_sprite->setVisible(false);
 	if (_isAutoRemoved)
 	{
 		_sprite->stopAllActions();
 		_sprite->getParent()->removeChild(_sprite, true);
-		this->release();
 	}
 }
 oSpriteEffect* oSpriteEffect::create( const char* filename )
 {
 	oSpriteEffect* effect = new oSpriteEffect();
+	INIT(effect);
 	effect->_isAutoRemoved = false;
 
 	oFrameActionDef* frameActionDef = oSharedAnimationCache.load(filename);
@@ -253,7 +259,7 @@ oSpriteEffect* oSpriteEffect::create( const char* filename )
 	if (frameActionDef->textureFile.empty() || frameActionDef->rects.size() == 0)
 	{
 		effect->_sprite = oSprite::create();
-		effect->_action = CCSequence::create(oCallFunc::create(effect, callfunc_selector(oSpriteEffect::onDispose)),nullptr);
+		effect->_action = CCSequence::create(oCallFunc::create(effect, callfunc_selector(oSpriteEffect::onActionEnd)),nullptr);
 	}
 	else
 	{
@@ -262,7 +268,7 @@ oSpriteEffect* oSpriteEffect::create( const char* filename )
 			*frameActionDef->rects[0]);
 		effect->_action = CCSequence::createWithTwoActions(
 			frameActionDef->toAction(),
-			oCallFunc::create(effect, callfunc_selector(oSpriteEffect::onDispose)));
+			oCallFunc::create(effect, callfunc_selector(oSpriteEffect::onActionEnd)));
 	}
 
 	effect->autorelease();

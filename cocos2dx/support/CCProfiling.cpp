@@ -70,6 +70,7 @@ void CCProfiler::releaseAllTimers()
 
 bool CCProfiler::init()
 {
+	if (!CCObject::init()) return false;
     m_pActiveTimers = new CCDictionary();
     return true;
 }

@@ -50,6 +50,7 @@ CCConfiguration::CCConfiguration()
 
 bool CCConfiguration::init()
 {
+	if (!CCObject::init()) return false;
     CCLOG("cocos2d: GL_VENDOR:     %s", glGetString(GL_VENDOR));
     CCLOG("cocos2d: GL_RENDERER:   %s", glGetString(GL_RENDERER));
     CCLOG("cocos2d: GL_VERSION:    %s", glGetString(GL_VERSION));

@@ -73,6 +73,7 @@ CCSpriteBatchNode* CCSpriteBatchNode::create(const char *fileImage, unsigned int
 */
 bool CCSpriteBatchNode::initWithTexture(CCTexture2D *tex, unsigned int capacity)
 {
+	if (!CCNode::init()) return false;
     m_blendFunc.src = CC_BLEND_SRC;
     m_blendFunc.dst = CC_BLEND_DST;
     m_pobTextureAtlas = new CCTextureAtlas();

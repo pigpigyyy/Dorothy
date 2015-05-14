@@ -40,6 +40,7 @@ CCScene::~CCScene()
 
 bool CCScene::init()
 {
+	if (!CCNode::init()) return false;
 	this->setAnchorPoint(ccp(0.5f, 0.5f));
 	this->setContentSize(
 		CCDirector::sharedDirector()->getWinSize());

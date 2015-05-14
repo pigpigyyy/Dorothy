@@ -31,6 +31,7 @@ public:
 	PROPERTY_READONLY(oSensor*, DetectSensor);
 	PROPERTY_BOOL(_isFaceRight, FaceRight);
 	PROPERTY(CCNode*, _face, Face);
+	virtual bool init();
 	virtual void update(float dt);
 	virtual void onExit();
 	virtual void cleanup();

@@ -90,7 +90,7 @@ public:
     virtual void cleanup();
 
     /** creates a base transition with duration and incoming scene */
-    static CCTransitionScene * create(float t, CCScene *scene);
+    static CCTransitionScene* create(float t, CCScene *scene);
 
     /** initializes a transition with duration and incoming scene */
     virtual bool initWithDuration(float t,CCScene* scene);

@@ -298,6 +298,7 @@ CCSequence* CCSequence::create(CCFiniteTimeAction* actions[], int count)
 
 bool CCSequence::initWithTwoActions(CCFiniteTimeAction *pActionOne, CCFiniteTimeAction *pActionTwo)
 {
+	if (!CCActionInterval::init()) return false;
 	CCAssert(pActionOne != NULL, "");
 	CCAssert(pActionTwo != NULL, "");
 

@@ -21,13 +21,6 @@ oFrameActionDef::oFrameActionDef():
 duration(0.0f)
 { }
 
-oFrameActionDef* oFrameActionDef::create()
-{
-	oFrameActionDef* def = new oFrameActionDef();
-	def->autorelease();
-	return def;
-}
-
 oFrameAction* oFrameActionDef::toAction()
 {
 	return oFrameAction::create(this);

@@ -19,8 +19,6 @@ NS_DOROTHY_BEGIN
 class oClipDef: public CCObject
 {
 public:
-	/** The only method to create a clip define. */
-	static oClipDef* create();
 	/** Name of the texture file. Name only, not file path. */
 	string textureFile;
 	/** Different areas on this texture. */
@@ -28,6 +26,7 @@ public:
 	/** Get a sprite instance with an name. */
 	CCSprite* toSprite(const string& name);
 	string toXml();
+	CREATE_FUNC(oClipDef);
 protected:
 	oClipDef();
 };

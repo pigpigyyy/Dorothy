@@ -122,6 +122,7 @@ public:
 		oModel* _owner;
 		friend class oModel;
 	} handlers;
+	virtual bool init();
 	virtual void cleanup();
 	static oModel* create(oModelDef* modelDef);
 	static oModel* create(const char* filename);

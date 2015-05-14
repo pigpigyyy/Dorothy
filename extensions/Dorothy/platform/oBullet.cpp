@@ -28,31 +28,36 @@ _owner(unit),
 _current(0),
 _lifeTime(bulletDef->lifeTime),
 _face(nullptr)
+{ }
+
+bool oBullet::init()
 {
-	oBullet::setFaceRight(unit->isFaceRight());
-	oBullet::setTag(bulletDef->tag);
+	if (!oBody::init()) return false;
+	oBullet::setFaceRight(_owner->isFaceRight());
+	oBullet::setTag(_bulletDef->tag);
 	_detectSensor = oBody::getSensorByTag(oBulletDef::SensorTag);
 	_detectSensor->bodyEnter += std::make_pair(this, &oBullet::onBodyEnter);
 	oVec2 v = _bulletDef->getVelocity();
 	oBody::setVelocity((_isFaceRight ? v.x : -v.x), v.y);
 	oBody::setGroup(oSharedData.getGroupDetect());
-	oFace* face = bulletDef->getFace();
+	oFace* face = _bulletDef->getFace();
 	if (face)
 	{
 		CCNode* node = face->toNode();
 		oBullet::setFace(node);
 	}
-	oModel* model = unit->getModel();
+	oModel* model = _owner->getModel();
 	const oVec2& offset = (model ? model->getModelDef()->getKeyPoint(oUnitDef::BulletKey) : oVec2::zero);
 	oBullet::setPosition(
 		ccpAdd(
-		unit->getPosition(),
-		(unit->isFaceRight() ? ccp(-offset.x, offset.y) : (CCPoint)offset)));
+		_owner->getPosition(),
+		(_owner->isFaceRight() ? ccp(-offset.x, offset.y) : (CCPoint)offset)));
 	if (oBody::getBodyDef()->gravityScale != 0.0f)
 	{
-		oBullet::setRotation(-CC_RADIANS_TO_DEGREES(atan2f(v.y, unit->isFaceRight() ? v.x : -v.x)));
+		oBullet::setRotation(-CC_RADIANS_TO_DEGREES(atan2f(v.y, _owner->isFaceRight() ? v.x : -v.x)));
 	}
 	this->scheduleUpdate();
+	return true;
 }
 
 void oBullet::updatePhysics()
@@ -107,6 +112,7 @@ void oBullet::cleanup()
 oBullet* oBullet::create(oBulletDef* def, oUnit* unit)
 {
 	oBullet* bullet = new oBullet(def, unit);
+	INIT(bullet);
 	bullet->autorelease();
 	return bullet;
 }

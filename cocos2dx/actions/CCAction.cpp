@@ -226,7 +226,7 @@ CCFollow* CCFollow::create(CCNode *pFollowedNode, const CCRect& rect/* = CCRect:
 bool CCFollow::initWithTarget(CCNode *pFollowedNode, const CCRect& rect/* = CCRect::zero*/)
 {
     CCAssert(pFollowedNode != NULL, "");
- 
+	CCAction::init();
     pFollowedNode->retain();
     m_pobFollowedNode = pFollowedNode;
     if (rect != CCRect::zero)

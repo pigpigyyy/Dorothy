@@ -152,6 +152,7 @@ int getColorLocation()
 
 bool CCDrawNode::init()
 {
+	if (!CCNode::init()) return false;
     m_sBlendFunc.src = CC_BLEND_SRC;
     m_sBlendFunc.dst = CC_BLEND_DST;
 

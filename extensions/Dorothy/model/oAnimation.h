@@ -27,7 +27,7 @@ public:
 	oOwnVector<CCRect> rects;
 	virtual oFrameAction* toAction();
 	string toXml();
-	static oFrameActionDef* create();
+	CREATE_FUNC(oFrameActionDef);
 protected:
 	oFrameActionDef();
 };

@@ -64,6 +64,7 @@ CCLayer::~CCLayer()
 
 bool CCLayer::init()
 {
+	if (!CCNode::init()) return false;
 	this->setContentSize(CCDirector::sharedDirector()->getWinSize());
 	m_bTouchEnabled = false;
 	m_bAccelerometerEnabled = false;
@@ -469,7 +470,6 @@ bool CCLayerColor::initWithColor(const ccColor4B& color, GLfloat w, GLfloat h)
 {
 	if (CCLayer::init())
 	{
-
 		// default blend function
 		m_tBlendFunc.src = GL_SRC_ALPHA;
 		m_tBlendFunc.dst = GL_ONE_MINUS_SRC_ALPHA;

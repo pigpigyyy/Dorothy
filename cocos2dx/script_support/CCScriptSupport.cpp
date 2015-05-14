@@ -71,6 +71,7 @@ CCSchedulerScriptHandlerEntry* CCSchedulerScriptHandlerEntry::create(int nHandle
 
 bool CCSchedulerScriptHandlerEntry::init(float fInterval, bool bPaused)
 {
+	if (!CCScriptHandlerEntry::init()) return false;
 	m_pTimer = new CCTimer();
 	m_pTimer->initWithScriptHandler(m_nHandler, fInterval);
 	m_pTimer->autorelease();

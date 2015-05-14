@@ -39,6 +39,7 @@ oBodyDef* oBulletDef::getBodyDef() const
 oBulletDef* oBulletDef::create()
 {
 	oBulletDef* def = new oBulletDef();
+	INIT(def);
 	def->autorelease();
 	return def;
 }

@@ -52,7 +52,11 @@ _modelDef(def),
 _speed(1.0f),
 _recoverTime(0.0f),
 _currentLookName(oString::Empty)
+{ }
+
+bool oModel::init()
 {
+	if (!CCNode::init()) return false;
 	handlers(this);
 	_resetAnimation.end = std::make_pair(this, &oModel::onResetAnimationEnd);
 	_root = _modelDef->isBatchUsed() ?
@@ -62,6 +66,7 @@ _currentLookName(oString::Empty)
 	oModel::setupCallback();
 	oModel::setContentSize(_modelDef->getSize());
 	this->addChild(_root);
+	return true;
 }
 
 void oModel::addLook( int index, CCNode* node )
@@ -392,6 +397,7 @@ void oModel::onResetAnimationEnd()
 oModel* oModel::create( oModelDef* modelDef )
 {
 	oModel* model = new oModel(modelDef);
+	INIT(model);
 	model->autorelease();
 	return model;
 }

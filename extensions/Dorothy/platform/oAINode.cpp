@@ -52,15 +52,14 @@ void oInstinct::onInstinctPropertyChanged( oUnit* unit, float oldValue, float ne
 oInstinct* oInstinct::create( const string& propName, oAILeaf* node )
 {
 	oInstinct* instinct = new oInstinct(propName, node);
+	INIT(instinct);
 	instinct->autorelease();
 	return instinct;
 }
 
 void oInstinct::add( int id, const string& propName, oAILeaf* node )
 {
-	oInstinct* instinct = new oInstinct(propName, node);
-	instinct->autorelease();
-	_instincts[id] = instinct;
+	_instincts[id] = oInstinct::create(propName, node);
 }
 
 void oInstinct::clear()
@@ -114,6 +113,7 @@ bool oSelNode::doAction()
 oSelNode* oSelNode::create()
 {
 	oSelNode* node = new oSelNode();
+	INIT(node);
 	node->autorelease();
 	return node;
 }
@@ -121,6 +121,7 @@ oSelNode* oSelNode::create()
 oSeqNode* oSeqNode::create()
 {
 	oSeqNode* node = new oSeqNode();
+	INIT(node);
 	node->autorelease();
 	return node;
 }
@@ -140,6 +141,7 @@ bool oSeqNode::doAction()
 oParSelNode* oParSelNode::create()
 {
 	oParSelNode* node = new oParSelNode();
+	INIT(node);
 	node->autorelease();
 	return node;
 }
@@ -160,6 +162,7 @@ bool oParSelNode::doAction()
 oParSeqNode* oParSeqNode::create()
 {
 	oParSeqNode* node = new oParSeqNode();
+	INIT(node);
 	node->autorelease();
 	return node;
 }
@@ -185,6 +188,7 @@ bool oConNode::doAction()
 oConNode* oConNode::create( int handler )
 {
 	oConNode* node = new oConNode();
+	INIT(node);
 	node->_handler = oScriptHandler::create(handler);
 	node->autorelease();
 	return node;
@@ -198,6 +202,7 @@ bool oActNode::doAction()
 oActNode* oActNode::create(const string& actionName)
 {
 	oActNode* node = new oActNode();
+	INIT(node);
 	node->_actionName = actionName;
 	node->autorelease();
 	return node;

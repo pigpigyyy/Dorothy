@@ -98,6 +98,7 @@ bool CCClippingNode::init()
 
 bool CCClippingNode::init(CCNode *pStencil)
 {
+	if (!CCNode::init()) return false;
     CC_SAFE_RELEASE(m_pStencil);
     m_pStencil = pStencil;
     CC_SAFE_RETAIN(m_pStencil);

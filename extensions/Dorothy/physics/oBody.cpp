@@ -19,22 +19,7 @@ _bodyB2(nullptr),
 _bodyDef(bodyDef),
 _world(world),
 _group(0)
-{
-	_bodyB2 = world->getB2World()->CreateBody(_bodyDef);
-	_bodyB2->SetUserData((void*)this);
-	CCNode::setPosition((CCPoint)oWorld::oVal(bodyDef->position));
-	for (b2FixtureDef* fixtureDef : _bodyDef->getFixtureDefs())
-	{
-		if (fixtureDef->isSensor)
-		{
-			oBody::attachSensor((int)(long)fixtureDef->userData, fixtureDef);
-		}
-		else
-		{
-			oBody::attachFixture(fixtureDef);
-		}
-	}
-}
+{ }
 
 oBody::~oBody()
 {
@@ -51,6 +36,26 @@ oBody::~oBody()
 	CCARRAY_END
 	contactStart.Clear();
 	contactEnd.Clear();
+}
+
+bool oBody::init()
+{
+	if (!CCNode::init()) return false;
+	_bodyB2 = _world->getB2World()->CreateBody(_bodyDef);
+	_bodyB2->SetUserData((void*)this);
+	CCNode::setPosition((CCPoint)oWorld::oVal(_bodyDef->position));
+	for (b2FixtureDef* fixtureDef : _bodyDef->getFixtureDefs())
+	{
+		if (fixtureDef->isSensor)
+		{
+			oBody::attachSensor((int)(long)fixtureDef->userData, fixtureDef);
+		}
+		else
+		{
+			oBody::attachFixture(fixtureDef);
+		}
+	}
+	return true;
 }
 
 void oBody::onEnter()
@@ -95,6 +100,7 @@ oBody* oBody::create(oBodyDef* bodyDef, oWorld* world, const oVec2& pos, float r
 	bodyDef->position = oWorld::b2Val(pos + bodyDef->offset);
 	bodyDef->angle = -CC_DEGREES_TO_RADIANS(rot + bodyDef->angleOffset);
 	oBody* body = new oBody(bodyDef, world);
+	INIT(body);
 	body->autorelease();
 	return body;
 }

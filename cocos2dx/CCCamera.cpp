@@ -49,9 +49,11 @@ const char* CCCamera::description()
     return CCString::createWithFormat("<CCCamera | center = (%.2f,%.2f,%.2f)>", m_fCenterX, m_fCenterY, m_fCenterZ)->getCString();
 }
 
-void CCCamera::init()
+bool CCCamera::init()
 {
+	if (!CCObject::init()) return false;
     restore();
+	return true;
 }
 
 void CCCamera::restore()

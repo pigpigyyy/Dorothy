@@ -46,31 +46,36 @@ damageType(unitDef->damageType),
 defenceType(unitDef->defenceType),
 sensity(unitDef->sensity),
 _unitDef(unitDef)
+{ }
+
+bool oUnit::init()
 {
+	if (!oBody::init()) return false;
 	properties(this);
 	_instincts(this);
-	oUnit::setDetectDistance(unitDef->detectDistance);
-	oUnit::setAttackRange(unitDef->attackRange);
-	oUnit::setTag(unitDef->tag);
+	oUnit::setDetectDistance(_unitDef->detectDistance);
+	oUnit::setAttackRange(_unitDef->attackRange);
+	oUnit::setTag(_unitDef->tag);
 	_groundSensor = oBody::getSensorByTag(oUnitDef::GroundSensorTag);
 	oUnit::setRotation(-CC_RADIANS_TO_DEGREES(oBody::getBodyDef()->angle));
-	oModelDef* modelDef = unitDef->getModelDef();
+	oModelDef* modelDef = _unitDef->getModelDef();
 	oModel* model = modelDef ? modelDef->toModel() : oModel::none();
 	_isFaceRight = !modelDef || modelDef->isFaceRight();
-	model->setScaleX(unitDef->getScale());
-	model->setScaleY(unitDef->getScale());
+	model->setScaleX(_unitDef->getScale());
+	model->setScaleY(_unitDef->getScale());
 	oUnit::setModel(model);
 	oBody::setOwner(this);
-	for (const string& name : unitDef->actions)
+	for (const string& name : _unitDef->actions)
 	{
 		oUnit::attachAction(name);
 	}
-	for (int id : unitDef->instincts)
+	for (int id : _unitDef->instincts)
 	{
 		oUnit::attachInstinct(id);
 	}
-	oUnit::setReflexArc(unitDef->reflexArc);
+	oUnit::setReflexArc(_unitDef->reflexArc);
 	this->scheduleUpdate();
+	return true;
 }
 
 oUnitDef* oUnit::getUnitDef() const
@@ -122,6 +127,7 @@ oUnit* oUnit::create(oUnitDef* unitDef, oWorld* world, const oVec2& pos, float r
 	unitDef->getBodyDef()->position = oWorld::b2Val(pos);
 	unitDef->getBodyDef()->angle = -CC_DEGREES_TO_RADIANS(rot);
 	oUnit* unit = new oUnit(unitDef, world);
+	INIT(unit);
 	unit->autorelease();
 	return unit;
 }

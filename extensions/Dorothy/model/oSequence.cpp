@@ -44,7 +44,7 @@ MEMORY_POOL(oSequence)
 
 oSequence* oSequence::createWithTwoActions(CCFiniteTimeAction *pActionOne, CCFiniteTimeAction *pActionTwo)
 {
-	oSequence *pSequence = new oSequence();
+	oSequence* pSequence = new oSequence();
 	pSequence->initWithTwoActions(pActionOne, pActionTwo);
 	pSequence->autorelease();
 
@@ -138,6 +138,7 @@ oSequence* oSequence::create(CCArray* arrayOfActions)
 
 bool oSequence::initWithTwoActions(CCFiniteTimeAction *pActionOne, CCFiniteTimeAction *pActionTwo)
 {
+	if (!oActionDuration::init()) return false;
 	CCAssert(pActionOne != NULL, "");
 	CCAssert(pActionTwo != NULL, "");
 

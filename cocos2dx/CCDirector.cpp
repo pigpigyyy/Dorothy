@@ -103,6 +103,7 @@ CCDirector::CCDirector()
 
 bool CCDirector::init()
 {
+	if (!CCObject::init()) return false;
 	srand((unsigned int)time(nullptr));
 	CCLOG("cocos2d: %s", cocos2dVersion());
 	// scenes

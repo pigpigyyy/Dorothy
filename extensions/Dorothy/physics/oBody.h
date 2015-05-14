@@ -22,6 +22,7 @@ class oBody: public CCNode
 	typedef Delegate<void(oBody* body,const oVec2& point,const oVec2& normal)> oContactHandler;
 public:
 	virtual ~oBody();
+	virtual bool init();
 	virtual void onEnter();
 	virtual void onExit();
 	virtual void cleanup();

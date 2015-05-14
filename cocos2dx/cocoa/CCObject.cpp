@@ -76,6 +76,12 @@ CCObject::~CCObject()
 	}
 }
 
+bool CCObject::init()
+{
+	//CCLOG("%s", typeid(*this).name());
+	return true;
+}
+
 CCObject* CCObject::copy()
 {
     return copyWithZone(0);

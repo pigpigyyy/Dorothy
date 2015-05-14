@@ -1114,6 +1114,7 @@ oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableI
 	};
 	oSpriteDef* root = visitSpriteDef();
 	oModelDef* modelDef = new oModelDef(isFaceRight, isBatchUsed, size, clipFile, texture, root, keys, animationNames, lookNames);
+	modelDef->init();
 	modelDef->autorelease();
 	lua_pop(L, 1);// pop content
 	return oSharedModelCache.update(filename, modelDef);
@@ -1122,6 +1123,7 @@ oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableI
 CCCall* CCCall::create(int nHandler)
 {
 	CCCall* pRet = new CCCall();
+	INIT(pRet);
 	pRet->_scriptHandler = nHandler;
 	pRet->autorelease();
 	return pRet;
@@ -1230,6 +1232,7 @@ CCTextFieldTTF* CCTextFieldTTF_create(const char* placeholder, const char* fontN
 {
 	CCTextFieldTTF* textField = CCTextFieldTTF::textFieldWithPlaceHolder(placeholder, fontName, fontSize);
 	oTextFieldDelegate* delegate = new oTextFieldDelegate();
+	INIT(delegate);
 	delegate->autorelease();
 	textField->setDelegate(delegate);
 	return textField;
@@ -1281,6 +1284,7 @@ public:
 	static oImageAsyncLoader* create(const char* filename, int handler)
 	{
 		oImageAsyncLoader* loader = new oImageAsyncLoader();
+		INIT(loader);
 		loader->_name = filename;
 		if (handler)
 		{

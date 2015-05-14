@@ -26,6 +26,7 @@ oActionDuration* oActionDuration::create(float d)
 
 bool oActionDuration::initWithDuration(float d)
 {
+	if (!CCFiniteTimeAction::init()) return false;
 	m_fDuration = MAX(d, FLT_EPSILON);
 	_elapsed = -1;
 	return true;

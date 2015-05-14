@@ -72,6 +72,7 @@ class CC_DLL CCObject : public CCCopying
 public:
 	CCObject();
 	virtual ~CCObject();
+	virtual bool init();
 	unsigned int getObjectId() const;
 	unsigned int getLuaRef();
 	bool isLuaRef();

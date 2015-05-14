@@ -154,7 +154,7 @@ local function oClipChooser(clipName)
 					100,100,
 					itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
 					function(item)
-						if panel.number >= 99 then return end
+						if panel.number > 99 then return end
 						sprite.opacity = 1
 						sprite.color = ccColor3()
 						if not item.circles then item.circles = {} end

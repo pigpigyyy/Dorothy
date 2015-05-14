@@ -66,6 +66,7 @@ void CCTouchDispatcher::setDispatchEvents(bool bDispatchEvents)
 
 bool CCTouchDispatcher::init()
 {
+	if (!CCObject::init()) return false;
     m_bDispatchEvents = true;
     m_pTargetedHandlers = CCArray::createWithCapacity(8);
     m_pTargetedHandlers->retain();

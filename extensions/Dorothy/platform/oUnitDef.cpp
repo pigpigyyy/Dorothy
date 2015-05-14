@@ -59,6 +59,7 @@ _restitution(0.4f)
 oUnitDef* oUnitDef::create()
 {
 	oUnitDef* unitDef = new oUnitDef();
+	INIT(unitDef);
 	unitDef->autorelease();
 	return unitDef;
 }

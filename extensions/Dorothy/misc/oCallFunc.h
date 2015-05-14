@@ -31,6 +31,7 @@ public:
 	}
 	virtual bool initWithTarget(CCObject* selectorTarget)
 	{
+		if (!CCActionInstant::init()) return false;
 		_selectorTarget = selectorTarget;
 		return true;
 	}
@@ -71,6 +72,7 @@ public:
 	}
 	virtual bool initWithTarget(CCObject* selectorTarget)
 	{
+		if (!CCActionInstant::init()) return false;
 		return true;
 	}
 	virtual void execute()

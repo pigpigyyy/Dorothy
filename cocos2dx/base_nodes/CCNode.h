@@ -132,11 +132,6 @@ public:
      * Default destructor
      */
     virtual ~CCNode();
-    /**
-     *  Initializes the instance of CCNode
-     *  @return Whether the initialization was successful.
-     */
-    virtual bool init();
 	/**
      * Allocates and initializes a node.
      * @return A initialized node which is marked as "autorelease".

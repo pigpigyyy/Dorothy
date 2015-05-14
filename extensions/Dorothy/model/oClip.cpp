@@ -17,13 +17,6 @@ NS_DOROTHY_BEGIN
 oClipDef::oClipDef()
 { }
 
-oClipDef* oClipDef::create()
-{
-	oClipDef* clipDef = new oClipDef();
-	clipDef->autorelease();
-	return clipDef;
-}
-
 CCSprite* oClipDef::toSprite( const string& name )
 {
 	auto it = rects.find(name);

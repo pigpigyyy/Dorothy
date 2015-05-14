@@ -29,7 +29,7 @@ oLine::~oLine()
 
 bool oLine::init()
 {
-	CCNode::init();
+	if (!CCNode::init()) return false;
 	CC_SAFE_DELETE_ARRAY(_buffer);
 	_count = 0;
 	CCGLProgram* shader = CCShaderCache::sharedShaderCache()->programForKey(kCCShader_Position_uColor);
@@ -72,17 +72,19 @@ void oLine::draw()
 oLine* oLine::create()
 {
 	oLine* line = new oLine();
-	line->init();
+	INIT(line);
 	line->autorelease();
 	return line;
 }
 
 oLine* oLine::create(oVec2 vecs[], int count, const ccColor4B& color)
 {
-	oLine* line = oLine::create();
+	oLine* line = new oLine();
+	INIT(line);
 	line->set(vecs, count);
 	line->setColor(ccColor3B{color.r, color.g, color.b});
 	line->setOpacity(color.a / 255.0f);
+	line->autorelease();
 	return line;
 }
 

@@ -168,6 +168,7 @@ bool CCParticleSystem::init()
 
 bool CCParticleSystem::initWithFile(const char *plistFile)
 {
+	if (!CCNode::init()) return false;
     bool bRet = false;
     m_sPlistFile = CCFileUtils::sharedFileUtils()->fullPathForFilename(plistFile);
     CCDictionary *dict = CCDictionary::createWithContentsOfFileThreadSafe(m_sPlistFile.c_str());
@@ -198,6 +199,7 @@ bool CCParticleSystem::initWithDictionary(CCDictionary *dictionary)
 
 bool CCParticleSystem::initWithDictionary(CCDictionary *dictionary, const char *dirname)
 {
+	if (!CCNode::init()) return false;
     bool bRet = false;
     do 
     {
@@ -395,6 +397,7 @@ CCTexture2D* CCParticleSystem::dataToTexture(const char* filename, const char* t
 
 bool CCParticleSystem::initWithTotalParticles(unsigned int numberOfParticles)
 {
+	if (!CCNode::init()) return false;
     m_uTotalParticles = numberOfParticles;
 
     CC_SAFE_FREE(m_pParticles);

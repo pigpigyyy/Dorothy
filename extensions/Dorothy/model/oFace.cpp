@@ -200,7 +200,7 @@ oParticleSystemQuad::~oParticleSystemQuad()
 oParticleSystemQuad* oParticleSystemQuad::createWithDef( oParticleDef* type )
 {
 	oParticleSystemQuad* pRet = new oParticleSystemQuad();
-	if (pRet && initParticleWithDef(pRet, type))
+	if (initParticleWithDef(pRet, type))
 	{
 		pRet->autorelease();
 		return pRet;
@@ -266,37 +266,37 @@ oSprite::~oSprite()
 
 oSprite* oSprite::create()
 {
-	oSprite* pobSprite = new oSprite();
-	if (pobSprite && pobSprite->init())
+	oSprite* sprite = new oSprite();
+	if (sprite->init())
 	{
-		pobSprite->autorelease();
-		return pobSprite;
+		sprite->autorelease();
+		return sprite;
 	}
-	CC_SAFE_DELETE(pobSprite);
+	CC_SAFE_DELETE(sprite);
 	return nullptr;
 }
 
 oSprite* oSprite::createWithTexture( CCTexture2D *pTexture )
 {
-	oSprite* pobSprite = new oSprite();
-	if (pobSprite && pobSprite->initWithTexture(pTexture))
+	oSprite* sprite = new oSprite();
+	if (sprite->initWithTexture(pTexture))
 	{
-		pobSprite->autorelease();
-		return pobSprite;
+		sprite->autorelease();
+		return sprite;
 	}
-	CC_SAFE_DELETE(pobSprite);
+	CC_SAFE_DELETE(sprite);
 	return nullptr;
 }
 
 oSprite* oSprite::createWithTexture( CCTexture2D *pTexture, const CCRect& rect )
 {
-	oSprite *pobSprite = new oSprite();
-	if (pobSprite && pobSprite->initWithTexture(pTexture, rect))
+	oSprite* sprite = new oSprite();
+	if (sprite->initWithTexture(pTexture, rect))
 	{
-		pobSprite->autorelease();
-		return pobSprite;
+		sprite->autorelease();
+		return sprite;
 	}
-	CC_SAFE_DELETE(pobSprite);
+	CC_SAFE_DELETE(sprite);
 	return nullptr;
 }
 
@@ -344,6 +344,7 @@ bool oFace::removeChild( oFace* face )
 oFace* oFace::create( const string& file, const oVec2& point )
 {
 	oFace* face = new oFace(file, point);
+	INIT(face);
 	face->autorelease();
 	return face;
 }

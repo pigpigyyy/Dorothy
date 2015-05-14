@@ -82,7 +82,7 @@ public:
     CCCamera();
     ~CCCamera();
 
-    void init();
+    virtual bool init();
 
     const char* description();
 

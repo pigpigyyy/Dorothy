@@ -44,6 +44,7 @@ public:
 	PROPERTY_READONLY(float, Width);
 	PROPERTY_READONLY(float, Height);
 	//
+	virtual bool init();
 	virtual void setGroup( int group );
 	virtual void update( float dt );
 	//Actions

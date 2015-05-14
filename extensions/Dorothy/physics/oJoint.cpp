@@ -67,6 +67,7 @@ oJoint* oJoint::distance(
 	jointDef.dampingRatio = damping;
 	jointDef.collideConnected = collideConnected;
 	oJoint* joint = new oJoint();
+	INIT(joint);
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
 	joint->_joint->SetUserData((void*)joint);
@@ -95,6 +96,7 @@ oJoint* oJoint::friction(
 	jointDef.maxTorque = maxTorque;
 	jointDef.collideConnected = collideConnected;
 	oJoint* joint = new oJoint();
+	INIT(joint);
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
 	joint->_joint->SetUserData((void*)joint);
@@ -120,6 +122,7 @@ oJoint* oJoint::gear(
 	jointDef.ratio = ratio;
 	jointDef.collideConnected = collideConnected;
 	oJoint* joint = new oJoint();
+	INIT(joint);
 	joint->_world = jointA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
 	joint->_joint->SetUserData((void*)joint);
@@ -152,6 +155,7 @@ oJoint* oJoint::spring(
 	jointDef.correctionFactor = correctionFactor;
 	jointDef.collideConnected = collideConnected;
 	oJoint* joint = new oJoint();
+	INIT(joint);
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
 	joint->_joint->SetUserData((void*)joint);
@@ -183,6 +187,7 @@ oMoveJoint* oJoint::move(
 	jointDef.dampingRatio = damping;
 	jointDef.collideConnected = collideConnected;
 	oMoveJoint* joint = new oMoveJoint();
+	INIT(joint);
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
 	joint->_joint->SetUserData((void*)joint);
@@ -217,6 +222,7 @@ oMotorJoint* oJoint::prismatic(
 	jointDef.motorSpeed = motorSpeed;
 	jointDef.collideConnected = collideConnected;
 	oMotorJoint* joint = new oMotorJoint();
+	INIT(joint);
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
 	joint->_joint->SetUserData((void*)joint);
@@ -250,6 +256,7 @@ oJoint* oJoint::pulley(
 	jointDef.Initialize(bA, bB, gA, gB, aA, aB, ratio);
 	jointDef.collideConnected = collideConnected;
 	oJoint* joint = new oJoint();
+	INIT(joint);
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
 	joint->_joint->SetUserData((void*)joint);
@@ -286,6 +293,7 @@ oMotorJoint* oJoint::revolute(
 	jointDef.motorSpeed = motorSpeed;
 	jointDef.collideConnected = collideConnected;
 	oMotorJoint* joint = new oMotorJoint();
+	INIT(joint);
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
 	joint->_joint->SetUserData((void*)joint);
@@ -317,6 +325,7 @@ oJoint* oJoint::rope(
 	jointDef.maxLength = oWorld::b2Val(maxLength);
 	jointDef.collideConnected = collideConnected;
 	oJoint* joint = new oJoint();
+	INIT(joint);
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
 	joint->_joint->SetUserData((void*)joint);
@@ -345,6 +354,7 @@ oJoint* oJoint::weld(
 	jointDef.dampingRatio = damping;
 	jointDef.collideConnected = collideConnected;
 	oJoint* joint = new oJoint();
+	INIT(joint);
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
 	joint->_joint->SetUserData((void*)joint);
@@ -378,6 +388,7 @@ oMotorJoint* oJoint::wheel(
 	jointDef.dampingRatio = damping;
 	jointDef.collideConnected = collideConnected;
 	oMotorJoint* joint = new oMotorJoint();
+	INIT(joint);
 	joint->_world = bodyA->getWorld();
 	joint->_joint = joint->_world->getB2World()->CreateJoint(&jointDef);
 	joint->_joint->SetUserData((void*)joint);

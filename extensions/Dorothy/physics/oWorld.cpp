@@ -80,18 +80,7 @@ _positionIterations(1),
 _contactListner(new oContactListener()),
 _contactFilter(new oContactFilter()),
 _destructionListener(new oDestructionListener())
-{
-	_world.SetContactFilter(_contactFilter);
-	_world.SetContactListener(_contactListner);
-	_world.SetDestructionListener(_destructionListener);
-	for (int i = 0; i < 16; i++)
-	{
-		_filters[i].groupIndex = i;
-		_filters[i].categoryBits = 1<<i;
-		_filters[i].maskBits = 0;
-	}
-	CCNode::scheduleUpdate();
-}
+{ }
 
 oWorld::~oWorld()
 {
@@ -106,6 +95,22 @@ oWorld::~oWorld()
 	}
 	b2Draw* draw = _world.GetDebugDraw();
 	CC_SAFE_DELETE(draw);
+}
+
+bool oWorld::init()
+{
+	if (!CCNode::init()) return false;
+	_world.SetContactFilter(_contactFilter);
+	_world.SetContactListener(_contactListner);
+	_world.SetDestructionListener(_destructionListener);
+	for (int i = 0; i < 16; i++)
+	{
+		_filters[i].groupIndex = i;
+		_filters[i].categoryBits = 1<<i;
+		_filters[i].maskBits = 0;
+	}
+	CCNode::scheduleUpdate();
+	return true;
 }
 
 b2World* oWorld::getB2World() const

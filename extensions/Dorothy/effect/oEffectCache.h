@@ -50,7 +50,7 @@ public:
 	virtual oEffect* setOffset( const oVec2& pos );
 	virtual oEffect* attachTo( CCNode* parent, int zOrder = 0);
 	virtual oEffect* autoRemove();
-	void onDispose();
+	void onActionEnd();
 	static oSpriteEffect* create(const char* filename);
 	oSprite* getSprite() const;
 private:

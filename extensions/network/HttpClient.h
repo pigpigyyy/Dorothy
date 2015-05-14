@@ -93,7 +93,6 @@ public:
 private:
     CCHttpClient();
     virtual ~CCHttpClient();
-    bool init();
     
     /**
      * Init pthread mutex, semaphore, and create new thread for http requests

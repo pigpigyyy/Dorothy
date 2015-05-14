@@ -64,7 +64,6 @@ public:
 class oWorld: public CCNode
 {
 public:
-	oWorld();
 	virtual ~oWorld();
 	PROPERTY_READONLY(b2World*, B2World);
 	PROPERTY_BOOL_NAME(ShowDebug);
@@ -86,6 +85,7 @@ public:
 	void setContactFilter(oOwn<oContactFilter>& filter);
 	void setGravity(const oVec2& gravity);
 	oVec2 getGravity() const;
+	virtual bool init();
 	virtual void update(float dt);
 	virtual void draw();
 	virtual void visit();
@@ -112,6 +112,8 @@ public:
 	 */
 	static float b2Factor;
 	CREATE_FUNC(oWorld);
+protected:
+	oWorld();
 private:
 	class oQueryAABB: public b2QueryCallback
 	{

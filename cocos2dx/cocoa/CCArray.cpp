@@ -190,6 +190,7 @@ bool CCArray::initWithObjects(CCObject* pObject, ...)
 
 bool CCArray::initWithCapacity(unsigned int capacity)
 {
+	if (!CCObject::init()) return false;
     ccArrayFree(data);
     data = ccArrayNew(capacity);
     return true;

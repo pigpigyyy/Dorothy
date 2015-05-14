@@ -14,7 +14,6 @@ local oEase = require("oEase")
 local CCHide = require("CCHide")
 local CCSprite = require("CCSprite")
 local oLine = require("oLine")
-local oEvent = require("oEvent")
 
 local function oClipViewer(file,rect)
 	local width = 130

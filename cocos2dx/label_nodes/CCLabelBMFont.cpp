@@ -463,6 +463,7 @@ CCLabelBMFont *CCLabelBMFont::create(const char *str, const char *fntFile, float
 
 bool CCLabelBMFont::init()
 {
+	if (!CCSpriteBatchNode::init()) return false;
     return initWithString(NULL, NULL, kCCLabelAutomaticWidth, kCCTextAlignmentLeft, CCPoint::zero);
 }
 
