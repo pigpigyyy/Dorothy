@@ -154,16 +154,21 @@ local function oClipChooser(clipName)
 					100,100,
 					itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
 					function(item)
+						if panel.number >= 99 then return end
 						sprite.opacity = 1
 						sprite.color = ccColor3()
-						if not item.circle then
+						if not item.circles then item.circles = {} end
+						local count = (#item.circles)
+						if count < 9 then
 							local circle = oCircle(panel.number)
 							circle.scaleX = 0
 							circle.scaleY = 0
+							circle.positionX = circle.positionX - math.floor(count/3)*30
+							circle.positionY = circle.positionY + (count%3)*30
 							circle:runAction(oScale(0.3,1,1,oEase.OutBack))
 							item.face.cascadeOpacity = false
 							item.node:addChild(circle)
-							item.circle = circle
+							table.insert(item.circles,circle)
 							panel.number = panel.number + 1
 							table.insert(panel.frameData,{rect=rect})
 						end
@@ -198,16 +203,21 @@ local function oClipChooser(clipName)
 				function()
 					for i = 1,menu.children.count do
 						local child = tolua.cast(menu.children[i],"CCMenuItem")
-						if child and child.circle then
+						if child and child.circles then
 							child.face.cascadeOpacity = true
 							child.node.children[1].opacity = 0.4
 							child.node.children[1].color = ccColor3(0x666666)
-							panel.frameData = {}
-							local circle = child.circle
-							circle:runAction(CCSequence({oScale(0.3,0,0,oEase.OutQuad),CCCall(function()
-								circle.parent:removeChild(circle)
-							end)}))
-							child.circle = nil
+							local count = #panel.frameData
+							while count > 0 do
+								table.remove(panel.frameData)
+								count = count - 1
+							end
+							for _,circle in ipairs(child.circles) do
+								circle:runAction(CCSequence({oScale(0.3,0,0,oEase.OutQuad),CCCall(function()
+									circle.parent:removeChild(circle)
+								end)}))
+							end
+							child.circles = nil
 						end
 					end
 					panel.number = 1

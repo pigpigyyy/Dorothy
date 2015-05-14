@@ -189,6 +189,12 @@ local function oEditControl()
 					oEditor.effectData.duration = value
 					oEvent:send("duration",value)
 				end)
+			elseif name == "interval" then
+				ruler:showForFrame(oEditor.effectData.interval,0,60,0.1,function(value)
+					value = value < 0 and -1 or math.floor(value*100)/100
+					oEditor.effectData.interval = value
+					oEvent:send("interval",value)
+				end)
 			elseif name == "blendFuncSrc" or name == "blendFuncDst" then
 				control:showBlendSelector(function(value)
 					if name == "blendFuncSrc" then
@@ -314,6 +320,11 @@ local function oEditControl()
 				oEditor.currentName = newName
 				oEditor:dumpEffectFile()
 				oEvent:send("name",newName)
+			elseif name == "interval" then
+				ruler:hide()
+				oEditor:dumpData(oEditor.currentFile)
+				oEvent:send("viewArea.changeEffect",oEditor.currentName)
+				oEvent:send("oFrameViewer.data",oEditor.effectData)
 			else
 				ruler:hide()
 				control:hideModeSelector()

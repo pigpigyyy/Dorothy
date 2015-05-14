@@ -21,6 +21,7 @@ local CCSequence = require("CCSequence")
 local CCCall = require("CCCall")
 local oPos = require("oPos")
 local oEvent = require("oEvent")
+local CCHide = require("CCHide")
 
 local function oEditRuler()
 	local winSize = CCDirector.winSize
@@ -33,6 +34,7 @@ local function oEditRuler()
 	ruler.visible = false
 	ruler.opacity = 0.8
 	ruler.cascadeOpacity = true
+	ruler.angle = 90
 	ruler.anchor = oVec2(1,0)
 	ruler.position = oVec2(10,10)
 
@@ -320,6 +322,21 @@ local function oEditRuler()
 		return true
 	end
 
+	local isUsedForFrame = false
+	ruler.showForFrame = function(self,default,min,max,indent,callback)
+		self:setIndent(indent)
+		self:setLimit(min,max)
+		self:setValue(default)
+		self.changed = callback
+		self.visible = true
+		self.opacity = 0
+		self:stopAllActions()
+		self.position = oVec2(winSize.width*0.5-height*0.5,200)
+		self:runAction(CCSpawn({oPos(0.3,winSize.width*0.5-height*0.5,170,oEase.OutQuad),oOpacity(0.3,0.8)}))
+		self.touchEnabled = true
+		isUsedForFrame = true
+	end
+
 	ruler.show = function(self,default,min,max,indent,callback)
 		self:setIndent(indent)
 		self:setLimit(min,max)
@@ -328,6 +345,7 @@ local function oEditRuler()
 		self.visible = true
 		self.opacity = 0
 		self:stopAllActions()
+		self.positionX = 10
 		self.positionY = -10-width
 		self:runAction(CCSpawn({oPos(0.5,10,10,oEase.OutBack),oOpacity(0.5,0.8)}))
 		self.touchEnabled = true
@@ -338,20 +356,21 @@ local function oEditRuler()
 		self.changed = nil
 		self.touchEnabled = false
 		self:stopAllActions()
-		self:runAction(CCSequence(
-		{
-			CCSpawn(
+		if not isUsedForFrame then
+			self:runAction(CCSequence(
 			{
-				oPos(0.5,10,-10-width,oEase.InBack),
-				oOpacity(0.5,0)
-			}),
-			CCCall(function()
-				ruler.visible = false
-			end),
-		}))
-		oEvent:send("editMenu.place",false)
+				CCSpawn(
+				{
+					oPos(0.5,10,-10-width,oEase.InBack),
+					oOpacity(0.5,0)
+				}),
+				CCHide(),
+			}))
+			oEvent:send("editMenu.place",false)
+		else
+			self:runAction(CCSequence({CCSpawn({oPos(0.3,winSize.width*0.5-height*0.5,200,oEase.OutQuad),oOpacity(0.3,0)}),CCHide()}))
+		end
 	end
-	ruler.angle = 90
 	return ruler
 end
 

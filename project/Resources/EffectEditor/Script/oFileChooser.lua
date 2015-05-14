@@ -135,7 +135,7 @@ local function oFileChooser(addExisted)
 			local data = frameFile:read("*a")
 			frameFile:close()
 			local img = data:match("A%s*=%s*\"([^\"]*)\"")
-			local interval = data:match("<A.*B%s*=%s*\"([^\"]*)\"")
+			local interval = tonumber(data:match("<A.*B%s*=%s*\"([^\"]*)\""))
 			local frameData = {file=img,interval=interval}
 			for rc in data:gmatch("<B[^>]*A%s*=%s*\"([^\"]*)\"") do
 				local rect = rc..","
