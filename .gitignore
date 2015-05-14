@@ -69,3 +69,6 @@ DerivedData/
 
 # Ignore genareted Cocos2d-x doc files
 /document/Cocos2d-x-cpp/doc/
+
+# include zbstudio files
+!/tools/zbstudio/bin/
