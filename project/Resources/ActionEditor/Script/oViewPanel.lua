@@ -175,7 +175,7 @@ local function oViewPanel()
 			node.position = node.position + delta
 		end
 	end
-	
+
 	local function setOffset(deltaPos, touching)
 		local children = menu.children
 		if not children then return end

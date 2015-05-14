@@ -161,7 +161,7 @@ void oAnimationCache::startElement( void *ctx, const char *name, const char **at
 				_item->textureFile = atts[++i];
 				break;
 			oCase::Duration:
-				_item->duration = (float)atoi(atts[++i])/60.0f;
+				_item->duration = (float)atof(atts[++i]);
 				break;
 			}
 		}

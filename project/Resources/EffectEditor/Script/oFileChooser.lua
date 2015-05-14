@@ -19,6 +19,7 @@ local oEvent = require("oEvent")
 local oTemplateChooser = require("oTemplateChooser")
 local CCDictionary = require("CCDictionary")
 local oCache = require("oCache")
+local CCRect = require("CCRect")
 
 local function oFileChooser(addExisted)
 	local winSize = CCDirector.winSize
@@ -133,12 +134,22 @@ local function oFileChooser(addExisted)
 			local frameFile = io.open(oEditor.output..file)
 			local data = frameFile:read("*a")
 			frameFile:close()
-			local img = data:match("A%s*=%s*\"\"")
-			if img then img = "" else img = data:match("A%s*=%s*\"(.*)\"") end
-			local interval = data:match("B%s*=%s*\"(.*)\"")
+			local img = data:match("A%s*=%s*\"([^\"]*)\"")
+			local interval = data:match("<A.*B%s*=%s*\"([^\"]*)\"")
+			local frameData = {file=img,interval=interval}
+			for rc in data:gmatch("<B[^>]*A%s*=%s*\"([^\"]*)\"") do
+				local rect = rc..","
+				local nums = {}
+				for num in rect:gmatch("(%d+),") do
+					table.insert(nums,num)
+				end
+				table.insert(frameData,{rect = CCRect(nums[1],nums[2],nums[3],nums[4])})
+			end
+			oEditor.effectData = frameData
 			oEvent:send("name",name)
 			oEvent:send("file",file)
 			oEvent:send("interval",interval)
+			oEvent:send("oFrameViewer.data",oEditor.effectData)
 		end
 		oEvent:send("viewArea.changeEffect",name)
 	end
@@ -331,6 +342,7 @@ local function oFileChooser(addExisted)
 					oEditor.currentFile = oEditor.currentName..".frame"
 					oEditor.items[oEditor.currentName] = oEditor.currentFile
 					oEditor:dumpEffectFile()
+					oEditor.effectData = {file="",interval=1}
 					oEvent:send("name",oEditor.currentName)
 					oEvent:send("file",oEditor.currentFile)
 					oEvent:send("interval",1)

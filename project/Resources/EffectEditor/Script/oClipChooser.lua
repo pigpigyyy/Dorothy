@@ -89,7 +89,7 @@ local function oClipChooser(clipName)
 	btnBk.position = oVec2(30,30)
 	cancelButton:addChild(btnBk,-1)
 	opMenu:addChild(cancelButton)
-	
+
 	if clipName then
 		local setButton = oButton("Set",17,60,false,70,0,function(item)
 			item.tapHandler = nil
@@ -97,7 +97,10 @@ local function oClipChooser(clipName)
 			if panel.fadeSprites then
 				panel:fadeSprites()
 			end
-			oEvent:send("oClipChooser.clips",panel.clips)
+			oEditor.effectData = panel.frameData
+			oEditor:dumpData(oEditor.currentFile)
+			oEvent:send("viewArea.changeEffect",oEditor.currentName)
+			oEvent:send("oFrameViewer.data",oEditor.effectData)
 			panel:hide()
 		end)
 		setButton.anchor = oVec2.zero
@@ -137,13 +140,15 @@ local function oClipChooser(clipName)
 		else
 			panel.number = 1
 			panel.sprites = {}
-			panel.clips = {}
+			panel.frameData = {interval=oEditor.effectData.interval}
 			local filename = oEditor.input..clipName
 			local names = oCache.Clip:getNames(filename)
+			panel.frameData.file = oCache.Clip:getTextureFile(filename):match("[^%.\\/]*%.[^%.\\/]*$")
 			for index = 1,#names do
 				n = n + 1
 				y = borderSize.height-10-itemHeight*0.5-math.floor((n-1)/itemNum)*(itemHeight+10)
 				local clipStr = filename.."|"..names[index]
+				local rect = CCSprite(clipStr).textureRect
 				local sprite = nil
 				local button = oButton("",0,
 					100,100,
@@ -160,7 +165,7 @@ local function oClipChooser(clipName)
 							item.node:addChild(circle)
 							item.circle = circle
 							panel.number = panel.number + 1
-							table.insert(panel.clips,clipStr)
+							table.insert(panel.frameData,{rect=rect})
 						end
 					end)
 				sprite = CCSprite(clipStr)
@@ -197,7 +202,7 @@ local function oClipChooser(clipName)
 							child.face.cascadeOpacity = true
 							child.node.children[1].opacity = 0.4
 							child.node.children[1].color = ccColor3(0x666666)
-							panel.clips = {}
+							panel.frameData = {}
 							local circle = child.circle
 							circle:runAction(CCSequence({oScale(0.3,0,0,oEase.OutQuad),CCCall(function()
 								circle.parent:removeChild(circle)

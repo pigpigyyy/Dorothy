@@ -14,10 +14,12 @@ local oEase = require("oEase")
 local CCHide = require("CCHide")
 local CCSprite = require("CCSprite")
 local oLine = require("oLine")
+local oEvent = require("oEvent")
 
-local function oClipViewer(clipStr)
+local function oClipViewer(file,rect)
 	local width = 130
-	local sprite = CCSprite(clipStr)
+	local sprite = CCSprite(file)
+	sprite.textureRect = rect
 	local contentSize = sprite.contentSize
 	if contentSize.width > width or contentSize.height > width then
 		local scale = contentSize.width > contentSize.height and (width-2)/contentSize.width or (width-2)/contentSize.height
@@ -82,12 +84,12 @@ local function oFrameViewer()
 		panel.visible = true
 		panel:runAction(oPos(0.5,endPos.x,endPos.y,oEase.OutBack))
 	end))
-	panel.data:add(oListener("oClipChooser.clips",function(clips)
+	panel.data:add(oListener("oFrameViewer.data",function(data)
 		menu:removeAllChildrenWithCleanup()
 		local width = 0
-		for i,clipStr in ipairs(clips) do
+		for i,item in ipairs(data) do
 			width = 10+140*(i-1)
-			local clip = oClipViewer(clipStr)
+			local clip = oClipViewer(data.file,item.rect)
 			clip.position = oVec2(width,10)
 			menu:addChild(clip)
 		end

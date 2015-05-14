@@ -60,25 +60,35 @@ oEditor.dumpData = function(self,filename)
 	local extension = string.match(filename, "%.([^%.\\/]*)$")
 	if extension then extension = string.lower(extension) end
 	if extension == "par" then
+		local data = oEditor.effectData()
 		local str = [[
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 	<dict>]]
-		for k,v in pairs(oEditor.effectData()) do
+		for k,v in pairs(data) do
 			if type(v) == "number" then
 				str = str.."\n\t<key>"..k.."</key>\n\t<real>"..tostring(v).."</real>"
 			elseif type(v) == "string" then
 				str = str.."\n\t<key>"..k.."</key>\n\t<string>"..tostring(v).."</string>"
 			end
 		end
-		str = str..[[
-	</dict>
-</plist>]]
+		str = str.."\n\t</dict>\n</plist>"
 		oContent:saveToFile(oEditor.output..filename,str)
 		oCache.Particle:unload(oEditor.output..filename)
 	elseif extension == "frame" then
-		-- TODO
+		local data = oEditor.effectData
+		local str = "<A A=\""..data.file.."\" B=\""..tostring(data.interval).."\">"
+		for _,it in ipairs(data) do
+			str = str.."<B A=\""
+				..tostring(it.rect.origin.x)..","
+				..tostring(it.rect.origin.y)..","
+				..tostring(it.rect.size.width)..","
+				..tostring(it.rect.size.height).."\"/>"
+		end
+		str = str.."</A>"
+		oContent:saveToFile(oEditor.output..filename,str)
+		oCache.Animation:unload(oEditor.output..filename)
 	end
 end
 
