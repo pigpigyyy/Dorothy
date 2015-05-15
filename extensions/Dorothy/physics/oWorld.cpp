@@ -41,16 +41,27 @@ void oContactListener::oContactPair::release()
 	bodyB->release();
 }
 
+void oWorld::oQueryAABB::setInfo(const CCRect& rc)
+{
+	transform.Set(b2Vec2(b2Val(rc.getMidX()), b2Val(rc.getMidY())), 0);
+	testShape.SetAsBox(b2Val(rc.size.width), b2Val(rc.size.height));
+}
 bool oWorld::oQueryAABB::ReportFixture( b2Fixture* fixture )
 {
-	if (!fixture->IsSensor())
+	BLOCK_START
 	{
+		BREAK_IF(fixture->IsSensor());
+		b2Shape* shape = fixture->GetShape();
+		bool isCommonShape = shape->GetType() != b2Shape::e_chain && shape->GetType() != b2Shape::e_edge;
+		BREAK_IF(isCommonShape && !b2TestOverlap(&testShape, 0, shape, 0, transform, fixture->GetBody()->GetTransform()));
 		oBody* body = (oBody*)fixture->GetBody()->GetUserData();
+		vector<oBody*>& results = isCommonShape ? resultsOfCommonShapes : resultsOfChainsAndEdges;
 		if (results.empty() || results.back() != body)
 		{
 			results.push_back(body);
 		}
 	}
+	BLOCK_END
 	return true;
 }
 
@@ -228,12 +239,23 @@ void oWorld::query( const CCRect& rect, const function<bool(oBody*)>& callback )
 	b2AABB b2aabb;
 	b2aabb.lowerBound.Set(b2Val(rect.getMinX()), b2Val(rect.getMinY()));
 	b2aabb.upperBound.Set(b2Val(rect.getMaxX()), b2Val(rect.getMaxY()));
+	_queryCallback.setInfo(rect);
 	_world.QueryAABB(&_queryCallback, b2aabb);
-	for (oBody* item : _queryCallback.results)
+	for (oBody* item : _queryCallback.resultsOfCommonShapes)
+	{
+		if (callback(item))
+		{
+			_queryCallback.resultsOfChainsAndEdges.clear();
+			_queryCallback.resultsOfCommonShapes.clear();
+			return;
+		}
+	}
+	for (oBody* item : _queryCallback.resultsOfChainsAndEdges)
 	{
 		if (callback(item)) break;
 	}
-	_queryCallback.results.clear();
+	_queryCallback.resultsOfChainsAndEdges.clear();
+	_queryCallback.resultsOfCommonShapes.clear();
 }
 
 void oWorld::cast(const oVec2& start, const oVec2& end, bool closest, const function<bool(oBody*, const oVec2&, const oVec2&)>& callback)

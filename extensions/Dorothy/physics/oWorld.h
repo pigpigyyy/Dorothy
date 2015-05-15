@@ -118,8 +118,13 @@ private:
 	class oQueryAABB: public b2QueryCallback
 	{
 	public:
-		vector<oBody*> results;
+		void setInfo(const CCRect& rc);
+		vector<oBody*> resultsOfCommonShapes;
+		vector<oBody*> resultsOfChainsAndEdges;
 		virtual bool ReportFixture( b2Fixture* fixture );
+	private:
+		b2PolygonShape testShape;
+		b2Transform transform;
 	} _queryCallback;
 	class oRayCast: public b2RayCastCallback
 	{
