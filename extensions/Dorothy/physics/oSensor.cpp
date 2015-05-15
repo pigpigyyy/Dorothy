@@ -109,7 +109,7 @@ b2Fixture* oSensor::getFixture() const
 oSensor* oSensor::create( oBody* owner, int tag, b2Fixture* fixture )
 {
 	oSensor* sensor = new oSensor(owner, tag, fixture);
-	INIT(sensor);
+	CC_INIT(sensor);
 	sensor->autorelease();
 	return sensor;
 }

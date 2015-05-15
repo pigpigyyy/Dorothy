@@ -344,7 +344,7 @@ bool oFace::removeChild( oFace* face )
 oFace* oFace::create( const string& file, const oVec2& point )
 {
 	oFace* face = new oFace(file, point);
-	INIT(face);
+	CC_INIT(face);
 	face->autorelease();
 	return face;
 }

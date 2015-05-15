@@ -13,7 +13,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "Dorothy/model/oModelAnimationDef.h"
 #include "Dorothy/model/oKeyFrame.h"
 #include "Dorothy/model/oModelCache.h"
-#include "Dorothy/misc/oCallFunc.h"
 #include "Dorothy/misc/oHelper.h"
 
 NS_DOROTHY_BEGIN
@@ -397,7 +396,7 @@ void oModel::onResetAnimationEnd()
 oModel* oModel::create( oModelDef* modelDef )
 {
 	oModel* model = new oModel(modelDef);
-	INIT(model);
+	CC_INIT(model);
 	model->autorelease();
 	return model;
 }
@@ -565,7 +564,7 @@ void oResetAnimation::add( oSpriteDef* spriteDef, CCNode* node, CCFiniteTimeActi
 	{
 		_group[0]->animation = oSequence::createWithTwoActions(
 			_group[0]->animation,
-			oCallFunc::create(this, callfunc_selector(oResetAnimation::onActionEnd)));
+			CCCallFunc::create(this, callfunc_selector(oResetAnimation::onActionEnd)));
 	}
 }
 
@@ -651,14 +650,14 @@ void oModel::setupCallback()
 			action = oSequence::create(
 				action,
 				CCDelayTime::create(duration - d),
-				oCallFunc::create(this, callfunc_selector(oModel::onActionEnd)),
+				CCCallFunc::create(this, callfunc_selector(oModel::onActionEnd)),
 				nullptr);
 		}
 		else
 		{
 			action = oSequence::createWithTwoActions(
 				action,
-				oCallFunc::create(this, callfunc_selector(oModel::onActionEnd)));
+				CCCallFunc::create(this, callfunc_selector(oModel::onActionEnd)));
 		}
 		animationGroup->animations[0]->setAction(action);
 	}

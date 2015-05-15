@@ -361,7 +361,7 @@ b2FixtureDef* oBodyDef::chain(const oVec2 vertices[], int count, float friction,
 oBodyDef* oBodyDef::create()
 {
 	oBodyDef* bodyDef = new oBodyDef();
-	INIT(bodyDef);
+	CC_INIT(bodyDef);
 	bodyDef->autorelease();
 	return bodyDef;
 }

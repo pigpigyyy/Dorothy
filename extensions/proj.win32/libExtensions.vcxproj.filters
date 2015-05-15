@@ -347,9 +347,6 @@
     <ClInclude Include="..\Dorothy\effect\oParticleCache.h">
       <Filter>Dorothy\effect</Filter>
     </ClInclude>
-    <ClInclude Include="..\Dorothy\misc\oCallFunc.h">
-      <Filter>Dorothy\effect</Filter>
-    </ClInclude>
     <ClInclude Include="..\Dorothy\audio\oAudio.h">
       <Filter>Dorothy\audio</Filter>
     </ClInclude>

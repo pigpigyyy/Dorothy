@@ -53,7 +53,7 @@ void oListener::handle( oEvent* e )
 oListener* oListener::create( const string& name, const oEventHandler& handler )
 {
 	oListener* listener = new oListener(name, handler);
-	INIT(listener);
+	CC_INIT(listener);
 	listener->autorelease();
 	listener->setEnabled(true);
 	return listener;

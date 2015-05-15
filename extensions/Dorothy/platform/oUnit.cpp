@@ -127,7 +127,7 @@ oUnit* oUnit::create(oUnitDef* unitDef, oWorld* world, const oVec2& pos, float r
 	unitDef->getBodyDef()->position = oWorld::b2Val(pos);
 	unitDef->getBodyDef()->angle = -CC_DEGREES_TO_RADIANS(rot);
 	oUnit* unit = new oUnit(unitDef, world);
-	INIT(unit);
+	CC_INIT(unit);
 	unit->autorelease();
 	return unit;
 }

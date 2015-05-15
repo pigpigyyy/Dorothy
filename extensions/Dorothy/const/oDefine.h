@@ -77,8 +77,6 @@ public: void set##funName(bool var)
 public: bool is##funName() const;\
 public: void set##funName(bool var)
 
-#define INIT(item) if (!item->init()) {delete item;return nullptr;}
-
 /** @brief Code block for condition check
 	@example as below
 

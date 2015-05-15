@@ -112,7 +112,7 @@ void oBullet::cleanup()
 oBullet* oBullet::create(oBulletDef* def, oUnit* unit)
 {
 	oBullet* bullet = new oBullet(def, unit);
-	INIT(bullet);
+	CC_INIT(bullet);
 	bullet->autorelease();
 	return bullet;
 }

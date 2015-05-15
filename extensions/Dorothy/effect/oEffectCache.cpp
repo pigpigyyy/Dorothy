@@ -11,7 +11,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "Dorothy/effect/oParticleCache.h"
 #include "Dorothy/model/oAnimation.h"
 #include "Dorothy/misc/oContent.h"
-#include "Dorothy/misc/oCallFunc.h"
 #include "Dorothy/misc/oHelper.h"
 #include "Dorothy/const/oXml.h"
 
@@ -171,7 +170,7 @@ oEffect* oParticleEffect::autoRemove()
 oParticleEffect* oParticleEffect::create( const char* filename )
 {
 	oParticleEffect* effect = new oParticleEffect();
-	INIT(effect);
+	CC_INIT(effect);
 	effect->_particle = (CCParticleSystemQuad*)oSharedParticleCache.loadParticle(filename);
 	effect->_particle->setPositionType(kCCPositionTypeFree);
 	effect->_particle->setPosition(oVec2::zero);
@@ -197,13 +196,11 @@ CCParticleSystemQuad* oParticleEffect::getParticle() const
 //oSpriteEffect
 void oSpriteEffect::start()
 {
-	/* effect is retained by sprite, because sprite needs _isAutoRemoved flag */
 	if (_action->isDone())
 	{
 		_sprite->setVisible(true);
 		_sprite->stopAllActions();
 		_sprite->runAction(_action);
-		this->retain();
 	}
 }
 void oSpriteEffect::stop()
@@ -212,7 +209,6 @@ void oSpriteEffect::stop()
 	{	
 		_sprite->setVisible(false);
 		_sprite->stopAllActions();
-		this->release();
 	}
 	if (_isAutoRemoved)
 	{
@@ -240,7 +236,6 @@ oEffect* oSpriteEffect::autoRemove()
 }
 void oSpriteEffect::onActionEnd()
 {
-	this->release();
 	_sprite->setVisible(false);
 	if (_isAutoRemoved)
 	{
@@ -251,7 +246,7 @@ void oSpriteEffect::onActionEnd()
 oSpriteEffect* oSpriteEffect::create( const char* filename )
 {
 	oSpriteEffect* effect = new oSpriteEffect();
-	INIT(effect);
+	CC_INIT(effect);
 	effect->_isAutoRemoved = false;
 
 	oFrameActionDef* frameActionDef = oSharedAnimationCache.load(filename);
@@ -259,7 +254,7 @@ oSpriteEffect* oSpriteEffect::create( const char* filename )
 	if (frameActionDef->textureFile.empty() || frameActionDef->rects.size() == 0)
 	{
 		effect->_sprite = oSprite::create();
-		effect->_action = CCSequence::create(oCallFunc::create(effect, callfunc_selector(oSpriteEffect::onActionEnd)),nullptr);
+		effect->_action = CCSequence::create(CCCallFunc::create(effect, callfunc_selector(oSpriteEffect::onActionEnd)),nullptr);
 	}
 	else
 	{
@@ -268,7 +263,7 @@ oSpriteEffect* oSpriteEffect::create( const char* filename )
 			*frameActionDef->rects[0]);
 		effect->_action = CCSequence::createWithTwoActions(
 			frameActionDef->toAction(),
-			oCallFunc::create(effect, callfunc_selector(oSpriteEffect::onActionEnd)));
+			CCCallFunc::create(effect, callfunc_selector(oSpriteEffect::onActionEnd)));
 	}
 
 	effect->autorelease();

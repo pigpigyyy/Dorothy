@@ -72,7 +72,7 @@ void oLine::draw()
 oLine* oLine::create()
 {
 	oLine* line = new oLine();
-	INIT(line);
+	CC_INIT(line);
 	line->autorelease();
 	return line;
 }
@@ -80,7 +80,7 @@ oLine* oLine::create()
 oLine* oLine::create(oVec2 vecs[], int count, const ccColor4B& color)
 {
 	oLine* line = new oLine();
-	INIT(line);
+	CC_INIT(line);
 	line->set(vecs, count);
 	line->setColor(ccColor3B{color.r, color.g, color.b});
 	line->setOpacity(color.a / 255.0f);

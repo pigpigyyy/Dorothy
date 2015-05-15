@@ -52,6 +52,8 @@ static __TYPE__* create() \
     } \
 }
 
+#define CC_INIT(item) if (!item->init()) {delete item;return nullptr;}
+
 /**
  * define a node function for a specific type, such as CCLayer
  * @__TYPE__ class type to add node(), such as CCLayer

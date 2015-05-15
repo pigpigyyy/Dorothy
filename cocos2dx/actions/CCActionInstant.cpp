@@ -363,6 +363,12 @@ CCCallFunc::~CCCallFunc()
     CC_SAFE_RELEASE(_targetRef);
 }
 
+CCObject* CCCallFunc::getSelectorTarget()
+{
+	if (_targetRef) return _targetRef->target;
+	return NULL;
+}
+
 CCObject * CCCallFunc::copyWithZone(CCZone *pZone) {
     CCZone* pNewZone = NULL;
     CCCallFunc* pRet = NULL;

@@ -23,7 +23,7 @@ oScriptHandler::~oScriptHandler()
 oScriptHandler* oScriptHandler::create(int handler)
 {
 	oScriptHandler* scriptHandler = new oScriptHandler(handler);
-	INIT(scriptHandler);
+	CC_INIT(scriptHandler);
 	scriptHandler->autorelease();
 	return scriptHandler;
 }

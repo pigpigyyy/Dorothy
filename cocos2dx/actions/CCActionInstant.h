@@ -52,7 +52,7 @@ public:
     virtual void step(float dt);
     virtual void update(float time);
     //CCFiniteTimeAction method
-    virtual CCFiniteTimeAction * reverse();
+    virtual CCFiniteTimeAction* reverse();
 };
 
 /** @brief Show the node
@@ -195,7 +195,7 @@ public:
 
     typedef void (CCObject::*SEL_CallFunc)();
     */
-    static CCCallFunc * create(CCObject* pSelectorTarget, SEL_CallFunc selector);
+    static CCCallFunc* create(CCObject* pSelectorTarget, SEL_CallFunc selector);
 
 	/** initializes the action with the callback 
     
@@ -206,12 +206,8 @@ public:
     virtual void execute();
     //super methods
     virtual void update(float time);
-    CCObject * copyWithZone(CCZone *pZone);
-	CCObject* getSelectorTarget()
-	{
-		if (_targetRef) return _targetRef->target;
-		return NULL;
-	}
+    CCObject* copyWithZone(CCZone *pZone);
+	CCObject* getSelectorTarget();
 protected:
     /** Target that will be called */
     CCWeak* _targetRef;// use weak reference

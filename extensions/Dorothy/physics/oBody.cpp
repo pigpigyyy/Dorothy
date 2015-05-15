@@ -100,7 +100,7 @@ oBody* oBody::create(oBodyDef* bodyDef, oWorld* world, const oVec2& pos, float r
 	bodyDef->position = oWorld::b2Val(pos + bodyDef->offset);
 	bodyDef->angle = -CC_DEGREES_TO_RADIANS(rot + bodyDef->angleOffset);
 	oBody* body = new oBody(bodyDef, world);
-	INIT(body);
+	CC_INIT(body);
 	body->autorelease();
 	return body;
 }

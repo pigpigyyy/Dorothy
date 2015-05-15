@@ -1123,7 +1123,7 @@ oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableI
 CCCall* CCCall::create(int nHandler)
 {
 	CCCall* pRet = new CCCall();
-	INIT(pRet);
+	CC_INIT(pRet);
 	pRet->_scriptHandler = nHandler;
 	pRet->autorelease();
 	return pRet;
@@ -1135,7 +1135,7 @@ CCCall::~CCCall()
 		CCScriptEngine::sharedEngine()->removeScriptHandler(_scriptHandler);
 	}
 }
-CCObject* CCCall::copyWithZone(CCZone *pZone)
+CCObject* CCCall::copyWithZone(CCZone* pZone)
 {
 	return nullptr;
 }
@@ -1232,7 +1232,7 @@ CCTextFieldTTF* CCTextFieldTTF_create(const char* placeholder, const char* fontN
 {
 	CCTextFieldTTF* textField = CCTextFieldTTF::textFieldWithPlaceHolder(placeholder, fontName, fontSize);
 	oTextFieldDelegate* delegate = new oTextFieldDelegate();
-	INIT(delegate);
+	CC_INIT(delegate);
 	delegate->autorelease();
 	textField->setDelegate(delegate);
 	return textField;
@@ -1284,7 +1284,7 @@ public:
 	static oImageAsyncLoader* create(const char* filename, int handler)
 	{
 		oImageAsyncLoader* loader = new oImageAsyncLoader();
-		INIT(loader);
+		CC_INIT(loader);
 		loader->_name = filename;
 		if (handler)
 		{

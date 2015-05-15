@@ -155,7 +155,6 @@
     <ClInclude Include="..\Dorothy\event\oEventType.h" />
     <ClInclude Include="..\Dorothy\event\oListener.h" />
     <ClInclude Include="..\Dorothy\misc\oAsync.h" />
-    <ClInclude Include="..\Dorothy\misc\oCallFunc.h" />
     <ClInclude Include="..\Dorothy\misc\oContent.h" />
     <ClInclude Include="..\Dorothy\misc\oHelper.h" />
     <ClInclude Include="..\Dorothy\misc\oIDisposable.h" />

@@ -66,7 +66,7 @@ local gcButton = oButton("GC",17,60,false,
 		cclog("Pool alloc : %.2f MB(%d KB)",size/1024/1024,size/1024)
 		size = oCache.Pool:collect()
 		cclog("Pool collect : %.2f MB(%d KB)",size/1024/1024,size/1024)
-		---[[
+		--[[
 		for i,item in pairs(ubox()) do
 			print(i,item)
 		end

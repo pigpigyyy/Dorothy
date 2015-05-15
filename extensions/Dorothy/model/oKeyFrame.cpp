@@ -57,7 +57,7 @@ CCObject* oKeyReset::copyWithZone( CCZone* zone )
 oKeyReset* oKeyReset::create( oKeyFrameDef* def )
 {
 	oKeyReset* keyReset = new oKeyReset();
-	INIT(keyReset);
+	CC_INIT(keyReset);
 	keyReset->_x = def->x;
 	keyReset->_y = def->y;
 	keyReset->_scaleX = def->scaleX;
