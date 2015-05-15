@@ -38,23 +38,16 @@ local function wait(cond)
 end
 
 local function once(job)
-	return wrap(function(...)
-		job(...)
+	return wrap(function()
+		job()
 		return true
 	end)
 end
 
 local function loop(job)
-	return wrap(function(...)
-		local _job = job
-		local worker = create(_job)
-		repeat
-			local _,result = resume(worker,...)
-			if status(worker) == "dead"then
-				worker = create(_job)
-			end
-			yield(result)
-		until false
+	return wrap(function()
+		repeat until job()
+		return true
 	end)
 end
 
