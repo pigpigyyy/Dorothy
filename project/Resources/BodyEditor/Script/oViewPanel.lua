@@ -13,6 +13,9 @@ local oLine = require("oLine")
 local CCSequence = require("CCSequence")
 local CCDelay = require("CCDelay")
 local oOpacity = require("oOpacity")
+local oRoutine = require("oRoutine")
+local once = require("once")
+local cycle = require("cycle")
 
 local function oViewPanel()
 	local winSize = CCDirector.winSize
@@ -62,18 +65,26 @@ local function oViewPanel()
 	local crossB = createCross()
 
 	local function moveViewToData(data)
-		if oEditor.isPlaying then return end
+		crossA.transformTarget = oEditor.world
+		crossB.transformTarget = oEditor.world
 		if data.resetListener then
 			if data:has("BodyA") and data:has("BodyB") then
 				local bodyA = oEditor:getItem(data:get("BodyA"))
 				local bodyB = oEditor:getItem(data:get("BodyB"))
 				if bodyA then
-					crossA.position = bodyA.position
+					crossA.transformTarget = bodyA
+					crossA.position = oVec2.zero
 					crossA:fadeOut()
 				end
 				if bodyB then
-					crossB.position = bodyB.position
+					crossB.transformTarget = bodyB
+					crossB.position = oVec2.zero
 					crossB:fadeOut()
+				end
+				if bodyA then
+					oEvent:send("viewArea.toPos",oEditor.origin-bodyA.position)
+				elseif bodyB then
+					oEvent:send("viewArea.toPos",oEditor.origin-bodyB.position)
 				end
 			end
 			return
@@ -81,30 +92,62 @@ local function oViewPanel()
 		if not data.parent then
 			if data:has("Center") then
 				local worldNode = oEditor.worldNode
-				worldNode.position = data:get("Position")
-				worldNode.angle = data:has("Angle") and data:get("Angle") or 0
+				local item = oEditor:getItem(data)
+				if item then
+					worldNode.position = item.position
+					worldNode.angle = item.angle
+					crossA.transformTarget = item
+					crossA.position = data:get("Center")
+				else
+					worldNode.position = data:get("Position")
+					worldNode.angle = data:has("Angle") and data:get("Angle") or 0	
+				end
 				local pos = worldNode:convertToWorldSpace(data:get("Center"))
 				pos = oEditor.world:convertToNodeSpace(pos)
-				crossA.position = pos
+				if not item then crossA.position = pos end
 				oEvent:send("viewArea.toPos",oEditor.origin-pos)
 			elseif data:has("Position") then
-				local pos = data:get("Position")
-				crossA.position = pos
+				local item = oEditor:getItem(data)
+				local pos
+				if item then
+					crossA.transformTarget = item
+					crossA.position = oVec2.zero
+					pos = item.position
+				else
+					pos = data:get("Position")
+					crossA.position = pos
+				end
 				oEvent:send("viewArea.toPos",oEditor.origin-pos)
 			end
 		elseif not data:has("Center") then
 			local parent = data.parent
-			local pos = parent:get("Position")
-			crossA.position = pos
+			local item = oEditor:getItem(parent)
+			local pos
+			if item then
+				pos = item.position
+				crossA.transformTarget = item
+				crossA.position = oVec2.zero
+			else
+				pos = parent:get("Position")
+				crossA.position = pos
+			end
 			oEvent:send("viewArea.toPos",oEditor.origin-pos)
 		else
 			local parent = data.parent
+			local item = oEditor:getItem(parent)
 			local worldNode = oEditor.worldNode
-			worldNode.position = parent:get("Position")
-			worldNode.angle = parent:has("Angle") and parent:get("Angle") or 0
+			if item then
+				worldNode.position = item.position
+				worldNode.angle = item.angle
+				crossA.transformTarget = item
+				crossA.position = data:get("Center")
+			else
+				worldNode.position = parent:get("Position")
+				worldNode.angle = parent:has("Angle") and parent:get("Angle") or 0
+			end
 			local pos = worldNode:convertToWorldSpace(data:get("Center"))
 			pos = oEditor.world:convertToNodeSpace(pos)
-			crossA.position = pos
+			if not item then crossA.position = pos end
 			oEvent:send("viewArea.toPos",oEditor.origin-pos)
 		end
 		crossA:fadeOut()

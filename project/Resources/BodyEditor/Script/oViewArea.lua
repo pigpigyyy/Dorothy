@@ -163,6 +163,7 @@ local function oViewArea()
 				scaleNode.scaleX = scale
 				scaleNode.scaleY = scale
 				oEditor.scale = scale
+				pick = false
 				oEvent:send("viewArea.scale",scale)
 			end
 		elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then

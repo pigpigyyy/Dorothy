@@ -23,9 +23,6 @@ loaded.CCMessageBox = nil
 
 local yield = coroutine.yield
 local wrap = coroutine.wrap
-local create = coroutine.create
-local resume = coroutine.resume
-local status = coroutine.status
 local CCDirector = loaded.CCDirector
 local table_insert = table.insert
 local table_remove = table.remove
