@@ -465,7 +465,6 @@ void CCScheduler::appendIn(_listEntry **ppList, CCObject *pTarget, bool bPaused)
 
 void CCScheduler::scheduleUpdateForTarget(CCObject *pTarget, int nPriority, bool bPaused)
 {
-
     tHashUpdateEntry *pHashElement = NULL;
     HASH_FIND_INT(m_pHashForUpdates, &pTarget, pHashElement);
     if (pHashElement)

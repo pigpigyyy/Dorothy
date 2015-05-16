@@ -630,7 +630,7 @@ local Dorothy =
 			},
 			schedule =
 			{
-				args = "(handler: function, priority: int)",
+				args = "(handler: function, priority: int = 0)",
 				description = " -- handler: function(deltaTime: float)",
 				returns = "()",
 				type = "method",

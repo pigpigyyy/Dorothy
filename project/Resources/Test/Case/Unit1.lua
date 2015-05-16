@@ -21,7 +21,7 @@ else
 end
 
 local isJumpKeyDown = oCon(function()
-	return CCKeyboard:isKeyDown(CCKey.Up)
+	return CCKeyboard:isKeyPressed(CCKey.Up)
 end)
 
 local isWalkKeyPressed = oCon(function()
