@@ -15,7 +15,7 @@
 ```lua
 	-- 物理引擎的简单示例，创建一个旋转下落的矩形方块
 	-- 设置环境
-	setfenv(Dorothy())
+	Dorothy()
 	-- 创建场景
 	local scene = CCScene()
 	-- 创建世界
