@@ -43,7 +43,7 @@ end
 
 local function loop(job)
 	return wrap(function()
-		repeat until job()
+		repeat yield() until job()
 		return true
 	end)
 end

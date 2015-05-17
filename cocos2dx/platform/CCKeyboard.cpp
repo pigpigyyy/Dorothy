@@ -40,7 +40,7 @@ void CCKeyboard::update(float dt)
 {
 	if (_needUpdate)
 	{
-    	_needUpdate = false;
+		_needUpdate = false;
 		memcpy(_oldKeyState, _newKeyState, sizeof(bool)*MAX_KEY);
 	}
 }
