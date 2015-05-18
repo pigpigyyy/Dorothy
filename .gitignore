@@ -65,6 +65,7 @@ DerivedData/
 # Ignore genareted Dorothy lua doc files
 /document/Dorothy/doc/
 !/document/Dorothy/bin/
+!/document/Dorothy/bin/lua.exe
 /document/Dorothy/bin/doc.lua
 
 # Ignore genareted Cocos2d-x doc files

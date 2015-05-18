@@ -62,7 +62,7 @@ local function oBox(text,okHandler,isInput)
 			oVec2(-85,18)
 		},ccColor4(0),0.5,ccColor4(0xff00ffff))
 		border:addChild(frame)
-	
+
 		menu = CCMenu()
 		menu.contentSize = CCSize(120,50)
 		menu.touchPriority = CCMenu.DefaultHandlerPriority-5

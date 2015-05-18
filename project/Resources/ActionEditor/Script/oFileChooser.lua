@@ -138,7 +138,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 		},ccColor4(0x44ffffff))
 
 		local node = CCNode()
-		
+
 		for n = 1, #blocks do
 			local block = blocks[n]
 			if block.fit then

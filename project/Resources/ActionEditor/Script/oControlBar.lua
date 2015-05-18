@@ -30,7 +30,8 @@ local function oControlBar()
 	controlBar.opacity = 0.4
 	controlBar.touchEnabled = true
 	controlBar.data = CCDictionary()
-	
+	controlBar.visible = false
+
 	-- border
 	local border = CCDrawNode()
 	border:drawPolygon(
@@ -322,7 +323,7 @@ local function oControlBar()
 	controlBar.getTime = function(self)
 		return bar:getPos()/60
 	end
-	
+
 	return controlBar
 end
 

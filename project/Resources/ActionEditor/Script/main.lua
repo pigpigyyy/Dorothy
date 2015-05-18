@@ -33,53 +33,6 @@ oContent:addSearchPath("ActionEditor/Script")
 
 local oEditor = require("oEditor").oEditor
 
-local bk = CCLayerColor(ccColor4(0xff000000),CCDirector.winSize.width,CCDirector.winSize.height)
-bk.anchor = oVec2.zero
-local logo = CCLabelTTF("LUV FIGHT","Arial",48)
-logo.texture.antiAlias = false
-logo.position = oVec2(CCDirector.winSize.width*0.5,CCDirector.winSize.height*0.5)
-logo.scaleX = 0.3
-logo.scaleY = 0.3
-logo.opacity= 0
-logo:runAction(oScale(0.3,1,1,oEase.OutBack))
-logo:runAction(oOpacity(0.3,1,oEase.OutQuad))
-
-bk:addChild(logo)
-local flower = CCDrawNode()
-flower:drawPolygon(
-{
-	oVec2(-1,10),
-	oVec2(9,10),
-	oVec2(9,20),
-	oVec2(-1,20),
-},ccColor4(0xff00ffff))
-flower:drawPolygon(
-{
-	oVec2(10,-1),
-	oVec2(20,-1),
-	oVec2(20,9),
-	oVec2(10,9),
-},ccColor4(0xff00ffff))
-flower:drawPolygon(
-{
-	oVec2(21,10),
-	oVec2(31,10),
-	oVec2(31,20),
-	oVec2(21,20),
-},ccColor4(0xff00ffff))
-flower:drawPolygon(
-{
-	oVec2(10,21),
-	oVec2(20,21),
-	oVec2(20,31),
-	oVec2(10,31),
-},ccColor4(0xff00ffff))
-flower.scaleX = 0.5
-flower.scaleY = 0.5
-flower.position = oVec2(logo.contentSize.width+2,logo.contentSize.height-2)
-logo:addChild(flower)
-oEditor.scene:addChild(bk,998)
-
 local controls =
 {
 	"oViewArea",
@@ -89,7 +42,6 @@ local controls =
 	"oSettingPanel",
 }
 
-local isUILoaded = false
 oRoutine(once(function() -- load UI asynchronously
 	for i = 1,#controls do
 		local controlName = controls[i]
@@ -99,11 +51,10 @@ oRoutine(once(function() -- load UI asynchronously
 		controlName = controlName:sub(2,2):lower()..controlName:sub(3,-1)
 		oEditor[controlName] = controls[i]
 		coroutine.yield()
-	end
-	for i = 1,#controls do
 		oEditor.scene:addChild(controls[i]) -- add to scene
 		coroutine.yield()
 	end
+	oEditor.editMenu:toStart()
 	local resPath = "ActionEditor/Model"
 	local writePath = oContent.writablePath.."Model"
 	if not oContent:exist(oContent.writablePath.."Model") and oContent:exist("ActionEditor/Model") then
@@ -119,24 +70,10 @@ oRoutine(once(function() -- load UI asynchronously
 	oEditor.vertexControl = require("oVertexControl")() -- one more control to load
 	coroutine.yield()
 	oEditor.scene:addChild(oEditor.vertexControl)
-	isUILoaded = true
-end))
+	coroutine.yield()
 
-oRoutine(once(function() -- thread to wait UI loaded
-	wait(seconds(1)) -- wait 1 second and let UI load
-	wait(function() return not isUILoaded end) -- wait when UI has not been loaded yet
-	oEvent:send("EditorLoaded")
-	logo:runAction(CCSequence(
-	{
-		oOpacity(0.3,0),
-		CCCall(
-			function()
-				bk.visible = false
-				bk.parent:removeChild(bk)
-				oEditor.scene.opacity = 0
-				oEditor.scene:runAction(oOpacity(0.3,1))
-			end),
-	}))
+	local oFileChooser = require("oFileChooser")
+	oFileChooser(true)
 end))
 
 --[[

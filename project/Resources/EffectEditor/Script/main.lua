@@ -63,6 +63,6 @@ oRoutine(once(function()
 	end
 	oContent:addSearchPath(oEditor.input)
 
-	--local oFileChooser = require("oFileChooser")
-	--oEditor:addChild(oFileChooser(),oEditor.topMost)
+	local oFileChooser = require("oFileChooser")
+	oEditor:addChild(oFileChooser(),oEditor.topMost)
 end))

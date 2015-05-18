@@ -856,10 +856,9 @@ oEditor.spriteData[oSd.index]
 		end)
 	menu.data.selectListener.enabled = false
 
-	menu.data.loadListener = oListener("EditorLoaded",
-		function()
-			menu:toStart()
-		end)
+	items.Origin.visible = false
+	items.Zoom.visible = false
+	hideItems()
     return menu
 end
 
