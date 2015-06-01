@@ -53,7 +53,7 @@ CCRenderTexture::CCRenderTexture()
 , m_pTextureCopy(0)
 , m_pUITextureImage(NULL)
 , m_ePixelFormat(kCCTexture2DPixelFormat_RGBA8888)
-, m_uClearFlags(0)
+, m_uClearFlags(GL_COLOR_BUFFER_BIT)
 , m_sClearColor(ccc4f(0,0,0,0))
 , m_fClearDepth(0.0f)
 , m_nClearStencil(0)
@@ -203,11 +203,11 @@ void CCRenderTexture::setAutoDraw(bool bAutoDraw)
     m_bAutoDraw = bAutoDraw;
 }
 
-CCRenderTexture * CCRenderTexture::create(int w, int h, CCTexture2DPixelFormat eFormat)
+CCRenderTexture* CCRenderTexture::create(int w, int h, CCTexture2DPixelFormat eFormat)
 {
-    CCRenderTexture *pRet = new CCRenderTexture();
+    CCRenderTexture* pRet = new CCRenderTexture();
 
-    if(pRet && pRet->initWithWidthAndHeight(w, h, eFormat))
+    if (pRet && pRet->initWithWidthAndHeight(w, h, eFormat))
     {
         pRet->autorelease();
         return pRet;
@@ -216,9 +216,9 @@ CCRenderTexture * CCRenderTexture::create(int w, int h, CCTexture2DPixelFormat e
     return NULL;
 }
 
-CCRenderTexture * CCRenderTexture::create(int w ,int h, CCTexture2DPixelFormat eFormat, GLuint uDepthStencilFormat)
+CCRenderTexture* CCRenderTexture::create(int w ,int h, CCTexture2DPixelFormat eFormat, GLuint uDepthStencilFormat)
 {
-    CCRenderTexture *pRet = new CCRenderTexture();
+    CCRenderTexture* pRet = new CCRenderTexture();
 
     if(pRet && pRet->initWithWidthAndHeight(w, h, eFormat, uDepthStencilFormat))
     {
@@ -229,7 +229,7 @@ CCRenderTexture * CCRenderTexture::create(int w ,int h, CCTexture2DPixelFormat e
     return NULL;
 }
 
-CCRenderTexture * CCRenderTexture::create(int w, int h)
+CCRenderTexture* CCRenderTexture::create(int w, int h)
 {
     CCRenderTexture *pRet = new CCRenderTexture();
 
@@ -253,6 +253,7 @@ bool CCRenderTexture::initWithWidthAndHeight(int w, int h, CCTexture2DPixelForma
 
     bool bRet = false;
     void *data = NULL;
+	setContentSize(CCSize(w,h));
     do 
 	{
 		w = (int)(w * CC_CONTENT_SCALE_FACTOR());
@@ -339,7 +340,7 @@ bool CCRenderTexture::initWithWidthAndHeight(int w, int h, CCTexture2DPixelForma
         m_pTexture->release();
         m_pSprite->setScaleY(-1);
 
-        ccBlendFunc tBlendFunc = {GL_ONE, GL_ONE_MINUS_SRC_ALPHA };
+        ccBlendFunc tBlendFunc = {GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA };
         m_pSprite->setBlendFunc(tBlendFunc);
 
         glBindRenderbuffer(GL_RENDERBUFFER, oldRBO);
@@ -366,7 +367,7 @@ void CCRenderTexture::begin()
 	kmGLMatrixMode(KM_GL_MODELVIEW);
     kmGLPushMatrix();
     
-    CCDirector *director = CCDirector::sharedDirector();
+    CCDirector* director = CCDirector::sharedDirector();
     director->setProjection(director->getProjection());
 
     const CCSize& texSize = m_pTexture->getContentSizeInPixels();
@@ -449,7 +450,7 @@ void CCRenderTexture::render(CCNode* target)
 
 void CCRenderTexture::end()
 {
-    CCDirector *director = CCDirector::sharedDirector();
+    CCDirector* director = CCDirector::sharedDirector();
     
     glBindFramebuffer(GL_FRAMEBUFFER, m_nOldFBO);
 
@@ -502,9 +503,39 @@ void CCRenderTexture::visit()
     }
     
     transform();
-    m_pSprite->visit();
-    draw();
-	
+	CCSize size = getContentSize();
+	m_pSprite->setPosition(CCPoint(size.width*0.5f, size.height*0.5f));
+	if (!m_bAutoDraw && m_pChildren && m_pChildren->count() > 0)
+	{
+		this->sortAllChildren();
+		CCObject** arr = m_pChildren->data->arr;
+		unsigned int count = m_pChildren->data->num;
+		unsigned int i = 0;
+		for (; i < count; ++i)
+		{
+			CCNode* pNode = (CCNode*)arr[i];
+			if (pNode && pNode->getZOrder() < 0)
+			{
+				pNode->visit();
+			}
+			else break;
+		}
+		m_pSprite->visit();
+		for (; i < count; ++i)
+		{
+			CCNode* pNode = (CCNode*)arr[i];
+			if (pNode)
+			{
+				pNode->visit();
+			}
+		}
+	}
+	else
+	{
+		this->draw();
+		m_pSprite->visit();
+	}
+
     if (m_pGrid && m_pGrid->isActive())
     {
         m_pGrid->afterDraw(this);
@@ -515,7 +546,7 @@ void CCRenderTexture::visit()
 
 void CCRenderTexture::draw()
 {
-    if( m_bAutoDraw)
+    if (m_bAutoDraw)
     {
         begin();
 		
@@ -544,7 +575,7 @@ void CCRenderTexture::draw()
 		//! make sure all children are drawn
         sortAllChildren();
 		
-		CCObject *pElement;
+		CCObject* pElement;
 		CCARRAY_FOREACH(m_pChildren, pElement)
         {
             CCNode *pChild = (CCNode*)pElement;
