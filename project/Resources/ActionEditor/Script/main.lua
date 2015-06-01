@@ -82,9 +82,9 @@ for i = 1,#names do
 	local sp = CCSprite(oEditor.output.."nvjing.clip|"..names[i])
 	sp.anchor = oVec2.zero
 	local target = CCRenderTarget(sp.contentSize.width,sp.contentSize.height)
-	target:beginPaint(ccColor4(0))
+	target:beginDraw(ccColor4(0))
 	target:draw(sp)
-	target:endPaint()
+	target:endDraw()
 	target:save(names[i]..".png",CCImage.PNG)
 end
 ]]

@@ -1786,7 +1786,12 @@ local Dorothy =
 	{
 		childs =
 		{
-			beginPaint =
+			autoDraw =
+			{
+				description = "[bool]",
+				type = "value",
+			},
+			beginDraw =
 			{
 				args = "()",
 				description = " args1 -- (color: ccColor4)",
@@ -1800,7 +1805,7 @@ local Dorothy =
 				returns = "()",
 				type = "method",
 			},
-			endPaint =
+			endDraw =
 			{
 				args = "()",
 				description = "",

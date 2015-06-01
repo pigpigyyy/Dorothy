@@ -25,9 +25,9 @@ local function oViewArea()
 	local star = oStar(radius,ccColor4(0x6600ffff),0.5,ccColor4(0xff00ffff))
 	star.position = oVec2(radius,radius)
 	local renderTarget = CCRenderTarget(radius*2,radius*2)
-	renderTarget:beginPaint(ccColor4(0))
+	renderTarget:beginDraw(ccColor4(0))
 	renderTarget:draw(star)
-	renderTarget:endPaint()
+	renderTarget:endDraw()
 
 	local tex = oCache.Texture:add(renderTarget,"star.png")
 

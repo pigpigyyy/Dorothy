@@ -274,7 +274,7 @@ local function oViewArea()
 	renderTarget.position = oVec2(winSize.width*0.5,winSize.height*0.5)
 	renderTarget:schedule(
 		function()
-			renderTarget:beginPaint()
+			renderTarget:beginDraw()
 			crossNode.opacity = 0
 			if editorView then
 				editorView.visible = true
@@ -286,7 +286,7 @@ local function oViewArea()
 				editorView.visible = false
 			end
 			crossNode.opacity = 1
-			renderTarget:endPaint()
+			renderTarget:endDraw()
 		end)
 	view:addChild(renderTarget)
 ]]

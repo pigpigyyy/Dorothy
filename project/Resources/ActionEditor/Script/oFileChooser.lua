@@ -160,9 +160,9 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 		end
 
 		local target = CCRenderTarget(w,h)
-		target:beginPaint(ccColor4(0))
+		target:beginDraw(ccColor4(0))
 		target:draw(node)
-		target:endPaint()
+		target:endDraw()
 		target:save(oEditor.output..file..".png",CCImage.PNG)
 		local xml = "<A A=\""..file..".png\">"
 		for i = 1,#blocks do
