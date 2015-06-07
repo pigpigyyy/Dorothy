@@ -8,7 +8,7 @@ class CCNode: public CCObject
 		Exit @ Exited = 1,
 		Cleanup = 4
 	};
-	tolua_readonly tolua_property__common int zOrder;
+	tolua_property__common int zOrder;
 	tolua_property__common float rotation @ angle;
 	tolua_property__common float scaleX;
 	tolua_property__common float scaleY;
@@ -44,7 +44,6 @@ class CCNode: public CCObject
 	void removeChild(CCNode* child, bool cleanup = true);
 	void removeChildByTag(int tag, bool cleanup = true);
 	void removeAllChildrenWithCleanup(bool cleanup = true);
-	void reorderChild(CCNode * child, int zOrder);
 	void runAction(CCAction* action);
 	void stopAllActions();
 	void stopAction(CCAction* action);

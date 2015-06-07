@@ -585,13 +585,6 @@ local Dorothy =
 				returns = "()",
 				type = "method",
 			},
-			reorderChild =
-			{
-				args = "(child: CCNode, zOrder: int)",
-				description = "",
-				returns = "()",
-				type = "method",
-			},
 			runAction =
 			{
 				args = "(action: CCAction)",
