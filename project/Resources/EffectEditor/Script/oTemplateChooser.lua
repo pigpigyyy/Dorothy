@@ -16,7 +16,7 @@ local CCCall = require("CCCall")
 local CCMenu = require("CCMenu")
 local CCDictionary = require("CCDictionary")
 local oCache = require("oCache")
-local oEvent = require("oEvent")
+local emit = require("emit")
 
 local templates =
 {
@@ -380,12 +380,12 @@ local function oTemplateChooser(filename)
 				parData.textureRectw = 0
 				parData.textureRecth = 0
 				for k,v in pairs(parData) do
-					oEvent:send(k,v)
+					emit(k,v)
 				end
-				oEvent:send("name",name)
-				oEvent:send("file",filename)
+				emit("name",name)
+				emit("file",filename)
 				oCache.Effect:load(oEditor.output.."main.effect")
-				oEvent:send("viewArea.changeEffect",name)
+				emit("viewArea.changeEffect",name)
 			end)
 		button.template = name
 		button.enabled = false

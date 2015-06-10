@@ -12,11 +12,10 @@ local oEase = require("oEase")
 local CCMenuItem = require("CCMenuItem")
 local CCLabelTTF = require("CCLabelTTF")
 local ccColor3 = require("ccColor3")
-local oEvent = require("oEvent")
+local emit = require("emit")
 local oOpacity = require("oOpacity")
 local CCTouch = require("CCTouch")
 local CCRect = require("CCRect")
-local oListener = require("oListener")
 local CCSequence = require("CCSequence")
 local oEditor = require("oEditor").oEditor
 local oSd = require("oEditor").oSd
@@ -55,7 +54,6 @@ local function oSettingPanel()
 	panel.opacity = 0.4
 	panel.touchEnabled = true
 	panel.position = oVec2(winSize.width-170,70)
-	panel.data = CCDictionary()
 
 	local border = CCDrawNode()
 	border:drawPolygon(
@@ -218,7 +216,7 @@ local function oSettingPanel()
 		if name == "Name :" then
 			label = oTextField(108,7,14,8,
 				function()
-					oEvent:send("SettingSelected",nil)
+					emit("SettingSelected",nil)
 				end)
 			isInput = true
 		else
@@ -286,11 +284,11 @@ local function oSettingPanel()
 			if eventType == CCMenuItem.Tapped then
 				if not isInput then
 					if enableFunc ~= nil and disableFunc ~= nil then
-						oEvent:send("SettingSelected",menuItem)
+						emit("SettingSelected",menuItem)
 					end
 				else
 					if oEditor.state == oEditor.EDIT_SPRITE and enableFunc ~= nil and disableFunc ~= nil then
-						oEvent:send("SettingSelected",menuItem)
+						emit("SettingSelected",menuItem)
 					end
 				end
 			end
@@ -990,7 +988,7 @@ local function oSettingPanel()
 	end
 
 	local isShowingRoot = false
-	panel.data.selectListener = oListener("ImageSelected",
+	panel:slot("ImageSelected",
 		function(args)
 			if oEditor.state == oEditor.EDIT_SPRITE or oEditor.state == oEditor.EDIT_ANIMATION then
 				if args then
@@ -1081,7 +1079,7 @@ local function oSettingPanel()
 		keyItems.EaseO:setValue(oEditor.easeNames[frame[oKd.easeOpacity]])
 	end
 	
-	panel.data.posListener = oListener("ControlBarPos",
+	panel:slot("ControlBarPos",
 		function(pos)
 			if not oEditor.animationData or not oEditor.sprite then
 				for name,item in pairs(keyItems) do
@@ -1089,7 +1087,7 @@ local function oSettingPanel()
 						item:setEnabled(false)
 					end
 				end
-				oEvent:send("SettingSelected",nil)
+				emit("SettingSelected",nil)
 				return
 			end
 			local total = 0
@@ -1107,7 +1105,7 @@ local function oSettingPanel()
 			local enable = oEditor.currentFramePos ~= nil and oEditor.currentFramePos == pos
 			panel:setEditEnable(enable)
 			if not enable then
-				oEvent:send("SettingSelected",nil)
+				emit("SettingSelected",nil)
 			end
 
 			if oEditor.keyIndex and oEditor.keyIndex == index then
@@ -1119,7 +1117,7 @@ local function oSettingPanel()
 		end)
 
 	local selectedItem = nil
-	panel.data.listener = oListener("SettingSelected",
+	panel:slot("SettingSelected",
 		function(menuItem)
 			if selectedItem and selectedItem == menuItem then
 				selectedItem:select(false)
@@ -1176,7 +1174,7 @@ local function oSettingPanel()
 		end)
 
 	panel.clearSelection = function(self)
-		oEvent:send("SettingSelected",nil)
+		emit("SettingSelected",nil)
 		for _,item in pairs(keyItems) do
 			item:select(false)
 		end

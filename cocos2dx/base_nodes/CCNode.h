@@ -136,7 +136,7 @@ public:
      * Allocates and initializes a node.
      * @return A initialized node which is marked as "autorelease".
      */
-    static CCNode * create();
+    static CCNode* create();
     /**
      * Gets the description string. It makes debugging easier.
      * @return A string terminated with '\0'
@@ -654,27 +654,34 @@ public:
      */
     virtual void setTag(int nTag);
     
-    /** 
-     * Returns a user assigned CCObject
-     * 
-     * Similar to userData, but instead of holding a void* it holds an object
-     *
+    /**
      * @return A user assigned CCObject
      */
-    virtual CCObject* getUserObject();
+	CCObject* getUserObject();
     /**
-     * Returns a user assigned CCObject
-     *
      * The UserObject will be retained once in this method,
      * and the previous UserObject (if existed) will be relese.
-     * The UserObject will be released in CCNode's destructure.
+     * The UserObject will be released in CCNode cleanup.
      *
      * @param A user assigned CCObject
      */
-    virtual void setUserObject(CCObject *pUserObject);
-    
-	inline void setUserData(void* ptr){ m_pUserData = ptr; }
+    void setUserObject(CCObject* pUserObject);
+	
+    /** 
+     * @return A user assigned CCObject
+     */
+	CCObject* getHelperObject();
+	/**
+     * The HelperObject will be retained once in this method,
+     * and the previous HelperObject (if existed) will be relese.
+     * The HelperObject will be released in CCNode cleanup.
+     *
+     * @param A user assigned CCObject
+     */
+	void setHelperObject(CCObject* helperObject);
+
 	inline void* getUserData() const{ return m_pUserData; }
+	inline void setUserData(void* ptr){ m_pUserData = ptr; }
     /// @} end of Tag & User Data
     
     
@@ -1220,8 +1227,9 @@ protected:
     
     int m_nTag;                         ///< a tag. Can be any number you assigned just to identify this node
     
-    CCObject *m_pUserObject;            ///< A user assigned CCObject
-	void* m_pUserData;					///< A user assigned pointer
+    CCObject* m_pUserObject;            ///< A user assigned CCObject
+	CCObject* m_pHelperObject;			///< A user assigned CCObject
+	void* m_pUserData;					///< A user assigned ptr
 
     CCGLProgram *m_pShaderProgram;      ///< OpenGL shader
     

@@ -63,4 +63,9 @@ void oEventType::handle( oEvent* e )
 	}
 }
 
+bool oEventType::isEmpty() const
+{
+	return _listeners.empty();
+}
+
 NS_DOROTHY_END

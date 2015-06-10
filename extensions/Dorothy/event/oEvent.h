@@ -57,8 +57,6 @@ public:
 	oEvent(const string& name);
 	inline const string& getName() const { return _name; }
 public:
-	static void addType(const string& name);
-	static bool removeType(const string& name);
 	static oListener* addListener(const string& name, const oEventHandler& handler);
 	static void send(const string& name);
 	static void clear();

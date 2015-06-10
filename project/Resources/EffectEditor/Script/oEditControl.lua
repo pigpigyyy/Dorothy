@@ -8,8 +8,7 @@ local CCDrawNode = require("CCDrawNode")
 local oVec2 = require("oVec2")
 local ccColor4 = require("ccColor4")
 local oButton = require("oButton")
-local oListener = require("oListener")
-local oEvent = require("oEvent")
+local emit = require("emit")
 local oEffect = require("oEffect")
 local ccBlendFunc = require("ccBlendFunc")
 local oColorPicker = require("oColorPicker")
@@ -49,7 +48,7 @@ local function oEditControl()
 		if blendSelected then
 			blendSelected(ccBlendFunc[button.text])
 		end
-		oEvent:send("settingPanel.cancel")
+		emit("settingPanel.cancel")
 	end
 	blendSelector.menu:addChild(oButton("Src",16,100,50,60,blendSize.height-35,blendCallback))
 	blendSelector.menu:addChild(oButton("Dst",16,100,50,60,blendSize.height-95,blendCallback))
@@ -95,8 +94,8 @@ local function oEditControl()
 		if modeSelected then
 			modeSelected(button.text == "Gravity" and oEditor.EmitterGravity or oEditor.EmitterRadius)
 		end
-		oEvent:send("settingPanel.cancel")
-		oEvent:send("settingPanel.moveToMode")
+		emit("settingPanel.cancel")
+		emit("settingPanel.moveToMode")
 	end
 	modeSelector.menu:addChild(oButton("Gravity",16,100,50,60,modeSize.height-35,modeCallback))
 	modeSelector.menu:addChild(oButton("Radius",16,100,50,60,modeSize.height-95,modeCallback))
@@ -162,47 +161,47 @@ local function oEditControl()
 		lifeTimeVar = "particleLifespanVariance",
 	}
 
-	control.data = oListener("settingPanel.edit",function(item)
+	control:slot("settingPanel.edit",function(item)
 		local name = item.name
 		if item.selected then
 			if name == "maxParticles" then
 				ruler:show(oEditor.effectData.maxParticles,0,10000,10,function(value)
 					value = math.floor(value)
 					oEditor.effectData.maxParticles = value
-					oEvent:send("maxParticles",value)
+					emit("maxParticles",value)
 				end)
 			elseif name == "angle" then
 				ruler:show(oEditor.effectData.angle,-360,360,10,function(value)
 					value = math.floor(value)
 					oEditor.effectData.angle = value
-					oEvent:send("angle",value)
+					emit("angle",value)
 				end)
 			elseif name == "angleVar" then
 				ruler:show(oEditor.effectData.angleVariance,0,360,10,function(value)
 					value = math.floor(value)
 					oEditor.effectData.angleVariance = value
-					oEvent:send("angleVariance",value)
+					emit("angleVariance",value)
 				end)
 			elseif name == "duration" then
 				ruler:show(oEditor.effectData.duration,-1,60,1,function(value)
 					value = value < 0 and -1 or math.floor(value*10)/10
 					oEditor.effectData.duration = value
-					oEvent:send("duration",value)
+					emit("duration",value)
 				end)
 			elseif name == "interval" then
 				ruler:showForFrame(oEditor.effectData.interval,0,60,0.1,function(value)
 					value = value < 0 and -1 or math.floor(value*100)/100
 					oEditor.effectData.interval = value
-					oEvent:send("interval",value)
+					emit("interval",value)
 				end)
 			elseif name == "blendFuncSrc" or name == "blendFuncDst" then
 				control:showBlendSelector(function(value)
 					if name == "blendFuncSrc" then
 						oEditor.effectData.blendFuncSource = value
-						oEvent:send("blendFuncSource",value)
+						emit("blendFuncSource",value)
 					else
 						oEditor.effectData.blendFuncDestination = value
-						oEvent:send("blendFuncDestination",value)
+						emit("blendFuncDestination",value)
 					end
 				end)
 			elseif name == "startColor" or name == "finishColor" then
@@ -221,10 +220,10 @@ local function oEditControl()
 					oEditor.effectData[sg] = g/255
 					oEditor.effectData[sb] = b/255
 					oEditor.effectData[sa] = a/255
-					oEvent:send(sr,oEditor.effectData[sr])
-					oEvent:send(sg,oEditor.effectData[sg])
-					oEvent:send(sb,oEditor.effectData[sb])
-					oEvent:send(sa,oEditor.effectData[sa])
+					emit(sr,oEditor.effectData[sr])
+					emit(sg,oEditor.effectData[sg])
+					emit(sb,oEditor.effectData[sb])
+					emit(sa,oEditor.effectData[sa])
 				end)
 			elseif name == "startRedVar"
 				or name == "startBlueVar"
@@ -239,39 +238,39 @@ local function oEditControl()
 				ruler:show(oEditor.effectData[valueName]*255,0,255,10,function(value)
 					value = math.floor(value)
 					oEditor.effectData[valueName] = value/255
-					oEvent:send(valueName,value/255)
+					emit(valueName,value/255)
 				end)
 			elseif name == "startSize" then
 				ruler:show(oEditor.effectData.startParticleSize,0,10000,10,function(value)
 					value = math.floor(value)
 					oEditor.effectData.startParticleSize = value
-					oEvent:send("startParticleSize",value)
+					emit("startParticleSize",value)
 				end)
 			elseif varNames[name] then
 				local varName = varNames[name]
 				ruler:show(oEditor.effectData[varName],0,10000,10,function(value)
 					value = math.floor(value)
 					oEditor.effectData[varName] = value
-					oEvent:send(varName,value)
+					emit(varName,value)
 				end)
 			elseif anyNames[name] then
 				local varName = anyNames[name]
 				ruler:show(oEditor.effectData[varName],-10000,10000,10,function(value)
 					value = math.floor(value)
 					oEditor.effectData[varName] = value
-					oEvent:send(varName,value)
+					emit(varName,value)
 				end)
 			elseif lifeNames[name] then
 				local varName = lifeNames[name]
 				ruler:show(oEditor.effectData[varName],0,1000,1,function(value)
 					value = math.floor(value*10)/10
 					oEditor.effectData[varName] = value
-					oEvent:send(varName,value)
+					emit(varName,value)
 				end)
 			elseif name == "emitterType" then
 				control:showModeSelector(function(value)
 					oEditor.effectData.emitterType = value
-					oEvent:send("emitterType",value)
+					emit("emitterType",value)
 				end)
 			elseif name == "textureFile" then
 				local spriteChooser = oSpriteChooser()
@@ -299,15 +298,15 @@ local function oEditControl()
 						end
 						oEditor.effectData.textureFileName = filename:match("[^\\/]*%.[^%.\\/]*$")
 					end
-					oEvent:send("textureFileName",oEditor.effectData.textureFileName)
-					oEvent:send("textureRectx",oEditor.effectData.textureRectx)
-					oEvent:send("textureRecty",oEditor.effectData.textureRecty)
-					oEvent:send("textureRectw",oEditor.effectData.textureRectw)
-					oEvent:send("textureRecth",oEditor.effectData.textureRecth)
+					emit("textureFileName",oEditor.effectData.textureFileName)
+					emit("textureRectx",oEditor.effectData.textureRectx)
+					emit("textureRecty",oEditor.effectData.textureRecty)
+					emit("textureRectw",oEditor.effectData.textureRectw)
+					emit("textureRecth",oEditor.effectData.textureRecth)
 				end
 				local ended = spriteChooser.ended
 				spriteChooser.ended = function(self)
-					oEvent:send("settingPanel.cancel")
+					emit("settingPanel.cancel")
 					ended(self)
 				end
 				oEditor:addChild(spriteChooser,oEditor.topMost)
@@ -319,12 +318,12 @@ local function oEditControl()
 				oEditor.items[newName] = oEditor.currentFile
 				oEditor.currentName = newName
 				oEditor:dumpEffectFile()
-				oEvent:send("name",newName)
+				emit("name",newName)
 			elseif name == "interval" then
 				ruler:hide()
 				oEditor:dumpData(oEditor.currentFile)
-				oEvent:send("viewArea.changeEffect",oEditor.currentName)
-				oEvent:send("oFrameViewer.data",oEditor.effectData)
+				emit("viewArea.changeEffect",oEditor.currentName)
+				emit("oFrameViewer.data",oEditor.effectData)
 			else
 				ruler:hide()
 				control:hideModeSelector()
@@ -334,7 +333,7 @@ local function oEditControl()
 					oEditor.dirty = false
 					oEffect:update(oEditor.effect,oEditor.effectData())
 					oEditor.effect:start()
-					oEvent:send("oEditor.change")
+					emit("oEditor.change")
 				end
 			end
 		end

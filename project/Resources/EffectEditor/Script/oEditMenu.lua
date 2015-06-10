@@ -3,10 +3,9 @@ local CCMenu = require("CCMenu")
 local oEditor = require("oEditor")
 local oVec2 = require("oVec2")
 local oButton = require("oButton")
-local oEvent = require("oEvent")
+local emit = require("emit")
 local oFileChooser = require("oFileChooser")
 local CCArray = require("CCArray")
-local oListener = require("oListener")
 local oPos = require("oPos")
 local oEase = require("oEase")
 local CCSequence = require("CCSequence")
@@ -36,11 +35,11 @@ local function oEditMenu()
 					oEditor:dumpData(oEditor.currentFile)
 				end
 			end
-			oEvent:send("settingPanel.cancel")
+			emit("settingPanel.cancel")
 		end),
 
 		Origin = oButton("Origin",16,50,50,winSize.width-240-45-60,winSize.height-35,function()
-			oEvent:send("viewArea.toOrigin",oEditor.origin)
+			emit("viewArea.toOrigin",oEditor.origin)
 		end),
 
 		Zoom = oButton("100%",16,50,50,winSize.width-240-45,winSize.height-35,function(button)
@@ -56,12 +55,12 @@ local function oEditMenu()
 			button.mode = button.mode + 1
 			button.mode = button.mode % 3
 			button.text = tostring(scale*100).."%"
-			oEvent:send("viewArea.toScale",scale)
+			emit("viewArea.toScale",scale)
 		end),
 
 		Play = oButton("Play",16,50,50,winSize.width-240-45,35,function()
-			oEvent:send("settingPanel.cancel")
-			oEvent:send("viewArea.play")
+			emit("settingPanel.cancel")
+			emit("viewArea.play")
 		end),
 
 		Set = oButton("Set",16,50,50,35,45+150,function()
@@ -79,16 +78,15 @@ local function oEditMenu()
 	end
 	menu.items = items
 
-	menu.data = CCArray()
-	menu.data:add(oListener("editMenu.place",function(flag)
+	menu:slot("editMenu.place",function(flag)
 		items.Play:stopAllActions()
 		if flag then
 			items.Play:runAction(oPos(0.5,winSize.width-240-45,105,oEase.OutBack))
 		else
 			items.Play:runAction(oPos(0.5,winSize.width-240-45,35,oEase.InBack))
 		end
-	end))
-	menu.data:add(oListener("oEditor.particle",function()
+	end)
+	menu:slot("oEditor.particle",function()
 		if items.Origin.visible then
 			items.Origin:stopAllActions()
 			items.Origin:runAction(CCSequence({CCDelay(0.3),oPos(0.3,winSize.width-240-45,winSize.height-35,oEase.OutQuad)}))
@@ -109,9 +107,9 @@ local function oEditMenu()
 			items.Set:runAction(CCSequence({oScale(0.3,0,0,oEase.InBack),CCHide()}))
 		end
 		
-		oEvent:send("viewArea.pos",oEditor.origin)
-	end))
-	menu.data:add(oListener("oEditor.frame",function()
+		emit("viewArea.pos",oEditor.origin)
+	end)
+	menu:slot("oEditor.frame",function()
 		if not items.Origin.visible then
 			if items.Zoom.visible then
 				items.Origin:stopAllActions()
@@ -146,14 +144,14 @@ local function oEditMenu()
 			items.Set:runAction(CCSequence({CCShow(),oScale(0,0,0),oScale(0.3,1,1,oEase.OutBack)}))
 		end
 
-		oEvent:send("viewArea.pos",oVec2(winSize.width*0.5,(winSize.height-150)*0.5+150))
-	end))
-	menu.data:add(oListener("oEditor.change",function()
+		emit("viewArea.pos",oVec2(winSize.width*0.5,(winSize.height-150)*0.5+150))
+	end)
+	menu:slot("oEditor.change",function()
 		if not oEditor.dirty then
 			oEditor.dirty = true
 			items.Edit.text = "Save"
 		end
-	end))
+	end)
 
 	return menu
 end

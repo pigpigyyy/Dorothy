@@ -5,9 +5,7 @@ local ccColor4 = require("ccColor4")
 local CCDirector = require("CCDirector")
 local oSelectionPanel = require("oSelectionPanel")
 local oViewItem = require("oViewItem")
-local oEvent = require("oEvent")
-local CCDictionary = require("CCDictionary")
-local oListener = require("oListener")
+local emit = require("emit")
 local oEditor = require("oEditor")
 local oLine = require("oLine")
 local CCSequence = require("CCSequence")
@@ -82,9 +80,9 @@ local function oViewPanel()
 					crossB:fadeOut()
 				end
 				if bodyA then
-					oEvent:send("viewArea.toPos",oEditor.origin-bodyA.position)
+					emit("viewArea.toPos",oEditor.origin-bodyA.position)
 				elseif bodyB then
-					oEvent:send("viewArea.toPos",oEditor.origin-bodyB.position)
+					emit("viewArea.toPos",oEditor.origin-bodyB.position)
 				end
 			end
 			return
@@ -105,7 +103,7 @@ local function oViewPanel()
 				local pos = worldNode:convertToWorldSpace(data:get("Center"))
 				pos = oEditor.world:convertToNodeSpace(pos)
 				if not item then crossA.position = pos end
-				oEvent:send("viewArea.toPos",oEditor.origin-pos)
+				emit("viewArea.toPos",oEditor.origin-pos)
 			elseif data:has("Position") then
 				local item = oEditor:getItem(data)
 				local pos
@@ -117,7 +115,7 @@ local function oViewPanel()
 					pos = data:get("Position")
 					crossA.position = pos
 				end
-				oEvent:send("viewArea.toPos",oEditor.origin-pos)
+				emit("viewArea.toPos",oEditor.origin-pos)
 			end
 		elseif not data:has("Center") then
 			local parent = data.parent
@@ -131,7 +129,7 @@ local function oViewPanel()
 				pos = parent:get("Position")
 				crossA.position = pos
 			end
-			oEvent:send("viewArea.toPos",oEditor.origin-pos)
+			emit("viewArea.toPos",oEditor.origin-pos)
 		else
 			local parent = data.parent
 			local item = oEditor:getItem(parent)
@@ -148,7 +146,7 @@ local function oViewPanel()
 			local pos = worldNode:convertToWorldSpace(data:get("Center"))
 			pos = oEditor.world:convertToNodeSpace(pos)
 			if not item then crossA.position = pos end
-			oEvent:send("viewArea.toPos",oEditor.origin-pos)
+			emit("viewArea.toPos",oEditor.origin-pos)
 		end
 		crossA:fadeOut()
 	end
@@ -163,7 +161,7 @@ local function oViewPanel()
 	end
 
 	local baseJointName = nil
-	menu.data = oListener("viewPanel.selectJoint",function(joint)
+	menu:slot("viewPanel.selectJoint",function(joint)
 		baseJointName = joint
 	end)
 
@@ -173,7 +171,7 @@ local function oViewPanel()
 				local data = item.dataItem
 				local name = data:get("Name")
 				if name ~= baseJointName then
-					oEvent:send("editControl.joint",name)
+					emit("editControl.joint",name)
 					item.selected = false
 				else
 					item.selected = true
@@ -183,14 +181,14 @@ local function oViewPanel()
 			end
 			return
 		end
-		oEvent:send("editControl.hide")
-		oEvent:send("settingPanel.edit",nil)
-		oEvent:send("viewPanel.choose",item)
+		emit("editControl.hide")
+		emit("settingPanel.edit",nil)
+		emit("viewPanel.choose",item)
 		if item.selected then
-			oEvent:send("settingPanel.toState",item.dataItem:get("ItemType"))
+			emit("settingPanel.toState",item.dataItem:get("ItemType"))
 			moveViewToData(item.dataItem)
 		else
-			oEvent:send("settingPanel.toState",nil)
+			emit("settingPanel.toState",nil)
 		end
 	end
 
@@ -222,9 +220,8 @@ local function oViewPanel()
 	end
 	updateViewItems(oEditor.bodyData)
 
-	self.data = CCDictionary()
 	local currentItem = nil
-	self.data.chooseListener = oListener("viewPanel.choose",function(arg)
+	self:slot("viewPanel.choose",function(arg)
 		local item
 		if type(arg) == "table" then
 			for _,v in ipairs(self.items) do
@@ -236,7 +233,7 @@ local function oViewPanel()
 					item = v
 					item.selected = true
 					oEditor.currentData = item.dataItem
-					oEvent:send("settingPanel.toState",item.dataItem[1])
+					emit("settingPanel.toState",item.dataItem[1])
 					self:setPos(oVec2(0,borderSize.height*0.5+30-item.positionY))
 					moveViewToData(item.dataItem)
 					break
@@ -262,10 +259,10 @@ local function oViewPanel()
 			oEditor.currentData = nil
 		end
 	end)
-	self.data.bodyDataListener = oListener("editor.bodyData",function(bodyData)
+	self:slot("editor.bodyData",function(bodyData)
 		updateViewItems(bodyData)
 	end)
-	self.data.renameListener = oListener("editor.rename",function(args)
+	self:slot("editor.rename",function(args)
 		local newName = args.newName
 		for _,item in ipairs(self.items) do
 			if item.dataItem[2] == newName then
@@ -274,7 +271,7 @@ local function oViewPanel()
 			end
 		end
 	end)
-	self.data.moveViewListener = oListener("viewArea.moveToData",function(data)
+	self:slot("viewArea.moveToData",function(data)
 		moveViewToData(data)
 	end)
 	return self

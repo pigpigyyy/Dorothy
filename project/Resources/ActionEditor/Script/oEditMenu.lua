@@ -9,13 +9,13 @@ local CCMenu = require("CCMenu")
 local oVec2 = require("oVec2")
 local oCache = require("oCache")
 local ccColor3 = require("ccColor3")
-local oEvent = require("oEvent")
+local emit = require("emit")
+local oSlot = require("oSlot")
 local cclog = require("cclog")
 local CCObject = require("CCObject")
 local CCSequence = require("CCSequence")
 local CCDelay = require("CCDelay")
 local oOpacity = require("oOpacity")
-local oListener = require("oListener")
 local oSd = require("oEditor").oSd
 local oEditor = require("oEditor").oEditor
 local oAd = require("oEditor").oAd
@@ -49,7 +49,6 @@ local function oEditMenu()
     local winSize = CCDirector.winSize
     local menu = CCMenu(false)
 	menu.anchor = oVec2.zero
-	menu.data = CCDictionary()
 	local frameCopy = nil
 	local items =
 	{
@@ -360,12 +359,12 @@ local function oEditMenu()
 					oEditor.loop = false
 					item.label.text = "Once"
 					item.label.texture.antiAlias = false
-					oEvent:send("LoopState",false)
+					emit("LoopState",false)
 				else
 					oEditor.loop = true
 					item.label.text = "Loop"
 					item.label.texture.antiAlias = false
-					oEvent:send("LoopState",true)
+					emit("LoopState",true)
 				end
 			end),
 		Play = oButton("Play",16,50,50,winSize.width-205,95,
@@ -392,17 +391,17 @@ local function oEditMenu()
 								item.label.text = "Play"
 								item.label.texture.antiAlias = false
 								item:unschedule()
-								oEvent:send("PlayState","Stop")
+								emit("PlayState","Stop")
 							end
 						end)
-						oEvent:send("PlayState","Play")
+						emit("PlayState","Play")
 					else
 						oEditor.isPlaying = false
 						item.label.text = "Play"
 						item.label.texture.antiAlias = false
 						model:pause()
 						item:unschedule()
-						oEvent:send("PlayState","Pause")
+						emit("PlayState","Pause")
 					end
 				end
 			end),
@@ -836,7 +835,7 @@ oEditor.spriteData[oSd.index]
 		end
 		items.Size.visible = false
 		items.Visible:setText("Visible")
-		menu.data.selectListener.enabled = true
+		menu.data.enabled = true
 		oEditor.state = oEditor.EDIT_LOOK
 		oEditor.settingPanel.visible = false
 		oEditor.controlBar.visible = false
@@ -847,14 +846,13 @@ oEditor.spriteData[oSd.index]
 		oEditor.viewPanel:selectItem(selectedSp)
 	end
 	
-	menu.data.selectListener = oListener("ImageSelected",
-		function(args)
-			if not args then
-				return
-			end
-			items.Visible:setText(args[2].visible and "Hide" or "Show")
-		end)
-	menu.data.selectListener.enabled = false
+	menu.data = oSlot("ImageSelected", function(args)
+		if not args then
+			return
+		end
+		items.Visible:setText(args[2].visible and "Hide" or "Show")
+	end)
+	menu.data.enabled = false
 
 	items.Origin.visible = false
 	items.Zoom.visible = false

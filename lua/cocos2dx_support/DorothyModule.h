@@ -5,6 +5,8 @@
 using namespace Dorothy;
 using namespace Dorothy::Platform;
 
+void CCNode_slot(CCNode* self, const char* name, int handler);
+
 void CCDrawNode_drawPolygon(
 	CCDrawNode* self,
 	oVec2* verts,

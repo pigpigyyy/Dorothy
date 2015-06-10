@@ -15,7 +15,7 @@ local CCDelay = require("CCDelay")
 local CCCall = require("CCCall")
 local CCMenu = require("CCMenu")
 local oBox = require("oBox")
-local oEvent = require("oEvent")
+local emit = require("emit")
 	
 local joints =
 {
@@ -82,8 +82,8 @@ local function oJointChooser()
 				local joint = item.joint
 				local data = oEditor["new"..joint](oEditor)
 				oEditor:addData(data)
-				oEvent:send("viewPanel.choose",data)
-				oEvent:send("editor.change")
+				emit("viewPanel.choose",data)
+				emit("editor.change")
 				panel.ended = function()
 					panel.parent:removeChild(panel)
 				end

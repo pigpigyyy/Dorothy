@@ -69,6 +69,7 @@ CCNode::CCNode()
 , m_nTag(0)
 , m_pUserObject(NULL)
 , m_pUserData(NULL)
+, m_pHelperObject(NULL)
 , m_pShaderProgram(NULL)
 , m_eGLServerState(ccGLServerState(0))
 , m_bRunning(false)
@@ -110,6 +111,7 @@ CCNode::~CCNode()
 	CC_SAFE_RELEASE(m_pGrid);
 	CC_SAFE_RELEASE(m_pShaderProgram);
 	CC_SAFE_RELEASE(m_pUserObject);
+	CC_SAFE_RELEASE(m_pHelperObject);
 	CC_SAFE_RELEASE(_transformTargetRef);
 	if (m_pChildren && m_pChildren->count() > 0)
 	{
@@ -394,11 +396,6 @@ CCGLProgram* CCNode::getShaderProgram()
 	return m_pShaderProgram;
 }
 
-CCObject* CCNode::getUserObject()
-{
-	return m_pUserObject;
-}
-
 ccGLServerState CCNode::getGLServerState()
 {
 	return m_eGLServerState;
@@ -409,18 +406,35 @@ void CCNode::setGLServerState(ccGLServerState glServerState)
 	m_eGLServerState = glServerState;
 }
 
-void CCNode::setUserObject(CCObject *pUserObject)
+CCObject* CCNode::getUserObject()
 {
-	CC_SAFE_RELEASE(m_pUserObject);
+	return m_pUserObject;
+}
+
+void CCNode::setUserObject(CCObject* pUserObject)
+{
 	CC_SAFE_RETAIN(pUserObject);
+	CC_SAFE_RELEASE(m_pUserObject);
 	m_pUserObject = pUserObject;
 }
 
-void CCNode::setShaderProgram(CCGLProgram *pShaderProgram)
+CCObject* CCNode::getHelperObject()
 {
+	return m_pHelperObject;
+}
+
+void CCNode::setHelperObject(CCObject* pHelperObject)
+{
+	CC_SAFE_RETAIN(pHelperObject);
+	CC_SAFE_RELEASE(m_pHelperObject);
+	m_pHelperObject = pHelperObject;
+}
+
+void CCNode::setShaderProgram(CCGLProgram* pShaderProgram)
+{
+	CC_SAFE_RETAIN(pShaderProgram);
 	CC_SAFE_RELEASE(m_pShaderProgram);
 	m_pShaderProgram = pShaderProgram;
-	CC_SAFE_RETAIN(m_pShaderProgram);
 }
 
 CCRect CCNode::boundingBox()
@@ -458,6 +472,7 @@ void CCNode::cleanup()
 
 	// clear user object
 	CC_SAFE_RELEASE_NULL(m_pUserObject);
+	CC_SAFE_RELEASE_NULL(m_pHelperObject);
 
 	// remove peer data
 	CCScriptEngine::sharedEngine()->removePeer(this);

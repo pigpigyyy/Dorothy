@@ -14,14 +14,13 @@ local ccColor3 = require("ccColor3")
 local CCSprite = require("CCSprite")
 local CCSequence = require("CCSequence")
 local oScale = require("oScale")
-local oEvent = require("oEvent")
+local emit = require("emit")
 local oOpacity = require("oOpacity")
 local CCTouch = require("CCTouch")
 local CCRect = require("CCRect")
 local cclog = require("cclog")
 local tolua = require("tolua")
 local CCNode = require("CCNode")
-local oListener = require("oListener")
 local oSd = require("oEditor").oSd
 local oEditor = require("oEditor").oEditor
 local CCDictionary = require("CCDictionary")
@@ -58,7 +57,6 @@ local function oViewPanel()
 	panel.opacity = 0.4
 	panel.touchEnabled = true
 	panel.position = oVec2(winSize.width-170,winSize.height-borderSize.height-10)
-	panel.data = CCDictionary()
 
 	local border = CCDrawNode()
 	border:drawPolygon(
@@ -359,7 +357,7 @@ local function oViewPanel()
 			elseif eventType == CCMenuItem.Tapped then
 				menuItem:select(true)
 				oEditor.settingPanel:clearSelection()
-				oEvent:send("ImageSelected",{sp,sp[oSd.sprite],menuItem})
+				emit("ImageSelected",{sp,sp[oSd.sprite],menuItem})
 				if #sp[oSd.children] > 0 then
 					if isFolding then
 						isFolding = false
@@ -411,7 +409,7 @@ local function oViewPanel()
 			if targetSp == sp then
 				item:select(true)
 				oEditor.settingPanel:clearSelection()
-				oEvent:send("ImageSelected",{sp,sprite,item})
+				emit("ImageSelected",{sp,sprite,item})
 				setPos(oVec2(90-item.positionX,borderSize.height*0.5+30-item.positionY))
 			end
 		end
@@ -617,7 +615,7 @@ local function oViewPanel()
 
 	local selectedItem = nil
 	local outline = nil
-	panel.data.listener = oListener("ImageSelected",
+	panel:slot("ImageSelected",
 		function(args)
 			if not args then
 				if selectedItem then
@@ -741,7 +739,7 @@ local function oViewPanel()
 	end
 
 	panel.clearSelection = function(self)
-		oEvent:send("ImageSelected",nil)
+		emit("ImageSelected",nil)
 	end
 	panel.glow = function(self)
 		self:stopAllActions()

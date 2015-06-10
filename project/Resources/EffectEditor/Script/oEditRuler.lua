@@ -9,7 +9,6 @@ local oLine = require("oLine")
 local CCNode = require("CCNode")
 local CCLabelTTF = require("CCLabelTTF")
 local CCDictionary = require("CCDictionary")
-local oListener = require("oListener")
 local oScale = require("oScale")
 local oEase = require("oEase")
 local CCSize = require("CCSize")
@@ -19,7 +18,7 @@ local CCSpawn = require("CCSpawn")
 local oOpacity = require("oOpacity")
 local CCSequence = require("CCSequence")
 local oPos = require("oPos")
-local oEvent = require("oEvent")
+local emit = require("emit")
 local CCHide = require("CCHide")
 
 local function oEditRuler()
@@ -139,8 +138,7 @@ local function oEditRuler()
 			children[i].scaleX = scale
 		end
 	end
-	ruler.data = CCDictionary()
-	ruler.data.scaleListener = oListener("viewArea.scale",function(scale)
+	ruler:slot("viewArea.scale",function(scale)
 		if scale > 5 then scale = 5 end
 		intervalNode.scaleY = scale
 		-- unscale interval text --
@@ -154,7 +152,7 @@ local function oEditRuler()
 			if bottom < newBottom then bottom = newBottom end
 		end
 	end)
-	ruler.data.toScaleListener = oListener("viewArea.toScale",function(scale)
+	ruler:slot("viewArea.toScale",function(scale)
 		intervalNode:runAction(oScale(0.5,1,scale,oEase.OutQuad))
 		-- manually update and unscale interval text --
 		local time = 0
@@ -348,7 +346,7 @@ local function oEditRuler()
 		self.positionY = -10-width
 		self:runAction(CCSpawn({oPos(0.5,10,10,oEase.OutBack),oOpacity(0.5,0.8)}))
 		self.touchEnabled = true
-		oEvent:send("editMenu.place",true)
+		emit("editMenu.place",true)
 	end
 	ruler.hide = function(self)
 		if not ruler.visible then return end
@@ -365,7 +363,7 @@ local function oEditRuler()
 				}),
 				CCHide(),
 			}))
-			oEvent:send("editMenu.place",false)
+			emit("editMenu.place",false)
 		else
 			self:runAction(CCSequence({CCSpawn({oPos(0.3,winSize.width*0.5-height*0.5,200,oEase.OutQuad),oOpacity(0.3,0)}),CCHide()}))
 		end

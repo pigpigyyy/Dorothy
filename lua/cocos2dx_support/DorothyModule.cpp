@@ -2,6 +2,27 @@
 #include "CCLuaEngine.h"
 #include "tolua++.h"
 
+HANDLER_WRAP_START(oListenerHandlerWrapper)
+void call(oEvent* event) const
+{
+	void* params[] = { event };
+	int names[] = {CCLuaType<oEvent>()};
+	CCLuaEngine::sharedEngine()->executeFunction(getHandler(), 1, params, names);
+}
+HANDLER_WRAP_END
+
+void CCNode_slot(CCNode* self, const char* name, int handler)
+{
+	CCDictionary* slots = CCLuaCast<CCDictionary>(self->getHelperObject());
+	if (!slots)
+	{
+		slots = CCDictionary::create();
+		self->setHelperObject(slots);
+	}
+	oListener* listener = oListener::create(name, std::make_pair(oListenerHandlerWrapper(handler), &oListenerHandlerWrapper::call));
+	slots->setObject(listener, name);
+}
+
 void CCDrawNode_drawPolygon(
 	CCDrawNode* self,
 	oVec2* verts,
@@ -329,14 +350,6 @@ void oUnitDef_setInstincts(oUnitDef* def, int instincts[], int count)
 	}
 }
 
-HANDLER_WRAP_START(oListenerHandlerWrapper)
-void call(oEvent* event) const
-{
-	void* params[] = { event };
-	int names[] = {CCLuaType<oEvent>()};
-	CCLuaEngine::sharedEngine()->executeFunction(getHandler(), 1, params, names);
-}
-HANDLER_WRAP_END
 oListener* oListener_create(const string& name, int handler)
 {
 	return oListener::create(name, std::make_pair(oListenerHandlerWrapper(handler), &oListenerHandlerWrapper::call));

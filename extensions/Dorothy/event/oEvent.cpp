@@ -24,26 +24,6 @@ _name(name)
 
 unordered_map<string, oOwn<oEventType>> oEvent::_eventMap;
 
-void oEvent::addType( const string& name )
-{
-	auto it = _eventMap.find(name);
-	if (it == _eventMap.end())
-	{
-		_eventMap[name] = oOwnMake(new oEventType(name));
-	}
-}
-
-bool oEvent::removeType( const string& name )
-{
-	auto it = _eventMap.find(name);
-	if (it != _eventMap.end())
-	{
-		_eventMap.erase(it);
-		return true;
-	}
-	return false;
-}
-
 void oEvent::clear()
 {
 	_eventMap.clear();
@@ -54,7 +34,12 @@ void oEvent::unreg( oListener* listener )
 	auto it = _eventMap.find(listener->getName());
 	if (it != _eventMap.end())
 	{
-		it->second->remove(listener);
+		oEventType* type = it->second;
+		type->remove(listener);
+		if (type->isEmpty())
+		{
+			_eventMap.erase(it);
+		}
 	}
 }
 

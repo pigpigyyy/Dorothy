@@ -5,7 +5,6 @@ local CCNode = require("CCNode")
 local oEditor = require("oEditor")
 local CCTouch = require("CCTouch")
 local CCArray = require("CCArray")
-local oListener = require("oListener")
 local oEffect = require("oEffect")
 local oScale = require("oScale")
 local oEase = require("oEase")
@@ -57,8 +56,7 @@ local function oViewArea()
 		return true
 	end
 
-	view.data = CCArray()
-	view.data:add(oListener("viewArea.changeEffect",function(effectName)
+	view:slot("viewArea.changeEffect",function(effectName)
 		if not effectName and oEditor.effect then
 			oEditor.effect:autoRemove():stop()
 			oEditor.effect = nil
@@ -70,21 +68,21 @@ local function oViewArea()
 		local effect = oEffect(effectName)
 		effect:attachTo(scrollNode):start()
 		oEditor.effect = effect
-	end))
-	view.data:add(oListener("viewArea.scroll",function(scale)
+	end)
+	view:slot("viewArea.scroll",function(scale)
 		scrollNode:runAction(oScale(0.3,scale,scale,oEase.OutQuad))
-	end))
-	view.data:add(oListener("viewArea.toOrigin",function(origin)
+	end)
+	view:slot("viewArea.toOrigin",function(origin)
 		scrollNode:runAction(oPos(0.3,origin.x,origin.y,oEase.OutQuad))
-	end))
-	view.data:add(oListener("viewArea.pos",function(pos)
+	end)
+	view:slot("viewArea.pos",function(pos)
 		scrollNode.position = pos
-	end))
-	view.data:add(oListener("viewArea.play",function()
+	end)
+	view:slot("viewArea.play",function()
 		if oEditor.effect then
 			oEditor.effect:start()
 		end
-	end))
+	end)
 
 	return view
 end

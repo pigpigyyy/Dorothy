@@ -5,8 +5,8 @@ local oVec2 = require("oVec2")
 local CCSize = require("CCSize")
 local oBody = require("oBody")
 local oJoint = require("oJoint")
-local oEvent = require("oEvent")
-local oListener = require("oListener")
+local emit = require("emit")
+local oSlot = require("oSlot")
 local tolua = require("tolua")
 local oContent = require("oContent")
 local oWorld = require("oWorld")
@@ -809,7 +809,7 @@ local defaultShapeData =
 
 local function setFunc(data,name,value)
 	data[oEditor[data[1]][name]] = value
-	oEvent:send("editor.change")
+	emit("editor.change")
 end
 local function getFunc(data,name)
 	return data[oEditor[data[1]][name]]
@@ -838,12 +838,12 @@ for shapeName,shapeDefine in pairs(defaultShapeData) do
 			newData.get = getFunc
 			newData.has = hasFunc
 			if renameFunc then
-				newData.renameListener = oListener("editor.rename",function(args)
+				newData.renameListener = oSlot("editor.rename",function(args)
 					renameFunc(newData,args.oldName,args.newName)
 				end)
 			end
 			if resetFunc then
-				newData.resetListener = oListener("editor.reset",function(args)
+				newData.resetListener = oSlot("editor.reset",function(args)
 					resetFunc(newData,args)
 				end)
 			end
@@ -867,7 +867,7 @@ oEditor.addSubData = function(self,data,subData)
 		shape.has = hasFunc
 	end
 	oEditor:resetItem(data)
-	oEvent:send("editor.bodyData",self.bodyData)
+	emit("editor.bodyData",self.bodyData)
 end
 
 oEditor.addData = function(self,data)
@@ -916,7 +916,7 @@ oEditor.addData = function(self,data)
 		end
 	end
 	oEditor:resetItem(data)
-	oEvent:send("editor.bodyData",bodyData)
+	emit("editor.bodyData",bodyData)
 end
 oEditor.getData = function(self,name)
 	for _,data in ipairs(self.bodyData) do
@@ -960,7 +960,7 @@ oEditor.removeData = function(self,data)
 					oEditor.items[name] = nil
 				end
 			end
-			oEvent:send("editor.bodyData",self.bodyData)
+			emit("editor.bodyData",self.bodyData)
 			break
 		end
 	end
@@ -979,7 +979,7 @@ oEditor.clearData = function(self)
 	self.bodyData = {}
 	oEditor.names = {}
 	oEditor:clearItems()
-	oEvent:send("editor.bodyData",self.bodyData)
+	emit("editor.bodyData",self.bodyData)
 end
 
 oEditor.resetItem = function(self,data,resetFace)
@@ -1031,7 +1031,7 @@ oEditor.resetItem = function(self,data,resetFace)
 	local name = data:get("Name")
 	oEditor.items[name] = item
 	if item then item.dataItem = data end
-	oEvent:send("editor.reset",{name=name,type=(data.resetListener and "Joint" or "Body")})
+	emit("editor.reset",{name=name,type=(data.resetListener and "Joint" or "Body")})
 	return item
 end
 oEditor.resetItems = function(self)
@@ -1070,7 +1070,7 @@ oEditor.rename = function(self,oldName,newName)
 	self.items[newName] = item
 	self.names[oldName] = nil
 	self.names[newName] = true
-	oEvent:send("editor.rename",{oldName=oldName,newName=newName})
+	emit("editor.rename",{oldName=oldName,newName=newName})
 end
 oEditor.getItem = function(self,arg) -- arg: name or data
 	if type(arg) == "string" then
@@ -1186,19 +1186,19 @@ oEditor.loadData = function(self,filename)
 			end
 		end
 		if renameFunc then
-			data.renameListener = oListener("editor.rename",function(args)
+			data.renameListener = oSlot("editor.rename",function(args)
 				renameFunc(data,args.oldName,args.newName)
 			end)
 		end
 		if resetFunc then
-			data.resetListener = oListener("editor.reset",function(args)
+			data.resetListener = oSlot("editor.reset",function(args)
 				resetFunc(data,args)
 			end)
 		end
 		oEditor:checkName(data)
 	end
 	oEditor:resetItems()
-	oEvent:send("editor.bodyData",self.bodyData)
+	emit("editor.bodyData",self.bodyData)
 	-- TODO
 end
 

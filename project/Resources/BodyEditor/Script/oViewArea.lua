@@ -5,8 +5,7 @@ local oVec2 = require("oVec2")
 local CCNode = require("CCNode")
 local oLine = require("oLine")
 local CCTouch = require("CCTouch")
-local oEvent = require("oEvent")
-local oListener = require("oListener")
+local emit = require("emit")
 local oScale = require("oScale")
 local oEase = require("oEase")
 local CCDictionary = require("CCDictionary")
@@ -61,8 +60,7 @@ local function oViewArea()
 	crossNode:addChild(cross)
 
 	-- listen reset events --
-	crossNode.data = CCDictionary()
-	crossNode.data.toScaleListener = oListener("viewArea.toScale",function(scale)
+	crossNode:slot("viewArea.toScale",function(scale)
 		oEditor.scale = scale
 		view.touchEnabled = false
 		scaleNode:runAction(CCSequence(
@@ -75,7 +73,7 @@ local function oViewArea()
 			end),
 		}))
 	end)
-	crossNode.data.toPosListener = oListener("viewArea.toPos",function(pos)
+	crossNode:slot("viewArea.toPos",function(pos)
 		view.touchEnabled = false
 		crossNode:runAction(CCSequence(
 		{
@@ -87,17 +85,17 @@ local function oViewArea()
 			end),
 		}))
 	end)
-	crossNode.data.moveListener = oListener("viewArea.move",function(delta)
+	crossNode:slot("viewArea.move",function(delta)
 		crossNode.position = crossNode.position + delta/scaleNode.scaleX
 	end)
 
 	local shapeToCreate = nil
-	crossNode.data.createListener = oListener("viewArea.create",function(name)
+	crossNode:slot("viewArea.create",function(name)
 		shapeToCreate = name
 	end)
 
 	local function createShape(name,pos)
-		oEvent:send("editControl.hide")
+		emit("editControl.hide")
 		local data
 		if oEditor.currentData and not oEditor.currentData.parent and not oEditor.currentData.resetListener then
 			data = oEditor["newSub"..name](oEditor)
@@ -122,9 +120,9 @@ local function oViewArea()
 			data:set("Position",pos)
 			oEditor:addData(data)
 		end
-		oEvent:send("viewPanel.choose",data)
-		oEvent:send("editMenu.created")
-		oEvent:send("editor.change")
+		emit("viewPanel.choose",data)
+		emit("editMenu.created")
+		emit("editor.change")
 	end
 	
 	-- init world node --
@@ -150,7 +148,7 @@ local function oViewArea()
 				local delta = touches[1].delta
 				if delta ~= oVec2.zero then
 					pick = false
-					oEvent:send("viewArea.move",touches[1].delta)
+					emit("viewArea.move",touches[1].delta)
 				end
 			elseif #touches >= 2 then -- scale view
 				local preDistance = touches[1].preLocation:distance(touches[2].preLocation)
@@ -164,14 +162,14 @@ local function oViewArea()
 				scaleNode.scaleY = scale
 				oEditor.scale = scale
 				pick = false
-				oEvent:send("viewArea.scale",scale)
+				emit("viewArea.scale",scale)
 			end
 		elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
 			if pick then
 				local pos = oEditor.world:convertToNodeSpace(touches[1].location)
 				oEditor.world:query(CCRect(pos.x-0.5,pos.y-0.5,1,1),function(body)
 						local data = body.dataItem
-						oEvent:send("viewPanel.choose",data)
+						emit("viewPanel.choose",data)
 					return true
 				end)
 			end

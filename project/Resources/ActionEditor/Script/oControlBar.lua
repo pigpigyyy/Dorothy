@@ -4,13 +4,12 @@ local oVec2 = require("oVec2")
 local CCSize = require("CCSize")
 local CCDrawNode = require("CCDrawNode")
 local ccColor4 = require("ccColor4")
-local oEvent = require("oEvent")
+local emit = require("emit")
 local CCLabelTTF = require("CCLabelTTF")
 local CCNode = require("CCNode")
 local CCClipNode = require("CCClipNode")
 local oOpacity = require("oOpacity")
 local oEase = require("oEase")
-local oListener = require("oListener")
 local CCTouch = require("CCTouch")
 local CCRect = require("CCRect")
 local oEditor = require("oEditor").oEditor
@@ -29,7 +28,6 @@ local function oControlBar()
 	controlBar.contentSize = CCSize(winSize.width,60)
 	controlBar.opacity = 0.4
 	controlBar.touchEnabled = true
-	controlBar.data = CCDictionary()
 	controlBar.visible = false
 
 	-- border
@@ -58,7 +56,7 @@ local function oControlBar()
 		self._pos = pos
 		pos = math.floor(pos+0.5)
 		self.scaleX = pos/60.0
-		oEvent:send("ControlBarPos",pos)
+		emit("ControlBarPos",pos)
 	end
 	bar.getPos = function(self)
 		return self._pos
@@ -187,7 +185,7 @@ local function oControlBar()
 	local offset = 0
 	local moveBar = false
 	local locLength = 0
-	controlBar.data.listener = oListener("PlayState",
+	controlBar:slot("PlayState",
 		function(state)
 			if state == "Play" then
 				controlBar.touchEnabled = false

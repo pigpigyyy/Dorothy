@@ -3,7 +3,6 @@ local oLine = require("oLine")
 local oVec2 = require("oVec2")
 local ccColor4 = require("ccColor4")
 local CCLayerColor = require("CCLayerColor")
-local oListener = require("oListener")
 local CCDictionary = require("CCDictionary")
 local oScale = require("oScale")
 local oEase = require("oEase")
@@ -116,16 +115,15 @@ local function oVRuler()
 	-- set default interval negtive & positive part length --
 	updatePart(origin.y, winSize.height-origin.y)
 	intervalNode.position = oVec2(halfW,origin.y)
-	intervalNode.data = CCDictionary()
 	self:addChild(intervalNode)
 
 	-- listen view move event --
-	intervalNode.data.moveListener = oListener("viewArea.move",function(delta)
+	intervalNode:slot("viewArea.move",function(delta)
 		intervalNode.positionY = intervalNode.positionY + delta.y/self.scaleY
 		updatePart(delta.y < 0 and winSize.height-intervalNode.positionY or 0,
 			delta.y > 0 and intervalNode.positionY or 0)
 	end)
-	intervalNode.data.toPosListener = oListener("viewArea.toPos",function(pos)
+	intervalNode:slot("viewArea.toPos",function(pos)
 		pos = pos + center
 		intervalNode:runAction(oPos(0.5,halfW,pos.y,oEase.OutQuad))
 		updatePart(winSize.height-pos.y,pos.y)
@@ -143,8 +141,7 @@ local function oVRuler()
 		updateIntervalTextScale(1)
 	end)})
 	local fadeIn = oOpacity(0.3,0.3)
-	self.data = CCDictionary()
-	self.data.scaleListener = oListener("viewArea.scale",function(scale)
+	self:slot("viewArea.scale",function(scale)
 		if scale < 1.0 and self.opacity > 0 and fadeOut.done then
 			self.touchEnabled = false
 			self:stopAllActions()
@@ -160,7 +157,7 @@ local function oVRuler()
 			updateIntervalTextScale(1/scale)
 		end
 	end)
-	self.data.toScaleListener = oListener("viewArea.toScale",function(scale)
+	self:slot("viewArea.toScale",function(scale)
 		if scale < 1.0 and self.opacity > 0 and fadeOut.done then
 			self.touchEnabled = false
 			self:stopAllActions()

@@ -174,39 +174,31 @@ CCUserDefaultClass.__newindex = function(self,key,value)
 	CCUserDefaultClass_set(self,key,value)
 end
 
-local oEvent = loaded.oEvent
+local emit = loaded.emit
 local oEvent_args = {}
-local oEvent_send = oEvent.send
-oEvent.send = function(self,name,args)
-	local argsTable = oEvent_args[name] or {}
-	local n = (argsTable.n or 0)+1
-	argsTable.n = n
-	argsTable[n] = args
-	oEvent_args[name] = argsTable
-	oEvent_send(self,name)
-	table_remove(argsTable,argsTable.n)
-	argsTable.n = argsTable.n-1
+local oEvent_argsCount = 0
+loaded.emit = function(name,args)
+	oEvent_argsCount = oEvent_argsCount + 1
+	oEvent_args[oEvent_argsCount] = args
+	emit(name)
+	table_remove(oEvent_args,oEvent_argsCount)
+	oEvent_argsCount = oEvent_argsCount - 1
 end
 
-local oEvent_remove = oEvent.remove
-oEvent.remove = function(self,name)
-	oEvent_args[name] = nil
-	oEvent_remove(self,name)
+local CCNode_slot = loaded.CCNode.slot
+loaded.CCNode.slot = function(self,name,handler)
+	CCNode_slot(self,name, function(event)
+		local args = oEvent_args[oEvent_argsCount]
+		handler(args,event)
+	end)
 end
 
-local oEvent_clear = oEvent.clear
-oEvent.clear = function(self)
-	oEvent_clear()
-	oEvent_args = {}
-end
-
-local oListener = loaded.oListener
-loaded.oListener = function(name,handler)
-	return oListener(name,
-			function(event)
-				local argsTable = oEvent_args[name]
-				handler(argsTable[argsTable.n],event)
-			end)
+local oSlot = loaded.oSlot
+loaded.oSlot = function(name,handler)
+	return oSlot(name, function(event)
+		local args = oEvent_args[oEvent_argsCount]
+		handler(args,event)
+	end)
 end
 
 local oAction = loaded.oAction

@@ -12,7 +12,6 @@ local oEase = require("oEase")
 local oPos = require("oPos")
 local oCache = require("oCache")
 local oModel = require("oModel")
-local oListener = require("oListener")
 local CCDrawNode = require("CCDrawNode")
 local CCMenu = require("CCMenu")
 local CCSize = require("CCSize")
@@ -20,7 +19,7 @@ local CCSpawn = require("CCSpawn")
 local oOpacity = require("oOpacity")
 local CCSequence = require("CCSequence")
 local CCCall = require("CCCall")
-local oEvent = require("oEvent")
+local emit = require("emit")
 local ccColor3 = require("ccColor3")
 local oEditor = require("oEditor").oEditor
 local oKd = require("oEditor").oKd
@@ -32,7 +31,6 @@ local function oViewArea()
 	local view = CCLayerColor(ccColor4(0xff1a1a1a),winSize.width, winSize.height)
 	view.anchor = oVec2.zero
 	view.cascadeOpacity = true
-	view.data = CCDictionary()
 
 	local crossNode = CCNode()
 	local origin = oVec2(
@@ -222,7 +220,7 @@ local function oViewArea()
 		return self._model
 	end
 	
-	view.data.loopListener = oListener("LoopState",
+	view:slot("LoopState",
 		function(loop)
 			if view._model then
 				view._model.loop = loop
@@ -1103,7 +1101,7 @@ local function oViewArea()
 		easeMenuItem:setValue(item.easeName)
 		oEditor.editMenu:markEditButton(true)
 		valueChanged = true
-		oEvent:send("SettingSelected",easeMenuItem)
+		emit("SettingSelected",easeMenuItem)
 	end
 
 	for i = 1,#oEditor.easeNames do
@@ -1134,7 +1132,7 @@ local function oViewArea()
 		610+winSize.width*0.5-335,
 		35+winSize.height*0.5-185,
 		function()
-			oEvent:send("SettingSelected",easeMenuItem)
+			emit("SettingSelected",easeMenuItem)
 		end)
 	button.color = ccColor3(0xffffff)
 	board:addChild(button)

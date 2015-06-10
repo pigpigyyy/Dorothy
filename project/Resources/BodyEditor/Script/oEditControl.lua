@@ -14,9 +14,8 @@ local oLine = require("oLine")
 local CCTouch = require("CCTouch")
 local ccColor3 = require("ccColor3")
 local CCDictionary = require("CCDictionary")
-local oListener = require("oListener")
 local oBodyDef = require("oBodyDef")
-local oEvent = require("oEvent")
+local emit = require("emit")
 local oVertexControl = require("oVertexControl")
 local oScale = require("oScale")
 local oEase = require("oEase")
@@ -53,7 +52,7 @@ local function oEditControl()
 		fixX = not fixX
 		button.color = fixX and ccColor3(0xff0080) or ccColor3(0x00ffff)
 		oEditor.fixX = fixX
-		oEvent:send("oEditor.fix",{fixX=fixX,fixY=fixY})
+		emit("oEditor.fix",{fixX=fixX,fixY=fixY})
 	end)
 	fixMenu:addChild(fixXButton)
 	fixYButton = oButton("",0,50,50,winSize.width-345,winSize.height-35,function(button)
@@ -65,7 +64,7 @@ local function oEditControl()
 		fixY = not fixY
 		button.color = fixY and ccColor3(0xff0080) or ccColor3(0x00ffff)
 		oEditor.fixY = fixY
-		oEvent:send("oEditor.fix",{fixX=fixX,fixY=fixY})
+		emit("oEditor.fix",{fixX=fixX,fixY=fixY})
 	end)
 	fixMenu:addChild(fixYButton)
 	local function createArrowForButton(button,angle)
@@ -118,7 +117,7 @@ local function oEditControl()
 		fixYButton:runAction(oScale(0.5,1,1,oEase.OutBack))
 		fixMenu.visible = true
 		fixMenu.touchEnabled = true
-		oEvent:send("oEditor.fix",{fixX=false,fixY=false})
+		emit("oEditor.fix",{fixX=false,fixY=false})
 	end
 	editControl.hideFixButtons = function(self)
 		if not fixMenu.visible then return end
@@ -254,7 +253,7 @@ local function oEditControl()
 	},ccColor4()))
 	posVisual.transformTarget = oEditor.world
 	posEditor:addChild(posVisual)
-	posVisual.data = oListener("oEditor.fix",function(args)
+	posVisual:slot("oEditor.fix",function(args)
 		posVisual.children[1].visible = not args.fixY
 		posVisual.children[2].visible = not args.fixX
 	end)
@@ -412,7 +411,7 @@ local function oEditControl()
 	},ccColor4()))
 	sizeVisual.transformTarget = worldNode
 	sizeEditor:addChild(sizeVisual)
-	sizeVisual.data = oListener("oEditor.fix",function(args)
+	sizeVisual:slot("oEditor.fix",function(args)
 		sizeVisual.children[1].visible = not args.fixY
 		sizeVisual.children[2].visible = not args.fixX
 	end)
@@ -508,7 +507,7 @@ local function oEditControl()
 	centerEditor:addChild(centerVisual)
 	centerEditor.scaleX = 0.5
 	centerEditor.scaleY = 0.5
-	centerVisual.data = oListener("oEditor.fix",function(args)
+	centerVisual:slot("oEditor.fix",function(args)
 		centerVisual.children[1].visible = not args.fixY
 		centerVisual.children[2].visible = not args.fixX
 	end)
@@ -774,7 +773,7 @@ local function oEditControl()
 	-- init joint chooser --
 	local jointSelected = nil
 	local jointChooser = CCNode()
-	jointChooser.data = oListener("editControl.joint",function(joint)
+	jointChooser:slot("editControl.joint",function(joint)
 		if jointSelected then
 			jointSelected(joint)
 		end
@@ -785,13 +784,13 @@ local function oEditControl()
 		editControl:hide()
 		jointChooser.visible = true
 		jointSelected = callback
-		oEvent:send("viewPanel.selectJoint",gearName)
+		emit("viewPanel.selectJoint",gearName)
 	end
 	editControl.hideJointChooser = function(self)
 		if not jointChooser.visible then return end
 		jointChooser.visible = false
 		jointSelected = nil
-		oEvent:send("viewPanel.selectJoint",nil)
+		emit("viewPanel.selectJoint",nil)
 	end
 
 	-- hide all controls
@@ -811,13 +810,12 @@ local function oEditControl()
 		editControl:hideJointChooser()
 	end
 
-	editControl.data = CCDictionary()
-	editControl.data.hideListener = oListener("editControl.hide",function()
+	editControl:slot("editControl.hide",function()
 		editControl:hide()
 	end)
 	local currentSetting = nil
 	local n2str = function(num) return string.format("%.2f",num) end
-	editControl.data.settingListener = oListener("settingPanel.edit",function(item)
+	editControl:slot("settingPanel.edit",function(item)
 		if not item then return end
 		local name = item.name
 		local value = item.value
@@ -839,7 +837,7 @@ local function oEditControl()
 						data:set("Type",bodyType)
 						oEditor:resetItem(data)
 					end
-					oEvent:send("settingPanel.edit",nil)
+					emit("settingPanel.edit",nil)
 				end)
 			elseif name == "Position" then
 				editControl:showPosEditor(data:get("Position"),function(pos)
@@ -847,7 +845,7 @@ local function oEditControl()
 					local body = oEditor:getItem(data)
 					if body then
 						body.position = pos
-						oEvent:send("editor.reset",{name=data:get("Name"),type="Body"})
+						emit("editor.reset",{name=data:get("Name"),type="Body"})
 					end
 					data:set("Position",pos)
 				end)
@@ -864,7 +862,7 @@ local function oEditControl()
 						local body = oEditor:getItem(data)
 						if body then
 							body.angle = rot
-							oEvent:send("editor.reset",{name=data:get("Name"),type="Body"})
+							emit("editor.reset",{name=data:get("Name"),type="Body"})
 						end
 					end
 				end)
@@ -961,8 +959,8 @@ local function oEditControl()
 						data:set(name,bodyName)
 						oEditor:resetItem(data)
 						editControl:hideBodyChooser()
-						oEvent:send("viewArea.moveToData",body)
-						oEvent:send("settingPanel.edit",nil)
+						emit("viewArea.moveToData",body)
+						emit("settingPanel.edit",nil)
 					end
 				end)
 			elseif name == "JointA" or name == "JointB" then
@@ -984,7 +982,7 @@ local function oEditControl()
 					data:set(name,jointName)
 					oEditor:resetItem(data)
 					editControl:hideJointChooser()
-					oEvent:send("settingPanel.edit",nil)
+					emit("settingPanel.edit",nil)
 				end)
 			elseif name == "WorldPos" or name == "GroundA" or name == "GroundB" then
 				editControl:showPointControl(data:get(name),function(pos)
@@ -1019,12 +1017,12 @@ local function oEditControl()
 					item.value = filename
 					data:set("Face",filename)
 					oEditor:resetItem(data,true)
-					oEvent:send("settingPanel.edit",nil)
+					emit("settingPanel.edit",nil)
 				end
 				local ended = spriteChooser.ended
 				spriteChooser.ended = function(self)
 					ended(self)
-					oEvent:send("settingPanel.edit",nil)
+					emit("settingPanel.edit",nil)
 				end
 			elseif name == "FacePos" then
 				local target = oEditor:getItem(data)

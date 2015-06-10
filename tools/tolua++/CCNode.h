@@ -58,5 +58,6 @@ class CCNode: public CCObject
 	oVec2 convertToWorldSpaceAR @ convertToWorldSpace(oVec2& nodePoint);
 	oVec2 convertToGameSpace(oVec2& nodePoint);
 
+	tolua_outside void CCNode_slot @ slot(const char* name, tolua_function nHandler);
 	static CCNode* create();
 };

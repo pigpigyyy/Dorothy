@@ -8,8 +8,7 @@ local ccColor3 = require("ccColor3")
 local CCNode = require("CCNode")
 local oEditor = require("oEditor")
 local oPlayButton = require("oPlayButton")
-local oListener = require("oListener")
-local oEvent = require("oEvent")
+local emit = require("emit")
 local class,property = unpack(require("class"))
 local oFileChooser = require("oFileChooser")
 local CCDictionary = require("CCDictionary")
@@ -48,19 +47,19 @@ local function oEditMenu()
 			function(self,value)
 				self._selected = value
 				if value then
-					oEvent:send("editControl.hide")
-					oEvent:send("settingPanel.toState",nil)
+					emit("editControl.hide")
+					emit("settingPanel.toState",nil)
 					self.color = ccColor3(0xff0080)
 					if lastSelected then
 						lastSelected.selected = false
 					end
 					lastSelected = self
-					oEvent:send("viewArea.create",self._name)
-					oEvent:send("viewPanel.choose",nil)
+					emit("viewArea.create",self._name)
+					emit("viewPanel.choose",nil)
 				else
 					self.color = ccColor3(0x00ffff)
 					if lastSelected == self then
-						oEvent:send("viewArea.create",nil)
+						emit("viewArea.create",nil)
 					end
 					lastSelected = nil
 				end
@@ -99,12 +98,12 @@ local function oEditMenu()
 		Loop = oShapeButton("Loop",35,winSize.height-335),
 		Delete = oButton("Delete",16,50,50,35,winSize.height-395,function()
 			if oEditor.currentData then
-				oEvent:send("settingPanel.toState",nil)
+				emit("settingPanel.toState",nil)
 				oEditor:removeData(oEditor.currentData)
 				if not oEditor.currentData.parent and not oEditor.currentData.resetListener then
 					oEditor:rename(oEditor.currentData:get("Name"),"")
 					oEditor.currentData = nil
-					oEvent:send("editor.change")
+					emit("editor.change")
 				end
 			end
 		end),
@@ -113,7 +112,7 @@ local function oEditMenu()
 		end),
 
 		Origin = oButton("Origin",16,50,50,winSize.width-285,winSize.height-35,function()
-			oEvent:send("viewArea.toPos",oEditor.origin)
+			emit("viewArea.toPos",oEditor.origin)
 		end),
 
 		Zoom = oButton("100%",16,50,50,winSize.width-225,winSize.height-35,function(button)
@@ -128,14 +127,14 @@ local function oEditMenu()
 			button.mode = button.mode + 1
 			button.mode = button.mode % 3
 			button.text = tostring(scale*100).."%"
-			oEvent:send("viewArea.toScale",scale)
+			emit("viewArea.toScale",scale)
 		end),
 
 		Play = oPlayButton(50,winSize.width-225,35,function(button)
-			oEvent:send("editControl.hide")
-			oEvent:send("settingPanel.edit",nil)
-			oEvent:send("settingPanel.enable",not button.isPlaying)
-			oEvent:send("editor.isPlaying",button.isPlaying)
+			emit("editControl.hide")
+			emit("settingPanel.edit",nil)
+			emit("settingPanel.enable",not button.isPlaying)
+			emit("editor.isPlaying",button.isPlaying)
 		end),
 	}
 
@@ -246,11 +245,11 @@ local function oEditMenu()
 
 	-- update scale button --
 	items.Zoom.mode = 0
-	items.Zoom.data = oListener("viewArea.scale",function(scale)
+	items.Zoom:slot("viewArea.scale",function(scale)
 		if scale ~= 1 then items.Zoom.mode = 2 end
 		items.Zoom.text = tostring(math.floor(scale*100)).."%"
 	end)
-	items.Play.data = oListener("editor.isPlaying",function(isPlaying)
+	items.Play:slot("editor.isPlaying",function(isPlaying)
 		oEditor.isPlaying = isPlaying
 		oEditor.worldScheduler.timeScale = isPlaying and 1 or 0
 		if not isPlaying then
@@ -284,20 +283,19 @@ local function oEditMenu()
 		end
 	end)
 
-	menu.data = CCDictionary()
-	menu.data.createListener = oListener("editMenu.created",function()
+	menu:slot("editMenu.created",function()
 		if lastSelected then
 			lastSelected.selected = false
 			lastSelected = nil
 		end
 	end)
-	menu.data.changeListener = oListener("editor.change",function()
+	menu:slot("editor.change",function()
 		if not oEditor.dirty then
 			oEditor.dirty = true
 			items.Edit.text = "Save"
 		end
 	end)
-	menu.data.resetListener = oListener("editMenu.reset",function()
+	menu:slot("editMenu.reset",function()
 		items.Play.isPlaying = false
 	end)
 

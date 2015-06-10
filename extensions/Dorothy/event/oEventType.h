@@ -23,6 +23,7 @@ public:
 	void add(oListener* listener);
 	void remove(oListener* listener);
 	void handle(oEvent* e);
+	bool isEmpty() const;
 protected:
 	string _name;
 private:

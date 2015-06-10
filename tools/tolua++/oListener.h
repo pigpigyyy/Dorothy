@@ -1,4 +1,4 @@
-class oListener: public CCObject
+class oListener @ oSlot : public CCObject
 {
 	tolua_property__bool bool enabled;
 

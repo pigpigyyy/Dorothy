@@ -20,7 +20,7 @@ local oScale = require("oScale")
 local oEase = require("oEase")
 local CCSequence = require("CCSequence")
 local CCCall = require("CCCall")
-local oEvent = require("oEvent")
+local emit = require("emit")
 
 local function oCircle(number)
 	local width = 25
@@ -99,8 +99,8 @@ local function oClipChooser(clipName)
 			end
 			oEditor.effectData = panel.frameData
 			oEditor:dumpData(oEditor.currentFile)
-			oEvent:send("viewArea.changeEffect",oEditor.currentName)
-			oEvent:send("oFrameViewer.data",oEditor.effectData)
+			emit("viewArea.changeEffect",oEditor.currentName)
+			emit("oFrameViewer.data",oEditor.effectData)
 			panel:hide()
 		end)
 		setButton.anchor = oVec2.zero

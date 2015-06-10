@@ -6,7 +6,6 @@ local CCSize = require("CCSize")
 local oSelectionPanel = require("oSelectionPanel")
 local oEditor = require("oEditor")
 local CCArray = require("CCArray")
-local oListener = require("oListener")
 local CCSequence = require("CCSequence")
 local CCDelay = require("CCDelay")
 local oPos = require("oPos")
@@ -70,20 +69,19 @@ local function oFrameViewer()
 	panel.position = startPos
 	panel.visible = false
 
-	panel.data = CCArray()
-	panel.data:add(oListener("oEditor.particle",function()
+	panel:slot("oEditor.particle",function()
 		if panel.visible then
 			panel:stopAllActions()
 			panel:runAction(CCSequence({CCDelay(0.3),oPos(0.5,startPos.x,startPos.y,oEase.InBack),CCHide()}))
 		end
-	end))
-	panel.data:add(oListener("oEditor.frame",function()
+	end)
+	panel:slot("oEditor.frame",function()
 		panel:stopAllActions()
 		panel.position = startPos
 		panel.visible = true
 		panel:runAction(oPos(0.5,endPos.x,endPos.y,oEase.OutBack))
-	end))
-	panel.data:add(oListener("oFrameViewer.data",function(data)
+	end)
+	panel:slot("oFrameViewer.data",function(data)
 		menu:removeAllChildrenWithCleanup()
 		local width = 0
 		for i,item in ipairs(data) do
@@ -94,7 +92,7 @@ local function oFrameViewer()
 		end
 		width = width + 140
 		panel:reset(width,borderSize.height,50,0)
-	end))
+	end)
 
 	return panel
 end

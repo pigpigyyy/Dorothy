@@ -13,7 +13,6 @@ local ccColor3 = require("ccColor3")
 local oScale = require("oScale")
 local oEase = require("oEase")
 local CCLabelTTF = require("CCLabelTTF")
-local oListener = require("oListener")
 local once = require("once")
 local cycle = require("cycle")
 local CCSequence = require("CCSequence")
@@ -58,7 +57,7 @@ local function oVertexControl()
 		label.position = oVec2(pos.x,pos.y+45*scale)
 	end
 
-	label.data = oListener("viewArea.toScale",function()
+	label:slot("viewArea.toScale",function()
 		label:schedule(once(function()
 			cycle(0.5,function()
 				if selectedVert then

@@ -72,6 +72,14 @@ local Dorothy =
 		type = "function",
 		index = index()
 	},
+	emit =
+	{
+		args = "(name: string, eventArgs: ...)",
+		description = "send event",
+		returns = "()",
+		type = "function",
+		index = index()
+	},
 	doXml =
 	{
 		args = "(xml: string)",
@@ -657,6 +665,13 @@ local Dorothy =
 				description = "",
 				returns = "(point: oVec2)",
 				typeName = "oVec2",
+				type = "method",
+			},
+			slot =
+			{
+				args = "(name: string, handler: function)",
+				description = " -- handler: function{eventArgs: table, event: oEvent}",
+				returns = "()",
 				type = "method",
 			},
 		},
@@ -6691,50 +6706,28 @@ local Dorothy =
 				typeName = "string",
 				type = "value",
 			},
-			add =
-			{
-				args = "(typeName: string)",
-				description = "",
-				returns = "()",
-				static = true,
-				type = "method",
-			},
-			remove =
-			{
-				args = "(typeName: string)",
-				description = "",
-				returns = "()",
-				static = true,
-				type = "method",
-			},
-			send =
-			{
-				args = "(name: string, args: table)",
-				description = "",
-				returns = "()",
-				static = true,
-				type = "method",
-			},
 		},
 		description = "class oEvent.",
+		hide = true,
 		type = "class",
 		index = index()
 	},
-	oListener =
-	{
-		childs =
-		{
-			enabled =
-			{
-				description = "[bool]",
-				type = "value",
-			},
-		},
-		description = "class oListener.\n args -- (name: string, handler: function)\n -- handler: function{eventArgs: table, event: oEvent}",
-		parents = {"CCObject",},
-		type = "class",
-		index = index()
-	},
+-	oSlot =
+-	{
+-		childs =
+-		{
+-			enabled =
+-			{
+-				description = "[bool]",
+-				type = "value",
+-			},
+-		},
+-		description = "class oSlot.\n args -- (name: string, handler: function)\n -- handler: function{eventArgs: table, event: oEvent}",
+-		parents = {"CCObject",},
++		hide = true,
+ 		type = "class",
+ 		index = index()
+ 	},
 }
 
 local function makeDerivation(pack)

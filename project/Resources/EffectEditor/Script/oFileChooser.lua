@@ -15,7 +15,7 @@ local CCDelay = require("CCDelay")
 local CCCall = require("CCCall")
 local CCMenu = require("CCMenu")
 local oBox = require("oBox")
-local oEvent = require("oEvent")
+local emit = require("emit")
 local oTemplateChooser = require("oTemplateChooser")
 local CCDictionary = require("CCDictionary")
 local oCache = require("oCache")
@@ -126,10 +126,10 @@ local function oFileChooser(addExisted)
 				parData.textureRecth = 0
 			end
 			for k,v in pairs(parData) do
-				oEvent:send(k,v)
+				emit(k,v)
 			end
-			oEvent:send("name",name)
-			oEvent:send("file",file)
+			emit("name",name)
+			emit("file",file)
 		elseif extension == "frame" then
 			local frameFile = io.open(oEditor.output..file)
 			local data = frameFile:read("*a")
@@ -146,12 +146,12 @@ local function oFileChooser(addExisted)
 				table.insert(frameData,{rect = CCRect(nums[1],nums[2],nums[3],nums[4])})
 			end
 			oEditor.effectData = frameData
-			oEvent:send("name",name)
-			oEvent:send("file",file)
-			oEvent:send("interval",interval)
-			oEvent:send("oFrameViewer.data",oEditor.effectData)
+			emit("name",name)
+			emit("file",file)
+			emit("interval",interval)
+			emit("oFrameViewer.data",oEditor.effectData)
 		end
-		oEvent:send("viewArea.changeEffect",name)
+		emit("viewArea.changeEffect",name)
 	end
 
 	if addExisted then
@@ -343,12 +343,12 @@ local function oFileChooser(addExisted)
 					oEditor.items[oEditor.currentName] = oEditor.currentFile
 					oEditor:dumpEffectFile()
 					oEditor.effectData = {file="",interval=1}
-					oEvent:send("name",oEditor.currentName)
-					oEvent:send("file",oEditor.currentFile)
-					oEvent:send("interval",1)
+					emit("name",oEditor.currentName)
+					emit("file",oEditor.currentFile)
+					emit("interval",1)
 					oContent:saveToFile(oEditor.output..oEditor.currentFile,[[<A A="" B="1"></A>]])
 					oCache.Effect:load(oEditor.output.."main.effect")
-					oEvent:send("viewArea.changeEffect",oEditor.currentName)
+					emit("viewArea.changeEffect",oEditor.currentName)
 				end
 			end,true),oEditor.topMost)
 		end)
@@ -419,8 +419,8 @@ local function oFileChooser(addExisted)
 					local lastFile = oEditor.currentFile
 					oEditor.currentFile = nil
 					oEditor:dumpEffectFile()
-					oEvent:send("viewArea.changeEffect",nil)
-					oEvent:send("settingPanel.hide")
+					emit("viewArea.changeEffect",nil)
+					emit("settingPanel.hide")
 
 					if count <= 1 then
 						local box = oBox("Delete "..lastFile,function()

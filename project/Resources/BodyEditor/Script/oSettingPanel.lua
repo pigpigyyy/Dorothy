@@ -8,8 +8,7 @@ local oSelectionPanel = require("oSelectionPanel")
 local CCLabelTTF = require("CCLabelTTF")
 local ccColor3 = require("ccColor3")
 local CCDictionary = require("CCDictionary")
-local oEvent = require("oEvent")
-local oListener = require("oListener")
+local emit = require("emit")
 local oEditor = require("oEditor")
 local tolua = require("tolua")
 local oBodyDef = require("oBodyDef")
@@ -123,7 +122,7 @@ local function oSettingPanel()
 	local items = {}
 	local getPosY = genPosY()
 	local function editCallback(settingItem)
-		oEvent:send("settingPanel.edit",settingItem)
+		emit("settingPanel.edit",settingItem)
 	end
 	for i = 1,#itemNames do
 		items[itemNames[i]] = oSettingItem(itemNames[i].." :",itemWidth,itemHeight,0,getPosY(),i == 1,editCallback)
@@ -487,9 +486,8 @@ local function oSettingPanel()
 		end
 	end
 
-	self.data = CCDictionary()
-	self.data.toStateListener = oListener("settingPanel.toState",function(state)
-		oEvent:send("settingPanel.edit",nil)
+	self:slot("settingPanel.toState",function(state)
+		emit("settingPanel.edit",nil)
 		if state then
 			selectGroup(state)
 		else
@@ -502,7 +500,7 @@ local function oSettingPanel()
 		end
 	end)
 	local currentItem = nil
-	self.data.editListener = oListener("settingPanel.edit",function(item)
+	self:slot("settingPanel.edit",function(item)
 		if not item or item.selected then
 			if currentItem then
 				currentItem.selected = false
@@ -512,7 +510,7 @@ local function oSettingPanel()
 			currentItem = nil
 		end
 	end)
-	self.data.enableListener = oListener("settingPanel.enable",function(enable)
+	self:slot("settingPanel.enable",function(enable)
 		for _,item in pairs(items) do
 			item.enabled = enable
 		end

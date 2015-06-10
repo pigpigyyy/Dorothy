@@ -7,8 +7,8 @@ local oSettingItem = require("oSettingItem")
 local oSelectionPanel = require("oSelectionPanel")
 local CCLabelTTF = require("CCLabelTTF")
 local ccColor3 = require("ccColor3")
-local oEvent = require("oEvent")
-local oListener = require("oListener")
+local emit = require("emit")
+local oSlot = require("oSlot")
 local oEditor = require("oEditor")
 local tolua = require("tolua")
 local ccBlendFunc = require("ccBlendFunc")
@@ -114,7 +114,7 @@ local function oSettingPanel()
 			currentItem.selected = false
 		end
 		currentItem = settingItem.selected and settingItem or nil
-		oEvent:send("settingPanel.edit",settingItem)
+		emit("settingPanel.edit",settingItem)
 	end
 	local items = {}
 	local getPosY = genPosY()
@@ -133,7 +133,7 @@ local function oSettingPanel()
 			name = itemName
 		end
 		local item = items[itemName]
-		local listener = oListener(name,function(var)
+		local listener = oSlot(name,function(var)
 			item.value = getter and getter(var) or var
 		end)
 		if multi then
@@ -378,7 +378,7 @@ local function oSettingPanel()
 					self:runAction(oPos(0.3,framePos.x,framePos.y,oEase.OutQuad))
 				end))
 			end
-			oEvent:send("oEditor.frame")
+			emit("oEditor.frame")
 		else
 			label.text = "Particle"
 			label.texture.antiAlias = false
@@ -408,7 +408,7 @@ local function oSettingPanel()
 					self:runAction(oPos(0.3,particlePos.x,particlePos.y,oEase.OutQuad))
 				end))
 			end
-			oEvent:send("oEditor.particle")
+			emit("oEditor.particle")
 		end
 		currentGroup = group
 		self:reset(borderSize.width,contentHeight,0,50)
@@ -431,25 +431,24 @@ local function oSettingPanel()
 
 	for itemName,item in pairs(items) do
 		if not item.data then
-			item.data = oListener(itemName,function(value)
+			item:slot(itemName,function(value)
 				item.value = value
 			end)
 		end
 	end
 
-	self.data = CCArray()
-	self.data:add(oListener("settingPanel.cancel",function()
+	self:slot("settingPanel.cancel",function()
 		if currentItem then
 			currentItem.selected = false
 		end
-	end))
-	self.data:add(oListener("settingPanel.hide",function()
+	end)
+	self:slot("settingPanel.hide",function()
 		setGroup(nil)
-		oEvent:send("settingPanel.cancel")
-	end))
-	self.data:add(oListener("settingPanel.moveToMode",function()
+		emit("settingPanel.cancel")
+	end)
+	self:slot("settingPanel.moveToMode",function()
 		self:setPos(oVec2(0,borderSize.height*0.5+30-items.emitterType.positionY))
-	end))
+	end)
 
 	return self
 end
