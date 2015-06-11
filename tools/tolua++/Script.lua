@@ -175,14 +175,10 @@ CCUserDefaultClass.__newindex = function(self,key,value)
 end
 
 local emit = loaded.emit
-local oEvent_args = {}
-local oEvent_argsCount = 0
+local oEvent_args
 loaded.emit = function(name,args)
-	oEvent_argsCount = oEvent_argsCount + 1
-	oEvent_args[oEvent_argsCount] = args
+	oEvent_args = args
 	emit(name)
-	table_remove(oEvent_args,oEvent_argsCount)
-	oEvent_argsCount = oEvent_argsCount - 1
 end
 
 local CCNode_slot = loaded.CCNode.slot
@@ -190,8 +186,8 @@ loaded.CCNode.slot = function(self,name,...)
 	local handler = select(1,...)
 	if handler then
 		return CCNode_slot(self,name, function(event)
-			local args = oEvent_args[oEvent_argsCount]
-			handler(args,event)
+			handler(oEvent_args,event)
+			oEvent_args = nil
 		end)
 	else
 		return CCNode_slot(self,name,...)
