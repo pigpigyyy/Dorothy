@@ -43,11 +43,11 @@ int CCNode_slot(lua_State* L)
 			listener = oListener::create(name, std::make_pair(oListenerHandlerWrapper(handler), &oListenerHandlerWrapper::call));
 			slots->setObject(listener, name);
 		}
-		if (tolua_isnoobj(L, 3, &tolua_err)) // get
+		else if (tolua_isnoobj(L, 3, &tolua_err)) // get
 		{
 			listener = (oListener*)slots->objectForKey(name);
 		}
-		else // del
+		else if (lua_isnil(L, 3))// del
 		{
 			slots->removeObjectForKey(name);
 		}
