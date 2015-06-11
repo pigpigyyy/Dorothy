@@ -37,17 +37,17 @@ int CCNode_slot(lua_State* L)
 			self->setHelperObject(slots);
 		}
 		oListener* listener = nullptr;
-		if (lua_isfunction(L, 3))
+		if (lua_isfunction(L, 3)) // set
 		{
 			int handler = toluafix_ref_function(L, 3);
 			listener = oListener::create(name, std::make_pair(oListenerHandlerWrapper(handler), &oListenerHandlerWrapper::call));
 			slots->setObject(listener, name);
 		}
-		if (tolua_isnoobj(L, 3, &tolua_err))
+		if (tolua_isnoobj(L, 3, &tolua_err)) // get
 		{
 			listener = (oListener*)slots->objectForKey(name);
 		}
-		else if (lua_isnil(L, 3))
+		else // del
 		{
 			slots->removeObjectForKey(name);
 		}
