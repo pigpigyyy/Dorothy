@@ -186,11 +186,16 @@ loaded.emit = function(name,args)
 end
 
 local CCNode_slot = loaded.CCNode.slot
-loaded.CCNode.slot = function(self,name,handler)
-	CCNode_slot(self,name, function(event)
-		local args = oEvent_args[oEvent_argsCount]
-		handler(args,event)
-	end)
+loaded.CCNode.slot = function(self,name,...)
+	local handler = select(1,...)
+	if handler then
+		return CCNode_slot(self,name, function(event)
+			local args = oEvent_args[oEvent_argsCount]
+			handler(args,event)
+		end)
+	else
+		return CCNode_slot(self,name,...)
+	end
 end
 
 local oSlot = loaded.oSlot

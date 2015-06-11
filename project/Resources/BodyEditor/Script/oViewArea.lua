@@ -7,13 +7,12 @@ local oLine = require("oLine")
 local CCTouch = require("CCTouch")
 local emit = require("emit")
 local oScale = require("oScale")
-local oEase = require("oEase")
-local CCDictionary = require("CCDictionary")
 local oPos = require("oPos")
 local CCSequence = require("CCSequence")
 local CCCall = require("CCCall")
 local oEditor = require("oEditor")
 local CCRect = require("CCRect")
+local oEase = require("oEase")
 
 --[[
 events:

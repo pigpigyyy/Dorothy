@@ -29,7 +29,7 @@ local oBox = class({
 		return CCNode()
 	end,
 
-	__init = function(self,text,okHandler,isInput)
+	__init = function(self,text,_,isInput)
 		local w = CCDirector.winSize.width*0.5
 		local h = CCDirector.winSize.height*0.5
 		local size = isInput and 125 or 90

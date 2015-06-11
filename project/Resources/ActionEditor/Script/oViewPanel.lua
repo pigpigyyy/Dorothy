@@ -23,7 +23,6 @@ local tolua = require("tolua")
 local CCNode = require("CCNode")
 local oSd = require("oEditor").oSd
 local oEditor = require("oEditor").oEditor
-local CCDictionary = require("CCDictionary")
 
 local function oViewPanel()
 	local winSize = CCDirector.winSize

@@ -20,7 +20,6 @@ local CCSequence = require("CCSequence")
 local oEditor = require("oEditor").oEditor
 local oSd = require("oEditor").oSd
 local oKd = require("oEditor").oKd
-local CCDictionary = require("CCDictionary")
 
 local function oSettingPanel()
 	local winSize = CCDirector.winSize

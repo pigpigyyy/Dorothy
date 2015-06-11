@@ -6,7 +6,6 @@ local ccColor3 = require("ccColor3")
 local oTextField = require("oTextField")
 local oLine = require("oLine")
 local ccColor4 = require("ccColor4")
-local oEditor = require("oEditor")
 local class,property = unpack(require("class"))
 
 local oSettingItem = class(
@@ -22,7 +21,7 @@ local oSettingItem = class(
 
 	-- self = CCMenuItem
 	__init = function(self,name,width,height, x, y, isInput, toggled)
-		local halfW = width*0.5
+		--local halfW = width*0.5
 		local halfH = height*0.5
 		
 		self._isInput = isInput
@@ -45,7 +44,7 @@ local oSettingItem = class(
 			local x = nextCenterX
 			local y = halfH-fontSize*0.5-2
 			label = oTextField(x,y,fontSize,limit,
-				function(textField)
+				function()
 					self.selected = false
 				end)
 		else

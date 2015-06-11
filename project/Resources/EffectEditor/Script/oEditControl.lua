@@ -1,4 +1,3 @@
-local CCDirector = require("CCDirector")
 local CCNode = require("CCNode")
 local oEditRuler = require("oEditRuler")
 local CCSize = require("CCSize")

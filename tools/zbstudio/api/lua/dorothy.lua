@@ -671,7 +671,8 @@ local Dorothy =
 			{
 				args = "(name: string, handler: function)",
 				description = " -- handler: function{eventArgs: table, event: oEvent}",
-				returns = "()",
+				returns = "(slot: oSlot)",
+				typeName = "oSlot",
 				type = "method",
 			},
 		},
@@ -6712,19 +6713,19 @@ local Dorothy =
 		type = "class",
 		index = index()
 	},
--	oSlot =
--	{
--		childs =
--		{
--			enabled =
--			{
--				description = "[bool]",
--				type = "value",
--			},
--		},
--		description = "class oSlot.\n args -- (name: string, handler: function)\n -- handler: function{eventArgs: table, event: oEvent}",
--		parents = {"CCObject",},
-+		hide = true,
+	oSlot =
+	{
+		childs =
+		{
+			enabled =
+			{
+				description = "[bool]",
+				type = "value",
+			},
+		},
+		description = "class oSlot.\n args -- (name: string, handler: function)\n -- handler: function{eventArgs: table, event: oEvent}",
+		parents = {"CCObject",},
+		hide = true,
  		type = "class",
  		index = index()
  	},

@@ -5,7 +5,7 @@
 using namespace Dorothy;
 using namespace Dorothy::Platform;
 
-void CCNode_slot(CCNode* self, const char* name, int handler);
+int CCNode_slot(lua_State* L);
 
 void CCDrawNode_drawPolygon(
 	CCDrawNode* self,

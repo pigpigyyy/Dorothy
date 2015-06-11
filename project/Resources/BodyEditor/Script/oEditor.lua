@@ -16,8 +16,6 @@ local CCNode = require("CCNode")
 local CCSprite = require("CCSprite")
 local oModel = require("oModel")
 
-local winSize = CCDirector.winSize
-
 local oEditor = CCScene()
 
 oEditor.isPlaying = false

@@ -24,7 +24,6 @@ local ccColor3 = require("ccColor3")
 local oEditor = require("oEditor").oEditor
 local oKd = require("oEditor").oKd
 local oSd = require("oEditor").oSd
-local CCDictionary = require("CCDictionary")
 
 local function oViewArea()
 	local winSize = CCDirector.winSize

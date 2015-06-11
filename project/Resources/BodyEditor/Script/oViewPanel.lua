@@ -11,9 +11,6 @@ local oLine = require("oLine")
 local CCSequence = require("CCSequence")
 local CCDelay = require("CCDelay")
 local oOpacity = require("oOpacity")
-local oRoutine = require("oRoutine")
-local once = require("once")
-local cycle = require("cycle")
 
 local function oViewPanel()
 	local winSize = CCDirector.winSize

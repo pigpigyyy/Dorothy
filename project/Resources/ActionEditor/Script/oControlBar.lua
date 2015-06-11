@@ -16,7 +16,6 @@ local oEditor = require("oEditor").oEditor
 local oSd = require("oEditor").oSd
 local oAd = require("oEditor").oAd
 local oKd = require("oEditor").oKd
-local CCDictionary = require("CCDictionary")
 
 local function oControlBar()
     local winSize = CCDirector.winSize

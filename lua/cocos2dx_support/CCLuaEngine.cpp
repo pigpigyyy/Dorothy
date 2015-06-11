@@ -228,6 +228,9 @@ CCLuaEngine::CCLuaEngine()
 	addLuaLoader(cclua_loader);
 
 	tolua_beginmodule(L, 0);//stack: package.loaded
+		tolua_beginmodule(L, "CCNode");
+			tolua_function(L, "slot", CCNode_slot);
+		tolua_endmodule(L);
 		tolua_beginmodule(L, "CCDictionary");//stack: package.loaded CCDictionary
 			tolua_variable(L, "keys", CCDictionary_keys, nullptr);
 			tolua_variable(L, "randomObject", CCDictionary_randomObject, nullptr);

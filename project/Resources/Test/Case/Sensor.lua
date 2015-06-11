@@ -11,7 +11,6 @@ local layer = CCLayerColor(ccColor4(0x22cccccc),CCDirector.winSize.width,CCDirec
 layer.anchor = oVec2.zero
 scene:addChild(layer)
 
-
 local label = CCLabelTTF("","Arial",24)
 label.position = oVec2(400,300)
 world:addChild(label)

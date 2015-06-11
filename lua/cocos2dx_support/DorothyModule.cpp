@@ -11,16 +11,54 @@ void call(oEvent* event) const
 }
 HANDLER_WRAP_END
 
-void CCNode_slot(CCNode* self, const char* name, int handler)
+int CCNode_slot(lua_State* L)
 {
-	CCDictionary* slots = CCLuaCast<CCDictionary>(self->getHelperObject());
-	if (!slots)
+#ifndef TOLUA_RELEASE
+	tolua_Error tolua_err;
+	if (
+		!tolua_isusertype(L, 1, "CCNode", 0, &tolua_err) ||
+		!tolua_isstring(L, 2, 0, &tolua_err) ||
+		!(toluafix_isfunction(L, 3, &tolua_err) || lua_isnil(L, 3) || tolua_isnoobj(L, 3, &tolua_err)) ||
+		!tolua_isnoobj(L, 4, &tolua_err)
+		)
+		goto tolua_lerror;
+	else
+#endif
 	{
-		slots = CCDictionary::create();
-		self->setHelperObject(slots);
+		CCNode* self = (CCNode*)tolua_tousertype(L, 1, 0);
+#ifndef TOLUA_RELEASE
+		if (!self) tolua_error(L, "invalid 'self' in function 'CCNode_slot'", NULL);
+#endif
+		const char* name = tolua_tostring(L, 2, 0);
+		CCDictionary* slots = CCLuaCast<CCDictionary>(self->getHelperObject());
+		if (!slots)
+		{
+			slots = CCDictionary::create();
+			self->setHelperObject(slots);
+		}
+		oListener* listener = nullptr;
+		if (lua_isfunction(L, 3))
+		{
+			int handler = toluafix_ref_function(L, 3);
+			listener = oListener::create(name, std::make_pair(oListenerHandlerWrapper(handler), &oListenerHandlerWrapper::call));
+			slots->setObject(listener, name);
+		}
+		if (tolua_isnoobj(L, 3, &tolua_err))
+		{
+			listener = (oListener*)slots->objectForKey(name);
+		}
+		else if (lua_isnil(L, 3))
+		{
+			slots->removeObjectForKey(name);
+		}
+		tolua_pushccobject(L, (void*)listener);
 	}
-	oListener* listener = oListener::create(name, std::make_pair(oListenerHandlerWrapper(handler), &oListenerHandlerWrapper::call));
-	slots->setObject(listener, name);
+	return 1;
+#ifndef TOLUA_RELEASE
+tolua_lerror :
+	tolua_error(L, "#ferror in function 'slot'.", &tolua_err);
+	return 0;
+#endif
 }
 
 void CCDrawNode_drawPolygon(

@@ -16,7 +16,7 @@ local oViewItem = class({
 	__partial = function(self)
 		self._selected = false -- boolean
 		self._node = nil -- CCNode to control cascading
-		self._border = nil -- oLine
+		self._border = nil -- oLinelocal oEase = require("oEase")
 		self._borderBold = nil -- CCDrawNode
 		self._tapped = nil -- function
 		self._scale = nil -- oScale
