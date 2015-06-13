@@ -201,12 +201,12 @@ local function oClipChooser(clipName)
 				100,100,
 				itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
 				function()
-					for i = 1,menu.children.count do
-						local child = tolua.cast(menu.children[i],"CCMenuItem")
-						if child and child.circles then
+					menu:eachChild(function(child)
+						if tolua.type(child) == "CCMenuItem" and child.circles then
 							child.face.cascadeOpacity = true
-							child.node.children[1].opacity = 0.4
-							child.node.children[1].color = ccColor3(0x666666)
+							local node = child.node:getChildByIndex(1)
+							node.opacity = 0.4
+							node.color = ccColor3(0x666666)
 							local count = #panel.frameData
 							while count > 0 do
 								table.remove(panel.frameData)
@@ -219,7 +219,7 @@ local function oClipChooser(clipName)
 							end
 							child.circles = nil
 						end
-					end
+					end)
 					panel.number = 1
 				end)
 			button.position = button.position + panel:getTotalDelta()

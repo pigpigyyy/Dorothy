@@ -175,10 +175,14 @@ CCUserDefaultClass.__newindex = function(self,key,value)
 end
 
 local emit = loaded.emit
-local oEvent_args
+local oEvent_args = {}
+local argsCount = 0
 loaded.emit = function(name,args)
-	oEvent_args = args
+	argsCount = argsCount + 1
+	oEvent_args[argsCount] = args
 	emit(name)
+	oEvent_args[argsCount] = nil
+	argsCount = argsCount - 1
 end
 
 local CCNode_slot = loaded.CCNode.slot
@@ -186,8 +190,7 @@ loaded.CCNode.slot = function(self,name,...)
 	local handler = select(1,...)
 	if handler then
 		return CCNode_slot(self,name, function(event)
-			handler(oEvent_args,event)
-			oEvent_args = nil
+			handler(oEvent_args[argsCount],event)
 		end)
 	else
 		return CCNode_slot(self,name,...)
@@ -197,8 +200,7 @@ end
 local oSlot = loaded.oSlot
 loaded.oSlot = function(name,handler)
 	return oSlot(name, function(event)
-		local args = oEvent_args[oEvent_argsCount]
-		handler(args,event)
+		handler(oEvent_args[argsCount],event)
 	end)
 end
 

@@ -17,6 +17,6 @@ scene:addChild(world)
 local car = oBody("BodyEditor/Body/Output/car.body",world)
 car.data.wheel.enabled = true
 world:addChild(car)
-world.camera:follow(car.children[1])
+world.camera:follow(car:getChildByIndex(1))
 
 CCDirector:run(CCScene:crossFade(0.5,scene))

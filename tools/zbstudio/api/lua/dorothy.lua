@@ -554,12 +554,6 @@ local Dorothy =
 				description = "[int][Readonly]",
 				type = "value",
 			},
-			children =
-			{
-				description = "[CCArray][Readonly]",
-				typeName = "CCArray",
-				type = "value",
-			},
 			running =
 			{
 				description = "[bool][Readonly]",
@@ -629,6 +623,22 @@ local Dorothy =
 				typeName = "CCNode",
 				type = "method",
 			},
+			getChildByIndex =
+			{
+				args = "(index: int)",
+				description = "",
+				returns = "(child: CCNode)",
+				typeName = "CCNode",
+				type = "method",
+			},
+			getChildren =
+			{
+				args = "()",
+				description = "",
+				returns = "(children: table{CCNode})",
+				typeName = "CCNode",
+				type = "method",
+			},
 			schedule =
 			{
 				args = "(handler: function, priority: int = 0)",
@@ -673,6 +683,20 @@ local Dorothy =
 				description = " -- handler: function{eventArgs: table, event: oEvent}",
 				returns = "(slot: oSlot)",
 				typeName = "oSlot",
+				type = "method",
+			},
+			traverse =
+			{
+				args = "(handler: function)",
+				description = " -- handler: function{child: CCNode}",
+				returns = "()",
+				type = "method",
+			},
+			eachChild =
+			{
+				args = "(handler: function)",
+				description = " -- handler: function{child: CCNode}",
+				returns = "()",
 				type = "method",
 			},
 		},
@@ -1030,22 +1054,28 @@ local Dorothy =
 				description = "[uint][Readonly]",
 				type = "value",
 			},
-			keys =
-			{
-				description = "[table{int|string}][Readonly]",
-				type = "value",
-			},
 			randomObject =
 			{
 				description = "[CCObject][Readonly]",
 				typeName = "CCObject",
 				type = "value",
 			},
+			 =
+			{
+				description = "[][Readonly]",
+				type = "value",
+			},
+			getKeys =
+			{
+				args = "()",
+				description = "",
+				returns = "(keys: table{int|string})",
+				type = "method",
+			},
 			get =
 			{
 				args = "(key: int|string)",
 				description = "",
-				typeName = "CCObject",
 				returns = "(item: number|bool|string|CCObject)",
 				type = "method",
 			},

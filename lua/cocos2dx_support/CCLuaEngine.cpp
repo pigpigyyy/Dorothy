@@ -230,10 +230,13 @@ CCLuaEngine::CCLuaEngine()
 	tolua_beginmodule(L, 0);//stack: package.loaded
 		tolua_beginmodule(L, "CCNode");
 			tolua_function(L, "slot", CCNode_slot);
+			tolua_function(L, "traverse", CCNode_traverse);
+			tolua_function(L, "eachChild", CCNode_eachChild);
+			tolua_function(L, "getChildren", CCNode_getChildren);
 		tolua_endmodule(L);
 		tolua_beginmodule(L, "CCDictionary");//stack: package.loaded CCDictionary
-			tolua_variable(L, "keys", CCDictionary_keys, nullptr);
 			tolua_variable(L, "randomObject", CCDictionary_randomObject, nullptr);
+			tolua_function(L, "getKeys", CCDictionary_getKeys);
 			tolua_function(L, "set", CCDictionary_set);
 			tolua_function(L, "get", CCDictionary_get);
 		tolua_endmodule(L);

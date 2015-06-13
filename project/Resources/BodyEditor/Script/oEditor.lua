@@ -1044,13 +1044,11 @@ oEditor.removeItem = function(self,data)
 	if data.parent then data = data.parent end
 	local name = data:get("Name")
 	local item = oEditor.items[name]
-	local face = nil
+	local face
 	if item then
-		if item.children then
-			face = item.children[1]
-			if face then
-				item:removeChild(face)
-			end
+		face = item:getChildByIndex(1)
+		if face then
+			item:removeChild(face)
 		end
 		if item.destroy then
 			item:destroy()

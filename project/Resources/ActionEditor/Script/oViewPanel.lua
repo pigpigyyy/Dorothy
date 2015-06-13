@@ -87,9 +87,6 @@ local function oViewPanel()
 	menu.positionY = borderSize.height
 
 	local function updateReset(deltaTime)
-		local children = menu.children
-		if not children then return end
-
 		local xVal = nil
 		local yVal = nil
 		time = time + deltaTime
@@ -116,10 +113,9 @@ local function oViewPanel()
 			yVal = totalDelta.y - yVal
 		end
 		
-		for i = 1, children.count do
-			local node = children[i]
-			node.position = node.position + oVec2(xVal and xVal or 0, yVal and yVal or 0)
-		end
+		menu:eachChild(function(child)
+			child.position = child.position + oVec2(xVal and xVal or 0, yVal and yVal or 0)
+		end)
 		
 		if t == 1 then
 			panel:unschedule()
@@ -148,8 +144,6 @@ local function oViewPanel()
 	end
 
 	local function setPos(delta)
-		local children = menu.children
-		if not children then return end
 		local newPos = totalDelta+delta
 		if newPos.x > 0 then
 			newPos.x = 0 
@@ -167,18 +161,14 @@ local function oViewPanel()
 
 		totalDelta = totalDelta + delta
 
-		for i = 1, children.count do
-			local node = children[i]
-			node.position = node.position + delta
-		end
+		menu:eachChild(function(child)
+			child.position = child.position + delta
+		end)
 	end
 
 	local function setOffset(deltaPos, touching)
-		local children = menu.children
-		if not children then return end
-
 		local newPos = totalDelta + deltaPos
-		
+
 		if touching then
 			if newPos.x > 0 then
 				newPos.x = 0--padding 
@@ -231,10 +221,9 @@ local function oViewPanel()
 
 		totalDelta = totalDelta + deltaPos
 
-		for i = 1, children.count do
-			local node = children[i]
-			node.position = node.position + deltaPos
-		end
+		menu:eachChild(function(child)
+			child.position = child.position + deltaPos
+		end)
 		
 		if not touching and (newPos.y < -padding*0.5 or newPos.y > moveY+padding*0.5 or newPos.x > padding*0.5 or newPos.x < moveX-padding*0.5) then
 			startReset()
@@ -513,7 +502,7 @@ local function oViewPanel()
 		menu:addChild(drawNode)
 		local size = 60
 		local indent = 10
-		local root = model.children[1]
+		local root = model:getChildByIndex(1)
 		local function visitSprite(sp,x,y,node)
 			local clip = sp[oSd.clip]
 			local child = node
@@ -539,7 +528,7 @@ local function oViewPanel()
 					drawNode:drawSegment(oVec2(x+indent,y+nextY-size*0.5),oVec2(x+indent*2,y+nextY-size*0.5),0.5,ccColor4(0xffffffff))
 					children[i][oSd.parent] = sp
 					children[i][oSd.index] = i
-					local lenY, subLayer = visitSprite(children[i],x+indent*2,y+nextY,child.children[i])
+					local lenY, subLayer = visitSprite(children[i],x+indent*2,y+nextY,child:getChildByIndex(i))
 					nextY = nextY + lenY
 					if maxSubLayer < subLayer then maxSubLayer = subLayer end
 					if i == childrenSize then
@@ -697,10 +686,10 @@ local function oViewPanel()
 			sp[oSd.sprite] = child
 			local children = sp[oSd.children]
 			for i = 1, #children do
-				visitSprite(children[i],child.children[i])
+				visitSprite(children[i],child:getChildByIndex(i))
 			end
 		end
-		visitSprite(data,model.children[1])
+		visitSprite(data,model:getChildByIndex(1))
 		if selectedItem ~= nil then
 			local sp,node = selectedItem:getData()
 			local withFrame = node.contentSize ~= CCSize.zero

@@ -6,6 +6,10 @@ using namespace Dorothy;
 using namespace Dorothy::Platform;
 
 int CCNode_slot(lua_State* L);
+int CCNode_traverse(lua_State* L);
+int CCNode_eachChild(lua_State* L);
+int CCNode_getChildren(lua_State* L);
+CCNode* CCNode_getChildByIndex(CCNode* self, int index);
 
 void CCDrawNode_drawPolygon(
 	CCDrawNode* self,
@@ -123,7 +127,7 @@ CCTexture2D* CCTextureCache_add(CCTextureCache* self, CCRenderTexture* renderTex
 
 int CCDictionary_get(lua_State* L);
 int CCDictionary_set(lua_State* L);
-int CCDictionary_keys(lua_State* L);
+int CCDictionary_getKeys(lua_State* L);
 int CCDictionary_randomObject(lua_State* L);
 
 void __oModelCache_getData(lua_State* L,  const char* filename);

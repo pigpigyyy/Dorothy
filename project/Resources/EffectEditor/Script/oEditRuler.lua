@@ -132,10 +132,9 @@ local function oEditRuler()
 	ruler:addChild(arrow)
 
 	local function updateIntervalTextScale(scale)
-		local children = intervalNode.children
-		for i = 1, children.count do
-			children[i].scaleX = scale
-		end
+		intervalNode:eachChild(function(child)
+			child.scaleX = scale
+		end)
 	end
 	ruler:slot("viewArea.scale",function(scale)
 		if scale > 5 then scale = 5 end

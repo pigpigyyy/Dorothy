@@ -76,9 +76,6 @@ local function oSelectionPanel(borderSize,noCliping)
 	menu.position = oVec2(-winSize.width*0.5,winSize.height*0.5)
 
 	local function updateReset(deltaTime)
-		local children = menu.children
-		if not children then return end
-
 		local xVal = nil
 		local yVal = nil
 		time = time + deltaTime
@@ -104,11 +101,10 @@ local function oSelectionPanel(borderSize,noCliping)
 			totalDelta.y = oEase:func(oEase.OutBack,t,startPos.y,moveY-startPos.y)
 			yVal = totalDelta.y - yVal
 		end
-		
-		for i = 1, children.count do
-			local node = children[i]
-			node.position = node.position + oVec2(xVal and xVal or 0, yVal and yVal or 0)
-		end
+
+		menu:eachChild(function(child)
+			child.position = child.position + oVec2(xVal and xVal or 0, yVal and yVal or 0)
+		end)
 
 		if t == 1.0 then
 			panel:unschedule()
@@ -129,9 +125,6 @@ local function oSelectionPanel(borderSize,noCliping)
 	end
 
 	local function setOffset(deltaPos, touching)
-		local children = menu.children
-		if not children then return end
-
 		local newPos = totalDelta + deltaPos
 
 		if touching then
@@ -186,11 +179,10 @@ local function oSelectionPanel(borderSize,noCliping)
 
 		totalDelta = totalDelta + deltaPos
 
-		for i = 1, children.count do
-			local node = children[i]
-			node.position = node.position + deltaPos
-		end
-		
+		menu:eachChild(function(child)
+			child.position = child.position + deltaPos
+		end)
+
 		if not touching and (newPos.y < -paddingY*0.5 or newPos.y > moveY+paddingY*0.5 or newPos.x > paddingX*0.5 or newPos.x < moveX-paddingX*0.5) then
 			startReset()
 		end
@@ -326,15 +318,12 @@ local function oSelectionPanel(borderSize,noCliping)
 	end
 
 	panel.removeMenuItems = function(self)
-		local children = menu.children
-		if children then
-			for i = 1, children.count do
-				local item = tolua.cast(children[i],"CCMenuItem")
-				if item then
-					item.tapHandler = nil
-				end
+		menu:eachChild(function(child)
+			local item = tolua.cast(child,"CCMenuItem")
+			if item then
+				item.tapHandler = nil
 			end
-		end
+		end)
 		menu:removeAllChildrenWithCleanup()
 	end
 	

@@ -94,9 +94,6 @@ local function oSettingPanel()
 	menu.visible = false
 
 	local function updateReset(deltaTime)
-		local children = menu.children
-		if not children then return end
-
 		local yVal = nil
 		time = time + deltaTime
 		local t = time/4.0
@@ -112,10 +109,9 @@ local function oSettingPanel()
 			yVal = totalDelta.y - yVal
 		end
 		
-		for i = 1, children.count do
-			local node = children[i]
-			node.position = node.position + oVec2(0, yVal and yVal or 0)
-		end
+		menu:eachChild(function(child)
+			child.position = child.position + oVec2(0, yVal and yVal or 0)
+		end)
 		
 		if t == 1.0 then
 			panel:unschedule()
@@ -140,9 +136,6 @@ local function oSettingPanel()
 	end
 
 	local function setOffset(deltaPos, touching)
-		local children = menu.children
-		if not children then return end
-
 		local newPos = totalDelta + deltaPos
 		
 		if touching then
@@ -187,10 +180,9 @@ local function oSettingPanel()
 
 		totalDelta = totalDelta + deltaPos
 
-		for i = 1, children.count do
-			local node = children[i]
-			node.position = node.position + deltaPos
-		end
+		menu:eachChild(function(child)
+			child.position = child.position + deltaPos
+		end)
 		
 		if not touching and (newPos.y < -padding*0.5 or newPos.y > moveY+padding*0.5 or newPos.x > padding*0.5 or newPos.x < moveX-padding*0.5) then
 			startReset()

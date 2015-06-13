@@ -78,7 +78,7 @@ local function create(itemDict,world,pos,angle)
 	local node = CCNode()
 	node.data = items
 	local center = nil
-	local keys = itemDict.keys
+	local keys = itemDict:getKeys()
 	for i = 1,#keys do
 		local key = keys[i]
 		local itemDef = itemDict[key]

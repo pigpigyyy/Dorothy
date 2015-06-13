@@ -353,7 +353,7 @@ local function oTemplateChooser(filename)
 				oEditor:dumpEffectFile()
 
 				local dict = CCDictionary(oEditor.output..filename)
-				local keys = dict.keys
+				local keys = dict:getKeys()
 				local parData = {}
 				local dataWrapper = {}
 				setmetatable(dataWrapper,

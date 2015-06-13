@@ -130,10 +130,9 @@ local function oVRuler()
 
 	-- listen view scale event --
 	local function updateIntervalTextScale(scale)
-		local children = intervalNode.children
-		for i = 1, children.count do
-			children[i].scaleX = scale
-		end
+		intervalNode:eachChild(function(child)
+			child.scaleX = scale
+		end)
 	end
 	local fadeOut = CCSequence({oOpacity(0.3,0),CCCall(function()
 		self.scaleY = 1

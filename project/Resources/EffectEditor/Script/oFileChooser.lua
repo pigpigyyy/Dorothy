@@ -97,7 +97,7 @@ local function oFileChooser(addExisted)
 		local extension = string.match(file, "%.([^%.\\/]*)$")
 		if extension == "par" then
 			local dict = CCDictionary(oEditor.output..file)
-			local keys = dict.keys
+			local keys = dict:getKeys()
 			local parData = {}
 			local dataWrapper = {}
 			setmetatable(dataWrapper,

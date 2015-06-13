@@ -77,9 +77,6 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 	menu.position = oVec2(-halfBW,halfBH)
 
 	local function updateReset(deltaTime)
-		local children = menu.children
-		if not children then return end
-
 		local xVal = nil
 		local yVal = nil
 		time = time + deltaTime
@@ -106,11 +103,10 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 			totalDelta.y = oEase:func(oEase.OutBack,t,startPos.y,moveY-startPos.y)
 			yVal = totalDelta.y - yVal
 		end
-		
-		for i = 1, children.count do
-			local node = children[i]
-			node.position = node.position + oVec2(xVal and xVal or 0, yVal and yVal or 0)
-		end
+
+		menu:eachChild(function(child)
+			child.position = child.position + oVec2(xVal and xVal or 0, yVal and yVal or 0)
+		end)
 
 		if t == 1.0 then
 			panel:unschedule()
@@ -132,9 +128,6 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 	end
 
 	local function setOffset(deltaPos, touching)
-		local children = menu.children
-		if not children then return end
-
 		local newPos = totalDelta + deltaPos
 		
 		if touching then
@@ -189,11 +182,10 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 
 		totalDelta = totalDelta + deltaPos
 
-		for i = 1, children.count do
-			local node = children[i]
-			node.position = node.position + deltaPos
-		end
-		
+		menu:eachChild(function(child)
+			child.position = child.position + deltaPos
+		end)
+
 		if not touching and (newPos.y < -paddingY*0.5 or newPos.y > moveY+paddingY*0.5 or newPos.x > paddingX*0.5 or newPos.x < moveX-paddingX*0.5) then
 			startReset()
 		end
@@ -250,8 +242,6 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 	end
 
 	local function setPos(self,delta)
-		local children = menu.children
-		if not children then return end
 		local newPos = totalDelta+delta
 		if newPos.x > 0 then
 			newPos.x = 0 
@@ -269,10 +259,9 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 
 		totalDelta = totalDelta + delta
 
-		for i = 1, children.count do
-			local node = children[i]
-			node.position = node.position + delta
-		end
+		menu:eachChild(function(child)
+			child.position = child.position + delta
+		end)
 	end
 	panel.setPos = setPos
 

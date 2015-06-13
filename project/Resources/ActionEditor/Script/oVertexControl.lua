@@ -48,14 +48,12 @@ local function oVertexControl()
 		if selectedVert then
 			local name = selectedVert.name
 			local item
-			local children = menu.children
-			for i = 1,children.count do
-				local child = children[i]
+			menu:eachChild(function(child)
 				child.enabled = true
 				if child.name == name then
 					item = child
 				end
-			end
+			end)
 			item.enabled = false
 			item:runAction(CCSequence(
 			{
@@ -90,10 +88,9 @@ local function oVertexControl()
 				item.opacity = 0.8
 				item.highlighted = true
 			end
-			local children = menu.children
-			for i = 1,children.count do
-				children[i].enabled = false
-			end
+			menu:eachChild(function(child)
+				child.enabled = false
+			end)
 			item.enabled = true
 		elseif eventType == CCMenuItem.Tapped then
 			if vertexToAdd and lastCreateVertex and lastCreateVertex ~= item then
@@ -109,10 +106,9 @@ local function oVertexControl()
 			selectedVert = item.selected and item or nil
 			item.opacity = item.selected and 0.8 or 0.4
 			item.highlighted = item.selected
-			local children = menu.children
-			for i = 1,children.count do
-				children[i].enabled = true
-			end
+			menu:eachChild(function(child)
+				child.enabled = true
+			end)
 		end
 	end
 	local function oVertex(pos,name)
