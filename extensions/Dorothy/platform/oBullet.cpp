@@ -91,14 +91,11 @@ void oBullet::onExit()
 	oBody::onExit();
 	if (_face)
 	{
-		CCNode::traverse(
-			_face,
-			[](CCNode* node)->void
-			{
-				oIDisposable* item = dynamic_cast<oIDisposable*>(node);
-				item->disposing.Clear();
-			}
-		);
+		_face->traverse([](CCNode* node)
+		{
+			oIDisposable* item = dynamic_cast<oIDisposable*>(node);
+			item->disposing.Clear();
+		});
 		_face = nullptr;
 	}
 }

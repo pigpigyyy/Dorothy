@@ -116,7 +116,7 @@ int CCNode_traverse(lua_State* L)
 #ifndef TOLUA_RELEASE
 		if (!self) tolua_error(L, "invalid 'self' in function 'CCNode_traverse'", NULL);
 #endif
-		CCNode::traverse(self, [L](CCNode* child)
+		self->traverse([L](CCNode* child)
 		{
 			int top = lua_gettop(L);
 			lua_pushvalue(L, 2);

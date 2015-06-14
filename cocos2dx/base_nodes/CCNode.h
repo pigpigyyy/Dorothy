@@ -1143,25 +1143,27 @@ public:
 	void unscheduleUpdateLua();
 
 	template<typename NodeFunc>
-	static void traverse(CCNode* root, const NodeFunc& func)
+	void traverse(const NodeFunc& func)
 	{
-		func(root);
-		CCArray* children = root->getChildren();
-		CCObject* child;
-		CCARRAY_FOREACH(children, child)
+		func(this);
+		CCArray* children = this->getChildren();
+		CCObject* object;
+		CCARRAY_FOREACH(children, object)
 		{
-			CCNode::traverse((CCNode*)child, func);
+			CCNode* child = (CCNode*)object;
+			child->traverse(func);
 		}
 	}
 
 	template<typename NodeFunc>
-	static void visit(CCNode* parent, const NodeFunc& func)
+	void eachChild(const NodeFunc& func)
 	{
-		CCArray* children = parent->getChildren();
-		CCObject* child;
-		CCARRAY_FOREACH(children, child)
+		CCArray* children = this->getChildren();
+		CCObject* object;
+		CCARRAY_FOREACH(children, object)
 		{
-			func((CCNode*)child);
+			CCNode* child = (CCNode*)object;
+			func(child);
 		}
 	}
 
