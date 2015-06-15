@@ -1060,11 +1060,6 @@ local Dorothy =
 				typeName = "CCObject",
 				type = "value",
 			},
-			 =
-			{
-				description = "[][Readonly]",
-				type = "value",
-			},
 			getKeys =
 			{
 				args = "()",
