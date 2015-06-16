@@ -1046,9 +1046,11 @@ oEditor.removeItem = function(self,data)
 	local item = oEditor.items[name]
 	local face
 	if item then
-		face = item:getChildByIndex(1)
-		if face then
-			item:removeChild(face)
+		if item.getChildByIndex then
+			face = item:getChildByIndex(1)
+			if face then
+				item:removeChild(face)
+			end
 		end
 		if item.destroy then
 			item:destroy()
