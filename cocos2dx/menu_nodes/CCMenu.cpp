@@ -180,8 +180,15 @@ void CCMenu::setHandlerPriority(int newPriority)
 
 void CCMenu::registerWithTouchDispatcher()
 {
-    CCDirector* pDirector = CCDirector::sharedDirector();
-    pDirector->getTouchDispatcher()->addTargetedDelegate(this, this->getTouchPriority(), true);
+	CCTouchDispatcher* pDispatcher = CCDirector::sharedDirector()->getTouchDispatcher();
+	if (m_bMultiTouches)
+	{
+		pDispatcher->addStandardDelegate(this, m_nTouchPriority);
+	}
+	else
+	{
+		pDispatcher->addTargetedDelegate(this, m_nTouchPriority, true);
+	}
 }
 
 bool CCMenu::ccTouchBegan(CCTouch* touch, CCEvent* event)

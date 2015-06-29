@@ -239,7 +239,7 @@ local function oVertexControl()
 	
 	local editMenu = CCMenu(false)
 	editMenu.anchor = oVec2.zero
-	editMenu.touchPriority = oEditor.touchPriorityEditControl
+	editMenu.touchPriority = oEditor.touchPriorityEditControl-1
 	editMenu.touchEnabled = false
 	layer:addChild(editMenu)
 	removeButton = oButton("-",20,50,50,winSize.width-465,winSize.height-35,function(button)	

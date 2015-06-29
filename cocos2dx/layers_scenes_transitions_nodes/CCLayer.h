@@ -92,7 +92,7 @@ public:
 	virtual void keyMenuClicked();
 
 private:
-	void registerWithTouchDispatcher();
+	virtual void registerWithTouchDispatcher();
 
 	// Script touch events handler
 	int m_pScriptTouchHandler;
