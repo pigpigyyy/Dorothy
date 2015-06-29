@@ -381,9 +381,9 @@ TOLUA_API void tolua_constant(lua_State* L, const char* name, lua_Number value)
 }
 
 #ifndef TOLUA_RELEASE
-int tolua_setReadonly(lua_State* L)
+static int tolua_setReadonly(lua_State* L)
 {
-	// 1 self, 2 key, 3 value
+	// 1 self, 2 value
 	luaL_error(L, "assign to a readonly field of \"%s\".", tolua_typename(L, 1));
 	return 0;
 }

@@ -1,9 +1,9 @@
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := cocos_extension_static
+LOCAL_MODULE := dorothy_static
 
-LOCAL_MODULE_FILENAME := libextension
+LOCAL_MODULE_FILENAME := libdorothy
 
 define walk
 	$(wildcard $(1)) $(foreach e, $(wildcard $(1)/*), $(call walk, $(e)))

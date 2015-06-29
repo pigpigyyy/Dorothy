@@ -275,6 +275,17 @@
 		3C5ACB571A21CB0C006EDD2B /* CCDouble.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C5ACB541A21CB0C006EDD2B /* CCDouble.h */; };
 		3C5ACB581A21CB0C006EDD2B /* CCFloat.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C5ACB551A21CB0C006EDD2B /* CCFloat.h */; };
 		3C7632411A83DE0D00FA0C16 /* firePngData.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7632401A83DE0D00FA0C16 /* firePngData.h */; };
+		3C969CB81B41908500C3BF37 /* AssetsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C969CAB1B41908500C3BF37 /* AssetsManager.cpp */; };
+		3C969CB91B41908500C3BF37 /* AssetsManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C969CAC1B41908500C3BF37 /* AssetsManager.h */; };
+		3C969CBA1B41908500C3BF37 /* cocos-ext.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C969CAD1B41908500C3BF37 /* cocos-ext.h */; };
+		3C969CBB1B41908500C3BF37 /* ExtensionMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C969CAE1B41908500C3BF37 /* ExtensionMacros.h */; };
+		3C969CBC1B41908500C3BF37 /* LocalStorage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C969CB01B41908500C3BF37 /* LocalStorage.cpp */; };
+		3C969CBD1B41908500C3BF37 /* LocalStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C969CB11B41908500C3BF37 /* LocalStorage.h */; };
+		3C969CBE1B41908500C3BF37 /* LocalStorageAndroid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C969CB21B41908500C3BF37 /* LocalStorageAndroid.cpp */; };
+		3C969CBF1B41908500C3BF37 /* HttpClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C969CB41B41908500C3BF37 /* HttpClient.cpp */; };
+		3C969CC01B41908500C3BF37 /* HttpClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C969CB51B41908500C3BF37 /* HttpClient.h */; };
+		3C969CC11B41908500C3BF37 /* HttpRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C969CB61B41908500C3BF37 /* HttpRequest.h */; };
+		3C969CC21B41908500C3BF37 /* HttpResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C969CB71B41908500C3BF37 /* HttpResponse.h */; };
 		3CBD1C881A40754E00602936 /* CCApplicationProtocol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD1C871A40754E00602936 /* CCApplicationProtocol.cpp */; };
 		41BC70B915BF7EA2006A0A6C /* CCThread.mm in Sources */ = {isa = PBXBuildFile; fileRef = 41BC70B815BF7EA2006A0A6C /* CCThread.mm */; };
 		41CD6C3515BF7382005E6F29 /* CCAccelerometer.h in Headers */ = {isa = PBXBuildFile; fileRef = 41CD6C2215BF7382005E6F29 /* CCAccelerometer.h */; };
@@ -574,6 +585,17 @@
 		3C5ACB541A21CB0C006EDD2B /* CCDouble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCDouble.h; sourceTree = "<group>"; };
 		3C5ACB551A21CB0C006EDD2B /* CCFloat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCFloat.h; sourceTree = "<group>"; };
 		3C7632401A83DE0D00FA0C16 /* firePngData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = firePngData.h; sourceTree = "<group>"; };
+		3C969CAB1B41908500C3BF37 /* AssetsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetsManager.cpp; sourceTree = "<group>"; };
+		3C969CAC1B41908500C3BF37 /* AssetsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetsManager.h; sourceTree = "<group>"; };
+		3C969CAD1B41908500C3BF37 /* cocos-ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "cocos-ext.h"; sourceTree = "<group>"; };
+		3C969CAE1B41908500C3BF37 /* ExtensionMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExtensionMacros.h; sourceTree = "<group>"; };
+		3C969CB01B41908500C3BF37 /* LocalStorage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LocalStorage.cpp; sourceTree = "<group>"; };
+		3C969CB11B41908500C3BF37 /* LocalStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalStorage.h; sourceTree = "<group>"; };
+		3C969CB21B41908500C3BF37 /* LocalStorageAndroid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LocalStorageAndroid.cpp; sourceTree = "<group>"; };
+		3C969CB41B41908500C3BF37 /* HttpClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpClient.cpp; sourceTree = "<group>"; };
+		3C969CB51B41908500C3BF37 /* HttpClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpClient.h; sourceTree = "<group>"; };
+		3C969CB61B41908500C3BF37 /* HttpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpRequest.h; sourceTree = "<group>"; };
+		3C969CB71B41908500C3BF37 /* HttpResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpResponse.h; sourceTree = "<group>"; };
 		3CBD1C871A40754E00602936 /* CCApplicationProtocol.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCApplicationProtocol.cpp; sourceTree = "<group>"; };
 		41BC70B815BF7EA2006A0A6C /* CCThread.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CCThread.mm; sourceTree = "<group>"; };
 		41CD6C2215BF7382005E6F29 /* CCAccelerometer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAccelerometer.h; sourceTree = "<group>"; };
@@ -654,17 +676,7 @@
 		1551A353158F2ADE00E66CFE /* cocos2dx */ = {
 			isa = PBXGroup;
 			children = (
-				46A3939816E03F4D00210B16 /* ccFPSImages.c */,
-				46A3939916E03F4D00210B16 /* ccFPSImages.h */,
-				1551A375158F2ADE00E66CFE /* CCCamera.cpp */,
-				1551A377158F2ADE00E66CFE /* CCConfiguration.cpp */,
-				1551A379158F2ADE00E66CFE /* CCDirector.cpp */,
-				1551A37D158F2ADE00E66CFE /* CCScheduler.cpp */,
-				1551A395158F2ADE00E66CFE /* cocos2d.cpp */,
-				1551A376158F2ADE00E66CFE /* CCCamera.h */,
-				1551A378158F2ADE00E66CFE /* CCConfiguration.h */,
-				1551A37A158F2ADE00E66CFE /* CCDirector.h */,
-				1551A37E158F2ADE00E66CFE /* CCScheduler.h */,
+				3C969CC31B4190A100C3BF37 /* basics */,
 				1551A354158F2ADE00E66CFE /* actions */,
 				1551A370158F2ADE00E66CFE /* base_nodes */,
 				1551A37F158F2ADE00E66CFE /* cocoa */,
@@ -687,6 +699,7 @@
 				1551A60B158F2ADE00E66CFE /* textures */,
 				1551A614158F2ADE00E66CFE /* tileMap_parallax_nodes */,
 				1551A621158F2ADE00E66CFE /* touch_dispatcher */,
+				3C969CA91B41908500C3BF37 /* extensions */,
 			);
 			name = cocos2dx;
 			path = ..;
@@ -1198,6 +1211,66 @@
 			path = webp;
 			sourceTree = "<group>";
 		};
+		3C969CA91B41908500C3BF37 /* extensions */ = {
+			isa = PBXGroup;
+			children = (
+				3C969CAD1B41908500C3BF37 /* cocos-ext.h */,
+				3C969CAE1B41908500C3BF37 /* ExtensionMacros.h */,
+				3C969CAA1B41908500C3BF37 /* AssetsManager */,
+				3C969CAF1B41908500C3BF37 /* LocalStorage */,
+				3C969CB31B41908500C3BF37 /* network */,
+			);
+			path = extensions;
+			sourceTree = "<group>";
+		};
+		3C969CAA1B41908500C3BF37 /* AssetsManager */ = {
+			isa = PBXGroup;
+			children = (
+				3C969CAB1B41908500C3BF37 /* AssetsManager.cpp */,
+				3C969CAC1B41908500C3BF37 /* AssetsManager.h */,
+			);
+			path = AssetsManager;
+			sourceTree = "<group>";
+		};
+		3C969CAF1B41908500C3BF37 /* LocalStorage */ = {
+			isa = PBXGroup;
+			children = (
+				3C969CB01B41908500C3BF37 /* LocalStorage.cpp */,
+				3C969CB11B41908500C3BF37 /* LocalStorage.h */,
+				3C969CB21B41908500C3BF37 /* LocalStorageAndroid.cpp */,
+			);
+			path = LocalStorage;
+			sourceTree = "<group>";
+		};
+		3C969CB31B41908500C3BF37 /* network */ = {
+			isa = PBXGroup;
+			children = (
+				3C969CB41B41908500C3BF37 /* HttpClient.cpp */,
+				3C969CB51B41908500C3BF37 /* HttpClient.h */,
+				3C969CB61B41908500C3BF37 /* HttpRequest.h */,
+				3C969CB71B41908500C3BF37 /* HttpResponse.h */,
+			);
+			path = network;
+			sourceTree = "<group>";
+		};
+		3C969CC31B4190A100C3BF37 /* basics */ = {
+			isa = PBXGroup;
+			children = (
+				46A3939816E03F4D00210B16 /* ccFPSImages.c */,
+				46A3939916E03F4D00210B16 /* ccFPSImages.h */,
+				1551A375158F2ADE00E66CFE /* CCCamera.cpp */,
+				1551A377158F2ADE00E66CFE /* CCConfiguration.cpp */,
+				1551A379158F2ADE00E66CFE /* CCDirector.cpp */,
+				1551A37D158F2ADE00E66CFE /* CCScheduler.cpp */,
+				1551A395158F2ADE00E66CFE /* cocos2d.cpp */,
+				1551A376158F2ADE00E66CFE /* CCCamera.h */,
+				1551A378158F2ADE00E66CFE /* CCConfiguration.h */,
+				1551A37A158F2ADE00E66CFE /* CCDirector.h */,
+				1551A37E158F2ADE00E66CFE /* CCScheduler.h */,
+			);
+			name = basics;
+			sourceTree = "<group>";
+		};
 		41CD6C2115BF7382005E6F29 /* mac */ = {
 			isa = PBXGroup;
 			children = (
@@ -1261,6 +1334,7 @@
 				1551A647158F2ADE00E66CFE /* CCCamera.h in Headers */,
 				1551A649158F2ADE00E66CFE /* CCConfiguration.h in Headers */,
 				1551A64B158F2ADE00E66CFE /* CCDirector.h in Headers */,
+				3C969CBA1B41908500C3BF37 /* cocos-ext.h in Headers */,
 				1551A64F158F2ADE00E66CFE /* CCScheduler.h in Headers */,
 				1551A651158F2ADE00E66CFE /* CCAffineTransform.h in Headers */,
 				1551A653158F2ADE00E66CFE /* CCArray.h in Headers */,
@@ -1273,6 +1347,7 @@
 				1551A660158F2ADE00E66CFE /* CCSet.h in Headers */,
 				1551A662158F2ADE00E66CFE /* CCString.h in Headers */,
 				1551A664158F2ADE00E66CFE /* CCZone.h in Headers */,
+				3C969CC11B41908500C3BF37 /* HttpRequest.h in Headers */,
 				1551A667158F2ADE00E66CFE /* CCGrabber.h in Headers */,
 				1551A669158F2ADE00E66CFE /* CCGrid.h in Headers */,
 				1551A6B1158F2ADE00E66CFE /* ccConfig.h in Headers */,
@@ -1282,6 +1357,7 @@
 				1551A6B5158F2ADE00E66CFE /* ccTypes.h in Headers */,
 				1551A6B6158F2ADE00E66CFE /* cocos2d.h in Headers */,
 				1551A6B8158F2ADE00E66CFE /* aabb.h in Headers */,
+				3C969CB91B41908500C3BF37 /* AssetsManager.h in Headers */,
 				1551A6B9158F2ADE00E66CFE /* mat4stack.h in Headers */,
 				1551A6BA158F2ADE00E66CFE /* matrix.h in Headers */,
 				1551A6BB158F2ADE00E66CFE /* kazmath.h in Headers */,
@@ -1290,6 +1366,7 @@
 				1551A6BE158F2ADE00E66CFE /* neon_matrix_impl.h in Headers */,
 				1551A6BF158F2ADE00E66CFE /* plane.h in Headers */,
 				1551A6C0158F2ADE00E66CFE /* quaternion.h in Headers */,
+				3C969CBB1B41908500C3BF37 /* ExtensionMacros.h in Headers */,
 				1551A6C1158F2ADE00E66CFE /* ray2.h in Headers */,
 				1551A6C2158F2ADE00E66CFE /* utility.h in Headers */,
 				1551A6C3158F2ADE00E66CFE /* vec2.h in Headers */,
@@ -1307,6 +1384,7 @@
 				1551A6E0158F2ADE00E66CFE /* CCScene.h in Headers */,
 				1551A6E2158F2ADE00E66CFE /* CCTransition.h in Headers */,
 				1551A6E4158F2ADE00E66CFE /* CCTransitionPageTurn.h in Headers */,
+				3C969CC01B41908500C3BF37 /* HttpClient.h in Headers */,
 				1551A6E6158F2ADE00E66CFE /* CCTransitionProgress.h in Headers */,
 				1551A6E8158F2ADE00E66CFE /* CCMenu.h in Headers */,
 				1551A6EA158F2ADE00E66CFE /* CCMenuItem.h in Headers */,
@@ -1369,6 +1447,7 @@
 				1551A856158F2ADF00E66CFE /* CCIMEDispatcher.h in Headers */,
 				1551A858158F2ADF00E66CFE /* CCTextFieldTTF.h in Headers */,
 				1551A85A158F2ADF00E66CFE /* CCTexture2D.h in Headers */,
+				3C969CC21B41908500C3BF37 /* HttpResponse.h in Headers */,
 				1551A85C158F2ADF00E66CFE /* CCTextureAtlas.h in Headers */,
 				1551A85E158F2ADF00E66CFE /* CCTextureCache.h in Headers */,
 				1551A860158F2ADF00E66CFE /* CCTexturePVR.h in Headers */,
@@ -1380,6 +1459,7 @@
 				1551A86C158F2ADF00E66CFE /* CCTMXXMLParser.h in Headers */,
 				1551A86D158F2ADF00E66CFE /* CCTouch.h in Headers */,
 				1551A86E158F2ADF00E66CFE /* CCTouchDelegateProtocol.h in Headers */,
+				3C969CBD1B41908500C3BF37 /* LocalStorage.h in Headers */,
 				1551A870158F2ADF00E66CFE /* CCTouchDispatcher.h in Headers */,
 				1551A872158F2ADF00E66CFE /* CCTouchHandler.h in Headers */,
 				1551A874158F2B4700E66CFE /* cocos2dx-Prefix.pch in Headers */,
@@ -1471,7 +1551,10 @@
 				1551A634158F2ADE00E66CFE /* CCActionInstant.cpp in Sources */,
 				1551A636158F2ADE00E66CFE /* CCActionInterval.cpp in Sources */,
 				1551A638158F2ADE00E66CFE /* CCActionManager.cpp in Sources */,
+				3C969CBE1B41908500C3BF37 /* LocalStorageAndroid.cpp in Sources */,
 				1551A63A158F2ADE00E66CFE /* CCActionPageTurn3D.cpp in Sources */,
+				3C969CBF1B41908500C3BF37 /* HttpClient.cpp in Sources */,
+				3C969CBC1B41908500C3BF37 /* LocalStorage.cpp in Sources */,
 				1551A63C158F2ADE00E66CFE /* CCActionProgressTimer.cpp in Sources */,
 				1551A63E158F2ADE00E66CFE /* CCActionTiledGrid.cpp in Sources */,
 				1551A642158F2ADE00E66CFE /* CCAtlasNode.cpp in Sources */,
@@ -1550,6 +1633,7 @@
 				1551A850158F2ADF00E66CFE /* unzip.cpp in Sources */,
 				1551A852158F2ADF00E66CFE /* ZipUtils.cpp in Sources */,
 				3C5ACAF51A21C709006EDD2B /* CCZip.cpp in Sources */,
+				3C969CB81B41908500C3BF37 /* AssetsManager.cpp in Sources */,
 				1551A855158F2ADF00E66CFE /* CCIMEDispatcher.cpp in Sources */,
 				1551A857158F2ADF00E66CFE /* CCTextFieldTTF.cpp in Sources */,
 				1551A859158F2ADF00E66CFE /* CCTexture2D.cpp in Sources */,

@@ -28,7 +28,6 @@
 
 #include "cocos2d.h"
 #include "ExtensionMacros.h"
-
 #include "HttpRequest.h"
 #include "HttpResponse.h"
 
