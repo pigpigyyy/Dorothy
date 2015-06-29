@@ -9,8 +9,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifndef __DOROTHY_MODEL_OKEYFRAME_H__
 #define __DOROTHY_MODEL_OKEYFRAME_H__
 
-#include "Dorothy/model/oEase.h"
-#include "Dorothy/misc/oMemoryPool.h"
+#include "model/oEase.h"
+#include "misc/oMemoryPool.h"
 
 NS_DOROTHY_BEGIN
 

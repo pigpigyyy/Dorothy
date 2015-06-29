@@ -6,15 +6,15 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-#include "Dorothy/const/oDefine.h"
-#include "Dorothy/model/oModelDef.h"
-#include "Dorothy/model/oModelAnimationDef.h"
-#include "Dorothy/const/oXml.h"
-#include "Dorothy/model/oKeyFrame.h"
-#include "Dorothy/model/oModel.h"
-#include "Dorothy/model/oClip.h"
-#include "Dorothy/misc/oContent.h"
-#include "Dorothy/misc/oHelper.h"
+#include "const/oDefine.h"
+#include "model/oModelDef.h"
+#include "model/oModelAnimationDef.h"
+#include "const/oXml.h"
+#include "model/oKeyFrame.h"
+#include "model/oModel.h"
+#include "model/oClip.h"
+#include "misc/oContent.h"
+#include "misc/oHelper.h"
 
 #define s(x) oHelper::convert(x,2,buf,32)
 #define sp(x) oHelper::convert(x,3,buf,32)

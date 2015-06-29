@@ -8,7 +8,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #ifndef __DOROTHY_PLATFORM_OAI_H__
 #define __DOROTHY_PLATFORM_OAI_H__
-#include "Dorothy/platform/oAINode.h"
+#include "platform/oAINode.h"
 
 NS_DOROTHY_PLATFORM_BEGIN
 

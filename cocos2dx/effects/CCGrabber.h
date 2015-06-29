@@ -25,7 +25,7 @@ THE SOFTWARE.
 #ifndef __EFFECTS_CCGRABBER_H__
 #define __EFFECTS_CCGRABBER_H__
 
-#include "CCConfiguration.h"
+#include "basics/CCConfiguration.h"
 #include "cocoa/CCObject.h"
 #include "CCGL.h"
 

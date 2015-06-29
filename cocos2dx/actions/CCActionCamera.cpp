@@ -25,7 +25,7 @@ THE SOFTWARE.
 ****************************************************************************/
 #include "CCActionCamera.h"
 #include "base_nodes/CCNode.h"
-#include "CCCamera.h"
+#include "basics/CCCamera.h"
 #include "CCStdC.h"
 #include "cocoa/CCZone.h"
 

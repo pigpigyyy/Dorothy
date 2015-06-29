@@ -27,7 +27,7 @@ THE SOFTWARE.
 
 #include "CCActionManager.h"
 #include "base_nodes/CCNode.h"
-#include "CCScheduler.h"
+#include "basics/CCScheduler.h"
 #include "ccMacros.h"
 #include "support/data_support/ccCArray.h"
 #include "support/data_support/uthash.h"

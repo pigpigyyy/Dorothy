@@ -27,7 +27,7 @@ THE SOFTWARE.
 #include "CCTexture2D.h"
 #include "CCTexturePVR.h"
 #include "ccMacros.h"
-#include "CCConfiguration.h"
+#include "basics/CCConfiguration.h"
 #include "support/ccUtils.h"
 #include "CCStdC.h"
 #include "platform/CCFileUtils.h"

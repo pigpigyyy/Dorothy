@@ -7,9 +7,11 @@ LOCAL_MODULE := cocos2dx_static
 LOCAL_MODULE_FILENAME := libcocos2d
 
 LOCAL_SRC_FILES := \
-CCConfiguration.cpp \
-CCScheduler.cpp \
-CCCamera.cpp \
+basics/CCConfiguration.cpp \
+basics/CCScheduler.cpp \
+basics/CCCamera.cpp \
+basics/CCDirector.cpp \
+basics/ccFPSImages.c \
 actions/CCAction.cpp \
 actions/CCActionCamera.cpp \
 actions/CCActionCatmullRom.cpp \
@@ -34,9 +36,7 @@ cocoa/CCSet.cpp \
 cocoa/CCString.cpp \
 cocoa/CCZone.cpp \
 cocoa/CCArray.cpp \
-cocos2d.cpp \
-CCDirector.cpp \
-ccFPSImages.c \
+include/cocos2d.cpp \
 draw_nodes/CCDrawingPrimitives.cpp \
 draw_nodes/CCDrawNode.cpp \
 effects/CCGrabber.cpp \
@@ -134,11 +134,15 @@ tilemap_parallax_nodes/CCTMXXMLParser.cpp \
 tilemap_parallax_nodes/CCTileMapAtlas.cpp \
 touch_dispatcher/CCTouchDispatcher.cpp \
 touch_dispatcher/CCTouchHandler.cpp \
-touch_dispatcher/CCTouch.cpp
+touch_dispatcher/CCTouch.cpp \
+extensions/AssetsManager/AssetsManager.cpp \
+extensions/LocalStorage/LocalStorageAndroid.cpp \
+extensions/network/HttpClient.cpp
 
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH) \
                     $(LOCAL_PATH)/include \
                     $(LOCAL_PATH)/kazmath/include \
+                    $(LOCAL_PATH)/extensions \
                     $(LOCAL_PATH)/platform/android
 
 
@@ -149,6 +153,7 @@ LOCAL_EXPORT_LDLIBS := -llog\
 LOCAL_C_INCLUDES := $(LOCAL_PATH) \
                     $(LOCAL_PATH)/include \
                     $(LOCAL_PATH)/kazmath/include \
+                    $(LOCAL_PATH)/extensions \
                     $(LOCAL_PATH)/platform/android
 
 #LOCAL_LDLIBS := -lGLESv2 \
@@ -161,6 +166,7 @@ LOCAL_WHOLE_STATIC_LIBRARIES += cocos_jpeg_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocos_libxml2_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocos_libtiff_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocos_libwebp_static
+LOCAL_WHOLE_STATIC_LIBRARIES += cocos_curl_static
 
 # define the macro to compile through support/zip_support/ioapi.c
 LOCAL_CFLAGS := -Wno-psabi -DUSE_FILE32API
@@ -172,3 +178,4 @@ $(call import-module,libjpeg)
 $(call import-module,libpng)
 $(call import-module,libtiff)
 $(call import-module,libwebp)
+$(call import-module,cocos2dx/platform/third_party/android/prebuilt/libcurl)

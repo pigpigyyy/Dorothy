@@ -1,7 +1,7 @@
 #include "platform/CCCommon.h"
 #include "CCKeyboard.h"
-#include "CCDirector.h"
-#include "CCScheduler.h"
+#include "basics/CCDirector.h"
+#include "basics/CCScheduler.h"
 #include <string.h>
 
 NS_CC_BEGIN

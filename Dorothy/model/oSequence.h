@@ -9,7 +9,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifndef __DOROTHY_MODEL_OSEQUENCE_H__
 #define __DOROTHY_MODEL_OSEQUENCE_H__
 
-#include "Dorothy/model/oActionDuration.h"
+#include "model/oActionDuration.h"
 
 NS_DOROTHY_BEGIN
 

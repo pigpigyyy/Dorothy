@@ -29,7 +29,7 @@
 #include "kazmath/GL/matrix.h"
 #include "shaders/CCGLProgram.h"
 #include "shaders/CCShaderCache.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "support/CCPointExtension.h"
 #include "draw_nodes/CCDrawingPrimitives.h"
 

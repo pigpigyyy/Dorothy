@@ -30,7 +30,7 @@ THE SOFTWARE.
 #include "ccConfig.h"
 #include "cocoa/CCDictionary.h"
 #include "cocoa/CCInteger.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "support/CCPointExtension.h"
 
 NS_CC_BEGIN

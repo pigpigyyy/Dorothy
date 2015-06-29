@@ -9,7 +9,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifndef __DOROTHY_MISC_OMEMORYPOOL_H__
 #define __DOROTHY_MISC_OMEMORYPOOL_H__
 
-#include "Dorothy/const/oDefine.h"
+#include "const/oDefine.h"
 #include <utility>
 #include <new>
 

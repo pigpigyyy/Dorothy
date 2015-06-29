@@ -9,9 +9,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifndef __DOROTHY_MODEL_OANIMATION_H__
 #define __DOROTHY_MODEL_OANIMATION_H__
 
-#include "Dorothy/misc/oXmlItemCache.h"
-#include "Dorothy/model/oActionDuration.h"
-#include "Dorothy/model/oModelAnimationDef.h"
+#include "misc/oXmlItemCache.h"
+#include "model/oActionDuration.h"
+#include "model/oModelAnimationDef.h"
 
 NS_DOROTHY_BEGIN
 

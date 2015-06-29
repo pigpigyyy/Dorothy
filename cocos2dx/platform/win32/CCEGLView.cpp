@@ -25,7 +25,7 @@ THE SOFTWARE.
 #include "CCEGLView.h"
 #include "cocoa/CCSet.h"
 #include "ccMacros.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "touch_dispatcher/CCTouch.h"
 #include "touch_dispatcher/CCTouchDispatcher.h"
 #include "text_input_node/CCIMEDispatcher.h"

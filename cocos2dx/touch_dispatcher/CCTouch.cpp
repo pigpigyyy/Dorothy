@@ -24,7 +24,7 @@
 
 #include "support/CCPointExtension.h"
 #include "CCTouch.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 
 NS_CC_BEGIN
 

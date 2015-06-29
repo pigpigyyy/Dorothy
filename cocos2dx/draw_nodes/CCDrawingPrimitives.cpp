@@ -39,7 +39,7 @@ THE SOFTWARE.
 #include "ccTypes.h"
 #include "ccMacros.h"
 #include "CCGL.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "shaders/ccGLStateCache.h"
 #include "shaders/CCShaderCache.h"
 #include "shaders/CCGLProgram.h"

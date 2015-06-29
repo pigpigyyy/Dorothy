@@ -23,14 +23,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#include "CCConfiguration.h"
+#include "basics/CCConfiguration.h"
 #include "misc_nodes/CCRenderTexture.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "platform/platform.h"
 #include "platform/CCImage.h"
 #include "shaders/CCGLProgram.h"
 #include "shaders/ccGLStateCache.h"
-#include "CCConfiguration.h"
+#include "basics/CCConfiguration.h"
 #include "support/ccUtils.h"
 #include "textures/CCTextureCache.h"
 #include "platform/CCFileUtils.h"

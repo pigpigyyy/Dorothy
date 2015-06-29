@@ -28,7 +28,7 @@ THE SOFTWARE.
 #include "CCActionInterval.h"
 #include "base_nodes/CCNode.h"
 #include "support/CCPointExtension.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "cocoa/CCZone.h"
 
 NS_CC_BEGIN

@@ -9,7 +9,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifndef __DOROTHY_OEFFECT_H__
 #define __DOROTHY_OEFFECT_H__
 
-#include "Dorothy/model/oFace.h"
+#include "model/oFace.h"
 
 NS_DOROTHY_BEGIN
 

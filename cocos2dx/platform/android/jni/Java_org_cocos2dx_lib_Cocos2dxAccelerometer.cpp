@@ -3,7 +3,7 @@
 #include "../CCEGLView.h"
 #include "JniHelper.h"
 #include <jni.h>
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 
 using namespace cocos2d;
 

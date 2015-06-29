@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>libcocos2d</ProjectName>
+    <ProjectName>libCocos2d</ProjectName>
     <ProjectGuid>{98A51BA8-FC3A-415B-AC8F-8C7BD464E93E}</ProjectGuid>
     <RootNamespace>cocos2d-x.win32</RootNamespace>
     <Keyword>Win32Proj</Keyword>
@@ -71,7 +71,7 @@
     </PreBuildEvent>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)..;$(ProjectDir)..\platform\win32;$(ProjectDir)..\platform\third_party\win32\iconv;$(ProjectDir)..\platform\third_party\win32\zlib;$(ProjectDir)..\platform\third_party\win32\libpng;$(ProjectDir)..\platform\third_party\win32\libjpeg;$(ProjectDir)..\platform\third_party\win32\libtiff;$(ProjectDir)..\platform\third_party\win32\libwebp;$(ProjectDir)..\platform\third_party\win32\pthread;$(ProjectDir)..\platform\third_party\win32\OGLES;..\include;$(ProjectDir)..\kazmath\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..;$(ProjectDir)..\extensions;$(ProjectDir)..\platform\win32;$(ProjectDir)..\platform\third_party\win32;$(ProjectDir)..\platform\third_party\win32\iconv;$(ProjectDir)..\platform\third_party\win32\zlib;$(ProjectDir)..\platform\third_party\win32\libpng;$(ProjectDir)..\platform\third_party\win32\libjpeg;$(ProjectDir)..\platform\third_party\win32\libtiff;$(ProjectDir)..\platform\third_party\win32\libwebp;$(ProjectDir)..\platform\third_party\win32\pthread;$(ProjectDir)..\platform\third_party\win32\OGLES;$(ProjectDir)..\include;$(ProjectDir)..\kazmath\include;$(ProjectDir)..\..\external\sqlite3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;COCOS2DXWIN32_EXPORTS;GL_GLEXT_PROTOTYPES;COCOS2D_DEBUG=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -85,10 +85,11 @@
     <PreLinkEvent>
       <Command>if not exist "$(OutDir)" mkdir "$(OutDir)"
 xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir)"
-</Command>
+
+xcopy /Y /Q "$(ProjectDir)..\..\external\sqlite3\libraries\win32\*.*" "$(OutDir)"</Command>
     </PreLinkEvent>
     <Link>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;libzlib.lib;libpng.lib;libjpeg.lib;libtiff.lib;libwebp.lib;libiconv.lib;pthreadVCE2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;libzlib.lib;libpng.lib;libjpeg.lib;libtiff.lib;libwebp.lib;libiconv.lib;pthreadVCE2.lib;libcurl_imp.lib;sqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -109,7 +110,7 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
       </Command>
     </PreBuildEvent>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..;$(ProjectDir)..\platform\win32;$(ProjectDir)..\platform\third_party\win32\iconv;$(ProjectDir)..\platform\third_party\win32\zlib;$(ProjectDir)..\platform\third_party\win32\libpng;$(ProjectDir)..\platform\third_party\win32\libjpeg;$(ProjectDir)..\platform\third_party\win32\libtiff;$(ProjectDir)..\platform\third_party\win32\libwebp;$(ProjectDir)..\platform\third_party\win32\pthread;$(ProjectDir)..\platform\third_party\win32\OGLES;..\include;$(ProjectDir)..\kazmath\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..;$(ProjectDir)..\extensions;$(ProjectDir)..\platform\win32;$(ProjectDir)..\platform\third_party\win32;$(ProjectDir)..\platform\third_party\win32\iconv;$(ProjectDir)..\platform\third_party\win32\zlib;$(ProjectDir)..\platform\third_party\win32\libpng;$(ProjectDir)..\platform\third_party\win32\libjpeg;$(ProjectDir)..\platform\third_party\win32\libtiff;$(ProjectDir)..\platform\third_party\win32\libwebp;$(ProjectDir)..\platform\third_party\win32\pthread;$(ProjectDir)..\platform\third_party\win32\OGLES;$(ProjectDir)..\include;$(ProjectDir)..\kazmath\include;$(ProjectDir)..\..\external\sqlite3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;COCOS2DXWIN32_EXPORTS;GL_GLEXT_PROTOTYPES;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>
@@ -121,10 +122,12 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
     <PreLinkEvent>
       <Command>if not exist "$(OutDir)" mkdir "$(OutDir)"
 xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir)"
-</Command>
+
+
+xcopy /Y /Q "$(ProjectDir)..\..\external\sqlite3\libraries\win32\*.*" "$(OutDir)"</Command>
     </PreLinkEvent>
     <Link>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;libzlib.lib;libpng.lib;libjpeg.lib;libtiff.lib;libwebp.lib;libiconv.lib;pthreadVCE2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;libzlib.lib;libpng.lib;libjpeg.lib;libtiff.lib;libwebp.lib;libiconv.lib;pthreadVCE2.lib;libcurl_imp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries> ;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -144,7 +147,7 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
     <ClCompile Include="..\actions\CCActionEase.cpp" />
     <ClCompile Include="..\base_nodes\CCAtlasNode.cpp" />
     <ClCompile Include="..\base_nodes\CCNode.cpp" />
-    <ClCompile Include="..\ccFPSImages.c" />
+    <ClCompile Include="..\basics\ccFPSImages.c" />
     <ClCompile Include="..\cocoa\CCAffineTransform.cpp" />
     <ClCompile Include="..\cocoa\CCArray.cpp" />
     <ClCompile Include="..\cocoa\CCAutoreleasePool.cpp" />
@@ -170,6 +173,9 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
     <ClCompile Include="..\actions\CCActionPageTurn3D.cpp" />
     <ClCompile Include="..\actions\CCActionProgressTimer.cpp" />
     <ClCompile Include="..\actions\CCActionTiledGrid.cpp" />
+    <ClCompile Include="..\extensions\AssetsManager\AssetsManager.cpp" />
+    <ClCompile Include="..\extensions\LocalStorage\LocalStorage.cpp" />
+    <ClCompile Include="..\extensions\network\HttpClient.cpp" />
     <ClCompile Include="..\label_nodes\CCLabelAtlas.cpp" />
     <ClCompile Include="..\label_nodes\CCLabelBMFont.cpp" />
     <ClCompile Include="..\label_nodes\CCLabelTTF.cpp" />
@@ -258,17 +264,17 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
     <ClCompile Include="..\kazmath\src\vec4.c" />
     <ClCompile Include="..\kazmath\src\GL\mat4stack.c" />
     <ClCompile Include="..\kazmath\src\GL\matrix.c" />
-    <ClCompile Include="..\CCCamera.cpp" />
-    <ClCompile Include="..\CCConfiguration.cpp" />
-    <ClCompile Include="..\CCDirector.cpp" />
-    <ClCompile Include="..\CCScheduler.cpp" />
-    <ClCompile Include="..\cocos2d.cpp" />
+    <ClCompile Include="..\basics\CCCamera.cpp" />
+    <ClCompile Include="..\basics\CCConfiguration.cpp" />
+    <ClCompile Include="..\basics\CCDirector.cpp" />
+    <ClCompile Include="..\basics\CCScheduler.cpp" />
+    <ClCompile Include="..\include\cocos2d.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\actions\CCActionEase.h" />
     <ClInclude Include="..\base_nodes\CCAtlasNode.h" />
     <ClInclude Include="..\base_nodes\CCNode.h" />
-    <ClInclude Include="..\ccFPSImages.h" />
+    <ClInclude Include="..\basics\ccFPSImages.h" />
     <ClInclude Include="..\cocoa\CCAffineTransform.h" />
     <ClInclude Include="..\cocoa\CCArray.h" />
     <ClInclude Include="..\cocoa\CCAutoreleasePool.h" />
@@ -298,6 +304,11 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
     <ClInclude Include="..\actions\CCActionPageTurn3D.h" />
     <ClInclude Include="..\actions\CCActionProgressTimer.h" />
     <ClInclude Include="..\actions\CCActionTiledGrid.h" />
+    <ClInclude Include="..\extensions\AssetsManager\AssetsManager.h" />
+    <ClInclude Include="..\extensions\LocalStorage\LocalStorage.h" />
+    <ClInclude Include="..\extensions\network\HttpClient.h" />
+    <ClInclude Include="..\extensions\network\HttpRequest.h" />
+    <ClInclude Include="..\extensions\network\HttpResponse.h" />
     <ClInclude Include="..\include\ccConfig.h" />
     <ClInclude Include="..\include\CCEventType.h" />
     <ClInclude Include="..\include\ccMacros.h" />
@@ -418,10 +429,10 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
     <ClInclude Include="..\kazmath\include\kazmath\vec4.h" />
     <ClInclude Include="..\kazmath\include\kazmath\GL\mat4stack.h" />
     <ClInclude Include="..\kazmath\include\kazmath\GL\matrix.h" />
-    <ClInclude Include="..\CCCamera.h" />
-    <ClInclude Include="..\CCConfiguration.h" />
-    <ClInclude Include="..\CCDirector.h" />
-    <ClInclude Include="..\CCScheduler.h" />
+    <ClInclude Include="..\basics\CCCamera.h" />
+    <ClInclude Include="..\basics\CCConfiguration.h" />
+    <ClInclude Include="..\basics\CCDirector.h" />
+    <ClInclude Include="..\basics\CCScheduler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1341,7 +1341,7 @@
 					"\"$(SRCROOT)/../../lua/lib/include\"",
 					"\"$(SRCROOT)/../../lua/tolua\"",
 					"\"$(SRCROOT)/../../lua/cocos2d_support\"",
-					"\"$(SRCROOT)/../..\"",
+					"\"$(SRCROOT)/../../dorothy\"",
 				);
 				INFOPLIST_FILE = Dorothy/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -1383,7 +1383,7 @@
 					"\"$(SRCROOT)/../../lua/lib/include\"",
 					"\"$(SRCROOT)/../../lua/tolua\"",
 					"\"$(SRCROOT)/../../lua/cocos2d_support\"",
-					"\"$(SRCROOT)/../..\"",
+					"\"$(SRCROOT)/../../dorothy\"",
 				);
 				INFOPLIST_FILE = Dorothy/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";

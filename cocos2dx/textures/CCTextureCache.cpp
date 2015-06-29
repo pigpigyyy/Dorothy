@@ -27,13 +27,13 @@ THE SOFTWARE.
 #include "CCTextureCache.h"
 #include "CCTexture2D.h"
 #include "ccMacros.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "platform/platform.h"
 #include "platform/CCFileUtils.h"
 #include "platform/CCThread.h"
 #include "platform/CCImage.h"
 #include "support/ccUtils.h"
-#include "CCScheduler.h"
+#include "basics/CCScheduler.h"
 #include "cocoa/CCString.h"
 #include <errno.h>
 #include <stack>

@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "CCTextFieldTTF.h"
 
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "CCEGLView.h"
 
 NS_CC_BEGIN

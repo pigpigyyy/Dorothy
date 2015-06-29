@@ -23,7 +23,7 @@
  ****************************************************************************/
 
 #include "CCScriptSupport.h"
-#include "CCScheduler.h"
+#include "basics/CCScheduler.h"
 
 void CC_DLL cc_assert_script_compatible(bool cond, const char *msg)
 {

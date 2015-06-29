@@ -9,9 +9,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifndef __DOROTHY_MISC_OXMLITEMCACHE_H__
 #define __DOROTHY_MISC_OXMLITEMCACHE_H__
 
-#include "Dorothy/const/oDefine.h"
-#include "Dorothy/misc/oContent.h"
-#include "Dorothy/misc/oHelper.h"
+#include "const/oDefine.h"
+#include "misc/oContent.h"
+#include "misc/oHelper.h"
 
 NS_DOROTHY_BEGIN
 

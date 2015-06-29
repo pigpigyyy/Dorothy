@@ -100,6 +100,21 @@
     <Filter Include="support\user_default">
       <UniqueIdentifier>{c45b97e8-fa1f-4e58-8ec5-d46371c2dd26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="basics">
+      <UniqueIdentifier>{a3010def-7c0b-435b-bf44-177131891574}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extensions">
+      <UniqueIdentifier>{f46c7834-7c81-4766-ae24-ab7b23f34c6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extensions\AssetsManager">
+      <UniqueIdentifier>{0f43305f-6bbf-4064-a57a-07cfdcf9bfa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extensions\LocalStorage">
+      <UniqueIdentifier>{25666062-04e9-4e67-8dfc-ac1d86372c5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extensions\network">
+      <UniqueIdentifier>{3bafe1c6-80e7-41e4-b59b-782be8764440}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\base_nodes\CCAtlasNode.cpp">
@@ -387,11 +402,6 @@
     <ClCompile Include="..\kazmath\src\GL\matrix.c">
       <Filter>kazmath\src\GL</Filter>
     </ClCompile>
-    <ClCompile Include="..\CCCamera.cpp" />
-    <ClCompile Include="..\CCConfiguration.cpp" />
-    <ClCompile Include="..\CCDirector.cpp" />
-    <ClCompile Include="..\CCScheduler.cpp" />
-    <ClCompile Include="..\cocos2d.cpp" />
     <ClCompile Include="..\draw_nodes\CCDrawingPrimitives.cpp">
       <Filter>draw_nodes</Filter>
     </ClCompile>
@@ -440,7 +450,6 @@
     <ClCompile Include="..\support\CCZip.cpp">
       <Filter>support</Filter>
     </ClCompile>
-    <ClCompile Include="..\cocoa\CCAffineTransform.cpp" />
     <ClCompile Include="..\support\CCNotificationCenter.cpp">
       <Filter>support</Filter>
     </ClCompile>
@@ -450,9 +459,38 @@
     <ClCompile Include="..\platform\CCKeyboard.cpp">
       <Filter>platform</Filter>
     </ClCompile>
-    <ClCompile Include="..\ccFPSImages.c" />
     <ClCompile Include="..\platform\CCApplicationProtocol.cpp">
       <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocoa\CCAffineTransform.cpp">
+      <Filter>cocoa</Filter>
+    </ClCompile>
+    <ClCompile Include="..\basics\CCCamera.cpp">
+      <Filter>basics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\basics\CCConfiguration.cpp">
+      <Filter>basics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\basics\CCDirector.cpp">
+      <Filter>basics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\basics\ccFPSImages.c">
+      <Filter>basics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\basics\CCScheduler.cpp">
+      <Filter>basics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\cocos2d.cpp">
+      <Filter>include</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extensions\AssetsManager\AssetsManager.cpp">
+      <Filter>extensions\AssetsManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extensions\LocalStorage\LocalStorage.cpp">
+      <Filter>extensions\LocalStorage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extensions\network\HttpClient.cpp">
+      <Filter>extensions\network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -801,10 +839,6 @@
     <ClInclude Include="..\kazmath\include\kazmath\GL\matrix.h">
       <Filter>kazmath\include\kazmath\GL</Filter>
     </ClInclude>
-    <ClInclude Include="..\CCCamera.h" />
-    <ClInclude Include="..\CCConfiguration.h" />
-    <ClInclude Include="..\CCDirector.h" />
-    <ClInclude Include="..\CCScheduler.h" />
     <ClInclude Include="..\draw_nodes\CCDrawingPrimitives.h">
       <Filter>draw_nodes</Filter>
     </ClInclude>
@@ -916,6 +950,35 @@
     <ClInclude Include="..\platform\CCKeyboard.h">
       <Filter>platform</Filter>
     </ClInclude>
-    <ClInclude Include="..\ccFPSImages.h" />
+    <ClInclude Include="..\basics\CCScheduler.h">
+      <Filter>basics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\basics\CCCamera.h">
+      <Filter>basics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\basics\CCConfiguration.h">
+      <Filter>basics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\basics\CCDirector.h">
+      <Filter>basics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\basics\ccFPSImages.h">
+      <Filter>basics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extensions\AssetsManager\AssetsManager.h">
+      <Filter>extensions\AssetsManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extensions\LocalStorage\LocalStorage.h">
+      <Filter>extensions\LocalStorage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extensions\network\HttpClient.h">
+      <Filter>extensions\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extensions\network\HttpRequest.h">
+      <Filter>extensions\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extensions\network\HttpResponse.h">
+      <Filter>extensions\network</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

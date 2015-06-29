@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include "ccGLStateCache.h"
 #include "CCGLProgram.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "ccConfig.h"
 
 // extern

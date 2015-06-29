@@ -23,7 +23,7 @@ THE SOFTWARE.
 ****************************************************************************/
 #include "CCEGLView.h"
 #include "cocoa/CCSet.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "ccMacros.h"
 #include "touch_dispatcher/CCTouchDispatcher.h"
 #include "jni/IMEJni.h"

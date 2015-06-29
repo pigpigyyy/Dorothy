@@ -53,7 +53,7 @@ THE SOFTWARE.
 #include "platform/CCFileUtils.h"
 #include "platform/CCImage.h"
 #include "platform/platform.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "support/CCProfiling.h"
 #include "firePngData.h"
 // opengl

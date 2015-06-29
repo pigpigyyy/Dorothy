@@ -9,8 +9,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifndef __DOROTHY_PLATFORM_OBULLET_H__
 #define __DOROTHY_PLATFORM_OBULLET_H__
 
-#include "Dorothy/physics/oBody.h"
-#include "Dorothy/misc/oIDisposable.h"
+#include "physics/oBody.h"
+#include "misc/oIDisposable.h"
 
 NS_DOROTHY_BEGIN
 class oWorld;

@@ -9,7 +9,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifndef __DOROTHY_MODEL_OMODELCACHE__
 #define __DOROTHY_MODEL_OMODELCACHE__
 
-#include "Dorothy/misc/oXmlItemCache.h"
+#include "misc/oXmlItemCache.h"
 
 NS_DOROTHY_BEGIN
 

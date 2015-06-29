@@ -27,7 +27,7 @@ THE SOFTWARE.
 
 #include "CCGL.h"
 #include "CCParticleSystemQuad.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "CCParticleBatchNode.h"
 #include "textures/CCTextureAtlas.h"
 #include "shaders/CCShaderCache.h"

@@ -9,12 +9,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifndef __DOROTHY_PLATFORM_OUNIT_H__
 #define __DOROTHY_PLATFORM_OUNIT_H__
 
-#include "Dorothy/model/oModel.h"
-#include "Dorothy/physics/oBody.h"
-#include "Dorothy/platform/oUnitDef.h"
-#include "Dorothy/platform/oProperty.h"
-#include "Dorothy/platform/oAINode.h"
-#include "Dorothy/platform/oBulletDef.h"
+#include "model/oModel.h"
+#include "physics/oBody.h"
+#include "platform/oUnitDef.h"
+#include "platform/oProperty.h"
+#include "platform/oAINode.h"
+#include "platform/oBulletDef.h"
 
 NS_DOROTHY_BEGIN
 class oSensor;

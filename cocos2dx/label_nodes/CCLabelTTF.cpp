@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 #include "CCLabelTTF.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "shaders/CCGLProgram.h"
 #include "shaders/CCShaderCache.h"
 #include "CCApplication.h"

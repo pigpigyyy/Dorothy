@@ -1,6 +1,6 @@
 #include "JniHelper.h"
 #include <string.h>
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "../CCApplication.h"
 #include "platform/CCFileUtils.h"
 #include "CCEventType.h"

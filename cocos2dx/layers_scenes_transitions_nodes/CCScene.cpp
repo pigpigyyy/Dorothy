@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include "CCScene.h"
 #include "support/CCPointExtension.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 
 NS_CC_BEGIN
 

@@ -1,5 +1,5 @@
-#include "Dorothy/const/oDefine.h"
-#include "Dorothy/misc/oAsync.h"
+#include "const/oDefine.h"
+#include "misc/oAsync.h"
 #include <errno.h>
 #include <queue>
 #include <pthread.h>

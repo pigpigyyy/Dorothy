@@ -9,7 +9,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifndef __DOROTHY_PLATFORM_OAI_NODE_H__
 #define __DOROTHY_PLATFORM_OAI_NODE_H__
 
-#include "Dorothy/platform/oProperty.h"
+#include "platform/oProperty.h"
 
 NS_DOROTHY_BEGIN
 class oScriptHandler;

@@ -24,7 +24,7 @@ THE SOFTWARE.
 ****************************************************************************/
 #include "ccMacros.h"
 #include "effects/CCGrid.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "effects/CCGrabber.h"
 #include "support/ccUtils.h"
 #include "shaders/CCGLProgram.h"

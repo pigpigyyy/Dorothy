@@ -25,7 +25,7 @@
 #include "CCLuaEngine.h"
 #include "cocos2d.h"
 #include "cocoa/CCArray.h"
-#include "CCScheduler.h"
+#include "basics/CCScheduler.h"
 #include "LuaCocos2d.h"
 #include "DorothyXml.h"
 

@@ -32,7 +32,7 @@ THE SOFTWARE.
 #include "shaders/CCShaderCache.h"
 #include "shaders/CCGLProgram.h"
 #include "shaders/ccGLStateCache.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "support/TransformUtils.h"
 #include "cocoa/CCInteger.h"
 #include "platform/CCFileUtils.h"

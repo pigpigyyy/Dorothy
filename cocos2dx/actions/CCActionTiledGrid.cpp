@@ -1,5 +1,5 @@
 /****************************************************************************
-Copyright (c) 2010£­2011 cocos2d-x.org
+Copyright (c) 2010ï¿½ï¿½2011 cocos2d-x.org
 Copyright (c) 2009       On-Core
  
 http://www.cocos2d-x.org
@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 #include "CCActionTiledGrid.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "ccMacros.h"
 #include "support/CCPointExtension.h"
 #include "effects/CCGrid.h"

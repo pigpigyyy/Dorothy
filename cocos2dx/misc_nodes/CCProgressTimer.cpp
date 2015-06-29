@@ -30,7 +30,7 @@ THE SOFTWARE.
 #include "shaders/CCGLProgram.h"
 #include "shaders/CCShaderCache.h"
 #include "shaders/ccGLStateCache.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "support/TransformUtils.h"
 #include "draw_nodes/CCDrawingPrimitives.h"
 // extern

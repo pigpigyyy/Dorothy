@@ -24,7 +24,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 #include "CCParticleExamples.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "textures/CCTextureCache.h"
 #include "support/CCPointExtension.h"
 #include "platform/CCImage.h"

@@ -213,10 +213,10 @@ THE SOFTWARE.
 #include "touch_dispatcher/CCTouchHandler.h"
 
 // root
-#include "CCCamera.h"
-#include "CCConfiguration.h"
-#include "CCDirector.h"
-#include "CCScheduler.h"
+#include "basics/CCCamera.h"
+#include "basics/CCConfiguration.h"
+#include "basics/CCDirector.h"
+#include "basics/CCScheduler.h"
 
 NS_CC_BEGIN
 

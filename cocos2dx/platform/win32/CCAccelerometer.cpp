@@ -23,7 +23,7 @@
 
 #include "CCAccelerometer.h"
 #include "CCEGLView.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "ccMacros.h"
 
 namespace

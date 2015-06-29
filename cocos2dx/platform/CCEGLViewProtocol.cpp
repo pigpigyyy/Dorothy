@@ -1,7 +1,7 @@
 #include "CCEGLViewProtocol.h"
 #include "touch_dispatcher/CCTouchDispatcher.h"
 #include "touch_dispatcher/CCTouch.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "cocoa/CCSet.h"
 #include "cocoa/CCDictionary.h"
 #include "cocoa/CCInteger.h"

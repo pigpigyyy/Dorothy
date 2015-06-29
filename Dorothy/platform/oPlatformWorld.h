@@ -9,8 +9,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifndef __DOROTHY_PLATFORM_OPLATFORMWORLD_H__
 #define __DOROTHY_PLATFORM_OPLATFORMWORLD_H__
 
-#include "Dorothy/physics/oWorld.h"
-#include "Dorothy/misc/oNode3D.h"
+#include "physics/oWorld.h"
+#include "misc/oNode3D.h"
 
 NS_DOROTHY_PLATFORM_BEGIN
 

@@ -41,7 +41,7 @@ public class Dorothy extends Cocos2dxActivity{
     }
 
     static {
-        System.loadLibrary("dorothy");
+        System.loadLibrary("game");
     }
 }
 

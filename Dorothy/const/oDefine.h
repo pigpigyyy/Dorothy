@@ -30,9 +30,9 @@ using std::unordered_set;
 using std::ostringstream;
 #include <tuple>
 using std::tuple;
-#include "Dorothy/other/AcfDelegate.h"
+#include "other/AcfDelegate.h"
 using Acf::Delegate;
-#include "Dorothy/other/Property.h"
+#include "other/Property.h"
 
 #define NS_DOROTHY_BEGIN namespace Dorothy {
 #define NS_DOROTHY_END }
@@ -174,12 +174,12 @@ private:\
 
 NS_DOROTHY_END
 
-#include "Dorothy/misc/oRef.h"
-#include "Dorothy/misc/oRefVector.h"
-#include "Dorothy/misc/oOwn.h"
-#include "Dorothy/misc/oOwnVector.h"
-#include "Dorothy/misc/oWRef.h"
-#include "Dorothy/misc/oWRefVector.h"
-#include "Dorothy/misc/oVec2.h"
+#include "misc/oRef.h"
+#include "misc/oRefVector.h"
+#include "misc/oOwn.h"
+#include "misc/oOwnVector.h"
+#include "misc/oWRef.h"
+#include "misc/oWRefVector.h"
+#include "misc/oVec2.h"
 
 #endif // __DOROTHY_CONST_ODEFINE_H__

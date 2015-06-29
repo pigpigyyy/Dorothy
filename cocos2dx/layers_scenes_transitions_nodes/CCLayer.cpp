@@ -29,7 +29,7 @@ THE SOFTWARE.
 #include "touch_dispatcher/CCTouchDispatcher.h"
 #include "keypad_dispatcher/CCKeypadDispatcher.h"
 #include "CCAccelerometer.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "support/CCPointExtension.h"
 #include "shaders/CCShaderCache.h"
 #include "shaders/CCGLProgram.h"

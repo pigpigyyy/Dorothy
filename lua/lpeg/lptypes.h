@@ -9,7 +9,7 @@
 #define lptypes_h
 
 
-#if !defined(LPEG_DEBUG)
+#if !defined(LPEG_DEBUG) && !defined(NDEBUG)
 #define NDEBUG
 #endif
 

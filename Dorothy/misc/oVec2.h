@@ -9,7 +9,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifndef __DOROTHY_MISC_OVEC2_H__
 #define __DOROTHY_MISC_OVEC2_H__
 
-#include "Dorothy/misc/oMemoryPool.h"
+#include "misc/oMemoryPool.h"
 
 NS_DOROTHY_BEGIN
 

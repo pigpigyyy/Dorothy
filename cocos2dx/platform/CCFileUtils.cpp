@@ -23,7 +23,7 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "CCFileUtils.h"
-#include "CCDirector.h"
+#include "basics/CCDirector.h"
 #include "cocoa/CCDictionary.h"
 #include "cocoa/CCString.h"
 #include "cocoa/CCInteger.h"
