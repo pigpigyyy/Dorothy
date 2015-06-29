@@ -124,7 +124,7 @@ bool CCMenu::initWithArray(CCArray* pArrayOfItems)
         
         if (pArrayOfItems != NULL)
         {
-            int z=0;
+            int z = 0;
             CCObject* pObj = NULL;
             CCARRAY_FOREACH(pArrayOfItems, pObj)
             {
@@ -171,13 +171,6 @@ void CCMenu::removeChild(CCNode* child, bool cleanup)
 }
 
 //Menu - Events
-
-void CCMenu::setHandlerPriority(int newPriority)
-{
-    CCTouchDispatcher* pDispatcher = CCDirector::sharedDirector()->getTouchDispatcher();
-    pDispatcher->setPriority(newPriority, this);
-}
-
 void CCMenu::registerWithTouchDispatcher()
 {
 	CCTouchDispatcher* pDispatcher = CCDirector::sharedDirector()->getTouchDispatcher();

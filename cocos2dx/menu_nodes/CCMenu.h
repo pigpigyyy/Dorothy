@@ -104,9 +104,6 @@ public:
     void alignItemsInRows(unsigned int rows, va_list args);
     void alignItemsInRowsWithArray(CCArray* columns);
 
-    /** set event handler priority. By default it is: kCCMenuTouchPriority */
-    void setHandlerPriority(int newPriority);
-
     //super methods
     virtual void registerWithTouchDispatcher();
     virtual void removeChild(CCNode* child, bool cleanup);
@@ -125,18 +122,15 @@ public:
     */
     virtual void onExit();
 
-    virtual void setOpacityModifyRGB(bool bValue) {CC_UNUSED_PARAM(bValue);}
-    virtual bool isOpacityModifyRGB() { return false;}
-    
-    virtual bool isEnabled() { return m_bEnabled; }
-    virtual void setEnabled(bool value) { m_bEnabled = value; };
+	inline bool isEnabled() { return m_bEnabled; }
+	inline void setEnabled(bool value) { m_bEnabled = value; }
 
 protected:
 	CCMenuItem* itemForTouch(CCTouch * touch);
 	/** whether or not the menu will receive events */
 	bool m_bEnabled;
     tCCMenuState m_eState;
-    CCMenuItem *m_pSelectedItem;
+    CCMenuItem* m_pSelectedItem;
 	CC_LUA_TYPE(CCMenu)
 };
 

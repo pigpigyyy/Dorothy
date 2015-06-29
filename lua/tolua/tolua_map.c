@@ -380,11 +380,23 @@ TOLUA_API void tolua_constant(lua_State* L, const char* name, lua_Number value)
 	lua_rawset(L, -3);
 }
 
+#ifndef TOLUA_RELEASE
+int tolua_setReadonly(lua_State* L)
+{
+	// 1 self, 2 key, 3 value
+	luaL_error(L, "assign to a readonly field of \"%s\".", tolua_typename(L, 1));
+	return 0;
+}
+#endif
+
 /* Map variable
 	* It assigns a variable into the current module(or class)
 	*/
 TOLUA_API void tolua_variable(lua_State* L, const char* name, lua_CFunction get, lua_CFunction set)
 {
+#ifndef TOLUA_RELEASE
+	if (!set) set = tolua_setReadonly;
+#endif
 	/* get func */
 	lua_rawgeti(L, -1, MT_GET);
 	if (!lua_istable(L, -1))

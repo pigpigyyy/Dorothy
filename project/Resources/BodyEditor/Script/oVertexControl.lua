@@ -53,8 +53,8 @@ local function oVertexControl()
 		label.texture.antiAlias = false
 		pos = target.parent:convertToWorldSpace(pos)
 		pos = layer:convertToNodeSpace(pos)
-		local scale = oEditor.world.parent.scaleX
-		label.position = oVec2(pos.x,pos.y+45*scale)
+		local scale = oEditor.world.parent.parent.scaleX
+		label.position = oVec2(pos.x,pos.y+20*scale+25)
 	end
 
 	label:slot("viewArea.toScale",function()
