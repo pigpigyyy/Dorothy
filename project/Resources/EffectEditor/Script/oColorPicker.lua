@@ -176,7 +176,7 @@ local function oColorPicker(color,callback)
 		alphaArrow.position = oVec2(0+(255-a)*finalColorSize/255,0)
 	end
 
-	local menu = CCMenu(false)
+	local menu = CCMenu()
 	menu.anchor = oVec2.zero
 	menu.contentSize = panel.contentSize
 	menu.touchPriority = CCMenu.DefaultHandlerPriority-2

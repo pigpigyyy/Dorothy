@@ -205,6 +205,7 @@ local function oFileChooser()
 	panel:reset(viewWidth,viewHeight,paddingX,paddingY)
 
 	local opMenu = CCMenu()
+	opMenu.swallowTouches = true
 	opMenu.contentSize = CCSize(130,60)
 	opMenu.anchor = oVec2(1,0.5)
 	opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3

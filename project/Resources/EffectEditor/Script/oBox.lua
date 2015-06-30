@@ -72,6 +72,7 @@ local oBox = class({
 			border:addChild(frame)
 
 			local menu = CCMenu()
+			menu.swallowTouches = true
 			menu.contentSize = CCSize(120,50)
 			menu.touchPriority = CCMenu.DefaultHandlerPriority-5
 			border:addChild(menu)
@@ -132,6 +133,7 @@ local oBox = class({
 				CCCall(
 					function()
 						local opMenu = CCMenu()
+						opMenu.swallowTouches = true
 						opMenu.contentSize = CCSize(130,60)
 						opMenu.touchPriority = CCMenu.DefaultHandlerPriority-6
 						opMenu.position = oVec2(w,h-(self._isInput and 76 or 36))

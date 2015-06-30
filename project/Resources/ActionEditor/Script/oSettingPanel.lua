@@ -87,6 +87,7 @@ local function oSettingPanel()
 	panel:addChild(view)
 
 	local menu = CCMenu()
+	menu.swallowTouches = true
 	menu.touchPriority = CCMenu.DefaultHandlerPriority-1
 	menu.contentSize = borderSize
 	menu.anchor = oVec2(0,1)

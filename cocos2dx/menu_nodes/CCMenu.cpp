@@ -59,12 +59,12 @@ enum
 //CCMenu
 //
 
-CCMenu* CCMenu::create(bool swallow)
+CCMenu* CCMenu::create()
 {
-	return CCMenu::createWithArray(nullptr, swallow);
+	return CCMenu::createWithArray(nullptr);
 }
 
-CCMenu * CCMenu::create(bool swallow, CCMenuItem* item, ...)
+CCMenu * CCMenu::create(CCMenuItem* item, ...)
 {
     va_list args;
     va_start(args,item);
@@ -80,12 +80,12 @@ CCMenu * CCMenu::create(bool swallow, CCMenuItem* item, ...)
 		}
 	}
     va_end(args);
-	return CCMenu::createWithArray(pArray, swallow);
+	return CCMenu::createWithArray(pArray);
 }
 
-CCMenu* CCMenu::createWithArray(CCArray* pArrayOfItems, bool swallow)
+CCMenu* CCMenu::createWithArray(CCArray* pArrayOfItems)
 {
-    CCMenu *pRet = new CCMenu(swallow);
+    CCMenu* pRet = new CCMenu();
     if (pRet && pRet->initWithArray(pArrayOfItems))
     {
         pRet->autorelease();
@@ -98,9 +98,9 @@ CCMenu* CCMenu::createWithArray(CCArray* pArrayOfItems, bool swallow)
     return pRet;
 }
 
-CCMenu* CCMenu::createWithItem(CCMenuItem* item, bool swallow)
+CCMenu* CCMenu::createWithItem(CCMenuItem* item)
 {
-	return CCMenu::createWithArray(CCArray::create(item, nullptr), swallow);
+	return CCMenu::createWithArray(CCArray::create(item, nullptr));
 }
 
 bool CCMenu::init()

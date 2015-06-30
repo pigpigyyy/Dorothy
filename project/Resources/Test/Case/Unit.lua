@@ -60,7 +60,7 @@ local terrain = oBody(terrainDef,world,oVec2(400,0))
 terrain.group = oData.GroupTerrain
 world:addChild(terrain)
 
-local menu = CCMenu(false)
+local menu = CCMenu()
 menu.anchor = oVec2.zero
 world.UILayer:addChild(menu)
 local btn = oButton("Walk",16,60,nil,10,10,

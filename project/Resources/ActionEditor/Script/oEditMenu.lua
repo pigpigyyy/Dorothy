@@ -46,7 +46,7 @@ end
 
 local function oEditMenu()
     local winSize = CCDirector.winSize
-    local menu = CCMenu(false)
+    local menu = CCMenu()
 	menu.anchor = oVec2.zero
 	local frameCopy = nil
 	local items =

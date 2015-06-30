@@ -31,6 +31,7 @@ local background = CCLayerColor(ccColor4(0xff000000))
 panel.border:addChild(background,-1)
 
 local opMenu = CCMenu()
+opMenu.swallowTouches = true
 opMenu.contentSize = CCSize(60,60)
 opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
 opMenu.position = oVec2(winSize.width-40,40)
@@ -46,6 +47,7 @@ if CCApplication.targetPlatform ~= CCTargetPlatform.Ipad and CCApplication.targe
 end
 
 opMenu = CCMenu()
+opMenu.swallowTouches = true
 opMenu.contentSize = CCSize(130,60)
 opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
 opMenu.anchor = oVec2.zero
@@ -133,6 +135,7 @@ panel.init = function(self)
 				if type(result) == "function" then result() end
 				if not Tests[i][3] then
 					local opMenu = CCMenu()
+					opMenu.swallowTouches = true
 					opMenu.contentSize = CCSize(60,60)
 					opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
 					opMenu.position = oVec2(winSize.width-40,40)

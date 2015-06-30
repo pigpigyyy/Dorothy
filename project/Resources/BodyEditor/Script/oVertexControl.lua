@@ -34,7 +34,7 @@ local function oVertexControl()
 	layer.contentSize = CCSize.zero
 	layer.visible = false
 
-	local menu = CCMenu(false)
+	local menu = CCMenu()
 	menu.items = nil
 	menu.vs = nil
 	menu.touchPriority = oEditor.touchPriorityEditControl+1
@@ -46,14 +46,14 @@ local function oVertexControl()
 	local label = CCLabelTTF("","Arial",16)
 	label.color = ccColor3(0x00ffff)
 	layer:addChild(label)
-	
+
 	local function setLabelPos(target)
 		local pos = target.position
 		label.text = string.format("%.2f",pos.x)..","..string.format("%.2f",pos.y)
 		label.texture.antiAlias = false
 		pos = target.parent:convertToWorldSpace(pos)
 		pos = layer:convertToNodeSpace(pos)
-		local scale = oEditor.world.parent.parent.scaleX
+		local scale = oEditor.world.parent.parent.scaleX -- world.crossNode.scaleNode
 		label.position = oVec2(pos.x,pos.y+20*scale+25)
 	end
 
@@ -156,7 +156,7 @@ local function oVertexControl()
 		circle:runAction(oScale(0.5,1,1,oEase.OutBack))
 		return menuItem
 	end
-	
+
 	local function setVertices(vs)
 		menu:removeAllChildrenWithCleanup()
 		menu.vs = vs
@@ -237,7 +237,7 @@ local function oVertexControl()
 	mask.touchHandler = function() return selectedVert ~= nil end
 	layer:addChild(mask)
 	
-	local editMenu = CCMenu(false)
+	local editMenu = CCMenu()
 	editMenu.anchor = oVec2.zero
 	editMenu.touchPriority = oEditor.touchPriorityEditControl-1
 	editMenu.touchEnabled = false

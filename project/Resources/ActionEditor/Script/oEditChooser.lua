@@ -37,6 +37,7 @@ local function oEditChooser(withCancel)
 	border:addChild(background,-1)
 
 	local opMenu = CCMenu()
+	opMenu.swallowTouches = true
 	opMenu.contentSize = CCSize(60,60)
 	opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
 	opMenu.position = oVec2(winSize.width*0.5+borderSize.width*0.5,winSize.height*0.5+borderSize.height*0.5)

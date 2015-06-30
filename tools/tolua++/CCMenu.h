@@ -9,5 +9,5 @@ class CCMenu: public CCLayer
 	void alignItemsHorizontally();
 	void alignItemsHorizontallyWithPadding @ alignItemsHorizontally(float padding);
 
-	static CCMenu* create(bool swallow = true);
+	static CCMenu* create();
 };

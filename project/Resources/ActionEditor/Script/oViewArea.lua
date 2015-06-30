@@ -941,6 +941,7 @@ local function oViewArea()
 	
 	-- visible
 	local visibleEditor = CCMenu()
+	visibleEditor.swallowTouches = true
 	visibleEditor.contentSize = CCSize(50,50)
 	visibleEditor.anchor = oVec2.zero
 	visibleEditor.position = oVec2(winSize.width-230,250)
@@ -982,6 +983,7 @@ local function oViewArea()
 
 	-- front
 	local frontEditor = CCMenu()
+	frontEditor.swallowTouches = true
 	frontEditor.contentSize = CCSize(50,50)
 	frontEditor.anchor = oVec2.zero
 	frontEditor.position = oVec2(winSize.width-230,370)

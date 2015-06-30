@@ -21,7 +21,7 @@ local oOpacity = require("oOpacity")
 local function oEditMenu()
 	local winSize = CCDirector.winSize
 	
-	local menu = CCMenu(false)
+	local menu = CCMenu()
 	menu.touchPriority = oEditor.touchPriorityEditMenu
 	menu.anchor = oVec2.zero
 	

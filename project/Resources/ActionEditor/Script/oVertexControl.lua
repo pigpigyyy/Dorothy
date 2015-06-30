@@ -35,7 +35,7 @@ local function oVertexControl()
 	layer.contentSize = CCSize.zero
 	layer.visible = false
 
-	local menu = CCMenu(false)
+	local menu = CCMenu()
 	menu.items = nil
 	menu.vs = nil
 	menu.touchPriority = CCMenu.DefaultHandlerPriority+1
@@ -243,7 +243,7 @@ local function oVertexControl()
 	mask.touchHandler = function() return selectedVert ~= nil end
 	layer:addChild(mask)
 
-	local editMenu = CCMenu(false)
+	local editMenu = CCMenu()
 	editMenu.anchor = oVec2.zero
 	editMenu.touchPriority = CCMenu.DefaultHandlerPriority
 	editMenu.touchEnabled = false

@@ -56,23 +56,23 @@ enum {
 class CC_DLL CCMenu : public CCLayer
 {
 public:
-	CCMenu(bool swallow) : m_pSelectedItem(NULL) { m_bSwallowTouches = swallow; }
+	CCMenu() : m_pSelectedItem(NULL) { }
     virtual ~CCMenu(){}
 
     /** creates an empty CCMenu */
-    static CCMenu* create(bool swallow = true);
+    static CCMenu* create();
 
     /** creates a CCMenu with CCMenuItem objects */
-	static CCMenu* create(bool swallow, CCMenuItem* item, ...);
+	static CCMenu* create(CCMenuItem* item, ...);
 
     /** creates a CCMenu with a CCArray of CCMenuItem objects */
-	static CCMenu* createWithArray(CCArray* pArrayOfItems, bool swallow = true);
+	static CCMenu* createWithArray(CCArray* pArrayOfItems);
 
     /** creates a CCMenu with it's item, then use addChild() to add 
       * other items. It is used for script, it can't init with undetermined
       * number of variables.
     */
-	static CCMenu* createWithItem(CCMenuItem* item, bool swallow = true);
+	static CCMenu* createWithItem(CCMenuItem* item);
 
     /** initializes an empty CCMenu */
     bool init();

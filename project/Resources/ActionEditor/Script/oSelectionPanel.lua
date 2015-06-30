@@ -68,7 +68,7 @@ local function oSelectionPanel(borderSize,noCliping)
 	end
 	border:addChild(view)
 
-	local menu = CCMenu(false)
+	local menu = CCMenu()
 	menu.contentSize = CCSize(winSize.width,winSize.height)
 	menu.enabled = false
 	menu.touchPriority = CCMenu.DefaultHandlerPriority-4

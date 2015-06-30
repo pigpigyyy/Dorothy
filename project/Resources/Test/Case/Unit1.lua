@@ -44,32 +44,32 @@ local idle = oAct("idle")
 local turn = oAct("turn")
 local jump = oAct("jump")
 
-oAI:add("keyboardControl",oSel({
-	oSeq({
+oAI:add("keyboardControl",oSel{
+	oSeq{
 		isJumpKeyDown,
 		jump,
-	}),
-	oSeq({
+	},
+	oSeq{
 		isWalkKeyPressed,
-		oSel({
-			oSeq({
+		oSel{
+			oSeq{
 				isFaceDirectionChanged,
 				turn,
-			}),
+			},
 			walk,
-		}),
-	}),
-	oSeq({
+		},
+	},
+	oSeq{
 		needGoIdle,
 		cancel,
 		idle,
-	}),
+	},
 	idle,
-}))
+})
 
-oAI:add("follow",oSel({
-	oSel({
-		oSeq({
+oAI:add("follow",oSel{
+	oSel{
+		oSeq{
 			oCon(function()
 				local self = oAI.self
 				local target = self.data
@@ -78,30 +78,30 @@ oAI:add("follow",oSel({
 				end
 				return false
 			end),
-			oSel({
-				oSeq({
+			oSel{
+				oSeq{
 					oCon(function()
 						local self = oAI.self
 						local target = self.data
 						return target and (self.positionX < target.positionX) ~= self.faceRight
 					end),
 					turn,
-				}),
+				},
 				walk,
-			}),
-		}),
-		oSeq({
+			},
+		},
+		oSeq{
 			oCon(function() return oAI.self:isDoing("walk") end),
-			oSel({
-				oSeq({
+			oSel{
+				oSeq{
 					cancel,
 					idle
-				}),
-			}),
-		}),
-	}),
+				},
+			},
+		},
+	},
 	idle,
-}))
+})
 
 local function suit(unit,filename)
 	local suit = loadfile(filename)()
@@ -186,7 +186,7 @@ local scene = CCScene()
 scene:addChild(world)
 world:addChild(body)
 
-local menu = CCMenu(false)
+local menu = CCMenu()
 menu.anchor = oVec2.zero
 world.UILayer:addChild(menu)
 
