@@ -18,6 +18,38 @@ static void oHandler(const char* begin, const char* end)
 	}
 }
 
+static const char* getBoolean(const char* str)
+{
+	if (str)
+	{
+		SWITCH_STR_START(str)
+		{
+			CASE_STR(True) return "true";
+			CASE_STR(False) return "false";
+		}
+		SWITCH_STR_END
+		return str;
+	}
+	return "false";
+}
+
+static const char* getGroup(const char* str)
+{
+	if (str)
+	{
+		SWITCH_STR_START(str)
+		{
+			CASE_STR(Detect) return "oData.GroupDetect";
+			CASE_STR(DetectPlayer) return "oData.GroupDetectPlayer";
+			CASE_STR(Hide) return "oData.GroupHide";
+			CASE_STR(Terrain) return "oData.GroupTerrain";
+		}
+		SWITCH_STR_END
+		return str;
+	}
+	return "1";
+}
+
 #define Self_Check(name) \
 	if (self.empty()) { self = getUsableName(#name); names.insert(self); }\
 	if (firstItem.empty()) firstItem = self;
@@ -40,8 +72,7 @@ static void oHandler(const char* begin, const char* end)
 #define Object_Define \
 	string self;
 #define Object_Check \
-	CASE_STR(Name) { self = atts[++i]; break; }\
-	CASE_STR(Key) { if (strcmp(elementStack.top().type,"Data") == 0) currentKey = atts[++i]; break; }
+	CASE_STR(Name) { self = atts[++i]; break; }
 
 // Speed
 #define Speed_Define \
@@ -497,7 +528,7 @@ static void oHandler(const char* begin, const char* end)
 #define Grid_Shaky3D_Handle \
 	oFunc func = {string("CCGrid:shaky3D(")+(time ? time : "0")+\
 	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
-	(range ? range : "0")+","+(shakeZ ? shakeZ : "false")+")",""};\
+	(range ? range : "0")+","+getBoolean(shakeZ)+")",""};\
 	funcs.push(func);
 #define Grid_Shaky3D_Finish
 
@@ -563,7 +594,7 @@ static void oHandler(const char* begin, const char* end)
 	oFunc func = {string("CCGrid:waves(")+(time ? time : "0")+\
 	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
 	(waves ? waves : "0")+","+(amplitude ? amplitude : "0")+","+\
-	(horizontal ? horizontal : "0")+","+(vertical ? vertical : "0")+")",""};\
+	getBoolean(horizontal)+","+getBoolean(vertical)+")",""};\
 	funcs.push(func);
 #define Grid_Wave_Finish
 
@@ -653,7 +684,7 @@ static void oHandler(const char* begin, const char* end)
 #define Tile_Shaky3D_Handle \
 	oFunc func = {string("CCTile:shaky3D(")+(time ? time : "0")+\
 	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
-	(range ? range : "0")+","+(shakeZ ? shakeZ : "false")+")",""};\
+	(range ? range : "0")+","+getBoolean(shakeZ)+")",""};\
 	funcs.push(func);
 #define Tile_Shaky3D_Finish
 
@@ -860,8 +891,8 @@ static void oHandler(const char* begin, const char* end)
 	if (x) stream << self << ".positionX = " << x << '\n';\
 	if (y) stream << self << ".positionY = " << y << '\n';\
 	if (z) stream << self << ".positionZ = " << z << '\n';\
-	if (passColor) stream << self << ".cascadeColor = " << passColor << '\n';\
-	if (passOpacity) stream << self << ".cascadeOpacity = " << passOpacity << '\n';\
+	if (passColor) stream << self << ".cascadeColor = " << getBoolean(passColor) << '\n';\
+	if (passOpacity) stream << self << ".cascadeOpacity = " << getBoolean(passOpacity) << '\n';\
 	if (color) stream << self << ".color = ccColor3(" << color << ")\n";\
 	if (opacity) stream << self << ".opacity = " << opacity << '\n';\
 	if (angle) stream << self << ".angle = " << angle << '\n';\
@@ -871,7 +902,7 @@ static void oHandler(const char* begin, const char* end)
 	if (skewX) stream << self << ".skewX = " << skewX << '\n';\
 	if (skewY) stream << self << ".skewY = " << skewY << '\n';\
 	if (transformTarget) stream << self << ".transformTarget = " << transformTarget << '\n';\
-	if (visible) stream << self << ".visible = " << visible << '\n';\
+	if (visible) stream << self << ".visible = " << getBoolean(visible) << '\n';\
 	if (width && height) stream << self << ".contentSize = CCSize(" << width << ',' << height << ")\n";\
 	else if (width && !height) stream << self << ".contentSize = CCSize(" << width << ',' << self << ".contentSize.height)\n";\
 	else if (!width && height) stream << self << ".contentSize = CCSize(" << self << ".contentSize.width," << height << ")\n";
@@ -1012,7 +1043,7 @@ static void oHandler(const char* begin, const char* end)
 #define ClipNode_Handle \
 	Node_Handle\
 	if (alphaThreshold) stream << self << ".alphaThreshold = " << alphaThreshold << '\n';\
-	if (inverted) stream << self << ".inverted = " << inverted << '\n';
+	if (inverted) stream << self << ".inverted = " << getBoolean(inverted) << '\n';
 #define ClipNode_Finish \
 	Add_To_Parent
 
@@ -1099,8 +1130,8 @@ static void oHandler(const char* begin, const char* end)
 	else stream << ")\n";
 #define Sprite_Handle \
 	Node_Handle\
-	if (flipX) stream << self << ".flipX = " << flipX << '\n';\
-	if (flipY) stream << self << ".flipY = " << flipY << '\n';\
+	if (flipX) stream << self << ".flipX = " << getBoolean(flipX) << '\n';\
+	if (flipY) stream << self << ".flipY = " << getBoolean(flipY) << '\n';\
 	if (blendFuncSrc && blendFuncDst) stream << self << ".blendFunc = ccBlendFunc(ccBlendFunc."\
 									<< blendFuncSrc << ",ccBlendFunc." << blendFuncDst << ")\n";\
 	else if (blendFuncSrc && !blendFuncDst) stream << self << ".blendFunc = ccBlendFunc(ccBlendFunc."\
@@ -1145,12 +1176,12 @@ static void oHandler(const char* begin, const char* end)
 	stream << "local " << self << " = CCLayer()\n";
 #define Layer_Handle \
 	Node_Handle\
-	if (accelerometerEnabled) stream << self << ".accelerometerEnabled = " << accelerometerEnabled << '\n';\
-	if (keypadEnabled) stream << self << ".keypadEnabled = " << keypadEnabled << '\n';\
-	if (multiTouches) stream << self << ".multiTouches = " << multiTouches << '\n';\
+	if (accelerometerEnabled) stream << self << ".accelerometerEnabled = " << getBoolean(accelerometerEnabled) << '\n';\
+	if (keypadEnabled) stream << self << ".keypadEnabled = " << getBoolean(keypadEnabled) << '\n';\
+	if (multiTouches) stream << self << ".multiTouches = " << getBoolean(multiTouches) << '\n';\
 	if (touchPriority) stream << self << ".touchPriority = " << touchPriority << '\n';\
-	if (swallowTouches) stream << self << ".swallowTouches = " << swallowTouches << '\n';\
-	if (touchEnabled) stream << self << ".touchEnabled = " << touchEnabled << '\n';
+	if (swallowTouches) stream << self << ".swallowTouches = " << getBoolean(swallowTouches) << '\n';\
+	if (touchEnabled) stream << self << ".touchEnabled = " << getBoolean(touchEnabled) << '\n';
 #define Layer_Finish \
 	Add_To_Parent
 
@@ -1210,11 +1241,10 @@ static void oHandler(const char* begin, const char* end)
 	Layer_Check\
 	CASE_STR(Enabled) { enabled = atts[++i]; break; }
 #define Menu_Create \
-	stream << "local " << self << " = CCMenu(" << (swallowTouches ? swallowTouches : "") << ")\n";\
-	swallowTouches = nullptr;
+	stream << "local " << self << " = CCMenu()\n";
 #define Menu_Handle \
 	Layer_Handle\
-	if (enabled) stream << self << ".enabled = " << enabled << '\n';
+	if (enabled) stream << self << ".enabled = " << getBoolean(enabled) << '\n';
 #define Menu_Finish \
 	Add_To_Parent
 
@@ -1229,7 +1259,7 @@ static void oHandler(const char* begin, const char* end)
 	stream << "local " << self << " = CCMenuItem()\n";
 #define MenuItem_Handle \
 	Node_Handle\
-	if (enabled) stream << self << ".enabled = " << enabled << '\n';
+	if (enabled) stream << self << ".enabled = " << getBoolean(enabled) << '\n';
 #define MenuItem_Finish \
 	Add_To_Parent
 
@@ -1258,7 +1288,7 @@ static void oHandler(const char* begin, const char* end)
 									<< gravityX << ',' << self << ".gravity.y)\n";\
 	else if (!gravityX && gravityY) stream << self << ".gravity = oVec2(" << self\
 									<< ".gravity.x," << gravityY << ")\n";\
-	if (showDebug) stream << self << ".showDebug = " << showDebug << '\n';\
+	if (showDebug) stream << self << ".showDebug = " << getBoolean(showDebug) << '\n';\
 	if (velocityIter || positionIter) stream << self << ":setIterations(" << (velocityIter ? velocityIter : "8")\
 											<< ',' << (positionIter ? positionIter : "3") << ")\n";
 #define World_Finish \
@@ -1290,7 +1320,7 @@ static void oHandler(const char* begin, const char* end)
 	{\
 		stream << elementStack.top().name <<\
 		":setShouldContact(" << (groupA ? groupA : "") << ',' << (groupB ? groupB : "") << ',' <<\
-		(enabled ? enabled : "") << ")\n\n";\
+		getBoolean(enabled) << ")\n\n";\
 	}
 
 // Model
@@ -1315,9 +1345,9 @@ static void oHandler(const char* begin, const char* end)
 #define Model_Handle \
 	Node_Handle\
 	if (look) stream << self << ".look = \"" << look << "\"\n";\
-	if (loop) stream << self << ".loop = " << loop << '\n';\
+	if (loop) stream << self << ".loop = " << getBoolean(loop) << '\n';\
 	if (play) stream << self << ":play(\"" << play << "\")\n";\
-	if (faceRight) stream << self << ".faceRight = " << faceRight << '\n';\
+	if (faceRight) stream << self << ".faceRight = " << getBoolean(faceRight) << '\n';\
 	if (speed) stream << self << ".speed = " << speed << '\n';
 #define Model_Finish \
 	Add_To_Parent
@@ -1389,7 +1419,6 @@ class oXmlDelegate : public CCSAXDelegator
 public:
 	oXmlDelegate():
 	codes(nullptr),
-	currentKey(nullptr),
 	priority(nullptr)
 	{ }
 	virtual void startElement(void *ctx, const char *name, const char **atts);
@@ -1398,7 +1427,6 @@ public:
 public:
 	void clear()
 	{
-		currentKey = nullptr;
 		codes = nullptr;
 		for (; !elementStack.empty(); elementStack.pop());
 		for (; !funcs.empty(); funcs.pop());
@@ -1454,8 +1482,6 @@ private:
 	};
 	// Script
 	const char* codes;
-	// Data
-	const char* currentKey;
 	// Schedule
 	const char* priority;
 	// Loader
@@ -1841,8 +1867,7 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 	if (parentIsData)
 	{
 		const oItem& data = elementStack.top();
-		stream << data.name << "[\"" << (currentKey ? currentKey : currentData.name.c_str()) << "\"] = " << currentData.name << "\n\n";
-		currentKey = nullptr;
+		stream << data.name << "[\"" << currentData.name.c_str() << "\"] = " << currentData.name << "\n\n";
 	}
 }
 
