@@ -5,13 +5,13 @@ LOCAL_MODULE := cocos_lua_static
 
 LOCAL_MODULE_FILENAME := liblua
 
-LOCAL_SRC_FILES := ../cocos2dx_support/CCLuaEngine.cpp \
-		../cocos2dx_support/DorothyXml.cpp \
-		../cocos2dx_support/DorothyModule.cpp \
-		../cocos2dx_support/LuaCocos2d.cpp \
-		../cocos2dx_support/LuaCode.cpp \
-		../cocos2dx_support/tolua_extern.cpp \
-		../cocos2dx_support/tolua_fix.c \
+LOCAL_SRC_FILES := ../support/CCLuaEngine.cpp \
+		../support/DorothyXml.cpp \
+		../support/DorothyModule.cpp \
+		../support/LuaCocos2d.cpp \
+		../support/LuaCode.cpp \
+		../support/tolua_extern.cpp \
+		../support/tolua_fix.c \
 		../tolua/tolua_event.c \
 		../tolua/tolua_is.c \
 		../tolua/tolua_map.c \
@@ -25,7 +25,7 @@ LOCAL_SRC_FILES := ../cocos2dx_support/CCLuaEngine.cpp \
 
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/../lib/include \
                            $(LOCAL_PATH)/../tolua \
-                           $(LOCAL_PATH)/../cocos2dx_support
+                           $(LOCAL_PATH)/../support
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/ \
                     $(LOCAL_PATH)/../lib/include \

@@ -18,37 +18,132 @@ static void oHandler(const char* begin, const char* end)
 	}
 }
 
-static const char* getBoolean(const char* str)
+static const char* toBoolean(const char* str)
 {
 	if (str)
 	{
-		SWITCH_STR_START(str)
-		{
-			CASE_STR(True) return "true";
-			CASE_STR(False) return "false";
-		}
-		SWITCH_STR_END
+		if (strcmp(str,"True") == 0) return "true";
+		if (strcmp(str,"False") == 0) return "false";
 		return str;
 	}
 	return "false";
 }
 
-static const char* getGroup(const char* str)
+static bool isGroup(const char* str)
 {
 	if (str)
 	{
 		SWITCH_STR_START(str)
 		{
-			CASE_STR(Detect) return "oData.GroupDetect";
-			CASE_STR(DetectPlayer) return "oData.GroupDetectPlayer";
-			CASE_STR(Hide) return "oData.GroupHide";
-			CASE_STR(Terrain) return "oData.GroupTerrain";
+			CASE_STR(Detect) return true;
+			CASE_STR(DetectPlayer) return true;
+			CASE_STR(Hide) return true;
+			CASE_STR(Terrain) return true;
 		}
 		SWITCH_STR_END
-		return str;
 	}
-	return "1";
+	return false;
 }
+#define toGroup(str) (isGroup(str) ? "oData.Group" : "") << (str ? str : "")
+
+static bool isBlendFunc(const char* str)
+{
+	if (str)
+	{
+		SWITCH_STR_START(str)
+		{
+			CASE_STR(Src) return true;
+			CASE_STR(Dst) return true;
+			CASE_STR(One) return true;
+			CASE_STR(Zero) return true;
+			CASE_STR(OneMinSrc) return true;
+			CASE_STR(OneMinDst) return true;
+		}
+		SWITCH_STR_END
+	}
+	return false;
+}
+#define toBlendFunc(str) (isBlendFunc(str) ? "ccBlendFunc." : "") << (str ? str : "ccBlendFunc.Zero")
+
+static bool isEase(const char* str)
+{
+	if (str)
+	{
+		SWITCH_STR_START(str)
+		{
+			CASE_STR(Linear) return true;
+			CASE_STR(InQuad) return true;
+			CASE_STR(OutQuad) return true;
+			CASE_STR(InOutQuad) return true;
+			CASE_STR(InCubic) return true;
+			CASE_STR(OutCubic) return true;
+			CASE_STR(InOutCubic) return true;
+			CASE_STR(InQuart) return true;
+			CASE_STR(OutQuart) return true;
+			CASE_STR(InOutQuart) return true;
+			CASE_STR(InQuint) return true;
+			CASE_STR(OutQuint) return true;
+			CASE_STR(InOutQuint) return true;
+			CASE_STR(InSine) return true;
+			CASE_STR(OutSine) return true;
+			CASE_STR(InOutSine) return true;
+			CASE_STR(InExpo) return true;
+			CASE_STR(OutExpo) return true;
+			CASE_STR(InOutExpo) return true;
+			CASE_STR(InCirc) return true;
+			CASE_STR(OutCirc) return true;
+			CASE_STR(InOutCirc) return true;
+			CASE_STR(InElastic) return true;
+			CASE_STR(OutElastic) return true;
+			CASE_STR(InOutElastic) return true;
+			CASE_STR(InBack) return true;
+			CASE_STR(OutBack) return true;
+			CASE_STR(InOutBack) return true;
+			CASE_STR(InBounce) return true;
+			CASE_STR(OutBounce) return true;
+			CASE_STR(InOutBounce) return true;
+		}
+		SWITCH_STR_END
+	}
+	return false;
+}
+#define toEase(str) (isEase(str) ? "oEase." : "") + (str ? str : "")
+
+static bool isOrientation(const char* str)
+{
+	if (str)
+	{
+		SWITCH_STR_START(str)
+		{
+			CASE_STR(Left) return true;
+			CASE_STR(Right) return true;
+			CASE_STR(Up) return true;
+			CASE_STR(Down) return true;
+		}
+		SWITCH_STR_END
+	}
+	return false;
+}
+#define toOrientation(str) (isOrientation(str) ? "CCOrientation." : "") + (str ? str : "CCOrientation.Down")
+
+static bool isTextAlign(const char* str)
+{
+	if (str)
+	{
+		SWITCH_STR_START(str)
+		{
+			CASE_STR(HCenter) return true;
+			CASE_STR(HLeft) return true;
+			CASE_STR(HRight) return true;
+			CASE_STR(VBottom) return true;
+			CASE_STR(VCenter) return true;
+			CASE_STR(VTop) return true;
+		}
+		SWITCH_STR_END
+	}
+	return false;
+}
+#define toTextAlign(str) (isTextAlign(str) ? "CCTextAlign." : "") << (str ? str : "CCTextAlign.HLeft")
 
 #define Self_Check(name) \
 	if (self.empty()) { self = getUsableName(#name); names.insert(self); }\
@@ -133,7 +228,7 @@ static const char* getGroup(const char* str)
 	CASE_STR(Ease) { ease = atts[++i]; break; }
 #define Scale_Create
 #define Scale_Handle \
-	oFunc func = {string("oScale(")+(time ? time : "0")+","+(x ? x : "")+","+(y ? y : "")+(ease ? ",oEase." : "")+(ease ? ease : "")+")",""};\
+	oFunc func = {string("oScale(")+(time ? time : "0")+","+(x ? x : "")+","+(y ? y : "")+(ease ? "," : "")+toEase(ease)+")",""};\
 	funcs.push(func);
 #define Scale_Finish
 
@@ -152,7 +247,7 @@ static const char* getGroup(const char* str)
 	CASE_STR(Ease) { ease = atts[++i]; break; }
 #define Move_Create
 #define Move_Handle \
-	oFunc func = {string("oPos(")+(time ? time : "0")+","+(x ? x : "")+","+(y ? y : "")+(ease ? ",oEase." : "")+(ease ? ease : "")+")",""};\
+	oFunc func = {string("oPos(")+(time ? time : "0")+","+(x ? x : "")+","+(y ? y : "")+(ease ? "," : "")+toEase(ease)+")",""};\
 	funcs.push(func);
 #define Move_Finish
 
@@ -169,7 +264,7 @@ static const char* getGroup(const char* str)
 	CASE_STR(Ease) { ease = atts[++i]; break; }
 #define Rotate_Create
 #define Rotate_Handle \
-	oFunc func = {string("oRotate(")+(time ? time : "0")+","+(angle ? angle : "")+(ease ? ",oEase." : "")+(ease ? ease : "")+")",""};\
+	oFunc func = {string("oRotate(")+(time ? time : "0")+","+(angle ? angle : "")+(ease ? "," : "")+toEase(ease)+")",""};\
 	funcs.push(func);
 #define Rotate_Finish
 
@@ -186,7 +281,7 @@ static const char* getGroup(const char* str)
 	CASE_STR(Ease) { ease = atts[++i]; break; }
 #define Opacity_Create
 #define Opacity_Handle \
-	oFunc func = {string("oOpacity(")+(time ? time : "0")+","+(alpha ? alpha : "")+(ease ? ",oEase." : "")+(ease ? ease : "")+")",""};\
+	oFunc func = {string("oOpacity(")+(time ? time : "0")+","+(alpha ? alpha : "")+(ease ? "," : "")+toEase(ease)+")",""};\
 	funcs.push(func);
 #define Opacity_Finish
 
@@ -205,7 +300,7 @@ static const char* getGroup(const char* str)
 	CASE_STR(Ease) { ease = atts[++i]; break; }
 #define Skew_Create
 #define Skew_Handle \
-	oFunc func = {string("oSkew(")+(time ? time : "0")+","+(x ? x : "")+","+(y ? y : "")+(ease ? ",oEase." : "")+(ease ? ease : "")+")",""};\
+	oFunc func = {string("oSkew(")+(time ? time : "0")+","+(x ? x : "")+","+(y ? y : "")+(ease ? "," : "")+toEase(ease)+")",""};\
 	funcs.push(func);
 #define Skew_Finish
 
@@ -222,7 +317,7 @@ static const char* getGroup(const char* str)
 	CASE_STR(Ease) { ease = atts[++i]; break; }
 #define Roll_Create
 #define Roll_Handle \
-	oFunc func = {string("oRoll(")+(time ? time : "0")+","+(angle ? angle : "")+(ease ? ",oEase." : "")+(ease ? ease : "")+")",""};\
+	oFunc func = {string("oRoll(")+(time ? time : "0")+","+(angle ? angle : "")+(ease ? "," : "")+toEase(ease)+")",""};\
 	funcs.push(func);
 #define Roll_Finish
 
@@ -528,7 +623,7 @@ static const char* getGroup(const char* str)
 #define Grid_Shaky3D_Handle \
 	oFunc func = {string("CCGrid:shaky3D(")+(time ? time : "0")+\
 	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
-	(range ? range : "0")+","+getBoolean(shakeZ)+")",""};\
+	(range ? range : "0")+","+toBoolean(shakeZ)+")",""};\
 	funcs.push(func);
 #define Grid_Shaky3D_Finish
 
@@ -594,7 +689,7 @@ static const char* getGroup(const char* str)
 	oFunc func = {string("CCGrid:waves(")+(time ? time : "0")+\
 	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
 	(waves ? waves : "0")+","+(amplitude ? amplitude : "0")+","+\
-	getBoolean(horizontal)+","+getBoolean(vertical)+")",""};\
+	toBoolean(horizontal)+","+toBoolean(vertical)+")",""};\
 	funcs.push(func);
 #define Grid_Wave_Finish
 
@@ -638,7 +733,7 @@ static const char* getGroup(const char* str)
 #define Tile_FadeOut_Handle \
 	oFunc func = {string("CCTile:fadeOut(")+(time ? time : "0")+\
 	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
-	"CCOrientation."+(orientation ? orientation : "Down")+")",""};\
+	toOrientation(orientation)+")",""};\
 	funcs.push(func);
 #define Tile_FadeOut_Finish
 
@@ -684,7 +779,7 @@ static const char* getGroup(const char* str)
 #define Tile_Shaky3D_Handle \
 	oFunc func = {string("CCTile:shaky3D(")+(time ? time : "0")+\
 	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
-	(range ? range : "0")+","+getBoolean(shakeZ)+")",""};\
+	(range ? range : "0")+","+toBoolean(shakeZ)+")",""};\
 	funcs.push(func);
 #define Tile_Shaky3D_Finish
 
@@ -891,8 +986,8 @@ static const char* getGroup(const char* str)
 	if (x) stream << self << ".positionX = " << x << '\n';\
 	if (y) stream << self << ".positionY = " << y << '\n';\
 	if (z) stream << self << ".positionZ = " << z << '\n';\
-	if (passColor) stream << self << ".cascadeColor = " << getBoolean(passColor) << '\n';\
-	if (passOpacity) stream << self << ".cascadeOpacity = " << getBoolean(passOpacity) << '\n';\
+	if (passColor) stream << self << ".cascadeColor = " << toBoolean(passColor) << '\n';\
+	if (passOpacity) stream << self << ".cascadeOpacity = " << toBoolean(passOpacity) << '\n';\
 	if (color) stream << self << ".color = ccColor3(" << color << ")\n";\
 	if (opacity) stream << self << ".opacity = " << opacity << '\n';\
 	if (angle) stream << self << ".angle = " << angle << '\n';\
@@ -902,7 +997,7 @@ static const char* getGroup(const char* str)
 	if (skewX) stream << self << ".skewX = " << skewX << '\n';\
 	if (skewY) stream << self << ".skewY = " << skewY << '\n';\
 	if (transformTarget) stream << self << ".transformTarget = " << transformTarget << '\n';\
-	if (visible) stream << self << ".visible = " << getBoolean(visible) << '\n';\
+	if (visible) stream << self << ".visible = " << toBoolean(visible) << '\n';\
 	if (width && height) stream << self << ".contentSize = CCSize(" << width << ',' << height << ")\n";\
 	else if (width && !height) stream << self << ".contentSize = CCSize(" << width << ',' << self << ".contentSize.height)\n";\
 	else if (!width && height) stream << self << ".contentSize = CCSize(" << self << ".contentSize.width," << height << ")\n";
@@ -1043,7 +1138,7 @@ static const char* getGroup(const char* str)
 #define ClipNode_Handle \
 	Node_Handle\
 	if (alphaThreshold) stream << self << ".alphaThreshold = " << alphaThreshold << '\n';\
-	if (inverted) stream << self << ".inverted = " << getBoolean(inverted) << '\n';
+	if (inverted) stream << self << ".inverted = " << toBoolean(inverted) << '\n';
 #define ClipNode_Finish \
 	Add_To_Parent
 
@@ -1085,7 +1180,7 @@ static const char* getGroup(const char* str)
 	stream << "local " << self << " = CCLabelBMFont(\"" << (text ? text : "\"");\
 	if (fntFile) stream << "\"," << fntFile << '\"';\
 	else stream << ",";\
-	stream << ',' << (fontWidth ? fontWidth : "CCLabelBMFont.AutomaticWidth") << ",CCTextAlign." << (alignment ? alignment : "HLeft") << ',' << (imageOffset ? imageOffset : "oVec2.zero") << ")\n";
+	stream << ',' << (fontWidth ? fontWidth : "CCLabelBMFont.AutomaticWidth") << "," << toTextAlign(alignment) << ',' << (imageOffset ? imageOffset : "oVec2.zero") << ")\n";
 #define LabelBMFont_Handle \
 	Node_Handle
 #define LabelBMFont_Finish \
@@ -1130,14 +1225,14 @@ static const char* getGroup(const char* str)
 	else stream << ")\n";
 #define Sprite_Handle \
 	Node_Handle\
-	if (flipX) stream << self << ".flipX = " << getBoolean(flipX) << '\n';\
-	if (flipY) stream << self << ".flipY = " << getBoolean(flipY) << '\n';\
-	if (blendFuncSrc && blendFuncDst) stream << self << ".blendFunc = ccBlendFunc(ccBlendFunc."\
-									<< blendFuncSrc << ",ccBlendFunc." << blendFuncDst << ")\n";\
-	else if (blendFuncSrc && !blendFuncDst) stream << self << ".blendFunc = ccBlendFunc(ccBlendFunc."\
-									<< blendFuncSrc << ',' << self << ".blendFunc.dst)\n";\
+	if (flipX) stream << self << ".flipX = " << toBoolean(flipX) << '\n';\
+	if (flipY) stream << self << ".flipY = " << toBoolean(flipY) << '\n';\
+	if (blendFuncSrc && blendFuncDst) stream << self << ".blendFunc = ccBlendFunc("\
+									<< toBlendFunc(blendFuncSrc) << "," << toBlendFunc(blendFuncDst) << ")\n";\
+	else if (blendFuncSrc && !blendFuncDst) stream << self << ".blendFunc = ccBlendFunc("\
+									<< toBlendFunc(blendFuncSrc) << ',' << self << ".blendFunc.dst)\n";\
 	else if (!blendFuncSrc && blendFuncDst) stream << self << ".blendFunc = ccBlendFunc(" << self\
-									<< ".blendFunc.src,ccBlendFunc." << blendFuncDst << ")\n";
+									<< ".blendFunc.src," << toBlendFunc(blendFuncDst) << ")\n";
 #define Sprite_Finish \
 	Add_To_Parent
 
@@ -1176,12 +1271,12 @@ static const char* getGroup(const char* str)
 	stream << "local " << self << " = CCLayer()\n";
 #define Layer_Handle \
 	Node_Handle\
-	if (accelerometerEnabled) stream << self << ".accelerometerEnabled = " << getBoolean(accelerometerEnabled) << '\n';\
-	if (keypadEnabled) stream << self << ".keypadEnabled = " << getBoolean(keypadEnabled) << '\n';\
-	if (multiTouches) stream << self << ".multiTouches = " << getBoolean(multiTouches) << '\n';\
+	if (accelerometerEnabled) stream << self << ".accelerometerEnabled = " << toBoolean(accelerometerEnabled) << '\n';\
+	if (keypadEnabled) stream << self << ".keypadEnabled = " << toBoolean(keypadEnabled) << '\n';\
+	if (multiTouches) stream << self << ".multiTouches = " << toBoolean(multiTouches) << '\n';\
 	if (touchPriority) stream << self << ".touchPriority = " << touchPriority << '\n';\
-	if (swallowTouches) stream << self << ".swallowTouches = " << getBoolean(swallowTouches) << '\n';\
-	if (touchEnabled) stream << self << ".touchEnabled = " << getBoolean(touchEnabled) << '\n';
+	if (swallowTouches) stream << self << ".swallowTouches = " << toBoolean(swallowTouches) << '\n';\
+	if (touchEnabled) stream << self << ".touchEnabled = " << toBoolean(touchEnabled) << '\n';
 #define Layer_Finish \
 	Add_To_Parent
 
@@ -1199,12 +1294,12 @@ static const char* getGroup(const char* str)
 	color = nullptr;
 #define LayerColor_Handle \
 	Layer_Handle\
-	if (blendFuncSrc && blendFuncDst) stream << self << ".blendFunc = ccBlendFunc(ccBlendFunc."\
-									<< blendFuncSrc << ",ccBlendFunc." << blendFuncDst << ")\n";\
-	else if (blendFuncSrc && !blendFuncDst) stream << self << ".blendFunc = ccBlendFunc(ccBlendFunc."\
-									<< blendFuncSrc << ',' << self << ".blendFunc.dst)\n";\
+	if (blendFuncSrc && blendFuncDst) stream << self << ".blendFunc = ccBlendFunc("\
+									<< toBlendFunc(blendFuncSrc) << "," << toBlendFunc(blendFuncDst) << ")\n";\
+	else if (blendFuncSrc && !blendFuncDst) stream << self << ".blendFunc = ccBlendFunc("\
+									<< toBlendFunc(blendFuncSrc) << ',' << self << ".blendFunc.dst)\n";\
 	else if (!blendFuncSrc && blendFuncDst) stream << self << ".blendFunc = ccBlendFunc(" << self\
-									<< ".blendFunc.src,ccBlendFunc." << blendFuncDst << ")\n";
+									<< ".blendFunc.src," << toBlendFunc(blendFuncDst) << ")\n";
 #define LayerColor_Finish \
 	Add_To_Parent
 
@@ -1244,7 +1339,7 @@ static const char* getGroup(const char* str)
 	stream << "local " << self << " = CCMenu()\n";
 #define Menu_Handle \
 	Layer_Handle\
-	if (enabled) stream << self << ".enabled = " << getBoolean(enabled) << '\n';
+	if (enabled) stream << self << ".enabled = " << toBoolean(enabled) << '\n';
 #define Menu_Finish \
 	Add_To_Parent
 
@@ -1259,7 +1354,7 @@ static const char* getGroup(const char* str)
 	stream << "local " << self << " = CCMenuItem()\n";
 #define MenuItem_Handle \
 	Node_Handle\
-	if (enabled) stream << self << ".enabled = " << getBoolean(enabled) << '\n';
+	if (enabled) stream << self << ".enabled = " << toBoolean(enabled) << '\n';
 #define MenuItem_Finish \
 	Add_To_Parent
 
@@ -1288,7 +1383,7 @@ static const char* getGroup(const char* str)
 									<< gravityX << ',' << self << ".gravity.y)\n";\
 	else if (!gravityX && gravityY) stream << self << ".gravity = oVec2(" << self\
 									<< ".gravity.x," << gravityY << ")\n";\
-	if (showDebug) stream << self << ".showDebug = " << getBoolean(showDebug) << '\n';\
+	if (showDebug) stream << self << ".showDebug = " << toBoolean(showDebug) << '\n';\
 	if (velocityIter || positionIter) stream << self << ":setIterations(" << (velocityIter ? velocityIter : "8")\
 											<< ',' << (positionIter ? positionIter : "3") << ")\n";
 #define World_Finish \
@@ -1319,8 +1414,8 @@ static const char* getGroup(const char* str)
 	if (!elementStack.empty())\
 	{\
 		stream << elementStack.top().name <<\
-		":setShouldContact(" << (groupA ? groupA : "") << ',' << (groupB ? groupB : "") << ',' <<\
-		getBoolean(enabled) << ")\n\n";\
+		":setShouldContact(" << toGroup(groupA) << ',' << toGroup(groupB) << ',' <<\
+		(enabled ? toBoolean(enabled) : "") << ")\n\n";\
 	}
 
 // Model
@@ -1345,9 +1440,9 @@ static const char* getGroup(const char* str)
 #define Model_Handle \
 	Node_Handle\
 	if (look) stream << self << ".look = \"" << look << "\"\n";\
-	if (loop) stream << self << ".loop = " << getBoolean(loop) << '\n';\
+	if (loop) stream << self << ".loop = " << toBoolean(loop) << '\n';\
 	if (play) stream << self << ":play(\"" << play << "\")\n";\
-	if (faceRight) stream << self << ".faceRight = " << getBoolean(faceRight) << '\n';\
+	if (faceRight) stream << self << ".faceRight = " << toBoolean(faceRight) << '\n';\
 	if (speed) stream << self << ".speed = " << speed << '\n';
 #define Model_Finish \
 	Add_To_Parent
@@ -1370,7 +1465,7 @@ static const char* getGroup(const char* str)
 	x = y = angle = nullptr;
 #define Body_Handle \
 	Node_Handle\
-	if (group) stream << self << ".group = " << group << '\n';
+	if (group) stream << self << ".group = " << toGroup(group) << '\n';
 #define Body_Finish \
 	Add_To_Parent
 

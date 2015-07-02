@@ -663,7 +663,7 @@
 			isa = PBXGroup;
 			children = (
 				3CDECC4D1AFC22A100AF8490 /* lpeg */,
-				46C1007916BF786A00F74D54 /* cocos2dx_support */,
+				46C1007916BF786A00F74D54 /* support */,
 				1AA88A50171D04FC0023E7B2 /* include */,
 				15C15650168311CB00D239F2 /* tolua */,
 			);
@@ -908,7 +908,7 @@
 			path = lpeg;
 			sourceTree = "<group>";
 		};
-		46C1007916BF786A00F74D54 /* cocos2dx_support */ = {
+		46C1007916BF786A00F74D54 /* support */ = {
 			isa = PBXGroup;
 			children = (
 				3CECB16A1AC331B300BA17F3 /* DorothyXml.cpp */,
@@ -924,7 +924,7 @@
 				46C1008A16BF786A00F74D54 /* tolua_fix.c */,
 				46C1008B16BF786A00F74D54 /* tolua_fix.h */,
 			);
-			path = cocos2dx_support;
+			path = support;
 			sourceTree = "<group>";
 		};
 		F293B3BD15EB7BE500256477 = {

@@ -4,9 +4,6 @@
     <Filter Include="tolua">
       <UniqueIdentifier>{243d29bc-c49a-4d05-8e2f-2c2f5858928a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="cocos2dx_support">
-      <UniqueIdentifier>{bbe428ed-e8e5-4e3c-80c9-0e586814b884}</UniqueIdentifier>
-    </Filter>
     <Filter Include="lib">
       <UniqueIdentifier>{948e219e-763e-41d0-bc8d-6421dba8ad70}</UniqueIdentifier>
     </Filter>
@@ -15,6 +12,9 @@
     </Filter>
     <Filter Include="lpeg">
       <UniqueIdentifier>{bdefa860-4b55-413f-9c3c-c3e0dce89fba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="support">
+      <UniqueIdentifier>{bbe428ed-e8e5-4e3c-80c9-0e586814b884}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -33,27 +33,6 @@
     <ClCompile Include="..\tolua\tolua_to.c">
       <Filter>tolua</Filter>
     </ClCompile>
-    <ClCompile Include="..\cocos2dx_support\CCLuaEngine.cpp">
-      <Filter>cocos2dx_support</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos2dx_support\LuaCocos2d.cpp">
-      <Filter>cocos2dx_support</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos2dx_support\tolua_fix.c">
-      <Filter>cocos2dx_support</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos2dx_support\DorothyModule.cpp">
-      <Filter>cocos2dx_support</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos2dx_support\tolua_extern.cpp">
-      <Filter>cocos2dx_support</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos2dx_support\LuaCode.cpp">
-      <Filter>cocos2dx_support</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos2dx_support\DorothyXml.cpp">
-      <Filter>cocos2dx_support</Filter>
-    </ClCompile>
     <ClCompile Include="..\lpeg\lpcap.c">
       <Filter>lpeg</Filter>
     </ClCompile>
@@ -69,6 +48,27 @@
     <ClCompile Include="..\lpeg\lpvm.c">
       <Filter>lpeg</Filter>
     </ClCompile>
+    <ClCompile Include="..\support\CCLuaEngine.cpp">
+      <Filter>support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\support\DorothyModule.cpp">
+      <Filter>support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\support\DorothyXml.cpp">
+      <Filter>support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\support\LuaCocos2d.cpp">
+      <Filter>support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\support\LuaCode.cpp">
+      <Filter>support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\support\tolua_extern.cpp">
+      <Filter>support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\support\tolua_fix.c">
+      <Filter>support</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\tolua\tolua++.h">
@@ -76,15 +76,6 @@
     </ClInclude>
     <ClInclude Include="..\tolua\tolua_event.h">
       <Filter>tolua</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos2dx_support\CCLuaEngine.h">
-      <Filter>cocos2dx_support</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos2dx_support\LuaCocos2d.h">
-      <Filter>cocos2dx_support</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos2dx_support\tolua_fix.h">
-      <Filter>cocos2dx_support</Filter>
     </ClInclude>
     <ClInclude Include="..\luajit\include\lauxlib.h">
       <Filter>lib\include</Filter>
@@ -97,12 +88,6 @@
     </ClInclude>
     <ClInclude Include="..\luajit\include\lualib.h">
       <Filter>lib\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos2dx_support\DorothyModule.h">
-      <Filter>cocos2dx_support</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos2dx_support\DorothyXml.h">
-      <Filter>cocos2dx_support</Filter>
     </ClInclude>
     <ClInclude Include="..\lpeg\lpcap.h">
       <Filter>lpeg</Filter>
@@ -121,6 +106,21 @@
     </ClInclude>
     <ClInclude Include="..\lpeg\lpvm.h">
       <Filter>lpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\CCLuaEngine.h">
+      <Filter>support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\DorothyModule.h">
+      <Filter>support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\DorothyXml.h">
+      <Filter>support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\LuaCocos2d.h">
+      <Filter>support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\tolua_fix.h">
+      <Filter>support</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

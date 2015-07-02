@@ -125,18 +125,18 @@ xcopy /Y /Q "$(ProjectDir)..\lib\win32\*.*" "$(OutDir)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\cocos2dx_support\CCLuaEngine.cpp" />
-    <ClCompile Include="..\cocos2dx_support\DorothyModule.cpp" />
-    <ClCompile Include="..\cocos2dx_support\DorothyXml.cpp" />
-    <ClCompile Include="..\cocos2dx_support\LuaCocos2d.cpp" />
-    <ClCompile Include="..\cocos2dx_support\LuaCode.cpp" />
-    <ClCompile Include="..\cocos2dx_support\tolua_fix.c" />
-    <ClCompile Include="..\cocos2dx_support\tolua_extern.cpp" />
     <ClCompile Include="..\lpeg\lpcap.c" />
     <ClCompile Include="..\lpeg\lpcode.c" />
     <ClCompile Include="..\lpeg\lpprint.c" />
     <ClCompile Include="..\lpeg\lptree.c" />
     <ClCompile Include="..\lpeg\lpvm.c" />
+    <ClCompile Include="..\support\CCLuaEngine.cpp" />
+    <ClCompile Include="..\support\DorothyModule.cpp" />
+    <ClCompile Include="..\support\DorothyXml.cpp" />
+    <ClCompile Include="..\support\LuaCocos2d.cpp" />
+    <ClCompile Include="..\support\LuaCode.cpp" />
+    <ClCompile Include="..\support\tolua_extern.cpp" />
+    <ClCompile Include="..\support\tolua_fix.c" />
     <ClCompile Include="..\tolua\tolua_event.c" />
     <ClCompile Include="..\tolua\tolua_is.c" />
     <ClCompile Include="..\tolua\tolua_map.c" />
@@ -144,11 +144,6 @@ xcopy /Y /Q "$(ProjectDir)..\lib\win32\*.*" "$(OutDir)"</Command>
     <ClCompile Include="..\tolua\tolua_to.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\cocos2dx_support\CCLuaEngine.h" />
-    <ClInclude Include="..\cocos2dx_support\DorothyModule.h" />
-    <ClInclude Include="..\cocos2dx_support\DorothyXml.h" />
-    <ClInclude Include="..\cocos2dx_support\LuaCocos2d.h" />
-    <ClInclude Include="..\cocos2dx_support\tolua_fix.h" />
     <ClInclude Include="..\lpeg\lpcap.h" />
     <ClInclude Include="..\lpeg\lpcode.h" />
     <ClInclude Include="..\lpeg\lpprint.h" />
@@ -159,6 +154,11 @@ xcopy /Y /Q "$(ProjectDir)..\lib\win32\*.*" "$(OutDir)"</Command>
     <ClInclude Include="..\luajit\include\lua.h" />
     <ClInclude Include="..\luajit\include\luaconf.h" />
     <ClInclude Include="..\luajit\include\lualib.h" />
+    <ClInclude Include="..\support\CCLuaEngine.h" />
+    <ClInclude Include="..\support\DorothyModule.h" />
+    <ClInclude Include="..\support\DorothyXml.h" />
+    <ClInclude Include="..\support\LuaCocos2d.h" />
+    <ClInclude Include="..\support\tolua_fix.h" />
     <ClInclude Include="..\tolua\tolua++.h" />
     <ClInclude Include="..\tolua\tolua_event.h" />
   </ItemGroup>
