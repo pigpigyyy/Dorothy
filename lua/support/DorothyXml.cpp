@@ -921,13 +921,25 @@ static bool isTextAlign(const char* str)
 #define Add_To_Parent \
 	if (!elementStack.empty()) {\
 		const oItem& parent = elementStack.top();\
-		stream << parent.name << ":addChild(" << self;\
-		if (zOrder) {\
-			stream << ',' << zOrder;\
-			if (tag) stream << ',' << tag;\
+		if (!parent.name.empty())\
+		{\
+			stream << parent.name << ":addChild(" << self;\
+			if (zOrder) {\
+				stream << ',' << zOrder;\
+				if (tag) stream << ',' << tag;\
+			}\
+			else if (tag) stream << ",0," << tag;\
+			stream << ")\n\n";\
 		}\
-		else if (tag) stream << ",0," << tag;\
-		stream << ")\n\n";\
+		else if (strcmp(parent.type,"Stencil") == 0)\
+		{\
+			elementStack.pop();\
+			if (!elementStack.empty())\
+			{\
+				const oItem& newParent = elementStack.top();\
+				stream << newParent.name << ".stencil = " << self << "\n\n";\
+			}\
+		}\
 	}
 
 // Node
@@ -1126,21 +1138,24 @@ static bool isTextAlign(const char* str)
 #define ClipNode_Define \
 	Node_Define\
 	const char* alphaThreshold = nullptr;\
-	const char* inverted = nullptr;\
-	const char* stencil = nullptr;
+	const char* inverted = nullptr;
 #define ClipNode_Check \
 	Node_Check\
 	CASE_STR(AlphaThreshold) { alphaThreshold = atts[++i]; break; }\
-	CASE_STR(Inverted) { inverted = atts[++i]; break; }\
-	CASE_STR(Stencil) { stencil = atts[++i]; break; }
+	CASE_STR(Inverted) { inverted = atts[++i]; break; }
 #define ClipNode_Create \
-	stream << "local " << self << " = CCClipNode(" << (stencil ? stencil : "Stencil") << ")\n";
+	stream << "local " << self << " = CCClipNode()\n";
 #define ClipNode_Handle \
 	Node_Handle\
 	if (alphaThreshold) stream << self << ".alphaThreshold = " << alphaThreshold << '\n';\
 	if (inverted) stream << self << ".inverted = " << toBoolean(inverted) << '\n';
 #define ClipNode_Finish \
 	Add_To_Parent
+
+// Stencil
+#define Stencil_Define \
+	const char* self = "";
+#define Stencil_Finish
 
 // LabelAtlas
 #define LabelAtlas_Define \
@@ -1585,7 +1600,6 @@ private:
 	stack<string> items;
 	stack<oItem> elementStack;
 	unordered_set<string> names;
-	unordered_map<const char*, const char*> params;
 	ostringstream stream;
 };
 
@@ -1701,6 +1715,12 @@ void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
 			Item_Define(Contact)
 			Item_Loop(Contact)
 			Contact_Finish
+			break;
+		}
+		CASE_STR(Stencil)
+		{
+			Item_Define(Stencil)
+			Item_Push(Stencil)
 			break;
 		}
 	}
