@@ -55,7 +55,7 @@ local function oViewArea()
 		return true
 	end
 
-	view:slot("viewArea.changeEffect",function(effectName)
+	view:gslot("viewArea.changeEffect",function(effectName)
 		if not effectName and oEditor.effect then
 			oEditor.effect:autoRemove():stop()
 			oEditor.effect = nil
@@ -68,16 +68,16 @@ local function oViewArea()
 		effect:attachTo(scrollNode):start()
 		oEditor.effect = effect
 	end)
-	view:slot("viewArea.scroll",function(scale)
+	view:gslot("viewArea.scroll",function(scale)
 		scrollNode:runAction(oScale(0.3,scale,scale,oEase.OutQuad))
 	end)
-	view:slot("viewArea.toOrigin",function(origin)
+	view:gslot("viewArea.toOrigin",function(origin)
 		scrollNode:runAction(oPos(0.3,origin.x,origin.y,oEase.OutQuad))
 	end)
-	view:slot("viewArea.pos",function(pos)
+	view:gslot("viewArea.pos",function(pos)
 		scrollNode.position = pos
 	end)
-	view:slot("viewArea.play",function()
+	view:gslot("viewArea.play",function()
 		if oEditor.effect then
 			oEditor.effect:start()
 		end

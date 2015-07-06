@@ -219,7 +219,7 @@ local function oViewArea()
 		return self._model
 	end
 	
-	view:slot("LoopState",
+	view:gslot("LoopState",
 		function(loop)
 			if view._model then
 				view._model.loop = loop
@@ -1027,7 +1027,8 @@ local function oViewArea()
 		end
 	end
 
-	local board = CCMenu(true)
+	local board = CCMenu()
+	board.swallowTouches = true
 	board.contentSize = CCSize(winSize.width,winSize.height)
 	local border = CCDrawNode()
 	border:drawPolygon({

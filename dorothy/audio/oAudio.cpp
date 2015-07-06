@@ -37,17 +37,17 @@ void oSound::load( const char* filename )
 		if (isExtractNeeded(filename, extractedName))
 		{
 			oSharedContent.extractGameFile(filename, extractedName->c_str());
-			oShareAudioEngine.loadSound(extractedName->c_str());
+			oSharedAudioEngine.loadSound(extractedName->c_str());
 			if (!g_useCache) oSharedContent.removeFile(extractedName->c_str());
 		}
 		else
 		{
-			oShareAudioEngine.loadSound(extractedName->c_str());
+			oSharedAudioEngine.loadSound(extractedName->c_str());
 		}
 	}
 	else
 	{
-		oShareAudioEngine.loadSound(filename);
+		oSharedAudioEngine.loadSound(filename);
 	}
 }
 void oSound::unload(const char* filename)
@@ -57,16 +57,16 @@ void oSound::unload(const char* filename)
 		string* extractedName;
 		if (isExtractNeeded(filename, extractedName))
 		{
-			oShareAudioEngine.unloadSound(extractedName->c_str());
+			oSharedAudioEngine.unloadSound(extractedName->c_str());
 		}
 		else
 		{
-			oShareAudioEngine.unloadSound(extractedName->c_str());
+			oSharedAudioEngine.unloadSound(extractedName->c_str());
 		}
 	}
 	else
 	{
-		oShareAudioEngine.unloadSound(filename);
+		oSharedAudioEngine.unloadSound(filename);
 	}
 }
 int oSound::play( const char* filename, bool loop )
@@ -77,32 +77,32 @@ int oSound::play( const char* filename, bool loop )
 		if (isExtractNeeded(filename, extractedName))
 		{
 			oSharedContent.extractGameFile(filename, extractedName->c_str());
-			oShareAudioEngine.loadSound(extractedName->c_str());
+			oSharedAudioEngine.loadSound(extractedName->c_str());
 			if (!g_useCache) oSharedContent.removeFile(extractedName->c_str());
-			return oShareAudioEngine.playSound(extractedName->c_str(), loop);
+			return oSharedAudioEngine.playSound(extractedName->c_str(), loop);
 		}
 		else
 		{
-			return oShareAudioEngine.playSound(extractedName->c_str(), loop);
+			return oSharedAudioEngine.playSound(extractedName->c_str(), loop);
 		}
 	}
-	return oShareAudioEngine.playSound(filename, loop);
+	return oSharedAudioEngine.playSound(filename, loop);
 }
 void oSound::stop( int id )
 {
-	oShareAudioEngine.stopSound(id);
+	oSharedAudioEngine.stopSound(id);
 }
 void oSound::stop()
 {
-	oShareAudioEngine.stopSound();
+	oSharedAudioEngine.stopSound();
 }
 void oSound::setVolume( float volume )
 {
-	oShareAudioEngine.setSoundVolume(volume);
+	oSharedAudioEngine.setSoundVolume(volume);
 }
 float oSound::getVolume()
 {
-	return oShareAudioEngine.getSoundVolume();
+	return oSharedAudioEngine.getSoundVolume();
 }
 void oSound::setUseCache(bool cache)
 {
@@ -121,12 +121,12 @@ void oMusic::preload( const char* filename )
 		if (isExtractNeeded(filename, extractedName))
 		{
 			oSharedContent.extractGameFile(filename, extractedName->c_str());
-			oShareAudioEngine.loadMusic(extractedName->c_str());
+			oSharedAudioEngine.loadMusic(extractedName->c_str());
 		}
 	}
 	else
 	{
-		oShareAudioEngine.loadMusic(filename);
+		oSharedAudioEngine.loadMusic(filename);
 	}
 }
 void oMusic::play( const char* filename, bool loop )
@@ -137,38 +137,38 @@ void oMusic::play( const char* filename, bool loop )
 		if (isExtractNeeded(filename, extractedName))
 		{
 			oSharedContent.extractGameFile(filename, extractedName->c_str());
-			oShareAudioEngine.loadMusic(extractedName->c_str());
-			oShareAudioEngine.playMusic(extractedName->c_str(), loop);
+			oSharedAudioEngine.loadMusic(extractedName->c_str());
+			oSharedAudioEngine.playMusic(extractedName->c_str(), loop);
 		}
 		else
 		{
-			oShareAudioEngine.playMusic(oSharedContent.getExtractedFullName(filename).c_str(), loop);
+			oSharedAudioEngine.playMusic(oSharedContent.getExtractedFullName(filename).c_str(), loop);
 		}
 	}
 	else
 	{
-		oShareAudioEngine.playMusic(filename, loop);
+		oSharedAudioEngine.playMusic(filename, loop);
 	}
 }
 void oMusic::pause()
 {
-	oShareAudioEngine.pauseMusic();
+	oSharedAudioEngine.pauseMusic();
 }
 void oMusic::resume()
 {
-	oShareAudioEngine.resumeMusic();
+	oSharedAudioEngine.resumeMusic();
 }
 void oMusic::stop()
 {
-	oShareAudioEngine.stopMusic();
+	oSharedAudioEngine.stopMusic();
 }
 void oMusic::setVolume( float volume )
 {
-	oShareAudioEngine.setMusicVolume(volume);
+	oSharedAudioEngine.setMusicVolume(volume);
 }
 float oMusic::getVolume()
 {
-	return oShareAudioEngine.getMusicVolume();
+	return oSharedAudioEngine.getMusicVolume();
 }
 
 class oSimpleAudioEngine: public oAudioEngine

@@ -158,7 +158,7 @@ local function oViewPanel()
 	end
 
 	local baseJointName = nil
-	menu:slot("viewPanel.selectJoint",function(joint)
+	menu:gslot("viewPanel.selectJoint",function(joint)
 		baseJointName = joint
 	end)
 
@@ -218,7 +218,7 @@ local function oViewPanel()
 	updateViewItems(oEditor.bodyData)
 
 	local currentItem = nil
-	self:slot("viewPanel.choose",function(arg)
+	self:gslot("viewPanel.choose",function(arg)
 		local item
 		if type(arg) == "table" then
 			for _,v in ipairs(self.items) do
@@ -256,10 +256,10 @@ local function oViewPanel()
 			oEditor.currentData = nil
 		end
 	end)
-	self:slot("editor.bodyData",function(bodyData)
+	self:gslot("editor.bodyData",function(bodyData)
 		updateViewItems(bodyData)
 	end)
-	self:slot("editor.rename",function(args)
+	self:gslot("editor.rename",function(args)
 		local newName = args.newName
 		for _,item in ipairs(self.items) do
 			if item.dataItem[2] == newName then
@@ -268,7 +268,7 @@ local function oViewPanel()
 			end
 		end
 	end)
-	self:slot("viewArea.moveToData",function(data)
+	self:gslot("viewArea.moveToData",function(data)
 		moveViewToData(data)
 	end)
 	return self

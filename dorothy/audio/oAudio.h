@@ -63,7 +63,7 @@ private:
 	static oAudioEngine* _engine;
 };
 
-#define oShareAudioEngine (*oAudioEngine::shared())
+#define oSharedAudioEngine (*oAudioEngine::shared())
 
 NS_DOROTHY_END
 

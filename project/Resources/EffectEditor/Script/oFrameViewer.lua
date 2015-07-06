@@ -68,19 +68,19 @@ local function oFrameViewer()
 	panel.position = startPos
 	panel.visible = false
 
-	panel:slot("oEditor.particle",function()
+	panel:gslot("oEditor.particle",function()
 		if panel.visible then
 			panel:stopAllActions()
 			panel:runAction(CCSequence({CCDelay(0.3),oPos(0.5,startPos.x,startPos.y,oEase.InBack),CCHide()}))
 		end
 	end)
-	panel:slot("oEditor.frame",function()
+	panel:gslot("oEditor.frame",function()
 		panel:stopAllActions()
 		panel.position = startPos
 		panel.visible = true
 		panel:runAction(oPos(0.5,endPos.x,endPos.y,oEase.OutBack))
 	end)
-	panel:slot("oFrameViewer.data",function(data)
+	panel:gslot("oFrameViewer.data",function(data)
 		menu:removeAllChildrenWithCleanup()
 		local width = 0
 		for i,item in ipairs(data) do

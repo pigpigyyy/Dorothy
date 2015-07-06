@@ -160,7 +160,7 @@ local function oEditControl()
 		lifeTimeVar = "particleLifespanVariance",
 	}
 
-	control:slot("settingPanel.edit",function(item)
+	control:gslot("settingPanel.edit",function(item)
 		local name = item.name
 		if item.selected then
 			if name == "maxParticles" then

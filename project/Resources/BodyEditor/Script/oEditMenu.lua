@@ -244,11 +244,11 @@ local function oEditMenu()
 
 	-- update scale button --
 	items.Zoom.mode = 0
-	items.Zoom:slot("viewArea.scale",function(scale)
+	items.Zoom:gslot("viewArea.scale",function(scale)
 		if scale ~= 1 then items.Zoom.mode = 2 end
 		items.Zoom.text = tostring(math.floor(scale*100)).."%"
 	end)
-	items.Play:slot("editor.isPlaying",function(isPlaying)
+	items.Play:gslot("editor.isPlaying",function(isPlaying)
 		oEditor.isPlaying = isPlaying
 		oEditor.worldScheduler.timeScale = isPlaying and 1 or 0
 		if not isPlaying then
@@ -282,19 +282,19 @@ local function oEditMenu()
 		end
 	end)
 
-	menu:slot("editMenu.created",function()
+	menu:gslot("editMenu.created",function()
 		if lastSelected then
 			lastSelected.selected = false
 			lastSelected = nil
 		end
 	end)
-	menu:slot("editor.change",function()
+	menu:gslot("editor.change",function()
 		if not oEditor.dirty then
 			oEditor.dirty = true
 			items.Edit.text = "Save"
 		end
 	end)
-	menu:slot("editMenu.reset",function()
+	menu:gslot("editMenu.reset",function()
 		items.Play.isPlaying = false
 	end)
 

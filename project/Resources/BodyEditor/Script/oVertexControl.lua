@@ -57,7 +57,7 @@ local function oVertexControl()
 		label.position = oVec2(pos.x,pos.y+20*scale+25)
 	end
 
-	label:slot("viewArea.toScale",function()
+	label:gslot("viewArea.toScale",function()
 		label:schedule(once(function()
 			cycle(0.5,function()
 				if selectedVert then

@@ -59,7 +59,7 @@ local function oViewArea()
 	crossNode:addChild(cross)
 
 	-- listen reset events --
-	crossNode:slot("viewArea.toScale",function(scale)
+	crossNode:gslot("viewArea.toScale",function(scale)
 		oEditor.scale = scale
 		view.touchEnabled = false
 		scaleNode:runAction(CCSequence(
@@ -72,7 +72,7 @@ local function oViewArea()
 			end),
 		}))
 	end)
-	crossNode:slot("viewArea.toPos",function(pos)
+	crossNode:gslot("viewArea.toPos",function(pos)
 		view.touchEnabled = false
 		crossNode:runAction(CCSequence(
 		{
@@ -84,12 +84,12 @@ local function oViewArea()
 			end),
 		}))
 	end)
-	crossNode:slot("viewArea.move",function(delta)
+	crossNode:gslot("viewArea.move",function(delta)
 		crossNode.position = crossNode.position + delta/scaleNode.scaleX
 	end)
 
 	local shapeToCreate = nil
-	crossNode:slot("viewArea.create",function(name)
+	crossNode:gslot("viewArea.create",function(name)
 		shapeToCreate = name
 	end)
 

@@ -5,7 +5,23 @@
 using namespace Dorothy;
 using namespace Dorothy::Platform;
 
-int CCNode_slot(lua_State* L);
+class oSlotList : public CCObject
+{
+public:
+	oSlotList();
+	void add(int handler);
+	bool remove(int handler);
+	void clear();
+	void invoke(lua_State* L, int args);
+	CREATE_FUNC(oSlotList)
+private:
+	oRef<CCArray> _list;
+	CC_LUA_TYPE(oSlotList)
+};
+
+int CCNode_gslot(lua_State* L);
+int CCNode_slots(lua_State* L);
+int CCNode_emit(lua_State* L);
 int CCNode_traverse(lua_State* L);
 int CCNode_eachChild(lua_State* L);
 int CCNode_getChildren(lua_State* L);

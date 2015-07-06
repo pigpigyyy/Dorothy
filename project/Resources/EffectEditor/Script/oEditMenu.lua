@@ -77,7 +77,7 @@ local function oEditMenu()
 	end
 	menu.items = items
 
-	menu:slot("editMenu.place",function(flag)
+	menu:gslot("editMenu.place",function(flag)
 		items.Play:stopAllActions()
 		if flag then
 			items.Play:runAction(oPos(0.5,winSize.width-240-45,105,oEase.OutBack))
@@ -85,7 +85,7 @@ local function oEditMenu()
 			items.Play:runAction(oPos(0.5,winSize.width-240-45,35,oEase.InBack))
 		end
 	end)
-	menu:slot("oEditor.particle",function()
+	menu:gslot("oEditor.particle",function()
 		if items.Origin.visible then
 			items.Origin:stopAllActions()
 			items.Origin:runAction(CCSequence({CCDelay(0.3),oPos(0.3,winSize.width-240-45,winSize.height-35,oEase.OutQuad)}))
@@ -108,7 +108,7 @@ local function oEditMenu()
 		
 		emit("viewArea.pos",oEditor.origin)
 	end)
-	menu:slot("oEditor.frame",function()
+	menu:gslot("oEditor.frame",function()
 		if not items.Origin.visible then
 			if items.Zoom.visible then
 				items.Origin:stopAllActions()
@@ -145,7 +145,7 @@ local function oEditMenu()
 
 		emit("viewArea.pos",oVec2(winSize.width*0.5,(winSize.height-150)*0.5+150))
 	end)
-	menu:slot("oEditor.change",function()
+	menu:gslot("oEditor.change",function()
 		if not oEditor.dirty then
 			oEditor.dirty = true
 			items.Edit.text = "Save"

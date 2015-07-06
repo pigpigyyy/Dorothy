@@ -184,7 +184,7 @@ local function oControlBar()
 	local offset = 0
 	local moveBar = false
 	local locLength = 0
-	controlBar:slot("PlayState",
+	controlBar:gslot("PlayState",
 		function(state)
 			if state == "Play" then
 				controlBar.touchEnabled = false

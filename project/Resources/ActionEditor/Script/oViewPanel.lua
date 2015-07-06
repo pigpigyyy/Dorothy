@@ -604,7 +604,7 @@ local function oViewPanel()
 
 	local selectedItem = nil
 	local outline = nil
-	panel:slot("ImageSelected",
+	panel:gslot("ImageSelected",
 		function(args)
 			if not args then
 				if selectedItem then

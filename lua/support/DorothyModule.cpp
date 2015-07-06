@@ -11,7 +11,67 @@ void call(oEvent* event) const
 }
 HANDLER_WRAP_END
 
-int CCNode_slot(lua_State* L)
+class oSlotData : public CCObject
+{
+public:
+	virtual ~oSlotData()
+	{
+		if (slots)
+		{
+			CCDictElement* element;
+			CCDICT_FOREACH(slots, element)
+			{
+				oSlotList* slotList = (oSlotList*)element->getObject();
+				slotList->clear();
+			}
+		}
+	}
+	oRef<CCDictionary> gslot;
+	oRef<CCDictionary> slots;
+	CREATE_FUNC(oSlotData)
+	CC_LUA_TYPE(oSlotData)
+};
+
+oSlotList::oSlotList():_list(CCArray::createWithCapacity(1))
+{ }
+
+void oSlotList::add(int handler)
+{
+	_list->addObject(CCScriptHandlerEntry::create(handler));
+}
+
+bool oSlotList::remove(int handler)
+{
+	CCARRAY_START(CCScriptHandlerEntry, _entry, _list)
+	{
+		if (CCLuaEngine::sharedEngine()->scriptHandlerEqual(_entry->getHandler(),handler))
+		{
+			_list->removeObject(_entry);
+			return true;
+		}
+	}
+	CCARRAY_END
+	return false;
+}
+
+void oSlotList::clear()
+{
+	_list->removeAllObjects();
+}
+
+void oSlotList::invoke(lua_State* L, int args)
+{
+	int top = lua_gettop(L);
+	CCARRAY_START(CCScriptHandlerEntry, entry, _list)
+	{
+		toluafix_get_function_by_refid(L, entry->getHandler());
+		for (int i = top-args+1;i <= top;i++) lua_pushvalue(L, i);
+		CCLuaEngine::call(L, args, 0);
+	}
+	CCARRAY_END
+}
+
+int CCNode_gslot(lua_State* L)
 {
 #ifndef TOLUA_RELEASE
 	tolua_Error tolua_err;
@@ -29,36 +89,135 @@ int CCNode_slot(lua_State* L)
 	{
 		CCNode* self = (CCNode*)tolua_tousertype(L, 1, 0);
 #ifndef TOLUA_RELEASE
-		if (!self) tolua_error(L, "invalid 'self' in function 'CCNode_slot'", NULL);
+		if (!self) tolua_error(L, "invalid 'self' in function 'CCNode_gslot'", NULL);
 #endif
 		const char* name = tolua_tostring(L, 2, 0);
-		CCDictionary* slots = CCLuaCast<CCDictionary>(self->getHelperObject());
-		if (!slots)
+		CCAssert(self->getHelperObject() == 0 || CCLuaCast<oSlotData>(self->getHelperObject()), "Invalid slot object")
+		oSlotData* slotData = (oSlotData*)self->getHelperObject();
+		if (!slotData)
 		{
-			slots = CCDictionary::create();
-			self->setHelperObject(slots);
+			slotData = oSlotData::create();
+			self->setHelperObject(slotData);
+		}
+		CCDictionary* gslot = slotData->gslot;
+		if (!gslot)
+		{
+			gslot = CCDictionary::create();
+			slotData->gslot = gslot;
 		}
 		oListener* listener = nullptr;
 		if (lua_isfunction(L, 3)) // set
 		{
 			int handler = toluafix_ref_function(L, 3);
 			listener = oListener::create(name, std::make_pair(oListenerHandlerWrapper(handler), &oListenerHandlerWrapper::call));
-			slots->setObject(listener, name);
+			gslot->setObject(listener, name);
 		}
 		else if (tolua_isnoobj(L, 3, &tolua_err)) // get
 		{
-			listener = (oListener*)slots->objectForKey(name);
+			listener = (oListener*)gslot->objectForKey(name);
 		}
 		else if (lua_isnil(L, 3))// del
 		{
-			slots->removeObjectForKey(name);
+			gslot->removeObjectForKey(name);
 		}
 		tolua_pushccobject(L, (void*)listener);
 	}
 	return 1;
 #ifndef TOLUA_RELEASE
 tolua_lerror :
-	tolua_error(L, "#ferror in function 'slot'.", &tolua_err);
+	tolua_error(L, "#ferror in function 'gslot'.", &tolua_err);
+	return 0;
+#endif
+}
+
+int CCNode_slots(lua_State* L)
+{
+#ifndef TOLUA_RELEASE
+	tolua_Error tolua_err;
+	if (
+		!tolua_isusertype(L, 1, "CCNode", 0, &tolua_err) ||
+		!tolua_isstring(L, 2, 0, &tolua_err) ||
+		!(lua_isnil(L, 3) || tolua_isnoobj(L, 3, &tolua_err)) ||
+		!tolua_isnoobj(L, 4, &tolua_err)
+		)
+		goto tolua_lerror;
+	else
+#endif
+	{
+		CCNode* self = (CCNode*)tolua_tousertype(L, 1, 0);
+#ifndef TOLUA_RELEASE
+		if (!self) tolua_error(L, "invalid 'self' in function 'CCNode_slots'", NULL);
+#endif
+		const char* name = tolua_tostring(L, 2, 0);
+		CCAssert(self->getHelperObject() == 0 || CCLuaCast<oSlotData>(self->getHelperObject()), "Invalid slot object")
+		oSlotData* slotData = CCLuaCast<oSlotData>(self->getHelperObject());
+		if (!slotData)
+		{
+			slotData = oSlotData::create();
+			self->setHelperObject(slotData);
+		}
+		CCDictionary* slots = slotData->slots;
+		if (!slots)
+		{
+			slots = CCDictionary::create();
+			slotData->slots = slots;
+		}
+		if (lua_isnil(L, 3))
+		{
+			slots->removeObjectForKey(name);
+			return 0;
+		}
+		oSlotList* slotList = (oSlotList*)slots->objectForKey(name);
+		if (!slotList)
+		{
+			slotList = oSlotList::create();
+			slots->setObject(slotList, name);
+		}
+		tolua_pushccobject(L, (void*)slotList);
+	}
+	return 1;
+#ifndef TOLUA_RELEASE
+tolua_lerror :
+	tolua_error(L, "#ferror in function 'slots'.", &tolua_err);
+	return 0;
+#endif
+}
+
+int CCNode_emit(lua_State* L)
+{
+#ifndef TOLUA_RELEASE
+	tolua_Error tolua_err;
+	if (
+		!tolua_isusertype(L, 1, "CCNode", 0, &tolua_err) ||
+		!tolua_isstring(L, 2, 0, &tolua_err)
+		)
+		goto tolua_lerror;
+	else
+#endif
+	{
+		CCNode* self = (CCNode*)tolua_tousertype(L, 1, 0);
+#ifndef TOLUA_RELEASE
+		if (!self) tolua_error(L, "invalid 'self' in function 'CCNode_emit'", NULL);
+#endif
+		const char* name = tolua_tostring(L, 2, 0);
+		CCAssert(self->getHelperObject() == 0 || CCLuaCast<oSlotData>(self->getHelperObject()), "Invalid slot object")
+		oSlotData* slotData = (oSlotData*)self->getHelperObject();
+		if (slotData)
+		{
+			CCDictionary* slots = slotData->slots;
+			if (slots)
+			{
+				int top = lua_gettop(L);
+				int args = top - 2;
+				oSlotList* list = (oSlotList*)slots->objectForKey(name);
+				if (list) list->invoke(L, args);
+			}
+		}
+	}
+	return 0;
+#ifndef TOLUA_RELEASE
+tolua_lerror :
+	tolua_error(L, "#ferror in function 'emit'.", &tolua_err);
 	return 0;
 #endif
 }
@@ -477,7 +636,7 @@ void oCache_clear()
 	oSharedParticleCache.unload();
 	oSharedClipCache.unload();
 	CCTextureCache::sharedTextureCache()->removeAllTextures();
-	oShareAudioEngine.unload();
+	oSharedAudioEngine.unload();
 }
 
 int oCache_poolCollect()

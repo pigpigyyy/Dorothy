@@ -136,7 +136,7 @@ local function oEditRuler()
 			child.scaleX = scale
 		end)
 	end
-	ruler:slot("viewArea.scale",function(scale)
+	ruler:gslot("viewArea.scale",function(scale)
 		if scale > 5 then scale = 5 end
 		intervalNode.scaleY = scale
 		-- unscale interval text --
@@ -150,7 +150,7 @@ local function oEditRuler()
 			if bottom < newBottom then bottom = newBottom end
 		end
 	end)
-	ruler:slot("viewArea.toScale",function(scale)
+	ruler:gslot("viewArea.toScale",function(scale)
 		intervalNode:runAction(oScale(0.5,1,scale,oEase.OutQuad))
 		-- manually update and unscale interval text --
 		local time = 0

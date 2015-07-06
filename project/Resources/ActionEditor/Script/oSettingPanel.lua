@@ -980,7 +980,7 @@ local function oSettingPanel()
 	end
 
 	local isShowingRoot = false
-	panel:slot("ImageSelected",
+	panel:gslot("ImageSelected",
 		function(args)
 			if oEditor.state == oEditor.EDIT_SPRITE or oEditor.state == oEditor.EDIT_ANIMATION then
 				if args then
@@ -1071,7 +1071,7 @@ local function oSettingPanel()
 		keyItems.EaseO:setValue(oEditor.easeNames[frame[oKd.easeOpacity]])
 	end
 	
-	panel:slot("ControlBarPos",
+	panel:gslot("ControlBarPos",
 		function(pos)
 			if not oEditor.animationData or not oEditor.sprite then
 				for name,item in pairs(keyItems) do
@@ -1109,7 +1109,7 @@ local function oSettingPanel()
 		end)
 
 	local selectedItem = nil
-	panel:slot("SettingSelected",
+	panel:gslot("SettingSelected",
 		function(menuItem)
 			if selectedItem and selectedItem == menuItem then
 				selectedItem:select(false)

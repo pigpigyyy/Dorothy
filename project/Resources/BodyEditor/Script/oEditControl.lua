@@ -252,7 +252,7 @@ local function oEditControl()
 	},ccColor4()))
 	posVisual.transformTarget = oEditor.world
 	posEditor:addChild(posVisual)
-	posVisual:slot("oEditor.fix",function(args)
+	posVisual:gslot("oEditor.fix",function(args)
 		posVisual:getChildByIndex(1).visible = not args.fixY
 		posVisual:getChildByIndex(2).visible = not args.fixX
 	end)
@@ -410,7 +410,7 @@ local function oEditControl()
 	},ccColor4()))
 	sizeVisual.transformTarget = worldNode
 	sizeEditor:addChild(sizeVisual)
-	sizeVisual:slot("oEditor.fix",function(args)
+	sizeVisual:gslot("oEditor.fix",function(args)
 		sizeVisual:getChildByIndex(1).visible = not args.fixY
 		sizeVisual:getChildByIndex(2).visible = not args.fixX
 	end)
@@ -506,7 +506,7 @@ local function oEditControl()
 	centerEditor:addChild(centerVisual)
 	centerEditor.scaleX = 0.5
 	centerEditor.scaleY = 0.5
-	centerVisual:slot("oEditor.fix",function(args)
+	centerVisual:gslot("oEditor.fix",function(args)
 		centerVisual:getChildByIndex(1).visible = not args.fixY
 		centerVisual:getChildByIndex(2).visible = not args.fixX
 	end)
@@ -772,7 +772,7 @@ local function oEditControl()
 	-- init joint chooser --
 	local jointSelected = nil
 	local jointChooser = CCNode()
-	jointChooser:slot("editControl.joint",function(joint)
+	jointChooser:gslot("editControl.joint",function(joint)
 		if jointSelected then
 			jointSelected(joint)
 		end
@@ -809,12 +809,12 @@ local function oEditControl()
 		editControl:hideJointChooser()
 	end
 
-	editControl:slot("editControl.hide",function()
+	editControl:gslot("editControl.hide",function()
 		editControl:hide()
 	end)
 	local currentSetting = nil
 	local n2str = function(num) return string.format("%.2f",num) end
-	editControl:slot("settingPanel.edit",function(item)
+	editControl:gslot("settingPanel.edit",function(item)
 		if not item then return end
 		local name = item.name
 		local value = item.value

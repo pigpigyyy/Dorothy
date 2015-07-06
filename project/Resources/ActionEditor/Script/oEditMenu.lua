@@ -834,7 +834,7 @@ oEditor.spriteData[oSd.index]
 		end
 		items.Size.visible = false
 		items.Visible:setText("Visible")
-		menu:slot("ImageSelected").enabled = true
+		menu:gslot("ImageSelected").enabled = true
 		oEditor.state = oEditor.EDIT_LOOK
 		oEditor.settingPanel.visible = false
 		oEditor.controlBar.visible = false
@@ -845,7 +845,7 @@ oEditor.spriteData[oSd.index]
 		oEditor.viewPanel:selectItem(selectedSp)
 	end
 
-	menu:slot("ImageSelected", function(args)
+	menu:gslot("ImageSelected", function(args)
 		if not args then
 			return
 		end

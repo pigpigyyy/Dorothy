@@ -684,12 +684,27 @@ local Dorothy =
 				typeName = "oVec2",
 				type = "method",
 			},
-			slot =
+			gslot =
 			{
 				args = "(name: string, handler: function)",
 				description = " -- handler: function{eventArgs: table, event: oEvent}",
 				returns = "(slot: oSlot)",
 				typeName = "oSlot",
+				type = "method",
+			},
+			slots =
+			{
+				args = "(name: string, deleteFlag: nil)",
+				description = " -- handler: function{eventArgs: ...}",
+				returns = "(slotList: oSlotList)",
+				typeName = "oSlotList",
+				type = "method",
+			},
+			emit =
+			{
+				args = "(slotName: string, eventArgs: ...)",
+				description = "",
+				returns = "()",
 				type = "method",
 			},
 			traverse =
@@ -6761,6 +6776,38 @@ local Dorothy =
  		type = "class",
  		index = index()
  	},
+	oSlotList =
+	{
+		childs =
+		{
+			add =
+			{
+				args = "(handler: function)",
+				description = " -- handler: function{any: ...}",
+				returns = "()",
+				type = "method",
+			},
+			remove =
+			{
+				args = "(handler: function)",
+				description = " -- handler: function{any: ...}",
+				returns = "(result: bool)",
+				type = "method",
+			},
+			clear =
+			{
+				args = "()",
+				description = "",
+				returns = "()",
+				type = "method",
+			},
+		},
+		description = "class oSlotList(CCObject).",
+		parents = {"CCObject",},
+		type = "class",
+		hide = true,
+		index = index()
+	},
 }
 
 local function makeDerivation(pack)

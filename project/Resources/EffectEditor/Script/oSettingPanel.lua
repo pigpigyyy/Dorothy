@@ -431,22 +431,22 @@ local function oSettingPanel()
 
 	for itemName,item in pairs(items) do
 		if not item.data then
-			item:slot(itemName,function(value)
+			item:gslot(itemName,function(value)
 				item.value = value
 			end)
 		end
 	end
 
-	self:slot("settingPanel.cancel",function()
+	self:gslot("settingPanel.cancel",function()
 		if currentItem then
 			currentItem.selected = false
 		end
 	end)
-	self:slot("settingPanel.hide",function()
+	self:gslot("settingPanel.hide",function()
 		setGroup(nil)
 		emit("settingPanel.cancel")
 	end)
-	self:slot("settingPanel.moveToMode",function()
+	self:gslot("settingPanel.moveToMode",function()
 		self:setPos(oVec2(0,borderSize.height*0.5+30-items.emitterType.positionY))
 	end)
 

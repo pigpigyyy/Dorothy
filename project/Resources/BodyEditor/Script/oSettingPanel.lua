@@ -485,7 +485,7 @@ local function oSettingPanel()
 		end
 	end
 
-	self:slot("settingPanel.toState",function(state)
+	self:gslot("settingPanel.toState",function(state)
 		emit("settingPanel.edit",nil)
 		if state then
 			selectGroup(state)
@@ -499,7 +499,7 @@ local function oSettingPanel()
 		end
 	end)
 	local currentItem = nil
-	self:slot("settingPanel.edit",function(item)
+	self:gslot("settingPanel.edit",function(item)
 		if not item or item.selected then
 			if currentItem then
 				currentItem.selected = false
@@ -509,7 +509,7 @@ local function oSettingPanel()
 			currentItem = nil
 		end
 	end)
-	self:slot("settingPanel.enable",function(enable)
+	self:gslot("settingPanel.enable",function(enable)
 		for _,item in pairs(items) do
 			item.enabled = enable
 		end

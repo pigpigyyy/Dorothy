@@ -60,6 +60,7 @@ local ccobjects = {
 "oJoint",
 "oMoveJoint",
 "oMotorJoint",
+"oSlotList",
 }
 
 -- register CCObject types

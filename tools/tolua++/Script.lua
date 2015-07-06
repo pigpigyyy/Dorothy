@@ -185,15 +185,15 @@ loaded.emit = function(name,args)
 	argsCount = argsCount - 1
 end
 
-local CCNode_slot = loaded.CCNode.slot
-loaded.CCNode.slot = function(self,name,...)
+local CCNode_gslot = loaded.CCNode.gslot
+loaded.CCNode.gslot = function(self,name,...)
 	local handler = select(1,...)
 	if handler then
-		return CCNode_slot(self,name, function(event)
+		return CCNode_gslot(self,name, function(event)
 			handler(oEvent_args[argsCount],event)
 		end)
 	else
-		return CCNode_slot(self,name,...)
+		return CCNode_gslot(self,name,...)
 	end
 end
 

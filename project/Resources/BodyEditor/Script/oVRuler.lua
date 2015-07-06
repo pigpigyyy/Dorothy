@@ -117,12 +117,12 @@ local function oVRuler()
 	self:addChild(intervalNode)
 
 	-- listen view move event --
-	intervalNode:slot("viewArea.move",function(delta)
+	intervalNode:gslot("viewArea.move",function(delta)
 		intervalNode.positionY = intervalNode.positionY + delta.y/self.scaleY
 		updatePart(delta.y < 0 and winSize.height-intervalNode.positionY or 0,
 			delta.y > 0 and intervalNode.positionY or 0)
 	end)
-	intervalNode:slot("viewArea.toPos",function(pos)
+	intervalNode:gslot("viewArea.toPos",function(pos)
 		pos = pos + center
 		intervalNode:runAction(oPos(0.5,halfW,pos.y,oEase.OutQuad))
 		updatePart(winSize.height-pos.y,pos.y)
@@ -139,7 +139,7 @@ local function oVRuler()
 		updateIntervalTextScale(1)
 	end)})
 	local fadeIn = oOpacity(0.3,0.3)
-	self:slot("viewArea.scale",function(scale)
+	self:gslot("viewArea.scale",function(scale)
 		if scale < 1.0 and self.opacity > 0 and fadeOut.done then
 			self.touchEnabled = false
 			self:stopAllActions()
@@ -155,7 +155,7 @@ local function oVRuler()
 			updateIntervalTextScale(1/scale)
 		end
 	end)
-	self:slot("viewArea.toScale",function(scale)
+	self:gslot("viewArea.toScale",function(scale)
 		if scale < 1.0 and self.opacity > 0 and fadeOut.done then
 			self.touchEnabled = false
 			self:stopAllActions()
