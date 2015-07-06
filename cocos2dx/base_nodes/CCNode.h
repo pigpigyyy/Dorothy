@@ -851,6 +851,7 @@ public:
      */
     void stopAllActions();
 
+	void perform(CCAction* action);
     /** 
      * Stops and removes an action from the running action list.
      *

@@ -45,6 +45,7 @@ class CCNode: public CCObject
 	void removeAllChildrenWithCleanup(bool cleanup = true);
 	void runAction(CCAction* action);
 	void stopAllActions();
+	void perform(CCAction* action);
 	void stopAction(CCAction* action);
 	void cleanup();
 

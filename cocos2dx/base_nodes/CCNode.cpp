@@ -870,6 +870,12 @@ void CCNode::stopAllActions()
 	m_pScheduler->getActionManager()->removeAllActionsFromTarget(this);
 }
 
+void CCNode::perform(CCAction* action)
+{
+	this->stopAllActions();
+	this->runAction(action);
+}
+
 void CCNode::stopAction(CCAction* action)
 {
 	m_pScheduler->getActionManager()->removeAction(action);

@@ -59,8 +59,8 @@ DerivedData/
 *.swp
 
 # Ignore genareted lua binding source files
-/lua/cocos2dx_support/LuaCocos2d.cpp
-/lua/cocos2dx_support/LuaCode.cpp
+/lua/support/LuaCocos2d.cpp
+/lua/support/LuaCode.cpp
 
 # Ignore genareted Dorothy lua doc files
 /document/Dorothy/doc/

@@ -601,6 +601,13 @@ local Dorothy =
 				returns = "()",
 				type = "method",
 			},
+			perform =
+			{
+				args = "(action: CCAction)",
+				description = "",
+				returns = "()",
+				type = "method",
+			},
 			cleanup =
 			{
 				args = "()",
