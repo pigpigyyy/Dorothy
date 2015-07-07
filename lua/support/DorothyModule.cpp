@@ -71,6 +71,30 @@ void oSlotList::invoke(lua_State* L, int args)
 	CCARRAY_END
 }
 
+oSlotList* CCNode_getSlotList(CCNode* self, const char* name)
+{
+	CCAssert(self->getHelperObject() == 0 || CCLuaCast<oSlotData>(self->getHelperObject()), "Invalid slot object")
+		oSlotData* slotData = CCLuaCast<oSlotData>(self->getHelperObject());
+		if (!slotData)
+		{
+			slotData = oSlotData::create();
+			self->setHelperObject(slotData);
+		}
+		CCDictionary* slots = slotData->slots;
+		if (!slots)
+		{
+			slots = CCDictionary::create();
+			slotData->slots = slots;
+		}
+		oSlotList* slotList = (oSlotList*)slots->objectForKey(name);
+		if (!slotList)
+		{
+			slotList = oSlotList::create();
+			slots->setObject(slotList, name);
+		}
+		return slotList;
+}
+
 int CCNode_gslot(lua_State* L)
 {
 #ifndef TOLUA_RELEASE
@@ -149,31 +173,21 @@ int CCNode_slots(lua_State* L)
 		if (!self) tolua_error(L, "invalid 'self' in function 'CCNode_slots'", NULL);
 #endif
 		const char* name = tolua_tostring(L, 2, 0);
-		CCAssert(self->getHelperObject() == 0 || CCLuaCast<oSlotData>(self->getHelperObject()), "Invalid slot object")
-		oSlotData* slotData = CCLuaCast<oSlotData>(self->getHelperObject());
-		if (!slotData)
-		{
-			slotData = oSlotData::create();
-			self->setHelperObject(slotData);
-		}
-		CCDictionary* slots = slotData->slots;
-		if (!slots)
-		{
-			slots = CCDictionary::create();
-			slotData->slots = slots;
-		}
 		if (lua_isnil(L, 3))
 		{
-			slots->removeObjectForKey(name);
+			CCAssert(self->getHelperObject() == 0 || CCLuaCast<oSlotData>(self->getHelperObject()), "Invalid slot object")
+			oSlotData* slotData = CCLuaCast<oSlotData>(self->getHelperObject());
+			if (slotData)
+			{
+				CCDictionary* slots = slotData->slots;
+				if (slots)
+				{
+					slots->removeObjectForKey(name);
+				}
+			}
 			return 0;
 		}
-		oSlotList* slotList = (oSlotList*)slots->objectForKey(name);
-		if (!slotList)
-		{
-			slotList = oSlotList::create();
-			slots->setObject(slotList, name);
-		}
-		tolua_pushccobject(L, (void*)slotList);
+		else tolua_pushccobject(L, (void*)CCNode_getSlotList(self, name));
 	}
 	return 1;
 #ifndef TOLUA_RELEASE

@@ -26,6 +26,7 @@ int CCNode_traverse(lua_State* L);
 int CCNode_eachChild(lua_State* L);
 int CCNode_getChildren(lua_State* L);
 CCNode* CCNode_getChildByIndex(CCNode* self, int index);
+oSlotList* CCNode_getSlotList(CCNode* self, const char* name);
 
 void CCDrawNode_drawPolygon(
 	CCDrawNode* self,
