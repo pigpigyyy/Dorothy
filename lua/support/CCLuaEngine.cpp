@@ -165,6 +165,18 @@ static int cclua_doXml(lua_State* L)
 	return newTop - top;
 }
 
+static int cclua_xmlToLua(lua_State* L)
+{
+	string codes(luaL_checkstring(L, 1));
+	codes = oSharedXMLLoader.load(codes);
+	if (codes.empty())
+	{
+		luaL_error(L, "error parsing xml\n");
+	}
+	lua_pushlstring(L, codes.c_str(), codes.size());
+	return 1;
+}
+
 static int cclua_dofile(lua_State* L)
 {
 	string filename(luaL_checkstring(L, 1));
@@ -219,6 +231,7 @@ CCLuaEngine::CCLuaEngine()
 		{ "loadfile", cclua_loadfile },
 		{ "dofile", cclua_dofile },
 		{ "doXml", cclua_doXml },
+		{ "xmlToLua", cclua_xmlToLua },
 		{ "ubox", cclua_ubox },
 		{ NULL, NULL }
 	};

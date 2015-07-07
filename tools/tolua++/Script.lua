@@ -391,7 +391,7 @@ oContent.copyAsync = function(self,src,dst)
 	wait(function() return not loaded end)
 end
 
-_G["Dorothy"] = (function(env)
+_G["Dorothy"] = (function()
 	local tb
 	local function gettb()
 		tb = {}
@@ -403,7 +403,7 @@ _G["Dorothy"] = (function(env)
 		end
 		return tb
 	end
-	return function()
+	return function(env)
 		local dorothy = tb or gettb()
 		if env then
 			local newEnv = {}
