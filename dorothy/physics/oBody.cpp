@@ -18,7 +18,8 @@ oBody::oBody(oBodyDef* bodyDef, oWorld* world):
 _bodyB2(nullptr),
 _bodyDef(bodyDef),
 _world(world),
-_group(0)
+_group(0),
+_receivingContact(false)
 { }
 
 oBody::~oBody()

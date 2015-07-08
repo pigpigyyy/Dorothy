@@ -41,6 +41,7 @@ public:
 	PROPERTY_NAME(float, VelocityX);
 	PROPERTY_NAME(float, VelocityY);
 	PROPERTY_VIRTUAL(int, _group, Group);
+	PROPERTY_BOOL(_receivingContact, ReceivingContact);
 	oContactHandler contactStart;
 	oContactHandler contactEnd;
 	oSensorHandler sensorAdded;

@@ -35,6 +35,9 @@ public:
 	static const char* KeyMenu;
 	//Acceleration
 	static const char* Acceleration;
+	//Sum
+	static const char* slotNames[];
+	static int slotNameCount;
 	//builtin slot end
 	oSlotList();
 	void add(int handler);
@@ -75,26 +78,7 @@ oVec2 oModel_getKey(oModel* model, const char* key);
 void oWorld_query(oWorld* world, const CCRect& rect, int nHandler);
 void oWorld_cast(oWorld* world, const oVec2& start, const oVec2& end, bool closest, int handler);
 
-ENUM_START(oSensorEvent)
-{
-	Enter,
-	Leave
-}
-ENUM_END(oSensorEvent)
-void oSensor_addHandler(oSensor* sensor, uint32 flag, int nHandler);
-void oSensor_removeHandler(oSensor* sensor, uint32 flag, int nHandler);
-void oSensor_clearHandler(oSensor* sensor, uint32 flag);
-
-ENUM_START(oBodyEvent)
-{
-	ContactStart,
-	ContactEnd
-}
-ENUM_END(oBodyEvent)
 oBody* oBody_create(oBodyDef* def, oWorld* world);
-void oBody_addHandler(oBody* body, uint32 flag, int nHandler);
-void oBody_removeHandler(oBody* body, uint32 flag, int nHandler);
-void oBody_clearHandler(oBody* body, uint32 flag);
 
 bool oAnimationCache_load(const char* filename);
 bool oAnimationCache_update(const char* name, const char* content);

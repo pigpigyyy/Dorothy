@@ -380,6 +380,16 @@ TOLUA_API void tolua_constant(lua_State* L, const char* name, lua_Number value)
 	lua_rawset(L, -3);
 }
 
+/* Map string
+	* It assigns a string into the current module(or class)
+	*/
+TOLUA_API void tolua_string(lua_State* L, const char* str)
+{
+	lua_pushstring(L, str);
+	lua_pushstring(L, str);
+	lua_rawset(L, -3);
+}
+
 #ifndef TOLUA_RELEASE
 static int tolua_setReadonly(lua_State* L)
 {

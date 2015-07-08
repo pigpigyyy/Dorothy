@@ -30,6 +30,36 @@ oSlotName(KeyMenu)
 //Acceleration
 oSlotName(Acceleration)
 
+const char* oSlotList::slotNames[] =
+{
+	oSlotList::Entering,
+	oSlotList::Entered,
+	oSlotList::Exiting,
+	oSlotList::Exited,
+	oSlotList::Cleanup,
+	//Touch
+	oSlotList::TouchBegan,
+	oSlotList::TouchCancelled,
+	oSlotList::TouchEnded,
+	oSlotList::TouchMoved,
+	//MenuItem
+	oSlotList::TapBegan,
+	oSlotList::TapEnded,
+	oSlotList::Tapped,
+	//Body
+	oSlotList::ContactEnd,
+	oSlotList::ContactStart,
+	//Sensor
+	oSlotList::BodyEnter,
+	oSlotList::BodyLeave,
+	//Keypad
+	oSlotList::KeyBack,
+	oSlotList::KeyMenu,
+	//Acceleration
+	oSlotList::Acceleration,
+};
+int oSlotList::slotNameCount = sizeof(oSlotList::slotNames)/sizeof(const char*);
+
 HANDLER_WRAP_START(oListenerHandlerWrapper)
 void call(oEvent* event) const
 {
@@ -206,7 +236,9 @@ int CCNode_slots(lua_State* L)
 	if (
 		!tolua_isusertype(L, 1, "CCNode", 0, &tolua_err) ||
 		!tolua_isstring(L, 2, 0, &tolua_err) ||
-		!(lua_isnil(L, 3) || tolua_isnoobj(L, 3, &tolua_err)) ||
+		!(toluafix_isfunction(L, 3, &tolua_err) ||
+			lua_isnil(L, 3) ||
+			tolua_isnoobj(L, 3, &tolua_err)) ||
 		!tolua_isnoobj(L, 4, &tolua_err)
 		)
 		goto tolua_lerror;
@@ -218,7 +250,14 @@ int CCNode_slots(lua_State* L)
 		if (!self) tolua_error(L, "invalid 'self' in function 'CCNode_slots'", NULL);
 #endif
 		const char* name = tolua_tostring(L, 2, 0);
-		if (lua_isnil(L, 3))
+		if (lua_isfunction(L, 3))
+		{
+			oSlotList* slotList = CCNode_getSlotList(self, name);
+			int handler = toluafix_ref_function(L, 3);
+			slotList->add(handler);
+			return 0;
+		}
+		else if (lua_isnil(L, 3))
 		{
 			CCAssert(self->getHelperObject() == 0 || CCLuaCast<oSlotData>(self->getHelperObject()), "Invalid slot object")
 			oSlotData* slotData = CCLuaCast<oSlotData>(self->getHelperObject());
@@ -413,7 +452,7 @@ oModel* oModel_create(const char* filename)
 	oModel* model = oModel::create(filename);
 	model->handlers.each([](const char* name, oAnimationHandler& handler)
 	{
-		handler = oAnimationHandler([name](oModel* model)
+		handler = [name](oModel* model)
 		{
 			oSlotList* slotList = CCNode_tryGetSlotList(model, name);
 			if (slotList)
@@ -423,7 +462,7 @@ oModel* oModel_create(const char* filename)
 				slotList->invoke(L, 1);
 				lua_pop(L, 1);
 			}
-		});
+		};
 	});
 	return model;
 }
@@ -433,48 +472,30 @@ oVec2 oModel_getKey(oModel* model, const char* key)
 	return model->getModelDef()->getKeyPoint(key);
 }
 
-HANDLER_WRAP_START(oSensorHandlerWrapper)
-void call(oSensor* sensor, oBody* body) const
+inline void oHandleSensor(oSensor* sensor, oBody* body, const char* slotName)
 {
-	CCObject* params[] = { sensor, body };
-	CCLuaEngine::sharedEngine()->executeFunction(getHandler(), 2, params);
+	oSlotList* slotList = CCNode_tryGetSlotList(body, slotName);
+	if (slotList)
+	{
+		lua_State* L = CCLuaEngine::sharedEngine()->getState();
+		tolua_pushccobject(L, sensor);
+		tolua_pushccobject(L, body);
+		slotList->invoke(L, 2);
+		lua_pop(L, 2);
+	}
 }
-HANDLER_WRAP_END
 
-void oSensor_addHandler(oSensor* sensor, uint32 flag, int nHandler)
+inline void oHandleContact(oBody* body, const oVec2& point, const oVec2& normal, const char* slotName)
 {
-	switch (flag)
+	oSlotList* slotList = CCNode_tryGetSlotList(body, slotName);
+	if (slotList)
 	{
-	case oSensorEvent::Enter:
-		sensor->bodyEnter += std::make_pair(oSensorHandlerWrapper(nHandler), &oSensorHandlerWrapper::call);
-		break;
-	case oSensorEvent::Leave:
-		sensor->bodyLeave += std::make_pair(oSensorHandlerWrapper(nHandler), &oSensorHandlerWrapper::call);
-		break;
-	}
-}
-void oSensor_removeHandler(oSensor* sensor, uint32 flag, int nHandler)
-{
-	switch (flag)
-	{
-	case oSensorEvent::Enter:
-		sensor->bodyEnter -= std::make_pair(oSensorHandlerWrapper(nHandler), &oSensorHandlerWrapper::call);
-		break;
-	case oSensorEvent::Leave:
-		sensor->bodyLeave -= std::make_pair(oSensorHandlerWrapper(nHandler), &oSensorHandlerWrapper::call);
-		break;
-	}
-}
-void oSensor_clearHandler(oSensor* sensor, uint32 flag)
-{
-	switch (flag)
-	{
-	case oSensorEvent::Enter:
-		sensor->bodyEnter.Clear();
-		break;
-	case oSensorEvent::Leave:
-		sensor->bodyLeave.Clear();
-		break;
+		lua_State* L = CCLuaEngine::sharedEngine()->getState();
+		tolua_pushccobject(L, body);
+		tolua_pushusertype(L, new oVec2(point), CCLuaType<oVec2>());
+		tolua_pushusertype(L, new oVec2(normal), CCLuaType<oVec2>());
+		slotList->invoke(L, 3);
+		lua_pop(L, 3);
 	}
 }
 
@@ -485,67 +506,24 @@ oBody* oBody_create(oBodyDef* def, oWorld* world)
 	{
 		sensor->bodyEnter = [](oSensor* sensor, oBody* body)
 		{
-			oSlotList* slotList = CCNode_tryGetSlotList(body, oSlotList::BodyEnter);
-			if (slotList)
-			{
-				
-				tolua_pushccobject(L, sensor);
-				tolua_pushccobject(L, body);
-				
-			}
+			oHandleSensor(sensor, body, oSlotList::BodyEnter);
+		};
+		sensor->bodyLeave = [](oSensor* sensor, oBody* body)
+		{
+			oHandleSensor(sensor, body, oSlotList::BodyEnter);
 		};
 	};
 	body->eachSensor(sensorAddHandler);
-	body->sensorAdded = oSensorHandler(sensorAddHandler);
+	body->sensorAdded = sensorAddHandler;
+	body->contactStart = [](oBody* body, const oVec2& point, const oVec2& normal)
+	{
+		oHandleContact(body, point, normal, oSlotList::ContactStart);
+	};
+	body->contactEnd = [](oBody* body, const oVec2& point, const oVec2& normal)
+	{
+		oHandleContact(body, point, normal, oSlotList::ContactEnd);
+	};
 	return body;
-}
-
-HANDLER_WRAP_START(oBodyHandlerWrapper)
-void call(oBody* body, const oVec2& point, const oVec2& normal) const
-{
-	lua_State* L = CCLuaEngine::sharedEngine()->getState();
-	tolua_pushccobject(L, body);
-	tolua_pushusertype(L, new oVec2(point), CCLuaType<oVec2>());
-	tolua_pushusertype(L, new oVec2(normal), CCLuaType<oVec2>());
-	CCLuaEngine::sharedEngine()->executeFunction(getHandler(), 3);
-}
-HANDLER_WRAP_END
-
-void oBody_addHandler(oBody* body, uint32 flag, int nHandler)
-{
-	switch (flag)
-	{
-	case oBodyEvent::ContactStart:
-		body->contactStart += std::make_pair(oBodyHandlerWrapper(nHandler), &oBodyHandlerWrapper::call);
-		break;
-	case oBodyEvent::ContactEnd:
-		body->contactEnd += std::make_pair(oBodyHandlerWrapper(nHandler), &oBodyHandlerWrapper::call);
-		break;
-	}
-}
-void oBody_removeHandler(oBody* body, uint32 flag, int nHandler)
-{
-	switch (flag)
-	{
-	case oBodyEvent::ContactStart:
-		body->contactStart -= std::make_pair(oBodyHandlerWrapper(nHandler), &oBodyHandlerWrapper::call);
-		break;
-	case oBodyEvent::ContactEnd:
-		body->contactEnd -= std::make_pair(oBodyHandlerWrapper(nHandler), &oBodyHandlerWrapper::call);
-		break;
-	}
-}
-void oBody_clearHandler(oBody* body, uint32 flag)
-{
-	switch (flag)
-	{
-	case oBodyEvent::ContactStart:
-		body->contactStart.Clear();
-		break;
-	case oBodyEvent::ContactEnd:
-		body->contactEnd.Clear();
-		break;
-	}
 }
 
 void oWorld_query(oWorld* world, const CCRect& rect, int handler)

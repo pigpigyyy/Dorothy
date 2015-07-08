@@ -262,6 +262,9 @@ CCLuaEngine::CCLuaEngine()
 		tolua_beginmodule(L, "CCTextFieldTTF");
 			tolua_variable(L, "inputHandler", CCTextFieldTTF_getInputHandler, CCTextFieldTTF_setInputHandler);
 		tolua_endmodule(L);
+		tolua_beginmodule(L, "oSlot");
+			for (int i = 0; i < oSlotList::slotNameCount; i++) tolua_string(L, oSlotList::slotNames[i]);
+		tolua_endmodule(L);
 	tolua_endmodule(L);
 
 	tolua_LuaCode_open(L);
