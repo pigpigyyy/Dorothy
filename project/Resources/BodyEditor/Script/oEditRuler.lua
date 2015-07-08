@@ -12,7 +12,6 @@ local oScale = require("oScale")
 local oEase = require("oEase")
 local CCSize = require("CCSize")
 local once = require("once")
-local CCTouch = require("CCTouch")
 local CCSpawn = require("CCSpawn")
 local oOpacity = require("oOpacity")
 local CCSequence = require("CCSequence")
@@ -290,7 +289,7 @@ local function oEditRuler()
 		ruler:schedule(updateSpeed)
 		return true
 	end)
-	ruler:slots("TouchMoved",function()
+	ruler:slots("TouchMoved",function(touch)
 		local v = _value-touch.delta.y*indent/(interval*10)
 		local padding = 0.5*indent
 		if _max > _min then

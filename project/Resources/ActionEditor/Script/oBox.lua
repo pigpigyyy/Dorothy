@@ -140,9 +140,10 @@ local function oBox(text,okHandler,isInput)
 						opMenu:addChild(okButton)
 						local cancelButton
 						if okHandler then
-							local cancelButton = oButton("Cancel",17,60,false,
+							cancelButton = oButton("Cancel",17,60,false,
 								70,0,
-								function()
+								function(item)
+									item.enabled = false
 									opMenu:removeHandlers()
 									box:hide()
 								end)

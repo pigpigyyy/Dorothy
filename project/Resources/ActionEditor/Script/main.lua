@@ -1,7 +1,6 @@
 local oContent = require("oContent")
 local oRoutine = require("oRoutine")
 local once = require("once")
-local CCNode = require("CCNode")
 local oCache = require("oCache")
 local CCDirector = require("CCDirector")
 

@@ -215,6 +215,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 		backButton = oButton("Quit",17,60,false,
 			70,0,
 			function(item)
+				item.enabled = false
 				opMenu.enabled = false
 				CCDirector:popToRootScene()
 			end)
@@ -231,6 +232,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 		cancelButton = oButton("Cancel",17,60,false,
 			140,0,
 			function(item)
+				item.enabled = false
 				opMenu.enabled = false
 				panel:hide()
 			end)
@@ -436,7 +438,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 			local button = oButton("<NEW>",17,
 				itemWidth,50,
 				xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
-				function(item)
+				function()
 					opMenu.enabled = false
 					panel:hide()
 					oBox("New Model",function(name)

@@ -8,7 +8,6 @@ local ccColor4 = require("ccColor4")
 local CCClipNode = require("CCClipNode")
 local CCSize = require("CCSize")
 local oEase = require("oEase")
-local CCTouch = require("CCTouch")
 local CCRect = require("CCRect")
 local CCSequence = require("CCSequence")
 local CCSpawn = require("CCSpawn")
@@ -267,7 +266,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 	panel.setPos = setPos
 
 	panel.touchPriority = CCMenu.DefaultHandlerPriority-3
-	panel:slots("TouchBegan",function()
+	panel:slots("TouchBegan",function(touch)
 		if touch.id ~= 0 then
 			return false
 		end
@@ -300,7 +299,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 	panel:slots("TouchEnded",touchEnded)
 	panel:slots("TouchCancelled",touchEnded)
 
-	panel:slots("TouchMoved",function()
+	panel:slots("TouchMoved",function(touch)
 		deltaMoveLength = deltaMoveLength + touch.delta.length
 		_s = _s + touch.delta
 		if deltaMoveLength > 10 then

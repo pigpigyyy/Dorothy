@@ -12,7 +12,6 @@ local oButton = require("oButton")
 local once = require("once")
 local cycle = require("cycle")
 local oEase = require("oEase")
-local CCTouch = require("CCTouch")
 local CCRect = require("CCRect")
 local oEditor = require("oEditor")
 

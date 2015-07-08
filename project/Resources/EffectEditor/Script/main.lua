@@ -10,7 +10,6 @@ _G["require"] = function(name)
 end
 
 local CCDirector = require("CCDirector")
-local CCNode = require("CCNode")
 local oContent = require("oContent")
 local oRoutine = require("oRoutine")
 local once = require("once")

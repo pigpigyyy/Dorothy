@@ -14,7 +14,6 @@ local CCLabelTTF = require("CCLabelTTF")
 local ccColor3 = require("ccColor3")
 local emit = require("emit")
 local oOpacity = require("oOpacity")
-local CCTouch = require("CCTouch")
 local CCRect = require("CCRect")
 local CCSequence = require("CCSequence")
 local oEditor = require("oEditor").oEditor
@@ -343,7 +342,7 @@ local function oSettingPanel()
 	end
 
 	panel.touchPriority = CCMenu.DefaultHandlerPriority-2
-	panel:slots("TouchBegan",function()
+	panel:slots("TouchBegan",function(touch)
 		if touch.id ~= 0 or oEditor.isPlaying or not panel.visible then
 			return false
 		end		
@@ -374,7 +373,7 @@ local function oSettingPanel()
 	panel:slots("TouchEnded",touchEnded)
 	panel:slots("TouchCancelled",touchEnded)
 
-	panel:slots("TouchMoved",function()
+	panel:slots("TouchMoved",function(touch)
 		deltaMoveLength = deltaMoveLength + touch.delta.length
 		_s = _s + touch.delta
 		if deltaMoveLength > 10 then

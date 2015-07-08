@@ -16,7 +16,6 @@ local CCSequence = require("CCSequence")
 local oScale = require("oScale")
 local emit = require("emit")
 local oOpacity = require("oOpacity")
-local CCTouch = require("CCTouch")
 local CCRect = require("CCRect")
 local cclog = require("cclog")
 local tolua = require("tolua")
@@ -337,7 +336,7 @@ local function oViewPanel()
 		end
 
 		local isFolding = false
-		menuItem:slots("Tapped",function()
+		menuItem:slots("Tapped",function(self)
 			if oEditor.isPlaying then
 				return false
 			end
@@ -446,7 +445,7 @@ local function oViewPanel()
 	end
 
 	panel.touchPriority = CCMenu.DefaultHandlerPriority-2
-	panel:slots("TouchBegan",function()
+	panel:slots("TouchBegan",function(touch)
 		if touch.id ~= 0 then
 			return false
 		end
@@ -476,7 +475,7 @@ local function oViewPanel()
 	panel:slots("TouchEnded",touchEnded)
 	panel:slots("TouchCancelled",touchEnded)
 
-	panel:slots("TouchMoved",function()
+	panel:slots("TouchMoved",function(touch)
 		deltaMoveLength = deltaMoveLength + touch.delta.length
 		_s = _s + touch.delta
 		if deltaMoveLength > 10 then
