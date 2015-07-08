@@ -12,6 +12,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 NS_DOROTHY_BEGIN
 
 class oBody;
+class oSensor;
 
 typedef Delegate<void(oSensor*,oBody*)> oSensorHandler;
 

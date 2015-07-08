@@ -60,15 +60,7 @@ public:
 		Tapped,
 		TapEnded
 	};
-    CCMenuItem()
-    : m_bSelected(false)
-    , m_bEnabled(false)            
-    , m_pListener(NULL)            
-    , m_pfnSelector(NULL)
-    , m_nScriptTapHandler(0)
-    {}
-    virtual ~CCMenuItem();
-
+    CCMenuItem();
     /** Creates a CCMenuItem with no target/selector */
     static CCMenuItem* create();
     /** Creates a CCMenuItem with a target/selector */
@@ -84,10 +76,6 @@ public:
     /** The item was unselected */
     virtual void unselected();
 	virtual void cleanup();
-    
-    /** Register menu handler script function */
-	void setScriptTapHandler(int handler);
-    int getScriptTapHandler() const { return m_nScriptTapHandler; };
 
     virtual bool isEnabled();
     //@note: It's 'setIsEnable' in cocos2d-iphone. 
@@ -100,7 +88,6 @@ public:
 protected:
     CCObject* m_pListener;
     SEL_MenuHandler m_pfnSelector;
-    int m_nScriptTapHandler;
 	CC_LUA_TYPE(CCMenuItem)
 };
 

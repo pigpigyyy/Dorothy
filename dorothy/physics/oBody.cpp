@@ -316,6 +316,16 @@ void oBody::setPosition( float x, float y )
 	this->setPosition(CCPoint(x,y));
 }
 
+void oBody::setReceivingContact(bool var)
+{
+	_receivingContact = var;
+}
+
+bool oBody::isReceivingContact() const
+{
+	return _receivingContact;
+}
+
 void oBody::updatePhysics()
 {
 	if (_bodyB2->IsAwake())

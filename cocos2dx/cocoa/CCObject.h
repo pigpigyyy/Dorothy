@@ -114,7 +114,7 @@ typedef void (CCObject::*SEL_CallFunc)();
 typedef void (CCObject::*SEL_CallFuncN)(CCNode*);
 typedef void (CCObject::*SEL_CallFuncND)(CCNode*, void*);
 typedef void (CCObject::*SEL_CallFuncO)(CCObject*);
-typedef void (CCObject::*SEL_MenuHandler)(CCObject*);
+typedef void (CCObject::*SEL_MenuHandler)(int,CCObject*);
 typedef void (CCObject::*SEL_EventHandler)(CCEvent*);
 typedef int (CCObject::*SEL_Compare)(CCObject*);
 

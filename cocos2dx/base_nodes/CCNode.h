@@ -734,29 +734,6 @@ public:
     /// @{
     /// @name Script Bindings for lua
 
-    /**
-     * Registers a script function that will be called in onEnter() & onExit() seires functions.
-     * 
-     * This handler will be removed automatically after onExit() called.
-     * @code
-     * -- lua sample
-     * scene.nodeHandler = function(eventType)
-     *     if eventType == CCNode.Entered then
-     *         -- do something
-     *     elseif evetType == CCNode.Exited then
-     *         -- do something
-     *     end
-     * end
-     * @endcode
-     *
-     * @warning This method is for internal usage, don't call it manually.
-     * @todo Perhaps we should rename it to get/set/removeScriptHandler acoording to the function name style.
-     *
-     * @param handler   A number that indicates a lua function. 
-     */
-	void setScriptHandler(int handler);
-    inline int getScriptHandler() const { return m_nScriptHandler; };
-
     /** 
      * Schedules for lua script. 
      */
@@ -1239,9 +1216,8 @@ protected:
     ccGLServerState m_eGLServerState;   ///< OpenGL servier side state
     
     CCScheduler *m_pScheduler;          ///< scheduler used to schedule timers and updates
-    
-    int m_nScriptHandler;               ///< script handler for onEnter() & onExit(), used in Javascript binding and Lua binding.
-    int m_nUpdateScriptHandler;         ///< script handler for update() callback per frame, which is invoked from lua & javascript.
+
+    int m_nUpdateScriptHandler;         ///< script handler for update() callback per frame, which is invoked from lua.
 	CC_LUA_TYPE(CCNode)
 };
 

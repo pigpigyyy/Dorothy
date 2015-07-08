@@ -77,7 +77,6 @@ CCNode::CCNode()
 , m_bInverseDirty(true)
 , m_bVisible(true)
 , m_bReorderChildDirty(false)
-, m_nScriptHandler(0)
 , m_nUpdateScriptHandler(0)
 , _displayedOpacity(1.0f)
 , _realOpacity(1.0f)
@@ -99,7 +98,6 @@ CCNode::~CCNode()
 	CCLOGINFO("cocos2d: deallocing");
 
 	// callbacks
-	CCNode::setScriptHandler(0);
 	if (m_nUpdateScriptHandler)
 	{
 		CCScriptEngine::sharedEngine()->removeScriptHandler(m_nUpdateScriptHandler);
@@ -468,7 +466,6 @@ void CCNode::cleanup()
 
 	// clear lua callbacks
 	CCNode::unscheduleUpdateLua();
-	CCNode::setScriptHandler(0);
 
 	// clear user object
 	CC_SAFE_RELEASE_NULL(m_pUserObject);
@@ -854,15 +851,6 @@ CCAction* CCNode::runAction(CCAction* action)
 	CCAssert(action != NULL, "CCNode run action argument must be non-nil");
 	m_pScheduler->getActionManager()->addAction(action, this, !m_bRunning);
 	return action;
-}
-
-void CCNode::setScriptHandler(int handler)
-{
-	if (m_nScriptHandler)
-	{
-		CCScriptEngine::sharedEngine()->removeScriptHandler(m_nScriptHandler);
-	}
-	m_nScriptHandler = handler;
 }
 
 void CCNode::stopAllActions()

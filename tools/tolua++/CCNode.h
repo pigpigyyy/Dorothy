@@ -1,13 +1,5 @@
 class CCNode: public CCObject
 {
-	enum
-	{
-		Enter @ Entering = 0,
-		EnterTransitionDidFinish @ Entered = 2,
-		ExitTransitionDidStart @ Exiting = 3,
-		Exit @ Exited = 1,
-		Cleanup = 4
-	};
 	tolua_property__common int zOrder;
 	tolua_property__common float rotation @ angle;
 	tolua_property__common float scaleX;
@@ -27,7 +19,6 @@ class CCNode: public CCObject
 	tolua_property__bool bool cascadeOpacity;
 	tolua_property__bool bool cascadeColor;
 	tolua_property__common CCNode* transformTarget;
-	tolua_property__common tolua_function scriptHandler @ nodeHandler;
 	//tolua_property__common CCGLProgram* shaderProgram;
 	tolua_property__common CCScheduler* scheduler;
 	tolua_property__common CCObject* userObject @ data;

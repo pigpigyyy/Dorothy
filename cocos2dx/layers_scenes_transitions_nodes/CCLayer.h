@@ -58,12 +58,8 @@ public:
 	CC_PROPERTY_BOOL(m_bTouchEnabled, TouchEnabled)
 	CC_PROPERTY_BOOL(m_bKeypadEnabled, KeypadEnabled)
 	CC_PROPERTY_BOOL(m_bAccelerometerEnabled, AccelerometerEnabled)
-	CC_PROPERTY_NAME(int, ScriptAccelerateHandler)
-	CC_PROPERTY_NAME(int, ScriptTouchHandler)
-	CC_PROPERTY_NAME(int, ScriptKeypadHandler)
 
 	CCLayer();
-	virtual ~CCLayer();
 	virtual bool init();
 	virtual void cleanup();
 
@@ -93,12 +89,6 @@ public:
 
 private:
 	virtual void registerWithTouchDispatcher();
-
-	// Script touch events handler
-	int m_pScriptTouchHandler;
-	int m_pScriptKeypadHandler;
-	int m_pScriptAccelerateHandler;
-
 	int excuteScriptTouchHandler(int nEventType, CCTouch* pTouch);
 	int excuteScriptTouchHandler(int nEventType, CCSet* pTouches);
 	CC_LUA_TYPE(CCLayer)

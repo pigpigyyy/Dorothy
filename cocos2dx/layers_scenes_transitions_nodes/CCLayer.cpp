@@ -45,21 +45,11 @@ CCLayer::CCLayer()
 : m_bTouchEnabled(false)
 , m_bAccelerometerEnabled(false)
 , m_bKeypadEnabled(false)
-, m_pScriptTouchHandler(0)
-, m_pScriptKeypadHandler(0)
-, m_pScriptAccelerateHandler(0)
 , m_nTouchPriority(0)
 , m_bMultiTouches(false)
 , m_bSwallowTouches(false)
 {
 	setAnchorPoint(ccp(0.5f, 0.5f));
-}
-
-CCLayer::~CCLayer()
-{
-	CCLayer::setScriptTouchHandler(0);
-	CCLayer::setScriptKeypadHandler(0);
-	CCLayer::setScriptAccelerateHandler(0);
 }
 
 bool CCLayer::init()
@@ -73,9 +63,6 @@ bool CCLayer::init()
 
 void CCLayer::cleanup()
 {
-	CCLayer::setScriptTouchHandler(0);
-	CCLayer::setScriptKeypadHandler(0);
-	CCLayer::setScriptAccelerateHandler(0);
 	CCNode::cleanup();
 }
 
@@ -107,20 +94,6 @@ void CCLayer::registerWithTouchDispatcher()
 	{
 		pDispatcher->addTargetedDelegate(this, m_nTouchPriority, m_bSwallowTouches);
 	}
-}
-
-void CCLayer::setScriptTouchHandler(int nHandler)
-{
-	if (m_pScriptTouchHandler)
-	{
-		CCScriptEngine::sharedEngine()->removeScriptHandler(m_pScriptTouchHandler);
-	}
-	m_pScriptTouchHandler = nHandler;
-}
-
-int CCLayer::getScriptTouchHandler()
-{
-	return m_pScriptTouchHandler;
 }
 
 int CCLayer::excuteScriptTouchHandler(int nEventType, CCTouch* pTouch)
@@ -245,23 +218,9 @@ void CCLayer::setAccelerometerInterval(double interval)
 	}
 }
 
-
 void CCLayer::didAccelerate(CCAcceleration* pAccelerationValue)
 {
 	CCScriptEngine::sharedEngine()->executeAccelerometerEvent(this, pAccelerationValue);
-}
-
-void CCLayer::setScriptAccelerateHandler(int nHandler)
-{
-	if (m_pScriptAccelerateHandler)
-	{
-		CCScriptEngine::sharedEngine()->removeScriptHandler(m_pScriptAccelerateHandler);
-	}
-	m_pScriptAccelerateHandler = nHandler;
-}
-int CCLayer::getScriptAccelerateHandler()
-{
-	return m_pScriptAccelerateHandler;
 }
 
 void CCLayer::setKeypadEnabled(bool enabled)
@@ -288,32 +247,13 @@ bool CCLayer::isKeypadEnabled()
 	return m_bKeypadEnabled;
 }
 
-void CCLayer::setScriptKeypadHandler(int nHandler)
-{
-	if (m_pScriptKeypadHandler)
-	{
-		CCScriptEngine::sharedEngine()->removeScriptHandler(m_pScriptKeypadHandler);
-	}
-	m_pScriptKeypadHandler = nHandler;
-}
-int CCLayer::getScriptKeypadHandler()
-{
-	return m_pScriptKeypadHandler;
-}
-
 void CCLayer::keyBackClicked()
 {
-	if (m_pScriptKeypadHandler)
-	{
-		CCScriptEngine::sharedEngine()->executeLayerKeypadEvent(this, CCKeypad::Back);
-	}
+	CCScriptEngine::sharedEngine()->executeLayerKeypadEvent(this, CCKeypad::Back);
 }
 void CCLayer::keyMenuClicked()
 {
-	if (m_pScriptKeypadHandler)
-	{
-		CCScriptEngine::sharedEngine()->executeLayerKeypadEvent(this, CCKeypad::Menu);
-	}
+	CCScriptEngine::sharedEngine()->executeLayerKeypadEvent(this, CCKeypad::Menu);
 }
 
 void CCLayer::onEnter()

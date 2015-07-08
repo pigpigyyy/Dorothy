@@ -6,10 +6,6 @@ class CCLayer: public CCNode
 	tolua_property__bool bool multiTouches;
 	tolua_property__bool bool swallowTouches;
 	tolua_property__common int touchPriority;
-	tolua_property__common tolua_function scriptAccelerateHandler @ accelerateHandler;
-	tolua_property__common tolua_function scriptTouchHandler @ touchHandler;
-	tolua_property__common tolua_function scriptKeypadHandler @ keypadHandler;
-
 	static CCLayer* create();
 };
 

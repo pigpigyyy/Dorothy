@@ -40,6 +40,13 @@ NS_CC_BEGIN
 // CCMenuItem
 //
 
+CCMenuItem::CCMenuItem()
+: m_bSelected(false)
+, m_bEnabled(false)
+, m_pListener(NULL)
+, m_pfnSelector(NULL)
+{}
+
 CCMenuItem* CCMenuItem::create()
 {
     return CCMenuItem::create(NULL, NULL);
@@ -63,36 +70,29 @@ bool CCMenuItem::initWithTarget(CCObject *rec, SEL_MenuHandler selector)
     return true;
 }
 
-CCMenuItem::~CCMenuItem()
-{
-	CCMenuItem::setScriptTapHandler(0);
-}
-
 void CCMenuItem::cleanup()
 {
-	CCMenuItem::setScriptTapHandler(0);
 	CCNode::cleanup();
 }
 
 void CCMenuItem::selected()
 {
 	m_bSelected = true;
+	if (m_pListener && m_pfnSelector)
+	{
+		(m_pListener->*m_pfnSelector)(CCMenuItem::TapBegan, this);
+	}
 	CCScriptEngine::sharedEngine()->executeMenuItemEvent(CCMenuItem::TapBegan, this);
 }
 
 void CCMenuItem::unselected()
 {
 	m_bSelected = false;
-	CCScriptEngine::sharedEngine()->executeMenuItemEvent(CCMenuItem::TapEnded, this);
-}
-
-void CCMenuItem::setScriptTapHandler(int handler)
-{
-	if (m_nScriptTapHandler)
+	if (m_pListener && m_pfnSelector)
 	{
-		CCScriptEngine::sharedEngine()->removeScriptHandler(m_nScriptTapHandler);
+		(m_pListener->*m_pfnSelector)(CCMenuItem::TapEnded, this);
 	}
-	m_nScriptTapHandler = handler;
+	CCScriptEngine::sharedEngine()->executeMenuItemEvent(CCMenuItem::TapEnded, this);
 }
 
 void CCMenuItem::activate()
@@ -101,7 +101,7 @@ void CCMenuItem::activate()
     {
         if (m_pListener && m_pfnSelector)
         {
-            (m_pListener->*m_pfnSelector)(this);
+            (m_pListener->*m_pfnSelector)(CCMenuItem::Tapped, this);
         }
 		CCScriptEngine::sharedEngine()->executeMenuItemEvent(CCMenuItem::Tapped, this);
     }

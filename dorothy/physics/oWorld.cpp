@@ -374,18 +374,18 @@ void oContactListener::BeginContact( b2Contact* contact )
 			_sensorEnters.push_back(pair);
 		}
 	}
-	else if (bodyA->_receivingContact || bodyB->_receivingContact)
+	else if (bodyA->isReceivingContact() || bodyB->isReceivingContact())
 	{
 		b2WorldManifold worldManifold;
 		contact->GetWorldManifold(&worldManifold);
 		oVec2 point = oWorld::oVal(worldManifold.points[0]);
-		if (bodyA->_receivingContact)
+		if (bodyA->isReceivingContact())
 		{
 			oContactPair pair = { bodyA, bodyB, point, worldManifold.normal };
 			pair.retain();
 			_contactStarts.push_back(pair);
 		}
-		if (bodyB->_receivingContact)
+		if (bodyB->isReceivingContact())
 		{
 			oContactPair pair = { bodyB, bodyA, point, worldManifold.normal };
 			pair.retain();
@@ -420,18 +420,18 @@ void oContactListener::EndContact( b2Contact* contact )
 			_sensorLeaves.push_back(pair);
 		}
 	}
-	else if (bodyA->_receivingContact || bodyB->_receivingContact)
+	else if (bodyA->isReceivingContact() || bodyB->isReceivingContact())
 	{
 		b2WorldManifold worldManifold;
 		contact->GetWorldManifold(&worldManifold);
 		oVec2 point = oWorld::oVal(worldManifold.points[0]);
-		if (bodyA->_receivingContact)
+		if (bodyA->isReceivingContact())
 		{
 			oContactPair pair = { bodyA, bodyB, point, worldManifold.normal };
 			pair.retain();
 			_contactEnds.push_back(pair);
 		}
-		if (bodyB->_receivingContact)
+		if (bodyB->isReceivingContact())
 		{
 			oContactPair pair = { bodyB, bodyA, point, worldManifold.normal };
 			pair.retain();
