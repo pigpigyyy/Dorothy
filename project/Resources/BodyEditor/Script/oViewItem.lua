@@ -39,7 +39,7 @@ local oViewItem = class({
 		self._tapped = tapped
 		self.contentSize = CCSize(width,height)
 		self.position = oVec2(x+(isSub and 15 or 0),y)
-		self.tapHandler = function(eventType) self:tapped(eventType) end
+		self:slots("Tapped",function() self:tapped() end)
 
 		local node = CCNode()
 		node.position = oVec2(halfW,halfH)
@@ -165,15 +165,14 @@ local oViewItem = class({
 		self._scale = oScale(0.25,1,1,oEase.OutBack)
 		self._fade = oOpacity(0.5, 0)
 	end,
-	
-	tapped = function(self,eventType)
-		if eventType ~= CCMenuItem.Tapped then return end
+
+	tapped = function(self)
 		self.selected = not self.selected
 		if self._tapped then
 			self._tapped(self)
 		end
 	end,
-	
+
 	selected = property(
 		function(self)
 			return self._selected

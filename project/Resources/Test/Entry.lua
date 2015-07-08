@@ -164,19 +164,15 @@ panel:show()
 scene:addChild(panel)
 
 panel.keypadEnabled = true
-panel.keypadHandler = function(eventType)
-	if eventType == CCKeypad.Back then
-		CCDirector:stop() -- end is Lua keyword, so this function use name stop
-	end
-end
+panel:slots("KeyBack",function()
+	CCDirector:stop() -- end is Lua keyword, so this function use name stop
+end)
 
 CCDirector.displayStats = true
 
-scene.nodeHandler = function(eventType)
-	if eventType == CCNode.Entered then
-		CCDirector:popToRootScene()
-	end
-end
+scene:slots("Entered",function()
+	CCDirector:popToRootScene()
+end)
 
 oContent:setSearchPaths({"","Lib"})
 

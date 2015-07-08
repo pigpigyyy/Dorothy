@@ -10,7 +10,6 @@ local CCNode = require("CCNode")
 local CCClipNode = require("CCClipNode")
 local oOpacity = require("oOpacity")
 local oEase = require("oEase")
-local CCTouch = require("CCTouch")
 local CCRect = require("CCRect")
 local oEditor = require("oEditor").oEditor
 local oSd = require("oEditor").oSd
@@ -213,8 +212,8 @@ local function oControlBar()
 
 	local jumpPos = false
 	controlBar.swallowTouches = true
-	controlBar.touchHandler = function(eventType, touch)
-		--touch = CCTouch
+	
+	local function isTouchValid(touch)
 		if not controlBar.visible or touch.id ~= 0 then
 			return false
 		end
@@ -225,73 +224,84 @@ local function oControlBar()
 		locLength = loc.x-10-barIterval
 		if locLength < 0 then locLength = 0 end
 		if locLength > barLength then locLength = barLength end
-
-		if eventType == CCTouch.Began then
-			if not CCRect(oVec2.zero, controlBar.contentSize):containsPoint(loc) then
-				return false
-			end
-			controlBar:show()
-			--cclog("Start %d,%d",lastPos,offset)
-			if lastPos-barDragPos <= locLength and locLength <= lastPos+barDragPos then
-				moveBar = true
-			end
-		elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
-			controlBar:hide()
-			if moveBar then
-				lastPos = locLength
-				moveBar = false
-			end
-			if jumpPos then
-				jumpPos = false
-				oEditor.settingPanel:clearSelection()
-				local model = oEditor.viewArea:getModel()
-				if model then
-					local pos = (locLength-offset)*60/barLength
-					if pos < 0 then pos = 0 end
-					if not model.doing then
-						model:play(oEditor.animation)
-						model:pause()
-					end
-					model.time = (math.floor(pos+0.5)/60.0)/model.duration
-					controlBar:setPos(pos)
-				end
-			else
-				jumpPos = true
-				local interval = 0
-				controlBar:schedule(function(deltaTime)
-					interval = interval + deltaTime
-					if interval >= 0.5 then
-						jumpPos = false
-						controlBar:unschedule()
-					end
-				end)
-			end
-			--cclog("End %d,%d",lastPos,offset)
-		elseif eventType == CCTouch.Moved then
-			if moveBar then
-				local model = oEditor.viewArea:getModel()
-				if model then
-					local pos = (locLength-offset)*60/barLength
-					if not model.doing then
-						model:play(oEditor.animation)
-						model:pause()
-					end
-					model.time = (math.floor(pos+0.5)/60.0)/model.duration
-					bar:setPos(pos)
-				end
-			else
-				local deltaX = touch.delta.x * 2
-				offset = offset + deltaX
-				if offset > 0 then
-					offset = 0
-				else
-					lastPos = lastPos + deltaX
-				end
-				controlNode:setOffset(offset)
-			end
-		end
 		return true
 	end
+	
+	controlBar:slots("TouchBegan",function(touch)
+		if not isTouchValid(touch) then return false end
+		local loc = controlBar:convertToNodeSpace(touch.location)
+		if not CCRect(oVec2.zero, controlBar.contentSize):containsPoint(loc) then
+			return false
+		end
+		controlBar:show()
+		--cclog("Start %d,%d",lastPos,offset)
+		if lastPos-barDragPos <= locLength and locLength <= lastPos+barDragPos then
+			moveBar = true
+		end
+		return true
+	end)
+
+	local function touchEnded(touch)
+		if not isTouchValid(touch) then return end
+		controlBar:hide()
+		if moveBar then
+			lastPos = locLength
+			moveBar = false
+		end
+		if jumpPos then
+			jumpPos = false
+			oEditor.settingPanel:clearSelection()
+			local model = oEditor.viewArea:getModel()
+			if model then
+				local pos = (locLength-offset)*60/barLength
+				if pos < 0 then pos = 0 end
+				if not model.doing then
+					model:play(oEditor.animation)
+					model:pause()
+				end
+				model.time = (math.floor(pos+0.5)/60.0)/model.duration
+				controlBar:setPos(pos)
+			end
+		else
+			jumpPos = true
+			local interval = 0
+			controlBar:schedule(function(deltaTime)
+				interval = interval + deltaTime
+				if interval >= 0.5 then
+					jumpPos = false
+					controlBar:unschedule()
+				end
+			end)
+		end
+		--cclog("End %d,%d",lastPos,offset)
+	end
+	controlBar:slots("TouchEnded",touchEnded)
+	controlBar:slots("TouchCancelled",touchEnded)
+
+	controlBar:slots("TouchMoved",function(touch)
+		if not isTouchValid(touch) then return end
+		if moveBar then
+			local model = oEditor.viewArea:getModel()
+			if model then
+				local pos = (locLength-offset)*60/barLength
+				if not model.doing then
+					model:play(oEditor.animation)
+					model:pause()
+				end
+				model.time = (math.floor(pos+0.5)/60.0)/model.duration
+				bar:setPos(pos)
+			end
+		else
+			local deltaX = touch.delta.x * 2
+			offset = offset + deltaX
+			if offset > 0 then
+				offset = 0
+			else
+				lastPos = lastPos + deltaX
+			end
+			controlNode:setOffset(offset)
+		end
+	end)
 
 	controlBar.setPos = function(self,pos)
 		local deltaX = barIterval * (pos - bar:getPos())

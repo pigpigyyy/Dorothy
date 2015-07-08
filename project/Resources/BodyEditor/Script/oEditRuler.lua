@@ -284,35 +284,37 @@ local function oEditRuler()
 
 	ruler.touchPriority = oEditor.touchPriorityEditControl
 	ruler.swallowTouches = true
-	ruler.touchHandler = function(eventType,touch)
-		--touch=CCTouch
-		if eventType == CCTouch.Began then
-			_s = 0
-			_v = 0
-			ruler:schedule(updateSpeed)
-		elseif eventType == CCTouch.Moved then
-			local v = _value-touch.delta.y*indent/(interval*10)
-			local padding = 0.5*indent
-			if _max > _min then
-				local d = 1
-				if v > _max then
-					d = (v - _max)*3/padding
-				elseif v < _min then
-					d = (_min - v)*3/padding
-				end
-				v = _value+(v - _value)/(d < 1 and 1 or d*d)
-			end
-			ruler:setValue((v-_value)/intervalNode.scaleY+_value)
-			_s = _s + touch.delta.y
-		elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
-			if isReseting() then
-				startReset()
-			elseif _v ~= 0 then
-				ruler:schedule(updatePos)
-			end
-		end
+	ruler:slots("TouchBegan",function()
+		_s = 0
+		_v = 0
+		ruler:schedule(updateSpeed)
 		return true
+	end)
+	ruler:slots("TouchMoved",function()
+		local v = _value-touch.delta.y*indent/(interval*10)
+		local padding = 0.5*indent
+		if _max > _min then
+			local d = 1
+			if v > _max then
+				d = (v - _max)*3/padding
+			elseif v < _min then
+				d = (_min - v)*3/padding
+			end
+			v = _value+(v - _value)/(d < 1 and 1 or d*d)
+		end
+		ruler:setValue((v-_value)/intervalNode.scaleY+_value)
+		_s = _s + touch.delta.y
+	end)
+
+	local function touchEnded()
+		if isReseting() then
+			startReset()
+		elseif _v ~= 0 then
+			ruler:schedule(updatePos)
+		end
 	end
+	ruler:slots("TouchEnded",touchEnded)
+	ruler:slots("TouchCancelled",touchEnded)
 
 	ruler.show = function(self,default,min,max,indent,callback)
 		self:setIndent(indent)

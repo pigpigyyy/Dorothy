@@ -109,30 +109,35 @@ layer.anchor = oVec2.zero
 scene:addChild(layer)
 
 local joint = nil
-layer.touchHandler = function(eventType, touch)
+layer:slots("TouchBegan",function(touch)
 	local pos = world:convertToNodeSpace(touch.location)
-	if eventType == CCTouch.Began then
-		world:query(CCRect(pos.x-0.5,pos.y-0.5,1,1),function(body)
-			if oData:isTerrain(body) then
-				return true
-			end
-			if joint then
-				joint:destroy()
-			end
-			joint = oJoint:move(true,terrain,body,pos,1000*body.mass)
+	world:query(CCRect(pos.x-0.5,pos.y-0.5,1,1),function(body)
+		if oData:isTerrain(body) then
 			return true
-		end)
-	elseif eventType == CCTouch.Moved then
-		if joint then
-			joint.position = pos
 		end
-	elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
 		if joint then
 			joint:destroy()
-			joint = nil
 		end
-	end
+		joint = oJoint:move(true,terrain,body,pos,1000*body.mass)
+		return true
+	end)
 	return true
+end)
+
+layer:slots("TouchMoved",function(touch)
+	local pos = world:convertToNodeSpace(touch.location)
+	if joint then
+		joint.position = pos
+	end
+end)
+
+local function touchEnded()
+	if joint then
+		joint:destroy()
+		joint = nil
+	end
 end
+layer:slots("TouchEnded",touchEnded)
+layer:slots("TouchCancelled",touchEnded)
 
 CCDirector:run(CCScene:crossFade(0.5,scene))

@@ -47,7 +47,7 @@ local function oSpriteChooser()
 	panel:addChild(opMenu)
 
 	local cancelButton = oButton("Cancel",17,60,false,0,0,function(item)
-		item.tapHandler = nil
+		item.enabled = false
 		opMenu.enabled = false
 		panel:fadeSprites()
 		panel:hide()
@@ -91,7 +91,7 @@ local function oSpriteChooser()
 			itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
 			function()
 				if panel.selected then
-					cancelButton.tapHandler = nil
+					cancelButton.enabled = false
 					oRoutine:remove(routine)
 					panel:hide()
 					panel.selected("")
@@ -115,7 +115,7 @@ local function oSpriteChooser()
 								itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
 								function()
 									if panel.selected then
-										cancelButton.tapHandler = nil
+										cancelButton.enabled = false
 										oRoutine:remove(routine)
 										panel:hide()
 										panel.selected(clipStr)
@@ -151,7 +151,7 @@ local function oSpriteChooser()
 								itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
 								function()
 									if panel.selected then
-										cancelButton.tapHandler = nil
+										cancelButton.enabled = false
 										oRoutine:remove(routine)
 										panel:hide()
 										panel.selected(filename)
@@ -186,7 +186,7 @@ local function oSpriteChooser()
 							itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
 							function()
 								if panel.selected then
-									cancelButton.tapHandler = nil
+									cancelButton.enabled = false
 									oRoutine:remove(routine)
 									panel:hide()
 									panel.selected(filename)

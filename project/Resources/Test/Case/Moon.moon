@@ -11,10 +11,7 @@ model = with oModel "ActionEditor/Model/Output/xiaoli.model"
 layer = with CCLayer!
 	.anchor = oVec2.zero
 	.touchEnabled = true
-	.touchHandler = (eventType,touch)->
-		if eventType == CCTouch.Moved
-			model.position += touch.delta
-		true
+	\slots "TouchMoved",(touch)-> model.position += touch.delta
 	\addChild model
 
 scene = with CCScene!

@@ -48,12 +48,9 @@ local function oViewArea()
 --]]
 
 	view.touchEnabled = true
-	view.touchHandler = function(eventType,touch)
-		if eventType == CCTouch.Moved then
-			scrollNode.position = scrollNode.position + touch.delta
-		end
-		return true
-	end
+	view:slots("TouchMoved",function(touch)
+		scrollNode.position = scrollNode.position + touch.delta
+	end)
 
 	view:gslot("viewArea.changeEffect",function(effectName)
 		if not effectName and oEditor.effect then

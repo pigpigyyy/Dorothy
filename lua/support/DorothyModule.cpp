@@ -60,15 +60,6 @@ const char* oSlotList::slotNames[] =
 };
 int oSlotList::slotNameCount = sizeof(oSlotList::slotNames)/sizeof(const char*);
 
-HANDLER_WRAP_START(oListenerHandlerWrapper)
-void call(oEvent* event) const
-{
-	void* params[] = { event };
-	int names[] = {CCLuaType<oEvent>()};
-	CCLuaEngine::sharedEngine()->executeFunction(getHandler(), 1, params, names);
-}
-HANDLER_WRAP_END
-
 class oSlotData : public CCObject
 {
 public:
@@ -208,7 +199,12 @@ int CCNode_gslot(lua_State* L)
 		if (lua_isfunction(L, 3)) // set
 		{
 			int handler = toluafix_ref_function(L, 3);
-			listener = oListener::create(name, std::make_pair(oListenerHandlerWrapper(handler), &oListenerHandlerWrapper::call));
+			listener = oListener::create(name, [handler](oEvent* event)
+			{
+				void* params[] = { event };
+				int names[] = { CCLuaType<oEvent>() };
+				CCLuaEngine::sharedEngine()->executeFunction(handler, 1, params, names);
+			});
 			gslot->setObject(listener, name);
 		}
 		else if (tolua_isnoobj(L, 3, &tolua_err)) // get
@@ -741,7 +737,12 @@ void oUnitDef_setInstincts(oUnitDef* def, int instincts[], int count)
 
 oListener* oListener_create(const string& name, int handler)
 {
-	return oListener::create(name, std::make_pair(oListenerHandlerWrapper(handler), &oListenerHandlerWrapper::call));
+	return oListener::create(name, [handler](oEvent* event)
+	{
+		void* params[] = { event };
+		int names[] = { CCLuaType<oEvent>() };
+		CCLuaEngine::sharedEngine()->executeFunction(handler, 1, params, names);
+	});
 }
 
 void __oContent_getDirEntries(lua_State* L, oContent* self, const char* path, bool isFolder)

@@ -99,49 +99,51 @@ local function oVertexControl()
 		end
 	end
 
-	local function itemTapped(eventType,item)
-		if eventType == CCMenuItem.TapBegan then
-			if selectedVert and item ~= selectedVert then
-				if vertexToAdd and lastCreateVertex and lastCreateVertex ~= item then
-					return
-				end
-				selectedVert.opacity = 0.2
-				selectedVert.highlighted = false
-				selectedVert.selected = false
-			end
-			selectedVert = item
-			setLabelPos(item)
-			if item.highlighted then
-				item.selected = true
-			else
-				item.opacity = 0.5
-				item.highlighted = true
-			end
-			menu:eachChild(function(child)
-				child.enabled = false
-			end)
-			item.enabled = true
-		elseif eventType == CCMenuItem.Tapped then
+	local function itemTapBegan(item)
+		if selectedVert and item ~= selectedVert then
 			if vertexToAdd and lastCreateVertex and lastCreateVertex ~= item then
 				return
 			end
-			if vertexToDel then
-				removeVertex()
-				return
-			end
-			item.selected = not item.selected
-			selectedVert = item.selected and item or nil
-			if not item.selected then label.text = "" end
-			item.opacity = item.selected and 0.5 or 0.2
-			item.highlighted = item.selected
-			menu:eachChild(function(child)
-				child.enabled = true
-			end)
+			selectedVert.opacity = 0.2
+			selectedVert.highlighted = false
+			selectedVert.selected = false
 		end
+		selectedVert = item
+		setLabelPos(item)
+		if item.highlighted then
+			item.selected = true
+		else
+			item.opacity = 0.5
+			item.highlighted = true
+		end
+		menu:eachChild(function(child)
+			child.enabled = false
+		end)
+		item.enabled = true
 	end
+
+	local function itemTapped(item)
+		if vertexToAdd and lastCreateVertex and lastCreateVertex ~= item then
+			return
+		end
+		if vertexToDel then
+			removeVertex()
+			return
+		end
+		item.selected = not item.selected
+		selectedVert = item.selected and item or nil
+		if not item.selected then label.text = "" end
+		item.opacity = item.selected and 0.5 or 0.2
+		item.highlighted = item.selected
+		menu:eachChild(function(child)
+			child.enabled = true
+		end)
+	end
+
 	local function oVertex(pos,index)
 		local menuItem = CCMenuItem()
-		menuItem.tapHandler = itemTapped
+		menuItem:slots("TapBegan",itemTapBegan)
+		menuItem:slots("Tapped",itemTapped)
 		menuItem.contentSize = CCSize(vertSize,vertSize)
 		local circle = CCDrawNode()
 		circle:drawDot(oVec2.zero,halfSize,ccColor4(0xff00ffff))
@@ -181,60 +183,59 @@ local function oVertexControl()
 
 	local totalDelta = oVec2.zero
 	layer.touchPriority = oEditor.touchPriorityEditControl
-	layer.touchHandler = function(eventType, touch)
-		if eventType == CCTouch.Began then
-			if vertexToAdd then
-				local pos = menu:convertToNodeSpace(touch.location)
-				if oEditor.isFixed then
-					pos = oEditor:round(pos)
-				end
-				if pos ~= menu.vs[#menu.vs] then
-					local item = addVertex(pos)
-					setLabelPos(item)
-					lastCreateVertex = item
-				end
+	layer:slots("TouchBegan",function(touch)
+		if vertexToAdd then
+			local pos = menu:convertToNodeSpace(touch.location)
+			if oEditor.isFixed then
+				pos = oEditor:round(pos)
 			end
-			totalDelta = oVec2.zero
-		elseif eventType == CCTouch.Moved then
-			if touch.delta ~= oVec2.zero and selectedVert then
-				selectedVert.selected = false
-				local delta = menu:convertToNodeSpace(touch.location) - menu:convertToNodeSpace(touch.preLocation)
-				if oEditor.fixX then delta.x = 0 end
-				if oEditor.fixY then delta.y = 0 end
-				local pos = selectedVert.position
-				if oEditor.isFixed then
-					totalDelta = totalDelta + delta
-					if totalDelta.x > 1 or totalDelta.x < -1 then
-						local posX = pos.x+totalDelta.x
-						pos.x = oEditor:round(posX)
-						totalDelta.x = 0
-					end
-					if totalDelta.y > 1 or totalDelta.y < -1 then
-						local posY = pos.y+totalDelta.y
-						pos.y = oEditor:round(posY)
-						totalDelta.y = 0
-					end
-				else
-					pos = pos + delta
+			if pos ~= menu.vs[#menu.vs] then
+				local item = addVertex(pos)
+				setLabelPos(item)
+				lastCreateVertex = item
+			end
+		end
+		totalDelta = oVec2.zero
+		return true
+	end)
+	layer:slots("TouchMoved",function(touch)
+		if touch.delta ~= oVec2.zero and selectedVert then
+			selectedVert.selected = false
+			local delta = menu:convertToNodeSpace(touch.location) - menu:convertToNodeSpace(touch.preLocation)
+			if oEditor.fixX then delta.x = 0 end
+			if oEditor.fixY then delta.y = 0 end
+			local pos = selectedVert.position
+			if oEditor.isFixed then
+				totalDelta = totalDelta + delta
+				if totalDelta.x > 1 or totalDelta.x < -1 then
+					local posX = pos.x+totalDelta.x
+					pos.x = oEditor:round(posX)
+					totalDelta.x = 0
 				end
-				if pos ~= selectedVert.position then
-					selectedVert.position = pos
-					menu.vs[selectedVert.index] = pos
-					setLabelPos(selectedVert)
-					if vertChanged then
-						vertChanged(menu.vs)
-					end
+				if totalDelta.y > 1 or totalDelta.y < -1 then
+					local posY = pos.y+totalDelta.y
+					pos.y = oEditor:round(posY)
+					totalDelta.y = 0
+				end
+			else
+				pos = pos + delta
+			end
+			if pos ~= selectedVert.position then
+				selectedVert.position = pos
+				menu.vs[selectedVert.index] = pos
+				setLabelPos(selectedVert)
+				if vertChanged then
+					vertChanged(menu.vs)
 				end
 			end
 		end
-		return true
-	end
+	end)
 
 	local mask = CCLayer()
 	mask.contentSize = CCSize.zero
 	mask.touchPriority = oEditor.touchPriorityEditControl+2
 	mask.swallowTouches = true
-	mask.touchHandler = function() return selectedVert ~= nil end
+	mask:slots("TouchBegan",function() return selectedVert ~= nil end)
 	layer:addChild(mask)
 	
 	local editMenu = CCMenu()

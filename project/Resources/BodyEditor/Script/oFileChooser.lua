@@ -215,9 +215,9 @@ local function oFileChooser()
 	local cancelButton = oButton("Cancel",17,60,false,
 		70,0,
 		function(item)
+			item.enabled = false
 			opMenu.enabled = false
 			panel:hide()
-			item.tapHandler = nil
 		end)
 	cancelButton.anchor = oVec2.zero
 	local btnBk = CCDrawNode()
@@ -231,7 +231,7 @@ local function oFileChooser()
 			0,0,
 			function(item)
 				opMenu.enabled = false
-				item.tapHandler = nil
+				item.enabled = false
 				CCDirector:popToRootScene()
 			end)
 		backButton.anchor = oVec2.zero

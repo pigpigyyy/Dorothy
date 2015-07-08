@@ -293,7 +293,7 @@ local function oTemplateChooser(filename)
 		function(item)
 			opMenu.enabled = false
 			panel:hide()
-			item.tapHandler = nil
+			item.enabled = false
 		end)
 	cancelButton.anchor = oVec2.zero
 	local btnBk = CCDrawNode()

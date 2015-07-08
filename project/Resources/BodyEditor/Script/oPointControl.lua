@@ -28,44 +28,21 @@ local function oPointControl()
 	local jumpNow = false
 	control.touchPriority = oEditor.touchPriorityEditControl
 	control.swallowTouches = true
-	control.touchHandler = function(eventType,touch)
-		if eventType == CCTouch.Began then
-			if not jump then
-				jump = true
-				jumpNow = true
-				control:schedule(once(function()
-					wait(seconds(0.4))
-					jump = false
-					jumpNow = false
-				end))
-			elseif jumpNow then
+	control:slots("TouchBegan",function(touch)
+		if not jump then
+			jump = true
+			jumpNow = true
+			control:schedule(once(function()
+				wait(seconds(0.4))
 				jump = false
-				control:unschedule()
-				targetPos = target:convertToNodeSpace(touch.location)
-				if oEditor.isFixed then
-					targetPos = oEditor:round(targetPos)
-				end
-				circle.position = targetPos
-				if posChanged then
-					posChanged(targetPos)
-				end
-			end
-		elseif eventType == CCTouch.Moved then
-			local delta = target:convertToNodeSpace(touch.location) - target:convertToNodeSpace(touch.preLocation)
+				jumpNow = false
+			end))
+		elseif jumpNow then
+			jump = false
+			control:unschedule()
+			targetPos = target:convertToNodeSpace(touch.location)
 			if oEditor.isFixed then
-				totalDelta = totalDelta + delta
-				if totalDelta.x > 1 or totalDelta.x < -1 then
-					local posX = targetPos.x+totalDelta.x
-					targetPos.x = oEditor:round(posX)
-					totalDelta.x = 0
-				end
-				if totalDelta.y > 1 or totalDelta.y < -1 then
-					local posY = targetPos.y+totalDelta.y
-					targetPos.y = oEditor:round(posY)
-					totalDelta.y = 0
-				end
-			else
-				targetPos = targetPos + delta
+				targetPos = oEditor:round(targetPos)
 			end
 			circle.position = targetPos
 			if posChanged then
@@ -73,7 +50,29 @@ local function oPointControl()
 			end
 		end
 		return true
-	end
+	end)
+	control:slots("TouchMoved",function(touch)
+		local delta = target:convertToNodeSpace(touch.location) - target:convertToNodeSpace(touch.preLocation)
+		if oEditor.isFixed then
+			totalDelta = totalDelta + delta
+			if totalDelta.x > 1 or totalDelta.x < -1 then
+				local posX = targetPos.x+totalDelta.x
+				targetPos.x = oEditor:round(posX)
+				totalDelta.x = 0
+			end
+			if totalDelta.y > 1 or totalDelta.y < -1 then
+				local posY = targetPos.y+totalDelta.y
+				targetPos.y = oEditor:round(posY)
+				totalDelta.y = 0
+			end
+		else
+			targetPos = targetPos + delta
+		end
+		circle.position = targetPos
+		if posChanged then
+			posChanged(targetPos)
+		end
+	end)
 
 	control.show = function(self,pos,callback,controlTarget)
 		control.visible = true

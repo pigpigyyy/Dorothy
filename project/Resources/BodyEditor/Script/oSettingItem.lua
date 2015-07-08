@@ -67,12 +67,10 @@ local oSettingItem = class(
 		border.visible = false
 		self:addChild(border)
 		self._border = border
-		
-		self.tapHandler = function(eventType)
-			if eventType == CCMenuItem.Tapped then
-				self.selected = not self.selected
-			end
-		end
+
+		self:slots("Tapped",function()
+			self.selected = not self.selected
+		end)
 	end,
 
 	-- string

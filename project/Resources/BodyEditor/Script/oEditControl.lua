@@ -262,32 +262,30 @@ local function oEditControl()
 	local posChanged = nil
 	posEditor.touchPriority = oEditor.touchPriorityEditControl
 	posEditor.swallowTouches = true
-	posEditor.touchHandler = function(eventType,touch)
-		if eventType == CCTouch.Moved then
-			local delta = touch.delta
-			if fixX then delta.x = 0 end
-			if fixY then delta.y = 0 end
-			if oEditor.isFixed then
-				totalDeltaPos = totalDeltaPos + delta/oEditor.scale
-				if totalDeltaPos.x > 1 or totalDeltaPos.x < -1 then
-					local posX = posVisual.positionX+totalDeltaPos.x
-					posVisual.positionX = posX > 0 and math.floor(posX+0.5) or math.ceil(posX-0.5)
-					totalDeltaPos.x = 0
-				end
-				if totalDeltaPos.y > 1 or totalDeltaPos.y < -1 then
-					local posY = posVisual.positionY+totalDeltaPos.y
-					posVisual.positionY = posY > 0 and math.floor(posY+0.5) or math.ceil(posY-0.5)
-					totalDeltaPos.y = 0
-				end
-			else
-				posVisual.position = posVisual.position + delta/oEditor.scale
+
+	posEditor:slots("TouchMoved",function(touch)
+		local delta = touch.delta
+		if fixX then delta.x = 0 end
+		if fixY then delta.y = 0 end
+		if oEditor.isFixed then
+			totalDeltaPos = totalDeltaPos + delta/oEditor.scale
+			if totalDeltaPos.x > 1 or totalDeltaPos.x < -1 then
+				local posX = posVisual.positionX+totalDeltaPos.x
+				posVisual.positionX = posX > 0 and math.floor(posX+0.5) or math.ceil(posX-0.5)
+				totalDeltaPos.x = 0
 			end
-			if posChanged then
-				posChanged(posVisual.position)
+			if totalDeltaPos.y > 1 or totalDeltaPos.y < -1 then
+				local posY = posVisual.positionY+totalDeltaPos.y
+				posVisual.positionY = posY > 0 and math.floor(posY+0.5) or math.ceil(posY-0.5)
+				totalDeltaPos.y = 0
 			end
+		else
+			posVisual.position = posVisual.position + delta/oEditor.scale
 		end
-		return true
-	end
+		if posChanged then
+			posChanged(posVisual.position)
+		end
+	end)
 
 	-- show & hide position editor
 	editControl.showPosEditor = function(self,pos,callback)
@@ -330,41 +328,38 @@ local function oEditControl()
 	local totalRot = 0
 	rotEditor.touchPriority = oEditor.touchPriorityEditControl
 	rotEditor.swallowTouches = true
-	rotEditor.touchHandler = function(eventType,touch)
-		if eventType == CCTouch.Moved then
-			local oldPos = rotVisual:convertToNodeSpace(touch.preLocation)
-			local newPos = rotVisual:convertToNodeSpace(touch.location)
-			local v1 = rotCenter - oldPos
-			local v2 = rotCenter - newPos
-			local len1 = v1.length
-			local len2 = v2.length
-			if len1 ~= 0 and len2 ~= 0 then
-				local res = (v1.x*v2.x+v1.y*v2.y)/(len1*len2)
-				if res > 1 then res = 1 end
-				if res < -1 then res = -1 end
-				local s = (oldPos.x*(newPos.y-rotCenter.y)-oldPos.y*(newPos.x-rotCenter.x)+(newPos.x*rotCenter.y-newPos.y*rotCenter.x))
-				local delta = (s>0 and -1 or 1)*math.acos(res)*180/math.pi/oEditor.scale
-				if oEditor.isFixed then
-					totalRot = totalRot + delta
-					if totalRot < 1 and totalRot > -1 then
-						delta = 0
-					else
-						delta = totalRot > 0 and math.floor(totalRot) or math.ceil(totalRot)
-						totalRot = 0
-						local angle = rotVisual.angle + delta
-						angle = angle > 0 and math.floor(angle) or math.ceil(angle)
-						rotVisual.angle = angle
-					end
+	rotEditor:slots("TouchMoved",function(touch)
+		local oldPos = rotVisual:convertToNodeSpace(touch.preLocation)
+		local newPos = rotVisual:convertToNodeSpace(touch.location)
+		local v1 = rotCenter - oldPos
+		local v2 = rotCenter - newPos
+		local len1 = v1.length
+		local len2 = v2.length
+		if len1 ~= 0 and len2 ~= 0 then
+			local res = (v1.x*v2.x+v1.y*v2.y)/(len1*len2)
+			if res > 1 then res = 1 end
+			if res < -1 then res = -1 end
+			local s = (oldPos.x*(newPos.y-rotCenter.y)-oldPos.y*(newPos.x-rotCenter.x)+(newPos.x*rotCenter.y-newPos.y*rotCenter.x))
+			local delta = (s>0 and -1 or 1)*math.acos(res)*180/math.pi/oEditor.scale
+			if oEditor.isFixed then
+				totalRot = totalRot + delta
+				if totalRot < 1 and totalRot > -1 then
+					delta = 0
 				else
-					rotVisual.angle = rotVisual.angle + delta
+					delta = totalRot > 0 and math.floor(totalRot) or math.ceil(totalRot)
+					totalRot = 0
+					local angle = rotVisual.angle + delta
+					angle = angle > 0 and math.floor(angle) or math.ceil(angle)
+					rotVisual.angle = angle
 				end
-				if rotChanged then
-					rotChanged(rotVisual.angle)
-				end
+			else
+				rotVisual.angle = rotVisual.angle + delta
+			end
+			if rotChanged then
+				rotChanged(rotVisual.angle)
 			end
 		end
-		return true
-	end
+	end)
 
 	-- show & hide angle editor
 	editControl.showRotEditor = function(self,position,angle,center,callback)
@@ -422,40 +417,37 @@ local function oEditControl()
 	local sizeChanged = nil
 	sizeEditor.touchPriority = oEditor.touchPriorityEditControl
 	sizeEditor.swallowTouches = true
-	sizeEditor.touchHandler = function(eventType,touch)
-		if eventType == CCTouch.Moved then
-			local delta = sizeVisual:convertToNodeSpace(touch.location) - 
-				sizeVisual:convertToNodeSpace(touch.preLocation)
-			if delta ~= oVec2.zero then
-				delta = delta*oEditor.scale
-				if fixX then delta.x = 0 end
-				if fixY then delta.y = 0 end
-				if oEditor.isFixed then
-					totalW = totalW + delta.x
-					totalH = totalH + delta.y
-					if totalW > 1 or totalW < -1 then
-						local w = totalSize.width+totalW
-						totalSize.width = w > 0 and math.floor(w+0.5) or math.ceil(w-0.5)
-						totalW = 0
-					end
-					if totalH > 1 or totalH < -1 then
-						local h = totalSize.height+totalH
-						totalSize.height = h > 0 and math.floor(h+0.5) or math.ceil(h-0.5)
-						totalH = 0
-					end
-				else
-					totalSize.width = totalSize.width + delta.x
-					totalSize.height = totalSize.height + delta.y
+	sizeEditor:slots("TouchMoved",function(touch)
+		local delta = sizeVisual:convertToNodeSpace(touch.location) - 
+			sizeVisual:convertToNodeSpace(touch.preLocation)
+		if delta ~= oVec2.zero then
+			delta = delta*oEditor.scale
+			if fixX then delta.x = 0 end
+			if fixY then delta.y = 0 end
+			if oEditor.isFixed then
+				totalW = totalW + delta.x
+				totalH = totalH + delta.y
+				if totalW > 1 or totalW < -1 then
+					local w = totalSize.width+totalW
+					totalSize.width = w > 0 and math.floor(w+0.5) or math.ceil(w-0.5)
+					totalW = 0
 				end
-				if totalSize.width < 10 then totalSize.width = 10 end
-				if totalSize.height < 10 then totalSize.height = 10 end
-				if sizeChanged then
-					sizeChanged(totalSize)
+				if totalH > 1 or totalH < -1 then
+					local h = totalSize.height+totalH
+					totalSize.height = h > 0 and math.floor(h+0.5) or math.ceil(h-0.5)
+					totalH = 0
 				end
+			else
+				totalSize.width = totalSize.width + delta.x
+				totalSize.height = totalSize.height + delta.y
+			end
+			if totalSize.width < 10 then totalSize.width = 10 end
+			if totalSize.height < 10 then totalSize.height = 10 end
+			if sizeChanged then
+				sizeChanged(totalSize)
 			end
 		end
-		return true
-	end
+	end)
 
 	-- show & hide size editor
 	editControl.showSizeEditor = function(self,target,center,size,callback)
@@ -517,33 +509,30 @@ local function oEditControl()
 	local centerChanged = nil
 	centerEditor.touchPriority = oEditor.touchPriorityEditControl
 	centerEditor.swallowTouches = true
-	centerEditor.touchHandler = function(eventType,touch)
-		if eventType == CCTouch.Moved then
-			local delta = touch.delta
-			if fixX then delta.x = 0 end
-			if fixY then delta.y = 0 end
-			if oEditor.isFixed then
-				totalDeltaCenter = totalDeltaCenter + delta/oEditor.scale
-				if totalDeltaCenter.x > 1 or totalDeltaCenter.x < -1 then
-					local posX = centerPos.x+totalDeltaCenter.x
-					centerPos.x = posX > 0 and math.floor(posX+0.5) or math.ceil(posX-0.5)
-					totalDeltaCenter.x = 0
-				end
-				if totalDeltaCenter.y > 1 or totalDeltaCenter.y < -1 then
-					local posY = centerPos.y+totalDeltaCenter.y
-					centerPos.y = posY > 0 and math.floor(posY+0.5) or math.ceil(posY-0.5)
-					totalDeltaCenter.y = 0
-				end
-			else
-				centerPos = centerPos + delta/oEditor.scale
+	centerEditor:slots("TouchMoved",function(touch)
+		local delta = touch.delta
+		if fixX then delta.x = 0 end
+		if fixY then delta.y = 0 end
+		if oEditor.isFixed then
+			totalDeltaCenter = totalDeltaCenter + delta/oEditor.scale
+			if totalDeltaCenter.x > 1 or totalDeltaCenter.x < -1 then
+				local posX = centerPos.x+totalDeltaCenter.x
+				centerPos.x = posX > 0 and math.floor(posX+0.5) or math.ceil(posX-0.5)
+				totalDeltaCenter.x = 0
 			end
-			centerVisual.position = centerPos
-			if centerChanged then
-				centerChanged(worldNode:convertToNodeSpace(oEditor.world:convertToWorldSpace(centerPos)))
+			if totalDeltaCenter.y > 1 or totalDeltaCenter.y < -1 then
+				local posY = centerPos.y+totalDeltaCenter.y
+				centerPos.y = posY > 0 and math.floor(posY+0.5) or math.ceil(posY-0.5)
+				totalDeltaCenter.y = 0
 			end
+		else
+			centerPos = centerPos + delta/oEditor.scale
 		end
-		return true
-	end
+		centerVisual.position = centerPos
+		if centerChanged then
+			centerChanged(worldNode:convertToNodeSpace(oEditor.world:convertToWorldSpace(centerPos)))
+		end
+	end)
 
 	-- show & hide center editor
 	editControl.showCenterEditor = function(self,target,center,callback)
@@ -590,30 +579,27 @@ local function oEditControl()
 	local radiusChanged = nil
 	radiusEditor.touchPriority = oEditor.touchPriorityEditControl
 	radiusEditor.swallowTouches = true
-	radiusEditor.touchHandler = function(eventType,touch)
-		if eventType == CCTouch.Moved then
-			local prevPos = touch.preLocation
-			local pos = touch.location
-			if pos ~= radiusCenter then
-				local delta = pos:distance(radiusCenter)-prevPos:distance(radiusCenter)
-				if oEditor.isFixed then
-					totalDeltaRadius = totalDeltaRadius + delta/oEditor.scale
-					if totalDeltaRadius > 1 or totalDeltaRadius < -1 then
-						local radius = totalRadius+totalDeltaRadius
-						totalRadius = radius > 0 and math.floor(radius+0.5) or math.ceil(radius-0.5)
-						totalDeltaRadius = 0
-					end
-				else
-					totalRadius = totalRadius + totalDeltaRadius/oEditor.scale
+	radiusEditor:slots("TouchMoved",function(touch)
+		local prevPos = touch.preLocation
+		local pos = touch.location
+		if pos ~= radiusCenter then
+			local delta = pos:distance(radiusCenter)-prevPos:distance(radiusCenter)
+			if oEditor.isFixed then
+				totalDeltaRadius = totalDeltaRadius + delta/oEditor.scale
+				if totalDeltaRadius > 1 or totalDeltaRadius < -1 then
+					local radius = totalRadius+totalDeltaRadius
+					totalRadius = radius > 0 and math.floor(radius+0.5) or math.ceil(radius-0.5)
+					totalDeltaRadius = 0
 				end
-				if totalRadius < 5 then totalRadius = 5 end
-				if radiusChanged then
-					radiusChanged(totalRadius)
-				end
+			else
+				totalRadius = totalRadius + totalDeltaRadius/oEditor.scale
+			end
+			if totalRadius < 5 then totalRadius = 5 end
+			if radiusChanged then
+				radiusChanged(totalRadius)
 			end
 		end
-		return true
-	end
+	end)
 
 	-- show & hide size editor
 	editControl.showRadiusEditor = function(self,target,center,radius,callback)
@@ -656,19 +642,16 @@ local function oEditControl()
 	bodyChooser.touchPriority = oEditor.touchPriorityEditControl
 	bodyChooser.swallowTouches = true
 	bodyChooser.touchEnabled = false
-	bodyChooser.touchHandler = function(eventType,touch)
-		if eventType == CCTouch.Ended then
-			local pos = oEditor.world:convertToNodeSpace(touch.location)
-			oEditor.world:query(CCRect(pos.x-0.5,pos.y-0.5,1,1),function(body)
-				local data = body.dataItem
-				if bodyChoosed and data:has("Name") then
-					bodyChoosed(data)
-				end
-				return true
-			end)
-		end
-		return true
-	end
+	bodyChooser:slots("TouchEnded",function(touch)
+		local pos = oEditor.world:convertToNodeSpace(touch.location)
+		oEditor.world:query(CCRect(pos.x-0.5,pos.y-0.5,1,1),function(body)
+			local data = body.dataItem
+			if bodyChoosed and data:has("Name") then
+				bodyChoosed(data)
+			end
+			return true
+		end)
+	end)
 
 	local function createCross(pos,long)
 		local cross = oLine(

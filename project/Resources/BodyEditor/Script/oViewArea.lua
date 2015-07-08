@@ -132,48 +132,52 @@ local function oViewArea()
 	view.multiTouches = true
 	view.touchPriority = oEditor.touchPriorityViewArea
 	view.touchEnabled = true
-	view.touchHandler = function(eventType, touches)
-		if eventType == CCTouch.Began then
-			if not oEditor.isPlaying and shapeToCreate ~= nil then
-				createShape(shapeToCreate,touches[1].location)
-				shapeToCreate = nil
-				return false
-			else
-				pick = true
-				return true
-			end
-		elseif eventType == CCTouch.Moved then
-			if #touches == 1 then -- move view
-				local delta = touches[1].delta
-				if delta ~= oVec2.zero then
-					pick = false
-					emit("viewArea.move",touches[1].delta)
-				end
-			elseif #touches >= 2 then -- scale view
-				local preDistance = touches[1].preLocation:distance(touches[2].preLocation)
-				local distance = touches[1].location:distance(touches[2].location)
-				local delta = (distance - preDistance) * 4 / winSize.height
-				local scale = scaleNode.scaleX + delta
-				if scale <= 0.5 then
-					scale = 0.5
-				end
-				scaleNode.scaleX = scale
-				scaleNode.scaleY = scale
-				oEditor.scale = scale
+	view:slots("TouchBegan",function(touches)
+		if not oEditor.isPlaying and shapeToCreate ~= nil then
+			createShape(shapeToCreate,touches[1].location)
+			shapeToCreate = nil
+			return false
+		else
+			pick = true
+			return true
+		end
+		return true
+	end)
+	view:slots("TouchMoved",function(touches)
+		if #touches == 1 then -- move view
+			local delta = touches[1].delta
+			if delta ~= oVec2.zero then
 				pick = false
-				emit("viewArea.scale",scale)
+				emit("viewArea.move",touches[1].delta)
 			end
-		elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
-			if pick then
-				local pos = oEditor.world:convertToNodeSpace(touches[1].location)
-				oEditor.world:query(CCRect(pos.x-0.5,pos.y-0.5,1,1),function(body)
-						local data = body.dataItem
-						emit("viewPanel.choose",data)
-					return true
-				end)
+		elseif #touches >= 2 then -- scale view
+			local preDistance = touches[1].preLocation:distance(touches[2].preLocation)
+			local distance = touches[1].location:distance(touches[2].location)
+			local delta = (distance - preDistance) * 4 / winSize.height
+			local scale = scaleNode.scaleX + delta
+			if scale <= 0.5 then
+				scale = 0.5
 			end
+			scaleNode.scaleX = scale
+			scaleNode.scaleY = scale
+			oEditor.scale = scale
+			pick = false
+			emit("viewArea.scale",scale)
+		end
+	end)
+
+	local function touchEnded(touches)
+		if pick then
+			local pos = oEditor.world:convertToNodeSpace(touches[1].location)
+			oEditor.world:query(CCRect(pos.x-0.5,pos.y-0.5,1,1),function(body)
+					local data = body.dataItem
+					emit("viewPanel.choose",data)
+				return true
+			end)
 		end
 	end
+	view:slots("TouchEnded",touchEnded)
+	view:slots("TouchCancelled",touchEnded)
 
 	-- test codes below
 	--[[local CCDrawNode = require("CCDrawNode")

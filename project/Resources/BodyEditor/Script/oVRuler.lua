@@ -183,20 +183,18 @@ local function oVRuler()
 	self.touchPriority = oEditor.touchPriorityVRuler
 	self.swallowTouches = true
 	self.touchEnabled = true
-	self.touchHandler = function(eventType,touch)
-		if eventType == CCTouch.Began then -- check touch area
-			local loc = self:convertToNodeSpace(touch.location)
-			return CCRect(-halfW,-halfH,rulerWidth,rulerHeight):containsPoint(loc)
-		elseif eventType == CCTouch.Moved then -- move up and down
-			self.positionX = self.positionX + touch.delta.x
-			if self.positionX > winSize.width-190-halfW then
-				self.positionX = winSize.width-190-halfW
-			elseif self.positionX < halfW then
-				self.positionX = halfW
-			end
+	self:slots("TouchBegan",function(touch)
+		local loc = self:convertToNodeSpace(touch.location)
+		return CCRect(-halfW,-halfH,rulerWidth,rulerHeight):containsPoint(loc)
+	end)
+	self:slots("TouchMoved",function(touch)
+		self.positionX = self.positionX + touch.delta.x
+		if self.positionX > winSize.width-190-halfW then
+			self.positionX = winSize.width-190-halfW
+		elseif self.positionX < halfW then
+			self.positionX = halfW
 		end
-		return true
-	end
+	end)
 
 	return self
 end

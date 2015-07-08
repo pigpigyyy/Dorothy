@@ -45,7 +45,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 		mask.touchPriority = CCMenu.DefaultHandlerPriority-1
 		mask.swallowTouches = true
 		mask.touchEnabled = true
-		mask.touchHandler = function() return panel.visible end
+		mask:slots("TouchBegan",function() return panel.visible end)
 		panel:addChild(mask)
 		panel.mask = mask
 	end
@@ -267,44 +267,47 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 	panel.setPos = setPos
 
 	panel.touchPriority = CCMenu.DefaultHandlerPriority-3
-	panel.touchHandler = function(eventType, touch)
-		--touch=CCTouch
+	panel:slots("TouchBegan",function()
 		if touch.id ~= 0 then
 			return false
 		end
-		if eventType == CCTouch.Began then
-			if not CCRect(oVec2(winSize.width-borderSize.width,winSize.height-borderSize.height)*0.5, borderSize):containsPoint(panel:convertToNodeSpace(touch.location)) then
-				return false
-			end
+		if not CCRect(oVec2(winSize.width-borderSize.width,winSize.height-borderSize.height)*0.5, borderSize):containsPoint(panel:convertToNodeSpace(touch.location)) then
+			return false
+		end
 
-			if fading then panel:fadeIn() end
+		if fading then panel:fadeIn() end
 
-			deltaMoveLength = 0
-			menu.enabled = true
-			_s = oVec2.zero
-			_v = oVec2.zero
-			panel:schedule(updateSpeed)
-		elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
-			menu.enabled = true
-			if isReseting() then
-				startReset()
-			else
-				if _v ~= oVec2.zero and deltaMoveLength > 10 then
-					panel:schedule(updatePos)
-				elseif fading then
-					panel:fadeOut()
-				end
-			end
-		elseif eventType == CCTouch.Moved then
-			deltaMoveLength = deltaMoveLength + touch.delta.length
-			_s = _s + touch.delta
-			if deltaMoveLength > 10 then
-				menu.enabled = false
-				setOffset(touch.delta, true)
+		deltaMoveLength = 0
+		menu.enabled = true
+		_s = oVec2.zero
+		_v = oVec2.zero
+		panel:schedule(updateSpeed)
+		return true
+	end)
+	
+	local function touchEnded()
+		menu.enabled = true
+		if isReseting() then
+			startReset()
+		else
+			if _v ~= oVec2.zero and deltaMoveLength > 10 then
+				panel:schedule(updatePos)
+			elseif fading then
+				panel:fadeOut()
 			end
 		end
-		return true
 	end
+	panel:slots("TouchEnded",touchEnded)
+	panel:slots("TouchCancelled",touchEnded)
+
+	panel:slots("TouchMoved",function()
+		deltaMoveLength = deltaMoveLength + touch.delta.length
+		_s = _s + touch.delta
+		if deltaMoveLength > 10 then
+			menu.enabled = false
+			setOffset(touch.delta, true)
+		end
+	end)
 
 	panel.view = view
 	panel.border = border

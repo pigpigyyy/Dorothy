@@ -47,12 +47,13 @@ world.data = CCDictionary()
 world.data.joint = oJoint:rope(
 	true,terrain,circle,oVec2.zero,oVec2.zero,300)
 
-circle:addHandler(oBody.ContactStart,function(body,point)
+circle.receivingContact = true
+circle:slots("ContactStart",function(body,point)
 	drawNode.position = point
 	print(string.format("[%d,%d]",point.x,point.y))
 	label.text = "Contact: "..string.format("[%d,%d]",point.x,point.y)
 end)
-circle:addHandler(oBody.ContactEnd,function(body,point)
+circle:slots("ContactEnd",function(body,point)
 	--label.text = "End"
 end)
 

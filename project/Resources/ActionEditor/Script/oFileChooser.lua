@@ -216,7 +216,6 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 			70,0,
 			function(item)
 				opMenu.enabled = false
-				item.tapHandler = nil
 				CCDirector:popToRootScene()
 			end)
 		backButton.anchor = oVec2.zero
@@ -234,7 +233,6 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 			function(item)
 				opMenu.enabled = false
 				panel:hide()
-				item.tapHandler = nil
 			end)
 		cancelButton.anchor = oVec2.zero
 		local btnBk = CCDrawNode()
@@ -262,7 +260,6 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 		function(item)
 			opMenu.enabled = false
 			panel:hide()
-			item.tapHandler = nil
 			oEditor.controlBar:clearCursors()
 			local modelFile = item.editTarget..".model"
 			oEditor.model = oEditor.output..modelFile
@@ -442,7 +439,6 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 				function(item)
 					opMenu.enabled = false
 					panel:hide()
-					item.tapHandler = nil
 					oBox("New Model",function(name)
 						if name == "" or name:match("[\\/|:*?<>\"%.]") then
 							oBox("Invalid Name")

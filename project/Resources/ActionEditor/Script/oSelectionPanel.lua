@@ -8,14 +8,12 @@ local ccColor4 = require("ccColor4")
 local CCClipNode = require("CCClipNode")
 local CCSize = require("CCSize")
 local oEase = require("oEase")
-local CCTouch = require("CCTouch")
 local CCRect = require("CCRect")
 local CCSequence = require("CCSequence")
 local CCSpawn = require("CCSpawn")
 local oOpacity = require("oOpacity")
 local oScale = require("oScale")
 local CCCall = require("CCCall")
-local tolua = require("tolua")
 
 local function oSelectionPanel(borderSize,noCliping)
 	local winSize = CCDirector.winSize
@@ -42,7 +40,7 @@ local function oSelectionPanel(borderSize,noCliping)
 	mask.touchPriority = CCMenu.DefaultHandlerPriority-3
 	mask.swallowTouches = true
 	mask.touchEnabled = true
-	mask.touchHandler = function() return panel.visible end
+	mask:slots("TouchBegan",function() return panel.visible end)
 	panel:addChild(mask)
 
 	local border = CCNode()
@@ -221,37 +219,41 @@ local function oSelectionPanel(borderSize,noCliping)
 	end
 
 	panel.touchPriority = CCMenu.DefaultHandlerPriority-5
-	panel.touchHandler = function(eventType, touch)
-		--touch=CCTouch
+	
+	panel:slots("TouchBegan",function(touch)
 		if touch.id ~= 0 then
 			return false
 		end
-		if eventType == CCTouch.Began then
-			if not CCRect(oVec2(winSize.width-borderSize.width,winSize.height-borderSize.height)*0.5, borderSize):containsPoint(panel:convertToNodeSpace(touch.location)) then
-				return false
-			end
-			deltaMoveLength = 0
-			menu.enabled = true
-			panel:schedule(updateSpeed)
-		elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
-			menu.enabled = true
-			if isReseting() then
-				startReset()
-			else
-				if _v ~= oVec2.zero and deltaMoveLength > 10 then
-					panel:schedule(updatePos)
-				end
-			end
-		elseif eventType == CCTouch.Moved then
-			deltaMoveLength = deltaMoveLength + touch.delta.length
-			_s = _s + touch.delta
-			if deltaMoveLength > 10 then
-				menu.enabled = false
-				setOffset(touch.delta, true)
+		if not CCRect(oVec2(winSize.width-borderSize.width,winSize.height-borderSize.height)*0.5, borderSize):containsPoint(panel:convertToNodeSpace(touch.location)) then
+			return false
+		end
+		deltaMoveLength = 0
+		menu.enabled = true
+		panel:schedule(updateSpeed)
+		return true
+	end)
+	
+	local function touchEnded()
+		menu.enabled = true
+		if isReseting() then
+			startReset()
+		else
+			if _v ~= oVec2.zero and deltaMoveLength > 10 then
+				panel:schedule(updatePos)
 			end
 		end
-		return true
 	end
+	panel:slots("TouchEnded",touchEnded)
+	panel:slots("TouchCancelled",touchEnded)
+
+	panel:slots("TouchMoved",function(touch)
+		deltaMoveLength = deltaMoveLength + touch.delta.length
+		_s = _s + touch.delta
+		if deltaMoveLength > 10 then
+			menu.enabled = false
+			setOffset(touch.delta, true)
+		end
+	end)
 
 	panel.view = view
 	panel.border = border
@@ -292,16 +294,15 @@ local function oSelectionPanel(borderSize,noCliping)
 					oOpacity(0.3,0),
 					oScale(0.3,0.3,0.3,oEase.InBack)
 				}),
-				CCCall(
-					function()
-						panel:removeMenuItems()
-						panel.touchHandler = nil
-						panel:unschedule()
-						panel.parent:removeChild(panel)
-					end)
+				CCCall(function()
+					panel:removeMenuItems()
+					panel.touchEnabled = false
+					panel:unschedule()
+					panel.parent:removeChild(panel)
+				end)
 			}))
 	end
-	
+
 	panel.reset = function(self,width,height,padX,padY)
 		viewWidth = width
 		viewHeight = height
@@ -318,12 +319,6 @@ local function oSelectionPanel(borderSize,noCliping)
 	end
 
 	panel.removeMenuItems = function(self)
-		menu:eachChild(function(child)
-			local item = tolua.cast(child,"CCMenuItem")
-			if item then
-				item.tapHandler = nil
-			end
-		end)
 		menu:removeAllChildrenWithCleanup()
 	end
 	

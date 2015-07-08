@@ -190,11 +190,9 @@ local menu = CCMenu()
 menu.anchor = oVec2.zero
 world.UILayer:addChild(menu)
 
-scene.nodeHandler = function(eventType)
-	if eventType == CCNode.Cleanup then
-		oContent:setSearchPaths({"Lib"})
-	end
-end
+scene:slots("Cleanup",function()
+	oContent:setSearchPaths({"Lib"})
+end)
 
 CCDirector:run(CCScene:crossFade(0.5,scene))
 

@@ -44,14 +44,11 @@ local function oColorPicker(color,callback)
 	mask.touchPriority = CCMenu.DefaultHandlerPriority-1
 	mask.swallowTouches = true
 	mask.touchEnabled = true
-	mask.touchHandler = function(eventType, touch)
-		if eventType == CCTouch.Began then
-			if CCRect(oVec2.zero,mask.contentSize):containsPoint(mask:convertToNodeSpace(touch.location)) then
-				return panel.visible
-			end
+	mask:slots("TouchBegan",function(touch)
+		if CCRect(oVec2.zero,mask.contentSize):containsPoint(mask:convertToNodeSpace(touch.location)) then
+			return panel.visible
 		end
-		return false
-	end
+	end)
 	background:addChild(mask)
 
 	local ChanelR,ChanelG,ChanelB = 1,2,3
@@ -243,77 +240,71 @@ local function oColorPicker(color,callback)
 
 	colorPanel.touchPriority = CCMenu.DefaultHandlerPriority-2
 	colorPanel.touchEnabled = true
-	colorPanel.touchHandler = function(eventType,touch)
-		if eventType == CCTouch.Began then
-			return CCRect(oVec2.zero,colorPanel.contentSize):containsPoint(colorPanel:convertToNodeSpace(touch.location))
-		elseif eventType == CCTouch.Moved then
-			target.position = target.position + touch.delta
-			target.positionX = math.min(target.positionX,panelSize)
-			target.positionX = math.max(target.positionX,0)
-			target.positionY = math.min(target.positionY,panelSize)
-			target.positionY = math.max(target.positionY,0)
-			local x,y = getCurrentPosColor()
-			if currentChanel == ChanelR then
-				g,b = x,y
-			elseif currentChanel == ChanelG then
-				r,b = x,y
-			elseif currentChanel == ChanelB then
-				r,g = x,y
-			end
-			resetBarColor()
-			updateTargetColor()
-			resetAlphaColor()
-			updateDisplayColor()
+	colorPanel:slots("TouchBegan",function(touch)
+		return CCRect(oVec2.zero,colorPanel.contentSize):containsPoint(colorPanel:convertToNodeSpace(touch.location))
+	end)
+	colorPanel:slots("TouchMoved",function(touch)
+		target.position = target.position + touch.delta
+		target.positionX = math.min(target.positionX,panelSize)
+		target.positionX = math.max(target.positionX,0)
+		target.positionY = math.min(target.positionY,panelSize)
+		target.positionY = math.max(target.positionY,0)
+		local x,y = getCurrentPosColor()
+		if currentChanel == ChanelR then
+			g,b = x,y
+		elseif currentChanel == ChanelG then
+			r,b = x,y
+		elseif currentChanel == ChanelB then
+			r,g = x,y
 		end
-		return true
-	end
+		resetBarColor()
+		updateTargetColor()
+		resetAlphaColor()
+		updateDisplayColor()
+	end)
 
 	redBar.touchPriority = CCMenu.DefaultHandlerPriority-2
 	redBar.touchEnabled = true
-	redBar.touchHandler = function(eventType,touch)
-		if eventType == CCTouch.Began then
-			local size = redBar.contentSize
-			size.width = size.width+40
-			size.height = size.height+20
-			return CCRect(oVec2(-20,-10),size):containsPoint(redBar:convertToNodeSpace(touch.location))
-		elseif eventType == CCTouch.Moved then
-			arrow.positionY = arrow.positionY + touch.delta.y
-			arrow.positionY = math.min(arrow.positionY,panelSize+10)
-			arrow.positionY = math.max(arrow.positionY,10)
-			local value = math.floor((arrow.positionY-10)*255/panelSize+0.5)
-			if currentChanel == ChanelR then
-				r = value
-			elseif currentChanel == ChanelG then
-				g = value
-			elseif currentChanel == ChanelB then
-				b = value
-			end
-			resetPanelColor()
-			updateTargetColor()
-			resetAlphaColor()
-			updateDisplayColor()
+	redBar:slots("TouchBegan",function(touch)
+		local size = redBar.contentSize
+		size.width = size.width+40
+		size.height = size.height+20
+		return CCRect(oVec2(-20,-10),size):containsPoint(redBar:convertToNodeSpace(touch.location))
+	end)
+	redBar:slots("TouchMoved",function(touch)
+		arrow.positionY = arrow.positionY + touch.delta.y
+		arrow.positionY = math.min(arrow.positionY,panelSize+10)
+		arrow.positionY = math.max(arrow.positionY,10)
+		local value = math.floor((arrow.positionY-10)*255/panelSize+0.5)
+		if currentChanel == ChanelR then
+			r = value
+		elseif currentChanel == ChanelG then
+			g = value
+		elseif currentChanel == ChanelB then
+			b = value
 		end
-		return true
-	end
+		resetPanelColor()
+		updateTargetColor()
+		resetAlphaColor()
+		updateDisplayColor()
+	end)
 
 	alphaBar.touchEnabled = true
 	alphaBar.touchPriority = CCMenu.DefaultHandlerPriority-2
-	alphaBar.touchHandler = function(eventType,touch)
-		if eventType == CCTouch.Began then
-			local size = alphaBar.contentSize
-			size.width = size.width+20
-			size.height = size.height+20
-			return CCRect(oVec2(-10,-10),size):containsPoint(alphaBar:convertToNodeSpace(touch.location))
-		elseif eventType == CCTouch.Moved then
-			alphaArrow.positionX = alphaArrow.positionX + touch.delta.x
-			alphaArrow.positionX = math.min(alphaArrow.positionX,finalColorSize)
-			alphaArrow.positionX = math.max(alphaArrow.positionX,0)
-			a = 255-math.floor(alphaArrow.positionX*255/finalColorSize+0.5)
-			resetAlphaColor()
-			updateDisplayColor()
-		end
-		return true
-	end
+	alphaBar:slots("TouchBegan",function(touch)
+		local size = alphaBar.contentSize
+		size.width = size.width+20
+		size.height = size.height+20
+		return CCRect(oVec2(-10,-10),size):containsPoint(alphaBar:convertToNodeSpace(touch.location))
+	end)
+	alphaBar:slots("TouchMoved",function(touch)
+		alphaArrow.positionX = alphaArrow.positionX + touch.delta.x
+		alphaArrow.positionX = math.min(alphaArrow.positionX,finalColorSize)
+		alphaArrow.positionX = math.max(alphaArrow.positionX,0)
+		a = 255-math.floor(alphaArrow.positionX*255/finalColorSize+0.5)
+		resetAlphaColor()
+		updateDisplayColor()
+	end)
 
 	local function setColor(self,oldVal)
 		r,g,b,a = oldVal.r,oldVal.g,oldVal.b,oldVal.a

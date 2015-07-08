@@ -28,18 +28,17 @@ oRoutine(once(function()
 	oContent:addSearchPath("EffectEditor/Script")
 
 	local oEditor = require("oEditor")
-	oEditor.nodeHandler = function(eventType)
-		if eventType == CCNode.Exited then
-			_G["require"] = _require
-			for _,name in ipairs(loaded) do
-				package.loaded[name] = nil
-			end
-		elseif eventType == CCNode.Cleanup then
-			-- do editor cleanup
-			oContent:removeSearchPath("EffectEditor/Script")
-			oContent:removeSearchPath(oEditor.input)
+	oEditor:slots("Exited",function()
+		_G["require"] = _require
+		for _,name in ipairs(loaded) do
+			package.loaded[name] = nil
 		end
-	end
+	end)
+	oEditor:slots("Cleanup",function()
+		-- do editor cleanup
+		oContent:removeSearchPath("EffectEditor/Script")
+		oContent:removeSearchPath(oEditor.input)
+	end)
 	CCDirector:run(oEditor)
 	coroutine.yield()
 	for index,name in ipairs(controls) do

@@ -18,12 +18,9 @@ do
   local _with_0 = CCLayer()
   _with_0.anchor = oVec2.zero
   _with_0.touchEnabled = true
-  _with_0.touchHandler = function(eventType, touch)
-    if eventType == CCTouch.Moved then
-      model.position = model.position + touch.delta
-    end
-    return true
-  end
+  _with_0:slots("TouchMoved", function(touch)
+    model.position = model.position + touch.delta
+  end)
   _with_0:addChild(model)
   layer = _with_0
 end

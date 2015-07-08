@@ -337,41 +337,36 @@ local function oViewPanel()
 		end
 
 		local isFolding = false
-		menuItem.tapHandler = function(eventType, self)
+		menuItem:slots("Tapped",function()
 			if oEditor.isPlaying then
 				return false
 			end
-			if eventType == CCMenuItem.TapBegan then
-			elseif eventType == CCMenuItem.TapEnded then
-			elseif eventType == CCMenuItem.Tapped then
-				menuItem:select(true)
-				oEditor.settingPanel:clearSelection()
-				emit("ImageSelected",{sp,sp[oSd.sprite],menuItem})
-				if #sp[oSd.children] > 0 then
-					if isFolding then
-						isFolding = false
-						sp[oSd.fold] = not sp[oSd.fold]
-						local model = oEditor.viewArea:getModel()
-						panel:clearSelection()
-						panel:updateImages(oEditor.data,model)
-						panel:selectItem(sp)
-					else
-						isFolding = true
-						local interval = 0
-						self:schedule(function(deltaTime)
-							interval = interval+deltaTime
-							if interval > 0.5 then
-								self:unschedule()
-								isFolding = false
-							end
-						end)
-					end
+			menuItem:select(true)
+			oEditor.settingPanel:clearSelection()
+			emit("ImageSelected",{sp,sp[oSd.sprite],menuItem})
+			if #sp[oSd.children] > 0 then
+				if isFolding then
+					isFolding = false
+					sp[oSd.fold] = not sp[oSd.fold]
+					local model = oEditor.viewArea:getModel()
+					panel:clearSelection()
+					panel:updateImages(oEditor.data,model)
+					panel:selectItem(sp)
+				else
+					isFolding = true
+					local interval = 0
+					self:schedule(function(deltaTime)
+						interval = interval+deltaTime
+						if interval > 0.5 then
+							self:unschedule()
+							isFolding = false
+						end
+					end)
 				end
 			end
-		end
+		end)
 
 		menuItem.dispose = function(self)
-			self.tapHandler = nil
 			self:unschedule()
 			local sp = self:getData()
 			sp[oSd.sprite] = nil
@@ -451,41 +446,44 @@ local function oViewPanel()
 	end
 
 	panel.touchPriority = CCMenu.DefaultHandlerPriority-2
-	panel.touchHandler = function(eventType, touch)
-		--touch=CCTouch
+	panel:slots("TouchBegan",function()
 		if touch.id ~= 0 then
 			return false
 		end
-		if eventType == CCTouch.Began then
-			if not CCRect(oVec2.zero, panel.contentSize):containsPoint(panel:convertToNodeSpace(touch.location)) then
-				return false
-			end
-			panel:show()
+		if not CCRect(oVec2.zero, panel.contentSize):containsPoint(panel:convertToNodeSpace(touch.location)) then
+			return false
+		end
+		panel:show()
 
-			deltaMoveLength = 0
-			menu.enabled = true
-			panel:schedule(updateSpeed)
-		elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
-			menu.enabled = true
-			if isReseting() then
-				startReset()
+		deltaMoveLength = 0
+		menu.enabled = true
+		panel:schedule(updateSpeed)
+		return true
+	end)
+
+	local function touchEnded()
+		menu.enabled = true
+		if isReseting() then
+			startReset()
+		else
+			if _v == oVec2.zero or deltaMoveLength <= 10 then
+				panel:hide()
 			else
-				if _v == oVec2.zero or deltaMoveLength <= 10 then
-					panel:hide()
-				else
-					panel:schedule(updatePos)
-				end
-			end
-		elseif eventType == CCTouch.Moved then
-			deltaMoveLength = deltaMoveLength + touch.delta.length
-			_s = _s + touch.delta
-			if deltaMoveLength > 10 then
-				menu.enabled = false
-				setOffset(touch.delta, true)
+				panel:schedule(updatePos)
 			end
 		end
-		return true
 	end
+	panel:slots("TouchEnded",touchEnded)
+	panel:slots("TouchCancelled",touchEnded)
+
+	panel:slots("TouchMoved",function()
+		deltaMoveLength = deltaMoveLength + touch.delta.length
+		_s = _s + touch.delta
+		if deltaMoveLength > 10 then
+			menu.enabled = false
+			setOffset(touch.delta, true)
+		end
+	end)
 
 	panel.items = nil
 	panel.updateImages = function(self, data, model)

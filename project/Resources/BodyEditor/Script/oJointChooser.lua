@@ -119,9 +119,9 @@ local function oJointChooser()
 	local cancelButton = oButton("Cancel",17,60,false,
 		0,0,
 		function(item)
+			item.enabled = false
 			opMenu.enabled = false
 			panel:hide()
-			item.tapHandler = nil
 		end)
 	cancelButton.anchor = oVec2.zero
 	local btnBk = CCDrawNode()

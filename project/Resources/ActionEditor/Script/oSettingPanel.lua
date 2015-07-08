@@ -272,19 +272,17 @@ local function oSettingPanel()
 			end
 		end
 
-		menuItem.tapHandler = function(eventType,self)
-			if eventType == CCMenuItem.Tapped then
-				if not isInput then
-					if enableFunc ~= nil and disableFunc ~= nil then
-						emit("SettingSelected",menuItem)
-					end
-				else
-					if oEditor.state == oEditor.EDIT_SPRITE and enableFunc ~= nil and disableFunc ~= nil then
-						emit("SettingSelected",menuItem)
-					end
+		menuItem:slots("Tapped",function()
+			if not isInput then
+				if enableFunc ~= nil and disableFunc ~= nil then
+					emit("SettingSelected",menuItem)
+				end
+			else
+				if oEditor.state == oEditor.EDIT_SPRITE and enableFunc ~= nil and disableFunc ~= nil then
+					emit("SettingSelected",menuItem)
 				end
 			end
-		end
+		end)
 
 		menuItem.setEnabled = function(self,enabled)
 			menuItem.enabled = enabled
@@ -345,42 +343,45 @@ local function oSettingPanel()
 	end
 
 	panel.touchPriority = CCMenu.DefaultHandlerPriority-2
-	panel.touchHandler = function(eventType, touch)
-		--touch=CCTouch
+	panel:slots("TouchBegan",function()
 		if touch.id ~= 0 or oEditor.isPlaying or not panel.visible then
 			return false
+		end		
+		if not CCRect(oVec2.zero, panel.contentSize):containsPoint(panel:convertToNodeSpace(touch.location)) then
+			return false
 		end
-		if eventType == CCTouch.Began then
-			if not CCRect(oVec2.zero, panel.contentSize):containsPoint(panel:convertToNodeSpace(touch.location)) then
-				return false
-			end
 
-			panel:show()
+		panel:show()
 
-			deltaMoveLength = 0
-			menu.enabled = true
-			panel:schedule(updateSpeed)
-		elseif eventType == CCTouch.Ended or eventType == CCTouch.Cancelled then
-			menu.enabled = true
-			if isReseting() then
-				startReset()
-			else
-				if _v == oVec2.zero or deltaMoveLength <= 10 then
-					panel:hide()
-				else
-					panel:schedule(updatePos)
-				end
-			end
-		elseif eventType == CCTouch.Moved then
-			deltaMoveLength = deltaMoveLength + touch.delta.length
-			_s = _s + touch.delta
-			if deltaMoveLength > 10 then
-				menu.enabled = false
-				setOffset(touch.delta, true)
-			end
-		end
+		deltaMoveLength = 0
+		menu.enabled = true
+		panel:schedule(updateSpeed)
 		return true
+	end)
+
+	local function touchEnded()
+		menu.enabled = true
+		if isReseting() then
+			startReset()
+		else
+			if _v == oVec2.zero or deltaMoveLength <= 10 then
+				panel:hide()
+			else
+				panel:schedule(updatePos)
+			end
+		end
 	end
+	panel:slots("TouchEnded",touchEnded)
+	panel:slots("TouchCancelled",touchEnded)
+
+	panel:slots("TouchMoved",function()
+		deltaMoveLength = deltaMoveLength + touch.delta.length
+		_s = _s + touch.delta
+		if deltaMoveLength > 10 then
+			menu.enabled = false
+			setOffset(touch.delta, true)
+		end
+	end)
 
 	local function genPosY()
 		local index = 0

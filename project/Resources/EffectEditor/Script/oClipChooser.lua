@@ -77,7 +77,7 @@ local function oClipChooser(clipName)
 	panel:addChild(opMenu)
 
 	local cancelButton = oButton("Cancel",17,60,false,clipName and 0 or 70,0,function(item)
-		item.tapHandler = nil
+		item.enabled = false
 		opMenu.enabled = false
 		if panel.fadeSprites then
 			panel:fadeSprites()
@@ -93,7 +93,7 @@ local function oClipChooser(clipName)
 
 	if clipName then
 		local setButton = oButton("Set",17,60,false,70,0,function(item)
-			item.tapHandler = nil
+			item.enabled = false
 			opMenu.enabled = false
 			if panel.fadeSprites then
 				panel:fadeSprites()

@@ -77,22 +77,22 @@ end
 ]]
 
 --CCDirector.displayStats = true
-oEditor.scene.nodeHandler = function(eventType)
-	if eventType == CCNode.Exited then
-		_G["require"] = _require
-		for _,name in ipairs(loaded) do
-			package.loaded[name] = nil
-		end
-		for k,_ in pairs(oEditor.settingPanel.items) do
-			oEditor.settingPanel.items[k] = nil
-		end
-		for k,_ in pairs(oEditor) do
-			oEditor[k] = nil
-		end
-		oCache:clear()
-	elseif eventType == CCNode.Cleanup then
-		oContent:removeSearchPath("ActionEditor/Script")
+oEditor.scene:slots("Exited",function()
+	_G["require"] = _require
+	for _,name in ipairs(loaded) do
+		package.loaded[name] = nil
 	end
-end
+	for k,_ in pairs(oEditor.settingPanel.items) do
+		oEditor.settingPanel.items[k] = nil
+	end
+	for k,_ in pairs(oEditor) do
+		oEditor[k] = nil
+	end
+	oCache:clear()
+end)
+
+oEditor.scene:slots("Cleanup",function()
+	oContent:removeSearchPath("ActionEditor/Script")
+end)
 
 CCDirector:run(oEditor.scene)
