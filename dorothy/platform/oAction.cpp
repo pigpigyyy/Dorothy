@@ -129,54 +129,6 @@ void oAction::clear()
 	_actionDefs.clear();
 }
 
-HANDLER_WRAP_START(oActionHandlerWrapper)
-	void call(oAction* action) const
-	{
-		void* params[] = {action};
-		int paramTypes[] = {CCLuaType<oAction>()};
-		CCScriptEngine::sharedEngine()->executeFunction(getHandler(), 1, params, paramTypes);
-	}
-HANDLER_WRAP_END
-
-void oAction::addHandler( int type, int handler )
-{
-	switch (type)
-	{
-	case oAction::Start:
-		actionStart += std::make_pair(oActionHandlerWrapper(handler), &oActionHandlerWrapper::call);
-		break;
-	case oAction::End:
-		actionEnd += std::make_pair(oActionHandlerWrapper(handler), &oActionHandlerWrapper::call);
-		break;
-	}
-}
-
-void oAction::removeHandler( int type, int handler )
-{
-	switch (type)
-	{
-	case oAction::Start:
-		actionStart -= std::make_pair(oActionHandlerWrapper(handler), &oActionHandlerWrapper::call);
-		break;
-	case oAction::End:
-		actionEnd -= std::make_pair(oActionHandlerWrapper(handler), &oActionHandlerWrapper::call);
-		break;
-	}
-}
-
-void oAction::clearHandler(int type)
-{
-	switch (type)
-	{
-	case oAction::Start:
-		actionStart.Clear();
-		break;
-	case oAction::End:
-		actionEnd.Clear();
-		break;
-	}
-}
-
 oScriptAction::oScriptAction( const string& name, int priority, oUnit* owner ):
 oAction(name, priority, owner)
 { }

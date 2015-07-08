@@ -187,6 +187,7 @@ oAction* oUnit::attachAction( const string& name )
 		{
 			_actions[name] = oOwnMake(action);
 		}
+		actionAdded(action);
 		return action;
 	}
 	return it->second;
@@ -210,6 +211,14 @@ oAction* oUnit::getAction( const string& name ) const
 {
 	auto it = _actions.find(name);
 	return it == _actions.end() ? nullptr : it->second.get();
+}
+
+void oUnit::eachAction(const oActionHandler& func)
+{
+	for (const auto& pair : _actions)
+	{
+		func(pair.second);
+	}
 }
 
 bool oUnit::start( const string& name )

@@ -1,12 +1,5 @@
 class CCTextFieldTTF: public CCLabelTTF
 {
-	#define oTextFieldEvent::Attach @ Attach
-	#define oTextFieldEvent::Detach @ Detach
-	#define oTextFieldEvent::Insert @ Insert
-	#define oTextFieldEvent::Inserted @ Inserted
-	#define oTextFieldEvent::Delete @ Delete
-	#define oTextFieldEvent::Deleted @ Deleted
-
 	bool attachWithIME();
 	bool detachWithIME();
 

@@ -259,12 +259,6 @@ CCLuaEngine::CCLuaEngine()
 		tolua_beginmodule(L, "CCTextureCache");
 			tolua_function(L, "loadAsync", CCTextureCache_loadAsync);
 		tolua_endmodule(L);
-		tolua_beginmodule(L, "CCTextFieldTTF");
-			tolua_variable(L, "inputHandler", CCTextFieldTTF_getInputHandler, CCTextFieldTTF_setInputHandler);
-		tolua_endmodule(L);
-		tolua_beginmodule(L, "oSlot");
-			for (int i = 0; i < oSlotList::slotNameCount; i++) tolua_string(L, oSlotList::slotNames[i]);
-		tolua_endmodule(L);
 	tolua_endmodule(L);
 
 	tolua_LuaCode_open(L);
@@ -460,6 +454,7 @@ int CCLuaEngine::executeSchedule(int nHandler, float dt)
 int CCLuaEngine::executeLayerTouchEvent(CCLayer* layer, int eventType, CCTouch* touch)
 {
 	const char* name = nullptr;
+	int ret = 1;
 	switch (eventType)
 	{
 		case CCTouch::Began:
@@ -481,16 +476,16 @@ int CCLuaEngine::executeLayerTouchEvent(CCLayer* layer, int eventType, CCTouch* 
 	if (slotList)
 	{
 		tolua_pushccobject(L, touch);
-		int ret = slotList->invoke(L, 1);
+		ret = slotList->invoke(L, 1);
 		lua_pop(L, 1);
-		return ret;
 	}
-	return 0;
+	return ret;
 }
 
 int CCLuaEngine::executeLayerTouchesEvent(CCLayer* layer, int eventType, CCSet* touches)
 {
 	const char* name = nullptr;
+	int ret = 1;
 	switch (eventType)
 	{
 		case CCTouch::Began:
@@ -519,11 +514,10 @@ int CCLuaEngine::executeLayerTouchesEvent(CCLayer* layer, int eventType, CCSet* 
 			tolua_pushccobject(L, touch);
 			lua_rawseti(L, -2, i++);
 		}
-		int ret = slotList->invoke(L, 1);
+		ret = slotList->invoke(L, 1);
 		lua_pop(L, 1);
-		return ret;
 	}
-	return 0;
+	return ret;
 }
 
 int CCLuaEngine::executeLayerKeypadEvent(CCLayer* layer, int eventType)

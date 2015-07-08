@@ -53,5 +53,5 @@ class oUnit: public oBody
 	void remove(const char* name);
 	void clear();
 	
-	static oUnit* create(oUnitDef* unitDef, oWorld* world, oVec2 pos = oVec2::zero, float rot = 0);
+	static tolua_outside oUnit* oUnit_create @ create(oUnitDef* unitDef, oWorld* world, oVec2 pos = oVec2::zero, float rot = 0);
 };

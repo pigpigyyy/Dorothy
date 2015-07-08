@@ -185,7 +185,6 @@ local oBox = class({
 							okButton.enabled = false
 							if cancelButton then cancelButton.enabled = false end
 							if self._isInput then
-								self._textField.inputHandler = nil
 								self._menu.enabled = false
 							end
 							opMenu.enabled = false

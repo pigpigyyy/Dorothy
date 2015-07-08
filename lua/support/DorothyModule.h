@@ -35,9 +35,18 @@ public:
 	static const char* KeyMenu;
 	//Acceleration
 	static const char* Acceleration;
-	//Sum
-	static const char* slotNames[];
-	static int slotNameCount;
+	//TextField
+	static const char* InputAttach;
+	static const char* InputDetach;
+	static const char* InputInserting;
+	static const char* InputInserted;
+	static const char* InputDeleting;
+	static const char* InputDeleted;
+	//Model
+	static const char* AnimationEnd;
+	//Action
+	static const char* ActionStart;
+	static const char* ActionEnd;
 	//builtin slot end
 	oSlotList();
 	void add(int handler);
@@ -78,7 +87,8 @@ oVec2 oModel_getKey(oModel* model, const char* key);
 void oWorld_query(oWorld* world, const CCRect& rect, int nHandler);
 void oWorld_cast(oWorld* world, const oVec2& start, const oVec2& end, bool closest, int handler);
 
-oBody* oBody_create(oBodyDef* def, oWorld* world);
+oBody* oBody_create(oBodyDef* def, oWorld* world, oVec2 pos, float rot);
+oUnit* oUnit_create(oUnitDef* unitDef, oWorld* world, const oVec2& pos, float rot);
 
 bool oAnimationCache_load(const char* filename);
 bool oAnimationCache_update(const char* name, const char* content);
@@ -180,19 +190,7 @@ private:
 	int _scriptHandler;
 };
 
-ENUM_START(oTextFieldEvent)
-{
-	Attach,
-	Detach,
-	Insert,
-	Inserted,
-	Delete,
-	Deleted
-}
-ENUM_END(oTextFieldEvent)
 CCTextFieldTTF* CCTextFieldTTF_create(const char* placeholder, const char* fontName, float fontSize);
-int CCTextFieldTTF_setInputHandler(lua_State* L);
-int CCTextFieldTTF_getInputHandler(lua_State* L);
 
 CCRenderTexture* CCRenderTexture_create(int w, int h, bool withDepthStencil = false);
 

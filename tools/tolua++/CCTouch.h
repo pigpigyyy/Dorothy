@@ -1,12 +1,5 @@
 class CCTouch: public CCObject
 {
-	enum
-	{
-		Began,
-		Moved,
-		Ended,
-		Cancelled
-	};
 	tolua_readonly tolua_property__common oVec2 location;
     tolua_readonly tolua_property__common oVec2 previousLocation @ preLocation;
     tolua_readonly tolua_property__common oVec2 delta;

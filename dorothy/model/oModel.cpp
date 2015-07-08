@@ -63,7 +63,9 @@ bool oModel::init()
 		CCNode::create();
 	oModel::visit(_modelDef->getRoot(), _root);
 	oModel::setupCallback();
-	oModel::setContentSize(_modelDef->getSize());
+	CCSize size = _modelDef->getSize();
+	oModel::setContentSize(size);
+	_root->setPosition(ccp(size.width*0.5f, size.height*0.5f));
 	this->addChild(_root);
 	return true;
 }

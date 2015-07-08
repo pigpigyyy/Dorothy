@@ -39,7 +39,6 @@ public:
 class oAction
 {
 public:
-	enum { Start, End };
 	oAction(const string& name, int priority, oUnit* owner);
 	virtual ~oAction();
 	float reaction;
@@ -50,9 +49,6 @@ public:
 	oUnit* getOwner() const;
 	oActionHandler actionStart;
 	oActionHandler actionEnd;
-	void addHandler(int type, int handler);
-	void removeHandler(int type, int handler);
-	void clearHandler(int type);
 	virtual bool isAvailable();
 	virtual void run();
 	virtual void update(float dt);

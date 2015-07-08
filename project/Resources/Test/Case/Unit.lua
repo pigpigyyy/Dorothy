@@ -43,6 +43,7 @@ unitDef:setActions(
 local unit = oUnit(unitDef,world,oVec2(400,300))
 unit.moveSpeed = 0.9
 unit.group = 1
+unit:slots("ActionEnd",function(name) print(name,"end") end)
 world:addChild(unit)
 
 local terrainDef = oBodyDef()

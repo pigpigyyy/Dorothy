@@ -11,7 +11,6 @@ $pfile "CCEGLView.h"
 $pfile "CCApplication.h"
 $pfile "CCDirector.h"
 $pfile "CCUserDefault.h"
-$pfile "CCKeypad.h"
 
 $pfile "CCImage.h"
 $pfile "CCNode.h"

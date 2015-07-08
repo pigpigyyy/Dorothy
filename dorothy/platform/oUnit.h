@@ -25,6 +25,8 @@ class oAction;
 class oProperty;
 class oInstinct;
 
+typedef Delegate<void (oAction* action)> oActionHandler;
+
 class oUnit: public oBody
 {
 	typedef unordered_map<string, oOwn<oAction>> oActionMap;
@@ -52,14 +54,15 @@ public:
 	void removeAction(const string& name);
 	void removeAllActions();
 	oAction* getAction(const string& name) const;
+	void eachAction(const oActionHandler& func);
+	oActionHandler actionAdded;
 
 	bool start(const string& name);
 	void stop();
 	bool isDoing(const string& name);
 	//
 	bool isOnSurface() const;
-	void onActionEnd(oAction* action);
-	static oUnit* create(oWorld* world, oUnitDef* unitDef);
+
 	//Named properties
 	class oPropertySet
 	{

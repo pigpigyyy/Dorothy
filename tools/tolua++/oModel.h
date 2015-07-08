@@ -18,6 +18,6 @@ class oModel: public CCNode
 	void stop();
 	void reset();
 	CCNode* getNodeByName @ getChildByName(const char* name);
-	static oModel* create(const char* filename);
+	static tolua_outside oModel* oModel_create @ create(const char* filename);
 	static oModel* none();
 };

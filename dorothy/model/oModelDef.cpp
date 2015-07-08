@@ -276,7 +276,7 @@ const char* oModelDef::getAnimationNameByIndex( int index )
 			return item.first.c_str();
 		}
 	}
-	return nullptr;
+	return "";
 }
 
 int oModelDef::getLookIndexByName( const string& name )

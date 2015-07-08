@@ -20,5 +20,5 @@ class oBody: public CCNode
 	void attach(oFixtureDef* fixtureDef);
 	oSensor* attachSensor(int tag, oFixtureDef* fixtureDef);
 	void destroy();
-	static oBody* create(oBodyDef* def, oWorld* world, oVec2 pos = oVec2::zero, float rot = 0);
+	static tolua_outside oBody* oBody_create @ create(oBodyDef* def, oWorld* world, oVec2 pos = oVec2::zero, float rot = 0);
 };

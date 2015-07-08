@@ -29,36 +29,15 @@ oSlotName(KeyBack)
 oSlotName(KeyMenu)
 //Acceleration
 oSlotName(Acceleration)
-
-const char* oSlotList::slotNames[] =
-{
-	oSlotList::Entering,
-	oSlotList::Entered,
-	oSlotList::Exiting,
-	oSlotList::Exited,
-	oSlotList::Cleanup,
-	//Touch
-	oSlotList::TouchBegan,
-	oSlotList::TouchCancelled,
-	oSlotList::TouchEnded,
-	oSlotList::TouchMoved,
-	//MenuItem
-	oSlotList::TapBegan,
-	oSlotList::TapEnded,
-	oSlotList::Tapped,
-	//Body
-	oSlotList::ContactEnd,
-	oSlotList::ContactStart,
-	//Sensor
-	oSlotList::BodyEnter,
-	oSlotList::BodyLeave,
-	//Keypad
-	oSlotList::KeyBack,
-	oSlotList::KeyMenu,
-	//Acceleration
-	oSlotList::Acceleration,
-};
-int oSlotList::slotNameCount = sizeof(oSlotList::slotNames)/sizeof(const char*);
+oSlotName(InputAttach)
+oSlotName(InputDetach)
+oSlotName(InputInserting)
+oSlotName(InputInserted)
+oSlotName(InputDeleting)
+oSlotName(InputDeleted)
+oSlotName(AnimationEnd)
+oSlotName(ActionStart)
+oSlotName(ActionEnd)
 
 class oSlotData : public CCObject
 {
@@ -125,7 +104,7 @@ bool oSlotList::invoke(lua_State* L, int args)
 oSlotList* CCNode_getSlotList(CCNode* self, const char* name)
 {
 	CCAssert(self->getHelperObject() == 0 || CCLuaCast<oSlotData>(self->getHelperObject()), "Invalid slot object")
-		oSlotData* slotData = CCLuaCast<oSlotData>(self->getHelperObject());
+		oSlotData* slotData = (oSlotData*)self->getHelperObject();
 		if (!slotData)
 		{
 			slotData = oSlotData::create();
@@ -149,7 +128,7 @@ oSlotList* CCNode_getSlotList(CCNode* self, const char* name)
 oSlotList* CCNode_tryGetSlotList(CCNode* self, const char* name)
 {
 	CCAssert(self->getHelperObject() == 0 || CCLuaCast<oSlotData>(self->getHelperObject()), "Invalid slot object")
-	oSlotData* slotData = CCLuaCast<oSlotData>(self->getHelperObject());
+	oSlotData* slotData = (oSlotData*)self->getHelperObject();
 	if (slotData)
 	{
 		CCDictionary* slots = slotData->slots;
@@ -159,6 +138,19 @@ oSlotList* CCNode_tryGetSlotList(CCNode* self, const char* name)
 		}
 	}
 	return nullptr;
+}
+
+HANDLER_WRAP_START(oListenerHandlerWrapper)
+void call(oEvent* event) const
+{
+	void* params[] = { event };
+	int names[] = {CCLuaType<oEvent>()};
+	CCLuaEngine::sharedEngine()->executeFunction(getHandler(), 1, params, names);
+}
+HANDLER_WRAP_END
+oListener* oListener_create(const string& name, int handler)
+{
+	return oListener::create(name, std::make_pair(oListenerHandlerWrapper(handler), &oListenerHandlerWrapper::call));
 }
 
 int CCNode_gslot(lua_State* L)
@@ -199,12 +191,7 @@ int CCNode_gslot(lua_State* L)
 		if (lua_isfunction(L, 3)) // set
 		{
 			int handler = toluafix_ref_function(L, 3);
-			listener = oListener::create(name, [handler](oEvent* event)
-			{
-				void* params[] = { event };
-				int names[] = { CCLuaType<oEvent>() };
-				CCLuaEngine::sharedEngine()->executeFunction(handler, 1, params, names);
-			});
+			listener = oListener_create(name, handler);
 			gslot->setObject(listener, name);
 		}
 		else if (tolua_isnoobj(L, 3, &tolua_err)) // get
@@ -256,7 +243,7 @@ int CCNode_slots(lua_State* L)
 		else if (lua_isnil(L, 3))
 		{
 			CCAssert(self->getHelperObject() == 0 || CCLuaCast<oSlotData>(self->getHelperObject()), "Invalid slot object")
-			oSlotData* slotData = CCLuaCast<oSlotData>(self->getHelperObject());
+			oSlotData* slotData = (oSlotData*)self->getHelperObject();
 			if (slotData)
 			{
 				CCDictionary* slots = slotData->slots;
@@ -450,13 +437,14 @@ oModel* oModel_create(const char* filename)
 	{
 		handler = [name](oModel* model)
 		{
-			oSlotList* slotList = CCNode_tryGetSlotList(model, name);
+			oSlotList* slotList = CCNode_tryGetSlotList(model, oSlotList::AnimationEnd);
 			if (slotList)
 			{
 				lua_State* L = CCLuaEngine::sharedEngine()->getState();
+				lua_pushstring(L, name);
 				tolua_pushccobject(L, model);
-				slotList->invoke(L, 1);
-				lua_pop(L, 1);
+				slotList->invoke(L, 2);
+				lua_pop(L, 2);
 			}
 		};
 	});
@@ -468,26 +456,26 @@ oVec2 oModel_getKey(oModel* model, const char* key)
 	return model->getModelDef()->getKeyPoint(key);
 }
 
-inline void oHandleSensor(oSensor* sensor, oBody* body, const char* slotName)
+inline void oHandleSensor(oSensor* sensor, oBody* other, const char* slotName)
 {
-	oSlotList* slotList = CCNode_tryGetSlotList(body, slotName);
+	oSlotList* slotList = CCNode_tryGetSlotList(sensor->getOwner(), slotName);
 	if (slotList)
 	{
 		lua_State* L = CCLuaEngine::sharedEngine()->getState();
 		tolua_pushccobject(L, sensor);
-		tolua_pushccobject(L, body);
+		tolua_pushccobject(L, other);
 		slotList->invoke(L, 2);
 		lua_pop(L, 2);
 	}
 }
 
-inline void oHandleContact(oBody* body, const oVec2& point, const oVec2& normal, const char* slotName)
+inline void oHandleContact(oBody* self, oBody* other, const oVec2& point, const oVec2& normal, const char* slotName)
 {
-	oSlotList* slotList = CCNode_tryGetSlotList(body, slotName);
+	oSlotList* slotList = CCNode_tryGetSlotList(self, slotName);
 	if (slotList)
 	{
 		lua_State* L = CCLuaEngine::sharedEngine()->getState();
-		tolua_pushccobject(L, body);
+		tolua_pushccobject(L, other);
 		tolua_pushusertype(L, new oVec2(point), CCLuaType<oVec2>());
 		tolua_pushusertype(L, new oVec2(normal), CCLuaType<oVec2>());
 		slotList->invoke(L, 3);
@@ -495,31 +483,63 @@ inline void oHandleContact(oBody* body, const oVec2& point, const oVec2& normal,
 	}
 }
 
-oBody* oBody_create(oBodyDef* def, oWorld* world)
+oBody* oBody_create(oBodyDef* def, oWorld* world, oVec2 pos, float rot)
 {
-	oBody* body = oBody::create(def, world);
+	oBody* body = oBody::create(def, world, pos, rot);
 	auto sensorAddHandler = [](oSensor* sensor, oBody*)
 	{
-		sensor->bodyEnter = [](oSensor* sensor, oBody* body)
+		sensor->bodyEnter = [](oSensor* sensor, oBody* other)
 		{
-			oHandleSensor(sensor, body, oSlotList::BodyEnter);
+			oHandleSensor(sensor, other, oSlotList::BodyEnter);
 		};
-		sensor->bodyLeave = [](oSensor* sensor, oBody* body)
+		sensor->bodyLeave = [](oSensor* sensor, oBody* other)
 		{
-			oHandleSensor(sensor, body, oSlotList::BodyEnter);
+			oHandleSensor(sensor, other, oSlotList::BodyEnter);
 		};
 	};
 	body->eachSensor(sensorAddHandler);
 	body->sensorAdded = sensorAddHandler;
-	body->contactStart = [](oBody* body, const oVec2& point, const oVec2& normal)
+	body->contactStart = [body](oBody* other, const oVec2& point, const oVec2& normal)
 	{
-		oHandleContact(body, point, normal, oSlotList::ContactStart);
+		oHandleContact(body, other, point, normal, oSlotList::ContactStart);
 	};
-	body->contactEnd = [](oBody* body, const oVec2& point, const oVec2& normal)
+	body->contactEnd = [body](oBody* other, const oVec2& point, const oVec2& normal)
 	{
-		oHandleContact(body, point, normal, oSlotList::ContactEnd);
+		oHandleContact(body, other, point, normal, oSlotList::ContactEnd);
 	};
 	return body;
+}
+
+inline void oHandleAction(oAction* action, const char* slotName)
+{
+	oSlotList* slotList = CCNode_tryGetSlotList(action->getOwner(), slotName);
+	if (slotList)
+	{
+		lua_State* L = CCLuaEngine::sharedEngine()->getState();
+		lua_pushlstring(L, action->getName().c_str(), action->getName().size());
+		tolua_pushusertype(L, action, CCLuaType<oAction>());
+		slotList->invoke(L, 2);
+		lua_pop(L, 2);
+	}
+}
+
+oUnit* oUnit_create(oUnitDef* unitDef, oWorld* world, const oVec2& pos, float rot)
+{
+	oUnit* unit = oUnit::create(unitDef, world, pos, rot);
+	auto handleActionAdd = [](oAction* action)
+	{
+		action->actionStart = [](oAction* action)
+		{
+			oHandleAction(action, oSlotList::ActionStart);
+		};
+		action->actionEnd = [](oAction* action)
+		{
+			oHandleAction(action, oSlotList::ActionEnd);
+		};
+	};
+	unit->eachAction(handleActionAdd);
+	unit->actionAdded = handleActionAdd;
+	return unit;
 }
 
 void oWorld_query(oWorld* world, const CCRect& rect, int handler)
@@ -733,16 +753,6 @@ void oUnitDef_setInstincts(oUnitDef* def, int instincts[], int count)
 	{
 		def->instincts.push_back(instincts[i]);
 	}
-}
-
-oListener* oListener_create(const string& name, int handler)
-{
-	return oListener::create(name, [handler](oEvent* event)
-	{
-		void* params[] = { event };
-		int names[] = { CCLuaType<oEvent>() };
-		CCLuaEngine::sharedEngine()->executeFunction(handler, 1, params, names);
-	});
 }
 
 void __oContent_getDirEntries(lua_State* L, oContent* self, const char* path, bool isFolder)
@@ -1577,73 +1587,82 @@ void CCCall::execute()
 class oTextFieldDelegate: public CCTextFieldDelegate
 {
 public:
-	oRef<oScriptHandler> handler;
-	virtual bool onTextFieldAttachWithIME(CCTextFieldTTF * sender)
+	virtual bool onTextFieldAttachWithIME(CCTextFieldTTF* sender)
 	{
-		if (handler)
+		oSlotList* slotList = CCNode_tryGetSlotList(sender, oSlotList::InputAttach);
+		if (slotList)
 		{
 			lua_State* L = CCLuaEngine::sharedEngine()->getState();
 			tolua_pushccobject(L, sender);
-			lua_pushinteger(L, oTextFieldEvent::Attach);
-			return CCLuaEngine::sharedEngine()->executeFunction(handler->get(), 2) != 0;
+			bool ret = slotList->invoke(L, 1);
+			lua_pop(L, 1);
+			return ret;
 		}
-		return false;
+		return true;
 	}
-	virtual bool onTextFieldDetachWithIME(CCTextFieldTTF * sender)
+	virtual bool onTextFieldDetachWithIME(CCTextFieldTTF* sender)
 	{
-		if (handler)
+		oSlotList* slotList = CCNode_tryGetSlotList(sender, oSlotList::InputDetach);
+		if (slotList)
 		{
 			lua_State* L = CCLuaEngine::sharedEngine()->getState();
 			tolua_pushccobject(L, sender);
-			lua_pushinteger(L, oTextFieldEvent::Detach);
-			return CCLuaEngine::sharedEngine()->executeFunction(handler->get(), 2) != 0;
+			bool ret = slotList->invoke(L, 1);
+			lua_pop(L, 1);
+			return ret;
 		}
-		return false;
+		return true;
 	}
-	virtual bool onTextFieldInsertText(CCTextFieldTTF * sender, const char * text, int nLen)
+	virtual bool onTextFieldInsertText(CCTextFieldTTF * sender, const char* text, int nLen)
 	{
-		if (handler)
+		oSlotList* slotList = CCNode_tryGetSlotList(sender, oSlotList::InputInserting);
+		if (slotList)
 		{
 			lua_State* L = CCLuaEngine::sharedEngine()->getState();
+			lua_pushlstring(L, text, nLen);
 			tolua_pushccobject(L, sender);
-			lua_pushinteger(L, oTextFieldEvent::Insert);
-			lua_pushstring(L, text);
-			return CCLuaEngine::sharedEngine()->executeFunction(handler->get(), 3) == 0;
+			bool ret = !slotList->invoke(L, 2);
+			lua_pop(L, 2);
+			return ret;
 		}
 		return false;
 	}
 	virtual void onTextFieldInserted(CCTextFieldTTF* sender, const char* text)
 	{
-		if (handler)
+		oSlotList* slotList = CCNode_tryGetSlotList(sender, oSlotList::InputInserted);
+		if (slotList)
 		{
 			lua_State* L = CCLuaEngine::sharedEngine()->getState();
-			tolua_pushccobject(L, sender);
-			lua_pushinteger(L, oTextFieldEvent::Inserted);
 			lua_pushstring(L, text);
-			CCLuaEngine::sharedEngine()->executeFunction(handler->get(), 3);
+			tolua_pushccobject(L, sender);
+			slotList->invoke(L, 2);
+			lua_pop(L, 2);
 		}
 	}
-	virtual bool onTextFieldDeleteBackward(CCTextFieldTTF * sender, const char * delText, int nLen)
+	virtual bool onTextFieldDeleteBackward(CCTextFieldTTF* sender, const char* delText, int nLen)
 	{
-		if (handler)
+		oSlotList* slotList = CCNode_tryGetSlotList(sender, oSlotList::InputDeleting);
+		if (slotList)
 		{
 			lua_State* L = CCLuaEngine::sharedEngine()->getState();
+			lua_pushlstring(L, delText, nLen);
 			tolua_pushccobject(L, sender);
-			lua_pushinteger(L, oTextFieldEvent::Delete);
-			lua_pushstring(L, delText);
-			return CCLuaEngine::sharedEngine()->executeFunction(handler->get(), 3) == 0;
+			bool ret = !slotList->invoke(L, 2);
+			lua_pop(L, 2);
+			return ret;
 		}
 		return false;
 	}
 	virtual void onTextFieldDeleted(CCTextFieldTTF* sender, const char* delText)
 	{
-		if (handler)
+		oSlotList* slotList = CCNode_tryGetSlotList(sender, oSlotList::InputDeleted);
+		if (slotList)
 		{
 			lua_State* L = CCLuaEngine::sharedEngine()->getState();
-			tolua_pushccobject(L, sender);
-			lua_pushinteger(L, oTextFieldEvent::Deleted);
 			lua_pushstring(L, delText);
-			CCLuaEngine::sharedEngine()->executeFunction(handler->get(), 3);
+			tolua_pushccobject(L, sender);
+			slotList->invoke(L, 2);
+			lua_pop(L, 2);
 		}
 	}
 };
@@ -1656,32 +1675,6 @@ CCTextFieldTTF* CCTextFieldTTF_create(const char* placeholder, const char* fontN
 	delegate->autorelease();
 	textField->setDelegate(delegate);
 	return textField;
-}
-int CCTextFieldTTF_setInputHandler(lua_State* L)
-{
-	CCTextFieldTTF* self = (CCTextFieldTTF*)tolua_tousertype(L, 1, 0);
-#ifndef TOLUA_RELEASE
-	tolua_Error tolua_err;
-	if (!self) tolua_error(L, "invalid 'self' in accessing variable 'inputHandler'", NULL);
-	if (!(toluafix_isfunction(L, 2, &tolua_err) || lua_isnil(L, 2)))
-		tolua_error(L, "#vinvalid type in variable assignment.", &tolua_err);
-#endif
-	oTextFieldDelegate* delegate = (oTextFieldDelegate*)(self->getDelegate());
-	int handler = toluafix_ref_function(L, 2);
-	delegate->handler = handler ? oScriptHandler::create(handler) : nullptr;
-	return 0;
-}
-int CCTextFieldTTF_getInputHandler(lua_State* L)
-{
-	CCTextFieldTTF* self = (CCTextFieldTTF*)tolua_tousertype(L, 1, 0);
-#ifndef TOLUA_RELEASE
-	if (!self) tolua_error(L, "invalid 'self' in accessing variable 'inputHandler'", NULL);
-#endif
-	oTextFieldDelegate* delegate = (oTextFieldDelegate*)(self->getDelegate());
-	int handler = delegate->handler ? delegate->handler->get() : 0;
-	if (handler) toluafix_get_function_by_refid(L, handler);
-	else lua_pushnil(L);
-	return 1;
 }
 
 CCRenderTexture* CCRenderTexture_create(int w, int h, bool withDepthStencil)

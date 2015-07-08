@@ -156,7 +156,6 @@ local function oBox(text,okHandler,isInput)
 						end
 						opMenu.removeHandlers = function(self)
 							if isInput then
-								textField.inputHandler = nil
 								menu.enabled = false
 							end
 							opMenu.enabled = false

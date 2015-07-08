@@ -94,11 +94,11 @@ public:
 	virtual int executeLayerKeypadEvent(CCLayer* pLayer, int eventType);
 	virtual int executeAccelerometerEvent(CCLayer* pLayer, CCAcceleration* pAccelerationValue);
 	virtual int executeApplicationEvent(int handler, int eventType);
-	
+
 	virtual int executeEvent(int nHandler, const char* pEventName, CCObject* pEventSource = NULL);
 	virtual bool executeAssert(bool cond, const char *msg = NULL);
 	virtual bool scriptHandlerEqual(int nHandlerA, int nHandlerB);
-	
+
 	static int call(lua_State* L, int paramCount, int returnCount);
 	static int execute(lua_State* L, int nHandler, int numArgs);
 	static int execute(lua_State* L, int numArgs);

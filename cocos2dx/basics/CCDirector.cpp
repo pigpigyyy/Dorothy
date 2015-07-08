@@ -852,7 +852,7 @@ void CCDirector::createStatsLabel()
     CCTexture2D* texture = CCTextureCache::sharedTextureCache()->addImage("cc_fps_images");
 
     m_pFPSLabel = new CCLabelAtlas();
-    m_pFPSLabel->initWithString("00.0", texture, 12, 32 , '.');
+    m_pFPSLabel->initWithString("FPS 00.0", texture, 12, 32 , '.');
 	m_pFPSLabel->retain();
 
     m_pUSPFLabel = new CCLabelAtlas();
