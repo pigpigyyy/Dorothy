@@ -28,6 +28,7 @@
 #include "basics/CCScheduler.h"
 #include "LuaCocos2d.h"
 #include "DorothyXml.h"
+#include "DorothyModule.h"
 
 NS_CC_BEGIN
 
@@ -329,7 +330,7 @@ void CCLuaEngine::removePeer(CCObject* object)
 int CCLuaEngine::executeString(const char *codes)
 {
 	luaL_loadstring(L, codes);
-	return lua_execute(0);
+	return CCLuaEngine::execute(L, 0);
 }
 
 int CCLuaEngine::executeScriptFile(const char* filename)
@@ -347,7 +348,7 @@ int CCLuaEngine::executeGlobalFunction(const char* functionName)
 		lua_pop(L, 1);
 		return 0;
 	}
-	return lua_execute(0);
+	return CCLuaEngine::execute(L, 0);
 }
 
 int CCLuaEngine::executeFunction(int nHandler, int paramCount, CCObject* params[])
@@ -356,7 +357,7 @@ int CCLuaEngine::executeFunction(int nHandler, int paramCount, CCObject* params[
 	{
 		tolua_pushccobject(L, params[i]);
 	}
-	return lua_execute(nHandler, paramCount);
+	return CCLuaEngine::execute(L, nHandler, paramCount);
 }
 
 int CCLuaEngine::executeFunction(int nHandler, int paramCount, void* params[], int paramTypes[])
@@ -365,12 +366,12 @@ int CCLuaEngine::executeFunction(int nHandler, int paramCount, void* params[], i
 	{
 		tolua_pushusertype(L, params[i], paramTypes[i]);
 	}
-	return lua_execute(nHandler, paramCount);
+	return CCLuaEngine::execute(L, nHandler, paramCount);
 }
 
 int CCLuaEngine::executeFunction(int nHandler, int paramCount)
 {
-	return lua_execute(nHandler, paramCount);
+	return CCLuaEngine::execute(L, nHandler, paramCount);
 }
 
 int CCLuaEngine::executeActionUpdate(int nHandler, void* param, int paramType, float deltaTime)
@@ -378,82 +379,185 @@ int CCLuaEngine::executeActionUpdate(int nHandler, void* param, int paramType, f
 	if (!nHandler) return 0;
 	tolua_pushusertype(L, param, paramType);
 	lua_pushnumber(L, deltaTime);
-	return lua_execute(nHandler, 2);
+	return CCLuaEngine::execute(L, nHandler, 2);
 }
 
 int CCLuaEngine::executeNodeEvent(CCNode* pNode, int nAction)
 {
-	int nHandler = pNode->getScriptHandler();
-	if (!nHandler) return 0;
-	lua_pushinteger(L, nAction);
-	return lua_execute(nHandler, 1);
+	const char* name = nullptr;
+	switch (nAction)
+	{
+		case CCNode::Enter:
+			name = oSlotList::Entering;
+    		break;
+		case CCNode::EnterTransitionDidFinish:
+			name = oSlotList::Entered;
+    		break;
+		case CCNode::Exit:
+			name = oSlotList::Exiting;
+    		break;
+		case CCNode::ExitTransitionDidStart:
+			name = oSlotList::Exited;
+    		break;
+		case CCNode::Cleanup:
+			name = oSlotList::Cleanup;
+    		break;
+		default:
+			break;
+	}
+	oSlotList* slotList = CCNode_tryGetSlotList(pNode, name);
+	if (slotList)
+	{
+		slotList->invoke(L);
+	}
+	return 0;
 }
 
 int CCLuaEngine::executeAppEvent(int nHandler, int eventType)
 {
 	if (!nHandler) return 0;
 	lua_pushinteger(L, eventType);
-	return lua_execute(nHandler, 1);
+	return CCLuaEngine::execute(L, nHandler, 1);
 }
 
-int CCLuaEngine::executeMenuItemEvent(int eventType, CCMenuItem* pMenuItem)
+int CCLuaEngine::executeMenuItemEvent(int eventType, CCMenuItem* menuItem)
 {
-	int nHandler = pMenuItem->getScriptTapHandler();
-	if (!nHandler) return 0;
-	lua_pushinteger(L, eventType);
-	tolua_pushccobject(L, pMenuItem);
-	return lua_execute(nHandler, 2);
+	const char* name = nullptr;
+	switch (eventType)
+	{
+		case CCMenuItem::TapBegan:
+			name = oSlotList::TapBegan;
+    		break;
+		case CCMenuItem::TapEnded:
+			name = oSlotList::TapEnded;
+    		break;
+		case CCMenuItem::Tapped:
+			name = oSlotList::Tapped;
+    		break;
+		default:
+			break;
+	}
+	oSlotList* slotList = CCNode_tryGetSlotList(menuItem, name);
+	if (slotList)
+	{
+		tolua_pushccobject(L, menuItem);
+		slotList->invoke(L, 1);
+		lua_pop(L, 1);
+	}
+	return 0;
 }
 
 int CCLuaEngine::executeSchedule(int nHandler, float dt)
 {
 	if (!nHandler) return 0;
 	lua_pushnumber(L, dt);
-	return lua_execute(nHandler, 1);
+	return CCLuaEngine::execute(L, nHandler, 1);
 }
 
-int CCLuaEngine::executeLayerTouchEvent(CCLayer* pLayer, int eventType, CCTouch *pTouch)
+int CCLuaEngine::executeLayerTouchEvent(CCLayer* layer, int eventType, CCTouch* touch)
 {
-	int nHandler = pLayer->getScriptTouchHandler();
-	if (!nHandler) return 0;
-	lua_pushinteger(L, eventType);
-	tolua_pushccobject(L, pTouch);
-	return lua_execute(nHandler, 2);
-}
-
-int CCLuaEngine::executeLayerTouchesEvent(CCLayer* pLayer, int eventType, CCSet *pTouches)
-{
-	int nHandler = pLayer->getScriptTouchHandler();
-	if (!nHandler) return 0;
-	lua_pushinteger(L, eventType);
-	lua_createtable(L, pTouches->count(), 0);
-	int i = 1;
-	for (CCSetIterator it = pTouches->begin(); it != pTouches->end(); ++it)
+	const char* name = nullptr;
+	switch (eventType)
 	{
-		CCTouch* pTouch = (CCTouch*)*it;
-		tolua_pushccobject(L, pTouch);
-		lua_rawseti(L, -2, i++);
+		case CCTouch::Began:
+			name = oSlotList::TouchBegan;
+    		break;
+		case CCTouch::Moved:
+			name = oSlotList::TouchMoved;
+			break;
+		case CCTouch::Ended:
+			name = oSlotList::TouchEnded;
+    		break;
+		case CCTouch::Cancelled:
+			name = oSlotList::TouchCancelled;
+    		break;
+		default:
+			break;
 	}
-	return lua_execute(nHandler, 2);
+	oSlotList* slotList = CCNode_tryGetSlotList(layer, name);
+	if (slotList)
+	{
+		tolua_pushccobject(L, touch);
+		int ret = slotList->invoke(L, 1);
+		lua_pop(L, 1);
+		return ret;
+	}
+	return 0;
 }
 
-int CCLuaEngine::executeLayerKeypadEvent(CCLayer* pLayer, int eventType)
+int CCLuaEngine::executeLayerTouchesEvent(CCLayer* layer, int eventType, CCSet* touches)
 {
-	int nHandler = pLayer->getScriptKeypadHandler();
-	if (!nHandler) return 0;
-	lua_pushinteger(L, eventType);
-	return lua_execute(nHandler, 1);
+	const char* name = nullptr;
+	switch (eventType)
+	{
+		case CCTouch::Began:
+			name = oSlotList::TouchBegan;
+    		break;
+		case CCTouch::Moved:
+			name = oSlotList::TouchMoved;
+			break;
+		case CCTouch::Ended:
+			name = oSlotList::TouchEnded;
+    		break;
+		case CCTouch::Cancelled:
+			name = oSlotList::TouchCancelled;
+    		break;
+		default:
+			break;
+	}
+	oSlotList* slotList = CCNode_tryGetSlotList(layer, name);
+	if (slotList)
+	{
+		lua_createtable(L, touches->count(), 0);
+		int i = 1;
+		for (CCSetIterator it = touches->begin(); it != touches->end(); ++it)
+		{
+			CCTouch* touch = (CCTouch*)*it;
+			tolua_pushccobject(L, touch);
+			lua_rawseti(L, -2, i++);
+		}
+		int ret = slotList->invoke(L, 1);
+		lua_pop(L, 1);
+		return ret;
+	}
+	return 0;
 }
 
-int CCLuaEngine::executeAccelerometerEvent(CCLayer* pLayer, CCAcceleration* pAccelerationValue)
+int CCLuaEngine::executeLayerKeypadEvent(CCLayer* layer, int eventType)
 {
-	int nHandler = pLayer->getScriptAccelerateHandler();
-	if (!nHandler) return 0;
-	lua_pushnumber(L, pAccelerationValue->x);
-	lua_pushnumber(L, pAccelerationValue->y);
-	lua_pushnumber(L, pAccelerationValue->z);
-	lua_pushnumber(L, pAccelerationValue->timestamp);
-	return lua_execute(nHandler, 4);
+	const char* name = nullptr;
+	switch (eventType)
+	{
+		case CCKeypad::Menu:
+			name = oSlotList::KeyMenu;
+    		break;
+		case CCKeypad::Back:
+			name = oSlotList::KeyBack;
+    		break;
+		default:
+			break;
+	}
+	oSlotList* slotList = CCNode_tryGetSlotList(layer, name);
+	if (slotList)
+	{
+		slotList->invoke(L);
+	}
+	return 0;
+}
+
+int CCLuaEngine::executeAccelerometerEvent(CCLayer* layer, CCAcceleration* accelerationValue)
+{
+	oSlotList* slotList = CCNode_tryGetSlotList(layer, oSlotList::Acceleration);
+	if (slotList)
+	{
+		lua_pushnumber(L, accelerationValue->x);
+		lua_pushnumber(L, accelerationValue->y);
+		lua_pushnumber(L, accelerationValue->z);
+		lua_pushnumber(L, accelerationValue->timestamp);
+		slotList->invoke(L, 4);
+		lua_pop(L, 4);
+	}
+	return 0;
 }
 
 int CCLuaEngine::executeApplicationEvent(int handler, int eventType)
@@ -461,7 +565,7 @@ int CCLuaEngine::executeApplicationEvent(int handler, int eventType)
 	if (handler)
 	{
 		lua_pushinteger(L, eventType);
-		return lua_execute(handler, 1);
+		return CCLuaEngine::execute(L, handler, 1);
 	}
 	return 0;
 }
@@ -470,7 +574,7 @@ int CCLuaEngine::executeEvent(int nHandler, const char* pEventName, CCObject* pE
 {
 	lua_pushstring(L, pEventName);
 	if (pEventSource) tolua_pushccobject(L, pEventSource);
-	return lua_execute(nHandler, pEventSource ? 2 : 1);
+	return CCLuaEngine::execute(L, nHandler, pEventSource ? 2 : 1);
 }
 
 bool CCLuaEngine::executeAssert(bool cond, const char *msg)
@@ -522,7 +626,7 @@ int CCLuaEngine::call(lua_State* L, int paramCount, int returnCount)
 	return 1;
 }
 
-int CCLuaEngine::lua_execute(int numArgs)
+int CCLuaEngine::execute(lua_State* L, int numArgs)
 {
 	int ret = 0;
 	int top = lua_gettop(L) - numArgs - 1;
@@ -543,7 +647,7 @@ int CCLuaEngine::lua_execute(int numArgs)
 	return ret;
 }
 
-int CCLuaEngine::lua_execute(int nHandler, int numArgs)
+int CCLuaEngine::execute(lua_State* L, int nHandler, int numArgs)
 {
 	toluafix_get_function_by_refid(L, nHandler);// args... func
 	if (!lua_isfunction(L, -1))
@@ -554,10 +658,10 @@ int CCLuaEngine::lua_execute(int nHandler, int numArgs)
 	}
 	if (numArgs > 0) lua_insert(L, -(numArgs + 1));// func args...
 
-	return lua_execute(numArgs);
+	return CCLuaEngine::execute(L, numArgs);
 }
 
-int CCLuaEngine::lua_invoke(int nHandler, int numArgs, int numRets)
+int CCLuaEngine::invoke(lua_State* L, int nHandler, int numArgs, int numRets)
 {
 	toluafix_get_function_by_refid(L, nHandler);// args... func
 	if (!lua_isfunction(L, -1))
@@ -574,7 +678,7 @@ int CCLuaEngine::lua_invoke(int nHandler, int numArgs, int numRets)
 int CCLuaEngine::executeActionCreate(int nHandler)
 {
 	int handler = 0;
-	lua_invoke(nHandler, 0, 1);
+	CCLuaEngine::invoke(L, nHandler, 0, 1);
 	int top = lua_gettop(L);
 	if (lua_isfunction(L, top))
 	{

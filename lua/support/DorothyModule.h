@@ -8,11 +8,39 @@ using namespace Dorothy::Platform;
 class oSlotList : public CCObject
 {
 public:
+	//builtin slot start
+	//Node
+	static const char* Entering;
+	static const char* Entered;
+	static const char* Exiting;
+	static const char* Exited;
+	static const char* Cleanup;
+	//Touch
+	static const char* TouchBegan;
+	static const char* TouchCancelled;
+	static const char* TouchEnded;
+	static const char* TouchMoved;
+	//MenuItem
+	static const char* TapBegan;
+	static const char* TapEnded;
+	static const char* Tapped;
+	//Body
+	static const char* ContactEnd;
+	static const char* ContactStart;
+	//Sensor
+	static const char* BodyEnter;
+	static const char* BodyLeave;
+	//Keypad
+	static const char* KeyBack;
+	static const char* KeyMenu;
+	//Acceleration
+	static const char* Acceleration;
+	//builtin slot end
 	oSlotList();
 	void add(int handler);
 	bool remove(int handler);
 	void clear();
-	void invoke(lua_State* L, int args);
+	bool invoke(lua_State* L, int args = 0);
 	CREATE_FUNC(oSlotList)
 private:
 	oRef<CCArray> _list;
@@ -27,6 +55,7 @@ int CCNode_eachChild(lua_State* L);
 int CCNode_getChildren(lua_State* L);
 CCNode* CCNode_getChildByIndex(CCNode* self, int index);
 oSlotList* CCNode_getSlotList(CCNode* self, const char* name);
+oSlotList* CCNode_tryGetSlotList(CCNode* self, const char* name);
 
 void CCDrawNode_drawPolygon(
 	CCDrawNode* self,
@@ -40,9 +69,7 @@ void CCDrawNode_drawPolygon(
 	int count,
 	const ccColor4B& fillColor);
 
-void oModel_addHandler(oModel* model, const string& name, int nHandler);
-void oModel_removeHandler(oModel* model, const string& name, int nHandler);
-void oModel_clearHandler(oModel* model, const string& name);
+oModel* oModel_create(const char* filename);
 oVec2 oModel_getKey(oModel* model, const char* key);
 
 void oWorld_query(oWorld* world, const CCRect& rect, int nHandler);
@@ -64,6 +91,7 @@ ENUM_START(oBodyEvent)
 	ContactEnd
 }
 ENUM_END(oBodyEvent)
+oBody* oBody_create(oBodyDef* def, oWorld* world);
 void oBody_addHandler(oBody* body, uint32 flag, int nHandler);
 void oBody_removeHandler(oBody* body, uint32 flag, int nHandler);
 void oBody_clearHandler(oBody* body, uint32 flag);

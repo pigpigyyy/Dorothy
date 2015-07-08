@@ -13,9 +13,10 @@ NS_DOROTHY_BEGIN
 
 class oBody;
 
+typedef Delegate<void(oSensor*,oBody*)> oSensorHandler;
+
 class oSensor: public CCObject
 {
-	typedef Delegate<void(oSensor*,oBody*)> oSensorHandler;
 public:
 	virtual ~oSensor();
 	/**

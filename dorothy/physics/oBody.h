@@ -11,15 +11,18 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 NS_DOROTHY_BEGIN
 
+class oBody;
 class oSensor;
 class oWorld;
 class oBodyDef;
 class oContact;
 typedef b2FixtureDef oFixtureDef;
 
+typedef Delegate<void(oBody* body,const oVec2& point,const oVec2& normal)> oContactHandler;
+typedef Delegate<void(oSensor* sensor,oBody* body)> oSensorHandler;
+
 class oBody: public CCNode
 {
-	typedef Delegate<void(oBody* body,const oVec2& point,const oVec2& normal)> oContactHandler;
 public:
 	virtual ~oBody();
 	virtual bool init();
@@ -40,6 +43,7 @@ public:
 	PROPERTY_VIRTUAL(int, _group, Group);
 	oContactHandler contactStart;
 	oContactHandler contactEnd;
+	oSensorHandler sensorAdded;
 	void applyLinearImpulse(const oVec2& impulse, const oVec2& pos);
 	void applyAngularImpulse(float impulse);
 	void setVelocity(float x, float y);
@@ -48,6 +52,7 @@ public:
 	virtual void setRotation(float var); 
 	virtual void setPosition(const CCPoint& var);
 	oSensor* getSensorByTag(int tag);
+	void eachSensor(const oSensorHandler& func);
 	bool removeSensorByTag(int tag);
 	bool removeSensor(oSensor* sensor);
 	b2Fixture* attach(b2FixtureDef* fixtureDef);

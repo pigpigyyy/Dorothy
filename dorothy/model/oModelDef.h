@@ -89,7 +89,7 @@ public:
 	void setActionName(int index, const string& name);
 	void setLookName(int index, const string& name);
 	int getAnimationIndexByName(const string& name);
-	string getAnimationNameByIndex(int index);
+	const char* getAnimationNameByIndex(int index);
 	int getLookIndexByName(const string& name);
 	const unordered_map<string, int>& getAnimationIndexMap() const;
 	const unordered_map<string, int>& getLookIndexMap() const;

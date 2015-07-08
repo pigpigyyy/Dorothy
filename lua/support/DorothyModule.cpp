@@ -2,6 +2,34 @@
 #include "CCLuaEngine.h"
 #include "tolua++.h"
 
+#define oSlotName(name) const char* oSlotList::name(#name);
+//Node
+oSlotName(Entering)
+oSlotName(Entered)
+oSlotName(Exiting)
+oSlotName(Exited)
+oSlotName(Cleanup)
+//Touch
+oSlotName(TouchBegan)
+oSlotName(TouchCancelled)
+oSlotName(TouchEnded)
+oSlotName(TouchMoved)
+//MenuItem
+oSlotName(TapBegan)
+oSlotName(TapEnded)
+oSlotName(Tapped)
+//Body
+oSlotName(ContactEnd)
+oSlotName(ContactStart)
+//Sensor
+oSlotName(BodyEnter)
+oSlotName(BodyLeave)
+//Keypad
+oSlotName(KeyBack)
+oSlotName(KeyMenu)
+//Acceleration
+oSlotName(Acceleration)
+
 HANDLER_WRAP_START(oListenerHandlerWrapper)
 void call(oEvent* event) const
 {
@@ -59,16 +87,18 @@ void oSlotList::clear()
 	_list->removeAllObjects();
 }
 
-void oSlotList::invoke(lua_State* L, int args)
+bool oSlotList::invoke(lua_State* L, int args)
 {
 	int top = lua_gettop(L);
+	int result = 0;
 	CCARRAY_START(CCScriptHandlerEntry, entry, _list)
 	{
 		toluafix_get_function_by_refid(L, entry->getHandler());
 		for (int i = top-args+1;i <= top;i++) lua_pushvalue(L, i);
-		CCLuaEngine::call(L, args, 0);
+		result = CCLuaEngine::execute(L, args);
 	}
 	CCARRAY_END
+	return result != 0;
 }
 
 oSlotList* CCNode_getSlotList(CCNode* self, const char* name)
@@ -93,6 +123,21 @@ oSlotList* CCNode_getSlotList(CCNode* self, const char* name)
 			slots->setObject(slotList, name);
 		}
 		return slotList;
+}
+
+oSlotList* CCNode_tryGetSlotList(CCNode* self, const char* name)
+{
+	CCAssert(self->getHelperObject() == 0 || CCLuaCast<oSlotData>(self->getHelperObject()), "Invalid slot object")
+	oSlotData* slotData = CCLuaCast<oSlotData>(self->getHelperObject());
+	if (slotData)
+	{
+		CCDictionary* slots = slotData->slots;
+		if (slots)
+		{
+			return (oSlotList*)slots->objectForKey(name);
+		}
+	}
+	return nullptr;
 }
 
 int CCNode_gslot(lua_State* L)
@@ -180,10 +225,7 @@ int CCNode_slots(lua_State* L)
 			if (slotData)
 			{
 				CCDictionary* slots = slotData->slots;
-				if (slots)
-				{
-					slots->removeObjectForKey(name);
-				}
+				if (slots) slots->removeObjectForKey(name);
 			}
 			return 0;
 		}
@@ -214,18 +256,12 @@ int CCNode_emit(lua_State* L)
 		if (!self) tolua_error(L, "invalid 'self' in function 'CCNode_emit'", NULL);
 #endif
 		const char* name = tolua_tostring(L, 2, 0);
-		CCAssert(self->getHelperObject() == 0 || CCLuaCast<oSlotData>(self->getHelperObject()), "Invalid slot object")
-		oSlotData* slotData = (oSlotData*)self->getHelperObject();
-		if (slotData)
+		oSlotList* list = CCNode_tryGetSlotList(self, name);
+		if (list)
 		{
-			CCDictionary* slots = slotData->slots;
-			if (slots)
-			{
-				int top = lua_gettop(L);
-				int args = top - 2;
-				oSlotList* list = (oSlotList*)slots->objectForKey(name);
-				if (list) list->invoke(L, args);
-			}
+			int top = lua_gettop(L);
+			int args = top - 2;
+			list->invoke(L, args);
 		}
 	}
 	return 0;
@@ -372,25 +408,26 @@ void CCDrawNode_drawPolygon(
 	self->drawPolygon((CCPoint*)verts, count, fillColor, 0, ccColor4B());
 }
 
-HANDLER_WRAP_START(oModelHandlerWrapper)
-void call(oModel* model) const
+oModel* oModel_create(const char* filename)
 {
-	CCObject* params[] = { model };
-	CCLuaEngine::sharedEngine()->executeFunction(getHandler(), 1, params);
+	oModel* model = oModel::create(filename);
+	model->handlers.each([](const char* name, oAnimationHandler& handler)
+	{
+		handler = oAnimationHandler([name](oModel* model)
+		{
+			oSlotList* slotList = CCNode_tryGetSlotList(model, name);
+			if (slotList)
+			{
+				lua_State* L = CCLuaEngine::sharedEngine()->getState();
+				tolua_pushccobject(L, model);
+				slotList->invoke(L, 1);
+				lua_pop(L, 1);
+			}
+		});
+	});
+	return model;
 }
-HANDLER_WRAP_END
-void oModel_addHandler(oModel* model, const string& name, int nHandler)
-{
-	model->handlers[name] += std::make_pair(oModelHandlerWrapper(nHandler), &oModelHandlerWrapper::call);
-}
-void oModel_removeHandler(oModel* model, const string& name, int nHandler)
-{
-	model->handlers[name] -= std::make_pair(oModelHandlerWrapper(nHandler), &oModelHandlerWrapper::call);
-}
-void oModel_clearHandler(oModel* model, const string& name)
-{
-	model->handlers[name].Clear();
-}
+
 oVec2 oModel_getKey(oModel* model, const char* key)
 {
 	return model->getModelDef()->getKeyPoint(key);
@@ -439,6 +476,28 @@ void oSensor_clearHandler(oSensor* sensor, uint32 flag)
 		sensor->bodyLeave.Clear();
 		break;
 	}
+}
+
+oBody* oBody_create(oBodyDef* def, oWorld* world)
+{
+	oBody* body = oBody::create(def, world);
+	auto sensorAddHandler = [](oSensor* sensor, oBody*)
+	{
+		sensor->bodyEnter = [](oSensor* sensor, oBody* body)
+		{
+			oSlotList* slotList = CCNode_tryGetSlotList(body, oSlotList::BodyEnter);
+			if (slotList)
+			{
+				
+				tolua_pushccobject(L, sensor);
+				tolua_pushccobject(L, body);
+				
+			}
+		};
+	};
+	body->eachSensor(sensorAddHandler);
+	body->sensorAdded = oSensorHandler(sensorAddHandler);
+	return body;
 }
 
 HANDLER_WRAP_START(oBodyHandlerWrapper)

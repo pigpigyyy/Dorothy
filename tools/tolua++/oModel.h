@@ -10,9 +10,6 @@ class oModel: public CCNode
 	tolua_readonly tolua_property__bool bool playing;
 	tolua_readonly tolua_property__bool bool paused;
 	tolua_readonly tolua_property__common string currentAnimationName @ currentAnimation;
-	tolua_outside void oModel_addHandler @ addHandler(const char* name, tolua_function nHandler);
-	tolua_outside void oModel_removeHandler @ removeHandler(const char* name, tolua_function nHandler);
-	tolua_outside void oModel_clearHandler @ clearHandler(const char* name);
 	tolua_outside oVec2 oModel_getKey @ getKey(const char* key);
 	void play(const char* name);
 	void pause();

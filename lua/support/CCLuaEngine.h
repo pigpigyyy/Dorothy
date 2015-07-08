@@ -100,11 +100,11 @@ public:
 	virtual bool scriptHandlerEqual(int nHandlerA, int nHandlerB);
 	
 	static int call(lua_State* L, int paramCount, int returnCount);
+	static int execute(lua_State* L, int nHandler, int numArgs);
+	static int execute(lua_State* L, int numArgs);
+	static int invoke(lua_State* L, int nHandler, int numArgs, int numRets);
 private:
 	CCLuaEngine();
-	int lua_invoke(int nHandler, int numArgs, int numRets);
-	int lua_execute(int numArgs);
-	int lua_execute(int nHandler, int numArgs);
 	lua_State* L;
 };
 

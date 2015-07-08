@@ -40,7 +40,7 @@ static unsigned int g_luaRefCount = 0;
 
 NS_CC_BEGIN
 
-int g_luaType = 2;
+int g_luaType = 3;//1 UBOX 2 CALLBACK
 
 CCObject* CCCopying::copyWithZone(CCZone *pZone)
 {

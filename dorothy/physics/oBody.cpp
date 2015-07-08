@@ -259,7 +259,17 @@ oSensor* oBody::attachSensor( int tag, b2FixtureDef* fixtureDef )
 	fixture->SetUserData((void*)sensor);
 	if (!_sensors) _sensors = CCArray::create();
 	_sensors->addObject(sensor);
+	sensorAdded(sensor, this);
 	return sensor;
+}
+
+void oBody::eachSensor(const oSensorHandler& func)
+{
+	CCARRAY_START(oSensor, sensor, _sensors)
+	{
+		func(sensor, this);
+	}
+	CCARRAY_END
 }
 
 void oBody::setVelocityX( float x )

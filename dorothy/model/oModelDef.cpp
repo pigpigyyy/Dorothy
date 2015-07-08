@@ -267,16 +267,16 @@ int oModelDef::getAnimationIndexByName( const string& name )
 	return oAnimation::None;
 }
 
-string oModelDef::getAnimationNameByIndex( int index )
+const char* oModelDef::getAnimationNameByIndex( int index )
 {
 	for (const auto& item : _animationIndex)
 	{
 		if (item.second == index)
 		{
-			return string(item.first.c_str());
+			return item.first.c_str();
 		}
 	}
-	return string();
+	return nullptr;
 }
 
 int oModelDef::getLookIndexByName( const string& name )

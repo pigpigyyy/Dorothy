@@ -118,6 +118,7 @@ public:
 		void operator()(oModel* owner);
 		oAnimationHandler& operator[](int index);
 		oAnimationHandler& operator[](const string& name);
+		void each(const function<void(const char*,oAnimationHandler&)>& func);
 	private:
 		oModel* _owner;
 		friend class oModel;

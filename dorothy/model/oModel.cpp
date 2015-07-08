@@ -626,6 +626,15 @@ oAnimationHandler& oModel::oAnimationHandlerGroup::operator[]( const string& nam
 	return _owner->_animationGroups[_owner->_modelDef->getAnimationIndexByName(name)]->animationEnd;
 }
 
+void oModel::oAnimationHandlerGroup::each(const function<void(const char*,oAnimationHandler&)>& func)
+{
+	for (int i = 0; i < (int)_owner->_animationGroups.size(); i++)
+	{
+		const char* name = _owner->_modelDef->getAnimationNameByIndex(i);
+		func(name, _owner->_animationGroups[i]->animationEnd);
+	}
+}
+
 void oModel::setupCallback()
 {
 	for (oAnimationGroup* animationGroup : _animationGroups)

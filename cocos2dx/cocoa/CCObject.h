@@ -39,7 +39,7 @@ extern CC_DLL int g_luaType;
 template <class T>
 int CCLuaType()
 {
-	static int type = ++g_luaType;
+	static int type = g_luaType++;
 	return type;
 }
 
