@@ -6,15 +6,9 @@ static void oHandler(const char* begin, const char* end)
 #define ELSE_CHECK_CDATA(name) else CHECK_CDATA(name)
 	if (*(begin-1) != '/')
 	{
-		CHECK_CDATA(Listener)
-		ELSE_CHECK_CDATA(Call)
+		CHECK_CDATA(Call)
 		ELSE_CHECK_CDATA(Script)
 		ELSE_CHECK_CDATA(Schedule)
-		ELSE_CHECK_CDATA(TapHandler)
-		ELSE_CHECK_CDATA(NodeHandler)
-		ELSE_CHECK_CDATA(TouchHandler)
-		ELSE_CHECK_CDATA(KeypadHandler)
-		ELSE_CHECK_CDATA(AccelerateHandler)
 	}
 }
 
@@ -1484,6 +1478,19 @@ static bool isTextAlign(const char* str)
 #define Body_Finish \
 	Add_To_Parent
 
+// ModuleNode
+#define ModuleNode_Define
+#define ModuleNode_Check \
+	attributes[__targetStrForSwitch] = atts[++i];
+#define ModuleNode_Create \
+	stream << "local " << self << " = CCClipNode()\n";
+#define ModuleNode_Handle \
+	Node_Handle\
+	if (alphaThreshold) stream << self << ".alphaThreshold = " << alphaThreshold << '\n';\
+	if (inverted) stream << self << ".inverted = " << toBoolean(inverted) << '\n';
+#define ModuleNode_Finish \
+	Add_To_Parent
+
 #define Item_Define(name) name##_Define
 #define Item_Loop(name) \
 	for (int i = 0; atts[i] != nullptr; i++)\
@@ -1600,6 +1607,7 @@ private:
 	stack<string> items;
 	stack<oItem> elementStack;
 	unordered_set<string> names;
+	unordered_map<string, string> attributes;
 	ostringstream stream;
 };
 
@@ -1750,36 +1758,6 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 			codes = nullptr;
 			break;
 		}
-		CASE_STR(TouchHandler)
-		{
-			stream << currentData.name << ".touchHandler = " << (codes ? codes : "") << '\n';
-			codes = nullptr;
-			break;
-		}
-		CASE_STR(AccelerateHandler)
-		{
-			stream << currentData.name << ".accelerateHandler = " << (codes ? codes : "") << '\n';
-			codes = nullptr;
-			break;
-		}
-		CASE_STR(KeypadHandler)
-		{
-			stream << currentData.name << ".keypadHandler = " << (codes ? codes : "") << '\n';
-			codes = nullptr;
-			break;
-		}
-		CASE_STR(NodeHandler)
-		{
-			stream << currentData.name << ".nodeHandler = " << (codes ? codes : "") << '\n';
-			codes = nullptr;
-			break;
-		}
-		CASE_STR(TapHandler)
-		{
-			stream << currentData.name << ".tapHandler = " << (codes ? codes : "") << '\n';
-			codes = nullptr;
-			break;
-		}
 		CASE_STR(Schedule)
 		{
 			stream << currentData.name << ":schedule(" << (codes ? codes : "");
@@ -1793,7 +1771,7 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 		{
 			oFunc func = funcs.top();
 			funcs.pop();
-			string tempItem = func.begin + (codes ? codes : "") + func.end;
+			string tempItem = func.begin + "function()\n" + (codes ? codes : "") + "\nend" + func.end;
 			if (parentIsData)
 			{
 				stream << "local " << currentData.name << " = " << tempItem << '\n';
