@@ -41,9 +41,6 @@ public:
 	static oBullet* create(oBulletDef* def, oUnit* unit);
 	oTargetAllow targetAllow;
 	oBulletHandler hitTarget;
-	void addHandler(int handler);
-	void removeHandler(int handler);
-	void clearHandler();
 	virtual void destroy();
 protected:
 	oBullet(oBulletDef* def, oUnit* unit);

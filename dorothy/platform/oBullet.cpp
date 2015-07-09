@@ -103,7 +103,6 @@ void oBullet::onExit()
 void oBullet::cleanup()
 {
 	oBody::cleanup();
-	oBullet::clearHandler();
 }
 
 oBullet* oBullet::create(oBulletDef* def, oUnit* unit)
@@ -237,29 +236,6 @@ void oBullet::destroy()
 	{
 		oBody::destroy();
 	}
-}
-
-HANDLER_WRAP_START(oBulletHandlerWrapper)
-	bool call(oBullet* bullet, oUnit* target) const
-	{
-		CCObject* params[] = {bullet, target};
-		return CCScriptEngine::sharedEngine()->executeFunction(getHandler(), 2, params) != 0;
-	}
-HANDLER_WRAP_END
-
-void oBullet::addHandler( int handler )
-{
-	hitTarget += std::make_pair(oBulletHandlerWrapper(handler), &oBulletHandlerWrapper::call);
-}
-
-void oBullet::removeHandler( int handler )
-{
-	hitTarget -= std::make_pair(oBulletHandlerWrapper(handler), &oBulletHandlerWrapper::call);
-}
-
-void oBullet::clearHandler()
-{
-	hitTarget.Clear();
 }
 
 NS_DOROTHY_PLATFORM_END

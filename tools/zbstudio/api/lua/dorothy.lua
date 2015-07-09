@@ -7,87 +7,6 @@ local index = genIndex()
 
 local Dorothy =
 {
-	oRoutine =
-	{
-		childs =
-		{
-			remove =
-			{
-				args = "(routine: thread)",
-				description = "",
-				returns = "()",
-				static = true,
-				type = "method",
-			},
-			start =
-			{
-				args = "()",
-				description = "",
-				returns = "()",
-				static = true,
-				type = "method",
-			},
-			stop =
-			{
-				args = "()",
-				description = "",
-				returns = "()",
-				static = true,
-				type = "method",
-			},
-		},
-		description = "class oRoutine.\n args -- (routine: thread)\n -- routine: created by once(function() end) or loop(function() end)",
-		type = "class",
-		index = index()
-	},
-	once =
-	{
-		args = "(action: function)",
-		description = "",
-		returns = "(routine: thread)",
-		type = "function",
-		index = index()
-	},
-	loop =
-	{
-		args = "(action: function)",
-		description = "",
-		returns = "(routine: thread)",
-		type = "function",
-		index = index()
-	},
-	wait =
-	{
-		args = "(action: function)",
-		description = "",
-		returns = "()",
-		type = "function",
-		index = index()
-	},
-	seconds =
-	{
-		args = "(time: float)",
-		description = "",
-		returns = "(action: function)",
-		type = "function",
-		index = index()
-	},
-	emit =
-	{
-		args = "(name: string, eventArgs: ...)",
-		description = "send event",
-		returns = "()",
-		type = "function",
-		index = index()
-	},
-	doXml =
-	{
-		args = "(xml: string)",
-		description = "execute codes of Dorothy Xml format.",
-		returns = "(...)",
-		type = "function",
-		index = index()
-	},
 	tolua =
 	{
 		childs =
@@ -6507,6 +6426,88 @@ local Dorothy =
 		hide = true,
 		index = index()
 	},
+	oRoutine =
+	{
+		childs =
+		{
+			remove =
+			{
+				args = "(routine: thread)",
+				description = "",
+				returns = "()",
+				static = true,
+				type = "method",
+			},
+			start =
+			{
+				args = "()",
+				description = "",
+				returns = "()",
+				static = true,
+				type = "method",
+			},
+			stop =
+			{
+				args = "()",
+				description = "",
+				returns = "()",
+				static = true,
+				type = "method",
+			},
+		},
+		description = "class oRoutine.\n args -- (routine: thread)\n -- routine: created by once(function() end) or loop(function() end)",
+		type = "class",
+		index = index()
+	},
+	once =
+	{
+		args = "(action: function)",
+		description = "",
+		returns = "(routine: thread)",
+		type = "function",
+		index = index()
+	},
+	loop =
+	{
+		args = "(action: function)",
+		description = "",
+		returns = "(routine: thread)",
+		type = "function",
+		index = index()
+	},
+	wait =
+	{
+		args = "(action: function)",
+		description = "",
+		returns = "()",
+		type = "function",
+		index = index()
+	},
+	seconds =
+	{
+		args = "(time: float)",
+		description = "",
+		returns = "(action: function)",
+		type = "function",
+		index = index()
+	},
+	emit =
+	{
+		args = "(name: string, eventArgs: ...)",
+		description = "send event",
+		returns = "()",
+		type = "function",
+		index = index()
+	},
+	doXml =
+	{
+		args = "(xml: string)",
+		description = "execute codes of Dorothy Xml format.",
+		returns = "(...)",
+		type = "function",
+		index = index()
+	},
+
 	TouchBegan =
 	{
 		args = "",
@@ -6703,6 +6704,38 @@ local Dorothy =
 	{
 		args = "",
 		description = " a builtin slot string for CCTextFieldTTF\n\n -- handler : function(delText: string, textField: CCTextFieldTTF)",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	AnimationEnd =
+	{
+		args = "",
+		description = " a builtin slot string for oModel\n\n -- handler : function(animationName: string, model: oModel)",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	ActionStart =
+	{
+		args = "",
+		description = " a builtin slot string for oUnit\n\n -- handler : function(actionName: string, action: oAction)",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	ActionEnd =
+	{
+		args = "",
+		description = " a builtin slot string for oUnit\n\n -- handler : function(actionName: string, action: oAction)",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	HitTarget =
+	{
+		args = "",
+		description = " a builtin slot string for oBullet\n\n -- handler : function(target: oUnit, bullet: oBullet)",
 		returns = "",
 		type = "function",
 		index = index()

@@ -20,6 +20,11 @@ public:
 	static const char* TouchCancelled;
 	static const char* TouchEnded;
 	static const char* TouchMoved;
+	//Keypad
+	static const char* KeyBack;
+	static const char* KeyMenu;
+	//Acceleration
+	static const char* Acceleration;
 	//MenuItem
 	static const char* TapBegan;
 	static const char* TapEnded;
@@ -30,11 +35,6 @@ public:
 	//Sensor
 	static const char* BodyEnter;
 	static const char* BodyLeave;
-	//Keypad
-	static const char* KeyBack;
-	static const char* KeyMenu;
-	//Acceleration
-	static const char* Acceleration;
 	//TextField
 	static const char* InputAttach;
 	static const char* InputDetach;
@@ -44,9 +44,11 @@ public:
 	static const char* InputDeleted;
 	//Model
 	static const char* AnimationEnd;
-	//Action
+	//Unit
 	static const char* ActionStart;
 	static const char* ActionEnd;
+	//Bullet
+	static const char* HitTarget;
 	//builtin slot end
 	oSlotList();
 	void add(int handler);
@@ -89,6 +91,7 @@ void oWorld_cast(oWorld* world, const oVec2& start, const oVec2& end, bool close
 
 oBody* oBody_create(oBodyDef* def, oWorld* world, oVec2 pos, float rot);
 oUnit* oUnit_create(oUnitDef* unitDef, oWorld* world, const oVec2& pos, float rot);
+oBullet* oBullet_create(oBulletDef* def, oUnit* unit);
 
 bool oAnimationCache_load(const char* filename);
 bool oAnimationCache_update(const char* name, const char* content);

@@ -38,6 +38,7 @@ oSlotName(InputDeleted)
 oSlotName(AnimationEnd)
 oSlotName(ActionStart)
 oSlotName(ActionEnd)
+oSlotName(HitTarget)
 
 class oSlotData : public CCObject
 {
@@ -540,6 +541,26 @@ oUnit* oUnit_create(oUnitDef* unitDef, oWorld* world, const oVec2& pos, float ro
 	unit->eachAction(handleActionAdd);
 	unit->actionAdded = handleActionAdd;
 	return unit;
+}
+
+oBullet* oBullet_create(oBulletDef* def, oUnit* unit)
+{
+	oBullet* bullet = oBullet::create(def, unit);
+	bullet->hitTarget = [](oBullet* bullet, oUnit* target)
+	{
+		oSlotList* slotList = CCNode_tryGetSlotList(bullet, oSlotList::HitTarget);
+		if (slotList)
+		{
+			lua_State* L = CCLuaEngine::sharedEngine()->getState();
+			tolua_pushccobject(L, target);
+			tolua_pushccobject(L, bullet);
+			bool ret = slotList->invoke(L, 2);
+			lua_pop(L, 2);
+			return ret;
+		}
+		return true;
+	};
+	return bullet;
 }
 
 void oWorld_query(oWorld* world, const CCRect& rect, int handler)

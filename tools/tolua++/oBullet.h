@@ -6,11 +6,7 @@ class oBullet: public oBody
 	tolua_readonly tolua_property__common oSensor* detectSensor;
 	tolua_readonly tolua_property__common oBulletDef* bulletDef;
 	tolua_property__common CCNode* face;
-		
-	void addHandler(tolua_function handler);
-	void removeHandler(tolua_function handler);
-	void clearHandler();
 
 	void destroy();
-	static oBullet* create(oBulletDef* def, oUnit* owner);
+	static tolua_outside oBullet* oBullet_create @ create(oBulletDef* def, oUnit* owner);
 };
