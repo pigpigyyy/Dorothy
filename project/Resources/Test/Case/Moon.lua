@@ -11,6 +11,9 @@ do
   _with_0.loop = true
   _with_0.position = oVec2(width * 0.5, height * 0.5)
   _with_0:play("walk")
+  _with_0:slots("AnimationEnd", function(name)
+    return print(name)
+  end)
   model = _with_0
 end
 local layer

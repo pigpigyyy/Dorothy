@@ -104,6 +104,18 @@ local function compile(dir)
 				oContent:saveToFile(dir.."/"..name..".lua",codes)
 				print("Moon compiled: "..entry)
 			end
+		elseif extension == "xml" then
+			local entry = dir.."/"..item
+			local file = io.open(entry,"r")
+			local xmlCodes = file:read("*a")
+			local codes = xmlToLua(xmlCodes)
+			file:close()
+			if not codes then
+				print("Compile errors in "..entry)
+			else
+				oContent:saveToFile(dir.."/"..name..".lua",codes)
+				print("xml compiled: "..entry)
+			end
 		end
 	end
 end

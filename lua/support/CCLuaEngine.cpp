@@ -386,19 +386,19 @@ int CCLuaEngine::executeNodeEvent(CCNode* pNode, int nAction)
 	{
 		case CCNode::Enter:
 			name = oSlotList::Entering;
-    		break;
+			break;
 		case CCNode::EnterTransitionDidFinish:
 			name = oSlotList::Entered;
-    		break;
+			break;
 		case CCNode::Exit:
 			name = oSlotList::Exiting;
-    		break;
+			break;
 		case CCNode::ExitTransitionDidStart:
 			name = oSlotList::Exited;
-    		break;
+			break;
 		case CCNode::Cleanup:
 			name = oSlotList::Cleanup;
-    		break;
+			break;
 		default:
 			break;
 	}

@@ -462,8 +462,8 @@ inline void oHandleSensor(oSensor* sensor, oBody* other, const char* slotName)
 	if (slotList)
 	{
 		lua_State* L = CCLuaEngine::sharedEngine()->getState();
-		tolua_pushccobject(L, sensor);
 		tolua_pushccobject(L, other);
+		tolua_pushccobject(L, sensor);
 		slotList->invoke(L, 2);
 		lua_pop(L, 2);
 	}

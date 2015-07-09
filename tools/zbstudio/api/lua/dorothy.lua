@@ -384,36 +384,6 @@ local Dorothy =
 	{
 		childs =
 		{
-			Entering =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
-			Exiting =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
-			Entered =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
-			Exited =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
-			Cleanup =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
 			zOrder =
 			{
 				description = "[int]",
@@ -530,11 +500,6 @@ local Dorothy =
 			cascadeColor =
 			{
 				description = "[bool]",
-				type = "value",
-			},
-			nodeHandler =
-			{
-				description = "[function]\n\n -- handler: function(eventType: int)\n\n -- eventType: {CCNode.Enter|CCNode.Exit|CCNode.Entered|CCNode.Exited|CCNode.Cleanup}",
 				type = "value",
 			},
 			boundingBox =
@@ -797,21 +762,6 @@ local Dorothy =
 			touchPriority =
 			{
 				description = "[int]",
-				type = "value",
-			},
-			touchHandler =
-			{
-				description = "[function]\n\n If isMultiTouches\n\n true -- handler: function(eventType: int, touches: table{CCTouch})\n\n false -- handler: function(eventType: int, touch: CCTouch)\n\n -- eventType: CCTouch.{Began|Moved|Ended|Cancelled}",
-				type = "value",
-			},
-			keypadHandler =
-			{
-				description = "[function]\n\n -- handler: function(eventType: int)\n\n -- eventType: {CCKeypad.Back|CCKeypad.Menu}",
-				type = "value",
-			},
-			accelerateHandler =
-			{
-				description = "[function]\n\n -- handler: function(x: float, y: float, z: float, timestamp: float)",
 				type = "value",
 			},
 		},
@@ -1600,27 +1550,6 @@ local Dorothy =
 			},
 		},
 		description = "class CCUserDefault.",
-		type = "class",
-		index = index()
-	},
-	CCKeypad =
-	{
-		childs =
-		{
-			Menu =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
-			Back =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
-		},
-		description = "enum CCKeypad.",
 		type = "class",
 		index = index()
 	},
@@ -2965,24 +2894,6 @@ local Dorothy =
 	{
 		childs =
 		{
-			TapBegan =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
-			Tapped =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
-			TapEnded =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
 			hitArea =
 			{
 				description = "[CCRect][Readonly]",
@@ -2992,11 +2903,6 @@ local Dorothy =
 			enabled =
 			{
 				description = "[bool]",
-				type = "value",
-			},
-			tapHandler  =
-			{
-				description = "[function]\n\n -- handler: function(eventType: int, menuItem: CCMenuItem)\n -- eventType: CCMenuItem.{TapBegan|Tapped|TapEnded}",
 				type = "value",
 			},
 		},
@@ -3081,42 +2987,6 @@ local Dorothy =
 	{
 		childs =
 		{
-			Attach =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
-			Detach =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
-			Insert =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
-			Inserted =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
-			Delete =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
-			Deleted =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
 			colorPlaceHolder =
 			{
 				description = "[ccColor3]",
@@ -3133,11 +3003,6 @@ local Dorothy =
 			{
 				description = "[string]",
 				typeName = "string",
-				type = "value",
-			},
-			inputHandler =
-			{
-				description = "[function]\n\n -- handler: function(self: CCTextFieldTTF, eventType: int, nil|text: string)\n\n -- eventType: CCTextFieldTTF.{Attach|Detach|Insert|Delete}",
 				type = "value",
 			},
 			attachWithIME =
@@ -3301,30 +3166,6 @@ local Dorothy =
 	{
 		childs =
 		{
-			Began =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
-			Moved =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
-			Ended =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
-			Cancelled =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
 			location =
 			{
 				description = "[oVec2][Readonly]",
@@ -3731,27 +3572,6 @@ local Dorothy =
 				description = "[string][Readonly] Current model animation`s name.",
 				type = "value"
 			},
-			addHandler =
-			{
-				args = "(animationName: string, handler: function)",
-				description = "Add another handler for specified animation`s end event.\n\n -- handler:  function(self: oModel)",
-				returns = "()",
-				type = "method"
-			},
-			removeHandler =
-			{
-				args = "(animationName: string, handler: function)",
-				description = "Remove one of the handlers for specified animation`s end event.\n\n -- handler: function(self: oModel)",
-				returns = "()",
-				type = "method"
-			},
-			clearHandler =
-			{
-				args = "(animationName: string)",
-				description = "Remove all end event handlers of specified animation.",
-				returns = "()",
-				type = "method"
-			},
 			getKey =
 			{
 				args = "(key: string)",
@@ -3813,18 +3633,6 @@ local Dorothy =
 	{
 		childs =
 		{
-			Start =
-			{
-				description = "[int][Const] Start event flag for action handler.",
-				static = true,
-				type = "value"
-			},
-			End =
-			{
-				description = "[int][Const] End event flag for action handler.",
-				static = true,
-				type = "value"
-			},
 			reaction =
 			{
 				description = "[float] When doing this action, the unit will take this extra reaction time\n\n in seconds to respond to the game world changes.",
@@ -3860,27 +3668,6 @@ local Dorothy =
 				description = "[oUnit][Readonly] Get the owner of the action.",
 				typeName = "oUnit",
 				type = "value"
-			},
-			addHandler =
-			{
-				args = "(type: int, handler: function)",
-				description = "Add a callback function which is called when the action starts or ends. Multiple functions could be added.\n\nThe type param can be [oAction.Start] or [oAction.End].\n\n -- handler: function(self: oAction)",
-				returns = "()",
-				type = "method"
-			},
-			removeHandler =
-			{
-				args = "(type: int, handler: function)",
-				description = "Remove a callback function which is called when the action starts or ends.\n\nThe type param can be [oAction.Start] or [oAction.End].",
-				returns = "()",
-				type = "method"
-			},
-			clearHandler =
-			{
-				args = "(type: int)",
-				description = "Remove all the associated callback functions that are called when the action starts or ends.\n\nThe type param can be [oAction.Start] or [oAction.End].",
-				returns = "()",
-				type = "method"
 			},
 			add =
 			{
@@ -4373,18 +4160,6 @@ local Dorothy =
 	{
 		childs =
 		{
-			ContactStart =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value"
-			},
-			ContactEnd =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value"
-			},
 			world =
 			{
 				description = "[oWorld]",
@@ -4499,27 +4274,6 @@ local Dorothy =
 			{
 				args = "()",
 				description = "",
-				returns = "()",
-				type = "method"
-			},
-			addHandler =
-			{
-				args = "(flag: int, handler: function)",
-				description = " -- flag: oBody.ContactStart | oBody.ContactEnd\n\n -- handler: function(body: oBody, point: oVec2, normal: oVec2)",
-				returns = "()",
-				type = "method"
-			},
-			removeHandler =
-			{
-				args = "(flag: int, handler: function)",
-				description = " -- flag: oBody.ContactStart | oBody.ContactEnd\n\n -- handler: function(body: oBody, point: oVec2, normal: oVec2)",
-				returns = "()",
-				type = "method"
-			},
-			clearHandler =
-			{
-				args = "(flag: int)",
-				description = " -- flag: oBody.ContactStart | oBody.ContactEnd",
 				returns = "()",
 				type = "method"
 			},
@@ -4731,27 +4485,6 @@ local Dorothy =
 				description = "[CCNode]",
 				typeName = "CCNode",
 				type = "value"
-			},
-			addHandler =
-			{
-				args = "(handler: function)",
-				description = "handler -- moveOn: bool function(bullet: oBullet, target: oUnit)",
-				returns = "()",
-				type = "method"
-			},
-			removeHandler =
-			{
-				args = "(handler: function)",
-				description = "",
-				returns = "()",
-				type = "method"
-			},
-			clearHandler =
-			{
-				args = "()",
-				description = "",
-				returns = "()",
-				type = "method"
 			},
 			destroy =
 			{
@@ -5929,18 +5662,6 @@ local Dorothy =
 	{
 		childs =
 		{
-			Enter =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value"
-			},
-			Leave =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value"
-			},
 			enabled =
 			{
 				description = "[bool]",
@@ -5967,27 +5688,6 @@ local Dorothy =
 				description = "[CCArray][Readonly]",
 				typeName = "CCArray",
 				type = "value"
-			},
-			addHandler =
-			{
-				args = "(flag: int, handler: function)",
-				description = " -- flag: oSensor.Enter | oSensor.Leave\n\n -- handler: function(sensor: oSensor, body: oBody)",
-				returns = "()",
-				type = "method"
-			},
-			removeHandler =
-			{
-				args = "(flag: int, handler: function)",
-				description = " -- flag: oSensor.Enter | oSensor.Leave\n\n -- handler: function(sensor: oSensor, body: oBody)",
-				returns = "()",
-				type = "method"
-			},
-			clearHandler =
-			{
-				args = "(flag: int)",
-				description = " -- flag: oSensor.Enter | oSensor.Leave",
-				returns = "()",
-				type = "method"
 			},
 			contains =
 			{
@@ -6772,7 +6472,6 @@ local Dorothy =
 		},
 		description = "class oSlot.\n args -- (name: string, handler: function)\n -- handler: function{eventArgs: table, event: oEvent}",
 		parents = {"CCObject",},
-		hide = true,
  		type = "class",
  		index = index()
  	},
@@ -6806,6 +6505,206 @@ local Dorothy =
 		parents = {"CCObject",},
 		type = "class",
 		hide = true,
+		index = index()
+	},
+	TouchBegan =
+	{
+		args = "",
+		description = " a builtin slot string for CCLayer\n\n single touch -- handler : function(touch: CCTouch)\n\n multi touches -- handler : function(touches: table{CCTouch})\n\n return true to accept touches",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	TouchEnded =
+	{
+		args = "",
+		description = " a builtin slot string for CCLayer\n\n single touch -- handler : function(touch: CCTouch)\n\n multi touches -- handler : function(touches: table{CCTouch})",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	TouchMoved =
+	{
+		args = "",
+		description = " a builtin slot string for CCLayer\n\n single touch -- handler : function(touch: CCTouch)\n\n multi touches -- handler : function(touches: table{CCTouch})",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	TouchCancelled =
+	{
+		args = "",
+		description = " a builtin slot string for CCLayer\n\n single touch -- handler : function(touch: CCTouch)\n\n multi touches -- handler : function(touches: table{CCTouch})",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	TapBegan =
+	{
+		args = "",
+		description = " a builtin slot string for CCMenuItem\n\n -- handler : function(menuItem: CCMenuItem)",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	TapEnded =
+	{
+		args = "",
+		description = " a builtin slot string for CCMenuItem\n\n -- handler : function(menuItem: CCMenuItem)",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	Tapped =
+	{
+		args = "",
+		description = " a builtin slot string for CCMenuItem\n\n -- handler : function(menuItem: CCMenuItem)",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	KeyMenu =
+	{
+		args = "",
+		description = " a builtin slot string for CCLayer\n\n -- handler : function()",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	KeyBack =
+	{
+		args = "",
+		description = " a builtin slot string for CCLayer\n\n -- handler : function()",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	Acceleration =
+	{
+		args = "",
+		description = " a builtin slot string for CCLayer\n\n -- handler : function(x: float, y: float, z: float, timeStep: float)",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	Entering =
+	{
+		args = "",
+		description = " a builtin slot string for CCNode\n\n -- handler : function()",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	Entered =
+	{
+		args = "",
+		description = " a builtin slot string for CCNode\n\n -- handler : function()",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	Exiting =
+	{
+		args = "",
+		description = " a builtin slot string for CCNode\n\n -- handler : function()",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	Exited =
+	{
+		args = "",
+		description = " a builtin slot string for CCNode\n\n -- handler : function()",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	Cleanup =
+	{
+		args = "",
+		description = " a builtin slot string for CCNode\n\n -- handler : function()",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	ContactStart =
+	{
+		args = "",
+		description = " a builtin slot string for oBody\n\n -- handler : function(other: oBody, pos: oVec2, normal: oVec2)",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	ContactEnd =
+	{
+		args = "",
+		description = " a builtin slot string for oBody\n\n -- handler : function(other: oBody, pos: oVec2, normal: oVec2)",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	BodyEnter =
+	{
+		args = "",
+		description = " a builtin slot string for oBody\n\n -- handler : function(other: oBody, sensor: oSensor)",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	BodyLeave =
+	{
+		args = "",
+		description = " a builtin slot string for oBody\n\n -- handler : function(other: oBody, sensor: oSensor)",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	InputAttach =
+	{
+		args = "",
+		description = " a builtin slot string for CCTextFieldTTF\n\n -- handler : function(textField: CCTextFieldTTF)\n\n return true to allow IME to open",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	InputDettach =
+	{
+		args = "",
+		description = " a builtin slot string for CCTextFieldTTF\n\n -- handler : function(textField: CCTextFieldTTF)\n\n return true to allow IME to close",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	InputInserting =
+	{
+		args = "",
+		description = " a builtin slot string for CCTextFieldTTF\n\n -- handler : function(addText: string, textField: CCTextFieldTTF)\n\n return true to accept the input text",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	InputInserted =
+	{
+		args = "",
+		description = " a builtin slot string for CCTextFieldTTF\n\n -- handler : function(addText: string, textField: CCTextFieldTTF)",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	InputDeleting =
+	{
+		args = "",
+		description = " a builtin slot string for CCTextFieldTTF\n\n -- handler : function(delText: string, textField: CCTextFieldTTF)\n\n return true to make text deleted",
+		returns = "",
+		type = "function",
+		index = index()
+	},
+	InputDeleted =
+	{
+		args = "",
+		description = " a builtin slot string for CCTextFieldTTF\n\n -- handler : function(delText: string, textField: CCTextFieldTTF)",
+		returns = "",
+		type = "function",
 		index = index()
 	},
 }
