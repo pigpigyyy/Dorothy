@@ -8,7 +8,6 @@ static void oHandler(const char* begin, const char* end)
 	{
 		CHECK_CDATA(Call)
 		ELSE_CHECK_CDATA(Script)
-		ELSE_CHECK_CDATA(Schedule)
 	}
 }
 
@@ -142,10 +141,6 @@ static bool isTextAlign(const char* str)
 #define Self_Check(name) \
 	if (self.empty()) { self = getUsableName(#name); names.insert(self); }\
 	if (firstItem.empty()) firstItem = self;
-
-// Schedule
-#define Schedule_Check \
-	CASE_STR(Priority) { priority = atts[++i]; break; }
 
 // Vec2
 #define Vec2_Define \
@@ -1535,8 +1530,7 @@ class oXmlDelegate : public CCSAXDelegator
 {
 public:
 	oXmlDelegate():
-	codes(nullptr),
-	priority(nullptr)
+	codes(nullptr)
 	{ }
 	virtual void startElement(void *ctx, const char *name, const char **atts);
 	virtual void endElement(void *ctx, const char *name);
@@ -1599,8 +1593,6 @@ private:
 	};
 	// Script
 	const char* codes;
-	// Schedule
-	const char* priority;
 	// Loader
 	string firstItem;
 	stack<oFunc> funcs;
@@ -1692,11 +1684,6 @@ void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
 			Item_Handle(Vec2)
 			break;
 		}
-		CASE_STR(Schedule)
-		{
-			Item_Loop(Schedule)
-			break;
-		}
 		CASE_STR(Dot)
 		{
 			Item_Define(Dot)
@@ -1756,15 +1743,6 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 		{
 			stream << (codes ? codes : "") << '\n';
 			codes = nullptr;
-			break;
-		}
-		CASE_STR(Schedule)
-		{
-			stream << currentData.name << ":schedule(" << (codes ? codes : "");
-			if (priority) stream << ',' << priority;
-			stream << ")\n";
-			codes = nullptr;
-			priority = nullptr;
 			break;
 		}
 		CASE_STR(Call)

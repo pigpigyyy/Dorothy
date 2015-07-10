@@ -3,7 +3,7 @@
 	<LabelTTF Name="label" Text="Hello" FontName="Arial" FontSize="20" Color="0x000000"
 		X="layer.contentSize.width*0.5"
 		Y="layer.contentSize.height*0.5"/>
-	<Data>
+	<Data> 
 		<Loop Name="fade">
 			<Sequence>
 				<Grid.Twirl Time="5" GridX="100" GridY="100" Twirls="1" Amplitude="0.5"/>
