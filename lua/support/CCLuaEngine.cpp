@@ -172,7 +172,7 @@ static int cclua_xmlToLua(lua_State* L)
 	codes = oSharedXMLLoader.load(codes);
 	if (codes.empty())
 	{
-		luaL_error(L, "error parsing xml\n");
+		luaL_error(L, oSharedXMLLoader.getLastError().c_str());
 	}
 	lua_pushlstring(L, codes.c_str(), codes.size());
 	return 1;

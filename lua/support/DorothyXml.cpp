@@ -2014,3 +2014,8 @@ string oXmlLoader::load(const string& xml)
 	_delegate->end();
 	return result ? _delegate->getResult() : string();
 }
+
+const string& oXmlLoader::getLastError() const
+{
+	return _parser.getLastError();
+}

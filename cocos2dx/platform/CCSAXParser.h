@@ -27,6 +27,8 @@
 #include "CCPlatformConfig.h"
 #include "CCCommon.h"
 
+#include <string>
+
 NS_CC_BEGIN
 
 /**
@@ -53,6 +55,7 @@ public:
     bool init(const char *pszEncoding);
     bool parse(const char* pXMLData, unsigned int uDataLength);
     bool parse(const char *pszFile);
+	const std::string& getLastError() const;
 
     void setDelegator(CCSAXDelegator* pDelegator);
 
@@ -64,6 +67,7 @@ public:
 	static void setHeaderHandler(void(*handler)(const char* start, const char* end));
 private:
 	CCSAXDelegator* m_pDelegator;
+	std::string _lastError;
 };
 
 // end of platform group

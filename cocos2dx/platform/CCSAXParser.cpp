@@ -90,21 +90,56 @@ bool CCSAXParser::init(const char *pszEncoding)
     return true;
 }
 
+const std::string& CCSAXParser::getLastError() const
+{
+	return _lastError;
+}
+
 bool CCSAXParser::parse(const char* pXMLData, unsigned int uDataLength)
 {
+	_lastError.clear();
 	tinyxml2::XMLDocument tinyDoc;
+	tinyxml2::XMLError error;
 	if (uDataLength == 0)
 	{
-		tinyDoc.Parse(pXMLData);
+		 error = tinyDoc.Parse(pXMLData);
 	}
 	else
 	{
-		tinyDoc.Parse(pXMLData,uDataLength);
+		error = tinyDoc.Parse(pXMLData,uDataLength);
+	}
+	if (error != tinyxml2::XML_NO_ERROR)
+	{
+		_lastError = "XMLDocument error at: ";
+		if (tinyDoc.GetErrorStr1())
+		{
+			_lastError += tinyDoc.GetErrorStr1();
+		}
+		if (tinyDoc.GetErrorStr2())
+		{
+			if (!_lastError.empty()) _lastError += '\n';
+			_lastError += tinyDoc.GetErrorStr2();
+		}
+		return false;
 	}
 	XmlSaxHander printer;
 	printer.setCCSAXParserImp(this);
 
-	return tinyDoc.Accept( &printer );	
+	if (!tinyDoc.Accept(&printer))
+	{
+		_lastError = "XMLDocument error at: ";
+		if (tinyDoc.GetErrorStr1())
+		{
+			_lastError += tinyDoc.GetErrorStr1();
+		}
+		if (tinyDoc.GetErrorStr2())
+		{
+			if (!_lastError.empty()) _lastError += '\n';
+			_lastError += tinyDoc.GetErrorStr2();
+		}
+		return false;
+	}
+	return true;
 }
 
 bool CCSAXParser::parse(const char *pszFile)
