@@ -154,9 +154,10 @@ static bool isTextAlign(const char* str)
 
 // Object
 #define Object_Define \
-	string self;
+	string self;\
+	bool hasSelf = false;
 #define Object_Check \
-	CASE_STR(Name) { self = atts[++i]; break; }
+	CASE_STR(Name) { hasSelf = true; self = atts[++i]; break; }
 
 // Speed
 #define Speed_Define \
@@ -894,19 +895,6 @@ static bool isTextAlign(const char* str)
 		stream << parent.name << ".data = " << self << "\n\n";\
 	}
 
-// Listener
-#define Listener_Define \
-	Object_Define\
-	const char* event = nullptr;
-#define Listener_Check \
-	Object_Check\
-	CASE_STR(Event) { event = atts[++i]; break; }
-#define Listener_Create
-#define Listener_Handle \
-	oFunc func = {string("oListener(\"") + event + "\",",")"};\
-	funcs.push(func);
-#define Listener_Finish
-
 #define Add_To_Parent \
 	if (!elementStack.empty()) {\
 		const oItem& parent = elementStack.top();\
@@ -918,7 +906,12 @@ static bool isTextAlign(const char* str)
 				if (tag) stream << ',' << tag;\
 			}\
 			else if (tag) stream << ",0," << tag;\
-			stream << ")\n\n";\
+			stream << ")\n";\
+			if (hasSelf)\
+			{\
+				stream << firstItem << "." << self << " = " << self << "\n";\
+			}\
+			stream << "\n";\
 		}\
 		else if (strcmp(parent.type,"Stencil") == 0)\
 		{\
@@ -1474,17 +1467,50 @@ static bool isTextAlign(const char* str)
 	Add_To_Parent
 
 // ModuleNode
-#define ModuleNode_Define
+#define ModuleNode_Define \
+	Object_Define
 #define ModuleNode_Check \
-	attributes[__targetStrForSwitch] = atts[++i];
+	Object_Check\
+	else attributes[__targetStrForSwitch] = atts[++i];
 #define ModuleNode_Create \
-	stream << "local " << self << " = CCClipNode()\n";
+	stream << "local " << self << " = " << name << "({";
 #define ModuleNode_Handle \
-	Node_Handle\
-	if (alphaThreshold) stream << self << ".alphaThreshold = " << alphaThreshold << '\n';\
-	if (inverted) stream << self << ".inverted = " << toBoolean(inverted) << '\n';
+	for (const auto& pair : attributes)\
+	{\
+		stream << (char)tolower(pair.first.substr(0, 1).at(0)) << pair.first.substr(1) << " = " << pair.second << ',';\
+	}\
+	attributes.clear();\
+	stream << "})\n";
 #define ModuleNode_Finish \
-	Add_To_Parent
+	if (!elementStack.empty())\
+	{\
+		const oItem& parent = elementStack.top();\
+		if (!parent.name.empty())\
+		{\
+			stream << parent.name << ":addChild(" << self << ")\n";\
+			if (hasSelf)\
+			{\
+				stream << firstItem << "." << self << " = " << self << "\n";\
+			}\
+			stream << "\n";\
+		}\
+	}
+
+// Import
+#define Import_Define \
+	const char* moduleName = nullptr;
+#define Import_Check \
+	CASE_STR(Module) { moduleName = atts[++i]; break; }
+#define Import_Create \
+	if (moduleName) { stream << "local " << moduleName << " = require(\"" << moduleName << "\")\n\n";}
+
+// Require
+#define Require_Define \
+	const char* moduleName = nullptr;
+#define Require_Check \
+	CASE_STR(Module) { moduleName = atts[++i]; break; }
+#define Require_Create \
+	if (moduleName) { stream << "require(\"" << moduleName << "\")(" << firstItem << ")\n\n"; }
 
 #define Item_Define(name) name##_Define
 #define Item_Loop(name) \
@@ -1631,7 +1657,6 @@ void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
 
 		Item(Data, data)
 
-		Item(Listener, listener)
 		Item(Speed, speed)
 
 		Item(Delay, delay)
@@ -1718,6 +1743,29 @@ void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
 			Item_Push(Stencil)
 			break;
 		}
+		CASE_STR(Import)
+		{
+			Item_Define(Import)
+			Item_Loop(Import)
+			Import_Create
+			break;
+		}
+		CASE_STR(Require)
+		{
+			Item_Define(Require)
+			Item_Loop(Require)
+			Require_Create
+			break;
+		}
+		CASE_STR(Script) break;
+		{
+			Item_Define(ModuleNode)
+			Item_Loop(ModuleNode)
+			Self_Check(item)
+			Item_Create(ModuleNode)
+			Item_Handle(ModuleNode)
+			Item_Push(ModuleNode)
+		}
 	}
 	SWITCH_STR_END
 }
@@ -1731,14 +1779,6 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 
 	SWITCH_STR_START(name)
 	{
-		CASE_STR(Listener)
-		{
-			oFunc func = funcs.top();
-			funcs.pop();
-			stream << "local " << currentData.name << " = " << func.begin << (codes ? codes : "") << func.end << '\n';
-			codes = nullptr;
-			break;
-		}
 		CASE_STR(Script)
 		{
 			stream << (codes ? codes : "") << '\n';
