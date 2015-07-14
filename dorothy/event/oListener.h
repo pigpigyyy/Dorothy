@@ -30,6 +30,7 @@ public:
 	void setHandler(const oEventHandler& handler);
 	/** Get callback delegate. */
 	const oEventHandler& getHandler() const;
+	void clearHandler();
 	/** Invoked when event is received. */
 	void handle(oEvent* e);
 	/** Use it to create a new listener. You may want to get the listener retained for future use. */

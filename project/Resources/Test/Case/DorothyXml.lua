@@ -18,8 +18,8 @@ layer1.angle = 10
 scene:addChild(layer1)
 
 local label = CCLabelTTF("Hello","Arial",20)
-label.positionX = layer.contentSize.width*0.5
-label.positionY = layer.contentSize.height*0.5
+label.positionX = scene.contentSize.width*0.5
+label.positionY = scene.contentSize.height*0.5
 label.color = ccColor3(0x000000)
 scene:addChild(label)
 scene.label = label
@@ -38,6 +38,11 @@ scene.label = label
 		end))
 		CCDirector:run(CCScene:crossFade(0.5,scene))
 	
+scene:slots("event",function() print(scene) end)
+scene:slots("event1",function() print(scene) end)
+scene:slots("event2",function() print(scene) end)
+scene:slots("event3",function() print(scene) end)
+scene:slots("event4",function() print(scene) end)
 
 return scene
 

@@ -1,6 +1,5 @@
 class oListener @ oSlot : public CCObject
 {
+	tolua_readonly tolua_property__common string name;
 	tolua_property__bool bool enabled;
-
-	static tolua_outside oListener* oListener_create @ create(string& name, tolua_function handler);
 };

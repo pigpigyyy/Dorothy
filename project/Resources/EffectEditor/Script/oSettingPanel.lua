@@ -8,7 +8,6 @@ local oSelectionPanel = require("oSelectionPanel")
 local CCLabelTTF = require("CCLabelTTF")
 local ccColor3 = require("ccColor3")
 local emit = require("emit")
-local oSlot = require("oSlot")
 local oEditor = require("oEditor")
 local tolua = require("tolua")
 local ccBlendFunc = require("ccBlendFunc")
@@ -127,21 +126,15 @@ local function oSettingPanel()
 	items.textureRect.enabled = false
 	items.file.enabled = false
 
-	local function listen(itemName,name,getter,multi)
+	local function listen(itemName,name,getter)
 		if not getter and type(name) == "function" then
 			getter = name
 			name = itemName
 		end
 		local item = items[itemName]
-		local listener = oSlot(name,function(var)
+		item:gslot(name,function(var)
 			item.value = getter and getter(var) or var
 		end)
-		if multi then
-			if tolua.type(item.data) ~= "CCArray" then item.data = CCArray() end
-			item.data:add(listener)
-		else
-			item.data = listener
-		end
 	end
 
 	local finishColorA = 0
@@ -152,10 +145,10 @@ local function oSettingPanel()
 	local function getFinishColorStr()
 		return string.format("0x%.8X",finishColorA+finishColorR+finishColorG+finishColorB)
 	end
-	listen("finishColor","finishColorAlpha",function(a) finishColorA = shiftColor(a,24);return getFinishColorStr() end,true)
-	listen("finishColor","finishColorRed",function(r) finishColorR = shiftColor(r,16);return getFinishColorStr() end,true)
-	listen("finishColor","finishColorGreen",function(g) finishColorG = shiftColor(g,8);return getFinishColorStr() end,true)
-	listen("finishColor","finishColorBlue",function(b) finishColorB = shiftColor(b,0);return getFinishColorStr() end,true)
+	listen("finishColor","finishColorAlpha",function(a) finishColorA = shiftColor(a,24);return getFinishColorStr() end)
+	listen("finishColor","finishColorRed",function(r) finishColorR = shiftColor(r,16);return getFinishColorStr() end)
+	listen("finishColor","finishColorGreen",function(g) finishColorG = shiftColor(g,8);return getFinishColorStr() end)
+	listen("finishColor","finishColorBlue",function(b) finishColorB = shiftColor(b,0);return getFinishColorStr() end)
 	local function getChanel(var) return string.format("%d",var*255) end
 	listen("finishRedVar","finishColorVarianceRed",getChanel)
 	listen("finishGreenVar","finishColorVarianceGreen",getChanel)
@@ -169,10 +162,10 @@ local function oSettingPanel()
 	local function getStartColorStr()
 		return string.format("0x%.8X",startColorA+startColorR+startColorG+startColorB)
 	end
-	listen("startColor","startColorAlpha",function(a) startColorA = shiftColor(a,24);return getStartColorStr() end,true)
-	listen("startColor","startColorRed",function(r) startColorR = shiftColor(r,16);return getStartColorStr() end,true)
-	listen("startColor","startColorGreen",function(g) startColorG = shiftColor(g,8);return getStartColorStr() end,true)
-	listen("startColor","startColorBlue",function(b) startColorB = shiftColor(b,0);return getStartColorStr() end,true)
+	listen("startColor","startColorAlpha",function(a) startColorA = shiftColor(a,24);return getStartColorStr() end)
+	listen("startColor","startColorRed",function(r) startColorR = shiftColor(r,16);return getStartColorStr() end)
+	listen("startColor","startColorGreen",function(g) startColorG = shiftColor(g,8);return getStartColorStr() end)
+	listen("startColor","startColorBlue",function(b) startColorB = shiftColor(b,0);return getStartColorStr() end)
 	listen("startRedVar","startColorVarianceRed",getChanel)
 	listen("startGreenVar","startColorVarianceGreen",getChanel)
 	listen("startBlueVar","startColorVarianceBlue",getChanel)
@@ -219,10 +212,10 @@ local function oSettingPanel()
 	local function getRectStr()
 		return rc == CCRect.zero and "Full" or string.format("%d,%d,%d,%d",rc.origin.x,rc.origin.y,rc.size.width,rc.size.height)
 	end
-	listen("textureRect","textureRectx",function(x) rc.origin = oVec2(x,rc.origin.y);return getRectStr() end,true)
-	listen("textureRect","textureRecty",function(y) rc.origin = oVec2(rc.origin.x,y);return getRectStr() end,true)
-	listen("textureRect","textureRectw",function(w) rc.size = CCSize(w,rc.size.height);return getRectStr() end,true)
-	listen("textureRect","textureRecth",function(h) rc.size = CCSize(rc.size.width,h);return getRectStr() end,true)
+	listen("textureRect","textureRectx",function(x) rc.origin = oVec2(x,rc.origin.y);return getRectStr() end)
+	listen("textureRect","textureRecty",function(y) rc.origin = oVec2(rc.origin.x,y);return getRectStr() end)
+	listen("textureRect","textureRectw",function(w) rc.size = CCSize(w,rc.size.height);return getRectStr() end)
+	listen("textureRect","textureRecth",function(h) rc.size = CCSize(rc.size.width,h);return getRectStr() end)
 
 	local modeGravity =
 	{

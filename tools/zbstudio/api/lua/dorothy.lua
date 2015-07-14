@@ -6383,15 +6383,21 @@ local Dorothy =
 	{
 		childs =
 		{
+			name =
+			{
+				description = "[Readonly][string]",
+				type = "value",
+			},
 			enabled =
 			{
 				description = "[bool]",
 				type = "value",
 			},
 		},
-		description = "class oSlot.\n args -- (name: string, handler: function)\n -- handler: function{eventArgs: table, event: oEvent}",
+		description = "class oSlot.",
 		parents = {"CCObject",},
  		type = "class",
+		hide = true,
  		index = index()
  	},
 	oSlotList =
