@@ -9,6 +9,7 @@ using std::stack;
 using namespace cocos2d;
 #include "Dorothy.h"
 using namespace Dorothy;
+#include "CCLuaEngine.h"
 
 static int g_ref_id = 0;
 static stack<int> g_available_ref_ids;
@@ -95,4 +96,14 @@ extern "C" int tolua_isccobject(lua_State* L, int lo)
 		return result;
 	}
 	return 0;
+}
+
+extern "C" void tolua_dobuffer(lua_State* L, char* codes, unsigned int size, const char* name)
+{
+		if (luaL_loadbuffer(L, codes, size, name) != 0)
+		{
+			luaL_error(L, "error loading module %s from %s :\n\t%s",
+				lua_tostring(L, 1), name, lua_tostring(L, -1));
+		}
+		else CCLuaEngine::call(L, 0, 0);
 }
