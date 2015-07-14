@@ -6,7 +6,6 @@ local CCSize = require("CCSize")
 local oBody = require("oBody")
 local oJoint = require("oJoint")
 local emit = require("emit")
-local oSlot = require("oSlot")
 local tolua = require("tolua")
 local oContent = require("oContent")
 local oWorld = require("oWorld")
@@ -835,12 +834,12 @@ for shapeName,shapeDefine in pairs(defaultShapeData) do
 			newData.get = getFunc
 			newData.has = hasFunc
 			if renameFunc then
-				newData.renameListener = oSlot("editor.rename",function(args)
+				newData.renameListener = oEditor:gslot("editor.rename",function(args)
 					renameFunc(newData,args.oldName,args.newName)
 				end)
 			end
 			if resetFunc then
-				newData.resetListener = oSlot("editor.reset",function(args)
+				newData.resetListener = oEditor:gslot("editor.reset",function(args)
 					resetFunc(newData,args)
 				end)
 			end
@@ -943,12 +942,10 @@ oEditor.removeData = function(self,data)
 				local name = data:get("Name")
 				table.remove(self.bodyData,i)
 				if data.renameListener then
-					data.renameListener.enabled = false
-					data.renameListener = nil
+					oEditor:gslot(data.renameListener,nil)
 				end
 				if data.resetListener then
-					data.resetListener.enabled = false
-					data.resetListener = nil
+					oEditor:gslot(data.resetListener,nil)
 				end
 				oEditor.names[name] = nil
 				local item = oEditor.items[name]
@@ -965,12 +962,10 @@ end
 oEditor.clearData = function(self)
 	for _,data in ipairs(oEditor.bodyData) do
 		if data.renameListener then
-			data.renameListener.enabled = false
-			data.renameListener = nil
+			oEditor:gslot(data.renameListener,nil)
 		end
 		if data.resetListener then
-			data.resetListener.enabled = false
-			data.resetListener = nil
+			oEditor:gslot(data.resetListener,nil)
 		end
 	end
 	self.bodyData = {}
@@ -1183,12 +1178,12 @@ oEditor.loadData = function(self,filename)
 			end
 		end
 		if renameFunc then
-			data.renameListener = oSlot("editor.rename",function(args)
+			data.renameListener = oEditor:gslot("editor.rename",function(args)
 				renameFunc(data,args.oldName,args.newName)
 			end)
 		end
 		if resetFunc then
-			data.resetListener = oSlot("editor.reset",function(args)
+			data.resetListener = oEditor:gslot("editor.reset",function(args)
 				resetFunc(data,args)
 			end)
 		end

@@ -42,6 +42,11 @@ const oEventHandler& oListener::getHandler() const
 	return _handler;
 }
 
+void oListener::clearHandler()
+{
+	_handler.Clear();
+}
+
 void oListener::handle( oEvent* e )
 {
 	if (_handler)

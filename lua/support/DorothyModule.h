@@ -51,13 +51,14 @@ public:
 	static const char* HitTarget;
 	//builtin slot end
 	oSlotList();
+	virtual ~oSlotList();
 	void add(int handler);
 	bool remove(int handler);
 	void clear();
 	bool invoke(lua_State* L, int args = 0);
 	CREATE_FUNC(oSlotList)
 private:
-	oRef<CCArray> _list;
+	vector<int> _list;
 	CC_LUA_TYPE(oSlotList)
 };
 

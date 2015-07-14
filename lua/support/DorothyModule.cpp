@@ -43,87 +43,331 @@ oSlotName(HitTarget)
 class oSlotData : public CCObject
 {
 public:
+	static const int MAX_SLOT_ARRAY;
 	virtual ~oSlotData()
 	{
-		if (slots)
+		if (_gslotArray)
 		{
-			CCDictElement* element;
-			CCDICT_FOREACH(slots, element)
+			for (const auto& slot : *_gslotArray)
 			{
-				oSlotList* slotList = (oSlotList*)element->getObject();
-				slotList->clear();
+				for (auto& item : *slot.second)
+				{
+					item->clearHandler();
+				}
+			}
+		}
+		else if (_gslot)
+		{
+			for (const auto& slot : *_gslot)
+			{
+				for (auto& item : *slot.second)
+				{
+					item->clearHandler();
+				}
+			}
+		}
+		if (_slotsArray)
+		{
+			for (const auto& item : *_slotsArray)
+			{
+				item.second->clear();
+			}
+		}
+		else if (_slots)
+		{
+			for (const auto& item : *_slots)
+			{
+				item.second->clear();
 			}
 		}
 	}
-	oRef<CCDictionary> gslot;
-	oRef<CCDictionary> slots;
+	oRefVector<oListener>* getGSlotItems(const char* name)
+	{
+		if (_gslotArray)
+		{
+			for (const auto& item : *_gslotArray)
+			{
+				if (item.first == name)
+				{
+					return item.second;
+				}
+			}
+		}
+		else if (_gslot)
+		{
+			auto it = _gslot->find(name);
+			if (it != _gslot->end())
+			{
+				return it->second;
+			}
+		}
+		return nullptr;
+	}
+	oListener* addGSlotItem(const char* name, int handler)
+	{
+		oListener* listener = oListener_create(name, handler);
+		if (_gslot)
+		{
+			auto it = _gslot->find(name);
+			if (it == _gslot->end())
+			{
+				auto vec = new oRefVector<oListener>();
+				(*_gslot)[name] = oOwnMake(vec);
+				vec->push_back(listener);
+			}
+			else it->second->push_back(listener);
+			return listener;
+		}
+		else if (_gslotArray)
+		{
+			for (const auto& item : *_gslotArray)
+			{
+				if (item.first == name)
+				{
+					item.second->push_back(listener);
+					return listener;
+				}
+			}
+			if ((int)_gslotArray->size() < MAX_SLOT_ARRAY)
+			{
+				auto vec = new oRefVector<oListener>();
+				_gslotArray->push_back(std::make_pair(string(name), oOwnMake(vec)));
+				vec->push_back(listener);
+				return listener;
+			}
+			else
+			{
+				_gslot = oOwnMake((new unordered_map<string,oOwn<oRefVector<oListener>>>()));
+				for (auto& item : *_gslotArray)
+				{
+					(*_gslot)[item.first] = std::move(item.second);
+				}
+				_gslotArray.reset(nullptr);
+				auto vec = new oRefVector<oListener>();
+				(*_gslot)[name] = oOwnMake(vec);
+				vec->push_back(listener);
+				return listener;
+			}
+		}
+		else
+		{
+			_gslotArray = oOwnMake((new vector<std::pair<string,oOwn<oRefVector<oListener>>>>()));
+			auto vec = new oRefVector<oListener>();
+			_gslotArray->push_back(std::make_pair(string(name), oOwnMake(vec)));
+			vec->push_back(listener);
+			return listener;
+		}
+	}
+	void removeGSlotItems(const char* name)
+	{
+		if (_gslot)
+		{
+			auto it = _gslot->find(name);
+			if (it != _gslot->end())
+			{
+				_gslot->erase(it);
+			}
+		}
+		else if (_gslotArray)
+		{
+			for (auto it = _gslotArray->begin();it != _gslotArray->end();++it)
+			{
+				if (it->first == name)
+				{
+					_gslotArray->erase(it);
+					break;
+				}
+			}
+		}
+	}
+	void removeGSlotItem(oListener* listener)
+	{
+		oRefVector<oListener>* slotList = nullptr;
+		if (_gslot)
+		{
+			auto it = _gslot->find(listener->getName());
+			if (it != _gslot->end())
+			{
+				slotList = it->second;
+			}
+		}
+		else if (_gslotArray)
+		{
+			for (auto it = _gslotArray->begin(); it != _gslotArray->end(); ++it)
+			{
+				if (it->first == listener->getName())
+				{
+					slotList = it->second;
+					break;
+				}
+			}
+		}
+		if (slotList)
+		{
+			for (auto it = slotList->begin();it != slotList->end();++it)
+			{
+				if (*it == listener)
+				{
+					listener->clearHandler();
+					slotList->erase(it);
+					break;
+				}
+			}
+		}
+	}
+	oSlotList* tryGetSlotList(const char* name)
+	{
+		if (_slots)
+		{
+			auto it = _slots->find(name);
+			if (it != _slots->end()) return it->second;
+		}
+		else if (_slotsArray)
+		{
+			for (const auto& it : *_slotsArray)
+			{
+				if (it.first == name)
+				{
+					return it.second;
+				}
+			}
+		}
+		return nullptr;
+	}
+	oSlotList* getSlotList(const char* name)
+	{
+		if (_slots)
+		{
+			auto it = _slots->find(name);
+			if (it == _slots->end())
+			{
+				oSlotList* slotList = oSlotList::create();
+				(*_slots)[name] = slotList;
+				return slotList;
+			}
+			else return it->second;
+		}
+		else if (_slotsArray)
+		{
+			for (const auto& it : *_slotsArray)
+			{
+				if (it.first == name)
+				{
+					return it.second;
+				}
+			}
+			oSlotList* slotList = oSlotList::create();
+			if ((int)_slotsArray->size() < MAX_SLOT_ARRAY)
+			{
+				_slotsArray->push_back(std::make_pair(string(name), oRefMake(slotList)));
+			}
+			else
+			{
+				_slots = oOwnMake((new unordered_map<string,oRef<oSlotList>>()));
+				for (const auto& item : *_slotsArray)
+				{
+					(*_slots)[item.first] = item.second;
+				}
+				_slotsArray.reset(nullptr);
+				(*_slots)[name] = slotList;
+			}
+			return slotList;
+		}
+		else
+		{
+			_slotsArray = oOwnMake((new vector<std::pair<string,oRef<oSlotList>>>()));
+			oSlotList* slotList = oSlotList::create();
+			_slotsArray->push_back(std::make_pair(string(name),oRefMake(slotList)));
+			return slotList;
+		}
+	}
+	void removeSlotList(const char* name)
+	{
+		if (_slotsArray)
+		{
+			for (auto it = _slotsArray->begin(); it != _slotsArray->end();++it)
+			{
+				if (it->first == name)
+				{
+					_slotsArray->erase(it);
+				}
+			}
+		}
+		else if (_slots)
+		{
+			auto it = _slots->find(name);
+			if (it != _slots->end()) _slots->erase(it);
+		}
+	}
 	CREATE_FUNC(oSlotData)
+private:
+	oOwn<unordered_map<string,oOwn<oRefVector<oListener>>>> _gslot;
+	oOwn<vector<std::pair<string,oOwn<oRefVector<oListener>>>>> _gslotArray;
+	oOwn<unordered_map<string,oRef<oSlotList>>> _slots;
+	oOwn<vector<std::pair<string,oRef<oSlotList>>>> _slotsArray;
 	CC_LUA_TYPE(oSlotData)
 };
+const int oSlotData::MAX_SLOT_ARRAY = 3;
 
-oSlotList::oSlotList():_list(CCArray::createWithCapacity(1))
+oSlotList::oSlotList():_list()
 { }
+
+oSlotList::~oSlotList()
+{
+	oSlotList::clear();
+}
 
 void oSlotList::add(int handler)
 {
-	_list->addObject(CCScriptHandlerEntry::create(handler));
+	_list.push_back(handler);
 }
 
 bool oSlotList::remove(int handler)
 {
-	CCARRAY_START(CCScriptHandlerEntry, _entry, _list)
+	for (auto it = _list.begin();it != _list.end();++it)
 	{
-		if (CCLuaEngine::sharedEngine()->scriptHandlerEqual(_entry->getHandler(),handler))
+		if (CCLuaEngine::sharedEngine()->scriptHandlerEqual(*it, handler))
 		{
-			_list->removeObject(_entry);
+			CCLuaEngine::sharedEngine()->removeScriptHandler(*it);
+			_list.erase(it);
 			return true;
 		}
 	}
-	CCARRAY_END
 	return false;
 }
 
 void oSlotList::clear()
 {
-	_list->removeAllObjects();
+	for (int handler : _list)
+	{
+		CCLuaEngine::sharedEngine()->removeScriptHandler(handler);
+	}
+	_list.clear();
 }
 
 bool oSlotList::invoke(lua_State* L, int args)
 {
 	int top = lua_gettop(L);
 	int result = 0;
-	CCARRAY_START(CCScriptHandlerEntry, entry, _list)
+	for (int i = 0;i < (int)_list.size();i++)
 	{
-		toluafix_get_function_by_refid(L, entry->getHandler());
-		for (int i = top-args+1;i <= top;i++) lua_pushvalue(L, i);
+		toluafix_get_function_by_refid(L, _list[i]);
+		for (int index = top-args+1;index <= top;index++) lua_pushvalue(L, index);
 		result = CCLuaEngine::execute(L, args);
 	}
-	CCARRAY_END
 	return result != 0;
 }
 
 oSlotList* CCNode_getSlotList(CCNode* self, const char* name)
 {
 	CCAssert(self->getHelperObject() == 0 || CCLuaCast<oSlotData>(self->getHelperObject()), "Invalid slot object")
-		oSlotData* slotData = (oSlotData*)self->getHelperObject();
-		if (!slotData)
-		{
-			slotData = oSlotData::create();
-			self->setHelperObject(slotData);
-		}
-		CCDictionary* slots = slotData->slots;
-		if (!slots)
-		{
-			slots = CCDictionary::create();
-			slotData->slots = slots;
-		}
-		oSlotList* slotList = (oSlotList*)slots->objectForKey(name);
-		if (!slotList)
-		{
-			slotList = oSlotList::create();
-			slots->setObject(slotList, name);
-		}
-		return slotList;
+	oSlotData* slotData = (oSlotData*)self->getHelperObject();
+	if (!slotData)
+	{
+		slotData = oSlotData::create();
+		self->setHelperObject(slotData);
+	}
+	return slotData->getSlotList(name);
 }
 
 oSlotList* CCNode_tryGetSlotList(CCNode* self, const char* name)
@@ -132,11 +376,7 @@ oSlotList* CCNode_tryGetSlotList(CCNode* self, const char* name)
 	oSlotData* slotData = (oSlotData*)self->getHelperObject();
 	if (slotData)
 	{
-		CCDictionary* slots = slotData->slots;
-		if (slots)
-		{
-			return (oSlotList*)slots->objectForKey(name);
-		}
+		return slotData->tryGetSlotList(name);
 	}
 	return nullptr;
 }
@@ -160,7 +400,8 @@ int CCNode_gslot(lua_State* L)
 	tolua_Error tolua_err;
 	if (
 		!tolua_isusertype(L, 1, "CCNode", 0, &tolua_err) ||
-		!tolua_isstring(L, 2, 0, &tolua_err) ||
+		!(tolua_isstring(L, 2, 0, &tolua_err) ||
+			tolua_isusertype(L, 2, "oSlot", 0, &tolua_err)) ||
 		!(toluafix_isfunction(L, 3, &tolua_err) ||
 			lua_isnil(L, 3) ||
 			tolua_isnoobj(L, 3, &tolua_err)) ||
@@ -174,38 +415,52 @@ int CCNode_gslot(lua_State* L)
 #ifndef TOLUA_RELEASE
 		if (!self) tolua_error(L, "invalid 'self' in function 'CCNode_gslot'", NULL);
 #endif
-		const char* name = tolua_tostring(L, 2, 0);
 		CCAssert(self->getHelperObject() == 0 || CCLuaCast<oSlotData>(self->getHelperObject()), "Invalid slot object")
 		oSlotData* slotData = (oSlotData*)self->getHelperObject();
 		if (!slotData)
 		{
+			if (lua_isnil(L, 3) || tolua_isnoobj(L, 3, &tolua_err)) return 0;
 			slotData = oSlotData::create();
 			self->setHelperObject(slotData);
 		}
-		CCDictionary* gslot = slotData->gslot;
-		if (!gslot)
+		if (lua_isstring(L, 2))
 		{
-			gslot = CCDictionary::create();
-			slotData->gslot = gslot;
+			const char* name = tolua_tostring(L, 2, 0);
+			if (lua_isfunction(L, 3)) // set
+			{
+				int handler = toluafix_ref_function(L, 3);
+				oListener* listener = slotData->addGSlotItem(name, handler);
+				tolua_pushccobject(L, listener);
+				return 1;
+			}
+			else if (tolua_isnoobj(L, 3, &tolua_err)) // get
+			{
+				oRefVector<oListener>* slotItems = slotData->getGSlotItems(name);
+				if (slotItems)
+				{
+					lua_createtable(L, (int)slotItems->size(), 0);
+					for (int i = 0; i < (int)slotItems->size(); i++)
+					{
+						tolua_pushccobject(L, (*slotItems)[i]);
+						lua_rawseti(L, -2, i + 1);
+					}
+				}
+				else lua_pushnil(L);
+				return 1;
+			}
+			else if (lua_isnil(L, 3))// del
+			{
+				slotData->removeGSlotItems(name);
+				return 0;
+			}
 		}
-		oListener* listener = nullptr;
-		if (lua_isfunction(L, 3)) // set
+		else
 		{
-			int handler = toluafix_ref_function(L, 3);
-			listener = oListener_create(name, handler);
-			gslot->setObject(listener, name);
+			oListener* listener = (oListener*)tolua_tousertype(L, 2, 0);
+			slotData->removeGSlotItem(listener);
+			return 0;
 		}
-		else if (tolua_isnoobj(L, 3, &tolua_err)) // get
-		{
-			listener = (oListener*)gslot->objectForKey(name);
-		}
-		else if (lua_isnil(L, 3))// del
-		{
-			gslot->removeObjectForKey(name);
-		}
-		tolua_pushccobject(L, (void*)listener);
 	}
-	return 1;
 #ifndef TOLUA_RELEASE
 tolua_lerror :
 	tolua_error(L, "#ferror in function 'gslot'.", &tolua_err);
@@ -247,8 +502,7 @@ int CCNode_slots(lua_State* L)
 			oSlotData* slotData = (oSlotData*)self->getHelperObject();
 			if (slotData)
 			{
-				CCDictionary* slots = slotData->slots;
-				if (slots) slots->removeObjectForKey(name);
+				slotData->removeSlotList(name);
 			}
 			return 0;
 		}
