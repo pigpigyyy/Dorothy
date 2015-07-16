@@ -30,6 +30,7 @@ THE SOFTWARE.
 #include "CCCommon.h"
 #include "CCStdC.h"
 #include "CCFileUtils.h"
+#include "textures/CCTexture2D.h"
 #include "png.h"
 #include "jpeglib.h"
 #include "tiffio.h"
