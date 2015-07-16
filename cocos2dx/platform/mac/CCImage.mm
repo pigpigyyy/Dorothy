@@ -1021,5 +1021,119 @@ CCImage::EImageFormat CCImage::computeImageFormatType(const std::string& filenam
 	return ret;
 }
 
+unsigned char* CCImage::convertToPremultipliedData(CCImage* image)
+{
+	unsigned char* tempData = image->getData();
+    bool hasAlpha = image->hasAlpha();
+	unsigned int width = image->getWidth();
+    unsigned int height = image->getHeight();
+    size_t bpp = image->getBitsPerComponent();
+    // compute pixel format
+    CCTexture2DPixelFormat pixelFormat = hasAlpha ? CCTexture2D::getDefaultAlphaPixelFormat() : (bpp >= 8 ? kCCTexture2DPixelFormat_RGB888 : kCCTexture2DPixelFormat_RGB565);
+    
+    // Repack the pixel data into the right format
+    unsigned int length = width * height;
+    unsigned int* inPixel32 = NULL;
+    unsigned char* inPixel8 = NULL;
+    unsigned short* outPixel16 = NULL;
+	
+    if (pixelFormat == kCCTexture2DPixelFormat_RGB565)
+    {
+        if (hasAlpha)
+        {
+            // Convert "RRRRRRRRRGGGGGGGGBBBBBBBBAAAAAAAA" to "RRRRRGGGGGGBBBBB"
+            
+            tempData = new unsigned char[width * height * 2];
+            outPixel16 = (unsigned short*)tempData;
+            inPixel32 = (unsigned int*)image->getData();
+            
+            for (unsigned int i = 0; i < length; ++i, ++inPixel32)
+            {
+				unsigned int R = ((((*inPixel32 >>  0) & 0xFF) >> 3) << 11);
+				unsigned int G = ((((*inPixel32 >>  8) & 0xFF) >> 2) << 5);
+				unsigned int B = ((((*inPixel32 >> 16) & 0xFF) >> 3) << 0);
+                *outPixel16++ = R|G|B;
+            }
+        }
+        else 
+        {
+            // Convert "RRRRRRRRRGGGGGGGGBBBBBBBB" to "RRRRRGGGGGGBBBBB"
+            
+            tempData = new unsigned char[width * height * 2];
+            outPixel16 = (unsigned short*)tempData;
+            inPixel8 = (unsigned char*)image->getData();
+            
+            for (unsigned int i = 0; i < length; ++i)
+            {
+				unsigned int R = (((*inPixel8++ & 0xFF) >> 3) << 11);
+				unsigned int G = (((*inPixel8++ & 0xFF) >> 2) << 5);
+				unsigned int B = (((*inPixel8++ & 0xFF) >> 3) << 0);
+                *outPixel16++ = R|G|B;
+            }
+        }    
+    }
+    else if (pixelFormat == kCCTexture2DPixelFormat_RGBA4444)
+    {
+        // Convert "RRRRRRRRRGGGGGGGGBBBBBBBBAAAAAAAA" to "RRRRGGGGBBBBAAAA"
+        
+        inPixel32 = (unsigned int*)image->getData();  
+        tempData = new unsigned char[width * height * 2];
+        outPixel16 = (unsigned short*)tempData;
+        
+        for (unsigned int i = 0; i < length; ++i, ++inPixel32)
+        {
+            *outPixel16++ = 
+            ((((*inPixel32 >> 0) & 0xFF) >> 4) << 12) | // R
+            ((((*inPixel32 >> 8) & 0xFF) >> 4) <<  8) | // G
+            ((((*inPixel32 >> 16) & 0xFF) >> 4) << 4) | // B
+            ((((*inPixel32 >> 24) & 0xFF) >> 4) << 0);  // A
+        }
+    }
+    else if (pixelFormat == kCCTexture2DPixelFormat_RGB5A1)
+    {
+        // Convert "RRRRRRRRRGGGGGGGGBBBBBBBBAAAAAAAA" to "RRRRRGGGGGBBBBBA"
+        inPixel32 = (unsigned int*)image->getData();   
+        tempData = new unsigned char[width * height * 2];
+        outPixel16 = (unsigned short*)tempData;
+        
+        for (unsigned int i = 0; i < length; ++i, ++inPixel32)
+        {
+            *outPixel16++ = 
+            ((((*inPixel32 >> 0) & 0xFF) >> 3) << 11) | // R
+            ((((*inPixel32 >> 8) & 0xFF) >> 3) <<  6) | // G
+            ((((*inPixel32 >> 16) & 0xFF) >> 3) << 1) | // B
+            ((((*inPixel32 >> 24) & 0xFF) >> 7) << 0);  // A
+        }
+    }
+    else if (pixelFormat == kCCTexture2DPixelFormat_A8)
+    {
+        // Convert "RRRRRRRRRGGGGGGGGBBBBBBBBAAAAAAAA" to "AAAAAAAA"
+        inPixel32 = (unsigned int*)image->getData();
+        tempData = new unsigned char[width * height];
+        unsigned char *outPixel8 = tempData;
+        
+        for (unsigned int i = 0; i < length; ++i, ++inPixel32)
+        {
+            *outPixel8++ = (*inPixel32 >> 24) & 0xFF;  // A
+        }
+    }
+
+    if (hasAlpha && pixelFormat == kCCTexture2DPixelFormat_RGB888)
+    {
+        // Convert "RRRRRRRRRGGGGGGGGBBBBBBBBAAAAAAAA" to "RRRRRRRRGGGGGGGGBBBBBBBB"
+        inPixel32 = (unsigned int*)image->getData();
+        tempData = new unsigned char[width * height * 3];
+        unsigned char *outPixel8 = tempData;
+        
+        for (unsigned int i = 0; i < length; ++i, ++inPixel32)
+        {
+            *outPixel8++ = (*inPixel32 >> 0) & 0xFF; // R
+            *outPixel8++ = (*inPixel32 >> 8) & 0xFF; // G
+            *outPixel8++ = (*inPixel32 >> 16) & 0xFF; // B
+        }
+    }
+	return tempData;
+}
+
 NS_CC_END
 

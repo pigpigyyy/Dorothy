@@ -53,15 +53,15 @@ public:
 
     typedef enum
     {
-        kAlignCenter        = 0x33, ///< Horizontal center and vertical center.
-        kAlignTop           = 0x13, ///< Horizontal center and vertical top.
-        kAlignTopRight      = 0x12, ///< Horizontal right and vertical top.
-        kAlignRight         = 0x32, ///< Horizontal right and vertical center.
-        kAlignBottomRight   = 0x22, ///< Horizontal right and vertical bottom.
-        kAlignBottom        = 0x23, ///< Horizontal center and vertical bottom.
-        kAlignBottomLeft    = 0x21, ///< Horizontal left and vertical bottom.
-        kAlignLeft          = 0x31, ///< Horizontal left and vertical center.
-        kAlignTopLeft       = 0x11, ///< Horizontal left and vertical top.
+        kAlignCenter = 0x33, ///< Horizontal center and vertical center.
+        kAlignTop = 0x13, ///< Horizontal center and vertical top.
+        kAlignTopRight = 0x12, ///< Horizontal right and vertical top.
+        kAlignRight = 0x32, ///< Horizontal right and vertical center.
+        kAlignBottomRight = 0x22, ///< Horizontal right and vertical bottom.
+        kAlignBottom = 0x23, ///< Horizontal center and vertical bottom.
+        kAlignBottomLeft = 0x21, ///< Horizontal left and vertical bottom.
+        kAlignLeft = 0x31, ///< Horizontal left and vertical center.
+        kAlignTopLeft = 0x11, ///< Horizontal left and vertical top.
     }ETextAlign;
     
     /**
@@ -90,7 +90,7 @@ public:
     @param nWidth, nHeight, nBitsPerComponent are used for kFmtRawData.
     @return true if loaded correctly.
     */
-    bool initWithImageData(void * pData, 
+    bool initWithImageData(void* pData,
                            int nDataLen, 
                            EImageFormat eFmt = kFmtUnKnown,
                            int nWidth = 0,
@@ -107,18 +107,18 @@ public:
     @param  nSize       the font size, if 0, use the system default size.
     */
     bool initWithString(
-        const char *    pText, 
-        int             nWidth = 0, 
-        int             nHeight = 0,
-        ETextAlign      eAlignMask = kAlignCenter,
-        const char *    pFontName = 0,
-        int             nSize = 0);
+        const char* pText,
+        int nWidth = 0,
+        int nHeight = 0,
+        ETextAlign eAlignMask = kAlignCenter,
+        const char* pFontName = 0,
+        int nSize = 0);
 
-    unsigned char *   getData()               { return m_pData; }
-    int         getDataLen()            { return m_nWidth * m_nHeight; }
+    unsigned char* getData() { return m_pData; }
+    int getDataLen() { return m_nWidth * m_nHeight; }
 
-    bool hasAlpha()                     { return m_bHasAlpha; }
-    bool isPremultipliedAlpha()         { return m_bPreMulti; }
+    bool hasAlpha() { return m_bHasAlpha; }
+    bool isPremultipliedAlpha() { return m_bPreMulti; }
 
     /**
     @brief    Save CCImage data to the specified file, with specified format.
@@ -127,11 +127,13 @@ public:
     */
     bool saveToFile(const char *pszFilePath, bool bIsToRGB = true);
 
-    CC_SYNTHESIZE_READONLY(unsigned short,   m_nWidth,       Width);
-    CC_SYNTHESIZE_READONLY(unsigned short,   m_nHeight,      Height);
-    CC_SYNTHESIZE_READONLY(int,     m_nBitsPerComponent,   BitsPerComponent);
+    CC_SYNTHESIZE_READONLY(unsigned short, m_nWidth, Width);
+    CC_SYNTHESIZE_READONLY(unsigned short, m_nHeight, Height);
+    CC_SYNTHESIZE_READONLY(int, m_nBitsPerComponent, BitsPerComponent);
 	static bool isPngAlphaPremultiplied;
 	static CCImage::EImageFormat computeImageFormatType(const std::string& filename);
+	// return copy of premultiplied data or passed data from image
+	static unsigned char* convertToPremultipliedData(CCImage* image);
 protected:
     bool _initWithJpgData(void *pData, int nDatalen);
     bool _initWithPngData(void *pData, int nDatalen);
@@ -143,7 +145,7 @@ protected:
     bool _saveImageToPNG(const char *pszFilePath, bool bIsToRGB = true);
     bool _saveImageToJPG(const char *pszFilePath);
 
-    unsigned char *m_pData;
+    unsigned char* m_pData;
     bool m_bHasAlpha;
     bool m_bPreMulti;
 
