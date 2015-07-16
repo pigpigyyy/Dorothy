@@ -232,14 +232,16 @@ local oCache_poolCollect = oCache.Pool.collect
 oCache.Pool.collect = function(self)
 	return oCache_poolCollect()
 end
+local CCTextureCache = loaded.CCTextureCache
+local CCTextureCache_loadAsync = CCTextureCache.loadAsync
 oCache.Texture = loaded.CCTextureCache()
 loaded.CCTextureCache = nil
 
-local function _loadTextureAsync(filename, loaded)
+local function _loadTextureAsync(self,filename, loaded)
 	if type(filename) == "table" then
 		local length = #filename
 		local count = 0
-		oCache.Texture:loadAsync(filename,
+		CCTextureCache_loadAsync(self,filename,
 			function(name)
 				if loaded then
 					loaded(name)
@@ -251,7 +253,7 @@ local function _loadTextureAsync(filename, loaded)
 		end
 	elseif type(filename) == "string" then
 		local isloaded = false
-		oCache.Texture:loadAsync(filename,
+		CCTextureCache_loadAsync(self,filename,
 			function(name)
 				if loaded then
 					loaded(name)
@@ -263,6 +265,7 @@ local function _loadTextureAsync(filename, loaded)
 		end
 	end
 end
+CCTextureCache.loadAsync = _loadTextureAsync
 
 local oSound = require("oSound")
 local oMusic = require("oMusic")
@@ -271,7 +274,7 @@ local function _loadAsync(filename, loaded)
 	if extension then extension = string.lower(extension) end
 	local itemType = nil
 	if extension == "png" or extension == "jpg" or extension == "tiff" or extension == "webp" then
-		return _loadTextureAsync(filename, loaded)
+		return _loadTextureAsync(CCTextureCache,filename, loaded)
 	else
 		local isLoaded = false
 		local function loader()
@@ -312,7 +315,7 @@ local function _loadAsync(filename, loaded)
 	end
 end
 
-local function loadAsync(_, filename, loaded)
+oCache.loadAsync = function(_, filename, loaded)
 	if type(filename) == "string" then
 		wait(_loadAsync(filename, loaded))
 	elseif type(filename) == "table" then
@@ -321,9 +324,8 @@ local function loadAsync(_, filename, loaded)
 		end
 	end
 end
-oCache.loadAsync = loadAsync
 
-local function swapAsync(cache, listA, listB, loaded)
+oCache.swapAsync = function(cache, listA, listB, loaded)
 	local removal_list = {}
 	for _,itemA in ipairs(listA) do
 		local found = false
@@ -379,7 +381,6 @@ local function swapAsync(cache, listA, listB, loaded)
 	end
 	cache:loadAsync(added_list, loaded)
 end
-oCache.swapAsync = swapAsync
 
 local oContent = loaded.oContent
 local oContent_copyAsync = oContent.copyAsync
