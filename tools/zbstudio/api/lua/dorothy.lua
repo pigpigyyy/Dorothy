@@ -1598,14 +1598,6 @@ local Dorothy =
 				returns = "(texture: CCTexture2D)",
 				type = "method",
 			},
-			loadAsync =
-			{
-				args = "(filename: string|table{string}: table{string}, callback: function)",
-				description = " -- callback: function(filename)",
-				typeName = "",
-				returns = "()",
-				type = "method",
-			},
 			add =
 			{
 				args = "(renderTarget: CCRenderTarget, name: string)",
