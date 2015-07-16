@@ -50,15 +50,15 @@ NS_CC_BEGIN
 
 typedef struct _AsyncStruct
 {
-    std::string            filename;
-    CCObject    *target;
-    SEL_CallFuncO        selector;
+    std::string filename;
+    CCObject* target;
+	CCImage* image;
+    SEL_CallFuncO selector;
 } AsyncStruct;
 
 typedef struct _ImageInfo
 {
-    AsyncStruct *asyncStruct;
-    CCImage        *image;
+    AsyncStruct* asyncStruct;
     CCImage::EImageFormat imageType;
 } ImageInfo;
 
@@ -136,10 +136,11 @@ static void* loadImage(void* data)
             continue;
         }
         
-        // generate image            
-        CCImage *pImage = new CCImage();
+        // generate image
+        CCImage* pImage = pAsyncStruct->image;
         if (pImage && !pImage->initWithImageFileThreadSafe(filename, imageType))
         {
+			pAsyncStruct->image = NULL;
             CC_SAFE_RELEASE(pImage);
             CCLOG("can not load %s", filename);
             continue;
@@ -148,7 +149,6 @@ static void* loadImage(void* data)
         // generate image info
         ImageInfo *pImageInfo = new ImageInfo();
         pImageInfo->asyncStruct = pAsyncStruct;
-        pImageInfo->image = pImage;
         pImageInfo->imageType = imageType;
 
         // put the image info into the queue
@@ -298,6 +298,7 @@ void CCTextureCache::addImageAsync(const char *path, CCObject *target, SEL_CallF
     data->filename = fullpath.c_str();
     data->target = target;
     data->selector = selector;
+	data->image = new CCImage();
 
     // add async struct into queue
     pthread_mutex_lock(&s_asyncStructQueueMutex);
@@ -324,7 +325,7 @@ void CCTextureCache::addImageAsyncCallBack(float dt)
         pthread_mutex_unlock(&s_ImageInfoMutex);
 
         AsyncStruct *pAsyncStruct = pImageInfo->asyncStruct;
-        CCImage *pImage = pImageInfo->image;
+        CCImage *pImage = pAsyncStruct->image;
 
         CCObject *target = pAsyncStruct->target;
         SEL_CallFuncO selector = pAsyncStruct->selector;
