@@ -53,6 +53,9 @@ typedef struct _AsyncStruct
     std::string filename;
     CCObject* target;
 	CCImage* image;
+	unsigned char* data;
+	CCSize size;
+	CCTexture2DPixelFormat pixelFormat;
     SEL_CallFuncO selector;
 } AsyncStruct;
 
@@ -64,8 +67,8 @@ typedef struct _ImageInfo
 
 static pthread_t s_loadingThread;
 
-static pthread_mutex_t      s_asyncStructQueueMutex;
-static pthread_mutex_t      s_ImageInfoMutex;
+static pthread_mutex_t s_asyncStructQueueMutex;
+static pthread_mutex_t s_ImageInfoMutex;
 
 static sem_t* s_pSem = NULL;
 static unsigned long s_nAsyncRefCount = 0;
@@ -107,7 +110,7 @@ static void* loadImage(void* data)
             break;
         }
 
-        std::queue<AsyncStruct*> *pQueue = s_pAsyncStructQueue;
+        std::queue<AsyncStruct*>* pQueue = s_pAsyncStructQueue;
 
         pthread_mutex_lock(&s_asyncStructQueueMutex);// get async struct from queue
         if (pQueue->empty())
@@ -125,7 +128,7 @@ static void* loadImage(void* data)
             pthread_mutex_unlock(&s_asyncStructQueueMutex);
         }        
 
-        const char *filename = pAsyncStruct->filename.c_str();
+        const char* filename = pAsyncStruct->filename.c_str();
 
         // compute image type
         CCImage::EImageFormat imageType = CCImage::computeImageFormatType(pAsyncStruct->filename);
@@ -145,9 +148,22 @@ static void* loadImage(void* data)
             CCLOG("can not load %s", filename);
             continue;
         }
+		
+		unsigned char* tempData = CCImage::convertToPremultipliedData(pImage);
+		if (tempData != pImage->getData())
+		{
+			CCSize size = CCSizeMake(pImage->getWidth(), pImage->getHeight());
+			size_t bpp = pImage->getBitsPerComponent();
+		CCTexture2DPixelFormat pixelFormat = pImage->hasAlpha() ? CCTexture2D::getDefaultAlphaPixelFormat() : (bpp >= 8 ? kCCTexture2DPixelFormat_RGB888 : kCCTexture2DPixelFormat_RGB565);
+			pAsyncStruct->image = NULL;
+            CC_SAFE_RELEASE(pImage);
+			pAsyncStruct->data = tempData;
+			pAsyncStruct->size = size;
+			pAsyncStruct->pixelFormat = pixelFormat;
+		}
 
         // generate image info
-        ImageInfo *pImageInfo = new ImageInfo();
+        ImageInfo* pImageInfo = new ImageInfo();
         pImageInfo->asyncStruct = pAsyncStruct;
         pImageInfo->imageType = imageType;
 
@@ -176,9 +192,9 @@ static void* loadImage(void* data)
 // implementation CCTextureCache
 
 // TextureCache - Alloc, Init & Dealloc
-static CCTextureCache *g_sharedTextureCache = NULL;
+static CCTextureCache* g_sharedTextureCache = NULL;
 
-CCTextureCache * CCTextureCache::sharedTextureCache()
+CCTextureCache* CCTextureCache::sharedTextureCache()
 {
     if (!g_sharedTextureCache)
     {
@@ -294,11 +310,12 @@ void CCTextureCache::addImageAsync(const char *path, CCObject *target, SEL_CallF
     }
 
     // generate async struct
-    AsyncStruct *data = new AsyncStruct();
+    AsyncStruct* data = new AsyncStruct();
     data->filename = fullpath.c_str();
     data->target = target;
     data->selector = selector;
 	data->image = new CCImage();
+	data->data = NULL;
 
     // add async struct into queue
     pthread_mutex_lock(&s_asyncStructQueueMutex);
@@ -320,23 +337,30 @@ void CCTextureCache::addImageAsyncCallBack(float dt)
     }
     else
     {
-        ImageInfo *pImageInfo = imagesQueue->front();
+        ImageInfo* pImageInfo = imagesQueue->front();
         imagesQueue->pop();
         pthread_mutex_unlock(&s_ImageInfoMutex);
 
-        AsyncStruct *pAsyncStruct = pImageInfo->asyncStruct;
-        CCImage *pImage = pAsyncStruct->image;
+        AsyncStruct* pAsyncStruct = pImageInfo->asyncStruct;
+        CCImage* pImage = pAsyncStruct->image;
 
-        CCObject *target = pAsyncStruct->target;
+        CCObject* target = pAsyncStruct->target;
         SEL_CallFuncO selector = pAsyncStruct->selector;
         const char* filename = pAsyncStruct->filename.c_str();
 
         // generate texture in render thread
-        CCTexture2D *texture = new CCTexture2D();
+        CCTexture2D* texture = new CCTexture2D();
 #if 0 //TODO: (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
         texture->initWithImage(pImage, kCCResolutioniPhone);
 #else
-        texture->initWithImage(pImage);
+		if (pImage)
+		{
+			texture->initWithImage(pImage);
+		}
+		else
+		{
+			texture->initWithData(pAsyncStruct->data, pAsyncStruct->pixelFormat, pAsyncStruct->size.width, pAsyncStruct->size.height, pAsyncStruct->size);
+		}
 #endif
 
 #if CC_ENABLE_CACHE_TEXTURE_DATA
@@ -354,7 +378,8 @@ void CCTextureCache::addImageAsyncCallBack(float dt)
             target->release();
         }        
 
-        pImage->release();
+		CC_SAFE_RELEASE(pImage);
+		CC_SAFE_DELETE_ARRAY(pAsyncStruct->data);
         delete pAsyncStruct;
         delete pImageInfo;
 

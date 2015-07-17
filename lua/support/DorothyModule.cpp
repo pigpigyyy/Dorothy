@@ -1993,7 +1993,7 @@ int CCTextureCache_loadAsync(lua_State* L)
 	tolua_Error tolua_err;
 	if (
 		!tolua_isusertype(L, 1, "CCTextureCache", 0, &tolua_err) ||
-		!(tolua_isstring(L, 2, 0, &tolua_err) || tolua_istable(L,2,0,&tolua_err)) ||
+		!tolua_isstring(L, 2, 0, &tolua_err) ||
 		!(toluafix_isfunction(L, 3, &tolua_err) || tolua_isnoobj(L, 3, &tolua_err)) ||
 		!tolua_isnoobj(L, 4, &tolua_err)
 		)
@@ -2006,26 +2006,10 @@ int CCTextureCache_loadAsync(lua_State* L)
 #ifndef TOLUA_RELEASE
 		if (!self) tolua_error(L, "invalid 'self' in function 'CCTextureCache_loadAsync'", nullptr);
 #endif
-		if (lua_isstring(L, 2))
-		{
-			const char* filename = ((const char*)tolua_tostring(L, 2, 0));
-			int nHandler = lua_gettop(L) < 3 ? 0 : toluafix_ref_function(L, 3);
-			oImageAsyncLoader* loader = oImageAsyncLoader::create(filename, nHandler);
-			self->addImageAsync(filename, loader, callfuncO_selector(oImageAsyncLoader::callback));
-		}
-		else if (lua_istable(L, 2))
-		{
-			int length = (int)lua_objlen(L, 2);
-			for (int i = 0; i < length; i++)
-			{
-				lua_rawgeti(L, 2, i + 1);
-				const char* filename = lua_tostring(L, -1);
-				int nHandler = lua_gettop(L) < 3 ? 0 : toluafix_ref_function(L, 3);
-				oImageAsyncLoader* loader = oImageAsyncLoader::create(filename, nHandler);
-				self->addImageAsync(filename, loader, callfuncO_selector(oImageAsyncLoader::callback));
-				lua_pop(L, 1);
-			}
-		}
+		const char* filename = ((const char*)tolua_tostring(L, 2, 0));
+		int nHandler = lua_gettop(L) < 3 ? 0 : toluafix_ref_function(L, 3);
+		oImageAsyncLoader* loader = oImageAsyncLoader::create(filename, nHandler);
+		self->addImageAsync(filename, loader, callfuncO_selector(oImageAsyncLoader::callback));
 		return 0;
     }
 #ifndef TOLUA_RELEASE

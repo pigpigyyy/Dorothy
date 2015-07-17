@@ -253,7 +253,6 @@
 		1A950DFC16BB6661003F4508 /* CCFileUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A950DFB16BB6661003F4508 /* CCFileUtils.cpp */; };
 		1AB7FB3F16D0D31800D35305 /* CCDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AB7FB3E16D0D31800D35305 /* CCDevice.h */; };
 		1AB7FB4116D0D4C600D35305 /* CCDevice.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7FB4016D0D4C600D35305 /* CCDevice.mm */; };
-		3C5ACA021A21BB60006EDD2B /* CCImageCommon_cpp.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C5AC9FE1A21BB60006EDD2B /* CCImageCommon_cpp.h */; };
 		3C5ACA031A21BB60006EDD2B /* CCKeyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C5AC9FF1A21BB60006EDD2B /* CCKeyboard.cpp */; };
 		3C5ACA041A21BB60006EDD2B /* CCKeyboard.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C5ACA001A21BB60006EDD2B /* CCKeyboard.h */; };
 		3C5ACA051A21BB60006EDD2B /* CCThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C5ACA011A21BB60006EDD2B /* CCThread.cpp */; };
@@ -563,7 +562,6 @@
 		1A950DFB16BB6661003F4508 /* CCFileUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCFileUtils.cpp; sourceTree = "<group>"; };
 		1AB7FB3E16D0D31800D35305 /* CCDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCDevice.h; sourceTree = "<group>"; };
 		1AB7FB4016D0D4C600D35305 /* CCDevice.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CCDevice.mm; sourceTree = "<group>"; };
-		3C5AC9FE1A21BB60006EDD2B /* CCImageCommon_cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCImageCommon_cpp.h; sourceTree = "<group>"; };
 		3C5AC9FF1A21BB60006EDD2B /* CCKeyboard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCKeyboard.cpp; sourceTree = "<group>"; };
 		3C5ACA001A21BB60006EDD2B /* CCKeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCKeyboard.h; sourceTree = "<group>"; };
 		3C5ACA011A21BB60006EDD2B /* CCThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCThread.cpp; sourceTree = "<group>"; };
@@ -967,7 +965,6 @@
 			children = (
 				41CD6C2115BF7382005E6F29 /* mac */,
 				1A94C9D316C1FF6C00D79D09 /* third_party */,
-				3C5AC9FE1A21BB60006EDD2B /* CCImageCommon_cpp.h */,
 				3C5AC9FF1A21BB60006EDD2B /* CCKeyboard.cpp */,
 				3C5ACA001A21BB60006EDD2B /* CCKeyboard.h */,
 				3C5ACA011A21BB60006EDD2B /* CCThread.cpp */,
@@ -1387,7 +1384,6 @@
 				1551A6E8158F2ADE00E66CFE /* CCMenu.h in Headers */,
 				1551A6EA158F2ADE00E66CFE /* CCMenuItem.h in Headers */,
 				1551A6EC158F2ADE00E66CFE /* CCMotionStreak.h in Headers */,
-				3C5ACA021A21BB60006EDD2B /* CCImageCommon_cpp.h in Headers */,
 				1551A6EE158F2ADE00E66CFE /* CCProgressTimer.h in Headers */,
 				1551A6F0158F2ADE00E66CFE /* CCRenderTexture.h in Headers */,
 				1551A6F2158F2ADE00E66CFE /* CCParticleBatchNode.h in Headers */,

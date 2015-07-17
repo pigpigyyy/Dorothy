@@ -236,37 +236,19 @@ local CCTextureCache = loaded.CCTextureCache
 local CCTextureCache_loadAsync = CCTextureCache.loadAsync
 oCache.Texture = loaded.CCTextureCache()
 loaded.CCTextureCache = nil
+CCTextureCache.loadAsync = nil
 
-local function _loadTextureAsync(self,filename, loaded)
-	if type(filename) == "table" then
-		local length = #filename
-		local count = 0
-		CCTextureCache_loadAsync(self,filename,
-			function(name)
-				if loaded then
-					loaded(name)
-				end
-				count = count + 1
-			end)
-		return function()
-			return not (count == length)
+local function _loadTextureAsync(filename, loaded)
+	local isloaded = false
+	CCTextureCache_loadAsync(oCache.Texture,filename,function(name)
+		if loaded then
+			loaded(name)
 		end
-	elseif type(filename) == "string" then
-		local isloaded = false
-		CCTextureCache_loadAsync(self,filename,
-			function(name)
-				if loaded then
-					loaded(name)
-				end
-				isloaded = true
-			end)
-		return function()
-			return not isloaded
-		end
+		isloaded = true
+	end)
+	return function()
+		return not isloaded
 	end
-end
-CCTextureCache.loadAsync = function(self,filename,loaded)
-	wait(_loadTextureAsync(self,filename,loaded))
 end
 
 local oSound = require("oSound")
@@ -276,7 +258,7 @@ local function _loadAsync(filename, loaded)
 	if extension then extension = string.lower(extension) end
 	local itemType = nil
 	if extension == "png" or extension == "jpg" or extension == "tiff" or extension == "webp" then
-		return _loadTextureAsync(oCache.Texture,filename, loaded)
+		return _loadTextureAsync(filename, loaded)
 	else
 		local isLoaded = false
 		local function loader()
