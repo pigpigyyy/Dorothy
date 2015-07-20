@@ -1,5 +1,5 @@
 <Scene Name="scene">
-	<Data>
+	<Action>
 		<Loop Name="fade">
 			<Sequence>
 				<Grid.Twirl Time="5" GridX="100" GridY="100" Twirls="1" Amplitude="0.5"/>
@@ -12,7 +12,7 @@
 			<Delay Time="4"/>
 			<Scale Time="1" X="1" Y="1" Ease="OutElastic"/>
 		</Sequence>
-	</Data>
+	</Action>
 	<LayerColor Angle="10" Color="0xff00ffff" AnchorX="0" AnchorY="0"/>
 	<LabelTTF Name="label" Text="Hello" FontName="Arial" FontSize="20" Color="0x000000"
 		X="scene.contentSize.width*0.5"

@@ -1,23 +1,20 @@
-return function(data)
-Dorothy(data)
+return function(__data)
+Dorothy(__data)
 
 local scene = CCScene()
 
-local data1 = CCDictionary()
-scene.data = data1
-
 local fade = CCRepeatForever(CCSequence({CCGrid:twirl(5,CCSize(100,100),oVec2(0,0),1,0.5),oOpacity(1,0),oOpacity(1,1)}))
-data1["fade"] = fade
+scene.fade = fade
 
 local scale = CCSequence({oScale(1,3,3,oEase.OutElastic),CCDelay(4),oScale(1,1,1,oEase.OutElastic)})
-data1["scale"] = scale
+scene.scale = scale
 
 local layer1 = CCLayerColor(ccColor4(0xff00ffff))
 layer1.anchor = oVec2(0,0)
 layer1.angle = 10
 scene:addChild(layer1)
 
-local label = CCLabelTTF("Hello","Arial",20)
+local label = CCLabelTTF((__data and __data["Hello"] or "Hello"),(__data and __data["Arial"] or "Arial"),20)
 label.positionX = scene.contentSize.width*0.5
 label.positionY = scene.contentSize.height*0.5
 label.color = ccColor3(0x000000)
@@ -38,11 +35,6 @@ scene.label = label
 		end))
 		CCDirector:run(CCScene:crossFade(0.5,scene))
 	
-scene:slots("event",function() print(scene) end)
-scene:slots("event1",function() print(scene) end)
-scene:slots("event2",function() print(scene) end)
-scene:slots("event3",function() print(scene) end)
-scene:slots("event4",function() print(scene) end)
 
 return scene
 

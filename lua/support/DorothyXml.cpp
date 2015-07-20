@@ -138,6 +138,8 @@ static bool isTextAlign(const char* str)
 }
 #define toTextAlign(str) (isTextAlign(str) ? "CCTextAlign." : "") << (str ? str : "CCTextAlign.HLeft")
 
+#define toText(text) "(__data and __data[\"" << (text ? text : "") << "\"] or \"" << (text ? text : "") << "\")"
+
 #define Self_Check(name) \
 	if (self.empty()) { self = getUsableName(#name); names.insert(self); }\
 	if (firstItem.empty()) firstItem = self;
@@ -881,20 +883,6 @@ static bool isTextAlign(const char* str)
 	items.push("Spawn");
 #define Spawn_Finish
 
-// Data
-#define Data_Define \
-	Object_Define
-#define Data_Check \
-	Object_Check
-#define Data_Create \
-	stream << "local " << self << " = CCDictionary()\n";
-#define Data_Handle
-#define Data_Finish \
-	if (!elementStack.empty()) {\
-		const oItem& parent = elementStack.top();\
-		stream << parent.name << ".data = " << self << "\n\n";\
-	}
-
 #define Add_To_Parent \
 	if (!elementStack.empty()) {\
 		const oItem& parent = elementStack.top();\
@@ -1149,9 +1137,8 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Text) { text = atts[++i]; break; }\
 	CASE_STR(File) { fntFile = atts[++i]; break; }
 #define LabelAtlas_Create \
-	stream << "local " << self << " = CCLabelAtlas(\"" << (text ? text : "\"") << ',';\
-	if (fntFile) stream << '\"' << fntFile << '\"';\
-	else stream << "";\
+	stream << "local " << self << " = CCLabelAtlas(" << toText(text);\
+	if (fntFile) stream << "," << toText(fntFile);\
 	stream << ")\n";
 #define LabelAtlas_Handle \
 	Node_Handle
@@ -1174,8 +1161,8 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Alignment) { alignment = atts[++i]; break; }\
 	CASE_STR(ImageOffset) { imageOffset = atts[++i]; break; }
 #define LabelBMFont_Create \
-	stream << "local " << self << " = CCLabelBMFont(\"" << (text ? text : "\"");\
-	if (fntFile) stream << "\"," << fntFile << '\"';\
+	stream << "local " << self << " = CCLabelBMFont(" << toText(text);\
+	if (fntFile) stream << "," << toText(fntFile);\
 	else stream << ",";\
 	stream << ',' << (fontWidth ? fontWidth : "CCLabelBMFont.AutomaticWidth") << "," << toTextAlign(alignment) << ',' << (imageOffset ? imageOffset : "oVec2.zero") << ")\n";
 #define LabelBMFont_Handle \
@@ -1195,7 +1182,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(FontName) { fontName = atts[++i]; break; }\
 	CASE_STR(FontSize) { fontSize = atts[++i]; break; }
 #define LabelTTF_Create \
-	stream << "local " << self << " = CCLabelTTF(\"" << (text ? text : "") << "\",\"" << (fontName ? fontName : "Arial") << "\"," << (fontSize ? fontSize : "12") << ")\n";
+	stream << "local " << self << " = CCLabelTTF(" << toText(text) << ',' << toText(fontName) << ',' << (fontSize ? fontSize : "") << ")\n";
 #define LabelTTF_Handle \
 	Node_Handle
 #define LabelTTF_Finish \
@@ -1218,7 +1205,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(BlendDst) { blendFuncDst = atts[++i]; break; }
 #define Sprite_Create \
 	stream << "local " << self << " = CCSprite(";\
-	if (file) stream << '\"' << file << "\")\n";\
+	if (file) stream << toText(file) << ")\n";\
 	else stream << ")\n";
 #define Sprite_Handle \
 	Node_Handle\
@@ -1241,7 +1228,7 @@ static bool isTextAlign(const char* str)
 	Node_Check\
 	CASE_STR(File) { file = atts[++i]; break; }
 #define SpriteBatch_Create \
-	stream << "local " << self << " = CCSpriteBatchNode(\"" << (file ? file : "") << "\")\n";
+	stream << "local " << self << " = CCSpriteBatchNode(" << toText(file) << ")\n";
 #define SpriteBatch_Handle \
 	Node_Handle
 #define SpriteBatch_Finish \
@@ -1433,7 +1420,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(FaceRight) { faceRight = atts[++i]; break; }\
 	CASE_STR(Speed) { speed = atts[++i]; break; }
 #define Model_Create \
-	stream << "local " << self << " = oModel(\"" << (filename ? filename : "") << "\")\n";
+	stream << "local " << self << " = oModel(" << toText(filename) << ")\n";
 #define Model_Handle \
 	Node_Handle\
 	if (look) stream << self << ".look = \"" << look << "\"\n";\
@@ -1456,8 +1443,8 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Group) { group = atts[++i]; break; }\
 	CASE_STR(World) { world = atts[++i]; break; }
 #define Body_Create \
-	stream << "local " << self << " = oBody(\"" << (filename ? filename : "")\
-			<< "\"," << (world ? world : "") << ",oVec2(" << (x ? x : "0") << ',' << (y ? y : "0") << "),"\
+	stream << "local " << self << " = oBody(" << toText(filename)\
+			<< ',' << (world ? world : "") << ",oVec2(" << (x ? x : "0") << ',' << (y ? y : "0") << "),"\
 			<< (angle ? angle : "0") << ")\n";\
 	x = y = angle = nullptr;
 #define Body_Handle \
@@ -1477,7 +1464,8 @@ static bool isTextAlign(const char* str)
 #define ModuleNode_Handle \
 	for (const auto& pair : attributes)\
 	{\
-		stream << (char)tolower(pair.first.substr(0, 1).at(0)) << pair.first.substr(1) << " = " << pair.second << ',';\
+		bool digit = (bool)isdigit(pair.second.at(0));\
+		stream << (char)tolower(pair.first.substr(0, 1).at(0)) << pair.first.substr(1) << " = " << (digit ? "" : "\"") << pair.second << (digit ? "" : "\"") << ',';\
 	}\
 	attributes.clear();\
 	stream << "})\n";
@@ -1577,8 +1565,8 @@ public:
 	{
 		oXmlDelegate::clear();
 		stream <<
-		"return function(data)\n"
-			"Dorothy(data)\n\n";
+		"return function(__data)\n"
+			"Dorothy(__data)\n\n";
 	}
 	void end()
 	{
@@ -1654,8 +1642,6 @@ void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
 		Item(PlatformWorld, world)
 		Item(Model, model)
 		Item(Body, body)
-
-		Item(Data, data)
 
 		Item(Speed, speed)
 
@@ -1757,6 +1743,12 @@ void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
 			Require_Create
 			break;
 		}
+		CASE_STR(Action)
+		{
+			oItem item = { "Action" };
+			elementStack.push(item);
+			break;
+		}
 		CASE_STR(Script) break;
 		{
 			Item_Define(ModuleNode)
@@ -1764,7 +1756,9 @@ void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
 			Self_Check(item)
 			Item_Create(ModuleNode)
 			Item_Handle(ModuleNode)
-			Item_Push(ModuleNode)
+			ModuleNode_Finish;
+			oItem item = { name, self };
+			elementStack.push(item);
 		}
 	}
 	SWITCH_STR_END
@@ -1775,7 +1769,7 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 	if (elementStack.empty()) return;
 	oItem currentData = elementStack.top();
 	if (strcmp(name, elementStack.top().type) == 0) elementStack.pop();
-	bool parentIsData = !elementStack.empty() && strcmp(elementStack.top().type, "Data") == 0;
+	bool parentIsAction = !elementStack.empty() && strcmp(elementStack.top().type, "Action") == 0;
 
 	SWITCH_STR_START(name)
 	{
@@ -1790,7 +1784,7 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 			oFunc func = funcs.top();
 			funcs.pop();
 			string tempItem = func.begin + "function()\n" + (codes ? codes : "") + "\nend" + func.end;
-			if (parentIsData)
+			if (parentIsAction)
 			{
 				stream << "local " << currentData.name << " = " << tempItem << '\n';
 			}
@@ -1817,7 +1811,7 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 			}
 			items.pop();
 			tempItem += func.end;
-			if (parentIsData)
+			if (parentIsAction)
 			{
 				stream << "local " << currentData.name << " = " << tempItem << '\n';
 			}
@@ -1869,7 +1863,7 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 		{
 			oFunc func = funcs.top();
 			funcs.pop();
-			if (parentIsData)
+			if (parentIsAction)
 			{
 				stream << "local " << currentData.name << " = " << func.begin << '\n';
 			}
@@ -1902,7 +1896,7 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 				if (!tempStack.empty()) tempItem += ",";
 			}
 			tempItem += "})";
-			if (parentIsData)
+			if (parentIsAction)
 			{
 				stream << "local " << currentData.name << " = " << tempItem << '\n';
 			}
@@ -1934,7 +1928,7 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 				if (!tempStack.empty()) tempItem += ",";
 			}
 			tempItem += func.end;
-			if (parentIsData)
+			if (parentIsAction)
 			{
 				stream << "local " << currentData.name << " = " << tempItem << '\n';
 			}
@@ -1975,10 +1969,9 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 	}
 	SWITCH_STR_END
 
-	if (parentIsData)
+	if (parentIsAction)
 	{
-		const oItem& data = elementStack.top();
-		stream << data.name << "[\"" << currentData.name.c_str() << "\"] = " << currentData.name << "\n\n";
+		stream << firstItem << '.' << currentData.name << " = " << currentData.name << "\n\n";
 	}
 }
 
