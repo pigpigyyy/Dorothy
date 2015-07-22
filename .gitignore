@@ -73,3 +73,5 @@ DerivedData/
 
 # include zbstudio files
 !/tools/zbstudio/bin/
+
+/project/Resources/SceneEditor/**/*.lua

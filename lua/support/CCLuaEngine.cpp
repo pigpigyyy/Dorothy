@@ -82,13 +82,20 @@ static int cclua_loadfile(lua_State* L, const string& file)
 	size_t pos = filename.rfind('.');
 	if (pos == string::npos)
 	{
-		string newFileName = filename + ".xml";
+		string newFileName = filename + ".lua";
 		if (oSharedContent.isFileExist(newFileName.c_str()))
 		{
 			filename = std::move(newFileName);
-			isXml = true;
 		}
-		else filename.append(".lua");
+		else
+		{
+			newFileName = filename + ".xml";
+			if (oSharedContent.isFileExist(newFileName.c_str()))
+			{
+				filename = std::move(newFileName);
+				isXml = true;
+			}
+		}
 	}
 	else isXml = filename.substr(pos) == ".xml";
 

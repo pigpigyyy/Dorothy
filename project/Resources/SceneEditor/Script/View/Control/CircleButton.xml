@@ -1,7 +1,7 @@
 <!-- params: X, Y, Width, Height, FontSize, Text -->
 <ButtonBase X="{ x }" Y="{ y }" Width="{ radius*2 }" Height="{ radius*2 }">
 
-	<Import Module="View.ButtonBase"/>
+	<Import Module="View.Control.ButtonBase"/>
 	<Import Module="View.Shape.SolidCircle"/>
 	<Import Module="View.Shape.LineCircle"/>
 

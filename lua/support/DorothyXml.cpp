@@ -8,137 +8,60 @@ static void oHandler(const char* begin, const char* end)
 	{
 		CHECK_CDATA(Call)
 		ELSE_CHECK_CDATA(Script)
+		ELSE_CHECK_CDATA(Slot)
 	}
 }
 
-static const char* toBoolean(const char* str)
+static bool isVal(const char* value)
 {
-	if (str)
-	{
-		if (strcmp(str,"True") == 0) return "true";
-		if (strcmp(str,"False") == 0) return "false";
-		return str;
-	}
-	return "false";
+	if (value && value[0] == '{') return false;
+	return true;
 }
 
-static bool isGroup(const char* str)
+static string oVal(const char* name, const char* value, const char* def = nullptr)
 {
-	if (str)
+	if (!value || !value[0])
 	{
-		SWITCH_STR_START(str)
+		if (def)
 		{
-			CASE_STR(Detect) return true;
-			CASE_STR(DetectPlayer) return true;
-			CASE_STR(Hide) return true;
-			CASE_STR(Terrain) return true;
+			return string(def);
 		}
-		SWITCH_STR_END
-	}
-	return false;
-}
-#define toGroup(str) (isGroup(str) ? "oData.Group" : "") << (str ? str : "")
-
-static bool isBlendFunc(const char* str)
-{
-	if (str)
-	{
-		SWITCH_STR_START(str)
+		else
 		{
-			CASE_STR(Src) return true;
-			CASE_STR(Dst) return true;
-			CASE_STR(One) return true;
-			CASE_STR(Zero) return true;
-			CASE_STR(OneMinSrc) return true;
-			CASE_STR(OneMinDst) return true;
+			CCLOG("Xml missing attribute for %s", name);
+			return string();
 		}
-		SWITCH_STR_END
 	}
-	return false;
-}
-#define toBlendFunc(str) (isBlendFunc(str) ? "ccBlendFunc." : "") << (str ? str : "ccBlendFunc.Zero")
-
-static bool isEase(const char* str)
-{
-	if (str)
+	if (value[0] == '{')
 	{
-		SWITCH_STR_START(str)
-		{
-			CASE_STR(Linear) return true;
-			CASE_STR(InQuad) return true;
-			CASE_STR(OutQuad) return true;
-			CASE_STR(InOutQuad) return true;
-			CASE_STR(InCubic) return true;
-			CASE_STR(OutCubic) return true;
-			CASE_STR(InOutCubic) return true;
-			CASE_STR(InQuart) return true;
-			CASE_STR(OutQuart) return true;
-			CASE_STR(InOutQuart) return true;
-			CASE_STR(InQuint) return true;
-			CASE_STR(OutQuint) return true;
-			CASE_STR(InOutQuint) return true;
-			CASE_STR(InSine) return true;
-			CASE_STR(OutSine) return true;
-			CASE_STR(InOutSine) return true;
-			CASE_STR(InExpo) return true;
-			CASE_STR(OutExpo) return true;
-			CASE_STR(InOutExpo) return true;
-			CASE_STR(InCirc) return true;
-			CASE_STR(OutCirc) return true;
-			CASE_STR(InOutCirc) return true;
-			CASE_STR(InElastic) return true;
-			CASE_STR(OutElastic) return true;
-			CASE_STR(InOutElastic) return true;
-			CASE_STR(InBack) return true;
-			CASE_STR(OutBack) return true;
-			CASE_STR(InOutBack) return true;
-			CASE_STR(InBounce) return true;
-			CASE_STR(OutBounce) return true;
-			CASE_STR(InOutBounce) return true;
-		}
-		SWITCH_STR_END
+		string valStr(value);
+		return valStr.substr(1, valStr.size()-2);
 	}
-	return false;
+	else return string(value);
 }
-#define toEase(str) (isEase(str) ? "oEase." : "") + (str ? str : "")
 
-static bool isOrientation(const char* str)
+#if defined(COCOS2D_DEBUG) && COCOS2D_DEBUG > 0
+	#define toVal(s,def) (oVal(#s,s,def).c_str())
+	#define Val(s) (oVal(#s,s,nullptr).c_str())
+#else
+	#define toVal(s,def) (oVal(nullptr,s,def).c_str())
+	#define Val(s) (oVal(nullptr,s,nullptr).c_str())
+#endif
+
+static const char* _toBoolean(const char* str)
 {
-	if (str)
-	{
-		SWITCH_STR_START(str)
-		{
-			CASE_STR(Left) return true;
-			CASE_STR(Right) return true;
-			CASE_STR(Up) return true;
-			CASE_STR(Down) return true;
-		}
-		SWITCH_STR_END
-	}
-	return false;
+	if (strcmp(str,"True") == 0) return "true";
+	if (strcmp(str,"False") == 0) return "false";
+	return str;
 }
-#define toOrientation(str) (isOrientation(str) ? "CCOrientation." : "") + (str ? str : "CCOrientation.Down")
 
-static bool isTextAlign(const char* str)
-{
-	if (str)
-	{
-		SWITCH_STR_START(str)
-		{
-			CASE_STR(HCenter) return true;
-			CASE_STR(HLeft) return true;
-			CASE_STR(HRight) return true;
-			CASE_STR(VBottom) return true;
-			CASE_STR(VCenter) return true;
-			CASE_STR(VTop) return true;
-		}
-		SWITCH_STR_END
-	}
-	return false;
-}
-#define toTextAlign(str) (isTextAlign(str) ? "CCTextAlign." : "") << (str ? str : "CCTextAlign.HLeft")
-
-#define toText(text) "(__data and __data[\"" << (text ? text : "") << "\"] or \"" << (text ? text : "") << "\")"
+#define toBoolean(x) (_toBoolean(toVal(x,"False")))
+#define toEase(x) (isVal(x) ? string("oEase.")+Val(x) : Val(x))
+#define toGroup(x) (isVal(x) ? string("oData.Group")+Val(x) : Val(x))
+#define toBlendFunc(x) (isVal(x) ? string("ccBlendFunc.")+toVal(x,"Zero") : Val(x))
+#define toOrientation(x) (isVal(x) ? string("CCOrientation.")+toVal(x,"Down") : Val(x))
+#define toTextAlign(x) (isVal(x) ? string("CCTextAlign.")+toVal(x,"HLeft") : Val(x))
+#define toText(x) (isVal(x) ? string("\"")+Val(x)+"\"" : Val(x))
 
 #define Self_Check(name) \
 	if (self.empty()) { self = getUsableName(#name); names.insert(self); }\
@@ -152,7 +75,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(X) { x = atts[++i]; break; }\
 	CASE_STR(Y) { y = atts[++i]; break; }
 #define Vec2_Handle \
-	items.push(string("oVec2(")+(x ? x : "0")+","+(y ? y : "0")+")");
+	items.push(string("oVec2(")+toVal(x,"0")+","+toVal(y,"0")+")");
 
 // Object
 #define Object_Define \
@@ -170,7 +93,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Rate) { rate = atts[++i]; break; }
 #define Speed_Create
 #define Speed_Handle \
-	oFunc func = {"CCSpeed(", (rate ? string(",")+rate+")" : ",1)")};\
+	oFunc func = {"CCSpeed(", string(",")+toVal(rate,"1")+")"};\
 	funcs.push(func);\
 	items.push("");
 #define Speed_Finish
@@ -184,7 +107,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Times) { times = atts[++i]; break; }
 #define Loop_Create
 #define Loop_Handle \
-	oFunc func = {(times ? "CCRepeat(" : "CCRepeatForever("), (times ? string(",")+times+")" : ")")};\
+	oFunc func = {(times ? "CCRepeat(" : "CCRepeatForever("), (times ? string(",")+Val(times)+")" : ")")};\
 	funcs.push(func);\
 	items.push("");
 #define Loop_Finish
@@ -198,10 +121,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Time) { time = atts[++i]; break; }
 #define Delay_Create
 #define Delay_Handle \
-	string str("CCDelay(");\
-	if (time) str += time; else str += "0";\
-	str += ")";\
-	oFunc func = {str,""};\
+	oFunc func = {string("CCDelay(")+toVal(time,"0")+")",""};\
 	funcs.push(func);
 #define Delay_Finish
 
@@ -220,7 +140,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Ease) { ease = atts[++i]; break; }
 #define Scale_Create
 #define Scale_Handle \
-	oFunc func = {string("oScale(")+(time ? time : "0")+","+(x ? x : "")+","+(y ? y : "")+(ease ? "," : "")+toEase(ease)+")",""};\
+	oFunc func = {string("oScale(")+toVal(time,"0")+","+Val(x)+","+Val(y)+(ease ? string(",")+toEase(ease) : "")+")",""};\
 	funcs.push(func);
 #define Scale_Finish
 
@@ -239,7 +159,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Ease) { ease = atts[++i]; break; }
 #define Move_Create
 #define Move_Handle \
-	oFunc func = {string("oPos(")+(time ? time : "0")+","+(x ? x : "")+","+(y ? y : "")+(ease ? "," : "")+toEase(ease)+")",""};\
+	oFunc func = {string("oPos(")+toVal(time,"0")+","+Val(x)+","+Val(y)+(ease ? string(",")+toEase(ease) : "")+")",""};\
 	funcs.push(func);
 #define Move_Finish
 
@@ -256,7 +176,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Ease) { ease = atts[++i]; break; }
 #define Rotate_Create
 #define Rotate_Handle \
-	oFunc func = {string("oRotate(")+(time ? time : "0")+","+(angle ? angle : "")+(ease ? "," : "")+toEase(ease)+")",""};\
+	oFunc func = {string("oRotate(")+toVal(time,"0")+","+Val(angle)+(ease ? string(",")+toEase(ease) : "")+")",""};\
 	funcs.push(func);
 #define Rotate_Finish
 
@@ -273,7 +193,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Ease) { ease = atts[++i]; break; }
 #define Opacity_Create
 #define Opacity_Handle \
-	oFunc func = {string("oOpacity(")+(time ? time : "0")+","+(alpha ? alpha : "")+(ease ? "," : "")+toEase(ease)+")",""};\
+	oFunc func = {string("oOpacity(")+toVal(time,"0")+","+Val(alpha)+(ease ? string(",")+toEase(ease) : "")+")",""};\
 	funcs.push(func);
 #define Opacity_Finish
 
@@ -292,7 +212,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Ease) { ease = atts[++i]; break; }
 #define Skew_Create
 #define Skew_Handle \
-	oFunc func = {string("oSkew(")+(time ? time : "0")+","+(x ? x : "")+","+(y ? y : "")+(ease ? "," : "")+toEase(ease)+")",""};\
+	oFunc func = {string("oSkew(")+toVal(time,"0")+","+Val(x)+","+Val(y)+(ease ? string(",")+toEase(ease) : "")+")",""};\
 	funcs.push(func);
 #define Skew_Finish
 
@@ -309,7 +229,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Ease) { ease = atts[++i]; break; }
 #define Roll_Create
 #define Roll_Handle \
-	oFunc func = {string("oRoll(")+(time ? time : "0")+","+(angle ? angle : "")+(ease ? "," : "")+toEase(ease)+")",""};\
+	oFunc func = {string("oRoll(")+toVal(time,"0")+","+Val(angle)+(ease ? string(",")+toEase(ease) : "")+")",""};\
 	funcs.push(func);
 #define Roll_Finish
 
@@ -330,7 +250,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Jumps) { jumps = atts[++i]; break; }
 #define Jump_Create
 #define Jump_Handle \
-	oFunc func = {string("CCJumpTo(")+(time ? time : "0")+","+(x ? x : "")+","+(y ? y : "")+","+(height ? height : "")+","+(jumps ? jumps : "1")+")",""};\
+	oFunc func = {string("CCJumpTo(")+toVal(time,"0")+","+Val(x)+","+Val(y)+","+Val(height)+","+toVal(jumps,"1")+")",""};\
 	funcs.push(func);
 #define Jump_Finish
 
@@ -355,7 +275,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Y2) { secondY = atts[++i]; break; }
 #define Bezier_Create
 #define Bezier_Handle \
-	oFunc func = {string("CCBezierTo(")+(time ? time : "0")+",oVec2("+(x ? x : "")+","+(y ? y : "")+"),oVec2("+(firstX ? firstX : "")+","+(firstY ? firstY : "")+"),oVec2("+(secondX ? secondX : "")+","+(secondY ? secondY : "")+"))",""};\
+	oFunc func = {string("CCBezierTo(")+toVal(time,"0")+",oVec2("+Val(x)+","+Val(y)+"),oVec2("+Val(firstX)+","+Val(firstY)+"),oVec2("+Val(secondX)+","+Val(secondY)+"))",""};\
 	funcs.push(func);
 #define Bezier_Finish
 
@@ -370,7 +290,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Blinks) { blinks = atts[++i]; break; }
 #define Blink_Create
 #define Blink_Handle \
-	oFunc func = {string("CCBlink(")+(time ? time : "0")+","+(blinks ? blinks : "1")+")",""};\
+	oFunc func = {string("CCBlink(")+toVal(time,"0")+","+toVal(blinks,"1")+")",""};\
 	funcs.push(func);
 #define Blink_Finish
 
@@ -385,7 +305,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Color) { color = atts[++i]; break; }
 #define Tint_Create
 #define Tint_Handle \
-	oFunc func = {string("CCTintTo(")+(time ? time : "0")+","+(color ? color : "0xffffffff")+")",""};\
+	oFunc func = {string("CCTintTo(")+toVal(time,"0")+","+toVal(color,"0xffffffff")+")",""};\
 	funcs.push(func);
 #define Tint_Finish
 
@@ -423,9 +343,9 @@ static bool isTextAlign(const char* str)
 #define Flip_Create
 #define Flip_Handle \
 	oFunc func;\
-	if (flipX && flipY) func.begin = string("CCSpawn({CCFlipX(")+flipX+"),CCFlipY("+flipY+")})";\
-	else if (flipX && !flipY) func.begin = string("CCFlipX(")+flipX+")";\
-	else if (!flipX && flipY) func.begin = string("CCFlipY(")+flipY+")";\
+	if (flipX && flipY) func.begin = string("CCSpawn({CCFlipX(")+Val(flipX)+"),CCFlipY("+Val(flipY)+")})";\
+	else if (flipX && !flipY) func.begin = string("CCFlipX(")+Val(flipX)+")";\
+	else if (!flipX && flipY) func.begin = string("CCFlipY(")+Val(flipY)+")";\
 	funcs.push(func);
 #define Flip_Finish
 
@@ -461,7 +381,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(DeltaAngleX) { deltaAngleX = atts[++i]; break; }
 #define Orbit_Create
 #define Orbit_Handle \
-	oFunc func = {string("CCOrbitCamera(")+(time ? time : "0")+","+(startRadius ? startRadius : "0")+","+(deltaRadius ? deltaRadius : "0")+","+(startAngleZ ? startAngleZ : "0")+","+(deltaAngleZ ? deltaAngleZ : "0")+","+(startAngleX ? startAngleX : "0")+","+(deltaAngleX ? deltaAngleX : "0")+")",""};\
+	oFunc func = {string("CCOrbitCamera(")+toVal(time,"0")+","+toVal(startRadius,"0")+","+toVal(deltaRadius,"0")+","+toVal(startAngleZ,"0")+","+toVal(deltaAngleZ,"0")+","+toVal(startAngleX,"0")+","+toVal(deltaAngleX,"0")+")",""};\
 	funcs.push(func);
 #define Orbit_Finish
 
@@ -476,7 +396,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Tension) { tension = atts[++i]; break; }
 #define CardinalSpline_Create
 #define CardinalSpline_Handle \
-	oFunc func = {string("CCCardinalSplineTo(")+(time ? time : 0)+",{",string("},")+(tension ? tension : "0")+")"};\
+	oFunc func = {string("CCCardinalSplineTo(")+toVal(time,"0")+",{",string("},")+toVal(tension,"0")+")"};\
 	funcs.push(func);\
 	items.push("CardinalSpline");
 #define CardinalSpline_Finish
@@ -490,7 +410,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Time) { time = atts[++i]; break; }
 #define Grid_FlipX3D_Create
 #define Grid_FlipX3D_Handle \
-	oFunc func = {string("CCGrid:flipX3D(")+(time ? time : "0")+")",""};\
+	oFunc func = {string("CCGrid:flipX3D(")+toVal(time,"0")+")",""};\
 	funcs.push(func);
 #define Grid_FlipX3D_Finish
 
@@ -503,7 +423,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Time) { time = atts[++i]; break; }
 #define Grid_FlipY3D_Create
 #define Grid_FlipY3D_Handle \
-	oFunc func = {string("CCGrid:flipY3D(")+(time ? time : "0")+")",""};\
+	oFunc func = {string("CCGrid:flipY3D(")+toVal(time,"0")+")",""};\
 	funcs.push(func);
 #define Grid_FlipY3D_Finish
 
@@ -526,8 +446,8 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Radius) { radius = atts[++i]; break; }
 #define Grid_Lens3D_Create
 #define Grid_Lens3D_Handle \
-	oFunc func = {string("CCGrid:lens3D(")+(time ? time : "0")+\
-	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),oVec2("+(x ? x : "0")+","+(y ? y : "0")+"),"+(radius ? radius : "0")+")",""};\
+	oFunc func = {string("CCGrid:lens3D(")+toVal(time,"0")+\
+	",CCSize("+toVal(gridX,"0")+","+toVal(gridY,"0")+"),oVec2("+toVal(x,"0")+","+toVal(y,"0")+"),"+toVal(radius,"0")+")",""};\
 	funcs.push(func);
 #define Grid_Lens3D_Finish
 
@@ -548,9 +468,9 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Amplitude) { amplitude = atts[++i]; break; }
 #define Grid_Liquid_Create
 #define Grid_Liquid_Handle \
-	oFunc func = {string("CCGrid:liquid(")+(time ? time : "0")+\
-	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
-	(waves ? waves : "0")+","+(amplitude ? amplitude : "0")+")",""};\
+	oFunc func = {string("CCGrid:liquid(")+toVal(time,"0")+\
+	",CCSize("+toVal(gridX,"0")+","+toVal(gridY,"0")+"),"+\
+	toVal(waves,"0")+","+toVal(amplitude,"0")+")",""};\
 	funcs.push(func);
 #define Grid_Liquid_Finish
 
@@ -563,7 +483,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Times) { times = atts[++i]; break; }
 #define Grid_Reuse_Create
 #define Grid_Reuse_Handle \
-	oFunc func = {string("CCGrid:reuse(")+(times ? times : "0")+")",""};\
+	oFunc func = {string("CCGrid:reuse(")+toVal(times,"0")+")",""};\
 	funcs.push(func);
 #define Grid_Reuse_Finish
 
@@ -590,9 +510,9 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Amplitude) { amplitude = atts[++i]; break; }
 #define Grid_Ripple3D_Create
 #define Grid_Ripple3D_Handle \
-	oFunc func = {string("CCGrid:ripple3D(")+(time ? time : "0")+\
-	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),oVec2("+(x ? x : "0")+","+(y ? y : "0")+"),"+(radius ? radius : "0")+","+\
-	(waves ? waves : "0")+","+(amplitude ? amplitude : "0")+")",""};\
+	oFunc func = {string("CCGrid:ripple3D(")+toVal(time,"0")+\
+	",CCSize("+toVal(gridX,"0")+","+toVal(gridY,"0")+"),oVec2("+toVal(x,"0")+","+toVal(y,"0")+"),"+toVal(radius,"0")+","+\
+	toVal(waves,"0")+","+toVal(amplitude,"0")+")",""};\
 	funcs.push(func);
 #define Grid_Ripple3D_Finish
 
@@ -613,9 +533,9 @@ static bool isTextAlign(const char* str)
 	CASE_STR(ShakeZ) { shakeZ = atts[++i]; break; }
 #define Grid_Shaky3D_Create
 #define Grid_Shaky3D_Handle \
-	oFunc func = {string("CCGrid:shaky3D(")+(time ? time : "0")+\
-	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
-	(range ? range : "0")+","+toBoolean(shakeZ)+")",""};\
+	oFunc func = {string("CCGrid:shaky3D(")+toVal(time,"0")+\
+	",CCSize("+toVal(gridX,"0")+","+toVal(gridY,"0")+"),"+\
+	toVal(range,"0")+","+toBoolean(shakeZ)+")",""};\
 	funcs.push(func);
 #define Grid_Shaky3D_Finish
 
@@ -651,9 +571,9 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Amplitude) { amplitude = atts[++i]; break; }
 #define Grid_Twirl_Create
 #define Grid_Twirl_Handle \
-	oFunc func = {string("CCGrid:twirl(")+(time ? time : "0")+\
-	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),oVec2("+(x ? x : "0")+","+(y ? y : "0")+"),"+\
-	(twirls ? twirls : "0")+","+(amplitude ? amplitude : "0")+")",""};\
+	oFunc func = {string("CCGrid:twirl(")+toVal(time,"0")+\
+	",CCSize("+toVal(gridX,"0")+","+toVal(gridY,"0")+"),oVec2("+toVal(x,"0")+","+toVal(y,"0")+"),"+\
+	toVal(twirls,"0")+","+toVal(amplitude,"0")+")",""};\
 	funcs.push(func);
 #define Grid_Twirl_Finish
 
@@ -678,9 +598,9 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Vertical) { vertical = atts[++i]; break; }
 #define Grid_Wave_Create
 #define Grid_Wave_Handle \
-	oFunc func = {string("CCGrid:waves(")+(time ? time : "0")+\
-	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
-	(waves ? waves : "0")+","+(amplitude ? amplitude : "0")+","+\
+	oFunc func = {string("CCGrid:waves(")+toVal(time,"0")+\
+	",CCSize("+toVal(gridX,"0")+","+toVal(gridY,"0")+"),"+\
+	toVal(waves,"0")+","+toVal(amplitude,"0")+","+\
 	toBoolean(horizontal)+","+toBoolean(vertical)+")",""};\
 	funcs.push(func);
 #define Grid_Wave_Finish
@@ -702,9 +622,9 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Amplitude) { amplitude = atts[++i]; break; }
 #define Grid_Wave3D_Create
 #define Grid_Wave3D_Handle \
-	oFunc func = {string("CCGrid:waves3D(")+(time ? time : "0")+\
-	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
-	(waves ? waves : "0")+","+(amplitude ? amplitude : "0")+")",""};\
+	oFunc func = {string("CCGrid:waves3D(")+toVal(time,"0")+\
+	",CCSize("+toVal(gridX,"0")+","+toVal(gridY,"0")+"),"+\
+	toVal(waves,"0")+","+toVal(amplitude,"0")+")",""};\
 	funcs.push(func);
 #define Grid_Wave3D_Finish
 
@@ -723,8 +643,8 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Dir) { orientation = atts[++i]; break; }
 #define Tile_FadeOut_Create
 #define Tile_FadeOut_Handle \
-	oFunc func = {string("CCTile:fadeOut(")+(time ? time : "0")+\
-	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
+	oFunc func = {string("CCTile:fadeOut(")+toVal(time,"0")+\
+	",CCSize("+toVal(gridX,"0")+","+toVal(gridY,"0")+"),"+\
 	toOrientation(orientation)+")",""};\
 	funcs.push(func);
 #define Tile_FadeOut_Finish
@@ -746,9 +666,9 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Amplitude) { amplitude = atts[++i]; break; }
 #define Tile_Jump3D_Create
 #define Tile_Jump3D_Handle \
-	oFunc func = {string("CCTile:jump3D(")+(time ? time : "0")+\
-	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
-	(numberOfJumps ? numberOfJumps : "0")+","+(amplitude ? amplitude : "0")+")",""};\
+	oFunc func = {string("CCTile:jump3D(")+toVal(time,"0")+\
+	",CCSize("+toVal(gridX,"0")+","+toVal(gridY,"0")+"),"+\
+	toVal(numberOfJumps,"0")+","+toVal(amplitude,"0")+")",""};\
 	funcs.push(func);
 #define Tile_Jump3D_Finish
 
@@ -769,9 +689,9 @@ static bool isTextAlign(const char* str)
 	CASE_STR(ShakeZ) { shakeZ = atts[++i]; break; }
 #define Tile_Shaky3D_Create
 #define Tile_Shaky3D_Handle \
-	oFunc func = {string("CCTile:shaky3D(")+(time ? time : "0")+\
-	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
-	(range ? range : "0")+","+toBoolean(shakeZ)+")",""};\
+	oFunc func = {string("CCTile:shaky3D(")+toVal(time,"0")+\
+	",CCSize("+toVal(gridX,"0")+","+toVal(gridY,"0")+"),"+\
+	toVal(range,"0")+","+toBoolean(shakeZ)+")",""};\
 	funcs.push(func);
 #define Tile_Shaky3D_Finish
 
@@ -788,8 +708,8 @@ static bool isTextAlign(const char* str)
 	CASE_STR(GridY) { gridY = atts[++i]; break; }
 #define Tile_Shuffle_Create
 #define Tile_Shuffle_Handle \
-	oFunc func = {string("CCTile:shuffle(")+(time ? time : "0")+\
-	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"))",""};\
+	oFunc func = {string("CCTile:shuffle(")+toVal(time,"0")+\
+	",CCSize("+toVal(gridX,"0")+","+toVal(gridY,"0")+"))",""};\
 	funcs.push(func);
 #define Tile_Shuffle_Finish
 
@@ -803,7 +723,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Columns) { cols = atts[++i]; break; }
 #define Tile_SplitCols_Create
 #define Tile_SplitCols_Handle \
-	oFunc func = {string("CCTile:splitCols(")+(time ? time : "0")+","+(cols ? cols : "0")+")",""};\
+	oFunc func = {string("CCTile:splitCols(")+toVal(time,"0")+","+toVal(cols,"0")+")",""};\
 	funcs.push(func);
 #define Tile_SplitCols_Finish
 
@@ -818,7 +738,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Rows) { rows = atts[++i]; break; }
 #define Tile_SplitRows_Create
 #define Tile_SplitRows_Handle \
-	oFunc func = {string("CCTile:splitRows(")+(time ? time : "0")+","+(rows ? rows : "0")+")",""};\
+	oFunc func = {string("CCTile:splitRows(")+toVal(time,"0")+","+toVal(rows,"0")+")",""};\
 	funcs.push(func);
 #define Tile_SplitRows_Finish
 
@@ -835,8 +755,8 @@ static bool isTextAlign(const char* str)
 	CASE_STR(GridY) { gridY = atts[++i]; break; }
 #define Tile_TurnOff_Create
 #define Tile_TurnOff_Handle \
-	oFunc func = {string("CCTile:turnOff(")+(time ? time : "0")+\
-	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"))",""};\
+	oFunc func = {string("CCTile:turnOff(")+toVal(time,"0")+\
+	",CCSize("+toVal(gridX,"0")+","+toVal(gridY,"0")+"))",""};\
 	funcs.push(func);
 #define Tile_TurnOff_Finish
 
@@ -857,9 +777,9 @@ static bool isTextAlign(const char* str)
 	CASE_STR(Amplitude) { amplitude = atts[++i]; break; }
 #define Tile_Waves3D_Create
 #define Tile_Waves3D_Handle \
-	oFunc func = {string("CCTile:waves3D(")+(time ? time : "0")+\
-	",CCSize("+(gridX ? gridX : "0")+","+(gridY ? gridY : "0")+"),"+\
-	(waves ? waves : "0")+","+(amplitude ? amplitude : "0")+")",""};\
+	oFunc func = {string("CCTile:waves3D(")+toVal(time,"0")+\
+	",CCSize("+toVal(gridX,"0")+","+toVal(gridY,"0")+"),"+\
+	toVal(waves,"0")+","+toVal(amplitude,"0")+")",""};\
 	funcs.push(func);
 #define Tile_Waves3D_Finish
 
@@ -890,10 +810,10 @@ static bool isTextAlign(const char* str)
 		{\
 			stream << parent.name << ":addChild(" << self;\
 			if (zOrder) {\
-				stream << ',' << zOrder;\
-				if (tag) stream << ',' << tag;\
+				stream << ',' << Val(zOrder);\
+				if (tag) stream << ',' << Val(tag);\
 			}\
-			else if (tag) stream << ",0," << tag;\
+			else if (tag) stream << ",0," << Val(tag);\
 			stream << ")\n";\
 			if (hasSelf)\
 			{\
@@ -962,27 +882,27 @@ static bool isTextAlign(const char* str)
 #define Node_Create \
 	stream << "local " << self << " = CCNode()\n";
 #define Node_Handle \
-	if (anchorX && anchorY) stream << self << ".anchor = oVec2(" << anchorX << ',' << anchorY << ")\n";\
-	else if (anchorX && !anchorY) stream << self << ".anchor = oVec2(" << anchorX << ',' << self << ".anchor.y)\n";\
-	else if (!anchorX && anchorY) stream << self << ".anchor = oVec2(" << self << ".anchor.x," << anchorY << ")\n";\
-	if (x) stream << self << ".positionX = " << x << '\n';\
-	if (y) stream << self << ".positionY = " << y << '\n';\
-	if (z) stream << self << ".positionZ = " << z << '\n';\
+	if (anchorX && anchorY) stream << self << ".anchor = oVec2(" << Val(anchorX) << ',' << Val(anchorY) << ")\n";\
+	else if (anchorX && !anchorY) stream << self << ".anchor = oVec2(" << Val(anchorX) << ',' << self << ".anchor.y)\n";\
+	else if (!anchorX && anchorY) stream << self << ".anchor = oVec2(" << self << ".anchor.x," << Val(anchorY) << ")\n";\
+	if (x) stream << self << ".positionX = " << Val(x) << '\n';\
+	if (y) stream << self << ".positionY = " << Val(y) << '\n';\
+	if (z) stream << self << ".positionZ = " << Val(z) << '\n';\
 	if (passColor) stream << self << ".cascadeColor = " << toBoolean(passColor) << '\n';\
 	if (passOpacity) stream << self << ".cascadeOpacity = " << toBoolean(passOpacity) << '\n';\
-	if (color) stream << self << ".color = ccColor3(" << color << ")\n";\
-	if (opacity) stream << self << ".opacity = " << opacity << '\n';\
-	if (angle) stream << self << ".angle = " << angle << '\n';\
-	if (scaleX) stream << self << ".scaleX = " << scaleX << '\n';\
-	if (scaleY) stream << self << ".scaleY = " << scaleY << '\n';\
-	if (scheduler) stream << self << ".scheduler = " << scheduler << '\n';\
-	if (skewX) stream << self << ".skewX = " << skewX << '\n';\
-	if (skewY) stream << self << ".skewY = " << skewY << '\n';\
-	if (transformTarget) stream << self << ".transformTarget = " << transformTarget << '\n';\
+	if (color) stream << self << ".color = ccColor3(" << Val(color) << ")\n";\
+	if (opacity) stream << self << ".opacity = " << Val(opacity) << '\n';\
+	if (angle) stream << self << ".angle = " << Val(angle) << '\n';\
+	if (scaleX) stream << self << ".scaleX = " << Val(scaleX) << '\n';\
+	if (scaleY) stream << self << ".scaleY = " << Val(scaleY) << '\n';\
+	if (scheduler) stream << self << ".scheduler = " << Val(scheduler) << '\n';\
+	if (skewX) stream << self << ".skewX = " << Val(skewX) << '\n';\
+	if (skewY) stream << self << ".skewY = " << Val(skewY) << '\n';\
+	if (transformTarget) stream << self << ".transformTarget = " << Val(transformTarget) << '\n';\
 	if (visible) stream << self << ".visible = " << toBoolean(visible) << '\n';\
-	if (width && height) stream << self << ".contentSize = CCSize(" << width << ',' << height << ")\n";\
-	else if (width && !height) stream << self << ".contentSize = CCSize(" << width << ',' << self << ".contentSize.height)\n";\
-	else if (!width && height) stream << self << ".contentSize = CCSize(" << self << ".contentSize.width," << height << ")\n";
+	if (width && height) stream << self << ".contentSize = CCSize(" << Val(width) << ',' << Val(height) << ")\n";\
+	else if (width && !height) stream << self << ".contentSize = CCSize(" << Val(width) << ',' << self << ".contentSize.height)\n";\
+	else if (!width && height) stream << self << ".contentSize = CCSize(" << self << ".contentSize.width," << Val(height) << ")\n";
 #define Node_Finish \
 	Add_To_Parent
 
@@ -999,8 +919,8 @@ static bool isTextAlign(const char* str)
 	stream << "local " << self << " = oNode3D()\n";
 #define Node3D_Handle \
 	Node_Handle\
-	if (angleX) stream << self << ".angleX = " << angleX << '\n';\
-	if (angleY) stream << self << ".angleY = " << angleY << '\n';
+	if (angleX) stream << self << ".angleX = " << Val(angleX) << '\n';\
+	if (angleY) stream << self << ".angleY = " << Val(angleY) << '\n';
 #define Node3D_Finish \
 	Add_To_Parent
 
@@ -1043,8 +963,8 @@ static bool isTextAlign(const char* str)
 	if (!elementStack.empty())\
 	{\
 		stream << elementStack.top().name <<\
-		":drawDot(oVec2(" << (x ? x : "0") << ',' << (y ? y : "0") << ")," <<\
-		(radius ? radius : "0") << ",ccColor4(" << (color ? color : "") << "))\n\n";\
+		":drawDot(oVec2(" << toVal(x,"0") << ',' << toVal(y,"0") << ")," <<\
+		toVal(radius,"0.5") << ",ccColor4(" << Val(color) << "))\n\n";\
 	}
 
 // DrawNode.Polygon
@@ -1060,7 +980,7 @@ static bool isTextAlign(const char* str)
 	if (!elementStack.empty())\
 	{\
 		oFunc func = {elementStack.top().name+":drawPolygon({",\
-		string("},ccColor4(")+(fillColor ? fillColor : "")+"),"+(borderWidth ? borderWidth : "0")+",ccColor4("+(borderColor ? borderColor : "")+"))\n\n"};\
+		string("},ccColor4(")+Val(fillColor)+"),"+toVal(borderWidth,"0")+",ccColor4("+toVal(borderColor,"")+"))\n\n"};\
 		funcs.push(func);\
 		items.push("Polygon");\
 	}
@@ -1084,9 +1004,8 @@ static bool isTextAlign(const char* str)
 	if (!elementStack.empty())\
 	{\
 		stream << elementStack.top().name <<\
-		":drawSegment(oVec2(" << (beginX ? beginX : "0") << ',' << (beginY ? beginY : "0") << "),oVec2(" <<\
-		(endX ? endX : "0") << ',' << (endY ? endY : "0") << ")," << (radius ? radius : "0.5") << ",ccColor4(" <<\
-		(color ? color : "") << "))\n\n";\
+		":drawSegment(oVec2(" << toVal(beginX,"0") << ',' << toVal(beginY,"0") << "),oVec2(" <<\
+		toVal(endX,"0") << ',' << toVal(endY,"0") << ")," << toVal(radius,"0.5") << ",ccColor4(" << toVal(color,"") << "))\n\n";\
 	}
 
 // Line
@@ -1117,7 +1036,7 @@ static bool isTextAlign(const char* str)
 	stream << "local " << self << " = CCClipNode()\n";
 #define ClipNode_Handle \
 	Node_Handle\
-	if (alphaThreshold) stream << self << ".alphaThreshold = " << alphaThreshold << '\n';\
+	if (alphaThreshold) stream << self << ".alphaThreshold = " << Val(alphaThreshold) << '\n';\
 	if (inverted) stream << self << ".inverted = " << toBoolean(inverted) << '\n';
 #define ClipNode_Finish \
 	Add_To_Parent
@@ -1164,7 +1083,7 @@ static bool isTextAlign(const char* str)
 	stream << "local " << self << " = CCLabelBMFont(" << toText(text);\
 	if (fntFile) stream << "," << toText(fntFile);\
 	else stream << ",";\
-	stream << ',' << (fontWidth ? fontWidth : "CCLabelBMFont.AutomaticWidth") << "," << toTextAlign(alignment) << ',' << (imageOffset ? imageOffset : "oVec2.zero") << ")\n";
+	stream << ',' << toVal(fontWidth,"CCLabelBMFont.AutomaticWidth") << "," << toTextAlign(alignment) << ',' << toVal(imageOffset,"oVec2.zero") << ")\n";
 #define LabelBMFont_Handle \
 	Node_Handle
 #define LabelBMFont_Finish \
@@ -1182,7 +1101,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(FontName) { fontName = atts[++i]; break; }\
 	CASE_STR(FontSize) { fontSize = atts[++i]; break; }
 #define LabelTTF_Create \
-	stream << "local " << self << " = CCLabelTTF(" << toText(text) << ',' << toText(fontName) << ',' << (fontSize ? fontSize : "") << ")\n";
+	stream << "local " << self << " = CCLabelTTF(" << toText(text) << ',' << toText(fontName) << ',' << Val(fontSize) << ")\n";
 #define LabelTTF_Handle \
 	Node_Handle
 #define LabelTTF_Finish \
@@ -1258,7 +1177,7 @@ static bool isTextAlign(const char* str)
 	if (accelerometerEnabled) stream << self << ".accelerometerEnabled = " << toBoolean(accelerometerEnabled) << '\n';\
 	if (keypadEnabled) stream << self << ".keypadEnabled = " << toBoolean(keypadEnabled) << '\n';\
 	if (multiTouches) stream << self << ".multiTouches = " << toBoolean(multiTouches) << '\n';\
-	if (touchPriority) stream << self << ".touchPriority = " << touchPriority << '\n';\
+	if (touchPriority) stream << self << ".touchPriority = " << Val(touchPriority) << '\n';\
 	if (swallowTouches) stream << self << ".swallowTouches = " << toBoolean(swallowTouches) << '\n';\
 	if (touchEnabled) stream << self << ".touchEnabled = " << toBoolean(touchEnabled) << '\n';
 #define Layer_Finish \
@@ -1274,7 +1193,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(BlendSrc) { blendFuncSrc = atts[++i]; break; }\
 	CASE_STR(BlendDst) { blendFuncDst = atts[++i]; break; }
 #define LayerColor_Create \
-	stream << "local " << self << " = CCLayerColor(ccColor4(" << (color ? color : "") << "))\n";\
+	stream << "local " << self << " = CCLayerColor(ccColor4(" << toVal(color,"") << "))\n";\
 	color = nullptr;
 #define LayerColor_Handle \
 	Layer_Handle\
@@ -1301,12 +1220,7 @@ static bool isTextAlign(const char* str)
 	CASE_STR(VectorX) { vectorX = atts[++i]; break; }\
 	CASE_STR(VectorY) { vectorY = atts[++i]; break; }
 #define LayerGradient_Create \
-	stream << "local " << self << " = CCLayerGradient(";\
-	if (!start || !start[0]) start = "0xffffffff";\
-	if (!end || !end[0]) end = "0xffffffff";\
-	if (!vectorX || !vectorX[0]) vectorX = "0";\
-	if (!vectorY || !vectorY[0]) vectorY = "0.5";\
-	stream << start << ',' << end << ',' << "oVec2(" << vectorX << ',' << vectorY << ")\n";
+	stream << "local " << self << " = CCLayerGradient(ccColor4(" << toVal(start,"0xffffffff") << "),ccColor4(" << toVal(end,"0xffffffff") << ")," << "oVec2(" << toVal(vectorX,"0") << ',' << toVal(vectorY,"0.5") << ")\n";
 #define LayerGradient_Handle \
 	LayerColor_Handle
 #define LayerGradient_Finish \
@@ -1362,14 +1276,14 @@ static bool isTextAlign(const char* str)
 #define World_Handle \
 	Node_Handle\
 	if (gravityX && gravityY) stream << self << ".gravity = oVec2("\
-									<< gravityX << ',' << gravityY << ")\n";\
+									<< Val(gravityX) << ',' << Val(gravityY) << ")\n";\
 	else if (gravityX && !gravityY) stream << self << ".gravity = oVec2("\
-									<< gravityX << ',' << self << ".gravity.y)\n";\
+									<< Val(gravityX) << ',' << self << ".gravity.y)\n";\
 	else if (!gravityX && gravityY) stream << self << ".gravity = oVec2(" << self\
-									<< ".gravity.x," << gravityY << ")\n";\
+									<< ".gravity.x," << Val(gravityY) << ")\n";\
 	if (showDebug) stream << self << ".showDebug = " << toBoolean(showDebug) << '\n';\
-	if (velocityIter || positionIter) stream << self << ":setIterations(" << (velocityIter ? velocityIter : "8")\
-											<< ',' << (positionIter ? positionIter : "3") << ")\n";
+	if (velocityIter || positionIter) stream << self << ":setIterations(" << toVal(velocityIter,"8")\
+											<< ',' << toVal(positionIter,"3") << ")\n";
 #define World_Finish \
 	Add_To_Parent
 
@@ -1399,7 +1313,7 @@ static bool isTextAlign(const char* str)
 	{\
 		stream << elementStack.top().name <<\
 		":setShouldContact(" << toGroup(groupA) << ',' << toGroup(groupB) << ',' <<\
-		(enabled ? toBoolean(enabled) : "") << ")\n\n";\
+		(enabled && enabled[0] ? toBoolean(enabled) : "true") << ")\n\n";\
 	}
 
 // Model
@@ -1423,11 +1337,11 @@ static bool isTextAlign(const char* str)
 	stream << "local " << self << " = oModel(" << toText(filename) << ")\n";
 #define Model_Handle \
 	Node_Handle\
-	if (look) stream << self << ".look = \"" << look << "\"\n";\
+	if (look) stream << self << ".look = \"" << Val(look) << "\"\n";\
 	if (loop) stream << self << ".loop = " << toBoolean(loop) << '\n';\
-	if (play) stream << self << ":play(\"" << play << "\")\n";\
+	if (play) stream << self << ":play(\"" << Val(play) << "\")\n";\
 	if (faceRight) stream << self << ".faceRight = " << toBoolean(faceRight) << '\n';\
-	if (speed) stream << self << ".speed = " << speed << '\n';
+	if (speed) stream << self << ".speed = " << Val(speed) << '\n';
 #define Model_Finish \
 	Add_To_Parent
 
@@ -1444,8 +1358,8 @@ static bool isTextAlign(const char* str)
 	CASE_STR(World) { world = atts[++i]; break; }
 #define Body_Create \
 	stream << "local " << self << " = oBody(" << toText(filename)\
-			<< ',' << (world ? world : "") << ",oVec2(" << (x ? x : "0") << ',' << (y ? y : "0") << "),"\
-			<< (angle ? angle : "0") << ")\n";\
+			<< ',' << Val(world) << ",oVec2(" << toVal(x,"0") << ',' << toVal(y,"0") << "),"\
+			<< toVal(angle,"0") << ")\n";\
 	x = y = angle = nullptr;
 #define Body_Handle \
 	Node_Handle\
@@ -1496,8 +1410,30 @@ static bool isTextAlign(const char* str)
 #define Import_Create \
 	if (moduleName) {\
 		string mod(moduleName);\
-		int pos = mod.rfind('.');\
-		stream << "local " << (name ? name : (pos == string::npos ? moduleName : mod.substr(pos+1).c_str()))<< " = require(\"" << moduleName << "\")\n\n";}
+		size_t pos = mod.rfind('.');\
+		requires << "local " << (name ? name : (pos == string::npos ? moduleName : mod.substr(pos+1).c_str()))<< " = require(\"" << moduleName << "\")\n";}
+
+// Item
+#define NodeItem_Define \
+	const char* name = nullptr;
+#define NodeItem_Check \
+	CASE_STR(Name) { name = atts[++i]; break; }
+#define NodeItem_Create \
+	stream << Val(name) << " = " << elementStack.top().name << '.' << Val(name) << "\n\n";\
+	if (name && name[0])\
+	{\
+		oItem item = { "Item", name };\
+		elementStack.push(item);\
+	}
+
+// Slot
+#define Slot_Define \
+	const char* name = nullptr;
+#define Slot_Check \
+	CASE_STR(Name) { name = atts[++i]; break; }
+#define Slot_Create \
+	oFunc func = {elementStack.top().name+":slots("+toText(name)+",", ")"};\
+	funcs.push(func);
 
 #define Item_Define(name) name##_Define
 #define Item_Loop(name) \
@@ -1557,6 +1493,8 @@ public:
 		for (; !items.empty(); items.pop());
 		stream.clear();
 		stream.str("");
+		requires.clear();
+		requires.str("");
 		names.clear();
 		firstItem.clear();
 	}
@@ -1564,8 +1502,8 @@ public:
 	{
 		oXmlDelegate::clear();
 		stream <<
-		"return function(__data)\n"
-			"Dorothy(__data)\n\n";
+		"return function(args)\n"
+			"Dorothy(args)\n\n";
 	}
 	void end()
 	{
@@ -1573,7 +1511,7 @@ public:
 	}
 	string getResult()
 	{
-		return stream.str();
+		return requires.str() + stream.str();
 	}
 private:
 	string getUsableName(const char* baseName)
@@ -1614,6 +1552,7 @@ private:
 	unordered_set<string> names;
 	unordered_map<string, string> attributes;
 	ostringstream stream;
+	ostringstream requires;
 };
 
 void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
@@ -1741,6 +1680,20 @@ void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
 			elementStack.push(item);
 			break;
 		}
+		CASE_STR(Item)
+		{
+			Item_Define(NodeItem)
+			Item_Loop(NodeItem)
+			Item_Create(NodeItem)
+			break;
+		}
+		CASE_STR(Slot)
+		{
+			Item_Define(Slot)
+			Item_Loop(Slot)
+			Item_Create(Slot)
+			break;
+		}
 		CASE_STR(Script) break;
 		{
 			Item_Define(ModuleNode)
@@ -1786,6 +1739,13 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 				auto it = names.find(currentData.name);
 				if (it != names.end()) names.erase(it);
 			}
+			break;
+		}
+		CASE_STR(Slot)
+		{
+			oFunc func = funcs.top();
+			funcs.pop();
+			stream << func.begin << "function() " << (codes ? codes : "") << " end" << func.end << '\n';
 			break;
 		}
 		CASE_STR(Speed) goto FLAG_WRAP_ACTION_BEGIN;

@@ -110,7 +110,32 @@ bool CCSAXParser::parse(const char* pXMLData, unsigned int uDataLength)
 	}
 	if (error != tinyxml2::XML_NO_ERROR)
 	{
-		_lastError = "XMLDocument error at: ";
+		_lastError = "XMLDocument error: ";
+		switch (error)
+		{
+			case tinyxml2::XML_NO_ATTRIBUTE: _lastError += "no attribute. "; break;
+			case tinyxml2::XML_WRONG_ATTRIBUTE_TYPE: _lastError += "wrong attribute type. "; break;
+			case tinyxml2::XML_ERROR_FILE_NOT_FOUND: _lastError += "file not found. "; break;
+			case tinyxml2::XML_ERROR_FILE_COULD_NOT_BE_OPENED: _lastError += "file could not be opened. "; break;
+			case tinyxml2::XML_ERROR_FILE_READ_ERROR: _lastError += "file read error. "; break;
+			case tinyxml2::XML_ERROR_ELEMENT_MISMATCH: _lastError += "element mismatch. "; break;
+			case tinyxml2::XML_ERROR_PARSING_ELEMENT: _lastError += "parsing element error. "; break;
+			case tinyxml2::XML_ERROR_PARSING_ATTRIBUTE: _lastError += "parsing attribute error. "; break;
+			case tinyxml2::XML_ERROR_IDENTIFYING_TAG: _lastError += "identifying tag error. "; break;
+			case tinyxml2::XML_ERROR_PARSING_TEXT: _lastError += "parsing text error. "; break;
+			case tinyxml2::XML_ERROR_PARSING_CDATA: _lastError += "parsing cdata error. "; break;
+			case tinyxml2::XML_ERROR_PARSING_COMMENT: _lastError += "parsing comment error. "; break;
+			case tinyxml2::XML_ERROR_PARSING_DECLARATION: _lastError += "parsing declaration error. "; break;
+			case tinyxml2::XML_ERROR_PARSING_UNKNOWN: _lastError += "parsing unknown error. "; break;
+			case tinyxml2::XML_ERROR_EMPTY_DOCUMENT: _lastError += "empty document. "; break;
+			case tinyxml2::XML_ERROR_MISMATCHED_ELEMENT: _lastError += "mismatch element. "; break;
+			case tinyxml2::XML_ERROR_PARSING: _lastError += "parsing error. "; break;
+			case tinyxml2::XML_CAN_NOT_CONVERT_TEXT: _lastError += "can not convert text. "; break;
+			case tinyxml2::XML_NO_TEXT_NODE: _lastError += "no text node. "; break;
+			default:
+    			break;
+		}
+
 		if (tinyDoc.GetErrorStr1())
 		{
 			_lastError += tinyDoc.GetErrorStr1();

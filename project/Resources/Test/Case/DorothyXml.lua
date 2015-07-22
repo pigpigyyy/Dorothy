@@ -1,5 +1,5 @@
-return function(__data)
-Dorothy(__data)
+return function(args)
+Dorothy(args)
 
 local scene = CCScene()
 
@@ -14,7 +14,7 @@ layer1.anchor = oVec2(0,0)
 layer1.angle = 10
 scene:addChild(layer1)
 
-local label = CCLabelTTF((__data and __data["Hello"] or "Hello"),(__data and __data["Arial"] or "Arial"),20)
+local label = CCLabelTTF("Hello","Arial",20)
 label.positionX = scene.contentSize.width*0.5
 label.positionY = scene.contentSize.height*0.5
 label.color = ccColor3(0x000000)
