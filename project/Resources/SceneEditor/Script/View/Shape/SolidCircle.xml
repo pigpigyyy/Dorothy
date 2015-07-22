@@ -1,0 +1,4 @@
+<!-- params: Radius, Color -->
+<DrawNode>
+	<Dot X="{ radius }" Y="{ radius }" Radius="{ radius }" Color="{ color }"/>
+</DrawNode>

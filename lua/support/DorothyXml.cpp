@@ -1464,8 +1464,10 @@ static bool isTextAlign(const char* str)
 #define ModuleNode_Handle \
 	for (const auto& pair : attributes)\
 	{\
-		bool digit = (bool)isdigit(pair.second.at(0));\
-		stream << (char)tolower(pair.first.substr(0, 1).at(0)) << pair.first.substr(1) << " = " << (digit ? "" : "\"") << pair.second << (digit ? "" : "\"") << ',';\
+		stream << (char)tolower(pair.first.substr(0, 1).at(0)) << pair.first.substr(1) << " = ";\
+		if (isdigit(pair.second.at(0))) stream << pair.second;\
+		else stream << toText(pair.second.c_str());\
+		stream << ',';\
 	}\
 	attributes.clear();\
 	stream << "})\n";
@@ -1496,14 +1498,6 @@ static bool isTextAlign(const char* str)
 		string mod(moduleName);\
 		int pos = mod.rfind('.');\
 		stream << "local " << (name ? name : (pos == string::npos ? moduleName : mod.substr(pos+1).c_str()))<< " = require(\"" << moduleName << "\")\n\n";}
-
-// Require
-#define Require_Define \
-	const char* moduleName = nullptr;
-#define Require_Check \
-	CASE_STR(Module) { moduleName = atts[++i]; break; }
-#define Require_Create \
-	if (moduleName) { stream << "require(\"" << moduleName << "\")(" << firstItem << ")\n\n"; }
 
 #define Item_Define(name) name##_Define
 #define Item_Loop(name) \
@@ -1739,13 +1733,6 @@ void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
 			Item_Define(Import)
 			Item_Loop(Import)
 			Import_Create
-			break;
-		}
-		CASE_STR(Require)
-		{
-			Item_Define(Require)
-			Item_Loop(Require)
-			Require_Create
 			break;
 		}
 		CASE_STR(Action)

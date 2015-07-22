@@ -1,0 +1,9 @@
+<Scene Name="scene">
+	<Import Module="Control.Button"/>
+	<Import Module="Control.CircleButton"/>
+
+	<Menu AnchorX="0" AnchorY="0">
+		<Button Name="btn" X="100" Y="100" Width="60" Height="60" FontSize="20" Text="OK"/>
+		<CircleButton X="300" Y="100" Radius="30" FontSize="16" Text="Cancel"/>
+	</Menu>
+</Scene>

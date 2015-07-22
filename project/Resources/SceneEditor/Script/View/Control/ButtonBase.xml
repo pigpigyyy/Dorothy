@@ -1,0 +1,26 @@
+<!-- params: X, Y, Width, Height -->
+<MenuItem Name="menuItem" X="{ x }" Y="{ y }" Width="{ width }" Height="{ height }" Color="0x00ffff">
+
+	<Action>
+		<Sequence Name="scale">
+			<Spawn>
+				<Opacity Alpha="1"/>
+				<Scale X="0.3" Y="0.3"/>
+			</Spawn>
+			<Scale Time="0.3" X="1" Y="1" Ease="OutBack"/>
+		</Sequence>
+
+		<Opacity Name="fade" Time="0.3" Alpha="0.4" Ease="InExpo"/>
+	</Action>
+
+	<Node Name="face" X="{ width*0.5 }" Y="{ height*0.5 }" Width="{ width }" Height="{ height }" Opacity="0.4"/>
+
+	<Slot Name="TapBegan">
+		face:perform(scale)
+	</Slot>
+
+	<Slot Name="TapEnded">
+		if not fade.done then face:stopAction(fade) end
+			face:runAction(fade)
+	</Slot>
+</MenuItem>
