@@ -1428,11 +1428,13 @@ static const char* _toBoolean(const char* str)
 
 // Slot
 #define Slot_Define \
-	const char* name = nullptr;
+	const char* name = nullptr;\
+	const char* args = nullptr;
 #define Slot_Check \
-	CASE_STR(Name) { name = atts[++i]; break; }
+	CASE_STR(Name) { name = atts[++i]; break; }\
+	CASE_STR(Args) { args = atts[++i]; break; }
 #define Slot_Create \
-	oFunc func = {elementStack.top().name+":slots("+toText(name)+",", ")"};\
+	oFunc func = {elementStack.top().name+":slots("+toText(name)+",function("+(args ? args : "")+") ", " end)"};\
 	funcs.push(func);
 
 #define Item_Define(name) name##_Define
@@ -1745,7 +1747,7 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 		{
 			oFunc func = funcs.top();
 			funcs.pop();
-			stream << func.begin << "function() " << (codes ? codes : "") << " end" << func.end << '\n';
+			stream << func.begin << (codes ? codes : "") << func.end << '\n';
 			break;
 		}
 		CASE_STR(Speed) goto FLAG_WRAP_ACTION_BEGIN;

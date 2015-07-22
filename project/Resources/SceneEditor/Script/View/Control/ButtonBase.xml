@@ -21,6 +21,6 @@
 
 	<Slot Name="TapEnded">
 		if not fade.done then face:stopAction(fade) end
-			face:runAction(fade)
+		face:runAction(fade)
 	</Slot>
 </MenuItem>
