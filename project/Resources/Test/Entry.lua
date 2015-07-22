@@ -104,6 +104,7 @@ local function compile(dir)
 				oContent:saveToFile(dir.."/"..name..".lua",codes)
 				print("Moon compiled: "..entry)
 			end
+		---[[
 		elseif extension == "xml" then
 			local entry = dir.."/"..item
 			local file = io.open(entry,"r")
@@ -116,6 +117,7 @@ local function compile(dir)
 				oContent:saveToFile(dir.."/"..name..".lua",codes)
 				print("xml compiled: "..entry)
 			end
+		--]]
 		end
 	end
 end

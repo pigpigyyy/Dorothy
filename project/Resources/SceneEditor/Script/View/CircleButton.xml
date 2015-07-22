@@ -1,4 +1,5 @@
-<MenuItem Name="menuItem" X="x" Y="y" Width="r*2" Height="r*2" Color="0x00ffff">
+<!-- params: X, Y, Radius, FontSize, Text -->
+<MenuItem Name="menuItem" X="x" Y="y" Width="radius*2" Height="radius*2" Color="0x00ffff">
 	<Action>
 		<Sequence Name="scale">
 			<Spawn>
@@ -9,10 +10,10 @@
 		</Sequence>
 		<Opacity Name="fade" Time="0.3" Alpha="0.4" Ease="InExpo"/>
 	</Action>
-	<Node Name="face" X="r" Y="r" Width="r*2" Height="r*2" Opacity="0.4">
+	<Node Name="face" X="radius" Y="radius" Width="radius*2" Height="radius*2" Opacity="0.4">
 		<Node PassColor="False">
 			<DrawNode>
-				<Dot X="r" Y="r" Radius="r" Color="0x88000000"/>
+				<Dot X="radius" Y="radius" Radius="radius" Color="0x88000000"/>
 			</DrawNode>
 		</Node>
 		<Script>
@@ -20,11 +21,11 @@
 			local num = 20
 			for i = 0, num do
 				local angle = 2*math.pi*i/num
-				table.insert(vs,oVec2(r*math.cos(angle),r*math.sin(angle))+oVec2(r,r))
+				table.insert(vs,oVec2(radius*math.cos(angle),radius*math.sin(angle))+oVec2(radius,radius))
 			end
 			face:addChild(oLine(vs,ccColor4()))
 		</Script>
-		<LabelTTF X="r" Y="r" Text="text" FontName="Arial" FontSize="fontSize"/>
+		<LabelTTF Name="label" X="radius" Y="radius" Text="text" FontName="Arial" FontSize="fontSize"/>
 	</Node>
 	<Script>
 		menuItem:slots("TapBegan",function()
