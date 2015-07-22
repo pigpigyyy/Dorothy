@@ -1486,11 +1486,16 @@ static bool isTextAlign(const char* str)
 
 // Import
 #define Import_Define \
-	const char* moduleName = nullptr;
+	const char* moduleName = nullptr;\
+	const char* name = nullptr;
 #define Import_Check \
-	CASE_STR(Module) { moduleName = atts[++i]; break; }
+	CASE_STR(Module) { moduleName = atts[++i]; break; }\
+	CASE_STR(Name) { name = atts[++i]; break; }
 #define Import_Create \
-	if (moduleName) { stream << "local " << moduleName << " = require(\"" << moduleName << "\")\n\n";}
+	if (moduleName) {\
+		string mod(moduleName);\
+		int pos = mod.rfind('.');\
+		stream << "local " << (name ? name : (pos == string::npos ? moduleName : mod.substr(pos+1).c_str()))<< " = require(\"" << moduleName << "\")\n\n";}
 
 // Require
 #define Require_Define \
