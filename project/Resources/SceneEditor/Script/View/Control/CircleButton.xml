@@ -12,7 +12,7 @@
 		<LineCircle Radius="{ radius }" Color="0xffffffff"/>
 	
 		<Script>if text then</Script>
-		<LabelTTF Name="label" X="{ radius }" Y="{ radius }" Text="{ text }" FontName="Arial" FontSize="{ fontSize }"/>
+		<LabelTTF Name="label" X="{ radius }" Y="{ radius }" Text="{ text }" FontName="Arial" FontSize="{ fontSize }"  Ref="True"/>
 		<Script>end</Script>
 	</Item>
 

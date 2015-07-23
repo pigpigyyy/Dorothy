@@ -13,7 +13,7 @@
 		<Opacity Name="fade" Time="0.3" Alpha="0.4" Ease="InExpo"/>
 	</Action>
 
-	<Node Name="face" X="{ width*0.5 }" Y="{ height*0.5 }" Width="{ width }" Height="{ height }" Opacity="0.4"/>
+	<Node Name="face" X="{ width*0.5 }" Y="{ height*0.5 }" Width="{ width }" Height="{ height }" Opacity="0.4" Ref="True"/>
 
 	<Slot Name="TapBegan">
 		face:perform(scale)

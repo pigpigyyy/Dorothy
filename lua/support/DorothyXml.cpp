@@ -80,9 +80,11 @@ static const char* _toBoolean(const char* str)
 // Object
 #define Object_Define \
 	string self;\
-	bool hasSelf = false;
+	bool hasSelf = false;\
+	bool ref = false;
 #define Object_Check \
-	CASE_STR(Name) { hasSelf = true; self = atts[++i]; break; }
+	CASE_STR(Name) { hasSelf = true; self = atts[++i]; break; }\
+	CASE_STR(Ref) { ref = strcmp(atts[++i],"True") == 0; break; }
 
 // Speed
 #define Speed_Define \
@@ -815,7 +817,7 @@ static const char* _toBoolean(const char* str)
 			}\
 			else if (tag) stream << ",0," << Val(tag);\
 			stream << ")\n";\
-			if (hasSelf)\
+			if (hasSelf && ref)\
 			{\
 				stream << firstItem << "." << self << " = " << self << "\n";\
 			}\
@@ -1040,11 +1042,6 @@ static const char* _toBoolean(const char* str)
 	if (inverted) stream << self << ".inverted = " << toBoolean(inverted) << '\n';
 #define ClipNode_Finish \
 	Add_To_Parent
-
-// Stencil
-#define Stencil_Define \
-	const char* self = "";
-#define Stencil_Finish
 
 // LabelAtlas
 #define LabelAtlas_Define \
@@ -1449,7 +1446,7 @@ static const char* _toBoolean(const char* str)
 	}
 #define Item_Create(name) name##_Create
 #define Item_Handle(name) name##_Handle
-#define Item_Push(name) name##_Finish;oItem item = {#name,self};elementStack.push(item);
+#define Item_Push(name) name##_Finish;oItem item = {#name,self,ref};elementStack.push(item);
 
 #define Item(name,var) \
 	CASE_STR(name)\
@@ -1464,7 +1461,7 @@ static const char* _toBoolean(const char* str)
 	}
 
 #define CASE_STR_DOT(prename,name) __CASE_STR1(#prename"."#name, prename##name)
-#define ItemDot_Push(prename,name) prename##_##name##_Finish;oItem item = {#prename"."#name,self};elementStack.push(item);
+#define ItemDot_Push(prename,name) prename##_##name##_Finish;oItem item = {#prename"."#name,self,ref};elementStack.push(item);
 #define ItemDot(prename,name,var) \
 	CASE_STR_DOT(prename,name)\
 	{\
@@ -1538,6 +1535,7 @@ private:
 	{
 		const char* type;
 		string name;
+		bool ref;
 	};
 	struct oFunc
 	{
@@ -1665,8 +1663,8 @@ void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
 		}
 		CASE_STR(Stencil)
 		{
-			Item_Define(Stencil)
-			Item_Push(Stencil)
+			oItem item = { "Stencil" };
+			elementStack.push(item);
 			break;
 		}
 		CASE_STR(Import)
@@ -1923,7 +1921,7 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 	}
 	SWITCH_STR_END
 
-	if (parentIsAction)
+	if (parentIsAction && currentData.ref)
 	{
 		stream << firstItem << '.' << currentData.name << " = " << currentData.name << "\n\n";
 	}

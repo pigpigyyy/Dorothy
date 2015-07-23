@@ -1,6 +1,5 @@
 <!-- params: X, Y, Width, Height, FontSize, Text -->
 <ButtonBase X="{ x }" Y="{ y }" Width="{ width }" Height="{ height }">
-
 	<Import Module="View.Control.ButtonBase"/>
 	<Import Module="View.Shape.SolidRect"/>
 	<Import Module="View.Shape.LineRect"/>
@@ -12,7 +11,7 @@
 		<LineRect Width="{ width }" Height="{ height }" Color="0xffffffff"/>
 
 		<Script>if text then</Script>
-		<LabelTTF Name="label" X="{ width*0.5 }" Y="{ height*0.5 }" Text="{ text }" FontName="Arial" FontSize="{ fontSize }"/>
+		<LabelTTF Name="label" X="{ width*0.5 }" Y="{ height*0.5 }" Text="{ text }" FontName="Arial" FontSize="{ fontSize }"  Ref="True"/>
 		<Script>end</Script>
 	</Item>
 
