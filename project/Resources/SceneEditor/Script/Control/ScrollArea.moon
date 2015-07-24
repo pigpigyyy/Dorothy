@@ -2,19 +2,22 @@ Dorothy!
 Class,property = unpack require "class"
 ScrollAreaView = require "View.Control.ScrollArea"
 
+-- signals:
+-- "ScrollStart",->
+-- "Scrolled",(delta)->
 Class
 	__partial: (args)=> ScrollAreaView args
 	__init: (args)=>
 		{:width,:height,:touchPriority} = args
 		touchPriority = touchPriority or CCMenu.DefaultHandlerPriority
 		winHeight = CCDirector.winSize.height
-		viewWidth = args.viewWidth or width
-		viewHeight = args.winHeight or height
+		viewWidth = math.max args.viewWidth or width,width
+		viewHeight = math.max args.viewHeight or height,height
 		moveY = viewHeight - height
 		moveX = width - viewWidth
 		deltaX,deltaY = 0,0
 		paddingX = args.paddingX or 200
-		paddingY = args.paddingX or 200
+		paddingY = args.paddingY or 200
 		posX,posY = 0,0
 		timePassed = 0
 		S = oVec2.zero
@@ -45,7 +48,7 @@ Class
 					y = deltaY - tmp
 			x or= 0
 			y or= 0
-			@\emit "scroll",oVec2(x,y)
+			@\emit "Scrolled",oVec2(x,y)
 			@\unschedule! if t == 1
 
 		isReseting = ->
@@ -72,7 +75,7 @@ Class
 
 			if touching
 				lenY = if newPosY < 0
-					(newPosY-0)/paddingY
+					(0-newPosY)/paddingY
 				elseif newPosY > moveY
 					(newPosY-moveY)/paddingY
 				else 0
@@ -96,7 +99,7 @@ Class
 			deltaX += dPosX
 			deltaY += dPosY
 			
-			@\emit "scroll",oVec2(dPosX,dPosY)
+			@\emit "Scrolled",oVec2(dPosX,dPosY)
 			
 			startReset! if not touching and
 			(newPosY < -paddingY*0.5 or 
@@ -111,8 +114,8 @@ Class
 
 		updatePos = (dt)->
 			accel = winHeight*2
-			A = oVec2 (V.x > 0 and accel or -accel),
-								(V.y > 0 and accel or -accel)
+			A = oVec2 (V.x > 0 and -accel or accel),
+								(V.y > 0 and -accel or accel)
 
 			xInc = V.x > 0
 			yInc = V.y > 0
@@ -154,13 +157,17 @@ Class
 		@\slots "TouchEnded",touchEnded
 		@\slots "TouchCancelled",touchEnded
 		@\slots "TouchMoved",(touch)->
+			lastMoveLength = deltaMoveLength
 			deltaMoveLength += touch.delta.length
 			S += touch.delta
-			if deltaMoveLength > 10 then setOffset touch.delta,true
+			if deltaMoveLength > 10
+				setOffset touch.delta,true
+				if lastMoveLength <= 10
+					@\emit "ScrollStart"
 
-		@scroll = (dX, dY)=>
-			newPosX = deltaX + dX
-			newPosY = deltaY + dY
+		@scroll = (delta)=>
+			newPosX = deltaX + delta.x
+			newPosY = deltaY + delta.y
 
 			newPosX = math.min newPosX, 0
 			newPosX = math.max newPosX, moveX
@@ -169,8 +176,8 @@ Class
 			
 			dX = newPosX - deltaX
 			dY = newPosY - deltaY
-			
-			@\emit "scroll",oVec2(dX,dY)
+			offset = oVec2(dX,dY)
+			setOffset offset,false
 
 		@updateViewSize = (wView,hView)=>
 			viewWidth = math.max wView,width
@@ -188,3 +195,8 @@ Class
 			S = oVec2.zero
 			V = oVec2.zero
 			deltaMoveLength = 0
+		
+		@getTotalDelta = -> oVec2 deltaX,deltaY
+		
+	offset: property => @getTotalDelta!,
+		(offset)=> @scroll offset-@getTotalDelta!
