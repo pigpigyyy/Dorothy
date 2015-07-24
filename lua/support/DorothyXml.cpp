@@ -1371,17 +1371,19 @@ static const char* _toBoolean(const char* str)
 	Object_Check\
 	else attributes[__targetStrForSwitch] = atts[++i];
 #define ModuleNode_Create \
-	stream << "local " << self << " = " << name << "({";
+	stream << "local " << self << " = " << name << "{";
 #define ModuleNode_Handle \
 	for (const auto& pair : attributes)\
 	{\
 		stream << (char)tolower(pair.first.substr(0, 1).at(0)) << pair.first.substr(1) << " = ";\
-		if (isdigit(pair.second.at(0))) stream << pair.second;\
+		char* p;\
+		strtod(pair.second.c_str(), &p);\
+		if (*p == 0) stream << pair.second;\
 		else stream << toText(pair.second.c_str());\
 		stream << ',';\
 	}\
 	attributes.clear();\
-	stream << "})\n";
+	stream << "}\n";
 #define ModuleNode_Finish \
 	if (!elementStack.empty())\
 	{\
@@ -1389,11 +1391,20 @@ static const char* _toBoolean(const char* str)
 		if (!parent.name.empty())\
 		{\
 			stream << parent.name << ":addChild(" << self << ")\n";\
-			if (hasSelf)\
+			if (hasSelf && ref)\
 			{\
 				stream << firstItem << "." << self << " = " << self << "\n";\
 			}\
 			stream << "\n";\
+		}\
+		else if (strcmp(parent.type,"Stencil") == 0)\
+		{\
+			elementStack.pop();\
+			if (!elementStack.empty())\
+			{\
+				const oItem& newParent = elementStack.top();\
+				stream << newParent.name << ".stencil = " << self << "\n\n";\
+			}\
 		}\
 	}
 
@@ -1416,7 +1427,7 @@ static const char* _toBoolean(const char* str)
 #define NodeItem_Check \
 	CASE_STR(Name) { name = atts[++i]; break; }
 #define NodeItem_Create \
-	stream << Val(name) << " = " << elementStack.top().name << '.' << Val(name) << "\n\n";\
+	stream << "local " << Val(name) << " = " << elementStack.top().name << '.' << Val(name) << "\n\n";\
 	if (name && name[0])\
 	{\
 		oItem item = { "Item", name };\
@@ -1702,7 +1713,7 @@ void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
 			Item_Create(ModuleNode)
 			Item_Handle(ModuleNode)
 			ModuleNode_Finish;
-			oItem item = { name, self };
+			oItem item = { name, self, ref };
 			elementStack.push(item);
 		}
 	}

@@ -1,5 +1,5 @@
-<!-- params: X, Y, Width, Height, FillColor, BorderColor -->
-<Node X="{ x }" Y="{ y }" Width="{ width }" Height="{ height }">
+<!-- params: X=0, Y=0, Width, Height, FillColor, BorderColor -->
+<Node X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }">
 	<Import Module="View.Shape.SolidRect"/>
 	<Import Module="View.Shape.LineRect"/>
 

@@ -11,7 +11,7 @@
 		<LineRect Width="{ width }" Height="{ height }" Color="0xffffffff"/>
 
 		<Script>if text then</Script>
-		<LabelTTF Name="label" X="{ width*0.5 }" Y="{ height*0.5 }" Text="{ text }" FontName="Arial" FontSize="{ fontSize }"  Ref="True"/>
+		<LabelTTF Name="label" X="{ width*0.5 }" Y="{ height*0.5 }" Text="{ text }" FontName="Arial" FontSize="{ fontSize }" Ref="True"/>
 		<Script>end</Script>
 	</Item>
 

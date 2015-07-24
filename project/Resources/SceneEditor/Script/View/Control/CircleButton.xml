@@ -1,6 +1,5 @@
 <!-- params: X, Y, Width, Height, FontSize, Text -->
 <ButtonBase X="{ x }" Y="{ y }" Width="{ radius*2 }" Height="{ radius*2 }">
-
 	<Import Module="View.Control.ButtonBase"/>
 	<Import Module="View.Shape.SolidCircle"/>
 	<Import Module="View.Shape.LineCircle"/>
@@ -10,7 +9,7 @@
 			<SolidCircle Radius="{ radius }" Color="0x88000000"/>
 		</Node>
 		<LineCircle Radius="{ radius }" Color="0xffffffff"/>
-	
+
 		<Script>if text then</Script>
 		<LabelTTF Name="label" X="{ radius }" Y="{ radius }" Text="{ text }" FontName="Arial" FontSize="{ fontSize }"  Ref="True"/>
 		<Script>end</Script>
