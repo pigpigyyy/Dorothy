@@ -1,5 +1,11 @@
 require("Test/Entry")
-
+--[[Dorothy()
+local scene = CCScene()
+local label = CCLabelTTF("OK","Arial",16)
+label.anchor = oVec2.zero
+scene:addChild(label)
+CCDirector:run(scene)
+]]
 --[[
 Dorothy()
 

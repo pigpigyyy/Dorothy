@@ -34,14 +34,6 @@ THE SOFTWARE.
     #define _USE_MATH_DEFINES       // make M_PI can be use
 #endif
 
-#if !defined(isnan)
-    #define isnan   _isnan
-#endif
-
-#ifndef snprintf
-#define snprintf _snprintf
-#endif
-
 #include <math.h>
 #include <string.h>
 #include <stdarg.h>
@@ -49,10 +41,18 @@ THE SOFTWARE.
 #include <stdlib.h>
 #include <time.h>
 
+#if !defined(isnan)
+#define isnan _isnan
+#endif
+
+#ifndef snprintf
+#define snprintf _snprintf
+#endif
+
 // for MIN MAX and sys/time.h on win32 platform
 
-#define MIN     min
-#define MAX     max
+#define MIN min
+#define MAX max
 
 #if _MSC_VER >= 1600
     #include <stdint.h>

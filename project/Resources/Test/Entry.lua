@@ -115,7 +115,6 @@ local function compile(dir,clean)
 					oContent:remove(filename)
 				end
 			end
-		---[[
 		elseif extension == "xml" then
 			if not clean then
 				local entry = dir.."/"..item
@@ -136,7 +135,6 @@ local function compile(dir,clean)
 					oContent:remove(filename)
 				end
 			end
-		--]]
 		end
 	end
 end
@@ -171,6 +169,7 @@ panel.init = function(self)
 			winSize.width*0.5,y,
 			function()
 				local result = require(Tests[i][2])
+				package.loaded[Tests[i][2]] = nil
 				if type(result) == "function" then result() end
 				if not Tests[i][3] then
 					local opMenu = CCMenu()
@@ -182,7 +181,6 @@ panel.init = function(self)
 					local endBtn = oButton("Back",17,60,false,
 						0,0,
 						function()
-							package.loaded[Tests[i][2]] = nil
 							CCDirector:run(CCScene:crossFade(0.5,scene))
 						end)
 					endBtn.anchor = oVec2.zero

@@ -105,8 +105,9 @@ static int cclua_loadfile(lua_State* L, const string& file)
 	}
 	else
 	{
-		isXml = filename.substr(pos) == ".xml";
-		if (!isXml && filename.substr(pos) != ".lua")
+		string extension = filename.substr(pos);
+		isXml = extension == ".xml";
+		if (!isXml && extension != ".lua" && extension != ".body")
 		{
 			lua_pushnil(L);
 			lua_pushliteral(L, "Xml and Lua files not found");
