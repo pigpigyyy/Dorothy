@@ -18,6 +18,9 @@ local CCLayerColor = require("CCLayerColor")
 local ccColor4 = require("ccColor4")
 local oContent = require("oContent")
 
+oContent:addSearchPath("Lib")
+require("moonscript")
+
 local scene = CCScene()
 
 local winSize = CCDirector.winSize
@@ -45,7 +48,7 @@ end
 
 opMenu = CCMenu()
 opMenu.swallowTouches = true
-opMenu.contentSize = CCSize(130,60)
+opMenu.contentSize = CCSize(200,60)
 opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
 opMenu.anchor = oVec2.zero
 opMenu.position = oVec2(10,10)
@@ -78,12 +81,12 @@ local gcButton = oButton("GC",17,60,false,
 gcButton.anchor = oVec2.zero
 opMenu:addChild(gcButton)
 
-local function compile(dir)
+local function compile(dir,clean)
 	local entries = oContent:getEntries(dir,true)
 	for _,item in ipairs(entries) do
 		local entry = dir.."/"..item
 		if item ~= "." and item ~= ".." then
-			compile(entry)
+			compile(entry,clean)
 		end
 	end
 	entries = oContent:getEntries(dir,false)
@@ -91,43 +94,68 @@ local function compile(dir)
 		local name = item:match("(.*)%.[^%.\\/]*$")
 		local extension = string.match(item, "%.([^%.\\/]*)$")
 		if extension == "moon" then
-			local entry = dir.."/"..item
-			local moonscript = require("moonscript")
-			local file = io.open(entry,"r")
-			local moonCodes = file:read("*a")
-			local codes,err = moonscript.to_lua(moonCodes)
-			file:close()
-			if not codes then
-				print("Compile errors in "..entry)
-				print(err)
+			if not clean then
+				local entry = dir.."/"..item
+				local moonscript = require("moonscript.base")
+				local file = io.open(entry,"r")
+				local moonCodes = file:read("*a")
+				local codes,err = moonscript.to_lua(moonCodes)
+				file:close()
+				if not codes then
+					print("Compile errors in "..entry)
+					print(err)
+				else
+					oContent:saveToFile(dir.."/"..name..".lua",codes)
+					print("Moon compiled: "..entry)
+				end
 			else
-				oContent:saveToFile(dir.."/"..name..".lua",codes)
-				print("Moon compiled: "..entry)
+				local filename = dir.."/"..name..".lua"
+				if oContent:exist(filename) then
+					print("Moon cleaned: "..filename)
+					oContent:remove(filename)
+				end
 			end
 		---[[
 		elseif extension == "xml" then
-			local entry = dir.."/"..item
-			local file = io.open(entry,"r")
-			local xmlCodes = file:read("*a")
-			local codes = xmlToLua(xmlCodes)
-			file:close()
-			if not codes then
-				print("Compile errors in "..entry)
+			if not clean then
+				local entry = dir.."/"..item
+				local file = io.open(entry,"r")
+				local xmlCodes = file:read("*a")
+				local codes = xmlToLua(xmlCodes)
+				file:close()
+				if not codes then
+					print("Compile errors in "..entry)
+				else
+					oContent:saveToFile(dir.."/"..name..".lua",codes)
+					print("xml compiled: "..entry)
+				end
 			else
-				oContent:saveToFile(dir.."/"..name..".lua",codes)
-				print("xml compiled: "..entry)
+				local filename = dir.."/"..name..".lua"
+				if oContent:exist(filename) then
+					print("Xml cleaned: "..filename)
+					oContent:remove(filename)
+				end
 			end
 		--]]
 		end
 	end
 end
-local compileButton = oButton("Moon\nCompile",12,60,false,
+local compileButton = oButton("Compile",12,60,false,
 	70,0,
 	function()
-		compile(".")
+		compile(".",false)
+		print("Compile done.")
 	end)
 compileButton.anchor = oVec2.zero
 opMenu:addChild(compileButton)
+local cleanButton = oButton("Clean",16,60,false,
+	140,0,
+	function()
+		compile(".",true)
+		print("Clean done.")
+	end)
+cleanButton.anchor = oVec2.zero
+opMenu:addChild(cleanButton)
 
 panel.init = function(self)
 	menu.opacity = 0
@@ -142,7 +170,7 @@ panel.init = function(self)
 			200,50,
 			winSize.width*0.5,y,
 			function()
-				local result = dofile(Tests[i][2])
+				local result = require(Tests[i][2])
 				if type(result) == "function" then result() end
 				if not Tests[i][3] then
 					local opMenu = CCMenu()
@@ -154,6 +182,7 @@ panel.init = function(self)
 					local endBtn = oButton("Back",17,60,false,
 						0,0,
 						function()
+							package.loaded[Tests[i][2]] = nil
 							CCDirector:run(CCScene:crossFade(0.5,scene))
 						end)
 					endBtn.anchor = oVec2.zero
@@ -184,7 +213,5 @@ CCDirector.displayStats = true
 scene:slots("Entered",function()
 	CCDirector:popToRootScene()
 end)
-
-oContent:setSearchPaths({"","Lib"})
 
 CCDirector:run(scene)

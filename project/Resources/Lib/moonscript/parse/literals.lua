@@ -5,13 +5,11 @@ do
   local _obj_0 = require("lpeg")
   S, P, R, C = _obj_0.S, _obj_0.P, _obj_0.R, _obj_0.C
 end
-local lpeg = require("lpeg")
-local L = lpeg.luversion and lpeg.L or function(val) return #val end
 local White = S(" \t\r\n") ^ 0
 local plain_space = S(" \t") ^ 0
 local Break = P("\r") ^ -1 * P("\n")
 local Stop = Break + -1
-local Comment = P("--") * (1 - S("\r\n")) ^ 0 * L(Stop)
+local Comment = P("--") * (1 - S("\r\n")) ^ 0 * #Stop
 local Space = plain_space * Comment ^ -1
 local SomeSpace = S(" \t") ^ 1 * Comment ^ -1
 local SpaceBreak = Space * Break

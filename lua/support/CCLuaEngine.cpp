@@ -95,9 +95,24 @@ static int cclua_loadfile(lua_State* L, const string& file)
 				filename = std::move(newFileName);
 				isXml = true;
 			}
+			else
+			{
+				lua_pushnil(L);
+				lua_pushliteral(L, "Xml and Lua files not found");
+				return 2;
+			}
 		}
 	}
-	else isXml = filename.substr(pos) == ".xml";
+	else
+	{
+		isXml = filename.substr(pos) == ".xml";
+		if (!isXml && filename.substr(pos) != ".lua")
+		{
+			lua_pushnil(L);
+			lua_pushliteral(L, "Xml and Lua files not found");
+			return 2;
+		}
+	}
 
 	unsigned long codeBufferSize = 0;
 	const char* codeBuffer = nullptr;
@@ -123,8 +138,7 @@ static int cclua_loadfile(lua_State* L, const string& file)
 	{
 		if (luaL_loadbuffer(L, codeBuffer, codeBufferSize, filename.c_str()) != 0)
 		{
-			if (isXml) CCLOG("%s", codeBuffer);
-			else delete [] codeBuffer;
+			delete [] codeBuffer;
 			luaL_error(L, "error loading module %s from file %s :\n\t%s",
 				lua_tostring(L, 1), filename.c_str(), lua_tostring(L, -1));
 		}
@@ -140,6 +154,20 @@ static int cclua_loadfile(lua_State* L)
 {
 	string filename(luaL_checkstring(L, 1));
 	return cclua_loadfile(L, filename);
+}
+
+static int cclua_dofile(lua_State* L)
+{
+	string filename(luaL_checkstring(L, 1));
+	cclua_loadfile(L, filename);
+	if (lua_isnil(L, -2) && lua_isstring(L, -1))
+	{
+		luaL_error(L, lua_tostring(L, -1));
+	}
+	int top = lua_gettop(L) - 1;
+	CCLuaEngine::call(L, 0, LUA_MULTRET);
+	int newTop = lua_gettop(L);
+	return newTop - top;
 }
 
 static int cclua_loader(lua_State* L)
@@ -183,16 +211,6 @@ static int cclua_xmlToLua(lua_State* L)
 	}
 	lua_pushlstring(L, codes.c_str(), codes.size());
 	return 1;
-}
-
-static int cclua_dofile(lua_State* L)
-{
-	string filename(luaL_checkstring(L, 1));
-	cclua_loadfile(L, filename);
-	int top = lua_gettop(L) - 1;
-	CCLuaEngine::call(L, 0, LUA_MULTRET);
-	int newTop = lua_gettop(L);
-	return newTop - top;
 }
 
 static int cclua_ubox(lua_State* L)
@@ -296,15 +314,15 @@ void CCLuaEngine::addLuaLoader(lua_CFunction func)
 	// get loader table
 	lua_getglobal(L, "package");/* L: package */
 	lua_getfield(L, -1, "loaders");/* L: package, loaders */
-	// insert loader into index 2
+	// insert loader into index 1
 	lua_pushcfunction(L, func);/* L: package, loaders, func */
-	for (int i = (int)lua_objlen(L, -2) + 1; i > 2; --i)
+	for (int i = (int)lua_objlen(L, -2) + 1; i > 1; --i)
 	{
 		lua_rawgeti(L, -2, i - 1);/* L: package, loaders, func, function */
 		// we call lua_rawgeti, so the loader table now is at -3
 		lua_rawseti(L, -3, i);/* L: package, loaders, func */
 	}
-	lua_rawseti(L, -2, 2);/* L: package, loaders */
+	lua_rawseti(L, -2, 1);/* L: package, loaders */
 	// set loaders into package
 	lua_setfield(L, -2, "loaders");/* L: package */
 	lua_pop(L, 1);

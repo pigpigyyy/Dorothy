@@ -376,6 +376,11 @@ oContent.copyAsync = function(self,src,dst)
 	wait(function() return not loaded end)
 end
 
+local io_open = io.open
+io.open = function(file,...)
+	return io_open(oContent:getFullPath(file),...)
+end
+
 _G["Dorothy"] = (function()
 	local tb
 	local function gettb()
