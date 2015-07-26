@@ -86,7 +86,9 @@ local function compile(dir,clean)
 	for _,item in ipairs(entries) do
 		local entry = dir.."/"..item
 		if item ~= "." and item ~= ".." then
-			compile(entry,clean)
+			if not compile(entry,clean) then
+				return false
+			end
 		end
 	end
 	entries = oContent:getEntries(dir,false)
@@ -104,6 +106,7 @@ local function compile(dir,clean)
 				if not codes then
 					print("Compile errors in "..entry)
 					print(err)
+					return false
 				else
 					oContent:saveToFile(dir.."/"..name..".lua",codes)
 					print("Moon compiled: "..entry)
@@ -124,6 +127,7 @@ local function compile(dir,clean)
 				file:close()
 				if not codes then
 					print("Compile errors in "..entry)
+					return false
 				else
 					oContent:saveToFile(dir.."/"..name..".lua",codes)
 					print("xml compiled: "..entry)
@@ -137,6 +141,7 @@ local function compile(dir,clean)
 			end
 		end
 	end
+	return true
 end
 local compileButton = oButton("Compile",12,60,false,
 	70,0,

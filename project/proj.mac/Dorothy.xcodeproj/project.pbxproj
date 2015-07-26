@@ -81,6 +81,7 @@
 		3C5050021A23802F000C79D6 /* tolua_map.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C504FE31A23802F000C79D6 /* tolua_map.c */; };
 		3C5050031A23802F000C79D6 /* tolua_push.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C504FE41A23802F000C79D6 /* tolua_push.c */; };
 		3C5050041A23802F000C79D6 /* tolua_to.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C504FE51A23802F000C79D6 /* tolua_to.c */; };
+		3C6484CC1B649CB400A44651 /* SceneEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C6484CB1B649CB400A44651 /* SceneEditor */; };
 		3C7AA4D41A47291F007836D2 /* main.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4CB1A47291F007836D2 /* main.lua */; };
 		3C969C7D1B41903900C3BF37 /* oAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C969C0C1B41903900C3BF37 /* oAudio.cpp */; };
 		3C969C7E1B41903900C3BF37 /* oDefine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C969C0F1B41903900C3BF37 /* oDefine.cpp */; };
@@ -299,6 +300,7 @@
 		3C504FE31A23802F000C79D6 /* tolua_map.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tolua_map.c; sourceTree = "<group>"; };
 		3C504FE41A23802F000C79D6 /* tolua_push.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tolua_push.c; sourceTree = "<group>"; };
 		3C504FE51A23802F000C79D6 /* tolua_to.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tolua_to.c; sourceTree = "<group>"; };
+		3C6484CB1B649CB400A44651 /* SceneEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = SceneEditor; sourceTree = "<group>"; };
 		3C7AA4CB1A47291F007836D2 /* main.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.lua; sourceTree = "<group>"; };
 		3C969C0C1B41903900C3BF37 /* oAudio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oAudio.cpp; sourceTree = "<group>"; };
 		3C969C0D1B41903900C3BF37 /* oAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oAudio.h; sourceTree = "<group>"; };
@@ -766,6 +768,7 @@
 		3C7AA4C41A4728FC007836D2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3C6484CB1B649CB400A44651 /* SceneEditor */,
 				3C9AF16A1AEFCC4500B649DC /* Lib */,
 				3CD77C581A83A990003B55A0 /* ActionEditor */,
 				3C07A5E71A6ED4830036E419 /* BodyEditor */,
@@ -1052,6 +1055,7 @@
 				3CD77C5B1A83A99E003B55A0 /* EffectEditor in Resources */,
 				3C7AA4D41A47291F007836D2 /* main.lua in Resources */,
 				9F9E47EC1AE8FC6D00826626 /* MainMenu.xib in Resources */,
+				3C6484CC1B649CB400A44651 /* SceneEditor in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

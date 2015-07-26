@@ -1,4 +1,5 @@
 require("Test/Entry")
+
 --[[Dorothy()
 local scene = CCScene()
 local label = CCLabelTTF("OK","Arial",16)
