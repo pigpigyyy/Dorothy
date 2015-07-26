@@ -19,7 +19,23 @@ local ccColor4 = require("ccColor4")
 local oContent = require("oContent")
 
 oContent:addSearchPath("Lib")
-require("moonscript")
+local moonscript = require("moonscript")
+local util = require("moonscript.util")
+local errors = require("moonscript.errors")
+
+local traceback = debug.traceback
+debug.traceback = function(err)
+	local trace = traceback("",2)
+	if trace then
+		local rewritten = errors.rewrite_traceback(util.trim(trace), err)
+		if rewritten then
+			return rewritten
+		else
+			return table.concat({err, util.trim(trace)}, "\n")
+		end
+	end
+	return ""
+end
 
 local scene = CCScene()
 
@@ -98,7 +114,6 @@ local function compile(dir,clean)
 		if extension == "moon" then
 			if not clean then
 				local entry = dir.."/"..item
-				local moonscript = require("moonscript.base")
 				local file = io.open(entry,"r")
 				local moonCodes = file:read("*a")
 				local codes,err = moonscript.to_lua(moonCodes)

@@ -64,14 +64,13 @@ static int cclua_print(lua_State* L)
 
 static int cclua_traceback(lua_State* L)
 {
-	CCLog("[LUA ERROR] %s", lua_tostring(L, -1));
-	lua_getglobal(L, "debug");
-	lua_getfield(L, -1, "traceback");
-	lua_call(L, 0, 1);
-	CCLog(lua_tostring(L, -1));
-	lua_pop(L, 2);
-	//luaL_traceback(L, L, lua_tostring(L, 1), 1);
-	//lua_pop(L, 1);
+	// 1 error_string
+	lua_getglobal(L, "debug"); // err debug
+	lua_getfield(L, -1, "traceback"); // err debug traceback
+	lua_pushvalue(L, -3); // err debug traceback err
+	lua_call(L, 1, 1); // traceback(err), err debug tace
+	CCLog("%s", lua_tostring(L, -1));
+	lua_pop(L, 3); // empty
 	return 0;
 }
 
