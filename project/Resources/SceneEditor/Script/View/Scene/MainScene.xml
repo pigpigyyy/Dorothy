@@ -3,11 +3,11 @@
 	<Import Module="Control.CircleButton"/>
 	<Import Module="Control.ScrollArea"/>
 
-	<ScrollArea Name="scrollArea" X="200" Y="200" Width="400" Height="400" ViewWidth="800" ViewHeight="800" PaddingX="50" PaddingY="50" TouchPriority="{ CCMenu.DefaultHandlerPriority-1 }" Ref="True">
+	<ScrollArea Name="scrollArea" X="200" Y="200" Width="400" Height="400" ViewWidth="400" ViewHeight="600" PaddingX="0" PaddingY="50" TouchPriority="0" Ref="True">
 		<Item Name="view">
-			<Menu Name="menu" AnchorX="0" AnchorY="0" Width="400" Height="400" Ref="True">
-				<Button Name="btn" X="100" Y="100" Width="60" Height="60" FontSize="20" Text="OK"/>
-				<CircleButton X="300" Y="100" Radius="30" FontSize="16" Text="Cancel"/>
+			<Menu Name="menu" AnchorX="0" AnchorY="0" Width="400" Height="400" TouchPriority="1" Ref="True">
+				<Button Name="btn" X="{ 400-30 }" Y="30" Width="60" Height="60" FontSize="20" Text="OK"/>
+				<CircleButton X="30" Y="{ 400-30 }" Radius="30" FontSize="16" Text="Cancel"/>
 			</Menu>
 		</Item>
 	</ScrollArea>

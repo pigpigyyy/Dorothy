@@ -4,6 +4,7 @@ ScrollAreaView = require "View.Control.ScrollArea"
 
 -- signals:
 -- "ScrollStart",->
+-- "ScrollEnd",->
 -- "Scrolled",(delta)->
 Class
 	__partial: (args)=> ScrollAreaView args
@@ -11,10 +12,10 @@ Class
 		{:width,:height,:touchPriority} = args
 		touchPriority = touchPriority or CCMenu.DefaultHandlerPriority
 		winHeight = CCDirector.winSize.height
-		viewWidth = math.max args.viewWidth or width,width
-		viewHeight = math.max args.viewHeight or height,height
+		viewWidth = math.max args.viewWidth or width
+		viewHeight = math.max args.viewHeight or height
 		moveY = viewHeight - height
-		moveX = width - viewWidth
+		moveX = viewWidth - width
 		deltaX,deltaY = 0,0
 		paddingX = args.paddingX or 200
 		paddingY = args.paddingY or 200
@@ -30,11 +31,11 @@ Class
 			timePassed += deltaTime
 			t = math.min timePassed*4,1
 			with oEase
-				if posX > 0
+				if posX < 0
 					tmp = deltaX
 					deltaX = \func .OutBack,t,posX,0-posX
 					x = deltaX - tmp
-				elseif posX < moveX
+				elseif posX > moveX
 					tmp = deltaX
 					deltaX = \func .OutBack,t,posX,moveX-posX
 					x = deltaX - tmp
@@ -52,7 +53,7 @@ Class
 			@\unschedule! if t == 1
 
 		isReseting = ->
-			deltaX > 0 or deltaX < moveX or deltaY > moveY or deltaY < 0
+			deltaX < 0 or deltaX > moveX or deltaY > moveY or deltaY < 0
 
 		startReset = ->
 			posX = deltaX
@@ -65,9 +66,9 @@ Class
 			dPosY = delta.y
 			newPosX = deltaX + dPosX
 			newPosY = deltaY + dPosY
-			
-			newPosX = math.min newPosX, paddingX
-			newPosX = math.max newPosX, moveX-paddingX
+
+			newPosX = math.max newPosX, -paddingX
+			newPosX = math.min newPosX, moveX+paddingX
 			newPosY = math.max newPosY, -paddingY
 			newPosY = math.min newPosY, moveY+paddingY
 			dPosX = newPosX - deltaX
@@ -79,33 +80,32 @@ Class
 				elseif newPosY > moveY
 					(newPosY-moveY)/paddingY
 				else 0
-				
-				lenX = if newPosX > 0
-					(newPosX-0)/paddingX
-				elseif newPosX < moveX
-					(moveX-newPosX)/paddingX
+				lenX = if newPosX < 0
+					(0-newPosX)/paddingX
+				elseif newPosX > moveX
+					(newPosX-moveX)/paddingX
 				else 0
-				
+
 				if lenY > 0
 					v = lenY*3
 					dPosY = dPosY / math.max v*v,1
 				if lenX > 0
 					v = lenX*3
 					dPosX = dPosX / math.max v*v,1
-			
+
 			dPosX = 0 if viewWidth < width
 			dPosY = 0 if viewHeight < height
-			
+
 			deltaX += dPosX
 			deltaY += dPosY
-			
+
 			@\emit "Scrolled",oVec2(dPosX,dPosY)
-			
+
 			startReset! if not touching and
 			(newPosY < -paddingY*0.5 or 
 			newPosY > moveY+paddingY*0.5 or
-			newPosX > paddingX*0.5 or
-			newPosX < moveX-paddingX*0.5)
+			newPosX < -paddingX*0.5 or
+			newPosX > moveX+paddingX*0.5)
 
 		updateSpeed = (dt)->
 			if S == oVec2.zero then return
@@ -153,6 +153,7 @@ Class
 				startReset!
 			elseif V ~= oVec2.zero and deltaMoveLength > 10
 				@\schedule updatePos
+			@\emit "ScrollEnd"
 
 		@\slots "TouchEnded",touchEnded
 		@\slots "TouchCancelled",touchEnded
@@ -169,8 +170,8 @@ Class
 			newPosX = deltaX + delta.x
 			newPosY = deltaY + delta.y
 
-			newPosX = math.min newPosX, 0
-			newPosX = math.max newPosX, moveX
+			newPosX = math.max newPosX, 0
+			newPosX = math.min newPosX, moveX
 			newPosY = math.max newPosY, 0
 			newPosY = math.min newPosY, moveY
 			
@@ -180,13 +181,15 @@ Class
 			setOffset offset,false
 
 		@updateViewSize = (wView,hView)=>
+			{:width,:height} = @contentSize
 			viewWidth = math.max wView,width
 			viewHeight = math.max hView,height
 			moveY = viewHeight - height
-			moveX = width - viewWidth
+			moveX = viewWidth - width
+			@scroll oVec2 0,0
 
 		@reset = (wView,hView,padX,padY)=>
-			@\updateViewSize wView,hView
+			@updateViewSize wView,hView
 			paddingX = padX
 			paddingY = padY
 			deltaX,deltaY = 0,0
@@ -195,8 +198,12 @@ Class
 			S = oVec2.zero
 			V = oVec2.zero
 			deltaMoveLength = 0
-		
+
+		@getViewSize = -> CCSize viewWidth,viewHeight
 		@getTotalDelta = -> oVec2 deltaX,deltaY
-		
+
 	offset: property => @getTotalDelta!,
 		(offset)=> @scroll offset-@getTotalDelta!
+
+	viewSize: property => @getViewSize!,
+		(size)=> @updateViewSize size.width,size.height

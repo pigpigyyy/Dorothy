@@ -3,16 +3,14 @@ Class,property = unpack require "class"
 MainSceneView = require "View.Scene.MainScene"
 
 Class
-  __partial: => MainSceneView!
-  __init: =>
-    @scrollArea\slots "Scrolled",(delta)->
-      @menu\eachChild (child)->
-        child.position += delta
-    
-    @scrollArea\slots "ScrollStart",->
-      @menu.enabled = false
+	__partial: => MainSceneView!
+	__init: =>
+		@scrollArea\slots "Scrolled",(delta)->
+			@menu\eachChild (child)->
+				child.position += delta
 
-    @scrollArea\slots "TouchEnded",->
-      @menu.enabled = true
-    
-    @scrollArea.offset = oVec2 -100,0
+		@scrollArea\slots "ScrollStart",->
+			@menu.enabled = false
+
+		@scrollArea\slots "ScrollEnd",->
+			@menu.enabled = true
