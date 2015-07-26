@@ -74,4 +74,10 @@ DerivedData/
 # include zbstudio files
 !/tools/zbstudio/bin/
 
+# exclude Moonscript and Xml compile files
 /project/Resources/SceneEditor/**/*.lua
+
+# include scite for Moonscript
+!/tools/moonscite/moon.exe
+!/tools/moonscite/moonc.exe
+!/tools/moonscite/Scite.exe
