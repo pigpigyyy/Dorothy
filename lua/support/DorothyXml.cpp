@@ -18,19 +18,16 @@ static bool isVal(const char* value)
 	return true;
 }
 
-static string oVal(const char* name, const char* value, const char* def = nullptr)
+static string oVal(const char* value, const char* def = nullptr, const char* name = nullptr, const char* attr = nullptr)
 {
 	if (!value || !value[0])
 	{
-		if (def)
+		if (def) return string(def);
+		else if (attr && name)
 		{
-			return string(def);
+			CCLOG("[XML ERROR] missing attribute %s for %s", attr, name);
 		}
-		else
-		{
-			CCLOG("Xml missing attribute for %s", name);
-			return string();
-		}
+		return string();
 	}
 	if (value[0] == '{')
 	{
@@ -41,11 +38,11 @@ static string oVal(const char* name, const char* value, const char* def = nullpt
 }
 
 #if defined(COCOS2D_DEBUG) && COCOS2D_DEBUG > 0
-	#define toVal(s,def) (oVal(#s,s,def).c_str())
-	#define Val(s) (oVal(#s,s,nullptr).c_str())
+	#define toVal(s,def) (oVal(s,def,name,#s).c_str())
+	#define Val(s) (oVal(s,nullptr,name,#s).c_str())
 #else
-	#define toVal(s,def) (oVal(nullptr,s,def).c_str())
-	#define Val(s) (oVal(nullptr,s,nullptr).c_str())
+	#define toVal(s,def) (oVal(s,def).c_str())
+	#define Val(s) (oVal(s,nullptr).c_str())
 #endif
 
 static const char* _toBoolean(const char* str)
