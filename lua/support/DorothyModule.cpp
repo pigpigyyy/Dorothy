@@ -419,7 +419,7 @@ int CCNode_gslot(lua_State* L)
 		oSlotData* slotData = (oSlotData*)self->getHelperObject();
 		if (!slotData)
 		{
-			if (lua_isnil(L, 3) || tolua_isnoobj(L, 3, &tolua_err)) return 0;
+			if (lua_isnil(L, 3) || lua_gettop(L) < 3) return 0;
 			slotData = oSlotData::create();
 			self->setHelperObject(slotData);
 		}
@@ -433,7 +433,7 @@ int CCNode_gslot(lua_State* L)
 				tolua_pushccobject(L, listener);
 				return 1;
 			}
-			else if (tolua_isnoobj(L, 3, &tolua_err)) // get
+			else if (lua_gettop(L) < 3) // get
 			{
 				oRefVector<oListener>* slotItems = slotData->getGSlotItems(name);
 				if (slotItems)
@@ -464,8 +464,8 @@ int CCNode_gslot(lua_State* L)
 #ifndef TOLUA_RELEASE
 tolua_lerror :
 	tolua_error(L, "#ferror in function 'gslot'.", &tolua_err);
-	return 0;
 #endif
+	return 0;
 }
 
 int CCNode_slots(lua_State* L)
