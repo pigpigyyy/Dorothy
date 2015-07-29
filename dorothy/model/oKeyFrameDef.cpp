@@ -35,38 +35,38 @@ skewX(0.0f),
 skewY(0.0f)
 { }
 
-string oKeyFrameDef::toXml()
+string oKeyFrameDef::toXml(oKeyFrameDef* lastDef)
 {
 	char buf[32];
 	ostringstream stream;
 	stream << '<' << char(oModelXml::KeyFrame);
-	if (duration != 0.0f)
+	if ((lastDef && lastDef->duration != duration) || (!lastDef && duration != 0.0f))
 	{
 		stream << ' ' << char(oModelXml::Duration) << "=\"" << (int)(duration*60.0f+0.5f) << '\"';
 	}
-	if (!visible)
+	if ((lastDef && lastDef->visible != visible) || (!lastDef && !visible))
 	{
 		stream << ' ' << char(oModelXml::Visible) << "=\"0\"";
 	}
-	if (x != 0.0f || y != 0.0f)
+	if ((lastDef && (lastDef->x != x || lastDef->y != y)) || (!lastDef && (x != 0.0f || y != 0.0f)))
 	{
 		stream << ' ' << char(oModelXml::Position) << "=\"" << s(x);
 		stream << ',' << s(y) << '\"';
 	}
-	if (rotation != 0.0f)
+	if ((lastDef && lastDef->rotation != rotation) || (!lastDef && rotation != 0.0f))
 	{
 		stream << ' ' << char(oModelXml::Rotation) << "=\"" << s(rotation) << '\"';
 	}
-	if (scaleX != 1.0f || scaleY != 1.0f)
+	if ((lastDef && (lastDef->scaleX != scaleX || lastDef->scaleY != scaleY)) || (!lastDef && (scaleX != 1.0f || scaleY != 1.0f)))
 	{
 		stream << ' ' << char(oModelXml::Scale) << "=\"" << s(scaleX);
 		stream << ',' << s(scaleY) << '\"';
 	}
-	if (opacity != 1.0f)
+	if ((lastDef && lastDef->opacity != opacity) || (!lastDef && opacity != 1.0f))
 	{
 		stream << ' ' << char(oModelXml::Opacity) << "=\"" << s(opacity) << '\"';
 	}
-	if (skewX != 0.0f || skewY != 0.0f)
+	if ((lastDef && (lastDef->skewX != skewX || lastDef->skewY != skewY)) || (!lastDef && (skewX != 0.0f || skewY != 0.0f)))
 	{
 		stream << ' ' << char(oModelXml::Skew) << "=\"" << s(skewX);
 		stream << ',' << s(skewY) << '\"';
@@ -93,6 +93,15 @@ string oKeyFrameDef::toXml()
 	}
 	stream << "/>";
 	return stream.str();
+}
+
+oKeyFrameDef* oKeyAnimationDef::getLastFrameDef() const
+{
+	if (!_keyFrameDefs.empty())
+	{
+		return _keyFrameDefs.back();
+	}
+	return nullptr;
 }
 
 void oKeyAnimationDef::add( oKeyFrameDef* def )
@@ -180,9 +189,11 @@ string oKeyAnimationDef::toXml()
 	else
 	{
 		stream << '>';
+		oKeyFrameDef* lastDef = nullptr;
 		for (oKeyFrameDef* keyFrameDef : _keyFrameDefs)
 		{
-			stream << keyFrameDef->toXml();
+			stream << keyFrameDef->toXml(lastDef);
+			lastDef = keyFrameDef;
 		}
 		stream << "</" << char(oModelXml::KeyAnimation) << '>';
 	}

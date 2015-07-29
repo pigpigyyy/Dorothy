@@ -117,32 +117,40 @@ void oModelCache::startElement( void *ctx, const char *name, const char **atts )
 	oCase::KeyFrame:
 		{
 			oKeyFrameDef* keyFrameDef = new oKeyFrameDef();
+			oKeyAnimationDef* animationDef = oModelCache::getCurrentKeyAnimation();
 			if (atts)
 			{
+				const char* duration = nullptr;
+				const char* position = nullptr;
+				const char* rotation = nullptr;
+				const char* scale = nullptr;
+				const char* skew = nullptr;
+				const char* opacity = nullptr;
+				const char* visible = nullptr;
 				for (int i = 0;atts[i] != nullptr;i++)
 				{
 					switch (atts[i][0])
 					{
 					oCase::Duration:
-						keyFrameDef->duration = (float)atoi(atts[++i])/60.0f;
+						duration = atts[++i];
 						break;
 					oCase::Position:
-						oHelper::getPosFromStr(atts[++i], keyFrameDef->x, keyFrameDef->y);
+						position = atts[++i];
 						break;
 					oCase::Rotation:
-						keyFrameDef->rotation = (float)atof(atts[++i]);
+						rotation = atts[++i];
 						break;
 					oCase::Scale:
-						oHelper::getPosFromStr(atts[++i], keyFrameDef->scaleX, keyFrameDef->scaleY);
+						scale = atts[++i];
 						break;
 					oCase::Skew:
-						oHelper::getPosFromStr(atts[++i], keyFrameDef->skewX, keyFrameDef->skewY);
+						skew = atts[++i];
 						break;
 					oCase::Opacity:
-						keyFrameDef->opacity = (float)atof(atts[++i]);
+						opacity = atts[++i];
 						break;
 					oCase::Visible:
-						keyFrameDef->visible = atoi(atts[++i]) == 1;
+						visible = atts[++i];
 						break;
 					oCase::EasePos:
 						keyFrameDef->easePos = atoi(atts[++i]);
@@ -161,8 +169,67 @@ void oModelCache::startElement( void *ctx, const char *name, const char **atts )
 						break;
 					}
 				}
+				oKeyFrameDef* lastDef = animationDef->getLastFrameDef();
+				if (duration)
+				{
+					keyFrameDef->duration = (float)atoi(duration) / 60.0f;
+				}
+				else if (lastDef)
+				{
+					keyFrameDef->duration = lastDef->duration;
+				}
+				if (position)
+				{
+					oHelper::getPosFromStr(position, keyFrameDef->x, keyFrameDef->y);
+				}
+				else if (lastDef)
+				{
+					keyFrameDef->x = lastDef->x;
+					keyFrameDef->y = lastDef->y;
+				}
+				if (rotation)
+				{
+					keyFrameDef->rotation = (float)atof(rotation);
+				}
+				else if (lastDef)
+				{
+					keyFrameDef->rotation = lastDef->rotation;
+				}
+				if (scale)
+				{
+					oHelper::getPosFromStr(scale, keyFrameDef->scaleX, keyFrameDef->scaleY);
+				}
+				else if (lastDef)
+				{
+					keyFrameDef->scaleX = lastDef->scaleX;
+					keyFrameDef->scaleY = lastDef->scaleY;
+				}
+				if (skew)
+				{
+					oHelper::getPosFromStr(skew, keyFrameDef->skewX, keyFrameDef->skewY);
+				}
+				else if (lastDef)
+				{
+					keyFrameDef->skewX = lastDef->skewX;
+					keyFrameDef->skewY = lastDef->skewY;
+				}
+				if (opacity)
+				{
+					keyFrameDef->opacity = (float)atof(opacity);
+				}
+				else if (lastDef)
+				{
+					keyFrameDef->opacity = lastDef->opacity;
+				}
+				if (visible)
+				{
+					keyFrameDef->visible = atoi(visible) == 1;
+				}
+				else if (lastDef)
+				{
+					keyFrameDef->visible = lastDef->visible;
+				}
 			}
-			oKeyAnimationDef* animationDef = oModelCache::getCurrentKeyAnimation();
 			animationDef->add(keyFrameDef);
 		}
 		break;

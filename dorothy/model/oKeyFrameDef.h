@@ -38,13 +38,14 @@ public:
 	float rotation;/*5*/
 	float skewX;
 	float skewY;/*6*/
-	string toXml();
+	string toXml(oKeyFrameDef* lastDef);
 };
 
 class oKeyAnimationDef: public oModelAnimationDef
 {
 public:
 	void add(oKeyFrameDef* def);
+	oKeyFrameDef* getLastFrameDef() const;
 	const oOwnVector<oKeyFrameDef>& getFrames() const;
 	virtual oActionDuration* toAction();
 	virtual string toXml();
