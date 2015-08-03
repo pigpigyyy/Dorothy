@@ -1,4 +1,4 @@
 Dorothy!
-oContent\addSearchPath "SceneEditor/Script"
+oContent\addSearchPath "SceneEditor"
 MainScene = require "Scene.MainScene"
 CCDirector\run MainScene!

@@ -4,7 +4,7 @@ static void oHandler(const char* begin, const char* end)
 {
 #define CHECK_CDATA(name) if (strcmp(begin,#name) == 0) CCSAXParser::placeCDataHeader("</"#name">");
 #define ELSE_CHECK_CDATA(name) else CHECK_CDATA(name)
-	if (*(begin-1) != '/')
+	if (begin < end && *(begin-1) != '/')
 	{
 		CHECK_CDATA(Call)
 		ELSE_CHECK_CDATA(Script)
@@ -18,28 +18,9 @@ static bool isVal(const char* value)
 	return true;
 }
 
-static string oVal(const char* value, const char* def = nullptr, const char* name = nullptr, const char* attr = nullptr)
-{
-	if (!value || !value[0])
-	{
-		if (def) return string(def);
-		else if (attr && name)
-		{
-			CCLOG("[XML ERROR] missing attribute %s for %s", attr, name);
-		}
-		return string();
-	}
-	if (value[0] == '{')
-	{
-		string valStr(value);
-		return valStr.substr(1, valStr.size()-2);
-	}
-	else return string(value);
-}
-
 #if defined(COCOS2D_DEBUG) && COCOS2D_DEBUG > 0
-	#define toVal(s,def) (oVal(s,def,name,#s).c_str())
-	#define Val(s) (oVal(s,nullptr,name,#s).c_str())
+	#define toVal(s,def) (oVal(s,def,element,#s).c_str())
+	#define Val(s) (oVal(s,nullptr,element,#s).c_str())
 #else
 	#define toVal(s,def) (oVal(s,def).c_str())
 	#define Val(s) (oVal(s,nullptr).c_str())
@@ -268,10 +249,10 @@ static const char* _toBoolean(const char* str)
 	CASE_STR(Time) { time = atts[++i]; break; }\
 	CASE_STR(X) { x = atts[++i]; break; }\
 	CASE_STR(Y) { y = atts[++i]; break; }\
-	CASE_STR(X1) { firstX = atts[++i]; break; }\
-	CASE_STR(Y1) { firstY = atts[++i]; break; }\
-	CASE_STR(X2) { secondX = atts[++i]; break; }\
-	CASE_STR(Y2) { secondY = atts[++i]; break; }
+	CASE_STR(FirstX) { firstX = atts[++i]; break; }\
+	CASE_STR(FirstY) { firstY = atts[++i]; break; }\
+	CASE_STR(SecondX) { secondX = atts[++i]; break; }\
+	CASE_STR(SecondY) { secondY = atts[++i]; break; }
 #define Bezier_Create
 #define Bezier_Handle \
 	oFunc func = {string("CCBezierTo(")+toVal(time,"0")+",oVec2("+Val(x)+","+Val(y)+"),oVec2("+Val(firstX)+","+Val(firstY)+"),oVec2("+Val(secondX)+","+Val(secondY)+"))",""};\
@@ -333,18 +314,19 @@ static const char* _toBoolean(const char* str)
 // Flip
 #define Flip_Define \
 	Object_Define\
-	const char* flipX = nullptr;\
-	const char* flipY = nullptr;
+	const char* x = nullptr;\
+	const char* y = nullptr;
 #define Flip_Check \
 	Object_Check\
-	CASE_STR(X) { flipX = atts[++i]; break; }\
-	CASE_STR(Y) { flipY = atts[++i]; break; }
+	CASE_STR(X) { x = atts[++i]; break; }\
+	CASE_STR(Y) { y = atts[++i]; break; }
 #define Flip_Create
 #define Flip_Handle \
 	oFunc func;\
-	if (flipX && flipY) func.begin = string("CCSpawn({CCFlipX(")+Val(flipX)+"),CCFlipY("+Val(flipY)+")})";\
-	else if (flipX && !flipY) func.begin = string("CCFlipX(")+Val(flipX)+")";\
-	else if (!flipX && flipY) func.begin = string("CCFlipY(")+Val(flipY)+")";\
+	if (x && y) func.begin = string("CCSpawn({CCFlipX(")+Val(x)+"),CCFlipY("+Val(y)+")})";\
+	else if (x && !y) func.begin = string("CCFlipX(")+Val(x)+")";\
+	else if (!x && y) func.begin = string("CCFlipY(")+Val(y)+")";\
+	else func.begin = string("CCSpawn({CCFlipX(")+Val(x)+"),CCFlipY("+Val(y)+")})";\
 	funcs.push(func);
 #define Flip_Finish
 
@@ -633,18 +615,18 @@ static const char* _toBoolean(const char* str)
 	const char* time = nullptr;\
 	const char* gridX = nullptr;\
 	const char* gridY = nullptr;\
-	const char* orientation = nullptr;
+	const char* dir = nullptr;
 #define Tile_FadeOut_Check \
 	Object_Check\
 	CASE_STR(Time) { time = atts[++i]; break; }\
 	CASE_STR(GridX) { gridX = atts[++i]; break; }\
 	CASE_STR(GridY) { gridY = atts[++i]; break; }\
-	CASE_STR(Dir) { orientation = atts[++i]; break; }
+	CASE_STR(Dir) { dir = atts[++i]; break; }
 #define Tile_FadeOut_Create
 #define Tile_FadeOut_Handle \
 	oFunc func = {string("CCTile:fadeOut(")+toVal(time,"0")+\
 	",CCSize("+toVal(gridX,"0")+","+toVal(gridY,"0")+"),"+\
-	toOrientation(orientation)+")",""};\
+	toOrientation(dir)+")",""};\
 	funcs.push(func);
 #define Tile_FadeOut_Finish
 
@@ -654,20 +636,20 @@ static const char* _toBoolean(const char* str)
 	const char* time = nullptr;\
 	const char* gridX = nullptr;\
 	const char* gridY = nullptr;\
-	const char* numberOfJumps = nullptr;\
+	const char* jumps = nullptr;\
 	const char* amplitude = nullptr;
 #define Tile_Jump3D_Check \
 	Object_Check\
 	CASE_STR(Time) { time = atts[++i]; break; }\
 	CASE_STR(GridX) { gridX = atts[++i]; break; }\
 	CASE_STR(GridY) { gridY = atts[++i]; break; }\
-	CASE_STR(Jumps) { numberOfJumps = atts[++i]; break; }\
+	CASE_STR(Jumps) { jumps = atts[++i]; break; }\
 	CASE_STR(Amplitude) { amplitude = atts[++i]; break; }
 #define Tile_Jump3D_Create
 #define Tile_Jump3D_Handle \
 	oFunc func = {string("CCTile:jump3D(")+toVal(time,"0")+\
 	",CCSize("+toVal(gridX,"0")+","+toVal(gridY,"0")+"),"+\
-	toVal(numberOfJumps,"0")+","+toVal(amplitude,"0")+")",""};\
+	toVal(jumps,"0")+","+toVal(amplitude,"0")+")",""};\
 	funcs.push(func);
 #define Tile_Jump3D_Finish
 
@@ -715,14 +697,14 @@ static const char* _toBoolean(const char* str)
 #define Tile_SplitCols_Define \
 	Object_Define\
 	const char* time = nullptr;\
-	const char* cols = nullptr;
+	const char* columns = nullptr;
 #define Tile_SplitCols_Check \
 	Object_Check\
 	CASE_STR(Time) { time = atts[++i]; break; }\
-	CASE_STR(Columns) { cols = atts[++i]; break; }
+	CASE_STR(Columns) { columns = atts[++i]; break; }
 #define Tile_SplitCols_Create
 #define Tile_SplitCols_Handle \
-	oFunc func = {string("CCTile:splitCols(")+toVal(time,"0")+","+toVal(cols,"0")+")",""};\
+	oFunc func = {string("CCTile:splitCols(")+toVal(time,"0")+","+toVal(columns,"0")+")",""};\
 	funcs.push(func);
 #define Tile_SplitCols_Finish
 
@@ -829,7 +811,8 @@ static const char* _toBoolean(const char* str)
 				stream << newParent.name << ".stencil = " << self << "\n\n";\
 			}\
 		}\
-	}
+	}\
+	else stream << "\n";
 
 // Node
 #define Node_Define \
@@ -963,7 +946,7 @@ static const char* _toBoolean(const char* str)
 	{\
 		stream << elementStack.top().name <<\
 		":drawDot(oVec2(" << toVal(x,"0") << ',' << toVal(y,"0") << ")," <<\
-		toVal(radius,"0.5") << ",ccColor4(" << Val(color) << "))\n\n";\
+		toVal(radius,"0.5") << ",ccColor4(" << Val(color) << "))\n";\
 	}
 
 // DrawNode.Polygon
@@ -979,7 +962,7 @@ static const char* _toBoolean(const char* str)
 	if (!elementStack.empty())\
 	{\
 		oFunc func = {elementStack.top().name+":drawPolygon({",\
-		string("},ccColor4(")+Val(fillColor)+"),"+toVal(borderWidth,"0")+",ccColor4("+toVal(borderColor,"")+"))\n\n"};\
+		string("},ccColor4(")+Val(fillColor)+"),"+toVal(borderWidth,"0")+",ccColor4("+toVal(borderColor,"")+"))\n"};\
 		funcs.push(func);\
 		items.push("Polygon");\
 	}
@@ -993,10 +976,10 @@ static const char* _toBoolean(const char* str)
 	const char* radius = nullptr;\
 	const char* color = nullptr;
 #define Segment_Check \
-	CASE_STR(X1) { beginX = atts[++i]; break; }\
-	CASE_STR(Y1) { beginY = atts[++i]; break; }\
-	CASE_STR(X2) { endX = atts[++i]; break; }\
-	CASE_STR(Y2) { endY = atts[++i]; break; }\
+	CASE_STR(BeginX) { beginX = atts[++i]; break; }\
+	CASE_STR(BeginY) { beginY = atts[++i]; break; }\
+	CASE_STR(EndX) { endX = atts[++i]; break; }\
+	CASE_STR(EndY) { endY = atts[++i]; break; }\
 	CASE_STR(Radius) { radius = atts[++i]; break; }\
 	CASE_STR(Color) { color = atts[++i]; break; }
 #define Segment_Finish \
@@ -1004,7 +987,7 @@ static const char* _toBoolean(const char* str)
 	{\
 		stream << elementStack.top().name <<\
 		":drawSegment(oVec2(" << toVal(beginX,"0") << ',' << toVal(beginY,"0") << "),oVec2(" <<\
-		toVal(endX,"0") << ',' << toVal(endY,"0") << ")," << toVal(radius,"0.5") << ",ccColor4(" << toVal(color,"") << "))\n\n";\
+		toVal(endX,"0") << ',' << toVal(endY,"0") << ")," << toVal(radius,"0.5") << ",ccColor4(" << toVal(color,"") << "))\n";\
 	}
 
 // Line
@@ -1018,7 +1001,7 @@ static const char* _toBoolean(const char* str)
 	Node_Handle
 #define Line_Finish \
 	Add_To_Parent\
-	oFunc func = {string(self)+":set({","})\n\n"};\
+	oFunc func = {string(self)+":set({","})\n"};\
 	funcs.push(func);\
 	items.push("Line");
 
@@ -1050,7 +1033,8 @@ static const char* _toBoolean(const char* str)
 	CASE_STR(Text) { text = atts[++i]; break; }\
 	CASE_STR(File) { fntFile = atts[++i]; break; }
 #define LabelAtlas_Create \
-	stream << "local " << self << " = CCLabelAtlas(" << toText(text);\
+	stream << "local " << self << " = CCLabelAtlas(";\
+	if (text && text[0]) stream << toText(text); else stream << "\"\"";\
 	if (fntFile) stream << "," << toText(fntFile);\
 	stream << ")\n";
 #define LabelAtlas_Handle \
@@ -1074,7 +1058,8 @@ static const char* _toBoolean(const char* str)
 	CASE_STR(Alignment) { alignment = atts[++i]; break; }\
 	CASE_STR(ImageOffset) { imageOffset = atts[++i]; break; }
 #define LabelBMFont_Create \
-	stream << "local " << self << " = CCLabelBMFont(" << toText(text);\
+	stream << "local " << self << " = CCLabelBMFont(";\
+	if (text && text[0]) stream << toText(text); else stream << "\"\"";\
 	if (fntFile) stream << "," << toText(fntFile);\
 	else stream << ",";\
 	stream << ',' << toVal(fontWidth,"CCLabelBMFont.AutomaticWidth") << "," << toTextAlign(alignment) << ',' << toVal(imageOffset,"oVec2.zero") << ")\n";
@@ -1095,7 +1080,9 @@ static const char* _toBoolean(const char* str)
 	CASE_STR(FontName) { fontName = atts[++i]; break; }\
 	CASE_STR(FontSize) { fontSize = atts[++i]; break; }
 #define LabelTTF_Create \
-	stream << "local " << self << " = CCLabelTTF(" << toText(text) << ',' << toText(fontName) << ',' << Val(fontSize) << ")\n";
+	stream << "local " << self << " = CCLabelTTF(";\
+	if (text && text[0]) stream << toText(text); else stream << "\"\"";\
+	stream << ',' << toText(fontName) << ',' << Val(fontSize) << ")\n";
 #define LabelTTF_Handle \
 	Node_Handle
 #define LabelTTF_Finish \
@@ -1107,15 +1094,15 @@ static const char* _toBoolean(const char* str)
 	const char* file = nullptr;\
 	const char* flipX = nullptr;\
 	const char* flipY = nullptr;\
-	const char* blendFuncSrc = nullptr;\
-	const char* blendFuncDst = nullptr;
+	const char* blendSrc = nullptr;\
+	const char* blendDst = nullptr;
 #define Sprite_Check \
 	Node_Check\
 	CASE_STR(File) { file = atts[++i]; break; }\
 	CASE_STR(FlipX) { flipX = atts[++i]; break; }\
 	CASE_STR(FlipY) { flipY = atts[++i]; break; }\
-	CASE_STR(BlendSrc) { blendFuncSrc = atts[++i]; break; }\
-	CASE_STR(BlendDst) { blendFuncDst = atts[++i]; break; }
+	CASE_STR(BlendSrc) { blendSrc = atts[++i]; break; }\
+	CASE_STR(BlendDst) { blendDst = atts[++i]; break; }
 #define Sprite_Create \
 	stream << "local " << self << " = CCSprite(";\
 	if (file) stream << toText(file) << ")\n";\
@@ -1124,12 +1111,12 @@ static const char* _toBoolean(const char* str)
 	Node_Handle\
 	if (flipX) stream << self << ".flipX = " << toBoolean(flipX) << '\n';\
 	if (flipY) stream << self << ".flipY = " << toBoolean(flipY) << '\n';\
-	if (blendFuncSrc && blendFuncDst) stream << self << ".blendFunc = ccBlendFunc("\
-									<< toBlendFunc(blendFuncSrc) << "," << toBlendFunc(blendFuncDst) << ")\n";\
-	else if (blendFuncSrc && !blendFuncDst) stream << self << ".blendFunc = ccBlendFunc("\
-									<< toBlendFunc(blendFuncSrc) << ',' << self << ".blendFunc.dst)\n";\
-	else if (!blendFuncSrc && blendFuncDst) stream << self << ".blendFunc = ccBlendFunc(" << self\
-									<< ".blendFunc.src," << toBlendFunc(blendFuncDst) << ")\n";
+	if (blendSrc && blendDst) stream << self << ".blendFunc = ccBlendFunc("\
+									<< toBlendFunc(blendSrc) << "," << toBlendFunc(blendDst) << ")\n";\
+	else if (blendSrc && !blendDst) stream << self << ".blendFunc = ccBlendFunc("\
+									<< toBlendFunc(blendSrc) << ',' << self << ".blendFunc.dst)\n";\
+	else if (!blendSrc && blendDst) stream << self << ".blendFunc = ccBlendFunc(" << self\
+									<< ".blendFunc.src," << toBlendFunc(blendDst) << ")\n";
 #define Sprite_Finish \
 	Add_To_Parent
 
@@ -1180,41 +1167,41 @@ static const char* _toBoolean(const char* str)
 // LayerColor
 #define LayerColor_Define \
 	Layer_Define\
-	const char* blendFuncSrc = nullptr;\
-	const char* blendFuncDst = nullptr;
+	const char* blendSrc = nullptr;\
+	const char* blendDst = nullptr;
 #define LayerColor_Check \
 	Layer_Check\
-	CASE_STR(BlendSrc) { blendFuncSrc = atts[++i]; break; }\
-	CASE_STR(BlendDst) { blendFuncDst = atts[++i]; break; }
+	CASE_STR(BlendSrc) { blendSrc = atts[++i]; break; }\
+	CASE_STR(BlendDst) { blendDst = atts[++i]; break; }
 #define LayerColor_Create \
 	stream << "local " << self << " = CCLayerColor(ccColor4(" << toVal(color,"") << "))\n";\
 	color = nullptr;
 #define LayerColor_Handle \
 	Layer_Handle\
-	if (blendFuncSrc && blendFuncDst) stream << self << ".blendFunc = ccBlendFunc("\
-									<< toBlendFunc(blendFuncSrc) << "," << toBlendFunc(blendFuncDst) << ")\n";\
-	else if (blendFuncSrc && !blendFuncDst) stream << self << ".blendFunc = ccBlendFunc("\
-									<< toBlendFunc(blendFuncSrc) << ',' << self << ".blendFunc.dst)\n";\
-	else if (!blendFuncSrc && blendFuncDst) stream << self << ".blendFunc = ccBlendFunc(" << self\
-									<< ".blendFunc.src," << toBlendFunc(blendFuncDst) << ")\n";
+	if (blendSrc && blendDst) stream << self << ".blendFunc = ccBlendFunc("\
+									<< toBlendFunc(blendSrc) << "," << toBlendFunc(blendDst) << ")\n";\
+	else if (blendSrc && !blendDst) stream << self << ".blendFunc = ccBlendFunc("\
+									<< toBlendFunc(blendSrc) << ',' << self << ".blendFunc.dst)\n";\
+	else if (!blendSrc && blendDst) stream << self << ".blendFunc = ccBlendFunc(" << self\
+									<< ".blendFunc.src," << toBlendFunc(blendDst) << ")\n";
 #define LayerColor_Finish \
 	Add_To_Parent
 
 // LayerGradient
 #define LayerGradient_Define \
 	LayerColor_Define\
-	const char* start = nullptr;\
-	const char* end = nullptr;\
+	const char* startColor = nullptr;\
+	const char* endColor = nullptr;\
 	const char* vectorX = nullptr;\
 	const char* vectorY = nullptr;
 #define LayerGradient_Check \
 	LayerColor_Check\
-	CASE_STR(StartColor) { start = atts[++i]; break; }\
-	CASE_STR(EndColor) { end = atts[++i]; break; }\
+	CASE_STR(StartColor) { startColor = atts[++i]; break; }\
+	CASE_STR(EndColor) { endColor = atts[++i]; break; }\
 	CASE_STR(VectorX) { vectorX = atts[++i]; break; }\
 	CASE_STR(VectorY) { vectorY = atts[++i]; break; }
 #define LayerGradient_Create \
-	stream << "local " << self << " = CCLayerGradient(ccColor4(" << toVal(start,"0xffffffff") << "),ccColor4(" << toVal(end,"0xffffffff") << ")," << "oVec2(" << toVal(vectorX,"0") << ',' << toVal(vectorY,"0.5") << ")\n";
+	stream << "local " << self << " = CCLayerGradient(ccColor4(" << toVal(startColor,"0xffffffff") << "),ccColor4(" << toVal(endColor,"0xffffffff") << ")," << "oVec2(" << toVal(vectorX,"0") << ',' << toVal(vectorY,"0.5") << ")\n";
 #define LayerGradient_Handle \
 	LayerColor_Handle
 #define LayerGradient_Finish \
@@ -1307,7 +1294,7 @@ static const char* _toBoolean(const char* str)
 	{\
 		stream << elementStack.top().name <<\
 		":setShouldContact(" << toGroup(groupA) << ',' << toGroup(groupB) << ',' <<\
-		(enabled && enabled[0] ? toBoolean(enabled) : "true") << ")\n\n";\
+		(enabled && enabled[0] ? toBoolean(enabled) : "true") << ")\n";\
 	}
 
 // Model
@@ -1342,16 +1329,16 @@ static const char* _toBoolean(const char* str)
 // Body
 #define Body_Define \
 	Node_Define\
-	const char* filename = nullptr;\
+	const char* file = nullptr;\
 	const char* group = nullptr;\
 	const char* world = nullptr;
 #define Body_Check \
 	Node_Check\
-	CASE_STR(File) { filename = atts[++i]; break; }\
+	CASE_STR(File) { file = atts[++i]; break; }\
 	CASE_STR(Group) { group = atts[++i]; break; }\
 	CASE_STR(World) { world = atts[++i]; break; }
 #define Body_Create \
-	stream << "local " << self << " = oBody(" << toText(filename)\
+	stream << "local " << self << " = oBody(" << toText(file)\
 			<< ',' << Val(world) << ",oVec2(" << toVal(x,"0") << ',' << toVal(y,"0") << "),"\
 			<< toVal(angle,"0") << ")\n";\
 	x = y = angle = nullptr;
@@ -1368,16 +1355,21 @@ static const char* _toBoolean(const char* str)
 	Object_Check\
 	else attributes[__targetStrForSwitch] = atts[++i];
 #define ModuleNode_Create \
-	stream << "local " << self << " = " << name << "{";
+	stream << "local " << self << " = " << element << "{";
 #define ModuleNode_Handle \
-	for (const auto& pair : attributes)\
+	auto it = attributes.begin();\
+	while (it != attributes.end())\
 	{\
-		stream << (char)tolower(pair.first.substr(0, 1).at(0)) << pair.first.substr(1) << " = ";\
+		stream << (char)tolower(it->first[0]) << it->first.substr(1) << " = ";\
 		char* p;\
-		strtod(pair.second.c_str(), &p);\
-		if (*p == 0) stream << pair.second;\
-		else stream << toText(pair.second.c_str());\
-		stream << ',';\
+		strtod(it->second.c_str(), &p);\
+		if (*p == 0) stream << it->second;\
+		else stream << toText(it->second.c_str());\
+		++it;\
+		if (it != attributes.end())\
+		{\
+			stream << ", ";\
+		}\
 	}\
 	attributes.clear();\
 	stream << "}\n";
@@ -1403,20 +1395,23 @@ static const char* _toBoolean(const char* str)
 				stream << newParent.name << ".stencil = " << self << "\n\n";\
 			}\
 		}\
-	}
+	}\
+	else stream << "\n";
 
 // Import
 #define Import_Define \
-	const char* moduleName = nullptr;\
+	const char* module = nullptr;\
 	const char* name = nullptr;
 #define Import_Check \
-	CASE_STR(Module) { moduleName = atts[++i]; break; }\
+	CASE_STR(Module) { module = atts[++i]; break; }\
 	CASE_STR(Name) { name = atts[++i]; break; }
 #define Import_Create \
-	if (moduleName) {\
-		string mod(moduleName);\
+	if (module) {\
+		string mod(module);\
 		size_t pos = mod.rfind('.');\
-		requires << "local " << (name ? name : (pos == string::npos ? moduleName : mod.substr(pos+1).c_str()))<< " = require(\"" << moduleName << "\")\n";}
+		string modStr = (name ? name : (pos == string::npos ? string(module) : mod.substr(pos+1)));\
+		imported.insert(modStr);\
+		requires << "local " << modStr << " = require(\"" << module << "\")\n";}
 
 // Item
 #define NodeItem_Define \
@@ -1485,12 +1480,14 @@ static const char* _toBoolean(const char* str)
 class oXmlDelegate : public CCSAXDelegator
 {
 public:
-	oXmlDelegate():
-	codes(nullptr)
+	oXmlDelegate(CCSAXParser* parser):
+	codes(nullptr),
+	parser(parser)
 	{ }
 	virtual void startElement(void *ctx, const char *name, const char **atts);
 	virtual void endElement(void *ctx, const char *name);
 	virtual void textHandler(void *ctx, const char *s, int len);
+	string oVal(const char* value, const char* def = nullptr, const char* element = nullptr, const char* attr = nullptr);
 public:
 	void clear()
 	{
@@ -1503,22 +1500,33 @@ public:
 		requires.clear();
 		requires.str("");
 		names.clear();
+		imported.clear();
 		firstItem.clear();
+		lastError.clear();
 	}
 	void begin()
 	{
 		oXmlDelegate::clear();
 		stream <<
 		"return function(args)\n"
-			"Dorothy(args)\n\n";
+		"Dorothy(args)\n\n";
 	}
 	void end()
 	{
-		stream << "\nreturn " << firstItem << "\n\nend";
+		stream << "return " << firstItem << "\nend";
 	}
 	string getResult()
 	{
-		return requires.str() + stream.str();
+		if (lastError.empty())
+		{
+			string requireStr = requires.str();
+			return requireStr + (requireStr.empty() ? "" : "\n") + stream.str();
+		}
+		return string();
+	}
+	const string& getLastError()
+	{
+		return lastError;
 	}
 private:
 	string getUsableName(const char* baseName)
@@ -1550,22 +1558,61 @@ private:
 		string begin;
 		string end;
 	};
+	CCSAXParser* parser;
 	// Script
 	const char* codes;
 	// Loader
 	string firstItem;
+	string lastError;
 	stack<oFunc> funcs;
 	stack<string> items;
 	stack<oItem> elementStack;
 	unordered_set<string> names;
+	unordered_set<string> imported;
 	unordered_map<string, string> attributes;
 	ostringstream stream;
 	ostringstream requires;
 };
 
-void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
+string oXmlDelegate::oVal(const char* value, const char* def, const char* element, const char* attr)
 {
-	SWITCH_STR_START(name)
+	if (!value || !value[0])
+	{
+		if (def) return string(def);
+		else if (attr && element)
+		{
+			char num[10];
+			sprintf(num, "%d", parser->getLineNumber(element));
+			lastError += string("Missing attribute ") + (char)toupper(attr[0]) + string(attr).substr(1) + " for " + element + ", at line " + num + "\n";
+		}
+		return string();
+	}
+	if (value[0] == '{')
+	{
+		string valStr(value);
+		if (valStr.back() != '}') return valStr;
+		int start = 1;
+		for (; valStr[start] == ' ' || valStr[start] == '\t'; ++start);
+		int end = (int)valStr.size() - 2;
+		for (; valStr[end] == ' ' || valStr[end] == '\t'; --end);
+		if (end < start)
+		{
+			if (attr && element)
+			{
+				char num[10];
+				sprintf(num, "%d", parser->getLineNumber(element));
+				lastError += string("Missing attribute ") + (char)toupper(attr[0]) + string(attr).substr(1) + " for " + element + ", at line " + num + "\n";
+			}
+			return string();
+		}
+		return valStr.substr(start, end - start + 1);
+	}
+	else return string(value);
+}
+
+void oXmlDelegate::startElement(void* ctx, const char* element, const char** atts)
+{
+	SWITCH_STR_START(element)
 	{
 		Item(Node, node)
 		Item(Node3D, node3D)
@@ -1710,7 +1757,7 @@ void oXmlDelegate::startElement(void *ctx, const char *name, const char **atts)
 			Item_Create(ModuleNode)
 			Item_Handle(ModuleNode)
 			ModuleNode_Finish;
-			oItem item = { name, self, ref };
+			oItem item = { element, self, ref };
 			elementStack.push(item);
 		}
 	}
@@ -1784,40 +1831,42 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 			break;
 		}
 		FLAG_WRAP_ACTION_END:
-		CASE_STR(Delay) goto FLAG_ACTION_BEGIN;
-		CASE_STR(Scale) goto FLAG_ACTION_BEGIN;
-		CASE_STR(Move) goto FLAG_ACTION_BEGIN;
-		CASE_STR(Rotate) goto FLAG_ACTION_BEGIN;
-		CASE_STR(Opacity) goto FLAG_ACTION_BEGIN;
-		CASE_STR(Skew) goto FLAG_ACTION_BEGIN;
-		CASE_STR(Roll) goto FLAG_ACTION_BEGIN;
-		CASE_STR(Jump) goto FLAG_ACTION_BEGIN;
-		CASE_STR(Bezier) goto FLAG_ACTION_BEGIN;
-		CASE_STR(Blink) goto FLAG_ACTION_BEGIN;
-		CASE_STR(Tint) goto FLAG_ACTION_BEGIN;
-		CASE_STR(Show) goto FLAG_ACTION_BEGIN;
-		CASE_STR(Hide) goto FLAG_ACTION_BEGIN;
-		CASE_STR(Flip) goto FLAG_ACTION_BEGIN;
-		CASE_STR(Orbit) goto FLAG_ACTION_BEGIN;
-		CASE_STR_DOT(Grid,FlipX3D) goto FLAG_ACTION_BEGIN;
-		CASE_STR_DOT(Grid,FlipY3D) goto FLAG_ACTION_BEGIN;
-		CASE_STR_DOT(Grid,Lens3D) goto FLAG_ACTION_BEGIN;
-		CASE_STR_DOT(Grid,Liquid) goto FLAG_ACTION_BEGIN;
-		CASE_STR_DOT(Grid,Reuse) goto FLAG_ACTION_BEGIN;
-		CASE_STR_DOT(Grid,Ripple3D) goto FLAG_ACTION_BEGIN;
-		CASE_STR_DOT(Grid,Shaky3D) goto FLAG_ACTION_BEGIN;
-		CASE_STR_DOT(Grid,Twirl) goto FLAG_ACTION_BEGIN;
-		CASE_STR_DOT(Grid,Stop) goto FLAG_ACTION_BEGIN;
-		CASE_STR_DOT(Grid,Wave) goto FLAG_ACTION_BEGIN;
-		CASE_STR_DOT(Grid,Wave3D) goto FLAG_ACTION_BEGIN;
-		CASE_STR_DOT(Tile,FadeOut) goto FLAG_ACTION_BEGIN;
-		CASE_STR_DOT(Tile,Jump3D) goto FLAG_ACTION_BEGIN;
-		CASE_STR_DOT(Tile,Shaky3D) goto FLAG_ACTION_BEGIN;
-		CASE_STR_DOT(Tile,Shuffle) goto FLAG_ACTION_BEGIN;
-		CASE_STR_DOT(Tile,SplitCols) goto FLAG_ACTION_BEGIN;
-		CASE_STR_DOT(Tile,SplitRows) goto FLAG_ACTION_BEGIN;
-		CASE_STR_DOT(Tile,TurnOff) goto FLAG_ACTION_BEGIN;
-		CASE_STR_DOT(Tile,Waves3D) goto FLAG_ACTION_BEGIN;
+		#define CaseAction(x) CASE_STR(x) goto FLAG_ACTION_BEGIN;
+		#define CaseActionDot(x1,x2) CASE_STR_DOT(x1,x2) goto FLAG_ACTION_BEGIN;
+		CaseAction(Delay)
+		CaseAction(Scale)
+		CaseAction(Move)
+		CaseAction(Rotate)
+		CaseAction(Opacity)
+		CaseAction(Skew)
+		CaseAction(Roll)
+		CaseAction(Jump)
+		CaseAction(Bezier)
+		CaseAction(Blink)
+		CaseAction(Tint)
+		CaseAction(Show)
+		CaseAction(Hide)
+		CaseAction(Flip)
+		CaseAction(Orbit)
+		CaseActionDot(Grid,FlipX3D)
+		CaseActionDot(Grid,FlipY3D)
+		CaseActionDot(Grid,Lens3D)
+		CaseActionDot(Grid,Liquid)
+		CaseActionDot(Grid,Reuse)
+		CaseActionDot(Grid,Ripple3D)
+		CaseActionDot(Grid,Shaky3D)
+		CaseActionDot(Grid,Twirl)
+		CaseActionDot(Grid,Stop)
+		CaseActionDot(Grid,Wave)
+		CaseActionDot(Grid,Wave3D)
+		CaseActionDot(Tile,FadeOut)
+		CaseActionDot(Tile,Jump3D)
+		CaseActionDot(Tile,Shaky3D)
+		CaseActionDot(Tile,Shuffle)
+		CaseActionDot(Tile,SplitCols)
+		CaseActionDot(Tile,SplitRows)
+		CaseActionDot(Tile,TurnOff)
+		CaseActionDot(Tile,Waves3D)
 		goto FLAG_ACTION_END;
 		FLAG_ACTION_BEGIN:
 		{
@@ -1925,22 +1974,66 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 			break;
 		}
 		FLAG_VEC2_CONTAINER_END:
-		break;
+		CASE_STR(Action)
+		{
+			stream << "\n";
+			break;
+		}
+		#define CaseBuiltin(x) CASE_STR(x) goto FLAG_OTHER_BUILTIN_BEGIN;
+		CaseBuiltin(Node)
+		CaseBuiltin(Node3D)
+		CaseBuiltin(Scene)
+		CaseBuiltin(DrawNode)
+		CaseBuiltin(Sprite)
+		CaseBuiltin(SpriteBatch)
+		CaseBuiltin(Layer)
+		CaseBuiltin(LayerColor)
+		CaseBuiltin(LayerGradient)
+		CaseBuiltin(ClipNode)
+		CaseBuiltin(LabelAtlas)
+		CaseBuiltin(LabelBMFont)
+		CaseBuiltin(LabelTTF)
+		CaseBuiltin(Menu)
+		CaseBuiltin(MenuItem)
+		CaseBuiltin(World)
+		CaseBuiltin(PlatformWorld)
+		CaseBuiltin(Model)
+		CaseBuiltin(Body)
+		CaseBuiltin(Vec2)
+		CaseBuiltin(Dot)
+		CaseBuiltin(Segment)
+		CaseBuiltin(Contact)
+		CaseBuiltin(Stencil)
+		CaseBuiltin(Import)
+		CaseBuiltin(Item)
+		goto FLAG_OTHER_BUILTIN_END;
+		FLAG_OTHER_BUILTIN_BEGIN:
+		{
+			break;
+		}
+		FLAG_OTHER_BUILTIN_END:
+		auto it = imported.find(name);
+		if (it == imported.end())
+		{
+			char num[10];
+			sprintf(num, "%d", parser->getLineNumber(name));
+			lastError += string("Tag <") + name + "> not imported, closed at line " + num + "\n";
+		}
 	}
 	SWITCH_STR_END
 
 	if (parentIsAction && currentData.ref)
 	{
-		stream << firstItem << '.' << currentData.name << " = " << currentData.name << "\n\n";
+		stream << firstItem << '.' << currentData.name << " = " << currentData.name << "\n";
 	}
 }
 
-void oXmlDelegate::textHandler(void *ctx, const char *s, int len)
+void oXmlDelegate::textHandler(void* ctx, const char* s, int len)
 {
 	codes = s;
 }
 
-oXmlLoader::oXmlLoader():_delegate(new oXmlDelegate())
+oXmlLoader::oXmlLoader():_delegate(new oXmlDelegate(&_parser))
 {
 	_parser.setDelegator(_delegate);
 }
@@ -1968,7 +2061,13 @@ string oXmlLoader::load(const string& xml)
 	return result ? _delegate->getResult() : string();
 }
 
-const string& oXmlLoader::getLastError() const
+string oXmlLoader::getLastError()
 {
-	return _parser.getLastError();
+	const string& parserError = _parser.getLastError();
+	const string& dorothyError = _delegate->getLastError();
+	if (parserError.empty() && !dorothyError.empty())
+	{
+		return string("Xml document error\n") + dorothyError;
+	}
+	return parserError + dorothyError;
 }

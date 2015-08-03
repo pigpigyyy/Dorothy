@@ -26,6 +26,7 @@
 
 #include "CCPlatformConfig.h"
 #include "CCCommon.h"
+#include "support/tinyxml2/tinyxml2.h"
 
 #include <string>
 
@@ -65,9 +66,11 @@ public:
 
 	static void placeCDataHeader(const char* cdataHeader);
 	static void setHeaderHandler(void(*handler)(const char* start, const char* end));
+	int getLineNumber(const char* name);
 private:
 	CCSAXDelegator* m_pDelegator;
 	std::string _lastError;
+	tinyxml2::XMLDocument _tinyDoc;
 };
 
 // end of platform group

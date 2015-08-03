@@ -1510,7 +1510,7 @@ public:
         node->_parent->DeleteChild( node );
     }
 
-    void SetError( XMLError error, const char* str1, const char* str2 );
+    void SetError( const char* p, XMLError error, const char* str1, const char* str2 );
 
     /// Return true if there was an error parsing the document.
     bool Error() const {
@@ -1528,6 +1528,12 @@ public:
     const char* GetErrorStr2() const {
         return _errorStr2;
     }
+	int GetErrorLine() const {
+		return _errorLine;
+	}
+	const char* GetCharBuffer() const {
+		return _charBuffer;
+	}
     /// If there is an error, print it to stdout.
     void PrintError() const;
 
@@ -1552,6 +1558,7 @@ private:
     const char* _errorStr1;
     const char* _errorStr2;
     char*       _charBuffer;
+    int         _errorLine;
 
     MemPoolT< sizeof(XMLElement) >	 _elementPool;
     MemPoolT< sizeof(XMLAttribute) > _attributePool;

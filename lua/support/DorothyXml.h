@@ -16,7 +16,7 @@ public:
 	~oXmlLoader();
 	string load(const char* filename);
 	string load(const string& xml);
-	const string& getLastError() const;
+	string getLastError();
 private:
 	oOwn<oXmlDelegate> _delegate;
 	CCSAXParser _parser;
