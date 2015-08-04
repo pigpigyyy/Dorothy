@@ -14,7 +14,7 @@
 	</Action>
 
 	<!-- Face Node -->
-	<Node Name="face" X="{ width*0.5 }" Y="{ height*0.5 }" Width="{ width }" Height="{ height }" Opacity="0.4" Ref="True"/>
+	<Node Name="face" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" Opacity="0.4" Ref="True"/>
 
 	<!-- Tap Event -->
 	<Slot Name="TapBegan">

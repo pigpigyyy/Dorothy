@@ -1591,9 +1591,9 @@ string oXmlDelegate::oVal(const char* value, const char* def, const char* elemen
 	{
 		string valStr(value);
 		if (valStr.back() != '}') return valStr;
-		int start = 1;
+		size_t start = 1;
 		for (; valStr[start] == ' ' || valStr[start] == '\t'; ++start);
-		int end = (int)valStr.size() - 2;
+		size_t end = valStr.size() - 2;
 		for (; valStr[end] == ' ' || valStr[end] == '\t'; --end);
 		if (end < start)
 		{
@@ -1605,7 +1605,82 @@ string oXmlDelegate::oVal(const char* value, const char* def, const char* elemen
 			}
 			return string();
 		}
-		return valStr.substr(start, end - start + 1);
+		valStr = valStr.substr(start, end - start + 1);
+		string newStr;
+		start = 0;
+		size_t i = 0;
+		while (i < valStr.size())
+		{
+			if (valStr[i] == '$' && i < valStr.size() - 1)
+			{
+				string parent;
+				if (!elementStack.empty())
+				{
+					oItem top = elementStack.top();
+					if (!top.name.empty())
+					{
+						parent = top.name;
+					}
+					else if (strcmp(top.type, "Stencil") == 0)
+					{
+						elementStack.pop();
+						if (!elementStack.empty())
+						{
+							const oItem& newTop = elementStack.top();
+							parent = newTop.name;
+						}
+						elementStack.push(top);
+					}
+				}
+				if (parent.empty() && element)
+				{
+					char num[10];
+					sprintf(num, "%d", parser->getLineNumber(element));
+					lastError += string("The $ expression can`t be used in tag at line ") + num + "\n";
+				}
+				newStr += valStr.substr(start, i - start);
+				i++;
+				start = i + 1;
+				switch (valStr[i])
+				{
+				case 'L':
+					newStr += "0";
+					break;
+				case 'W':
+				case 'R':
+					newStr += parent + ".width";
+					break;
+				case 'H':
+				case 'T':
+					newStr += parent + ".height";
+					break;
+				case 'B':
+					newStr += "0";
+					break;
+				case 'X':
+					newStr += parent + ".width*0.5";
+					break;
+				case 'Y':
+					newStr += parent + ".height*0.5";
+					break;
+				default:
+					if (element)
+					{
+						char num[10];
+						sprintf(num, "%d", parser->getLineNumber(element));
+						lastError += string("Invalid expression $") + valStr[i] + " at line " + num + "\n";
+					}
+					break;
+				}
+			}
+			i++;
+		}
+		if (0 < start)
+		{
+			if (start < valStr.size()) newStr += valStr.substr(start);
+			return newStr;
+		}
+		else return valStr;
 	}
 	else return string(value);
 }
