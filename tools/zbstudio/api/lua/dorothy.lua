@@ -371,6 +371,16 @@ local Dorothy =
 				typeName = "CCSize",
 				type = "value",
 			},
+			width =
+			{
+				description = "[float]",
+				type = "value",
+			},
+			height =
+			{
+				description = "[float]",
+				type = "value",
+			},
 			tag =
 			{
 				description = "[int]",

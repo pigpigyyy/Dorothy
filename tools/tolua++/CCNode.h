@@ -13,6 +13,8 @@ class CCNode: public CCObject
 	tolua_property__bool bool visible;
 	tolua_property__common oVec2 anchorPoint @ anchor;
 	tolua_property__common CCSize contentSize;
+	tolua_property__common float width;
+	tolua_property__common float height;
 	tolua_property__common int tag;
 	tolua_property__common ccColor3 color;
 	tolua_property__common float opacity;

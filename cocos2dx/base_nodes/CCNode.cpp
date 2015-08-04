@@ -360,6 +360,23 @@ void CCNode::setContentSize(const CCSize & size)
 	}
 }
 
+void CCNode::setWidth(float w)
+{
+	setContentSize(CCSize(w, getContentSize().height));
+}
+float CCNode::getWidth()
+{
+	return getContentSize().width;
+}
+void CCNode::setHeight(float h)
+{
+	setContentSize(CCSize(getContentSize().width, h));
+}
+float CCNode::getHeight()
+{
+	return getContentSize().height;
+}
+
 // isRunning getter
 bool CCNode::isRunning()
 {

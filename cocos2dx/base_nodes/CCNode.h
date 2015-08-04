@@ -380,6 +380,10 @@ public:
      */
     virtual const CCSize& getContentSize();
 
+	void setWidth(float w);
+	float getWidth();
+	void setHeight(float h);
+	float getHeight();
     
     /**
      * Sets whether the node is visible

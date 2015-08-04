@@ -883,8 +883,8 @@ static const char* _toBoolean(const char* str)
 	if (transformTarget) stream << self << ".transformTarget = " << Val(transformTarget) << '\n';\
 	if (visible) stream << self << ".visible = " << toBoolean(visible) << '\n';\
 	if (width && height) stream << self << ".contentSize = CCSize(" << Val(width) << ',' << Val(height) << ")\n";\
-	else if (width && !height) stream << self << ".contentSize = CCSize(" << Val(width) << ',' << self << ".contentSize.height)\n";\
-	else if (!width && height) stream << self << ".contentSize = CCSize(" << self << ".contentSize.width," << Val(height) << ")\n";
+	else if (width && !height) stream << self << ".width = " << Val(width) << '\n';\
+	else if (!width && height) stream << self << ".height = " << Val(height) << '\n';
 #define Node_Finish \
 	Add_To_Parent
 
