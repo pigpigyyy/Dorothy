@@ -2,12 +2,14 @@
 	<Import Module="Control.Button"/>
 	<Import Module="Control.CircleButton"/>
 	<Import Module="Control.ScrollArea"/>
+	<Import Module="Control.SpriteView"/>
 
 	<ScrollArea Name="scrollArea" X="200" Y="200" Width="400" Height="400" ViewWidth="400" ViewHeight="700" PaddingX="0" PaddingY="50" TouchPriority="0" Ref="True">
 		<Item Name="view">
 			<Menu Name="menu" AnchorX="0" AnchorY="0" Width="400" Height="400" TouchPriority="1" Ref="True">
 				<Button Name="btn" X="{ 400-30 }" Y="30" Width="60" Height="60" FontSize="20" Text="OK"/>
 				<CircleButton X="30" Y="{ 400-30 }" Radius="30" FontSize="16" Text="Cancel"/>
+				<SpriteView File="ActionEditor/Model/Input/xiaoli/1.png" X="200" Y="200" Width="100" Height="100" TouchPriority="1"/>
 			</Menu>
 		</Item>
 	</ScrollArea>

@@ -406,6 +406,18 @@ _G["Dorothy"] = (function()
 	end
 end)()
 
+_G["go"] = function(routine)
+	oRoutine(once(routine))
+end
+
+_G["goloop"] = function(routine)
+	oRoutine(loop(routine))
+end
+
+_G["sleep"] = function(sec)
+	wait(seconds(sec))
+end
+
 collectgarbage("setpause", 100)
 collectgarbage("setstepmul", 5000)
 $]

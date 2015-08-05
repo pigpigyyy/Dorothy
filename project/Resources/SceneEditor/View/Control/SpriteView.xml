@@ -1,0 +1,58 @@
+<!-- params: X, Y, Width, Height, File, TouchPriority -->
+<Menu X="{ x }" Y="{ y }" Width="{ width }" Height="{ height }" TouchPriority="{ touchPriority }">
+	<Import Module="View.Shape.LineRect"/>
+	<Import Module="View.Shape.SolidRect"/>
+
+	<Action>
+		<Sequence Name="scale">
+			<Spawn>
+				<Opacity Alpha="1"/>
+				<Scale X="0.3" Y="0.3"/>
+			</Spawn>
+			<Scale Time="0.3" X="1" Y="1" Ease="OutBack"/>
+		</Sequence>
+		<Opacity Name="fade" Time="0.3" Alpha="0.4" Ease="InExpo"/>
+	</Action>
+
+	<Node Name="face" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" Opacity="0.4">
+		<LineRect Width="{ width }" Height="{ height }" Color="0xff00ffff"/>
+		<Sprite Name="sprite" X="{ $X }" Y="{ $Y }" Ref="True"/>
+		<Node Name="boxFace" X="{ $R-15 }" Y="{ $B+15 }" Width="30" Height="30">
+			<Action>
+				<Sequence Name="scaleBox">
+					<Scale X="0.3" Y="0.3"/>
+					<Scale Time="0.3" X="1" Y="1" Ease="OutBack"/>
+				</Sequence>
+				<Sequence Name="fadeBox">
+					<Opacity Name="fadeBox" Time="0.3" Alpha="0.4" Ease="InExpo"/>
+					<Call>
+						boxFace.opacity = 1
+						boxFace.cascadeOpacity = true
+					</Call>
+				</Sequence>
+			</Action>
+			<SolidRect Width="30" Height="30" Color="0x0"/>
+			<LineRect Width="30" Height="30" Color="0xff00ffff"/>
+		</Node>
+	</Node>
+
+	<MenuItem Name="checkBox" X="{ $R-15 }" Y="{ $B+15 }" Width="30" Height="30" Ref="True">
+		<Slot Name="TapBegan">
+			boxFace.cascadeOpacity = false
+			boxFace:perform(scaleBox)
+		</Slot>
+		<Slot Name="TapEnded">
+			if not fadeBox.done then boxFace:stopAction(fadeBox) end
+			boxFace:runAction(fadeBox)
+		</Slot>
+	</MenuItem>
+	<MenuItem X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }">
+		<Slot Name="TapBegan">
+			face:perform(scale)
+		</Slot>
+		<Slot Name="TapEnded">
+			if not fade.done then face:stopAction(fade) end
+			face:runAction(fade)
+		</Slot>
+	</MenuItem>
+</Menu>
