@@ -14,3 +14,6 @@ Class
 
 		@scrollArea\slots "ScrollEnd",->
 			@menu.enabled = true
+		
+		@btn\slots "Tapped", ->
+			@viewItem.isCheckMode = not @viewItem.isCheckMode

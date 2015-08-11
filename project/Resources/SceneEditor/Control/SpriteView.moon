@@ -6,12 +6,15 @@ Class
 	__partial: (args)=> SpriteViewView args
 	__init: (args)=>
 		{:width,:height,:file} = args
-		@\updateImage file
-
+		@_isCheckMode = false
 		@_checked = false
-		@checkBox\slots "Tapped", ->
-			@_checked = not @_checked
-			@\emit "Checked",@_checked
+		@boxFill.visible = false
+		@\slots "TapBegan",->
+			@\_setBoxChecked not @_checked if @isCheckMode
+		@\slots "Tapped", ->
+			@\emit "Selected",@ if not @isCheckMode
+		@\updateImage file
+		@isCheckMode = true
 
 	updateImage: (file)=>
 		go ->
@@ -36,4 +39,16 @@ Class
 			@sprite.opacity = 0
 			@sprite\perform oOpacity 0.3,1
 
+	_setBoxChecked: (checked)=>
+		@_checked = checked
+		@boxFill.visible = checked
+		@\emit "Checked",checked
+
 	checked: property => @_checked
+
+	isCheckMode: property => @_isCheckMode,
+		(value)=>
+			@_isCheckMode = value
+			@boxFace.visible = value
+			if not value
+				@\_setBoxChecked false if @_checked
