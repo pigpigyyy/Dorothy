@@ -15,7 +15,7 @@ Class
 
 		@scrollArea\slots "ScrollEnd",->
 			@menu.enabled = true
-		
+
 		--@btn\slots "Tapped", ->
 		--	@viewItem.isCheckMode = not @viewItem.isCheckMode
 
@@ -57,14 +57,23 @@ Class
 		visitResource oContent.writablePath.."Body"
 		visitResource oContent.writablePath.."Effect"
 
+		{:width,:height} = @scrollArea
 		y = 0
 		for i,image in ipairs images
 			i -= 1
-			y = 240-math.floor(i/4)*110
-			viewItem = SpriteView file:image,x:60+(i%4)*110,y:y,width:100,height:100
+			x = 60+(i%4)*110
+			y = height-60-math.floor(i/4)*110
+			viewItem = SpriteView file:image,x:x,y:y,width:100,height:100
 			@menu\addChild viewItem
-		y -= 60
+		y -= 50
 
+		startY = y
 		TabButton = require "View.Control.TabButton"
-		@menu\addChild TabButton x:225,y:y-15,text:"model.clip"
+		for i,clip in ipairs clips
+			i -= 1
+			y = startY-25-i*40
+			clipItem = TabButton x:225,y:y,text:clip
+			@menu\addChild clipItem
+		y -= 25
+
 		@scrollArea.viewSize = CCSize 450,10+math.floor((#images-1)/4+1)*110+40

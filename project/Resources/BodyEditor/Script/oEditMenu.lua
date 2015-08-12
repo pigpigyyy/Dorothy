@@ -179,7 +179,7 @@ local function oEditMenu()
 	node.position = oVec2(25,25)
 	node:addChild(paint)
 	items.Polygon.face:addChild(node)
-	
+
 	-- chain button --
 	paint = oLine(
 	{

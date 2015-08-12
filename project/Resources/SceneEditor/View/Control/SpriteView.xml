@@ -45,7 +45,7 @@
 	</Slot>
 	<Slot Name="Tapped">
 		if item.isCheckMode then
-			boxFace:runAction(scaleBox)		
+			boxFace:runAction(scaleBox)
 		end
 	</Slot>
 	<Slot Name="TapEnded">

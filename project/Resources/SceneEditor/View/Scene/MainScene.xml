@@ -3,6 +3,7 @@
 	<Import Module="Control.CircleButton"/>
 	<Import Module="Control.ScrollArea"/>
 	<Import Module="Control.SpriteView"/>
+	<Import Module="View.Shape.LineRect"/>
 
 	<ScrollArea Name="scrollArea" X="225" Y="150" Width="450" Height="300" ViewWidth="450" ViewHeight="300" PaddingX="0" PaddingY="50" TouchPriority="0" Ref="True">
 		<Item Name="view">
@@ -11,4 +12,5 @@
 			</Menu>
 		</Item>
 	</ScrollArea>
+	<LineRect Width="450" Height="300" Color="0xff00ffff"/>
 </Scene>

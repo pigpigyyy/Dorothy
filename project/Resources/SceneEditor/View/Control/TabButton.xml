@@ -1,4 +1,4 @@
-<MenuItem X="{ x }" Y="{ y }" Width="430" Height="30" Text="{ text }" Color="0x00ffff" Opacity="0.4">
+<MenuItem Name="item" X="{ x }" Y="{ y }" Width="430" Height="30" Text="{ text }" Color="0x00ffff" Opacity="0.4">
 	<Import Module="View.Shape.LineRect"/>
 	
 	<LineRect Width="430" Height="30" Color="0xffffffff"/>
@@ -6,4 +6,22 @@
 	<Script>
 		label.texture.antiAlias = false
 	</Script>
+	<Node Name="arrow" X="25" Y="15" PassColor="False">
+		<DrawNode>
+			<Polygon FillColor="0xff80ff00">
+				<Vec2 X="-9" Y="-10"/>
+				<Vec2 X="-9" Y="10"/>
+				<Vec2 X="9" Y="0"/>
+			</Polygon>
+		</DrawNode>
+	</Node>
+	<Slot Name="Tapped">
+		if item.opacity < 1 then
+			item.opacity = 1
+			arrow:perform(oRotate(0.3,90,oEase.OutExpo))
+		else
+			item.opacity = 0.4
+			arrow:perform(oRotate(0.3,0,oEase.OutExpo))
+		end
+	</Slot>
 </MenuItem>

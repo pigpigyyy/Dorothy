@@ -14,12 +14,15 @@ Class
 				@\_setBoxChecked not @_checked
 			else
 				@\emit "Selected",@
+		@\slots "Cleanup", ->
+			oRoutine\remove @routine
+			oCache.Texture\unload @_file if @_file
 
 		@\updateImage file
 		@isCheckMode = true
 
 	updateImage: (file)=>
-		go ->
+		@routine = go ->
 			oCache.Texture\unload @_file if @_file
 			oCache\loadAsync file
 			sprite = CCSprite file
@@ -38,10 +41,11 @@ Class
 			sleep 0.1
 			@_file = file\match("(.*)%.[^%.\\/]*$").."Small."..file\match("%.([^%.\\/]*)$")
 			tex = oCache.Texture\add renderTarget,@_file
-			@sprite.texture = tex
-			@sprite.textureRect = CCRect 0,0,width,height
-			@sprite.opacity = 0
-			@sprite\perform oOpacity 0.3,1
+			if @sprite
+				@sprite.texture = tex
+				@sprite.textureRect = CCRect 0,0,width,height
+				@sprite.opacity = 0
+				@sprite\perform oOpacity 0.3,1
 
 	_setBoxChecked: (checked)=>
 		@_checked = checked
