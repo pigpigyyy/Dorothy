@@ -536,7 +536,7 @@ char* XMLDocument::Identify( char* p, XMLNode** node )
 #if defined(_MSC_VER)
 #pragma warning (pop)
 #endif
-    if ( XMLUtil::StringEqual( p, xmlHeader, xmlHeaderLen ) ) {
+	if ( XMLUtil::StringEqual( p, xmlHeader, xmlHeaderLen ) ) {
         returnNode = new (_commentPool.Alloc()) XMLDeclaration( this );
         returnNode->_memPool = &_commentPool;
         p += xmlHeaderLen;
@@ -558,6 +558,12 @@ char* XMLDocument::Identify( char* p, XMLNode** node )
 			g_cdataHeader = NULL;
 		}
     }
+	else if (g_cdataHeader) {
+		XMLText* text = new (_textPool.Alloc()) XMLText(this);
+		returnNode = text;
+		returnNode->_memPool = &_textPool;
+		text->SetCData(true);
+	}
     else if ( XMLUtil::StringEqual( p, dtdHeader, dtdHeaderLen ) ) {
         returnNode = new (_commentPool.Alloc()) XMLUnknown( this );
         returnNode->_memPool = &_commentPool;
@@ -869,23 +875,10 @@ char* XMLNode::ParseDeep( char* p, StrPair* parentEnd )
 char* XMLText::ParseDeep( char* p, StrPair* )
 {
     const char* start = p;
-    if ( this->CData() ) {
-		char* tmp = p;
-        p = _value.ParseText( p, "]]>", StrPair::NEEDS_NEWLINE_NORMALIZATION );
-        if ( !p ) {
-            _document->SetError(tmp, XML_ERROR_PARSING_CDATA, start, 0 );
-        }
-        return p;
-    }
-	else if (g_cdataHeader) {
-		int flags = _document->ProcessEntities() ? StrPair::TEXT_ELEMENT : StrPair::TEXT_ELEMENT_LEAVE_ENTITIES;
-		if (_document->WhitespaceMode() == COLLAPSE_WHITESPACE) {
-			flags |= StrPair::COLLAPSE_WHITESPACE;
-		}
-		char* tmp = p;
-		p = _value.ParseText(p, g_cdataHeader, flags);
+	if (g_cdataHeader) {
+		p = _value.ParseText(p, g_cdataHeader, StrPair::NEEDS_NEWLINE_NORMALIZATION);
 		if (!p) {
-			_document->SetError(tmp, XML_ERROR_PARSING_TEXT, start, 0);
+			_document->SetError(start, XML_ERROR_PARSING_CDATA, start, 0);
 		}
 		if (p && *p) {
 			size_t len = strlen(g_cdataHeader);
@@ -893,6 +886,13 @@ char* XMLText::ParseDeep( char* p, StrPair* )
 			return p - len;
 		}
 	}
+	else if ( this->CData() ) {
+        p = _value.ParseText( p, "]]>", StrPair::NEEDS_NEWLINE_NORMALIZATION );
+        if ( !p ) {
+            _document->SetError(start, XML_ERROR_PARSING_CDATA, start, 0);
+        }
+        return p;
+    }
 	else {
         int flags = _document->ProcessEntities() ? StrPair::TEXT_ELEMENT : StrPair::TEXT_ELEMENT_LEAVE_ENTITIES;
         if ( _document->WhitespaceMode() == COLLAPSE_WHITESPACE ) {
@@ -1392,11 +1392,11 @@ char* XMLElement::ParseAttributes( char* p )
             XMLAttribute* attrib = new (_document->_attributePool.Alloc() ) XMLAttribute();
             attrib->_memPool = &_document->_attributePool;
 			attrib->_memPool->SetTracked();
-
+			const char* tmp = p;
             p = attrib->ParseDeep( p, _document->ProcessEntities() );
             if ( !p || Attribute( attrib->Name() ) ) {
                 DELETE_ATTRIBUTE( attrib );
-                _document->SetError( start, XML_ERROR_PARSING_ATTRIBUTE, start, p );
+                _document->SetError( tmp, XML_ERROR_PARSING_ATTRIBUTE, tmp, p );
                 return 0;
             }
             // There is a minor bug here: if the attribute in the source xml

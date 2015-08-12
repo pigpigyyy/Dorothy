@@ -2,13 +2,17 @@
 
 static void oHandler(const char* begin, const char* end)
 {
-#define CHECK_CDATA(name) if (strcmp(begin,#name) == 0) CCSAXParser::placeCDataHeader("</"#name">");
-#define ELSE_CHECK_CDATA(name) else CHECK_CDATA(name)
+#define CHECK_CDATA(name) \
+	if (strncmp(begin, #name, sizeof(#name) / sizeof(char) - 1) == 0)\
+	{\
+		CCSAXParser::placeCDataHeader("</"#name">");\
+		return;\
+	}
 	if (begin < end && *(begin-1) != '/')
 	{
 		CHECK_CDATA(Call)
-		ELSE_CHECK_CDATA(Script)
-		ELSE_CHECK_CDATA(Slot)
+		CHECK_CDATA(Script)
+		CHECK_CDATA(Slot)
 	}
 }
 
