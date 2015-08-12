@@ -9,10 +9,12 @@ Class
 		@_isCheckMode = false
 		@_checked = false
 		@boxFill.visible = false
-		@\slots "TapBegan",->
-			@\_setBoxChecked not @_checked if @isCheckMode
 		@\slots "Tapped", ->
-			@\emit "Selected",@ if not @isCheckMode
+			if @isCheckMode
+				@\_setBoxChecked not @_checked
+			else
+				@\emit "Selected",@
+
 		@\updateImage file
 		@isCheckMode = true
 
@@ -22,7 +24,9 @@ Class
 			oCache\loadAsync file
 			sprite = CCSprite file
 			{:width,:height} = @
-			scale = math.min width/sprite.width,height/sprite.height
+			scale = 1
+			if width < sprite.width or height < sprite.height
+				scale = math.min width/sprite.width,height/sprite.height
 			sprite.scaleX = scale
 			sprite.scaleY = scale
 			sprite.position = oVec2 width/2,height/2
