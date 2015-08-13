@@ -230,11 +230,11 @@ void CCMenu::ccTouchEnded(CCTouch *touch, CCEvent* event)
 		return;
 	}
 	if (m_pSelectedItem)
-    {
-        m_pSelectedItem->unselected();
-        m_pSelectedItem->activate();
-    }
-    m_eState = kCCMenuStateWaiting;
+	{
+		m_pSelectedItem->activate();
+		m_pSelectedItem->unselected();
+	}
+	m_eState = kCCMenuStateWaiting;
 }
 
 void CCMenu::ccTouchCancelled(CCTouch *touch, CCEvent* event)

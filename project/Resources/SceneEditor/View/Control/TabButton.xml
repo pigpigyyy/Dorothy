@@ -3,9 +3,7 @@
 	
 	<LineRect Width="430" Height="30" Color="0xffffffff"/>
 	<LabelTTF Name="label" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="16" Text="{ text }"/>
-	<Script>
-		label.texture.antiAlias = false
-	</Script>
+	<Script>label.texture.antiAlias = false</Script>
 	<Node Name="arrow" X="25" Y="15" PassColor="False">
 		<DrawNode>
 			<Polygon FillColor="0xff80ff00">

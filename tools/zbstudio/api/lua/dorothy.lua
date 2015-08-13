@@ -138,37 +138,38 @@ local Dorothy =
 			},
 			left =
 			{
-				description = "[float]",
+				description = "[float][Readonly]",
 				type = "value",
 			},
 			right =
 			{
-				description = "[float]",
+				description = "[float][Readonly]",
 				type = "value",
 			},
 			bottom =
 			{
-				description = "[float]",
+				description = "[float][Readonly]",
 				type = "value",
 			},
 			up =
 			{
-				description = "[float]",
+				description = "[float][Readonly]",
 				type = "value",
 			},
 			midX =
 			{
-				description = "[float]",
+				description = "[float][Readonly]",
 				type = "value",
 			},
 			midY =
 			{
-				description = "[float]",
+				description = "[float][Readonly]",
 				type = "value",
 			},
 			zero =
 			{
 				description = "[CCRect][Readonly]",
+				typeName = "CCRect",
 				static = true,
 				type = "value",
 			},
@@ -184,6 +185,13 @@ local Dorothy =
 				args = "(rect: CCRect)",
 				description = "",
 				returns = "(result: bool)",
+				type = "method",
+			},
+			set =
+			{
+				args = "(x: float, y: float, width: float, height: float)",
+				description = "",
+				returns = "()",
 				type = "method",
 			},
 		},

@@ -4,7 +4,9 @@
 	<Import Module="Control.ScrollArea"/>
 	<Import Module="Control.SpriteView"/>
 	<Import Module="View.Shape.LineRect"/>
+	<Import Module="View.Shape.SolidRect"/>
 
+	<SolidRect Width="450" Height="300" Color="0x2200ffff"/>
 	<ScrollArea Name="scrollArea" X="225" Y="150" Width="450" Height="300" ViewWidth="450" ViewHeight="300" PaddingX="0" PaddingY="50" TouchPriority="0" Ref="True">
 		<Item Name="view">
 			<Menu Name="menu" AnchorX="0" AnchorY="0" Width="450" Height="400" TouchPriority="1" Ref="True">

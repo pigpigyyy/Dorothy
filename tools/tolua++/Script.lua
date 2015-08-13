@@ -259,6 +259,13 @@ local function _loadAsync(filename, loaded)
 	local itemType = nil
 	if extension == "png" or extension == "jpg" or extension == "tiff" or extension == "webp" then
 		return _loadTextureAsync(filename, loaded)
+	elseif extension == "clip" then
+		oCache.Clip:load(filename)
+		return _loadTextureAsync(oCache.Clip:getTextureFile(filename),function()
+			if loaded then
+				loaded(filename)
+			end
+		end)
 	else
 		local isLoaded = false
 		local function loader()
@@ -274,8 +281,6 @@ local function _loadAsync(filename, loaded)
 		end
 		if extension == "model" then
 			itemType = "Model"
-		elseif extension == "clip" then
-			itemType = "Clip"
 		elseif extension == "frame" then
 			itemType = "Animation"
 		elseif extension == "effect" then

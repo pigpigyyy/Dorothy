@@ -14,45 +14,16 @@
 		<Opacity Name="fade" Time="0.3" Alpha="0.4" Ease="InExpo"/>
 	</Action>
 
-	<Node Name="face" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" Opacity="0.4">
+	<Node Name="face" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" Opacity="0.4" Ref="True">
 		<LineRect Width="{ width }" Height="{ height }" Color="0xff00ffff"/>
 		<Sprite Name="sprite" X="{ $X }" Y="{ $Y }" Ref="True"/>
-		<Node Name="boxFace" X="{ $R-15 }" Y="{ $B+15 }" Width="30" Height="30" Ref="True">
-			<Action>
-				<Sequence Name="scaleBox">
-					<Scale X="0.3" Y="0.3"/>
-					<Scale Time="0.5" X="1" Y="1" Ease="OutBack"/>
-				</Sequence>
-				<Sequence Name="fadeBox">
-					<Opacity Name="fadeBox" Time="0.3" Alpha="0.4" Ease="InExpo"/>
-					<Call>
-						boxFace.opacity = 1
-						boxFace.cascadeOpacity = true
-					</Call>
-				</Sequence>
-			</Action>
-			<SolidRect Name="boxFill" X="3" Y="3" Width="24" Height="24" Color="0xff00ffff" Ref="True"/>
-			<LineRect Width="30" Height="30" Color="0xff00ffff"/>
-		</Node>
 	</Node>
 
 	<Slot Name="TapBegan">
-		if item.isCheckMode then
-			boxFace.cascadeOpacity = false
-		else
-			face:perform(scale)
-		end
-	</Slot>
-	<Slot Name="Tapped">
-		if item.isCheckMode then
-			boxFace:runAction(scaleBox)
-		end
+		face:perform(scale)
 	</Slot>
 	<Slot Name="TapEnded">
-		if item.isCheckMode then
-			if not fadeBox.done then boxFace:stopAction(fadeBox) end
-			boxFace:runAction(fadeBox)
-		else
+		if not item.checked then
 			if not fade.done then face:stopAction(fade) end
 			face:runAction(fade)
 		end

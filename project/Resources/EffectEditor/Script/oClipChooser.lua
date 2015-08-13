@@ -25,7 +25,7 @@ local emit = require("emit")
 local function oCircle(number)
 	local width = 25
 	local vs = {}
-	local num = 50
+	local num = 20
 	for i = 0, num do
 		local angle = 2*math.pi*i/num
 		table.insert(vs,oVec2(width*0.5*math.cos(angle),width*0.5*math.sin(angle)))

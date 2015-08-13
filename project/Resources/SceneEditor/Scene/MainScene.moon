@@ -7,8 +7,13 @@ Class
 	__partial: => MainSceneView!
 	__init: =>
 		@scrollArea\slots "Scrolled",(delta)->
+			contentRect = CCRect oVec2.zero,@scrollArea.contentSize
+			itemRect = CCRect.zero
 			@menu\eachChild (child)->
 				child.position += delta
+				{:positionX,:positionY,:width,:height} = child
+				itemRect\set positionX-width/2,positionY-height/2,width,height
+				child.visible = contentRect\intersectsRect itemRect -- reduce draw calls
 
 		@scrollArea\slots "ScrollStart",->
 			@menu.enabled = false
@@ -59,21 +64,60 @@ Class
 
 		{:width,:height} = @scrollArea
 		y = 0
+		startY = height
+		TabButton = require "Control.TabButton"
+		for i,clip in ipairs clips
+			i -= 1
+			y = startY-25-i*40
+			clipTab = TabButton x:width/2,y:y,text:clip\match("[\\/]([^\\/]*)$")
+			clipTab\slots "Checked", (checked)->
+				if checked
+					posY = clipTab.positionY-15
+					names = oCache.Clip\getNames clip
+					texFile = oCache.Clip\getTextureFile clip
+					newY = posY
+					for i,name in ipairs names
+						i -= 1
+						spriteStr = clip.."|"..name
+						newX = 60+(i%4)*110
+						newY = posY-60-math.floor(i/4)*110
+						viewItem = SpriteView {
+							file:texFile
+							spriteStr:spriteStr
+							x:newX
+							y:newY
+							width:100
+							height:100
+						}
+						viewItem.clip = clip
+						@menu\addChild viewItem
+					newY -= 50
+					deltaY = posY - newY
+					clipTab.deltaY = deltaY
+					@menu\eachChild (child)->
+						if child.clip ~= clip
+							child.positionY -= deltaY if child.positionY < posY
+					@scrollArea.offset = @scrollArea.offset
+				else
+					deltaY = clipTab.deltaY
+					posY = clipTab.positionY-15-deltaY
+					children = @menu\getChildren!
+					for child in *children
+						if child.clip == clip
+							child.parent\removeChild child
+						else
+							child.positionY += deltaY if child.positionY < posY
+					@scrollArea.offset = @scrollArea.offset
+			@menu\addChild clipTab
+		y -= 25
+
+		startY = y
 		for i,image in ipairs images
 			i -= 1
 			x = 60+(i%4)*110
-			y = height-60-math.floor(i/4)*110
+			y = startY-60-math.floor(i/4)*110
 			viewItem = SpriteView file:image,x:x,y:y,width:100,height:100
 			@menu\addChild viewItem
 		y -= 50
 
-		startY = y
-		TabButton = require "View.Control.TabButton"
-		for i,clip in ipairs clips
-			i -= 1
-			y = startY-25-i*40
-			clipItem = TabButton x:225,y:y,text:clip
-			@menu\addChild clipItem
-		y -= 25
-
-		@scrollArea.viewSize = CCSize 450,10+math.floor((#images-1)/4+1)*110+40
+		@scrollArea.viewSize = CCSize width,height-y
