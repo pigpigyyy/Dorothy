@@ -1,5 +1,5 @@
 <!-- params: X=0, Y=0, Width, Height, Color -->
-<Line X="{ x or 0 }" Y="{ y or 0 }" Color="{ color or 0xffffffff }" Opacity="{ color and ccColor4(color).a or 1 }">
+<Line X="{ x or 0 }" Y="{ y or 0 }" Color="{ color or 0xffffff }" Opacity="{ color and ccColor4(color).a/255 or 1 }">
 	<Vec2 X="0" Y="0"/>
 	<Vec2 X="{ width }" Y="0"/>
 	<Vec2 X="{ width }" Y="{ height }"/>

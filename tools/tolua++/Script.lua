@@ -411,16 +411,20 @@ _G["Dorothy"] = (function()
 	end
 end)()
 
-_G["go"] = function(routine)
+_G["thread"] = function(routine)
 	oRoutine(once(routine))
 end
 
-_G["goloop"] = function(routine)
+_G["threadLoop"] = function(routine)
 	oRoutine(loop(routine))
 end
 
 _G["sleep"] = function(sec)
-	wait(seconds(sec))
+	if sec then
+		wait(seconds(sec))
+	else
+		yield()
+	end
 end
 
 collectgarbage("setpause", 100)

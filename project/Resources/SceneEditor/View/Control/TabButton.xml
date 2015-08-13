@@ -1,3 +1,4 @@
+<!-- params: X, Y, Text -->
 <MenuItem Name="item" X="{ x }" Y="{ y }" Width="430" Height="30" Text="{ text }" Color="0x00ffff" Opacity="0.4">
 	<Import Module="View.Shape.LineRect"/>
 	

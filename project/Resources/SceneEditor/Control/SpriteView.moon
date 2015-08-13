@@ -1,9 +1,9 @@
 Dorothy!
 Class,property = unpack require "class"
 SpriteViewView = require "View.Control.SpriteView"
-NumberDot = require "View.Control.NumberDot"
+NumberDot = require "Control.NumberDot"
 
-selectedNumber = 0
+selectedItems = {}
 
 Class
 	__partial: (args)=> SpriteViewView args
@@ -19,6 +19,7 @@ Class
 		@\slots "Cleanup", ->
 			oRoutine\remove @routine
 			oCache.Texture\unload @_prevFile if @_prevFile
+			@\_setBoxChecked false
 
 		@\updateImage file,spriteStr
 		@isCheckMode = true
@@ -30,7 +31,7 @@ Class
 			@\emit "Selected",@
 
 	updateImage: (file,spriteStr)=>
-		@routine = go ->
+		@routine = thread ->
 			oCache.Texture\unload @_prevFile if @_prevFile
 			oCache\loadAsync file
 			sprite = CCSprite spriteStr
@@ -56,22 +57,31 @@ Class
 				@sprite\perform oOpacity 0.3,1
 
 	_setBoxChecked: (checked)=>
+		if not @isCheckMode or checked == @_checked
+			return
 		if checked
-			if selectedNumber < 99
-				selectedNumber += 1
-				@number = selectedNumber
-				@numberDot = NumberDot x:@width-17.5, y:17.5, number:selectedNumber
+			currentNumber = #selectedItems
+			if currentNumber < 99
+				@numberDot = NumberDot {
+					x: @width-17.5
+					y: 17.5
+					number: currentNumber+1
+				}
 				@numberDot.cascadeOpacity = false
 				@numberDot.cascadeColor = false
 				@numberDot.scaleX = 0
 				@numberDot.scaleY = 0
 				@numberDot\perform oScale 0.3,1,1,oEase.OutBack
 				@face\addChild @numberDot
+				table.insert selectedItems,@numberDot
 				@_checked = true
 				@\emit "Checked",@
-		elseif @number == selectedNumber
-			selectedNumber -= 1
+		else
 			dot = @numberDot
+			num = dot.number + 1
+			for item in *selectedItems[num,]
+				item.number -= 1
+			table.remove selectedItems,num - 1
 			dot\perform CCSequence {
 				oScale 0.3,0,0,oEase.OutQuad
 				CCCall ->
@@ -87,5 +97,4 @@ Class
 		(value)=>
 			@_isCheckMode = value
 			if not value and @_checked
-				@number = selectedNumber
 				@\_setBoxChecked false

@@ -1,4 +1,4 @@
 Dorothy!
 oContent\addSearchPath "SceneEditor"
-MainScene = require "Scene.MainScene"
-CCDirector\run MainScene!
+Editor = require "Scene.Editor"
+CCDirector\run Editor!

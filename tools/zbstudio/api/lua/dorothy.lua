@@ -6507,6 +6507,30 @@ local Dorothy =
 		type = "function",
 		index = index()
 	},
+	thread =
+	{
+		args = "(action: function)",
+		description = "",
+		returns = "(routine: thread)",
+		type = "function",
+		index = index()
+	},
+	threadLoop =
+	{
+		args = "(action: function)",
+		description = "",
+		returns = "(routine: thread)",
+		type = "function",
+		index = index()
+	},
+	sleep =
+	{
+		args = "(nil|time: float)",
+		description = "",
+		returns = "(action: function)",
+		type = "function",
+		index = index()
+	},
 	emit =
 	{
 		args = "(name: string, eventArgs: ...)",

@@ -147,7 +147,7 @@ Class
 			V = oVec2.zero
 			@\schedule updateSpeed
 			return true
-		
+
 		touchEnded = ->
 			if isReseting!
 				startReset!
