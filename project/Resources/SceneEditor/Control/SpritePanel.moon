@@ -45,6 +45,10 @@ Class
 					visitResource path.."/"..folder
 
 		thread ->
+			@selBtn.enabled = false
+			@groupBtn.enabled = false
+			@delGroupBtn.enabled = false
+
 			SpriteView = require "Control.SpriteView"
 			sleep!
 			visitResource "ActionEditor/Model/Input"
@@ -56,18 +60,22 @@ Class
 			y = 0
 			startY = height
 			TabButton = require "Control.TabButton"
+			sleep!
 			for i,clip in ipairs clips
 				sleep!
 				i -= 1
-				y = startY-25-i*40
+				y = startY-30-i*50
 				clipTab = TabButton {
 					x: width/2
 					y: y
+					width: width-20
+					height: 40
 					text: clip\match "[\\/]([^\\/]*)$"
+					isClipTab: true
 				}
-				clipTab\slots "Checked", (checked)->
-					if checked
-						posY = clipTab.positionY-15
+				clipTab\slots "Expanded", (expanded)->
+					if expanded
+						posY = clipTab.positionY-20
 						names = oCache.Clip\getNames clip
 						texFile = oCache.Clip\getTextureFile clip
 						newY = posY
@@ -92,22 +100,24 @@ Class
 						@menu\eachChild (child)->
 							if child.clip ~= clip
 								child.positionY -= deltaY if child.positionY < posY
-						@scrollArea.offset = @scrollArea.offset
+						with @scrollArea.viewSize
+							@scrollArea.viewSize = CCSize .width,.height+deltaY
 					else
 						deltaY = clipTab.deltaY
-						posY = clipTab.positionY-15-deltaY
+						posY = clipTab.positionY-20-deltaY
 						children = @menu\getChildren!
 						for child in *children
 							if child.clip == clip
 								child.parent\removeChild child
 							else
 								child.positionY += deltaY if child.positionY < posY
-						@scrollArea.offset = @scrollArea.offset
+						with @scrollArea.viewSize
+							@scrollArea.viewSize = CCSize .width,.height-deltaY
 				clipTab.position += @scrollArea.offset
 				clipTab.enabled = false
 				@menu\addChild clipTab
 				@scrollArea.viewSize = CCSize width,height-y
-			y -= 15
+			y -= 20
 
 			startY = y
 			for i,image in ipairs images
@@ -133,3 +143,23 @@ Class
 			@menu\eachChild (child)->
 				if tolua.type child == "CCMenuItem"
 					child.enabled = true
+
+			@selBtn.enabled = true
+			@groupBtn.enabled = true
+			@delGroupBtn.enabled = true
+
+		isSelecting = false
+		@selBtn\slots "Tapped", ->
+			isSelecting = not isSelecting
+			@\_setCheckMode isSelecting
+			if isSelecting
+				@selBtn.color = ccColor3 0xff0088
+			else
+				@selBtn.color = ccColor3 0x00ffff
+
+	_setCheckMode: (value)=>
+		@menu\eachChild (child)->
+			if not child.clip and not child.isClipTab
+				child.isCheckMode = value
+			else
+				child.enabled = not value

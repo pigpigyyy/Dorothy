@@ -1,25 +1,41 @@
-<!-- params: X, Y, Text -->
-<MenuItem Name="item" X="{ x }" Y="{ y }" Width="430" Height="30" Text="{ text }" Color="0x00ffff" Opacity="0.4">
+<!-- params: X, Y, Width, Height,Text -->
+<MenuItem Name="item" X="{ x }" Y="{ y }" Width="{ width }" Height="{ height }" Text="{ text }" Color="0x00ffff" Opacity="0.4">
 	<Import Module="View.Shape.LineRect"/>
-	
-	<LineRect Width="430" Height="30" Color="0xffffffff"/>
+
+	<Action>
+		<Opacity Name="fade" Time="0.3" Alpha="0.4" Ease="InQuad"/>
+	</Action>	
+
+	<LineRect Width="{ width }" Height="{ height }" Color="0xffffffff"/>
 	<LabelTTF Name="label" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="16" Text="{ text }"/>
 	<Script>label.texture.antiAlias = false</Script>
-	<Node Name="arrow" X="25" Y="15" PassColor="False">
+	<Node Name="arrow" X="{ height/2 }" Y="{ height/2 }" PassColor="False">
 		<DrawNode>
-			<Polygon FillColor="0xff80ff00">
+			<Polygon FillColor="0x88ff9da4" BorderWidth="1" BorderColor="0xffff9da4">
 				<Vec2 X="-9" Y="-10"/>
 				<Vec2 X="-9" Y="10"/>
 				<Vec2 X="9" Y="0"/>
 			</Polygon>
 		</DrawNode>
 	</Node>
-	<Slot Name="Tapped">
-		if item.opacity < 1 then
+
+	<Slot Name="TapBegan">
+		item.opacity = 1
+	</Slot>
+	<Slot Name="TapEnded">
+		if not item.checked then
+			item:perform(fade)
+		end
+	</Slot>
+	<Slot Name="Checked" Args="checked">
+		if checked then
 			item.opacity = 1
+		end
+	</Slot>
+	<Slot Name="Expanded" Args="expend">
+		if expend then
 			arrow:perform(oRotate(0.3,90,oEase.OutExpo))
 		else
-			item.opacity = 0.4
 			arrow:perform(oRotate(0.3,0,oEase.OutExpo))
 		end
 	</Slot>

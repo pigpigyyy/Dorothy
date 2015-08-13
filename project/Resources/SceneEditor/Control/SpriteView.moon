@@ -12,6 +12,7 @@ Class
 		spriteStr or= file
 		@number = 0
 		@file = file
+		@spriteStr = spriteStr
 		@_isCheckMode = false
 		@_checked = false
 
@@ -22,7 +23,7 @@ Class
 			@\_setBoxChecked false
 
 		@\updateImage file,spriteStr
-		@isCheckMode = true
+		@isCheckMode = false
 
 	_tapped: =>
 		if @isCheckMode
@@ -57,7 +58,7 @@ Class
 				@sprite\perform oOpacity 0.3,1
 
 	_setBoxChecked: (checked)=>
-		if not @isCheckMode or checked == @_checked
+		if checked == @_checked
 			return
 		if checked
 			currentNumber = #selectedItems
@@ -95,6 +96,6 @@ Class
 
 	isCheckMode: property => @_isCheckMode,
 		(value)=>
+			@\_setBoxChecked false
+			@\emit "TapEnded"
 			@_isCheckMode = value
-			if not value and @_checked
-				@\_setBoxChecked false
