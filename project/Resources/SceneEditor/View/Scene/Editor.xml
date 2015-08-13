@@ -1,0 +1,5 @@
+<Scene>
+	<Import Module="Control.SpritePanel"/>
+
+	<SpritePanel X="{ $L+10+225 }" Y="{ $B+10+150 }" Width="450" Height="300"/>
+</Scene>
