@@ -5,6 +5,7 @@ SpritePanelView = require "View.Control.SpritePanel"
 Class
 	__partial: (args)=> SpritePanelView args
 	__init: (args)=>
+		@_isSelecting = false
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
 		@scrollArea\slots "Scrolled",(delta)->
@@ -20,6 +21,9 @@ Class
 
 		@scrollArea\slots "ScrollEnd",->
 			@menu.enabled = true
+
+		@\slots "Cleanup",->
+			oRoutine\remove @routine if @routine
 
 		images = {}
 		clips = {}
@@ -44,10 +48,11 @@ Class
 				if folder ~= "." and folder ~= ".."
 					visitResource path.."/"..folder
 
-		thread ->
-			@selBtn.enabled = false
+		@routine = thread ->
+			@modeBtn.enabled = false
 			@groupBtn.enabled = false
 			@delGroupBtn.enabled = false
+			@hint\perform @loopFade
 
 			SpriteView = require "Control.SpriteView"
 			sleep!
@@ -73,7 +78,7 @@ Class
 					text: clip\match "[\\/]([^\\/]*)$"
 					isClipTab: true
 				}
-				clipTab\slots "Expanded", (expanded)->
+				clipTab\slots "Expanded",(expanded)->
 					if expanded
 						posY = clipTab.positionY-20
 						names = oCache.Clip\getNames clip
@@ -144,22 +149,43 @@ Class
 				if tolua.type child == "CCMenuItem"
 					child.enabled = true
 
-			@selBtn.enabled = true
+			@modeBtn.enabled = true
 			@groupBtn.enabled = true
 			@delGroupBtn.enabled = true
+			@hint\stopAction @loopFade
+			@hint.opacity = 0
+			@routine = nil
 
-		isSelecting = false
-		@selBtn\slots "Tapped", ->
-			isSelecting = not isSelecting
-			@\_setCheckMode isSelecting
-			if isSelecting
-				@selBtn.color = ccColor3 0xff0088
-			else
-				@selBtn.color = ccColor3 0x00ffff
+		@groupBtn.visible = false
+		@delGroupBtn.visible = false
+		@modeBtn\slots "Tapped",-> @\_setCheckMode not @_isSelecting
 
-	_setCheckMode: (value)=>
+	_setCheckMode: (isSelecting)=>
+		return if isSelecting == @_isSelecting
+		@_isSelecting = isSelecting
+		@modeBtn.color = ccColor3(isSelecting and 0xff0088 or 0x00ffff)
+		if isSelecting
+			@groupBtn\perform CCSequence {
+				CCShow!
+				oScale 0,0,0
+				oScale 0.3,1,1,oEase.OutBack
+			}
+			@delGroupBtn\perform CCSequence {
+				CCShow!
+				oScale 0,0,0
+				oScale 0.3,1,1,oEase.OutBack
+			}
+		else
+			@groupBtn\perform CCSequence {
+				oScale 0.3,0,0,oEase.InBack
+				CCHide!
+			}
+			@delGroupBtn\perform CCSequence {
+				oScale 0.3,0,0,oEase.InBack
+				CCHide!
+			}
 		@menu\eachChild (child)->
 			if not child.clip and not child.isClipTab
-				child.isCheckMode = value
+				child.isCheckMode = isSelecting
 			else
-				child.enabled = not value
+				child.enabled = not isSelecting

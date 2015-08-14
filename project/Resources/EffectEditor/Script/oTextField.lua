@@ -24,7 +24,7 @@ local function oTextField(x,y,fontSize,limit,textChanged)
 	cursor.visible = false
 	cursor.positionX = textField.contentSize.width
 	textField:addChild(cursor)
-		textField:slots("InputAttach",function(self)
+	textField:slots("InputAttach",function(self)
 		cursor.visible = true
 		cursor:stopAllActions()
 		cursor:runAction(blink)
@@ -46,7 +46,6 @@ local function oTextField(x,y,fontSize,limit,textChanged)
 		return true
 	end)
 	local function inputed(text,self)
-		print(text)
 		cursor:stopAction(blink)
 		cursor:runAction(blink)
 		cursor.positionX = textField.contentSize.width

@@ -17,8 +17,8 @@ Class
 		@_checked = false
 
 		@\slots "Tapped", @_tapped
-		@\slots "Cleanup", ->
-			oRoutine\remove @routine
+		@\slots "Cleanup",->
+			oRoutine\remove @routine if @routine
 			oCache.Texture\unload @_prevFile if @_prevFile
 			@\_setBoxChecked false
 
@@ -56,6 +56,7 @@ Class
 				@sprite.textureRect = CCRect 0,0,width,height
 				@sprite.opacity = 0
 				@sprite\perform oOpacity 0.3,1
+			@routine = nil
 
 	_setBoxChecked: (checked)=>
 		if checked == @_checked
@@ -96,6 +97,16 @@ Class
 
 	isCheckMode: property => @_isCheckMode,
 		(value)=>
-			@\_setBoxChecked false
+			if @_checked
+				dot = @numberDot
+				table.remove selectedItems,dot.number
+				dot\perform CCSequence {
+					oScale 0.3,0,0,oEase.OutQuad
+					CCCall ->
+						dot.parent\removeChild dot
+				}
+				@numberDot = nil
+				@_checked = false
+				@\emit "Checked",@
 			@\emit "TapEnded"
 			@_isCheckMode = value

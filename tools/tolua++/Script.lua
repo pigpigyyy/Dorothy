@@ -412,11 +412,11 @@ _G["Dorothy"] = (function()
 end)()
 
 _G["thread"] = function(routine)
-	oRoutine(once(routine))
+	return oRoutine(once(routine))
 end
 
 _G["threadLoop"] = function(routine)
-	oRoutine(loop(routine))
+	return oRoutine(loop(routine))
 end
 
 _G["sleep"] = function(sec)

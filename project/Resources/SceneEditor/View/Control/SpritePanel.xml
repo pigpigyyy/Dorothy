@@ -14,8 +14,19 @@
 	</ScrollArea>
 	<LineRect X="-1" Y="-1" Width="{ width+2 }" Height="{ height+2 }" Color="0x6600ffff"/>
 	<Menu X="{ $X }" Y="{ $B+30 }" Width="{ width }" Height="60">
-		<Button Name="selBtn" X="30" Y="30" Width="40" Height="40" FontSize="16" Text="Sel" Ref="True"/>
+		<Button Name="modeBtn" X="30" Y="30" Width="40" Height="40" FontSize="12" Text="Mode" Ref="True"/>
 		<Button Name="groupBtn" X="80" Y="30" Width="40" Height="40" FontSize="12" Text="Group" Ref="True"/>
 		<Button Name="delGroupBtn" X="130" Y="30" Width="40" Height="40" FontSize="12" Text="Del\nGroup" Ref="True"/>
+		<LabelTTF Name="hint" X="{ $X }" Y="30" Text="Updating" FontName="Arial" FontSize="16" Color="0x00ffff" Opacity="0" Ref="True">
+			<Script>hint.texture.antiAlias = false</Script>
+			<Action>
+				<Loop Name="loopFade" Ref="True">
+					<Sequence>
+						<Opacity Time="0.3" Alpha="1"/>
+						<Opacity Time="0.3" Alpha="0"/>
+					</Sequence>
+				</Loop>
+			</Action>
+		</LabelTTF>
 	</Menu>
 </Node>

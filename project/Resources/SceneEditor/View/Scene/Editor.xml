@@ -1,5 +1,8 @@
 <Scene>
 	<Import Module="Control.SpritePanel"/>
+	<Import Module="Control.InputBox"/>
 
 	<SpritePanel X="{ $L+10+225 }" Y="{ $B+10+(CCDirector.winSize.height-20)/2 }" Width="450" Height="{ CCDirector.winSize.height-20 }"/>
+
+	<InputBox Text="Input Something"/>
 </Scene>
