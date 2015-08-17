@@ -950,7 +950,7 @@ static const char* _toBoolean(const char* str)
 	{\
 		stream << elementStack.top().name <<\
 		":drawDot(oVec2(" << toVal(x,"0") << ',' << toVal(y,"0") << ")," <<\
-		toVal(radius,"0.5") << ",ccColor4(" << Val(color) << "))\n";\
+		toVal(radius,"0.5") << ",ccColor4(" << Val(color) << "))\n\n";\
 	}
 
 // DrawNode.Polygon
@@ -966,7 +966,7 @@ static const char* _toBoolean(const char* str)
 	if (!elementStack.empty())\
 	{\
 		oFunc func = {elementStack.top().name+":drawPolygon({",\
-		string("},ccColor4(")+Val(fillColor)+"),"+toVal(borderWidth,"0")+",ccColor4("+toVal(borderColor,"")+"))\n"};\
+		string("},ccColor4(")+Val(fillColor)+"),"+toVal(borderWidth,"0")+",ccColor4("+toVal(borderColor,"")+"))\n\n"};\
 		funcs.push(func);\
 		items.push("Polygon");\
 	}
@@ -991,7 +991,7 @@ static const char* _toBoolean(const char* str)
 	{\
 		stream << elementStack.top().name <<\
 		":drawSegment(oVec2(" << toVal(beginX,"0") << ',' << toVal(beginY,"0") << "),oVec2(" <<\
-		toVal(endX,"0") << ',' << toVal(endY,"0") << ")," << toVal(radius,"0.5") << ",ccColor4(" << toVal(color,"") << "))\n";\
+		toVal(endX,"0") << ',' << toVal(endY,"0") << ")," << toVal(radius,"0.5") << ",ccColor4(" << toVal(color,"") << "))\n\n";\
 	}
 
 // Line
@@ -1077,18 +1077,21 @@ static const char* _toBoolean(const char* str)
 	Node_Define\
 	const char* text = nullptr;\
 	const char* fontName = nullptr;\
-	const char* fontSize = nullptr;
+	const char* fontSize = nullptr;\
+	const char* antiAlias = nullptr;
 #define LabelTTF_Check \
 	Node_Check\
 	CASE_STR(Text) { text = atts[++i]; break; }\
 	CASE_STR(FontName) { fontName = atts[++i]; break; }\
-	CASE_STR(FontSize) { fontSize = atts[++i]; break; }
+	CASE_STR(FontSize) { fontSize = atts[++i]; break; }\
+	CASE_STR(AntiAlias) { antiAlias = atts[++i]; break; }
 #define LabelTTF_Create \
 	stream << "local " << self << " = CCLabelTTF(";\
 	if (text && text[0]) stream << toText(text); else stream << "\"\"";\
 	stream << ',' << toText(fontName) << ',' << Val(fontSize) << ")\n";
 #define LabelTTF_Handle \
-	Node_Handle
+	Node_Handle\
+	if (antiAlias) stream << self << ".texture.antiAlias = " << toBoolean(antiAlias) << '\n';
 #define LabelTTF_Finish \
 	Add_To_Parent
 
@@ -1438,7 +1441,7 @@ static const char* _toBoolean(const char* str)
 	CASE_STR(Name) { name = atts[++i]; break; }\
 	CASE_STR(Args) { args = atts[++i]; break; }
 #define Slot_Create \
-	oFunc func = {elementStack.top().name+":slots("+toText(name)+",function("+(args ? args : "")+") ", " end)"};\
+	oFunc func = {elementStack.top().name+":slots("+toText(name)+",function("+(args ? args : "")+")", "end)"};\
 	funcs.push(func);
 
 #define Item_Define(name) name##_Define

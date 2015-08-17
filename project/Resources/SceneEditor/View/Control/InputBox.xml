@@ -31,8 +31,7 @@
 			<Vec2 X="-125" Y="125"/>
 		</Polygon>
 
-		<LabelTTF Name="title" Text="{ text }" FontName="Arial" FontSize="24" X="0" Y="76" Color="0x00ffff"/>
-		<Script>title.texture.antiAlias = false</Script>
+		<LabelTTF Name="title" Text="{ text }" FontName="Arial" FontSize="24" X="0" Y="76" Color="0x00ffff" AntiAlias="False"/>
 
 		<DrawNode Name="frame">
 			<Polygon FillColor="0x0" BorderWidth="0.5" BorderColor="0xff00ffff">

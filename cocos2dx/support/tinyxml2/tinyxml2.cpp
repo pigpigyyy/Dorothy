@@ -503,11 +503,13 @@ char* XMLDocument::Identify( char* p, XMLNode** node )
 {
     XMLNode* returnNode = 0;
     char* start = p;
-    p = XMLUtil::SkipWhiteSpace( p );
-    if( !p || !*p ) {
-        return p;
-    }
-
+	if (!g_cdataHeader)
+	{
+		p = XMLUtil::SkipWhiteSpace(p);
+		if (!p || !*p) {
+			return p;
+		}
+	}
     // What is this thing?
     // - Elements start with a letter or underscore, but xml is reserved.
     // - Comments: <!--

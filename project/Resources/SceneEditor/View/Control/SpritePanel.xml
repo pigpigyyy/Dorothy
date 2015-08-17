@@ -5,8 +5,7 @@
 	<Import Module="Control.Button"/>
 
 	<SolidRect Width="{ width }" Height="{ height }" Color="0x2200ffff"/>
-	<LabelTTF Name="title" X="{ $X }" Y="{ $T-20 }" Text="Select Sprite" FontName="Arial" FontSize="24" Color="0x00ffff" Opacity="0.5"/>
-	<Script>title.texture.antiAlias = false</Script>
+	<LabelTTF Name="title" X="{ $X }" Y="{ $T-20 }" Text="Select Sprite" FontName="Arial" FontSize="24" Color="0x00ffff" Opacity="0.5" AntiAlias="False"/>
 	<ScrollArea Name="scrollArea" X="{ $X }" Y="{ $T-40-(height-100)/2 }" Width="{ width }" Height="{ height-100 }" ViewWidth="{ width }" ViewHeight="{ height-100 }" PaddingX="0" PaddingY="100" TouchPriority="0" Ref="True">
 		<Item Name="view">
 			<Menu Name="menu" AnchorX="0" AnchorY="0" Width="{ width }" Height="{ height-100 }" TouchPriority="1" Ref="True"/>
@@ -17,8 +16,7 @@
 		<Button Name="modeBtn" X="30" Y="30" Width="40" Height="40" FontSize="12" Text="Mode" Ref="True"/>
 		<Button Name="groupBtn" X="80" Y="30" Width="40" Height="40" FontSize="12" Text="Group" Ref="True"/>
 		<Button Name="delGroupBtn" X="130" Y="30" Width="40" Height="40" FontSize="12" Text="Del\nGroup" Ref="True"/>
-		<LabelTTF Name="hint" X="{ $X }" Y="30" Text="Updating" FontName="Arial" FontSize="16" Color="0x00ffff" Opacity="0" Ref="True">
-			<Script>hint.texture.antiAlias = false</Script>
+		<LabelTTF Name="hint" X="{ $X }" Y="30" Text="Updating" FontName="Arial" FontSize="16" Color="0x00ffff" Opacity="0" AntiAlias="False" Ref="True">
 			<Action>
 				<Loop Name="loopFade" Ref="True">
 					<Sequence>

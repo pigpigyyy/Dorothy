@@ -1,5 +1,5 @@
 <!-- params: X, Y, Width, Height,Text -->
-<MenuItem Name="item" X="{ x }" Y="{ y }" Width="{ width }" Height="{ height }" Text="{ text }" Color="0x00ffff" Opacity="0.4">
+<MenuItem Name="item" X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }" Text="{ text }" Color="0x00ffff" Opacity="0.4">
 	<Import Module="View.Shape.LineRect"/>
 
 	<Action>
@@ -7,8 +7,7 @@
 	</Action>	
 
 	<LineRect Width="{ width }" Height="{ height }" Color="0xffffffff"/>
-	<LabelTTF Name="label" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="16" Text="{ text }"/>
-	<Script>label.texture.antiAlias = false</Script>
+	<LabelTTF X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="16" AntiAlias="False" Text="{ text }"/>
 	<Node Name="arrow" X="{ height/2 }" Y="{ height/2 }" PassColor="False">
 		<DrawNode>
 			<Polygon FillColor="0x88ff9da4" BorderWidth="1" BorderColor="0xffff9da4">
