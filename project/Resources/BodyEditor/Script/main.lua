@@ -63,7 +63,7 @@ oRoutine(once(function()
 	local oFileChooser = require("oFileChooser")
 	coroutine.yield()
 	oEditor:addChild(oFileChooser(),oEditor.topMost)
-	
+
 	local CCUserDefault = require("CCUserDefault")
 	local oVec2 = require("oVec2")
 	if CCUserDefault.G == "" then

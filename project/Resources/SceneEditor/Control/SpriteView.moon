@@ -8,7 +8,7 @@ selectedItems = {}
 Class
 	__partial: (args)=> SpriteViewView args
 	__init: (args)=>
-		{:width,:height,:file,:spriteStr} = args
+		{:width,:height,:file,:spriteStr,:alias,:needUnload} = args
 		spriteStr or= file
 		@number = 0
 		@file = file
@@ -22,7 +22,7 @@ Class
 			oCache.Texture\unload @_prevFile if @_prevFile
 			@\_setBoxChecked false
 
-		@\updateImage file,spriteStr
+		@\updateImage file,spriteStr,alias,needUnload
 		@isCheckMode = false
 
 	_tapped: =>
@@ -31,11 +31,14 @@ Class
 		else
 			@\emit "Selected",@
 
-	updateImage: (file,spriteStr)=>
+	updateImage: (file,spriteStr,alias,needUnload)=>
 		@routine = thread ->
-			oCache.Texture\unload @_prevFile if @_prevFile
+			if @_prevFile
+				oCache.Texture\unload @_prevFile
+				@_prevFile = nil
 			oCache\loadAsync file
 			sprite = CCSprite spriteStr
+			tex = sprite.texture
 			{:width,:height} = @
 			scale = 1
 			if width < sprite.width or height < sprite.height
@@ -43,17 +46,25 @@ Class
 			sprite.scaleX = scale
 			sprite.scaleY = scale
 			sprite.position = oVec2 width/2,height/2
-			renderTarget = CCRenderTarget width,height
-			renderTarget\beginDraw!
-			renderTarget\draw sprite
-			renderTarget\endDraw!
-			oCache.Texture\unload file
-			sleep 0.1
-			@_prevFile = spriteStr\match("(.*)%.[^%.\\/]*$").."Small."..spriteStr\match("%.([^%.\\/]*)$")
-			tex = oCache.Texture\add renderTarget,@_prevFile
-			if @sprite
-				@sprite.texture = tex
-				@sprite.textureRect = CCRect 0,0,width,height
+			needPrev = alias and alias*25000 < tex.size.width*tex.size.height -- preview image is smaller than target image
+			if needPrev
+				renderTarget = CCRenderTarget width,height
+				renderTarget\beginDraw!
+				renderTarget\draw sprite
+				renderTarget\endDraw!
+				oCache.Texture\unload file if needUnload
+				sleep 0.1
+				@_prevFile = spriteStr\match("(.*)%.[^%.\\/]*$").."Small."..spriteStr\match("%.([^%.\\/]*)$")
+				tex = oCache.Texture\add renderTarget,@_prevFile
+				if @sprite
+					@sprite.texture = tex
+					@sprite.textureRect = CCRect 0,0,width,height
+					@sprite.opacity = 0
+					@sprite\perform oOpacity 0.3,1
+			elseif @sprite
+				@sprite.parent\removeChild @sprite
+				@face\addChild sprite
+				@sprite = sprite
 				@sprite.opacity = 0
 				@sprite\perform oOpacity 0.3,1
 			@routine = nil
@@ -99,7 +110,10 @@ Class
 		(value)=>
 			if @_checked
 				dot = @numberDot
-				table.remove selectedItems,dot.number
+				for i,item in ipairs selectedItems
+					if item == dot
+						table.remove selectedItems,i
+						break
 				dot\perform CCSequence {
 					oScale 0.3,0,0,oEase.OutQuad
 					CCCall ->

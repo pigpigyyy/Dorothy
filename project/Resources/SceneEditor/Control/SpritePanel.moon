@@ -42,9 +42,8 @@ Class
 
 			oRoutine\remove @routine if @routine
 			@routine = thread ->
-				@modeBtn.enabled = false
-				@groupBtn.enabled = false
-				@delGroupBtn.enabled = false
+				@\_setCheckMode false
+				@opMenu.enabled = false
 				@hint.visible = true
 				@hint\perform @loopFade
 
@@ -105,7 +104,10 @@ Class
 					@clipExpands = {}
 					table.sort clips,(a,b)-> a\match("[\\/]([^\\/]*)$") < b\match("[\\/]([^\\/]*)$")
 					for clip in *clips
-						@clipItems[clip] = @\_addClipTab clip
+						sleep!
+						clipTab = @\_addClipTab clip
+						clipTab.visible = false
+						@clipItems[clip] = clipTab
 				@clips = clips
 
 				if @images
@@ -125,11 +127,14 @@ Class
 						item.parent\removeChild item
 						@imageItems[imageDel] = nil
 					for imageAdd in *imagesToAdd
+						sleep!
 						viewItem = SpriteView {
 							file: imageAdd
 							width: 100
 							height: 100
+							needUnload: true
 						}
+						viewItem.visible = false
 						viewItem.enabled = false
 						@menu\addChild viewItem
 						@imageItems[imageAdd] = viewItem
@@ -141,11 +146,14 @@ Class
 					@imageItems = {}
 					table.sort images,(a,b)-> a\match("[\\/]([^\\/]*)$") < b\match("[\\/]([^\\/]*)$")
 					for image in *images
+						sleep!
 						viewItem = SpriteView {
 							file: image
 							width: 100
 							height: 100
+							needUnload: true
 						}
+						viewItem.visible = false
 						viewItem.enabled = false
 						@menu\addChild viewItem
 						@imageItems[image] = viewItem
@@ -184,21 +192,18 @@ Class
 				@menu\eachChild (child)->
 					if tolua.type child == "CCMenuItem"
 						child.enabled = true
-				@modeBtn.enabled = true
-				@groupBtn.enabled = true
-				@delGroupBtn.enabled = true
+				@opMenu.enabled = true
 				@hint\stopAction @loopFade
 				@hint.opacity = 0
 				@hint.visible = false
 				@routine = nil
 
+		@addBtn.visible = false
+		@delBtn.visible = false
 		@groupBtn.visible = false
 		@delGroupBtn.visible = false
 		@modeBtn\slots "Tapped",->
 			@\_setCheckMode not @_isSelecting
-			emit "Editor.LoadSprite", {
-				oContent.writablePath.."Model/Output"
-			}
 
 		emit "Editor.LoadSprite", {
 			oContent.writablePath.."Model/Output"
@@ -208,7 +213,7 @@ Class
 		clipTab = TabButton {
 			width: @scrollArea.width-20
 			height: 40
-			text: clip\match "[\\/]([^\\/]*)$"
+			text: clip\match "[\\/]([^\\/]*)%..*$"
 			isClipTab: true
 		}
 		clipTab\slots "Expanded",(expanded)->
@@ -216,8 +221,8 @@ Class
 				posY = clipTab.positionY-20
 				names = oCache.Clip\getNames clip
 				texFile = oCache.Clip\getTextureFile clip
-				newY = posY
 				@clipExpands[clip] = {}
+				newY = posY
 				for i,name in ipairs names
 					i -= 1
 					spriteStr = clip.."|"..name
@@ -230,6 +235,8 @@ Class
 						y: newY
 						width: 100
 						height: 100
+						alias: #names
+						needUnload: i == #names-1
 					}
 					viewItem.clip = clip
 					@menu\addChild viewItem
@@ -265,28 +272,27 @@ Class
 		return if isSelecting == @_isSelecting
 		@_isSelecting = isSelecting
 		@modeBtn.color = ccColor3(isSelecting and 0xff0088 or 0x00ffff)
+		show = -> CCSequence {
+			CCShow!
+			oScale 0,0,0
+			oScale 0.3,1,1,oEase.OutBack
+		}
+		hide = -> CCSequence {
+			oScale 0.3,0,0,oEase.InBack
+			CCHide!
+		}
 		if isSelecting
-			@groupBtn\perform CCSequence {
-				CCShow!
-				oScale 0,0,0
-				oScale 0.3,1,1,oEase.OutBack
-			}
-			@delGroupBtn\perform CCSequence {
-				CCShow!
-				oScale 0,0,0
-				oScale 0.3,1,1,oEase.OutBack
-			}
+			@addBtn\perform show!
+			@delBtn\perform show!
+			@groupBtn\perform show!
+			@delGroupBtn\perform show!
 		else
-			@groupBtn\perform CCSequence {
-				oScale 0.3,0,0,oEase.InBack
-				CCHide!
-			}
-			@delGroupBtn\perform CCSequence {
-				oScale 0.3,0,0,oEase.InBack
-				CCHide!
-			}
+			@addBtn\perform hide!
+			@delBtn\perform hide!
+			@groupBtn\perform hide!
+			@delGroupBtn\perform hide!
 		@menu\eachChild (child)->
-			if not child.clip and not child.isClipTab
+			if not child.clip
 				child.isCheckMode = isSelecting
 			else
 				child.enabled = not isSelecting
