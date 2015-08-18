@@ -213,7 +213,7 @@ Class
 		clipTab = TabButton {
 			width: @scrollArea.width-20
 			height: 40
-			text: clip\match "[\\/]([^\\/]*)%..*$"
+			text: clip\match "[\\/]([^\\/]*)%.[^%.\\/]*$"
 			isClipTab: true
 		}
 		clipTab\slots "Expanded",(expanded)->
