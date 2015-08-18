@@ -1,4 +1,4 @@
-<!-- params: X, Y, Width, Height, File -->
+<!-- params: X=0, Y=0, Width, Height, File -->
 <MenuItem Name="item" X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }">
 	<Import Module="View.Shape.LineRect"/>
 	<Import Module="View.Shape.SolidRect"/>

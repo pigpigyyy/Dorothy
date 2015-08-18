@@ -1,18 +1,21 @@
 Dorothy!
 Class,property = unpack require "class"
 TabButtonView = require "View.Control.TabButton"
-
+-- [signal]
+-- "Checked",(checked,tabButton)->
+-- "Expanded",(expanded)->
+-- [params]
+-- x, y, width, height, text
 Class
 	__partial: (args)=> TabButtonView args
 	__init: (args)=>
-		@isClipTab = args.isClipTab
 		@_expanded = false
 		@_checked = false
 		@_isCheckMode = false
 		@\slots "Tapped", ->
 			if @_isCheckMode
 				@_checked = not @_checked
-				@\emit "Checked",@_checked
+				@\emit "Checked",@_checked,@
 			else
 				@_expanded = not @_expanded
 				@\emit "Expanded",@_expanded
@@ -26,5 +29,5 @@ Class
 			@_isCheckMode = value
 			if not value and @_checked
 				@_checked = false
-				@\emit "Checked",false
+				@\emit "Checked",false,@
 				@\emit "TapEnded"

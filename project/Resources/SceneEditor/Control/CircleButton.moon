@@ -1,7 +1,10 @@
 Dorothy!
 Class,property = unpack require "class"
 CircleButtonView = require "View.Control.CircleButton"
-
+-- [signals]
+-- "Tapped",(button)->
+-- [params]
+-- x, y, radius, fontSize, text
 Class
 	__partial: (args)=> CircleButtonView args
 	__init: (args)=>

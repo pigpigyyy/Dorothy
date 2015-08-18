@@ -1,8 +1,5 @@
 <!-- params: Text -->
-<Node Name="box" Width="250" Height="250"
-	X="{ CCDirector.winSize.width/2 }"
-	Y="{ CCDirector.winSize.height/2 }">
-
+<Node Name="box" X="{ @X }" Y="{ @Y }" Width="280" Height="250">
 	<Import Module="Control.TextField"/>
 	<Import Module="Control.CircleButton"/>
 
@@ -19,23 +16,23 @@
 
 	<DrawNode X="{ $X }" Y="{ $Y }">
 		<Polygon FillColor="0xe5100000" BorderWidth="0.5" BorderColor="0x88ffafaf">
-			<Vec2 X="-125" Y="-125"/>
-			<Vec2 X="125" Y="-125"/>
-			<Vec2 X="125" Y="125"/>
-			<Vec2 X="-125" Y="125"/>
+			<Vec2 X="-140" Y="-125"/>
+			<Vec2 X="140" Y="-125"/>
+			<Vec2 X="140" Y="125"/>
+			<Vec2 X="-140" Y="125"/>
 		</Polygon>
 
 		<LabelTTF Name="title" Text="{ text }" FontName="Arial" FontSize="24" X="0" Y="76" Color="0x00ffff" AntiAlias="False"/>
 
 		<DrawNode Name="frame">
 			<Polygon FillColor="0x0" BorderWidth="0.5" BorderColor="0xff00ffff">
-				<Vec2 X="-105" Y="-18"/>
-				<Vec2 X="105" Y="-18"/>
-				<Vec2 X="105" Y="18"/>
-				<Vec2 X="-105" Y="18"/>
+				<Vec2 X="-120" Y="-18"/>
+				<Vec2 X="120" Y="-18"/>
+				<Vec2 X="120" Y="18"/>
+				<Vec2 X="-120" Y="18"/>
 			</Polygon>
 		</DrawNode>
-		<TextField Name="textField" X="0" Y="-9" FontSize="17" Limit="12" Ref="True">
+		<TextField Name="textField" X="0" Y="-9" FontSize="16" Limit="15" Ref="True">
 			<Slot Name="TextChanged" Args="item">
 				item.opacity = 0.3
 				frame.opacity = 0.3

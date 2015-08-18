@@ -4,11 +4,13 @@ SpritePanelView = require "View.Control.SpritePanel"
 TabButton = require "Control.TabButton"
 SpriteView = require "Control.SpriteView"
 import Set from require "Data.Utils"
-
+-- [params]
+-- x, y, width, height
 Class
 	__partial: (args)=> SpritePanelView args
 	__init: (args)=>
 		@_isSelecting = false
+		@selectedImages = {}
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
 		@scrollArea\slots "Scrolled",(delta)->
@@ -110,6 +112,9 @@ Class
 						@clipItems[clip] = clipTab
 				@clips = clips
 
+				viewItemChecked = (checked,item)->
+					if @selectedImages
+						@selectedImages[item.file] = if checked then true else nil
 				if @images
 					imagesToDel = {}
 					imageSet = Set images
@@ -136,6 +141,7 @@ Class
 						}
 						viewItem.visible = false
 						viewItem.enabled = false
+						viewItem\slots "Checked",viewItemChecked
 						@menu\addChild viewItem
 						@imageItems[imageAdd] = viewItem
 					table.sort images,(a,b)-> a\match("[\\/]([^\\/]*)$") < b\match("[\\/]([^\\/]*)$")
@@ -153,6 +159,7 @@ Class
 							height: 100
 							needUnload: true
 						}
+						viewItem\slots "Checked",viewItemChecked
 						viewItem.visible = false
 						viewItem.enabled = false
 						@menu\addChild viewItem
@@ -204,6 +211,10 @@ Class
 		@delGroupBtn.visible = false
 		@modeBtn\slots "Tapped",->
 			@\_setCheckMode not @_isSelecting
+		@groupBtn\slots "Tapped",->
+			images = [image for image,_ in pairs @selectedImages]
+			ClipEditor = require "Control.ClipEditor"
+			CCDirector.currentScene\addChild ClipEditor :images
 
 		emit "Editor.LoadSprite", {
 			oContent.writablePath.."Model/Output"
@@ -214,7 +225,6 @@ Class
 			width: @scrollArea.width-20
 			height: 40
 			text: clip\match "[\\/]([^\\/]*)%.[^%.\\/]*$"
-			isClipTab: true
 		}
 		clipTab\slots "Expanded",(expanded)->
 			if expanded

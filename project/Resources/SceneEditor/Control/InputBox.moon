@@ -1,7 +1,10 @@
 Dorothy!
 Class,property = unpack require "class"
 InputBoxView = require "View.Control.InputBox"
-
+-- [signals]
+-- "Inputed",(text)->
+-- [params]
+-- text
 Class
 	__partial: (args)=> InputBoxView args
 	__init: (args)=>

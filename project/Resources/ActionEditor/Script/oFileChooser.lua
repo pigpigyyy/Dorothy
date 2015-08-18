@@ -113,7 +113,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 						w = sp.contentSize.width+4,
 						h = sp.contentSize.height+4,
 						sp = sp,
-						name = images[i]:sub(1,images[i]:find("%.")-1)
+						name = images[i]:match("([^\\/]*)%.[^%.\\/]*$")
 					}
 					table.insert(blocks,block)
 				end
@@ -464,7 +464,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 			}))
 			menu:addChild(button)
 		end
-	
+
 		local yTo = winSize.height*0.5+halfBH-y+35
 		local viewHeight = yTo < borderSize.height and borderSize.height or yTo
 		local viewWidth = borderSize.width

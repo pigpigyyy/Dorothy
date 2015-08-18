@@ -1,0 +1,14 @@
+<!-- params: nil -->
+<Layer X="{ @X }" Y="{ @Y }" TouchPriority="{ CCMenu.DefaultHandlerPriority-99 }" SwallowTouches="True" TouchEnabled="True">
+	<Import Module="Control.ScrollArea"/>
+
+	<DrawNode X="{ $X }" Y="{ $Y }">
+		<Polygon FillColor="0xe5100000" BorderWidth="0.5" BorderColor="0x88ffafaf">
+			<Vec2 X="{ -@W*0.3-1 }" Y="{ -@H*0.3-1 }"/>
+			<Vec2 X="{ @W*0.3+1 }" Y="{ -@H*0.3-1 }"/>
+			<Vec2 X="{ @W*0.3+1 }" Y="{ @H*0.3+1 }"/>
+			<Vec2 X="{ -@W*0.3-1 }" Y="{ @H*0.3+1 }"/>
+		</Polygon>
+	</DrawNode>
+	<ScrollArea Name="scrollArea" X="{ $X }" Y="{ $Y }" Width="{ @W*0.6 }" Height="{ @H*0.6 }" TouchPriority="{ CCMenu.DefaultHandlerPriority-100 }" Ref="True"/>
+</Layer>

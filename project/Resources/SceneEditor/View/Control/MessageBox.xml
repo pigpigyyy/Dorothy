@@ -1,0 +1,49 @@
+<!-- params: Text -->
+<Node Name="box" X="{ @X }" Y="{ @Y }" Width="260" Height="220">
+	<Import Module="Control.CircleButton"/>
+
+	<Layer Name="mask" X="{ $X }" Y="{ $Y }"
+		SwallowTouches="True" TouchEnabled="True"
+		TouchPriority="{ CCMenu.DefaultHandlerPriority-998 }"/>
+
+	<DrawNode X="{ $X }" Y="{ $Y }">
+		<Polygon FillColor="0xe5100000" BorderWidth="0.5" BorderColor="0x88ffafaf">
+			<Vec2 X="-130" Y="-110"/>
+			<Vec2 X="130" Y="-110"/>
+			<Vec2 X="130" Y="110"/>
+			<Vec2 X="-130" Y="110"/>
+		</Polygon>
+
+		<LabelTTF Name="title" Text="{ text }" FontName="Arial" FontSize="24" X="0" Y="40" Color="0x00ffff" AntiAlias="False"/>
+
+		<Menu Name="opMenu" Y="-40" Width="130" Height="60" SwallowTouches="True"
+			TouchPriority="{ CCMenu.DefaultHandlerPriority-1000 }" Ref="True">
+			<CircleButton Name="okBtn" X="{ okOnly and $X or 30 }" Y="30" Radius="30" FontSize="17" Text="OK" Ref="True">
+				<DrawNode X="30" Y="30">
+					<Dot X="0" Y="0" Radius="30" Color="0x22ffffff"/>
+				</DrawNode>
+			</CircleButton>
+			<Script>if not okOnly then</Script>
+			<CircleButton Name="cancelBtn" X="100" Y="30" Radius="30" FontSize="17" Text="Cancel" Ref="True">
+				<DrawNode X="30" Y="30">
+					<Dot X="0" Y="0" Radius="30" Color="0x22ffffff"/>
+				</DrawNode>
+			</CircleButton>
+			<Script>end</Script>
+		</Menu>
+	</DrawNode>
+
+	<Action>
+		<Spawn Name="show">
+			<Opacity Time="0.3" Alpha="1"/>
+			<Scale Time="0.3" X="1" Y="1" Ease="OutBack"/>
+		</Spawn>
+	</Action>
+
+	<Slot Name="Entered">
+		box.opacity = 0
+		box.scaleX = 0
+		box.scaleY = 0
+		box:perform(show)
+	</Slot>
+</Node>

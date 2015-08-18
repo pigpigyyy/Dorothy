@@ -1,7 +1,10 @@
 Dorothy!
 Class,property = unpack require "class"
 ButtonView = require "View.Control.Button"
-
+-- [signals]
+-- "Tapped",(button)->
+-- [params]
+-- x, y, width, height, fontSize, text
 Class
 	__partial: (args)=> ButtonView args
 	__init: (args)=>

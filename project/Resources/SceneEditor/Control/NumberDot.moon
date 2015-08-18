@@ -1,7 +1,8 @@
 Dorothy!
 Class,property = unpack require "class"
 NumberDotView = require "View.Control.NumberDot"
-
+-- [params]
+-- x, y, number
 Class
 	__partial: (args)=> NumberDotView args
 	__init: (args)=>

@@ -2,9 +2,13 @@ Dorothy!
 Class,property = unpack require "class"
 SpriteViewView = require "View.Control.SpriteView"
 NumberDot = require "Control.NumberDot"
-
+-- [signals]
+-- "Selected",(viewItem)->
+-- "Checked",(checked,viewItem)->
+-- [params]
+-- x, y, width, height,
+-- file, spriteStr, alias, needUnload
 selectedItems = {}
-
 Class
 	__partial: (args)=> SpriteViewView args
 	__init: (args)=>
@@ -88,7 +92,7 @@ Class
 				@face\addChild @numberDot
 				table.insert selectedItems,@numberDot
 				@_checked = true
-				@\emit "Checked",@
+				@\emit "Checked",true,@
 		else
 			dot = @numberDot
 			num = dot.number + 1
@@ -102,7 +106,7 @@ Class
 			}
 			@numberDot = nil
 			@_checked = false
-			@\emit "Checked",@
+			@\emit "Checked",false,@
 
 	checked: property => @_checked
 
@@ -121,6 +125,6 @@ Class
 				}
 				@numberDot = nil
 				@_checked = false
-				@\emit "Checked",@
+				@\emit "Checked",false,@
 			@\emit "TapEnded"
 			@_isCheckMode = value

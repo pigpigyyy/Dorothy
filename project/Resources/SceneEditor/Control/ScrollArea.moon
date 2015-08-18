@@ -1,11 +1,15 @@
 Dorothy!
 Class,property = unpack require "class"
 ScrollAreaView = require "View.Control.ScrollArea"
-
--- signals:
+-- [signals]
 -- "ScrollStart",->
 -- "ScrollEnd",->
 -- "Scrolled",(delta)->
+-- [params]
+-- x,y,width,height,
+-- paddingX,paddingY,
+-- viewWidth,viewHeight,
+-- touchPriority
 Class
 	__partial: (args)=> ScrollAreaView args
 	__init: (args)=>
@@ -31,13 +35,13 @@ Class
 			timePassed += deltaTime
 			t = math.min timePassed*4,1
 			with oEase
-				if posX < 0
+				if posX < -moveX
+					tmp = deltaX
+					deltaX = \func .OutBack,t,posX,-moveX-posX
+					x = deltaX - tmp
+				elseif posX > 0
 					tmp = deltaX
 					deltaX = \func .OutBack,t,posX,0-posX
-					x = deltaX - tmp
-				elseif posX > moveX
-					tmp = deltaX
-					deltaX = \func .OutBack,t,posX,moveX-posX
 					x = deltaX - tmp
 				if posY < 0
 					tmp = deltaY
@@ -53,7 +57,7 @@ Class
 			@\unschedule! if t == 1
 
 		isReseting = ->
-			deltaX < 0 or deltaX > moveX or deltaY > moveY or deltaY < 0
+			deltaX > 0 or deltaX < -moveX or deltaY > moveY or deltaY < 0
 
 		startReset = ->
 			posX = deltaX
@@ -67,8 +71,8 @@ Class
 			newPosX = deltaX + dPosX
 			newPosY = deltaY + dPosY
 
-			newPosX = math.max newPosX, -paddingX
-			newPosX = math.min newPosX, moveX+paddingX
+			newPosX = math.min newPosX, paddingX
+			newPosX = math.max newPosX, -moveX-paddingX
 			newPosY = math.max newPosY, -paddingY
 			newPosY = math.min newPosY, moveY+paddingY
 			dPosX = newPosX - deltaX
@@ -80,10 +84,10 @@ Class
 				elseif newPosY > moveY
 					(newPosY-moveY)/paddingY
 				else 0
-				lenX = if newPosX < 0
-					(0-newPosX)/paddingX
-				elseif newPosX > moveX
-					(newPosX-moveX)/paddingX
+				lenX = if newPosX > 0
+					(newPosX-0)/paddingX
+				elseif newPosX < -moveX
+					(-moveX-newPosX)/paddingX
 				else 0
 
 				if lenY > 0
@@ -93,8 +97,8 @@ Class
 					v = lenX*3
 					dPosX = dPosX / math.max v*v,1
 
-			dPosX = 0 if viewWidth < width
-			dPosY = 0 if viewHeight < height
+			dPosX = 0 if viewWidth < @width
+			dPosY = 0 if viewHeight < @height
 
 			deltaX += dPosX
 			deltaY += dPosY
@@ -104,8 +108,8 @@ Class
 			startReset! if not touching and
 			(newPosY < -paddingY*0.5 or 
 			newPosY > moveY+paddingY*0.5 or
-			newPosX < -paddingX*0.5 or
-			newPosX > moveX+paddingX*0.5)
+			newPosX > paddingX*0.5 or
+			newPosX < -moveX-paddingX*0.5)
 
 		updateSpeed = (dt)->
 			if S == oVec2.zero then return
@@ -139,7 +143,7 @@ Class
 			if touch.id ~= 0 then return false
 
 			pos = @\convertToNodeSpace touch.location
-			rect = CCRect oVec2(-width*0.5,-height*0.5),CCSize(width,height)
+			rect = CCRect oVec2(-@width*0.5,-@height*0.5),CCSize(@width,@height)
 			if not rect\containsPoint pos then return false
 
 			deltaMoveLength = 0
@@ -170,8 +174,8 @@ Class
 			newPosX = deltaX + delta.x
 			newPosY = deltaY + delta.y
 
-			newPosX = math.max newPosX, 0
-			newPosX = math.min newPosX, moveX
+			newPosX = math.min newPosX, 0
+			newPosX = math.max newPosX, -moveX
 			newPosY = math.max newPosY, 0
 			newPosY = math.min newPosY, moveY
 			
@@ -181,7 +185,7 @@ Class
 			setOffset offset,false
 
 		@updateViewSize = (wView,hView)=>
-			{:width,:height} = @contentSize
+			{:width,:height} = @
 			viewWidth = math.max wView,width
 			viewHeight = math.max hView,height
 			moveY = viewHeight - height
@@ -199,6 +203,12 @@ Class
 			V = oVec2.zero
 			deltaMoveLength = 0
 
+		@updatePadding = (padX,padY)=>
+			paddingX = padX
+			paddingY = padY
+			@scroll oVec2.zero
+
+		@getPadding = -> oVec2 paddingX,paddingY
 		@getViewSize = -> CCSize viewWidth,viewHeight
 		@getTotalDelta = -> oVec2 deltaX,deltaY
 
@@ -207,3 +217,6 @@ Class
 
 	viewSize: property => @getViewSize!,
 		(size)=> @updateViewSize size.width,size.height
+
+	padding: property => @getPadding!,
+		(padding)=> @updatePadding padding.x,padding.y

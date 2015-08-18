@@ -1,6 +1,9 @@
 Dorothy!
 Class = unpack require "class"
-
+-- [signals]
+-- "TextChanged",(textField)->
+-- [params]
+-- x, y, limit, fontSize
 Class
 	__partial: (args)=>
 		CCTextFieldTTF "","Arial",args.fontSize

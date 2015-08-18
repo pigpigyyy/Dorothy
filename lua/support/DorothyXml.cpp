@@ -1618,66 +1618,106 @@ string oXmlDelegate::oVal(const char* value, const char* def, const char* elemen
 		size_t i = 0;
 		while (i < valStr.size())
 		{
-			if (valStr[i] == '$' && i < valStr.size() - 1)
+			if ((valStr[i] == '$' || valStr[i] == '@') && i < valStr.size() - 1)
 			{
-				string parent;
-				if (!elementStack.empty())
+				if (valStr[i] == '$')
 				{
-					oItem top = elementStack.top();
-					if (!top.name.empty())
+					string parent;
+					if (!elementStack.empty())
 					{
-						parent = top.name;
-					}
-					else if (strcmp(top.type, "Stencil") == 0)
-					{
-						elementStack.pop();
-						if (!elementStack.empty())
+						oItem top = elementStack.top();
+						if (!top.name.empty())
 						{
-							const oItem& newTop = elementStack.top();
-							parent = newTop.name;
+							parent = top.name;
 						}
-						elementStack.push(top);
+						else if (strcmp(top.type, "Stencil") == 0)
+						{
+							elementStack.pop();
+							if (!elementStack.empty())
+							{
+								const oItem& newTop = elementStack.top();
+								parent = newTop.name;
+							}
+							elementStack.push(top);
+						}
 					}
-				}
-				if (parent.empty() && element)
-				{
-					char num[10];
-					sprintf(num, "%d", parser->getLineNumber(element));
-					lastError += string("The $ expression can`t be used in tag at line ") + num + "\n";
-				}
-				newStr += valStr.substr(start, i - start);
-				i++;
-				start = i + 1;
-				switch (valStr[i])
-				{
-				case 'L':
-					newStr += "0";
-					break;
-				case 'W':
-				case 'R':
-					newStr += parent + ".width";
-					break;
-				case 'H':
-				case 'T':
-					newStr += parent + ".height";
-					break;
-				case 'B':
-					newStr += "0";
-					break;
-				case 'X':
-					newStr += parent + ".width*0.5";
-					break;
-				case 'Y':
-					newStr += parent + ".height*0.5";
-					break;
-				default:
-					if (element)
+					if (parent.empty() && element)
 					{
 						char num[10];
 						sprintf(num, "%d", parser->getLineNumber(element));
-						lastError += string("Invalid expression $") + valStr[i] + " at line " + num + "\n";
+						lastError += string("The $ expression can`t be used in tag at line ") + num + "\n";
 					}
-					break;
+					newStr += valStr.substr(start, i - start);
+					i++;
+					start = i + 1;
+					switch (valStr[i])
+					{
+					case 'L':
+						newStr += "0";
+						break;
+					case 'W':
+					case 'R':
+						newStr += parent + ".width";
+						break;
+					case 'H':
+					case 'T':
+						newStr += parent + ".height";
+						break;
+					case 'B':
+						newStr += "0";
+						break;
+					case 'X':
+						newStr += parent + ".width*0.5";
+						break;
+					case 'Y':
+						newStr += parent + ".height*0.5";
+						break;
+					default:
+						if (element)
+						{
+							char num[10];
+							sprintf(num, "%d", parser->getLineNumber(element));
+							lastError += string("Invalid expression $") + valStr[i] + " at line " + num + "\n";
+						}
+						break;
+					}
+				}
+				else
+				{
+					newStr += valStr.substr(start, i - start);
+					i++;
+					start = i + 1;
+					switch (valStr[i])
+					{
+					case 'L':
+						newStr += "0";
+						break;
+					case 'W':
+					case 'R':
+						newStr += "CCDirector.winSize.width";
+						break;
+					case 'H':
+					case 'T':
+						newStr += "CCDirector.winSize.height";
+						break;
+					case 'B':
+						newStr += "0";
+						break;
+					case 'X':
+						newStr += "CCDirector.winSize.width*0.5";
+						break;
+					case 'Y':
+						newStr += "CCDirector.winSize.height*0.5";
+						break;
+					default:
+						if (element)
+						{
+							char num[10];
+							sprintf(num, "%d", parser->getLineNumber(element));
+							lastError += string("Invalid expression @") + valStr[i] + " at line " + num + "\n";
+						}
+						break;
+					}
 				}
 			}
 			i++;
