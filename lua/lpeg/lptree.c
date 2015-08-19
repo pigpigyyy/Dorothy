@@ -1281,11 +1281,16 @@ extern void luaopen_lpeg (lua_State *L) {
   lua_pushvalue(L, -1); // pattern_t lpeg_t lpeg_t
   lua_setfield(L, -3, "__index"); // pattern_t["__index"] = lpeg_t, pattern_t lpeg_t
   lua_remove(L, -2); // lpeg_t
-  lua_getglobal(L, "package"); // lpeg_t package
-  lua_getfield(L, -1, "loaded"); // lpeg_t package loaded
-  lua_remove(L, -2); // lpeg_t loaded
-  lua_insert(L, -2); // loaded lpeg_t
-  lua_setfield(L, -2, "lpeg"); // loaded["lpeg"] = lpeg_t, loaded
+  lua_getglobal(L, "builtin"); // lpeg_t builtin
+  if (!lua_istable(L, -1))
+  {
+	  lua_pop(L, 1);
+	  lua_newtable(L);
+	  lua_pushvalue(L, -1);
+	  lua_setglobal(L, "builtin");
+  }
+  lua_insert(L, -2); // builtin lpeg_t
+  lua_setfield(L, -2, "lpeg"); // builtin["lpeg"] = lpeg_t, builtin
   lua_pop(L, 1); // stack empty
 }
 

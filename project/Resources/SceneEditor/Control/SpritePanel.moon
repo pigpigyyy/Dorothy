@@ -71,6 +71,7 @@ Class
 
 				{:width,:height} = @scrollArea
 
+				i = 0
 				if @clips
 					clipsToDel = {}
 					clipSet = Set clips
@@ -93,7 +94,8 @@ Class
 								expItem.parent\removeChild expItem
 							@clipExpands[clipDel] = nil
 					for clipAdd in *clipsToAdd
-						@clipItems[clipAdd] = @\_addClipTab clipAdd
+						@clipItems[clipAdd] = @\_addClipTab clipAdd,i
+						i += 1
 				else
 					if @clipItems
 						for clip,item in pairs @clipItems
@@ -108,7 +110,8 @@ Class
 					table.sort clips,(a,b)-> a\match("[\\/]([^\\/]*)$") < b\match("[\\/]([^\\/]*)$")
 					for clip in *clips
 						sleep!
-						clipTab = @\_addClipTab clip
+						clipTab = @\_addClipTab clip,i
+						i += 1
 						clipTab.visible = false
 						@clipItems[clip] = clipTab
 				@clips = clips
@@ -145,6 +148,12 @@ Class
 						viewItem\slots "Checked",viewItemChecked
 						@menu\addChild viewItem
 						@imageItems[imageAdd] = viewItem
+						viewItem.opacity = 0
+						viewItem\perform CCSequence {
+							CCDelay i*0.1
+							oOpacity 0.3,1
+						}
+						i += 1
 					table.sort images,(a,b)-> a\match("[\\/]([^\\/]*)$") < b\match("[\\/]([^\\/]*)$")
 				else
 					if @imageItems
@@ -165,6 +174,12 @@ Class
 						viewItem.enabled = false
 						@menu\addChild viewItem
 						@imageItems[image] = viewItem
+						viewItem.opacity = 0
+						viewItem\perform CCSequence {
+							CCDelay i*0.1
+							oOpacity 0.3,1
+						}
+						i += 1
 				@images = images
 
 				y = height
@@ -219,7 +234,7 @@ Class
 			if images and #images > 0
 				ClipEditor :images
 
-	_addClipTab: (clip)=>
+	_addClipTab: (clip,index)=>
 		clipTab = TabButton {
 			width: @scrollArea.width-20
 			height: 40
@@ -275,6 +290,11 @@ Class
 		clipTab.position += @scrollArea.offset
 		clipTab.enabled = false
 		@menu\addChild clipTab
+		clipTab.opacity = 0
+		clipTab\perform CCSequence {
+			CCDelay (index or 0)*0.1
+			oOpacity 0.3,0.4
+		}
 		clipTab
 
 	_setCheckMode: (isSelecting)=>

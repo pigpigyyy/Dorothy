@@ -249,10 +249,14 @@ TOLUA_API void tolua_beginmodule(lua_State* L, const char* name)
 	}
 	else
 	{
-		//lua_pushvalue(L, LUA_GLOBALSINDEX);
-		lua_getglobal(L, "package"); // package
-		lua_getfield(L, -1, "loaded"); // package loaded
-		lua_remove(L, -2); // loaded
+		lua_getglobal(L, "builtin");// builtin
+		if (!lua_istable(L, -1))
+		{
+			lua_pop(L, 1);
+			lua_newtable(L);// builtin
+			lua_pushvalue(L, -1);// builtin builtin
+			lua_setglobal(L, "builtin"); // _G["builtin"] = builtin, builtin
+		}
 	}
 }
 

@@ -13,6 +13,8 @@ Class
 		emit "Editor.LoadSprite", {
 			@graphicPath
 		}
+		_G["editor"] = @
+		builtin["editor"] = @
 
 	game: property => @_gameName,
 		(name)=>

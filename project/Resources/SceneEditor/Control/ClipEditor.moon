@@ -50,7 +50,7 @@ Class
 								}
 								CCCall ->
 									emit "Editor.LoadSprite", {
-										oContent.writablePath.."Model/Output"
+										editor.graphicPath
 									}
 									@parent\removeChild @
 							}

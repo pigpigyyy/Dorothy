@@ -1,7 +1,12 @@
 {
 	fit: (blocks)=>
 		table.sort blocks,(a,b)->
-			math.max(a.w,a.h) >= math.max(b.w,b.h)
+			va = math.max(a.w,a.h)
+			vb = math.max(b.w,b.h)
+			if va == vb
+				a.w*a.h > b.w*b.h
+			else
+				va > vb
 		len = #blocks
 		x,y = 0,0
 		w = len > 0 and blocks[1].w or 0

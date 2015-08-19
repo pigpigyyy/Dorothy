@@ -1,29 +1,33 @@
 $[
-local loaded = package.loaded
+for k,v in pairs(package.loaded) do
+	package.loaded[k] = nil
+end
 
-loaded.CCView = loaded.CCView()
-loaded.CCApplication = loaded.CCApplication()
-loaded.CCDirector = loaded.CCDirector()
-loaded.CCUserDefault = loaded.CCUserDefault()
-loaded.CCKeyboard = loaded.CCKeyboard()
-loaded.oContent = loaded.oContent()
-loaded.oData = loaded.oData()
+local builtin = _G["builtin"]
 
-local CCLuaLog = loaded.CCLuaLog
-loaded.cclog = function(...)
+builtin.CCView = builtin.CCView()
+builtin.CCApplication = builtin.CCApplication()
+builtin.CCDirector = builtin.CCDirector()
+builtin.CCUserDefault = builtin.CCUserDefault()
+builtin.CCKeyboard = builtin.CCKeyboard()
+builtin.oContent = builtin.oContent()
+builtin.oData = builtin.oData()
+
+local CCLuaLog = builtin.CCLuaLog
+builtin.cclog = function(...)
     CCLuaLog(string.format(...))
 end
-loaded.CCLuaLog = nil
+builtin.CCLuaLog = nil
 
-local CCMessageBox = loaded.CCMessageBox
-loaded.ccmsg = function(title, ...)
+local CCMessageBox = builtin.CCMessageBox
+builtin.ccmsg = function(title, ...)
     CCMessageBox(string.format(...), title)
 end
-loaded.CCMessageBox = nil
+builtin.CCMessageBox = nil
 
 local yield = coroutine.yield
 local wrap = coroutine.wrap
-local CCDirector = loaded.CCDirector
+local CCDirector = builtin.CCDirector
 local table_insert = table.insert
 local table_remove = table.remove
 local type = type
@@ -120,14 +124,14 @@ end
 
 oRoutine:start()
 
-loaded.oRoutine = oRoutine
-loaded.wait = wait
-loaded.once = once
-loaded.loop = loop
-loaded.seconds = seconds
-loaded.cycle = cycle
+builtin.oRoutine = oRoutine
+builtin.wait = wait
+builtin.once = once
+builtin.loop = loop
+builtin.seconds = seconds
+builtin.cycle = cycle
 
-local CCArray = loaded.CCArray
+local CCArray = builtin.CCArray
 local CCArray_index = CCArray.__index
 local CCArray_get = CCArray.get
 CCArray.__index = function(self,key)
@@ -147,7 +151,7 @@ CCArray.__newindex = function(self,key,value)
 	end
 end
 
-local CCDictionary = loaded.CCDictionary
+local CCDictionary = builtin.CCDictionary
 local CCDictionary_index = CCDictionary.__index
 local CCDictionary_get = CCDictionary.get
 CCDictionary.__index = function(self,key)
@@ -161,7 +165,7 @@ CCDictionary.__newindex = function(self,key,value)
 	CCDictionary_set(self,key,value)
 end
 
-local CCUserDefaultClass = getmetatable(loaded.CCUserDefault)
+local CCUserDefaultClass = getmetatable(builtin.CCUserDefault)
 local CCUserDefaultClass_index = CCUserDefaultClass.__index
 local CCUserDefaultClass_get = CCUserDefaultClass.get
 CCUserDefaultClass.__index = function(self,key)
@@ -174,10 +178,10 @@ CCUserDefaultClass.__newindex = function(self,key,value)
 	CCUserDefaultClass_set(self,key,value)
 end
 
-local emit = loaded.emit
+local emit = builtin.emit
 local oEvent_args = {}
 local argsCount = 0
-loaded.emit = function(name,args)
+builtin.emit = function(name,args)
 	argsCount = argsCount + 1
 	oEvent_args[argsCount] = args
 	emit(name)
@@ -185,8 +189,8 @@ loaded.emit = function(name,args)
 	argsCount = argsCount - 1
 end
 
-local CCNode_gslot = loaded.CCNode.gslot
-loaded.CCNode.gslot = function(self,name,...)
+local CCNode_gslot = builtin.CCNode.gslot
+builtin.CCNode.gslot = function(self,name,...)
 	local handler = select(1,...)
 	if handler then
 		return CCNode_gslot(self,name, function(event)
@@ -197,14 +201,14 @@ loaded.CCNode.gslot = function(self,name,...)
 	end
 end
 
-local oSlot = loaded.oSlot
-loaded.oSlot = function(name,handler)
+local oSlot = builtin.oSlot
+builtin.oSlot = function(name,handler)
 	return oSlot(name, function(event)
 		handler(oEvent_args[argsCount],event)
 	end)
 end
 
-local oAction = loaded.oAction
+local oAction = builtin.oAction
 local oAction_add = oAction.add
 oAction.add = function(self,id,priority,reaction,recovery,access,routine,stop)
 	oAction_add(self,
@@ -219,7 +223,7 @@ oAction.add = function(self,id,priority,reaction,recovery,access,routine,stop)
 		stop)
 end
 
-local oCache = loaded.oCache
+local oCache = builtin.oCache
 local oCache_clear = oCache.clear
 oCache.clear = function(self)
 	oCache_clear()
@@ -232,10 +236,10 @@ local oCache_poolCollect = oCache.Pool.collect
 oCache.Pool.collect = function(self)
 	return oCache_poolCollect()
 end
-local CCTextureCache = loaded.CCTextureCache
+local CCTextureCache = builtin.CCTextureCache
 local CCTextureCache_loadAsync = CCTextureCache.loadAsync
-oCache.Texture = loaded.CCTextureCache()
-loaded.CCTextureCache = nil
+oCache.Texture = builtin.CCTextureCache()
+builtin.CCTextureCache = nil
 CCTextureCache.loadAsync = nil
 
 local function _loadTextureAsync(filename, loaded)
@@ -251,8 +255,8 @@ local function _loadTextureAsync(filename, loaded)
 	end
 end
 
-local oSound = require("oSound")
-local oMusic = require("oMusic")
+local oSound = builtin.oSound
+local oMusic = builtin.oMusic
 local function _loadAsync(filename, loaded)
 	local extension = string.match(filename, "%.([^%.\\/]*)$")
 	if extension then extension = string.lower(extension) end
@@ -371,7 +375,7 @@ oCache.swapAsync = function(cache, listA, listB, loaded)
 	cache:loadAsync(added_list, loaded)
 end
 
-local oContent = loaded.oContent
+local oContent = builtin.oContent
 local oContent_copyAsync = oContent.copyAsync
 oContent.copyAsync = function(self,src,dst)
 	local loaded  = false
@@ -402,25 +406,23 @@ _G["sleep"] = function(sec)
 	end
 end
 
-local dorothy = {}
-for k,v in pairs(package.loaded) do
-	dorothy[k] = v
-end
 for k,v in pairs(_G) do
-	dorothy[k] = v
+	builtin[k] = v
 end
 local function Dorothy(env)
 	if env then
 		local newEnv = {}
 		for k,v in pairs(env) do newEnv[k] = v end
-		setmetatable(newEnv,{__index=dorothy})
+		setmetatable(newEnv,{__index=builtin})
 		setfenv(2,newEnv)
 	else
-		setfenv(2,dorothy)
+		setfenv(2,builtin)
 	end
 end
 _G["Dorothy"] = Dorothy
-dorothy["Dorothy"] = Dorothy
+builtin["Dorothy"] = Dorothy
+
+setmetatable(package.loaded,{__index=builtin})
 
 collectgarbage("setpause", 100)
 collectgarbage("setstepmul", 5000)
