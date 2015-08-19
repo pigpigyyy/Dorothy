@@ -47,6 +47,7 @@ Class
 				@\_setCheckMode false
 				@opMenu.enabled = false
 				@hint.visible = true
+				@hint.opacity = 1
 				@hint\perform @loopFade
 
 				images = {}
@@ -184,7 +185,6 @@ Class
 							expItem.position = oVec2(x,y) + @scrollArea.offset
 						y -= 30 if #expandItems > 0
 				y -= 20 if #@clips > 0
-				@scrollArea.viewSize = CCSize width,height-y
 
 				startY = y
 				for i,image in ipairs @images
@@ -201,8 +201,10 @@ Class
 						child.enabled = true
 				@opMenu.enabled = true
 				@hint\stopAction @loopFade
-				@hint.opacity = 0
-				@hint.visible = false
+				@hint\perform CCSequence {
+					oOpacity 0.3,0,oEase.OutQuad
+					CCHide!
+				}
 				@routine = nil
 
 		@addBtn.visible = false
@@ -214,11 +216,8 @@ Class
 		@groupBtn\slots "Tapped",->
 			images = [image for image,_ in pairs @selectedImages]
 			ClipEditor = require "Control.ClipEditor"
-			CCDirector.currentScene\addChild ClipEditor :images
-
-		emit "Editor.LoadSprite", {
-			oContent.writablePath.."Model/Output"
-		}
+			if images and #images > 0
+				ClipEditor :images
 
 	_addClipTab: (clip)=>
 		clipTab = TabButton {

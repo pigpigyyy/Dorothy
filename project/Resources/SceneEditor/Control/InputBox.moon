@@ -19,15 +19,18 @@ Class
 		@cancelBtn\slots "Tapped", ->
 			@\inputed ""
 
+		CCDirector.currentScene\addChild @
+
 	inputed: (text)=>
 		@activateArea.enabled = false
 		@opMenu.enabled = false
-		@\perform CCSequence {
+		@\perform oOpacity 0.4,0
+		@box\perform CCSequence {
 			CCSpawn {
-				oScale 0.3,0,0,oEase.InBack
-				oOpacity 0.3,0
+				oScale 0.4,0,0,oEase.InBack
+				oOpacity 0.4,0
 			}
 			CCCall ->
+				@\emit "Inputed",text
 				@parent\removeChild @
 		}
-		@\emit "Inputed",text

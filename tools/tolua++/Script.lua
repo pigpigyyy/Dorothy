@@ -386,31 +386,6 @@ io.open = function(file,...)
 	return io_open(oContent:getFullPath(file),...)
 end
 
-_G["Dorothy"] = (function()
-	local tb
-	local function gettb()
-		tb = {}
-		for k,v in pairs(package.loaded) do
-			tb[k] = v
-		end
-		for k,v in pairs(_G) do
-			tb[k] = v
-		end
-		return tb
-	end
-	return function(env)
-		local dorothy = tb or gettb()
-		if env then
-			local newEnv = {}
-			for k,v in pairs(env) do newEnv[k] = v end
-			setmetatable(newEnv,{__index=dorothy})
-			setfenv(2,newEnv)
-		else
-			setfenv(2,dorothy)
-		end
-	end
-end)()
-
 _G["thread"] = function(routine)
 	return oRoutine(once(routine))
 end
@@ -426,6 +401,26 @@ _G["sleep"] = function(sec)
 		yield()
 	end
 end
+
+local dorothy = {}
+for k,v in pairs(package.loaded) do
+	dorothy[k] = v
+end
+for k,v in pairs(_G) do
+	dorothy[k] = v
+end
+local function Dorothy(env)
+	if env then
+		local newEnv = {}
+		for k,v in pairs(env) do newEnv[k] = v end
+		setmetatable(newEnv,{__index=dorothy})
+		setfenv(2,newEnv)
+	else
+		setfenv(2,dorothy)
+	end
+end
+_G["Dorothy"] = Dorothy
+dorothy["Dorothy"] = Dorothy
 
 collectgarbage("setpause", 100)
 collectgarbage("setstepmul", 5000)

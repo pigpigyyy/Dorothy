@@ -12,6 +12,51 @@ Class
 			@scrollArea.view\eachChild (child)->
 				child.position += delta
 
+		@okBtn\slots "Tapped",->
+			InputBox = require "Control.InputBox"
+			MessageBox = require "Control.MessageBox"
+			inputBox = InputBox text:"New Group Name"
+			inputBox\slots "Inputed",(name)->
+				if name == "" or name\match("[\\/|:*?<>\"%.]")
+					MessageBox text:"Invalid Name",okOnly:true
+				else
+					msgBox = MessageBox text:"Group Name\n"..name
+					msgBox\slots "OK",(result)->
+						if result
+							--@target\save name..".png",CCImage.PNG
+							xml = "<A A=\""..name..".png\">"
+							h = @target.height
+							for block in *@blocks
+								xml ..= "<B A=\""..block.name
+								xml ..= "\" B=\""
+								xml ..= tostring(block.fit.x+2)..","
+								xml ..= tostring(h-block.fit.y-2-block.h+4)..","
+								xml ..= tostring(block.w-4)..","
+								xml ..= tostring(block.h-4).."\"/>"
+							xml = xml.."</A>"
+
+							clipFile = name..".clip"
+							modelFile = name..".model"
+							texFile = name..".png"
+							--oContent\saveToFile clipFile,xml
+							--oCache.Clip\update clipFile,xml
+							--oCache.Texture\add @target,texFile
+							@opMenu.enabled = false
+							@\perform oOpacity 0.4,0
+							@panel\perform CCSequence {
+								CCSpawn {
+									oScale 0.4,0,0,oEase.InBack
+									oOpacity 0.4,0
+								}
+								CCCall ->
+									emit "Editor.LoadSprite", {
+										oContent.writablePath.."Model/Output"
+									}
+									@parent\removeChild @
+							}
+
+		CCDirector.currentScene\addChild @
+
 	addImages: (images)=>
 		@scrollArea.view\removeAllChildrenWithCleanup!
 		{:width,:height} = @scrollArea
@@ -51,7 +96,6 @@ Class
 		}, ccColor4 0x44ffffff
 
 		node = CCNode()
-
 		for block in *blocks
 			with block
 				if .fit
@@ -67,27 +111,18 @@ Class
 				frame\addChild line
 				.sp.position = rect.origin + oVec2 2,2
 				node\addChild .sp
-		file = "file"
+		@blocks = blocks
 		target = CCRenderTarget w,h
 		target\beginDraw!
 		target\draw node
 		target\endDraw!
-		--target\save file..".png",CCImage.PNG
-		xml = "<A A=\""..file..".png\">"
-		for block in *blocks
-			xml = xml.."<B A=\""..block.name.."\" B=\""..tostring(block.fit.x+2)..","..tostring(h-block.fit.y-2-block.h+4)..","..tostring(block.w-4)..","..tostring(block.h-4).."\"/>"
-		xml = xml.."</A>"
+		@target = target
 
-		clipFile = file..".clip"
-		modelFile = file..".model"
-		texFile = file..".png"
-		--oContent\saveToFile clipFile,xml
-		oCache.Clip\update clipFile,xml
-		tex = oCache.Texture\add target,texFile
-
-		@scrollArea.view\addChild with CCSprite tex
+		posX = w+20 <= width and width*0.5 or 10+w*0.5
+		posY = h+20 <= height and height*0.5 or height-h*0.5-10
+		@scrollArea.view\addChild with target
 			.opacity = 0
-			.position = oVec2(w+20 <= width and width*0.5 or 10+w*0.5, h+20 <= height and height*0.5 or height*0.5-h*0.5-10)
+			.position = oVec2 posX,posY
 			\addChild frame
 			\runAction oOpacity 0.3,1
 

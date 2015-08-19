@@ -2,21 +2,4 @@
 	<Import Module="Control.SpritePanel"/>
 
 	<SpritePanel X="{ $L+10+225 }" Y="{ $B+10+($H-20)/2 }" Width="450" Height="{ $H-20 }"/>
-
-	<Import Module="Control.MessageBox"/>
-	<MessageBox Text="Alert Something">
-		<Slot Name="OK" Args="result">
-			print(result)
-		</Slot>
-	</MessageBox>
-<!--
-	<Import Module="Control.InputBox"/>
-	<InputBox Text="Input Something">
-		<Slot Name="Inputed" Args="result">
-			print(result)
-		</Slot>
-	</InputBox>
-
-	<Import Module="View.Control.ClipEditor"/>
-	<ClipEditor />-->
 </Scene>

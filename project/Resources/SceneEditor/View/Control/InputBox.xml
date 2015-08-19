@@ -1,20 +1,12 @@
 <!-- params: Text -->
-<Node Name="box" X="{ @X }" Y="{ @Y }" Width="280" Height="250">
+<LayerColor Name="mask" X="{ @X }" Y="{ @Y }"
+		Color="0x0" Opacity="0"
+		SwallowTouches="True" TouchEnabled="True"
+		TouchPriority="{ CCMenu.DefaultHandlerPriority-998 }">
 	<Import Module="Control.TextField"/>
 	<Import Module="Control.CircleButton"/>
 
-	<Action>
-		<Spawn Name="show">
-			<Opacity Time="0.3" Alpha="1"/>
-			<Scale Time="0.3" X="1" Y="1" Ease="OutBack"/>
-		</Spawn>
-	</Action>
-
-	<Layer Name="mask" X="{ $X }" Y="{ $Y }"
-		SwallowTouches="True" TouchEnabled="True"
-		TouchPriority="{ CCMenu.DefaultHandlerPriority-998 }"/>
-
-	<DrawNode X="{ $X }" Y="{ $Y }">
+	<DrawNode Name="box" X="{ $X }" Y="{ $Y }" Ref="True">
 		<Polygon FillColor="0xe5100000" BorderWidth="0.5" BorderColor="0x88ffafaf">
 			<Vec2 X="-140" Y="-125"/>
 			<Vec2 X="140" Y="-125"/>
@@ -68,10 +60,19 @@
 		</Menu>
 	</DrawNode>
 
+	<Action>
+		<Opacity Name="fadeIn" Time="0.8" Alpha="0.8" Ease="OutQuad"/>
+		<Spawn Name="show">
+			<Opacity Time="0.3" Alpha="1"/>
+			<Scale Time="0.3" X="1" Y="1" Ease="OutBack"/>
+		</Spawn>
+	</Action>
+
 	<Slot Name="Entered">
+		mask:perform(fadeIn)
 		box.opacity = 0
 		box.scaleX = 0
 		box.scaleY = 0
 		box:perform(show)
 	</Slot>
-</Node>
+</LayerColor>

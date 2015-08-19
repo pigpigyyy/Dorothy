@@ -1,14 +1,51 @@
 <!-- params: nil -->
-<Layer X="{ @X }" Y="{ @Y }" TouchPriority="{ CCMenu.DefaultHandlerPriority-99 }" SwallowTouches="True" TouchEnabled="True">
+<LayerColor Name="mask" Color="0x0" Opacity="0" X="{ @X }" Y="{ @Y }" TouchPriority="{ CCMenu.DefaultHandlerPriority-99 }" SwallowTouches="True" TouchEnabled="True">
 	<Import Module="Control.ScrollArea"/>
+	<Import Module="Control.CircleButton"/>
 
-	<DrawNode X="{ $X }" Y="{ $Y }">
-		<Polygon FillColor="0xe5100000" BorderWidth="0.5" BorderColor="0x88ffafaf">
-			<Vec2 X="{ -@W*0.3-1 }" Y="{ -@H*0.3-1 }"/>
-			<Vec2 X="{ @W*0.3+1 }" Y="{ -@H*0.3-1 }"/>
-			<Vec2 X="{ @W*0.3+1 }" Y="{ @H*0.3+1 }"/>
-			<Vec2 X="{ -@W*0.3-1 }" Y="{ @H*0.3+1 }"/>
-		</Polygon>
-	</DrawNode>
-	<ScrollArea Name="scrollArea" X="{ $X }" Y="{ $Y }" Width="{ @W*0.6 }" Height="{ @H*0.6 }" TouchPriority="{ CCMenu.DefaultHandlerPriority-100 }" Ref="True"/>
-</Layer>
+	<Node Name="panel" X="{ $X }" Y="{ $Y }" Width="{ @W*0.6 }" Height="{ @H*0.6 }" Ref="True">
+		<ScrollArea Name="scrollArea" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ CCMenu.DefaultHandlerPriority-100 }" Ref="True">
+			<DrawNode X="{ $X }" Y="{ $Y }" ZOrder="-1">
+				<Polygon FillColor="0xe5100000" BorderWidth="0.5" BorderColor="0x88ffafaf">
+					<Vec2 X="{ -@W*0.3-1 }" Y="{ -@H*0.3-1 }"/>
+					<Vec2 X="{ @W*0.3+1 }" Y="{ -@H*0.3-1 }"/>
+					<Vec2 X="{ @W*0.3+1 }" Y="{ @H*0.3+1 }"/>
+					<Vec2 X="{ -@W*0.3-1 }" Y="{ @H*0.3+1 }"/>
+				</Polygon>
+			</DrawNode>
+		</ScrollArea>
+
+		<Menu Name="opMenu" X="{ $R-35 }" Y="{ $T }" Width="130" Height="60" TouchPriority="{ CCMenu.DefaultHandlerPriority-101 }" Ref="True">
+			<CircleButton Name="cancelBtn" X="30" Y="30" Radius="30" Text="Cancel" FontSize="16" Ref="True">
+				<DrawNode>
+					<Dot X="30" Y="30" Radius="30" Color="0x22ffffff"/>
+				</DrawNode>
+			</CircleButton>
+			<CircleButton Name="okBtn" X="100" Y="30" Radius="30" Text="Group" FontSize="16" Ref="True">
+				<DrawNode>
+					<Dot X="30" Y="30" Radius="30" Color="0x22ffffff"/>
+				</DrawNode>
+			</CircleButton>
+		</Menu>
+	</Node>
+
+	<Action>
+		<Opacity Name="fadeIn" Time="0.8" Alpha="0.8" Ease="OutQuad"/>
+		<Scale Name="scaleIn" Time="0.3" X="1" Y="1" Ease="OutBack"/>
+		<Scale Name="scaleInA" Time="0.3" X="1" Y="1" Ease="OutBack"/>
+		<Scale Name="scaleInB" Time="0.3" X="1" Y="1" Ease="OutBack"/>
+	</Action>
+
+	<Slot Name="Entered">
+		mask:perform(fadeIn)
+		scrollArea.scaleX = 0
+		scrollArea.scaleY = 0
+		scrollArea:perform(scaleIn)
+		cancelBtn.scaleX = 0
+		cancelBtn.scaleY = 0
+		cancelBtn:perform(scaleInA)
+		okBtn.scaleX = 0
+		okBtn.scaleY = 0
+		okBtn:perform(scaleInB)
+	</Slot>
+</LayerColor>

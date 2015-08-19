@@ -4,26 +4,28 @@ MessageBoxView = require "View.Control.MessageBox"
 -- [signals]
 -- "OK",(result)->
 -- [params]
--- text
+-- text, okOnly
 Class
 	__partial: (args)=> MessageBoxView args
 	__init: (args)=>
 		@okBtn\slots "Tapped", ->
-			@\clicked!
-			@\emit "OK",true
+			@\clicked true
 
 		if not args.okOnly
 			@cancelBtn\slots "Tapped", ->
-				@\clicked!
-				@\emit "OK",false
+				@\clicked false
 
-	clicked: =>
+		CCDirector.currentScene\addChild @
+
+	clicked: (result)=>
 		@opMenu.enabled = false
-		@\perform CCSequence {
+		@\perform oOpacity 0.4,0
+		@box\perform CCSequence {
 			CCSpawn {
-				oScale 0.3,0,0,oEase.InBack
-				oOpacity 0.3,0
+				oScale 0.4,0,0,oEase.InBack
+				oOpacity 0.4,0
 			}
 			CCCall ->
+				@\emit "OK",result
 				@parent\removeChild @
 		}

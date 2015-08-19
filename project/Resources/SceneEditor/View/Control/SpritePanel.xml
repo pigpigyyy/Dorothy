@@ -23,8 +23,8 @@
 			<Action>
 				<Loop Name="loopFade" Ref="True">
 					<Sequence>
-						<Opacity Time="0.3" Alpha="1"/>
-						<Opacity Time="0.3" Alpha="0"/>
+						<Opacity Time="0.3" Alpha="0" Ease="OutQuad"/>
+						<Opacity Time="0.3" Alpha="1" Ease="InQuad"/>
 					</Sequence>
 				</Loop>
 			</Action>
