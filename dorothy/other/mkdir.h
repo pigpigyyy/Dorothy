@@ -13,9 +13,11 @@
 #endif
 
 #ifdef _MSC_VER
-	#define MKDIR(a) _mkdir((a))
+	#define MKDIR(a) _mkdir(a)
+	#define RMDIR(a) _rmdir(a)
 #else
-	#define MKDIR(a) mkdir((a),0755)
+	#define MKDIR(a) mkdir(a,0755)
+	#define RMDIR(a) rmdir(a)
 #endif
 
 static void CopyFile(const char* src, const char* dst)

@@ -226,7 +226,8 @@ bool oContent::isFileExist(const char* filename)
 
 bool oContent::removeFile( const char* filename )
 {
-	return ::remove(oContent::getFullPath(filename).c_str()) == 0;
+	string fullpath = oContent::getFullPath(filename);
+	return ::remove(fullpath.c_str()) == 0 || RMDIR(fullpath.c_str()) == 0;
 }
 
 void oContent::saveToFile(const string& filename, const string& content)
