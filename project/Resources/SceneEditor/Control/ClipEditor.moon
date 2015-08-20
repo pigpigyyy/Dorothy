@@ -17,13 +17,13 @@ Class
 			MessageBox = require "Control.MessageBox"
 			inputBox = InputBox text:"New Group Name"
 			inputBox\slots "Inputed",(name)->
-				if name == "" or name\match("[\\/|:*?<>\"%.]")
+				if name == "" or name\match("[\\/|:*?<>\"%.]") or oContent\exist(name..".clip")
 					MessageBox text:"Invalid Name",okOnly:true
 				else
 					msgBox = MessageBox text:"Group Name\n"..name
 					msgBox\slots "OK",(result)->
 						if result
-							--@target\save name..".png",CCImage.PNG
+							-- save clip
 							xml = "<A A=\""..name..".png\">"
 							h = @target.height
 							for block in *@blocks
@@ -34,21 +34,21 @@ Class
 								xml ..= tostring(block.w-4)..","
 								xml ..= tostring(block.h-4).."\"/>"
 							xml = xml.."</A>"
-
-							clipFile = editor.graphicPath..name..".clip"
-							texFile = editor.graphicPath..name..".png"
-							@target\save texFile,CCImage.PNG
-							oContent\saveToFile clipFile,xml
+							clipFile = editor.graphicFolder..name..".clip"
+							oContent\saveToFile editor.gamePath..clipFile,xml
 							oCache.Clip\update clipFile,xml
+							-- save texture
+							texFile = editor.graphicFolder..name..".png"
+							@target\save editor.gamePath..texFile,CCImage.PNG
 							oCache.Texture\add @target,texFile
+							-- remove images
 							for image in *images
 								oContent\remove image
+								oCache.Texture\unload image
 							@\close!
 							thread ->
-								sleep 0.8
-								emit "Editor.LoadSprite", {
-									editor.graphicPath
-								}
+								sleep 0.7
+								editor\updateSprites!
 
 		@cancelBtn\slots "Tapped",->
 			@\close!
