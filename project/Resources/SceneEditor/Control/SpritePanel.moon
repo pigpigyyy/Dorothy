@@ -50,14 +50,7 @@ Class
 				return unless needUpdate
 			else @paths = paths
 
-			oRoutine\remove @routine if @routine
-			@routine = thread ->
-				@\_setCheckMode false
-				@opMenu.enabled = false
-				@hint.visible = true
-				@hint.opacity = 1
-				@hint\perform @loopFade
-
+			@\runThread ->
 				images = {}
 				clips = {}
 				visitResource = (path)->
@@ -75,7 +68,10 @@ Class
 								table.insert images,filename unless oContent\exist clipFile
 							when "clip"
 								table.insert clips,filename
-
+					folders = oContent\getEntries path,true
+					for folder in *folders
+						if folder ~= "." and folder ~= ".."
+							visitResource path.."/"..folder
 				for path in *paths do visitResource path
 
 				{:width,:height} = @scrollArea
@@ -116,14 +112,13 @@ Class
 								@clipExpands[clip] = nil
 					@clipItems = {}
 					@clipExpands = {}
-					table.sort clips,(a,b)-> a\match("[\\/]([^\\/]*)$") < b\match("[\\/]([^\\/]*)$")
 					for clip in *clips
-						sleep!
 						clipTab = @\_addClipTab clip,i
 						i += 1
 						clipTab.visible = false
 						@clipItems[clip] = clipTab
 				@clips = clips
+				table.sort clips,(a,b)-> a\match("[\\/]([^\\/]*)$") < b\match("[\\/]([^\\/]*)$")
 
 				if @images
 					imagesToDel = {}
@@ -142,7 +137,6 @@ Class
 						item.parent\removeChild item
 						@imageItems[imageDel] = nil
 					for imageAdd in *imagesToAdd
-						sleep!
 						viewItem = SpriteView {
 							file: imageAdd
 							width: 100
@@ -160,15 +154,12 @@ Class
 							oOpacity 0.3,1
 						}
 						i += 1
-					table.sort images,(a,b)-> a\match("[\\/]([^\\/]*)$") < b\match("[\\/]([^\\/]*)$")
 				else
 					if @imageItems
 						for _,item in pairs @imageItems
 							item.parent\removeChild item
 					@imageItems = {}
-					table.sort images,(a,b)-> a\match("[\\/]([^\\/]*)$") < b\match("[\\/]([^\\/]*)$")
 					for image in *images
-						sleep!
 						viewItem = SpriteView {
 							file: image
 							width: 100
@@ -217,17 +208,6 @@ Class
 				y -= 60 if #@images > 0
 				@scrollArea.viewSize = CCSize width,height-y
 
-				@menu\eachChild (child)->
-					if tolua.type child == "CCMenuItem"
-						child.enabled = true
-				@opMenu.enabled = true
-				@hint\stopAction @loopFade
-				@hint\perform CCSequence {
-					oOpacity 0.3,0,oEase.OutQuad
-					CCHide!
-				}
-				@routine = nil
-
 		@addBtn.visible = false
 		@delBtn.visible = false
 		@groupBtn.visible = false
@@ -240,8 +220,64 @@ Class
 				ClipEditor = require "Control.ClipEditor"
 				ClipEditor :images
 		@delGroupBtn\slots "Tapped",->
-			for clip,_ in pairs @selectedClips
-				print clip
+			clips = [clip for clip,_ in pairs @selectedClips]
+			if #clips > 0
+				@\runThread ->
+					for clip in *clips
+						sleep!
+						folder = editor.graphicFullPath..clip\match "[\\/]([^\\/]*)%.[^%.\\/]*$"
+						sleep!
+						if oContent\exist folder
+							sleep!
+							index = 1
+							while oContent\exist folder..tostring index
+								sleep!
+								index += 1
+							folder ..= tostring index
+						folder ..= "/"
+						oContent\mkdir folder
+						sleep!
+						names = oCache.Clip\getNames clip
+						for name in *names
+							sleep!
+							sp = CCSprite clip.."|"..name
+							sp.anchor = oVec2.zero
+							target = CCRenderTarget sp.width,sp.height
+							target\beginDraw!
+							target\draw sp
+							target\endDraw!
+							sleep!
+							target\save folder..name..".png",CCImage.PNG
+						oCache.Clip\unload clip
+						oContent\remove clip
+						texFile = oCache.Clip\getTextureFile clip
+						oCache.Texture\unload texFile
+						oContent\remove texFile
+					sleep!
+					editor\updateSprites!
+
+	runThread: (task)=>
+		oRoutine\remove @routine if @routine
+		@routine = thread ->
+			@\_setCheckMode false
+			@menu\eachChild (child)->
+				if tolua.type child == "CCMenuItem"
+					child.enabled = false
+			@opMenu.enabled = false
+			@hint.visible = true
+			@hint.opacity = 1
+			@hint\perform @loopFade
+			task!
+			@menu\eachChild (child)->
+				if tolua.type child == "CCMenuItem"
+					child.enabled = true
+			@opMenu.enabled = true
+			@hint\stopAction @loopFade
+			@hint\perform CCSequence {
+				oOpacity 0.3,0,oEase.OutQuad
+				CCHide!
+			}
+			@routine = nil
 
 	_addClipTab: (clip,index)=>
 		clipTab = TabButton {
