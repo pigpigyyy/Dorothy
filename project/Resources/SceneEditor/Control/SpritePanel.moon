@@ -39,17 +39,6 @@ Class
 			oRoutine\remove @routine if @routine
 
 		@\gslot "Editor.LoadSprite",(paths)->
-			if @routine and @paths
-				needUpdate = false
-				pathSet = Set @paths
-				for path in *paths
-					if not pathSet[path]
-						needUpdate = true
-						break
-				needUpdate = true if #@paths ~= #paths
-				return unless needUpdate
-			else @paths = paths
-
 			@\runThread ->
 				images = {}
 				clips = {}
@@ -81,15 +70,19 @@ Class
 					clipsToDel = {}
 					clipSet = Set clips
 					for clip in *@clips
+						print clip
 						if not clipSet[clip]
 							table.insert clipsToDel,clip
 					clipsToAdd = {}
 					clipSet = Set @clips
+					print "new"
 					for clip in *clips
+						print clip
 						if not clipSet[clip]
 							table.insert clipsToAdd,clip
 
 					for clipDel in *clipsToDel
+						print "del", clipDel
 						item = @clipItems[clipDel]
 						item.parent\removeChild item
 						@clipItems[clipDel] = nil
@@ -99,6 +92,7 @@ Class
 								expItem.parent\removeChild expItem
 							@clipExpands[clipDel] = nil
 					for clipAdd in *clipsToAdd
+						print "add",clipAdd
 						@clipItems[clipAdd] = @\_addClipTab clipAdd,i
 						i += 1
 				else
@@ -226,7 +220,6 @@ Class
 					for clip in *clips
 						sleep!
 						folder = editor.graphicFullPath..clip\match "[\\/]([^\\/]*)%.[^%.\\/]*$"
-						sleep!
 						if oContent\exist folder
 							sleep!
 							index = 1
@@ -248,11 +241,11 @@ Class
 							target\endDraw!
 							sleep!
 							target\save folder..name..".png",CCImage.PNG
-						oCache.Clip\unload clip
-						oContent\remove clip
 						texFile = oCache.Clip\getTextureFile clip
 						oCache.Texture\unload texFile
 						oContent\remove texFile
+						oCache.Clip\unload clip
+						oContent\remove clip
 					sleep!
 					editor\updateSprites!
 

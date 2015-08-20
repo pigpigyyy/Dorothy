@@ -37,7 +37,6 @@ Class
 					visitGraphicFolder path.."/"..folder
 			files = oContent\getEntries path,false
 			if #files == 0 and #folders == 2
-				print path
 				oContent\remove path
 		visitGraphicFolder @graphicFullPath\gsub("[\\/]*$","")
 
