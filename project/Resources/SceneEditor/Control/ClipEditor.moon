@@ -35,27 +35,36 @@ Class
 								xml ..= tostring(block.h-4).."\"/>"
 							xml = xml.."</A>"
 
-							clipFile = name..".clip"
-							modelFile = name..".model"
-							texFile = name..".png"
-							--oContent\saveToFile clipFile,xml
-							--oCache.Clip\update clipFile,xml
-							--oCache.Texture\add @target,texFile
-							@opMenu.enabled = false
-							@\perform oOpacity 0.4,0
-							@panel\perform CCSequence {
-								CCSpawn {
-									oScale 0.4,0,0,oEase.InBack
-									oOpacity 0.4,0
+							clipFile = editor.graphicPath..name..".clip"
+							texFile = editor.graphicPath..name..".png"
+							@target\save texFile,CCImage.PNG
+							oContent\saveToFile clipFile,xml
+							oCache.Clip\update clipFile,xml
+							oCache.Texture\add @target,texFile
+							for image in *images
+								oContent\remove image
+							@\close!
+							thread ->
+								sleep 0.8
+								emit "Editor.LoadSprite", {
+									editor.graphicPath
 								}
-								CCCall ->
-									emit "Editor.LoadSprite", {
-										editor.graphicPath
-									}
-									@parent\removeChild @
-							}
+
+		@cancelBtn\slots "Tapped",->
+			@\close!
 
 		CCDirector.currentScene\addChild @
+
+	close: =>
+		@opMenu.enabled = false
+		@\perform oOpacity 0.4,0
+		@panel\perform CCSequence {
+			CCSpawn {
+				oScale 0.4,0,0,oEase.InBack
+				oOpacity 0.4,0
+			}
+			CCCall -> @parent\removeChild @
+		}
 
 	addImages: (images)=>
 		@scrollArea.view\removeAllChildrenWithCleanup!

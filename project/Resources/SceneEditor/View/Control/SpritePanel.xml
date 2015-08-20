@@ -5,14 +5,14 @@
 	<Import Module="View.Shape.SolidRect"/>
 	<Import Module="Control.Button"/>
 
-	<SolidRect Width="{ width }" Height="{ height }" Color="0x2200ffff"/>
+	<SolidRect Width="{ width }" Height="{ height }" Color="0xe5100000"/>
 	<LabelTTF Name="title" X="{ $X }" Y="{ $T-20 }" Text="Select Sprite" FontName="Arial" FontSize="24" Color="0x00ffff" Opacity="0.5" AntiAlias="False"/>
 	<ScrollArea Name="scrollArea" X="{ $X }" Y="{ $T-40-(height-100)/2 }" Width="{ width }" Height="{ height-100 }" ViewWidth="{ width }" ViewHeight="{ height-100 }" PaddingX="0" PaddingY="100" TouchPriority="0" Ref="True">
 		<Item Name="view">
 			<Menu Name="menu" AnchorX="0" AnchorY="0" Width="{ width }" Height="{ height-100 }" TouchPriority="1" Ref="True"/>
 		</Item>
 	</ScrollArea>
-	<LineRect X="-1" Y="-1" Width="{ width+2 }" Height="{ height+2 }" Color="0x6600ffff"/>
+	<LineRect X="-1" Y="-1" Width="{ width+2 }" Height="{ height+2 }" Color="0x88ffafaf"/>
 	<Menu Name="opMenu" X="{ $X }" Y="{ $B+30 }" Width="{ width }" Height="60" Ref="True">
 		<Button Name="modeBtn" X="30" Y="30" Width="40" Height="40" FontSize="12" Text="Mode" Ref="True"/>
 		<Button Name="addBtn" X="80" Y="30" Width="40" Height="40" FontSize="20" Text="+" Ref="True"/>

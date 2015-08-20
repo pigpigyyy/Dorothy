@@ -6,9 +6,7 @@ Class
 	__partial: => EditorView!
 	__init: =>
 		@_gameName = ""
-		@_grahicPath = ""
-		@_physicsPath = ""
-		@_logicPath = ""
+
 		@game = "Test"
 		emit "Editor.LoadSprite", {
 			@graphicPath
@@ -18,16 +16,15 @@ Class
 
 	game: property => @_gameName,
 		(name)=>
+			oContent\removeSearchPath oContent.writablePath..@_gameName
 			@_gameName = name
 			root = oContent.writablePath..name
-			@_grahicPath = root.."/Graphic/"
-			@_physicsPath = root.."/Physics/"
-			@_logicPath = root.."/Logic/"
+			oContent\addSearchPath root
 			oContent\mkdir root unless oContent\exist root
-			oContent\mkdir @_grahicPath unless oContent\exist @_grahicPath
-			oContent\mkdir @_physicsPath unless oContent\exist @_physicsPath
-			oContent\mkdir @_logicPath unless oContent\exist @_logicPath
+			oContent\mkdir root..@graphicPath unless oContent\exist root..@graphicPath
+			oContent\mkdir root..@physicsPath unless oContent\exist root..@physicsPath
+			oContent\mkdir root..@logicPath unless oContent\exist root..@logicPath
 
-	graphicPath: property => @_grahicPath
-	physicsPath: property => @_physicsPath
-	logicPath: property => @_logicPath
+	graphicPath: "Graphic/"
+	physicsPath: "Physics/"
+	logicPath: "Logic/"

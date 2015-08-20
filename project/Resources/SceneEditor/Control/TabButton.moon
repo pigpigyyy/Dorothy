@@ -5,10 +5,11 @@ TabButtonView = require "View.Control.TabButton"
 -- "Checked",(checked,tabButton)->
 -- "Expanded",(expanded)->
 -- [params]
--- x, y, width, height, text
+-- x, y, width, height, text, file
 Class
 	__partial: (args)=> TabButtonView args
 	__init: (args)=>
+		@file = args.file
 		@_expanded = false
 		@_checked = false
 		@_isCheckMode = false

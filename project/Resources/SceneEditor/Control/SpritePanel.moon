@@ -11,6 +11,14 @@ Class
 	__init: (args)=>
 		@_isSelecting = false
 		@selectedImages = {}
+		@selectedClips = {}
+		@viewItemChecked = (checked,item)->
+			if @selectedImages
+				@selectedImages[item.file] = if checked then true else nil
+		@clipItemChecked = (checked,item)->
+			if @selectedClips
+				@selectedClips[item.file] = if checked then true else nil
+
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
 		@scrollArea\slots "Scrolled",(delta)->
@@ -54,6 +62,7 @@ Class
 				clips = {}
 				visitResource = (path)->
 					return unless oContent\exist path
+					path = path\gsub("[\\/]*$","")
 					files = oContent\getEntries path,false
 					sleep!
 					for file in *files
@@ -116,9 +125,6 @@ Class
 						@clipItems[clip] = clipTab
 				@clips = clips
 
-				viewItemChecked = (checked,item)->
-					if @selectedImages
-						@selectedImages[item.file] = if checked then true else nil
 				if @images
 					imagesToDel = {}
 					imageSet = Set images
@@ -145,7 +151,7 @@ Class
 						}
 						viewItem.visible = false
 						viewItem.enabled = false
-						viewItem\slots "Checked",viewItemChecked
+						viewItem\slots "Checked",@viewItemChecked
 						@menu\addChild viewItem
 						@imageItems[imageAdd] = viewItem
 						viewItem.opacity = 0
@@ -169,7 +175,7 @@ Class
 							height: 100
 							needUnload: true
 						}
-						viewItem\slots "Checked",viewItemChecked
+						viewItem\slots "Checked",@viewItemChecked
 						viewItem.visible = false
 						viewItem.enabled = false
 						@menu\addChild viewItem
@@ -230,12 +236,16 @@ Class
 			@\_setCheckMode not @_isSelecting
 		@groupBtn\slots "Tapped",->
 			images = [image for image,_ in pairs @selectedImages]
-			ClipEditor = require "Control.ClipEditor"
-			if images and #images > 0
+			if #images > 0
+				ClipEditor = require "Control.ClipEditor"
 				ClipEditor :images
+		@delGroupBtn\slots "Tapped",->
+			for clip,_ in pairs @selectedClips
+				print clip
 
 	_addClipTab: (clip,index)=>
 		clipTab = TabButton {
+			file: clip
 			width: @scrollArea.width-20
 			height: 40
 			text: clip\match "[\\/]([^\\/]*)%.[^%.\\/]*$"
@@ -286,6 +296,7 @@ Class
 				@clipExpands[clip] = nil
 				with @scrollArea.viewSize
 					@scrollArea.viewSize = CCSize .width,.height-deltaY
+		clipTab\slots "Checked",@clipItemChecked
 		clipTab.deltaY = 0
 		clipTab.position += @scrollArea.offset
 		clipTab.enabled = false
