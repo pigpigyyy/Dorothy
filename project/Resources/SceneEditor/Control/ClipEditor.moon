@@ -45,17 +45,14 @@ Class
 							for image in *images
 								oContent\remove image
 								oCache.Texture\unload image
-							@\close!
-							thread ->
-								sleep 0.7
-								editor\updateSprites!
+							@\close true
 
 		@cancelBtn\slots "Tapped",->
-			@\close!
+			@\close false
 
 		CCDirector.currentScene\addChild @
 
-	close: =>
+	close: (result)=>
 		@opMenu.enabled = false
 		@\perform oOpacity 0.4,0
 		@panel\perform CCSequence {
@@ -63,7 +60,9 @@ Class
 				oScale 0.4,0,0,oEase.InBack
 				oOpacity 0.4,0
 			}
-			CCCall -> @parent\removeChild @
+			CCCall ->
+				@\emit "Grouped",result
+				@parent\removeChild @
 		}
 
 	addImages: (images)=>

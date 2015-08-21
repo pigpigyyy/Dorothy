@@ -212,7 +212,14 @@ Class
 			images = [image for image,_ in pairs @selectedImages]
 			if #images > 0
 				ClipEditor = require "Control.ClipEditor"
-				ClipEditor :images
+				clipEditor = ClipEditor :images
+				clipEditor\slots "Grouped",(result)=>
+					if result
+						for image in *images
+							@imageItems[image].isCheckMode = false
+						thread ->
+							sleep 0.3
+							editor\updateSprites!
 		@delGroupBtn\slots "Tapped",->
 			clips = [clip for clip,_ in pairs @selectedClips]
 			if #clips > 0
@@ -246,7 +253,8 @@ Class
 						oContent\remove texFile
 						oCache.Clip\unload clip
 						oContent\remove clip
-					sleep!
+						@clipItems[clip].isCheckMode = false
+					sleep 0.3
 					editor\updateSprites!
 
 	runThread: (task)=>
