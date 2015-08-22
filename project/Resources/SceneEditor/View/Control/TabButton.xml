@@ -10,7 +10,7 @@
 	<LabelTTF X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="16" AntiAlias="False" Text="{ text }"/>
 	<Node Name="arrow" X="{ height/2 }" Y="{ height/2 }" PassColor="False">
 		<DrawNode>
-			<Polygon FillColor="0x88ff9da4" BorderWidth="1" BorderColor="0xffff9da4">
+			<Polygon FillColor="0x66ff0088" BorderWidth="1" BorderColor="0x88ff0088">
 				<Vec2 X="-9" Y="-10"/>
 				<Vec2 X="-9" Y="10"/>
 				<Vec2 X="9" Y="0"/>

@@ -11,7 +11,14 @@ Class
 		@game = "Test"
 		_G["editor"] = @
 		builtin["editor"] = @
-		@updateSprites!
+		@\slots "Cleanup",->
+			_G["editor"] = nil
+			builtin["editor"] = nil
+			oCache\clear!
+		@spritePanel\show!
+		@spritePanel\slots "Selected",(spriteStr)->
+			@addChild with CCSprite spriteStr
+				.position = oVec2 @width/2,@height/2
 
 	updateSprites: =>
 		emit "Editor.LoadSprite", {

@@ -15,7 +15,7 @@ builtin["require"] = reqFunc
 Editor = require "Scene.Editor"
 
 CCDirector\run with Editor!
-	\slots "Exited",->
+	\slots "Cleanup",->
 		_G["require"] = _require
 		builtin["require"] = _require
 		for name in *loaded

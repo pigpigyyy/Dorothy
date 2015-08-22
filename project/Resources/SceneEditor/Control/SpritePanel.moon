@@ -3,6 +3,7 @@ Class,property = unpack require "class"
 SpritePanelView = require "View.Control.SpritePanel"
 TabButton = require "Control.TabButton"
 SpriteView = require "Control.SpriteView"
+MessageBox = require "Control.MessageBox"
 import Set from require "Data.Utils"
 -- [params]
 -- x, y, width, height
@@ -18,6 +19,9 @@ Class
 		@clipItemChecked = (checked,item)->
 			if @selectedClips
 				@selectedClips[item.file] = if checked then true else nil
+		@selected = (item)->
+			@\hide!
+			@\emit "Selected",item.spriteStr
 
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
@@ -70,19 +74,15 @@ Class
 					clipsToDel = {}
 					clipSet = Set clips
 					for clip in *@clips
-						print clip
 						if not clipSet[clip]
 							table.insert clipsToDel,clip
 					clipsToAdd = {}
 					clipSet = Set @clips
-					print "new"
 					for clip in *clips
-						print clip
 						if not clipSet[clip]
 							table.insert clipsToAdd,clip
 
 					for clipDel in *clipsToDel
-						print "del", clipDel
 						item = @clipItems[clipDel]
 						item.parent\removeChild item
 						@clipItems[clipDel] = nil
@@ -92,7 +92,6 @@ Class
 								expItem.parent\removeChild expItem
 							@clipExpands[clipDel] = nil
 					for clipAdd in *clipsToAdd
-						print "add",clipAdd
 						@clipItems[clipAdd] = @\_addClipTab clipAdd,i
 						i += 1
 				else
@@ -139,7 +138,9 @@ Class
 						}
 						viewItem.visible = false
 						viewItem.enabled = false
+						viewItem.isCheckMode = @_isSelecting
 						viewItem\slots "Checked",@viewItemChecked
+						viewItem\slots "Selected",@selected
 						@menu\addChild viewItem
 						@imageItems[imageAdd] = viewItem
 						viewItem.opacity = 0
@@ -161,8 +162,10 @@ Class
 							needUnload: true
 						}
 						viewItem\slots "Checked",@viewItemChecked
+						viewItem\slots "Selected",@selected
 						viewItem.visible = false
 						viewItem.enabled = false
+						viewItem.isCheckMode = @_isSelecting
 						@menu\addChild viewItem
 						@imageItems[image] = viewItem
 						viewItem.opacity = 0
@@ -206,61 +209,103 @@ Class
 		@delBtn.visible = false
 		@groupBtn.visible = false
 		@delGroupBtn.visible = false
+
 		@modeBtn\slots "Tapped",->
 			@\_setCheckMode not @_isSelecting
+
+		@addBtn\slots "Tapped",->
+			MessageBox text:"Place Images In\n/Graphic/ folder",okOnly:true
+
+		@delBtn\slots "Tapped",->
+			images = [image for image,_ in pairs @selectedImages]
+			clips = [clip for clip,_ in pairs @selectedClips]
+			if #images + #clips > 0
+				with MessageBox text:"Delete "..(#images+#clips == 1 and "item" or "items")
+					\slots "OK",(result)->
+						return unless result
+						with MessageBox text:"Confirm This\nDeletion"
+							\slots "OK",(result)->
+								return unless result
+								@\runThread ->
+									for image in *images
+										sleep!
+										@imageItems[image].isCheckMode = false
+										oContent\remove image
+										oCache.Texture\unload image
+									for clip in *clips
+										sleep!
+										@clipItems[clip].isCheckMode = false
+										texFile = oCache.Clip\getTextureFile clip
+										oContent\remove clip
+										oContent\remove texFile
+										oCache.Clip\unload clip
+										oCache.Texture\unload texFile
+									sleep 0.3
+									editor\updateSprites!
+			else
+				MessageBox text:"No Item Selected",okOnly:true
+
 		@groupBtn\slots "Tapped",->
 			images = [image for image,_ in pairs @selectedImages]
 			if #images > 0
 				ClipEditor = require "Control.ClipEditor"
 				clipEditor = ClipEditor :images
-				clipEditor\slots "Grouped",(result)=>
-					if result
-						for image in *images
-							@imageItems[image].isCheckMode = false
-						thread ->
-							sleep 0.3
-							editor\updateSprites!
+				clipEditor\slots "Grouped",(result)->
+					return unless result
+					for image in *images
+						@imageItems[image].isCheckMode = false
+					thread ->
+						sleep 0.3
+						editor\updateSprites!
+			else
+				MessageBox text:"No Sprite Selected",okOnly:true
+
 		@delGroupBtn\slots "Tapped",->
 			clips = [clip for clip,_ in pairs @selectedClips]
 			if #clips > 0
-				@\runThread ->
-					for clip in *clips
-						sleep!
-						folder = editor.graphicFullPath..clip\match "[\\/]([^\\/]*)%.[^%.\\/]*$"
-						if oContent\exist folder
+				msgBox = MessageBox text:"Break Selected\nGroups"
+				msgBox\slots "OK",(result)->
+					return unless result
+					@\runThread ->
+						for clip in *clips
 							sleep!
-							index = 1
-							while oContent\exist folder..tostring index
+							folder = editor.graphicFullPath..clip\match "[\\/]([^\\/]*)%.[^%.\\/]*$"
+							if oContent\exist folder
 								sleep!
-								index += 1
-							folder ..= tostring index
-						folder ..= "/"
-						oContent\mkdir folder
-						sleep!
-						names = oCache.Clip\getNames clip
-						for name in *names
+								index = 1
+								while oContent\exist folder..tostring index
+									sleep!
+									index += 1
+								folder ..= tostring index
+							folder ..= "/"
+							oContent\mkdir folder
 							sleep!
-							sp = CCSprite clip.."|"..name
-							sp.anchor = oVec2.zero
-							target = CCRenderTarget sp.width,sp.height
-							target\beginDraw!
-							target\draw sp
-							target\endDraw!
-							sleep!
-							target\save folder..name..".png",CCImage.PNG
-						texFile = oCache.Clip\getTextureFile clip
-						oCache.Texture\unload texFile
-						oContent\remove texFile
-						oCache.Clip\unload clip
-						oContent\remove clip
-						@clipItems[clip].isCheckMode = false
-					sleep 0.3
-					editor\updateSprites!
+							names = oCache.Clip\getNames clip
+							for name in *names
+								sleep!
+								sp = CCSprite clip.."|"..name
+								sp.anchor = oVec2.zero
+								target = CCRenderTarget sp.width,sp.height
+								target\beginDraw!
+								target\draw sp
+								target\endDraw!
+								sleep!
+								target\save folder..name..".png",CCImage.PNG
+							texFile = oCache.Clip\getTextureFile clip
+							oCache.Texture\unload texFile
+							oContent\remove texFile
+							oCache.Clip\unload clip
+							oContent\remove clip
+							@clipItems[clip].isCheckMode = false
+						sleep 0.3
+						editor\updateSprites!
+				else
+					MessageBox text:"No Group Selected",okOnly:true
 
 	runThread: (task)=>
 		oRoutine\remove @routine if @routine
 		@routine = thread ->
-			@\_setCheckMode false
+			@scrollArea.touchEnabled = false
 			@menu\eachChild (child)->
 				if tolua.type child == "CCMenuItem"
 					child.enabled = false
@@ -269,15 +314,16 @@ Class
 			@hint.opacity = 1
 			@hint\perform @loopFade
 			task!
-			@menu\eachChild (child)->
-				if tolua.type child == "CCMenuItem"
-					child.enabled = true
-			@opMenu.enabled = true
 			@hint\stopAction @loopFade
 			@hint\perform CCSequence {
 				oOpacity 0.3,0,oEase.OutQuad
 				CCHide!
 			}
+			@opMenu.enabled = true
+			@menu\eachChild (child)->
+				if tolua.type child == "CCMenuItem"
+					child.enabled = child.isCheckMode or not @_isSelecting
+			@scrollArea.touchEnabled = true
 			@routine = nil
 
 	_addClipTab: (clip,index)=>
@@ -310,6 +356,7 @@ Class
 						needUnload: i == #names-1
 					}
 					viewItem.clip = clip
+					viewItem\slots "Selected",@selected
 					@menu\addChild viewItem
 					table.insert @clipExpands[clip],viewItem
 				newY -= 50
@@ -333,10 +380,11 @@ Class
 				@clipExpands[clip] = nil
 				with @scrollArea.viewSize
 					@scrollArea.viewSize = CCSize .width,.height-deltaY
-		clipTab\slots "Checked",@clipItemChecked
 		clipTab.deltaY = 0
 		clipTab.position += @scrollArea.offset
 		clipTab.enabled = false
+		clipTab.isCheckMode = @_isSelecting
+		clipTab\slots "Checked",@clipItemChecked
 		@menu\addChild clipTab
 		clipTab.opacity = 0
 		clipTab\perform CCSequence {
@@ -363,13 +411,41 @@ Class
 			@delBtn\perform show!
 			@groupBtn\perform show!
 			@delGroupBtn\perform show!
+			@hint.positionX = @width-(@width-250)/2
 		else
 			@addBtn\perform hide!
 			@delBtn\perform hide!
 			@groupBtn\perform hide!
 			@delGroupBtn\perform hide!
+			@hint.positionX = @width-(@width-50)/2
 		@menu\eachChild (child)->
 			if not child.clip
 				child.isCheckMode = isSelecting
 			else
 				child.enabled = not isSelecting
+
+	show: =>
+		targetX = @width/2+10
+		targetY = CCDirector.winSize.height/2
+		@positionX = @width/4
+		@opacity = 0
+		@perform CCSequence {
+			CCSpawn {
+				CCShow!
+				oOpacity 0.3,1,oEase.OutQuad
+				oPos 0.3,targetX,targetY,oEase.OutQuad
+			}
+			CCCall -> editor\updateSprites!
+		}
+
+	hide: =>
+		targetX = @width/4
+		targetY = CCDirector.winSize.height/2
+		@perform CCSequence {
+			CCSpawn {
+				oOpacity 0.3,0,oEase.OutQuad
+				oPos 0.3,targetX,targetY,oEase.OutQuad
+			}
+			CCHide!
+			CCCall -> @\emit "Hide"
+		}

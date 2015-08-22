@@ -217,7 +217,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 			function(item)
 				item.enabled = false
 				opMenu.enabled = false
-				CCDirector:popToRootScene()
+				CCDirector:popScene()
 			end)
 		backButton.anchor = oVec2.zero
 		local btnBk = CCDrawNode()

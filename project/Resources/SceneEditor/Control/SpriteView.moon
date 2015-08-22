@@ -56,7 +56,6 @@ Class
 				renderTarget\beginDraw!
 				renderTarget\draw sprite
 				renderTarget\endDraw!
-				oCache.Texture\unload file if needUnload
 				sleep 0.1
 				@_prevFile = spriteStr\match("(.*)%.[^%.\\/]*$").."Small."..spriteStr\match("%.([^%.\\/]*)$")
 				tex = oCache.Texture\add renderTarget,@_prevFile
@@ -65,6 +64,10 @@ Class
 					@sprite.textureRect = CCRect 0,0,width,height
 					@sprite.opacity = 0
 					@sprite\perform oOpacity 0.3,1
+				if needUnload
+					thread ->
+						sleep 0.1
+						oCache.Texture\removeUnused!
 			elseif @sprite
 				@sprite.parent\removeChild @sprite
 				@face\addChild sprite
