@@ -342,4 +342,24 @@ const CCSize& oModelDef::getSize() const
 	return _size;
 }
 
+vector<string> oModelDef::getLookNames() const
+{
+	vector<string> names(_lookIndex.size());
+	for (const auto& it : _lookIndex)
+	{
+		names[it.second] = it.first;
+	}
+	return names;
+}
+
+vector<string> oModelDef::getAnimationNames() const
+{
+	vector<string> names(_animationIndex.size());
+	for (const auto& it : _animationIndex)
+	{
+		names[it.second] = it.first;
+	}
+	return names;
+}
+
 NS_DOROTHY_END
