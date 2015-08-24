@@ -46,7 +46,7 @@ string oKeyFrameDef::toXml(oKeyFrameDef* lastDef)
 	}
 	if ((lastDef && lastDef->visible != visible) || (!lastDef && !visible))
 	{
-		stream << ' ' << char(oModelXml::Visible) << "=\"0\"";
+		stream << ' ' << char(oModelXml::Visible) << "=\"" << (visible ? "1" : "0") << '\"';
 	}
 	if ((lastDef && (lastDef->x != x || lastDef->y != y)) || (!lastDef && (x != 0.0f || y != 0.0f)))
 	{

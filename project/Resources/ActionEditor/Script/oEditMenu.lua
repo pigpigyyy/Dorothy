@@ -833,7 +833,6 @@ oEditor.spriteData[oSd.index]
 		end
 		items.Size.visible = false
 		items.Visible:setText("Visible")
-		menu:gslot("ImageSelected").enabled = true
 		oEditor.state = oEditor.EDIT_LOOK
 		oEditor.settingPanel.visible = false
 		oEditor.controlBar.visible = false
@@ -848,8 +847,14 @@ oEditor.spriteData[oSd.index]
 		if not args then
 			return
 		end
-		items.Visible:setText(args[2].visible and "Hide" or "Show")
-	end).enabled = false
+		if oEditor.state == oEditor.EDIT_LOOK then
+			items.Visible:setText(args[2].visible and "Hide" or "Show")
+		elseif not args[1][oSd.parent] then
+			items.Size.visible = true
+		else
+			items.Size.visible = false
+		end
+	end)
 
 	items.Origin.visible = false
 	items.Zoom.visible = false
