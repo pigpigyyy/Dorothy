@@ -93,6 +93,8 @@ public:
 	int getLookIndexByName(const string& name);
 	const unordered_map<string, int>& getAnimationIndexMap() const;
 	const unordered_map<string, int>& getLookIndexMap() const;
+	vector<string> getLookNames() const;
+	vector<string> getAnimationNames() const;
 	oModel* toModel();
 	string toXml();
 	static oModelDef* create();

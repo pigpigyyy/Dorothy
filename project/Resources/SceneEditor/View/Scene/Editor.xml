@@ -1,7 +1,9 @@
 <Scene>
 	<Import Module="Control.SpritePanel"/>
 	<Import Module="View.Shape.SolidRect"/>
+	<Import Module="Control.ModelView"/>
 
 	<SolidRect Width="{ $W }" Height="{ $H }" Color="0xff1a1a1a"/>	
 	<SpritePanel Name="spritePanel" X="{ $L-10-225 }" Y="{ $B+10+($H-20)/2 }" Width="450" Height="{ $H-20 }" Ref="True"/>
+	<ModelView X="{ @X }" Y="{ @Y }" Width="100" Height="100" File="Graphic/jiandunA.model"/>
 </Scene>
