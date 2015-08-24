@@ -16,6 +16,7 @@ class oActionDuration;
 class oSequence;
 class oSpriteDef;
 class oModelDef;
+class oClipDef;
 
 /** @brief A look is to change visibility of a model`s different parts.
  For example you can change a character`s face by different look.
@@ -132,7 +133,7 @@ protected:
 	oModel(oModelDef* def);
 private:
 	typedef unordered_map<string, CCNode*> oNodeMap;
-	void visit(oSpriteDef* parentDef, CCNode* parentNode);
+	void visit(oSpriteDef* parentDef, CCNode* parentNode, oClipDef* clipDef);
 	void onResetAnimationEnd();
 	void addLook(int index, CCNode* node);
 	void addAnimation(int index, CCNode* node, oActionDuration* action);

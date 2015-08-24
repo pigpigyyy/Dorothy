@@ -13,6 +13,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "model/oModelAnimationDef.h"
 #include "model/oKeyFrame.h"
 #include "model/oModelCache.h"
+#include "model/oClip.h"
 #include "misc/oHelper.h"
 
 NS_DOROTHY_BEGIN
@@ -59,9 +60,10 @@ bool oModel::init()
 	handlers(this);
 	_resetAnimation.end = std::make_pair(this, &oModel::onResetAnimationEnd);
 	_root = _modelDef->isBatchUsed() ?
-		CCSpriteBatchNode::createWithTexture(_modelDef->getTexture()) :
+		CCSpriteBatchNode::create(_modelDef->getTextureFile().c_str()) :
 		CCNode::create();
-	oModel::visit(_modelDef->getRoot(), _root);
+	oClipDef* clipDef = oSharedClipCache.load(_modelDef->getClipFile().c_str());
+	oModel::visit(_modelDef->getRoot(), _root, clipDef);
 	oModel::setupCallback();
 	CCSize size = _modelDef->getSize();
 	oModel::setContentSize(size);
@@ -409,7 +411,7 @@ oModel* oModel::create( const char* filename )
 	return modelDef->toModel();
 }
 
-void oModel::visit( oSpriteDef* parentDef, CCNode* parentNode )
+void oModel::visit( oSpriteDef* parentDef, CCNode* parentNode, oClipDef* clipDef )
 {
 	if (!parentDef)
 	{
@@ -419,10 +421,10 @@ void oModel::visit( oSpriteDef* parentDef, CCNode* parentNode )
 	for (uint32 n = 0;n < childrenDefs.size();n++)
 	{
 		oSpriteDef* nodeDef = childrenDefs[n];
-		CCSprite* node = nodeDef->toSprite();
+		CCSprite* node = nodeDef->toSprite(clipDef);
 		node->setUserData((void*)nodeDef);
 
-		oModel::visit(nodeDef, node);
+		oModel::visit(nodeDef, node, clipDef);
 
 		if (!_modelDef->isBatchUsed() && !nodeDef->name.empty())
 		{

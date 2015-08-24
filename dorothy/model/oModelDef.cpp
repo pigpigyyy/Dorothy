@@ -21,9 +21,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 NS_DOROTHY_BEGIN
 
-CCSprite* oSpriteDef::toSprite()
+CCSprite* oSpriteDef::toSprite(oClipDef* clipDef)
 {
-	CCSprite* sprite = CCSprite::createWithTexture(texture, rect);
+	CCSprite* sprite = clipDef->toSprite(clip);
+	if (!sprite)
+	{
+		sprite = CCSprite::create();
+		sprite->setTexture(oSharedContent.loadTexture(clipDef->textureFile.c_str()));
+	}
 	sprite->setAnchorPoint(ccp(anchorX, anchorY));
 	oSpriteDef::restore(sprite);
 	return sprite;
@@ -51,9 +56,6 @@ scaleX(1.0f),
 scaleY(1.0f),
 skewX(0.0f),
 skewY(0.0f),
-texture(nullptr),
-rect(),
-clip(),
 opacity(1.0f)
 { }
 
@@ -152,7 +154,6 @@ tuple<CCFiniteTimeAction*,CCArray*> oSpriteDef::toResetAction()
 }
 
 oModelDef::oModelDef():
-_texture(nullptr),
 _isFaceRight(false),
 _isBatchUsed(false)
 { }
@@ -162,12 +163,10 @@ oModelDef::oModelDef(
 	bool isBatchUsed,
 	const CCSize& size,
 	const string& clipFile,
-	CCTexture2D* texture,
 	oSpriteDef* root,
 	const unordered_map<string,oVec2>& keys,
 	const unordered_map<string,int>& animationIndex,
 	const unordered_map<string,int>& lookIndex):
-_texture(texture),
 _clip(clipFile),
 _isFaceRight(isFaceRight),
 _isBatchUsed(isBatchUsed),
@@ -178,19 +177,9 @@ _lookIndex(lookIndex),
 _root(oOwnMake(root))
 { }
 
-void oModelDef::setTexture( CCTexture2D* tex )
-{
-	_texture = tex;
-}
-
 const string& oModelDef::getClipFile() const
 {
 	return _clip;
-}
-
-CCTexture2D* oModelDef::getTexture()
-{
-	return _texture;
 }
 
 void oModelDef::setRoot( oSpriteDef* root )
@@ -360,6 +349,11 @@ vector<string> oModelDef::getAnimationNames() const
 		names[it.second] = it.first;
 	}
 	return names;
+}
+
+string oModelDef::getTextureFile() const
+{
+	return oSharedClipCache.load(_clip.c_str())->textureFile;
 }
 
 NS_DOROTHY_END

@@ -1697,7 +1697,6 @@ oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableI
 	CCSize size = *(CCSize*)lua_getUserType(19);
 	string clipFile = lua_getString(20);
 	oClipDef* clipDef = oSharedClipCache.load(clipFile.c_str());
-	CCTexture2D* texture = oSharedContent.loadTexture(clipDef->textureFile.c_str());
 	/*["keys"]*/
 	lua_rawgeti(L, -1, 21);// push keys
 	unordered_map<string,oVec2> keys;
@@ -1729,11 +1728,9 @@ oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableI
 	function<oSpriteDef*()> visitSpriteDef = [&]()->oSpriteDef*
 	{
 		oSpriteDef* spriteDef = new oSpriteDef();
-		spriteDef->texture = texture;
 		spriteDef->anchorX = lua_getFloat(1);
 		spriteDef->anchorY = lua_getFloat(2);
 		spriteDef->clip = lua_getString(3);
-		spriteDef->rect = spriteDef->clip == "" ? CCRect::zero : *clipDef->rects[spriteDef->clip];
 		spriteDef->name = lua_getString(4);
 		spriteDef->opacity = lua_getFloat(5);
 		spriteDef->rotation = lua_getFloat(6);
@@ -1818,7 +1815,7 @@ oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableI
 		return spriteDef;
 	};
 	oSpriteDef* root = visitSpriteDef();
-	oModelDef* modelDef = new oModelDef(isFaceRight, isBatchUsed, size, clipFile, texture, root, keys, animationNames, lookNames);
+	oModelDef* modelDef = new oModelDef(isFaceRight, isBatchUsed, size, clipFile, root, keys, animationNames, lookNames);
 	modelDef->init();
 	modelDef->autorelease();
 	lua_pop(L, 1);// pop content

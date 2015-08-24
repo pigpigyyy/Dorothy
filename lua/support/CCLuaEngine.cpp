@@ -430,6 +430,7 @@ int CCLuaEngine::executeNodeEvent(CCNode* pNode, int nAction)
 	oSlotList* slotList = CCNode_tryGetSlotList(pNode, name);
 	if (slotList)
 	{
+		oRef<oSlotList> ref(slotList);
 		slotList->invoke(L);
 	}
 	return 0;
@@ -462,6 +463,7 @@ int CCLuaEngine::executeMenuItemEvent(int eventType, CCMenuItem* menuItem)
 	oSlotList* slotList = CCNode_tryGetSlotList(menuItem, name);
 	if (slotList)
 	{
+		oRef<oSlotList> ref(slotList);
 		tolua_pushccobject(L, menuItem);
 		slotList->invoke(L, 1);
 		lua_pop(L, 1);
@@ -497,9 +499,10 @@ int CCLuaEngine::executeLayerTouchEvent(CCLayer* layer, int eventType, CCTouch* 
 		default:
 			break;
 	}
-	oSlotList* slotList = CCNode_tryGetSlotList(layer, name);
+	oSlotList* slotList(CCNode_tryGetSlotList(layer, name));
 	if (slotList)
 	{
+		oRef<oSlotList> ref(slotList);
 		tolua_pushccobject(L, touch);
 		ret = slotList->invoke(L, 1);
 		lua_pop(L, 1);
@@ -531,6 +534,7 @@ int CCLuaEngine::executeLayerTouchesEvent(CCLayer* layer, int eventType, CCSet* 
 	oSlotList* slotList = CCNode_tryGetSlotList(layer, name);
 	if (slotList)
 	{
+		oRef<oSlotList> ref(slotList);
 		lua_createtable(L, touches->count(), 0);
 		int i = 1;
 		for (CCSetIterator it = touches->begin(); it != touches->end(); ++it)
@@ -559,9 +563,10 @@ int CCLuaEngine::executeLayerKeypadEvent(CCLayer* layer, int eventType)
 		default:
 			break;
 	}
-	oSlotList* slotList = CCNode_tryGetSlotList(layer, name);
+	oSlotList* slotList(CCNode_tryGetSlotList(layer, name));
 	if (slotList)
 	{
+		oRef<oSlotList> ref(slotList);
 		slotList->invoke(L);
 	}
 	return 0;
@@ -569,9 +574,10 @@ int CCLuaEngine::executeLayerKeypadEvent(CCLayer* layer, int eventType)
 
 int CCLuaEngine::executeAccelerometerEvent(CCLayer* layer, CCAcceleration* accelerationValue)
 {
-	oSlotList* slotList = CCNode_tryGetSlotList(layer, oSlotList::Acceleration);
+	oSlotList* slotList(CCNode_tryGetSlotList(layer, oSlotList::Acceleration));
 	if (slotList)
 	{
+		oRef<oSlotList> ref(slotList);
 		lua_pushnumber(L, accelerationValue->x);
 		lua_pushnumber(L, accelerationValue->y);
 		lua_pushnumber(L, accelerationValue->z);

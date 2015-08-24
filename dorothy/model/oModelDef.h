@@ -13,14 +13,13 @@ NS_DOROTHY_BEGIN
 
 class oModelAnimationDef;
 class oModel;
+class oClipDef;
 
 /** @brief It`s component class of oModelDef. Do not use it alone. */
 class oSpriteDef
 {
 public:
 	bool front;
-	CCTexture2D* texture;
-	string clip;
 	float x;
 	float y;
 	float rotation;
@@ -31,8 +30,8 @@ public:
 	float skewX;
 	float skewY;
 	float opacity;
-	CCRect rect;
 	string name;
+	string clip;
 
 	oOwnVector<oSpriteDef> children;
 	oOwnVector<oModelAnimationDef> animationDefs;
@@ -47,7 +46,7 @@ public:
 	 or returns an animation of CCHide with nullptr.
 	*/
 	tuple<CCFiniteTimeAction*,CCArray*> toResetAction();
-	CCSprite* toSprite();
+	CCSprite* toSprite(oClipDef* clipDef);
 	string toXml();
 
 	template<typename NodeFunc>
@@ -72,13 +71,11 @@ public:
 		bool isBatchUsed,
 		const CCSize& size,
 		const string& clipFile,
-		CCTexture2D* texture,
 		oSpriteDef* root,
 		const unordered_map<string,oVec2>& keys,
 		const unordered_map<string,int>& animationIndex,
 		const unordered_map<string,int>& lookIndex);
 	const string& getClipFile() const;
-	CCTexture2D* getTexture();
 	oSpriteDef* getRoot();
 	void addKeyPoint(const string& key, const oVec2& point);
 	oVec2 getKeyPoint(const string& key) const;
@@ -95,16 +92,15 @@ public:
 	const unordered_map<string, int>& getLookIndexMap() const;
 	vector<string> getLookNames() const;
 	vector<string> getAnimationNames() const;
+	string getTextureFile() const;
 	oModel* toModel();
 	string toXml();
 	static oModelDef* create();
 private:
-	void setTexture(CCTexture2D* tex);
 	void setRoot(oSpriteDef* root);
 	bool _isBatchUsed;
 	bool _isFaceRight;
 	CCSize _size;
-	oRef<CCTexture2D> _texture;
 	oOwn<oSpriteDef> _root;
 	string _clip;
 	unordered_map<string,int> _animationIndex;

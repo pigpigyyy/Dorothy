@@ -17,7 +17,6 @@ class oSpriteDef;
 class oModelAnimationDef;
 class oKeyAnimationDef;
 class oModelDef;
-class oClipDef;
 class oModel;
 
 class oModelCache: public oXmlItemCache<oModelDef>
@@ -35,8 +34,6 @@ protected:
 private:
 	oKeyAnimationDef* getCurrentKeyAnimation();
 	stack<oSpriteDef*> _nodeStack;
-	CCTexture2D* _currentTexture;
-	oClipDef* _currentClip;
 	oModelAnimationDef* _currentAnimationDef;
 };
 

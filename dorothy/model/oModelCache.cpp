@@ -43,9 +43,6 @@ void oModelCache::startElement( void *ctx, const char *name, const char **atts )
 				{
 				oCase::File:
 					_item->_clip = _path + atts[++i];
-					_currentClip = oSharedClipCache.load(_item->_clip.c_str());
-					_currentTexture = oSharedContent.loadTexture(_currentClip->textureFile.c_str());
-					_item->setTexture(_currentTexture);
 					break;
 				oCase::FaceRight:
 					_item->_isFaceRight = (atoi(atts[++i]) == 1);
@@ -63,7 +60,6 @@ void oModelCache::startElement( void *ctx, const char *name, const char **atts )
 	oCase::Sprite:
 		{
 			oSpriteDef* spriteDef = new oSpriteDef();
-			spriteDef->texture = _currentTexture;
 			if (atts)
 			{
 				for (int i = 0;atts[i] != nullptr;i++)
@@ -92,18 +88,7 @@ void oModelCache::startElement( void *ctx, const char *name, const char **atts )
 						spriteDef->name = atts[++i];
 						break;
 					oCase::Clip:
-						{
-							spriteDef->clip = atts[++i];
-							auto it = _currentClip->rects.find(spriteDef->clip);
-							if (it == _currentClip->rects.end())
-							{
-								spriteDef->clip.clear();
-							}
-							else
-							{
-								spriteDef->rect = *(it->second);
-							}
-						}
+						spriteDef->clip = atts[++i];
 						break;
 					oCase::Front:
 						spriteDef->front = atoi(atts[++i]) != 0;
@@ -371,8 +356,6 @@ void oModelCache::textHandler( void *ctx, const char *s, int len )
 void oModelCache::beforeParse( const char* filename )
 {
 	for (;!_nodeStack.empty();_nodeStack.pop());
-	_currentTexture = nullptr;
-	_currentClip = nullptr;
 	_currentAnimationDef = nullptr;
 	_item = oModelDef::create();
 }
