@@ -19,6 +19,7 @@ Class
 		@spriteStr = spriteStr
 		@_isCheckMode = false
 		@_checked = false
+		@_loaded = false
 
 		@\slots "Tapped", @_tapped
 		@\slots "Cleanup",->
@@ -32,7 +33,7 @@ Class
 	_tapped: =>
 		if @isCheckMode
 			@\_setBoxChecked not @_checked
-		else
+		elseif @_loaded
 			@\emit "Selected",@
 
 	updateImage: (file,spriteStr,alias,needUnload)=>
@@ -40,7 +41,15 @@ Class
 			if @_prevFile
 				oCache.Texture\unload @_prevFile
 				@_prevFile = nil
-			oCache\loadAsync file
+			@_loaded = false
+			oCache\loadAsync file,-> @_loaded = true
+			if not @_loaded
+				@face\addChild with CCLabelTTF "[No Item]","Arial",16
+					.position = oVec2 @width/2,@height/2
+					.texture.antiAlias = false
+					.color = ccColor3 0x00ffff
+				@routine = nil
+				return
 			sprite = CCSprite spriteStr
 			tex = sprite.texture
 			{:width,:height} = @

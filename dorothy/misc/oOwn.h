@@ -55,19 +55,22 @@ private:
 
 /** Useless */
 template<class T>
-inline oOwn<T> __oOwnMake(T* item)
+inline oOwn<T>&& oOwnMake(T* item)
 {
-	return oOwn<T>(item);
+	return std::move(oOwn<T>(item));
 }
-#define oOwnMake(item) std::move(__oOwnMake(item))
-#define oOwnNew(type) std::move(oOwn<type>(new type()))
+
+template<class T, class... Args>
+inline oOwn<T>&& oOwnNew(Args&&... args)
+{
+	return std::move(oOwn<T>(new T(std::forward<Args>(args)...)));
+}
 
 template<class T>
-inline oOwnArray<T> __oOwnArrayMake(T* item)
+inline oOwnArray<T>&& oOwnArrayMake(T* item)
 {
-	return oOwnArray<T>(item);
+	return std::move(oOwnArray<T>(item));
 }
-#define oOwnArrayMake(item) std::move(__oOwnArrayMake(item))
 
 NS_DOROTHY_END
 

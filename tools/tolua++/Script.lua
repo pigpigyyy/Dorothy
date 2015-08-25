@@ -242,7 +242,12 @@ oCache.Texture = builtin.CCTextureCache()
 builtin.CCTextureCache = nil
 CCTextureCache.loadAsync = nil
 
+local oContent = builtin.oContent
 local function _loadTextureAsync(filename, loaded)
+	if not oContent:exist(filename) then
+		CCLuaLog(string.format("[ERROR] Texture file fails to load: %s", filename))
+		return function() return false end
+	end
 	local isloaded = false
 	CCTextureCache_loadAsync(oCache.Texture,filename,function(name)
 		if loaded then
@@ -264,12 +269,34 @@ local function _loadAsync(filename, loaded)
 	if extension == "png" or extension == "jpg" or extension == "tiff" or extension == "webp" then
 		return _loadTextureAsync(filename, loaded)
 	elseif extension == "clip" then
-		oCache.Clip:load(filename)
-		return _loadTextureAsync(oCache.Clip:getTextureFile(filename),function()
-			if loaded then
-				loaded(filename)
+		if oCache.Clip:load(filename) then
+			local texFile = oCache.Clip:getTextureFile(filename)
+			if oContent:exist(texFile) then
+				return _loadTextureAsync(texFile,function()
+					if loaded then
+						loaded(filename)
+					end
+				end)
 			end
-		end)
+		end
+		CCLuaLog(string.format("[ERROR] Clip file fails to load: %s", filename))
+		return function() return false end
+	elseif extension == "model" then
+		if oCache.Model:load(filename) then
+			local clipFile = oCache.Model:getClipFile(filename)
+			if oContent:exist(clipFile) then
+				local texFile = oCache.Clip:getTextureFile(clipFile)
+				if oContent:exist(texFile) then
+					return _loadTextureAsync(texFile,function()
+						if loaded then
+							loaded(filename)
+						end
+					end)
+				end
+			end
+		end
+		CCLuaLog(string.format("[ERROR] Model file fails to load: %s", filename))
+		return function() return false end
 	else
 		local isLoaded = false
 		local function loader()
@@ -278,14 +305,12 @@ local function _loadAsync(filename, loaded)
 				if loaded then
 					loaded(filename)
 				end
-				return true
-			else
 				return false
+			else
+				return true
 			end
 		end
-		if extension == "model" then
-			itemType = "Model"
-		elseif extension == "frame" then
+		if extension == "frame" then
 			itemType = "Animation"
 		elseif extension == "effect" then
 			itemType = "Effect"

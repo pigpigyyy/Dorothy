@@ -37,19 +37,19 @@ Class
 			with oEase
 				if posX < -moveX
 					tmp = deltaX
-					deltaX = \func .OutBack,t,posX,-moveX-posX
+					deltaX = \func .OutQuad,t,posX,-moveX-posX
 					x = deltaX - tmp
 				elseif posX > 0
 					tmp = deltaX
-					deltaX = \func .OutBack,t,posX,0-posX
+					deltaX = \func .OutQuad,t,posX,0-posX
 					x = deltaX - tmp
 				if posY < 0
 					tmp = deltaY
-					deltaY = \func .OutBack,t,posY,0-posY
+					deltaY = \func .OutQuad,t,posY,0-posY
 					y = deltaY - tmp
 				elseif posY > moveY
 					tmp = deltaY
-					deltaY = \func .OutBack,t,posY,moveY-posY
+					deltaY = \func .OutQuad,t,posY,moveY-posY
 					y = deltaY - tmp
 			x or= 0
 			y or= 0

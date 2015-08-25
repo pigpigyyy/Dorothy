@@ -4,7 +4,7 @@ SpritePanelView = require "View.Control.SpritePanel"
 TabButton = require "Control.TabButton"
 SpriteView = require "Control.SpriteView"
 MessageBox = require "Control.MessageBox"
-import Set from require "Data.Utils"
+import CompareTable from require "Data.Utils"
 -- [params]
 -- x, y, width, height
 Class
@@ -25,6 +25,7 @@ Class
 
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
+
 		@scrollArea\slots "Scrolled",(delta)->
 			contentRect\set 0,0,@scrollArea.width,@scrollArea.height
 			@menu\eachChild (child)->
@@ -44,6 +45,7 @@ Class
 
 		@\gslot "Editor.LoadSprite",(paths)->
 			@\runThread ->
+				-- get image and clip files
 				images = {}
 				clips = {}
 				visitResource = (path)->
@@ -70,18 +72,8 @@ Class
 				{:width,:height} = @scrollArea
 
 				i = 0
-				if @clips
-					clipsToDel = {}
-					clipSet = Set clips
-					for clip in *@clips
-						if not clipSet[clip]
-							table.insert clipsToDel,clip
-					clipsToAdd = {}
-					clipSet = Set @clips
-					for clip in *clips
-						if not clipSet[clip]
-							table.insert clipsToAdd,clip
-
+				if @clips -- already loaded clips
+					clipsToAdd,clipsToDel = CompareTable @clips,clips
 					for clipDel in *clipsToDel
 						item = @clipItems[clipDel]
 						item.parent\removeChild item
@@ -94,7 +86,7 @@ Class
 					for clipAdd in *clipsToAdd
 						@clipItems[clipAdd] = @\_addClipTab clipAdd,i
 						i += 1
-				else
+				else -- first load clips
 					if @clipItems
 						for clip,item in pairs @clipItems
 							item.parent\removeChild item
@@ -114,17 +106,7 @@ Class
 				table.sort clips,(a,b)-> a\match("[\\/]([^\\/]*)$") < b\match("[\\/]([^\\/]*)$")
 
 				if @images
-					imagesToDel = {}
-					imageSet = Set images
-					for image in *@images
-						if not imageSet[image]
-							table.insert imagesToDel,image
-					imagesToAdd = {}
-					imageSet = Set @images
-					for image in *images
-						if not imageSet[image]
-							table.insert imagesToAdd,image
-
+					imagesToAdd,imagesToDel = CompareTable @images,images
 					for imageDel in *imagesToDel
 						item = @imageItems[imageDel]
 						item.parent\removeChild item
@@ -302,6 +284,9 @@ Class
 				else
 					MessageBox text:"No Group Selected",okOnly:true
 
+		@closeBtn\slots "Tapped",->
+			@\hide!
+
 	runThread: (task)=>
 		oRoutine\remove @routine if @routine
 		@routine = thread ->
@@ -435,12 +420,19 @@ Class
 				oOpacity 0.3,1,oEase.OutQuad
 				oPos 0.3,targetX,targetY,oEase.OutQuad
 			}
-			CCCall -> editor\updateSprites!
+			CCCall ->
+				@scrollArea.touchEnabled = true
+				@menu.enabled = true
+				@opMenu.enabled = true
+				editor\updateSprites!
 		}
 
 	hide: =>
 		targetX = @width/4
 		targetY = CCDirector.winSize.height/2
+		@scrollArea.touchEnabled = false
+		@menu.enabled = false
+		@opMenu.enabled = false
 		@perform CCSequence {
 			CCSpawn {
 				oOpacity 0.3,0,oEase.OutQuad

@@ -7,7 +7,23 @@ Class
 	__partial: (args)=> SpriteViewView args
 	__init: (args)=>
 		{:width,:height,:file} = args
+		@_loaded = false
+
+		@\slots "Tapped",->
+			if @_loaded
+				emit "Selected",@
+
 		thread ->
+			@_loaded = false
+			oCache\loadAsync file,-> @_loaded = true
+			if not @_loaded
+				name = file\match "[\\/]([^\\/]*)%.[^%.\\/]*$"
+				@face\addChild with CCLabelTTF "[Model]\n"..name.."\n[Broken]","Arial",16
+					.position = oVec2 width/2,height/2
+					.texture.antiAlias = false
+					.color = ccColor3 0x00ffff
+				@routine = nil
+				return
 			model = oModel file
 			minX = nil
 			minY = nil
@@ -35,6 +51,7 @@ Class
 			scale = 1
 			if width < sizeW or height < sizeH
 				scale = math.min width/sizeW,height/sizeH
+			scale *= 1.2
 			model.scaleX = scale
 			model.scaleY = scale
 			model.position = oVec2 width/2,height/2
@@ -49,3 +66,6 @@ Class
 					@sprite.textureRect = CCRect 0,0,width,height
 					@sprite.opacity = 0
 					@sprite\perform oOpacity 0.3,1
+					thread ->
+						sleep 0.1
+						oCache.Texture\removeUnused!

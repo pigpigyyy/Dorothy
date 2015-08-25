@@ -14,7 +14,7 @@
 	</Action>
 
 	<Slot Name="TapBegan">
-		face.opacity = 0
+		face.opacity = 1
 		face.scaleX = 0.3
 		face.scaleY = 0.3
 		face:perform(scale)

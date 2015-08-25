@@ -1,12 +1,5 @@
 require("Test/Entry")
 
---[[Dorothy()
-local scene = CCScene()
-local label = CCLabelTTF("OK","Arial",16)
-label.anchor = oVec2.zero
-scene:addChild(label)
-CCDirector:run(scene)
-]]
 --[[
 Dorothy()
 
@@ -29,7 +22,6 @@ require("EffectEditor.Script.main")
 --[[
 CCScene:transition("cf",{"crossFade",1,CCOrientation.Left})
 CCScene:add("firstScene",CCScene())
-
 CCScene:run("firstScene","fadeIn")
 CCScene:push("firstScene","cf")
 CCScene:popTo("secondScene","crossFade")

@@ -5382,6 +5382,13 @@ local Dorothy =
 				returns = "()",
 				type = "method"
 			},
+			getClipFile =
+			{
+				args = "(filename: string)",
+				description = "",
+				returns = "(clipFile: string)",
+				type = "method"
+			}
 		},
 		description = "class oModelCache.",
 		hide = true,

@@ -121,6 +121,8 @@ bool oModelCache_load(const char* filename);
 bool oModelCache_update(const char* name, const char* content);
 bool oModelCache_unload(const char* filename = nullptr);
 void oModelCache_removeUnused();
+void __oModelCache_getClipFile(lua_State* L, const char* filename);
+#define oModelCache_getClipFile(filename) {__oModelCache_getClipFile(tolua_S,filename);return 1;}
 
 void oCache_removeUnused();
 void oCache_clear();

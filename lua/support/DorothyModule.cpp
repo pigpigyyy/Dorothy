@@ -137,7 +137,7 @@ public:
 			}
 			else
 			{
-				_gslot = oOwnMake((new unordered_map<string,oOwn<oRefVector<oListener>>>()));
+				_gslot = oOwnMake(new unordered_map<string,oOwn<oRefVector<oListener>>>());
 				for (auto& item : *_gslotArray)
 				{
 					(*_gslot)[item.first] = std::move(item.second);
@@ -151,7 +151,7 @@ public:
 		}
 		else
 		{
-			_gslotArray = oOwnMake((new vector<std::pair<string,oOwn<oRefVector<oListener>>>>()));
+			_gslotArray = oOwnMake(new vector<std::pair<string,oOwn<oRefVector<oListener>>>>());
 			auto vec = new oRefVector<oListener>();
 			_gslotArray->push_back(std::make_pair(string(name), oOwnMake(vec)));
 			vec->push_back(listener);
@@ -263,7 +263,7 @@ public:
 			}
 			else
 			{
-				_slots = oOwnMake((new unordered_map<string,oRef<oSlotList>>()));
+				_slots = oOwnMake(new unordered_map<string,oRef<oSlotList>>());
 				for (const auto& item : *_slotsArray)
 				{
 					(*_slots)[item.first] = item.second;
@@ -275,7 +275,7 @@ public:
 		}
 		else
 		{
-			_slotsArray = oOwnMake((new vector<std::pair<string,oRef<oSlotList>>>()));
+			_slotsArray = oOwnMake(new vector<std::pair<string,oRef<oSlotList>>>());
 			oSlotList* slotList = oSlotList::create();
 			_slotsArray->push_back(std::make_pair(string(name),oRefMake(slotList)));
 			return slotList;
@@ -290,6 +290,7 @@ public:
 				if (it->first == name)
 				{
 					_slotsArray->erase(it);
+					break;
 				}
 			}
 		}
@@ -959,6 +960,12 @@ bool oModelCache_unload(const char* filename)
 void oModelCache_removeUnused()
 {
 	oSharedModelCache.removeUnused();
+}
+void __oModelCache_getClipFile(lua_State* L, const char* filename)
+{
+	oModelDef* modelDef = oSharedModelCache.load(filename);
+	const string& clipFile = modelDef->getClipFile();
+	lua_pushlstring(L, clipFile.c_str(), clipFile.size());
 }
 
 void oCache_removeUnused()
