@@ -30,6 +30,7 @@ public:
 	}
 private:
 	oOwn(const oOwn& own);
+	const oOwn& operator=(const oOwn& own);
 };
 
 template<class Item>
@@ -51,25 +52,26 @@ public:
 	}
 private:
 	oOwnArray(const oOwnArray& own);
+	const oOwnArray& operator=(const oOwnArray& own);
 };
 
 /** Useless */
 template<class T>
-inline oOwn<T>&& oOwnMake(T* item)
+inline oOwn<T> oOwnMake(T* item)
 {
-	return std::move(oOwn<T>(item));
+	return oOwn<T>(item);
 }
 
 template<class T, class... Args>
-inline oOwn<T>&& oOwnNew(Args&&... args)
+inline oOwn<T> oOwnNew(Args&&... args)
 {
-	return std::move(oOwn<T>(new T(std::forward<Args>(args)...)));
+	return oOwn<T>(new T(std::forward<Args>(args)...));
 }
 
 template<class T>
-inline oOwnArray<T>&& oOwnArrayMake(T* item)
+inline oOwnArray<T> oOwnArrayMake(T* item)
 {
-	return std::move(oOwnArray<T>(item));
+	return oOwnArray<T>(item);
 }
 
 NS_DOROTHY_END
