@@ -1,3 +1,4 @@
+local require = using("BodyEditor.Script")
 local CCTextFieldTTF = require("CCTextFieldTTF")
 local oVec2 = require("oVec2")
 local oLine = require("oLine")

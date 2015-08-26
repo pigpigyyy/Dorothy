@@ -1,3 +1,4 @@
+local require = using("BodyEditor.Script")
 local CCDirector = require("CCDirector")
 local CCMenu = require("CCMenu")
 local oEditor = require("oEditor")

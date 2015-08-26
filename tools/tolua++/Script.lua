@@ -431,6 +431,16 @@ _G["sleep"] = function(sec)
 	end
 end
 
+_G["using"] = function(path)
+	return function(name)
+		local result = package.loaded[name]
+		if not result then
+			result = require(path.."."..name)
+		end
+		return result
+	end
+end
+
 for k,v in pairs(_G) do
 	builtin[k] = v
 end

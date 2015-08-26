@@ -1,6 +1,6 @@
-local oButton = require("ActionEditor/Script/oButton")
-local oSelectionPanel = require("ActionEditor/Script/oSelectionPanel")
-local Tests = require("Test/Tests")
+local oButton = require("ActionEditor.Script.oButton")
+local oSelectionPanel = require("ActionEditor.Script.oSelectionPanel")
+local Tests = require("Test.Tests")
 local CCDirector = require("CCDirector")
 local CCMenu = require("CCMenu")
 local CCSize = require("CCSize")
@@ -36,6 +36,19 @@ debug.traceback = function(err)
 	end
 	return ""
 end
+
+local _require = require
+local loaded = {} -- save loaded module names for end clean up
+local require = function(name)
+	local result = package.loaded[name]
+	if not result then
+		result = _require(name)
+		table.insert(loaded,name)
+	end
+	return result
+end
+_G["require"] = require
+builtin["require"] = require
 
 local scene = CCScene()
 
@@ -234,6 +247,9 @@ CCDirector.displayStats = true
 
 scene:slots("Entered",function()
 	CCDirector:popToRootScene()
+	for _,name in ipairs(loaded) do
+		package.loaded[name] = nil
+	end
 end)
 
 CCDirector:run(scene)

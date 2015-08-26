@@ -1,9 +1,12 @@
+local require = using("EffectEditor.Script")
 local CCScene = require("CCScene")
 local CCMenu = require("CCMenu")
 local oContent = require("oContent")
 local CCDirector = require("CCDirector")
 local oVec2 = require("oVec2")
 local oCache = require("oCache")
+local oRoutine = require("oRoutine")
+local once = require("once")
 
 local winSize = CCDirector.winSize
 
@@ -91,5 +94,45 @@ oEditor.dumpData = function(self,filename)
 		oCache.Animation:unload(oEditor.output..filename)
 	end
 end
+
+
+local controls =
+{
+	"oViewArea",
+	"oEditMenu",
+	"oSettingPanel",
+	"oEditControl",
+	"oFrameViewer",
+}
+oRoutine(once(function()
+	for index,name in ipairs(controls) do
+		local createFunc = require(name)
+		coroutine.yield()
+		oEditor[name] = createFunc() -- keep lua reference for control items
+		coroutine.yield()
+		oEditor:addChild(oEditor[name],index)
+		coroutine.yield()
+	end
+	local resPath = "EffectEditor/Effect"
+	local writePath = oContent.writablePath.."Effect"
+	if not oContent:exist(oContent.writablePath.."Effect") and oContent:exist("EffectEditor/Effect") then
+		oContent:copyAsync(resPath,writePath)
+	end
+	if not oContent:exist(oEditor.input) then
+		oContent:mkdir(oEditor.input)
+	end
+	if not oContent:exist(oEditor.output) then
+		oContent:mkdir(oEditor.output)
+	end
+	oContent:addSearchPath(oEditor.input)
+
+	local oFileChooser = require("oFileChooser")
+	oEditor:addChild(oFileChooser(),oEditor.topMost)
+end))
+
+oEditor:slots("Cleanup",function()
+	-- do editor cleanup
+	oContent:removeSearchPath(oEditor.input)
+end)
 
 return oEditor

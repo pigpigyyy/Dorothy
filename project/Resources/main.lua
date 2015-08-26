@@ -1,4 +1,4 @@
-require("Test/Entry")
+require("Test.Entry")
 
 --[[
 Dorothy()

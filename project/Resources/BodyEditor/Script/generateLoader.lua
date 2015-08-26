@@ -1,3 +1,4 @@
+local require = using("BodyEditor.Script")
 local oContent = require("oContent")
 local oEditor = require("oEditor")
 local Rectangle = oEditor.Rectangle

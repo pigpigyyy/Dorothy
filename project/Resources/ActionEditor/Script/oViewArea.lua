@@ -1,3 +1,4 @@
+local require = using("ActionEditor.Script")
 local oButton = require("oButton")
 local CCDirector = require("CCDirector")
 local CCLayerColor = require("CCLayerColor")
@@ -1132,7 +1133,7 @@ local function oViewArea()
 	button.color = ccColor3(0xffffff)
 	board:addChild(button)
 
-	oEditor.scene:addChild(board,1)
+	oEditor:addChild(board,1)
 
 	-- anchor
 	local anchorEditor = CCNode()

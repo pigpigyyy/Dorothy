@@ -1,3 +1,4 @@
+local require = using("ActionEditor.Script")
 local oButton = require("oButton")
 local oPacker = require("oPacker")
 local oSelectionPanel = require("oSelectionPanel")
@@ -26,7 +27,7 @@ local oSd = require("oEditor").oSd
 local ccBlendFunc = require("ccBlendFunc")
 local oBox = require("oBox")
 
-local function oFileChooser(withCancel,clipOnly,modelFile)
+local function oFileChooser(withCancel,clipOnly,modelFile,makeGroup)
 	local winSize = CCDirector.winSize
 	local itemWidth = 120
 	local itemNum = 3
@@ -94,7 +95,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 		end
 		panel:reset(viewWidth,viewHeight,paddingX,paddingY)
 	end
-	
+
 	local function addImages(file)
 		panel:removeMenuItems()
 		local blocks = {}
@@ -217,6 +218,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 			function(item)
 				item.enabled = false
 				opMenu.enabled = false
+				panel:hide()
 				CCDirector:popScene()
 			end)
 		backButton.anchor = oVec2.zero
@@ -336,7 +338,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 	opMenu:addChild(editButton)
 
 	panel.init = function(self)
-		local dirs = oContent:getEntries(oEditor.input,true)
+		local dirs = makeGroup and oContent:getEntries(oEditor.input,true) or {}
 		local files = oContent:getEntries(oEditor.output,false)
 		local dirDict = {}
 		for i = 1,#dirs do
@@ -346,10 +348,10 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 		local modelDict = {}
 		for i = 1,#files do
 			local name = nil
-			if files[i]:sub(-5,-1) == ".clip" then
+			if clipOnly and files[i]:sub(-5,-1) == ".clip" then
 				name = files[i]:sub(1,-6)
 				fileDict[name] = true
-			elseif not clipOnly and files[i]:sub(-6,-1) == ".model" and not oContent:exist(oEditor.output..files[i]:sub(1,-7)..".clip") then
+			elseif not clipOnly and files[i]:sub(-6,-1) == ".model" then
 				name = files[i]:sub(1,-7)
 				modelDict[name] = true
 			end
@@ -362,7 +364,15 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 		local xStart = winSize.width*0.5-halfBW -- left
 		local yStart = winSize.height*0.5+halfBH -- top
 
-		local title = CCLabelTTF(clipOnly and "Choose Clip" or "Choose  Item","Arial",24)
+		local titleText = ""
+		if makeGroup then
+			titleText = "Choose Image Group"
+		elseif clipOnly then
+			titleText = "Choose Clip"
+		else
+			titleText = "Choose Model"
+		end
+		local title = CCLabelTTF(titleText,"Arial",24)
 		title.texture.antiAlias = false
 		title.color = ccColor3(0x00ffff)
 		title.anchor = oVec2(0.5,1)
@@ -474,7 +484,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile)
 	end
 
 	panel:show()
-	oEditor.scene:addChild(panel)
+	oEditor:addChild(panel)
 	return panel
 end
 

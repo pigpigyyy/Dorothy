@@ -1,3 +1,4 @@
+local require = using("EffectEditor.Script")
 local oButton = require("oButton")
 local oTextField = require("oTextField")
 local class = unpack(require("class"))

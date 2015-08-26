@@ -1,3 +1,4 @@
+local require = using("EffectEditor.Script")
 local ccColor4 = require("ccColor4")
 local oNode3D = require("oNode3D")
 local oVec2 = require("oVec2")

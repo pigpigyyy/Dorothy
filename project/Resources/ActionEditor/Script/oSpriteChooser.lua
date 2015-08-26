@@ -1,3 +1,4 @@
+local require = using("ActionEditor.Script")
 local oButton = require("oButton")
 local oSelectionPanel = require("oSelectionPanel")
 local CCDirector = require("CCDirector")
@@ -130,7 +131,7 @@ local function oSpriteChooser()
 	end
 
 	panel:show()
-	oEditor.scene:addChild(panel)
+	oEditor:addChild(panel)
 	return panel
 end
 

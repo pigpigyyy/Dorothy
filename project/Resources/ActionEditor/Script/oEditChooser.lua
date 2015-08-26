@@ -1,7 +1,4 @@
-local oButton = require("oButton")
-local oSelectionPanel = require("oSelectionPanel")
-local oFileChooser = require("oFileChooser")
-local oBox = require("oBox")
+local require = using("ActionEditor.Script")
 local CCDirector = require("CCDirector")
 local CCSize = require("CCSize")
 local CCDrawNode = require("CCDrawNode")
@@ -13,6 +10,10 @@ local ccColor3 = require("ccColor3")
 local oOpacity = require("oOpacity")
 local CCSequence = require("CCSequence")
 local CCDelay = require("CCDelay")
+local oButton = require("oButton")
+local oSelectionPanel = require("oSelectionPanel")
+local oFileChooser = require("oFileChooser")
+local oBox = require("oBox")
 local oSd = require("oEditor").oSd
 local oEditor = require("oEditor").oEditor
 
@@ -369,7 +370,7 @@ local function oEditChooser(withCancel)
 	end
 
 	panel:show()
-	oEditor.scene:addChild(panel)
+	oEditor:addChild(panel)
 	return panel
 end
 

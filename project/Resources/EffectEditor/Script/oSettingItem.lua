@@ -1,3 +1,5 @@
+local class,property = unpack(require("class"))
+local require = using("EffectEditor.Script")
 local CCMenuItem = require("CCMenuItem")
 local oVec2 = require("oVec2")
 local CCSize = require("CCSize")
@@ -9,8 +11,6 @@ local ccColor4 = require("ccColor4")
 local CCSequence = require("CCSequence")
 local oOpacity = require("oOpacity")
 local CCHide = require("CCHide")
-
-local class,property = unpack(require("class"))
 
 local oSettingItem = class(
 {

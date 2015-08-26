@@ -1,3 +1,4 @@
+local require = using("BodyEditor.Script")
 local CCLayer = require("CCLayer")
 local oVec2 = require("oVec2")
 local CCDrawNode = require("CCDrawNode")

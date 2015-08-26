@@ -1,3 +1,4 @@
+local require = using("BodyEditor.Script")
 local CCScene = require("CCScene")
 local CCMenu = require("CCMenu")
 local oBodyDef = require("oBodyDef")
@@ -14,6 +15,8 @@ local CCDirector = require("CCDirector")
 local CCNode = require("CCNode")
 local CCSprite = require("CCSprite")
 local oModel = require("oModel")
+local oRoutine = require("oRoutine")
+local once = require("once")
 
 local oEditor = CCScene()
 
@@ -1196,5 +1199,54 @@ end
 
 -- bodyData[1]: ShapeName
 -- bodyData[2]: ItemName -- SubShapes don`t have names
+
+local controls =
+{
+	"oViewArea",
+	"oEditControl",
+	"oVRuler",
+	"oHRuler",
+	"oEditMenu",
+	"oSettingPanel",
+	"oViewPanel",
+}
+
+oRoutine(once(function()
+	coroutine.yield()
+	for index,name in ipairs(controls) do
+		local createFunc = require(name)
+		coroutine.yield()
+		oEditor[name] = createFunc() -- keep lua reference for control items
+		coroutine.yield()
+		oEditor:addChild(oEditor[name],index)
+		coroutine.yield()
+	end
+	local resPath = "BodyEditor/Body"
+	local writePath = oContent.writablePath.."Body"
+	if not oContent:exist(oContent.writablePath.."Body") and oContent:exist("BodyEditor/Body") then
+		oContent:copyAsync(resPath,writePath)
+		if not oContent:exist(oEditor.input) then
+			oContent:mkdir(oEditor.input)
+		end
+		if not oContent:exist(oEditor.output) then
+			oContent:mkdir(oEditor.output)
+		end
+	end
+	local oFileChooser = require("oFileChooser")
+	coroutine.yield()
+	oEditor:addChild(oFileChooser(),oEditor.topMost)
+
+	local CCUserDefault = require("CCUserDefault")
+	local oVec2 = require("oVec2")
+	if CCUserDefault.G == "" then
+		CCUserDefault.G = -10
+	end
+	oEditor.world.gravity = oVec2(0,CCUserDefault.G)
+	--dofile("BodyEditor/Script/generateLoader.lua")
+end))
+
+oEditor:slots("Cleanup",function()
+	oEditor:clearData()
+end)
 
 return oEditor

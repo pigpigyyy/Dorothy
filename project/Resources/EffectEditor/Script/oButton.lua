@@ -1,3 +1,5 @@
+local class,property = unpack(require("class"))
+local require = using("EffectEditor.Script")
 local CCNode = require("CCNode")
 local CCDrawNode = require("CCDrawNode")
 local oVec2 = require("oVec2")
@@ -10,7 +12,6 @@ local oScale = require("oScale")
 local oEase = require("oEase")
 local oOpacity = require("oOpacity")
 local ccColor3 = require("ccColor3")
-local class,property = unpack(require("class"))
 
 local oButton = class(
 {

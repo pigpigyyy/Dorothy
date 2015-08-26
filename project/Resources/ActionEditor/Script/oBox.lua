@@ -1,5 +1,4 @@
-local oButton = require("oButton")
-local oTextField = require("oTextField")
+local require = using("ActionEditor.Script")
 local CCDirector = require("CCDirector")
 local CCNode = require("CCNode")
 local CCLayer = require("CCLayer")
@@ -18,6 +17,8 @@ local oScale = require("oScale")
 local oEase = require("oEase")
 local CCCall = require("CCCall")
 local oEditor = require("oEditor").oEditor
+local oButton = require("oButton")
+local oTextField = require("oTextField")
 
 local function oBox(text,okHandler,isInput)
 	local w = CCDirector.winSize.width*0.5
@@ -123,9 +124,6 @@ local function oBox(text,okHandler,isInput)
 								box:hide()
 								if isInput then
 									textField:detachWithIME()
-									if okHandler then
-										okHandler(textField.text)
-									end
 								else
 									if okHandler then
 										okHandler()
@@ -181,7 +179,7 @@ local function oBox(text,okHandler,isInput)
 	end
 
 	box:show()
-	oEditor.scene:addChild(box)
+	oEditor:addChild(box)
 	return box
 end
 

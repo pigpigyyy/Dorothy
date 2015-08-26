@@ -1,3 +1,4 @@
+local require = using("ActionEditor.Script")
 local CCDirector = require("CCDirector")
 local CCSize = require("CCSize")
 local oVec2 = require("oVec2")

@@ -1,4 +1,5 @@
 local class,property = unpack(require("class"))
+local require = using("BodyEditor.Script")
 local oButton = require("oButton")
 local oVec2 = require("oVec2")
 local ccColor4 = require("ccColor4")

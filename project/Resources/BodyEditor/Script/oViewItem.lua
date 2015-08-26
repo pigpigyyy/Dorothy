@@ -1,4 +1,5 @@
 local class,property = unpack(require("class"))
+local require = using("BodyEditor.Script")
 local CCNode = require("CCNode")
 local CCDrawNode = require("CCDrawNode")
 local oVec2 = require("oVec2")

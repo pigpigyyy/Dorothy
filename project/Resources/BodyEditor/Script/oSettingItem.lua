@@ -1,3 +1,4 @@
+local require = using("BodyEditor.Script")
 local CCMenuItem = require("CCMenuItem")
 local oVec2 = require("oVec2")
 local CCSize = require("CCSize")

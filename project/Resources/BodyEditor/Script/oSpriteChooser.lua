@@ -1,3 +1,4 @@
+local require = using("BodyEditor.Script")
 local oButton = require("oButton")
 local oSelectionPanel = require("oSelectionPanel")
 local CCDirector = require("CCDirector")

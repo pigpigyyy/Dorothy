@@ -1,3 +1,4 @@
+local require = using("ActionEditor.Script")
 local CCMenuItem = require("CCMenuItem")
 local CCSize = require("CCSize")
 local CCDrawNode = require("CCDrawNode")

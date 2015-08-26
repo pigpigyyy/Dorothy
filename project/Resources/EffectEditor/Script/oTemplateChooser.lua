@@ -1,3 +1,4 @@
+local require = using("EffectEditor.Script")
 local CCDirector = require("CCDirector")
 local CCSize = require("CCSize")
 local oSelectionPanel = require("oSelectionPanel")

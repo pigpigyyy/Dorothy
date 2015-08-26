@@ -1,3 +1,4 @@
+local require = using("ActionEditor.Script")
 local CCNode = require("CCNode")
 local CCDrawNode = require("CCDrawNode")
 local oVec2 = require("oVec2")

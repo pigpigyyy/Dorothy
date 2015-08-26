@@ -1,6 +1,9 @@
+local require = using("ActionEditor.Script")
 local CCScene = require("CCScene")
 local oContent = require("oContent")
 local oVec2 = require("oVec2")
+local oRoutine = require("oRoutine")
+local once = require("once")
 
 local oSd =
 {
@@ -65,7 +68,7 @@ local oFd =
 	beginTime = 3,
 }
 
-local oEditor = {}
+local oEditor = CCScene()
 oEditor.model = nil
 oEditor.look = ""
 oEditor.animation = ""
@@ -78,7 +81,6 @@ oEditor.dirty = false
 oEditor.loop = false
 oEditor.isPlaying = false
 oEditor.data = nil
-oEditor.scene = CCScene()
 oEditor.easeNames =
 {
 	[0] = "Linear",
@@ -131,5 +133,48 @@ oEditor.round = function(self,val)
 			val.y > 0 and math.floor(val.y+0.5) or math.ceil(val.y-0.5))
 	end
 end
+
+local controls =
+{
+	"oViewArea",
+	"oEditMenu",
+	"oViewPanel",
+	"oControlBar",
+	"oSettingPanel",
+}
+
+oRoutine(once(function() -- load UI asynchronously
+	for i = 1,#controls do
+		local controlName = controls[i]
+		controls[i] = require(controlName) -- load codes
+		coroutine.yield()
+		controls[i] = controls[i]() -- create instance
+		controlName = controlName:sub(2,2):lower()..controlName:sub(3,-1)
+		oEditor[controlName] = controls[i]
+		coroutine.yield()
+		oEditor:addChild(controls[i]) -- add to scene
+		coroutine.yield()
+	end
+	oEditor.editMenu:toStart()
+	local resPath = "ActionEditor/Model"
+	local writePath = oContent.writablePath.."Model"
+	if not oContent:exist(oContent.writablePath.."Model") and oContent:exist("ActionEditor/Model") then
+		oContent:copyAsync(resPath,writePath) -- copy some prepared contents
+		if not oContent:exist(oEditor.input) then
+			oContent:mkdir(oEditor.input)
+		end
+		if not oContent:exist(oEditor.output) then
+			oContent:mkdir(oEditor.output)
+		end
+	end
+	coroutine.yield()
+	oEditor.vertexControl = require("oVertexControl")() -- one more control to load
+	coroutine.yield()
+	oEditor:addChild(oEditor.vertexControl)
+	coroutine.yield()
+
+	local oFileChooser = require("oFileChooser")
+	oFileChooser(true)
+end))
 
 return {oEditor=oEditor,oSd=oSd,oAd=oAd,oKd=oKd,oFd=oFd}

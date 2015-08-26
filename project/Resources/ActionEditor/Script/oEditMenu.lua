@@ -1,9 +1,4 @@
-local oButton = require("oButton")
-local oFileChooser = require("oFileChooser")
-local oSpriteChooser = require("oSpriteChooser")
-local oEditChooser = require("oEditChooser")
-local oLookChooser = require("oLookChooser")
-local oBox = require("oBox")
+local require = using("ActionEditor.Script")
 local CCDirector = require("CCDirector")
 local CCMenu = require("CCMenu")
 local oVec2 = require("oVec2")
@@ -19,6 +14,12 @@ local oSd = require("oEditor").oSd
 local oEditor = require("oEditor").oEditor
 local oAd = require("oEditor").oAd
 local oKd = require("oEditor").oKd
+local oButton = require("oButton")
+local oFileChooser = require("oFileChooser")
+local oSpriteChooser = require("oSpriteChooser")
+local oEditChooser = require("oEditChooser")
+local oLookChooser = require("oLookChooser")
+local oBox = require("oBox")
 
 local function removeAnimation(sp,index)
 	local aDefs = sp[oSd.animationDefs]

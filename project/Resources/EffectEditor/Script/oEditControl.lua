@@ -1,3 +1,4 @@
+local require = using("EffectEditor.Script")
 local CCNode = require("CCNode")
 local oEditRuler = require("oEditRuler")
 local CCSize = require("CCSize")

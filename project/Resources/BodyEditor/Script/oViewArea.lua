@@ -1,3 +1,4 @@
+local require = using("BodyEditor.Script")
 local CCDirector = require("CCDirector")
 local CCLayerColor = require("CCLayerColor")
 local ccColor4 = require("ccColor4")

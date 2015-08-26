@@ -1,3 +1,4 @@
+local require = using("ActionEditor.Script")
 local oTextField = require("oTextField")
 local CCDirector = require("CCDirector")
 local CCSize = require("CCSize")

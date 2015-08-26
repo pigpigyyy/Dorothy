@@ -1,3 +1,4 @@
+local require = using("BodyEditor.Script")
 local CCDirector = require("CCDirector")
 local oLine = require("oLine")
 local oVec2 = require("oVec2")

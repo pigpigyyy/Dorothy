@@ -110,6 +110,13 @@ Class
 				y -= 60 if #@models > 0
 				@scrollArea.viewSize = CCSize width,height-y
 
+		@addBtn\slots "Tapped",->
+			actionEditor = require("ActionEditor.Script.oEditor").oEditor.scene
+			--CCDirector\run CCScene\flipAngular 1,actionEditor
+			CCDirector.currentScene\eachChild (child)->
+				child.visible = false
+			CCDirector.currentScene\addChild actionEditor
+
 	runThread: (task)=>
 		oRoutine\remove @routine if @routine
 		@routine = thread ->
