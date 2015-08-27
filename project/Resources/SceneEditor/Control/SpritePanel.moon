@@ -158,6 +158,7 @@ Class
 						i += 1
 				@images = images
 
+				itemCount = math.floor (@width-10)/110
 				y = height
 				startY = height
 				for i,clip in ipairs @clips
@@ -171,8 +172,8 @@ Class
 						posY = y-20
 						for i,expItem in ipairs expandItems
 							i -= 1
-							x = 60+(i%4)*110
-							y = posY-60-math.floor(i/4)*110
+							x = 60+(i%itemCount)*110
+							y = posY-60-math.floor(i/itemCount)*110
 							expItem.position = oVec2(x,y) + @scrollArea.offset
 						y -= 30 if #expandItems > 0
 				y -= 20 if #@clips > 0
@@ -180,8 +181,8 @@ Class
 				startY = y
 				for i,image in ipairs @images
 					i -= 1
-					x = 60+(i%4)*110
-					y = startY-60-math.floor(i/4)*110
+					x = 60+(i%itemCount)*110
+					y = startY-60-math.floor(i/itemCount)*110
 					viewItem = @imageItems[image]
 					viewItem.position = oVec2(x,y) + @scrollArea.offset
 				y -= 60 if #@images > 0
@@ -325,11 +326,12 @@ Class
 				texFile = oCache.Clip\getTextureFile clip
 				@clipExpands[clip] = {}
 				newY = posY
+				itemCount = math.floor (@width-10)/110
 				for i,name in ipairs names
 					i -= 1
 					spriteStr = clip.."|"..name
-					newX = 60+(i%4)*110
-					newY = posY-60-math.floor(i/4)*110
+					newX = 60+(i%itemCount)*110
+					newY = posY-60-math.floor(i/itemCount)*110
 					viewItem = SpriteView {
 						file: texFile
 						spriteStr: spriteStr

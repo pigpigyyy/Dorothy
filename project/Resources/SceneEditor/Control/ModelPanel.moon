@@ -99,19 +99,20 @@ Class
 						i += 1
 				@models = models
 
+				itemCount = math.floor (@width-10)/110
 				y = height
 				startY = height
 				for i,model in ipairs @models
 					i -= 1
-					x = 60+(i%4)*110
-					y = startY-60-math.floor(i/4)*110
+					x = 60+(i%itemCount)*110
+					y = startY-60-math.floor(i/itemCount)*110
 					viewItem = @modelItems[model]
 					viewItem.position = oVec2(x,y) + @scrollArea.offset
 				y -= 60 if #@models > 0
 				@scrollArea.viewSize = CCSize width,height-y
 
 		@addBtn\slots "Tapped",->
-			actionEditor = require("ActionEditor.Script.oEditor").oEditor.scene
+			actionEditor = require("ActionEditor.Script.oEditor").oEditor
 			--CCDirector\run CCScene\flipAngular 1,actionEditor
 			CCDirector.currentScene\eachChild (child)->
 				child.visible = false
