@@ -1703,7 +1703,6 @@ oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableI
 	bool isBatchUsed = lua_getBool(18);
 	CCSize size = *(CCSize*)lua_getUserType(19);
 	string clipFile = lua_getString(20);
-	oClipDef* clipDef = oSharedClipCache.load(clipFile.c_str());
 	/*["keys"]*/
 	lua_rawgeti(L, -1, 21);// push keys
 	unordered_map<string,oVec2> keys;

@@ -77,6 +77,7 @@ local oFd =
 local oEditor = CCScene()
 oEditor.isLoaded = false
 oEditor.standAlone = true
+oEditor.quitable = false
 oEditor.model = nil
 oEditor.look = ""
 oEditor.animation = ""

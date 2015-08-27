@@ -124,14 +124,12 @@ Class
 				@scrollArea.viewSize = CCSize width,height-y
 
 		@addBtn\slots "Tapped",->
-			actionEditor = require("ActionEditor.Script.oEditor")
-			actionEditor.standAlone = false
-			actionEditor.input = editor.gameFullPath
-			actionEditor.output = editor.gameFullPath
-			actionEditor\slots "Activated",nil
+			return unless @_selectedItem
+			actionEditor = editor.actionEditor
+			actionEditor\slots("Activated")\clear!
 			actionEditor\slots "Activated",->
 				actionEditor\edit @_selectedItem
-			CCDirector\run CCScene\zoomFlip 0.3,actionEditor,CCOrientation.Down
+			CCDirector\replaceScene CCScene\zoomFlip(0.5,actionEditor,CCOrientation.Down),false
 
 	runThread: (task)=>
 		oRoutine\remove @routine if @routine

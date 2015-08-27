@@ -570,14 +570,14 @@ void CCDirector::runWithScene(CCScene *pScene)
 	if (m_pobScenesStack->count() == 1) startAnimation();
 }
 
-void CCDirector::replaceScene(CCScene *pScene)
+void CCDirector::replaceScene(CCScene *pScene, bool cleanup)
 {
 	CCAssert(m_pRunningScene, "Use runWithScene: instead to start the director");
 	CCAssert(pScene != NULL, "the scene should not be null");
 
 	unsigned int index = m_pobScenesStack->count();
 
-	m_bSendCleanupToScene = true;
+	m_bSendCleanupToScene = cleanup;
 	m_pobScenesStack->replaceObjectAtIndex(index - 1, pScene);
 
 	m_pNextScene = pScene;
@@ -593,7 +593,7 @@ void CCDirector::pushScene(CCScene *pScene)
 	m_pNextScene = pScene;
 }
 
-void CCDirector::popScene()
+void CCDirector::popScene(bool cleanup)
 {
 	CCAssert(m_pRunningScene != NULL, "running scene should not null");
 
@@ -609,7 +609,7 @@ void CCDirector::popScene()
 		m_pNextScene = (CCScene*)m_pobScenesStack->objectAtIndex(c - 1);
 		if (m_pRunningScene != m_pNextScene)
 		{
-			m_bSendCleanupToScene = true;
+			m_bSendCleanupToScene = cleanup;
 		}
 		else
 		{

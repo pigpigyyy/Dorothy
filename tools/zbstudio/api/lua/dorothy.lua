@@ -1355,24 +1355,6 @@ local Dorothy =
 				static = true,
 				type = "value",
 			},
-			convertToGL =
-			{
-				args = "(point: oVec2)",
-				description = "",
-				typeName = "oVec2",
-				returns = "(point: oVec2)",
-				static = true,
-				type = "method",
-			},
-			convertToUI =
-			{
-				args = "(point: oVec2)",
-				description = "",
-				typeName = "oVec2",
-				returns = "(point: oVec2)",
-				static = true,
-				type = "method",
-			},
 			run =
 			{
 				args = "(scene: CCScene)",
@@ -1413,17 +1395,9 @@ local Dorothy =
 				static = true,
 				type = "method",
 			},
-			pushScene =
-			{
-				args = "(scene: CCScene)",
-				description = "",
-				returns = "()",
-				static = true,
-				type = "method",
-			},
 			popScene =
 			{
-				args = "(scene: CCScene)",
+				args = "(scene: CCScene, cleanup: bool = true)",
 				description = "",
 				returns = "()",
 				static = true,
@@ -1431,7 +1405,7 @@ local Dorothy =
 			},
 			replaceScene =
 			{
-				args = "(scene: CCScene)",
+				args = "(scene: CCScene, cleanup: bool = true)",
 				description = "",
 				returns = "()",
 				static = true,

@@ -212,14 +212,14 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 	panel:addChild(opMenu)
 
 	local backButton
-	if CCDirector.sceneStackSize > 1 and not clipOnly and not groupOnly then
+	if oEditor.quitable and not clipOnly and not groupOnly then
 		backButton = oButton("Quit",17,60,false,
 			70,0,
 			function(item)
 				item.enabled = false
 				opMenu.enabled = false
 				panel:hide()
-				CCDirector:popScene()
+				oEditor:emit("Quit")
 			end)
 		backButton.anchor = oVec2.zero
 		local btnBk = CCDrawNode()
@@ -263,12 +263,18 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 		140,0,
 		function(item)
 			local modelFile = item.editTarget..".model"
+			local clip = item.clipFile:match("[^\\/]*$")
+			local prefix = ""
+			if #clip < #(item.clipFile) then
+				prefix = item.clipFile:sub(1,-#clip-1)
+			end
+			modelFile = prefix..modelFile
 			local model = oEditor.output..modelFile
 			if not oContent:exist(model) then
-				oBox("Will Create Model\n"..modelFile,function()
+				oBox("Will Create Model\n"..item.editTarget,function()
 					opMenu.enabled = false
 					panel:hide()
-					local modelText = "<A A=\""..item.clipFile.."\" D=\"0,0\"><B></B></A>"
+					local modelText = "<A A=\""..clip.."\" D=\"0,0\"><B></B></A>"
 					oContent:saveToFile(model, modelText)
 					oEditor:edit(modelFile,item.clipFile)
 				end)
@@ -317,7 +323,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 				local folders = oContent:getEntries(oEditor.output..path,true)
 				for _,folder in ipairs(folders) do
 					if folder ~= "." and folder ~= ".." then
-						getResources(folder.."/")
+						getResources(path..folder.."/")
 					end
 				end
 			end

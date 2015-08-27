@@ -17,8 +17,8 @@ class CCDirector
 	tolua_property__common CCNode* notificationNode;
 	tolua_property__common CCScheduler* scheduler;
 
-	oVec2 convertToGL(oVec2 point);
-	oVec2 convertToUI(oVec2 point);
+	//oVec2 convertToGL(oVec2 point);
+	//oVec2 convertToUI(oVec2 point);
 
 	void runWithScene @ run(CCScene *scene);
 	void pause();
@@ -27,10 +27,10 @@ class CCDirector
 	
 	void purgeCachedData @ purge();
 
-	void pushScene(CCScene* scene);
-	void popScene();
+	//void pushScene(CCScene* scene);
+	void popScene(bool cleanup = true);
 	void popToRootScene();
-	void replaceScene(CCScene* scene);
+	void replaceScene(CCScene* scene, bool cleanup = true);
 
 	void setDepthTest(bool var);
 	

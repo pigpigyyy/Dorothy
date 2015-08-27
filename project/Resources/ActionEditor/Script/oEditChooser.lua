@@ -39,14 +39,14 @@ local function oEditChooser(withCancel)
 
 	local opMenu = CCMenu()
 	opMenu.swallowTouches = true
-	opMenu.contentSize = CCSize(60,60)
+	opMenu.contentSize = CCSize(130,60)
 	opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
-	opMenu.position = oVec2(winSize.width*0.5+borderSize.width*0.5,winSize.height*0.5+borderSize.height*0.5)
+	opMenu.position = oVec2(winSize.width*0.5+borderSize.width*0.5-35,winSize.height*0.5+borderSize.height*0.5)
 	panel:addChild(opMenu)
 
 	if withCancel then
 		local cancelButton = oButton("Cancel",17,60,false,
-			0,0,
+			65,0,
 			function()
 				opMenu.enabled = false
 				panel:hide()
@@ -324,8 +324,8 @@ local function oEditChooser(withCancel)
 			}))
 		yStart = y-25
 
-		if CCDirector.sceneStackSize > 1 then
-			title = CCLabelTTF("Quit Editor","Arial",24)
+		if oEditor.quitable then
+			title = CCLabelTTF("Quit  Editor","Arial",24)
 			title.texture.antiAlias = false
 			title.color = ccColor3(0x00ffff)
 			title.anchor = oVec2(0.5,1)
@@ -347,7 +347,7 @@ local function oEditChooser(withCancel)
 					menu.enabled = false
 					opMenu.enabled = false
 					panel:hide()
-					CCDirector:popScene()
+					oEditor:emit("Quit")
 				end)
 			newButton.color = ccColor3(0xffcc88)
 			menu:addChild(newButton)

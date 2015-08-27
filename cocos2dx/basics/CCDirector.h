@@ -199,9 +199,7 @@ public:
 	// Scene Management
 
 	/**Enters the Director's main loop with the given Scene.
-	*  Call it to run only your FIRST scene.
-	*  Don't call it if there is already a running scene.
-	* 
+	*  Call it to run your FIRST scene.
 	*  It will call pushScene: and then it will call startAnimation
 	 */
 	void runWithScene(CCScene* pScene);
@@ -218,7 +216,7 @@ public:
 	*  The running scene will be deleted. If there are no more scenes in the stack the execution is terminated.
 	*  ONLY call it if there is a running scene.
 	 */
-	void popScene();
+	void popScene(bool cleanup = true);
 
 	/**Pops out all scenes from the queue until the root scene in the queue.
 	*  This scene will replace the running one.
@@ -230,7 +228,7 @@ public:
 	/** Replaces the running scene with a new one. The running scene is terminated.
 	*  ONLY call it if there is a running scene.
 	 */
-	void replaceScene(CCScene* pScene);
+	void replaceScene(CCScene* pScene, bool cleanup = true);
 
 	/** Ends the execution, releases the running scene.
 	 It doesn't remove the OpenGL view from its parent. You have to do it manually.

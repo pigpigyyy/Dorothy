@@ -7,6 +7,7 @@ Class
 	__init: =>
 		@_gameName = ""
 		@_gameFullPath = ""
+		@_actionEditor = nil
 		@game = "Test"
 		_G["editor"] = @
 		builtin["editor"] = @
@@ -14,6 +15,7 @@ Class
 			_G["editor"] = nil
 			builtin["editor"] = nil
 			oCache\clear!
+			@_actionEditor\cleanup! if @_actionEditor
 		--@spritePanel\show!
 		--@spritePanel\slots "Selected",(spriteStr)->
 			--@addChild with CCSprite spriteStr
@@ -22,6 +24,9 @@ Class
 
 	updateSprites: =>
 		emit "Editor.LoadSprite", { @graphicFolder }
+
+	updateModels: =>
+		emit "Editor.LoadModel", { @graphicFolder }
 
 	game: property => @_gameName,
 		(name)=>
@@ -41,3 +46,16 @@ Class
 	physicsFullPath: property => @_gameFullPath.."Physics/"
 	logicFolder: property => "Logic/"
 	logicFullPath: property => @_gameFullPath.."Logic/"
+
+	actionEditor: property =>
+		if not @_actionEditor
+			actionEditor = require("ActionEditor.Script.oEditor")
+			actionEditor.standAlone = false
+			actionEditor.quitable = true
+			actionEditor.input = @gameFullPath
+			actionEditor.output = @gameFullPath
+			actionEditor\slots "Quit",->
+				CCDirector\replaceScene CCScene\zoomFlip(0.5,@,CCOrientation.Up),false
+				@\updateModels!
+			@_actionEditor = actionEditor
+		return @_actionEditor
