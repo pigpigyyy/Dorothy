@@ -15,7 +15,7 @@ local CCSequence = require("CCSequence")
 local CCDelay = require("CCDelay")
 local oOpacity = require("oOpacity")
 local CCNode = require("CCNode")
-local oEditor = require("oEditor").oEditor
+local oEditor = require("oEditor")
 local oSd = require("oEditor").oSd
 
 local function oSpriteChooser()
@@ -60,7 +60,7 @@ local function oSpriteChooser()
 	panel.sprites = {}
 	panel.init = function(self)
 		local y = 0
-		local clipFile = oEditor.data[oSd.clipFile]
+		local clipFile = oEditor.modelData[oSd.clipFile]
 		local names = oCache.Clip:getNames(clipFile)
 		table.insert(names,1,"")
 		for i = 1,#names do

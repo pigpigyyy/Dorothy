@@ -20,7 +20,7 @@ local CCSequence = require("CCSequence")
 local CCCall = require("CCCall")
 local emit = require("emit")
 local ccColor3 = require("ccColor3")
-local oEditor = require("oEditor").oEditor
+local oEditor = require("oEditor")
 local oKd = require("oEditor").oKd
 local oSd = require("oEditor").oSd
 
@@ -191,7 +191,7 @@ local function oViewArea()
 	view.getModel = function(self)
 		if oEditor.dirty then
 			oEditor.dirty = false
-			oCache.Model:loadData(oEditor.model,oEditor.data)
+			oCache.Model:loadData(oEditor.model,oEditor.modelData)
 			local model = oModel(oEditor.model)
 			if oEditor.state == oEditor.EDIT_SPRITE then
 				model.look = ""
@@ -208,7 +208,7 @@ local function oViewArea()
 				end
 			end
 			view:setModel(model)
-			oEditor.viewPanel:updateSprite(oEditor.data,model)
+			oEditor.viewPanel:updateSprite(oEditor.modelData,model)
 		end
 		return self._model
 	end

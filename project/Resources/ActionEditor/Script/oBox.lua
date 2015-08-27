@@ -16,14 +16,14 @@ local oOpacity = require("oOpacity")
 local oScale = require("oScale")
 local oEase = require("oEase")
 local CCCall = require("CCCall")
-local oEditor = require("oEditor").oEditor
+local oEditor = require("oEditor")
 local oButton = require("oButton")
 local oTextField = require("oTextField")
 
 local function oBox(text,okHandler,isInput)
 	local w = CCDirector.winSize.width*0.5
 	local h = CCDirector.winSize.height*0.5
-	local size = isInput and 125 or 90
+	local size = isInput and 125 or 120
 	local box = CCNode()
 
 	local mask = CCLayer()

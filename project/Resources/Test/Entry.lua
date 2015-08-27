@@ -78,7 +78,7 @@ end
 opMenu = CCMenu()
 opMenu.swallowTouches = true
 opMenu.contentSize = CCSize(200,60)
-opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
+opMenu.touchPriority = CCMenu.DefaultHandlerPriority-4
 opMenu.anchor = oVec2.zero
 opMenu.position = oVec2(10,10)
 panel:addChild(opMenu)

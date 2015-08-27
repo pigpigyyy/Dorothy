@@ -10,8 +10,8 @@ local CCObject = require("CCObject")
 local CCSequence = require("CCSequence")
 local CCDelay = require("CCDelay")
 local oOpacity = require("oOpacity")
+local oEditor = require("oEditor")
 local oSd = require("oEditor").oSd
-local oEditor = require("oEditor").oEditor
 local oAd = require("oEditor").oAd
 local oKd = require("oEditor").oKd
 local oButton = require("oButton")
@@ -74,10 +74,10 @@ local function oEditMenu()
 				oEditor.settingPanel:clearSelection()
 				if oEditor.state == oEditor.EDIT_ANIMATION then
 					oBox("Delete\n"..oEditor.animation,function()
-						local aNames = oEditor.data[oSd.animationNames]
+						local aNames = oEditor.modelData[oSd.animationNames]
 						local index = aNames[oEditor.animation]
 						
-						removeAnimation(oEditor.data,index+1)
+						removeAnimation(oEditor.modelData,index+1)
 						for k,v in pairs(aNames) do
 							if v > index then
 								aNames[k] = v-1
@@ -92,9 +92,9 @@ local function oEditMenu()
 					end)
 				elseif oEditor.state == oEditor.EDIT_LOOK then
 					oBox("Delete\n"..oEditor.look,function()
-						local lNames = oEditor.data[oSd.lookNames]
+						local lNames = oEditor.modelData[oSd.lookNames]
 						local index = lNames[oEditor.look]
-						removeLook(oEditor.data,index)
+						removeLook(oEditor.modelData,index)
 						for k,v in pairs(lNames) do
 							if v > index then
 								lNames[k] = v-1
@@ -151,7 +151,7 @@ local function oEditMenu()
 					if not animationDef then
 						animationDef = {}
 						local aDefs = sp[oSd.animationDefs]
-						local aNames = oEditor.data[oSd.animationNames]
+						local aNames = oEditor.modelData[oSd.animationNames]
 						aDefs[aNames[oEditor.animation]+1] = animationDef
 						oEditor.animationData = animationDef
 						animationDef[oAd.type] = 1
@@ -240,7 +240,7 @@ local function oEditMenu()
 								oEditor.keyIndex = oEditor.keyIndex-1
 							else
 								local aDefs = sp[oSd.animationDefs]
-								local aNames = oEditor.data[oSd.animationNames]
+								local aNames = oEditor.modelData[oSd.animationNames]
 								aDefs[aNames[oEditor.animation]+1] = false
 								oEditor.animationData = false
 							end
@@ -286,7 +286,7 @@ local function oEditMenu()
 					if not animationDef then
 						animationDef = {}
 						local aDefs = sp[oSd.animationDefs]
-						local aNames = oEditor.data[oSd.animationNames]
+						local aNames = oEditor.modelData[oSd.animationNames]
 						aDefs[aNames[oEditor.animation]+1] = animationDef
 						oEditor.animationData = animationDef
 						animationDef[oAd.type] = 1
@@ -335,7 +335,7 @@ local function oEditMenu()
 					oBox("Clear\nFrames",function()
 						local sp = oEditor.spriteData
 						local aDefs = sp[oSd.animationDefs]
-						local aNames = oEditor.data[oSd.animationNames]
+						local aNames = oEditor.modelData[oSd.animationNames]
 						aDefs[aNames[oEditor.animation]+1] = false
 						oEditor.animationData = false
 						oEditor.keyIndex = 1
@@ -421,26 +421,26 @@ local function oEditMenu()
 
 		Batch = oButton("Batch\nUsed",16,54,50,35,35,
 			function(item)
-				if oEditor.data[oSd.isBatchUsed] then
+				if oEditor.modelData[oSd.isBatchUsed] then
 					item:setText("Batch\nUnused")
-					oEditor.data[oSd.isBatchUsed] = false
+					oEditor.modelData[oSd.isBatchUsed] = false
 				else
 					item:setText("Batch\nUsed")
-					oEditor.data[oSd.isBatchUsed] = true
+					oEditor.modelData[oSd.isBatchUsed] = true
 				end
-				oCache.Model:loadData(oEditor.model,oEditor.data)
+				oCache.Model:loadData(oEditor.model,oEditor.modelData)
 				menu:markEditButton(true)
 			end),
 		Face = oButton("Face\nRight",16,54,50,97,35,
 			function(item)
-				if oEditor.data[oSd.isFaceRight] then
+				if oEditor.modelData[oSd.isFaceRight] then
 					item:setText("Face\nLeft")
-					oEditor.data[oSd.isFaceRight] = false
+					oEditor.modelData[oSd.isFaceRight] = false
 				else
 					item:setText("Face\nRight")
-					oEditor.data[oSd.isFaceRight] = true
+					oEditor.modelData[oSd.isFaceRight] = true
 				end
-				oCache.Model:loadData(oEditor.model,oEditor.data)
+				oCache.Model:loadData(oEditor.model,oEditor.modelData)
 				menu:markEditButton(true)
 			end),
 		Add = oButton("Add",16,50,50,winSize.width-205,95,
@@ -474,7 +474,7 @@ local function oEditMenu()
 						oEditor.dirty = true
 						local model = oEditor.viewArea:getModel()
 						oEditor.viewPanel:clearSelection()
-						oEditor.viewPanel:updateImages(oEditor.data,model)
+						oEditor.viewPanel:updateImages(oEditor.modelData,model)
 						oEditor.viewPanel:selectItem(sp)
 						menu:markEditButton(true)
 					end
@@ -495,7 +495,7 @@ local function oEditMenu()
 						oEditor.dirty = true
 						local model = oEditor.viewArea:getModel()
 						oEditor.viewPanel:clearSelection()
-						oEditor.viewPanel:updateImages(oEditor.data,model)
+						oEditor.viewPanel:updateImages(oEditor.modelData,model)
 						menu:markEditButton(true)
 					end)
 				end
@@ -515,7 +515,7 @@ oEditor.spriteData[oSd.index]
 						oEditor.dirty = true
 						local model = oEditor.viewArea:getModel()
 						oEditor.viewPanel:clearSelection()
-						oEditor.viewPanel:updateImages(oEditor.data,model)
+						oEditor.viewPanel:updateImages(oEditor.modelData,model)
 						oEditor.viewPanel:selectItem(sp)
 						menu:markEditButton(true)
 					end
@@ -535,7 +535,7 @@ oEditor.spriteData[oSd.index]
 						oEditor.dirty = true
 						local model = oEditor.viewArea:getModel()
 						oEditor.viewPanel:clearSelection()
-						oEditor.viewPanel:updateImages(oEditor.data,model)
+						oEditor.viewPanel:updateImages(oEditor.modelData,model)
 						oEditor.viewPanel:selectItem(sp)
 						menu:markEditButton(true)
 					end
@@ -552,7 +552,7 @@ oEditor.spriteData[oSd.index]
 						oEditor.dirty = true
 						local model = oEditor.viewArea:getModel()
 						oEditor.viewPanel:clearSelection()
-						oEditor.viewPanel:updateImages(oEditor.data,model)
+						oEditor.viewPanel:updateImages(oEditor.modelData,model)
 						oEditor.viewPanel:selectItem(sp)
 						menu:markEditButton(true)
 					end
@@ -583,7 +583,7 @@ oEditor.spriteData[oSd.index]
 							oEditor.dirty = true
 							local model = oEditor.viewArea:getModel()
 							oEditor.viewPanel:clearSelection()
-							oEditor.viewPanel:updateImages(oEditor.data,model)
+							oEditor.viewPanel:updateImages(oEditor.modelData,model)
 							oEditor.viewPanel:selectItem(item.sp)
 							menu:markEditButton(true)
 						end
@@ -600,7 +600,7 @@ oEditor.spriteData[oSd.index]
 				-- item = CCNode
 				if oEditor.sprite and oEditor.spriteData then
 					local sp = oEditor.spriteData
-					local lname = oEditor.data[oSd.lookNames]
+					local lname = oEditor.modelData[oSd.lookNames]
 					local index = lname[oEditor.look]
 					local looks = sp[oSd.looks]
 					if not looks then
@@ -695,8 +695,8 @@ oEditor.spriteData[oSd.index]
 
 	menu.toSprite = function(self)
 		local function updateBF()
-			items.Batch:setText(oEditor.data[oSd.isBatchUsed] and "Batch\nUsed" or "Batch\nUnused")
-			items.Face:setText(oEditor.data[oSd.isFaceRight] and "Face\nRight" or "Face\nLeft")
+			items.Batch:setText(oEditor.modelData[oSd.isBatchUsed] and "Batch\nUsed" or "Batch\nUnused")
+			items.Face:setText(oEditor.modelData[oSd.isFaceRight] and "Face\nRight" or "Face\nLeft")
 		end
 		if oEditor.state == oEditor.EDIT_SPRITE then
 			updateBF()

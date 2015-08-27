@@ -22,12 +22,12 @@ local ccColor3 = require("ccColor3")
 local CCSequence = require("CCSequence")
 local CCDelay = require("CCDelay")
 local CCCall = require("CCCall")
-local oEditor = require("oEditor").oEditor
+local oEditor = require("oEditor")
 local oSd = require("oEditor").oSd
 local ccBlendFunc = require("ccBlendFunc")
 local oBox = require("oBox")
 
-local function oFileChooser(withCancel,clipOnly,modelFile,makeGroup)
+local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 	local winSize = CCDirector.winSize
 	local itemWidth = 120
 	local itemNum = 3
@@ -207,12 +207,12 @@ local function oFileChooser(withCancel,clipOnly,modelFile,makeGroup)
 	opMenu.swallowTouches = true
 	opMenu.contentSize = CCSize(200,60)
 	opMenu.anchor = oVec2(1,0.5)
-	opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
+	opMenu.touchPriority = CCMenu.DefaultHandlerPriority-5
 	opMenu.position = oVec2(winSize.width*0.5+borderSize.width*0.5+35,winSize.height*0.5+borderSize.height*0.5)
 	panel:addChild(opMenu)
 
 	local backButton
-	if CCDirector.sceneStackSize > 1 and not clipOnly then
+	if CCDirector.sceneStackSize > 1 and not clipOnly and not groupOnly then
 		backButton = oButton("Quit",17,60,false,
 			70,0,
 			function(item)
@@ -262,72 +262,21 @@ local function oFileChooser(withCancel,clipOnly,modelFile,makeGroup)
 	local editButton = oButton("Edit",17,60,false,
 		140,0,
 		function(item)
-			opMenu.enabled = false
-			panel:hide()
-			oEditor.controlBar:clearCursors()
 			local modelFile = item.editTarget..".model"
-			oEditor.model = oEditor.output..modelFile
-			oCache.clear()
-			oCache.Texture:removeUnused()
-			local files = oContent:getEntries(oEditor.output,false)
-			local fileExist = false
-			for i = 1,#files do
-				if files[i] == modelFile then
-					fileExist = true
-				end
+			local model = oEditor.output..modelFile
+			if not oContent:exist(model) then
+				oBox("Will Create Model\n"..modelFile,function()
+					opMenu.enabled = false
+					panel:hide()
+					local modelText = "<A A=\""..item.clipFile.."\" D=\"0,0\"><B></B></A>"
+					oContent:saveToFile(model, modelText)
+					oEditor:edit(modelFile,item.clipFile)
+				end)
+			else
+				opMenu.enabled = false
+				panel:hide()
+				oEditor:edit(modelFile,item.clipFile)
 			end
-			if not fileExist then
-				local modelText = "<A A=\""..item.clipFile.."\" D=\"0,0\"><B></B></A>"
-				oContent:saveToFile(oEditor.model, modelText)
-			end
-			oEditor.data = oCache.Model:getData(oEditor.model)
-			oEditor.look = ""
-			oEditor.animation = ""
-			oEditor.animationData = nil
-			oEditor.keyIndex = nil
-			oEditor.currentFramePos = nil
-			oEditor.sprite = nil
-			oEditor.spriteData = nil
-			oEditor.dirty = false
-			--oEditor.needSave = false
-
-			oEditor.editMenu:markEditButton(not oEditor.data)
-			if not oEditor.data then
-				oEditor.data =
-				{
-					0.5,--anchorX 1
-					0.5,--anchorY 2
-					"",--clip 3
-					"",--name 4
-					1,--opacity 5
-					0,--angle 6
-					1,--scaleX 7
-					1,--scaleY 8
-					0,--skewX 9
-					0,--skewY 10
-					0,--x 11
-					0,--y 12
-					{},--looks 13
-					{},--animationDefs 14
-					{},--children 15
-					true,--front 16
-					true,--isFaceRight 17
-					false,--isBatchUsed 18
-					CCSize.zero, --size 19
-					oEditor.output..item.clipFile,--clipFile 20
-					{},--keys 21
-					{},--animationNames 22
-					{},--lookNames 23
-				}
-			end
-			oEditor.dirty = true
-			local model = oEditor.viewArea:getModel()
-			oEditor.settingPanel:resetItems()
-			oEditor.viewPanel:clearSelection()
-			oEditor.viewPanel:updateImages(oEditor.data,model)
-			oEditor.viewArea:setModelSize(oEditor.data[oSd.size])
-			oEditor.editMenu.items.Size.visible = false
-			oEditor.editMenu:toSprite()
 		end)
 	editButton.anchor = oVec2.zero
 	editButton.visible = false
@@ -338,37 +287,53 @@ local function oFileChooser(withCancel,clipOnly,modelFile,makeGroup)
 	opMenu:addChild(editButton)
 
 	panel.init = function(self)
-		local dirs = makeGroup and oContent:getEntries(oEditor.input,true) or {}
-		local files = oContent:getEntries(oEditor.output,false)
-		local dirDict = {}
-		for i = 1,#dirs do
-			dirDict[dirs[i]] = true
-		end
-		local fileDict = {}
-		local modelDict = {}
-		for i = 1,#files do
-			local name = nil
-			if clipOnly and files[i]:sub(-5,-1) == ".clip" then
-				name = files[i]:sub(1,-6)
-				fileDict[name] = true
-			elseif not clipOnly and files[i]:sub(-6,-1) == ".model" then
-				name = files[i]:sub(1,-7)
-				modelDict[name] = true
+		local items
+		if groupOnly then
+			items = {}
+			for _,dir in ipairs(oContent:getEntries(oEditor.input,true)) do
+				if dir ~= "." and dir ~= ".." then
+					items[dir:match("([^\\/]*)$")] = dir
+				end
 			end
-			if name and not dirDict[name] then
-				table.insert(dirs,name)
+		else
+			items = {}
+			local function getResources(path)
+				local files = oContent:getEntries(oEditor.output..path,false)
+				for _,file in ipairs(files) do
+					local extension = file:match("%.([^%.\\/]*)$")
+					if extension then
+						extension = extension:lower()
+					end
+					if clipOnly then
+						if extension == "clip" then
+							local name = file:match("([^\\/]*)%.[^%.\\/]*$")
+							items[name] = path..file
+						end
+					elseif groupOnly or extension == "model" then
+						local name = file:match("([^\\/]*)%.[^%.\\/]*$")
+						items[name] = path..file
+					end
+				end
+				local folders = oContent:getEntries(oEditor.output..path,true)
+				for _,folder in ipairs(folders) do
+					if folder ~= "." and folder ~= ".." then
+						getResources(folder.."/")
+					end
+				end
 			end
+			getResources("")
 		end
+
 		local n = 0
 		local y = 0
 		local xStart = winSize.width*0.5-halfBW -- left
 		local yStart = winSize.height*0.5+halfBH -- top
 
 		local titleText = ""
-		if makeGroup then
+		if groupOnly then
 			titleText = "Choose Image Group"
 		elseif clipOnly then
-			titleText = "Choose Clip"
+			titleText = "Choose Image"
 		else
 			titleText = "Choose Model"
 		end
@@ -383,66 +348,65 @@ local function oFileChooser(withCancel,clipOnly,modelFile,makeGroup)
 		title:runAction(oOpacity(0.3,0.5))
 		yStart = y-title.contentSize.height-20
 
-		for i = 1,#dirs do
-			if dirs[i] ~= "." and dirs[i] ~= ".." then
-				n = n+1
-				y = yStart-35-math.floor((n-1)/itemNum)*60
-				local name = #dirs[i] > 10 and dirs[i]:sub(1,7).."..." or dirs[i]
-				local button = oButton(name,17,
-				itemWidth,50,
-				xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
-				function(item)
-					local file = item.file
-					panel:removeMenuItems()
-					if cancelButton then cancelButton.positionX = 0 end
-					editButton.visible = true
-					if backButton then backButton.visible = false end
-					if file:sub(-5,-1) == ".clip" then
-						editButton.editTarget = modelFile or file:sub(1,-6)
-						editButton.clipFile = file
-						addClip(file)
-						if cancelButton then cancelButton.positionX = 70 end
+		for itemName,filename in pairs(items) do
+			n = n+1
+			y = yStart-35-math.floor((n-1)/itemNum)*60
+			local name = #itemName > 10 and itemName:sub(1,7).."..." or itemName
+			local button = oButton(name,17,
+			itemWidth,50,
+			xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
+			function(item)
+				local file = item.file
+				if file:sub(-5,-1) == ".clip" then
+					editButton.editTarget = modelFile or file:sub(1,-6)
+					editButton.clipFile = file
+					addClip(file)
+					if cancelButton then cancelButton.positionX = 70 end
+				else
+					if file:sub(-6,-1) == ".model" then
+						local clipFile = oCache.Model:getClipFile(oEditor.output..file)
+						if not oContent:exist(clipFile) then
+							oBox("Broken Model!")
+							return
+						end
+						editButton.editTarget = file:sub(1,-7)
+						editButton.clipFile = clipFile:sub(#oEditor.output+1,-1)
+						editButton.clipName = clipFile:match("([^\\/]*)%.[^%.\\/]*$")
 					else
-						if file:sub(-6,-1) == ".model" then
-							editButton.editTarget = file:sub(1,-7)
-							local clipFile = io.open(oEditor.output..file,"r")
-							editButton.clipFile = clipFile:read("*a"):match("%b\"\""):gsub("\"","")
-							clipFile:close()
-							editButton.clipName = editButton.clipFile:sub(1,-6)
-						else
-							editButton.editTarget = modelFile or file
-							editButton.clipFile = file..".clip"
-							editButton.clipName = file
-						end
-						local clipName = editButton.clipName
-						if fileDict[clipName] then
-							updateButton.targetFile = clipName
-							addClip(editButton.clipFile)
-							if oContent:exist(oEditor.input..clipName) and #oContent:getEntries(oEditor.input..clipName,false) > 0 then
-								updateButton.visible = true
-							end
-							if cancelButton then cancelButton.positionX = updateButton.visible and 0 or 70 end
-						else
-							addImages(clipName)
-							if cancelButton then cancelButton.positionX = 0 end
-						end
+						editButton.editTarget = modelFile or file
+						editButton.clipFile = file..".clip"
+						editButton.clipName = file
 					end
+					local clipName = editButton.clipName
+					if not groupOnly then
+						updateButton.targetFile = clipName
+						addClip(editButton.clipFile)
+						if oEditor.standAlone and oContent:exist(oEditor.input..clipName) and #oContent:getEntries(oEditor.input..clipName,false) > 0 then
+							updateButton.visible = true
+						end
+					else
+						updateButton.visible = true
+						addImages(clipName)
+					end
+				end
+				if cancelButton then cancelButton.positionX = updateButton.visible and 0 or 70 end
+				editButton.visible = true
+				if backButton then backButton.visible = false end
+			end)
+			button.file = filename
+			button.enabled = false
+			button.opacity = 0
+			button:runAction(CCSequence(
+			{
+				CCDelay(n*0.05),
+				oOpacity(0.2,1),
+				CCCall(function()
+					button.enabled = true
 				end)
-				button.file = dirDict[dirs[i]] and dirs[i] or (modelDict[dirs[i]] and dirs[i]..".model" or dirs[i]..".clip")
-				button.enabled = false
-				button.opacity = 0
-				button:runAction(CCSequence(
-				{
-					CCDelay(n*0.05),
-					oOpacity(0.2,1),
-					CCCall(function()
-						button.enabled = true
-					end)
-				}))
-				menu:addChild(button)
-			end
+			}))
+			menu:addChild(button)
 		end
-		if not clipOnly then
+		if not clipOnly and not groupOnly then
 			n = n+1
 			y = yStart-35-math.floor((n-1)/itemNum)*60
 			local button = oButton("<NEW>",17,
@@ -462,6 +426,31 @@ local function oFileChooser(withCancel,clipOnly,modelFile,makeGroup)
 					end,true)
 				end)
 			button.color = ccColor3(0xffcc88)
+			button.enabled = false
+			button.opacity = 0
+			button:runAction(CCSequence(
+			{
+				CCDelay(n*0.05),
+				oOpacity(0.2,1),
+				CCCall(function()
+					button.enabled = true
+				end)
+			}))
+			menu:addChild(button)
+		end
+
+		if oEditor.standAlone and not clipOnly and not groupOnly then
+			n = n+1
+			y = yStart-35-math.floor((n-1)/itemNum)*60
+			local button = oButton("<GROUP>",17,
+				itemWidth,50,
+				xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
+				function()
+					opMenu.enabled = false
+					panel:hide()
+					oFileChooser(true,false,nil,true)
+				end)
+			button.color = ccColor3(0x88ff00)
 			button.enabled = false
 			button.opacity = 0
 			button:runAction(CCSequence(

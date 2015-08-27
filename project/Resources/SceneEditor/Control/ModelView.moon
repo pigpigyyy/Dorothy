@@ -8,10 +8,11 @@ Class
 	__init: (args)=>
 		{:width,:height,:file} = args
 		@_loaded = false
+		@file = file
 
 		@\slots "Tapped",->
 			if @_loaded
-				emit "Selected",@
+				@\emit "Selected",@
 
 		thread ->
 			@_loaded = false
