@@ -9,7 +9,20 @@ import CompareTable from require "Data.Utils"
 Class
 	__partial: (args)=> ModelPanelView args
 	__init: (args)=>
-		@selected = ->
+		@_isCheckMode = true
+		@modelItems = {}
+		@_selectedItem = nil
+		@selected = (item)->
+			if @_isCheckMode
+				if @_selectedItem
+					viewItem = @modelItems[@_selectedItem]
+					if viewItem and viewItem ~= item
+						viewItem.checked = false
+						viewItem\emit "TapEnded" 
+					@_selectedItem = nil
+				item.checked = not item.checked
+				if item.checked
+					@_selectedItem = item.file
 
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
@@ -67,7 +80,7 @@ Class
 							file: model
 						}
 						viewItem.visible = false
-						viewItem\slots "Tapped",@selected
+						viewItem\slots "Selected",@selected
 						@menu\addChild viewItem
 						@modelItems[model] = viewItem
 						viewItem.opacity = 0
@@ -87,7 +100,7 @@ Class
 							height: 100
 							file: model
 						}
-						viewItem\slots "Tapped",@selected
+						viewItem\slots "Selected",@selected
 						viewItem.visible = false
 						@menu\addChild viewItem
 						@modelItems[model] = viewItem
@@ -99,24 +112,26 @@ Class
 						i += 1
 				@models = models
 
-				itemCount = math.floor (@width-10)/110
 				y = height
 				startY = height
 				for i,model in ipairs @models
 					i -= 1
-					x = 60+(i%itemCount)*110
-					y = startY-60-math.floor(i/itemCount)*110
+					x = 60+(i%4)*110
+					y = startY-60-math.floor(i/4)*110
 					viewItem = @modelItems[model]
 					viewItem.position = oVec2(x,y) + @scrollArea.offset
 				y -= 60 if #@models > 0
 				@scrollArea.viewSize = CCSize width,height-y
 
 		@addBtn\slots "Tapped",->
-			actionEditor = require("ActionEditor.Script.oEditor").oEditor
-			--CCDirector\run CCScene\flipAngular 1,actionEditor
-			CCDirector.currentScene\eachChild (child)->
-				child.visible = false
-			CCDirector.currentScene\addChild actionEditor
+			actionEditor = require("ActionEditor.Script.oEditor")
+			actionEditor.standAlone = false
+			actionEditor.input = editor.gameFullPath
+			actionEditor.output = editor.gameFullPath
+			actionEditor\slots "Activated",nil
+			actionEditor\slots "Activated",->
+				actionEditor\edit @_selectedItem
+			CCDirector\run CCScene\zoomFlip 0.3,actionEditor,CCOrientation.Down
 
 	runThread: (task)=>
 		oRoutine\remove @routine if @routine

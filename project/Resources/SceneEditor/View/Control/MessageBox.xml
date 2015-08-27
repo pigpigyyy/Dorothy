@@ -33,7 +33,7 @@
 	</DrawNode>
 
 	<Action>
-		<Opacity Name="fadeIn" Time="0.8" Alpha="0.8" Ease="OutQuad"/>
+		<Opacity Name="fadeIn" Time="0.8" Alpha="0.4" Ease="OutQuad"/>
 		<Spawn Name="show">
 			<Opacity Time="0.3" Alpha="1"/>
 			<Scale Time="0.3" X="1" Y="1" Ease="OutBack"/>

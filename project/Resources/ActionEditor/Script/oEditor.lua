@@ -4,6 +4,12 @@ local oContent = require("oContent")
 local oVec2 = require("oVec2")
 local oRoutine = require("oRoutine")
 local once = require("once")
+local CCSize = require("CCSize")
+local oCache = require("oCache")
+local oOpacity = require("oOpacity")
+local oEase = require("oEase")
+local CCSpawn = require("CCSpawn")
+local oScale = require("oScale")
 
 local oSd =
 {
@@ -69,6 +75,8 @@ local oFd =
 }
 
 local oEditor = CCScene()
+oEditor.isLoaded = false
+oEditor.standAlone = true
 oEditor.model = nil
 oEditor.look = ""
 oEditor.animation = ""
@@ -80,7 +88,7 @@ oEditor.spriteData = nil
 oEditor.dirty = false
 oEditor.loop = false
 oEditor.isPlaying = false
-oEditor.data = nil
+oEditor.modelData = nil
 oEditor.easeNames =
 {
 	[0] = "Linear",
@@ -115,9 +123,9 @@ oEditor.easeNames =
 	"OutBounce",
 	"InOutBounce"
 }
-oEditor.res = oContent.writablePath.."Model/"
-oEditor.input = oEditor.res.."Input/"
-oEditor.output = oEditor.res.."Output/"
+local res = oContent.writablePath.."Model/"
+oEditor.input = res.."Input/"
+oEditor.output = res.."Output/"
 oEditor.EDIT_NONE = 0
 oEditor.EDIT_START = 1
 oEditor.EDIT_SPRITE = 2
@@ -125,6 +133,10 @@ oEditor.EDIT_ANIMTION = 3
 oEditor.EDIT_LOOK = 4
 oEditor.state = oEditor.EDIT_NONE
 oEditor.needSave = false
+oEditor.oSd = oSd
+oEditor.oAd = oAd
+oEditor.oKd = oKd
+oEditor.oFd = oFd
 oEditor.round = function(self,val)
 	if type(val) == "number" then
 		return val > 0 and math.floor(val+0.5) or math.ceil(val-0.5)
@@ -132,6 +144,65 @@ oEditor.round = function(self,val)
 		return oVec2(val.x > 0 and math.floor(val.x+0.5) or math.ceil(val.x-0.5),
 			val.y > 0 and math.floor(val.y+0.5) or math.ceil(val.y-0.5))
 	end
+end
+function oEditor:edit(modelFile,clipFile)
+	oEditor.model = oEditor.output..modelFile
+	oCache:removeUnused()
+	oEditor.modelData = oCache.Model:getData(oEditor.model)
+	oEditor.look = ""
+	oEditor.animation = ""
+	oEditor.animationData = nil
+	oEditor.keyIndex = nil
+	oEditor.currentFramePos = nil
+	oEditor.sprite = nil
+	oEditor.spriteData = nil
+	oEditor.dirty = false
+	--oEditor.needSave = false
+	oEditor.editMenu:markEditButton(not oEditor.modelData)
+	if not oEditor.modelData then
+		oEditor.modelData =
+		{
+			0.5,--anchorX 1
+			0.5,--anchorY 2
+			"",--clip 3
+			"",--name 4
+			1,--opacity 5
+			0,--angle 6
+			1,--scaleX 7
+			1,--scaleY 8
+			0,--skewX 9
+			0,--skewY 10
+			0,--x 11
+			0,--y 12
+			{},--looks 13
+			{},--animationDefs 14
+			{},--children 15
+			true,--front 16
+			true,--isFaceRight 17
+			false,--isBatchUsed 18
+			CCSize.zero, --size 19
+			oEditor.output..clipFile,--clipFile 20
+			{},--keys 21
+			{},--animationNames 22
+			{},--lookNames 23
+		}
+	end
+	oEditor.dirty = true
+	local model = oEditor.viewArea:getModel()
+	model.opacity = 0
+	model.scaleX = 0
+	model.scaleY = 0
+	model:perform(CCSpawn({
+		oOpacity(0.3,1,oEase.OutQuad),
+		oScale(0.3,1,1,oEase.OutBack)
+	}))
+	oEditor.controlBar:clearCursors()
+	oEditor.settingPanel:resetItems()
+	oEditor.viewPanel:clearSelection()
+	oEditor.viewPanel:updateImages(oEditor.modelData,model)
+	oEditor.viewArea:setModelSize(oEditor.modelData[oSd.size])
+	oEditor.editMenu.items.Size.visible = false
+	oEditor.editMenu:toSprite()
 end
 
 local controls =
@@ -156,25 +227,39 @@ oRoutine(once(function() -- load UI asynchronously
 		coroutine.yield()
 	end
 	oEditor.editMenu:toStart()
-	local resPath = "ActionEditor/Model"
-	local writePath = oContent.writablePath.."Model"
-	if not oContent:exist(oContent.writablePath.."Model") and oContent:exist("ActionEditor/Model") then
-		oContent:copyAsync(resPath,writePath) -- copy some prepared contents
-		if not oContent:exist(oEditor.input) then
-			oContent:mkdir(oEditor.input)
-		end
-		if not oContent:exist(oEditor.output) then
-			oContent:mkdir(oEditor.output)
-		end
-	end
 	coroutine.yield()
 	oEditor.vertexControl = require("oVertexControl")() -- one more control to load
 	coroutine.yield()
 	oEditor:addChild(oEditor.vertexControl)
 	coroutine.yield()
 
-	local oFileChooser = require("oFileChooser")
-	oFileChooser(true)
+	if oEditor.standAlone then
+		local resPath = "ActionEditor/Model"
+		local writePath = oContent.writablePath.."Model"
+		if not oContent:exist(oContent.writablePath.."Model") and oContent:exist("ActionEditor/Model") then
+			oContent:copyAsync(resPath,writePath) -- copy some prepared contents
+			if not oContent:exist(oEditor.input) then
+				oContent:mkdir(oEditor.input)
+			end
+			if not oContent:exist(oEditor.output) then
+				oContent:mkdir(oEditor.output)
+			end
+		end
+		local oFileChooser = require("oFileChooser")
+		oFileChooser(true)
+	end
+	if not oEditor.isLoaded then
+		oEditor.isLoaded = true
+	end
 end))
 
-return {oEditor=oEditor,oSd=oSd,oAd=oAd,oKd=oKd,oFd=oFd}
+oEditor:slots("Entering",function()
+	oRoutine(once(function()
+		repeat
+			coroutine.yield()
+		until oEditor.isLoaded
+		oEditor:emit("Activated")
+	end))
+end)
+
+return oEditor

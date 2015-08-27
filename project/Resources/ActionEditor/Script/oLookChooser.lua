@@ -11,7 +11,7 @@ local ccColor3 = require("ccColor3")
 local oOpacity = require("oOpacity")
 local CCSequence = require("CCSequence")
 local CCDelay = require("CCDelay")
-local oEditor = require("oEditor").oEditor
+local oEditor = require("oEditor")
 local oSd = require("oEditor").oSd
 
 local function oLookChooser()
@@ -50,7 +50,7 @@ local function oLookChooser()
 		title:runAction(oOpacity(0.3,0.5))
 		yStart = y-title.contentSize.height
 
-		local lNames = oEditor.data[oSd.lookNames]
+		local lNames = oEditor.modelData[oSd.lookNames]
 		local i = 0
 		y = yStart-45-math.floor(i/itemNum)*60
 		local button = oButton("None",17,

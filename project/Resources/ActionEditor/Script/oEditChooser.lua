@@ -14,8 +14,8 @@ local oButton = require("oButton")
 local oSelectionPanel = require("oSelectionPanel")
 local oFileChooser = require("oFileChooser")
 local oBox = require("oBox")
+local oEditor = require("oEditor")
 local oSd = require("oEditor").oSd
-local oEditor = require("oEditor").oEditor
 
 local function oEditChooser(withCancel)
 	local winSize = CCDirector.winSize
@@ -88,7 +88,7 @@ local function oEditChooser(withCancel)
 			end
 		end
 	
-		local aNames = oEditor.data[oSd.animationNames]
+		local aNames = oEditor.modelData[oSd.animationNames]
 		local i = 0
 		for k,_ in pairs(aNames) do
 			local name = #k > 10 and k:sub(1,7).."..." or k
@@ -144,7 +144,7 @@ local function oEditChooser(withCancel)
 							end
 						until flag
 						aNames[text] = index
-						addNewAnimation(oEditor.data,index+1)
+						addNewAnimation(oEditor.modelData,index+1)
 						oEditor.dirty = true
 						oEditor.viewArea:getModel()
 						oEditor.editMenu:markEditButton(true)
@@ -176,7 +176,7 @@ local function oEditChooser(withCancel)
 		title:runAction(oOpacity(0.3,0.5))
 		yStart = y-title.contentSize.height
 
-		local lNames = oEditor.data[oSd.lookNames]
+		local lNames = oEditor.modelData[oSd.lookNames]
 		i = 0
 		for k,_ in pairs(lNames) do
 			local name = #k > 10 and k:sub(1,7).."..." or k
@@ -325,7 +325,7 @@ local function oEditChooser(withCancel)
 		yStart = y-25
 
 		if CCDirector.sceneStackSize > 1 then
-			title = CCLabelTTF("Back to Menu","Arial",24)
+			title = CCLabelTTF("Quit Editor","Arial",24)
 			title.texture.antiAlias = false
 			title.color = ccColor3(0x00ffff)
 			title.anchor = oVec2(0.5,1)
@@ -338,7 +338,7 @@ local function oEditChooser(withCancel)
 
 			y = yStart-45
 			newButton = oButton(
-				"Back",17,
+				"Quit",17,
 				itemWidth,50,
 				xStart+itemWidth*0.5+10,
 				y,

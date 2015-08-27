@@ -21,8 +21,8 @@ local CCRect = require("CCRect")
 local cclog = require("cclog")
 local tolua = require("tolua")
 local CCNode = require("CCNode")
+local oEditor = require("oEditor")
 local oSd = require("oEditor").oSd
-local oEditor = require("oEditor").oEditor
 
 local function oViewPanel()
 	local winSize = CCDirector.winSize
@@ -350,7 +350,7 @@ local function oViewPanel()
 					sp[oSd.fold] = not sp[oSd.fold]
 					local model = oEditor.viewArea:getModel()
 					panel:clearSelection()
-					panel:updateImages(oEditor.data,model)
+					panel:updateImages(oEditor.modelData,model)
 					panel:selectItem(sp)
 				else
 					isFolding = true
@@ -628,7 +628,7 @@ local function oViewPanel()
 			local aDefs = sp[oSd.animationDefs]
 
 			if oEditor.state == oEditor.EDIT_ANIMATION and oEditor.animation then
-				local aNames = oEditor.data[oSd.animationNames]
+				local aNames = oEditor.modelData[oSd.animationNames]
 				local animation = aDefs[aNames[oEditor.animation]+1]
 				oEditor.animationData = animation
 			end
@@ -755,7 +755,7 @@ local function oViewPanel()
 		menu.positionY = borderSize.height
 		oEditor.dirty = true
 		panel:clearSelection()
-		panel:updateImages(oEditor.data,oEditor.viewArea:getModel())
+		panel:updateImages(oEditor.modelData,oEditor.viewArea:getModel())
 		panel:glow()
 	end
 

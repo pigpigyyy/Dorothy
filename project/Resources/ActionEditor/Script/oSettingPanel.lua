@@ -17,7 +17,7 @@ local emit = require("emit")
 local oOpacity = require("oOpacity")
 local CCRect = require("CCRect")
 local CCSequence = require("CCSequence")
-local oEditor = require("oEditor").oEditor
+local oEditor = require("oEditor")
 local oSd = require("oEditor").oSd
 local oKd = require("oEditor").oKd
 
@@ -853,8 +853,8 @@ local function oSettingPanel()
 			end),
 		KeyPoint = oSettingItem("Keys :",0,getPosY(),
 			function()
-				oEditor.vertexControl:show(oEditor.data[oSd.keys],function(vs)
-					oEditor.data[oSd.keys] = vs
+				oEditor.vertexControl:show(oEditor.modelData[oSd.keys],function(vs)
+					oEditor.modelData[oSd.keys] = vs
 					oEditor.editMenu:markEditButton(true)
 				end)
 			end,
@@ -892,7 +892,7 @@ local function oSettingPanel()
 		for _,item in pairs(keyItems) do
 			item:setEnabled(enable)
 		end
-		if not enable and oEditor.spriteData == oEditor.data then
+		if not enable and oEditor.spriteData == oEditor.modelData then
 			keyItems.Width:setEnabled(true)
 			keyItems.Height:setEnabled(true)
 			keyItems.KeyPoint:setEnabled(true)
@@ -1199,7 +1199,7 @@ local function oSettingPanel()
 				sp = {}
 			end
 			-- editing root name is not allowed
-			if sp ~= oEditor.data then
+			if sp ~= oEditor.modelData then
 				keyItems.Name:setValue(sp[oSd.name])
 			else
 				keyItems.Name:setValue("Root")
