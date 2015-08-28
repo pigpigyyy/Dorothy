@@ -125,11 +125,8 @@ Class
 
 		@addBtn\slots "Tapped",->
 			return unless @_selectedItem
-			actionEditor = editor.actionEditor
-			actionEditor\slots("Activated")\clear!
-			actionEditor\slots "Activated",->
-				actionEditor\edit @_selectedItem
-			CCDirector\replaceScene CCScene\zoomFlip(0.5,actionEditor,CCOrientation.Down),false
+			editor.actionEditor.model = @_selectedItem
+			CCScene\run "actionEditor","rollOut"
 
 	runThread: (task)=>
 		oRoutine\remove @routine if @routine

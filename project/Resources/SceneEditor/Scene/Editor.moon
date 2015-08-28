@@ -1,4 +1,5 @@
 Dorothy!
+CCScene = require "CCSceneEx"
 Class,property,classfield = unpack require "class"
 EditorView = require "View.Scene.Editor"
 
@@ -15,12 +16,16 @@ Class
 			_G["editor"] = nil
 			builtin["editor"] = nil
 			oCache\clear!
-			@_actionEditor\cleanup! if @_actionEditor
+			CCScene\remove "actionEditor"
 		--@spritePanel\show!
 		--@spritePanel\slots "Selected",(spriteStr)->
 			--@addChild with CCSprite spriteStr
 				--.position = oVec2 @width/2,@height/2
-		emit "Editor.LoadModel", { @graphicFolder }
+		@\updateModels!
+		CCScene\add "sceneEditor",@
+		CCScene\add "actionEditor",@actionEditor
+		CCScene\transition "rollIn",{"zoomFlip",0.5,CCOrientation.Down}
+		CCScene\transition "rollOut",{"zoomFlip",0.5,CCOrientation.Up}
 
 	updateSprites: =>
 		emit "Editor.LoadSprite", { @graphicFolder }
@@ -54,8 +59,10 @@ Class
 			actionEditor.quitable = true
 			actionEditor.input = @gameFullPath
 			actionEditor.output = @gameFullPath
+			actionEditor\slots "Activated",->
+				actionEditor\edit actionEditor.model
 			actionEditor\slots "Quit",->
-				CCDirector\replaceScene CCScene\zoomFlip(0.5,@,CCOrientation.Up),false
+				CCScene\run "sceneEditor","rollIn"
 				@\updateModels!
 			@_actionEditor = actionEditor
 		return @_actionEditor
