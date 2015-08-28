@@ -17,6 +17,7 @@ Class
 			MessageBox = require "Control.MessageBox"
 			inputBox = InputBox text:"New Group Name"
 			inputBox\slots "Inputed",(name)->
+				return unless name
 				if name == "" or name\match("[\\/|:*?<>\"%.]") or oContent\exist(name..".clip")
 					MessageBox text:"Invalid Name",okOnly:true
 				else
@@ -35,11 +36,11 @@ Class
 								xml ..= tostring(block.h-4).."\"/>"
 							xml = xml.."</A>"
 							clipFile = editor.graphicFolder..name..".clip"
-							oContent\saveToFile editor.gamePath..clipFile,xml
+							oContent\saveToFile editor.gameFullPath..clipFile,xml
 							oCache.Clip\update clipFile,xml
 							-- save texture
 							texFile = editor.graphicFolder..name..".png"
-							@target\save editor.gamePath..texFile,CCImage.PNG
+							@target\save editor.gameFullPath..texFile,CCImage.PNG
 							oCache.Texture\add @target,texFile
 							-- remove images
 							for image in *images
@@ -69,6 +70,8 @@ Class
 		@scrollArea.view\removeAllChildrenWithCleanup!
 		{:width,:height} = @scrollArea
 		blocks = {}
+		for image in *images
+			oCache.Texture\unload image
 		CCImage.isPngAlphaPremultiplied = false
 		blendFunc = ccBlendFunc ccBlendFunc.One,ccBlendFunc.Zero
 		for image in *images
@@ -85,6 +88,8 @@ Class
 				}
 				table.insert blocks,block
 		CCImage.isPngAlphaPremultiplied = true
+		for image in *images
+			oCache.Texture\unload image
 
 		Packer\fit blocks
 		w = Packer.root.w

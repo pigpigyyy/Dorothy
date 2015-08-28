@@ -103,8 +103,10 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 		CCImage.isPngAlphaPremultiplied = false
 		local blendFunc = ccBlendFunc(ccBlendFunc.One,ccBlendFunc.Zero)
 		for i = 1,#images do
-			if images[i]:sub(1,1) ~= "." then
-				local sp = CCSprite(oEditor.input..file.."/"..images[i])
+			if images[i]:lower():sub(-4,-1) == ".png" then
+				local texFile = oEditor.input..file.."/"..images[i]
+				oCache.Texture:unload(texFile)
+				local sp = CCSprite(texFile)
 				if sp then
 					sp.texture.antiAlias = false
 					sp.blendFunc = blendFunc
@@ -117,6 +119,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 						name = images[i]:match("([^\\/]*)%.[^%.\\/]*$")
 					}
 					table.insert(blocks,block)
+					oCache.Texture:unload(texFile)
 				end
 			end
 		end

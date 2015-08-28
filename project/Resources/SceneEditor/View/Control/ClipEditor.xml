@@ -1,5 +1,5 @@
 <!-- params: nil -->
-<LayerColor Name="mask" Color="0x0" Opacity="0" X="{ @X }" Y="{ @Y }" TouchPriority="{ CCMenu.DefaultHandlerPriority-99 }" SwallowTouches="True" TouchEnabled="True">
+<Layer Name="mask" X="{ @X }" Y="{ @Y }" TouchPriority="{ CCMenu.DefaultHandlerPriority-99 }" SwallowTouches="True" TouchEnabled="True">
 	<Import Module="Control.ScrollArea"/>
 	<Import Module="Control.CircleButton"/>
 
@@ -30,14 +30,12 @@
 	</Node>
 
 	<Action>
-		<Opacity Name="fadeIn" Time="0.8" Alpha="0.8" Ease="OutQuad"/>
 		<Scale Name="scaleIn" Time="0.3" X="1" Y="1" Ease="OutBack"/>
 		<Scale Name="scaleInA" Time="0.3" X="1" Y="1" Ease="OutBack"/>
 		<Scale Name="scaleInB" Time="0.3" X="1" Y="1" Ease="OutBack"/>
 	</Action>
 
 	<Slot Name="Entered">
-		mask:perform(fadeIn)
 		scrollArea.scaleX = 0
 		scrollArea.scaleY = 0
 		scrollArea:perform(scaleIn)
@@ -48,4 +46,4 @@
 		okBtn.scaleY = 0
 		okBtn:perform(scaleInB)
 	</Slot>
-</LayerColor>
+</Layer>

@@ -17,11 +17,11 @@ Class
 			builtin["editor"] = nil
 			oCache\clear!
 			CCScene\remove "actionEditor"
-		--@spritePanel\show!
+		@spritePanel\show!
 		--@spritePanel\slots "Selected",(spriteStr)->
 			--@addChild with CCSprite spriteStr
 				--.position = oVec2 @width/2,@height/2
-		@\updateModels!
+		--@\updateModels!
 		CCScene\add "sceneEditor",@
 		CCScene\add "actionEditor",@actionEditor
 		CCScene\transition "rollIn",{"zoomFlip",0.5,CCOrientation.Down}
@@ -29,6 +29,15 @@ Class
 
 	updateSprites: =>
 		emit "Editor.LoadSprite", { @graphicFolder }
+		visitGraphicFolder = (path)->
+			folders = oContent\getEntries path,true
+			for folder in *folders
+				if folder ~= "." and folder ~= ".."
+					visitGraphicFolder path.."/"..folder
+			files = oContent\getEntries path,false
+			if #files == 0 and #folders == 2
+				oContent\remove path
+		visitGraphicFolder @graphicFullPath\gsub("[\\/]*$","")
 
 	updateModels: =>
 		emit "Editor.LoadModel", { @graphicFolder }

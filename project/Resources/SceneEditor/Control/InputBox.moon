@@ -17,7 +17,7 @@ Class
 			@\inputed @textField.text
 
 		@cancelBtn\slots "Tapped", ->
-			@\inputed ""
+			@\inputed nil
 
 		CCDirector.currentScene\addChild @
 

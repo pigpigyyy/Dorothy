@@ -3,10 +3,11 @@
 
 	<SolidRect Width="{ $W }" Height="{ $H }" Color="0xff1a1a1a"/>	
 
-	<!--
 	<Import Module="Control.SpritePanel"/>
 	<SpritePanel Name="spritePanel" X="{ $L-10-225 }" Y="{ $B+10+($H-20)/2 }" Width="450" Height="{ $H-20 }" Ref="True"/>
--->
+<!--
 	<Import Module="Control.ModelPanel"/>
 	<ModelPanel Name="modelPanel" X="{ $L+10+225 }" Y="{ $B+10+($H-20)/2 }" Width="450" Height="{ $H-20 }" Ref="True"/>
+-->
+
 </Scene>

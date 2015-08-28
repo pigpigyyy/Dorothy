@@ -8,19 +8,19 @@
 
 	<SolidRect Width="{ width }" Height="{ height }" Color="0xff100000"/>
 	<LabelTTF Name="title" X="{ $X }" Y="{ $T-20 }" Text="Select Sprite" FontName="Arial" FontSize="24" Color="0x00ffff" Opacity="0.5" AntiAlias="False"/>
-	<ScrollArea Name="scrollArea" X="{ $X }" Y="{ $T-40-(height-100)/2 }" Width="{ width }" Height="{ height-100 }" ViewWidth="{ width }" ViewHeight="{ height-100 }" PaddingX="0" PaddingY="100" TouchPriority="0" Ref="True">
+	<ScrollArea Name="scrollArea" X="{ $X }" Y="{ $T-40-(height-110)/2 }" Width="{ width }" Height="{ height-110 }" ViewWidth="{ width }" ViewHeight="{ height-110 }" PaddingX="0" PaddingY="100" TouchPriority="0" Ref="True">
 		<Item Name="view">
-			<Menu Name="menu" AnchorX="0" AnchorY="0" Width="{ width }" Height="{ height-100 }" TouchPriority="1" Ref="True"/>
+			<Menu Name="menu" AnchorX="0" AnchorY="0" Width="{ width }" Height="{ height-110 }" TouchPriority="1" Ref="True"/>
 		</Item>
 	</ScrollArea>
 	<LineRect X="-1" Y="-1" Width="{ width+2 }" Height="{ height+2 }" Color="0x88ffafaf"/>
 
 	<Menu Name="opMenu" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" Ref="True">
-		<Button Name="modeBtn" X="30" Y="30" Width="40" Height="40" FontSize="12" Text="Mode" Ref="True"/>
-		<Button Name="addBtn" X="80" Y="30" Width="40" Height="40" FontSize="14" Text="New" Ref="True"/>
-		<Button Name="delBtn" X="130" Y="30" Width="40" Height="40" FontSize="14" Text="Del" Ref="True"/>
-		<Button Name="groupBtn" X="180" Y="30" Width="40" Height="40" FontSize="12" Text="Group" Ref="True"/>
-		<Button Name="delGroupBtn" X="230" Y="30" Width="40" Height="40" FontSize="12" Text="Break\nGroup" Ref="True"/>
+		<Button Name="modeBtn" X="35" Y="35" Width="50" Height="50" FontSize="14" Text="Mode" Ref="True"/>
+		<Button Name="addBtn" X="95" Y="35" Width="50" Height="50" FontSize="16" Text="New" Ref="True"/>
+		<Button Name="delBtn" X="155" Y="35" Width="50" Height="50" FontSize="16" Text="Del" Ref="True"/>
+		<Button Name="groupBtn" X="215" Y="35" Width="50" Height="50" FontSize="14" Text="Group" Ref="True"/>
+		<Button Name="delGroupBtn" X="275" Y="35" Width="50" Height="50" FontSize="14" Text="Break\nGroup" Ref="True"/>
 		<ButtonBase Name="closeBtn" X="30" Y="{ $T-20 }" Width="40" Height="40" Ref="True">
 			<Item Name="face">
 				<Line Color="0x00ffff" X="{ $X }" Y="{ $Y }">

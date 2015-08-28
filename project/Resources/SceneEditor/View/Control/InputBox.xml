@@ -1,6 +1,5 @@
 <!-- params: Text -->
-<LayerColor Name="mask" X="{ @X }" Y="{ @Y }"
-		Color="0x0" Opacity="0"
+<Layer Name="mask" X="{ @X }" Y="{ @Y }"
 		SwallowTouches="True" TouchEnabled="True"
 		TouchPriority="{ CCMenu.DefaultHandlerPriority-998 }">
 	<Import Module="Control.TextField"/>
@@ -61,7 +60,6 @@
 	</DrawNode>
 
 	<Action>
-		<Opacity Name="fadeIn" Time="0.8" Alpha="0.4" Ease="OutQuad"/>
 		<Spawn Name="show">
 			<Opacity Time="0.3" Alpha="1"/>
 			<Scale Time="0.3" X="1" Y="1" Ease="OutBack"/>
@@ -69,10 +67,9 @@
 	</Action>
 
 	<Slot Name="Entered">
-		mask:perform(fadeIn)
 		box.opacity = 0
 		box.scaleX = 0
 		box.scaleY = 0
 		box:perform(show)
 	</Slot>
-</LayerColor>
+</Layer>

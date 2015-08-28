@@ -70,6 +70,8 @@ Class
 				for path in *paths do visitResource path
 
 				{:width,:height} = @scrollArea
+				compareClip = (a,b)->
+					a\match("[\\/]([^\\/]*)$") < b\match("[\\/]([^\\/]*)$")
 
 				i = 0
 				if @clips -- already loaded clips
@@ -83,6 +85,8 @@ Class
 							for expItem in *expandItems
 								expItem.parent\removeChild expItem
 							@clipExpands[clipDel] = nil
+					table.sort clipsToAdd,compareClip
+					table.sort clips,compareClip
 					for clipAdd in *clipsToAdd
 						@clipItems[clipAdd] = @\_addClipTab clipAdd,i
 						i += 1
@@ -97,13 +101,13 @@ Class
 								@clipExpands[clip] = nil
 					@clipItems = {}
 					@clipExpands = {}
+					table.sort clips,compareClip
 					for clip in *clips
 						clipTab = @\_addClipTab clip,i
 						i += 1
 						clipTab.visible = false
 						@clipItems[clip] = clipTab
 				@clips = clips
-				table.sort clips,(a,b)-> a\match("[\\/]([^\\/]*)$") < b\match("[\\/]([^\\/]*)$")
 
 				if @images
 					imagesToAdd,imagesToDel = CompareTable @images,images
@@ -263,10 +267,19 @@ Class
 							folder ..= "/"
 							oContent\mkdir folder
 							sleep!
+							texFile = oCache.Clip\getTextureFile clip
+							oCache.Texture\unload texFile
+							CCImage.isPngAlphaPremultiplied = false
+							oCache\loadAsync texFile
+							CCImage.isPngAlphaPremultiplied = true
+							blendFunc = ccBlendFunc ccBlendFunc.One,ccBlendFunc.Zero
+							tex = oCache.Texture\load texFile
+							tex.antiAlias = false
 							names = oCache.Clip\getNames clip
 							for name in *names
 								sleep!
 								sp = CCSprite clip.."|"..name
+								sp.blendFunc = blendFunc
 								sp.anchor = oVec2.zero
 								target = CCRenderTarget sp.width,sp.height
 								target\beginDraw!
@@ -274,7 +287,6 @@ Class
 								target\endDraw!
 								sleep!
 								target\save folder..name..".png",CCImage.PNG
-							texFile = oCache.Clip\getTextureFile clip
 							oCache.Texture\unload texFile
 							oContent\remove texFile
 							oCache.Clip\unload clip
