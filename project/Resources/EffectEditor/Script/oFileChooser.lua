@@ -451,7 +451,7 @@ local function oFileChooser(addExisted)
 				end),oEditor.topMost)
 			end)
 		delButton.color = ccColor3(0xff0080)
-		addButton.anchor = oVec2(0,1)
+		delButton.anchor = oVec2(0,1)
 		delButton.enabled = false
 		delButton.opacity = 0
 		delButton:runAction(
