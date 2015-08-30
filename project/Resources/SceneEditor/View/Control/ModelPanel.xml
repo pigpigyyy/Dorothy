@@ -16,8 +16,10 @@
 	<LineRect X="-1" Y="-1" Width="{ width+2 }" Height="{ height+2 }" Color="0x88ffafaf"/>
 
 	<Menu Name="opMenu" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" Ref="True">
-		<Button Name="addBtn" X="35" Y="35" Width="50" Height="50" FontSize="16" Text="New" Ref="True"/>
-		<Button Name="delBtn" X="95" Y="35" Width="50" Height="50" FontSize="16" Text="Del" Ref="True"/>
+		<Button Name="modeBtn" X="35" Y="35" Width="50" Height="50" FontSize="16" Text="Mode" Ref="True"/>
+		<Button Name="addBtn" X="95" Y="35" Width="50" Height="50" FontSize="16" Text="New" Ref="True"/>
+		<Button Name="delBtn" X="155" Y="35" Width="50" Height="50" FontSize="14" Text="Delete" Ref="True"/>
+		<Button Name="editBtn" X="215" Y="35" Width="50" Height="50" FontSize="16" Text="Edit" Ref="True"/>
 		<ButtonBase Name="closeBtn" X="30" Y="{ $T-20 }" Width="40" Height="40" Ref="True">
 			<Item Name="face">
 				<Line Color="0x00ffff" X="{ $X }" Y="{ $Y }">

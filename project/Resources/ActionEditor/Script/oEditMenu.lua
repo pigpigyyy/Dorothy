@@ -58,6 +58,7 @@ local function oEditMenu()
 					menu:markEditButton(false)
 					oEditor.viewArea:getModel()
 					oCache.Model:save(oEditor.model,oEditor.model)
+					oEditor:emit("Edited",oEditor.modelFile)
 					return
 				end
 				if oEditor.isPlaying then

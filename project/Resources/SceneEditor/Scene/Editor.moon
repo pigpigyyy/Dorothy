@@ -10,18 +10,17 @@ Class
 		@_gameFullPath = ""
 		@_actionEditor = nil
 		@game = "Test"
+
 		_G["editor"] = @
 		builtin["editor"] = @
+
 		@\slots "Cleanup",->
 			_G["editor"] = nil
 			builtin["editor"] = nil
 			oCache\clear!
 			CCScene\remove "actionEditor"
-		@spritePanel\show!
-		--@spritePanel\slots "Selected",(spriteStr)->
-			--@addChild with CCSprite spriteStr
-				--.position = oVec2 @width/2,@height/2
-		--@\updateModels!
+		--@spritePanel\show!
+		@modelPanel\show!
 		CCScene\add "sceneEditor",@
 		CCScene\add "actionEditor",@actionEditor
 		CCScene\transition "rollIn",{"zoomFlip",0.5,CCOrientation.Down}
@@ -68,8 +67,8 @@ Class
 			actionEditor.quitable = true
 			actionEditor.input = @gameFullPath
 			actionEditor.output = @gameFullPath
-			actionEditor\slots "Activated",->
-				actionEditor\edit actionEditor.model
+			actionEditor\slots "Edited",(model)->
+				emit "Editor.ModelUpdated",model
 			actionEditor\slots "Quit",->
 				CCScene\run "sceneEditor","rollIn"
 				@\updateModels!

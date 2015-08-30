@@ -18,7 +18,7 @@
 	<Menu Name="opMenu" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" Ref="True">
 		<Button Name="modeBtn" X="35" Y="35" Width="50" Height="50" FontSize="14" Text="Mode" Ref="True"/>
 		<Button Name="addBtn" X="95" Y="35" Width="50" Height="50" FontSize="16" Text="New" Ref="True"/>
-		<Button Name="delBtn" X="155" Y="35" Width="50" Height="50" FontSize="16" Text="Del" Ref="True"/>
+		<Button Name="delBtn" X="155" Y="35" Width="50" Height="50" FontSize="14" Text="Delete" Ref="True"/>
 		<Button Name="groupBtn" X="215" Y="35" Width="50" Height="50" FontSize="14" Text="Group" Ref="True"/>
 		<Button Name="delGroupBtn" X="275" Y="35" Width="50" Height="50" FontSize="14" Text="Break\nGroup" Ref="True"/>
 		<ButtonBase Name="closeBtn" X="30" Y="{ $T-20 }" Width="40" Height="40" Ref="True">

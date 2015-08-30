@@ -318,6 +318,12 @@ oSlotList::~oSlotList()
 	oSlotList::clear();
 }
 
+void oSlotList::set(int handler)
+{
+	oSlotList::clear();
+	oSlotList::add(handler);
+}
+
 void oSlotList::add(int handler)
 {
 	_list.push_back(handler);

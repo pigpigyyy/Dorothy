@@ -6395,6 +6395,13 @@ local Dorothy =
 	{
 		childs =
 		{
+			set =
+			{
+				args = "(handler: function)",
+				description = " -- handler: function{any: ...}",
+				returns = "()",
+				type = "method",
+			},
 			add =
 			{
 				args = "(handler: function)",

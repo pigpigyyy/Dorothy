@@ -35,7 +35,8 @@ Class
 			with cursor
 				.visible = false
 				\stopAllActions!
-				@\emit "TextChanged",@
+				if @text ~= ""
+					@\emit "TextChanged",@
 			true
 
 		@\slots "InputInserting",(addText)->

@@ -44,7 +44,7 @@ Class
 			@_loaded = false
 			oCache\loadAsync file,-> @_loaded = true
 			if not @_loaded
-				@face\addChild with CCLabelTTF "[No Item]","Arial",16
+				@face\addChild with CCLabelTTF "No Item","Arial",16
 					.position = oVec2 @width/2,@height/2
 					.texture.antiAlias = false
 					.color = ccColor3 0x00ffff

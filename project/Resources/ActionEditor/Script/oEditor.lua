@@ -147,6 +147,7 @@ oEditor.round = function(self,val)
 	end
 end
 function oEditor:edit(modelFile,clipFile)
+	oEditor.modelFile = modelFile
 	oEditor.model = oEditor.output..modelFile
 	oCache:removeUnused()
 	oEditor.modelData = oCache.Model:getData(oEditor.model)

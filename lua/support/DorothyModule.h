@@ -52,6 +52,7 @@ public:
 	//builtin slot end
 	oSlotList();
 	virtual ~oSlotList();
+	void set(int handler);
 	void add(int handler);
 	bool remove(int handler);
 	void clear();

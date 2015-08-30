@@ -18,8 +18,10 @@ Class
 			inputBox = InputBox text:"New Group Name"
 			inputBox\slots "Inputed",(name)->
 				return unless name
-				if name == "" or name\match("[\\/|:*?<>\"%.]") or oContent\exist(name..".clip")
-					MessageBox text:"Invalid Name",okOnly:true
+				if name == "" or name\match("[\\/|:*?<>\"%.]")
+					MessageBox text:"Invalid Name!",okOnly:true
+				elseif oContent\exist(name..".clip")
+					MessageBox text:"Name Exist!",okOnly:true
 				else
 					msgBox = MessageBox text:"Group Name\n"..name
 					msgBox\slots "OK",(result)->

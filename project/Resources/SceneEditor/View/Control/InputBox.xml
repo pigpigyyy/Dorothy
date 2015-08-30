@@ -24,18 +24,16 @@
 			</Polygon>
 		</DrawNode>
 		<TextField Name="textField" X="0" Y="-9" FontSize="16" Limit="15" Ref="True">
-			<Slot Name="TextChanged" Args="item">
+			<Slot Name="InputDetach" Args="item">
 				item.opacity = 0.3
 				frame.opacity = 0.3
-				if item.text ~= "" then
-					item:detachWithIME()
-				end
+				return true
 			</Slot>
 		</TextField>
 
-		<Menu Name="activateArea" Width="120" Height="50" SwallowTouches="True"
+		<Menu Name="activateArea" Width="240" Height="50" SwallowTouches="True"
 			TouchPriority="{ CCMenu.DefaultHandlerPriority-999 }" Ref="True">
-			<MenuItem X="{ $X }" Y="{ $Y }" Width="120" Height="50">
+			<MenuItem X="{ $X }" Y="{ $Y }" Width="240" Height="50">
 				<Slot Name="Tapped">
 					textField:attachWithIME()
 					textField.opacity = 1

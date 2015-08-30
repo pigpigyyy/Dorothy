@@ -4,7 +4,7 @@
 	<Import Module="View.Shape.SolidRect"/>
 
 	<Node Name="face" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" Opacity="0.4" Ref="True">
-		<LineRect Width="{ width }" Height="{ height }" Color="0xff00ffff"/>
+		<LineRect X="-1" Y="-1" Width="{ width+2 }" Height="{ height+2 }" Color="0xff00ffff"/>
 		<Sprite Name="sprite" X="{ $X }" Y="{ $Y }" Ref="True"/>
 	</Node>
 

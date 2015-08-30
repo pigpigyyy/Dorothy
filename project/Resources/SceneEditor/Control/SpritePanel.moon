@@ -5,6 +5,9 @@ TabButton = require "Control.TabButton"
 SpriteView = require "Control.SpriteView"
 MessageBox = require "Control.MessageBox"
 import CompareTable from require "Data.Utils"
+-- [signals]
+-- "Selected",(spriteStr)->
+-- "Hide",->
 -- [params]
 -- x, y, width, height
 Class
@@ -396,27 +399,29 @@ Class
 		return if isSelecting == @_isSelecting
 		@_isSelecting = isSelecting
 		@modeBtn.color = ccColor3(isSelecting and 0xff0088 or 0x00ffff)
-		show = -> CCSequence {
+		show = (index)-> CCSequence {
+			CCDelay 0.1*index
 			CCShow!
 			oScale 0,0,0
 			oScale 0.3,1,1,oEase.OutBack
 		}
-		hide = -> CCSequence {
+		hide = (index)-> CCSequence {
+			CCDelay 0.1*index
 			oScale 0.3,0,0,oEase.InBack
 			CCHide!
 		}
 		if isSelecting
-			@addBtn\perform show!
-			@delBtn\perform show!
-			@groupBtn\perform show!
-			@delGroupBtn\perform show!
-			@hint.positionX = @width-(@width-250)/2
+			@addBtn\perform show 0
+			@delBtn\perform show 1
+			@groupBtn\perform show 2
+			@delGroupBtn\perform show 3
+			@hint.positionX = @width-(@width-300)/2
 		else
-			@addBtn\perform hide!
-			@delBtn\perform hide!
-			@groupBtn\perform hide!
-			@delGroupBtn\perform hide!
-			@hint.positionX = @width-(@width-50)/2
+			@addBtn\perform hide 3
+			@delBtn\perform hide 2
+			@groupBtn\perform hide 1
+			@delGroupBtn\perform hide 0
+			@hint.positionX = @width-(@width-60)/2
 		@menu\eachChild (child)->
 			if not child.clip
 				child.isCheckMode = isSelecting
@@ -444,6 +449,7 @@ Class
 	hide: =>
 		targetX = @width/4
 		targetY = CCDirector.winSize.height/2
+		@\_setCheckMode false
 		@scrollArea.touchEnabled = false
 		@menu.enabled = false
 		@opMenu.enabled = false

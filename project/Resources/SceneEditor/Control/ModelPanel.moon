@@ -3,26 +3,30 @@ Class,property = unpack require "class"
 ModelPanelView = require "View.Control.ModelPanel"
 ModelView = require "Control.ModelView"
 MessageBox = require "Control.MessageBox"
+InputBox = require "Control.InputBox"
 import CompareTable from require "Data.Utils"
+-- [signals]
+-- "Selected",(modelFile)->
+-- "Hide",->
 -- [params]
 -- x, y, width, height
 Class
 	__partial: (args)=> ModelPanelView args
 	__init: (args)=>
-		@_isCheckMode = true
+		@_isCheckMode = false
 		@modelItems = {}
 		@_selectedItem = nil
 		@selected = (item)->
+			file = item.file
 			if @_isCheckMode
-				if @_selectedItem
-					viewItem = @modelItems[@_selectedItem]
-					if viewItem and viewItem ~= item
-						viewItem.checked = false
-						viewItem\emit "TapEnded" 
-					@_selectedItem = nil
+				@\clearSelection! if @_selectedItem ~= file
 				item.checked = not item.checked
-				if item.checked
-					@_selectedItem = item.file
+				@_selectedItem = if item.checked then file else nil
+			elseif item.isLoaded
+				@\hide!
+				@\emit "Selected",file
+			else
+				MessageBox text:"Broken Model\nWith Data Error\nOr Missing Image",okOnly:true
 
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
@@ -43,6 +47,16 @@ Class
 
 		@\slots "Cleanup",->
 			oRoutine\remove @routine if @routine
+
+		@\gslot "Editor.ModelUpdated",(target)->
+			viewItem = @modelItems[target]
+			if viewItem and @models
+				for i,model in ipairs @models
+					if model == target
+						table.remove @models,i
+						break
+				viewItem.parent\removeChild viewItem
+				@modelItems[target] = nil
 
 		@\gslot "Editor.LoadModel",(paths)->
 			@\runThread ->
@@ -110,6 +124,8 @@ Class
 							oOpacity 0.3,1
 						}
 						i += 1
+				table.sort models,(a,b)->
+					a\match("[\\/]([^\\/]*)$") < b\match("[\\/]([^\\/]*)$")
 				@models = models
 
 				y = height
@@ -123,10 +139,64 @@ Class
 				y -= 60 if #@models > 0
 				@scrollArea.viewSize = CCSize width,height-y
 
+		@modeBtn\slots "Tapped",->
+			@isCheckMode = not @isCheckMode
+
 		@addBtn\slots "Tapped",->
-			return unless @_selectedItem
-			editor.actionEditor.model = @_selectedItem
-			CCScene\run "actionEditor","rollOut"
+			@\clearSelection!
+			with InputBox text:"New Model Name"
+				\slots "Inputed",(name)->
+					return unless name
+					if name == "" or name\match("[\\/|:*?<>\"%.]")
+						MessageBox text:"Invalid Name!",okOnly:true
+						return
+					for model,_ in pairs @modelItems
+						if name == model\match("([^\\/]*)%.[^%.\\/]*$")
+							MessageBox text:"Name Exist!",okOnly:true
+							return
+					actionEditor = editor.actionEditor
+					actionEditor\slots("Activated")\set ->
+						oFileChooser = require "ActionEditor.Script.oFileChooser"
+						oFileChooser(true,true,name)
+					CCScene\run "actionEditor","rollOut"
+
+		@delBtn\slots "Tapped",->
+			if not @_selectedItem
+				MessageBox text:"No Model Selected",okOnly:true
+				return
+			with MessageBox text:"Delete Model\n"..@_selectedItem\match("([^\\/]*)%.[^%.\\/]*$")
+				\slots "OK",(result)->
+					return unless result
+					MessageBox(text:"Confirm This\nDeletion")\slots "OK",(result)->
+						return unless result
+						@\runThread ->
+							oContent\remove @_selectedItem
+							oCache.Model\unload @_selectedItem
+							@\clearSelection!
+							sleep 0.3
+							editor\updateModels!
+
+		@editBtn\slots "Tapped",->
+			if not @_selectedItem
+				MessageBox text:"No Model Selected",okOnly:true
+				return
+			targetItem = @_selectedItem
+			viewItem = @modelItems[targetItem]
+			if viewItem.isLoaded
+				@\clearSelection!
+				actionEditor = editor.actionEditor
+				actionEditor\slots("Activated")\set ->
+					actionEditor\edit targetItem
+				CCScene\run "actionEditor","rollOut"
+			else
+				MessageBox text:"Broken Model\nWith Data Error\nOr Missing Image",okOnly:true
+
+		@closeBtn\slots "Tapped",->
+			@\hide!
+
+		@addBtn.visible = false
+		@delBtn.visible = false
+		@editBtn.visible = false
 
 	runThread: (task)=>
 		oRoutine\remove @routine if @routine
@@ -147,3 +217,73 @@ Class
 			@menu.enabled = true
 			@scrollArea.touchEnabled = true
 			@routine = nil
+
+	clearSelection: =>
+		if @_selectedItem
+			viewItem = @modelItems[@_selectedItem]
+			if viewItem and viewItem ~= item
+				viewItem.checked = false
+				viewItem.face\runAction oOpacity 0.3,0.4,oEase.OutQuad
+				@_selectedItem = nil
+
+	isCheckMode: property => @_isCheckMode,
+		(value)=>
+			return if @_isCheckMode == value
+			@_isCheckMode = value
+			@\clearSelection! unless value
+			@modeBtn.color = ccColor3(value and 0xff0088 or 0x00ffff)
+			show = (index)-> CCSequence {
+				CCDelay 0.1*index
+				CCShow!
+				oScale 0,0,0
+				oScale 0.3,1,1,oEase.OutBack
+			}
+			hide = (index)-> CCSequence {
+				CCDelay 0.1*index
+				oScale 0.3,0,0,oEase.InBack
+				CCHide!
+			}
+			if value
+				@addBtn\perform show 0
+				@delBtn\perform show 1
+				@editBtn\perform show 2
+				@hint.positionX = @width-(@width-240)/2
+			else
+				@addBtn\perform hide 2
+				@delBtn\perform hide 1
+				@editBtn\perform hide 0
+				@hint.positionX = @width-(@width-60)/2
+
+	show: =>
+		targetX = @width/2+10
+		targetY = CCDirector.winSize.height/2
+		@positionX = @width/4
+		@opacity = 0
+		@perform CCSequence {
+			CCSpawn {
+				CCShow!
+				oOpacity 0.3,1,oEase.OutQuad
+				oPos 0.3,targetX,targetY,oEase.OutQuad
+			}
+			CCCall ->
+				@scrollArea.touchEnabled = true
+				@menu.enabled = true
+				@opMenu.enabled = true
+				editor\updateModels!
+		}
+
+	hide: =>
+		targetX = @width/4
+		targetY = CCDirector.winSize.height/2
+		@isCheckMode = false
+		@scrollArea.touchEnabled = false
+		@menu.enabled = false
+		@opMenu.enabled = false
+		@perform CCSequence {
+			CCSpawn {
+				oOpacity 0.3,0,oEase.OutQuad
+				oPos 0.3,targetX,targetY,oEase.OutQuad
+			}
+			CCHide!
+			CCCall -> @\emit "Hide"
+		}

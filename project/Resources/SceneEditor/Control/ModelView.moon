@@ -1,6 +1,9 @@
 Dorothy!
 Class,property = unpack require "class"
 SpriteViewView = require "View.Control.SpriteView"
+MessageBox = require "Control.MessageBox"
+-- [signals]
+-- "Selected",(viewItem)->
 -- [params]
 -- x, y, width, height, file
 Class
@@ -11,19 +14,23 @@ Class
 		@file = file
 
 		@\slots "Tapped",->
-			if @_loaded
-				@\emit "Selected",@
+			@\emit "Selected",@
+
+		@\slots "Cleanup",->
+			oCache.Texture\unload @_prevFile if @_prevFile
 
 		thread ->
 			@_loaded = false
 			oCache\loadAsync file,-> @_loaded = true
 			if not @_loaded
-				name = file\match "[\\/]([^\\/]*)%.[^%.\\/]*$"
-				@face\addChild with CCLabelTTF "[Model]\n"..name.."\n[Broken]","Arial",16
+				name = file\match "([^\\/]*)%.[^%.\\/]*$"
+				@face\addChild with CCLabelTTF "Broken\nModel\n"..name,"Arial",16
 					.position = oVec2 width/2,height/2
 					.texture.antiAlias = false
 					.color = ccColor3 0x00ffff
-				@routine = nil
+					\perform oOpacity 0.3,1
+				@face\removeChild @sprite
+				@sprite = nil
 				return
 			model = oModel file
 			minX = nil
@@ -49,6 +56,16 @@ Class
 					maxY = v.y if v.y > maxY
 			sizeW = maxX-minX
 			sizeH = maxY-minY
+			if sizeW == 0 and sizeH == 0
+				name = file\match "([^\\/]*)%.[^%.\\/]*$"
+				@face\addChild with CCLabelTTF "Empty\nModel\n"..name,"Arial",16
+					.position = oVec2 width/2,height/2
+					.texture.antiAlias = false
+					.color = ccColor3 0x00ffff
+					\perform oOpacity 0.3,1
+				@face\removeChild @sprite
+				@sprite = nil
+				return
 			scale = 1
 			if width < sizeW or height < sizeH
 				scale = math.min width/sizeW,height/sizeH
@@ -70,3 +87,5 @@ Class
 					thread ->
 						sleep 0.1
 						oCache.Texture\removeUnused!
+
+	isLoaded: property => @_loaded
