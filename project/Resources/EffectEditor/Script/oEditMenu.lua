@@ -35,11 +35,11 @@ local function oEditMenu()
 					oEditor:dumpData(oEditor.currentFile)
 				end
 			end
-			emit("settingPanel.cancel")
+			emit("Effect.settingPanel.cancel")
 		end),
 
 		Origin = oButton("Origin",16,50,50,winSize.width-240-45-60,winSize.height-35,function()
-			emit("viewArea.toOrigin",oEditor.origin)
+			emit("Effect.viewArea.toOrigin",oEditor.origin)
 		end),
 
 		Zoom = oButton("100%",16,50,50,winSize.width-240-45,winSize.height-35,function(button)
@@ -55,12 +55,12 @@ local function oEditMenu()
 			button.mode = button.mode + 1
 			button.mode = button.mode % 3
 			button.text = tostring(scale*100).."%"
-			emit("viewArea.toScale",scale)
+			emit("Effect.viewArea.toScale",scale)
 		end),
 
 		Play = oButton("Play",16,50,50,winSize.width-240-45,35,function()
-			emit("settingPanel.cancel")
-			emit("viewArea.play")
+			emit("Effect.settingPanel.cancel")
+			emit("Effect.viewArea.play")
 		end),
 
 		Set = oButton("Set",16,50,50,35,45+150,function()
@@ -78,7 +78,7 @@ local function oEditMenu()
 	end
 	menu.items = items
 
-	menu:gslot("editMenu.place",function(flag)
+	menu:gslot("Effect.editMenu.place",function(flag)
 		items.Play:stopAllActions()
 		if flag then
 			items.Play:runAction(oPos(0.5,winSize.width-240-45,105,oEase.OutBack))
@@ -86,7 +86,7 @@ local function oEditMenu()
 			items.Play:runAction(oPos(0.5,winSize.width-240-45,35,oEase.InBack))
 		end
 	end)
-	menu:gslot("oEditor.particle",function()
+	menu:gslot("Effect.editor.particle",function()
 		if items.Origin.visible then
 			items.Origin:stopAllActions()
 			items.Origin:runAction(CCSequence({CCDelay(0.3),oPos(0.3,winSize.width-240-45,winSize.height-35,oEase.OutQuad)}))
@@ -107,9 +107,9 @@ local function oEditMenu()
 			items.Set:runAction(CCSequence({oScale(0.3,0,0,oEase.InBack),CCHide()}))
 		end
 		
-		emit("viewArea.pos",oEditor.origin)
+		emit("Effect.viewArea.pos",oEditor.origin)
 	end)
-	menu:gslot("oEditor.frame",function()
+	menu:gslot("Effect.editor.frame",function()
 		if not items.Origin.visible then
 			if items.Zoom.visible then
 				items.Origin:stopAllActions()
@@ -144,9 +144,9 @@ local function oEditMenu()
 			items.Set:runAction(CCSequence({CCShow(),oScale(0,0,0),oScale(0.3,1,1,oEase.OutBack)}))
 		end
 
-		emit("viewArea.pos",oVec2(winSize.width*0.5,(winSize.height-150)*0.5+150))
+		emit("Effect.viewArea.pos",oVec2(winSize.width*0.5,(winSize.height-150)*0.5+150))
 	end)
-	menu:gslot("oEditor.change",function()
+	menu:gslot("Effect.editor.change",function()
 		if not oEditor.dirty then
 			oEditor.dirty = true
 			items.Edit.text = "Save"

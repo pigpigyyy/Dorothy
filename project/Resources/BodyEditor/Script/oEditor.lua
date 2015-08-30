@@ -47,11 +47,13 @@ end
 local worldScheduler = CCScheduler()
 worldScheduler.timeScale = 0
 oEditor.worldScheduler = worldScheduler
-CCDirector.scheduler:shedule(oEditor.worldScheduler)
 oEditor.world = oWorld()
 oEditor.world.scheduler = oEditor.worldScheduler
 oEditor.world.showDebug = true
 oEditor.world:setShouldContact(0,0,true)
+oEditor.world:slots("Entered",function()
+	CCDirector.scheduler:shedule(oEditor.worldScheduler)
+end)
 oEditor.world:slots("Exited",function()
 	CCDirector.scheduler:unshedule(oEditor.worldScheduler)
 end)
@@ -808,7 +810,7 @@ local defaultShapeData =
 
 local function setFunc(data,name,value)
 	data[oEditor[data[1]][name]] = value
-	emit("editor.change")
+	emit("Body.editor.change")
 end
 local function getFunc(data,name)
 	return data[oEditor[data[1]][name]]
@@ -837,12 +839,12 @@ for shapeName,shapeDefine in pairs(defaultShapeData) do
 			newData.get = getFunc
 			newData.has = hasFunc
 			if renameFunc then
-				newData.renameListener = oEditor:gslot("editor.rename",function(args)
+				newData.renameListener = oEditor:gslot("Body.editor.rename",function(args)
 					renameFunc(newData,args.oldName,args.newName)
 				end)
 			end
 			if resetFunc then
-				newData.resetListener = oEditor:gslot("editor.reset",function(args)
+				newData.resetListener = oEditor:gslot("Body.editor.reset",function(args)
 					resetFunc(newData,args)
 				end)
 			end
@@ -866,7 +868,7 @@ oEditor.addSubData = function(self,data,subData)
 		shape.has = hasFunc
 	end
 	oEditor:resetItem(data)
-	emit("editor.bodyData",self.bodyData)
+	emit("Body.editor.bodyData",self.bodyData)
 end
 
 oEditor.addData = function(self,data)
@@ -915,7 +917,7 @@ oEditor.addData = function(self,data)
 		end
 	end
 	oEditor:resetItem(data)
-	emit("editor.bodyData",bodyData)
+	emit("Body.editor.bodyData",bodyData)
 end
 oEditor.getData = function(self,name)
 	for _,data in ipairs(self.bodyData) do
@@ -957,7 +959,7 @@ oEditor.removeData = function(self,data)
 					oEditor.items[name] = nil
 				end
 			end
-			emit("editor.bodyData",self.bodyData)
+			emit("Body.editor.bodyData",self.bodyData)
 			break
 		end
 	end
@@ -974,7 +976,7 @@ oEditor.clearData = function(self)
 	self.bodyData = {}
 	oEditor.names = {}
 	oEditor:clearItems()
-	emit("editor.bodyData",self.bodyData)
+	emit("Body.editor.bodyData",self.bodyData)
 end
 
 oEditor.resetItem = function(self,data,resetFace)
@@ -1026,7 +1028,7 @@ oEditor.resetItem = function(self,data,resetFace)
 	local name = data:get("Name")
 	oEditor.items[name] = item
 	if item then item.dataItem = data end
-	emit("editor.reset",{name=name,type=(data.resetListener and "Joint" or "Body")})
+	emit("Body.editor.reset",{name=name,type=(data.resetListener and "Joint" or "Body")})
 	return item
 end
 oEditor.resetItems = function(self)
@@ -1065,7 +1067,7 @@ oEditor.rename = function(self,oldName,newName)
 	self.items[newName] = item
 	self.names[oldName] = nil
 	self.names[newName] = true
-	emit("editor.rename",{oldName=oldName,newName=newName})
+	emit("Body.editor.rename",{oldName=oldName,newName=newName})
 end
 oEditor.getItem = function(self,arg) -- arg: name or data
 	if type(arg) == "string" then
@@ -1181,19 +1183,19 @@ oEditor.loadData = function(self,filename)
 			end
 		end
 		if renameFunc then
-			data.renameListener = oEditor:gslot("editor.rename",function(args)
+			data.renameListener = oEditor:gslot("Body.editor.rename",function(args)
 				renameFunc(data,args.oldName,args.newName)
 			end)
 		end
 		if resetFunc then
-			data.resetListener = oEditor:gslot("editor.reset",function(args)
+			data.resetListener = oEditor:gslot("Body.editor.reset",function(args)
 				resetFunc(data,args)
 			end)
 		end
 		oEditor:checkName(data)
 	end
 	oEditor:resetItems()
-	emit("editor.bodyData",self.bodyData)
+	emit("Body.editor.bodyData",self.bodyData)
 	-- TODO
 end
 

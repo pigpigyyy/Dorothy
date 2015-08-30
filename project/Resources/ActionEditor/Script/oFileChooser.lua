@@ -27,6 +27,8 @@ local oSd = require("oEditor").oSd
 local ccBlendFunc = require("ccBlendFunc")
 local oBox = require("oBox")
 
+local models = nil
+
 local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 	local winSize = CCDirector.winSize
 	local itemWidth = 120
@@ -306,6 +308,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 			end
 		else
 			items = {}
+			models = {}
 			local function getResources(path)
 				local files = oContent:getEntries(oEditor.output..path,false)
 				for _,file in ipairs(files) do
@@ -321,6 +324,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 					elseif groupOnly or extension == "model" then
 						local name = file:match("([^\\/]*)%.[^%.\\/]*$")
 						items[name] = path..file
+						table.insert(models,path..file)
 					end
 				end
 				local folders = oContent:getEntries(oEditor.output..path,true)
@@ -359,11 +363,11 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 
 		for itemName,filename in pairs(items) do
 			n = n+1
-			y = yStart-35-math.floor((n-1)/itemNum)*60
+			y = yStart-10-math.floor((n-1)/itemNum)*60
 			local name = #itemName > 10 and itemName:sub(1,7).."..." or itemName
 			local button = oButton(name,17,
 			itemWidth,50,
-			xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
+			xStart+10+((n-1)%itemNum)*(itemWidth+10), y,
 			function(item)
 				local file = item.file
 				if file:sub(-5,-1) == ".clip" then
@@ -403,6 +407,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 				if backButton then backButton.visible = false end
 			end)
 			button.file = filename
+			button.anchor = oVec2(0,1)
 			button.enabled = false
 			button.opacity = 0
 			button:runAction(CCSequence(
@@ -417,24 +422,29 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 		end
 		if not clipOnly and not groupOnly then
 			n = n+1
-			y = yStart-35-math.floor((n-1)/itemNum)*60
+			y = yStart-10-math.floor((n-1)/itemNum)*60
 			local button = oButton("<NEW>",17,
 				itemWidth,50,
-				xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
+				xStart+10+((n-1)%itemNum)*(itemWidth+10), y,
 				function()
 					opMenu.enabled = false
 					panel:hide()
 					oBox("New Model",function(name)
 						if name == "" or name:match("[\\/|:*?<>\"%.]") then
 							oBox("Invalid Name")
-						elseif oContent:exist(oEditor.output..name..".model") then
-							oBox(name.." Exist")
 						else
+							for _,model in ipairs(models) do
+								if model:match("([^\\/]*)%.[^%.\\/]*$") == name then
+									oBox("Name Exist!")
+									return
+								end
+							end
 							oFileChooser(true,true,name)
 						end
 					end,true)
 				end)
 			button.color = ccColor3(0xffcc88)
+			button.anchor = oVec2(0,1)
 			button.enabled = false
 			button.opacity = 0
 			button:runAction(CCSequence(
@@ -450,16 +460,17 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 
 		if oEditor.standAlone and not clipOnly and not groupOnly then
 			n = n+1
-			y = yStart-35-math.floor((n-1)/itemNum)*60
+			y = yStart-10-math.floor((n-1)/itemNum)*60
 			local button = oButton("<GROUP>",17,
 				itemWidth,50,
-				xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
+				xStart+10+((n-1)%itemNum)*(itemWidth+10), y,
 				function()
 					opMenu.enabled = false
 					panel:hide()
 					oFileChooser(true,false,nil,true)
 				end)
 			button.color = ccColor3(0x88ff00)
+			button.anchor = oVec2(0,1)
 			button.enabled = false
 			button.opacity = 0
 			button:runAction(CCSequence(

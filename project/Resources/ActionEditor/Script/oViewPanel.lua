@@ -87,6 +87,20 @@ local function oViewPanel()
 	menu.anchor = oVec2(0,1)
 	menu.positionY = borderSize.height
 
+	local contentRect = CCRect.zero
+	local itemRect = CCRect.zero
+	local function moveItems(delta)
+		contentRect:set(0,0,borderSize.width,borderSize.height)
+		menu:eachChild(function(child)
+			child.position = child.position + delta
+			if child.enabled ~= nil then
+				local positionX, positionY, width, height = child.positionX, child.positionY, child.width, child.height
+				itemRect:set(positionX, positionY - height, width, height)
+				child.visible = contentRect:intersectsRect(itemRect)
+			end
+		end)
+	end
+
 	local function updateReset(deltaTime)
 		local xVal = nil
 		local yVal = nil
@@ -113,11 +127,9 @@ local function oViewPanel()
 			totalDelta.y = oEase:func(oEase.OutBack,t,startPos.y,moveY-startPos.y)
 			yVal = totalDelta.y - yVal
 		end
-		
-		menu:eachChild(function(child)
-			child.position = child.position + oVec2(xVal and xVal or 0, yVal and yVal or 0)
-		end)
-		
+
+		moveItems(oVec2(xVal and xVal or 0, yVal and yVal or 0))
+
 		if t == 1 then
 			panel:unschedule()
 			--panel.touchEnabled = true
@@ -162,9 +174,7 @@ local function oViewPanel()
 
 		totalDelta = totalDelta + delta
 
-		menu:eachChild(function(child)
-			child.position = child.position + delta
-		end)
+		moveItems(delta)
 	end
 
 	local function setOffset(deltaPos, touching)
@@ -222,9 +232,7 @@ local function oViewPanel()
 
 		totalDelta = totalDelta + deltaPos
 
-		menu:eachChild(function(child)
-			child.position = child.position + deltaPos
-		end)
+		moveItems(deltaPos)
 		
 		if not touching and (newPos.y < -padding*0.5 or newPos.y > moveY+padding*0.5 or newPos.x > padding*0.5 or newPos.x < moveX-padding*0.5) then
 			startReset()
@@ -343,7 +351,7 @@ local function oViewPanel()
 			end
 			menuItem:select(true)
 			oEditor.settingPanel:clearSelection()
-			emit("ImageSelected",{sp,sp[oSd.sprite],menuItem})
+			emit("Action.ImageSelected",{sp,sp[oSd.sprite],menuItem})
 			if #sp[oSd.children] > 0 then
 				if isFolding then
 					isFolding = false
@@ -393,7 +401,7 @@ local function oViewPanel()
 			if targetSp == sp then
 				item:select(true)
 				oEditor.settingPanel:clearSelection()
-				emit("ImageSelected",{sp,sprite,item})
+				emit("Action.ImageSelected",{sp,sprite,item})
 				setPos(oVec2(90-item.positionX,borderSize.height*0.5+30-item.positionY))
 			end
 		end
@@ -548,6 +556,7 @@ local function oViewPanel()
 		if viewWidth < borderSize.width then viewWidth = borderSize.width end
 		moveY = viewHeight-borderSize.height
 		moveX = borderSize.width-viewWidth
+		setPos(oVec2.zero)
 	end
 
 	local function oImageOutline(node, withFrame)
@@ -602,7 +611,7 @@ local function oViewPanel()
 
 	local selectedItem = nil
 	local outline = nil
-	panel:gslot("ImageSelected",
+	panel:gslot("Action.ImageSelected",
 		function(args)
 			if not args then
 				if selectedItem then
@@ -726,7 +735,7 @@ local function oViewPanel()
 	end
 
 	panel.clearSelection = function(self)
-		emit("ImageSelected",nil)
+		emit("Action.ImageSelected",nil)
 	end
 	panel.glow = function(self)
 		self:stopAllActions()

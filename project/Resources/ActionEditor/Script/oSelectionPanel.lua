@@ -20,8 +20,8 @@ local function oSelectionPanel(borderSize,noCliping)
 	local winSize = CCDirector.winSize
 	local halfBW = borderSize.width*0.5
 	local halfBH = borderSize.height*0.5
-	local viewWidth = 0
-	local viewHeight = 0
+	local viewWidth = borderSize.width
+	local viewHeight = borderSize.height
 	local moveY = 0
 	local moveX = 0
 	local totalDelta = oVec2.zero
@@ -74,6 +74,19 @@ local function oSelectionPanel(borderSize,noCliping)
 	menu.anchor = oVec2(0,1)
 	menu.position = oVec2(-winSize.width*0.5,winSize.height*0.5)
 
+	local xStart = winSize.width*0.5-halfBW -- left
+	local yStart = winSize.height*0.5-halfBH -- bottom
+	local contentRect = CCRect(oVec2(xStart,yStart),borderSize)
+	local itemRect = CCRect.zero
+	local function moveItems(delta)
+		menu:eachChild(function(child)
+			child.position = child.position + delta
+			local positionX, positionY, width, height = child.positionX, child.positionY, child.width, child.height
+			itemRect:set(positionX, positionY - height, width, height)
+			child.visible = contentRect:intersectsRect(itemRect)
+		end)
+	end
+
 	local function updateReset(deltaTime)
 		local xVal = nil
 		local yVal = nil
@@ -101,9 +114,7 @@ local function oSelectionPanel(borderSize,noCliping)
 			yVal = totalDelta.y - yVal
 		end
 
-		menu:eachChild(function(child)
-			child.position = child.position + oVec2(xVal and xVal or 0, yVal and yVal or 0)
-		end)
+		moveItems(oVec2(xVal and xVal or 0, yVal and yVal or 0))
 
 		if t == 1.0 then
 			panel:unschedule()
@@ -178,9 +189,7 @@ local function oSelectionPanel(borderSize,noCliping)
 
 		totalDelta = totalDelta + deltaPos
 
-		menu:eachChild(function(child)
-			child.position = child.position + deltaPos
-		end)
+		moveItems(deltaPos)
 
 		if not touching and (newPos.y < -paddingY*0.5 or newPos.y > moveY+paddingY*0.5 or newPos.x > paddingX*0.5 or newPos.x < moveX-paddingX*0.5) then
 			startReset()

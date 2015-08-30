@@ -51,7 +51,7 @@ local function oEditControl()
 		fixX = not fixX
 		button.color = fixX and ccColor3(0xff0080) or ccColor3(0x00ffff)
 		oEditor.fixX = fixX
-		emit("oEditor.fix",{fixX=fixX,fixY=fixY})
+		emit("Body.editor.fix",{fixX=fixX,fixY=fixY})
 	end)
 	fixMenu:addChild(fixXButton)
 	fixYButton = oButton("",0,50,50,winSize.width-345,winSize.height-35,function(button)
@@ -63,7 +63,7 @@ local function oEditControl()
 		fixY = not fixY
 		button.color = fixY and ccColor3(0xff0080) or ccColor3(0x00ffff)
 		oEditor.fixY = fixY
-		emit("oEditor.fix",{fixX=fixX,fixY=fixY})
+		emit("Body.editor.fix",{fixX=fixX,fixY=fixY})
 	end)
 	fixMenu:addChild(fixYButton)
 	local function createArrowForButton(button,angle)
@@ -116,7 +116,7 @@ local function oEditControl()
 		fixYButton:runAction(oScale(0.5,1,1,oEase.OutBack))
 		fixMenu.visible = true
 		fixMenu.touchEnabled = true
-		emit("oEditor.fix",{fixX=false,fixY=false})
+		emit("Body.editor.fix",{fixX=false,fixY=false})
 	end
 	editControl.hideFixButtons = function(self)
 		if not fixMenu.visible then return end
@@ -252,7 +252,7 @@ local function oEditControl()
 	},ccColor4()))
 	posVisual.transformTarget = oEditor.world
 	posEditor:addChild(posVisual)
-	posVisual:gslot("oEditor.fix",function(args)
+	posVisual:gslot("Body.editor.fix",function(args)
 		posVisual:getChildByIndex(1).visible = not args.fixY
 		posVisual:getChildByIndex(2).visible = not args.fixX
 	end)
@@ -405,7 +405,7 @@ local function oEditControl()
 	},ccColor4()))
 	sizeVisual.transformTarget = worldNode
 	sizeEditor:addChild(sizeVisual)
-	sizeVisual:gslot("oEditor.fix",function(args)
+	sizeVisual:gslot("Body.editor.fix",function(args)
 		sizeVisual:getChildByIndex(1).visible = not args.fixY
 		sizeVisual:getChildByIndex(2).visible = not args.fixX
 	end)
@@ -498,7 +498,7 @@ local function oEditControl()
 	centerEditor:addChild(centerVisual)
 	centerEditor.scaleX = 0.5
 	centerEditor.scaleY = 0.5
-	centerVisual:gslot("oEditor.fix",function(args)
+	centerVisual:gslot("Body.editor.fix",function(args)
 		centerVisual:getChildByIndex(1).visible = not args.fixY
 		centerVisual:getChildByIndex(2).visible = not args.fixX
 	end)
@@ -755,7 +755,7 @@ local function oEditControl()
 	-- init joint chooser --
 	local jointSelected = nil
 	local jointChooser = CCNode()
-	jointChooser:gslot("editControl.joint",function(joint)
+	jointChooser:gslot("Body.editControl.joint",function(joint)
 		if jointSelected then
 			jointSelected(joint)
 		end
@@ -766,13 +766,13 @@ local function oEditControl()
 		editControl:hide()
 		jointChooser.visible = true
 		jointSelected = callback
-		emit("viewPanel.selectJoint",gearName)
+		emit("Body.viewPanel.selectJoint",gearName)
 	end
 	editControl.hideJointChooser = function(self)
 		if not jointChooser.visible then return end
 		jointChooser.visible = false
 		jointSelected = nil
-		emit("viewPanel.selectJoint",nil)
+		emit("Body.viewPanel.selectJoint",nil)
 	end
 
 	-- hide all controls
@@ -792,12 +792,12 @@ local function oEditControl()
 		editControl:hideJointChooser()
 	end
 
-	editControl:gslot("editControl.hide",function()
+	editControl:gslot("Body.editControl.hide",function()
 		editControl:hide()
 	end)
 	local currentSetting = nil
 	local n2str = function(num) return string.format("%.2f",num) end
-	editControl:gslot("settingPanel.edit",function(item)
+	editControl:gslot("Body.settingPanel.edit",function(item)
 		if not item then return end
 		local name = item.name
 		local value = item.value
@@ -819,7 +819,7 @@ local function oEditControl()
 						data:set("Type",bodyType)
 						oEditor:resetItem(data)
 					end
-					emit("settingPanel.edit",nil)
+					emit("Body.settingPanel.edit",nil)
 				end)
 			elseif name == "Position" then
 				editControl:showPosEditor(data:get("Position"),function(pos)
@@ -827,7 +827,7 @@ local function oEditControl()
 					local body = oEditor:getItem(data)
 					if body then
 						body.position = pos
-						emit("editor.reset",{name=data:get("Name"),type="Body"})
+						emit("Body.editor.reset",{name=data:get("Name"),type="Body"})
 					end
 					data:set("Position",pos)
 				end)
@@ -844,7 +844,7 @@ local function oEditControl()
 						local body = oEditor:getItem(data)
 						if body then
 							body.angle = rot
-							emit("editor.reset",{name=data:get("Name"),type="Body"})
+							emit("Body.editor.reset",{name=data:get("Name"),type="Body"})
 						end
 					end
 				end)
@@ -941,8 +941,8 @@ local function oEditControl()
 						data:set(name,bodyName)
 						oEditor:resetItem(data)
 						editControl:hideBodyChooser()
-						emit("viewArea.moveToData",body)
-						emit("settingPanel.edit",nil)
+						emit("Body.viewArea.moveToData",body)
+						emit("Body.settingPanel.edit",nil)
 					end
 				end)
 			elseif name == "JointA" or name == "JointB" then
@@ -964,7 +964,7 @@ local function oEditControl()
 					data:set(name,jointName)
 					oEditor:resetItem(data)
 					editControl:hideJointChooser()
-					emit("settingPanel.edit",nil)
+					emit("Body.settingPanel.edit",nil)
 				end)
 			elseif name == "WorldPos" or name == "GroundA" or name == "GroundB" then
 				editControl:showPointControl(data:get(name),function(pos)
@@ -999,12 +999,12 @@ local function oEditControl()
 					item.value = filename
 					data:set("Face",filename)
 					oEditor:resetItem(data,true)
-					emit("settingPanel.edit",nil)
+					emit("Body.settingPanel.edit",nil)
 				end
 				local ended = spriteChooser.ended
 				spriteChooser.ended = function(self)
 					ended(self)
-					emit("settingPanel.edit",nil)
+					emit("Body.settingPanel.edit",nil)
 				end
 			elseif name == "FacePos" then
 				local target = oEditor:getItem(data)
@@ -1019,8 +1019,7 @@ local function oEditControl()
 			elseif name == "G" then
 				editControl:showEditRuler(CCUserDefault.G,-100,0,10,function(val)
 					item.value = n2str(val)
-					CCUserDefault.G = val
-					oEditor.world.gravity = oVec2(0,val)
+					item.G = val
 				end)
 			end
 		else
@@ -1056,6 +1055,9 @@ local function oEditControl()
 					or name == "LowerAngle"
 					or name == "UpperAngle" then
 					oEditor:resetItem(data)
+				elseif name == "G" then
+					CCUserDefault.G = item.G
+					oEditor.world.gravity = oVec2(0,item.G)
 				end
 				editControl:hide()
 			end

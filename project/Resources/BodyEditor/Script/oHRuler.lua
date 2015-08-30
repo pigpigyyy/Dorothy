@@ -14,6 +14,8 @@ local CCSequence = require("CCSequence")
 local CCCall = require("CCCall")
 local once = require("once")
 local oEditor = require("oEditor")
+local oRoutine = require("oRoutine")
+local cycle = require("cycle")
 
 local function oHRuler()
 	local winSize = CCDirector.winSize
@@ -58,72 +60,94 @@ local function oHRuler()
 	end
 
 	-- worker thread for intervals creation --
-	self:schedule(once(function()
-		repeat
-			if nCurrentPart < nPart or pCurrentPart < pPart then
-				local start = math.floor(nPart/10)
-				local count = math.floor(nCurrentPart/10)
-				local length = #vs
-				if start > count then
-					for i = count,start do
-						if i ~= 0 then
-							local posX = -i*10
-							table.insert(vs,1,oVec2(posX,halfH))
-							table.insert(vs,1,oVec2(posX,halfH - (i%10 == 0 and 8 or 4)))
-							table.insert(vs,1,oVec2(posX,halfH))
+	self:slots("Entered",function()
+		self:schedule(once(function()
+			repeat
+				if nCurrentPart < nPart or pCurrentPart < pPart then
+					local start = math.floor(nPart/10)
+					local count = math.floor(nCurrentPart/10)
+					local length = #vs
+					if start > count then
+						for i = count,start do
+							if i ~= 0 then
+								local posX = -i*10
+								table.insert(vs,1,oVec2(posX,halfH))
+								table.insert(vs,1,oVec2(posX,halfH - (i%10 == 0 and 8 or 4)))
+								table.insert(vs,1,oVec2(posX,halfH))
+								if i%10 == 0 then
+									local label = CCLabelTTF(tostring(-i*10),"Arial",10)
+									label.texture.antiAlias = false
+									label.scaleX = 1/self.scaleX
+									label.position = oVec2(posX,halfH - 18)
+									intervalNode:addChild(label)
+									coroutine.yield()
+								end
+							end
+							nCurrentPart = nCurrentPart + 10
+						end
+					end
+					start = math.floor(pCurrentPart/10)
+					count = math.floor(pPart/10)
+					if start < count then
+						for i = start,count do
+							local posX = i*10
+							table.insert(vs,oVec2(posX,halfH))
+							table.insert(vs,oVec2(posX,halfH - (i%10 == 0 and 8 or 4)))
+							table.insert(vs,oVec2(posX,halfH))
 							if i%10 == 0 then
-								local label = CCLabelTTF(tostring(-i*10),"Arial",10)
+								local label = CCLabelTTF(tostring(i*10),"Arial",10)
 								label.texture.antiAlias = false
 								label.scaleX = 1/self.scaleX
 								label.position = oVec2(posX,halfH - 18)
 								intervalNode:addChild(label)
 								coroutine.yield()
 							end
+							pCurrentPart = pCurrentPart + 10
 						end
-						nCurrentPart = nCurrentPart + 10
+					end
+					if #vs ~= length then
+						intervalNode:set(vs)
 					end
 				end
-				start = math.floor(pCurrentPart/10)
-				count = math.floor(pPart/10)
-				if start < count then
-					for i = start,count do
-						local posX = i*10
-						table.insert(vs,oVec2(posX,halfH))
-						table.insert(vs,oVec2(posX,halfH - (i%10 == 0 and 8 or 4)))
-						table.insert(vs,oVec2(posX,halfH))
-						if i%10 == 0 then
-							local label = CCLabelTTF(tostring(i*10),"Arial",10)
-							label.texture.antiAlias = false
-							label.scaleX = 1/self.scaleX
-							label.position = oVec2(posX,halfH - 18)
-							intervalNode:addChild(label)
-							coroutine.yield()
-						end
-						pCurrentPart = pCurrentPart + 10
-					end
-				end
-				if #vs ~= length then
-					intervalNode:set(vs)
-				end
-			end
-			coroutine.yield()
-		until false
-	end))
+				coroutine.yield()
+			until false
+		end))
+	end)
 
 	-- set default interval negtive & positive part length --
 	updatePart(origin.x,winSize.width-origin.x)
 	intervalNode.position = oVec2(origin.x,halfH)
 	self:addChild(intervalNode)
 
+	local function updateVisible()
+		local posX = intervalNode.positionX
+		intervalNode:eachChild(function(child)
+			local loc = posX+child.positionX
+			local visible = true
+			if loc < 0 then
+				visible = loc+child.width/2 > 0
+			elseif loc > rulerWidth then
+				visible = loc-child.width/2 < rulerWidth
+			end
+			child.visible = visible
+		end)
+	end
+
 	-- listen view move event --
-	intervalNode:gslot("viewArea.move",function(delta)
+	intervalNode:gslot("Body.viewArea.move",function(delta)
 		intervalNode.positionX = intervalNode.positionX + delta.x/self.scaleX
+		updateVisible()
 		updatePart(delta.x > 0 and intervalNode.positionX or 0,
 			delta.x < 0 and winSize.width-intervalNode.positionX or 0)
 	end)
-	intervalNode:gslot("viewArea.toPos",function(pos)
+	intervalNode:gslot("Body.viewArea.toPos",function(pos)
 		pos = pos+center
 		intervalNode:runAction(oPos(0.5,pos.x,halfH,oEase.OutQuad))
+		oRoutine(once(function()
+			cycle(0.5,function()
+				updateVisible()
+			end)
+		end))
 		updatePart(pos.x,winSize.width-pos.x)
 	end)
 
@@ -138,7 +162,7 @@ local function oHRuler()
 		updateIntervalTextScale(1)
 	end)})
 	local fadeIn = oOpacity(0.3,0.3)
-	self:gslot("viewArea.scale",function(scale)
+	self:gslot("Body.viewArea.scale",function(scale)
 		if scale < 1.0 and self.opacity > 0 and fadeOut.done then
 			self.touchEnabled = false
 			self:stopAllActions()
@@ -154,7 +178,7 @@ local function oHRuler()
 			updateIntervalTextScale(1/scale)
 		end
 	end)
-	self:gslot("viewArea.toScale",function(scale)
+	self:gslot("Body.viewArea.toScale",function(scale)
 		if scale < 1.0 and self.opacity > 0 and fadeOut.done then
 			self.touchEnabled = false
 			self:stopAllActions()

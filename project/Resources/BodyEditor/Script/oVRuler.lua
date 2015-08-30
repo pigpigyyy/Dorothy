@@ -14,6 +14,8 @@ local CCSequence = require("CCSequence")
 local CCCall = require("CCCall")
 local once = require("once")
 local oEditor = require("oEditor")
+local oRoutine = require("oRoutine")
+local cycle = require("cycle")
 
 local function oVRuler()
 	local winSize = CCDirector.winSize
@@ -116,15 +118,35 @@ local function oVRuler()
 	intervalNode.position = oVec2(halfW,origin.y)
 	self:addChild(intervalNode)
 
+	local function updateVisible()
+		local posY = intervalNode.positionY
+		intervalNode:eachChild(function(child)
+			local loc = posY+child.positionY
+			local visible = true
+			if loc < 0 then
+				visible = loc+child.height/2 > 0
+			elseif loc > rulerHeight then
+				visible = loc-child.height/2 < rulerHeight
+			end
+			child.visible = visible
+		end)
+	end
+
 	-- listen view move event --
-	intervalNode:gslot("viewArea.move",function(delta)
+	intervalNode:gslot("Body.viewArea.move",function(delta)
 		intervalNode.positionY = intervalNode.positionY + delta.y/self.scaleY
+		updateVisible()
 		updatePart(delta.y < 0 and winSize.height-intervalNode.positionY or 0,
 			delta.y > 0 and intervalNode.positionY or 0)
 	end)
-	intervalNode:gslot("viewArea.toPos",function(pos)
+	intervalNode:gslot("Body.viewArea.toPos",function(pos)
 		pos = pos + center
 		intervalNode:runAction(oPos(0.5,halfW,pos.y,oEase.OutQuad))
+		oRoutine(once(function()
+			cycle(0.5,function()
+				updateVisible()
+			end)
+		end))
 		updatePart(winSize.height-pos.y,pos.y)
 	end)
 
@@ -139,7 +161,7 @@ local function oVRuler()
 		updateIntervalTextScale(1)
 	end)})
 	local fadeIn = oOpacity(0.3,0.3)
-	self:gslot("viewArea.scale",function(scale)
+	self:gslot("Body.viewArea.scale",function(scale)
 		if scale < 1.0 and self.opacity > 0 and fadeOut.done then
 			self.touchEnabled = false
 			self:stopAllActions()
@@ -155,7 +177,7 @@ local function oVRuler()
 			updateIntervalTextScale(1/scale)
 		end
 	end)
-	self:gslot("viewArea.toScale",function(scale)
+	self:gslot("Body.viewArea.toScale",function(scale)
 		if scale < 1.0 and self.opacity > 0 and fadeOut.done then
 			self.touchEnabled = false
 			self:stopAllActions()

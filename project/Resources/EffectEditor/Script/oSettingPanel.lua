@@ -114,7 +114,7 @@ local function oSettingPanel()
 			currentItem.selected = false
 		end
 		currentItem = settingItem.selected and settingItem or nil
-		emit("settingPanel.edit",settingItem)
+		emit("Effect.settingPanel.edit",settingItem)
 	end
 	local items = {}
 	local getPosY = genPosY()
@@ -127,16 +127,28 @@ local function oSettingPanel()
 	items.textureRect.enabled = false
 	items.file.enabled = false
 
+	local handlers = {}
 	local function listen(itemName,name,getter)
 		if not getter and type(name) == "function" then
 			getter = name
 			name = itemName
 		end
-		local item = items[itemName]
-		item:gslot(name,function(var)
-			item.value = getter and getter(var) or var
-		end)
+		handlers[name] = function(val)
+			local item = items[itemName]
+			item.value = getter and getter(val[2]) or val[2]
+		end
 	end
+
+	self:gslot("Effect.attr",function(val)
+		if not handlers[val[1]] then
+			local item = items[val[1]]
+			if item then
+				item.value = val[2]
+			end
+		else
+			handlers[val[1]](val)
+		end
+	end)
 
 	local finishColorA = 0
 	local finishColorR = 0
@@ -329,6 +341,7 @@ local function oSettingPanel()
 		if group == currentGroup then return end
 		for _,item in pairs(items) do
 			item.visible = false
+			item.positionX = -itemWidth
 		end
 		if group == nil then
 			label.visible = false
@@ -339,14 +352,17 @@ local function oSettingPanel()
 		local contentHeight = 40
 		local getPosY = genPosY()
 		for _,item in pairs(group) do
+			item.positionX = 0
 			item.positionY = getPosY()
 			item.visible = true
 			contentHeight = contentHeight + itemHeight
 		end
+		self:setPos(oVec2.zero)
 		if group == modeFrame then
 			label.text = "Frame"
 			label.texture.antiAlias = false
 			if not currentGroup then
+				background:clear()
 				background:drawPolygon(
 				{
 					oVec2(-halfBW,halfBH-150),
@@ -372,7 +388,8 @@ local function oSettingPanel()
 					self:runAction(oPos(0.3,framePos.x,framePos.y,oEase.OutQuad))
 				end))
 			end
-			emit("oEditor.frame")
+			self:reset(borderSize.width,contentHeight,0,0)
+			emit("Effect.editor.frame")
 		else
 			label.text = "Particle"
 			label.texture.antiAlias = false
@@ -402,10 +419,10 @@ local function oSettingPanel()
 					self:runAction(oPos(0.3,particlePos.x,particlePos.y,oEase.OutQuad))
 				end))
 			end
-			emit("oEditor.particle")
+			self:reset(borderSize.width,contentHeight,0,50)
+			emit("Effect.editor.particle")
 		end
 		currentGroup = group
-		self:reset(borderSize.width,contentHeight,0,50)
 	end
 
 	listen("emitterType",function(var)
@@ -423,24 +440,16 @@ local function oSettingPanel()
 		return var
 	end)
 
-	for itemName,item in pairs(items) do
-		if not item.data then
-			item:gslot(itemName,function(value)
-				item.value = value
-			end)
-		end
-	end
-
-	self:gslot("settingPanel.cancel",function()
+	self:gslot("Effect.settingPanel.cancel",function()
 		if currentItem then
 			currentItem.selected = false
 		end
 	end)
-	self:gslot("settingPanel.hide",function()
+	self:gslot("Effect.settingPanel.hide",function()
 		setGroup(nil)
-		emit("settingPanel.cancel")
+		emit("Effect.settingPanel.cancel")
 	end)
-	self:gslot("settingPanel.moveToMode",function()
+	self:gslot("Effect.settingPanel.moveToMode",function()
 		self:setPos(oVec2(0,borderSize.height*0.5+30-items.emitterType.positionY))
 	end)
 

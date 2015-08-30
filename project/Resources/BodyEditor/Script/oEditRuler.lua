@@ -71,7 +71,7 @@ local function oEditRuler()
 	local indent = 100
 	local labels = {}
 	ruler.labels = labels
-	content:schedule(once(function()
+	ruler.routine = once(function()
 		repeat
 			if up < top or down < bottom then
 				if up < top then
@@ -89,6 +89,15 @@ local function oEditRuler()
 							label.position = oVec2(-halfW+28,posY)
 							intervalNode:addChild(label)
 							labels[i/10] = label
+							local origin = ruler:getPos()
+							local halfH = label.height*0.5
+							local distance
+							if posY > origin then
+								distance = posY-halfH-origin
+							else
+								distance = origin-posY-halfH
+							end
+							label.visible = distance < height/2
 							coroutine.yield()
 						end
 					end
@@ -109,6 +118,15 @@ local function oEditRuler()
 							label.position = oVec2(-halfW+28,posY)
 							intervalNode:addChild(label)
 							labels[-i/10] = label
+							local origin = ruler:getPos()
+							local halfH = label.height*0.5
+							local distance
+							if posY > origin then
+								distance = posY-halfH-origin
+							else
+								distance = origin-posY-halfH
+							end
+							label.visible = distance < height/2
 							coroutine.yield()
 						end
 					end
@@ -119,7 +137,7 @@ local function oEditRuler()
 			end
 			coroutine.yield()
 		until false
-	end))
+	end)
 	content:addChild(intervalNode)
 	
 	local arrow = CCNode()
@@ -133,7 +151,7 @@ local function oEditRuler()
 			child.scaleX = scale
 		end)
 	end
-	ruler:gslot("viewArea.scale",function(scale)
+	ruler:gslot("Body.viewArea.scale",function(scale)
 		if scale > 5 then scale = 5 end
 		intervalNode.scaleY = scale
 		-- unscale interval text --
@@ -147,7 +165,7 @@ local function oEditRuler()
 			if bottom < newBottom then bottom = newBottom end
 		end
 	end)
-	ruler:gslot("viewArea.toScale",function(scale)
+	ruler:gslot("Body.viewArea.toScale",function(scale)
 		intervalNode:runAction(oScale(0.5,1,scale,oEase.OutQuad))
 		-- manually update and unscale interval text --
 		local time = 0
@@ -191,6 +209,17 @@ local function oEditRuler()
 		end
 		local posY = (v*10*interval/indent)
 		intervalNode.anchor = oVec2(0,posY/height)
+		intervalNode:eachChild(function(child)
+			local halfH = child.height*0.5
+			local y = child.positionY
+			local distance
+			if y > posY then
+				distance = y-halfH-posY
+			else
+				distance = posY-y-halfH
+			end
+			child.visible = distance < height/2
+		end)
 		local scale = intervalNode.scaleY
 		if posY >= 0 then
 			local newTop = math.ceil((posY+halfH/scale)/interval)
@@ -202,6 +231,9 @@ local function oEditRuler()
 	end
 	ruler.getValue = function(self)
 		return _value--intervalNode.anchor.y*height*indent/(10*interval)
+	end
+	ruler.getPos = function(self)
+		return _value*10*interval/indent
 	end
 
 	ruler.setLimit = function(self,min,max)
@@ -328,6 +360,7 @@ local function oEditRuler()
 		self:stopAllActions()
 		self:runAction(CCSpawn({oScale(0.5,1,1,oEase.OutBack),oOpacity(0.5,0.8)}))
 		self.touchEnabled = true
+		content:schedule(self.routine)
 	end
 	ruler.hide = function(self)
 		if not ruler.visible then return end
@@ -345,6 +378,7 @@ local function oEditRuler()
 				ruler.visible = false
 			end),
 		}))
+		content:unschedule()
 	end
 	return ruler
 end

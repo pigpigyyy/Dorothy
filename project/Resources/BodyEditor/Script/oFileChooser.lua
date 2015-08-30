@@ -39,14 +39,14 @@ local function oFileChooser()
 	border:addChild(background,-1)
 
 	local function resetEditor()
-		emit("viewArea.create",nil)
-		emit("editMenu.created")
-		emit("editMenu.reset")
-		emit("editControl.hide")
-		emit("settingPanel.toState",nil)
-		emit("settingPanel.enable",true)
-		emit("viewPanel.choose",nil)
-		emit("editor.isPlaying",false)
+		emit("Body.viewArea.create",nil)
+		emit("Body.editMenu.created")
+		emit("Body.editMenu.reset")
+		emit("Body.editControl.hide")
+		emit("Body.settingPanel.toState",nil)
+		emit("Body.settingPanel.enable",true)
+		emit("Body.viewPanel.choose",nil)
+		emit("Body.editor.isPlaying",false)
 	end
 
 	local entries = oContent:getEntries(oEditor.output,false)
@@ -91,13 +91,13 @@ local function oFileChooser()
 
 	for i = 1,#files do
 		n = n+1
-		y = yStart-35-math.floor((n-1)/itemNum)*60
+		y = yStart-10-math.floor((n-1)/itemNum)*60
 		local name = #files[i] > 10 and files[i]:sub(1,7).."..." or files[i]
 		local button = oButton(
 			name,
 			17,
 			itemWidth,50,
-			xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
+			xStart+10+((n-1)%itemNum)*(itemWidth+10), y,
 			function(item)
 				resetEditor()
 				oEditor.currentFile = item.file
@@ -109,6 +109,7 @@ local function oFileChooser()
 			end)
 		button.file = files[i]..".body"
 		--button.color = ccColor3(0xffffff)
+		button.anchor = oVec2(0,1)
 		button.enabled = false
 		button.opacity = 0
 		button:runAction(
@@ -124,12 +125,12 @@ local function oFileChooser()
 		menu:addChild(button)
 	end
 	n = n+1
-	y = yStart-35-math.floor((n-1)/itemNum)*60
+	y = yStart-10-math.floor((n-1)/itemNum)*60
 	local newButton = oButton(
 		"<NEW>",
 		17,
 		itemWidth,50,
-		xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
+		xStart+10+((n-1)%itemNum)*(itemWidth+10), y,
 		function()
 			panel.ended = function()
 				panel.parent:removeChild(panel)
@@ -147,6 +148,7 @@ local function oFileChooser()
 			end,true),oEditor.topMost)
 		end)
 	newButton.color = ccColor3(0x80ff00)
+	newButton.anchor = oVec2(0,1)
 	newButton.enabled = false
 	newButton.opacity = 0
 	newButton:runAction(
@@ -163,12 +165,12 @@ local function oFileChooser()
 
 	if oEditor.currentFile then
 		n = n+1
-		y = yStart-35-math.floor((n-1)/itemNum)*60
+		y = yStart-10-math.floor((n-1)/itemNum)*60
 		local delButton = oButton(
 			"<DEL>",
 			17,
 			itemWidth,50,
-			xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
+			xStart+10+((n-1)%itemNum)*(itemWidth+10), y,
 			function()
 				panel.ended = function()
 					panel.parent:removeChild(panel)
@@ -183,6 +185,7 @@ local function oFileChooser()
 				end),oEditor.topMost)
 			end)
 		delButton.color = ccColor3(0xff0080)
+		delButton.anchor = oVec2(0,1)
 		delButton.enabled = false
 		delButton.opacity = 0
 		delButton:runAction(
@@ -198,7 +201,7 @@ local function oFileChooser()
 		menu:addChild(delButton)
 	end
 
-	local yTo = winSize.height*0.5+halfBH-y+35
+	local yTo = winSize.height*0.5+halfBH-y-35
 	local viewHeight = yTo < borderSize.height and borderSize.height or yTo
 	local viewWidth = borderSize.width
 	local paddingX = 0

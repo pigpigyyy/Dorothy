@@ -327,6 +327,13 @@ local function oTemplateChooser(filename)
 	title:runAction(oOpacity(0.3,0.5))
 	yStart = y-title.contentSize.height-10
 
+	local pair = {true,true}
+	local function updateAttr(name,value)
+		pair[1] = name
+		pair[2] = value
+		emit("Effect.attr",pair)
+	end
+
 	local templateNames = {}
 	for k,_ in pairs(templates) do
 		table.insert(templateNames,k)
@@ -382,12 +389,12 @@ local function oTemplateChooser(filename)
 				parData.textureRectw = 0
 				parData.textureRecth = 0
 				for k,v in pairs(parData) do
-					emit(k,v)
+					updateAttr(k,v)
 				end
-				emit("name",name)
-				emit("file",filename)
+				updateAttr("name",name)
+				updateAttr("file",filename)
 				oCache.Effect:load(oEditor.output.."main.effect")
-				emit("viewArea.changeEffect",name)
+				emit("Effect.viewArea.changeEffect",name)
 			end)
 		button.template = name
 		button.enabled = false

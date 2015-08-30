@@ -59,7 +59,7 @@ local function oViewArea()
 	crossNode:addChild(cross)
 
 	-- listen reset events --
-	crossNode:gslot("viewArea.toScale",function(scale)
+	crossNode:gslot("Body.viewArea.toScale",function(scale)
 		oEditor.scale = scale
 		view.touchEnabled = false
 		scaleNode:runAction(CCSequence(
@@ -72,7 +72,7 @@ local function oViewArea()
 			end),
 		}))
 	end)
-	crossNode:gslot("viewArea.toPos",function(pos)
+	crossNode:gslot("Body.viewArea.toPos",function(pos)
 		view.touchEnabled = false
 		crossNode:runAction(CCSequence(
 		{
@@ -84,17 +84,17 @@ local function oViewArea()
 			end),
 		}))
 	end)
-	crossNode:gslot("viewArea.move",function(delta)
+	crossNode:gslot("Body.viewArea.move",function(delta)
 		crossNode.position = crossNode.position + delta/scaleNode.scaleX
 	end)
 
 	local shapeToCreate = nil
-	crossNode:gslot("viewArea.create",function(name)
+	crossNode:gslot("Body.viewArea.create",function(name)
 		shapeToCreate = name
 	end)
 
 	local function createShape(name,pos)
-		emit("editControl.hide")
+		emit("Body.editControl.hide")
 		local data
 		if oEditor.currentData and not oEditor.currentData.parent and not oEditor.currentData.resetListener then
 			data = oEditor["newSub"..name](oEditor)
@@ -119,9 +119,9 @@ local function oViewArea()
 			data:set("Position",pos)
 			oEditor:addData(data)
 		end
-		emit("viewPanel.choose",data)
-		emit("editMenu.created")
-		emit("editor.change")
+		emit("Body.viewPanel.choose",data)
+		emit("Body.editMenu.created")
+		emit("Body.editor.change")
 	end
 	
 	-- init world node --
@@ -148,7 +148,7 @@ local function oViewArea()
 			local delta = touches[1].delta
 			if delta ~= oVec2.zero then
 				pick = false
-				emit("viewArea.move",touches[1].delta)
+				emit("Body.viewArea.move",touches[1].delta)
 			end
 		elseif #touches >= 2 then -- scale view
 			local preDistance = touches[1].preLocation:distance(touches[2].preLocation)
@@ -162,7 +162,7 @@ local function oViewArea()
 			scaleNode.scaleY = scale
 			oEditor.scale = scale
 			pick = false
-			emit("viewArea.scale",scale)
+			emit("Body.viewArea.scale",scale)
 		end
 	end)
 
@@ -171,7 +171,7 @@ local function oViewArea()
 			local pos = oEditor.world:convertToNodeSpace(touches[1].location)
 			oEditor.world:query(CCRect(pos.x-0.5,pos.y-0.5,1,1),function(body)
 					local data = body.dataItem
-					emit("viewPanel.choose",data)
+					emit("Body.viewPanel.choose",data)
 				return true
 			end)
 		end

@@ -101,8 +101,8 @@ local function oClipChooser(clipName)
 			end
 			oEditor.effectData = panel.frameData
 			oEditor:dumpData(oEditor.currentFile)
-			emit("viewArea.changeEffect",oEditor.currentName)
-			emit("oFrameViewer.data",oEditor.effectData)
+			emit("Effect.viewArea.changeEffect",oEditor.currentName)
+			emit("Effect.frameViewer.data",oEditor.effectData)
 			panel:hide()
 		end)
 		setButton.anchor = oVec2.zero

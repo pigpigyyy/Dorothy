@@ -47,19 +47,19 @@ local function oEditMenu()
 			function(self,value)
 				self._selected = value
 				if value then
-					emit("editControl.hide")
-					emit("settingPanel.toState",nil)
+					emit("Body.editControl.hide")
+					emit("Body.settingPanel.toState",nil)
 					self.color = ccColor3(0xff0080)
 					if lastSelected then
 						lastSelected.selected = false
 					end
 					lastSelected = self
-					emit("viewArea.create",self._name)
-					emit("viewPanel.choose",nil)
+					emit("Body.viewArea.create",self._name)
+					emit("Body.viewPanel.choose",nil)
 				else
 					self.color = ccColor3(0x00ffff)
 					if lastSelected == self then
-						emit("viewArea.create",nil)
+						emit("Body.viewArea.create",nil)
 					end
 					lastSelected = nil
 				end
@@ -98,12 +98,12 @@ local function oEditMenu()
 		Loop = oShapeButton("Loop",35,winSize.height-335),
 		Delete = oButton("Delete",16,50,50,35,winSize.height-395,function()
 			if oEditor.currentData then
-				emit("settingPanel.toState",nil)
+				emit("Body.settingPanel.toState",nil)
 				oEditor:removeData(oEditor.currentData)
 				if not oEditor.currentData.parent and not oEditor.currentData.resetListener then
 					oEditor:rename(oEditor.currentData:get("Name"),"")
 					oEditor.currentData = nil
-					emit("editor.change")
+					emit("Body.editor.change")
 				end
 			end
 		end),
@@ -112,7 +112,7 @@ local function oEditMenu()
 		end),
 
 		Origin = oButton("Origin",16,50,50,winSize.width-285,winSize.height-35,function()
-			emit("viewArea.toPos",oEditor.origin)
+			emit("Body.viewArea.toPos",oEditor.origin)
 		end),
 
 		Zoom = oButton("100%",16,50,50,winSize.width-225,winSize.height-35,function(button)
@@ -127,14 +127,14 @@ local function oEditMenu()
 			button.mode = button.mode + 1
 			button.mode = button.mode % 3
 			button.text = tostring(scale*100).."%"
-			emit("viewArea.toScale",scale)
+			emit("Body.viewArea.toScale",scale)
 		end),
 
 		Play = oPlayButton(50,winSize.width-225,35,function(button)
-			emit("editControl.hide")
-			emit("settingPanel.edit",nil)
-			emit("settingPanel.enable",not button.isPlaying)
-			emit("editor.isPlaying",button.isPlaying)
+			emit("Body.editControl.hide")
+			emit("Body.settingPanel.edit",nil)
+			emit("Body.settingPanel.enable",not button.isPlaying)
+			emit("Body.editor.isPlaying",button.isPlaying)
 		end),
 	}
 
@@ -245,11 +245,11 @@ local function oEditMenu()
 
 	-- update scale button --
 	items.Zoom.mode = 0
-	items.Zoom:gslot("viewArea.scale",function(scale)
+	items.Zoom:gslot("Body.viewArea.scale",function(scale)
 		if scale ~= 1 then items.Zoom.mode = 2 end
 		items.Zoom.text = tostring(math.floor(scale*100)).."%"
 	end)
-	items.Play:gslot("editor.isPlaying",function(isPlaying)
+	items.Play:gslot("Body.editor.isPlaying",function(isPlaying)
 		oEditor.isPlaying = isPlaying
 		oEditor.worldScheduler.timeScale = isPlaying and 1 or 0
 		if not isPlaying then
@@ -283,19 +283,19 @@ local function oEditMenu()
 		end
 	end)
 
-	menu:gslot("editMenu.created",function()
+	menu:gslot("Body.editMenu.created",function()
 		if lastSelected then
 			lastSelected.selected = false
 			lastSelected = nil
 		end
 	end)
-	menu:gslot("editor.change",function()
+	menu:gslot("Body.editor.change",function()
 		if not oEditor.dirty then
 			oEditor.dirty = true
 			items.Edit.text = "Save"
 		end
 	end)
-	menu:gslot("editMenu.reset",function()
+	menu:gslot("Body.editMenu.reset",function()
 		items.Play.isPlaying = false
 	end)
 

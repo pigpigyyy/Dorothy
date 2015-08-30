@@ -78,9 +78,9 @@ local function oViewPanel()
 					crossB:fadeOut()
 				end
 				if bodyA then
-					emit("viewArea.toPos",oEditor.origin-bodyA.position)
+					emit("Body.viewArea.toPos",oEditor.origin-bodyA.position)
 				elseif bodyB then
-					emit("viewArea.toPos",oEditor.origin-bodyB.position)
+					emit("Body.viewArea.toPos",oEditor.origin-bodyB.position)
 				end
 			end
 			return
@@ -101,7 +101,7 @@ local function oViewPanel()
 				local pos = worldNode:convertToWorldSpace(data:get("Center"))
 				pos = oEditor.world:convertToNodeSpace(pos)
 				if not item then crossA.position = pos end
-				emit("viewArea.toPos",oEditor.origin-pos)
+				emit("Body.viewArea.toPos",oEditor.origin-pos)
 			elseif data:has("Position") then
 				local item = oEditor:getItem(data)
 				local pos
@@ -113,7 +113,7 @@ local function oViewPanel()
 					pos = data:get("Position")
 					crossA.position = pos
 				end
-				emit("viewArea.toPos",oEditor.origin-pos)
+				emit("Body.viewArea.toPos",oEditor.origin-pos)
 			end
 		elseif not data:has("Center") then
 			local parent = data.parent
@@ -127,7 +127,7 @@ local function oViewPanel()
 				pos = parent:get("Position")
 				crossA.position = pos
 			end
-			emit("viewArea.toPos",oEditor.origin-pos)
+			emit("Body.viewArea.toPos",oEditor.origin-pos)
 		else
 			local parent = data.parent
 			local item = oEditor:getItem(parent)
@@ -144,7 +144,7 @@ local function oViewPanel()
 			local pos = worldNode:convertToWorldSpace(data:get("Center"))
 			pos = oEditor.world:convertToNodeSpace(pos)
 			if not item then crossA.position = pos end
-			emit("viewArea.toPos",oEditor.origin-pos)
+			emit("Body.viewArea.toPos",oEditor.origin-pos)
 		end
 		crossA:fadeOut()
 	end
@@ -154,12 +154,12 @@ local function oViewPanel()
 		return function()
 			local v = index
 			index = index + 1
-			return borderSize.height-30-50*v
+			return borderSize.height-10-50*v
 		end
 	end
 
 	local baseJointName = nil
-	menu:gslot("viewPanel.selectJoint",function(joint)
+	menu:gslot("Body.viewPanel.selectJoint",function(joint)
 		baseJointName = joint
 	end)
 
@@ -169,7 +169,7 @@ local function oViewPanel()
 				local data = item.dataItem
 				local name = data:get("Name")
 				if name ~= baseJointName then
-					emit("editControl.joint",name)
+					emit("Body.editControl.joint",name)
 					item.selected = false
 				else
 					item.selected = true
@@ -179,14 +179,14 @@ local function oViewPanel()
 			end
 			return
 		end
-		emit("editControl.hide")
-		emit("settingPanel.edit",nil)
-		emit("viewPanel.choose",item)
+		emit("Body.editControl.hide")
+		emit("Body.settingPanel.edit",nil)
+		emit("Body.viewPanel.choose",item)
 		if item.selected then
-			emit("settingPanel.toState",item.dataItem:get("ItemType"))
+			emit("Body.settingPanel.toState",item.dataItem:get("ItemType"))
 			moveViewToData(item.dataItem)
 		else
-			emit("settingPanel.toState",nil)
+			emit("Body.settingPanel.toState",nil)
 		end
 	end
 
@@ -195,12 +195,14 @@ local function oViewPanel()
 		local getPosY = genPosY()
 		for _,data in ipairs(bodyData) do
 			local item = oViewItem(data[1],data[2],90,getPosY(),selectCallback)
+			item.anchor = oVec2(0.5,1)
 			item.dataItem = data
 			table.insert(items,item)
 			local subShapeIndex = oEditor[data[1]].SubShapes
 			if subShapeIndex and data[subShapeIndex] then
 				for index,subShape in ipairs(data[subShapeIndex]) do
 					local item = oViewItem(subShape[1],index,90,getPosY(),selectCallback)
+					item.anchor = oVec2(0.5,1)
 					item.dataItem = subShape
 					item.parentData = data
 					table.insert(items,item)
@@ -215,11 +217,12 @@ local function oViewPanel()
 		end
 		self.items = items
 		self:reset(borderSize.width,contentHeight,0,50)
+		self:setPos(oVec2.zero)
 	end
 	updateViewItems(oEditor.bodyData)
 
 	local currentItem = nil
-	self:gslot("viewPanel.choose",function(arg)
+	self:gslot("Body.viewPanel.choose",function(arg)
 		local item
 		if type(arg) == "table" then
 			for _,v in ipairs(self.items) do
@@ -231,7 +234,7 @@ local function oViewPanel()
 					item = v
 					item.selected = true
 					oEditor.currentData = item.dataItem
-					emit("settingPanel.toState",item.dataItem[1])
+					emit("Body.settingPanel.toState",item.dataItem[1])
 					self:setPos(oVec2(0,borderSize.height*0.5+30-item.positionY))
 					moveViewToData(item.dataItem)
 					break
@@ -257,10 +260,10 @@ local function oViewPanel()
 			oEditor.currentData = nil
 		end
 	end)
-	self:gslot("editor.bodyData",function(bodyData)
+	self:gslot("Body.editor.bodyData",function(bodyData)
 		updateViewItems(bodyData)
 	end)
-	self:gslot("editor.rename",function(args)
+	self:gslot("Body.editor.rename",function(args)
 		local newName = args.newName
 		for _,item in ipairs(self.items) do
 			if item.dataItem[2] == newName then
@@ -269,7 +272,7 @@ local function oViewPanel()
 			end
 		end
 	end)
-	self:gslot("viewArea.moveToData",function(data)
+	self:gslot("Body.viewArea.moveToData",function(data)
 		moveViewToData(data)
 	end)
 	return self

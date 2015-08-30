@@ -359,12 +359,12 @@ local function oEditMenu()
 					oEditor.loop = false
 					item.label.text = "Once"
 					item.label.texture.antiAlias = false
-					emit("LoopState",false)
+					emit("Action.LoopState",false)
 				else
 					oEditor.loop = true
 					item.label.text = "Loop"
 					item.label.texture.antiAlias = false
-					emit("LoopState",true)
+					emit("Action.LoopState",true)
 				end
 			end),
 		Play = oButton("Play",16,50,50,winSize.width-205,95,
@@ -391,28 +391,23 @@ local function oEditMenu()
 								item.label.text = "Play"
 								item.label.texture.antiAlias = false
 								item:unschedule()
-								emit("PlayState","Stop")
+								emit("Action.PlayState","Stop")
 							end
 						end)
-						emit("PlayState","Play")
+						emit("Action.PlayState","Play")
 					else
 						oEditor.isPlaying = false
 						item.label.text = "Play"
 						item.label.texture.antiAlias = false
 						model:pause()
 						item:unschedule()
-						emit("PlayState","Pause")
+						emit("Action.PlayState","Pause")
 					end
 				end
 			end),
 
 		Origin = oButton("Origin",16,50,50,winSize.width-265,winSize.height-35,
 			function()
-				collectgarbage()
-				cclog("[LUA MEMORY USAGE] %d KB",collectgarbage("count"))
-				cclog("Object Count: %d",CCObject.count)
-				cclog("Lua Count: %d",CCObject.luaRefCount)
-				cclog("Callback Count: %d", CCObject.callRefCount)
 				oEditor.viewArea:originReset()
 			end),
 		Zoom = oButton("100%",16,50,50,winSize.width-205,winSize.height-35,
@@ -845,7 +840,7 @@ oEditor.spriteData[oSd.index]
 		oEditor.viewPanel:selectItem(selectedSp)
 	end
 
-	menu:gslot("ImageSelected", function(args)
+	menu:gslot("Action.ImageSelected", function(args)
 		if not args then
 			return
 		end

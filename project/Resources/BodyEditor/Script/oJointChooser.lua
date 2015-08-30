@@ -70,19 +70,19 @@ local function oJointChooser()
 
 	for i = 1,#joints do
 		n = n+1
-		y = yStart-(itemHeight*0.5+10)-math.floor((n-1)/itemNum)*(itemHeight+10)
+		y = yStart-10-math.floor((n-1)/itemNum)*(itemHeight+10)
 		local name = joints[i]
 		local button = oButton(
 			name,
 			17,
 			itemWidth,itemHeight,
-			xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
+			xStart+10+((n-1)%itemNum)*(itemWidth+10), y,
 			function(item)
 				local joint = item.joint
 				local data = oEditor["new"..joint](oEditor)
 				oEditor:addData(data)
-				emit("viewPanel.choose",data)
-				emit("editor.change")
+				emit("Body.viewPanel.choose",data)
+				emit("Body.editor.change")
 				panel.ended = function()
 					panel.parent:removeChild(panel)
 				end
@@ -90,6 +90,7 @@ local function oJointChooser()
 			end)
 		button.joint = joints[i]
 		button.enabled = false
+		button.anchor = oVec2(0,1)
 		button.opacity = 0
 		button:runAction(
 			CCSequence(

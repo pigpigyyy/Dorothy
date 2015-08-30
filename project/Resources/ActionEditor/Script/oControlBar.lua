@@ -55,7 +55,7 @@ local function oControlBar()
 		self._pos = pos
 		pos = math.floor(pos+0.5)
 		self.scaleX = pos/60.0
-		emit("ControlBarPos",pos)
+		emit("Action.ControlBarPos",pos)
 	end
 	bar.getPos = function(self)
 		return self._pos
@@ -184,7 +184,7 @@ local function oControlBar()
 	local offset = 0
 	local moveBar = false
 	local locLength = 0
-	controlBar:gslot("PlayState",
+	controlBar:gslot("Action.PlayState",
 		function(state)
 			if state == "Play" then
 				controlBar.touchEnabled = false

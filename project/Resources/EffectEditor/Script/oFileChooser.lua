@@ -94,6 +94,13 @@ local function oFileChooser(addExisted)
 		panel:reset(viewWidth,viewHeight,paddingX,paddingY)
 	end
 
+	local pair = {true,true}
+	local function updateAttr(name,value)
+		pair[1] = name
+		pair[2] = value
+		emit("Effect.attr",pair)
+	end
+
 	local function loadEffect(name,file)
 		oCache.Effect:load(oEditor.output.."main.effect")
 		local extension = string.match(file, "%.([^%.\\/]*)$")
@@ -128,10 +135,10 @@ local function oFileChooser(addExisted)
 				parData.textureRecth = 0
 			end
 			for k,v in pairs(parData) do
-				emit(k,v)
+				updateAttr(k,v)
 			end
-			emit("name",name)
-			emit("file",file)
+			updateAttr("name",name)
+			updateAttr("file",file)
 		elseif extension == "frame" then
 			local frameFile = io.open(oEditor.output..file)
 			local data = frameFile:read("*a")
@@ -148,12 +155,12 @@ local function oFileChooser(addExisted)
 				table.insert(frameData,{rect = CCRect(nums[1],nums[2],nums[3],nums[4])})
 			end
 			oEditor.effectData = frameData
-			emit("name",name)
-			emit("file",file)
-			emit("interval",interval)
-			emit("oFrameViewer.data",oEditor.effectData)
+			updateAttr("name",name)
+			updateAttr("file",file)
+			updateAttr("interval",interval)
+			emit("Effect.frameViewer.data",oEditor.effectData)
 		end
-		emit("viewArea.changeEffect",name)
+		emit("Effect.viewArea.changeEffect",name)
 	end
 
 	if addExisted then
@@ -180,7 +187,7 @@ local function oFileChooser(addExisted)
 
 		for i = 1,#files do
 			n = n+1
-			y = yStart-35-math.floor((n-1)/itemNum)*60
+			y = yStart-10-math.floor((n-1)/itemNum)*60
 			local itemName = files[i]:match("(.*)%.[^%.\\/]*$")
 			local name = #itemName > 10 and itemName:sub(1,7).."..." or itemName
 			name = name.."\n."..files[i]:match("%.([^%.\\/]*)$")
@@ -188,7 +195,7 @@ local function oFileChooser(addExisted)
 				name,
 				17,
 				itemWidth,50,
-				xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
+				xStart+10+((n-1)%itemNum)*(itemWidth+10), y,
 				function(item)
 					panel.ended = function()
 						panel.parent:removeChild(panel)
@@ -204,6 +211,7 @@ local function oFileChooser(addExisted)
 			button.file = files[i]
 			button.enabled = false
 			button.opacity = 0
+			button.anchor = oVec2(0,1)
 			button:runAction(
 				CCSequence(
 				{
@@ -244,7 +252,7 @@ local function oFileChooser(addExisted)
 		title:runAction(oOpacity(0.3,0.5))
 		yStart = y-title.contentSize.height-10
 	end
-	
+
 	local effectFile = io.open(oEditor.output.."main.effect","r")
 	for item in effectFile:read("*a"):gmatch("%b<>") do
 		if not item:sub(2,2):match("[A/]") then
@@ -260,13 +268,13 @@ local function oFileChooser(addExisted)
 	for itemName,filename in pairs(oEditor.items) do
 		n = n+1
 		i = i+1
-		y = yStart-35-math.floor((n-1)/itemNum)*60
+		y = yStart-10-math.floor((n-1)/itemNum)*60
 		local name = #itemName > 10 and itemName:sub(1,7).."..." or itemName
 		local button = oButton(
 			name,
 			17,
 			itemWidth,50,
-			xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
+			xStart+10+((n-1)%itemNum)*(itemWidth+10), y,
 			function(item)
 				oEditor.currentName = item.name
 				oEditor.currentFile = item.file
@@ -279,6 +287,7 @@ local function oFileChooser(addExisted)
 		button.name = name
 		button.file = filename
 		button.enabled = false
+		button.anchor = oVec2(0,1)
 		button.opacity = 0
 		button:runAction(
 			CCSequence(
@@ -292,12 +301,12 @@ local function oFileChooser(addExisted)
 		menu:addChild(button)
 	end
 	n = n+1
-	y = yStart-35-math.floor((n-1)/itemNum)*60
+	y = yStart-10-math.floor((n-1)/itemNum)*60
 	local newPButton = oButton(
 		"<PARTICLE>",
 		17,
 		itemWidth,50,
-		xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
+		xStart+10+((n-1)%itemNum)*(itemWidth+10), y,
 		function()
 			panel.ended = function()
 				panel.parent:removeChild(panel)
@@ -312,6 +321,7 @@ local function oFileChooser(addExisted)
 			end,true),oEditor.topMost)
 		end)
 	newPButton.color = ccColor3(0x80ff00)
+	newPButton.anchor = oVec2(0,1)
 	newPButton.enabled = false
 	newPButton.opacity = 0
 	newPButton:runAction(
@@ -325,12 +335,12 @@ local function oFileChooser(addExisted)
 		}))
 	menu:addChild(newPButton)
 	n = n+1
-	y = yStart-35-math.floor((n-1)/itemNum)*60
+	y = yStart-10-math.floor((n-1)/itemNum)*60
 	local newFButton = oButton(
 		"<FRAME>",
 		17,
 		itemWidth,50,
-		xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
+		xStart+10+((n-1)%itemNum)*(itemWidth+10), y,
 		function()
 			panel.ended = function()
 				panel.parent:removeChild(panel)
@@ -345,16 +355,17 @@ local function oFileChooser(addExisted)
 					oEditor.items[oEditor.currentName] = oEditor.currentFile
 					oEditor:dumpEffectFile()
 					oEditor.effectData = {file="",interval=1}
-					emit("name",oEditor.currentName)
-					emit("file",oEditor.currentFile)
-					emit("interval",1)
+					updateAttr("name",oEditor.currentName)
+					updateAttr("file",oEditor.currentFile)
+					updateAttr("interval",1)
 					oContent:saveToFile(oEditor.output..oEditor.currentFile,[[<A A="" B="1"></A>]])
 					oCache.Effect:load(oEditor.output.."main.effect")
-					emit("viewArea.changeEffect",oEditor.currentName)
+					emit("Effect.viewArea.changeEffect",oEditor.currentName)
 				end
 			end,true),oEditor.topMost)
 		end)
 	newFButton.color = ccColor3(0x80ff00)
+	newFButton.anchor = oVec2(0,1)
 	newFButton.enabled = false
 	newFButton.opacity = 0
 	newFButton:runAction(
@@ -369,12 +380,12 @@ local function oFileChooser(addExisted)
 	menu:addChild(newFButton)
 
 	n = n+1
-	y = yStart-35-math.floor((n-1)/itemNum)*60
+	y = yStart-10-math.floor((n-1)/itemNum)*60
 	local addButton = oButton(
 		"<ADD>",
 		17,
 		itemWidth,50,
-		xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
+		xStart+10+((n-1)%itemNum)*(itemWidth+10), y,
 		function()
 			panel.ended = function()
 				panel.parent:removeChild(panel)
@@ -383,6 +394,7 @@ local function oFileChooser(addExisted)
 			oEditor:addChild(oFileChooser(true),oEditor.topMost)
 		end)
 	addButton.color = ccColor3(0xff8000)
+	addButton.anchor = oVec2(0,1)
 	addButton.enabled = false
 	addButton.opacity = 0
 	addButton:runAction(
@@ -398,12 +410,12 @@ local function oFileChooser(addExisted)
 
 	if oEditor.currentFile then
 		n = n+1
-		y = yStart-35-math.floor((n-1)/itemNum)*60
+		y = yStart-10-math.floor((n-1)/itemNum)*60
 		local delButton = oButton(
 			"<DEL>",
 			17,
 			itemWidth,50,
-			xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
+			xStart+10+((n-1)%itemNum)*(itemWidth+10), y,
 			function()
 				panel.ended = function()
 					panel.parent:removeChild(panel)
@@ -421,8 +433,8 @@ local function oFileChooser(addExisted)
 					local lastFile = oEditor.currentFile
 					oEditor.currentFile = nil
 					oEditor:dumpEffectFile()
-					emit("viewArea.changeEffect",nil)
-					emit("settingPanel.hide")
+					emit("Effect.viewArea.changeEffect",nil)
+					emit("Effect.settingPanel.hide")
 
 					if count <= 1 then
 						local box = oBox("Delete "..lastFile,function()
@@ -439,6 +451,7 @@ local function oFileChooser(addExisted)
 				end),oEditor.topMost)
 			end)
 		delButton.color = ccColor3(0xff0080)
+		addButton.anchor = oVec2(0,1)
 		delButton.enabled = false
 		delButton.opacity = 0
 		delButton:runAction(

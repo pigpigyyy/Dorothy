@@ -122,10 +122,10 @@ local function oSettingPanel()
 	local items = {}
 	local getPosY = genPosY()
 	local function editCallback(settingItem)
-		emit("settingPanel.edit",settingItem)
+		emit("Body.settingPanel.edit",settingItem)
 	end
 	for i = 1,#itemNames do
-		items[itemNames[i]] = oSettingItem(itemNames[i].." :",itemWidth,itemHeight,0,getPosY(),i == 1,editCallback)
+		items[itemNames[i]] = oSettingItem(itemNames[i].." :",itemWidth,itemHeight,-itemWidth,getPosY(),i == 1,editCallback)
 		items[itemNames[i]].name = itemNames[i]
 	end
 	for _,item in pairs(items) do
@@ -437,6 +437,7 @@ local function oSettingPanel()
 	local function selectGroup(groupName)
 		if currentGroup then
 			for _,item in ipairs(currentGroup) do
+				item.positionX = -itemWidth
 				item.visible = false
 			end
 		end
@@ -449,6 +450,7 @@ local function oSettingPanel()
 		local contentHeight = 40
 		for _,item in ipairs(currentGroup) do
 			item.visible = true
+			item.positionX = 0
 			item.positionY = getPosY()
 			contentHeight = contentHeight + itemHeight
 		end
@@ -486,21 +488,22 @@ local function oSettingPanel()
 		end
 	end
 
-	self:gslot("settingPanel.toState",function(state)
-		emit("settingPanel.edit",nil)
+	self:gslot("Body.settingPanel.toState",function(state)
+		emit("Body.settingPanel.edit",nil)
 		if state then
 			selectGroup(state)
 		else
 			label.visible = false
 			if currentGroup then
 				for _,item in ipairs(currentGroup) do
+					item.positionX = -itemWidth
 					item.visible = false
 				end
 			end
 		end
 	end)
 	local currentItem = nil
-	self:gslot("settingPanel.edit",function(item)
+	self:gslot("Body.settingPanel.edit",function(item)
 		if not item or item.selected then
 			if currentItem then
 				currentItem.selected = false
@@ -510,7 +513,7 @@ local function oSettingPanel()
 			currentItem = nil
 		end
 	end)
-	self:gslot("settingPanel.enable",function(enable)
+	self:gslot("Body.settingPanel.enable",function(enable)
 		for _,item in pairs(items) do
 			item.enabled = enable
 		end

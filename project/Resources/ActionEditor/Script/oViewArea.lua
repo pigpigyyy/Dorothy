@@ -213,7 +213,7 @@ local function oViewArea()
 		return self._model
 	end
 	
-	view:gslot("LoopState",
+	view:gslot("Action.LoopState",
 		function(loop)
 			if view._model then
 				view._model.loop = loop
@@ -1097,7 +1097,7 @@ local function oViewArea()
 		easeMenuItem:setValue(item.easeName)
 		oEditor.editMenu:markEditButton(true)
 		valueChanged = true
-		emit("SettingSelected",easeMenuItem)
+		emit("Action.SettingSelected",easeMenuItem)
 	end
 
 	for i = 1,#oEditor.easeNames do
@@ -1128,7 +1128,7 @@ local function oViewArea()
 		610+winSize.width*0.5-335,
 		35+winSize.height*0.5-185,
 		function()
-			emit("SettingSelected",easeMenuItem)
+			emit("Action.SettingSelected",easeMenuItem)
 		end)
 	button.color = ccColor3(0xffffff)
 	board:addChild(button)
@@ -1432,7 +1432,7 @@ local function oViewArea()
 			end
 			oEditor.settingPanel.items.Width:setValue(size.width)
 			oEditor.settingPanel.items.Height:setValue(size.height)
-			
+
 			oEditor.viewArea:setModelSize(size)
 			oEditor.editMenu:markEditButton(true)
 			valueChanged = true

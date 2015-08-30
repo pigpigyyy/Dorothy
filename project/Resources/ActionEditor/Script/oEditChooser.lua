@@ -92,10 +92,10 @@ local function oEditChooser(withCancel)
 		local i = 0
 		for k,_ in pairs(aNames) do
 			local name = #k > 10 and k:sub(1,7).."..." or k
-			y = yStart-45-math.floor(i/itemNum)*60
+			y = yStart-20-math.floor(i/itemNum)*60
 			local button = oButton(name,17,
 				itemWidth,50,
-				xStart+itemWidth*0.5+10+(i%itemNum)*(itemWidth+10),
+				xStart+10+(i%itemNum)*(itemWidth+10),
 				y,
 				function(item)
 					panel.touchEnabled = false
@@ -107,6 +107,7 @@ local function oEditChooser(withCancel)
 				end)
 			button.name = k
 			menu:addChild(button)
+			button.anchor = oVec2(0,1)
 			button.opacity = 0
 			button:runAction(
 				CCSequence(
@@ -116,11 +117,11 @@ local function oEditChooser(withCancel)
 				}))
 			i = i+1
 		end
-		y = yStart-45-math.floor(i/itemNum)*60
+		y = yStart-20-math.floor(i/itemNum)*60
 		local newButton = oButton(
 			"<NEW>",17,
 			itemWidth,50,
-			xStart+itemWidth*0.5+10+(i%itemNum)*(itemWidth+10),
+			xStart+10+(i%itemNum)*(itemWidth+10),
 			y,
 			function()
 				oBox("New Animation",
@@ -156,6 +157,7 @@ local function oEditChooser(withCancel)
 			end)
 		newButton.color = ccColor3(0xffcc88)
 		menu:addChild(newButton)
+		newButton.anchor = oVec2(0,1)
 		newButton.opacity = 0
 		newButton:runAction(
 			CCSequence(
@@ -163,7 +165,7 @@ local function oEditChooser(withCancel)
 				CCDelay((i%itemNum)*0.05),
 				oOpacity(0.3,1)
 			}))
-		yStart = y-25
+		yStart = y-45
 
 		title = CCLabelTTF("Edit  Look","Arial",24)
 		title.texture.antiAlias = false
@@ -180,10 +182,10 @@ local function oEditChooser(withCancel)
 		i = 0
 		for k,_ in pairs(lNames) do
 			local name = #k > 10 and k:sub(1,7).."..." or k
-			y = yStart-45-math.floor(i/itemNum)*60
+			y = yStart-20-math.floor(i/itemNum)*60
 			local button = oButton(name,17,
 				itemWidth,50,
-				xStart+itemWidth*0.5+10+(i%itemNum)*(itemWidth+10),
+				xStart+10+(i%itemNum)*(itemWidth+10),
 				y,
 				function(item)
 					panel.touchEnabled = false
@@ -197,6 +199,7 @@ local function oEditChooser(withCancel)
 				end)
 			button.name = k
 			menu:addChild(button)
+			button.anchor = oVec2(0,1)
 			button.opacity = 0
 			button:runAction(
 				CCSequence(
@@ -206,11 +209,11 @@ local function oEditChooser(withCancel)
 				}))
 			i = i+1
 		end
-		y = yStart-45-math.floor(i/itemNum)*60
+		y = yStart-20-math.floor(i/itemNum)*60
 		newButton = oButton(
 			"<NEW>",17,
 			itemWidth,50,
-			xStart+itemWidth*0.5+10+(i%itemNum)*(itemWidth+10),
+			xStart+10+(i%itemNum)*(itemWidth+10),
 			y,
 			function()
 				oBox("New Look",
@@ -243,6 +246,7 @@ local function oEditChooser(withCancel)
 			end)
 		newButton.color = ccColor3(0xffcc88)
 		menu:addChild(newButton)
+		newButton.anchor = oVec2(0,1)
 		newButton.opacity = 0
 		newButton:runAction(
 			CCSequence(
@@ -250,7 +254,7 @@ local function oEditChooser(withCancel)
 				CCDelay((i%itemNum)*0.05),
 				oOpacity(0.3,1)
 			}))
-		yStart = y-25
+		yStart = y-45
 	
 		if oEditor.state ~= oEditor.EDIT_SPRITE then
 			title = CCLabelTTF("Edit  Sprite","Arial",24)
@@ -264,11 +268,11 @@ local function oEditChooser(withCancel)
 			title:runAction(oOpacity(0.3,0.5))
 			yStart = y-title.contentSize.height
 
-			y = yStart-45
+			y = yStart-20
 			newButton = oButton(
 				"Edit",17,
 				itemWidth,50,
-				xStart+itemWidth*0.5+10,
+				xStart+10,
 				y,
 				function()
 					panel.touchEnabled = false
@@ -279,6 +283,7 @@ local function oEditChooser(withCancel)
 				end)
 			newButton.color = ccColor3(0xffcc88)
 			menu:addChild(newButton)
+			newButton.anchor = oVec2(0,1)
 			newButton.opacity = 0
 			newButton:runAction(
 				CCSequence(
@@ -286,7 +291,7 @@ local function oEditChooser(withCancel)
 					CCDelay((i%itemNum)*0.05),
 					oOpacity(0.3,1)
 				}))
-			yStart = y-25
+			yStart = y-45
 		end
 
 		title = CCLabelTTF("Change  Model","Arial",24)
@@ -300,11 +305,11 @@ local function oEditChooser(withCancel)
 		title:runAction(oOpacity(0.3,0.5))
 		yStart = y-title.contentSize.height
 
-		y = yStart-45
+		y = yStart-20
 		newButton = oButton(
 			"Change",17,
 			itemWidth,50,
-			xStart+itemWidth*0.5+10,
+			xStart+10,
 			y,
 			function()
 				panel.touchEnabled = false
@@ -315,6 +320,7 @@ local function oEditChooser(withCancel)
 			end)
 		newButton.color = ccColor3(0xffcc88)
 		menu:addChild(newButton)
+		newButton.anchor = oVec2(0,1)
 		newButton.opacity = 0
 		newButton:runAction(
 			CCSequence(
@@ -322,7 +328,7 @@ local function oEditChooser(withCancel)
 				CCDelay((i%itemNum)*0.05),
 				oOpacity(0.3,1)
 			}))
-		yStart = y-25
+		yStart = y-45
 
 		if oEditor.quitable then
 			title = CCLabelTTF("Quit  Editor","Arial",24)
@@ -336,11 +342,11 @@ local function oEditChooser(withCancel)
 			title:runAction(oOpacity(0.3,0.5))
 			yStart = y-title.contentSize.height
 
-			y = yStart-45
+			y = yStart-20
 			newButton = oButton(
 				"Quit",17,
 				itemWidth,50,
-				xStart+itemWidth*0.5+10,
+				xStart+10,
 				y,
 				function()
 					panel.touchEnabled = false
@@ -351,6 +357,7 @@ local function oEditChooser(withCancel)
 				end)
 			newButton.color = ccColor3(0xffcc88)
 			menu:addChild(newButton)
+			newButton.anchor = oVec2(0,1)
 			newButton.opacity = 0
 			newButton:runAction(
 				CCSequence(

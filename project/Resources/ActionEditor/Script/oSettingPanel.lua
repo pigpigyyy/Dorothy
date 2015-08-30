@@ -94,6 +94,18 @@ local function oSettingPanel()
 	menu.positionY = borderSize.height
 	menu.visible = false
 
+	local contentRect = CCRect.zero
+	local itemRect = CCRect.zero
+	local function moveItems(delta)
+		contentRect:set(0,0,borderSize.width,borderSize.height)
+		menu:eachChild(function(child)
+			child.position = child.position + delta
+			local positionX, positionY, width, height = child.positionX, child.positionY, child.width, child.height
+			itemRect:set(positionX, positionY - height, width, height)
+			child.visible = contentRect:intersectsRect(itemRect)
+		end)
+	end
+
 	local function updateReset(deltaTime)
 		local yVal = nil
 		time = time + deltaTime
@@ -109,11 +121,9 @@ local function oSettingPanel()
 			totalDelta.y = oEase:func(oEase.OutBack,t,startPos.y,moveY-startPos.y)
 			yVal = totalDelta.y - yVal
 		end
-		
-		menu:eachChild(function(child)
-			child.position = child.position + oVec2(0, yVal and yVal or 0)
-		end)
-		
+
+		moveItems(oVec2(0, yVal and yVal or 0))
+
 		if t == 1.0 then
 			panel:unschedule()
 		end
@@ -181,10 +191,8 @@ local function oSettingPanel()
 
 		totalDelta = totalDelta + deltaPos
 
-		menu:eachChild(function(child)
-			child.position = child.position + deltaPos
-		end)
-		
+		moveItems(deltaPos)
+
 		if not touching and (newPos.y < -padding*0.5 or newPos.y > moveY+padding*0.5 or newPos.x > padding*0.5 or newPos.x < moveX-padding*0.5) then
 			startReset()
 		end
@@ -208,7 +216,7 @@ local function oSettingPanel()
 		if name == "Name :" then
 			label = oTextField(108,7,14,8,
 				function()
-					emit("SettingSelected",nil)
+					emit("Action.SettingSelected",nil)
 				end)
 			isInput = true
 		else
@@ -275,11 +283,11 @@ local function oSettingPanel()
 		menuItem:slots("Tapped",function()
 			if not isInput then
 				if enableFunc ~= nil and disableFunc ~= nil then
-					emit("SettingSelected",menuItem)
+					emit("Action.SettingSelected",menuItem)
 				end
 			else
 				if oEditor.state == oEditor.EDIT_SPRITE and enableFunc ~= nil and disableFunc ~= nil then
-					emit("SettingSelected",menuItem)
+					emit("Action.SettingSelected",menuItem)
 				end
 			end
 		end)
@@ -869,6 +877,7 @@ local function oSettingPanel()
 	end
 	local function hideItems()
 		for i = 1,#group do
+			group[i].positionX = -160
 			group[i].visible = false
 		end
 	end
@@ -920,12 +929,14 @@ local function oSettingPanel()
 		local posY = genPosY()
 		for i = 1,#spriteItems do
 			spriteItems[i].visible = true
+			spriteItems[i].positionX = 0
 			spriteItems[i].positionY = posY()
 		end
 		viewHeight = 30*(#spriteItems)+20
 		viewWidth = borderSize.width
 		moveY = viewHeight-borderSize.height
 		moveX = borderSize.width-viewWidth
+		setOffset(oVec2.zero)
 	end
 	
 	local animationItems = 
@@ -952,12 +963,14 @@ local function oSettingPanel()
 		local posY = genPosY()
 		for i = 1,#animationItems do
 			animationItems[i].visible = true
+			animationItems[i].positionX = 0
 			animationItems[i].positionY = posY()
 		end
 		viewHeight = 30*(#animationItems)+20
 		viewWidth = borderSize.width
 		moveY = viewHeight-borderSize.height
 		moveX = borderSize.width-viewWidth
+		setOffset(oVec2.zero)
 	end
 
 	local rootItems =
@@ -972,6 +985,7 @@ local function oSettingPanel()
 		local posY = genPosY()
 		for i = 1,#rootItems do
 			rootItems[i].visible = true
+			rootItems[i].positionX = 0
 			rootItems[i].positionY = posY()
 		end
 		viewHeight = borderSize.height
@@ -981,7 +995,7 @@ local function oSettingPanel()
 	end
 
 	local isShowingRoot = false
-	panel:gslot("ImageSelected",
+	panel:gslot("Action.ImageSelected",
 		function(args)
 			if oEditor.state == oEditor.EDIT_SPRITE or oEditor.state == oEditor.EDIT_ANIMATION then
 				if args then
@@ -1072,7 +1086,7 @@ local function oSettingPanel()
 		keyItems.EaseO:setValue(oEditor.easeNames[frame[oKd.easeOpacity]])
 	end
 	
-	panel:gslot("ControlBarPos",
+	panel:gslot("Action.ControlBarPos",
 		function(pos)
 			if not oEditor.animationData or not oEditor.sprite then
 				for name,item in pairs(keyItems) do
@@ -1080,7 +1094,7 @@ local function oSettingPanel()
 						item:setEnabled(false)
 					end
 				end
-				emit("SettingSelected",nil)
+				emit("Action.SettingSelected",nil)
 				return
 			end
 			local total = 0
@@ -1098,7 +1112,7 @@ local function oSettingPanel()
 			local enable = oEditor.currentFramePos ~= nil and oEditor.currentFramePos == pos
 			panel:setEditEnable(enable)
 			if not enable then
-				emit("SettingSelected",nil)
+				emit("Action.SettingSelected",nil)
 			end
 
 			if oEditor.keyIndex and oEditor.keyIndex == index then
@@ -1110,7 +1124,7 @@ local function oSettingPanel()
 		end)
 
 	local selectedItem = nil
-	panel:gslot("SettingSelected",
+	panel:gslot("Action.SettingSelected",
 		function(menuItem)
 			if selectedItem and selectedItem == menuItem then
 				selectedItem:select(false)
@@ -1167,7 +1181,7 @@ local function oSettingPanel()
 		end)
 
 	panel.clearSelection = function(self)
-		emit("SettingSelected",nil)
+		emit("Action.SettingSelected",nil)
 		for _,item in pairs(keyItems) do
 			item:select(false)
 		end

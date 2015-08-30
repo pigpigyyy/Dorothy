@@ -72,10 +72,21 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 
 	local menu = CCMenu()
 	menu.swallowTouches = true
-	menu.contentSize = CCSize(borderSize.width,borderSize.height)
+	menu.contentSize = borderSize
 	menu.touchPriority = CCMenu.DefaultHandlerPriority-2
 	menu.anchor = oVec2(0,1)
 	menu.position = oVec2(-halfBW,halfBH)
+
+	local contentRect = CCRect(oVec2.zero, borderSize)
+	local itemRect = CCRect.zero
+	local function moveItems(delta)
+		menu:eachChild(function(child)
+			child.position = child.position + delta
+			local positionX, positionY, width, height = child.positionX, child.positionY, child.width, child.height
+			itemRect:set(positionX, positionY - height, width, height)
+			child.visible = contentRect:intersectsRect(itemRect)
+		end)
+	end
 
 	local function updateReset(deltaTime)
 		local xVal = nil
@@ -105,9 +116,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 			yVal = totalDelta.y - yVal
 		end
 		
-		menu:eachChild(function(child)
-			child.position = child.position + oVec2(xVal and xVal or 0, yVal and yVal or 0)
-		end)
+		moveItems(oVec2(xVal and xVal or 0, yVal and yVal or 0))
 
 		if t == 1.0 then
 			panel:unschedule()
@@ -183,9 +192,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 
 		totalDelta = totalDelta + deltaPos
 
-		menu:eachChild(function(child)
-			child.position = child.position + deltaPos
-		end)
+		moveItems(deltaPos)
 
 		if not touching and (newPos.y < -paddingY*0.5 or newPos.y > moveY+paddingY*0.5 or newPos.x > paddingX*0.5 or newPos.x < moveX-paddingX*0.5) then
 			startReset()
@@ -260,9 +267,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 
 		totalDelta = totalDelta + delta
 
-		menu:eachChild(function(child)
-			child.position = child.position + delta
-		end)
+		moveItems(delta)
 	end
 	panel.setPos = setPos
 
@@ -391,7 +396,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 		moveY = viewHeight-borderSize.height
 		moveX = borderSize.width-viewWidth
 	end
-	
+
 	return panel
 end
 
