@@ -1,0 +1,7 @@
+<Menu X="{ @X }" Y="{ @Y }" TouchPriority="2">
+	<Import Module="Control.Button"/>
+	<Button Name="editBtn" X="35" Y="{ $T-35 }" Width="50" Height="50" Text="Edit" FontSize="16" Ref="True"/>
+	<Button Name="spriteBtn" X="35" Y="{ $T-95 }" Width="50" Height="50" Text="Sprite" FontSize="16" Ref="True"/>
+	<Button Name="modelBtn" X="35" Y="{ $T-155 }" Width="50" Height="50" Text="Model" FontSize="16" Ref="True"/>
+	<Button Name="bodyBtn" X="35" Y="{ $T-215 }" Width="50" Height="50" Text="Body" FontSize="16" Ref="True"/>
+</Menu>
