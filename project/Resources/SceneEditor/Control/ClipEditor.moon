@@ -1,6 +1,8 @@
 Dorothy!
 Class,property = unpack require "class"
 ClipEditorView = require "View.Control.ClipEditor"
+InputBox = require "Control.InputBox"
+MessageBox = require "Control.MessageBox"
 Packer = require "Data.Packer"
 
 Class
@@ -13,8 +15,6 @@ Class
 				child.position += delta
 
 		@okBtn\slots "Tapped",->
-			InputBox = require "Control.InputBox"
-			MessageBox = require "Control.MessageBox"
 			inputBox = InputBox text:"New Group Name"
 			inputBox\slots "Inputed",(name)->
 				return unless name
@@ -53,7 +53,7 @@ Class
 		@cancelBtn\slots "Tapped",->
 			@\close false
 
-		CCDirector.currentScene\addChild @
+		CCDirector.currentScene\addChild @,2
 
 	close: (result)=>
 		@opMenu.enabled = false

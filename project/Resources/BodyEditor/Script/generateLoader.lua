@@ -99,9 +99,9 @@ local function create(itemDict,world,pos,angle)
 			local face = nil
 			local faceStr = itemDef.face
 			if faceStr ~= "" then
-				if faceStr:match("|") then
+				if faceStr:match("|") and oContent:exist(faceStr:match("(.*)|")) then
 					face = CCSprite(faceStr)
-				else
+				elseif oContent:exist(faceStr) then
 					local extension = string.lower(string.match(faceStr,"%.([^%.\\/]*)$"))
 					if extension == "model" then
 						face = oModel(faceStr)

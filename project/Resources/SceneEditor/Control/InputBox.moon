@@ -19,7 +19,7 @@ Class
 		@cancelBtn\slots "Tapped", ->
 			@\inputed nil
 
-		CCDirector.currentScene\addChild @
+		CCDirector.currentScene\addChild @,998
 
 	inputed: (text)=>
 		@activateArea.enabled = false

@@ -6,7 +6,7 @@
 	<Import Module="Control.Button"/>
 	<Import Module="View.Control.ButtonBase"/>
 
-	<SolidRect Width="{ width }" Height="{ height }" Color="0xff100000"/>
+	<SolidRect Width="{ width }" Height="{ height }" Color="0xcc100000"/>
 	<LabelTTF Name="title" X="{ $X }" Y="{ $T-20 }" Text="Select Model" FontName="Arial" FontSize="24" Color="0x00ffff" Opacity="0.5" AntiAlias="False"/>
 	<ScrollArea Name="scrollArea" X="{ $X }" Y="{ $T-40-(height-110)/2 }" Width="{ width }" Height="{ height-110 }" ViewWidth="{ width }" ViewHeight="{ height-110 }" PaddingX="0" PaddingY="100" TouchPriority="0" Ref="True">
 		<Item Name="view">

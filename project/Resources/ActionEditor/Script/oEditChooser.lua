@@ -353,6 +353,7 @@ local function oEditChooser(withCancel)
 					menu.enabled = false
 					opMenu.enabled = false
 					panel:hide()
+					oEditor.viewArea:originReset()
 					oEditor:emit("Quit")
 				end)
 			newButton.color = ccColor3(0xffcc88)

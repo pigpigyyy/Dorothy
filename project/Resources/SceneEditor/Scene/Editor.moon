@@ -19,15 +19,53 @@ Class
 			builtin["editor"] = nil
 			oCache\clear!
 			CCScene\remove "actionEditor"
-		--@spritePanel\show!
-		@modelPanel\show!
+
 		CCScene\add "sceneEditor",@
 		CCScene\add "actionEditor",@actionEditor
 		CCScene\transition "rollIn",{"zoomFlip",0.5,CCOrientation.Down}
 		CCScene\transition "rollOut",{"zoomFlip",0.5,CCOrientation.Up}
 
+		thread ->
+			width = 10+110*4
+			height = @height-20
+			sleep!
+			SpritePanel = require "Control.SpritePanel"
+			sleep!
+			@spritePanel = SpritePanel {
+				x:-10-width/2
+				y:10+height/2
+				width:width
+				height:height
+			}
+			@\addChild @spritePanel,1
+			sleep!
+			ModelPanel = require "Control.ModelPanel"
+			sleep!
+			@modelPanel = ModelPanel {
+				x:-10-width/2
+				y:10+height/2
+				width:width
+				height:height
+			}
+			@\addChild @modelPanel,1
+			sleep!
+			BodyPanel = require "Control.BodyPanel"
+			sleep!
+			@bodyPanel = BodyPanel {
+				x:-10-width/2
+				y:10+height/2
+				width:width
+				height:height
+			}
+			@\addChild @bodyPanel,1
+			sleep!
+			EditMenu = require "Control.EditMenu"
+			sleep!
+			@editMenu = EditMenu!
+			@\addChild @editMenu
+
 	updateSprites: =>
-		emit "Editor.LoadSprite", { @graphicFolder }
+		emit "Scene.LoadSprite", { @graphicFolder }
 		visitGraphicFolder = (path)->
 			folders = oContent\getEntries path,true
 			for folder in *folders
@@ -39,7 +77,10 @@ Class
 		visitGraphicFolder @graphicFullPath\gsub("[\\/]*$","")
 
 	updateModels: =>
-		emit "Editor.LoadModel", { @graphicFolder }
+		emit "Scene.LoadModel", { @graphicFolder }
+
+	updateBodies: =>
+		emit "Scene.LoadBody", { @physicsFolder }
 
 	game: property => @_gameName,
 		(name)=>
@@ -68,7 +109,7 @@ Class
 			actionEditor.input = @gameFullPath
 			actionEditor.output = @gameFullPath
 			actionEditor\slots "Edited",(model)->
-				emit "Editor.ModelUpdated",model
+				emit "Scene.ModelUpdated",model
 			actionEditor\slots "Quit",->
 				CCScene\run "sceneEditor","rollIn"
 				@\updateModels!

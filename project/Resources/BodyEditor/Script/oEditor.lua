@@ -20,6 +20,8 @@ local once = require("once")
 
 local oEditor = CCScene()
 
+oEditor.standAlone = true
+oEditor.quitable = false
 oEditor.isPlaying = false
 oEditor.origin = oVec2(60+(-120-180)*0.5,0)
 oEditor.currentData = nil

@@ -24,7 +24,7 @@ Class
 				@_selectedItem = if item.checked then file else nil
 			elseif item.isLoaded
 				@\hide!
-				@\emit "Selected",file
+				emit "Scene.ModelSelected",file
 			else
 				MessageBox text:"Broken Model\nWith Data Error\nOr Missing Image",okOnly:true
 
@@ -48,7 +48,10 @@ Class
 		@\slots "Cleanup",->
 			oRoutine\remove @routine if @routine
 
-		@\gslot "Editor.ModelUpdated",(target)->
+		@\gslot "Scene.ViewModel",->
+			@\show!
+
+		@\gslot "Scene.ModelUpdated",(target)->
 			viewItem = @modelItems[target]
 			if viewItem and @models
 				for i,model in ipairs @models
@@ -58,7 +61,7 @@ Class
 				viewItem.parent\removeChild viewItem
 				@modelItems[target] = nil
 
-		@\gslot "Editor.LoadModel",(paths)->
+		@\gslot "Scene.LoadModel",(paths)->
 			@\runThread ->
 				-- get model files
 				models = {}

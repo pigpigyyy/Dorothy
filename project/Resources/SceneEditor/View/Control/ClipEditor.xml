@@ -3,14 +3,14 @@
 	<Import Module="Control.ScrollArea"/>
 	<Import Module="Control.CircleButton"/>
 
-	<Node Name="panel" X="{ $X }" Y="{ $Y }" Width="{ @W*0.6 }" Height="{ @H*0.6 }" Ref="True">
+	<Node Name="panel" X="{ $X }" Y="{ $Y }" Width="400" Height="{ @H*0.6 }" Ref="True">
 		<ScrollArea Name="scrollArea" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ CCMenu.DefaultHandlerPriority-100 }" Ref="True">
 			<DrawNode X="{ $X }" Y="{ $Y }" ZOrder="-1">
 				<Polygon FillColor="0xe5100000" BorderWidth="0.5" BorderColor="0x88ffafaf">
-					<Vec2 X="{ -@W*0.3-1 }" Y="{ -@H*0.3-1 }"/>
-					<Vec2 X="{ @W*0.3+1 }" Y="{ -@H*0.3-1 }"/>
-					<Vec2 X="{ @W*0.3+1 }" Y="{ @H*0.3+1 }"/>
-					<Vec2 X="{ -@W*0.3-1 }" Y="{ @H*0.3+1 }"/>
+					<Vec2 X="{ -200-1 }" Y="{ -@H*0.3-1 }"/>
+					<Vec2 X="{ 200+1 }" Y="{ -@H*0.3-1 }"/>
+					<Vec2 X="{ 200+1 }" Y="{ @H*0.3+1 }"/>
+					<Vec2 X="{ -200-1 }" Y="{ @H*0.3+1 }"/>
 				</Polygon>
 			</DrawNode>
 		</ScrollArea>

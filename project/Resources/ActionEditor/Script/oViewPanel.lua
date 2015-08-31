@@ -504,6 +504,7 @@ local function oViewPanel()
 		panel.items = {}
 		panel:showOutline(false)
 		menu:removeAllChildrenWithCleanup()
+		if not data then return end
 		local clipFile = data[oSd.clipFile]
 		local drawNode = CCDrawNode()
 		menu:addChild(drawNode)

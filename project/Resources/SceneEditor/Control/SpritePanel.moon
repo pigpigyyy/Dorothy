@@ -24,7 +24,7 @@ Class
 				@selectedClips[item.file] = if checked then true else nil
 		@selected = (item)->
 			@\hide!
-			@\emit "Selected",item.spriteStr
+			emit "Scene.SpriteSelected",item.spriteStr
 
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
@@ -46,7 +46,10 @@ Class
 		@\slots "Cleanup",->
 			oRoutine\remove @routine if @routine
 
-		@\gslot "Editor.LoadSprite",(paths)->
+		@\gslot "Scene.ViewSprite",->
+			@\show!
+
+		@\gslot "Scene.LoadSprite",(paths)->
 			@\runThread ->
 				-- get image and clip files
 				images = {}

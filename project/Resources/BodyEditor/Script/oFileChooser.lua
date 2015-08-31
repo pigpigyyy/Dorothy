@@ -230,13 +230,13 @@ local function oFileChooser()
 	cancelButton:addChild(btnBk,-1)
 	opMenu:addChild(cancelButton)
 
-	if CCDirector.sceneStackSize > 1 then
+	if oEditor.quitable then
 		local backButton = oButton("Quit",17,60,false,
 			0,0,
 			function(item)
 				opMenu.enabled = false
 				item.enabled = false
-				CCDirector:popToRootScene()
+				oEditor:emit("Quit")
 			end)
 		backButton.anchor = oVec2.zero
 		local btnBk = CCDrawNode()

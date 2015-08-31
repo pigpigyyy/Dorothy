@@ -15,7 +15,7 @@ Class
 			@cancelBtn\slots "Tapped", ->
 				@\clicked false
 
-		CCDirector.currentScene\addChild @
+		CCDirector.currentScene\addChild @,998
 
 	clicked: (result)=>
 		@opMenu.enabled = false
