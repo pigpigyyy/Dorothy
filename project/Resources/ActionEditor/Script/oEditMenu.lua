@@ -318,7 +318,7 @@ local function oEditMenu()
 						end
 						frameCopy[oKd.duration] = duration
 						table.insert(oEditor.animationData,oEditor.keyIndex+1,frameCopy)
-					end	
+					end
 					oEditor.dirty = true
 					oEditor.viewArea:getModel()
 					oEditor.controlBar:updateCursors()

@@ -1,4 +1,10 @@
 local tolua = require("tolua")
+local setmetatable = setmetatable
+local getmetatable = getmetatable
+local pairs = pairs
+local rawget = rawget
+local rawset = rawset
+local type = type
 
 local function __call(self,...)
 	local inst = {}
@@ -46,13 +52,8 @@ local function __index(self,name)
 end
 
 local function __newindex(self,name,value)
-	local item = rawget(self,name) -- self field
-	if item ~= nil then
-		rawset(self,name,value)
-		return
-	end
 	local cls = getmetatable(self)
-	item = rawget(cls,name)
+	local item = rawget(cls,name)
 	if item == nil then
 		local c = getmetatable(cls)
 		while c do
@@ -73,20 +74,18 @@ end
 
 local function class(arg1,arg2)
 	local typeDef = arg2 or arg1
-	local base = arg2 and arg1 or
-	{
+	local base = arg2 and arg1 or {
 		__index = __index,
 		__newindex = __newindex,
 		__call = __call,
 	}
-	local cls =
-	{
+	local cls = {
 		__index = __index,
 		__newindex = __newindex,
 		__call = __call,
 	}
 	for k,v in pairs(typeDef) do
-		if type(v) == "table" and v[0] then
+		if type(v) == "table" and v.__classfield then
 			rawset(base,k,v)
 		else
 			rawset(cls,k,v)
@@ -102,7 +101,7 @@ local function property(getter,setter)
 end
 
 local function classfield(getter,setter)
-	return {getter,setter,[0]=true}
+	return {getter,setter,__classfield=true}
 end
 
 local function classmethod(method)
