@@ -52,6 +52,8 @@ Class
 			@\show!
 
 		@\gslot "Scene.BodyUpdated",(target)->
+			if oCache.Body
+				oCache.Body\unload target
 			viewItem = @bodyItems[target]
 			if viewItem and @bodies
 				for i,body in ipairs @bodies
@@ -187,10 +189,10 @@ Class
 			viewItem = @bodyItems[targetItem]
 			if viewItem.isLoaded
 				@\clearSelection!
-				actionEditor = editor.actionEditor
-				actionEditor\slots("Activated")\set ->
-					actionEditor\edit targetItem
-				CCScene\run "actionEditor","rollOut"
+				bodyEditor = editor.bodyEditor
+				bodyEditor\slots("Activated")\set ->
+					bodyEditor\edit targetItem
+				CCScene\run "bodyEditor","rollOut"
 			else
 				MessageBox text:"Broken Body\nWith Data Error",okOnly:true
 
@@ -258,15 +260,20 @@ Class
 				@hint.positionX = @width-(@width-60)/2
 
 	show: =>
-		targetX = @width/2+10
-		targetY = CCDirector.winSize.height/2
-		@positionX = @width/4
-		@opacity = 0
-		@perform CCSequence {
+		@\perform CCSequence {
+			CCShow!
+			oOpacity 0.3,0.6,oEase.OutQuad
+		}
+		@closeBtn.scaleX = 0
+		@closeBtn.scaleY = 0
+		@closeBtn\perform oScale 0.3,1,1,oEase.OutBack
+		@panel.opacity = 0
+		@panel.scaleX = 0
+		@panel.scaleY = 0
+		@panel\perform CCSequence {
 			CCSpawn {
-				CCShow!
 				oOpacity 0.3,1,oEase.OutQuad
-				oPos 0.3,targetX,targetY,oEase.OutQuad
+				oScale 0.3,1,1,oEase.OutBack
 			}
 			CCCall ->
 				@scrollArea.touchEnabled = true
@@ -276,17 +283,17 @@ Class
 		}
 
 	hide: =>
-		targetX = @width/4
-		targetY = CCDirector.winSize.height/2
 		@isCheckMode = false
 		@scrollArea.touchEnabled = false
 		@menu.enabled = false
 		@opMenu.enabled = false
-		@perform CCSequence {
-			CCSpawn {
-				oOpacity 0.3,0,oEase.OutQuad
-				oPos 0.3,targetX,targetY,oEase.OutQuad
-			}
+		@closeBtn\perform oScale 0.3,0,0,oEase.InBack
+		@panel\perform CCSpawn {
+			oOpacity 0.3,0,oEase.OutQuad
+			oScale 0.3,0,0,oEase.InBack
+		}
+		@\perform CCSequence {
+			oOpacity 0.3,0,oEase.OutQuad
 			CCHide!
 			CCCall -> @\emit "Hide"
 		}

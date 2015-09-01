@@ -258,15 +258,20 @@ Class
 				@hint.positionX = @width-(@width-60)/2
 
 	show: =>
-		targetX = @width/2+10
-		targetY = CCDirector.winSize.height/2
-		@positionX = @width/4
-		@opacity = 0
-		@perform CCSequence {
+		@\perform CCSequence {
+			CCShow!
+			oOpacity 0.3,0.6,oEase.OutQuad
+		}
+		@closeBtn.scaleX = 0
+		@closeBtn.scaleY = 0
+		@closeBtn\perform oScale 0.3,1,1,oEase.OutBack
+		@panel.opacity = 0
+		@panel.scaleX = 0
+		@panel.scaleY = 0
+		@panel\perform CCSequence {
 			CCSpawn {
-				CCShow!
 				oOpacity 0.3,1,oEase.OutQuad
-				oPos 0.3,targetX,targetY,oEase.OutQuad
+				oScale 0.3,1,1,oEase.OutBack
 			}
 			CCCall ->
 				@scrollArea.touchEnabled = true
@@ -276,17 +281,17 @@ Class
 		}
 
 	hide: =>
-		targetX = @width/4
-		targetY = CCDirector.winSize.height/2
 		@isCheckMode = false
 		@scrollArea.touchEnabled = false
 		@menu.enabled = false
 		@opMenu.enabled = false
-		@perform CCSequence {
-			CCSpawn {
-				oOpacity 0.3,0,oEase.OutQuad
-				oPos 0.3,targetX,targetY,oEase.OutQuad
-			}
+		@closeBtn\perform oScale 0.3,0,0,oEase.InBack
+		@panel\perform CCSpawn {
+			oOpacity 0.3,0,oEase.OutQuad
+			oScale 0.3,0,0,oEase.InBack
+		}
+		@\perform CCSequence {
+			oOpacity 0.3,0,oEase.OutQuad
 			CCHide!
 			CCCall -> @\emit "Hide"
 		}

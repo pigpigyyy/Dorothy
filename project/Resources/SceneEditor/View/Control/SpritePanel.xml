@@ -1,42 +1,42 @@
 <!-- params: X, Y, Width, Height -->
-<Node X="{ x }" Y="{ y }" Width="{ width }" Height="{ height }">
+<LayerColor X="{ @X }" Y="{ @Y }"
+	TouchPriority="{ CCMenu.DefaultHandlerPriority-99 }"
+	Color="0x0" Opacity="0"
+	SwallowTouches="True" TouchEnabled="True">
 	<Import Module="Control.ScrollArea"/>
 	<Import Module="View.Shape.LineRect"/>
 	<Import Module="View.Shape.SolidRect"/>
 	<Import Module="Control.Button"/>
-	<Import Module="View.Control.ButtonBase"/>
+	<Import Module="View.Control.CircleButton"/>
 
-	<SolidRect Width="{ width }" Height="{ height }" Color="0xcc100000"/>
-	<LabelTTF Name="title" X="{ $X }" Y="{ $T-20 }" Text="Select Sprite" FontName="Arial" FontSize="24" Color="0x00ffff" Opacity="0.5" AntiAlias="False"/>
-	<ScrollArea Name="scrollArea" X="{ $X }" Y="{ $T-40-(height-110)/2 }" Width="{ width }" Height="{ height-110 }" ViewWidth="{ width }" ViewHeight="{ height-110 }" PaddingX="0" PaddingY="100" TouchPriority="0" Ref="True">
-		<Item Name="view">
-			<Menu Name="menu" AnchorX="0" AnchorY="0" Width="{ width }" Height="{ height-110 }" TouchPriority="1" Ref="True"/>
-		</Item>
-	</ScrollArea>
-	<LineRect X="-1" Y="-1" Width="{ width+2 }" Height="{ height+2 }" Color="0x88ffafaf"/>
-
-	<Menu Name="opMenu" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" Ref="True">
-		<Button Name="modeBtn" X="35" Y="35" Width="50" Height="50" FontSize="14" Text="Mode" Ref="True"/>
-		<Button Name="addBtn" X="95" Y="35" Width="50" Height="50" FontSize="16" Text="New" Ref="True"/>
-		<Button Name="delBtn" X="155" Y="35" Width="50" Height="50" FontSize="14" Text="Delete" Ref="True"/>
-		<Button Name="groupBtn" X="215" Y="35" Width="50" Height="50" FontSize="14" Text="Group" Ref="True"/>
-		<Button Name="delGroupBtn" X="275" Y="35" Width="50" Height="50" FontSize="14" Text="Break\nGroup" Ref="True"/>
-		<ButtonBase Name="closeBtn" X="30" Y="{ $T-20 }" Width="40" Height="40" Ref="True">
-			<Item Name="face">
-				<Line Color="0x00ffff" X="{ $X }" Y="{ $Y }">
-					<Vec2 X="12" Y="0"/>
-					<Vec2 X="-12" Y="0"/>
-					<Vec2 X="-4" Y="8"/>
-					<Vec2 X="-12" Y="0"/>
-					<Vec2 X="-4" Y="-8"/>
-					<Vec2 X="-12" Y="0"/>
-					<Vec2 X="12" Y="0"/>
-				</Line>
+	<Node Name="panel" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" Ref="True">
+		<SolidRect Width="{ width }" Height="{ height }" Color="0xee100000"/>
+		<LabelTTF Name="title" X="{ $X }" Y="{ $T-20 }" Text="Select Sprite" FontName="Arial" FontSize="24" Color="0x00ffff" Opacity="0.5" AntiAlias="False"/>
+		<ScrollArea Name="scrollArea" X="{ $X }" Y="{ $T-40-(height-110)/2 }" Width="{ width }" Height="{ height-110 }" ViewWidth="{ width }" ViewHeight="{ height-110 }" PaddingX="0" PaddingY="100" TouchPriority="{ CCMenu.DefaultHandlerPriority-101 }" Ref="True">
+			<Item Name="view">
+				<Menu Name="menu" AnchorX="0" AnchorY="0" Width="{ width }" Height="{ height-110 }" TouchPriority="{ CCMenu.DefaultHandlerPriority-100 }" Ref="True"/>
 			</Item>
-		</ButtonBase>
-	</Menu>
+		</ScrollArea>
+		<LineRect X="-1" Y="-1" Width="{ width+2 }" Height="{ height+2 }" Color="0x88ffafaf"/>
 
-	<LabelTTF Name="hint" X="{ $W-($W-50)/2 }" Y="30" Text="Updating" FontName="Arial" FontSize="16" Color="0x00ffff" Opacity="0" AntiAlias="False" Ref="True"/>	
+		<Menu Name="opMenu" AnchorX="0" AnchorY="0" X="0" Y="0" Width="{ width }" Height="70" TouchPriority="{ CCMenu.DefaultHandlerPriority-102 }" Ref="True">
+			<Button Name="modeBtn" X="35" Y="35" Width="50" Height="50" FontSize="14" Text="Mode" Ref="True"/>
+			<Button Name="addBtn" X="95" Y="35" Width="50" Height="50" FontSize="16" Text="New" Ref="True"/>
+			<Button Name="delBtn" X="155" Y="35" Width="50" Height="50" FontSize="14" Text="Delete" Ref="True"/>
+			<Button Name="groupBtn" X="215" Y="35" Width="50" Height="50" FontSize="14" Text="Group" Ref="True"/>
+			<Button Name="delGroupBtn" X="275" Y="35" Width="50" Height="50" FontSize="14" Text="Break\nGroup" Ref="True"/>
+		</Menu>
+
+		<LabelTTF Name="hint" X="{ $W-($W-50)/2 }" Y="30" Text="Updating" FontName="Arial" FontSize="16" Color="0x00ffff" Opacity="0" AntiAlias="False" Ref="True"/>	
+	</Node>
+
+	<Menu X="{ @X+width/2 }" Y="{ @Y+height/2 }" Width="60" Height="60" TouchPriority="{ CCMenu.DefaultHandlerPriority-102 }">
+		<CircleButton Name="closeBtn" X="{ $X }" Y="{ $Y }" Radius="30" Text="Cancel" FontSize="16" Ref="True">
+			<DrawNode>
+				<Dot X="30" Y="30" Radius="30" Color="0x22ffffff"/>
+			</DrawNode>
+		</CircleButton>
+	</Menu>
 
 	<Action>
 		<Loop Name="loopFade" Ref="True">
@@ -46,4 +46,4 @@
 			</Sequence>
 		</Loop>
 	</Action>
-</Node>
+</LayerColor>
