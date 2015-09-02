@@ -168,7 +168,7 @@ Class
 						i += 1
 				@images = images
 
-				itemCount = math.floor (@width-10)/110
+				itemCount = math.floor (@panel.width-10)/110
 				y = height
 				startY = height
 				for i,clip in ipairs @clips
@@ -418,13 +418,13 @@ Class
 			@delBtn\perform show 1
 			@groupBtn\perform show 2
 			@delGroupBtn\perform show 3
-			@hint.positionX = @width-(@width-300)/2
+			@hint.positionX = @panel.width-(@panel.width-300)/2
 		else
 			@addBtn\perform hide 3
 			@delBtn\perform hide 2
 			@groupBtn\perform hide 1
 			@delGroupBtn\perform hide 0
-			@hint.positionX = @width-(@width-60)/2
+			@hint.positionX = @panel.width-(@panel.width-60)/2
 		@menu\eachChild (child)->
 			if not child.clip
 				child.isCheckMode = isSelecting

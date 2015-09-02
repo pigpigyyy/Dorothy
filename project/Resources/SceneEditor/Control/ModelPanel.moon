@@ -131,12 +131,13 @@ Class
 					a\match("[\\/]([^\\/]*)$") < b\match("[\\/]([^\\/]*)$")
 				@models = models
 
+				itemCount = math.floor (@panel.width-10)/110
 				y = height
 				startY = height
 				for i,model in ipairs @models
 					i -= 1
-					x = 60+(i%4)*110
-					y = startY-60-math.floor(i/4)*110
+					x = 60+(i%itemCount)*110
+					y = startY-60-math.floor(i/itemCount)*110
 					viewItem = @modelItems[model]
 					viewItem.position = oVec2(x,y) + @scrollArea.offset
 				y -= 60 if #@models > 0
@@ -250,12 +251,12 @@ Class
 				@addBtn\perform show 0
 				@delBtn\perform show 1
 				@editBtn\perform show 2
-				@hint.positionX = @width-(@width-240)/2
+				@hint.positionX = @panel.width-(@panel.width-240)/2
 			else
 				@addBtn\perform hide 2
 				@delBtn\perform hide 1
 				@editBtn\perform hide 0
-				@hint.positionX = @width-(@width-60)/2
+				@hint.positionX = @panel.width-(@panel.width-60)/2
 
 	show: =>
 		@\perform CCSequence {

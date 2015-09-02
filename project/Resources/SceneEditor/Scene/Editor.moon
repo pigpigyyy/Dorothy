@@ -26,6 +26,9 @@ Class
 		CCScene\transition "rollIn",{"zoomFlip",0.5,CCOrientation.Down}
 		CCScene\transition "rollOut",{"zoomFlip",0.5,CCOrientation.Up}
 
+		for i = 1,10
+			@["touchLevel"..tostring(i)] = CCMenu.DefaultHandlerPriority-i*10
+
 		thread ->
 			{:width,:height} = CCDirector.winSize
 			panelWidth = 10+110*4

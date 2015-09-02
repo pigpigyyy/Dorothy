@@ -1,7 +1,8 @@
 <!-- params: Text -->
-<Layer Name="mask" X="{ @X }" Y="{ @Y }"
-		SwallowTouches="True" TouchEnabled="True"
-		TouchPriority="{ CCMenu.DefaultHandlerPriority-998 }">
+<LayerColor Name="mask" X="{ @X }" Y="{ @Y }"
+	Color="0x0" Opacity="0"
+	SwallowTouches="True" TouchEnabled="True"
+	TouchPriority="{ editor.touchLevel10 }">
 	<Import Module="Control.CircleButton"/>
 
 	<DrawNode Name="box" X="{ $X }" Y="{ $Y }" Ref="True">
@@ -15,7 +16,7 @@
 		<LabelTTF Name="title" Text="{ text }" FontName="Arial" FontSize="24" X="0" Y="40" Color="0x00ffff" AntiAlias="False"/>
 
 		<Menu Name="opMenu" Y="-40" Width="130" Height="60" SwallowTouches="True"
-			TouchPriority="{ CCMenu.DefaultHandlerPriority-1000 }" Ref="True">
+			TouchPriority="{ editor.touchLevel10-1 }" Ref="True">
 			<CircleButton Name="okBtn" X="{ okOnly and $X or 30 }" Y="30" Radius="30" FontSize="17" Text="OK" Ref="True">
 				<DrawNode X="30" Y="30">
 					<Dot X="0" Y="0" Radius="30" Color="0x22ffffff"/>
@@ -32,6 +33,7 @@
 	</DrawNode>
 
 	<Action>
+		<Opacity Name="fadeIn" Time="0.3" Alpha="0.6" Ease="OutQuad"/>
 		<Spawn Name="show">
 			<Opacity Time="0.3" Alpha="1"/>
 			<Scale Time="0.3" X="1" Y="1" Ease="OutBack"/>
@@ -39,9 +41,10 @@
 	</Action>
 
 	<Slot Name="Entered">
+		mask:perform(fadeIn)
 		box.opacity = 0
 		box.scaleX = 0
 		box.scaleY = 0
 		box:perform(show)
 	</Slot>
-</Layer>
+</LayerColor>
