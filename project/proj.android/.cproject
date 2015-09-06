@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?fileVersion 4.0.0?>
-
-<cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
 		<cconfiguration id="com.android.toolchain.gcc.13488998">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.android.toolchain.gcc.13488998" moduleId="org.eclipse.cdt.core.settings" name="Default">
@@ -22,7 +20,7 @@
 					<folderInfo id="com.android.toolchain.gcc.13488998.1095756382" name="/" resourcePath="">
 						<toolChain id="com.android.toolchain.gcc.727751474" name="com.android.toolchain.gcc">
 							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF" id="com.android.targetPlatform.2082958126" isAbstract="false"/>
-							<builder arguments="NDK_DEBUG=0" buildPath="${ProjDirPath}" command="ndk-build" id="com.android.builder.1348035754" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Android Builder"/>
+							<builder arguments="NDK_DEBUG=1" autoBuildTarget="" buildPath="${ProjDirPath}" cleanBuildTarget="" command="ndk-build" enableAutoBuild="false" enableCleanBuild="true" enabledIncrementalBuild="true" id="com.android.builder.1348035754" incrementalBuildTarget="" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Android Builder" parallelizationNumber="1"/>
 						</toolChain>
 					</folderInfo>
 				</configuration>

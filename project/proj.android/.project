@@ -53,9 +53,9 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>Resources</name>
+			<name>assets</name>
 			<type>2</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Resources</locationURI>
+			<location>/Users/Jin/Workspace/Dorothy/project/Resources</location>
 		</link>
 	</linkedResources>
 </projectDescription>
