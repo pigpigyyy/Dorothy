@@ -1,10 +1,11 @@
 <!-- params: nil -->
-<Layer Name="mask" X="{ @X }" Y="{ @Y }" TouchPriority="{ CCMenu.DefaultHandlerPriority-99 }" SwallowTouches="True" TouchEnabled="True">
+<LayerColor Name="mask" X="{ @X }" Y="{ @Y }" TouchPriority="{ editor.touchLevel9 }" Color="0x0" Opacity="0"
+SwallowTouches="True" TouchEnabled="True">
 	<Import Module="Control.ScrollArea"/>
 	<Import Module="Control.CircleButton"/>
 
-	<Node Name="panel" X="{ $X }" Y="{ $Y }" Width="400" Height="{ @H*0.6 }" Ref="True">
-		<ScrollArea Name="scrollArea" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ CCMenu.DefaultHandlerPriority-100 }" Ref="True">
+	<Node X="{ $X }" Y="{ $Y }" Width="400" Height="{ @H*0.6 }">
+		<Node Name="panel" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" Ref="True">
 			<DrawNode X="{ $X }" Y="{ $Y }" ZOrder="-1">
 				<Polygon FillColor="0xe5100000" BorderWidth="0.5" BorderColor="0x88ffafaf">
 					<Vec2 X="{ -200-1 }" Y="{ -@H*0.3-1 }"/>
@@ -13,15 +14,16 @@
 					<Vec2 X="{ -200-1 }" Y="{ @H*0.3+1 }"/>
 				</Polygon>
 			</DrawNode>
-		</ScrollArea>
-
-		<Menu Name="opMenu" X="{ $R-35 }" Y="{ $T }" Width="130" Height="60" TouchPriority="{ CCMenu.DefaultHandlerPriority-101 }" Ref="True">
+			<LabelTTF Name="title" X="{ $X }" Y="{ $T-25 }" Text="New Image Group" FontName="Arial" FontSize="24" Color="0x00ffff" Opacity="0.5" AntiAlias="False"/>
+			<ScrollArea Name="scrollArea" X="{ $X }" Y="{ $B+($H-50)/2 }" Width="{ $W }" Height="{ $H-50 }" TouchPriority="{ editor.touchLevel9-1 }" Ref="True"/>
+		</Node>
+		<Menu Name="opMenu" X="{ $R-35 }" Y="{ $T }" Width="130" Height="60" TouchPriority="{ editor.touchLevel9-2 }" Ref="True">
 			<CircleButton Name="cancelBtn" X="30" Y="30" Radius="30" Text="Cancel" FontSize="16" Ref="True">
 				<DrawNode>
 					<Dot X="30" Y="30" Radius="30" Color="0x22ffffff"/>
 				</DrawNode>
 			</CircleButton>
-			<CircleButton Name="okBtn" X="100" Y="30" Radius="30" Text="Group" FontSize="16" Ref="True">
+			<CircleButton Name="okBtn" X="100" Y="30" Radius="30" Text="OK" FontSize="16" Ref="True">
 				<DrawNode>
 					<Dot X="30" Y="30" Radius="30" Color="0x22ffffff"/>
 				</DrawNode>
@@ -30,15 +32,17 @@
 	</Node>
 
 	<Action>
+		<Opacity Name="fadeIn" Time="0.3" Alpha="0.6" Ease="OutQuad"/>
 		<Scale Name="scaleIn" Time="0.3" X="1" Y="1" Ease="OutBack"/>
 		<Scale Name="scaleInA" Time="0.3" X="1" Y="1" Ease="OutBack"/>
 		<Scale Name="scaleInB" Time="0.3" X="1" Y="1" Ease="OutBack"/>
 	</Action>
 
 	<Slot Name="Entered">
-		scrollArea.scaleX = 0
-		scrollArea.scaleY = 0
-		scrollArea:perform(scaleIn)
+		mask:perform(fadeIn)
+		panel.scaleX = 0
+		panel.scaleY = 0
+		panel:perform(scaleIn)
 		cancelBtn.scaleX = 0
 		cancelBtn.scaleY = 0
 		cancelBtn:perform(scaleInA)
@@ -46,4 +50,4 @@
 		okBtn.scaleY = 0
 		okBtn:perform(scaleInB)
 	</Slot>
-</Layer>
+</LayerColor>

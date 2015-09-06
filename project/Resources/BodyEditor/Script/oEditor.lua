@@ -22,6 +22,7 @@ local oEditor = CCScene()
 
 oEditor.standAlone = true
 oEditor.quitable = false
+oEditor.isLoaded = false
 oEditor.isPlaying = false
 oEditor.origin = oVec2(60+(-120-180)*0.5,0)
 oEditor.currentData = nil
@@ -53,11 +54,9 @@ oEditor.world = oWorld()
 oEditor.world.scheduler = oEditor.worldScheduler
 oEditor.world.showDebug = true
 oEditor.world:setShouldContact(0,0,true)
-oEditor.world:slots("Entered",function()
-	CCDirector.scheduler:shedule(oEditor.worldScheduler)
-end)
+CCDirector.scheduler:shedule(oEditor.worldScheduler)
 oEditor.world:slots("Exited",function()
-	CCDirector.scheduler:unshedule(oEditor.worldScheduler)
+	--CCDirector.scheduler:unshedule(oEditor.worldScheduler)
 end)
 
 local worldNode = CCNode()
@@ -998,15 +997,14 @@ oEditor.resetItem = function(self,data,resetFace)
 		if data:has("Face") then
 			local faceStr = data:get("Face")
 			if faceStr ~= "" then
-				local filename = oEditor.input..faceStr
-				if faceStr:match("|") then
-					face = CCSprite(filename)
-				elseif oContent:exist(filename) then
+				if faceStr:match("|") and oContent:exist(faceStr:match("(.*)|")) then
+					face = CCSprite(faceStr)
+				elseif oContent:exist(faceStr) then
 					local extension = string.lower(string.match(faceStr,"%.([^%.\\/]*)$"))
 					if extension == "png" then
-						face = CCSprite(filename)
+						face = CCSprite(faceStr)
 					elseif extension == "model" then
-						face = oModel(filename)
+						face = oModel(faceStr)
 					end
 				else
 					face = nil
@@ -1201,6 +1199,23 @@ oEditor.loadData = function(self,filename)
 	-- TODO
 end
 
+oEditor.resetEditor = function(self)
+	emit("Body.viewArea.create",nil)
+	emit("Body.editMenu.created")
+	emit("Body.editMenu.reset")
+	emit("Body.editControl.hide")
+	emit("Body.settingPanel.toState",nil)
+	emit("Body.settingPanel.enable",true)
+	emit("Body.viewPanel.choose",nil)
+	emit("Body.editor.isPlaying",false)
+end
+
+oEditor.edit = function(self, file)
+	oEditor:resetEditor()
+	oEditor.currentFile = file
+	oEditor:loadData(file)
+end
+
 -- bodyData[1]: ShapeName
 -- bodyData[2]: ItemName -- SubShapes don`t have names
 
@@ -1225,21 +1240,22 @@ oRoutine(once(function()
 		oEditor:addChild(oEditor[name],index)
 		coroutine.yield()
 	end
-	local resPath = "BodyEditor/Body"
-	local writePath = oContent.writablePath.."Body"
-	if not oContent:exist(oContent.writablePath.."Body") and oContent:exist("BodyEditor/Body") then
-		oContent:copyAsync(resPath,writePath)
-		if not oContent:exist(oEditor.input) then
-			oContent:mkdir(oEditor.input)
+	if oEditor.standAlone then
+		local resPath = "BodyEditor/Body"
+		local writePath = oContent.writablePath.."Body"
+		if not oContent:exist(oContent.writablePath.."Body") and oContent:exist("BodyEditor/Body") then
+			oContent:copyAsync(resPath,writePath)
+			if not oContent:exist(oEditor.input) then
+				oContent:mkdir(oEditor.input)
+			end
+			if not oContent:exist(oEditor.output) then
+				oContent:mkdir(oEditor.output)
+			end
 		end
-		if not oContent:exist(oEditor.output) then
-			oContent:mkdir(oEditor.output)
-		end
+		local oFileChooser = require("oFileChooser")
+		coroutine.yield()
+		oEditor:addChild(oFileChooser(),oEditor.topMost)
 	end
-	local oFileChooser = require("oFileChooser")
-	coroutine.yield()
-	oEditor:addChild(oFileChooser(),oEditor.topMost)
-
 	local CCUserDefault = require("CCUserDefault")
 	local oVec2 = require("oVec2")
 	if CCUserDefault.G == "" then
@@ -1247,10 +1263,23 @@ oRoutine(once(function()
 	end
 	oEditor.world.gravity = oVec2(0,CCUserDefault.G)
 	--dofile("BodyEditor/Script/generateLoader.lua")
+
+	if not oEditor.isLoaded then
+		oEditor.isLoaded = true
+	end
 end))
 
 oEditor:slots("Cleanup",function()
 	oEditor:clearData()
+end)
+
+oEditor:slots("Entering",function()
+	oRoutine(once(function()
+		repeat
+			coroutine.yield()
+		until oEditor.isLoaded
+		oEditor:emit("Activated")
+	end))
 end)
 
 return oEditor

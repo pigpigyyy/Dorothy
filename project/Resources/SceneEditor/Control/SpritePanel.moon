@@ -168,7 +168,7 @@ Class
 						i += 1
 				@images = images
 
-				itemCount = math.floor (@width-10)/110
+				itemCount = math.floor (@panel.width-10)/110
 				y = height
 				startY = height
 				for i,clip in ipairs @clips
@@ -418,13 +418,13 @@ Class
 			@delBtn\perform show 1
 			@groupBtn\perform show 2
 			@delGroupBtn\perform show 3
-			@hint.positionX = @width-(@width-300)/2
+			@hint.positionX = @panel.width-(@panel.width-300)/2
 		else
 			@addBtn\perform hide 3
 			@delBtn\perform hide 2
 			@groupBtn\perform hide 1
 			@delGroupBtn\perform hide 0
-			@hint.positionX = @width-(@width-60)/2
+			@hint.positionX = @panel.width-(@panel.width-60)/2
 		@menu\eachChild (child)->
 			if not child.clip
 				child.isCheckMode = isSelecting
@@ -432,15 +432,20 @@ Class
 				child.enabled = not isSelecting
 
 	show: =>
-		targetX = @width/2+10
-		targetY = CCDirector.winSize.height/2
-		@positionX = @width/4
-		@opacity = 0
-		@perform CCSequence {
+		@\perform CCSequence {
+			CCShow!
+			oOpacity 0.3,0.6,oEase.OutQuad
+		}
+		@closeBtn.scaleX = 0
+		@closeBtn.scaleY = 0
+		@closeBtn\perform oScale 0.3,1,1,oEase.OutBack
+		@panel.opacity = 0
+		@panel.scaleX = 0
+		@panel.scaleY = 0
+		@panel\perform CCSequence {
 			CCSpawn {
-				CCShow!
 				oOpacity 0.3,1,oEase.OutQuad
-				oPos 0.3,targetX,targetY,oEase.OutQuad
+				oScale 0.3,1,1,oEase.OutBack
 			}
 			CCCall ->
 				@scrollArea.touchEnabled = true
@@ -450,17 +455,17 @@ Class
 		}
 
 	hide: =>
-		targetX = @width/4
-		targetY = CCDirector.winSize.height/2
 		@\_setCheckMode false
 		@scrollArea.touchEnabled = false
 		@menu.enabled = false
 		@opMenu.enabled = false
-		@perform CCSequence {
-			CCSpawn {
-				oOpacity 0.3,0,oEase.OutQuad
-				oPos 0.3,targetX,targetY,oEase.OutQuad
-			}
+		@closeBtn\perform oScale 0.3,0,0,oEase.InBack
+		@panel\perform CCSpawn {
+			oOpacity 0.3,0,oEase.OutQuad
+			oScale 0.3,0,0,oEase.InBack
+		}
+		@\perform CCSequence {
+			oOpacity 0.3,0,oEase.OutQuad
 			CCHide!
 			CCCall -> @\emit "Hide"
 		}

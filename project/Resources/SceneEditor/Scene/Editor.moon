@@ -9,6 +9,7 @@ Class
 		@_gameName = ""
 		@_gameFullPath = ""
 		@_actionEditor = nil
+		@_bodyEditor = nil
 		@game = "Test"
 
 		_G["editor"] = @
@@ -19,44 +20,49 @@ Class
 			builtin["editor"] = nil
 			oCache\clear!
 			CCScene\remove "actionEditor"
+			CCScene\remove "bodyEditor"
 
 		CCScene\add "sceneEditor",@
-		CCScene\add "actionEditor",@actionEditor
 		CCScene\transition "rollIn",{"zoomFlip",0.5,CCOrientation.Down}
 		CCScene\transition "rollOut",{"zoomFlip",0.5,CCOrientation.Up}
 
+		for i = 1,10
+			@["touchLevel"..tostring(i)] = CCMenu.DefaultHandlerPriority-i*10
+
 		thread ->
-			width = 10+110*4
-			height = @height-20
+			{:width,:height} = CCDirector.winSize
+			panelWidth = 10+110*4
+			panelHeight = height*0.6
 			sleep!
 			SpritePanel = require "Control.SpritePanel"
 			sleep!
 			@spritePanel = SpritePanel {
-				x:-10-width/2
-				y:10+height/2
-				width:width
-				height:height
+				x:width/2
+				y:height/2
+				width:panelWidth
+				height:panelHeight
 			}
+			@spritePanel.visible = false
 			@\addChild @spritePanel,1
 			sleep!
 			ModelPanel = require "Control.ModelPanel"
 			sleep!
 			@modelPanel = ModelPanel {
-				x:-10-width/2
-				y:10+height/2
-				width:width
-				height:height
+				width:panelWidth
+				height:panelHeight
 			}
+			@modelPanel.visible = false
 			@\addChild @modelPanel,1
 			sleep!
 			BodyPanel = require "Control.BodyPanel"
 			sleep!
 			@bodyPanel = BodyPanel {
-				x:-10-width/2
-				y:10+height/2
-				width:width
-				height:height
+				x:width/2
+				y:height/2
+				width:panelWidth
+				height:panelHeight
 			}
+			@bodyPanel.visible = false
 			@\addChild @bodyPanel,1
 			sleep!
 			EditMenu = require "Control.EditMenu"
@@ -92,6 +98,12 @@ Class
 			oContent\mkdir @graphicFullPath unless oContent\exist @graphicFullPath
 			oContent\mkdir @physicsFullPath unless oContent\exist @physicsFullPath
 			oContent\mkdir @logicFullPath unless oContent\exist @logicFullPath
+			if @_actionEditor
+				actionEditor.input = @gameFullPath
+				actionEditor.output = @gameFullPath
+			if @_bodyEditor
+				bodyEditor.input = @gameFullPath
+				bodyEditor.output = @gameFullPath
 
 	gameFullPath: property => @_gameFullPath
 	graphicFolder: property => "Graphic/"
@@ -113,5 +125,22 @@ Class
 			actionEditor\slots "Quit",->
 				CCScene\run "sceneEditor","rollIn"
 				@\updateModels!
+			CCScene\add "actionEditor",actionEditor
 			@_actionEditor = actionEditor
 		return @_actionEditor
+
+	bodyEditor: property =>
+		if not @_bodyEditor
+			bodyEditor = require("BodyEditor.Script.oEditor")
+			bodyEditor.standAlone = false
+			bodyEditor.quitable = true
+			bodyEditor.input = @gameFullPath
+			bodyEditor.output = @gameFullPath
+			bodyEditor\slots "Edited",(body)->
+				emit "Scene.BodyUpdated",body
+			bodyEditor\slots "Quit",->
+				CCScene\run "sceneEditor","rollIn"
+				@\updateBodies!
+			CCScene\add "bodyEditor",bodyEditor
+			@_bodyEditor = bodyEditor
+		return @_bodyEditor

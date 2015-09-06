@@ -57,11 +57,13 @@ Class
 
 	close: (result)=>
 		@opMenu.enabled = false
-		@\perform oOpacity 0.4,0
+		@\perform oOpacity 0.3,0
+		@okBtn\perform oScale 0.3,0,0,oEase.InBack
+		@cancelBtn\perform oScale 0.3,0,0,oEase.InBack
 		@panel\perform CCSequence {
 			CCSpawn {
-				oScale 0.4,0,0,oEase.InBack
-				oOpacity 0.4,0
+				oScale 0.3,0,0,oEase.InBack
+				oOpacity 0.3,0
 			}
 			CCCall ->
 				@\emit "Grouped",result

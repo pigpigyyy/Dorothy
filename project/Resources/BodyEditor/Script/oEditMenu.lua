@@ -77,6 +77,7 @@ local function oEditMenu()
 					oEditor.dirty = false
 					button.text = "Edit"
 					oEditor:dumpData(oEditor.currentFile)
+					oEditor:emit("Edited",oEditor.currentFile)
 				else
 					oEditor:addChild(oBox("New Name",function(name)
 						if name == "" or name:match("[\\/|:*?<>\"%.]") then
@@ -86,7 +87,6 @@ local function oEditMenu()
 							button.text = "Edit"
 							oEditor.currentFile = name..".body"
 							oEditor:dumpData(oEditor.currentFile)
-							oEditor:emit("Edited",oEditor.currentFile)
 						end
 					end,true),oEditor.topMost)
 				end

@@ -38,28 +38,26 @@ local function oFileChooser()
 	},ccColor4(0xe5100000),0.5,ccColor4(0x88ffafaf))
 	border:addChild(background,-1)
 
-	local function resetEditor()
-		emit("Body.viewArea.create",nil)
-		emit("Body.editMenu.created")
-		emit("Body.editMenu.reset")
-		emit("Body.editControl.hide")
-		emit("Body.settingPanel.toState",nil)
-		emit("Body.settingPanel.enable",true)
-		emit("Body.viewPanel.choose",nil)
-		emit("Body.editor.isPlaying",false)
-	end
-
-	local entries = oContent:getEntries(oEditor.output,false)
 	local files = {}
-	for i = 1,#entries do
-		local name = nil
-		if entries[i]:sub(-5,-1) == ".body" then
-			name = entries[i]:sub(1,-6)
+	local function getResources(path)
+		local entries = oContent:getEntries(oEditor.output..path,false)
+		for i = 1,#entries do
+			local name = nil
+			if entries[i]:sub(-5,-1) == ".body" then
+				name = entries[i]:sub(1,-6)
+			end
+			if name then
+				table.insert(files,path..name)
+			end
 		end
-		if name then
-			table.insert(files,name)
+		local folders = oContent:getEntries(oEditor.output..path,true)
+		for _,folder in ipairs(folders) do
+			if folder ~= "." and folder ~= ".." then
+				getResources(path..folder.."/")
+			end
 		end
 	end
+	getResources("")
 	local n = 0
 	local y = 0
 	local xStart = 0 -- left
@@ -77,7 +75,7 @@ local function oFileChooser()
 	yStart = y-title.contentSize.height-(oEditor.currentFile and -10 or 20)
 
 	if oEditor.currentFile then
-		title = CCLabelTTF("(Current: "..oEditor.currentFile:sub(1,-6)..")","Arial",16)
+		title = CCLabelTTF("(Current: "..oEditor.currentFile:match("([^\\/]*)%.[^%.\\/]*$")..")","Arial",16)
 		title.texture.antiAlias = false
 		title.color = ccColor3(0x00ffff)
 		title.anchor = oVec2(0.5,1)
@@ -92,16 +90,15 @@ local function oFileChooser()
 	for i = 1,#files do
 		n = n+1
 		y = yStart-10-math.floor((n-1)/itemNum)*60
-		local name = #files[i] > 10 and files[i]:sub(1,7).."..." or files[i]
+		local name = files[i]:match("([^\\/]*)$")
+		name = #name > 10 and name:sub(1,7).."..." or name
 		local button = oButton(
 			name,
 			17,
 			itemWidth,50,
 			xStart+10+((n-1)%itemNum)*(itemWidth+10), y,
 			function(item)
-				resetEditor()
-				oEditor.currentFile = item.file
-				oEditor:loadData(item.file)
+				oEditor:edit(item.file)
 				panel.ended = function()
 					panel.parent:removeChild(panel)
 				end
@@ -140,7 +137,7 @@ local function oFileChooser()
 				if name == "" or name:match("[\\/|:*?<>\"%.]") then
 					oEditor:addChild(oBox("Invalid Name"),oEditor.topMost)
 				else
-					resetEditor()
+					oEditor:resetEditor()
 					oEditor.currentFile = name..".body"
 					oEditor:clearData()
 					oEditor:dumpData(oEditor.currentFile)
@@ -177,7 +174,7 @@ local function oFileChooser()
 				end
 				panel:hide()
 				oEditor:addChild(oBox("Delete "..oEditor.currentFile:sub(1,-5),function()
-					resetEditor()
+					oEditor:resetEditor()
 					oContent:remove(oEditor.output..oEditor.currentFile)
 					oEditor.currentFile = nil
 					oEditor:clearData()
@@ -236,6 +233,7 @@ local function oFileChooser()
 			function(item)
 				opMenu.enabled = false
 				item.enabled = false
+				panel:hide()
 				oEditor:emit("Quit")
 			end)
 		backButton.anchor = oVec2.zero
