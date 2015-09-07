@@ -198,12 +198,12 @@ panel.init = function(self)
 	menu:runAction(oOpacity(0.3,1))
 	local y = 0
 	for i = 1,#Tests do
-		y = winSize.height-60-(i-1)*60
+		y = winSize.height-10-(i-1)*60
 		local button = oButton(
 			Tests[i][1],
 			16,
 			200,50,
-			winSize.width*0.5,y,
+			winSize.width*0.5-100,y,
 			function()
 				local result = require(Tests[i][2])
 				package.loaded[Tests[i][2]] = nil
@@ -224,6 +224,7 @@ panel.init = function(self)
 					opMenu:addChild(endBtn)
 				end
 			end)
+		button.anchor = oVec2(0,1)
 		menu:addChild(button)
 	end
 	local yTo = winSize.height-y+60

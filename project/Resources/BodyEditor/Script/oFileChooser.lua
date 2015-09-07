@@ -137,10 +137,7 @@ local function oFileChooser()
 				if name == "" or name:match("[\\/|:*?<>\"%.]") then
 					oEditor:addChild(oBox("Invalid Name"),oEditor.topMost)
 				else
-					oEditor:resetEditor()
-					oEditor.currentFile = name..".body"
-					oEditor:clearData()
-					oEditor:dumpData(oEditor.currentFile)
+					oEditor:new(name..".body")
 				end
 			end,true),oEditor.topMost)
 		end)
