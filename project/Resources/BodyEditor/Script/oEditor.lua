@@ -1216,6 +1216,13 @@ oEditor.edit = function(self, file)
 	oEditor:loadData(file)
 end
 
+oEditor.new = function(self, file)
+	oEditor:resetEditor()
+	oEditor.currentFile = file
+	oEditor:clearData()
+	oEditor:dumpData(oEditor.currentFile)
+end
+
 -- bodyData[1]: ShapeName
 -- bodyData[2]: ItemName -- SubShapes don`t have names
 

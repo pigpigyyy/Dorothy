@@ -156,15 +156,14 @@ Class
 					if name == "" or name\match("[\\/|:*?<>\"%.]")
 						MessageBox text:"Invalid Name!",okOnly:true
 						return
-					for model,_ in pairs @bodyItems
-						if name == model\match("([^\\/]*)%.[^%.\\/]*$")
+					for body,_ in pairs @bodyItems
+						if name == body\match("([^\\/]*)%.[^%.\\/]*$")
 							MessageBox text:"Name Exist!",okOnly:true
 							return
-					actionEditor = editor.actionEditor
-					actionEditor\slots("Activated")\set ->
-						oFileChooser = require "ActionEditor.Script.oFileChooser"
-						oFileChooser(true,true,name)
-					CCScene\run "actionEditor","rollOut"
+					bodyEditor = editor.bodyEditor
+					bodyEditor\slots("Activated")\set ->
+						bodyEditor\new editor.physicsFolder..name..".body"
+					CCScene\run "bodyEditor","rollOut"
 
 		@delBtn\slots "Tapped",->
 			if not @_selectedItem
