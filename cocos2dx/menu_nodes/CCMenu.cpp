@@ -207,7 +207,7 @@ bool CCMenu::ccTouchBegan(CCTouch* touch, CCEvent* event)
         m_pSelectedItem->selected();
         return true;
     }
-	if (m_bSwallowTouches && CCRect(CCPoint::zero, CCMenu::getContentSize()).containsPoint(CCMenu::convertToNodeSpace(touch->getLocation())))
+	if (m_bSwallowTouches && CCRect(CCPoint::zero, this->getContentSize()).containsPoint(this->convertToNodeSpace(touch->getLocation())))
 	{
 		m_eState = kCCMenuStateTrackingTouch;
 		return true;
