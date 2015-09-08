@@ -314,8 +314,8 @@ local function oSelectionPanel(borderSize,noCliping)
 	end
 
 	panel.reset = function(self,width,height,padX,padY)
-		viewWidth = width
-		viewHeight = height
+		if height < borderSize.height then height = borderSize.height end
+		if width < borderSize.width then width = borderSize.width end
 		moveY = viewHeight-borderSize.height
 		moveX = borderSize.width-viewWidth
 		paddingX = padX

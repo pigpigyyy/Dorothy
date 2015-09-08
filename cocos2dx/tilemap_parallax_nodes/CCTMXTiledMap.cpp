@@ -88,13 +88,13 @@ bool CCTMXTiledMap::initWithXML(const char* tmxString, const char* resourcePath)
 }
 
 CCTMXTiledMap::CCTMXTiledMap()
-    :m_tMapSize(CCSize::zero)
-    ,m_tTileSize(CCSize::zero)        
-    ,m_pObjectGroups(NULL)
-    ,m_pProperties(NULL)
-    ,m_pTileProperties(NULL)
-{
-}
+:m_tMapSize(CCSize::zero)
+,m_tTileSize(CCSize::zero)
+,m_pObjectGroups(NULL)
+,m_pProperties(NULL)
+,m_pTileProperties(NULL)
+{ }
+
 CCTMXTiledMap::~CCTMXTiledMap()
 {
     CC_SAFE_RELEASE(m_pProperties);
@@ -114,7 +114,7 @@ void CCTMXTiledMap::setObjectGroups(CCArray* var)
     m_pObjectGroups = var;
 }
 
-CCDictionary * CCTMXTiledMap::getProperties()
+CCDictionary* CCTMXTiledMap::getProperties()
 {
     return m_pProperties;
 }
@@ -127,10 +127,10 @@ void CCTMXTiledMap::setProperties(CCDictionary* var)
 }
 
 // private
-CCTMXLayer * CCTMXTiledMap::parseLayer(CCTMXLayerInfo *layerInfo, CCTMXMapInfo *mapInfo)
+CCTMXLayer* CCTMXTiledMap::parseLayer(CCTMXLayerInfo* layerInfo, CCTMXMapInfo* mapInfo)
 {
-    CCTMXTilesetInfo *tileset = tilesetForLayer(layerInfo, mapInfo);
-    CCTMXLayer *layer = CCTMXLayer::create(tileset, layerInfo, mapInfo);
+    CCTMXTilesetInfo* tileset = tilesetForLayer(layerInfo, mapInfo);
+    CCTMXLayer* layer = CCTMXLayer::create(tileset, layerInfo, mapInfo);
 
     // tell the layerinfo to release the ownership of the tiles map.
     layerInfo->m_bOwnTiles = false;
@@ -139,7 +139,7 @@ CCTMXLayer * CCTMXTiledMap::parseLayer(CCTMXLayerInfo *layerInfo, CCTMXMapInfo *
     return layer;
 }
 
-CCTMXTilesetInfo * CCTMXTiledMap::tilesetForLayer(CCTMXLayerInfo *layerInfo, CCTMXMapInfo *mapInfo)
+CCTMXTilesetInfo* CCTMXTiledMap::tilesetForLayer(CCTMXLayerInfo* layerInfo, CCTMXMapInfo* mapInfo)
 {
     CCSize size = layerInfo->m_tLayerSize;
     CCArray* tilesets = mapInfo->getTilesets();
@@ -214,19 +214,23 @@ void CCTMXTiledMap::buildWithMapInfo(CCTMXMapInfo* mapInfo)
             layerInfo = (CCTMXLayerInfo*)pObj;
             if (layerInfo && layerInfo->m_bVisible)
             {
-                CCTMXLayer *child = parseLayer(layerInfo, mapInfo);
+				CCTMXLayer* child = parseLayer(layerInfo, mapInfo);
                 addChild((CCNode*)child, idx, idx);
-
                 // update content size with the max size
                 const CCSize& childSize = child->getContentSize();
                 CCSize currentSize = this->getContentSize();
                 currentSize.width = MAX( currentSize.width, childSize.width );
                 currentSize.height = MAX( currentSize.height, childSize.height );
                 this->setContentSize(currentSize);
-
                 idx++;
             }
         }
+		const CCSize& size = this->getContentSize();
+		CCARRAY_FOREACH(this->getChildren(), pObj)
+		{
+			CCTMXLayer* child = (CCTMXLayer*)pObj;
+			child->setPosition(ccp(size.width*0.5f,size.height*0.5f));
+		}
     }
 }
 
@@ -251,7 +255,7 @@ CCTMXLayer * CCTMXTiledMap::layerNamed(const char *layerName)
     return NULL;
 }
 
-CCTMXObjectGroup * CCTMXTiledMap::objectGroupNamed(const char *groupName)
+CCTMXObjectGroup* CCTMXTiledMap::objectGroupNamed(const char *groupName)
 {
     CCAssert(groupName != NULL && strlen(groupName) > 0, "Invalid group name!");
 
@@ -283,7 +287,5 @@ CCDictionary* CCTMXTiledMap::propertiesForGID(int GID)
 {
     return (CCDictionary*)m_pTileProperties->objectForKey(GID);
 }
-        
 
 NS_CC_END
-

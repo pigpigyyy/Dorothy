@@ -34,9 +34,12 @@ local function oJointChooser()
 	local itemWidth = 120
 	local itemHeight = 60
 	local itemNum = 3
+	while (itemWidth+10)*itemNum+10 > winSize.width and itemNum > 1 do
+		itemNum = itemNum - 1
+	end
+	local borderSize = CCSize((itemWidth+10)*itemNum+10,winSize.height*0.6)
 	local paddingX = 0
 	local paddingY = 100
-	local borderSize = CCSize((itemWidth+10)*itemNum+10,winSize.height-200)
 	local panel = oSelectionPanel(borderSize)
 	local menu = panel.menu
 	local border = panel.border

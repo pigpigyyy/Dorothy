@@ -26,7 +26,10 @@ local function oFileChooser(addExisted)
 	local winSize = CCDirector.winSize
 	local itemWidth = 120
 	local itemNum = 3
-	local borderSize = CCSize((itemWidth+10)*itemNum+10,winSize.height-200)
+	while (itemWidth+10)*itemNum+10 > winSize.width and itemNum > 1 do
+		itemNum = itemNum - 1
+	end
+	local borderSize = CCSize((itemWidth+10)*itemNum+10,winSize.height*0.6)
 	local panel = oSelectionPanel(borderSize)
 	local menu = panel.menu
 	local border = panel.border
