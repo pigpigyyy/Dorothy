@@ -4,10 +4,9 @@ class CCMenu: public CCLayer
 	
 	tolua_property__bool bool enabled;
 
-	void alignItemsVertically();
-	void alignItemsVerticallyWithPadding @ alignItemsVertically(float padding);
-	void alignItemsHorizontally();
-	void alignItemsHorizontallyWithPadding @ alignItemsHorizontally(float padding);
+	float alignItemsVerticallyWithPadding @ alignItemsVertically(float padding = 10);
+	float alignItemsHorizontallyWithPadding @ alignItemsHorizontally(float padding = 10);
+	CCSize alignItemsWithPadding @ alignItems(float padding = 10);
 
 	static CCMenu* create();
 };

@@ -50,10 +50,7 @@ static std::vector<unsigned int> ccarray_to_std_vector(CCArray* pArray)
     return ret;
 }
 
-enum 
-{
-    kDefaultPadding =  5,
-};
+static const int kDefaultPadding =  5;
 
 //
 //CCMenu
@@ -215,7 +212,7 @@ bool CCMenu::ccTouchBegan(CCTouch* touch, CCEvent* event)
     return false;
 }
 
-void CCMenu::ccTouchEnded(CCTouch *touch, CCEvent* event)
+void CCMenu::ccTouchEnded(CCTouch* touch, CCEvent* event)
 {
     CC_UNUSED_PARAM(touch);
     CC_UNUSED_PARAM(event);
@@ -279,309 +276,98 @@ void CCMenu::ccTouchMoved(CCTouch* touch, CCEvent* event)
 }
 
 //Menu - Alignment
-void CCMenu::alignItemsVertically()
+
+float CCMenu::alignItemsVerticallyWithPadding(float padding)
 {
-    this->alignItemsVerticallyWithPadding(kDefaultPadding);
+	float width = getContentSize().width;
+	float y = getContentSize().height - padding;
+	if (m_pChildren && m_pChildren->count() > 0)
+	{
+		CCObject* pObject = NULL;
+		CCARRAY_FOREACH(m_pChildren, pObject)
+		{
+			CCNode* pChild = (CCNode*)pObject;
+			float realWidth = pChild->getContentSize().width * pChild->getScaleX();
+			float realHeight = pChild->getContentSize().height * pChild->getScaleY();
+			float realPosY = (1.0f - pChild->getAnchorPoint().y) * realHeight;
+			y -= realPosY;
+			pChild->setPositionX(width*0.5f - (0.5f - pChild->getAnchorPoint().x) * realWidth);
+			pChild->setPositionY(y);
+			y -= pChild->getAnchorPoint().y * realHeight;
+			y -= padding;
+		}
+		return getContentSize().height - y;
+	}
+	return 0;
 }
 
-void CCMenu::alignItemsVerticallyWithPadding(float padding)
+float CCMenu::alignItemsHorizontallyWithPadding(float padding)
 {
-    float height = -padding;
+	float height = getContentSize().height;
+	float x = padding;
     if (m_pChildren && m_pChildren->count() > 0)
     {
-        CCObject* pObject = NULL;
-        CCARRAY_FOREACH(m_pChildren, pObject)
-        {
-            CCNode* pChild = dynamic_cast<CCNode*>(pObject);
-            if (pChild)
-            {
-                height += pChild->getContentSize().height * pChild->getScaleY() + padding;
-            }
-        }
+		CCObject* pObject = NULL;
+		CCARRAY_FOREACH(m_pChildren, pObject)
+		{
+			CCNode* pChild = (CCNode*)pObject;
+			float realWidth = pChild->getContentSize().width * pChild->getScaleX();
+			float realHeight = pChild->getContentSize().height * pChild->getScaleY();
+			float realPosX = pChild->getAnchorPoint().x * realWidth;
+			x += realPosX;
+			pChild->setPositionX(x);
+			pChild->setPositionY(height*0.5f - (0.5f - pChild->getAnchorPoint().y) * realHeight);
+			x += (1.0f - pChild->getAnchorPoint().x) * realWidth;
+			x += padding;
+		}
+		return x;
     }
-
-    float y = height / 2.0f;
-    if (m_pChildren && m_pChildren->count() > 0)
-    {
-        CCObject* pObject = NULL;
-        CCARRAY_FOREACH(m_pChildren, pObject)
-        {
-            CCNode* pChild = dynamic_cast<CCNode*>(pObject);
-            if (pChild)
-            {
-                pChild->setPosition(ccp(0, y - pChild->getContentSize().height * pChild->getScaleY() / 2.0f));
-                y -= pChild->getContentSize().height * pChild->getScaleY() + padding;
-            }
-        }
-    }
+	return 0;
 }
 
-void CCMenu::alignItemsHorizontally()
+
+CCSize CCMenu::alignItemsWithPadding(float padding)
 {
-    this->alignItemsHorizontallyWithPadding(kDefaultPadding);
-}
+	float height = getContentSize().height;
+	float width = getContentSize().width;
+	float x = padding;
+	float y = getContentSize().height - padding;
+	if (m_pChildren && m_pChildren->count() > 0)
+	{
+		CCObject* pObject = NULL;
+		int rows = 0;
+		float curY = y;
+		CCARRAY_FOREACH(m_pChildren, pObject)
+		{
+			CCNode* pChild = (CCNode*)pObject;
 
-void CCMenu::alignItemsHorizontallyWithPadding(float padding)
-{
-    float width = -padding;
-    if (m_pChildren && m_pChildren->count() > 0)
-    {
-        CCObject* pObject = NULL;
-        CCARRAY_FOREACH(m_pChildren, pObject)
-        {
-            CCNode* pChild = dynamic_cast<CCNode*>(pObject);
-            if (pChild)
-            {
-                width += pChild->getContentSize().width * pChild->getScaleX() + padding;
-            }
-        }
-    }
+			float realWidth = pChild->getContentSize().width * pChild->getScaleX();
+			if (x + realWidth + padding > width)
+			{
+				x = padding;
+				rows++;
+				y = curY - padding;
+			}
+			float realPosX = pChild->getAnchorPoint().x * realWidth;
+			x += realPosX;
 
-    float x = -width / 2.0f;
-    if (m_pChildren && m_pChildren->count() > 0)
-    {
-        CCObject* pObject = NULL;
-        CCARRAY_FOREACH(m_pChildren, pObject)
-        {
-            CCNode* pChild = dynamic_cast<CCNode*>(pObject);
-            if (pChild)
-            {
-                pChild->setPosition(ccp(x + pChild->getContentSize().width * pChild->getScaleX() / 2.0f, 0));
-                 x += pChild->getContentSize().width * pChild->getScaleX() + padding;
-            }
-        }
-    }
-}
+			float realHeight = pChild->getContentSize().height * pChild->getScaleY();
+			float realPosY = (1.0f - pChild->getAnchorPoint().y) * realHeight;
 
-void CCMenu::alignItemsInColumns(unsigned int columns, ...)
-{
-    va_list args;
-    va_start(args, columns);
+			pChild->setPositionX(x);
+			pChild->setPositionY(y - realPosY);
 
-    this->alignItemsInColumns(columns, args);
+			x += (1.0f - pChild->getAnchorPoint().x) * realWidth;
+			x += padding;
 
-    va_end(args);
-}
-
-void CCMenu::alignItemsInColumns(unsigned int columns, va_list args)
-{
-    CCArray* rows = CCArray::create();
-    while (columns)
-    {
-        rows->addObject(CCInteger::create(columns));
-        columns = va_arg(args, unsigned int);
-    }
-    alignItemsInColumnsWithArray(rows);
-}
-
-void CCMenu::alignItemsInColumnsWithArray(CCArray* rowsArray)
-{
-    vector<unsigned int> rows = ccarray_to_std_vector(rowsArray);
-
-    int height = -5;
-    unsigned int row = 0;
-    unsigned int rowHeight = 0;
-    unsigned int columnsOccupied = 0;
-    unsigned int rowColumns;
-
-    if (m_pChildren && m_pChildren->count() > 0)
-    {
-        CCObject* pObject = NULL;
-        CCARRAY_FOREACH(m_pChildren, pObject)
-        {
-            CCNode* pChild = dynamic_cast<CCNode*>(pObject);
-            if (pChild)
-            {
-                CCAssert(row < rows.size(), "");
-
-                rowColumns = rows[row];
-                // can not have zero columns on a row
-                CCAssert(rowColumns, "");
-
-                float tmp = pChild->getContentSize().height;
-                rowHeight = (unsigned int)((rowHeight >= tmp || isnan(tmp)) ? rowHeight : tmp);
-
-                ++columnsOccupied;
-                if (columnsOccupied >= rowColumns)
-                {
-                    height += rowHeight + 5;
-
-                    columnsOccupied = 0;
-                    rowHeight = 0;
-                    ++row;
-                }
-            }
-        }
-    }    
-
-    // check if too many rows/columns for available menu items
-    CCAssert(! columnsOccupied, "");
-
-    CCSize winSize = CCDirector::sharedDirector()->getWinSize();
-
-    row = 0;
-    rowHeight = 0;
-    rowColumns = 0;
-    float w = 0.0;
-    float x = 0.0;
-    float y = (float)(height / 2);
-
-    if (m_pChildren && m_pChildren->count() > 0)
-    {
-        CCObject* pObject = NULL;
-        CCARRAY_FOREACH(m_pChildren, pObject)
-        {
-            CCNode* pChild = dynamic_cast<CCNode*>(pObject);
-            if (pChild)
-            {
-                if (rowColumns == 0)
-                {
-                    rowColumns = rows[row];
-                    w = winSize.width / (1 + rowColumns);
-                    x = w;
-                }
-
-                float tmp = pChild->getContentSize().height;
-                rowHeight = (unsigned int)((rowHeight >= tmp || isnan(tmp)) ? rowHeight : tmp);
-
-                pChild->setPosition(ccp(x - winSize.width / 2,
-                                       y - pChild->getContentSize().height / 2));
-
-                x += w;
-                ++columnsOccupied;
-
-                if (columnsOccupied >= rowColumns)
-                {
-                    y -= rowHeight + 5;
-
-                    columnsOccupied = 0;
-                    rowColumns = 0;
-                    rowHeight = 0;
-                    ++row;
-                }
-            }
-        }
-    }    
-}
-
-void CCMenu::alignItemsInRows(unsigned int rows, ...)
-{
-    va_list args;
-    va_start(args, rows);
-
-    this->alignItemsInRows(rows, args);
-
-    va_end(args);
-}
-
-void CCMenu::alignItemsInRows(unsigned int rows, va_list args)
-{
-    CCArray* pArray = CCArray::create();
-    while (rows)
-    {
-        pArray->addObject(CCInteger::create(rows));
-        rows = va_arg(args, unsigned int);
-    }
-    alignItemsInRowsWithArray(pArray);
-}
-
-void CCMenu::alignItemsInRowsWithArray(CCArray* columnArray)
-{
-    vector<unsigned int> columns = ccarray_to_std_vector(columnArray);
-
-    vector<unsigned int> columnWidths;
-    vector<unsigned int> columnHeights;
-
-    int width = -10;
-    int columnHeight = -5;
-    unsigned int column = 0;
-    unsigned int columnWidth = 0;
-    unsigned int rowsOccupied = 0;
-    unsigned int columnRows;
-
-    if (m_pChildren && m_pChildren->count() > 0)
-    {
-        CCObject* pObject = NULL;
-        CCARRAY_FOREACH(m_pChildren, pObject)
-        {
-            CCNode* pChild = dynamic_cast<CCNode*>(pObject);
-            if (pChild)
-            {
-                // check if too many menu items for the amount of rows/columns
-                CCAssert(column < columns.size(), "");
-
-                columnRows = columns[column];
-                // can't have zero rows on a column
-                CCAssert(columnRows, "");
-
-                // columnWidth = fmaxf(columnWidth, [item contentSize].width);
-                float tmp = pChild->getContentSize().width;
-                columnWidth = (unsigned int)((columnWidth >= tmp || isnan(tmp)) ? columnWidth : tmp);
-
-                columnHeight += (int)(pChild->getContentSize().height + 5);
-                ++rowsOccupied;
-
-                if (rowsOccupied >= columnRows)
-                {
-                    columnWidths.push_back(columnWidth);
-                    columnHeights.push_back(columnHeight);
-                    width += columnWidth + 10;
-
-                    rowsOccupied = 0;
-                    columnWidth = 0;
-                    columnHeight = -5;
-                    ++column;
-                }
-            }
-        }
-    }
-
-    // check if too many rows/columns for available menu items.
-    CCAssert(! rowsOccupied, "");
-
-    CCSize winSize = CCDirector::sharedDirector()->getWinSize();
-
-    column = 0;
-    columnWidth = 0;
-    columnRows = 0;
-    float x = (float)(-width / 2);
-    float y = 0.0;
-
-    if (m_pChildren && m_pChildren->count() > 0)
-    {
-        CCObject* pObject = NULL;
-        CCARRAY_FOREACH(m_pChildren, pObject)
-        {
-            CCNode* pChild = dynamic_cast<CCNode*>(pObject);
-            if (pChild)
-            {
-                if (columnRows == 0)
-                {
-                    columnRows = columns[column];
-                    y = (float) columnHeights[column];
-                }
-
-                // columnWidth = fmaxf(columnWidth, [item contentSize].width);
-                float tmp = pChild->getContentSize().width;
-                columnWidth = (unsigned int)((columnWidth >= tmp || isnan(tmp)) ? columnWidth : tmp);
-
-                pChild->setPosition(ccp(x + columnWidths[column] / 2,
-                                       y - winSize.height / 2));
-
-                y -= pChild->getContentSize().height + 10;
-                ++rowsOccupied;
-
-                if (rowsOccupied >= columnRows)
-                {
-                    x += columnWidth + 5;
-                    rowsOccupied = 0;
-                    columnRows = 0;
-                    columnWidth = 0;
-                    ++column;
-                }
-            }
-        }
-    }
+			if (curY > y - realHeight)
+			{
+				curY = y - realHeight;
+			}
+		}
+		return CCSize(x, height - curY + 10);
+	}
+	return CCSize::zero;
 }
 
 CCMenuItem* CCMenu::itemForTouch(CCTouch *touch)

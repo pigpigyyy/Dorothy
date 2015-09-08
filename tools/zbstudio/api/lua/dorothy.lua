@@ -2775,16 +2775,24 @@ local Dorothy =
 			},
 			alignItemsVertically =
 			{
-				args = "(nil|padding: float)",
+				args = "(padding: float = 10)",
 				description = "",
-				returns = "()",
+				returns = "(contentHeight: float)",
 				type = "method",
 			},
 			alignItemsHorizontally =
 			{
-				args = "(nil|padding: float)",
+				args = "(padding: float = 10)",
 				description = "",
-				returns = "()",
+				returns = "(contentWidth: float)",
+				type = "method",
+			},
+			alignItems =
+			{
+				args = "(padding: float = 10)",
+				description = "",
+				returns = "(contentSize: CCSize)",
+				typeName = "CCSize",
 				type = "method",
 			},
 		},

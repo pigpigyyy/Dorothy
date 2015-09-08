@@ -80,29 +80,17 @@ public:
     /** initializes a CCMenu with a NSArray of CCMenuItem objects */
     bool initWithArray(CCArray* pArrayOfItems);
 
-    /** align items vertically */
-    void alignItemsVertically();
     /** align items vertically with padding
     @since v0.7.2
     */
-    void alignItemsVerticallyWithPadding(float padding);
+    float alignItemsVerticallyWithPadding(float padding = 10);
 
-    /** align items horizontally */
-    void alignItemsHorizontally();
     /** align items horizontally with padding
     @since v0.7.2
     */
-    void alignItemsHorizontallyWithPadding(float padding);
+    float alignItemsHorizontallyWithPadding(float padding = 10);
 
-    /** align items in rows of columns */
-    void alignItemsInColumns(unsigned int columns, ...);
-    void alignItemsInColumns(unsigned int columns, va_list args);
-    void alignItemsInColumnsWithArray(CCArray* rows);
-
-    /** align items in columns of rows */
-    void alignItemsInRows(unsigned int rows, ...);
-    void alignItemsInRows(unsigned int rows, va_list args);
-    void alignItemsInRowsWithArray(CCArray* columns);
+	CCSize alignItemsWithPadding(float padding = 10);
 
     //super methods
     virtual void registerWithTouchDispatcher();

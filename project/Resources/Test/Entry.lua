@@ -196,14 +196,12 @@ panel.init = function(self)
 	menu.opacity = 0
 	menu.enabled = false
 	menu:runAction(oOpacity(0.3,1))
-	local y = 0
 	for i = 1,#Tests do
-		y = winSize.height-10-(i-1)*60
 		local button = oButton(
 			Tests[i][1],
 			16,
 			200,50,
-			winSize.width*0.5-100,y,
+			0,0,
 			function()
 				local result = require(Tests[i][2])
 				package.loaded[Tests[i][2]] = nil
@@ -227,8 +225,7 @@ panel.init = function(self)
 		button.anchor = oVec2(0,1)
 		menu:addChild(button)
 	end
-	local yTo = winSize.height-y+60
-	local viewHeight = yTo < winSize.height and winSize.height or yTo
+	local viewHeight = menu:alignItemsVertically()
 	local viewWidth = winSize.width
 	local paddingX = 0
 	local paddingY = 100
