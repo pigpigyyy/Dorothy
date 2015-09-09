@@ -38,20 +38,6 @@ using namespace std;
 
 NS_CC_BEGIN
 
-static std::vector<unsigned int> ccarray_to_std_vector(CCArray* pArray)
-{
-    std::vector<unsigned int> ret;
-    CCObject* pObj;
-    CCARRAY_FOREACH(pArray, pObj)
-    {
-        CCInteger* pInteger = (CCInteger*)pObj;
-        ret.push_back((unsigned int)pInteger->getValue());
-    }
-    return ret;
-}
-
-static const int kDefaultPadding =  5;
-
 //
 //CCMenu
 //
@@ -61,7 +47,7 @@ CCMenu* CCMenu::create()
 	return CCMenu::createWithArray(nullptr);
 }
 
-CCMenu * CCMenu::create(CCMenuItem* item, ...)
+CCMenu* CCMenu::create(CCMenuItem* item, ...)
 {
     va_list args;
     va_start(args,item);
