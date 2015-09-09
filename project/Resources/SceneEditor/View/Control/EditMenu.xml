@@ -4,4 +4,5 @@
 	<Button Name="spriteBtn" X="35" Y="{ $T-95 }" Width="50" Height="50" Text="Sprite" FontSize="16" Ref="True"/>
 	<Button Name="modelBtn" X="35" Y="{ $T-155 }" Width="50" Height="50" Text="Model" FontSize="16" Ref="True"/>
 	<Button Name="bodyBtn" X="35" Y="{ $T-215 }" Width="50" Height="50" Text="Body" FontSize="16" Ref="True"/>
+	<Button Name="effectBtn" X="35" Y="{ $T-275 }" Width="50" Height="50" Text="Effect" FontSize="16" Ref="True"/>
 </Menu>

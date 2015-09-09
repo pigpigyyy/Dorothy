@@ -1,7 +1,7 @@
 Dorothy!
 Class,property = unpack require "class"
-BodyPanelView = require "View.Control.BodyPanel"
-BodyView = require "Control.BodyView"
+EffectPanelView = require "View.Control.EffectPanel"
+EffectView = require "Control.EffectView"
 MessageBox = require "Control.MessageBox"
 InputBox = require "Control.InputBox"
 import CompareTable from require "Data.Utils"
@@ -11,10 +11,10 @@ import CompareTable from require "Data.Utils"
 -- [params]
 -- x, y, width, height
 Class
-	__partial: (args)=> BodyPanelView args
+	__partial: (args)=> EffectPanelView args
 	__init: (args)=>
 		@_isCheckMode = false
-		@bodyItems = {}
+		@effectItems = {}
 		@_selectedItem = nil
 		@selected = (item)->
 			file = item.file
@@ -24,9 +24,9 @@ Class
 				@_selectedItem = if item.checked then file else nil
 			elseif item.isLoaded
 				@\hide!
-				emit "Scene.BodySelected",file
+				emit "Scene.EffectSelected",file
 			else
-				MessageBox text:"Broken Body\nWith Data Error",okOnly:true
+				MessageBox text:"Broken Effect\nWith Data Error",okOnly:true
 
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
@@ -48,69 +48,68 @@ Class
 		@\slots "Cleanup",->
 			oRoutine\remove @routine if @routine
 
-		@\gslot "Scene.ViewBody",->
+		@\gslot "Scene.ViewEffect",->
 			@\show!
 
-		@\gslot "Scene.ClearBody",->
-			@bodies = nil
+		@\gslot "Scene.ClearEffect",->
+			@effects = nil
 
-		@\gslot "Scene.BodyUpdated",(target)->
-			if oCache.Body
-				oCache.Body\unload target
-			viewItem = @bodyItems[target]
-			if viewItem and @bodies
-				for i,body in ipairs @bodies
-					if body == target
-						table.remove @bodies,i
+		@\gslot "Scene.EffectUpdated",(target)->
+			if not oCache.Particle\unload target
+				oCache.Animation\unload target
+			viewItem = @effectItems[target]
+			if viewItem and @effects
+				for i,effect in ipairs @effects
+					if effect == target
+						table.remove @effects,i
 						break
 				viewItem.parent\removeChild viewItem
-				@bodyItems[target] = nil
+				@effectItems[target] = nil
 
-		@\gslot "Scene.LoadBody",(resPath)->
+		@\gslot "Scene.LoadEffect",(path)->
 			@\runThread ->
-				-- get body files
-				bodies = {}
-				visitResource = (path)->
-					return unless oContent\exist path
-					path = path\gsub("[\\/]*$","")
-					files = oContent\getEntries path,false
-					sleep!
-					for file in *files
-						extension = file\match "%.([^%.\\/]*)$"
-						extension = extension\lower! if extension
-						if extension == "body"
-							filename = path.."/"..file
-							table.insert bodies,filename
-					folders = oContent\getEntries path,true
-					for folder in *folders
-						if folder ~= "." and folder ~= ".."
-							visitResource path.."/"..folder
-					if #files == 0 and #folders == 2
-						oContent\remove path
-				visitResource resPath
+				-- get effect files
+				effects = {}
+				effectFiles = {}
+				effectFilename = path.."main.effect"
+				if not oContent\exist effectFilename
+					file = io.open effectFilename,"w"
+					file\write "<A></A>"
+					file\close!
+
+				file = io.open effectFilename,"r"
+				for item in file\read("*a")\gmatch("%b<>")
+					if not item\sub(2,2)\match("[A/]")
+						line = item\gsub "%s",""
+						name = line\match "A=\"(.-)\""
+						filename = line\match "B=\"(.-)\""
+						table.insert effects,name
+						effectFiles[name] = filename
+				file\close()
 
 				{:width,:height} = @scrollArea
+				itemWidth = (@scrollArea.width-30)/2
 
 				i = 0
-				if @bodies
-					bodiesToAdd,bodiesToDel = CompareTable @bodies,bodies
-					for body in *bodiesToDel
-						item = @bodyItems[body]
+				if @effects
+					effectsToAdd,effectsToDel = CompareTable @effects,effects
+					for effect in *effectsToDel
+						item = @effectItems[effect]
 						item.parent\removeChild item
-						@bodyItems[body] = nil
+						@effectItems[effect] = nil
 						@\playUpdateHint!
-					for body in *bodiesToAdd
-						viewItem = BodyView {
-							width: 100
-							height: 100
-							file: body
+					for effect in *effectsToAdd
+						viewItem = EffectView {
+							width: itemWidth
+							height: 40
+							file: effect
 						}
 						viewItem.visible = false
 						viewItem\slots "Selected",@selected
 						@menu\addChild viewItem
 						@\playUpdateHint!
 						sleep!
-						@bodyItems[body] = viewItem
+						@effectItems[effect] = viewItem
 						viewItem.opacity = 0
 						viewItem\perform CCSequence {
 							CCDelay i*0.1
@@ -118,15 +117,15 @@ Class
 						}
 						i += 1
 				else
-					if @bodyItems
+					if @effectItems
 						@\playUpdateHint!
-						for _,item in pairs @bodyItems
+						for _,item in pairs @effectItems
 							item.parent\removeChild item
-					@bodyItems = {}
-					for body in *bodies
-						viewItem = BodyView {
-							width: 100
-							height: 100
+					@effectItems = {}
+					for body in *effects
+						viewItem = EffectView {
+							width: itemWidth
+							height: 40
 							file: body
 						}
 						viewItem\slots "Selected",@selected
@@ -134,25 +133,26 @@ Class
 						@menu\addChild viewItem
 						@\playUpdateHint!
 						sleep!
-						@bodyItems[body] = viewItem
+						@effectItems[body] = viewItem
 						viewItem.opacity = 0
 						viewItem\perform CCSequence {
 							CCDelay i*0.1
 							oOpacity 0.3,1
 						}
 						i += 1
-				@bodies = bodies
+				table.sort effects
+				@effects = effects
 
-				itemCount = math.floor (@panel.width-10)/110
+				itemCount = 2
 				startY = height-40
 				y = startY
-				for i,body in ipairs @bodies
+				for i,effect in ipairs @effects
 					i -= 1
-					x = 60+(i%itemCount)*110
-					y = startY-60-math.floor(i/itemCount)*110
-					viewItem = @bodyItems[body]
+					x = ((itemWidth/2+10))+(i%itemCount)*(itemWidth+10)
+					y = startY-30-math.floor(i/itemCount)*50
+					viewItem = @effectItems[effect]
 					viewItem.position = oVec2(x,y) + @scrollArea.offset
-				y -= 60 if #@bodies > 0
+				y -= 30 if #@effects > 0
 				@scrollArea.viewSize = CCSize width,height-y
 
 		@modeBtn\slots "Tapped",->
@@ -160,26 +160,26 @@ Class
 
 		@addBtn\slots "Tapped",->
 			@\clearSelection!
-			with InputBox text:"New Body Name"
+			with InputBox text:"New Effect Name"
 				\slots "Inputed",(name)->
 					return unless name
 					if name == "" or name\match("[\\/|:*?<>\"%.]")
 						MessageBox text:"Invalid Name!",okOnly:true
 						return
-					for body,_ in pairs @bodyItems
-						if name == body\match("([^\\/]*)%.[^%.\\/]*$")
+					for effect in *@effects
+						if name == effect
 							MessageBox text:"Name Exist!",okOnly:true
 							return
-					bodyEditor = editor.bodyEditor
-					bodyEditor\slots("Activated")\set ->
-						bodyEditor\new editor.physicsFolder..name..".body"
-					CCScene\run "bodyEditor","rollOut"
+					effectEditor = editor.effectEditor
+					effectEditor\slots("Activated")\set ->
+						effectEditor\new editor.physicsFolder..name..".body"
+					CCScene\run "effectEditor","rollOut"
 
 		@delBtn\slots "Tapped",->
 			if not @_selectedItem
-				MessageBox text:"No Body Selected",okOnly:true
+				MessageBox text:"No Effect Selected",okOnly:true
 				return
-			with MessageBox text:"Delete Body\n"..@_selectedItem\match("([^\\/]*)%.[^%.\\/]*$")
+			with MessageBox text:"Delete Effect\n"..@_selectedItem\match("([^\\/]*)%.[^%.\\/]*$")
 				\slots "OK",(result)->
 					return unless result
 					MessageBox(text:"Confirm This\nDeletion")\slots "OK",(result)->
@@ -189,14 +189,14 @@ Class
 							oCache.Model\unload @_selectedItem
 							@\clearSelection!
 							sleep 0.3
-							editor\updateBodies!
+							editor\updateEffects!
 
 		@editBtn\slots "Tapped",->
 			if not @_selectedItem
-				MessageBox text:"No Body Selected",okOnly:true
+				MessageBox text:"No Effect Selected",okOnly:true
 				return
 			targetItem = @_selectedItem
-			viewItem = @bodyItems[targetItem]
+			viewItem = @effectItems[targetItem]
 			if viewItem.isLoaded
 				@\clearSelection!
 				bodyEditor = editor.bodyEditor
@@ -204,7 +204,7 @@ Class
 					bodyEditor\edit targetItem
 				CCScene\run "bodyEditor","rollOut"
 			else
-				MessageBox text:"Broken Body\nWith Data Error",okOnly:true
+				MessageBox text:"Broken Effect\nWith Data Error",okOnly:true
 
 		@closeBtn\slots "Tapped",->
 			@\hide!
@@ -237,7 +237,7 @@ Class
 
 	clearSelection: =>
 		if @_selectedItem
-			viewItem = @bodyItems[@_selectedItem]
+			viewItem = @effectItems[@_selectedItem]
 			if viewItem and viewItem ~= item
 				viewItem.checked = false
 				viewItem.face\runAction oOpacity 0.3,0.5,oEase.OutQuad
@@ -291,7 +291,7 @@ Class
 				@scrollArea.touchEnabled = true
 				@menu.enabled = true
 				@opMenu.enabled = true
-				editor\updateBodies!
+				editor\updateEffects!
 		}
 
 	hide: =>

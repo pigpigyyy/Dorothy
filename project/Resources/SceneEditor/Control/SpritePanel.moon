@@ -49,7 +49,11 @@ Class
 		@\gslot "Scene.ViewSprite",->
 			@\show!
 
-		@\gslot "Scene.LoadSprite",(paths)->
+		@\gslot "Scene.ClearSprite",->
+			@clips = nil
+			@images = nil
+
+		@\gslot "Scene.LoadSprite",(resPath)->
 			@\runThread ->
 				-- get image and clip files
 				images = {}
@@ -73,7 +77,9 @@ Class
 					for folder in *folders
 						if folder ~= "." and folder ~= ".."
 							visitResource path.."/"..folder
-				for path in *paths do visitResource path
+					if #files == 0 and #folders == 2
+						oContent\remove path
+				visitResource resPath
 
 				{:width,:height} = @scrollArea
 				compareClip = (a,b)->
@@ -91,13 +97,17 @@ Class
 							for expItem in *expandItems
 								expItem.parent\removeChild expItem
 							@clipExpands[clipDel] = nil
+						@\playUpdateHint!
 					table.sort clipsToAdd,compareClip
 					table.sort clips,compareClip
 					for clipAdd in *clipsToAdd
 						@clipItems[clipAdd] = @\_addClipTab clipAdd,i
+						@\playUpdateHint!
+						sleep!
 						i += 1
 				else -- first load clips
 					if @clipItems
+						@\playUpdateHint!
 						for clip,item in pairs @clipItems
 							item.parent\removeChild item
 							expandItems = @clipExpands[clip]
@@ -110,6 +120,8 @@ Class
 					table.sort clips,compareClip
 					for clip in *clips
 						clipTab = @\_addClipTab clip,i
+						@\playUpdateHint!
+						sleep!
 						i += 1
 						clipTab.visible = false
 						@clipItems[clip] = clipTab
@@ -121,6 +133,7 @@ Class
 						item = @imageItems[imageDel]
 						item.parent\removeChild item
 						@imageItems[imageDel] = nil
+						@\playUpdateHint!
 					for imageAdd in *imagesToAdd
 						viewItem = SpriteView {
 							file: imageAdd
@@ -134,6 +147,8 @@ Class
 						viewItem\slots "Checked",@viewItemChecked
 						viewItem\slots "Selected",@selected
 						@menu\addChild viewItem
+						@\playUpdateHint!
+						sleep!
 						@imageItems[imageAdd] = viewItem
 						viewItem.opacity = 0
 						viewItem\perform CCSequence {
@@ -143,6 +158,7 @@ Class
 						i += 1
 				else
 					if @imageItems
+						@\playUpdateHint!
 						for _,item in pairs @imageItems
 							item.parent\removeChild item
 					@imageItems = {}
@@ -159,6 +175,8 @@ Class
 						viewItem.enabled = false
 						viewItem.isCheckMode = @_isSelecting
 						@menu\addChild viewItem
+						@\playUpdateHint!
+						sleep!
 						@imageItems[image] = viewItem
 						viewItem.opacity = 0
 						viewItem\perform CCSequence {
@@ -170,7 +188,7 @@ Class
 
 				itemCount = math.floor (@panel.width-10)/110
 				y = height
-				startY = height
+				startY = height-40
 				for i,clip in ipairs @clips
 					i -= 1
 					y = startY-30-i*50
@@ -306,6 +324,12 @@ Class
 		@closeBtn\slots "Tapped",->
 			@\hide!
 
+	playUpdateHint: =>
+		if not @hint.visible
+			@hint.visible = true
+			@hint.opacity = 1
+			@hint\perform @loopFade
+
 	runThread: (task)=>
 		oRoutine\remove @routine if @routine
 		@routine = thread ->
@@ -314,11 +338,7 @@ Class
 				if tolua.type child == "CCMenuItem"
 					child.enabled = false
 			@opMenu.enabled = false
-			@hint.visible = true
-			@hint.opacity = 1
-			@hint\perform @loopFade
 			task!
-			@hint\stopAction @loopFade
 			@hint\perform CCSequence {
 				oOpacity 0.3,0,oEase.OutQuad
 				CCHide!
@@ -394,7 +414,7 @@ Class
 		clipTab.opacity = 0
 		clipTab\perform CCSequence {
 			CCDelay (index or 0)*0.1
-			oOpacity 0.3,0.4
+			oOpacity 0.3,0.5
 		}
 		clipTab
 

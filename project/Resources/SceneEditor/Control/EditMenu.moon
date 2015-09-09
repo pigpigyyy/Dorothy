@@ -8,6 +8,7 @@ Class
 		spriteSelected = false
 		modelSelected = false
 		bodySelected = false
+		effectSelected = false
 		clearSelection = ->
 			if spriteSelected
 				spriteSelected = false
@@ -21,6 +22,10 @@ Class
 				bodySelected = false
 				@bodyBtn.color = ccColor3 0x00ffff
 				emit "Scene.BodySelected",nil
+			if effectSelected
+				effectSelected = false
+				@bodyBtn.color = ccColor3 0x00ffff
+				emit "Scene.EffectSelected",nil
 
 		@spriteBtn\slots "Tapped",->
 			emit "Scene.ViewSprite" unless spriteSelected
@@ -47,4 +52,13 @@ Class
 		@bodyBtn\gslot "Scene.BodySelected",(item)->
 			if item
 				bodySelected = true
+				@bodyBtn.color = ccColor3 0xff0088
+
+		@effectBtn\slots "Tapped",->
+			emit "Scene.ViewEffect" unless effectSelected
+			clearSelection!
+
+		@effectBtn\gslot "Scene.EffectSelected",(item)->
+			if item
+				effectSelected = true
 				@bodyBtn.color = ccColor3 0xff0088

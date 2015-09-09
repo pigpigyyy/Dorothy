@@ -198,8 +198,7 @@ local function oFileChooser()
 		menu:addChild(delButton)
 	end
 
-	local yTo = winSize.height*0.5+halfBH-y-35
-	local viewHeight = yTo < borderSize.height and borderSize.height or yTo
+	local viewHeight = winSize.height*0.5+halfBH-y-5
 	local viewWidth = borderSize.width
 	local paddingX = 0
 	local paddingY = 100

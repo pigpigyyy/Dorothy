@@ -238,7 +238,6 @@ oRoutine(once(function() -- load UI asynchronously
 	if oEditor.standAlone then
 		local resPath = "ActionEditor/Model"
 		local writePath = oContent.writablePath.."Model"
-		print(oContent:exist(oContent.writablePath.."Model"),oContent:exist("ActionEditor/Model"))
 		if not oContent:exist(oContent.writablePath.."Model") and oContent:exist("ActionEditor/Model") then
 			oContent:copyAsync(resPath,writePath) -- copy some prepared contents
 		end

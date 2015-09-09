@@ -89,8 +89,7 @@ local function oFileChooser(addExisted)
 	local xStart = 0 -- left
 	local yStart = borderSize.height -- top
 	local function resetPanel()
-		local yTo = winSize.height*0.5+halfBH-y-65
-		local viewHeight = yTo < borderSize.height and borderSize.height or yTo
+		local viewHeight = winSize.height*0.5+halfBH-y-5
 		local viewWidth = borderSize.width
 		local paddingX = 0
 		local paddingY = 100

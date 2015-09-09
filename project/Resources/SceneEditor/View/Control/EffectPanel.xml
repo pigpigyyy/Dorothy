@@ -1,5 +1,5 @@
 <!-- params: X, Y, Width, Height -->
-<ItemPanel Title="Select Body" X="{ x }" Y="{ y }" Width="{ width }" Height="{ height }">
+<ItemPanel Title="Select Effect" X="{ x }" Y="{ y }" Width="{ width }" Height="{ height }">
 	<Import Module="View.Control.ItemPanel"/>
 	<Import Module="Control.Button"/>
 

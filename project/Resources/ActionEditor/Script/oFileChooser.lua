@@ -238,7 +238,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 		opMenu:addChild(backButton)
 	end
 
-	local cancelButton 
+	local cancelButton
 	if withCancel then
 		cancelButton = oButton("Cancel",17,60,false,
 			140,0,
@@ -488,8 +488,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 			menu:addChild(button)
 		end
 
-		local yTo = winSize.height*0.5+halfBH-y+35
-		local viewHeight = yTo < borderSize.height and borderSize.height or yTo
+		local viewHeight = winSize.height*0.5+halfBH-y+60
 		local viewWidth = borderSize.width
 		local paddingX = 0
 		local paddingY = 100

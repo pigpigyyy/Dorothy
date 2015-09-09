@@ -33,60 +33,42 @@ Class
 			{:width,:height} = CCDirector.winSize
 			panelWidth = 10+110*4
 			panelHeight = height*0.6
-			sleep!
-			SpritePanel = require "Control.SpritePanel"
-			sleep!
-			@spritePanel = SpritePanel {
-				x:width/2
-				y:height/2
-				width:panelWidth
-				height:panelHeight
+			panelNames = {
+				"SpritePanel"
+				"ModelPanel"
+				"BodyPanel"
+				"EffectPanel"
 			}
-			@spritePanel.visible = false
-			@\addChild @spritePanel,1
 			sleep!
-			ModelPanel = require "Control.ModelPanel"
-			sleep!
-			@modelPanel = ModelPanel {
-				width:panelWidth
-				height:panelHeight
-			}
-			@modelPanel.visible = false
-			@\addChild @modelPanel,1
-			sleep!
-			BodyPanel = require "Control.BodyPanel"
-			sleep!
-			@bodyPanel = BodyPanel {
-				x:width/2
-				y:height/2
-				width:panelWidth
-				height:panelHeight
-			}
-			@bodyPanel.visible = false
-			@\addChild @bodyPanel,1
-			sleep!
+			for name in *panelNames
+				Panel = require "Control."..name
+				sleep!
+				panel = Panel {
+					x:width/2
+					y:height/2
+					width:panelWidth
+					height:panelHeight
+				}
+				panel.visible = false
+				@[name\sub(1,1)\lower!..name\sub(2,-1)] = panel
+				@\addChild panel,1
+
 			EditMenu = require "Control.EditMenu"
 			sleep!
 			@editMenu = EditMenu!
 			@\addChild @editMenu
 
 	updateSprites: =>
-		emit "Scene.LoadSprite", { @graphicFolder }
-		visitGraphicFolder = (path)->
-			folders = oContent\getEntries path,true
-			for folder in *folders
-				if folder ~= "." and folder ~= ".."
-					visitGraphicFolder path.."/"..folder
-			files = oContent\getEntries path,false
-			if #files == 0 and #folders == 2
-				oContent\remove path
-		visitGraphicFolder @graphicFullPath\gsub("[\\/]*$","")
+		emit "Scene.LoadSprite", @graphicFolder
 
 	updateModels: =>
-		emit "Scene.LoadModel", { @graphicFolder }
+		emit "Scene.LoadModel", @graphicFolder
 
 	updateBodies: =>
-		emit "Scene.LoadBody", { @physicsFolder }
+		emit "Scene.LoadBody", @physicsFolder
+
+	updateEffects: =>
+		emit "Scene.LoadEffect", @graphicFolder
 
 	game: property => @_gameName,
 		(name)=>

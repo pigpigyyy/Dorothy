@@ -1,6 +1,6 @@
 Dorothy!
 Class,property = unpack require "class"
-BodyViewView = require "View.Control.BodyView"
+SpriteViewView = require "View.Control.SpriteView"
 MessageBox = require "Control.MessageBox"
 oBody = require "oBodyEx"
 -- [signals]
@@ -8,7 +8,7 @@ oBody = require "oBodyEx"
 -- [params]
 -- x, y, width, height, file
 Class
-	__partial: (args)=> BodyViewView args
+	__partial: (args)=> SpriteViewView args
 	__init: (args)=>
 		{:width,:height,:file} = args
 		@_loaded = false

@@ -51,6 +51,9 @@ Class
 		@\gslot "Scene.ViewModel",->
 			@\show!
 
+		@\gslot "Scene.ClearModel",->
+			@models = nil
+
 		@\gslot "Scene.ModelUpdated",(target)->
 			viewItem = @modelItems[target]
 			if viewItem and @models
@@ -61,7 +64,7 @@ Class
 				viewItem.parent\removeChild viewItem
 				@modelItems[target] = nil
 
-		@\gslot "Scene.LoadModel",(paths)->
+		@\gslot "Scene.LoadModel",(resPath)->
 			@\runThread ->
 				-- get model files
 				models = {}
@@ -79,7 +82,9 @@ Class
 					for folder in *folders
 						if folder ~= "." and folder ~= ".."
 							visitResource path.."/"..folder
-				for path in *paths do visitResource path
+					if #files == 0 and #folders == 2
+						oContent\remove path
+				visitResource resPath
 
 				{:width,:height} = @scrollArea
 
@@ -90,6 +95,7 @@ Class
 						item = @modelItems[model]
 						item.parent\removeChild item
 						@modelItems[model] = nil
+						@\playUpdateHint!
 					for model in *modelsToAdd
 						viewItem = ModelView {
 							width: 100
@@ -99,6 +105,8 @@ Class
 						viewItem.visible = false
 						viewItem\slots "Selected",@selected
 						@menu\addChild viewItem
+						@\playUpdateHint!
+						sleep!
 						@modelItems[model] = viewItem
 						viewItem.opacity = 0
 						viewItem\perform CCSequence {
@@ -108,6 +116,7 @@ Class
 						i += 1
 				else
 					if @modelItems
+						@\playUpdateHint!
 						for _,item in pairs @modelItems
 							item.parent\removeChild item
 					@modelItems = {}
@@ -120,6 +129,8 @@ Class
 						viewItem\slots "Selected",@selected
 						viewItem.visible = false
 						@menu\addChild viewItem
+						@\playUpdateHint!
+						sleep!
 						@modelItems[model] = viewItem
 						viewItem.opacity = 0
 						viewItem\perform CCSequence {
@@ -132,8 +143,8 @@ Class
 				@models = models
 
 				itemCount = math.floor (@panel.width-10)/110
-				y = height
-				startY = height
+				startY = height-40
+				y = startY
 				for i,model in ipairs @models
 					i -= 1
 					x = 60+(i%itemCount)*110
@@ -202,17 +213,19 @@ Class
 		@delBtn.visible = false
 		@editBtn.visible = false
 
+	playUpdateHint: =>
+		if not @hint.visible
+			@hint.visible = true
+			@hint.opacity = 1
+			@hint\perform @loopFade
+
 	runThread: (task)=>
 		oRoutine\remove @routine if @routine
 		@routine = thread ->
 			@scrollArea.touchEnabled = false
 			@menu.enabled = false
 			@opMenu.enabled = false
-			@hint.visible = true
-			@hint.opacity = 1
-			@hint\perform @loopFade
 			task!
-			@hint\stopAction @loopFade
 			@hint\perform CCSequence {
 				oOpacity 0.3,0,oEase.OutQuad
 				CCHide!
@@ -227,7 +240,7 @@ Class
 			viewItem = @modelItems[@_selectedItem]
 			if viewItem and viewItem ~= item
 				viewItem.checked = false
-				viewItem.face\runAction oOpacity 0.3,0.4,oEase.OutQuad
+				viewItem.face\runAction oOpacity 0.3,0.5,oEase.OutQuad
 				@_selectedItem = nil
 
 	isCheckMode: property => @_isCheckMode,
