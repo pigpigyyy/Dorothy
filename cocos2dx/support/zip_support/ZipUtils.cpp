@@ -29,7 +29,7 @@ THE SOFTWARE.
 #include "ccMacros.h"
 #include "platform/CCFileUtils.h"
 #include "unzip.h"
-#include <map>
+#include <unordered_map>
 
 NS_CC_BEGIN
 
@@ -300,7 +300,7 @@ public:
     unzFile zipFile;
 
     // std::unordered_map is faster if available on the platform
-    typedef std::map<std::string, struct ZipEntryInfo> FileListContainer;
+    typedef std::unordered_map<std::string, struct ZipEntryInfo> FileListContainer;
     FileListContainer fileList;
 };
 

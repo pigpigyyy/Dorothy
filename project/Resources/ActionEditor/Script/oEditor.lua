@@ -238,14 +238,15 @@ oRoutine(once(function() -- load UI asynchronously
 	if oEditor.standAlone then
 		local resPath = "ActionEditor/Model"
 		local writePath = oContent.writablePath.."Model"
+		print(oContent:exist(oContent.writablePath.."Model"),oContent:exist("ActionEditor/Model"))
 		if not oContent:exist(oContent.writablePath.."Model") and oContent:exist("ActionEditor/Model") then
 			oContent:copyAsync(resPath,writePath) -- copy some prepared contents
-			if not oContent:exist(oEditor.input) then
-				oContent:mkdir(oEditor.input)
-			end
-			if not oContent:exist(oEditor.output) then
-				oContent:mkdir(oEditor.output)
-			end
+		end
+		if not oContent:exist(oEditor.input) then
+			oContent:mkdir(oEditor.input)
+		end
+		if not oContent:exist(oEditor.output) then
+			oContent:mkdir(oEditor.output)
 		end
 		local oFileChooser = require("oFileChooser")
 		oFileChooser(true)

@@ -124,6 +124,7 @@ oRoutine(once(function()
 	if not oContent:exist(oEditor.output) then
 		oContent:mkdir(oEditor.output)
 	end
+
 	oContent:addSearchPath(oEditor.input)
 
 	local oFileChooser = require("oFileChooser")

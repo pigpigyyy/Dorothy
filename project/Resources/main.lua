@@ -1,4 +1,8 @@
-
+Dorothy()
+local winSize = CCDirector.winSize
+if winSize.width > 1000 and winSize.height > 960 then
+	CCView:setDesignResolution(winSize.width/2,winSize.height/2,CCView.ExactFit)
+end
 require("Test.Entry")
 
 --[[
