@@ -11,7 +11,12 @@ local once = require("once")
 local winSize = CCDirector.winSize
 
 local oEditor = CCScene()
+oEditor.standAlone = true
+oEditor.quitable = false
+oEditor.isLoaded = false
+oEditor.listFile = "list.effect"
 oEditor.effectData = nil
+oEditor.prefix = ""
 oEditor.input = oContent.writablePath.."Effect/Input/"
 oEditor.output = oContent.writablePath.."Effect/Output/"
 oEditor.currentName = nil
@@ -56,7 +61,7 @@ oEditor.dumpEffectFile = function(self)
 		content = content..string.format("<B A=\"%s\" B=\"%s\"/>",k,v)
 	end
 	content = content.."</A>"
-	oContent:saveToFile(oEditor.output.."main.effect",content)
+	oContent:saveToFile(oEditor.output..oEditor.listFile,content)
 end
 
 oEditor.dumpData = function(self,filename)
@@ -93,8 +98,8 @@ oEditor.dumpData = function(self,filename)
 		oContent:saveToFile(oEditor.output..filename,str)
 		oCache.Animation:unload(oEditor.output..filename)
 	end
+	oEditor:emit("Edited",filename)
 end
-
 
 local controls =
 {
@@ -113,27 +118,45 @@ oRoutine(once(function()
 		oEditor:addChild(oEditor[name],index)
 		coroutine.yield()
 	end
-	local resPath = "EffectEditor/Effect"
-	local writePath = oContent.writablePath.."Effect"
-	if not oContent:exist(oContent.writablePath.."Effect") and oContent:exist("EffectEditor/Effect") then
-		oContent:copyAsync(resPath,writePath)
-	end
-	if not oContent:exist(oEditor.input) then
-		oContent:mkdir(oEditor.input)
-	end
-	if not oContent:exist(oEditor.output) then
-		oContent:mkdir(oEditor.output)
+
+	if oEditor.standAlone then
+		local resPath = "EffectEditor/Effect"
+		local writePath = oContent.writablePath.."Effect"
+		if not oContent:exist(oContent.writablePath.."Effect") and oContent:exist("EffectEditor/Effect") then
+			oContent:copyAsync(resPath,writePath)
+		end
+		if not oContent:exist(oEditor.input) then
+			oContent:mkdir(oEditor.input)
+		end
+		if not oContent:exist(oEditor.output) then
+			oContent:mkdir(oEditor.output)
+		end
+
+		oContent:addSearchPath(oEditor.input)
+
+		local oFileChooser = require("oFileChooser")
+		oEditor:addChild(oFileChooser(),oEditor.topMost)
 	end
 
-	oContent:addSearchPath(oEditor.input)
-
-	local oFileChooser = require("oFileChooser")
-	oEditor:addChild(oFileChooser(),oEditor.topMost)
+	if not oEditor.isLoaded then
+		oEditor.isLoaded = true
+	end
 end))
 
 oEditor:slots("Cleanup",function()
 	-- do editor cleanup
-	oContent:removeSearchPath(oEditor.input)
+	if oEditor.standAlone then
+		oContent:removeSearchPath(oEditor.input)
+	end
+end)
+
+oEditor:slots("Entering",function()
+	oRoutine(once(function()
+		repeat
+			coroutine.yield()
+		until oEditor.isLoaded
+		oEditor:emit("Activated")
+	end))
 end)
 
 return oEditor

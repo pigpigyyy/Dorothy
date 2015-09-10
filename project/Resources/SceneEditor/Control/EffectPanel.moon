@@ -71,7 +71,7 @@ Class
 				-- get effect files
 				effects = {}
 				effectFiles = {}
-				effectFilename = path.."main.effect"
+				effectFilename = path.."list.effect"
 				if not oContent\exist effectFilename
 					file = io.open effectFilename,"w"
 					file\write "<A></A>"
@@ -90,7 +90,6 @@ Class
 				{:width,:height} = @scrollArea
 				itemWidth = (@scrollArea.width-30)/2
 
-				i = 0
 				if @effects
 					effectsToAdd,effectsToDel = CompareTable @effects,effects
 					for effect in *effectsToDel
@@ -111,38 +110,29 @@ Class
 						sleep!
 						@effectItems[effect] = viewItem
 						viewItem.opacity = 0
-						viewItem\perform CCSequence {
-							CCDelay i*0.1
-							oOpacity 0.3,1
-						}
-						i += 1
 				else
 					if @effectItems
 						@\playUpdateHint!
 						for _,item in pairs @effectItems
 							item.parent\removeChild item
 					@effectItems = {}
-					for body in *effects
+					for effect in *effects
 						viewItem = EffectView {
 							width: itemWidth
 							height: 40
-							file: body
+							file: effect
 						}
 						viewItem\slots "Selected",@selected
 						viewItem.visible = false
 						@menu\addChild viewItem
 						@\playUpdateHint!
 						sleep!
-						@effectItems[body] = viewItem
+						@effectItems[effect] = viewItem
 						viewItem.opacity = 0
-						viewItem\perform CCSequence {
-							CCDelay i*0.1
-							oOpacity 0.3,1
-						}
-						i += 1
 				table.sort effects
 				@effects = effects
 
+				i = 0
 				itemCount = 2
 				startY = height-40
 				y = startY
@@ -152,6 +142,12 @@ Class
 					y = startY-30-math.floor(i/itemCount)*50
 					viewItem = @effectItems[effect]
 					viewItem.position = oVec2(x,y) + @scrollArea.offset
+					if viewItem.opacity == 0
+						viewItem\perform CCSequence {
+							CCDelay i*0.1
+							oOpacity 0.3,1
+						}
+						i += 1
 				y -= 30 if #@effects > 0
 				@scrollArea.viewSize = CCSize width,height-y
 
@@ -172,7 +168,7 @@ Class
 							return
 					effectEditor = editor.effectEditor
 					effectEditor\slots("Activated")\set ->
-						effectEditor\new editor.physicsFolder..name..".body"
+						--effectEditor\new editor.graphicFolder..name..".body"
 					CCScene\run "effectEditor","rollOut"
 
 		@delBtn\slots "Tapped",->

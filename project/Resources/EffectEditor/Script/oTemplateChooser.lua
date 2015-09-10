@@ -393,7 +393,7 @@ local function oTemplateChooser(filename)
 				end
 				updateAttr("name",name)
 				updateAttr("file",filename)
-				oCache.Effect:load(oEditor.output.."main.effect")
+				oCache.Effect:load(oEditor.output..oEditor.listFile)
 				emit("Effect.viewArea.changeEffect",name)
 			end)
 		button.template = name

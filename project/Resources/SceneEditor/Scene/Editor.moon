@@ -10,6 +10,7 @@ Class
 		@_gameFullPath = ""
 		@_actionEditor = nil
 		@_bodyEditor = nil
+		@_effectEditor = nil
 		@game = "Test"
 
 		_G["editor"] = @
@@ -21,6 +22,7 @@ Class
 			oCache\clear!
 			CCScene\remove "actionEditor"
 			CCScene\remove "bodyEditor"
+			CCScene\remove "effectEditor"
 
 		CCScene\add "sceneEditor",@
 		CCScene\transition "rollIn",{"zoomFlip",0.5,CCOrientation.Down}
@@ -97,11 +99,12 @@ Class
 
 	actionEditor: property =>
 		if not @_actionEditor
-			actionEditor = require("ActionEditor.Script.oEditor")
+			actionEditor = require "ActionEditor.Script.oEditor"
 			actionEditor.standAlone = false
 			actionEditor.quitable = true
 			actionEditor.input = @gameFullPath
 			actionEditor.output = @gameFullPath
+			actionEditor.prefix = @graphicFolder
 			actionEditor\slots "Edited",(model)->
 				emit "Scene.ModelUpdated",model
 			actionEditor\slots "Quit",->
@@ -113,7 +116,7 @@ Class
 
 	bodyEditor: property =>
 		if not @_bodyEditor
-			bodyEditor = require("BodyEditor.Script.oEditor")
+			bodyEditor = require "BodyEditor.Script.oEditor"
 			bodyEditor.standAlone = false
 			bodyEditor.quitable = true
 			bodyEditor.input = @gameFullPath
@@ -126,3 +129,21 @@ Class
 			CCScene\add "bodyEditor",bodyEditor
 			@_bodyEditor = bodyEditor
 		return @_bodyEditor
+
+	effectEditor: property =>
+		if not @_effectEditor
+			effectEditor = require "EffectEditor.Script.oEditor"
+			effectEditor.standAlone = false
+			effectEditor.quitable = true
+			effectEditor.listFile = @graphicFolder.."list.effect"
+			effectEditor.prefix = @graphicFolder
+			effectEditor.input = @gameFullPath
+			effectEditor.output = @gameFullPath
+			effectEditor\slots "Edited",(effect)->
+				emit "Scene.EffectUpdated",effect
+			effectEditor\slots "Quit",->
+				CCScene\run "sceneEditor","rollIn"
+				@\updateEffects!
+			CCScene\add "effectEditor",effectEditor
+			@_effectEditor = effectEditor
+		return @_effectEditor

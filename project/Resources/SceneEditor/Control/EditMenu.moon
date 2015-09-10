@@ -24,7 +24,7 @@ Class
 				emit "Scene.BodySelected",nil
 			if effectSelected
 				effectSelected = false
-				@bodyBtn.color = ccColor3 0x00ffff
+				@effectBtn.color = ccColor3 0x00ffff
 				emit "Scene.EffectSelected",nil
 
 		@spriteBtn\slots "Tapped",->
@@ -61,4 +61,4 @@ Class
 		@effectBtn\gslot "Scene.EffectSelected",(item)->
 			if item
 				effectSelected = true
-				@bodyBtn.color = ccColor3 0xff0088
+				@effectBtn.color = ccColor3 0xff0088

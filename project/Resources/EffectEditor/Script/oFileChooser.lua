@@ -67,12 +67,12 @@ local function oFileChooser(addExisted)
 	cancelButton:addChild(btnBk,-1)
 	opMenu:addChild(cancelButton)
 
-	if not oContent:exist(oEditor.output.."main.effect") then
-		local file = io.open(oEditor.output.."main.effect","w")
+	if not oContent:exist(oEditor.output..oEditor.listFile) then
+		local file = io.open(oEditor.output..oEditor.listFile,"w")
 		file:write("<A></A>")
 		file:close()
 	end
-	local file = io.open(oEditor.output.."main.effect","r")
+	local file = io.open(oEditor.output..oEditor.listFile,"r")
 	for item in file:read("*a"):gmatch("%b<>") do
 		if not item:sub(2,2):match("[A/]") then
 			local line = item:gsub("%s","")
@@ -82,7 +82,7 @@ local function oFileChooser(addExisted)
 		end
 	end
 	file:close()
-	oCache.Effect:load(oEditor.output.."main.effect")
+	oCache.Effect:load(oEditor.output..oEditor.listFile)
 
 	local n = 0
 	local y = 0
@@ -104,7 +104,7 @@ local function oFileChooser(addExisted)
 	end
 
 	local function loadEffect(name,file)
-		oCache.Effect:load(oEditor.output.."main.effect")
+		oCache.Effect:load(oEditor.output..oEditor.listFile)
 		local extension = string.match(file, "%.([^%.\\/]*)$")
 		if extension == "par" then
 			local dict = CCDictionary(oEditor.output..file)
@@ -255,7 +255,7 @@ local function oFileChooser(addExisted)
 		yStart = y-title.contentSize.height-10
 	end
 
-	local effectFile = io.open(oEditor.output.."main.effect","r")
+	local effectFile = io.open(oEditor.output..oEditor.listFile,"r")
 	for item in effectFile:read("*a"):gmatch("%b<>") do
 		if not item:sub(2,2):match("[A/]") then
 			local line = item:gsub("%s","")
@@ -361,7 +361,7 @@ local function oFileChooser(addExisted)
 					updateAttr("file",oEditor.currentFile)
 					updateAttr("interval",1)
 					oContent:saveToFile(oEditor.output..oEditor.currentFile,[[<A A="" B="1"></A>]])
-					oCache.Effect:load(oEditor.output.."main.effect")
+					oCache.Effect:load(oEditor.output..oEditor.listFile)
 					emit("Effect.viewArea.changeEffect",oEditor.currentName)
 				end
 			end,true),oEditor.topMost)
@@ -468,13 +468,14 @@ local function oFileChooser(addExisted)
 		menu:addChild(delButton)
 	end
 
-	if CCDirector.sceneStackSize > 1 then
+	if oEditor.quitable then
 		local backButton = oButton("Quit",17,60,false,
 			0,0,
 			function(item)
 				opMenu.enabled = false
 				item.enabled = false
-				CCDirector:popToRootScene()
+				panel:hide()
+				oEditor:emit("Quit")
 			end)
 		backButton.anchor = oVec2.zero
 		local btnBk = CCDrawNode()

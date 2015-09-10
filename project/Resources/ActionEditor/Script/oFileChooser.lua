@@ -314,7 +314,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 			items = {}
 			models = {}
 			local function getResources(path)
-				local files = oContent:getEntries(oEditor.output..path,false)
+				local files = oContent:getEntries(oEditor.output..oEditor.prefix..path,false)
 				for _,file in ipairs(files) do
 					local extension = file:match("%.([^%.\\/]*)$")
 					if extension then
@@ -323,15 +323,16 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 					if clipOnly then
 						if extension == "clip" then
 							local name = file:match("([^\\/]*)%.[^%.\\/]*$")
-							items[name] = path..file
+							items[name] = oEditor.prefix..path..file
 						end
 					elseif groupOnly or extension == "model" then
 						local name = file:match("([^\\/]*)%.[^%.\\/]*$")
-						items[name] = path..file
-						table.insert(models,path..file)
+						local modelFile = oEditor.prefix..path..file
+						items[name] = modelFile
+						table.insert(models,modelFile)
 					end
 				end
-				local folders = oContent:getEntries(oEditor.output..path,true)
+				local folders = oContent:getEntries(oEditor.output..oEditor.prefix..path,true)
 				for _,folder in ipairs(folders) do
 					if folder ~= "." and folder ~= ".." then
 						getResources(path..folder.."/")

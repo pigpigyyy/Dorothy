@@ -78,6 +78,7 @@ local oEditor = CCScene()
 oEditor.isLoaded = false
 oEditor.standAlone = true
 oEditor.quitable = false
+oEditor.prefix = ""
 oEditor.model = nil
 oEditor.look = ""
 oEditor.animation = ""

@@ -118,8 +118,28 @@ local function oClipChooser(clipName)
 		local y = 0
 		local n = 0
 		if not clipName then
-			local files = oContent:getEntries(oEditor.input,false)
-			for index = 1,#files do
+			local items = {}
+			local function getResources(path)
+				local files = oContent:getEntries(oEditor.output..oEditor.prefix..path,false)
+				for _,file in ipairs(files) do
+					local extension = file:match("%.([^%.\\/]*)$")
+					if extension then
+						extension = extension:lower()
+					end
+					if extension == "clip" then
+						local name = file:match("([^\\/]*)%.[^%.\\/]*$")
+						items[name] = oEditor.prefix..path..file
+					end
+				end
+				local folders = oContent:getEntries(oEditor.output..oEditor.prefix..path,true)
+				for _,folder in ipairs(folders) do
+					if folder ~= "." and folder ~= ".." then
+						getResources(path..folder.."/")
+					end
+				end
+			end
+			getResources("")
+			for index = 1,#items do
 				local extension = string.match(files[index],"%.([^%.\\/]*)$")
 				if extension then
 					extension = string.lower(extension)

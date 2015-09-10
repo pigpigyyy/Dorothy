@@ -11,7 +11,7 @@ Class
 	__partial: (args)=> ItemViewView args
 	__init: (args)=>
 		{:width,:height,:file} = args
-		@isloaded = true
+		@isLoaded = true
 		@file = file
 
 		@\slots "Tapped",->
