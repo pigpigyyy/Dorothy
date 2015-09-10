@@ -356,7 +356,6 @@
 		3C969D2C1B4194EA00C3BF37 /* DebugDraw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugDraw.h; sourceTree = "<group>"; };
 		3C969D2D1B4194EA00C3BF37 /* mkdir.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mkdir.h; sourceTree = "<group>"; };
 		3C969D2E1B4194EA00C3BF37 /* Property.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Property.h; sourceTree = "<group>"; };
-		3C969D2F1B4194EA00C3BF37 /* tinydir.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinydir.h; sourceTree = "<group>"; };
 		3C969D311B4194EA00C3BF37 /* oBody.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oBody.cpp; sourceTree = "<group>"; };
 		3C969D321B4194EA00C3BF37 /* oBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oBody.h; sourceTree = "<group>"; };
 		3C969D331B4194EA00C3BF37 /* oBodyDef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oBodyDef.cpp; sourceTree = "<group>"; };
@@ -835,7 +834,6 @@
 				3C969D2C1B4194EA00C3BF37 /* DebugDraw.h */,
 				3C969D2D1B4194EA00C3BF37 /* mkdir.h */,
 				3C969D2E1B4194EA00C3BF37 /* Property.h */,
-				3C969D2F1B4194EA00C3BF37 /* tinydir.h */,
 			);
 			path = other;
 			sourceTree = "<group>";

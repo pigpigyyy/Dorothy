@@ -25,6 +25,7 @@ THE SOFTWARE.
 #include "support/zip_support/ZipUtils.h"
 #include "platform/CCCommon.h"
 #include "jni/Java_org_cocos2dx_lib_Cocos2dxHelper.h"
+#include "support/file_system/tinydir.h"
 
 using namespace std;
 
@@ -105,10 +106,10 @@ bool CCFileUtilsAndroid::isAbsolutePath(const std::string& strPath)
     return false;
 }
 
-std::vector<std::string> CCFileUtilsAndroid::getDirEntries(const std::string& path, bool isFolder)
+std::vector<std::string> CCFileUtilsAndroid::getDirEntries(const std::string& strFilePath, bool isFolder)
 {
-	std::string searchName = path;
-	if (strFilePath[0] != '/')
+	std::string searchName = CCFileUtils::sharedFileUtils()->fullPathForFilename(strFilePath.c_str());
+	if (searchName[0] != '/')
     {
 		return s_pZipFile->getDirEntries(searchName, isFolder);
 	}
@@ -121,8 +122,7 @@ std::vector<std::string> CCFileUtilsAndroid::getDirEntries(const std::string& pa
 		}
 		std::vector<std::string> files;
 		tinydir_dir dir;
-		string fullPath = CCFileUtils::sharedFileUtils()->fullPathForFilename(searchName.c_str());
-		int ret = tinydir_open(&dir, fullPath.c_str());
+		int ret = tinydir_open(&dir, searchName.c_str());
 		if (ret == 0)
 		{
 			while (dir.has_next)
@@ -139,7 +139,7 @@ std::vector<std::string> CCFileUtilsAndroid::getDirEntries(const std::string& pa
 		}
 		else
 		{
-			CCLOG("oContent get entry error, %s, %s", strerror(errno), fullPath.c_str());
+			CCLOG("oContent get entry error, %s, %s", strerror(errno), searchName.c_str());
 		}
 		return std::move(files);
 	}

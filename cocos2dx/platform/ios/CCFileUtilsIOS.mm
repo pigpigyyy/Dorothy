@@ -208,7 +208,7 @@ std::vector<std::string> CCFileUtilsIOS::getDirEntries(const std::string& path, 
 	}
 	std::vector<std::string> files;
 	tinydir_dir dir;
-	string fullPath = CCFileUtils::sharedFileUtils()->fullPathForFilename(searchName.c_str());
+	std::string fullPath = CCFileUtils::sharedFileUtils()->fullPathForFilename(searchName.c_str());
 	int ret = tinydir_open(&dir, fullPath.c_str());
 	if (ret == 0)
 	{

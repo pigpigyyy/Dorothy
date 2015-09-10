@@ -1042,6 +1042,11 @@
 		1551A5E7158F2ADE00E66CFE /* support */ = {
 			isa = PBXGroup;
 			children = (
+				1551A5F4158F2ADE00E66CFE /* data_support */,
+				1551A5F9158F2ADE00E66CFE /* image_support */,
+				469A7DF616C247C8006FFCB2 /* tinyxml2 */,
+				1A589D9E16EC7B2F00C6B691 /* user_default */,
+				1551A5FE158F2ADE00E66CFE /* zip_support */,
 				3C5ACAF31A21C709006EDD2B /* CCZip.cpp */,
 				3C5ACAF41A21C709006EDD2B /* CCZip.h */,
 				1551A5E8158F2ADE00E66CFE /* base64.cpp */,
@@ -1058,13 +1063,8 @@
 				1551A5F1158F2ADE00E66CFE /* ccUtils.h */,
 				1551A5F2158F2ADE00E66CFE /* CCVertex.cpp */,
 				1551A5F3158F2ADE00E66CFE /* CCVertex.h */,
-				1551A5F4158F2ADE00E66CFE /* data_support */,
-				1551A5F9158F2ADE00E66CFE /* image_support */,
-				469A7DF616C247C8006FFCB2 /* tinyxml2 */,
 				1551A5FC158F2ADE00E66CFE /* TransformUtils.cpp */,
 				1551A5FD158F2ADE00E66CFE /* TransformUtils.h */,
-				1A589D9E16EC7B2F00C6B691 /* user_default */,
-				1551A5FE158F2ADE00E66CFE /* zip_support */,
 			);
 			path = support;
 			sourceTree = "<group>";
