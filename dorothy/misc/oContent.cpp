@@ -76,7 +76,7 @@ char* oContent::loadFileUnsafe(const char* filename, unsigned long& size)
 	}
 	else
 	{
-		return (char*)CCFileUtils::sharedFileUtils()->getFileData(filename, "rt", &size);
+		return (char*)CCFileUtils::sharedFileUtils()->getFileData(filename, "rb", &size);
 	}
 }
 
@@ -172,7 +172,7 @@ void oContent::extractGameFileAsync(const char* file, const char* target, const 
 void oContent::copyFile(const char* src, const char* dst)
 {
 	string srcPath = oContent::getFullPath(src);
-	if (IsFolder(srcPath.c_str()))
+	if (CCFileUtils::sharedFileUtils()->isFolder(srcPath))
 	{
 		string dstPath = dst;
 		auto folders = oContent::getDirEntries(src, true);
@@ -191,12 +191,20 @@ void oContent::copyFile(const char* src, const char* dst)
 		auto files = oContent::getDirEntries(src, false);
 		for (const string& file : files)
 		{
-			CopyFile((srcPath+'/'+file).c_str(), (dstPath+'/'+file).c_str());
+			unsigned long size;
+			char* buffer = this->loadFileUnsafe((srcPath + '/' + file).c_str(), size);
+			ofstream stream((dstPath + '/' + file).c_str(), std::ios::out | std::ios::trunc | std::ios::binary);
+			stream.write(buffer, size);
+			delete buffer;
 		}
 	}
 	else
 	{
-		CopyFile(src, dst);
+		unsigned long size;
+		char* buffer = this->loadFileUnsafe(src, size);
+		ofstream stream(dst, std::ios::out | std::ios::trunc | std::ios::binary);
+		stream.write(buffer, size);
+		delete buffer;
 	}
 }
 

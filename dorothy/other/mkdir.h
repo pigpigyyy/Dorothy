@@ -48,16 +48,6 @@ static void CopyFile(const char* src, const char* dst)
 #endif
 }
 
-static bool IsFolder(const char* filename)
-{
-	struct stat buf;
-	if (::stat(filename, &buf) == 0)
-	{
-		return (buf.st_mode & S_IFDIR) != 0;
-	}
-	return false;
-}
-
 static int FileExist(const char* filename)
 {
 	struct stat buf;

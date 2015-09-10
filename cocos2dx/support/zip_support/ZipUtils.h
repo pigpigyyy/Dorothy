@@ -138,8 +138,8 @@ namespace cocos2d
         *
         * @since v2.0.5
         */
-        bool fileExists(const std::string &fileName) const;
-
+        bool fileExists(const std::string& fileName) const;
+		bool isFolder(const std::string& path) const;
         /**
         * Get resource file data from a zip file.
         * @param fileName File name

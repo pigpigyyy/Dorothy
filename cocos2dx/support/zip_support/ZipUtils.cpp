@@ -30,6 +30,7 @@ THE SOFTWARE.
 #include "platform/CCFileUtils.h"
 #include "unzip.h"
 #include <unordered_map>
+#include <unordered_set>
 
 NS_CC_BEGIN
 
@@ -302,6 +303,7 @@ public:
     // std::unordered_map is faster if available on the platform
     typedef std::unordered_map<std::string, struct ZipEntryInfo> FileListContainer;
     FileListContainer fileList;
+	std::unordered_set<std::string> folderList;
 };
 
 ZipFile::ZipFile(const std::string &zipFile, const std::string &filter)
@@ -333,6 +335,7 @@ bool ZipFile::setFilter(const std::string &filter)
 
         // clear existing file list
         m_data->fileList.clear();
+		m_data->folderList.clear();
 
         // UNZ_MAXFILENAMEINZIP + 1 - it is done so in unzLocateFile
         char szCurrentFileName[UNZ_MAXFILENAMEINZIP + 1];
@@ -356,7 +359,14 @@ bool ZipFile::setFilter(const std::string &filter)
                     entry.pos = posInfo;
                     entry.uncompressed_size = (uLong)fileInfo.uncompressed_size;
                     m_data->fileList[currentFileName] = entry;
-                }
+					size_t pos = currentFileName.rfind('/');
+					while (pos != std::string::npos)
+					{
+						currentFileName = currentFileName.substr(0, pos);
+						m_data->folderList.insert(currentFileName);
+						pos = currentFileName.rfind('/');
+					}
+				}
             }
             // next file - also get the information about it
             err = unzGoToNextFile64(m_data->zipFile, &fileInfo,
@@ -371,20 +381,24 @@ bool ZipFile::setFilter(const std::string &filter)
 
 bool ZipFile::fileExists(const std::string &fileName) const
 {
-    bool ret = false;
-    do
-    {
-        CC_BREAK_IF(!m_data);
-
-        ret = m_data->fileList.find(fileName) != m_data->fileList.end();
-    } while(false);
-
-    return ret;
+	bool ret = false;
+	do
+	{
+		CC_BREAK_IF(!m_data);
+		ret = m_data->fileList.find(fileName) != m_data->fileList.end() || m_data->folderList.find(fileName) != m_data->folderList.end();
+	}
+	while (false);
+	return ret;
 }
 
-unsigned char *ZipFile::getFileData(const std::string &fileName, unsigned long *pSize)
+bool ZipFile::isFolder(const std::string& path) const
 {
-    unsigned char * pBuffer = NULL;
+	return m_data->folderList.find(path) != m_data->folderList.end();
+}
+
+unsigned char* ZipFile::getFileData(const std::string &fileName, unsigned long *pSize)
+{
+    unsigned char* pBuffer = NULL;
     if (pSize)
     {
         *pSize = 0;
@@ -396,7 +410,7 @@ unsigned char *ZipFile::getFileData(const std::string &fileName, unsigned long *
         CC_BREAK_IF(fileName.empty());
 
         ZipFilePrivate::FileListContainer::const_iterator it = m_data->fileList.find(fileName);
-        CC_BREAK_IF(it ==  m_data->fileList.end());
+        CC_BREAK_IF(it == m_data->fileList.end());
 
         ZipEntryInfo fileInfo = it->second;
 

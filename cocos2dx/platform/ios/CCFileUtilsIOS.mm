@@ -34,6 +34,7 @@ THE SOFTWARE.
 #include "CCSAXParser.h"
 #include "CCDictionary.h"
 #include "support/zip_support/unzip.h"
+#include <sys/stat.h>
 
 #include "CCFileUtilsIOS.h"
 
@@ -184,6 +185,16 @@ bool CCFileUtilsIOS::isFileExist(const std::string& strFilePath)
     }
     
     return bRet;
+}
+
+bool CCFileUtilsIOS::isFolder(const std::string& path)
+{
+	struct stat buf;
+	if (::stat(path.c_str(), &buf) == 0)
+	{
+		return (buf.st_mode & S_IFDIR) != 0;
+	}
+	return false;
 }
 
 std::string CCFileUtilsIOS::getFullPathForDirectoryAndFilename(const std::string& strDirectory, const std::string& strFilename)

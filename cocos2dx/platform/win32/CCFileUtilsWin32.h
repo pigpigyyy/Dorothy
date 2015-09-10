@@ -47,6 +47,7 @@ public:
     bool init();
     virtual std::string getWritablePath();
     virtual bool isFileExist(const std::string& strFilePath);
+	virtual bool isFolder(const std::string & path);
     virtual bool isAbsolutePath(const std::string& strPath);
 };
 

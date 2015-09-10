@@ -87,6 +87,11 @@ bool CCFileUtilsAndroid::isFileExist(const std::string& strFilePath)
     return bFound;
 }
 
+bool CCFileUtilsAndroid::isFolder(const std::string& path)
+{
+	return s_pZipFile->isFolder(path);
+}
+
 bool CCFileUtilsAndroid::isAbsolutePath(const std::string& strPath)
 {
     // On Android, there are two situations for full path.
