@@ -263,6 +263,8 @@ public:
      */
     virtual bool isFileExist(const std::string& strFilePath) = 0;
 	virtual bool isFolder(const std::string& path) = 0;
+	virtual std::vector<std::string> getDirEntries(const std::string& path, bool isFolder) = 0;
+
     /**
      *  Checks whether the path is an absolute path.
      *

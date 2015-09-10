@@ -25,6 +25,7 @@ THE SOFTWARE.
 #define __SUPPORT_ZIPUTILS_H__
 
 #include <string>
+#include <vector>
 
 namespace cocos2d
 {
@@ -151,6 +152,7 @@ namespace cocos2d
         */
         unsigned char *getFileData(const std::string &fileName, unsigned long *pSize);
 
+		std::vector<std::string> getDirEntries(const std::string& path, bool isFolder);
     private:
         /** Internal data like zip file pointer / file list array and so on */
         ZipFilePrivate *m_data;

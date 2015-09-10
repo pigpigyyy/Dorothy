@@ -115,6 +115,9 @@
     <Filter Include="extensions\network">
       <UniqueIdentifier>{3bafe1c6-80e7-41e4-b59b-782be8764440}</UniqueIdentifier>
     </Filter>
+    <Filter Include="support\file_system">
+      <UniqueIdentifier>{4d908966-3387-46ee-92da-be668dff3fa0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\base_nodes\CCAtlasNode.cpp">
@@ -979,6 +982,9 @@
     </ClInclude>
     <ClInclude Include="..\extensions\network\HttpResponse.h">
       <Filter>extensions\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\file_system\tinydir.h">
+      <Filter>support\file_system</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

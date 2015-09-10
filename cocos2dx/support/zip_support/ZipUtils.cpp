@@ -379,6 +379,58 @@ bool ZipFile::setFilter(const std::string &filter)
     return ret;
 }
 
+std::vector<std::string> ZipFile::getDirEntries(const std::string& path, bool isFolder)
+{
+	std::string searchName = path;
+	char last = searchName[searchName.length() - 1];
+	if (last == '/' || last == '\\')
+	{
+		searchName.erase(--searchName.end());
+	}
+	size_t pos = 0;
+	while ((pos = searchName.find("\\", pos)) != std::string::npos)
+	{
+		searchName[pos] = '/';
+	}
+	std::vector<std::string> results;
+	if (isFolder)
+	{
+		for (const auto& folder : m_data->folderList)
+		{
+			if (searchName == folder.substr(0, searchName.length()))
+			{
+				size_t pos = folder.find('/',searchName.length()+1);
+				if (pos == std::string::npos)
+				{
+					if (searchName.length() < folder.length())
+					{
+						results.push_back(folder.substr(searchName.length()+1));
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		for (const auto& it : m_data->fileList)
+		{
+			const std::string& file = it.first;
+			if (searchName == file.substr(0, searchName.length()))
+			{
+				size_t pos = file.find('/',searchName.length()+1);
+				if (pos == std::string::npos)
+				{
+					if (searchName.length() < file.length())
+					{
+						results.push_back(file.substr(searchName.length()+1));
+					}
+				}
+			}
+		}
+	}
+	return std::move(results);
+}
+
 bool ZipFile::fileExists(const std::string &fileName) const
 {
 	bool ret = false;

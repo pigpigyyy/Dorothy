@@ -105,6 +105,45 @@ bool CCFileUtilsAndroid::isAbsolutePath(const std::string& strPath)
     return false;
 }
 
+std::vector<std::string> CCFileUtilsAndroid::getDirEntries(const std::string& path, bool isFolder)
+{
+	std::string searchName = path;
+	if (strFilePath[0] != '/')
+    {
+		return s_pZipFile->getDirEntries(searchName, isFolder);
+	}
+	else
+	{
+		char last = searchName[searchName.length() - 1];
+		if (last == '/' || last == '\\')
+		{
+			searchName.erase(--searchName.end());
+		}
+		std::vector<std::string> files;
+		tinydir_dir dir;
+		string fullPath = CCFileUtils::sharedFileUtils()->fullPathForFilename(searchName.c_str());
+		int ret = tinydir_open(&dir, fullPath.c_str());
+		if (ret == 0)
+		{
+			while (dir.has_next)
+			{
+				tinydir_file file;
+				tinydir_readfile(&dir, &file);
+				if ((file.is_dir != 0) == isFolder)
+				{
+					files.push_back(file.name);
+				}
+				tinydir_next(&dir);
+			}
+			tinydir_close(&dir);
+		}
+		else
+		{
+			CCLOG("oContent get entry error, %s, %s", strerror(errno), fullPath.c_str());
+		}
+		return std::move(files);
+	}
+}
 
 unsigned char* CCFileUtilsAndroid::getFileData(const char* pszFileName, const char* pszMode, unsigned long * pSize)
 {    

@@ -45,6 +45,7 @@ public:
     virtual std::string getWritablePath();
     virtual bool isFileExist(const std::string& strFilePath);
     virtual bool isFolder(const std::string& path);
+	virtual std::vector<std::string> getDirEntries(const std::string& path, bool isFolder);
     virtual bool isAbsolutePath(const std::string& strPath);
     virtual std::string getFullPathForDirectoryAndFilename(const std::string& strDirectory, const std::string& strFilename);
     

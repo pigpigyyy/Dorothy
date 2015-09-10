@@ -23,6 +23,7 @@ THE SOFTWARE.
 ****************************************************************************/
 #include "CCFileUtilsWin32.h"
 #include "platform/CCCommon.h"
+#include "support/file_system/tinydir.h"
 #include <Shlobj.h>
 
 using namespace std;
@@ -79,6 +80,39 @@ bool CCFileUtilsWin32::isFolder(const std::string& path)
 		return (buf.st_mode & S_IFDIR) != 0;
 	}
 	return false;
+}
+
+std::vector<std::string> CCFileUtilsWin32::getDirEntries(const std::string& path, bool isFolder)
+{
+	std::string searchName = path;
+	char last = searchName[searchName.length() - 1];
+	if (last == '/' || last == '\\')
+	{
+		searchName.erase(--searchName.end());
+	}
+	std::vector<std::string> files;
+	tinydir_dir dir;
+	string fullPath = CCFileUtils::sharedFileUtils()->fullPathForFilename(searchName.c_str());
+	int ret = tinydir_open(&dir, fullPath.c_str());
+	if (ret == 0)
+	{
+		while (dir.has_next)
+		{
+			tinydir_file file;
+			tinydir_readfile(&dir, &file);
+			if ((file.is_dir != 0) == isFolder)
+			{
+				files.push_back(file.name);
+			}
+			tinydir_next(&dir);
+		}
+		tinydir_close(&dir);
+	}
+	else
+	{
+		CCLOG("oContent get entry error, %s, %s", strerror(errno), fullPath.c_str());
+	}
+	return std::move(files);
 }
 
 bool CCFileUtilsWin32::isAbsolutePath(const std::string& strPath)

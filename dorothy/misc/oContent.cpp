@@ -9,7 +9,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "const/oDefine.h"
 #include "misc/oContent.h"
 #include "misc/oAsync.h"
-#include "other/tinydir.h"
 #include "other/mkdir.h"
 #include <fstream>
 using std::ofstream;
@@ -246,35 +245,7 @@ void oContent::saveToFile(const string& filename, const string& content)
 
 vector<string> oContent::getDirEntries(const char* path, bool isFolder)
 {
-    std::string searchName = path;
-	char last = searchName[searchName.length()-1];
-	if (last == '/' || last == '\\')
-	{
-		searchName.erase(--searchName.end());
-	}
-	vector<string> files;
-	tinydir_dir dir;
-	string fullPath = CCFileUtils::sharedFileUtils()->fullPathForFilename(searchName.c_str());
-	int ret = tinydir_open(&dir, fullPath.c_str());
-	if (ret == 0)
-	{
-		while (dir.has_next)
-		{
-			tinydir_file file;
-			tinydir_readfile(&dir, &file);
-			if ((file.is_dir != 0) == isFolder)
-			{
-				files.push_back(file.name);
-			}
-			tinydir_next(&dir);
-		}
-		tinydir_close(&dir);
-	}
-	else
-	{
-		CCLOG("oContent get entry error, %s, %s", strerror(errno), fullPath.c_str());
-	}
-	return std::move(files);
+	return CCFileUtils::sharedFileUtils()->getDirEntries(path, isFolder);
 }
 
 bool oContent::mkdir(const char* path)
