@@ -363,6 +363,7 @@ local function oEditRuler()
 		self:runAction(CCSpawn({oPos(0.3,winSize.width*0.5-height*0.5,170,oEase.OutQuad),oOpacity(0.3,0.8)}))
 		self.touchEnabled = true
 		isUsedForFrame = true
+		content:schedule(self.routine)
 	end
 
 	ruler.show = function(self,default,min,max,indent,callback)
@@ -377,6 +378,7 @@ local function oEditRuler()
 		self.positionY = -10-width
 		self:runAction(CCSpawn({oPos(0.5,10,10,oEase.OutBack),oOpacity(0.5,0.8)}))
 		self.touchEnabled = true
+		isUsedForFrame = false
 		emit("Effect.editMenu.place",true)
 		content:schedule(self.routine)
 	end
