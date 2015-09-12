@@ -66,12 +66,12 @@ Class
 				viewItem.parent\removeChild viewItem
 				@effectItems[target] = nil
 
-		@\gslot "Scene.LoadEffect",(path)->
+		@\gslot "Scene.LoadEffect",->
 			@\runThread ->
 				-- get effect files
 				effects = {}
 				effectFiles = {}
-				effectFilename = path.."list.effect"
+				effectFilename = editor.gameFullPath..editor.graphicFolder.."list.effect"
 				if not oContent\exist effectFilename
 					file = io.open effectFilename,"w"
 					file\write "<A></A>"
@@ -131,6 +131,7 @@ Class
 						viewItem.opacity = 0
 				table.sort effects
 				@effects = effects
+				@effectFiles = effectFiles
 
 				i = 0
 				itemCount = 2
@@ -175,14 +176,18 @@ Class
 			if not @_selectedItem
 				MessageBox text:"No Effect Selected",okOnly:true
 				return
-			with MessageBox text:"Delete Effect\n"..@_selectedItem\match("([^\\/]*)%.[^%.\\/]*$")
+			with MessageBox text:"Delete Effect\n"..@_selectedItem
 				\slots "OK",(result)->
 					return unless result
 					MessageBox(text:"Confirm This\nDeletion")\slots "OK",(result)->
 						return unless result
 						@\runThread ->
-							oContent\remove @_selectedItem
-							oCache.Model\unload @_selectedItem
+							@effectFiles[@_selectedItem] = nil
+							content = "<A>"
+							for k,v in pairs @effectFiles
+								content = content..string.format("<B A=\"%s\" B=\"%s\"/>",k,v)
+								content = content.."</A>"
+							oContent\saveToFile editor.gameFullPath..editor.graphicFolder.."list.effect",content
 							@\clearSelection!
 							sleep 0.3
 							editor\updateEffects!

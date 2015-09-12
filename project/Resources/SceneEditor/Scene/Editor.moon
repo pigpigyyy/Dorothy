@@ -36,10 +36,10 @@ Class
 			panelWidth = 10+110*4
 			panelHeight = height*0.6
 			panelNames = {
-				"SpritePanel"
-				"ModelPanel"
-				"BodyPanel"
-				"EffectPanel"
+				--"SpritePanel"
+				--"ModelPanel"
+				--"BodyPanel"
+				--"EffectPanel"
 			}
 			sleep!
 			for name in *panelNames
@@ -59,6 +59,9 @@ Class
 			sleep!
 			@editMenu = EditMenu!
 			@\addChild @editMenu
+
+			SelectionPanel = require "View.Control.SelectionPanel"
+			@\addChild SelectionPanel title:"Choose",width:400,height:300
 
 	updateSprites: =>
 		emit "Scene.LoadSprite", @graphicFolder

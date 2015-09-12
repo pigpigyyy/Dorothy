@@ -16,8 +16,8 @@ Class
 		{:width,:height,:touchPriority} = args
 		touchPriority = touchPriority or CCMenu.DefaultHandlerPriority
 		winHeight = CCDirector.winSize.height
-		viewWidth = math.max args.viewWidth or width
-		viewHeight = math.max args.viewHeight or height
+		viewWidth = math.max args.viewWidth or width,width
+		viewHeight = math.max args.viewHeight or height,height
 		moveY = viewHeight - height
 		moveX = viewWidth - width
 		deltaX,deltaY = 0,0

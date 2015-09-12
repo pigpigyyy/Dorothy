@@ -1,0 +1,40 @@
+<!-- params: title,width,height -->
+<LayerColor Name="mask" X="{ @X }" Y="{ @Y }"
+	Color="0x0" Opacity="0"
+	SwallowTouches="True" TouchEnabled="True"
+	TouchPriority="{ editor.touchLevel10 }">
+	<Import Module="Control.ScrollArea"/>
+
+	<DrawNode Name="box" X="{ $X }" Y="{ $Y }" Ref="True">
+		<Polygon FillColor="0xe5100000" BorderWidth="0.5" BorderColor="0x88ffafaf">
+			<Vec2 X="{ -width/2-1 }" Y="{ -height/2-1 }"/>
+			<Vec2 X="{ width/2+1 }" Y="{ -height/2-1 }"/>
+			<Vec2 X="{ width/2+1 }" Y="{ height/2+1 }"/>
+			<Vec2 X="{ -width/2-1 }" Y="{ height/2+1 }"/>
+		</Polygon>
+
+		<ScrollArea Name="scrollArea" Width="{ width }" Height="{ height }" TouchPriority="{ editor.touchLevel10-1 }" PaddingY="100" Ref="True">
+			<Item Name="view">
+				<Menu Name="menu" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" Ref="True">
+					<LabelTTF Text="{ title }" X="{ $X }" Y="{ $T-20 }" AntiAlias="False" FontName="Arial" FontSize="24"/>
+				</Menu>
+			</Item>
+		</ScrollArea>
+	</DrawNode>
+
+	<Action>
+		<Opacity Name="fadeIn" Time="0.3" Alpha="0.6" Ease="OutQuad"/>
+		<Spawn Name="show">
+			<Opacity Time="0.3" Alpha="1"/>
+			<Scale Time="0.3" X="1" Y="1" Ease="OutBack"/>
+		</Spawn>
+	</Action>
+
+	<Slot Name="Entered">
+		mask:perform(fadeIn)
+		box.opacity = 0
+		box.scaleX = 0
+		box.scaleY = 0
+		box:perform(show)
+	</Slot>
+</LayerColor>

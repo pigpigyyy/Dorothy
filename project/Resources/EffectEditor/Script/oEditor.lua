@@ -38,6 +38,10 @@ oEditor.dirty = false
 
 oEditor.items = {}
 
+oEditor.isNameExist = function(self,name)
+	return self.items[name] ~= nil
+end
+
 oEditor.getUsableName = function(self,originalName)
 	if originalName == "" then originalName = "name" end
 	if self.items[originalName] then

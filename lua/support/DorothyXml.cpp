@@ -42,7 +42,8 @@ static const char* _toBoolean(const char* str)
 #define toGroup(x) (isVal(x) ? string("oData.Group")+Val(x) : Val(x))
 #define toBlendFunc(x) (isVal(x) ? string("ccBlendFunc.")+toVal(x,"Zero") : Val(x))
 #define toOrientation(x) (isVal(x) ? string("CCOrientation.")+toVal(x,"Down") : Val(x))
-#define toTextAlign(x) (isVal(x) ? string("CCTextAlign.")+toVal(x,"HLeft") : Val(x))
+#define toTextAlignH(x) (isVal(x) ? string("CCTextAlign.H")+toVal(x,"Left") : Val(x))
+#define toTextAlignV(x) (isVal(x) ? string("CCTextAlign.V")+toVal(x,"Center") : Val(x))
 #define toText(x) (isVal(x) ? string("\"")+Val(x)+"\"" : Val(x))
 
 #define Self_Check(name) \
@@ -1052,21 +1053,21 @@ static const char* _toBoolean(const char* str)
 	const char* text = nullptr;\
 	const char* fntFile = nullptr;\
 	const char* fontWidth = nullptr;\
-	const char* alignment = nullptr;\
+	const char* hAlign = nullptr;\
 	const char* imageOffset = nullptr;
 #define LabelBMFont_Check \
 	Node_Check\
 	CASE_STR(Text) { text = atts[++i]; break; }\
 	CASE_STR(File) { fntFile = atts[++i]; break; }\
 	CASE_STR(FontWidth) { fontWidth = atts[++i]; break; }\
-	CASE_STR(Alignment) { alignment = atts[++i]; break; }\
+	CASE_STR(HorizontalAlign) { hAlign = atts[++i]; break; }\
 	CASE_STR(ImageOffset) { imageOffset = atts[++i]; break; }
 #define LabelBMFont_Create \
 	stream << "local " << self << " = CCLabelBMFont(";\
 	if (text && text[0]) stream << toText(text); else stream << "\"\"";\
 	if (fntFile) stream << "," << toText(fntFile);\
 	else stream << ",";\
-	stream << ',' << toVal(fontWidth,"CCLabelBMFont.AutomaticWidth") << "," << toTextAlign(alignment) << ',' << toVal(imageOffset,"oVec2.zero") << ")\n";
+	stream << ',' << toVal(fontWidth,"CCLabelBMFont.AutomaticWidth") << "," << toTextAlignH(hAlign) << ',' << toVal(imageOffset,"oVec2.zero") << ")\n";
 #define LabelBMFont_Handle \
 	Node_Handle
 #define LabelBMFont_Finish \
@@ -1078,12 +1079,16 @@ static const char* _toBoolean(const char* str)
 	const char* text = nullptr;\
 	const char* fontName = nullptr;\
 	const char* fontSize = nullptr;\
+	const char* hAlign = nullptr;\
+	const char* vAlign = nullptr;\
 	const char* antiAlias = nullptr;
 #define LabelTTF_Check \
 	Node_Check\
 	CASE_STR(Text) { text = atts[++i]; break; }\
 	CASE_STR(FontName) { fontName = atts[++i]; break; }\
 	CASE_STR(FontSize) { fontSize = atts[++i]; break; }\
+	CASE_STR(HorizontalAlign) { hAlign = atts[++i]; break; }\
+	CASE_STR(VerticalAlign) { vAlign = atts[++i]; break; }\
 	CASE_STR(AntiAlias) { antiAlias = atts[++i]; break; }
 #define LabelTTF_Create \
 	stream << "local " << self << " = CCLabelTTF(";\
@@ -1091,7 +1096,10 @@ static const char* _toBoolean(const char* str)
 	stream << ',' << toText(fontName) << ',' << Val(fontSize) << ")\n";
 #define LabelTTF_Handle \
 	Node_Handle\
-	if (antiAlias) stream << self << ".texture.antiAlias = " << toBoolean(antiAlias) << '\n';
+	if (antiAlias) stream << self << ".texture.antiAlias = " << toBoolean(antiAlias) << '\n';\
+	if (width || height) stream << self << ".dimensions = CCSize(" << toVal(width,(string(self)+".width").c_str()) << ',' << toVal(height,(string(self)+".height").c_str()) << ")\n";\
+	if (hAlign) stream << self << ".horizentalAlignment = " << toTextAlignH(hAlign) << '\n';\
+	if (vAlign) stream << self << ".verticalAlignment = " << toTextAlignV(vAlign) << '\n';
 #define LabelTTF_Finish \
 	Add_To_Parent
 
