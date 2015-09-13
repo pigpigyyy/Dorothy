@@ -3,6 +3,22 @@ local winSize = CCDirector.winSize
 if winSize.width > 1000 and winSize.height > 960 then
 	CCView:setDesignResolution(winSize.width/2,winSize.height/2,CCView.ExactFit)
 end
+
+local CCLabelTTF = builtin.CCLabelTTF
+builtin.CCLabelTTF = function(text,fontName,fontSize)
+	if fontSize == 17
+		or fontSize == 20
+		or fontSize == 24 then
+		return CCLabelBMFont(text,"Font/Arial"..tostring(fontSize)..".fnt")
+	elseif fontSize == 10
+		or fontSize == 12 then
+		return CCLabelBMFont(text,"Font/Arial14.fnt",CCLabelBMFont.AutomaticWidth,CCTextAlign.HCenter)
+	elseif fontSize == 14 or fontSize == 16 or fontSize == 18 then
+		return CCLabelBMFont(text,"Font/Arial17.fnt",CCLabelBMFont.AutomaticWidth,CCTextAlign.HCenter)
+	end
+	return CCLabelTTF(text,fontName,fontSize)
+end
+
 require("Test.Entry")
 
 --[[

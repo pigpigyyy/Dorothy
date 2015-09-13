@@ -1755,6 +1755,12 @@ local Dorothy =
 	{
 		childs =
 		{
+			texture =
+			{
+				description = "[CCTexture2D][Readonly]",
+				typeName = "CCTexture2D",
+				type = "value",
+			},
 		},
 		description = "class CCSpriteBatchNode(CCNode).\n args -- (imageFile: string, capacity: int = 3)\n args1 -- (texture: CCTexture2D, capacity: int = 3)",
 		parents = {"CCNode",},

@@ -7,6 +7,7 @@ local ccColor3 = require("ccColor3")
 local oTextField = require("oTextField")
 local oLine = require("oLine")
 local ccColor4 = require("ccColor4")
+local tolua = require("tolua")
 local class,property = unpack(require("class"))
 
 local oSettingItem = class(
@@ -21,11 +22,12 @@ local oSettingItem = class(
 	end,
 
 	-- self = CCMenuItem
-	__init = function(self,name,width,height, x, y, isInput, toggled)
+	__init = function(self,name,width,height, x, y, isInput, valueFormat, toggled)
 		--local halfW = width*0.5
 		local halfH = height*0.5
 		
 		self._isInput = isInput
+		self._valueFormat = valueFormat
 		self._toggled = toggled
 		self.anchor = oVec2(0,1)
 		self.contentSize = CCSize(width,height)
@@ -80,11 +82,16 @@ local oSettingItem = class(
 			return self._label.text
 		end,
 		function(self,value)
-			if value ~= nil and value ~= "" then
-				if type(value) == "number" then
-					self._label.text = string.format("%.2f",value)
-				else
+			if value ~= nil then
+				local valueFormat = self._valueFormat
+				if type(value) == "boolean" then
 					self._label.text = tostring(value)
+				elseif tolua.type(value) == "oVec2" then
+					self._label.text = string.format(valueFormat,value.x)..", "..string.format(valueFormat,value.y)
+				elseif tolua.type(value) == "CCSize" then
+					self._label.text = string.format(valueFormat,value.width)..", "..string.format(valueFormat,value.height)
+				else
+					self._label.text = string.format(valueFormat,value)
 				end
 				self._label.texture.antiAlias = false
 			else

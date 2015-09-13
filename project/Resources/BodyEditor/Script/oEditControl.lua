@@ -796,7 +796,6 @@ local function oEditControl()
 		editControl:hide()
 	end)
 	local currentSetting = nil
-	local n2str = function(num) return string.format("%.2f",num) end
 	editControl:gslot("Body.settingPanel.edit",function(item)
 		if not item then return end
 		local name = item.name
@@ -823,7 +822,7 @@ local function oEditControl()
 				end)
 			elseif name == "Position" then
 				editControl:showPosEditor(data:get("Position"),function(pos)
-					item.value = n2str(pos.x)..","..n2str(pos.y)
+					item.value = pos
 					local body = oEditor:getItem(data)
 					if body then
 						body.position = pos
@@ -836,7 +835,7 @@ local function oEditControl()
 				local angle = data:get("Angle")
 				local center = (data.parent and data:has("Center")) and data:get("Center") or oVec2.zero
 				editControl:showRotEditor(pos,angle,center,function(rot)
-					item.value = n2str(rot)
+					item.value = rot
 					data:set("Angle",rot)
 					if data.parent then
 						oEditor:resetItem(data)
@@ -850,14 +849,14 @@ local function oEditControl()
 				end)
 			elseif name == "Center" then
 				editControl:showCenterEditor(oEditor:getItem(data),data:get("Center"),function(center)
-					item.value = n2str(center.x)..","..n2str(center.y)
+					item.value = center
 					data:set("Center",center)
 					oEditor:resetItem(data)
 				end)
 			elseif name == "Size" then
 				editControl:showSizeEditor(
 					oEditor:getItem(data),data:get("Center"),data:get("Size"),function(size)
-					item.value = n2str(size.width)..","..n2str(size.height)
+					item.value = size
 					data:set("Size",size)
 					oEditor:resetItem(data)
 				end)
@@ -870,22 +869,22 @@ local function oEditControl()
 				end)
 			elseif name == "Density" then
 				editControl:showEditRuler(data:get("Density"),0,22.6,1,function(val)
-					item.value = n2str(val)
+					item.value = val
 					data:set("Density",val)
 				end)
 			elseif name == "Restitution" or  name == "Friction" or name == "Damping" then
 				editControl:showEditRuler(data:get(name),0,1,0.1,function(val)
-					item.value = n2str(val)
+					item.value = val
 					data:set(name,val)
 				end)
 			elseif name == "LinearDamping" or name ==  "AngularDamping" or name == "CorrectionFactor" then
 				editControl:showEditRuler(data:get(name),0,10,1,function(val)
-					item.value = n2str(val)
+					item.value = val
 					data:set(name,val)
 				end)
 			elseif name == "GravityScale" then
 				editControl:showEditRuler(data:get(name),-10,10,1,function(val)
-					item.value = n2str(val)
+					item.value = val
 					data:set(name,val)
 				end)
 			elseif name == "MaxLength"
@@ -898,30 +897,30 @@ local function oEditControl()
 				or name == "MaxTorque"
 				or name == "Frequency" then
 				editControl:showEditRuler(data:get(name),0,10000,10,function(val)
-					item.value = n2str(val)
+					item.value = val
 					data:set(name,val)
 				end)
 			elseif name == "MotorSpeed"
 				or name == "LowerAngle"
 				or name == "UpperAngle" then
 				editControl:showEditRuler(data:get(name),0,0,10,function(val)
-					item.value = n2str(val)
+					item.value = val
 					data:set(name,val)
 				end)
 			elseif name == "Ratio" then
 				editControl:showEditRuler(data:get(name),0.1,10,1,function(val)
-					item.value = n2str(val)
+					item.value = val
 					data:set(name,val)
 				end)
 			elseif name == "SensorTag" then
 				editControl:showEditRuler(data:get("SensorTag"),0,100,10,function(val)
 					val = math.floor(val)
-					item.value = string.format("%d",val)
+					item.value = val
 					data:set("SensorTag",val)
 				end)
 			elseif name == "FixedRotation" or name == "Bullet" or name == "Sensor" or name == "Collision" then
 				editControl:showSwitch(data:get(name), function(val)
-					item.value = tostring(val)
+					item.value = val
 					data:set(name,val)
 					oEditor:resetItem(data)
 				end)
@@ -974,19 +973,19 @@ local function oEditControl()
 				end)
 			elseif name == "AnchorA" or name == "AnchorB" then
 				editControl:showPointControl(data:get(name),function(pos)
-					item.value = n2str(pos.x)..","..n2str(pos.y)
+					item.value = pos
 					data:set(name,pos)
 					oEditor:resetItem(data)
 				end, oEditor:getItem(data:get(name == "AnchorA" and "BodyA" or "BodyB")))
 			elseif name == "Offset" then
 				editControl:showPointControl(data:get(name),function(pos)
-					item.value = n2str(pos.x)..","..n2str(pos.y)
+					item.value = pos
 					data:set(name,pos)
 					oEditor:resetItem(data)
 				end,oEditor:getItem(data:get("BodyA")))
 			elseif name == "Axis" then
 				editControl:showAxisEditor(data:get(name), data:get("WorldPos"),function(axis)
-					item.value = n2str(axis.x)..","..n2str(axis.y)
+					item.value = axis
 					data:set(name,axis)
 					oEditor:resetItem(data)
 				end)
@@ -1010,7 +1009,7 @@ local function oEditControl()
 				local target = oEditor:getItem(data)
 				local face = target:getChildByIndex(1)
 				editControl:showCenterEditor(oEditor:getItem(data),data:get("FacePos"),function(center)
-					item.value = n2str(center.x)..","..n2str(center.y)
+					item.value = center
 					data:set("FacePos",center)
 					if face then
 						face.position = center
@@ -1018,7 +1017,7 @@ local function oEditControl()
 				end)
 			elseif name == "G" then
 				editControl:showEditRuler(CCUserDefault.G,-100,0,10,function(val)
-					item.value = n2str(val)
+					item.value = val
 					item.G = val
 				end)
 			end
@@ -1055,7 +1054,7 @@ local function oEditControl()
 					or name == "LowerAngle"
 					or name == "UpperAngle" then
 					oEditor:resetItem(data)
-				elseif name == "G" then
+				elseif name == "G" and item.G then
 					CCUserDefault.G = item.G
 					oEditor.world.gravity = oVec2(0,item.G)
 				end

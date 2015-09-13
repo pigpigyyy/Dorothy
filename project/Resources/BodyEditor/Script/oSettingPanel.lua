@@ -55,68 +55,68 @@ local function oSettingPanel()
 	local itemNames =
 	{
 		-- text field
-		"Name",
+		{"Name","%s"},
 		-- body chooser
-		"BodyA",
-		"BodyB",
+		{"BodyA","%s"},
+		{"BodyB","%s"},
 		-- joint chooser
-		"JointA",
-		"JointB",
+		{"JointA","%s"},
+		{"JointB","%s"},
 		-- move point
-		"WorldPos",
-		"GroundA",
-		"GroundB",
-		"AnchorA",
-		"AnchorB",
-		"Offset",
+		{"WorldPos","%d"},
+		{"GroundA","%s"},
+		{"GroundB","%s"},
+		{"AnchorA","%d"},
+		{"AnchorB","%d"},
+		{"Offset","%d"},
 		-- move axis
-		"Axis",
+		{"Axis","%d"},
 		-- float
-		"MaxForce",
-		"MaxTorque",
-		"Ratio",
-		"AngularOffset", 
-		"CorrectionFactor",
-		"Lower",
-		"Upper",
-		"MaxMotorForce",
-		"MotorSpeed",
-		"LowerAngle",
-		"UpperAngle",
-		"MaxMotorTorque",
-		"MaxLength",
-		"Frequency",
-		"Damping",
-		"Angle",
-		"Radius",
-		"GravityScale",
-		"LinearDamping",
-		"AngularDamping",
-		"Density",
-		"Friction",
-		"Restitution",
+		{"MaxForce","%d"},
+		{"MaxTorque","%d"},
+		{"Ratio","%.1f"},
+		{"AngularOffset","%d"},
+		{"CorrectionFactor","%.1f"},
+		{"Lower","%d"},
+		{"Upper","%d"},
+		{"MaxMotorForce","%d"},
+		{"MotorSpeed","%d"},
+		{"LowerAngle","%d"},
+		{"UpperAngle","%d"},
+		{"MaxMotorTorque","%d"},
+		{"MaxLength","%d"},
+		{"Frequency","%d"},
+		{"Damping","%.2f"},
+		{"Angle","%d"},
+		{"Radius","%d"},
+		{"GravityScale","%.1f"},
+		{"LinearDamping","%.1f"},
+		{"AngularDamping","%.1f"},
+		{"Density","%.1f"},
+		{"Friction","%.2f"},
+		{"Restitution","%.2f"},
 		-- selector
-		"Type",
+		{"Type","%s"},
 		-- boolean
-		"Bullet",
-		"FixedRotation",
-		"Collision",
+		{"Bullet","%s"},
+		{"FixedRotation","%s"},
+		{"Collision","%s"},
 		-- rect maker
-		"Size",
+		{"Size","%d"},
 		-- move position
-		"Position",
-		"Center",
+		{"Position","%d"},
+		{"Center","%d"},
 		-- vertices editor
-		"Vertices",
+		{"Vertices","%s"},
 		-- face chooser
-		"Face",
+		{"Face","%s"},
 		-- move position
-		"FacePos",
+		{"FacePos","%d"},
 		-- boolean
-		"Sensor",
+		{"Sensor","%s"},
 		-- int
-		"SensorTag",
-		"G",
+		{"SensorTag","%d"},
+		{"G","%d"},
 	}
 
 	local items = {}
@@ -125,8 +125,10 @@ local function oSettingPanel()
 		emit("Body.settingPanel.edit",settingItem)
 	end
 	for i = 1,#itemNames do
-		items[itemNames[i]] = oSettingItem(itemNames[i].." :",itemWidth,itemHeight,-itemWidth,getPosY(),i == 1,editCallback)
-		items[itemNames[i]].name = itemNames[i]
+		local itemName = itemNames[i][1]
+		local valueFormat = itemNames[i][2]
+		items[itemName] = oSettingItem(itemName.." :",itemWidth,itemHeight,-itemWidth,getPosY(),i == 1,valueFormat,editCallback)
+		items[itemName].name = itemName
 	end
 	for _,item in pairs(items) do
 		item.visible = false
@@ -468,11 +470,7 @@ local function oSettingPanel()
 					and k ~= "set"
 					and k ~= "get" then
 					local value = data[v]
-					if tolua.type(value) == "oVec2" then
-						items[k].value = string.format("%.2f",value.x)..","..string.format("%.2f",value.y)
-					elseif tolua.type(value) == "CCSize" then
-						items[k].value = string.format("%d",value.width)..","..string.format("%d",value.height)
-					elseif k == "Type" then
+					if k == "Type" then
 						if value == oBodyDef.Dynamic then
 							items[k].value = "Dynamic"
 						elseif value == oBodyDef.Static then
@@ -481,7 +479,7 @@ local function oSettingPanel()
 							items[k].value = "Kinematic"
 						end
 					else
-						items[k].value = tostring(value)
+						items[k].value = value
 					end
 				end
 			end
