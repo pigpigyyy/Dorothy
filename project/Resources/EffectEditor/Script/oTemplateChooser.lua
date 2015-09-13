@@ -349,9 +349,6 @@ local function oTemplateChooser(filename)
 			itemWidth,50,
 			xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
 			function(item)
-				panel.ended = function()
-					panel.parent:removeChild(panel)
-				end
 				panel:hide()
 				local templateName = item.template
 				oContent:saveToFile(oEditor.output..filename,templates[templateName])

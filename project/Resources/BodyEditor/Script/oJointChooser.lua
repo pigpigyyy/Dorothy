@@ -86,9 +86,6 @@ local function oJointChooser()
 				oEditor:addData(data)
 				emit("Body.viewPanel.choose",data)
 				emit("Body.editor.change")
-				panel.ended = function()
-					panel.parent:removeChild(panel)
-				end
 				panel:hide()
 			end)
 		button.joint = joints[i]

@@ -192,7 +192,6 @@ local function oSpriteChooser()
 	end
 
 	panel.ended = function(self)
-		self.parent:removeChild(self)
 		collectgarbage()
 		oCache:removeUnused()
 	end

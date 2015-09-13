@@ -213,9 +213,6 @@ local function oFileChooser(addExisted,newEffectName)
 				itemWidth,50,
 				xStart+10+((n-1)%itemNum)*(itemWidth+10), y,
 				function(item)
-					panel.ended = function()
-						panel.parent:removeChild(panel)
-					end
 					panel:hide()
 					oEditor.items[newEffectName] = item.file
 					oEditor.currentName = newEffectName
@@ -293,9 +290,6 @@ local function oFileChooser(addExisted,newEffectName)
 			function(item)
 				oEditor.currentName = item.name
 				oEditor.currentFile = item.file
-				panel.ended = function()
-					panel.parent:removeChild(panel)
-				end
 				panel:hide()
 				loadEffect(item.name,item.file)
 			end)
@@ -323,9 +317,6 @@ local function oFileChooser(addExisted,newEffectName)
 		itemWidth,50,
 		xStart+10+((n-1)%itemNum)*(itemWidth+10), y,
 		function()
-			panel.ended = function()
-				panel.parent:removeChild(panel)
-			end
 			panel:hide()
 			oEditor:addChild(oBox("New Particle Name",function(name)
 				if name == "" or name:match("[\\/|:*?<>\"%.]") or oEditor:isNameExist(name) then
@@ -357,9 +348,6 @@ local function oFileChooser(addExisted,newEffectName)
 		itemWidth,50,
 		xStart+10+((n-1)%itemNum)*(itemWidth+10), y,
 		function()
-			panel.ended = function()
-				panel.parent:removeChild(panel)
-			end
 			panel:hide()
 			oEditor:addChild(oBox("New Frame Name",function(name)
 				if name == "" or name:match("[\\/|:*?<>\"%.]") or oEditor:isNameExist(name) then
@@ -402,9 +390,6 @@ local function oFileChooser(addExisted,newEffectName)
 		itemWidth,50,
 		xStart+10+((n-1)%itemNum)*(itemWidth+10), y,
 		function()
-			panel.ended = function()
-				panel.parent:removeChild(panel)
-			end
 			panel:hide()
 
 			oEditor:addChild(oBox("New Effect Name",function(name)
@@ -439,9 +424,6 @@ local function oFileChooser(addExisted,newEffectName)
 			itemWidth,50,
 			xStart+10+((n-1)%itemNum)*(itemWidth+10), y,
 			function()
-				panel.ended = function()
-					panel.parent:removeChild(panel)
-				end
 				panel:hide()
 				oEditor:addChild(oBox("Remove \n"..oEditor.currentName,function()
 					local count = 0

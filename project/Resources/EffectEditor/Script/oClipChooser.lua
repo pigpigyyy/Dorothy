@@ -264,10 +264,6 @@ local function oClipChooser(clipName)
 		menu:runAction(oOpacity(0.3,1))
 	end
 
-	panel.ended = function(self)
-		self.parent:removeChild(self)
-	end
-
 	panel:show()
 	return panel
 end

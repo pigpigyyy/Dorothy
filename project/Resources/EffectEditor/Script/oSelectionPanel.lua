@@ -360,8 +360,10 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 						panel:unschedule()
 						panel.visible = false
 						if panel.mask then panel.mask.touchEnabled = false end
-						if panel.ended then
-							panel:ended()
+						local ended = panel.ended
+						panel.parent:removeChild(panel)
+						if ended then
+							ended()
 						end
 					end)
 			}))

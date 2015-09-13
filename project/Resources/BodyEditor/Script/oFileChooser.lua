@@ -102,9 +102,6 @@ local function oFileChooser()
 			xStart+10+((n-1)%itemNum)*(itemWidth+10), y,
 			function(item)
 				oEditor:edit(item.file)
-				panel.ended = function()
-					panel.parent:removeChild(panel)
-				end
 				panel:hide()
 			end)
 		button.file = files[i]..".body"
@@ -132,9 +129,6 @@ local function oFileChooser()
 		itemWidth,50,
 		xStart+10+((n-1)%itemNum)*(itemWidth+10), y,
 		function()
-			panel.ended = function()
-				panel.parent:removeChild(panel)
-			end
 			panel:hide()
 			oEditor:addChild(oBox("New Body",function(name)
 				if name == "" or name:match("[\\/|:*?<>\"%.]") then
@@ -169,9 +163,6 @@ local function oFileChooser()
 			itemWidth,50,
 			xStart+10+((n-1)%itemNum)*(itemWidth+10), y,
 			function()
-				panel.ended = function()
-					panel.parent:removeChild(panel)
-				end
 				panel:hide()
 				oEditor:addChild(oBox("Delete "..oEditor.currentFile:sub(1,-5),function()
 					oEditor:resetEditor()
