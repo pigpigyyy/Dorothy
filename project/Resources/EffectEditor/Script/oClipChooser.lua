@@ -50,6 +50,9 @@ local function oClipChooser(clipName)
 	local itemWidth = clipName and 100 or 120
 	local itemHeight = clipName and 100 or 50
 	local itemNum = clipName and 5 or 3
+	while (itemWidth+10)*itemNum+10 > winSize.width and itemNum > 1 do
+		itemNum = itemNum - 1
+	end
 	local borderSize = CCSize((itemWidth+10)*itemNum+10,winSize.height-200)
 	local panel = oSelectionPanel(borderSize)
 	local menu = panel.menu
@@ -120,52 +123,51 @@ local function oClipChooser(clipName)
 		if not clipName then
 			local items = {}
 			local function getResources(path)
-				local files = oContent:getEntries(oEditor.output..oEditor.prefix..path,false)
+				local files = oContent:getEntries(oEditor.input..oEditor.prefix..path,false)
 				for _,file in ipairs(files) do
 					local extension = file:match("%.([^%.\\/]*)$")
 					if extension then
 						extension = extension:lower()
 					end
 					if extension == "clip" then
-						local name = file:match("([^\\/]*)%.[^%.\\/]*$")
-						items[name] = oEditor.prefix..path..file
+						table.insert(items,path..file)
 					end
 				end
-				local folders = oContent:getEntries(oEditor.output..oEditor.prefix..path,true)
-				for _,folder in ipairs(folders) do
-					if folder ~= "." and folder ~= ".." then
-						getResources(path..folder.."/")
+				if not oEditor.standAlone then
+					local folders = oContent:getEntries(oEditor.input..oEditor.prefix..path,true)
+					for _,folder in ipairs(folders) do
+						if folder ~= "." and folder ~= ".." then
+							getResources(path..folder.."/")
+						end
 					end
 				end
 			end
 			getResources("")
-			for index = 1,#items do
-				local extension = string.match(files[index],"%.([^%.\\/]*)$")
-				if extension then
-					extension = string.lower(extension)
-					if extension == "clip" then
-						local filename = files[index]
-						n = n + 1
-						y = borderSize.height-10-itemHeight*0.5-math.floor((n-1)/itemNum)*(itemHeight+10)
-						local button = oButton(filename:match("(.*)%.[^%.\\/]*$").."\n."..extension,17,
-							itemWidth,itemHeight,
-							itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
-							function()
-								panel:hide()
-								oEditor:addChild(oClipChooser(filename),oEditor.topMost)
-							end)
-						button.position = button.position + panel:getTotalDelta()
-						menu:addChild(button)
-					end
-				end
+			for i = 1,#items do
+				local filename = items[i]
+				n = n + 1
+				y = borderSize.height-10-itemHeight*0.5-math.floor((n-1)/itemNum)*(itemHeight+10)
+				local button = oButton(filename:match("(.*)%.[^%.\\/]*$"),17,
+					itemWidth,itemHeight,
+					itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
+					function()
+						panel:hide()
+						oEditor:addChild(oClipChooser(filename),oEditor.topMost)
+					end)
+				button.position = button.position + panel:getTotalDelta()
+				menu:addChild(button)
 			end
 		else
 			panel.number = 1
 			panel.sprites = {}
 			panel.frameData = {interval=oEditor.effectData.interval}
-			local filename = oEditor.input..clipName
+			local filename = oEditor.input..oEditor.prefix..clipName
 			local names = oCache.Clip:getNames(filename)
-			panel.frameData.file = oCache.Clip:getTextureFile(filename):match("[^%.\\/]*%.[^%.\\/]*$")
+			local file = clipName:match("[^\\/]*$")
+			local prefix = (#file == #clipName and "" or clipName:sub(1,-1-#file))
+			panel.frameData.file = oCache.Clip:getTextureFile(filename):match("[^\\/]*$")
+			oContent:remove(oEditor.output..oEditor.prefix..oEditor.currentFile)
+			oEditor.currentFile = prefix..oEditor.currentFile
 			for index = 1,#names do
 				n = n + 1
 				y = borderSize.height-10-itemHeight*0.5-math.floor((n-1)/itemNum)*(itemHeight+10)

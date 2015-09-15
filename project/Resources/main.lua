@@ -9,7 +9,7 @@ builtin.CCLabelTTF = function(text,fontName,fontSize)
 	if fontSize == 17
 		or fontSize == 20
 		or fontSize == 24 then
-		return CCLabelBMFont(text,"Font/Arial"..tostring(fontSize)..".fnt")
+		return CCLabelBMFont(text,"Font/Arial"..tostring(fontSize)..".fnt",CCLabelBMFont.AutomaticWidth,CCTextAlign.HCenter)
 	elseif fontSize == 10
 		or fontSize == 12 then
 		return CCLabelBMFont(text,"Font/Arial14.fnt",CCLabelBMFont.AutomaticWidth,CCTextAlign.HCenter)

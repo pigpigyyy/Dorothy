@@ -204,6 +204,7 @@ function oEditor:edit(modelFile,clipFile)
 	oEditor.viewPanel:clearSelection()
 	oEditor.viewPanel:updateImages(oEditor.modelData,model)
 	oEditor.viewArea:setModelSize(oEditor.modelData[oSd.size])
+	oEditor.viewArea:originReset()
 	oEditor.editMenu.items.Size.visible = false
 	oEditor.editMenu:toSprite()
 end

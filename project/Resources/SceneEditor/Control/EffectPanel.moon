@@ -30,7 +30,6 @@ Class
 
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
-
 		@scrollArea\slots "Scrolled",(delta)->
 			contentRect\set 0,0,@scrollArea.width,@scrollArea.height
 			@menu\eachChild (child)->
@@ -155,6 +154,31 @@ Class
 		@modeBtn\slots "Tapped",->
 			@isCheckMode = not @isCheckMode
 
+		@newBtn\slots "Tapped",->
+			@\clearSelection!
+			SelectionPanel = require "Control.SelectionPanel"
+			@\addChild with SelectionPanel {
+					title:"New Effect Type"
+					width:200
+					height:200
+					items:{"Particle","Frame"}
+				}
+				\slots "Selected",(itemType)->
+					with InputBox text:"New "..itemType.." Name"
+						\slots "Inputed",(name)->
+							return unless name
+							if name == "" or name\match("[\\/|:*?<>\"%.]")
+								MessageBox text:"Invalid Name!",okOnly:true
+								return
+							for effect in *@effects
+								if name == effect
+									MessageBox text:"Name Exist!",okOnly:true
+									return
+							effectEditor = editor.effectEditor
+							effectEditor\slots("Activated")\set ->
+								effectEditor["new"..itemType] effectEditor,name
+							CCScene\run "effectEditor","rollOut"
+
 		@addBtn\slots "Tapped",->
 			@\clearSelection!
 			with InputBox text:"New Effect Name"
@@ -169,7 +193,7 @@ Class
 							return
 					effectEditor = editor.effectEditor
 					effectEditor\slots("Activated")\set ->
-						--effectEditor\new editor.graphicFolder..name..".body"
+						effectEditor\addExistFile name
 					CCScene\run "effectEditor","rollOut"
 
 		@delBtn\slots "Tapped",->
@@ -200,16 +224,17 @@ Class
 			viewItem = @effectItems[targetItem]
 			if viewItem.isLoaded
 				@\clearSelection!
-				bodyEditor = editor.bodyEditor
-				bodyEditor\slots("Activated")\set ->
-					bodyEditor\edit targetItem
-				CCScene\run "bodyEditor","rollOut"
+				effectEditor = editor.effectEditor
+				effectEditor\slots("Activated")\set ->
+					effectEditor\edit targetItem
+				CCScene\run "effectEditor","rollOut"
 			else
 				MessageBox text:"Broken Effect\nWith Data Error",okOnly:true
 
 		@closeBtn\slots "Tapped",->
 			@\hide!
 
+		@newBtn.visible = false
 		@addBtn.visible = false
 		@delBtn.visible = false
 		@editBtn.visible = false
@@ -262,11 +287,13 @@ Class
 				CCHide!
 			}
 			if value
-				@addBtn\perform show 0
-				@delBtn\perform show 1
-				@editBtn\perform show 2
+				@newBtn\perform show 0
+				@addBtn\perform show 1
+				@delBtn\perform show 2
+				@editBtn\perform show 3
 				@hint.positionX = @panel.width-(@panel.width-240)/2
 			else
+				@newBtn\perform hide 3
 				@addBtn\perform hide 2
 				@delBtn\perform hide 1
 				@editBtn\perform hide 0

@@ -182,7 +182,7 @@ local function oEditRuler()
 		local newBottom = math.ceil((-posY+halfH/scale)/interval)
 		if bottom < newBottom then bottom = newBottom end
 	end)
-	
+
 	ruler.setIndent = function(self,ind)
 		indent = ind
 		for i,label in pairs(labels) do
@@ -195,7 +195,6 @@ local function oEditRuler()
 	local _max = 0
 	local _min = 0
 	ruler.setValue = function(self,v)
-		if v == _value then return end
 		_value = v
 		if self.changed then
 			if _min < _max then

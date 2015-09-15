@@ -1201,6 +1201,7 @@ end
 
 oEditor.resetEditor = function(self)
 	emit("Body.viewArea.create",nil)
+	emit("Body.viewArea.toPos",oEditor.origin)
 	emit("Body.editMenu.created")
 	emit("Body.editMenu.reset")
 	emit("Body.editControl.hide")

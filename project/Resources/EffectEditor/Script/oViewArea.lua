@@ -8,6 +8,9 @@ local oEffect = require("oEffect")
 local oScale = require("oScale")
 local oEase = require("oEase")
 local oPos = require("oPos")
+local CCDirector = require("CCDirector")
+local oLine = require("oLine")
+local emit = require("emit")
 
 local function oViewArea()
 	local view = CCLayerColor(ccColor4(0xff1a1a1a))
@@ -16,6 +19,24 @@ local function oViewArea()
 	local scrollNode = CCNode()
 	view:addChild(scrollNode)
 	scrollNode.position = oEditor.origin
+
+	local winSize = CCDirector.winSize
+	local crossNode = CCNode()
+	local cross = oLine(
+	{
+		oVec2(0,-winSize.height*2),
+		oVec2(0,winSize.height*2)
+	},ccColor4())
+	cross.opacity = 0.2
+	crossNode:addChild(cross)
+	cross = oLine(
+	{
+		oVec2(-winSize.width*2,0),
+		oVec2(winSize.width*2,0)
+	},ccColor4())
+	cross.opacity = 0.2
+	crossNode:addChild(cross)
+	scrollNode:addChild(crossNode)
 
 --[[
 	local winSize = CCDirector.winSize
@@ -53,6 +74,7 @@ local function oViewArea()
 	end)
 
 	view:gslot("Effect.viewArea.changeEffect",function(effectName)
+		emit("Effect.viewArea.toOrigin",oEditor.origin)
 		if not effectName and oEditor.effect then
 			oEditor.effect:autoRemove():stop()
 			oEditor.effect = nil

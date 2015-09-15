@@ -86,7 +86,7 @@ local function oFrameViewer()
 		local width = 0
 		for i,item in ipairs(data) do
 			width = 10+140*(i-1)
-			local clip = oClipViewer(data.file,item.rect)
+			local clip = oClipViewer(oEditor.prefix..data.file,item.rect)
 			clip.position = oVec2(width,10)
 			menu:addChild(clip)
 		end

@@ -1,5 +1,6 @@
 local oVec2 = require("oVec2")
 local CCDrawNode = require("CCDrawNode")
+local ccColor4 = require("ccColor4")
 
 local function oStar(radius,color,borderRadius,borderColor)
 	borderRadius = borderRadius or 0
@@ -22,7 +23,7 @@ local function oStar(radius,color,borderRadius,borderColor)
 	end
 
 	local drawNode = CCDrawNode()
-	drawNode:drawPolygon(vs,color,borderRadius,borderColor)
+	drawNode:drawPolygon(vs,ccColor4(color),borderRadius,ccColor4(borderColor))
 
 	return drawNode
 end

@@ -3,6 +3,7 @@ Class,property = unpack require "class"
 SpriteViewView = require "View.Control.SpriteView"
 MessageBox = require "Control.MessageBox"
 oBody = require "oBodyEx"
+oStar = require "EffectEditor.Script.oStar"
 -- [signals]
 -- "Selected",(viewItem)->
 -- [params]
@@ -12,7 +13,12 @@ Class
 	__init: (args)=>
 		{:width,:height,:file} = args
 		@_loaded = false
+		@_checked = false
 		@file = file
+		@star = with oStar 12,0x66ff0088,0.5,0xffff0088
+			.visible = false
+			.position = oVec2 width-20,20
+		@face\addChild @star
 
 		@\slots "Tapped",->
 			@\emit "Selected",@
@@ -98,3 +104,17 @@ Class
 						oCache.Texture\removeUnused!
 
 	isLoaded: property => @_loaded
+
+	checked: property => @_checked,
+		(value)=>
+			@_checked = value
+			if value
+				@star.visible = true
+				@star.scaleX = 0
+				@star.scaleY = 0
+				@star\perform oScale 0.3,1,1,oEase.OutBack
+			else
+				@star\perform CCSequence {
+					oScale 0.3,0,0,oEase.InBack
+					CCHide!
+				}

@@ -17,10 +17,6 @@ local CCCall = require("CCCall")
 local CCMenu = require("CCMenu")
 local oBox = require("oBox")
 local emit = require("emit")
-local oTemplateChooser = require("oTemplateChooser")
-local CCDictionary = require("CCDictionary")
-local oCache = require("oCache")
-local CCRect = require("CCRect")
 
 local function oFileChooser(addExisted,newEffectName)
 	local winSize = CCDirector.winSize
@@ -67,24 +63,7 @@ local function oFileChooser(addExisted,newEffectName)
 	cancelButton:addChild(btnBk,-1)
 	opMenu:addChild(cancelButton)
 	
-	local listFile = oEditor.output..oEditor.listFile
-
-	if not oContent:exist(listFile) then
-		local file = io.open(listFile,"w")
-		file:write("<A></A>")
-		file:close()
-	end
-	local file = io.open(listFile,"r")
-	for item in file:read("*a"):gmatch("%b<>") do
-		if not item:sub(2,2):match("[A/]") then
-			local line = item:gsub("%s","")
-			local name = line:match("A=\"(.-)\"")
-			local filename = line:match("B=\"(.-)\"")
-			oEditor.items[name] = filename
-		end
-	end
-	file:close()
-	oCache.Effect:load(listFile)
+	oEditor:loadEffectFile()
 
 	local n = 0
 	local y = 0
@@ -96,77 +75,6 @@ local function oFileChooser(addExisted,newEffectName)
 		local paddingX = 0
 		local paddingY = 100
 		panel:reset(viewWidth,viewHeight,paddingX,paddingY)
-	end
-
-	local pair = {true,true}
-	local function updateAttr(name,value)
-		pair[1] = name
-		pair[2] = value
-		emit("Effect.attr",pair)
-	end
-
-	local function loadEffect(name,file)
-		oCache.Effect:load(listFile)
-		local extension = string.match(file, "%.([^%.\\/]*)$")
-		if extension == "par" then
-			local dict = CCDictionary(oEditor.output..oEditor.prefix..file)
-			local keys = dict:getKeys()
-			local parData = {}
-			local dataWrapper = {}
-			setmetatable(dataWrapper,
-			{
-				__newindex = function(_,name,value)
-					if not oEditor.dirty then
-						oEditor.dirty = rawget(parData,name) ~= value
-					end
-					rawset(parData,name,value)
-				end,
-				__index = function(_,name)
-					return rawget(parData,name)
-				end,
-				__call = function(_)
-					return parData
-				end
-			})
-			for _,v in ipairs(keys) do
-				parData[v] = dict[v]
-			end
-			oEditor.effectData = dataWrapper
-			if not parData.textureRectx then
-				parData.textureRectx = 0
-				parData.textureRecty = 0
-				parData.textureRectw = 0
-				parData.textureRecth = 0
-			end
-			for k,v in pairs(parData) do
-				updateAttr(k,v)
-			end
-			updateAttr("name",name)
-			updateAttr("file",file)
-		elseif extension == "frame" then
-			local frameFile = io.open(oEditor.output..oEditor.prefix..file)
-			local fileName = file:match("[^\\/]*$")
-			local filePath = oEditor.prefix..(#fileName < #file and file:sub(1,-#fileName-1) or "")
-			local data = frameFile:read("*a")
-			frameFile:close()
-			local img = filePath..data:match("A%s*=%s*\"([^\"]*)\"")
-			local interval = tonumber(data:match("<A.*B%s*=%s*\"([^\"]*)\""))
-			local frameData = {file=img,interval=interval}
-			for rc in data:gmatch("<B[^>]*A%s*=%s*\"([^\"]*)\"") do
-				local rect = rc..","
-				local nums = {}
-				for num in rect:gmatch("(%d+),") do
-					table.insert(nums,num)
-				end
-				table.insert(frameData,{rect = CCRect(nums[1],nums[2],nums[3],nums[4])})
-			end
-			oEditor.effectData = frameData
-			updateAttr("name",name)
-			updateAttr("file",file)
-			updateAttr("interval",interval)
-			emit("Effect.frameViewer.data",oEditor.effectData)
-		end
-		emit("Effect.viewArea.changeEffect",name)
 	end
 
 	if addExisted then
@@ -218,7 +126,7 @@ local function oFileChooser(addExisted,newEffectName)
 					oEditor.currentName = newEffectName
 					oEditor.currentFile = item.file
 					oEditor:dumpEffectFile()
-					loadEffect(newEffectName,item.file)
+					oEditor:edit(newEffectName)
 				end)
 			button.file = files[i]
 			button.enabled = false
@@ -265,17 +173,6 @@ local function oFileChooser(addExisted,newEffectName)
 		yStart = y-title.contentSize.height-10
 	end
 
-	local effectFile = io.open(listFile,"r")
-	for item in effectFile:read("*a"):gmatch("%b<>") do
-		if not item:sub(2,2):match("[A/]") then
-			local line = item:gsub("%s","")
-			local name = line:match("A=\"(.-)\"")
-			local filename = line:match("B=\"(.-)\"")
-			oEditor.items[name] = filename
-		end
-	end
-	effectFile:close()
-
 	local i = 0
 	for itemName,filename in pairs(oEditor.items) do
 		n = n+1
@@ -291,7 +188,7 @@ local function oFileChooser(addExisted,newEffectName)
 				oEditor.currentName = item.name
 				oEditor.currentFile = item.file
 				panel:hide()
-				loadEffect(item.name,item.file)
+				oEditor:edit(item.name)
 			end)
 		button.name = name
 		button.file = filename
@@ -319,10 +216,12 @@ local function oFileChooser(addExisted,newEffectName)
 		function()
 			panel:hide()
 			oEditor:addChild(oBox("New Particle Name",function(name)
-				if name == "" or name:match("[\\/|:*?<>\"%.]") or oEditor:isNameExist(name) then
+				if name == "" or name:match("[\\/|:*?<>\"%.]") then
 					oEditor:addChild(oBox("Invalid Name"),oEditor.topMost)
+				elseif oEditor:isNameExist(name) then
+					oEditor:addChild(oBox("Name Exist!"),oEditor.topMost)
 				else
-					oEditor:addChild(oTemplateChooser(name..".par"),oEditor.topMost)
+					oEditor:newParticle(name)
 				end
 			end,true),oEditor.topMost)
 		end)
@@ -350,20 +249,12 @@ local function oFileChooser(addExisted,newEffectName)
 		function()
 			panel:hide()
 			oEditor:addChild(oBox("New Frame Name",function(name)
-				if name == "" or name:match("[\\/|:*?<>\"%.]") or oEditor:isNameExist(name) then
+				if name == "" or name:match("[\\/|:*?<>\"%.]") then
 					oEditor:addChild(oBox("Invalid Name"),oEditor.topMost)
+				elseif oEditor:isNameExist(name) then
+					oEditor:addChild(oBox("Name Exist!"),oEditor.topMost)
 				else
-					oEditor.currentName = name
-					oEditor.currentFile = oEditor.currentName..".frame"
-					oEditor.items[oEditor.currentName] = oEditor.currentFile
-					oEditor:dumpEffectFile()
-					oEditor.effectData = {file="",interval=1}
-					updateAttr("name",oEditor.currentName)
-					updateAttr("file",oEditor.currentFile)
-					updateAttr("interval",1)
-					oContent:saveToFile(oEditor.output..oEditor.currentFile,[[<A A="" B="1"></A>]])
-					oCache.Effect:load(oEditor.output..oEditor.listFile)
-					emit("Effect.viewArea.changeEffect",oEditor.currentName)
+					oEditor:newFrame(name)
 				end
 			end,true),oEditor.topMost)
 		end)
@@ -396,7 +287,7 @@ local function oFileChooser(addExisted,newEffectName)
 				if name == "" or name:match("[\\/|:*?<>\"%.]") or oEditor:isNameExist(name) then
 					oEditor:addChild(oBox("Invalid Name"),oEditor.topMost)
 				else
-					oEditor:addChild(oFileChooser(true,name),oEditor.topMost)
+					oEditor:addExistFile(name)
 				end
 			end,true),oEditor.topMost)
 		end)

@@ -227,7 +227,6 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 				item.enabled = false
 				opMenu.enabled = false
 				panel:hide()
-				oEditor.viewArea:originReset()
 				oEditor:emit("Quit")
 			end)
 		backButton.anchor = oVec2.zero

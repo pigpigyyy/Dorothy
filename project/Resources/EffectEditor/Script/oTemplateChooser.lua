@@ -351,14 +351,15 @@ local function oTemplateChooser(filename)
 			function(item)
 				panel:hide()
 				local templateName = item.template
-				oContent:saveToFile(oEditor.output..filename,templates[templateName])
-				local name = filename:match("(.*)%.[^%.\\/]*$")
+				local file = oEditor.output..oEditor.prefix..filename
+				oContent:saveToFile(file,templates[templateName])
+				local name = filename:match("([^\\/]*)%.[^%.\\/]*$")
 				oEditor.items[name] = filename
 				oEditor.currentName = name
 				oEditor.currentFile = filename
 				oEditor:dumpEffectFile()
 
-				local dict = CCDictionary(oEditor.output..filename)
+				local dict = CCDictionary(file)
 				local keys = dict:getKeys()
 				local parData = {}
 				local dataWrapper = {}

@@ -7,6 +7,9 @@ local oVec2 = require("oVec2")
 local oCache = require("oCache")
 local oRoutine = require("oRoutine")
 local once = require("once")
+local CCDictionary = require("CCDictionary")
+local CCRect = require("CCRect")
+local emit = require("emit")
 
 local winSize = CCDirector.winSize
 
@@ -65,10 +68,33 @@ oEditor.dumpEffectFile = function(self)
 		content = content..string.format("<B A=\"%s\" B=\"%s\"/>",k,v)
 	end
 	content = content.."</A>"
-	oContent:saveToFile(oEditor.output..oEditor.listFile,content)
+	local listFile = oEditor.output..oEditor.listFile
+	oContent:saveToFile(listFile,content)
+	oCache.Effect:load(listFile)
+end
+
+oEditor.loadEffectFile = function(self)
+	local listFile = oEditor.output..oEditor.listFile
+	if not oContent:exist(listFile) then
+		local file = io.open(listFile,"w")
+		file:write("<A></A>")
+		file:close()
+	end
+	local file = io.open(listFile,"r")
+	for item in file:read("*a"):gmatch("%b<>") do
+		if not item:sub(2,2):match("[A/]") then
+			local line = item:gsub("%s","")
+			local name = line:match("A=\"(.-)\"")
+			local filename = line:match("B=\"(.-)\"")
+			oEditor.items[name] = filename
+		end
+	end
+	file:close()
+	oCache.Effect:load(listFile)
 end
 
 oEditor.dumpData = function(self,filename)
+	local file = oEditor.output..oEditor.prefix..filename
 	local extension = string.match(filename, "%.([^%.\\/]*)$")
 	if extension then extension = string.lower(extension) end
 	if extension == "par" then
@@ -86,8 +112,8 @@ oEditor.dumpData = function(self,filename)
 			end
 		end
 		str = str.."\n\t</dict>\n</plist>"
-		oContent:saveToFile(oEditor.output..filename,str)
-		oCache.Particle:unload(oEditor.output..filename)
+		oContent:saveToFile(file,str)
+		oCache.Particle:unload(file)
 	elseif extension == "frame" then
 		local data = oEditor.effectData
 		local str = "<A A=\""..data.file.."\" B=\""..tostring(data.interval).."\">"
@@ -99,10 +125,111 @@ oEditor.dumpData = function(self,filename)
 				..tostring(it.rect.size.height).."\"/>"
 		end
 		str = str.."</A>"
-		oContent:saveToFile(oEditor.output..filename,str)
-		oCache.Animation:unload(oEditor.output..filename)
+		oContent:saveToFile(file,str)
+		oCache.Animation:unload(file)
 	end
-	oEditor:emit("Edited",filename)
+	oEditor:emit("Edited",oEditor.prefix..filename)
+end
+
+local pair = {true,true}
+local function updateAttr(name,value)
+	pair[1] = name
+	pair[2] = value
+	emit("Effect.attr",pair)
+end
+
+oEditor.edit = function(self,name)
+	oEditor:loadEffectFile()
+	local file = oEditor.items[name]
+	oEditor.currentName = name
+	oEditor.currentFile = file
+	local targetFile = oEditor.output..oEditor.prefix..file
+	local extension = string.match(file, "%.([^%.\\/]*)$")
+	if extension == "par" then
+		local dict = CCDictionary(targetFile)
+		local keys = dict:getKeys()
+		local parData = {}
+		local dataWrapper = {}
+		setmetatable(dataWrapper,
+		{
+			__newindex = function(_,name,value)
+				if not oEditor.dirty then
+					oEditor.dirty = rawget(parData,name) ~= value
+				end
+				rawset(parData,name,value)
+			end,
+			__index = function(_,name)
+				return rawget(parData,name)
+			end,
+			__call = function(_)
+				return parData
+			end
+		})
+		for _,v in ipairs(keys) do
+			parData[v] = dict[v]
+		end
+		oEditor.effectData = dataWrapper
+		if not parData.textureRectx then
+			parData.textureRectx = 0
+			parData.textureRecty = 0
+			parData.textureRectw = 0
+			parData.textureRecth = 0
+		end
+		for k,v in pairs(parData) do
+			updateAttr(k,v)
+		end
+		updateAttr("name",name)
+		updateAttr("file",file)
+	elseif extension == "frame" then
+		local frameFile = io.open(targetFile)
+		local fileName = file:match("[^\\/]*$")
+		local filePath = (#fileName < #file and file:sub(1,-#fileName-1) or "")
+		local data = frameFile:read("*a")
+		frameFile:close()
+		local img = filePath..data:match("A%s*=%s*\"([^\"]*)\"")
+		local interval = tonumber(data:match("<A.*B%s*=%s*\"([^\"]*)\""))
+		local frameData = {file=img,interval=interval}
+		for rc in data:gmatch("<B[^>]*A%s*=%s*\"([^\"]*)\"") do
+			local rect = rc..","
+			local nums = {}
+			for num in rect:gmatch("(%d+),") do
+				table.insert(nums,num)
+			end
+			table.insert(frameData,{rect = CCRect(nums[1],nums[2],nums[3],nums[4])})
+		end
+		oEditor.effectData = frameData
+		updateAttr("name",name)
+		updateAttr("file",file)
+		updateAttr("interval",interval)
+		emit("Effect.frameViewer.data",oEditor.effectData)
+	end
+	emit("Effect.viewArea.changeEffect",name)
+end
+
+oEditor.newFrame = function(self,name)
+	oEditor:loadEffectFile()
+	oEditor.currentName = name
+	oEditor.currentFile = name..".frame"
+	oEditor.items[oEditor.currentName] = oEditor.currentFile
+	oEditor.effectData = {file="",interval=1}
+	updateAttr("name",oEditor.currentName)
+	updateAttr("file",oEditor.currentFile)
+	updateAttr("interval",1)
+	oContent:saveToFile(oEditor.output..oEditor.prefix..oEditor.currentFile,[[<A A="" B="1"></A>]])
+	oEditor:dumpEffectFile()
+	emit("Effect.viewArea.changeEffect",oEditor.currentName)
+end
+
+oEditor.newParticle = function(self,name)
+	oEditor:loadEffectFile()
+	local oTemplateChooser = require("oTemplateChooser")
+	oEditor:addChild(oTemplateChooser(name..".par"),oEditor.topMost)
+end
+
+oEditor.addExistFile = function(self,name)
+	oEditor:loadEffectFile()
+	local oFileChooser = require("oFileChooser")
+	oEditor:addChild(oFileChooser(true,name),oEditor.topMost)
 end
 
 local controls =

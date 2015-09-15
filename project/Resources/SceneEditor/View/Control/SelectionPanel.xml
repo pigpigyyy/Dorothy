@@ -15,8 +15,10 @@
 
 		<ScrollArea Name="scrollArea" Width="{ width }" Height="{ height }" TouchPriority="{ editor.touchLevel10-1 }" PaddingY="100" Ref="True">
 			<Item Name="view">
-				<Menu Name="menu" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" Ref="True">
-					<LabelTTF Text="{ title }" X="{ $X }" Y="{ $T-20 }" AntiAlias="False" FontName="Arial" FontSize="24"/>
+				<Menu Name="menu" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" TouchPriority="{ editor.touchLevel10-2 }" Ref="True">
+					<Node X="{ $X }" Y="{ $T-20 }" Width="{ width }" Height="40">
+						<LabelTTF Text="{ title }" X="{ $X }" Y="{ $Y }" AntiAlias="False" FontName="Arial" FontSize="24" Color="0x00ffff"/>
+					</Node>
 				</Menu>
 			</Item>
 		</ScrollArea>
