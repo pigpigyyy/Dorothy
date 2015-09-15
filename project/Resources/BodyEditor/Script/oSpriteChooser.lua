@@ -91,12 +91,10 @@ local function oSpriteChooser()
 		local button = oButton("Empty",16,100,100,
 			itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
 			function()
-				if panel.selected then
-					cancelButton.enabled = false
-					oRoutine:remove(routine)
-					panel:hide()
-					panel.selected("")
-				end
+				oRoutine:remove(routine)
+				cancelButton.enabled = false
+				panel:hide()
+				panel:emit("Selected","")
 			end)
 		menu:addChild(button)
 		routine = oRoutine(once(function()
@@ -115,13 +113,11 @@ local function oSpriteChooser()
 								100,100,
 								itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
 								function()
-									if panel.selected then
-										cancelButton.enabled = false
-										oRoutine:remove(routine)
-										panel:hide()
-										panel.selected(clipStr)
-										panel.touchEnabled = false
-									end
+									cancelButton.enabled = false
+									oRoutine:remove(routine)
+									panel:hide()
+									panel.touchEnabled = false
+									panel:emit("Selected",clipStr)
 								end)
 							local sprite = nil
 							sprite = CCSprite(clipStr)
@@ -151,12 +147,10 @@ local function oSpriteChooser()
 								100,100,
 								itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
 								function()
-									if panel.selected then
-										cancelButton.enabled = false
-										oRoutine:remove(routine)
-										panel:hide()
-										panel.selected(filename)
-									end
+									cancelButton.enabled = false
+									oRoutine:remove(routine)
+									panel:hide()
+									panel:emit("Selected",filename)
 								end)
 							local sprite = nil
 							sprite = CCSprite(filename)
@@ -186,12 +180,10 @@ local function oSpriteChooser()
 							100,100,
 							itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
 							function()
-								if panel.selected then
-									cancelButton.enabled = false
-									oRoutine:remove(routine)
-									panel:hide()
-									panel.selected(filename)
-								end
+								cancelButton.enabled = false
+								oRoutine:remove(routine)
+								panel:hide()
+								panel:emit("Selected",filename)
 							end)
 						button.position = button.position + panel:getTotalDelta()
 						menu:addChild(button)
@@ -216,11 +208,11 @@ local function oSpriteChooser()
 	end
 
 	panel.ended = function(self)
+		panel:emit("Hide")
 		collectgarbage()
 		oCache:removeUnused()
 	end
 
-	panel:show()
 	return panel
 end
 

@@ -995,16 +995,19 @@ oEditor.resetItem = function(self,data,resetFace)
 		end
 	else
 		if data:has("Face") then
-			local faceStr = data:get("Face")
+			local faceStr = oEditor.input..data:get("Face")
 			if faceStr ~= "" then
-				if faceStr:match("|") and oContent:exist(faceStr:match("(.*)|")) then
+				if faceStr:match("|") then
 					face = CCSprite(faceStr)
 				elseif oContent:exist(faceStr) then
-					local extension = string.lower(string.match(faceStr,"%.([^%.\\/]*)$"))
-					if extension == "png" then
-						face = CCSprite(faceStr)
-					elseif extension == "model" then
-						face = oModel(faceStr)
+					local extension = string.match(faceStr,"%.([^%.\\/]*)$")
+					if extension then
+						extension = extension:lower()
+						if extension == "png" then
+							face = CCSprite(faceStr)
+						elseif extension == "model" then
+							face = oModel(faceStr)
+						end
 					end
 				else
 					face = nil
@@ -1249,6 +1252,11 @@ oRoutine(once(function()
 		coroutine.yield()
 	end
 	if oEditor.standAlone then
+		oEditor:gslot("Editor.SpriteChooser",function(handler)	
+			local oSpriteChooser = require("oSpriteChooser")
+			handler(oSpriteChooser())
+		end)
+
 		local resPath = "BodyEditor/Body"
 		local writePath = oContent.writablePath.."Body"
 		if not oContent:exist(oContent.writablePath.."Body") and oContent:exist("BodyEditor/Body") then

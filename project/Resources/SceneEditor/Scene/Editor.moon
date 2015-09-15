@@ -60,6 +60,14 @@ Class
 			@editMenu = EditMenu!
 			@\addChild @editMenu
 
+		@\gslot "Editor.SpriteChooser",(handler)->
+			@spritePanel\slots "Selected",nil
+			@spritePanel.parent\removeChild @spritePanel,false
+			@spritePanel\slots("Hide")\set ->
+				@spritePanel.parent\removeChild @spritePanel,false
+				@\addChild @spritePanel,1
+			handler @spritePanel
+
 	updateSprites: =>
 		emit "Scene.LoadSprite", @graphicFolder
 

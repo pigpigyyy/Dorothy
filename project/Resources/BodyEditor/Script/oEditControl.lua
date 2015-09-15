@@ -24,7 +24,6 @@ local CCDelay = require("CCDelay")
 local oOpacity = require("oOpacity")
 local CCCall = require("CCCall")
 local oPointControl = require("oPointControl")
-local oSpriteChooser = require("oSpriteChooser")
 local CCUserDefault = require("CCUserDefault")
 
 local function oEditControl()
@@ -991,20 +990,22 @@ local function oEditControl()
 				end)
 			elseif name == "Face" then
 				editControl:hide()
-				local spriteChooser = oSpriteChooser()
-				oEditor:addChild(spriteChooser,oEditor.topMost)
-				spriteChooser.selected = function(filename)
-					filename = filename:sub(#(oEditor.input)+1,-1)
-					item.value = filename
-					data:set("Face",filename)
-					oEditor:resetItem(data,true)
-					emit("Body.settingPanel.edit",nil)
-				end
-				local ended = spriteChooser.ended
-				spriteChooser.ended = function(self)
-					ended(self)
-					emit("Body.settingPanel.edit",nil)
-				end
+				emit("Editor.SpriteChooser",function(spriteChooser)
+					oEditor:addChild(spriteChooser,oEditor.topMost)
+					spriteChooser:show()
+					spriteChooser:slots("Selected"):set(function(filename)
+						if oEditor.standAlone then
+							filename = filename:sub(#(oEditor.input)+1,-1)
+						end
+						item.value = filename
+						data:set("Face",filename)
+						oEditor:resetItem(data,true)
+						emit("Body.settingPanel.edit",nil)
+					end)
+					spriteChooser:slots("Hide",function()
+						emit("Body.settingPanel.edit",nil)
+					end)
+				end)
 			elseif name == "FacePos" then
 				local target = oEditor:getItem(data)
 				local face = target:getChildByIndex(1)

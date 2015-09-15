@@ -24,11 +24,11 @@ Class
 				@selectedClips[item.file] = if checked then true else nil
 		@selected = (item)->
 			@\hide!
+			@\emit "Selected",item.spriteStr
 			emit "Scene.SpriteSelected",item.spriteStr
 
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
-
 		@scrollArea\slots "Scrolled",(delta)->
 			contentRect\set 0,0,@scrollArea.width,@scrollArea.height
 			@menu\eachChild (child)->
