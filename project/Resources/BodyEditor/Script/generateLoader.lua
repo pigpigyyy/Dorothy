@@ -24,7 +24,6 @@ local Wheel = oEditor.Wheel
 
 local loaderCodes = [[
 local CCDictionary = require("CCDictionary")
-local CCNode = require("CCNode")
 local tolua = require("tolua")
 local oBody = require("oBody")
 local oVec2 = require("oVec2")
@@ -65,20 +64,23 @@ local function unload(_,filename)
 	end
 end
 
-local oCache_clear = oCache.clear
+if not oCache._clear then
+	oCache._clear = oCache.clear
+end
 oCache.clear = function(self)
-	oCache_clear(self)
+	oCache._clear(self)
 	bodyCache:clear()
 end
 oCache.Body = {load=load,unload=unload}
 
-local oBody_create = oBody[2]
+if not rawget(oBody,"_create") then
+	rawset(oBody,"_create",oBody[2])
+end
 
 local function create(itemDict,world,pos,angle)
 	local items = CCDictionary()
-	local node = CCNode()
-	node.data = items
 	local center = nil
+	local centerBody = nil
 	local keys = itemDict:getKeys()
 	for i = 1,#keys do
 		local key = keys[i]
@@ -95,7 +97,10 @@ local function create(itemDict,world,pos,angle)
 				newPos = oVec2(length*math.cos(realAngle), length*math.sin(realAngle))
 				newPos = newPos + pos - oldPos
 			end
-			local body = oBody_create(oBody,itemDef,world,newPos,angle)
+			local body = oBody._create(oBody,itemDef,world,newPos,angle)
+			if not centerBody then
+				centerBody = body
+			end
 			local face = nil
 			local faceStr = itemDef.face
 			if faceStr ~= "" then
@@ -115,7 +120,6 @@ local function create(itemDict,world,pos,angle)
 				body:addChild(face)
 			end
 			items[key] = body
-			node:addChild(body)
 		else
 			if center then
 				itemDef.center = center
@@ -128,7 +132,8 @@ local function create(itemDict,world,pos,angle)
 			end
 		end
 	end
-	return node
+	centerBody.data = items
+	return items
 end
 
 oBody[2] = function(self,data,world,pos,angle)

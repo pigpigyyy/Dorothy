@@ -79,14 +79,17 @@ void oBody::cleanup()
 		_world->getB2World()->DestroyBody(_bodyB2);
 		_bodyB2 = nullptr;
 	}
-	CCARRAY_START(oSensor, sensor, _sensors)
+	if (_sensors)
 	{
-		sensor->bodyEnter.Clear();
-		sensor->bodyLeave.Clear();
-		sensor->setEnabled(false);
+		CCARRAY_START(oSensor, sensor, _sensors)
+		{
+			sensor->bodyEnter.Clear();
+			sensor->bodyLeave.Clear();
+			sensor->setEnabled(false);
+		}
+		CCARRAY_END
+		_sensors->removeAllObjects();
 	}
-	CCARRAY_END
-	if (_sensors) _sensors->removeAllObjects();
 	contactStart.Clear();
 	contactEnd.Clear();
 }

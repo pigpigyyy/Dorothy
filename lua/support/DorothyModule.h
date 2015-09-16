@@ -72,6 +72,9 @@ int CCNode_getChildren(lua_State* L);
 CCNode* CCNode_getChildByIndex(CCNode* self, int index);
 oSlotList* CCNode_getSlotList(CCNode* self, const char* name);
 oSlotList* CCNode_tryGetSlotList(CCNode* self, const char* name);
+#define CCNODE_ZORDER self->getZOrder()
+#define CCNODE_TAG self->getTag()
+void CCNode_addChild(CCNode* self, CCDictionary* dict, int zOrder, int tag);
 
 void CCDrawNode_drawPolygon(
 	CCDrawNode* self,

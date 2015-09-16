@@ -388,6 +388,19 @@ oSlotList* CCNode_tryGetSlotList(CCNode* self, const char* name)
 	return nullptr;
 }
 
+void CCNode_addChild(CCNode* self, CCDictionary* dict, int zOrder, int tag)
+{
+	CCDictElement* element;
+	CCDICT_FOREACH(dict, element)
+	{
+		CCNode* child = dynamic_cast<CCNode*>(element->getObject());
+		if (child)
+		{
+			self->addChild(child, zOrder, tag);
+		}
+	}
+}
+
 HANDLER_WRAP_START(oListenerHandlerWrapper)
 void call(oEvent* event) const
 {

@@ -4,6 +4,7 @@ local oVec2 = require("oVec2")
 local oBody = require("oBodyEx")
 local CCDirector = require("CCDirector")
 local CCRect = require("CCRect")
+local CCNode = require("CCNode")
 
 local scene = CCScene()
 
@@ -15,8 +16,9 @@ world.showDebug = true
 scene:addChild(world)
 
 local car = oBody("BodyEditor/Body/Output/car.body",world)
-car.data.wheel.enabled = true
+car.wheel.enabled = true
 world:addChild(car)
-world.camera:follow(car:getChildByIndex(1))
+
+world.camera:follow(car.rect)
 
 CCDirector:run(CCScene:crossFade(0.5,scene))

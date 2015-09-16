@@ -9,6 +9,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "const/oDefine.h"
 #include "physics/oJointDef.h"
 #include "physics/oJoint.h"
+#include "physics/oBody.h"
 
 NS_DOROTHY_BEGIN
 
@@ -245,8 +246,8 @@ oVec2 oJointDef::t(const oVec2& target)
 
 oJoint* oDistanceDef::toJoint(CCDictionary* itemDict)
 {
-	oBody* bodyA = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyA.c_str()));
-	oBody* bodyB = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyB.c_str()));
+	oBody* bodyA = dynamic_cast<oBody*>(itemDict->objectForKey(this->bodyA.c_str()));
+	oBody* bodyB = dynamic_cast<oBody*>(itemDict->objectForKey(this->bodyB.c_str()));
 	if (bodyA && bodyB)
 	{
 		return oJoint::distance(collision, bodyA, bodyB, anchorA, anchorB, frequency, damping);
@@ -256,8 +257,8 @@ oJoint* oDistanceDef::toJoint(CCDictionary* itemDict)
 
 oJoint* oFrictionDef::toJoint(CCDictionary* itemDict)
 {
-	oBody* bodyA = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyA.c_str()));
-	oBody* bodyB = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyB.c_str()));
+	oBody* bodyA = dynamic_cast<oBody*>(itemDict->objectForKey(this->bodyA.c_str()));
+	oBody* bodyB = dynamic_cast<oBody*>(itemDict->objectForKey(this->bodyB.c_str()));
 	if (bodyA && bodyB)
 	{
 		return oJoint::friction(collision, bodyA, bodyB, t(worldPos), maxForce, maxTorque);
@@ -267,8 +268,8 @@ oJoint* oFrictionDef::toJoint(CCDictionary* itemDict)
 
 oJoint* oGearDef::toJoint(CCDictionary* itemDict)
 {
-	oJoint* jointA = CCLuaCast<oJoint>(itemDict->objectForKey(this->jointA.c_str()));
-	oJoint* jointB = CCLuaCast<oJoint>(itemDict->objectForKey(this->jointB.c_str()));
+	oJoint* jointA = dynamic_cast<oJoint*>(itemDict->objectForKey(this->jointA.c_str()));
+	oJoint* jointB = dynamic_cast<oJoint*>(itemDict->objectForKey(this->jointB.c_str()));
 	if (jointA && jointB)
 	{
 		return oJoint::gear(collision, jointA, jointB, ratio);
@@ -278,8 +279,8 @@ oJoint* oGearDef::toJoint(CCDictionary* itemDict)
 
 oJoint* oSpringDef::toJoint(CCDictionary* itemDict)
 {
-	oBody* bodyA = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyA.c_str()));
-	oBody* bodyB = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyB.c_str()));
+	oBody* bodyA = dynamic_cast<oBody*>(itemDict->objectForKey(this->bodyA.c_str()));
+	oBody* bodyB = dynamic_cast<oBody*>(itemDict->objectForKey(this->bodyB.c_str()));
 	if (bodyA && bodyB)
 	{
 		return oJoint::spring(collision, bodyA, bodyB, linearOffset, angularOffset, maxForce, maxTorque, correctionFactor);
@@ -289,8 +290,8 @@ oJoint* oSpringDef::toJoint(CCDictionary* itemDict)
 
 oJoint* oPrismaticDef::toJoint(CCDictionary* itemDict)
 {
-	oBody* bodyA = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyA.c_str()));
-	oBody* bodyB = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyB.c_str()));
+	oBody* bodyA = dynamic_cast<oBody*>(itemDict->objectForKey(this->bodyA.c_str()));
+	oBody* bodyB = dynamic_cast<oBody*>(itemDict->objectForKey(this->bodyB.c_str()));
 	if (bodyA && bodyB)
 	{
 		return oJoint::prismatic(collision, bodyA, bodyB, t(worldPos), r(axis), lowerTranslation, upperTranslation, maxMotorForce, motorSpeed);
@@ -300,8 +301,8 @@ oJoint* oPrismaticDef::toJoint(CCDictionary* itemDict)
 
 oJoint* oPulleyDef::toJoint(CCDictionary* itemDict)
 {
-	oBody* bodyA = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyA.c_str()));
-	oBody* bodyB = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyB.c_str()));
+	oBody* bodyA = dynamic_cast<oBody*>(itemDict->objectForKey(this->bodyA.c_str()));
+	oBody* bodyB = dynamic_cast<oBody*>(itemDict->objectForKey(this->bodyB.c_str()));
 	if (bodyA && bodyB)
 	{
 		return oJoint::pulley(collision, bodyA, bodyB, anchorA, anchorB, t(groundAnchorA), t(groundAnchorB), ratio);
@@ -311,8 +312,8 @@ oJoint* oPulleyDef::toJoint(CCDictionary* itemDict)
 
 oJoint* oRevoluteDef::toJoint(CCDictionary* itemDict)
 {
-	oBody* bodyA = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyA.c_str()));
-	oBody* bodyB = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyB.c_str()));
+	oBody* bodyA = dynamic_cast<oBody*>(itemDict->objectForKey(this->bodyA.c_str()));
+	oBody* bodyB = dynamic_cast<oBody*>(itemDict->objectForKey(this->bodyB.c_str()));
 	if (bodyA && bodyB)
 	{
 		return oJoint::revolute(collision, bodyA, bodyB, t(worldPos), lowerAngle + angle, upperAngle + angle, maxMotorTorque, motorSpeed);
@@ -322,8 +323,8 @@ oJoint* oRevoluteDef::toJoint(CCDictionary* itemDict)
 
 oJoint* oRopeDef::toJoint(CCDictionary* itemDict)
 {
-	oBody* bodyA = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyA.c_str()));
-	oBody* bodyB = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyB.c_str()));
+	oBody* bodyA = dynamic_cast<oBody*>(itemDict->objectForKey(this->bodyA.c_str()));
+	oBody* bodyB = dynamic_cast<oBody*>(itemDict->objectForKey(this->bodyB.c_str()));
 	if (bodyA && bodyB)
 	{
 		return oJoint::rope(collision, bodyA, bodyB, anchorA, anchorB, maxLength);
@@ -333,8 +334,8 @@ oJoint* oRopeDef::toJoint(CCDictionary* itemDict)
 
 oJoint* oWeldDef::toJoint(CCDictionary* itemDict)
 {
-	oBody* bodyA = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyA.c_str()));
-	oBody* bodyB = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyB.c_str()));
+	oBody* bodyA = dynamic_cast<oBody*>(itemDict->objectForKey(this->bodyA.c_str()));
+	oBody* bodyB = dynamic_cast<oBody*>(itemDict->objectForKey(this->bodyB.c_str()));
 	if (bodyA && bodyB)
 	{
 		return oJoint::weld(collision, bodyA, bodyB, t(worldPos), frequency, damping);
@@ -344,8 +345,8 @@ oJoint* oWeldDef::toJoint(CCDictionary* itemDict)
 
 oJoint* oWheelDef::toJoint(CCDictionary* itemDict)
 {
-	oBody* bodyA = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyA.c_str()));
-	oBody* bodyB = CCLuaCast<oBody>(itemDict->objectForKey(this->bodyB.c_str()));
+	oBody* bodyA = dynamic_cast<oBody*>(itemDict->objectForKey(this->bodyA.c_str()));
+	oBody* bodyB = dynamic_cast<oBody*>(itemDict->objectForKey(this->bodyB.c_str()));
 	if (bodyA && bodyB)
 	{
 		return oJoint::wheel(collision, bodyA, bodyB, t(worldPos), r(axis), maxMotorTorque, motorSpeed, frequency, damping);

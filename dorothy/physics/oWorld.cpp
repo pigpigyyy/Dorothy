@@ -96,12 +96,17 @@ _destructionListener(new oDestructionListener())
 oWorld::~oWorld()
 {
 	b2Body* b = nullptr;
-	while ((b = _world.GetBodyList()) != nullptr)
+	if (_world.GetBodyList())
 	{
-		oBody* body = (oBody*)b->GetUserData();
-		if (body)
+		oRefVector<oBody> bodies;
+		while ((b = _world.GetBodyList()) != nullptr)
 		{
-			body->cleanup();
+			oBody* body = (oBody*)b->GetUserData();
+			if (body)
+			{
+				bodies.push_back(body);
+				body->cleanup();
+			}
 		}
 	}
 	b2Draw* draw = _world.GetDebugDraw();

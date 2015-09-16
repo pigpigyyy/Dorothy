@@ -30,9 +30,10 @@ class CCNode: public CCObject
 	tolua_readonly tolua_property__qt int numberOfRunningActions;
 	tolua_readonly tolua_property__bool bool running;
 
-	void addChild(CCNode* child);
-	void addChild(CCNode* child, int zOrder);
+	tolua_outside void CCNode_addChild @ addChild(CCDictionary* dict, int zOrder = CCNODE_ZORDER, int tag = CCNODE_TAG);
 	void addChild(CCNode* child, int zOrder, int tag);
+	void addChild(CCNode* child, int zOrder);
+	void addChild(CCNode* child);
 	void removeChild(CCNode* child, bool cleanup = true);
 	void removeChildByTag(int tag, bool cleanup = true);
 	void removeAllChildrenWithCleanup(bool cleanup = true);
@@ -45,6 +46,7 @@ class CCNode: public CCObject
 	CCNode* getChildByTag(int tag);
 	tolua_outside CCNode* CCNode_getChildByIndex @ getChildByIndex(int index);
 
+	
 	void scheduleUpdateWithPriorityLua @ schedule(tolua_function nHandler, int priority = 0);
 	void unscheduleUpdateLua @ unschedule();
 
