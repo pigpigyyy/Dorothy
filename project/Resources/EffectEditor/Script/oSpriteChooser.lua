@@ -18,15 +18,18 @@ local once = require("once")
 
 local function oSpriteChooser()
 	local winSize = CCDirector.winSize
-	local borderSize = CCSize(560,400)
+	local itemWidth = 100
+	local itemHeight = 100
+	local itemNum = 5
+	while (itemWidth+10)*itemNum+10 > winSize.width and itemNum > 1 do
+		itemNum = itemNum - 1
+	end
+	local borderSize = CCSize((itemWidth+10)*itemNum+10,winSize.height*0.6)
 	local panel = oSelectionPanel(borderSize)
 	local menu = panel.menu
 	local border = panel.border
 	local halfBW = borderSize.width*0.5
 	local halfBH = borderSize.height*0.5
-	local itemWidth = 100
-	local itemHeight = 100
-	local itemNum = 5
 	local paddingX = 0
 	local paddingY = 100
 	panel:reset(borderSize.width,borderSize.height,paddingX,paddingY)
@@ -85,12 +88,11 @@ local function oSpriteChooser()
 		local button = oButton("Built-In",16,100,100,
 			itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
 			function()
-				if panel.selected then
-					cancelButton.enabled = false
-					oRoutine:remove(routine)
-					panel:hide()
-					panel.selected("__firePngData")
-				end
+				cancelButton.enabled = false
+				oRoutine:remove(routine)
+				panel:hide()
+				panel:fadeSprites()
+				panel:emit("Selected","")
 			end)
 		menu:addChild(button)
 		routine = oRoutine(once(function()
@@ -109,12 +111,11 @@ local function oSpriteChooser()
 								100,100,
 								itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
 								function()
-									if panel.selected then
-										cancelButton.enabled = false
-										oRoutine:remove(routine)
-										panel:hide()
-										panel.selected(clipStr)
-									end
+									cancelButton.enabled = false
+									oRoutine:remove(routine)
+									panel:hide()
+									panel:fadeSprites()
+									panel:emit("Selected",clipStr)
 								end)
 							local sprite = nil
 							sprite = CCSprite(clipStr)
@@ -144,12 +145,11 @@ local function oSpriteChooser()
 								100,100,
 								itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
 								function()
-									if panel.selected then
-										cancelButton.enabled = false
-										oRoutine:remove(routine)
-										panel:hide()
-										panel.selected(filename)
-									end
+									cancelButton.enabled = false
+									oRoutine:remove(routine)
+									panel:hide()
+									panel:fadeSprites()
+									panel:emit("Selected",filename)
 								end)
 							local sprite = nil
 							sprite = CCSprite(filename)
@@ -191,12 +191,15 @@ local function oSpriteChooser()
 		panel.sprites = nil
 	end
 
-	panel.ended = function(self)
-		collectgarbage()
-		oCache:removeUnused()
+	panel.ended = function()
+		panel:emit("Hide")
+		thread(function()
+			sleep(0.1)
+			collectgarbage()
+			oCache:removeUnused()
+		end)
 	end
 
-	panel:show()
 	return panel
 end
 

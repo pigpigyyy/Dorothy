@@ -250,7 +250,12 @@ oRoutine(once(function()
 		coroutine.yield()
 	end
 
-	if oEditor.standAlone then
+	if oEditor.standAlone then	
+		oEditor:gslot("Editor.SpriteChooser",function(handler)	
+			local oSpriteChooser = require("oSpriteChooser")
+			handler(oSpriteChooser())
+		end)
+
 		local resPath = "EffectEditor/Effect"
 		local writePath = oContent.writablePath.."Effect"
 		if not oContent:exist(oContent.writablePath.."Effect") and oContent:exist("EffectEditor/Effect") then

@@ -995,8 +995,9 @@ oEditor.resetItem = function(self,data,resetFace)
 		end
 	else
 		if data:has("Face") then
-			local faceStr = oEditor.input..data:get("Face")
+			local faceStr = data:get("Face")
 			if faceStr ~= "" then
+				faceStr = oEditor.input..faceStr
 				if faceStr:match("|") then
 					face = CCSprite(faceStr)
 				elseif oContent:exist(faceStr) then

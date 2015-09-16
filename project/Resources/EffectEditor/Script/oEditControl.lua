@@ -12,7 +12,6 @@ local emit = require("emit")
 local oEffect = require("oEffect")
 local ccBlendFunc = require("ccBlendFunc")
 local oColorPicker = require("oColorPicker")
-local oSpriteChooser = require("oSpriteChooser")
 local CCSprite = require("CCSprite")
 local oCache = require("oCache")
 
@@ -279,43 +278,43 @@ local function oEditControl()
 					updateAttr("emitterType",value)
 				end)
 			elseif name == "textureFile" then
-				local spriteChooser = oSpriteChooser()
-				spriteChooser.selected = function(filename)
-					if filename == "__firePngData" then
-						oEditor.effectData.textureFileName = filename
-						oEditor.effectData.textureRectx = 0
-						oEditor.effectData.textureRecty = 0
-						oEditor.effectData.textureRectw = 0
-						oEditor.effectData.textureRecth = 0
-					else
-						if filename:match("|") then
-							local sprite = CCSprite(filename)
-							filename = filename:match("(.+)|")
-							filename = oCache.Clip:getTextureFile(filename)
-							oEditor.effectData.textureRectx = sprite.textureRect.origin.x
-							oEditor.effectData.textureRecty = sprite.textureRect.origin.y
-							oEditor.effectData.textureRectw = sprite.textureRect.size.width
-							oEditor.effectData.textureRecth = sprite.textureRect.size.height
-						else
+				emit("Editor.SpriteChooser",function(spriteChooser)
+					oEditor:addChild(spriteChooser,oEditor.topMost)
+					spriteChooser:show()
+					spriteChooser:slots("Selected",function(filename)
+						if filename == "" then
+							oEditor.effectData.textureFileName = "__firePngData"
 							oEditor.effectData.textureRectx = 0
 							oEditor.effectData.textureRecty = 0
 							oEditor.effectData.textureRectw = 0
 							oEditor.effectData.textureRecth = 0
+						else
+							if filename:match("|") then
+								local sprite = CCSprite(filename)
+								filename = filename:match("(.+)|")
+								filename = oCache.Clip:getTextureFile(filename)
+								oEditor.effectData.textureRectx = sprite.textureRect.origin.x
+								oEditor.effectData.textureRecty = sprite.textureRect.origin.y
+								oEditor.effectData.textureRectw = sprite.textureRect.size.width
+								oEditor.effectData.textureRecth = sprite.textureRect.size.height
+							else
+								oEditor.effectData.textureRectx = 0
+								oEditor.effectData.textureRecty = 0
+								oEditor.effectData.textureRectw = 0
+								oEditor.effectData.textureRecth = 0
+							end
+							oEditor.effectData.textureFileName = filename
 						end
-						oEditor.effectData.textureFileName = filename:match("[^\\/]*%.[^%.\\/]*$")
-					end
-					updateAttr("textureFileName",oEditor.effectData.textureFileName)
-					updateAttr("textureRectx",oEditor.effectData.textureRectx)
-					updateAttr("textureRecty",oEditor.effectData.textureRecty)
-					updateAttr("textureRectw",oEditor.effectData.textureRectw)
-					updateAttr("textureRecth",oEditor.effectData.textureRecth)
-				end
-				local ended = spriteChooser.ended
-				spriteChooser.ended = function(self)
-					emit("Effect.settingPanel.cancel")
-					ended(self)
-				end
-				oEditor:addChild(spriteChooser,oEditor.topMost)
+						updateAttr("textureFileName",oEditor.effectData.textureFileName)
+						updateAttr("textureRectx",oEditor.effectData.textureRectx)
+						updateAttr("textureRecty",oEditor.effectData.textureRecty)
+						updateAttr("textureRectw",oEditor.effectData.textureRectw)
+						updateAttr("textureRecth",oEditor.effectData.textureRecth)
+					end)
+					spriteChooser:slots("Hide",function(self)
+						emit("Effect.settingPanel.cancel")
+					end)
+				end)
 			end
 		else
 			if name == "name" then

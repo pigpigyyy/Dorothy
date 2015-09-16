@@ -997,7 +997,7 @@ local function oEditControl()
 						if oEditor.standAlone then
 							filename = filename:sub(#(oEditor.input)+1,-1)
 						end
-						item.value = filename
+						item.value = filename:match("[^\\/]*%.[^%.\\/]*$")
 						data:set("Face",filename)
 						oEditor:resetItem(data,true)
 						emit("Body.settingPanel.edit",nil)

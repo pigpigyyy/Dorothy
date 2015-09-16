@@ -478,6 +478,8 @@ local function oSettingPanel()
 						elseif value == oBodyDef.Kinematic then
 							items[k].value = "Kinematic"
 						end
+					elseif k == "Face" then
+						items[k].value = value:match("[^\\/]*%.[^%.\\/]*$")
 					else
 						items[k].value = value
 					end

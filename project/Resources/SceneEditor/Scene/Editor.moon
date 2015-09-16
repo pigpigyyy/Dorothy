@@ -61,9 +61,11 @@ Class
 			@\addChild @editMenu
 
 		@\gslot "Editor.SpriteChooser",(handler)->
+			@spritePanel.emptyBtn.visible = true
 			@spritePanel\slots "Selected",nil
 			@spritePanel.parent\removeChild @spritePanel,false
 			@spritePanel\slots("Hide")\set ->
+				@spritePanel.emptyBtn.visible = false
 				@spritePanel.parent\removeChild @spritePanel,false
 				@\addChild @spritePanel,1
 			handler @spritePanel
