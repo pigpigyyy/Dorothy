@@ -25,7 +25,8 @@ Class
 		@selected = (item)->
 			@\hide!
 			@\emit "Selected",item.spriteStr
-			emit "Scene.SpriteSelected",item.spriteStr
+			if @parent == editor
+				emit "Scene.SpriteSelected",item.spriteStr
 
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
@@ -369,7 +370,7 @@ Class
 				texFile = oCache.Clip\getTextureFile clip
 				@clipExpands[clip] = {}
 				newY = posY
-				itemCount = math.floor (@width-10)/110
+				itemCount = math.floor (@panel.width-10)/110
 				for i,name in ipairs names
 					i -= 1
 					spriteStr = clip.."|"..name
