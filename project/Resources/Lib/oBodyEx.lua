@@ -115,7 +115,7 @@ oBody[2] = function(self,data,world,pos,angle)
 	pos = pos or oVec2.zero
 	angle = angle or 0
 	if type(data) == "oBodyDef" then
-		return oBody_create(self,data,world,pos,angle)
+		return oBody._create(self,data,world,pos,angle)
 	elseif type(data) == "string" then
 		return create(load(nil,data),world,pos,angle)
 	else

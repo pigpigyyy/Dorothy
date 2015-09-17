@@ -4,7 +4,6 @@ local oVec2 = require("oVec2")
 local oBody = require("oBodyEx")
 local CCDirector = require("CCDirector")
 local CCRect = require("CCRect")
-local CCNode = require("CCNode")
 
 local scene = CCScene()
 
@@ -17,7 +16,6 @@ scene:addChild(world)
 
 local car = oBody("BodyEditor/Body/Output/car.body",world)
 car.wheel.enabled = true
-world:addChild(car)
 
 world.camera:follow(car.rect)
 

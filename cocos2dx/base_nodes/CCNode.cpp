@@ -255,22 +255,24 @@ void CCNode::setPosition(float x, float y)
 
 float CCNode::getPositionX()
 {
-	return m_obPosition.x;
+	return getPosition().x;
 }
 
 float CCNode::getPositionY()
 {
-	return  m_obPosition.y;
+	return  getPosition().y;
 }
 
 void CCNode::setPositionX(float x)
 {
-	setPosition(ccp(x, m_obPosition.y));
+	const CCPoint& pos = getPosition();
+	setPosition(ccp(x, pos.y));
 }
 
 void CCNode::setPositionY(float y)
 {
-	setPosition(ccp(m_obPosition.x, y));
+	const CCPoint& pos = getPosition();
+	setPosition(ccp(pos.x, y));
 }
 
 /// children getter

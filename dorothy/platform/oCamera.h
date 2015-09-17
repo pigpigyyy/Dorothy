@@ -18,7 +18,6 @@ class oCamera: public CCNode
 public:
 	oCamera();
 	PROPERTY_REF(CCRect, _boudary, Boudary);
-	PROPERTY_REF(CCSize, _view, View);
 	PROPERTY_REF(oVec2, _ratio, FollowRatio);
 	virtual bool init();
 	virtual void setPosition(const CCPoint& var);

@@ -67,11 +67,12 @@ void oPlatformWorld::draw()
 	GLESDebugDraw* draw = (GLESDebugDraw*)oWorld::getB2World()->GetDebugDraw();
 	if (draw)
 	{
-		kmGLTranslatef(_camera->getPositionX(), _camera->getPositionY(), 0);
+		kmGLPushMatrix();
+		_camera->transform();
 		draw->ratio = b2Factor;
 		draw->Begin();
 		oWorld::getB2World()->DrawDebugData();
-		kmGLTranslatef(-_camera->getPositionX(), -_camera->getPositionY(), 0);
+		kmGLPopMatrix();
 	}
 }
 

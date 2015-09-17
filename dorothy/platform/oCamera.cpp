@@ -13,14 +13,15 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 NS_DOROTHY_PLATFORM_BEGIN
 
 oCamera::oCamera():
-_ratio(1.0f, 1.0f),
-_view(CCDirector::sharedDirector()->getWinSize())
+_ratio(1.0f, 1.0f)
 { }
 
 bool oCamera::init()
 {
 	if (!CCNode::init()) return false;
 	CCNode::setContentSize(CCDirector::sharedDirector()->getWinSize());
+	_camPos = ccp(CCNode::getWidth()*0.5f, CCNode::getHeight()*0.5f);
+	CCNode::setPosition(_camPos);
 	return true;
 }
 
@@ -32,16 +33,6 @@ void oCamera::setBoudary(const CCRect& var)
 const CCRect& oCamera::getBoudary() const
 {
 	return _boudary;
-}
-
-void oCamera::setView(const CCSize& var)
-{
-	_view = var;
-}
-
-const CCSize& oCamera::getView() const
-{
-	return _view;
 }
 
 void oCamera::setFollowRatio(const oVec2& var)
@@ -63,24 +54,22 @@ void oCamera::setPosition(const CCPoint& var)
 {
 	if (_camPos != var)
 	{
-		CCPoint pos(
-			-var.x + _view.width * 0.5f,
-			-var.y + _view.height * 0.5f);
-		CCPoint to(-_boudary.origin.x, -_boudary.origin.y);
-		CCPoint from(
-			_view.width - _boudary.origin.x - _boudary.size.width,
-			_view.height - _boudary.size.height);
-		pos = ccpClamp(pos, from, to);
-		const CCPoint& lastPos = CCNode::getPosition();
-		float deltaX = (pos.x - lastPos.x) * _ratio.x;
-		float deltaY = (pos.y - lastPos.y) * _ratio.y;
-		_camPos.x += deltaX;
-		_camPos.x += deltaY;
+		float halfW = CCNode::getWidth() * 0.5f;
+		float halfH = CCNode::getHeight() * 0.5f;
+		CCPoint from(_boudary.origin.x + halfW, _boudary.origin.y + halfH);
+		CCPoint to(
+			_boudary.origin.x + _boudary.size.width - halfW,
+			_boudary.origin.y + _boudary.size.height - halfH);
+		CCPoint pos = ccpClamp(var, from, to);
+		float deltaX = pos.x - _camPos.x;
+		float deltaY = pos.y - _camPos.y;
+		_camPos = pos;
+		const CCPoint& anchor = CCNode::getAnchorPoint();
+		CCNode::setAnchorPoint(ccp(anchor.x+deltaX/CCNode::getWidth(), anchor.y+deltaY/CCNode::getHeight()));
 		if (moved)
 		{
 			moved(deltaX, deltaY);
 		}
-		CCNode::setPosition(ccp(lastPos.x+deltaX, lastPos.y+deltaY));
 	}
 }
 
@@ -93,7 +82,11 @@ CCAffineTransform oCamera::nodeToParentTransform()
 {
 	if (_target)
 	{
-		oCamera::setPosition(_target->getPosition());
+		const CCPoint& pos = oCamera::getPosition();
+		CCPoint delta = ccpSub(_target->getPosition(), pos);
+		delta.x = delta.x * _ratio.x;
+		delta.y = delta.y * _ratio.y;
+		oCamera::setPosition(ccpAdd(pos, delta));
 	}
 	return CCNode::nodeToParentTransform();
 }
