@@ -17,6 +17,13 @@ _ratio(1.0f, 1.0f),
 _view(CCDirector::sharedDirector()->getWinSize())
 { }
 
+bool oCamera::init()
+{
+	if (!CCNode::init()) return false;
+	CCNode::setContentSize(CCDirector::sharedDirector()->getWinSize());
+	return true;
+}
+
 void oCamera::setBoudary(const CCRect& var)
 {
 	_boudary = var;

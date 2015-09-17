@@ -20,6 +20,7 @@ public:
 	PROPERTY_REF(CCRect, _boudary, Boudary);
 	PROPERTY_REF(CCSize, _view, View);
 	PROPERTY_REF(oVec2, _ratio, FollowRatio);
+	virtual bool init();
 	virtual void setPosition(const CCPoint& var);
 	virtual const CCPoint& getPosition();
 	void follow(CCNode* target);
