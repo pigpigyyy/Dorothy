@@ -4503,12 +4503,6 @@ local Dorothy =
 				typeName = "CCRect",
 				type = "value"
 			},
-			view =
-			{
-				description = "[CCSize]",
-				typeName = "CCSize",
-				type = "value"
-			},
 			followRatio =
 			{
 				description = "[oVec2]",
