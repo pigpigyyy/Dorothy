@@ -1001,7 +1001,7 @@
 		3C504D4C1A23739B000C79D6 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0620;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Li Jin";
 				TargetAttributes = {
 					3C504D531A23739B000C79D6 = {
@@ -1229,6 +1229,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1362,6 +1363,7 @@
 					"-image_base",
 					100000000,
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "Jin.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1404,6 +1406,7 @@
 					"-image_base",
 					100000000,
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "Jin.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

@@ -972,11 +972,11 @@ bool CCImage::saveToFile(const char* pszFilePath, bool bIsToRGB)
     NSData* data;
     if (saveToPNG)
     {
-   		data = [newRep representationUsingType:NSPNGFileType properties:nil];
+   		data = [newRep representationUsingType:NSPNGFileType properties:[[NSDictionary alloc] init]];
     }
     else
     {
-   		data = [newRep representationUsingType:NSJPEGFileType properties:nil];
+   		data = [newRep representationUsingType:NSJPEGFileType properties:[[NSDictionary alloc] init]];
     }
 
     [data writeToFile:[NSString stringWithUTF8String:pszFilePath] atomically:YES];

@@ -32,27 +32,30 @@ public:
 	static void clear();
 	static oAILeaf* get(const string& name);
 private:
-	static oRef<oUnit> _self;
+	oAI();
+	static oAI& getAI();
 
-	static oUnit* _nearestUnit;
-	static oUnit* _nearestFriend;
-	static oUnit* _nearestEnemy;
-	static oUnit* _nearestNeutral;
+	oRef<oUnit> _self;
 
-	static oRef<CCArray> _friends;
-	static oRef<CCArray> _enemies;
-	static oRef<CCArray> _neutrals;
-	static oRef<CCArray> _detectedUnits;
+	oUnit* _nearestUnit;
+	oUnit* _nearestFriend;
+	oUnit* _nearestEnemy;
+	oUnit* _nearestNeutral;
 
-	static float _nearestUnitDistance;
-	static float _nearestFriendDistance;
-	static float _nearestEnemyDistance;
-	static float _nearestNeutralDistance;
+	oRef<CCArray> _friends;
+	oRef<CCArray> _enemies;
+	oRef<CCArray> _neutrals;
+	oRef<CCArray> _detectedUnits;
 
-	static float _oldInstinctValue;
-	static float _newInstinctValue;
+	float _nearestUnitDistance;
+	float _nearestFriendDistance;
+	float _nearestEnemyDistance;
+	float _nearestNeutralDistance;
 
-	static unordered_map<string, oRef<oAILeaf>> _reflexArcs;
+	float _oldInstinctValue;
+	float _newInstinctValue;
+
+	unordered_map<string, oRef<oAILeaf>> _reflexArcs;
 	friend class oInstinct;
 };
 

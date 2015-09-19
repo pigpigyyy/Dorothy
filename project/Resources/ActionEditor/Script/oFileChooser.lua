@@ -108,7 +108,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 		CCImage.isPngAlphaPremultiplied = false
 		local blendFunc = ccBlendFunc(ccBlendFunc.One,ccBlendFunc.Zero)
 		for i = 1,#images do
-			if images[i]:lower():sub(-4,-1) == ".png" then
+			if images[i]:sub(-4,-1):lower() == ".png" then
 				local texFile = oEditor.input..file.."/"..images[i]
 				oCache.Texture:unload(texFile)
 				local sp = CCSprite(texFile)
@@ -395,8 +395,8 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 						editButton.clipName = file
 					end
 					local clipName = editButton.clipName
+					updateButton.targetFile = clipName
 					if not groupOnly then
-						updateButton.targetFile = clipName
 						addClip(editButton.clipFile)
 						if oEditor.standAlone and oContent:exist(oEditor.input..clipName) and #oContent:getEntries(oEditor.input..clipName,false) > 0 then
 							updateButton.visible = true

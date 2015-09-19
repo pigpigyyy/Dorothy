@@ -63,6 +63,7 @@
 		15C15688168311CB00D239F2 /* tolua_push.c in Sources */ = {isa = PBXBuildFile; fileRef = 15C15656168311CB00D239F2 /* tolua_push.c */; };
 		15C15689168311CB00D239F2 /* tolua_to.c in Sources */ = {isa = PBXBuildFile; fileRef = 15C15657168311CB00D239F2 /* tolua_to.c */; };
 		15C1568E1683131500D239F2 /* libcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15C1568D1683131500D239F2 /* libcurl.a */; };
+		3C1C6FBC1BAD589B00607FF4 /* Font in Resources */ = {isa = PBXBuildFile; fileRef = 3C1C6FBB1BAD589B00607FF4 /* Font */; settings = {ASSET_TAGS = (); }; };
 		3C3843001A890B9D0047E2DF /* EffectEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C3842FF1A890B9D0047E2DF /* EffectEditor */; };
 		3C504D8E1A237B97000C79D6 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C504D8D1A237B97000C79D6 /* libwebp.a */; };
 		3C5AC9FC1A21A71F006EDD2B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5AC9FB1A21A71F006EDD2B /* CoreMotion.framework */; };
@@ -276,6 +277,7 @@
 		15C15656168311CB00D239F2 /* tolua_push.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tolua_push.c; sourceTree = "<group>"; };
 		15C15657168311CB00D239F2 /* tolua_to.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tolua_to.c; sourceTree = "<group>"; };
 		15C1568D1683131500D239F2 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = ../../cocos2dx/platform/third_party/ios/libraries/libcurl.a; sourceTree = "<group>"; };
+		3C1C6FBB1BAD589B00607FF4 /* Font */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Font; path = ../../../Dorothy/project/Resources/Font; sourceTree = "<group>"; };
 		3C3842FF1A890B9D0047E2DF /* EffectEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; name = EffectEditor; path = ../../../Dorothy/project/Resources/EffectEditor; sourceTree = "<group>"; };
 		3C504D8D1A237B97000C79D6 /* libwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwebp.a; path = ../../cocos2dx/platform/third_party/mac/libraries/libwebp.a; sourceTree = "<group>"; };
 		3C5AC9FB1A21A71F006EDD2B /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreMotion.framework; sourceTree = DEVELOPER_DIR; };
@@ -995,6 +997,7 @@
 		F293BC4615EB859D00256477 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3C1C6FBB1BAD589B00607FF4 /* Font */,
 				3CDECC5E1AFC274B00AF8490 /* Lib */,
 				3CAE8C491A685B1000D92541 /* Images.xcassets */,
 				3C7AA4D81A4731AD007836D2 /* ActionEditor */,
@@ -1034,7 +1037,7 @@
 		F293B3BF15EB7BE500256477 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0620;
+				LastUpgradeCheck = 0700;
 				TargetAttributes = {
 					F293B3C715EB7BE500256477 = {
 						DevelopmentTeam = M44UFM3UW4;
@@ -1082,6 +1085,7 @@
 				3CDECC5F1AFC274B00AF8490 /* Lib in Resources */,
 				3C7AA4E11A4731AD007836D2 /* ActionEditor in Resources */,
 				3C7AA4E71A4731AD007836D2 /* main.lua in Resources */,
+				3C1C6FBC1BAD589B00607FF4 /* Font in Resources */,
 				3C7AA4E91A4731AD007836D2 /* Test in Resources */,
 				3C3843001A890B9D0047E2DF /* EffectEditor in Resources */,
 				3CAE8C4A1A685B1000D92541 /* Images.xcassets in Resources */,
@@ -1234,6 +1238,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1347,6 +1352,7 @@
 					"\"$(SRCROOT)/../../lua/lib/ios\"",
 				);
 				OTHER_LDFLAGS = "-lz";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocos2dx.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = Dorothy;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -1396,6 +1402,7 @@
 					"\"$(SRCROOT)/../../lua/lib/ios\"",
 				);
 				OTHER_LDFLAGS = "-lz";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocos2dx.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = Dorothy;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";

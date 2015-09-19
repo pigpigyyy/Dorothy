@@ -35,7 +35,7 @@ THE SOFTWARE.
 
 NS_CC_BEGIN
 
-static void str_tolower(std::string& out)
+inline void str_tolower(std::string& out)
 {
 	for (size_t i = 0;i < out.size();i++)
 	{

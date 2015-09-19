@@ -15,30 +15,32 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 NS_DOROTHY_PLATFORM_BEGIN
 
-oUnit* oAI::_nearestUnit = nullptr;
-oUnit* oAI::_nearestFriend = nullptr;
-oUnit* oAI::_nearestEnemy = nullptr;
-oUnit* oAI::_nearestNeutral = nullptr;
+oAI::oAI():
+_nearestUnit(nullptr),
+_nearestFriend(nullptr),
+_nearestEnemy(nullptr),
+_nearestNeutral(nullptr),
+_nearestUnitDistance(0),
+_nearestFriendDistance(0),
+_nearestEnemyDistance(0),
+_nearestNeutralDistance(0),
+_oldInstinctValue(0),
+_newInstinctValue(0),
+_friends(CCArray::create()),
+_enemies(CCArray::create()),
+_neutrals(CCArray::create()),
+_detectedUnits(CCArray::create())
+{ }
 
-float oAI::_nearestUnitDistance;
-float oAI::_nearestFriendDistance;
-float oAI::_nearestEnemyDistance;
-float oAI::_nearestNeutralDistance;
-
-oRef<oUnit> oAI::_self;
-oRef<CCArray> oAI::_friends(CCArray::create());
-oRef<CCArray> oAI::_enemies(CCArray::create());
-oRef<CCArray> oAI::_neutrals(CCArray::create());
-oRef<CCArray> oAI::_detectedUnits(CCArray::create());
-
-float oAI::_oldInstinctValue = 0;
-float oAI::_newInstinctValue = 0;
-
-unordered_map<string, oRef<oAILeaf>> oAI::_reflexArcs;
+oAI& oAI::getAI()
+{
+	static oAI ai;
+	return ai;
+}
 
 oUnit* oAI::getSelf()
 {
-	return _self;
+	return oAI::getAI()._self;
 }
 
 bool oAI::conditionedReflex(oUnit* unit)
@@ -49,12 +51,14 @@ bool oAI::conditionedReflex(oUnit* unit)
 		return false;
 	}
 
-	_self = unit;
+	oAI& ai = oAI::getAI();
 
-	_nearestUnit = nullptr;
-	_nearestFriend = nullptr;
-	_nearestEnemy = nullptr;
-	_nearestNeutral = nullptr;
+	ai._self = unit;
+
+	ai._nearestUnit = nullptr;
+	ai._nearestFriend = nullptr;
+	ai._nearestEnemy = nullptr;
+	ai._nearestNeutral = nullptr;
 
 	float minUnitDistance = 0;
 	float minFriendDistance = 0;
@@ -69,40 +73,40 @@ bool oAI::conditionedReflex(oUnit* unit)
 			oUnit* aroundUnit = CCLuaCast<oUnit>(body->getOwner());
 			if (!aroundUnit) continue;
 
-			_detectedUnits->addObject(aroundUnit);
+			ai._detectedUnits->addObject(aroundUnit);
 
 			float newDistance = ccpDistanceSQ(unit->getPosition(), aroundUnit->getPosition());
 
-			if (!_nearestUnit || newDistance < minUnitDistance)
+			if (!ai._nearestUnit || newDistance < minUnitDistance)
 			{
 				minUnitDistance = newDistance;
-				_nearestUnit = aroundUnit;
+				ai._nearestUnit = aroundUnit;
 			}
-			oRelation relation = oSharedData.getRelation(_self, aroundUnit);
+			oRelation relation = oSharedData.getRelation(ai._self, aroundUnit);
 			switch (relation)
 			{
 			case oRelation::Friend:
-				_friends->addObject(aroundUnit);
-				if (!_nearestFriend || newDistance < minFriendDistance)
+				ai._friends->addObject(aroundUnit);
+				if (!ai._nearestFriend || newDistance < minFriendDistance)
 				{
 					minFriendDistance = newDistance;
-					_nearestFriend = aroundUnit;
+					ai._nearestFriend = aroundUnit;
 				}
 				break;
 			case oRelation::Enemy:
-				_enemies->addObject(aroundUnit);
-				if (!_nearestEnemy || newDistance < minEnemyDistance)
+				ai._enemies->addObject(aroundUnit);
+				if (!ai._nearestEnemy || newDistance < minEnemyDistance)
 				{
 					minEnemyDistance = newDistance;
-					_nearestEnemy = aroundUnit;
+					ai._nearestEnemy = aroundUnit;
 				}
 				break;
 			case oRelation::Neutral:
-				_neutrals->addObject(aroundUnit);
-				if (!_nearestNeutral || newDistance < minNeutralDistance)
+				ai._neutrals->addObject(aroundUnit);
+				if (!ai._nearestNeutral || newDistance < minNeutralDistance)
 				{
 					minNeutralDistance = newDistance;
-					_nearestNeutral = aroundUnit;
+					ai._nearestNeutral = aroundUnit;
 				}
 				break;
 			default:
@@ -110,36 +114,37 @@ bool oAI::conditionedReflex(oUnit* unit)
 			}
 		}
 		CCARRAY_END
-		_nearestUnitDistance = sqrtf(minUnitDistance);
-		_nearestFriendDistance = sqrtf(minFriendDistance);
-		_nearestEnemyDistance = sqrtf(minEnemyDistance);
-		_nearestNeutralDistance = sqrtf(minNeutralDistance);
+		ai._nearestUnitDistance = sqrtf(minUnitDistance);
+		ai._nearestFriendDistance = sqrtf(minFriendDistance);
+		ai._nearestEnemyDistance = sqrtf(minEnemyDistance);
+		ai._nearestNeutralDistance = sqrtf(minNeutralDistance);
 	}
 	//Do the Conditioned Reflex
 	bool result = reflexArc->doAction();
 
-	_friends->removeAllObjects();
-	_enemies->removeAllObjects();
-	_neutrals->removeAllObjects();
-	_detectedUnits->removeAllObjects();
-	_self = nullptr;
+	ai._friends->removeAllObjects();
+	ai._enemies->removeAllObjects();
+	ai._neutrals->removeAllObjects();
+	ai._detectedUnits->removeAllObjects();
+	ai._self = nullptr;
 
 	return result;
 }
 
 CCArray* oAI::getUnitsByRelation( oRelation relation )
 {
-	CCArray* units = _detectedUnits;
+	oAI& ai = oAI::getAI();
+	CCArray* units = ai._detectedUnits;
 	switch (relation)
 	{
 	case oRelation::Friend:
-		units = _friends;
+		units = ai._friends;
 		break;
 	case oRelation::Enemy:
-		units = _enemies;
+		units = ai._enemies;
 		break;
 	case oRelation::Neutral:
-		units = _neutrals;
+		units = ai._neutrals;
 		break;
 	default:
 		break;
@@ -149,68 +154,70 @@ CCArray* oAI::getUnitsByRelation( oRelation relation )
 
 CCArray* oAI::getDetectedUnits()
 {
-	return _detectedUnits;
+	return oAI::getAI()._detectedUnits;
 }
 
 oUnit* oAI::getNearestUnit( oRelation relation )
 {
+	oAI& ai = oAI::getAI();
 	switch (relation)
 	{
 	case oRelation::Friend:
-		return _nearestFriend;
+		return ai._nearestFriend;
 	case oRelation::Enemy:
-		return _nearestEnemy;
+		return ai._nearestEnemy;
 	case oRelation::Neutral:
-		return _nearestNeutral;
+		return ai._nearestNeutral;
 	default:
-		return _nearestUnit;
+		return ai._nearestUnit;
 	}
 }
 
 float oAI::getNearestUnitDistance( oRelation relation )
 {
+	oAI& ai = oAI::getAI();
 	switch (relation)
 	{
 	case oRelation::Friend:
-		return _nearestFriendDistance;
+		return ai._nearestFriendDistance;
 	case oRelation::Enemy:
-		return _nearestEnemyDistance;
+		return ai._nearestEnemyDistance;
 	case oRelation::Neutral:
-		return _nearestNeutralDistance;
+		return ai._nearestNeutralDistance;
 	default:
-		return _nearestUnitDistance;
+		return ai._nearestUnitDistance;
 	}
 }
 
 float oAI::getOldInstinctValue()
 {
-	return _oldInstinctValue;
+	return oAI::getAI()._oldInstinctValue;
 }
 
 float oAI::getNewInstinctValue()
 {
-	return _newInstinctValue;
+	return oAI::getAI()._newInstinctValue;
 }
 
 void oAI::add( const string& name, oAILeaf* leaf )
 {
 	if (!name.empty())
 	{
-		_reflexArcs[name] = leaf;
+		oAI::getAI()._reflexArcs[name] = leaf;
 	}
 }
 
 void oAI::clear()
 {
-	_reflexArcs.clear();
+	oAI::getAI()._reflexArcs.clear();
 }
 
 oAILeaf* oAI::get( const string& id )
 {
 	if (!id.empty())
 	{
-		auto it = _reflexArcs.find(id);
-		if (it != _reflexArcs.end())
+		auto it = oAI::getAI()._reflexArcs.find(id);
+		if (it != oAI::getAI()._reflexArcs.end())
 		{
 			return it->second;
 		}

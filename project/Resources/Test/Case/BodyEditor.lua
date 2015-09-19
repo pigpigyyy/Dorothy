@@ -16,6 +16,7 @@ scene:addChild(world)
 
 local car = oBody("BodyEditor/Body/Output/car.body",world)
 car.wheel.enabled = true
+world:addChild(car)
 
 world.camera:follow(car.rect)
 

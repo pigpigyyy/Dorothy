@@ -43,9 +43,10 @@ void oInstinct::uninstall( oUnit* unit )
 
 void oInstinct::onInstinctPropertyChanged( oUnit* unit, float oldValue, float newValue )
 {
-	oAI::_self = unit;
-	oAI::_oldInstinctValue = oldValue;
-	oAI::_newInstinctValue = newValue;
+	oAI& ai = oAI::getAI();
+	ai._self = unit;
+	ai._oldInstinctValue = oldValue;
+	ai._newInstinctValue = newValue;
 	_actionNode->doAction();
 }
 
