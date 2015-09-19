@@ -178,6 +178,7 @@ int CCDictionary_get(lua_State* L);
 int CCDictionary_set(lua_State* L);
 int CCDictionary_getKeys(lua_State* L);
 int CCDictionary_randomObject(lua_State* L);
+int CCDictionary_each(lua_State* L);
 
 void __oModelCache_getData(lua_State* L,  const char* filename);
 #define oModelCache_getData(filename) {__oModelCache_getData(tolua_S,filename);return 1;}

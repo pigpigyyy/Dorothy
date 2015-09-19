@@ -280,6 +280,7 @@ CCLuaEngine::CCLuaEngine()
 			tolua_function(L, "getKeys", CCDictionary_getKeys);
 			tolua_function(L, "set", CCDictionary_set);
 			tolua_function(L, "get", CCDictionary_get);
+			tolua_function(L, "each", CCDictionary_each);
 		tolua_endmodule(L);
 		tolua_beginmodule(L, "CCTextureCache");
 			tolua_function(L, "loadAsync", CCTextureCache_loadAsync);

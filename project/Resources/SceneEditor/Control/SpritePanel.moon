@@ -59,9 +59,9 @@ Class
 				-- get image and clip files
 				images = {}
 				clips = {}
+				resPath = resPath\gsub("[\\/]*$","")
 				visitResource = (path)->
 					return unless oContent\exist path
-					path = path\gsub("[\\/]*$","")
 					files = oContent\getEntries path,false
 					sleep!
 					for file in *files
@@ -78,7 +78,7 @@ Class
 					for folder in *folders
 						if folder ~= "." and folder ~= ".."
 							visitResource path.."/"..folder
-					if #files == 0 and #folders == 2
+					if #files == 0 and #folders == 2 and path ~= resPath
 						oContent\remove path
 				visitResource resPath
 

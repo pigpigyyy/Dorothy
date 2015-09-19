@@ -1470,6 +1470,42 @@ tolua_lerror :
 #endif
 }
 
+inline void tolua_pushCCDictObject(lua_State* L, CCObject* object)
+{
+	CCDouble* decimal64 = CCLuaCast<CCDouble>(object);
+	if (decimal64)
+	{
+		lua_pushnumber(L, decimal64->getValue());
+		return;
+	}
+	CCFloat* decimal32 = CCLuaCast<CCFloat>(object);
+	if (decimal32)
+	{
+		lua_pushnumber(L, decimal32->getValue());
+		return;
+	}
+	CCInteger* integer = CCLuaCast<CCInteger>(object);
+	if (integer)
+	{
+		lua_pushnumber(L, integer->getValue());
+		return;
+	}
+	CCBool* boolean = CCLuaCast<CCBool>(object);
+	if (boolean)
+	{
+		lua_pushboolean(L, boolean->getValue() ? 1 : 0);
+		return;
+	}
+	CCString* str = CCLuaCast<CCString>(object);
+	if (str)
+	{
+		lua_pushstring(L, str->getCString());
+		return;
+	}
+	tolua_pushccobject(L, object);
+	return;
+}
+
 int CCDictionary_randomObject(lua_State* L)
 {
 	CCDictionary* self = (CCDictionary*)tolua_tousertype(L, 1, 0);
@@ -1477,38 +1513,51 @@ int CCDictionary_randomObject(lua_State* L)
 	if (!self) tolua_error(L, "invalid 'self' in accessing variable 'randomObject'", nullptr);
 #endif
 	CCObject* object = self->randomObject();
-	CCDouble* decimal64 = CCLuaCast<CCDouble>(object);
-	if (decimal64)
-	{
-		lua_pushnumber(L, decimal64->getValue());
-		return 1;
-	}
-	CCFloat* decimal32 = CCLuaCast<CCFloat>(object);
-	if (decimal32)
-	{
-		lua_pushnumber(L, decimal32->getValue());
-		return 1;
-	}
-	CCInteger* integer = CCLuaCast<CCInteger>(object);
-	if (integer)
-	{
-		lua_pushnumber(L, integer->getValue());
-		return 1;
-	}
-	CCBool* boolean = CCLuaCast<CCBool>(object);
-	if (boolean)
-	{
-		lua_pushboolean(L, boolean->getValue() ? 1 : 0);
-		return 1;
-	}
-	CCString* str = CCLuaCast<CCString>(object);
-	if (str)
-	{
-		lua_pushstring(L, str->getCString());
-		return 1;
-	}
-	tolua_pushccobject(L, object);
+	tolua_pushCCDictObject(L, object);
 	return 1;
+}
+
+int CCDictionary_each(lua_State* L)
+{
+#ifndef TOLUA_RELEASE
+	tolua_Error tolua_err;
+	if (
+		!tolua_isusertype(L, 1, "CCDictionary", 0, &tolua_err) ||
+		!toluafix_isfunction(L, 2, &tolua_err) ||
+		!tolua_isnoobj(L, 3, &tolua_err)
+		)
+		goto tolua_lerror;
+	else
+#endif
+	{
+		CCDictionary* self = (CCDictionary*)tolua_tousertype(L, 1, 0);
+#ifndef TOLUA_RELEASE
+		if (!self) tolua_error(L, "invalid 'self' in function 'CCDictionary_each'", NULL);
+#endif
+		CCDictElement* element;
+		CCDICT_FOREACH(self, element)
+		{
+			int top = lua_gettop(L);
+			lua_pushvalue(L, 2);
+			if (element->isStringKey())
+			{
+				lua_pushstring(L, element->getStrKey());
+			}
+			else
+			{
+				lua_pushinteger(L, element->getIntKey());
+			}
+			tolua_pushCCDictObject(L, element->getObject());
+			CCLuaEngine::call(L, 2, 0);
+			lua_settop(L, top);
+		}
+	}
+	return 0;
+#ifndef TOLUA_RELEASE
+tolua_lerror :
+	tolua_error(L, "#ferror in function 'eachChild'.", &tolua_err);
+	return 0;
+#endif
 }
 
 void __oModelCache_getData(lua_State* L, const char* filename)

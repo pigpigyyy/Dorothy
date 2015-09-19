@@ -48,7 +48,7 @@ Class
 			minY = nil
 			maxX = nil
 			maxY = nil
-			body\traverse (child)->
+			body\each (_,child)->
 				return unless tolua.type(child) == "oBody"
 				rc = child.boundingBox
 				vs = {

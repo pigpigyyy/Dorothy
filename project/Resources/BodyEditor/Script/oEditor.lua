@@ -1122,16 +1122,16 @@ valueToString = function(value)
 		for _,v in ipairs(value) do
 			local typeName = tolua.type(v)
 			if typeName == "oVec2" then
-				str = str..string.format("oVec2(%.2f,%.2f),",v.x,v.y)
+				str = str..string.format("v(%.2f,%.2f),",v.x,v.y)
 			elseif typeName == "table" then
 				str = str..itemToString(v)
 			end
 		end
 		str = str.."},"
 	elseif typeName == "oVec2" then
-		str = str..string.format("oVec2(%.2f,%.2f),",value.x,value.y)
+		str = str..string.format("v(%.2f,%.2f),",value.x,value.y)
 	elseif typeName == "CCSize" then
-		str = str..string.format("CCSize(%d,%d),",value.width,value.height)
+		str = str..string.format("s(%d,%d),",value.width,value.height)
 	elseif typeName == "string" then
 		str = str.."\""..value.."\","
 	else
@@ -1150,8 +1150,8 @@ itemToString = function(item)
 end
 
 oEditor.dumpData = function(self,filename)
-	local str = [[local oVec2 = require("oVec2")
-local CCSize = require("CCSize")
+	local str = [[local v = require("oVec2")
+local s = require("CCSize")
 return {]]
 	for _,data in ipairs(oEditor.bodyData) do
 		str = str..itemToString(data)

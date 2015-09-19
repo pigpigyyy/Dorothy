@@ -997,6 +997,13 @@ local Dorothy =
 				returns = "()",
 				type = "method",
 			},
+			each =
+			{
+				args = "(handler: function)",
+				description = " -- handler: function{key: int|string, value: number|bool|string|CCObject}",
+				returns = "()",
+				type = "method",
+			},
 		},
 		description = "class CCDictionary(CCObject).\n args -- ()\n args1 -- (dict: CCDictionary)\n args2 -- (filename: string)",
 		parents = {"CCObject",},

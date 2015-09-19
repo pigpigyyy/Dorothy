@@ -84,8 +84,11 @@ public:
      */
     ~CCDictElement();
 
-    // Inline functions need to be implemented in header file on Android.
-    
+	bool isStringKey() const
+	{
+		return m_szKey != NULL;
+	}
+
     /**
      * Get the string key of this element.
      * @note    This method assumes you know the key type in the element. 
@@ -95,7 +98,7 @@ public:
      */
     inline const char* getStrKey() const
     {
-        CCAssert(m_szKey[0] != '\0', "Should not call this function for integer dictionary");
+        CCAssert(m_szKey != NULL, "Should not call this function for integer dictionary");
         return m_szKey;
     }
 
@@ -108,7 +111,7 @@ public:
      */
     inline intptr_t getIntKey() const
     {
-        CCAssert(m_szKey[0] == '\0', "Should not call this function for string dictionary");
+        CCAssert(m_szKey == NULL, "Should not call this function for string dictionary");
         return m_iKey;
     }
     

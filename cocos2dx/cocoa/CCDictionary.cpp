@@ -67,9 +67,7 @@ CCDictElement::~CCDictElement()
 CCDictionary::CCDictionary()
 : m_pElements(NULL)
 , m_eDictType(kCCDictUnknown)
-{
-
-}
+{ }
 
 CCDictionary::~CCDictionary()
 {
