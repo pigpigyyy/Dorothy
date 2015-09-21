@@ -67,8 +67,8 @@ Class
 					maxX = v.x if v.x > maxX
 					minY = v.y if v.y < minY
 					maxY = v.y if v.y > maxY
-			sizeW = maxX-minX
-			sizeH = maxY-minY
+			sizeW = maxX and minX and maxX-minX or 0
+			sizeH = maxY and minY and maxY-minY or 0
 			if sizeW == 0 and sizeH == 0
 				name = file\match "([^\\/]*)%.[^%.\\/]*$"
 				@face\addChild with CCLabelTTF "Empty\nBody\n"..name,"Arial",16

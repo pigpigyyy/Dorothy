@@ -132,7 +132,9 @@ local function create(itemDict,world,pos,angle)
 			end
 		end
 	end
-	centerBody.data = items
+	if centerBody then
+		centerBody.data = items
+	end
 	return items
 end
 

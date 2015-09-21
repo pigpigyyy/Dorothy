@@ -1445,7 +1445,7 @@ int CCDictionary_getKeys(lua_State* L)
 		if (!self) tolua_error(L, "invalid 'self' in function 'CCDictionary_getKeys'", nullptr);
 #endif
 		CCArray* keys = self->allKeys();
-		lua_createtable(L, keys->count(), 0);
+		lua_createtable(L, keys ? keys->count() : 0, 0);
 		int i = 1;
 		CCARRAY_START(CCObject, key, keys)
 		{
