@@ -25,6 +25,7 @@ THE SOFTWARE.
 #include "platform/CCCommon.h"
 #include "support/file_system/tinydir.h"
 #include <Shlobj.h>
+#include <sys/stat.h>
 
 using namespace std;
 
