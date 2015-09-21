@@ -990,22 +990,29 @@ local function oEditControl()
 				end)
 			elseif name == "Face" then
 				editControl:hide()
-				emit("Editor.SpriteChooser",function(spriteChooser)
-					oEditor:addChild(spriteChooser,oEditor.topMost)
-					spriteChooser:show()
-					spriteChooser:slots("Selected"):set(function(filename)
+				local function selected(filename)
+					item.value = filename:match("[^\\/]*%.[^%.\\/]*$")
+					data:set("Face",filename)
+					oEditor:resetItem(data,true)
+					emit("Body.settingPanel.edit",nil)
+				end
+				emit("Editor.ItemChooser",{"Sprite","Model","Empty",function(itemChooser)
+					if not itemChooser then
+						selected("")
+						return
+					end
+					oEditor:addChild(itemChooser,oEditor.topMost)
+					itemChooser:show()
+					itemChooser:slots("Selected"):set(function(filename)
 						if oEditor.standAlone then
 							filename = filename:sub(#(oEditor.input)+1,-1)
 						end
-						item.value = filename:match("[^\\/]*%.[^%.\\/]*$")
-						data:set("Face",filename)
-						oEditor:resetItem(data,true)
+						selected(filename)
+					end)
+					itemChooser:slots("Hide",function()
 						emit("Body.settingPanel.edit",nil)
 					end)
-					spriteChooser:slots("Hide",function()
-						emit("Body.settingPanel.edit",nil)
-					end)
-				end)
+				end})
 			elseif name == "FacePos" then
 				local target = oEditor:getItem(data)
 				local face = target:getChildByIndex(1)

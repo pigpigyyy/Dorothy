@@ -69,9 +69,53 @@ local function oViewArea()
 --]]
 
 	view.touchEnabled = true
-	view:slots("TouchMoved",function(touch)
-		scrollNode.position = scrollNode.position + touch.delta
+
+	local S = oVec2.zero
+	local V = oVec2.zero
+	local accel = winSize.height*2
+	local function updateDragSpeed(dt)
+		V = S / dt
+		if V.length > accel then
+			V:normalize()
+			V = V * accel
+		end
+		S = oVec2.zero
+	end
+	local function updateDragPos(dt)
+		local dir = oVec2(V.x,V.y)
+		dir:normalize()
+		local A = dir * -accel
+		local incX = V.x > 0
+		local incY = V.y > 0
+		V = V + A * dt * 0.5
+		local decX = V.x < 0
+		local decY = V.y < 0
+		if incX == decX and incY == decY then
+			view:unschedule()
+		else
+			scrollNode.position = scrollNode.position + V * dt
+		end
+	end
+
+	view:slots("TouchBegan",function()
+		S = oVec2.zero
+		V = oVec2.zero
+		view:schedule(updateDragSpeed)
+		return true
 	end)
+
+	view:slots("TouchMoved",function(touch)
+		S = touch.delta
+		scrollNode.position = scrollNode.position + S
+	end)
+
+	local function touchEnded()
+		if V ~= oVec2.zero then
+			view:schedule(updateDragPos)
+		end
+	end
+	view:slots("TouchEnded",touchEnded)
+	view:slots("TouchCancelled",touchEnded)
 
 	view:gslot("Effect.viewArea.changeEffect",function(effectName)
 		emit("Effect.viewArea.toOrigin",oEditor.origin)
@@ -91,6 +135,7 @@ local function oViewArea()
 		scrollNode:runAction(oScale(0.3,scale,scale,oEase.OutQuad))
 	end)
 	view:gslot("Effect.viewArea.toOrigin",function(origin)
+		view:unschedule()
 		scrollNode:runAction(oPos(0.3,origin.x,origin.y,oEase.OutQuad))
 	end)
 	view:gslot("Effect.viewArea.pos",function(pos)

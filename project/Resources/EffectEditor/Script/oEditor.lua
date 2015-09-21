@@ -86,7 +86,9 @@ oEditor.loadEffectFile = function(self)
 			local line = item:gsub("%s","")
 			local name = line:match("A=\"(.-)\"")
 			local filename = line:match("B=\"(.-)\"")
-			oEditor.items[name] = filename
+			if oContent:exist(oEditor.output..oEditor.prefix..filename) then
+				oEditor.items[name] = filename
+			end
 		end
 	end
 	file:close()
@@ -182,6 +184,7 @@ oEditor.edit = function(self,name)
 		updateAttr("file",file)
 	elseif extension == "frame" then
 		local frameFile = io.open(targetFile)
+		print(targetFile)
 		local fileName = file:match("[^\\/]*$")
 		local filePath = (#fileName < #file and file:sub(1,-#fileName-1) or "")
 		local data = frameFile:read("*a")
@@ -251,9 +254,9 @@ oRoutine(once(function()
 	end
 
 	if oEditor.standAlone then	
-		oEditor:gslot("Editor.SpriteChooser",function(handler)	
+		oEditor:gslot("Editor.ItemChooser",function(args)	
 			local oSpriteChooser = require("oSpriteChooser")
-			handler(oSpriteChooser())
+			args[#args](oSpriteChooser())
 		end)
 
 		local resPath = "EffectEditor/Effect"

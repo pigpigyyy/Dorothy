@@ -111,32 +111,29 @@ Class
 			newPosX > paddingX*0.5 or
 			newPosX < -moveX-paddingX*0.5)
 
+		accel = winHeight*2
 		updateSpeed = (dt)->
-			if S == oVec2.zero then return
 			V = S / dt
+			if V.length > accel
+				V\normalize!
+				V = V * accel
 			S = oVec2.zero
 
 		updatePos = (dt)->
-			accel = winHeight*2
-			A = oVec2 (V.x > 0 and -accel or accel),
-								(V.y > 0 and -accel or accel)
-
-			xInc = V.x > 0
-			yInc = V.y > 0
-			V += A * dt
-			xDec = V.x < 0
-			yDec = V.y < 0
-
-			if xInc and xDec then V.x,A.x = 0,0
-			if yInc and yDec then V.y,A.y = 0,0
-
-			dS = V * dt + A * (0.5 * dt * dt)
-
-			setOffset dS,false
-
-			if V == oVec2.zero
+			dir = oVec2 V.x,V.y
+			dir\normalize!
+			A = dir * -accel
+			incX = V.x > 0
+			incY = V.y > 0
+			V = V + A * dt * 0.5
+			decX = V.x < 0
+			decY = V.y < 0
+			if incX == decX and incY == decY
 				if isReseting! then startReset! else @\unschedule!
-		
+			else
+				dS = V * dt
+				setOffset dS,false
+
 		@touchEnabled = true
 		@touchPriority = touchPriority
 		@\slots "TouchBegan",(touch)->
@@ -163,10 +160,10 @@ Class
 		@\slots "TouchCancelled",touchEnded
 		@\slots "TouchMoved",(touch)->
 			lastMoveLength = deltaMoveLength
-			deltaMoveLength += touch.delta.length
-			S += touch.delta
+			S = touch.delta
+			deltaMoveLength += S.length
 			if deltaMoveLength > 10
-				setOffset touch.delta,true
+				setOffset S,true
 				if lastMoveLength <= 10
 					@\emit "ScrollStart"
 

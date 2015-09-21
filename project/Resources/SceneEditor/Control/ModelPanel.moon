@@ -24,7 +24,9 @@ Class
 				@_selectedItem = if item.checked then file else nil
 			elseif item.isLoaded
 				@\hide!
-				emit "Scene.ModelSelected",file
+				@\emit "Selected",file
+				if @parent == editor
+					emit "Scene.ModelSelected",file
 			else
 				MessageBox text:"Broken Model\nWith Data Error\nOr Missing Image",okOnly:true
 

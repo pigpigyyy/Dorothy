@@ -73,6 +73,7 @@ local function oViewArea()
 		}))
 	end)
 	crossNode:gslot("Body.viewArea.toPos",function(pos)
+		view:unschedule()
 		view.touchEnabled = false
 		crossNode:runAction(CCSequence(
 		{
@@ -132,15 +133,43 @@ local function oViewArea()
 	view.multiTouches = true
 	view.touchPriority = oEditor.touchPriorityViewArea
 	view.touchEnabled = true
+
+	local S = oVec2.zero
+	local V = oVec2.zero
+	local accel = winSize.height*2
+	local function updateDragSpeed(dt)
+		V = S / dt
+		if V.length > accel then
+			V:normalize()
+			V = V * accel
+		end
+		S = oVec2.zero
+	end
+	local function updateDragPos(dt)
+		local dir = oVec2(V.x,V.y)
+		dir:normalize()
+		local A = dir * -accel
+		local incX = V.x > 0
+		local incY = V.y > 0
+		V = V + A * dt * 0.5
+		local decX = V.x < 0
+		local decY = V.y < 0
+		if incX == decX and incY == decY then
+			view:unschedule()
+		else
+			emit("Body.viewArea.move",V * dt)
+		end
+	end
 	view:slots("TouchBegan",function(touches)
 		if not oEditor.isPlaying and shapeToCreate ~= nil then
 			createShape(shapeToCreate,touches[1].location)
 			shapeToCreate = nil
 			return false
-		else
-			pick = true
-			return true
 		end
+		pick = true
+		S = oVec2.zero
+		V = oVec2.zero
+		view:schedule(updateDragSpeed)
 		return true
 	end)
 	view:slots("TouchMoved",function(touches)
@@ -148,7 +177,8 @@ local function oViewArea()
 			local delta = touches[1].delta
 			if delta ~= oVec2.zero then
 				pick = false
-				emit("Body.viewArea.move",touches[1].delta)
+				S = delta
+				emit("Body.viewArea.move",delta)
 			end
 		elseif #touches >= 2 then -- scale view
 			local preDistance = touches[1].preLocation:distance(touches[2].preLocation)
@@ -168,12 +198,17 @@ local function oViewArea()
 
 	local function touchEnded(touches)
 		if pick then
+			view:unschedule()
 			local pos = oEditor.world:convertToNodeSpace(touches[1].location)
 			oEditor.world:query(CCRect(pos.x-0.5,pos.y-0.5,1,1),function(body)
-					local data = body.dataItem
-					emit("Body.viewPanel.choose",data)
+				local data = body.dataItem
+				emit("Body.viewPanel.choose",data)
 				return true
 			end)
+		else
+			if V ~= oVec2.zero then
+				view:schedule(updateDragPos)
+			end
 		end
 	end
 	view:slots("TouchEnded",touchEnded)

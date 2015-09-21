@@ -1,4 +1,4 @@
-<!-- params: title,width,height -->
+<!-- params: title = nil,width,height -->
 <LayerColor Name="mask" X="{ @X }" Y="{ @Y }"
 	Color="0x0" Opacity="0"
 	SwallowTouches="True" TouchEnabled="True"
@@ -16,9 +16,11 @@
 		<ScrollArea Name="scrollArea" Width="{ width }" Height="{ height }" TouchPriority="{ editor.touchLevel10-1 }" PaddingY="100" Ref="True">
 			<Item Name="view">
 				<Menu Name="menu" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" TouchPriority="{ editor.touchLevel10-2 }" Ref="True">
-					<Node X="{ $X }" Y="{ $T-20 }" Width="{ width }" Height="40">
-						<LabelTTF Text="{ title }" X="{ $X }" Y="{ $Y }" AntiAlias="False" FontName="Arial" FontSize="24" Color="0x00ffff"/>
+					<Script>if title then</Script>
+					<Node X="{ $X }" Y="{ $T-20 }" Width="{ width }" Height="50">
+						<LabelTTF Text="{ title }" X="{ $X }" Y="{ $Y }" AntiAlias="False" FontName="Arial" FontSize="24" Color="0x00ffff" Opacity="0.8"/>
 					</Node>
+					<Script>end</Script>
 				</Menu>
 			</Item>
 		</ScrollArea>
