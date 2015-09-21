@@ -112,6 +112,39 @@ local function oViewArea()
 	local editState = EDIT_NONE
 	view.multiTouches = true
 	view.touchEnabled = true
+
+	local S = oVec2.zero
+	local V = oVec2.zero
+	local accel = winSize.height*2
+	local function updateDragSpeed(dt)
+		V = S / dt
+		if V.length > accel then
+			V:normalize()
+			V = V * accel
+		end
+		S = oVec2.zero
+	end
+	local function updateDragPos(dt)
+		local dir = oVec2(V.x,V.y)
+		dir:normalize()
+		local A = dir * -accel
+		local incX = V.x > 0
+		local incY = V.y > 0
+		V = V + A * dt * 0.5
+		local decX = V.x < 0
+		local decY = V.y < 0
+		if incX == decX and incY == decY then
+			view:unschedule()
+		else
+			crossNode.position = crossNode.position + V * dt
+		end
+	end
+	view:slots("TouchBegan",function()
+		S = oVec2.zero
+		V = oVec2.zero
+		view:schedule(updateDragSpeed)
+		return true
+	end)
 	view:slots("TouchMoved",function(touches)
 		if not view:isControlEnabled() then
 			return
@@ -135,7 +168,8 @@ local function oViewArea()
 			return
 		end
 		if #touches == 1 then
-			crossNode.position = crossNode.position + touches[1].delta
+			S = touches[1].delta
+			crossNode.position = crossNode.position + S
 		elseif #touches >= 2 then
 			mode = 2
 			local preDistance = touches[1].preLocation:distance(touches[2].preLocation)
@@ -153,6 +187,13 @@ local function oViewArea()
 			zoomButton.label.texture.antiAlias = false
 		end
 	end)
+	local function touchEnded()
+		if V ~= oVec2.zero then
+			view:schedule(updateDragPos)
+		end
+	end
+	view:slots("TouchEnded",touchEnded)
+	view:slots("TouchCancelled",touchEnded)
 
 	view.keypadEnabled = true
 	view:slots("KeyBack",function()
@@ -178,6 +219,7 @@ local function oViewArea()
 	end
 
 	view.originReset = function(self)
+		view:unschedule()
 		crossNode:runAction(oPos(0.5,origin.x,origin.y,oEase.OutQuad))
 	end
 

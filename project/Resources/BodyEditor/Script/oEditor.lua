@@ -1253,9 +1253,9 @@ oRoutine(once(function()
 		coroutine.yield()
 	end
 	if oEditor.standAlone then
-		oEditor:gslot("Editor.SpriteChooser",function(handler)	
+		oEditor:gslot("Editor.ItemChooser",function(args)
 			local oSpriteChooser = require("oSpriteChooser")
-			handler(oSpriteChooser())
+			args[#args](oSpriteChooser())
 		end)
 
 		local resPath = "BodyEditor/Body"

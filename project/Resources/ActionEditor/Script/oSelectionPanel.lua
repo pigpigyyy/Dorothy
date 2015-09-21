@@ -197,34 +197,33 @@ local function oSelectionPanel(borderSize,noCliping)
 	end
 	view:addChild(menu)
 
+	local accel = winSize.height*2
 	local function updateSpeed(deltaTime)
-		if _s == oVec2.zero then
-			return
-		end
 		_v = _s / deltaTime
+		if _v.length > accel then
+			_v:normalize()
+			_v = _v * accel
+		end
 		_s = oVec2.zero
 	end
-
 	local function updatePos(deltaTime)
-		local val = winSize.height*2
-		local a = oVec2(_v.x > 0 and -val or val,_v.y > 0 and -val or val)
-		
-		local xR = _v.x > 0
-		local yR = _v.y > 0
-		
-		_v = _v + a*deltaTime
-		if _v.x < 0 == xR then _v.x = 0;a.x = 0 end
-		if _v.y < 0 == yR then _v.y = 0;a.y = 0 end
-		
-		local ds = _v * deltaTime + a*(0.5*deltaTime*deltaTime)
-		setOffset(ds, false)
-		
-		if _v == oVec2.zero then
+		local dir = oVec2(_v.x,_v.y)
+		dir:normalize()
+		local a = dir * -accel
+		local incX = _v.x > 0
+		local incY = _v.y > 0
+		_v = _v + a * deltaTime * 0.5
+		local decX = _v.x < 0
+		local decY = _v.y < 0
+		if incX == decX and incY == decY then
 			if isReseting() then
 				startReset()
 			else
 				panel:unschedule()
 			end
+		else
+			local ds = _v * deltaTime
+			setOffset(ds, false)
 		end
 	end
 
@@ -257,11 +256,11 @@ local function oSelectionPanel(borderSize,noCliping)
 	panel:slots("TouchCancelled",touchEnded)
 
 	panel:slots("TouchMoved",function(touch)
-		deltaMoveLength = deltaMoveLength + touch.delta.length
-		_s = _s + touch.delta
+		_s = touch.delta
+		deltaMoveLength = deltaMoveLength + _s.length
 		if deltaMoveLength > 10 then
 			menu.enabled = false
-			setOffset(touch.delta, true)
+			setOffset(_s, true)
 		end
 	end)
 

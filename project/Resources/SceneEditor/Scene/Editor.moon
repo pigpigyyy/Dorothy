@@ -2,6 +2,7 @@ Dorothy!
 CCScene = require "CCSceneEx"
 Class,property,classfield = unpack require "class"
 EditorView = require "View.Scene.Editor"
+SelectionPanel = require "Control.SelectionPanel"
 
 Class
 	__partial: => EditorView!
@@ -60,15 +61,33 @@ Class
 			@editMenu = EditMenu!
 			@\addChild @editMenu
 
-		@\gslot "Editor.SpriteChooser",(handler)->
-			@spritePanel.emptyBtn.visible = true
-			@spritePanel\slots "Selected",nil
-			@spritePanel.parent\removeChild @spritePanel,false
-			@spritePanel\slots("Hide")\set ->
-				@spritePanel.emptyBtn.visible = false
-				@spritePanel.parent\removeChild @spritePanel,false
-				@\addChild @spritePanel,1
-			handler @spritePanel
+		@\gslot "Editor.ItemChooser",(args)->
+			handler = args[#args]
+			table.remove args
+			chooseItem = (itemType)->
+				switch itemType
+					when "Sprite"
+						@spritePanel\slots "Selected",nil
+						@spritePanel.parent\removeChild @spritePanel,false
+						@spritePanel\slots("Hide")\set ->
+							@spritePanel.parent\removeChild @spritePanel,false
+							@\addChild @spritePanel,1
+						handler @spritePanel
+					when "Model"
+						@modelPanel\slots "Selected",nil
+						@modelPanel.parent\removeChild @modelPanel,false
+						@modelPanel\slots("Hide")\set ->
+							@modelPanel.parent\removeChild @modelPanel,false
+							@\addChild @modelPanel,1
+						handler @modelPanel
+					else
+						handler nil
+			if #args == 1
+				chooseItem args[1]
+			else
+				with SelectionPanel items:args
+					\slots "Selected",(itemType)->
+						chooseItem itemType
 
 	updateSprites: =>
 		emit "Scene.LoadSprite", @graphicFolder

@@ -82,8 +82,9 @@ Class
 						line = item\gsub "%s",""
 						name = line\match "A=\"(.-)\""
 						filename = line\match "B=\"(.-)\""
-						table.insert effects,name
-						effectFiles[name] = filename
+						if oContent\exist editor.graphicFolder..filename
+							table.insert effects,name
+							effectFiles[name] = filename
 				file\close()
 
 				{:width,:height} = @scrollArea
@@ -157,12 +158,7 @@ Class
 		@newBtn\slots "Tapped",->
 			@\clearSelection!
 			SelectionPanel = require "Control.SelectionPanel"
-			@\addChild with SelectionPanel {
-					title:"New Effect Type"
-					width:200
-					height:200
-					items:{"Particle","Frame"}
-				}
+			with SelectionPanel items:{"Particle","Frame"}
 				\slots "Selected",(itemType)->
 					with InputBox text:"New "..itemType.." Name"
 						\slots "Inputed",(name)->

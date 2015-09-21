@@ -4,7 +4,11 @@ SelectionPanelView = require "View.Control.SelectionPanel"
 Button = require "Control.Button"
 
 Class
-	__partial: (args)=> SelectionPanelView args
+	__partial: (args)=>
+		args.width = args.width or 120
+		args.height = args.height or (10+#args.items*60+(args.title and 60 or 0))
+		SelectionPanelView args
+
 	__init: (args)=>
 		{:width,:items} = args
 
@@ -29,7 +33,7 @@ Class
 				text:item
 				fontSize:16
 				width:width-20
-				height:40
+				height:50
 			}
 			button\slots "Tapped",->
 				@box\perform CCSequence {
@@ -45,3 +49,5 @@ Class
 
 		viewHeight = @menu\alignItemsVertically 10
 		@scrollArea.viewSize = CCSize width,viewHeight
+
+		CCDirector.currentScene\addChild @,998
