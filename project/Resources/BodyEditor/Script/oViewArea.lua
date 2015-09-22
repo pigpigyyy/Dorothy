@@ -124,7 +124,7 @@ local function oViewArea()
 		emit("Body.editMenu.created")
 		emit("Body.editor.change")
 	end
-	
+
 	-- init world node --
 	crossNode:addChild(oEditor.world)
 

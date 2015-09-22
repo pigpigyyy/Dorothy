@@ -106,8 +106,8 @@ local function oEditMenu()
 		if items.Set.visible then
 			items.Set:runAction(CCSequence({oScale(0.3,0,0,oEase.InBack),CCHide()}))
 		end
-		
-		emit("Effect.viewArea.pos",oEditor.origin)
+
+		--emit("Effect.viewArea.pos",oEditor.origin)
 	end)
 	menu:gslot("Effect.editor.frame",function()
 		if not items.Origin.visible then
@@ -144,7 +144,7 @@ local function oEditMenu()
 			items.Set:runAction(CCSequence({CCShow(),oScale(0,0,0),oScale(0.3,1,1,oEase.OutBack)}))
 		end
 
-		emit("Effect.viewArea.pos",oVec2(winSize.width*0.5,(winSize.height-150)*0.5+150))
+		--emit("Effect.viewArea.pos",oEditor.origin)
 	end)
 	menu:gslot("Effect.editor.change",function()
 		if not oEditor.dirty then

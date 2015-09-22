@@ -184,7 +184,6 @@ oEditor.edit = function(self,name)
 		updateAttr("file",file)
 	elseif extension == "frame" then
 		local frameFile = io.open(targetFile)
-		print(targetFile)
 		local fileName = file:match("[^\\/]*$")
 		local filePath = (#fileName < #file and file:sub(1,-#fileName-1) or "")
 		local data = frameFile:read("*a")

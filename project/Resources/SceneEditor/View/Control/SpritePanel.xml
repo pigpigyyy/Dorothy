@@ -9,6 +9,5 @@
 		<Button Name="delBtn" X="155" Y="35" Width="50" Height="50" FontSize="14" Text="Delete" Ref="True"/>
 		<Button Name="groupBtn" X="215" Y="35" Width="50" Height="50" FontSize="14" Text="Group" Ref="True"/>
 		<Button Name="delGroupBtn" X="275" Y="35" Width="50" Height="50" FontSize="14" Text="Break\nGroup" Ref="True"/>
-		<Button Name="emptyBtn" X="{ $R-35 }" Y="35" Width="50" Height="50" FontSize="14" Text="Empty" Ref="True"/>
 	</Item>
 </ItemPanel>

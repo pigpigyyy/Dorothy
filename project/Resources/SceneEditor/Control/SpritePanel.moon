@@ -221,7 +221,6 @@ Class
 		@delBtn.visible = false
 		@groupBtn.visible = false
 		@delGroupBtn.visible = false
-		@emptyBtn.visible = false
 
 		@modeBtn\slots "Tapped",->
 			@\_setCheckMode not @_isSelecting
@@ -325,10 +324,6 @@ Class
 
 		@closeBtn\slots "Tapped",->
 			@\hide!
-
-		@emptyBtn\slots "Tapped",->
-			@\hide!
-			@\emit "Selected",""
 
 	playUpdateHint: =>
 		if not @hint.visible

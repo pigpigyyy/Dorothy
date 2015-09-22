@@ -328,7 +328,7 @@ local function oSettingPanel()
 	{
 		items.name,
 		items.file,
-		items.interval
+		items.interval,
 	}
 
 	for _,item in pairs(items) do
@@ -389,6 +389,7 @@ local function oSettingPanel()
 				end))
 			end
 			self:reset(borderSize.width,contentHeight,0,0)
+			oEditor.origin = oVec2(winSize.width*0.5,(winSize.height-150)*0.5+150)
 			emit("Effect.editor.frame")
 		else
 			label.text = "Particle"
@@ -420,6 +421,7 @@ local function oSettingPanel()
 				end))
 			end
 			self:reset(borderSize.width,contentHeight,0,50)
+			oEditor.origin = oVec2((winSize.width-240-10)*0.5,winSize.height*0.5)
 			emit("Effect.editor.particle")
 		end
 		currentGroup = group
