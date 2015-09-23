@@ -125,6 +125,8 @@ Class
 	physicsFullPath: property => @_gameFullPath.."Physics/"
 	logicFolder: property => "Logic/"
 	logicFullPath: property => @_gameFullPath.."Logic/"
+	sceneFolder: property => "Scene/"
+	sceneFullPath: property => @_gameFullPath.."Scene/"
 
 	actionEditor: property =>
 		if not @_actionEditor

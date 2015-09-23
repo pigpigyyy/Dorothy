@@ -31,6 +31,7 @@ local oJoint = require("oJoint")
 local oBodyDef = require("oBodyDef")
 local oJointDef = require("oJointDef")
 local oCache = require("oCache")
+local oContent = require("oContent")
 local CCSprite = require("CCSprite")
 local oModel = require("oModel")
 local type = tolua.type
@@ -104,10 +105,10 @@ local function create(itemDict,world,pos,angle)
 			local face = nil
 			local faceStr = itemDef.face
 			if faceStr ~= "" then
-				if faceStr:match("|") and oContent:exist(faceStr:match("(.*)|")) then
+				if faceStr:match("|") and oContent:exist(faceStr:match("([^|]*)|")) then
 					face = CCSprite(faceStr)
 				elseif oContent:exist(faceStr) then
-					local extension = string.lower(string.match(faceStr,"%.([^%.\\/]*)$"))
+					local extension = string.lower(faceStr:sub(-5,-1))
 					if extension == "model" then
 						face = oModel(faceStr)
 					else
@@ -142,7 +143,7 @@ oBody[2] = function(self,data,world,pos,angle)
 	pos = pos or oVec2.zero
 	angle = angle or 0
 	if type(data) == "oBodyDef" then
-		return oBody_create(self,data,world,pos,angle)
+		return oBody._create(self,data,world,pos,angle)
 	elseif type(data) == "string" then
 		return create(load(nil,data),world,pos,angle)
 	else
@@ -152,8 +153,8 @@ end
 
 loadFuncs =
 {
-]]..string.format([[
-	Rectangle = function(data,itemDict)
+]]..string.format(--[[Rectangle]][[
+	function(data,itemDict)
 		local bodyDef = oBodyDef()
 		bodyDef.type = data[%d]
 		bodyDef.isBullet = data[%d]
@@ -204,8 +205,8 @@ Rectangle.Friction,
 Rectangle.Restitution,
 Rectangle.SubShapes,
 Rectangle.SubShapes,
-Rectangle.Name)..string.format([[
-	Circle = function(data,itemDict)
+Rectangle.Name)..string.format(--[[Circle]][[
+	function(data,itemDict)
 		local bodyDef = oBodyDef()
 		bodyDef.type = data[%d]
 		bodyDef.isBullet = data[%d]
@@ -251,8 +252,8 @@ Circle.Friction,
 Circle.Restitution,
 Circle.SubShapes,
 Circle.SubShapes,
-Circle.Name)..string.format([[
-	Polygon = function(data,itemDict)
+Circle.Name)..string.format(--[[Polygon]][[
+	function(data,itemDict)
 		if not data[%d] or #data[%d] < 3 then return end
 		local bodyDef = oBodyDef()
 		bodyDef.type = data[%d]
@@ -299,8 +300,8 @@ Polygon.Friction,
 Polygon.Restitution,
 Polygon.SubShapes,
 Polygon.SubShapes,
-Polygon.Name)..string.format([[
-	Chain = function(data,itemDict)
+Polygon.Name)..string.format(--[[Chain]][[
+	function(data,itemDict)
 		if not data[%d] or #data[%d] < 2 then return end
 		local bodyDef = oBodyDef()
 		bodyDef.type = data[%d]
@@ -339,8 +340,8 @@ Chain.Friction,
 Chain.Restitution,
 Chain.SubShapes,
 Chain.SubShapes,
-Chain.Name)..string.format([[
-	Loop = function(data,itemDict)
+Chain.Name)..string.format(--[[Loop]][[
+	function(data,itemDict)
 		if not data[%d] or #data[%d] < 3 then return end
 		local bodyDef = oBodyDef()
 		bodyDef.type = data[%d]
@@ -379,8 +380,8 @@ Loop.Friction,
 Loop.Restitution,
 Loop.SubShapes,
 Loop.SubShapes,
-Loop.Name)..string.format([[
-	SubRectangle = function(data,bodyDef)
+Loop.Name)..string.format(--[[SubRectangle]][[
+	function(data,bodyDef)
 		if data[%d] then
 			bodyDef:attachPolygonSensor(data[%d],
 				data[%d].width,data[%d].height,
@@ -404,8 +405,8 @@ SubRectangle.Size,
 SubRectangle.Angle,
 SubRectangle.Density,
 SubRectangle.Friction,
-SubRectangle.Restitution)..string.format([[
-	SubCircle = function(data,bodyDef)
+SubRectangle.Restitution)..string.format(--[[SubCircle]][[
+	function(data,bodyDef)
 		if data[%d] then
 			bodyDef:attachCircleSensor(data[%d],data[%d],data[%d])
 		else
@@ -421,8 +422,8 @@ SubCircle.Center,
 SubCircle.Radius,
 SubCircle.Density,
 SubCircle.Friction,
-SubCircle.Restitution)..string.format([[
-	SubPolygon = function(data,bodyDef)
+SubCircle.Restitution)..string.format(--[[SubPolygon]][[
+	function(data,bodyDef)
 		if not data[%d] or #data[%d] < 3 then return end
 		if data[%d] then
 			bodyDef:attachPolygonSensor(data[%d],data[%d])
@@ -439,8 +440,8 @@ SubPolygon.Vertices,
 SubPolygon.Vertices,
 SubPolygon.Density,
 SubPolygon.Friction,
-SubPolygon.Restitution)..string.format([[
-	SubChain = function(data,bodyDef)
+SubPolygon.Restitution)..string.format(--[[SubChain]][[
+	function(data,bodyDef)
 		if not data[%d] or #data[%d] < 2 then return end
 		bodyDef:attachChain(data[%d],data[%d],data[%d])
 	end,
@@ -449,8 +450,8 @@ SubChain.Vertices,
 SubChain.Vertices,
 SubChain.Vertices,
 SubChain.Friction,
-SubChain.Restitution)..string.format([[
-	SubLoop = function(data,bodyDef)
+SubChain.Restitution)..string.format(--[[SubLoop]][[
+	function(data,bodyDef)
 		if not data[%d] or #data[%d] < 3 then return end
 		bodyDef:attachLoop(data[%d],data[%d],data[%d])
 	end,
@@ -459,8 +460,8 @@ SubLoop.Vertices,
 SubLoop.Vertices,
 SubLoop.Vertices,
 SubLoop.Friction,
-SubLoop.Restitution)..string.format([[
-	Distance = function(data,itemDict)
+SubLoop.Restitution)..string.format(--[[Distance]][[
+	function(data,itemDict)
 		itemDict:set(data[%d],
 			oJointDef:distance(data[%d],data[%d],data[%d],data[%d],data[%d],data[%d],data[%d]))
 	end,
@@ -472,8 +473,8 @@ Distance.BodyB,
 Distance.AnchorA,
 Distance.AnchorB,
 Distance.Frequency,
-Distance.Damping)..string.format([[
-	Friction = function(data,itemDict)
+Distance.Damping)..string.format(--[[Friction]][[
+	function(data,itemDict)
 		itemDict:set(data[%d],
 			oJointDef:friction(data[%d],data[%d],data[%d],data[%d],data[%d],data[%d]))
 	end,
@@ -484,8 +485,8 @@ Friction.BodyA,
 Friction.BodyB,
 Friction.WorldPos,
 Friction.MaxForce,
-Friction.MaxTorque)..string.format([[
-	Gear = function(data,itemDict)
+Friction.MaxTorque)..string.format(--[[Gear]][[
+	function(data,itemDict)
 		itemDict:set(data[%d],
 			oJointDef:gear(data[%d],data[%d],data[%d],data[%d]))
 	end,
@@ -494,8 +495,8 @@ Gear.Name,
 Gear.Collision,
 Gear.JointA,
 Gear.JointB,
-Gear.Ratio)..string.format([[
-	Spring = function(data,itemDict)
+Gear.Ratio)..string.format(--[[Spring]][[
+	function(data,itemDict)
 		itemDict:set(data[%d],
 			oJointDef:spring(data[%d],data[%d],data[%d],data[%d],data[%d],data[%d],data[%d],data[%d]))
 	end,
@@ -508,8 +509,8 @@ Spring.Offset,
 Spring.AngularOffset,
 Spring.MaxForce,
 Spring.MaxTorque,
-Spring.CorrectionFactor)..string.format([[
-	Prismatic = function(data,itemDict)
+Spring.CorrectionFactor)..string.format(--[[Prismatic]][[
+	function(data,itemDict)
 		itemDict:set(data[%d],
 			oJointDef:prismatic(data[%d],data[%d],data[%d],data[%d],data[%d],data[%d],data[%d],data[%d],data[%d]))
 	end,
@@ -523,8 +524,8 @@ Prismatic.Axis,
 Prismatic.Lower,
 Prismatic.Upper,
 Prismatic.MaxMotorForce,
-Prismatic.MotorSpeed)..string.format([[
-	Pulley = function(data,itemDict)
+Prismatic.MotorSpeed)..string.format(--[[Pulley]][[
+	function(data,itemDict)
 		itemDict:set(data[%d],
 			oJointDef:pulley(data[%d],data[%d],data[%d],data[%d],data[%d],data[%d],data[%d],data[%d]))
 	end,
@@ -537,8 +538,8 @@ Pulley.AnchorA,
 Pulley.AnchorB,
 Pulley.GroundA,
 Pulley.GroundB,
-Pulley.Ratio)..string.format([[
-	Revolute = function(data,itemDict)
+Pulley.Ratio)..string.format(--[[Revolute]][[
+	function(data,itemDict)
 		itemDict:set(data[%d],
 			oJointDef:revolute(data[%d],data[%d],data[%d],data[%d],data[%d],data[%d],data[%d],data[%d]))
 	end,
@@ -551,8 +552,8 @@ Revolute.WorldPos,
 Revolute.LowerAngle,
 Revolute.UpperAngle,
 Revolute.MaxMotorTorque,
-Revolute.MotorSpeed)..string.format([[
-	Rope = function(data,itemDict)
+Revolute.MotorSpeed)..string.format(--[[Rope]][[
+	function(data,itemDict)
 		itemDict:set(data[%d],
 			oJointDef:rope(data[%d],data[%d],data[%d],data[%d],data[%d],data[%d]))
 	end,
@@ -563,8 +564,8 @@ Rope.BodyA,
 Rope.BodyB,
 Rope.AnchorA,
 Rope.AnchorB,
-Rope.MaxLength)..string.format([[
-	Weld = function(data,itemDict)
+Rope.MaxLength)..string.format(--[[Weld]][[
+	function(data,itemDict)
 		itemDict:set(data[%d],
 			oJointDef:weld(data[%d],data[%d],data[%d],data[%d],data[%d],data[%d]))
 	end,
@@ -575,8 +576,8 @@ Weld.BodyA,
 Weld.BodyB,
 Weld.WorldPos,
 Weld.Frequency,
-Weld.Damping)..string.format([[
-	Wheel = function(data,itemDict)
+Weld.Damping)..string.format(--[[Wheel]][[
+	function(data,itemDict)
 		itemDict:set(data[%d],
 			oJointDef:wheel(data[%d],data[%d],data[%d],data[%d],data[%d],data[%d],data[%d],data[%d],data[%d]))
 	end,

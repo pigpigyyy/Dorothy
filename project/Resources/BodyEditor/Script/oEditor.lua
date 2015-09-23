@@ -104,6 +104,35 @@ local function reset(self,args)
 	end
 end
 
+local types =
+{
+	Rectangle = 1,
+	Circle = 2,
+	Polygon = 3,
+	Chain = 4,
+	Loop = 5,
+	SubRectangle = 6,
+	SubCircle = 7,
+	SubPolygon = 8,
+	SubChain = 9,
+	SubLoop = 10,
+	Distance = 11,
+	Friction = 12,
+	Gear = 13,
+	Spring = 14,
+	Prismatic = 15,
+	Pulley = 16,
+	Revolute = 17,
+	Rope = 18,
+	Weld = 19,
+	Wheel = 20,
+}
+
+local typeNames = {}
+for k,v in pairs(types) do
+	typeNames[v] = k
+end
+
 local defaultShapeData =
 {
 	Rectangle =
@@ -1119,42 +1148,55 @@ valueToString = function(value)
 	local typeName = tolua.type(value)
 	if typeName == "table" then
 		str = str.."{"
-		for _,v in ipairs(value) do
+		local len = #value
+		for i,v in ipairs(value) do
 			local typeName = tolua.type(v)
 			if typeName == "oVec2" then
-				str = str..string.format("v(%.2f,%.2f),",v.x,v.y)
+				str = str..string.format("v(%.2f,%.2f)",v.x,v.y)
 			elseif typeName == "table" then
 				str = str..itemToString(v)
 			end
+			if i ~= len then
+				str = str..","
+			end
 		end
-		str = str.."},"
+		str = str.."}"
 	elseif typeName == "oVec2" then
-		str = str..string.format("v(%.2f,%.2f),",value.x,value.y)
+		str = str..string.format("v(%.2f,%.2f)",value.x,value.y)
 	elseif typeName == "CCSize" then
-		str = str..string.format("s(%d,%d),",value.width,value.height)
+		str = str..string.format("s(%d,%d)",value.width,value.height)
 	elseif typeName == "string" then
-		str = str.."\""..value.."\","
+		str = str.."\""..value.."\""
+	elseif typeName == "boolean" then
+		str = str..(value and "t" or "f")
 	else
-		str = str..tostring(value)..","
+		str = str..tostring(value)
 	end
 	return str
 end
 itemToString = function(item)
 	local str = ""
 	str = str.."{"
-	for _,v in ipairs(item) do
-		str = str..valueToString(v)
+	local len = #item
+	for i,v in ipairs(item) do
+		str = str..valueToString(i == 1 and types[v] or v)
+		if i ~= len then
+			str = str..","
+		end
 	end
-	str = str.."},"
+	str = str.."}"
 	return str
 end
 
 oEditor.dumpData = function(self,filename)
-	local str = [[local v = require("oVec2")
-local s = require("CCSize")
+	local str = [[local v,s,t,f = require("oVec2"),require("CCSize"),true,false
 return {]]
-	for _,data in ipairs(oEditor.bodyData) do
+	local len = #oEditor.bodyData
+	for i,data in ipairs(oEditor.bodyData) do
 		str = str..itemToString(data)
+		if i ~= len then
+			str = str..","
+		end
 	end
 	str = str.."}"
 	str = str:gsub("%.00","")
@@ -1168,6 +1210,7 @@ oEditor.loadData = function(self,filename)
 	if not self.bodyData then return end
 	oEditor.names = {}
 	for _,data in ipairs(self.bodyData) do
+		data[1] = typeNames[data[1]]
 		local shapeName = data[1]
 		local createFunc = oEditor[shapeName].create
 		local renameFunc = oEditor[shapeName].rename
@@ -1179,7 +1222,9 @@ oEditor.loadData = function(self,filename)
 		local subShapes = data[oEditor[shapeName].SubShapes]
 		if subShapes then
 			for _,subShape in ipairs(subShapes) do
-				subShape.create = oEditor[subShape[1]].create
+				subShape[1] = typeNames[subShape[1]]
+				local subShapeName = subShape[1]
+				subShape.create = oEditor[subShapeName].create
 				subShape.parent = data
 				subShape.set = setFunc
 				subShape.get = getFunc

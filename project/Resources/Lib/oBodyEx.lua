@@ -6,9 +6,9 @@ local oJoint = require("oJoint")
 local oBodyDef = require("oBodyDef")
 local oJointDef = require("oJointDef")
 local oCache = require("oCache")
+local oContent = require("oContent")
 local CCSprite = require("CCSprite")
 local oModel = require("oModel")
-local oContent = require("oContent")
 local type = tolua.type
 
 local bodyCache = CCDictionary()
@@ -16,6 +16,9 @@ local bodyCache = CCDictionary()
 local loadFuncs = nil
 local function loadData(data,item)
 	local itemType = data[1]
+	if not loadFuncs[itemType] then
+		print(itemType)
+	end
 	loadFuncs[itemType](data,item)
 end
 
@@ -52,6 +55,7 @@ oCache.Body = {load=load,unload=unload}
 if not rawget(oBody,"_create") then
 	rawset(oBody,"_create",oBody[2])
 end
+
 local function create(itemDict,world,pos,angle)
 	local items = CCDictionary()
 	local center = nil
@@ -79,10 +83,10 @@ local function create(itemDict,world,pos,angle)
 			local face = nil
 			local faceStr = itemDef.face
 			if faceStr ~= "" then
-				if faceStr:match("|") and oContent:exist(faceStr:match("(.*)|")) then
+				if faceStr:match("|") and oContent:exist(faceStr:match("([^|]*)|")) then
 					face = CCSprite(faceStr)
 				elseif oContent:exist(faceStr) then
-					local extension = string.lower(string.match(faceStr,"%.([^%.\\/]*)$"))
+					local extension = string.lower(faceStr:sub(-5,-1))
 					if extension == "model" then
 						face = oModel(faceStr)
 					else
@@ -127,7 +131,7 @@ end
 
 loadFuncs =
 {
-	Rectangle = function(data,itemDict)
+	function(data,itemDict)
 		local bodyDef = oBodyDef()
 		bodyDef.type = data[3]
 		bodyDef.isBullet = data[15]
@@ -154,7 +158,7 @@ loadFuncs =
 		end
 		itemDict:set(data[2],bodyDef)
 	end,
-	Circle = function(data,itemDict)
+	function(data,itemDict)
 		local bodyDef = oBodyDef()
 		bodyDef.type = data[3]
 		bodyDef.isBullet = data[15]
@@ -178,7 +182,7 @@ loadFuncs =
 		end
 		itemDict:set(data[2],bodyDef)
 	end,
-	Polygon = function(data,itemDict)
+	function(data,itemDict)
 		if not data[6] or #data[6] < 3 then return end
 		local bodyDef = oBodyDef()
 		bodyDef.type = data[3]
@@ -203,7 +207,7 @@ loadFuncs =
 		end
 		itemDict:set(data[2],bodyDef)
 	end,
-	Chain = function(data,itemDict)
+	function(data,itemDict)
 		if not data[6] or #data[6] < 2 then return end
 		local bodyDef = oBodyDef()
 		bodyDef.type = data[3]
@@ -224,7 +228,7 @@ loadFuncs =
 		end
 		itemDict:set(data[2],bodyDef)
 	end,
-	Loop = function(data,itemDict)
+	function(data,itemDict)
 		if not data[6] or #data[6] < 3 then return end
 		local bodyDef = oBodyDef()
 		bodyDef.type = data[3]
@@ -245,7 +249,7 @@ loadFuncs =
 		end
 		itemDict:set(data[2],bodyDef)
 	end,
-	SubRectangle = function(data,bodyDef)
+	function(data,bodyDef)
 		if data[8] then
 			bodyDef:attachPolygonSensor(data[9],
 				data[4].width,data[4].height,
@@ -256,14 +260,14 @@ loadFuncs =
 				data[3],data[5],data[6],data[7])
 		end
 	end,
-	SubCircle = function(data,bodyDef)
+	function(data,bodyDef)
 		if data[7] then
 			bodyDef:attachCircleSensor(data[8],data[2],data[3])
 		else
 			bodyDef:attachCircle(data[2],data[3],data[4],data[5],data[6])
 		end
 	end,
-	SubPolygon = function(data,bodyDef)
+	function(data,bodyDef)
 		if not data[2] or #data[2] < 3 then return end
 		if data[6] then
 			bodyDef:attachPolygonSensor(data[7],data[2])
@@ -271,51 +275,51 @@ loadFuncs =
 			bodyDef:attachPolygon(data[2],data[3],data[4],data[5])
 		end
 	end,
-	SubChain = function(data,bodyDef)
+	function(data,bodyDef)
 		if not data[2] or #data[2] < 2 then return end
 		bodyDef:attachChain(data[2],data[3],data[4])
 	end,
-	SubLoop = function(data,bodyDef)
+	function(data,bodyDef)
 		if not data[2] or #data[2] < 3 then return end
 		bodyDef:attachLoop(data[2],data[3],data[4])
 	end,
-	Distance = function(data,itemDict)
+	function(data,itemDict)
 		itemDict:set(data[2],
 			oJointDef:distance(data[3],data[4],data[5],data[6],data[7],data[8],data[9]))
 	end,
-	Friction = function(data,itemDict)
+	function(data,itemDict)
 		itemDict:set(data[2],
 			oJointDef:friction(data[3],data[4],data[5],data[6],data[7],data[8]))
 	end,
-	Gear = function(data,itemDict)
+	function(data,itemDict)
 		itemDict:set(data[2],
 			oJointDef:gear(data[3],data[4],data[5],data[6]))
 	end,
-	Spring = function(data,itemDict)
+	function(data,itemDict)
 		itemDict:set(data[2],
 			oJointDef:spring(data[3],data[4],data[5],data[6],data[7],data[8],data[9],data[10]))
 	end,
-	Prismatic = function(data,itemDict)
+	function(data,itemDict)
 		itemDict:set(data[2],
 			oJointDef:prismatic(data[3],data[4],data[5],data[6],data[7],data[8],data[9],data[10],data[11]))
 	end,
-	Pulley = function(data,itemDict)
+	function(data,itemDict)
 		itemDict:set(data[2],
 			oJointDef:pulley(data[3],data[4],data[5],data[6],data[7],data[8],data[9],data[10]))
 	end,
-	Revolute = function(data,itemDict)
+	function(data,itemDict)
 		itemDict:set(data[2],
 			oJointDef:revolute(data[3],data[4],data[5],data[6],data[7],data[8],data[9],data[10]))
 	end,
-	Rope = function(data,itemDict)
+	function(data,itemDict)
 		itemDict:set(data[2],
 			oJointDef:rope(data[3],data[4],data[5],data[6],data[7],data[8]))
 	end,
-	Weld = function(data,itemDict)
+	function(data,itemDict)
 		itemDict:set(data[2],
 			oJointDef:weld(data[3],data[4],data[5],data[6],data[7],data[8]))
 	end,
-	Wheel = function(data,itemDict)
+	function(data,itemDict)
 		itemDict:set(data[2],
 			oJointDef:wheel(data[3],data[4],data[5],data[6],data[7],data[8],data[9],data[10],data[11]))
 	end,

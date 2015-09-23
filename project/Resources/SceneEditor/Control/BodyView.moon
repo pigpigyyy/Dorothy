@@ -40,6 +40,8 @@ Class
 				return
 			world = with oWorld!
 				.visible = false
+				.cascadeOpacity = false
+				.cascadeColor = false
 			@\addChild world
 			body = oBody file,world
 			world\addChild body
@@ -95,13 +97,13 @@ Class
 			@_prevFile = file\match("(.*)%.[^%.\\/]*$").."Small."..file\match("%.([^%.\\/]*)$")
 			tex = oCache.Texture\add renderTarget,@_prevFile
 			if @sprite
-					@sprite.texture = tex
-					@sprite.textureRect = CCRect 0,0,width,height
-					@sprite.opacity = 0
-					@sprite\perform oOpacity 0.3,1
-					thread ->
-						sleep 0.1
-						oCache.Texture\removeUnused!
+				@sprite.texture = tex
+				@sprite.textureRect = CCRect 0,0,width,height
+				@sprite.opacity = 0
+				@sprite\perform oOpacity 0.3,1
+				thread ->
+					sleep 0.1
+					oCache.Texture\removeUnused!
 
 	isLoaded: property => @_loaded
 
