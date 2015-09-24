@@ -23,7 +23,8 @@ local function oEditMenu()
 	menu.anchor = oVec2.zero
 
 	-- init menu items --
-	local items =
+	local items
+	items =
 	{
 		Edit = oButton("Edit",16,50,50,35,winSize.height-35,function(button)
 			if not oEditor.dirty then
@@ -33,9 +34,18 @@ local function oEditMenu()
 					oEditor.dirty = false
 					button.text = "Edit"
 					oEditor:dumpData(oEditor.currentFile)
+					items.Undo:hide()
 				end
 			end
 			emit("Effect.settingPanel.cancel")
+		end),
+
+		Undo = oButton("Undo",16,50,50,95,winSize.height-35,function(button)
+			oEditor.dirty = false
+			items.Edit.text = "Edit"
+			emit("Effect.settingPanel.cancel")
+			oEditor:edit(oEditor.currentName)
+			button:hide()
 		end),
 
 		Origin = oButton("Origin",16,50,50,winSize.width-240-45-60,winSize.height-35,function()
@@ -146,11 +156,29 @@ local function oEditMenu()
 
 		--emit("Effect.viewArea.pos",oEditor.origin)
 	end)
+
+	items.Undo.visible = false
+	items.Undo.show = function(self)
+		self.visible = true
+		self.enabled = true
+		self.scaleX = 0
+		self.scaleY = 0
+		self:perform(oScale(0.3,1,1,oEase.OutBack))
+	end
+	items.Undo.hide = function(self)
+		self.enabled = false
+		self:perform(CCSequence({
+			oScale(0.3,0,0,oEase.InBack),
+			CCHide()
+		}))
+	end
+
 	menu:gslot("Effect.editor.change",function()
-		if not oEditor.dirty then
-			oEditor.dirty = true
+		if not oEditor.dirty and items.Edit.text ~= "Save" then
 			items.Edit.text = "Save"
+			items.Undo:show()
 		end
+		oEditor.dirty = true
 	end)
 
 	return menu

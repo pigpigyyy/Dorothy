@@ -18,6 +18,9 @@ local tolua = require("tolua")
 local CCSequence = require("CCSequence")
 local CCDelay = require("CCDelay")
 local oOpacity = require("oOpacity")
+local oScale = require("oScale")
+local oEase = require("oEase")
+local CCHide = require("CCHide")
 
 local function oEditMenu()
 	local winSize = CCDirector.winSize
@@ -67,9 +70,11 @@ local function oEditMenu()
 	})
 
 	-- init menu items --
-	local items =
+	local items
+	items =
 	{
 		Edit = oButton("Edit",16,50,50,35,winSize.height-35,function(button)
+			emit("Body.settingPanel.edit",nil)
 			if not oEditor.dirty then
 				oEditor:addChild(oFileChooser(),oEditor.topMost)
 			else
@@ -77,6 +82,7 @@ local function oEditMenu()
 					oEditor.dirty = false
 					button.text = "Edit"
 					oEditor:dumpData(oEditor.currentFile)
+					items.Undo:hide()
 					oEditor:emit("Edited",oEditor.currentFile)
 				else
 					oEditor:addChild(oBox("New Name",function(name)
@@ -87,10 +93,18 @@ local function oEditMenu()
 							button.text = "Edit"
 							oEditor.currentFile = name..".body"
 							oEditor:dumpData(oEditor.currentFile)
+							items.Undo:hide()
 						end
 					end,true),oEditor.topMost)
 				end
 			end
+		end),
+		Undo = oButton("Undo",16,50,50,95,winSize.height-35,function(button)
+			emit("Body.settingPanel.edit",nil)
+			oEditor.dirty = false
+			items.Edit.text = "Edit"
+			oEditor:edit(oEditor.currentFile)
+			button:hide()
 		end),
 		Rectangle = oShapeButton("Rectangle",35,winSize.height-95),
 		Circle = oShapeButton("Circle",35,winSize.height-155),
@@ -138,6 +152,22 @@ local function oEditMenu()
 			emit("Body.editor.isPlaying",button.isPlaying)
 		end),
 	}
+
+	items.Undo.visible = false
+	items.Undo.show = function(self)
+		self.visible = true
+		self.enabled = true
+		self.scaleX = 0
+		self.scaleY = 0
+		self:perform(oScale(0.3,1,1,oEase.OutBack))
+	end
+	items.Undo.hide = function(self)
+		self.enabled = false
+		self:perform(CCSequence({
+			oScale(0.3,0,0,oEase.InBack),
+			CCHide()
+		}))
+	end
 
 	-- rectangle button --
 	local paint = oLine(
@@ -259,7 +289,7 @@ local function oEditMenu()
 		if isPlaying then
 			local motorButtons = {}
 			local i = 0
-			local itemNum = math.floor((winSize.width-320-70)/100)
+			local itemNum = math.floor((winSize.width-320-70)/110)
 			for name,item in pairs(oEditor.items) do
 				if tolua.type(item) == "oMotorJoint" then
 					local x = winSize.width-370-(i%itemNum)*110
@@ -291,10 +321,11 @@ local function oEditMenu()
 		end
 	end)
 	menu:gslot("Body.editor.change",function()
-		if not oEditor.dirty then
-			oEditor.dirty = true
+		if not oEditor.dirty and items.Edit.text ~= "Save" then
 			items.Edit.text = "Save"
+			items.Undo:show()
 		end
+		oEditor.dirty = true
 	end)
 	menu:gslot("Body.editMenu.reset",function()
 		items.Play.isPlaying = false

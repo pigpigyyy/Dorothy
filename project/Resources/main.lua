@@ -47,6 +47,3 @@ CCScene:run("firstScene","fadeIn")
 CCScene:push("firstScene","cf")
 CCScene:popTo("secondScene","crossFade")
 --]]
-
-local def = oUnitDef()
-

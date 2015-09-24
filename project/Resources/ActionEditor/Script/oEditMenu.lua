@@ -20,6 +20,9 @@ local oSpriteChooser = require("oSpriteChooser")
 local oEditChooser = require("oEditChooser")
 local oLookChooser = require("oLookChooser")
 local oBox = require("oBox")
+local oScale = require("oScale")
+local oEase = require("oEase")
+local CCHide = require("CCHide")
 
 local function removeAnimation(sp,index)
 	local aDefs = sp[oSd.animationDefs]
@@ -70,6 +73,14 @@ local function oEditMenu()
 					oEditChooser(true)
 				end
 			end),
+		Undo = oButton("Undo",16,50,50,95,winSize.height-35,
+			function()
+				oEditor.dirty = false
+				menu:markEditButton(false)
+				oEditor.settingPanel:clearSelection()
+				oCache.Model:unload(oEditor.model)
+				oEditor:edit(oEditor.modelFile)
+			end),
 		Del = oButton("Del",16,50,50,95,winSize.height-35,
 			function()
 				oEditor.settingPanel:clearSelection()
@@ -77,7 +88,6 @@ local function oEditMenu()
 					oBox("Delete\n"..oEditor.animation,function()
 						local aNames = oEditor.modelData[oSd.animationNames]
 						local index = aNames[oEditor.animation]
-						
 						removeAnimation(oEditor.modelData,index+1)
 						for k,v in pairs(aNames) do
 							if v > index then
@@ -381,7 +391,7 @@ local function oEditMenu()
 						model:resume(oEditor.animation)
 						-- update controlBar progress
 						item:schedule(function()
-							--model = oModel
+							-- model = oModel
 							if model.playing then
 								local time = model.time * model.duration
 								oEditor.controlBar:setTime(time)
@@ -537,10 +547,11 @@ oEditor.spriteData[oSd.index]
 					end
 				end
 			end),
-		
+
 		Change = oButton("Rep",16,50,50,winSize.width-205,275,
 			function()
 				if oEditor.spriteData and oEditor.spriteData[oSd.parent] then
+					oEditor.settingPanel:clearSelection()
 					local sp = oEditor.spriteData
 					local chooser = oSpriteChooser()
 					chooser.selected = function(self, name)
@@ -626,6 +637,7 @@ oEditor.spriteData[oSd.index]
 		menu:addChild(item)
 	end
 	menu.items = items
+	items.Undo.visible = false
 
 	menu.markEditButton = function(self,flag)
 		if oEditor.needSave == flag then
@@ -635,9 +647,19 @@ oEditor.spriteData[oSd.index]
 		if flag then
 			label.text = "Save"
 			label.texture.antiAlias = false
+			items.Undo.visible = true
+			items.Undo.enabled = true
+			items.Undo.scaleX = 0
+			items.Undo.scaleY = 0
+			items.Undo:perform(oScale(0.3,1,1,oEase.OutBack))
 		else
 			label.text = "Edit"
 			label.texture.antiAlias = false
+			items.Undo.enabled = false
+			items.Undo:perform(CCSequence({
+				oScale(0.3,0,0,oEase.InBack),
+				CCHide()
+			}))
 		end
 		oEditor.needSave = flag
 	end

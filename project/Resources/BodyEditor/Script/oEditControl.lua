@@ -449,7 +449,7 @@ local function oEditControl()
 	end)
 
 	-- show & hide size editor
-	editControl.showSizeEditor = function(self,target,center,size,callback)
+	editControl.showSizeEditor = function(self,target,angle,center,size,callback)
 		editControl:hide()
 		editControl:showFixButtons()
 		totalSize = size
@@ -459,6 +459,7 @@ local function oEditControl()
 		worldNode.position = target.position
 		worldNode.angle = target.angle
 		sizeVisual.position = center
+		sizeVisual.angle = angle
 		totalW = 0
 		totalH = 0
 	end
@@ -853,8 +854,9 @@ local function oEditControl()
 					oEditor:resetItem(data)
 				end)
 			elseif name == "Size" then
+				local angle = data.parent and data:get("Angle") or 0
 				editControl:showSizeEditor(
-					oEditor:getItem(data),data:get("Center"),data:get("Size"),function(size)
+					oEditor:getItem(data),angle,data:get("Center"),data:get("Size"),function(size)
 					item.value = size
 					data:set("Size",size)
 					oEditor:resetItem(data)

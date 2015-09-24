@@ -28,6 +28,7 @@ local function oEditControl()
 	local halfTH = blendSize.height*0.5
 	local blendSelector = oSelectionPanel(blendSize,true,true,false)
 	blendSelector.visible = false
+	blendSelector.removeOnHide = false
 
 	-- blendBackground
 	local blendBackground = CCDrawNode()

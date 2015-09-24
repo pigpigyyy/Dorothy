@@ -341,6 +341,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 			}))
 	end
 
+	panel.removeOnHide = true
 	panel.hide = function(self)
 		menu.enabled = false
 		panel.touchEnabled = false
@@ -361,7 +362,9 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 						if panel.ended then
 							panel:ended()
 						end
-						panel.parent:removeChild(panel)
+						if panel.removeOnHide then
+							panel.parent:removeChild(panel)
+						end
 					end)
 			}))
 	end

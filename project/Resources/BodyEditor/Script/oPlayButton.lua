@@ -32,7 +32,7 @@ local oPlayButton = class(oButton,
 		node.position = oVec2(25,25)
 		node.cascadeColor = false
 		self.face:addChild(node)
-		
+
 		local playIcon = CCDrawNode()
 		playIcon:drawPolygon(
 		{
@@ -43,7 +43,7 @@ local oPlayButton = class(oButton,
 		playIcon.positionX = 2
 		node:addChild(playIcon)
 		self._playIcon = playIcon
-		
+
 		local pauseIcon = CCDrawNode()
 		pauseIcon:drawPolygon(
 		{
@@ -63,7 +63,7 @@ local oPlayButton = class(oButton,
 		node:addChild(pauseIcon)
 		self._pauseIcon = pauseIcon
 	end,
-	
+
 	isPlaying = property(
 		function(self)
 			return self._isPlaying
