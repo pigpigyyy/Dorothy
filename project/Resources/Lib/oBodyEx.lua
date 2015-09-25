@@ -16,9 +16,6 @@ local bodyCache = CCDictionary()
 local loadFuncs = nil
 local function loadData(data,item)
 	local itemType = data[1]
-	if not loadFuncs[itemType] then
-		print(itemType)
-	end
 	loadFuncs[itemType](data,item)
 end
 

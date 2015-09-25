@@ -48,7 +48,7 @@ local function oEditMenu()
 			button:hide()
 		end),
 
-		Origin = oButton("Origin",16,50,50,winSize.width-240-45-60,winSize.height-35,function()
+		Origin = oButton("Origin",16,50,50,winSize.width-240-105-60,winSize.height-35,function()
 			emit("Effect.viewArea.toOrigin",oEditor.origin)
 		end),
 
@@ -65,7 +65,7 @@ local function oEditMenu()
 			button.mode = button.mode + 1
 			button.mode = button.mode % 3
 			button.text = tostring(scale*100).."%"
-			emit("Effect.viewArea.toScale",scale)
+			emit("Effect.viewArea.scroll",scale)
 		end),
 
 		Play = oButton("Play",16,50,50,winSize.width-240-45,35,function()
@@ -98,14 +98,15 @@ local function oEditMenu()
 	end)
 	menu:gslot("Effect.editor.particle",function()
 		if items.Origin.visible then
-			items.Origin:stopAllActions()
-			items.Origin:runAction(CCSequence({CCDelay(0.3),oPos(0.3,winSize.width-240-45,winSize.height-35,oEase.OutQuad)}))
-			items.Zoom:stopAllActions()
-			items.Zoom:runAction(CCSequence({oScale(0.3,0,0,oEase.InBack),CCHide()}))
+			items.Origin:perform(CCSequence({CCDelay(0.3),oPos(0.3,winSize.width-240-105,winSize.height-35,oEase.OutQuad)}))
+			items.Zoom:perform(CCSequence({CCDelay(0.3),oPos(0.3,winSize.width-240-45,winSize.height-35,oEase.OutQuad)}))
 		else
 			items.Origin.visible = true
-			items.Origin.position = oVec2(winSize.width-240-45,winSize.height-35)
-			items.Origin:runAction(CCSequence({oScale(0,0,0),oScale(0.3,1,1,oEase.OutBack)}))
+			items.Zoom.visible = true
+			items.Origin.position = oVec2(winSize.width-240-105,winSize.height-35)
+			items.Zoom.position = oVec2(winSize.width-240-45,winSize.height-35)
+			items.Origin:perform(CCSequence({oScale(0,0,0),oScale(0.3,1,1,oEase.OutBack)}))
+			items.Zoom:perform(CCSequence({oScale(0,0,0),oScale(0.3,1,1,oEase.OutBack)}))
 		end
 		items.Play:stopAllActions()
 		if items.Play.visible then

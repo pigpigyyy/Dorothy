@@ -139,17 +139,7 @@ local function oEditMenu()
 				end
 				oEditor.viewArea:showModelSize(not visible)
 			end),
-		--[[
-		Move = oButton("Move",16,50,50,35,winSize.height-95),
-		Rotate = oButton("Rotate",16,50,50,35,winSize.height-155,
-			function()
-				oEditor.viewArea:editRot()
-			end),
-		Scale = oButton("Scale",16,50,50,35,winSize.height-215,
-			function(self)
-			end),
-		Opacity = oButton("Opacity",14,50,50,35,winSize.height-275),
-		]]
+
 		New = oButton("New",16,50,50,35,95,
 			function()
 				if oEditor.isPlaying then return end
@@ -568,7 +558,7 @@ oEditor.spriteData[oSd.index]
 		
 		Move = oButton("Move",16,50,50,winSize.width-205,335,
 			function(item)
-				if oEditor.spriteData and oEditor.spriteData[oSd.parent] then
+				if oEditor.spriteData then
 					if item.isMoving then
 						item.color = ccColor3(0x00ffff)
 						item:setText("Move")
@@ -594,7 +584,7 @@ oEditor.spriteData[oSd.index]
 							oEditor.viewPanel:selectItem(item.sp)
 							menu:markEditButton(true)
 						end
-					else
+					elseif oEditor.spriteData[oSd.parent] then
 						item.sp = oEditor.spriteData
 						item.color = ccColor3(0xff88cc)
 						item:setText("Mov\ning")
@@ -709,6 +699,7 @@ oEditor.spriteData[oSd.index]
 		oEditor.settingPanel.touchEnabled = false
 		oEditor.viewPanel.touchEnabled = false
 		oEditor.viewArea.touchEnabled = false
+		items.Undo.position = oVec2(95,winSize.height-35)
 	end
 
 	menu.toSprite = function(self)
@@ -767,6 +758,7 @@ oEditor.spriteData[oSd.index]
 		oEditor.viewPanel:selectItem(sp)
 		oEditor.viewPanel:glow()
 		oEditor.controlBar.visible = false
+		items.Undo.position = oVec2(95,winSize.height-35)
 	end
 
 	menu.toAnimation = function(self)
@@ -824,6 +816,7 @@ oEditor.spriteData[oSd.index]
 		model:play(oEditor.animation)
 		model:pause()
 		model.time = 0
+		items.Undo.position = oVec2(155,winSize.height-35)
 	end
 
 	menu.toLook = function(self)
@@ -860,6 +853,7 @@ oEditor.spriteData[oSd.index]
 		local selectedSp = oEditor.spriteData
 		oEditor.viewPanel:updateItems(true)
 		oEditor.viewPanel:selectItem(selectedSp)
+		items.Undo.position = oVec2(155,winSize.height-35)
 	end
 
 	menu:gslot("Action.ImageSelected", function(args)
