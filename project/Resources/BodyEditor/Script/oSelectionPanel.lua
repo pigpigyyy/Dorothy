@@ -340,7 +340,8 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 					end)
 			}))
 	end
-
+	
+	panel.isAutoRemove = true
 	panel.hide = function(self)
 		panel.touchEnabled = false
 		menu.enabled = false
@@ -361,7 +362,9 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 						if panel.ended then
 							panel:ended()
 						end
-						panel.parent:removeChild(panel)
+						if panel.isAutoRemove then
+							panel.parent:removeChild(panel)
+						end
 					end)
 			}))
 	end

@@ -171,6 +171,7 @@ local function oEditControl()
 	local typeSelector = oSelectionPanel(typeSize,true,true,false)
 	typeSelector.position = oEditor.origin
 	typeSelector.visible = false
+	typeSelector.isAutoRemove = false
 
 	-- typeBackground
 	local typeBackground = CCDrawNode()
@@ -864,7 +865,7 @@ local function oEditControl()
 			elseif name == "Radius" then
 				editControl:showRadiusEditor(
 					oEditor:getItem(data),data:get("Center"),data:get("Radius"),function(radius)
-					item.value = n2str(radius)
+					item.value = radius
 					data:set("Radius",radius)
 					oEditor:resetItem(data)
 				end)
@@ -968,7 +969,7 @@ local function oEditControl()
 				end)
 			elseif name == "WorldPos" or name == "GroundA" or name == "GroundB" then
 				editControl:showPointControl(data:get(name),function(pos)
-					item.value = n2str(pos.x)..","..n2str(pos.y)
+					item.value = pos
 					data:set(name,pos)
 					oEditor:resetItem(data)
 				end)
