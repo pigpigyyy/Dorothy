@@ -64,16 +64,13 @@
 
 ```lua
 	local layer = CCLayer()
-	layer.touchHandler = function(eventType) -- layer对象在C++实现内部引用了这个闭包对象
-		if eventType == CCTouch.Began then
-			layer.opacity = 1.0 -- 在闭包对象中又引用了layer对象
-		elseif eventType == CCTouch.Ended then
-			layer:runAction(oOpacity(0.3,0))
-		end
-	end
+	layer:slots("TouchBegan", function() -- layer对象在C++实现内部引用了这个闭包对象
+		layer.opacity = 1.0 -- 在闭包对象中又引用了layer对象
+		return true
+	end)
 
 	-- 在当前的实现中，Lua的GC系统无法检测这样的循环引用。
-	-- 所以在使用完layer对象以后，需要手动调用layer.touchHandler = nil
+	-- 所以在使用完layer对象以后，需要手动调用layer:slots("TouchBegan", nil)
     -- 来避免内存泄露。
 ``` 
 
@@ -111,17 +108,14 @@ Another branch of Cocos2d-x with Lua derived from Cocos2d-x version 2.1rc0. Its 
 
 ```lua
 	local layer = CCLayer()
-    layer.touchHandler = function(eventType) -- layer references closure to invoke it
-    	if eventType == CCTouch.Began then
-    		layer.opacity = 1.0 -- closure references layer to access it
-    	elseif eventType == CCTouch.Ended then
-    		layer:runAction(oOpacity(0.3,0))
-    	end
-	end
-
+    layer:slots("TouchBegan", function() -- layer references closure to invoke it
+		layer.opacity = 1.0 -- closure references layer to access it
+		return true
+	end)
+	
 	-- Currently in the implementation, the Lua GC system can`t detect 
 	-- this kind of cicular reference. When you are done with the layer.
-	-- You should call layer.touchHandler = nil manually to avoid 
+	-- You may call layer:slots("TouchBegan", nil) manually to avoid 
 	-- memory leak.
 ``` 
 
