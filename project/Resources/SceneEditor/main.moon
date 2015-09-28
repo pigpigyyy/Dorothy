@@ -1,6 +1,8 @@
 Dorothy!
+CCScene = require "CCSceneEx"
 oContent\addSearchPath "SceneEditor"
 
 Editor = require "Scene.Editor"
+CCScene\add "sceneEditor",Editor!
 
-CCDirector\run Editor!
+CCScene\run "sceneEditor"

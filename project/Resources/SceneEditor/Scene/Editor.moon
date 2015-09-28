@@ -1,5 +1,4 @@
 Dorothy!
-CCScene = require "CCSceneEx"
 Class,property,classfield = unpack require "class"
 EditorView = require "View.Scene.Editor"
 SelectionPanel = require "Control.SelectionPanel"
@@ -25,7 +24,6 @@ Class
 			CCScene\remove "bodyEditor"
 			CCScene\remove "effectEditor"
 
-		CCScene\add "sceneEditor",@
 		CCScene\transition "rollIn",{"zoomFlip",0.5,CCOrientation.Down}
 		CCScene\transition "rollOut",{"zoomFlip",0.5,CCOrientation.Up}
 
@@ -139,7 +137,7 @@ Class
 			actionEditor\slots "Edited",(model)->
 				emit "Scene.ModelUpdated",model
 			actionEditor\slots "Quit",->
-				CCScene\run "sceneEditor","rollIn"
+				CCScene\back "rollIn"
 				@\updateModels!
 			CCScene\add "actionEditor",actionEditor
 			@_actionEditor = actionEditor
@@ -155,7 +153,7 @@ Class
 			bodyEditor\slots "Edited",(body)->
 				emit "Scene.BodyUpdated",body
 			bodyEditor\slots "Quit",->
-				CCScene\run "sceneEditor","rollIn"
+				CCScene\back "rollIn"
 				@\updateBodies!
 			CCScene\add "bodyEditor",bodyEditor
 			@_bodyEditor = bodyEditor
@@ -173,7 +171,7 @@ Class
 			effectEditor\slots "Edited",(effect)->
 				emit "Scene.EffectUpdated",effect
 			effectEditor\slots "Quit",->
-				CCScene\run "sceneEditor","rollIn"
+				CCScene\back "rollIn"
 				@\updateEffects!
 			CCScene\add "effectEditor",effectEditor
 			@_effectEditor = effectEditor

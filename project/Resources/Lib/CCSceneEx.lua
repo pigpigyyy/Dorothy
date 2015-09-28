@@ -8,6 +8,8 @@ local CCDirector = require("CCDirector")
 
 local scenes = {}
 local transitions = {}
+local currentScene
+local sceneStack = {}
 
 function CCScene:transition(name,item)
 	transitions[name] = item
@@ -30,26 +32,45 @@ function CCScene:remove(name)
 	return false
 end
 
+local function runScene(scene,tname)
+	table.insert(sceneStack,currentScene)
+	currentScene = scene
+	local data = transitions[tname]
+	local transition
+	if data then
+		local args = {}
+		args[1] = data[2]
+		args[2] = scene
+		for i = 3,#data do
+			args[i] = data[i]
+		end
+		transition = CCScene[data[1]](CCScene,unpack(args))
+	end
+	if CCDirector.sceneStackSize == 0 then
+		CCDirector:run(transition or scene)
+	else
+		CCDirector:replaceScene(transition or scene,false)
+	end
+end
+
 function CCScene:run(sname,tname)
 	local scene = scenes[sname]
-	local data = transitions[tname]
 	if scene then
-		local transition
-		if data then
-			local args = {}
-			args[1] = data[2]
-			args[2] = scene
-			for i = 3,#data do
-				args[i] = data[i]
-			end
-			transition = CCScene[data[1]](CCScene,unpack(args))
-		end
-		if CCDirector.sceneStackSize == 0 then
-			CCDirector:run(transition or scene)
-		else
-			CCDirector:replaceScene(transition or scene,false)
-		end
+		runScene(scene,tname)
 	end
+end
+
+function CCScene:back(tname)
+	currentScene = nil
+	local lastScene = table.remove(sceneStack)
+	if lastScene then
+		runScene(lastScene,tname)
+	end
+end
+
+function CCScene:clearHistory()
+	currentScene = nil
+	sceneStack = {}
 end
 
 return CCScene

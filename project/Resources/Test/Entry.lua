@@ -216,7 +216,13 @@ panel.init = function(self)
 					local endBtn = oButton("Back",17,60,false,
 						0,0,
 						function()
-							CCDirector:run(CCScene:crossFade(0.5,scene))
+							CCDirector:replaceScene(CCScene:crossFade(0.5,scene),true)
+							if rawget(CCScene,"clearHistory") then
+								CCScene:clearHistory()
+							end
+							for _,name in ipairs(loaded) do
+								package.loaded[name] = nil
+							end
 						end)
 					endBtn.anchor = oVec2.zero
 					opMenu:addChild(endBtn)
@@ -242,12 +248,5 @@ panel:slots("KeyBack",function()
 end)
 
 CCDirector.displayStats = true
-
-scene:slots("Entered",function()
-	CCDirector:popToRootScene()
-	for _,name in ipairs(loaded) do
-		package.loaded[name] = nil
-	end
-end)
 
 CCDirector:run(scene)
