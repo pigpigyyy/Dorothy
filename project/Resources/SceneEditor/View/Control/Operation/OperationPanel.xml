@@ -1,0 +1,16 @@
+<!-- params: X, Y, Width, Height -->
+<ScrollArea X="{ x }" Y="{ y }" Width="{ width }" Height="{ height }" PaddingX="0" PaddingY="50" TouchPriority="{ editor.touchLevel7-1 }">
+	<Import Module="Control.Basic.ScrollArea"/>
+	<Import Module="View.Shape.SolidRect"/>
+	<Import Module="View.Shape.LineRect"/>
+
+	<Item Name="view">
+		<SolidRect Width="{ $W }" Height="{ $H }" Color="0xee100000"/>
+		<LineRect X="-1" Y="-1" Width="{ $W+2 }" Height="{ $H+2 }" Color="0x88ffafaf"/>
+	
+		<Menu Name="menu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.touchLevel7 }" Ref="True">
+			<LabelTTF Name="title" X="{ $X }" Y="{ $T-20 }" Text="title" FontName="Arial" FontSize="24" Color="0x00ffff" Opacity="0.5" AntiAlias="False"/>
+		</Menu>
+	</Item>
+
+</ScrollArea>
