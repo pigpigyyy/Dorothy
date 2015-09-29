@@ -355,12 +355,15 @@ void oSlotList::clear()
 bool oSlotList::invoke(lua_State* L, int args)
 {
 	int top = lua_gettop(L);
-	int result = 0;
+	int result = 1;
 	for (int i = 0;i < (int)_list.size();i++)
 	{
 		toluafix_get_function_by_refid(L, _list[i]);
 		for (int index = top-args+1;index <= top;index++) lua_pushvalue(L, index);
-		result = CCLuaEngine::execute(L, args);
+		if (CCLuaEngine::execute(L, args) == 0)
+		{
+			result = 0;
+		}
 	}
 	return result != 0;
 }

@@ -33,8 +33,6 @@ function CCScene:remove(name)
 end
 
 local function runScene(scene,tname)
-	table.insert(sceneStack,currentScene)
-	currentScene = scene
 	local data = transitions[tname]
 	local transition
 	if data then
@@ -56,20 +54,33 @@ end
 function CCScene:run(sname,tname)
 	local scene = scenes[sname]
 	if scene then
+		if #sceneStack > 0 then
+			sceneStack = {}
+		end
+		currentScene = scene
+		runScene(scene,tname)
+	end
+end
+
+function CCScene:forward(sname,tname)
+	local scene = scenes[sname]
+	if scene then
+		table.insert(sceneStack,currentScene)
+		currentScene = scene
 		runScene(scene,tname)
 	end
 end
 
 function CCScene:back(tname)
-	currentScene = nil
 	local lastScene = table.remove(sceneStack)
 	if lastScene then
+		currentScene = lastScene
 		runScene(lastScene,tname)
 	end
 end
 
 function CCScene:clearHistory()
-	currentScene = nil
+	currentScene = CCDirector.currentScene
 	sceneStack = {}
 end
 

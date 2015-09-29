@@ -423,9 +423,6 @@ local function oViewPanel()
 	end
 
 	local function updateSpeed(deltaTime)
-		if _s == oVec2.zero then
-			return
-		end
 		_v = _s / deltaTime
 		_s = oVec2.zero
 	end

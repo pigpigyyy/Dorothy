@@ -212,16 +212,13 @@ panel.init = function(self)
 					opMenu.contentSize = CCSize(60,60)
 					opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
 					opMenu.position = oVec2(winSize.width-40,40)
-					CCDirector.currentScene:addChild(opMenu)
+					CCDirector.currentScene:addChild(opMenu,998)
 					local endBtn = oButton("Back",17,60,false,
 						0,0,
 						function()
 							CCDirector:replaceScene(CCScene:crossFade(0.5,scene),true)
 							if rawget(CCScene,"clearHistory") then
 								CCScene:clearHistory()
-							end
-							for _,name in ipairs(loaded) do
-								package.loaded[name] = nil
 							end
 						end)
 					endBtn.anchor = oVec2.zero
@@ -245,6 +242,12 @@ scene:addChild(panel)
 panel.keypadEnabled = true
 panel:slots("KeyBack",function()
 	CCDirector:stop() -- end is Lua keyword, so this function use name stop
+end)
+
+panel:slots("Entered",function()
+	for _,name in ipairs(loaded) do
+		package.loaded[name] = nil
+	end
 end)
 
 CCDirector.displayStats = true

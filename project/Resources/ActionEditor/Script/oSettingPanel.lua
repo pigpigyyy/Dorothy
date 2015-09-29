@@ -320,26 +320,23 @@ local function oSettingPanel()
 	end
 
 	local function updateSpeed(deltaTime)
-		if _s == oVec2.zero then
-			return
-		end
 		_v = _s / deltaTime
 		_s = oVec2.zero
 	end
 	local function updatePos(deltaTime)
 		local val = winSize.height*2
 		local a = oVec2(_v.x > 0 and -val or val,_v.y > 0 and -val or val)
-		
+
 		local xR = _v.x > 0
 		local yR = _v.y > 0
-		
+
 		_v = _v + a*deltaTime
 		if _v.x < 0 == xR then _v.x = 0;a.x = 0 end
 		if _v.y < 0 == yR then _v.y = 0;a.y = 0 end
-		
+
 		local ds = _v * deltaTime + a*(0.5*deltaTime*deltaTime)
 		setOffset(ds, false)
-		
+
 		if _v == oVec2.zero then
 			if isReseting() then
 				startReset()

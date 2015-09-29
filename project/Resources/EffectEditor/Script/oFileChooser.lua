@@ -379,6 +379,7 @@ local function oFileChooser(addExisted,newEffectName)
 	end
 
 	resetPanel()
+	panel:show()
 	return panel
 end
 

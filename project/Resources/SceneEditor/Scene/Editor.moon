@@ -1,7 +1,7 @@
 Dorothy!
 Class,property,classfield = unpack require "class"
 EditorView = require "View.Scene.Editor"
-SelectionPanel = require "Control.SelectionPanel"
+SelectionPanel = require "Control.Basic.SelectionPanel"
 
 Class
 	__partial: => EditorView!
@@ -35,14 +35,14 @@ Class
 			panelWidth = 10+110*4
 			panelHeight = height*0.6
 			panelNames = {
-				"SpritePanel"
-				"ModelPanel"
-				"BodyPanel"
-				"EffectPanel"
+				--"SpritePanel"
+				--"ModelPanel"
+				--"BodyPanel"
+				--"EffectPanel"
 			}
 			sleep!
 			for name in *panelNames
-				Panel = require "Control."..name
+				Panel = require "Control.Item."..name
 				sleep!
 				panel = Panel {
 					x:width/2
@@ -54,10 +54,18 @@ Class
 				@[name\sub(1,1)\lower!..name\sub(2,-1)] = panel
 				@\addChild panel,1
 
-			EditMenu = require "Control.EditMenu"
+			EditMenu = require "Control.Operation.EditMenu"
 			sleep!
 			@editMenu = EditMenu!
 			@\addChild @editMenu
+
+			ViewPanel = require "View.Control.Operation.ViewPanel"
+			@viewPanel = ViewPanel!
+			@\addChild @viewPanel
+
+			SettingPanel = require "View.Control.Operation.SettingPanel"
+			@settingPanel = SettingPanel!
+			@\addChild @settingPanel
 
 		@\gslot "Editor.ItemChooser",(args)->
 			handler = args[#args]

@@ -223,6 +223,9 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 				startReset()
 			else
 				panel:unschedule()
+				if fading then
+					panel:fadeOut()
+				end
 			end
 		else
 			local ds = _v * deltaTime

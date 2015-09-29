@@ -1,8 +1,0 @@
-<!-- params: X=0, Y=0, Width, Height, File -->
-<ItemView X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }">
-	<Import Module="View.Control.ItemView"/>
-
-	<Item Name="face">
-		<Sprite Name="sprite" X="{ $X }" Y="{ $Y }" Ref="True"/>
-	</Item>
-</ItemView>

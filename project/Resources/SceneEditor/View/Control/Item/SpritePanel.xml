@@ -1,0 +1,13 @@
+<!-- params: X, Y, Width, Height -->
+<ItemPanel Title="Select Sprite" X="{ x }" Y="{ y }" Width="{ width }" Height="{ height }">
+	<Import Module="View.Control.Item.ItemPanel"/>
+	<Import Module="Control.Basic.Button"/>
+
+	<Item Name="opMenu">
+		<Button Name="modeBtn" X="35" Y="35" Width="50" Height="50" FontSize="14" Text="Mode" Ref="True"/>
+		<Button Name="addBtn" X="95" Y="35" Width="50" Height="50" FontSize="16" Text="New" Ref="True"/>
+		<Button Name="delBtn" X="155" Y="35" Width="50" Height="50" FontSize="14" Text="Delete" Ref="True"/>
+		<Button Name="groupBtn" X="215" Y="35" Width="50" Height="50" FontSize="14" Text="Group" Ref="True"/>
+		<Button Name="delGroupBtn" X="275" Y="35" Width="50" Height="50" FontSize="14" Text="Break\nGroup" Ref="True"/>
+	</Item>
+</ItemPanel>

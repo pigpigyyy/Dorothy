@@ -1,0 +1,18 @@
+<!-- params: X, Y, Width, Height, FontSize, Text -->
+<ButtonBase X="{ x }" Y="{ y }" Width="{ width }" Height="{ height }">
+	<Import Module="View.Control.Basic.ButtonBase"/>
+	<Import Module="View.Shape.SolidRect"/>
+	<Import Module="View.Shape.LineRect"/>
+
+	<Item Name="face">
+		<Node PassColor="False">
+			<SolidRect Width="{ width }" Height="{ height }" Color="0x88000000"/>
+		</Node>
+		<LineRect Width="{ width }" Height="{ height }" Color="0xffffffff"/>
+
+		<Script>if text then</Script>
+		<LabelTTF Name="label" X="{ $X }" Y="{ $Y }" Text="{ text }" FontName="Arial" FontSize="{ fontSize }" Ref="True"/>
+		<Script>end</Script>
+	</Item>
+
+</ButtonBase>

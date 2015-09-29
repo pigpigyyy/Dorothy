@@ -1,0 +1,13 @@
+<!-- params: X, Y, Width, Height -->
+<ItemPanel Title="Select Effect" X="{ x }" Y="{ y }" Width="{ width }" Height="{ height }">
+	<Import Module="View.Control.Item.ItemPanel"/>
+	<Import Module="Control.Basic.Button"/>
+
+	<Item Name="opMenu">
+		<Button Name="modeBtn" X="35" Y="35" Width="50" Height="50" FontSize="16" Text="Mode" Ref="True"/>
+		<Button Name="newBtn" X="95" Y="35" Width="50" Height="50" FontSize="16" Text="New" Ref="True"/>
+		<Button Name="addBtn" X="155" Y="35" Width="50" Height="50" FontSize="16" Text="Add" Ref="True"/>
+		<Button Name="delBtn" X="215" Y="35" Width="50" Height="50" FontSize="14" Text="Delete" Ref="True"/>
+		<Button Name="editBtn" X="275" Y="35" Width="50" Height="50" FontSize="16" Text="Edit" Ref="True"/>
+	</Item>
+</ItemPanel>
