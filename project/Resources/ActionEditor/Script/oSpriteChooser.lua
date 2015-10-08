@@ -20,7 +20,12 @@ local oSd = require("oEditor").oSd
 
 local function oSpriteChooser()
 	local winSize = CCDirector.winSize
-	local borderSize = CCSize(670,400)
+	local itemWidth = 100
+	local itemNum = 5
+	while (itemWidth+10)*itemNum+10 > winSize.width and itemNum > 1 do
+		itemNum = itemNum - 1
+	end
+	local borderSize = CCSize((itemWidth+10)*itemNum+10,winSize.height*0.6)
 	local panel = oSelectionPanel(borderSize)
 	local menu = panel.menu
 	local border = panel.border
@@ -64,12 +69,12 @@ local function oSpriteChooser()
 		local names = oCache.Clip:getNames(clipFile)
 		table.insert(names,1,"")
 		for i = 1,#names do
-			y = winSize.height*0.5+halfBH-60-math.floor((i-1)/6)*110
+			y = winSize.height*0.5+halfBH-10-math.floor((i-1)/6)*110
 			local button = oButton(
 				"",
 				0,
 				100,100,
-				winSize.width*0.5-halfBW+60+((i-1)%6)*110,y,
+				winSize.width*0.5-halfBW+10+((i-1)%6)*110,y,
 				function()
 					if panel.selected then
 						cancelButton.enabled = false
@@ -77,6 +82,7 @@ local function oSpriteChooser()
 						panel:selected(names[i])
 					end
 				end)
+			button.anchor = oVec2(0,1)
 			local clipStr = clipFile.."|"..names[i]
 			local sprite = nil
 			if names[i] ~= "" then
@@ -114,7 +120,7 @@ local function oSpriteChooser()
 		menu.opacity = 0
 		menu:runAction(oOpacity(0.3,1))
 
-		local yTo = winSize.height*0.5+halfBH-y+60
+		local yTo = winSize.height*0.5+halfBH-y+110
 		local viewHeight = yTo < borderSize.height and borderSize.height or yTo
 		local viewWidth = borderSize.width
 		local paddingX = 0

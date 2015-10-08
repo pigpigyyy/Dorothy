@@ -2,6 +2,7 @@ Dorothy!
 Class,property,classfield = unpack require "class"
 EditorView = require "View.Scene.Editor"
 SelectionPanel = require "Control.Basic.SelectionPanel"
+Model = require "Data.Model"
 
 Class
 	__partial: => EditorView!

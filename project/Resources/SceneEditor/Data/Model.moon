@@ -50,6 +50,7 @@ DataCreater = (dataDef)->
 		if not data
 			data = {v[1],type(v[2]) == "function" and v[2]! or v[2] for _,v in pairs dataDef}
 		data.typeName = TypeNames[data[1]]
+		data.getItems = => {v[1],k for k,v in pairs dataDef}
 		setmetatable data,dataMt
 		data
 

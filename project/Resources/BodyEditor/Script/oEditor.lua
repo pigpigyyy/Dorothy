@@ -1206,6 +1206,7 @@ end
 oEditor.loadData = function(self,filename)
 	self:clearData()
 	oEditor.currentData = nil
+	if not filename then return end
 	self.bodyData = dofile(oEditor.output..filename)
 	if not self.bodyData then return end
 	oEditor.names = {}

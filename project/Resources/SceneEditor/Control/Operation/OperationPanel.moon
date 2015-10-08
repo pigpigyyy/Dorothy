@@ -11,6 +11,7 @@ Class
 			CCDelay 1
 			oOpacity 0.5,0.4,oEase.InExpo
 		}
+
 		@\slots "ScrollTouchBegan",->
 			@\stopAction fadeOut
 			@opacity = 1

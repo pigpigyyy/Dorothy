@@ -84,9 +84,9 @@ local function oSpriteChooser()
 		end
 		local routine
 		n = n + 1
-		y = borderSize.height-10-itemHeight*0.5-math.floor((n-1)/itemNum)*(itemHeight+10)
+		y = borderSize.height-10-math.floor((n-1)/itemNum)*(itemHeight+10)
 		local button = oButton("Built-In",16,100,100,
-			itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
+			10+((n-1)%itemNum)*(itemWidth+10),y,
 			function()
 				cancelButton.enabled = false
 				oRoutine:remove(routine)
@@ -94,6 +94,7 @@ local function oSpriteChooser()
 				panel:fadeSprites()
 				panel:emit("Selected","")
 			end)
+		button.anchor = oVec2(0,1)
 		menu:addChild(button)
 		routine = oRoutine(once(function()
 			oCache:loadAsync(orderedFiles,function(filename)
@@ -105,11 +106,11 @@ local function oSpriteChooser()
 						local names = oCache.Clip:getNames(filename)
 						for index = 1,#names do
 							n = n + 1
-							y = borderSize.height-10-itemHeight*0.5-math.floor((n-1)/itemNum)*(itemHeight+10)
+							y = borderSize.height-10-math.floor((n-1)/itemNum)*(itemHeight+10)
 							local clipStr = filename.."|"..names[index]
 							local button = oButton("",0,
 								100,100,
-								itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
+								10+((n-1)%itemNum)*(itemWidth+10),y,
 								function()
 									cancelButton.enabled = false
 									oRoutine:remove(routine)
@@ -117,6 +118,7 @@ local function oSpriteChooser()
 									panel:fadeSprites()
 									panel:emit("Selected",clipStr)
 								end)
+							button.anchor = oVec2(0,1)
 							local sprite = nil
 							sprite = CCSprite(clipStr)
 							local contentSize = sprite.contentSize
@@ -173,7 +175,7 @@ local function oSpriteChooser()
 						end
 					end
 				end
-				local yTo = borderSize.height+itemHeight*0.5+10-y
+				local yTo = borderSize.height+itemHeight+10-y
 				local viewHeight = yTo < borderSize.height and borderSize.height or yTo
 				local viewWidth = borderSize.width
 				panel:updateSize(viewWidth,viewHeight)
