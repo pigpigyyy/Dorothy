@@ -252,4 +252,6 @@ end)
 
 CCDirector.displayStats = true
 
+require("test")
+
 CCDirector:run(scene)

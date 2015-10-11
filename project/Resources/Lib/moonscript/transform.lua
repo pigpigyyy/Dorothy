@@ -12,63 +12,16 @@ do
   local _obj_0 = require("moonscript.transform.names")
   NameProxy, LocalName = _obj_0.NameProxy, _obj_0.LocalName
 end
+local Run, transform_last_stm, last_stm, chain_is_stub
+do
+  local _obj_0 = require("moonscript.transform.statements")
+  Run, transform_last_stm, last_stm, chain_is_stub = _obj_0.Run, _obj_0.transform_last_stm, _obj_0.last_stm, _obj_0.chain_is_stub
+end
 local destructure = require("moonscript.transform.destructure")
 local NOOP = {
   "noop"
 }
-local Run, apply_to_last, is_singular, extract_declarations, expand_elseif_assign, constructor_name, with_continue_listener, Transformer, construct_comprehension, Statement, Accumulator, default_accumulator, implicitly_return, Value
-do
-  local _base_0 = {
-    call = function(self, state)
-      return self.fn(state)
-    end
-  }
-  _base_0.__index = _base_0
-  local _class_0 = setmetatable({
-    __init = function(self, fn)
-      self.fn = fn
-      self[1] = "run"
-    end,
-    __base = _base_0,
-    __name = "Run"
-  }, {
-    __index = _base_0,
-    __call = function(cls, ...)
-      local _self_0 = setmetatable({}, _base_0)
-      cls.__init(_self_0, ...)
-      return _self_0
-    end
-  })
-  _base_0.__class = _class_0
-  Run = _class_0
-end
-apply_to_last = function(stms, fn)
-  local last_exp_id = 0
-  for i = #stms, 1, -1 do
-    local stm = stms[i]
-    if stm and mtype(stm) ~= Run then
-      last_exp_id = i
-      break
-    end
-  end
-  return (function()
-    local _accum_0 = { }
-    local _len_0 = 1
-    for i, stm in ipairs(stms) do
-      if i == last_exp_id then
-        _accum_0[_len_0] = {
-          "transform",
-          stm,
-          fn
-        }
-      else
-        _accum_0[_len_0] = stm
-      end
-      _len_0 = _len_0 + 1
-    end
-    return _accum_0
-  end)()
-end
+local is_singular, extract_declarations, expand_elseif_assign, constructor_name, with_continue_listener, Transformer, construct_comprehension, Statement, Accumulator, default_accumulator, implicitly_return, Value
 is_singular = function(body)
   if #body ~= 1 then
     return false
@@ -162,8 +115,18 @@ with_continue_listener = function(body)
       if not (continue_name) then
         return 
       end
+      local last = last_stm(body)
+      local enclose_lines = types.terminating[last and ntype(last)]
       self:put_name(continue_name, nil)
       return self:splice(function(lines)
+        if enclose_lines then
+          lines = {
+            "do",
+            {
+              lines
+            }
+          }
+        end
         return {
           {
             "assign",
@@ -323,7 +286,7 @@ Statement = Transformer({
     return fn(node)
   end,
   root_stms = function(self, body)
-    return apply_to_last(body, implicitly_return(self))
+    return transform_last_stm(body, implicitly_return(self))
   end,
   ["return"] = function(self, node)
     local ret_val = node[2]
@@ -338,7 +301,7 @@ Statement = Transformer({
     if ret_val_type == "chain" or ret_val_type == "comprehension" or ret_val_type == "tblcomprehension" then
       ret_val = Value:transform_once(self, ret_val)
       if ntype(ret_val) == "block_exp" then
-        return build.group(apply_to_last(ret_val[2], function(stm)
+        return build.group(transform_last_stm(ret_val[2], function(stm)
           return {
             "return",
             stm
@@ -521,18 +484,18 @@ Statement = Transformer({
       local _len_0 = 1
       for _index_0 = 1, #names do
         local name = names[_index_0]
-        local dest_val
-        if ntype(name) == "colon_stub" then
-          dest_val = name[2]
+        local dest_name
+        if ntype(name) == "colon" then
+          dest_name = name[2]
         else
-          dest_val = name
+          dest_name = name
         end
         local _value_0 = {
           {
             "key_literal",
             name
           },
-          dest_val
+          dest_name
         }
         _accum_0[_len_0] = _value_0
         _len_0 = _len_0 + 1
@@ -565,7 +528,7 @@ Statement = Transformer({
   end,
   ["do"] = function(self, node, ret)
     if ret then
-      node[2] = apply_to_last(node[2], ret)
+      node[2] = transform_last_stm(node[2], ret)
     end
     return node
   end,
@@ -676,11 +639,11 @@ Statement = Transformer({
     node = expand_elseif_assign(node)
     if ret then
       smart_node(node)
-      node['then'] = apply_to_last(node['then'], ret)
+      node['then'] = transform_last_stm(node['then'], ret)
       for i = 4, #node do
         local case = node[i]
         local body_idx = #node[i]
-        case[body_idx] = apply_to_last(case[body_idx], ret)
+        case[body_idx] = transform_last_stm(case[body_idx], ret)
       end
     end
     return node
@@ -689,6 +652,14 @@ Statement = Transformer({
     local exp, block = unpack(node, 2)
     local copy_scope = true
     local scope_name, named_assign
+    do
+      local last = last_stm(block)
+      if last then
+        if types.terminating[ntype(last)] then
+          ret = false
+        end
+      end
+    end
     if ntype(exp) == "assign" then
       local names, values = unpack(exp, 2)
       local first_name = names[1]
@@ -712,19 +683,18 @@ Statement = Transformer({
       copy_scope = false
     end
     scope_name = scope_name or NameProxy("with")
-    return build["do"]({
+    local out = build["do"]({
+      copy_scope and build.assign_one(scope_name, exp) or NOOP,
+      named_assign or NOOP,
       Run(function(self)
         return self:set("scope_var", scope_name)
       end),
-      copy_scope and build.assign_one(scope_name, exp) or NOOP,
-      named_assign or NOOP,
-      build.group(block),
-      (function()
-        if ret then
-          return ret(scope_name)
-        end
-      end)()
+      unpack(block)
     })
+    if ret then
+      table.insert(out[2], ret(scope_name))
+    end
+    return out
   end,
   foreach = function(self, node, _)
     smart_node(node)
@@ -861,7 +831,7 @@ Statement = Transformer({
         body = case_exps
       end
       if ret then
-        body = apply_to_last(body, ret)
+        body = transform_last_stm(body, ret)
       end
       insert(out, body)
       return out
@@ -1129,29 +1099,21 @@ Statement = Transformer({
           end
           return self:set("super", function(block, chain)
             if chain then
-              local slice
-              do
-                local _accum_0 = { }
-                local _len_0 = 1
-                for _index_0 = 3, #chain do
-                  local item = chain[_index_0]
-                  _accum_0[_len_0] = item
-                  _len_0 = _len_0 + 1
-                end
-                slice = _accum_0
-              end
+              local chain_tail = {
+                unpack(chain, 3)
+              }
               local new_chain = {
                 "chain",
                 parent_cls_name
               }
-              local head = slice[1]
+              local head = chain_tail[1]
               if head == nil then
                 return parent_cls_name
               end
               local _exp_1 = head[1]
               if "call" == _exp_1 then
                 local calling_name = block:get("current_block")
-                slice[1] = {
+                chain_tail[1] = {
                   "call",
                   {
                     "self",
@@ -1170,21 +1132,23 @@ Statement = Transformer({
                   })
                 end
               elseif "colon" == _exp_1 then
-                local call = head[3]
-                insert(new_chain, {
-                  "dot",
-                  head[2]
-                })
-                slice[1] = {
-                  "call",
-                  {
-                    "self",
-                    unpack(call[2])
+                local call = chain_tail[2]
+                if call and call[1] == "call" then
+                  chain_tail[1] = {
+                    "dot",
+                    head[2]
                   }
-                }
+                  chain_tail[2] = {
+                    "call",
+                    {
+                      "self",
+                      unpack(call[2])
+                    }
+                  }
+                end
               end
-              for _index_0 = 1, #slice do
-                local item = slice[_index_0]
+              for _index_0 = 1, #chain_tail do
+                local item = chain_tail[_index_0]
                 insert(new_chain, item)
               end
               return new_chain
@@ -1305,7 +1269,7 @@ do
         body = { }
         val = single_stm
       else
-        body = apply_to_last(body, function(n)
+        body = transform_last_stm(body, function(n)
           if types.is_value(n) then
             return build.assign_one(self.value_name, n)
           else
@@ -1498,7 +1462,7 @@ Value = Transformer({
   end,
   fndef = function(self, node)
     smart_node(node)
-    node.body = apply_to_last(node.body, implicitly_return(self))
+    node.body = transform_last_stm(node.body, implicitly_return(self))
     node.body = {
       Run(function(self)
         return self:listen("varargs", function() end)
@@ -1528,8 +1492,7 @@ Value = Transformer({
     })
   end,
   chain = function(self, node)
-    local stub = node[#node]
-    for i = 3, #node do
+    for i = 2, #node do
       local part = node[i]
       if ntype(part) == "dot" and data.lua_keywords[part[2]] then
         node[i] = {
@@ -1547,10 +1510,11 @@ Value = Transformer({
         "parens",
         node[2]
       }
-    elseif type(stub) == "table" and stub[1] == "colon_stub" then
-      table.remove(node, #node)
+    end
+    if chain_is_stub(node) then
       local base_name = NameProxy("base")
       local fn_name = NameProxy("fn")
+      local colon = table.remove(node)
       local is_super = ntype(node[2]) == "ref" and node[2][2] == "super"
       return build.block_exp({
         build.assign({
@@ -1570,7 +1534,7 @@ Value = Transformer({
               base = base_name,
               {
                 "dot",
-                stub[2]
+                colon[2]
               }
             })
           }
