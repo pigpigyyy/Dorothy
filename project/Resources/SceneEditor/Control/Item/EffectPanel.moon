@@ -5,6 +5,7 @@ EffectView = require "Control.Item.EffectView"
 MessageBox = require "Control.Basic.MessageBox"
 InputBox = require "Control.Basic.InputBox"
 import CompareTable from require "Data.Utils"
+Reference = require "Data.Reference"
 -- [signals]
 -- "Selected",(BodyFile)->
 -- "Hide",->
@@ -196,6 +197,7 @@ Class
 			if not @_selectedItem
 				MessageBox text:"No Effect Selected",okOnly:true
 				return
+			return unless Reference.isRemovable @_selectedItem
 			with MessageBox text:"Delete Effect\n"..@_selectedItem
 				\slots "OK",(result)->
 					return unless result

@@ -1203,6 +1203,28 @@ return {]]
 	oContent:saveToFile(oEditor.output..filename,str)
 end
 
+oEditor.transformData = function(self,bodyData)
+	for _,data in ipairs(bodyData) do
+		data[1] = typeNames[data[1]]
+		local shapeName = data[1]
+		data.set = setFunc
+		data.get = getFunc
+		data.has = hasFunc
+		local subShapes = data[oEditor[shapeName].SubShapes]
+		if subShapes then
+			for _,subShape in ipairs(subShapes) do
+				subShape[1] = typeNames[subShape[1]]
+				local subShapeName = subShape[1]
+				subShape.parent = data
+				subShape.set = setFunc
+				subShape.get = getFunc
+				subShape.has = hasFunc
+			end
+		end
+	end
+	return bodyData
+end
+
 oEditor.loadData = function(self,filename)
 	self:clearData()
 	oEditor.currentData = nil
@@ -1272,6 +1294,7 @@ oEditor.new = function(self, file)
 	oEditor.currentFile = file
 	oEditor:clearData()
 	oEditor:dumpData(oEditor.currentFile)
+	oEditor:emit("Edited",oEditor.currentFile)
 end
 
 -- bodyData[1]: ShapeName

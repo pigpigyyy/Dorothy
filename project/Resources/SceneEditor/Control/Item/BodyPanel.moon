@@ -5,6 +5,7 @@ BodyView = require "Control.Item.BodyView"
 MessageBox = require "Control.Basic.MessageBox"
 InputBox = require "Control.Basic.InputBox"
 import CompareTable from require "Data.Utils"
+Reference = require "Data.Reference"
 -- [signals]
 -- "Selected",(BodyFile)->
 -- "Hide",->
@@ -179,14 +180,16 @@ Class
 			if not @_selectedItem
 				MessageBox text:"No Body Selected",okOnly:true
 				return
+			return unless Reference.isRemovable @_selectedItem
 			with MessageBox text:"Delete Body\n"..@_selectedItem\match("([^\\/]*)%.[^%.\\/]*$")
 				\slots "OK",(result)->
 					return unless result
 					MessageBox(text:"Confirm This\nDeletion")\slots "OK",(result)->
 						return unless result
 						@\runThread ->
+							oCache.Body\unload @_selectedItem
 							oContent\remove @_selectedItem
-							oCache.Model\unload @_selectedItem
+							Reference.removeRef @_selectedItem
 							@\clearSelection!
 							sleep 0.3
 							editor\updateBodies!

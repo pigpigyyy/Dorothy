@@ -4,6 +4,7 @@ ClipEditorView = require "View.Control.Item.ClipEditor"
 InputBox = require "Control.Basic.InputBox"
 MessageBox = require "Control.Basic.MessageBox"
 Packer = require "Data.Packer"
+Reference = require "Data.Reference"
 
 Class
 	__partial: (args)=> ClipEditorView args
@@ -40,14 +41,16 @@ Class
 							clipFile = editor.graphicFolder..name..".clip"
 							oContent\saveToFile editor.gameFullPath..clipFile,xml
 							oCache.Clip\update clipFile,xml
+							emit "Scene.ClipUpdated",clipFile
 							-- save texture
 							texFile = editor.graphicFolder..name..".png"
 							@target\save editor.gameFullPath..texFile,CCImage.PNG
 							oCache.Texture\add @target,texFile
 							-- remove images
 							for image in *images
-								oContent\remove image
 								oCache.Texture\unload image
+								oContent\remove image
+								Reference.removeRef image
 							@\close true
 
 		@cancelBtn\slots "Tapped",->

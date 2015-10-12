@@ -5,6 +5,7 @@ ModelView = require "Control.Item.ModelView"
 MessageBox = require "Control.Basic.MessageBox"
 InputBox = require "Control.Basic.InputBox"
 import CompareTable from require "Data.Utils"
+Reference = require "Data.Reference"
 -- [signals]
 -- "Selected",(modelFile)->
 -- "Hide",->
@@ -181,14 +182,16 @@ Class
 			if not @_selectedItem
 				MessageBox text:"No Model Selected",okOnly:true
 				return
+			return unless Reference.isRemovable @_selectedItem
 			with MessageBox text:"Delete Model\n"..@_selectedItem\match("([^\\/]*)%.[^%.\\/]*$")
 				\slots "OK",(result)->
 					return unless result
 					MessageBox(text:"Confirm This\nDeletion")\slots "OK",(result)->
 						return unless result
 						@\runThread ->
-							oContent\remove @_selectedItem
 							oCache.Model\unload @_selectedItem
+							oContent\remove @_selectedItem
+							Reference.removeRef @_selectedItem
 							@\clearSelection!
 							sleep 0.3
 							editor\updateModels!

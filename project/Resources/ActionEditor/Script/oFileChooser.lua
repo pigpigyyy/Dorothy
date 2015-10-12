@@ -285,6 +285,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 					local modelText = "<A A=\""..clip.."\" D=\"0,0\"><B></B></A>"
 					oContent:saveToFile(model, modelText)
 					oEditor:edit(modelFile,item.clipFile)
+					oEditor:emit("Edited",oEditor.modelFile)
 				end)
 			else
 				opMenu.enabled = false

@@ -210,7 +210,7 @@ panel.init = function(self)
 					local opMenu = CCMenu()
 					opMenu.swallowTouches = true
 					opMenu.contentSize = CCSize(60,60)
-					opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
+					opMenu.touchPriority = CCMenu.DefaultHandlerPriority-998
 					opMenu.position = oVec2(winSize.width-40,40)
 					CCDirector.currentScene:addChild(opMenu,998)
 					local endBtn = oButton("Back",17,60,false,
@@ -251,7 +251,5 @@ panel:slots("Entered",function()
 end)
 
 CCDirector.displayStats = true
-
-require("test")
 
 CCDirector:run(scene)

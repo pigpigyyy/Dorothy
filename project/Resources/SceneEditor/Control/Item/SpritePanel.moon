@@ -5,6 +5,7 @@ TabButton = require "Control.Item.TabButton"
 SpriteView = require "Control.Item.SpriteView"
 MessageBox = require "Control.Basic.MessageBox"
 import CompareTable from require "Data.Utils"
+Reference = require "Data.Reference"
 -- [signals]
 -- "Selected",(spriteStr)->
 -- "Hide",->
@@ -232,6 +233,14 @@ Class
 			images = [image for image,_ in pairs @selectedImages]
 			clips = [clip for clip,_ in pairs @selectedClips]
 			if #images + #clips > 0
+				for image in *images
+					if not Reference.isRemovable image
+						return
+				for clip in *clips
+					if not Reference.isRemovable clip
+						return
+					if not Reference.isRemovable oCache.Clip\getTextureFile clip
+						return
 				with MessageBox text:"Delete "..(#images+#clips == 1 and "item" or "items")
 					\slots "OK",(result)->
 						return unless result
@@ -242,16 +251,19 @@ Class
 									for image in *images
 										sleep!
 										@imageItems[image].isCheckMode = false
-										oContent\remove image
 										oCache.Texture\unload image
+										oContent\remove image
+										Reference.removeRef image
 									for clip in *clips
 										sleep!
 										@clipItems[clip].isCheckMode = false
 										texFile = oCache.Clip\getTextureFile clip
-										oContent\remove clip
-										oContent\remove texFile
 										oCache.Clip\unload clip
+										oContent\remove clip
+										Reference.removeRef clip
 										oCache.Texture\unload texFile
+										oContent\remove texFile
+										Reference.removeRef texFile
 									sleep 0.3
 									editor\updateSprites!
 			else
@@ -260,6 +272,9 @@ Class
 		@groupBtn\slots "Tapped",->
 			images = [image for image,_ in pairs @selectedImages]
 			if #images > 0
+				for image in *images
+					if not Reference.isRemovable image
+						return
 				ClipEditor = require "Control.Item.ClipEditor"
 				clipEditor = ClipEditor :images
 				clipEditor\slots "Grouped",(result)->
@@ -275,6 +290,9 @@ Class
 		@delGroupBtn\slots "Tapped",->
 			clips = [clip for clip,_ in pairs @selectedClips]
 			if #clips > 0
+				for clip in *clips
+					if not Reference.isRemovable clip
+						return
 				msgBox = MessageBox text:"Break Selected\nGroups"
 				msgBox\slots "OK",(result)->
 					return unless result
@@ -312,10 +330,12 @@ Class
 								target\endDraw!
 								sleep!
 								target\save folder..name..".png",CCImage.PNG
-							oCache.Texture\unload texFile
-							oContent\remove texFile
 							oCache.Clip\unload clip
 							oContent\remove clip
+							Reference.removeRef clip
+							oCache.Texture\unload texFile
+							oContent\remove texFile
+							Reference.removeRef texFile
 							@clipItems[clip].isCheckMode = false
 						sleep 0.3
 						editor\updateSprites!

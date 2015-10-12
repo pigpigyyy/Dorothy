@@ -3,6 +3,7 @@ Class,property,classfield = unpack require "class"
 EditorView = require "View.Scene.Editor"
 SelectionPanel = require "Control.Basic.SelectionPanel"
 Model = require "Data.Model"
+Reference = require "Data.Reference"
 
 Class
 	__partial: => EditorView!
@@ -36,10 +37,10 @@ Class
 			panelWidth = 10+110*4
 			panelHeight = height*0.6
 			panelNames = {
-				--"SpritePanel"
-				--"ModelPanel"
-				--"BodyPanel"
-				--"EffectPanel"
+				"SpritePanel"
+				"ModelPanel"
+				"BodyPanel"
+				"EffectPanel"
 			}
 			sleep!
 			for name in *panelNames
@@ -60,11 +61,11 @@ Class
 			@editMenu = EditMenu!
 			@\addChild @editMenu
 
-			ViewPanel = require "View.Control.Operation.ViewPanel"
+			ViewPanel = require "Control.Operation.ViewPanel"
 			@viewPanel = ViewPanel!
 			@\addChild @viewPanel
 
-			SettingPanel = require "View.Control.Operation.SettingPanel"
+			SettingPanel = require "Control.Operation.SettingPanel"
 			@settingPanel = SettingPanel!
 			@\addChild @settingPanel
 
@@ -96,6 +97,11 @@ Class
 					\slots "Selected",(itemType)->
 						chooseItem itemType
 
+		@\gslot "Scene.ModelUpdated",(item)->print "ModelUpdated",item
+		@\gslot "Scene.BodyUpdated",(item)->print "BodyUpdated",item
+		@\gslot "Scene.EffectUpdated",(item)->print "EffectUpdated",item
+		@\gslot "Scene.ClipUpdated",(item)->print "ClipUpdated",item
+
 	updateSprites: =>
 		emit "Scene.LoadSprite", @graphicFolder
 
@@ -124,6 +130,7 @@ Class
 			if @_bodyEditor
 				bodyEditor.input = @gameFullPath
 				bodyEditor.output = @gameFullPath
+			Reference.update!
 
 	gameFullPath: property => @_gameFullPath
 	graphicFolder: property => "Graphic/"
