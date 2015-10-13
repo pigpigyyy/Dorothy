@@ -97,10 +97,11 @@ Class
 					\slots "Selected",(itemType)->
 						chooseItem itemType
 
-		@\gslot "Scene.ModelUpdated",(item)->print "ModelUpdated",item
-		@\gslot "Scene.BodyUpdated",(item)->print "BodyUpdated",item
-		@\gslot "Scene.EffectUpdated",(item)->print "EffectUpdated",item
-		@\gslot "Scene.ClipUpdated",(item)->print "ClipUpdated",item
+		refreshRef = (item)-> Reference.refreshRef item
+		@\gslot "Scene.ModelUpdated",refreshRef
+		@\gslot "Scene.BodyUpdated",refreshRef
+		@\gslot "Scene.EffectUpdated",refreshRef
+		@\gslot "Scene.ClipUpdated",refreshRef
 
 	updateSprites: =>
 		emit "Scene.LoadSprite", @graphicFolder

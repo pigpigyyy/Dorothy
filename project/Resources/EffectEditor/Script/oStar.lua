@@ -2,9 +2,8 @@ local oVec2 = require("oVec2")
 local CCDrawNode = require("CCDrawNode")
 local ccColor4 = require("ccColor4")
 
-local function oStar(radius,color,borderRadius,borderColor)
-	borderRadius = borderRadius or 0
-	borderColor = borderColor or color
+local function oStar(radius,offset)
+	offset = offset or oVec2.zero
 	local a = math.rad(36)
 	local c = math.rad(72)
 	local f = math.sin(a)*math.tan(c)+math.cos(a)
@@ -16,16 +15,12 @@ local function oStar(radius,color,borderRadius,borderColor)
 	for i = 9,0,-1 do
 		local angle = i*a
 		if i%2 == 1 then
-			table.insert(vs,oVec2(r*math.sin(angle),r*math.cos(angle)))
+			table.insert(vs,oVec2(r*math.sin(angle),r*math.cos(angle))+offset)
 		else
-			table.insert(vs,oVec2(R*math.sin(angle),R*math.cos(angle)))
+			table.insert(vs,oVec2(R*math.sin(angle),R*math.cos(angle))+offset)
 		end
 	end
-
-	local drawNode = CCDrawNode()
-	drawNode:drawPolygon(vs,ccColor4(color),borderRadius,ccColor4(borderColor))
-
-	return drawNode
+	return vs
 end
 
 return oStar

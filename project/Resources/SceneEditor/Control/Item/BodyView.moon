@@ -15,7 +15,8 @@ Class
 		@_loaded = false
 		@_checked = false
 		@file = file
-		@star = with oStar 12,0x66ff0088,0.5,0xffff0088
+		@star = with CCDrawNode!
+			\drawPolygon oStar(12),ccColor4(0x66ff0088),0.5,ccColor4(0xffff0088)
 			.visible = false
 			.position = oVec2 width-20,20
 		@face\addChild @star

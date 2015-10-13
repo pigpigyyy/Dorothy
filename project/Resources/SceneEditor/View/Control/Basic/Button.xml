@@ -6,7 +6,7 @@
 
 	<Item Name="face">
 		<Node PassColor="False">
-			<SolidRect Width="{ width }" Height="{ height }" Color="0x88000000"/>
+			<SolidRect Width="{ width }" Height="{ height }" Color="0x66000000"/>
 		</Node>
 		<LineRect Width="{ width }" Height="{ height }" Color="0xffffffff"/>
 

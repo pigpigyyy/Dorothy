@@ -4,6 +4,7 @@
 	SwallowTouches="True" TouchEnabled="True"
 	TouchPriority="{ editor.touchLevel10 }">
 	<Import Module="Control.Basic.CircleButton"/>
+	<Import Module="Control.Basic.ScrollArea"/>
 
 	<DrawNode Name="box" X="{ $X }" Y="{ $Y }" Ref="True">
 		<Polygon FillColor="0xe5100000" BorderWidth="0.5" BorderColor="0x88ffafaf">
@@ -13,10 +14,14 @@
 			<Vec2 X="-130" Y="110"/>
 		</Polygon>
 
-		<LabelTTF Name="title" Text="{ text }" FontName="Arial" FontSize="24" X="0" Y="40" Color="0x00ffff" AntiAlias="False"/>
+		<ScrollArea Name="scrollArea" X="0" Y="45" Width="240" Height="90" PaddingX="50" PaddingY="50" TouchPriority="{ editor.touchLevel10-1 }" Ref="True">
+			<Item Name="view">
+				<LabelTTF Name="title" Text="{ text }" FontName="Arial" FontSize="24" X="{ $X }" Y="{ $Y }" Color="0x00ffff" AntiAlias="False" Ref="True"/>
+			</Item>
+		</ScrollArea>
 
-		<Menu Name="opMenu" Y="-40" Width="130" Height="60" SwallowTouches="True"
-			TouchPriority="{ editor.touchLevel10-1 }" Ref="True">
+		<Menu Name="opMenu" Y="-45" Width="130" Height="60" SwallowTouches="True"
+			TouchPriority="{ editor.touchLevel10-2 }" Ref="True">
 			<CircleButton Name="okBtn" X="{ okOnly and $X or 30 }" Y="30" Radius="30" FontSize="17" Text="OK" Ref="True">
 				<DrawNode X="30" Y="30">
 					<Dot X="0" Y="0" Radius="30" Color="0x22ffffff"/>

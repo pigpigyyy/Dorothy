@@ -41,7 +41,8 @@ local function oViewArea()
 --[[
 	local winSize = CCDirector.winSize
 	local radius = 50
-	local star = oStar(radius,ccColor4(0x6600ffff),0.5,ccColor4(0xff00ffff))
+	local star = CCDrawNode()
+	star:drawPolygon(oStar(radius),ccColor4(0x6600ffff),0.5,ccColor4(0xff00ffff))
 	star.position = oVec2(radius,radius)
 	local renderTarget = CCRenderTarget(radius*2,radius*2)
 	renderTarget:beginDraw(ccColor4(0))

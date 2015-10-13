@@ -10,6 +10,7 @@ Class
 	__init: (args)=>
 		@_text = args.text
 		@label.texture.antiAlias = false
+
 	text: property => @_text,
 		(value)=>
 			@_text = value

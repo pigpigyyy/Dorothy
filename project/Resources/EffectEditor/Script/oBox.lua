@@ -33,7 +33,7 @@ local oBox = class({
 	__init = function(self,text,_,isInput)
 		local w = CCDirector.winSize.width*0.5
 		local h = CCDirector.winSize.height*0.5
-		local size = isInput and 125 or 90
+		local size = isInput and 145 or 90
 
 		local mask = CCLayer()
 		mask.anchor = oVec2.zero

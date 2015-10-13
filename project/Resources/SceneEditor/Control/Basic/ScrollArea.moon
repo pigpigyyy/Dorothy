@@ -186,8 +186,7 @@ Class
 			
 			dX = newPosX - deltaX
 			dY = newPosY - deltaY
-			offset = oVec2(dX,dY)
-			setOffset offset,false
+			setOffset oVec2(dX,dY),false
 
 		@updateViewSize = (wView,hView)=>
 			{:width,:height} = @

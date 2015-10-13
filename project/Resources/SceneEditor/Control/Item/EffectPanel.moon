@@ -18,14 +18,14 @@ Class
 		@effectItems = {}
 		@_selectedItem = nil
 		@selected = (item)->
-			file = item.file
+			effectName = item.effect
 			if @_isCheckMode
-				@\clearSelection! if @_selectedItem ~= file
+				@\clearSelection! if @_selectedItem ~= effectName
 				item.checked = not item.checked
-				@_selectedItem = if item.checked then file else nil
+				@_selectedItem = if item.checked then effectName else nil
 			elseif item.isLoaded
 				@\hide!
-				emit "Scene.EffectSelected",file
+				emit "Scene.EffectSelected",effectName
 			else
 				MessageBox text:"Broken Effect\nWith Data Error",okOnly:true
 
@@ -89,6 +89,7 @@ Class
 				file\close()
 
 				{:width,:height} = @scrollArea
+				itemHeight = 40
 				itemWidth = (@scrollArea.width-30)/2
 
 				if @effects
@@ -101,8 +102,9 @@ Class
 					for effect in *effectsToAdd
 						viewItem = EffectView {
 							width: itemWidth
-							height: 40
-							file: effect
+							height: itemHeight
+							effect: effect
+							file: effectFiles[effect]
 						}
 						viewItem.visible = false
 						viewItem\slots "Selected",@selected
@@ -120,8 +122,9 @@ Class
 					for effect in *effects
 						viewItem = EffectView {
 							width: itemWidth
-							height: 40
-							file: effect
+							height: itemHeight
+							effect: effect
+							file: effectFiles[effect]
 						}
 						viewItem\slots "Selected",@selected
 						viewItem.visible = false
@@ -141,7 +144,7 @@ Class
 				for i,effect in ipairs @effects
 					i -= 1
 					x = ((itemWidth/2+10))+(i%itemCount)*(itemWidth+10)
-					y = startY-30-math.floor(i/itemCount)*50
+					y = startY-(itemHeight/2+10)-math.floor(i/itemCount)*(itemHeight+10)
 					viewItem = @effectItems[effect]
 					viewItem.position = oVec2(x,y) + @scrollArea.offset
 					if viewItem.opacity == 0
@@ -150,10 +153,11 @@ Class
 							oOpacity 0.3,1
 						}
 						i += 1
-				y -= 30 if #@effects > 0
+				y -= (itemHeight/2+10) if #@effects > 0
 				@scrollArea.viewSize = CCSize width,height-y
 
 		@modeBtn\slots "Tapped",->
+			return if Reference.isUpdating!
 			@isCheckMode = not @isCheckMode
 
 		@newBtn\slots "Tapped",->

@@ -2,7 +2,7 @@
 <MenuItem Name="menuItem" X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }" Color="0x00ffff">
 	<!-- Animations -->
 	<Action>
-		<Sequence Name="scale">
+		<Sequence Name="scale" Ref="True">
 			<Spawn>
 				<Opacity Alpha="1"/>
 				<Scale X="0.3" Y="0.3"/>
@@ -10,7 +10,7 @@
 			<Scale Time="0.3" X="1" Y="1" Ease="OutBack"/>
 		</Sequence>
 
-		<Opacity Name="fade" Time="0.3" Alpha="0.4" Ease="InExpo"/>
+		<Opacity Name="fade" Time="0.3" Alpha="0.4" Ease="InExpo" Ref="True"/>
 	</Action>
 
 	<!-- Face Node -->

@@ -157,6 +157,7 @@ Class
 				@scrollArea.viewSize = CCSize width,height-y
 
 		@modeBtn\slots "Tapped",->
+			return if Reference.isUpdating!
 			@isCheckMode = not @isCheckMode
 
 		@addBtn\slots "Tapped",->

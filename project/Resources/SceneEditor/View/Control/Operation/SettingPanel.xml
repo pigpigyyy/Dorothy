@@ -1,4 +1,7 @@
-<OperationPanel X="{ @R-10-80 }" Y="{ @B+10+(@H-30)*220/(600-30)/2 }" Width="160" Height="{ (@H-30)*220/(600-30) }">
+<OperationPanel X="{ @R-10-90 }" Y="{ @B+10+(@H-30)*220/(600-30)/2 }" Width="180" Height="{ (@H-30)*220/(600-30) }">
 	<Import Module="Control.Operation.OperationPanel"/>
-
+	
+	<Item Name="menu">
+		<LabelTTF Name="title" X="{ $X }" Y="{ $T-20 }" Text="title" FontName="Arial" FontSize="24" Color="0x00ffff" Opacity="0.5" AntiAlias="False"/>
+	</Item>
 </OperationPanel>

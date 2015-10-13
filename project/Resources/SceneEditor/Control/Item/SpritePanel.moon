@@ -224,6 +224,7 @@ Class
 		@delGroupBtn.visible = false
 
 		@modeBtn\slots "Tapped",->
+			return if Reference.isUpdating!
 			@\_setCheckMode not @_isSelecting
 
 		@addBtn\slots "Tapped",->
@@ -239,7 +240,9 @@ Class
 				for clip in *clips
 					if not Reference.isRemovable clip
 						return
-					if not Reference.isRemovable oCache.Clip\getTextureFile clip
+					texFile = oCache.Clip\getTextureFile clip
+					texFile = texFile\gsub editor.gameFullPath,""
+					if #Reference.getUpRefs(texFile) > 1 and not Reference.isRemovable texFile
 						return
 				with MessageBox text:"Delete "..(#images+#clips == 1 and "item" or "items")
 					\slots "OK",(result)->
@@ -292,6 +295,10 @@ Class
 			if #clips > 0
 				for clip in *clips
 					if not Reference.isRemovable clip
+						return
+					texFile = oCache.Clip\getTextureFile clip
+					texFile = texFile\gsub editor.gameFullPath,""
+					if #Reference.getUpRefs(texFile) > 1 and not Reference.isRemovable texFile
 						return
 				msgBox = MessageBox text:"Break Selected\nGroups"
 				msgBox\slots "OK",(result)->

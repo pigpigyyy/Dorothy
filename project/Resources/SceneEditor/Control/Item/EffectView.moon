@@ -10,11 +10,13 @@ oStar = require "EffectEditor.Script.oStar"
 Class
 	__partial: (args)=> ItemViewView args
 	__init: (args)=>
-		{:width,:height,:file} = args
+		{:width,:height,:file,:effect} = args
 		@_checked = false
 		@isLoaded = true
 		@file = file
-		@star = with oStar 12,0x66ff0088,0.5,0xffff0088
+		@effect = effect
+		@star = with CCDrawNode!
+			\drawPolygon oStar(12),ccColor4(0x66ff0088),0.5,ccColor4(0xffff0088)
 			.visible = false
 			.position = oVec2 width-20,20
 		@face\addChild @star
@@ -22,11 +24,39 @@ Class
 		@\slots "Tapped",->
 			@\emit "Selected",@
 
-		@face\addChild with CCLabelTTF file,"Arial",16
+		label = with CCLabelTTF effect,"Arial",16
 			.position = oVec2 width/2,height/2
 			.texture.antiAlias = false
 			.color = ccColor3 0x00ffff
 			\perform oOpacity 0.3,1
+		@face\addChild label
+
+		if file\sub(-3,-1)\lower! == "par"
+			@face\addChild with CCDrawNode!
+				\drawPolygon oStar(10,oVec2 label.positionX-label.width/2-10-2,label.positionY-label.height/2+8),ccColor4(0x6600ffff),0.5,ccColor4(0xff00ffff)
+				\drawPolygon oStar(10,oVec2 label.positionX-label.width/2-10-6,label.positionY-label.height/2+8),ccColor4(0xbb00ffff),0.5,ccColor4(0xff00ffff)
+				\drawPolygon oStar(10,oVec2 label.positionX-label.width/2-10-10,label.positionY-label.height/2+8),ccColor4(0xff00ffff),0.5,ccColor4(0xff00ffff)
+		else
+			@face\addChild with CCDrawNode!
+				.position = oVec2 label.positionX-label.width/2-5-5,label.positionY-label.height/2-2
+				\drawPolygon {
+					oVec2 0,0
+					oVec2 0,20
+					oVec2 5,20
+					oVec2 5,0
+				}, ccColor4(0x4400ffff),0.5,ccColor4(0xff00ffff)
+				\drawPolygon {
+					oVec2 0-7,0
+					oVec2 0-7,20
+					oVec2 5-7,20
+					oVec2 5-7,0
+				}, ccColor4(0x9900ffff),0.5,ccColor4(0xff00ffff)
+				\drawPolygon {
+					oVec2 0-14,0
+					oVec2 0-14,20
+					oVec2 5-14,20
+					oVec2 5-14,0
+				}, ccColor4(0xff00ffff),0.5,ccColor4(0xff00ffff)
 
 	checked: property => @_checked,
 		(value)=>
