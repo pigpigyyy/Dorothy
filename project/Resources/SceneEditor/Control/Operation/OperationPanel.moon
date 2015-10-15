@@ -27,4 +27,5 @@ Class
 				child.position += delta
 				{:positionX,:positionY,:width,:height} = child
 				itemRect\set positionX-width/2,positionY-height/2,width,height
-				child.visible = contentRect\intersectsRect itemRect
+				if width ~= 0 and height ~= 0
+					child.visible = contentRect\intersectsRect itemRect

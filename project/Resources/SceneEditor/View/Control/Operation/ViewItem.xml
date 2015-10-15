@@ -1,0 +1,26 @@
+<!-- params: X, Y, Width, Height, Text -->
+<MenuItem Name="menuItem" X="{ x }" Y="{ y }" Width="{ width }" Height="{ height }">
+	<LabelTTF Name="label" X="{ $X }" Y="{ $Y }" Text="{ text }" FontName="Arial" FontSize="16" Ref="True"/>
+	<Line Name="border" Color="0xffffff" X="{ $X }" Y="{ $Y }" Ref="True">
+		<Vec2 X="{ -width/2 }" Y="{ height/2 }"/>
+		<Vec2 X="{ width/2 }" Y="{ height/2 }"/>
+		<Vec2 X="{ width/2 }" Y="{ -height/2 }"/>
+		<Vec2 X="{ -width/2 }" Y="{ -height/2 }"/>
+		<Vec2 X="{ -width/2 }" Y="{ height/2 }"/>
+	</Line>
+	<DrawNode Name="borderBold" X="{ $X }" Y="{ $Y }" Visible="False" Ref="True">
+		<Polygon BorderColor="0xffffffff" BorderWidth="1" FillColor="0x0">
+			<Vec2 X="{ -width/2 }" Y="{ height/2 }"/>
+			<Vec2 X="{ width/2 }" Y="{ height/2 }"/>
+			<Vec2 X="{ width/2 }" Y="{ -height/2 }"/>
+			<Vec2 X="{ -width/2 }" Y="{ -height/2 }"/>
+		</Polygon>
+	</DrawNode>
+	<Action>
+		<Scale Name="scale" Time="0.25" X="1" Y="1" Ease="OutBack" Ref="True"/>
+		<Sequence Name="fade" Ref="True">
+			<Opacity Time="0.5" Alpha="0"/>
+			<Hide/>
+		</Sequence>
+	</Action>
+</MenuItem>

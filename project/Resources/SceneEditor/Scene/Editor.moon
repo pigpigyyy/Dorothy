@@ -37,10 +37,10 @@ Class
 			panelWidth = 10+110*4
 			panelHeight = height*0.6
 			panelNames = {
-				"SpritePanel"
-				"ModelPanel"
-				"BodyPanel"
-				"EffectPanel"
+				--"SpritePanel"
+				--"ModelPanel"
+				--"BodyPanel"
+				--"EffectPanel"
 			}
 			sleep!
 			for name in *panelNames
@@ -97,11 +97,23 @@ Class
 					\slots "Selected",(itemType)->
 						chooseItem itemType
 
-		refreshRef = (item)-> Reference.refreshRef item
+		refreshRef = Reference.refreshRef
 		@\gslot "Scene.ModelUpdated",refreshRef
 		@\gslot "Scene.BodyUpdated",refreshRef
 		@\gslot "Scene.EffectUpdated",refreshRef
 		@\gslot "Scene.ClipUpdated",refreshRef
+
+		thread ->
+			sleep 1
+			worldDef = Model.PlatformWorld!
+			worldDef.camera = Model.Camera!
+			worldDef.ui = Model.UILayer!
+			layerDef = Model.Layer!
+			bodyDef = Model.Body!
+			modelDef = Model.Model!
+			layerDef.children = {bodyDef,modelDef}
+			worldDef.children = {layerDef}
+			emit "Editor.DataLoaded",worldDef
 
 	updateSprites: =>
 		emit "Scene.LoadSprite", @graphicFolder

@@ -1,5 +1,7 @@
 Dorothy!
 
+oBody = require "oBodyEx"
+
 Point = (x,y)-> -> oVec2(x,y)
 Simulation = (level)->
 	switch level
@@ -106,9 +108,11 @@ Items =
 		gravity:{2,Point(0,-10)}
 		contact:{3,false}
 		simulation:{4,1}
-		children:{5,false}
+		camera:{5,false}
+		ui:{6,false}
+		children:{7,false}
 		-- design
-		outline:{6,true}
+		outline:{8,true}
 		-- helper
 		create:=>
 			world = with oPlatformWorld!
@@ -118,6 +122,7 @@ Items =
 			items = {:world}
 			Contact world,@contact
 			Children world,@children
+			@ui\create! if @ui
 			tmpItems = items
 			items = nil
 			tmpItems
@@ -128,7 +133,7 @@ Items =
 		children:{2,false}
 		-- helper
 		create:=>
-			layer = items.World.UILayer
+			layer = items.world.UILayer
 			Children layer,@children
 			nil
 
