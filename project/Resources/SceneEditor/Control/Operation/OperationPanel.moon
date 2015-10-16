@@ -19,6 +19,12 @@ Class
 		@\slots "ScrollEnd",->
 			@perform fadeOut
 
+		@\slots "ScrollStart",->
+			@menu.enabled = false
+
+		@\slots "ScrollTouchEnded",->
+			@menu.enabled = true
+
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
 		@\slots "Scrolled",(delta)->

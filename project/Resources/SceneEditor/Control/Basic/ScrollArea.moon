@@ -192,7 +192,6 @@ Class
 			{:width,:height} = @
 			viewWidth = math.max wView,width
 			viewHeight = math.max hView,height
-			print viewWidth,viewHeight
 			moveY = viewHeight - height
 			moveX = viewWidth - width
 			@scroll oVec2 0,0
