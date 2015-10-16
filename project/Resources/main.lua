@@ -1,6 +1,6 @@
 Dorothy()
 local winSize = CCDirector.winSize
-if winSize.width > 1000 and winSize.height > 960 then
+if winSize.width >= 1280 and winSize.height >= 960 then
 	CCView:setDesignResolution(winSize.width/2,winSize.height/2,CCView.ExactFit)
 end
 

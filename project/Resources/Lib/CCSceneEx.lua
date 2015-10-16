@@ -19,6 +19,7 @@ function CCScene:add(name,scene)
 	scenes[name] = scene
 	scene:slots("Cleanup",function()
 		scenes[name] = nil
+		print("Cleanup",name)
 	end)
 end
 

@@ -7,7 +7,6 @@
 	<Item Name="view">
 		<SolidRect Width="{ $W }" Height="{ $H }" Color="0xee100000"/>
 		<LineRect X="-1" Y="-1" Width="{ $W+2 }" Height="{ $H+2 }" Color="0x88ffafaf"/>
-	
 		<Menu Name="menu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.touchLevel7 }" Ref="True"/>
 	</Item>
 

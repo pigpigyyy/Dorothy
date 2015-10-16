@@ -17,6 +17,7 @@ local CCTargetPlatform = require("CCTargetPlatform")
 local CCLayerColor = require("CCLayerColor")
 local ccColor4 = require("ccColor4")
 local oContent = require("oContent")
+local tolua = require("tolua")
 
 oContent:addSearchPath("Lib")
 local moonscript = require("moonscript")
@@ -82,6 +83,7 @@ opMenu.touchPriority = CCMenu.DefaultHandlerPriority-4
 opMenu.anchor = oVec2.zero
 opMenu.position = oVec2(10,10)
 panel:addChild(opMenu)
+local startUboxItems = {}
 local gcButton = oButton("GC",17,60,false,
 	0,0,
 	function()
@@ -94,16 +96,36 @@ local gcButton = oButton("GC",17,60,false,
 		cclog("Lua Count: %d",CCObject.luaRefCount)
 		cclog("Callback Count: %d", CCObject.callRefCount)
 		local size = oCache.Pool.size
-		cclog("Pool alloc : %.2f MB(%d KB)",size/1024/1024,size/1024)
+		cclog("Pool alloc: %.2f MB(%d KB)",size/1024/1024,size/1024)
 		size = oCache.Pool:collect()
-		cclog("Pool collect : %.2f MB(%d KB)",size/1024/1024,size/1024)
+		cclog("Pool collect: %.2f MB(%d KB)",size/1024/1024,size/1024)
+		--[[[
 		print("Loaded:")
 		for k,_ in pairs(package.loaded) do
 			print(k)
+		end]]
+		local itemMap = {}
+		for _,item in pairs(ubox()) do
+			local typeName = tolua.type(item)
+			if not itemMap[typeName] then
+				itemMap[typeName] = 0
+			end
+			itemMap[typeName] = itemMap[typeName]+1
 		end
-		--[[
-		for i,item in pairs(ubox()) do
-			print(i,item)
+		print("Possibly Leaked Objects:")
+		local leak = false
+		for k,v in pairs(itemMap) do
+			if not startUboxItems[k] then
+				startUboxItems[k] = 0
+			end
+			local count = itemMap[k] - startUboxItems[k]
+			if count > 0 then
+				leak = true
+				print(k,count)
+			end
+		end
+		if not leak then
+			print("None!")
 		end
 		--]]
 		--[[for k,v in pairs(_G) do
@@ -233,6 +255,15 @@ panel.init = function(self)
 	local paddingX = 0
 	local paddingY = 100
 	panel:reset(viewWidth,viewHeight,paddingX,paddingY)
+
+	collectgarbage()
+	for _,item in pairs(ubox()) do
+		local typeName = tolua.type(item)
+		if not startUboxItems[typeName] then
+			startUboxItems[typeName] = 0
+		end
+		startUboxItems[typeName] = startUboxItems[typeName]+1
+	end
 end
 
 panel:show()

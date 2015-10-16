@@ -17,6 +17,12 @@ local function __call(self,...)
 			for k,v in pairs(peer) do
 				inst[k] = v
 			end
+			local peermt = getmetatable(peer)
+			if peermt then
+				-- chaining partial class`s metatable
+				local selfmt = getmetatable(self)
+				setmetatable(selfmt,peermt)
+			end
 		end
 		tolua.setpeer(c_inst,inst)
 		inst[0] = c_inst

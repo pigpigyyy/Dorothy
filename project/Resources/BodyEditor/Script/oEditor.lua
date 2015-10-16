@@ -55,8 +55,10 @@ oEditor.world.scheduler = oEditor.worldScheduler
 oEditor.world.showDebug = true
 oEditor.world:setShouldContact(0,0,true)
 CCDirector.scheduler:shedule(oEditor.worldScheduler)
-oEditor.world:slots("Exited",function()
-	--CCDirector.scheduler:unshedule(oEditor.worldScheduler)
+
+oEditor:slots("Cleanup",function()
+	CCDirector.scheduler:unshedule(oEditor.worldScheduler)
+	oEditor:clearData()
 end)
 
 local worldNode = CCNode()
@@ -1354,10 +1356,6 @@ oRoutine(once(function()
 		oEditor.isLoaded = true
 	end
 end))
-
-oEditor:slots("Cleanup",function()
-	oEditor:clearData()
-end)
 
 oEditor:slots("Entering",function()
 	oRoutine(once(function()

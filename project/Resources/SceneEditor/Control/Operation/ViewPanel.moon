@@ -32,7 +32,7 @@ Class
 				item.itemData = data
 				@menu\addChild item
 				right = math.max x+itemW/2+10,right
-				bottom = math.max y+itemH/2+10,bottom
+				bottom = math.max height-y+itemH/2+10,bottom
 				@items[data] = item
 
 			getChildCount = (parent)->
@@ -45,9 +45,17 @@ Class
 				else
 					0
 
-			drawVLine = (itemData,initCount)->
-				initCount or= 0
-				itemCount = initCount + getChildCount itemData
+			drawVLine = (itemData,itemCount)->
+				itemCount or= 0
+				childCount = 0
+				children = itemData.children
+				if children
+					for i = 1,#children-1
+						itemCount += 1
+						itemCount += getChildCount children[i]
+					itemCount += 1
+					childCount = itemCount
+					childCount += getChildCount children[#children]
 				if itemCount > 0
 					item = @items[itemData]
 					startX = item.positionX-itemW/2+10
@@ -55,7 +63,8 @@ Class
 					endX = startX
 					endY = startY-(itemH/2+10)-(itemCount-1)*(itemH+10)
 					drawNode\drawSegment oVec2(startX,startY),oVec2(endX,endY),0.5,ccColor4!
-					itemH/2+endY-endX
+					endY = startY-(itemH/2+10)-(childCount-1)*(itemH+10)
+					itemH/2+startY-endY
 				else
 					0
 
@@ -83,7 +92,9 @@ Class
 					if data.children
 						for child in *data.children
 							y -= (10+itemH)
-							y -= traverseData child,x,y
+							d = traverseData child,x,y
+							print "layer",d
+							y -= d
 					dV
 				else
 					addItem x,y,itemData.name,itemData
@@ -94,8 +105,11 @@ Class
 						for child in *itemData.children
 							y -= (10+itemH)
 							y -= traverseData child,x,y
+					print "dV",dV
 					dV
 
 			itemX = 10+itemW/2
 			itemY = height-10-itemH/2
 			traverseData data,itemX,itemY
+
+			@viewSize = CCSize right,bottom

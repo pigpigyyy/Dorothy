@@ -14,11 +14,14 @@ Class
 		@_bodyEditor = nil
 		@_effectEditor = nil
 		@game = "Test"
+		@initRoutine = nil
 
 		_G["editor"] = @
 		builtin["editor"] = @
 
 		@\slots "Cleanup",->
+			Reference.stopUpdate!
+			oRoutine\remove @initRoutine if @initRoutine
 			_G["editor"] = nil
 			builtin["editor"] = nil
 			oCache\clear!
@@ -32,15 +35,15 @@ Class
 		for i = 1,10
 			@["touchLevel"..tostring(i)] = CCMenu.DefaultHandlerPriority-i*10
 
-		thread ->
+		@initRoutine = thread ->
 			{:width,:height} = CCDirector.winSize
 			panelWidth = 10+110*4
 			panelHeight = height*0.6
 			panelNames = {
-				--"SpritePanel"
-				--"ModelPanel"
-				--"BodyPanel"
-				--"EffectPanel"
+				"SpritePanel"
+				"ModelPanel"
+				"BodyPanel"
+				"EffectPanel"
 			}
 			sleep!
 			for name in *panelNames
@@ -111,8 +114,10 @@ Class
 			layerDef = Model.Layer!
 			bodyDef = Model.Body!
 			modelDef = Model.Model!
-			layerDef.children = {bodyDef,modelDef}
-			worldDef.children = {layerDef}
+			layerDef.children = {bodyDef,modelDef,Model.Sprite!}
+			layerDef1 = Model.Layer!
+			layerDef1.name = "layer1"
+			worldDef.children = {layerDef,layerDef1}
 			emit "Editor.DataLoaded",worldDef
 
 	updateSprites: =>
@@ -143,7 +148,7 @@ Class
 			if @_bodyEditor
 				bodyEditor.input = @gameFullPath
 				bodyEditor.output = @gameFullPath
-			Reference.update!
+			--Reference.update!
 
 	gameFullPath: property => @_gameFullPath
 	graphicFolder: property => "Graphic/"

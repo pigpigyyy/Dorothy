@@ -70,6 +70,7 @@ updateItemRef = (filename)->
 					upRefMap[texFile] = {}
 				table.insert upRefMap[texFile],parFile
 
+routine = nil
 update = ()->
 	return if updating
 	visitResource = (path)->
@@ -85,7 +86,7 @@ update = ()->
 			if folder ~= "." and folder ~= ".."
 				visitResource path.."/"..folder
 	updating = true
-	thread ->
+	routine = thread ->
 		downRefMap = {}
 		upRefMap = {}
 		resPath = editor.gameFullPath\gsub("[\\/]*$","")
@@ -95,6 +96,10 @@ update = ()->
 		collectgarbage!
 		sleep 0.1
 		oCache\removeUnused!
+		routine = nil
+
+stopUpdate = ()->
+	oRoutine\remove routine if routine
 
 isUpdating = ()->
 	if updating
@@ -145,6 +150,7 @@ removeRef = (item)->
 
 {
 	:update
+	:stopUpdate
 	:getUpRefs
 	:getDownRefs
 	:isRemovable
