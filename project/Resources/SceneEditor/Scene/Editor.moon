@@ -120,7 +120,18 @@ Class
 			layerDef.children = {bodyDef,modelDef,Model.Sprite!}
 			layerDef1 = Model.Layer!
 			layerDef1.name = "layer1"
-			worldDef.children = {layerDef,layerDef1}
+			layerDef2 = Model.Layer!
+			layerDef2.name = "layer2"
+			layerDef3 = Model.Layer!
+			layerDef3.name = "layer3"
+			layerDef4 = Model.Layer!
+			layerDef4.name = "layer4"
+			layerDef5 = Model.Layer!
+			layerDef5.name = "layer5"
+			bodyDef = Model.Body!
+			bodyDef.name = "body1"
+			layerDef5.children = {bodyDef}
+			worldDef.children = {layerDef,layerDef1,layerDef2,layerDef3,layerDef4,layerDef5}
 			@sceneData = worldDef
 			emit "Scene.DataLoaded",worldDef
 

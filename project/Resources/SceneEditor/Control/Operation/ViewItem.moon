@@ -26,3 +26,19 @@ Class
 				@color = ccColor3 0xffffff
 				@cascadeOpacity = true
 				@borderBold\runAction @fade
+
+	fold: property => @_fold,
+		(value)=>
+			@_fold = value
+			if value
+				@\addChild with CCDrawNode!
+					.tag = 1
+					.position = oVec2 @width-7.5,@height-7.5
+					\drawPolygon {
+						oVec2 -2.5,-2.5
+						oVec2 2.5,-2.5
+						oVec2 2.5,2.5
+						oVec2 -2.5,2.5
+					},ccColor4(0x88ffffff),0.5,ccColor4!
+			else
+				@\removeChildByTag 1

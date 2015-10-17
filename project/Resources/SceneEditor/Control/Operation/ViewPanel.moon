@@ -37,8 +37,9 @@ Class
 							len = #itemData.children
 							offset = len*(10+itemH)
 							lastChild = @items[itemData.children[len]]
+							lastChildBottom = lastChild.positionY-lastChild.height/2
 							for _,it in pairs @items
-								if it.positionY < lastChild.positionY
+								if it.positionY < lastChildBottom
 									it.positionY += offset
 							viewSize = @viewSize
 							@viewSize = CCSize viewSize.width,viewSize.height-offset
@@ -48,8 +49,9 @@ Class
 								@items[child].positionX = 400
 							len = #itemData.children
 							offset = len*(10+itemH)
+							itemBottom = item.positionY-item.height/2
 							for _,it in pairs @items
-								if it.positionY < item.positionY and it.positionX < 400
+								if it.positionY < itemBottom and it.positionX < 400
 									it.positionY -= offset
 							for child in *itemData.children
 								@items[child].positionX = item.positionX+20
@@ -136,6 +138,7 @@ Class
 
 			drawHLine = (itemData)->
 				item = @items[itemData]
+				return if item.positionX < 0
 				startX = item.positionX-item.width/2-10
 				startY = item.positionY-offsetY
 				endX = startX+10
