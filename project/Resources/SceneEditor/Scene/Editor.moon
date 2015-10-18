@@ -128,7 +128,7 @@ Class
 			layerDef4.name = "layer4"
 			bodyDef = Model.Body!
 			bodyDef.name = "body1"
-			layerDef5.children = {bodyDef}
+			layerDef4.children = {bodyDef}
 			worldDef.children = {layerDef,layerDef1,layerDef2,layerDef3,layerDef4}
 			@sceneData = worldDef
 			emit "Scene.DataLoaded",worldDef
