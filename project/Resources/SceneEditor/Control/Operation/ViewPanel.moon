@@ -31,33 +31,51 @@ Class
 						item.fold = not item.fold
 						itemData = item.itemData
 
-						if item.fold
-							for child in *itemData.children
-								@items[child].positionX = -200
-							len = #itemData.children
-							offset = len*(10+itemH)
-							lastChild = @items[itemData.children[len]]
-							lastChildBottom = lastChild.positionY-lastChild.height/2
-							for _,it in pairs @items
-								if it.positionY < lastChildBottom
-									it.positionY += offset
-							viewSize = @viewSize
-							@viewSize = CCSize viewSize.width,viewSize.height-offset
-							@\updateLine!
-						else
-							for child in *itemData.children
-								@items[child].positionX = 400
-							len = #itemData.children
-							offset = len*(10+itemH)
-							itemBottom = item.positionY-item.height/2
-							for _,it in pairs @items
-								if it.positionY < itemBottom and it.positionX < 400
-									it.positionY -= offset
-							for child in *itemData.children
-								@items[child].positionX = item.positionX+20
-							viewSize = @viewSize
-							@viewSize = CCSize viewSize.width,viewSize.height+offset
-							@\updateLine!
+						thread ->
+							@menuEnabled = false
+							if item.fold
+								for child in *itemData.children
+									@items[child]\perform oScale 0.3,1,0,oEase.OutQuad
+								sleep 0.3
+								for child in *itemData.children
+									@items[child].positionX = -200
+								len = #itemData.children
+								offset = len*(10+itemH)
+								lastChild = @items[itemData.children[len]]
+								lastChildBottom = lastChild.positionY-lastChild.height/2
+								for _,it in pairs @items
+									if it.positionY < lastChildBottom
+										it.positionY += offset
+								viewSize = @viewSize
+								@viewSize = CCSize viewSize.width,viewSize.height-offset
+								@\updateLine!
+								for _,it in pairs @items
+									if it.positionY < item.positionY and it.visible
+										it.scaleY = 0
+										it\perform oScale 0.3,1,1,oEase.OutBack
+								sleep 0.3
+							else
+								for child in *itemData.children
+									@items[child].positionX = 400
+								len = #itemData.children
+								offset = len*(10+itemH)
+								itemBottom = item.positionY-item.height/2
+								for _,it in pairs @items
+									if it.positionY < itemBottom and it.positionX < 400
+										it.positionY -= offset
+								for child in *itemData.children
+									@items[child].positionX = item.positionX+20
+								viewSize = @viewSize
+								@viewSize = CCSize viewSize.width,viewSize.height+offset
+								@\updateLine!
+								for child in *itemData.children
+									with @items[child]
+										if .visible
+											\perform oScale 0.3,1,1,oEase.OutBack
+										else
+											.scaleY = 1
+								sleep 0.3
+							@menuEnabled = true
 
 					elseif item.itemData.children and #item.itemData.children > 0
 						foldingItem = item

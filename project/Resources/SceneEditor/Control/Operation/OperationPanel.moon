@@ -6,6 +6,7 @@ Class
 	__partial: (args)=> OperationPanelView args
 	__init: (args)=>
 		@opacity = 0.4
+		@_menuEnabled = true
 
 		fadeOut = CCSequence {
 			CCDelay 1
@@ -23,7 +24,8 @@ Class
 			@menu.enabled = false
 
 		@\slots "ScrollTouchEnded",->
-			@menu.enabled = true
+			if @_menuEnabled
+				@menu.enabled = true
 
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
@@ -35,3 +37,8 @@ Class
 				itemRect\set positionX-width/2,positionY-height/2,width,height
 				if width ~= 0 and height ~= 0
 					child.visible = contentRect\intersectsRect itemRect
+
+	menuEnabled: property => @_menuEnabled,
+		(value)=>
+			@_menuEnabled = value
+			@menu.enabled = value
