@@ -28,6 +28,7 @@ Class
 							if @_selectedItem
 								@_selectedItem.checked = false
 							@_selectedItem = item
+							emit "Scene.ViewPanel.Select",item.itemData
 						item.fold = not item.fold
 						itemData = item.itemData
 
@@ -81,8 +82,13 @@ Class
 						foldingItem = item
 						foldingRoutine = thread ->
 							sleep 0.3
+							if @_selectedItem == nil
+								emit "Scene.ViewPanel.Select",nil
 							foldingItem = nil
 							foldingRoutine = nil
+				else
+					if @_selectedItem == nil
+						emit "Scene.ViewPanel.Select",nil
 
 		@\gslot "Scene.DataLoaded",(data)->
 			@menu\removeAllChildrenWithCleanup!
@@ -98,6 +104,7 @@ Class
 					if @_selectedItem
 						@_selectedItem.checked = false
 					@_selectedItem = item
+					emit "Scene.ViewPanel.Select",item.itemData
 				elseif @_selectedItem == item
 					@_selectedItem = nil
 				checkFolding item

@@ -176,17 +176,10 @@ Class
 					@\emit "ScrollStart"
 
 		@scroll = (delta)=>
-			newPosX = deltaX + delta.x
-			newPosY = deltaY + delta.y
-
-			newPosX = math.min newPosX, 0
-			newPosX = math.max newPosX, -moveX
-			newPosY = math.max newPosY, 0
-			newPosY = math.min newPosY, moveY
-			
-			dX = newPosX - deltaX
-			dY = newPosY - deltaY
-			setOffset oVec2(dX,dY),false
+			deltaX += delta.x
+			deltaY += delta.y
+			@\emit "Scrolled",oVec2(delta.x,delta.y)
+			startReset! if isReseting!
 
 		@updateViewSize = (wView,hView)=>
 			{:width,:height} = @
@@ -194,7 +187,7 @@ Class
 			viewHeight = math.max hView,height
 			moveY = viewHeight - height
 			moveX = viewWidth - width
-			@scroll oVec2 0,0
+			@scroll oVec2.zero
 
 		@reset = (wView,hView,padX,padY)=>
 			@updateViewSize wView,hView

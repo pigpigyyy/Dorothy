@@ -330,7 +330,7 @@ local function oSelectionPanel(borderSize,noCliping)
 	panel.removeMenuItems = function(self)
 		menu:removeAllChildrenWithCleanup()
 	end
-	
+
 	return panel
 end
 

@@ -43,20 +43,20 @@ local function oViewArea()
 	scaleNode:addChild(crossNode)
 
 	-- init cross --
-	local cross = oLine(
+	local xcross = oLine(
 	{
-		oVec2(0,-winSize.height*2),
-		oVec2(0,winSize.height*2)
+		oVec2(0,-winSize.height),
+		oVec2(0,winSize.height)
 	},ccColor4())
-	cross.opacity = 0.2
-	crossNode:addChild(cross)
-	cross = oLine(
+	xcross.opacity = 0.2
+	crossNode:addChild(xcross)
+	local ycross = oLine(
 	{
-		oVec2(-winSize.width*2,0),
-		oVec2(winSize.width*2,0)
+		oVec2(-winSize.width,0),
+		oVec2(winSize.width,0)
 	},ccColor4())
-	cross.opacity = 0.2
-	crossNode:addChild(cross)
+	ycross.opacity = 0.2
+	crossNode:addChild(ycross)
 
 	-- listen reset events --
 	crossNode:gslot("Body.viewArea.toScale",function(scale)
@@ -84,9 +84,14 @@ local function oViewArea()
 				end
 			end),
 		}))
+		xcross:runAction(oPos(0.5,0,0,oEase.OutQuad))
+		ycross:runAction(oPos(0.5,0,0,oEase.OutQuad))
 	end)
 	crossNode:gslot("Body.viewArea.move",function(delta)
-		crossNode.position = crossNode.position + delta/scaleNode.scaleX
+		delta = delta/scaleNode.scaleX
+		crossNode.position = crossNode.position + delta
+		xcross.positionY = xcross.positionY - delta.y
+		ycross.positionX = ycross.positionX - delta.x
 	end)
 
 	local shapeToCreate = nil

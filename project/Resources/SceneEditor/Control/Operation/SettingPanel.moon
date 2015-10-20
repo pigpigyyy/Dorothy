@@ -6,6 +6,8 @@ SettingItem = require "BodyEditor.Script.oSettingItem"
 Class
 	__partial: (args)=> SettingPanelView args
 	__init: (args)=>
+		itemWidth = @width
+		itemHeight = 30
 		itemNames = {
 			{"Outline","%s"}
 			{"RatioX","%.2f"}
@@ -38,7 +40,7 @@ Class
 			()->
 				v = index
 				index += 1
-				@height-30-itemHeight*v
+				@height-30-itemHeight/2-itemHeight*v
 
 		items = {}
 		getPosY = genPosY()
@@ -48,30 +50,29 @@ Class
 		for i = 1,#itemNames
 			itemName = itemNames[i][1]
 			valueFormat = itemNames[i][2]
-			items[itemName] = SettingItem itemName.." :",itemWidth,itemHeight,-itemWidth,getPosY(),i == 1,valueFormat,editCallback
-			items[itemName].name = itemName
+			item = SettingItem itemName.." :",itemWidth,itemHeight,-itemWidth,getPosY(),i == 1,valueFormat,editCallback
+			item.anchor = oVec2 0.5,0.5
+			item.name = itemName\sub(1,1)\lower!..itemName\sub(2,-1)
+			items[itemName] = item
 
 		for _,item in pairs items
-			item.visible = false
+			item.visible = true
 			@menu\addChild item
 
 		groups = {
 			PlatformWorld: {
-				items.Name
 				items.Gravity
 				items.Contact
 				items.Simulation
 				items.Outline
 			}
 			UILayer: {
-				items.Name
 			}
 			Camera: {
-				items.Name
+				items.Position
+				items.Target
 				items.RatioX
 				items.RatioY
-				items.Target
-				items.Position
 				items.Zoom
 			}
 			Layer: {
@@ -125,3 +126,46 @@ Class
 				items.Play
 			}
 		}
+
+		currentGroup = nil
+		@\gslot "Scene.ViewPanel.Select",(data)->
+			if currentGroup
+				for item in *currentGroup
+					item.positionX = -itemWidth
+					item.visible = false
+			if data
+				@offset = oVec2.zero
+				with @title
+					.visible = true
+					.text = data.typeName
+					.texture.antiAlias = false
+					.position = oVec2 @width/2,@height-18
+			else
+				@title.positionX = -itemWidth
+				return
+
+			currentGroup = groups[data.typeName]
+			getPosY = genPosY!
+			contentHeight = 40
+			for item in *currentGroup
+				item.visible = true
+				item.positionX = itemWidth/2
+				item.positionY = getPosY!
+				contentHeight = contentHeight + itemHeight
+				item.value = switch item.name
+					when "simulation"
+						switch data[item.name]
+							when 1
+								"Low"
+							when 2
+								"Medium"
+							when 3
+								"High"
+					when "contact"
+						". . ."
+					when "outline"
+						data[item.name] and "Show" or "Hide"
+					else
+						data[item.name] == "" and "None" or data[item.name]
+
+			@viewSize = CCSize @width,contentHeight

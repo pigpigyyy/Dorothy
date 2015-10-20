@@ -40,10 +40,10 @@ Class
 			panelWidth = 10+110*4
 			panelHeight = height*0.6
 			panelNames = {
-				--"SpritePanel"
-				--"ModelPanel"
-				--"BodyPanel"
-				--"EffectPanel"
+				"SpritePanel"
+				"ModelPanel"
+				"BodyPanel"
+				"EffectPanel"
 			}
 			sleep!
 			for name in *panelNames
@@ -59,10 +59,10 @@ Class
 				@[name\sub(1,1)\lower!..name\sub(2,-1)] = panel
 				@\addChild panel,1
 
-			--EditMenu = require "Control.Operation.EditMenu"
-			--sleep!
-			--@editMenu = EditMenu!
-			--@\addChild @editMenu
+			EditMenu = require "Control.Operation.EditMenu"
+			sleep!
+			@editMenu = EditMenu!
+			@\addChild @editMenu
 
 			ViewPanel = require "Control.Operation.ViewPanel"
 			@viewPanel = ViewPanel!
@@ -129,7 +129,7 @@ Class
 			bodyDef = Model.Body!
 			bodyDef.name = "body1"
 			layerDef4.children = {bodyDef}
-			worldDef.children = {layerDef,layerDef1,layerDef2,layerDef3,layerDef4}
+			worldDef.children = {layerDef1,layerDef2,layerDef3,layerDef4,layerDef}
 			@sceneData = worldDef
 			emit "Scene.DataLoaded",worldDef
 

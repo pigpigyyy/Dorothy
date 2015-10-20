@@ -212,10 +212,10 @@ local function oHRuler()
 	end)
 	self:slots("TouchMoved",function(touch)
 		self.positionY = self.positionY + touch.delta.y
-		if self.positionY > winSize.height-halfH then
-			self.positionY = winSize.height-halfH
-		elseif self.positionY < halfH then
-			self.positionY = halfH
+		if self.positionY > winSize.height-halfH-10 then
+			self.positionY = winSize.height-halfH-10
+		elseif self.positionY < halfH+10 then
+			self.positionY = halfH+10
 		end
 	end)
 

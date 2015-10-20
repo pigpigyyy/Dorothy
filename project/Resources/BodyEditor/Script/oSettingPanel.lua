@@ -37,12 +37,12 @@ local function oSettingPanel()
 	},ccColor4(0xe5100000),0.5,ccColor4(0x88ffafaf))
 	border:addChild(background,-1)
 	self.position = oVec2(winSize.width*0.5-100,-winSize.height*0.5+halfBH+10)
-	
+
 	local label = CCLabelTTF("","Arial",16)
 	label.position = oVec2(halfBW,borderSize.height-18)
 	label.color = ccColor3(0x00ffff)
 	menu:addChild(label)
-	
+
 	local function genPosY()
 		local index = 0
 		return function()

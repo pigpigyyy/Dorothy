@@ -211,10 +211,10 @@ local function oVRuler()
 	end)
 	self:slots("TouchMoved",function(touch)
 		self.positionX = self.positionX + touch.delta.x
-		if self.positionX > winSize.width-190-halfW then
-			self.positionX = winSize.width-190-halfW
-		elseif self.positionX < halfW then
-			self.positionX = halfW
+		if self.positionX > winSize.width-190-halfW-10 then
+			self.positionX = winSize.width-190-halfW-10
+		elseif self.positionX < halfW+10 then
+			self.positionX = halfW+10
 		end
 	end)
 

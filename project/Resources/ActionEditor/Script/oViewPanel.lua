@@ -56,6 +56,7 @@ local function oViewPanel()
 	panel.opacity = 0.4
 	panel.touchEnabled = true
 	panel.position = oVec2(winSize.width-170,winSize.height-borderSize.height-10)
+	panel.enabledMenu = true
 
 	local border = CCDrawNode()
 	border:drawPolygon(
@@ -95,7 +96,7 @@ local function oViewPanel()
 			child.position = child.position + delta
 			if child.enabled ~= nil then
 				local positionX, positionY, width, height = child.positionX, child.positionY, child.width, child.height
-				itemRect:set(positionX, positionY - height, width, height)
+				itemRect:set(positionX, positionY - height/2, width, height)
 				child.visible = contentRect:intersectsRect(itemRect)
 			end
 		end)
@@ -182,7 +183,7 @@ local function oViewPanel()
 
 		if touching then
 			if newPos.x > 0 then
-				newPos.x = 0--padding 
+				newPos.x = 0
 			elseif newPos.x-moveX < -padding then
 				newPos.x = moveX-padding
 			end
@@ -200,9 +201,7 @@ local function oViewPanel()
 			elseif newPos.y > moveY then
 				lenY = (newPos.y-moveY)/padding
 			end
-			--[[if newPos.x > 0 then
-				lenX = newPos.x/padding
-			else]]if newPos.x < moveX then
+			if newPos.x < moveX then
 				lenX = (moveX-newPos.x)/padding
 			end
 			if lenY > 0 then
@@ -233,7 +232,7 @@ local function oViewPanel()
 		totalDelta = totalDelta + deltaPos
 
 		moveItems(deltaPos)
-		
+
 		if not touching and (newPos.y < -padding*0.5 or newPos.y > moveY+padding*0.5 or newPos.x > padding*0.5 or newPos.x < moveX-padding*0.5) then
 			startReset()
 		end
@@ -272,7 +271,7 @@ local function oViewPanel()
 		},ccColor4(0xffffffff)))
 
 		local menuItem = CCMenuItem()
-		menuItem.anchor = oVec2(0,1)
+		menuItem.anchor = oVec2(0,0.5)
 		menuItem.contentSize = CCSize(size,size)
 		menuItem.position = oVec2(x, y)
 		menuItem:addChild(borderSelected)
@@ -357,9 +356,43 @@ local function oViewPanel()
 					isFolding = false
 					sp[oSd.fold] = not sp[oSd.fold]
 					local model = oEditor.viewArea:getModel()
+					local offset = panel:getOffset()
 					panel:clearSelection()
-					panel:updateImages(oEditor.modelData,model)
-					panel:selectItem(sp)
+					panel.enabledMenu = false
+					menu.enabled = false
+					thread(function()
+						if sp[oSd.fold] then
+							local function visitSprite(data)
+								local children = data[oSd.children]
+								if children then
+									for i = 1,#children do
+										local item = panel.items[children[i]]
+										if item then
+											item:perform(oScale(0.3,1,0,oEase.OutQuad))
+											visitSprite(children[i])
+										end
+									end
+								end
+							end
+							visitSprite(sp)
+							sleep(0.2)
+						end
+						panel:updateImages(oEditor.modelData,model)
+						panel:selectItem(sp)
+						panel:setOffset(offset)
+						if isReseting() then
+							startReset()
+						end
+						local targetItem = panel.items[sp]
+						for _,item in pairs(panel.items) do
+							if item.positionY < targetItem.positionY and item.visible then
+								item.scaleY = 0
+								item:perform(oScale(0.3,1,1,oEase.OutBack))
+							end
+						end
+						panel.enabledMenu = true
+						menu.enabled = true
+					end)
 				else
 					isFolding = true
 					local interval = 0
@@ -374,12 +407,6 @@ local function oViewPanel()
 			end
 		end)
 
-		menuItem.dispose = function(self)
-			self:unschedule()
-			local sp = self:getData()
-			sp[oSd.sprite] = nil
-		end
-
 		menuItem.setName = function(self,name)
 			if clipStr == "" then
 				self.label.text = name == "" and "Node" or name
@@ -389,7 +416,7 @@ local function oViewPanel()
 
 		return menuItem
 	end
-	
+
 	panel.selectItem = function(self, targetSp)
 		panel:clearSelection()
 		if not targetSp then
@@ -436,10 +463,10 @@ local function oViewPanel()
 		_v = _v + a*deltaTime
 		if _v.x < 0 == xR then _v.x = 0;a.x = 0 end
 		if _v.y < 0 == yR then _v.y = 0;a.y = 0 end
-		
+
 		local ds = _v * deltaTime + a*(0.5*deltaTime*deltaTime)
 		setOffset(ds, false)
-		
+
 		if _v == oVec2.zero then
 			if isReseting() then
 				startReset()
@@ -467,7 +494,9 @@ local function oViewPanel()
 	end)
 
 	local function touchEnded()
-		menu.enabled = true
+		if panel.enabledMenu then
+			menu.enabled = true
+		end
 		if isReseting() then
 			startReset()
 		else
@@ -490,14 +519,22 @@ local function oViewPanel()
 		end
 	end)
 
+	panel.setOffset = function(self,offset)
+		local deltaPos = offset-totalDelta
+		totalDelta = totalDelta + deltaPos
+		moveItems(deltaPos)
+		if isReseting() then
+			startReset()
+		end
+	end
+
+	panel.getOffset = function(self)
+		return totalDelta
+	end
+
 	panel.items = nil
 	panel.updateImages = function(self, data, model)
 		initValues()
-		if panel.items then
-			for _,v in pairs(panel.items) do
-				v:dispose()
-			end
-		end
 		panel.items = {}
 		panel:showOutline(false)
 		menu:removeAllChildrenWithCleanup()
@@ -508,15 +545,13 @@ local function oViewPanel()
 		local size = 60
 		local indent = 10
 		local root = model:getChildByIndex(1)
-		local function visitSprite(sp,x,y,node)
+		local function visitSprite(sp,x,y,child)
 			local clip = sp[oSd.clip]
-			local child = node
-			if child == nil then
-				cclog(tolua.type(node))
+			if not sp[oSd.sprite] then
+				sp[oSd.sprite] = child -- don`t override data from updateSprite()
 			end
-			sp[oSd.sprite] = child
-			local isRoot = node == root
-			local imageView = oImageView(size,x,y,
+			local isRoot = child == root
+			local imageView = oImageView(size,x,y-size/2,
 				clip == ""
 				and "" or (clipFile.."|"..tostring(clip)),
 				sp,isRoot)
@@ -533,7 +568,8 @@ local function oViewPanel()
 					drawNode:drawSegment(oVec2(x+indent,y+nextY-size*0.5),oVec2(x+indent*2,y+nextY-size*0.5),0.5,ccColor4(0xffffffff))
 					children[i][oSd.parent] = sp
 					children[i][oSd.index] = i
-					local lenY, subLayer = visitSprite(children[i],x+indent*2,y+nextY,child:getChildByIndex(i))
+					local sprite = children[i][oSd.sprite]
+					local lenY, subLayer = visitSprite(children[i],x+indent*2,y+nextY,sprite or child:getChildByIndex(i)) -- reuse data computed from updateSprite()
 					nextY = nextY + lenY
 					if maxSubLayer < subLayer then maxSubLayer = subLayer end
 					if i == childrenSize then
@@ -546,8 +582,8 @@ local function oViewPanel()
 			end
 			return nextY, layer+maxSubLayer
 		end
-		
-		local height, layer = visitSprite(data,indent,borderSize.height-indent,root)
+
+		local height, layer = visitSprite(data,indent,borderSize.height-indent,model:getChildByIndex(1))
 		viewHeight = -height+indent
 		if viewHeight < borderSize.height then viewHeight = borderSize.height end
 		viewWidth = layer*indent*2+size
@@ -593,13 +629,13 @@ local function oViewPanel()
 			anchor.position = oVec2(w*node.anchor.x, h*node.anchor.y)
 			self.transformTarget = node
 		end
-		
+
 		outline:setNode(node, withFrame)
-		
+
 		outline.updateAnchor = function(self, node)
 			anchor.position = oVec2(node.contentSize.width*node.anchor.x, node.contentSize.height*node.anchor.y)
 		end
-		
+
 		return outline
 	end
 	

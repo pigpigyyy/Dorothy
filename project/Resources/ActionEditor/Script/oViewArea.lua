@@ -38,20 +38,20 @@ local function oViewArea()
 	view:addChild(crossNode)
 	view.viewNode = crossNode
 
-	local cross = oLine(
+	local yCross = oLine(
 	{
-		oVec2(0,-winSize.height*2),
-		oVec2(0,winSize.height*2)
+		oVec2(0,-winSize.height),
+		oVec2(0,winSize.height)
 	},ccColor4())
-	cross.opacity = 0.2
-	crossNode:addChild(cross)
-	cross = oLine(
+	yCross.opacity = 0.2
+	crossNode:addChild(yCross)
+	local xCross = oLine(
 	{
-		oVec2(-winSize.width*2,0),
-		oVec2(winSize.width*2,0)
+		oVec2(-winSize.width,0),
+		oVec2(winSize.width,0)
 	},ccColor4())
-	cross.opacity = 0.2
-	crossNode:addChild(cross)
+	xCross.opacity = 0.2
+	crossNode:addChild(xCross)
 
 	local scrollNode = CCNode()
 	crossNode:addChild(scrollNode)
@@ -136,7 +136,10 @@ local function oViewArea()
 		if incX == decX and incY == decY then
 			view:unschedule()
 		else
-			crossNode.position = crossNode.position + V * dt
+			local d = V * dt
+			crossNode.position = crossNode.position + d
+			xCross.positionX = xCross.positionX - d.x
+			yCross.positionY = yCross.positionY - d.y
 		end
 	end
 	view:slots("TouchBegan",function()
@@ -170,6 +173,8 @@ local function oViewArea()
 		if #touches == 1 then
 			S = touches[1].delta
 			crossNode.position = crossNode.position + S
+			xCross.positionX = xCross.positionX - S.x
+			yCross.positionY = yCross.positionY - S.y
 		elseif #touches >= 2 then
 			mode = 2
 			local preDistance = touches[1].preLocation:distance(touches[2].preLocation)
@@ -254,14 +259,14 @@ local function oViewArea()
 		end
 		return self._model
 	end
-	
+
 	view:gslot("Action.LoopState",
 		function(loop)
 			if view._model then
 				view._model.loop = loop
 			end
 		end)
-	
+
 	view._enabled = true
 	view.setControlEnabled = function(self,enable)
 		self._enabled = enable
@@ -269,7 +274,7 @@ local function oViewArea()
 	view.isControlEnabled = function(self)
 		return self._enabled
 	end
-	
+
 	local editorView = nil
 	local editTarget = nil
 	local function setEditorView(editor)
