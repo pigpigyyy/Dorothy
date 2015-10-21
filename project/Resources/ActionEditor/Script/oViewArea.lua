@@ -40,15 +40,15 @@ local function oViewArea()
 
 	local yCross = oLine(
 	{
-		oVec2(0,-winSize.height),
-		oVec2(0,winSize.height)
+		oVec2(0,-origin.y*2),
+		oVec2(0,(winSize.height-origin.y)*2)
 	},ccColor4())
 	yCross.opacity = 0.2
 	crossNode:addChild(yCross)
 	local xCross = oLine(
 	{
-		oVec2(-winSize.width,0),
-		oVec2(winSize.width,0)
+		oVec2(-origin.x*2,0),
+		oVec2((winSize.width-origin.x)*2,0)
 	},ccColor4())
 	xCross.opacity = 0.2
 	crossNode:addChild(xCross)
@@ -138,8 +138,8 @@ local function oViewArea()
 		else
 			local d = V * dt
 			crossNode.position = crossNode.position + d
-			xCross.positionX = xCross.positionX - d.x
-			yCross.positionY = yCross.positionY - d.y
+			xCross.positionX = -(crossNode.positionX - origin.x)/crossNode.scaleX
+			yCross.positionY = -(crossNode.positionY - origin.y)/crossNode.scaleX
 		end
 	end
 	view:slots("TouchBegan",function()
@@ -173,8 +173,8 @@ local function oViewArea()
 		if #touches == 1 then
 			S = touches[1].delta
 			crossNode.position = crossNode.position + S
-			xCross.positionX = xCross.positionX - S.x
-			yCross.positionY = yCross.positionY - S.y
+			xCross.positionX = -(crossNode.positionX - origin.x)/crossNode.scaleX
+			yCross.positionY = -(crossNode.positionY - origin.y)/crossNode.scaleX
 		elseif #touches >= 2 then
 			mode = 2
 			local preDistance = touches[1].preLocation:distance(touches[2].preLocation)
@@ -186,6 +186,8 @@ local function oViewArea()
 			end
 			crossNode.scaleX = scale
 			crossNode.scaleY = scale
+			xCross.positionX = -(crossNode.positionX - origin.x)/scale
+			yCross.positionY = -(crossNode.positionY - origin.y)/scale
 
 			local zoomButton = oEditor.editMenu.items.Zoom
 			zoomButton.label.text = tostring(math.floor(scale*100)).."%"
@@ -200,11 +202,6 @@ local function oViewArea()
 	view:slots("TouchEnded",touchEnded)
 	view:slots("TouchCancelled",touchEnded)
 
-	view.keypadEnabled = true
-	view:slots("KeyBack",function()
-		CCDirector:stop()
-	end)
-
 	view.zoomReset = function(self)
 		local scale = 0
 		if mode == 0 then
@@ -217,7 +214,9 @@ local function oViewArea()
 		mode = mode + 1
 		mode = mode % 3
 		crossNode:runAction(oScale(0.5,scale,scale,oEase.OutQuad))
-		
+		xCross:runAction(oPos(0.5,-(crossNode.positionX - origin.x)/scale,0,oEase.OutQuad))
+		yCross:runAction(oPos(0.5,0,-(crossNode.positionY - origin.y)/scale,oEase.OutQuad))
+
 		local zoomButton = oEditor.editMenu.items.Zoom
 		zoomButton.label.text = tostring(scale*100).."%"
 		zoomButton.label.texture.antiAlias = false
@@ -226,6 +225,8 @@ local function oViewArea()
 	view.originReset = function(self)
 		view:unschedule()
 		crossNode:runAction(oPos(0.5,origin.x,origin.y,oEase.OutQuad))
+		xCross:runAction(oPos(0.5,0,0,oEase.OutQuad))
+		yCross:runAction(oPos(0.5,0,0,oEase.OutQuad))
 	end
 
 	view.setModel = function(self,model)

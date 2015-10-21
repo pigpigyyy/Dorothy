@@ -75,8 +75,8 @@ local function oEditRuler()
 	local labelList = {}
 	local function setupLabels()
 		local posY = intervalNode.anchor.y*height
-		local right = math.floor((posY+height/2+50)/100)
-		local left = math.floor((posY-height/2-50)/100)
+		local right = math.floor((posY+height+50)/100)
+		local left = math.floor((posY-height-50)/100)
 		for i = left,right do
 			local pos = i*100
 			local label = CCLabelTTF(tostring(pos/100*indent),"Arial",10)
@@ -102,8 +102,8 @@ local function oEditRuler()
 	
 	local function updateLabels()
 		local posY = intervalNode.anchor.y*height
-		local right = math.floor((posY+height/2)/100)
-		local left = math.floor((posY-height/2)/100)
+		local right = math.floor((posY+height)/100)
+		local left = math.floor((posY-height)/100)
 		local insertPos = 1
 		for i = left,right do
 			local pos = i*100
@@ -194,6 +194,7 @@ local function oEditRuler()
 		if top < newTop then top = newTop end
 		local newBottom = math.ceil((-posY+halfH/scale)/interval)
 		if bottom < newBottom then bottom = newBottom end
+		ruler:setValue(ruler:getValue())
 	end)
 
 	ruler.setIndent = function(self,ind)

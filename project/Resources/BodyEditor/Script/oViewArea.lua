@@ -45,15 +45,15 @@ local function oViewArea()
 	-- init cross --
 	local xcross = oLine(
 	{
-		oVec2(0,-winSize.height),
-		oVec2(0,winSize.height)
+		oVec2(0,-winSize.height*2),
+		oVec2(0,winSize.height*2)
 	},ccColor4())
 	xcross.opacity = 0.2
 	crossNode:addChild(xcross)
 	local ycross = oLine(
 	{
-		oVec2(-winSize.width,0),
-		oVec2(winSize.width,0)
+		oVec2(-winSize.width*2,0),
+		oVec2(winSize.width*2,0)
 	},ccColor4())
 	ycross.opacity = 0.2
 	crossNode:addChild(ycross)
@@ -84,8 +84,8 @@ local function oViewArea()
 				end
 			end),
 		}))
-		xcross:runAction(oPos(0.5,0,0,oEase.OutQuad))
-		ycross:runAction(oPos(0.5,0,0,oEase.OutQuad))
+		xcross:runAction(oPos(0.5,0,-pos.y,oEase.OutQuad))
+		ycross:runAction(oPos(0.5,-pos.x,0,oEase.OutQuad))
 	end)
 	crossNode:gslot("Body.viewArea.move",function(delta)
 		delta = delta/scaleNode.scaleX

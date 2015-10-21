@@ -65,7 +65,7 @@ Class
 									if it.positionY < itemBottom and it.positionX < 400
 										it.positionY -= offset
 								for child in *itemData.children
-									@items[child].positionX = item.positionX+20
+									@items[child].positionX = width-10-@items[child].width/2
 								viewSize = @viewSize
 								@viewSize = CCSize viewSize.width,viewSize.height+offset
 								@\updateLine!
@@ -109,17 +109,19 @@ Class
 					@_selectedItem = nil
 				checkFolding item
 			addItem = (x,y,text,data)->
+				realW = width-(x-itemW/2)-10
+				realX = (x-itemW/2)+realW/2
 				item = ViewItem {
 					text:text
-					x:x
+					x:realX
 					y:y
-					width:itemW
+					width:realW
 					height:itemH
 				}
 				item.itemData = data
 				item\slots "Tapped",itemTapped
 				@menu\addChild item
-				right = math.max x+itemW/2+10,right
+				right = math.max x+realW/2+10,right
 				bottom = math.max height-y+itemH/2+10,bottom
 				@items[data] = item
 
@@ -151,7 +153,7 @@ Class
 					childCount += getChildCount children[#children]
 				if itemCount > 0
 					item = @items[itemData]
-					startX = item.positionX-itemW/2+10
+					startX = item.positionX-item.width/2+10
 					startY = item.positionY-itemH/2-offsetY
 					endX = startX
 					endY = startY-(itemH/2+10)-(itemCount-1)*(itemH+10)

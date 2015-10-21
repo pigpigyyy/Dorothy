@@ -16,26 +16,28 @@ local function oViewArea()
 	local view = CCLayerColor(ccColor4(0xff1a1a1a))
 	view.anchor = oVec2.zero
 
+	local origin = oEditor.origin
+
 	local scrollNode = CCNode()
 	view:addChild(scrollNode)
-	scrollNode.position = oEditor.origin
+	scrollNode.position = origin
 
 	local winSize = CCDirector.winSize
 	local crossNode = CCNode()
-	local cross = oLine(
+	local ycross = oLine(
 	{
 		oVec2(0,-winSize.height*2),
 		oVec2(0,winSize.height*2)
 	},ccColor4())
-	cross.opacity = 0.2
-	crossNode:addChild(cross)
-	cross = oLine(
+	ycross.opacity = 0.2
+	crossNode:addChild(ycross)
+	local xcross = oLine(
 	{
 		oVec2(-winSize.width*2,0),
 		oVec2(winSize.width*2,0)
 	},ccColor4())
-	cross.opacity = 0.2
-	crossNode:addChild(cross)
+	xcross.opacity = 0.2
+	crossNode:addChild(xcross)
 	scrollNode:addChild(crossNode)
 
 --[[
@@ -95,6 +97,8 @@ local function oViewArea()
 			view:unschedule()
 		else
 			scrollNode.position = scrollNode.position + V * dt
+			xcross.positionX = -(scrollNode.positionX - origin.x)/scrollNode.scaleX
+			ycross.positionY = -(scrollNode.positionY - origin.y)/scrollNode.scaleX
 		end
 	end
 
@@ -108,6 +112,8 @@ local function oViewArea()
 	view:slots("TouchMoved",function(touch)
 		S = touch.delta
 		scrollNode.position = scrollNode.position + S
+		xcross.positionX = -(scrollNode.positionX - origin.x)/scrollNode.scaleX
+		ycross.positionY = -(scrollNode.positionY - origin.y)/scrollNode.scaleX
 	end)
 
 	local function touchEnded()
@@ -134,10 +140,14 @@ local function oViewArea()
 	end)
 	view:gslot("Effect.viewArea.scroll",function(scale)
 		scrollNode:runAction(oScale(0.3,scale,scale,oEase.OutQuad))
+		xcross:runAction(oPos(0.5,-(scrollNode.positionX - origin.x)/scale,0,oEase.OutQuad))
+		ycross:runAction(oPos(0.5,0,-(scrollNode.positionY - origin.y)/scale,oEase.OutQuad))
 	end)
 	view:gslot("Effect.viewArea.toOrigin",function(origin)
 		view:unschedule()
 		scrollNode:runAction(oPos(0.3,origin.x,origin.y,oEase.OutQuad))
+		xcross:runAction(oPos(0.5,0,0,oEase.OutQuad))
+		ycross:runAction(oPos(0.5,0,0,oEase.OutQuad))
 	end)
 	view:gslot("Effect.viewArea.pos",function(pos)
 		scrollNode.position = pos
