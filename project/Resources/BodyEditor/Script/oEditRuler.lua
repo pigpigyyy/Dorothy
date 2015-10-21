@@ -61,6 +61,7 @@ local function oEditRuler()
 	
 	local intervalNode = oLine()
 	intervalNode.contentSize = CCSize(width,height)
+	content:addChild(intervalNode)
 
 	local interval = 10
 	local top = math.ceil(halfH/interval)
@@ -69,77 +70,89 @@ local function oEditRuler()
 	local bottom = math.ceil(halfH/interval)
 	local vs = {}
 	local indent = 100
-	local labels = {}
-	ruler.labels = labels
-	ruler.routine = once(function()
-		repeat
-			if up < top or down < bottom then
-				if up < top then
-					local target = top
-					for i = up,target do
-						local posY = i*interval
-						table.insert(vs,1,oVec2(-halfW,posY))
-						table.insert(vs,1,oVec2(-halfW+(i%10 == 0 and 16 or 8),posY))
-						table.insert(vs,1,oVec2(-halfW,posY))
-						if i%10 == 0 then
-							local label = CCLabelTTF(tostring(i*indent/10),"Arial",12)
-							label.texture.antiAlias = false
-							label.scaleX = 1/intervalNode.scaleY
-							label.angle = -90
-							label.position = oVec2(-halfW+28,posY)
-							intervalNode:addChild(label)
-							labels[i/10] = label
-							local origin = ruler:getPos()
-							local halfH = label.height*0.5
-							local distance
-							if posY > origin then
-								distance = posY-halfH-origin
-							else
-								distance = origin-posY-halfH
-							end
-							label.visible = distance < height/2
-							coroutine.yield()
-						end
-					end
-					up = target+1
-				end
-				if down < bottom then
-					local target = bottom
-					for i = down,target do
-						local posY = -i*interval
-						table.insert(vs,oVec2(-halfW,posY))
-						table.insert(vs,oVec2(-halfW+(i%10 == 0 and 16 or 8),posY))
-						table.insert(vs,oVec2(-halfW,posY))
-						if i%10 == 0 then
-							local label = CCLabelTTF(tostring(-i*indent/10),"Arial",12)
-							label.texture.antiAlias = false
-							label.scaleX = 1/intervalNode.scaleY
-							label.angle = -90
-							label.position = oVec2(-halfW+28,posY)
-							intervalNode:addChild(label)
-							labels[-i/10] = label
-							local origin = ruler:getPos()
-							local halfH = label.height*0.5
-							local distance
-							if posY > origin then
-								distance = posY-halfH-origin
-							else
-								distance = origin-posY-halfH
-							end
-							label.visible = distance < height/2
-							coroutine.yield()
-						end
-					end
-					down = target+1
-				end
-				coroutine.yield()
-				intervalNode:set(vs)
-			end
-			coroutine.yield()
-		until false
-	end)
-	content:addChild(intervalNode)
 	
+	local labels = {}
+	local labelList = {}
+	local function setupLabels()
+		local posY = intervalNode.anchor.y*height
+		local right = math.floor((posY+height/2+50)/100)
+		local left = math.floor((posY-height/2-50)/100)
+		for i = left,right do
+			local pos = i*100
+			local label = CCLabelTTF(tostring(pos/100*indent),"Arial",10)
+			label.texture.antiAlias = false
+			label.scaleX = 1/intervalNode.scaleY
+			label.angle = -90
+			label.position = oVec2(-halfW+28,pos)
+			intervalNode:addChild(label)
+			labels[pos] = label
+			table.insert(labelList,label)
+		end
+	end
+	
+	local function moveLabel(label,pos)
+		labels[math.ceil(tonumber(label.text)/indent)*100] = nil
+		label.text = tostring(pos/100*indent)
+		label.texture.antiAlias = false
+		label.scaleX = 1/intervalNode.scaleY
+		label.angle = -90
+		label.position = oVec2(-halfW+28,pos)
+		labels[pos] = label
+	end
+	
+	local function updateLabels()
+		local posY = intervalNode.anchor.y*height
+		local right = math.floor((posY+height/2)/100)
+		local left = math.floor((posY-height/2)/100)
+		local insertPos = 1
+		for i = left,right do
+			local pos = i*100
+			if labels[pos] then
+				break
+			else
+				local label = table.remove(labelList)
+				table.insert(labelList,insertPos,label)
+				insertPos = insertPos+1
+				moveLabel(label,pos)
+			end
+		end
+		for i = right,left,-1 do
+			local pos = i*100
+			if labels[pos] then
+				break
+			else
+				local label = table.remove(labelList,1)
+				table.insert(labelList,label)
+				moveLabel(label,pos)
+			end
+		end
+		if up < top or down < bottom then
+			if up < top then
+				local target = top
+				for i = up,target do
+					local posY = i*interval
+					table.insert(vs,1,oVec2(-halfW,posY))
+					table.insert(vs,1,oVec2(-halfW+(i%10 == 0 and 16 or 8),posY))
+					table.insert(vs,1,oVec2(-halfW,posY))
+				end
+				up = target+1
+			end
+			if down < bottom then
+				local target = bottom
+				for i = down,target do
+					local posY = -i*interval
+					table.insert(vs,oVec2(-halfW,posY))
+					table.insert(vs,oVec2(-halfW+(i%10 == 0 and 16 or 8),posY))
+					table.insert(vs,oVec2(-halfW,posY))
+				end
+				down = target+1
+			end
+			intervalNode:set(vs)
+		end
+	end
+
+	setupLabels()
+
 	local arrow = CCNode()
 	arrow.cascadeOpacity = false
 	arrow:addChild(oLine({oVec2(-halfW,0),oVec2(halfW,0)},ccColor4(0xff00ffff)))
@@ -186,7 +199,7 @@ local function oEditRuler()
 	ruler.setIndent = function(self,ind)
 		indent = ind
 		for i,label in pairs(labels) do
-			label.text = tostring(ind*i)
+			label.text = tostring(ind*i/100)
 			label.texture.antiAlias = false
 		end
 	end
@@ -208,17 +221,7 @@ local function oEditRuler()
 		end
 		local posY = (v*10*interval/indent)
 		intervalNode.anchor = oVec2(0,posY/height)
-		intervalNode:eachChild(function(child)
-			local halfH = child.height*0.5
-			local y = child.positionY
-			local distance
-			if y > posY then
-				distance = y-halfH-posY
-			else
-				distance = posY-y-halfH
-			end
-			child.visible = distance < height/2
-		end)
+
 		local scale = intervalNode.scaleY
 		if posY >= 0 then
 			local newTop = math.ceil((posY+halfH/scale)/interval)
@@ -227,6 +230,7 @@ local function oEditRuler()
 			local newBottom = math.ceil((-posY+halfH/scale)/interval)
 			if bottom < newBottom then bottom = newBottom end
 		end
+		updateLabels()
 	end
 	ruler.getValue = function(self)
 		return _value--intervalNode.anchor.y*height*indent/(10*interval)
@@ -359,7 +363,6 @@ local function oEditRuler()
 		self:stopAllActions()
 		self:runAction(CCSpawn({oScale(0.5,1,1,oEase.OutBack),oOpacity(0.5,0.8)}))
 		self.touchEnabled = true
-		content:schedule(self.routine)
 	end
 	ruler.hide = function(self)
 		if not ruler.visible then return end
@@ -377,7 +380,6 @@ local function oEditRuler()
 				ruler.visible = false
 			end),
 		}))
-		content:unschedule()
 	end
 	return ruler
 end

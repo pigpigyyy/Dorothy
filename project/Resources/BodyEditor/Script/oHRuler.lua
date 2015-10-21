@@ -42,12 +42,17 @@ local function oHRuler()
 
 	-- init interval --
 	local intervalNode = oLine()
+	intervalNode.position = oVec2(origin.x,halfH)
+	self:addChild(intervalNode)
+
 	local nPart = 0
 	local nCurrentPart = 0
 	local pPart = 0
 	local pCurrentPart = 0
 	local vs = {}
 	local function updatePart(nLength,pLength)
+		nLength = nLength + 10
+		pLength = pLength + 10
 		if nLength <= nPart and pLength <= pPart then
 			return
 		end
@@ -59,93 +64,105 @@ local function oHRuler()
 		end
 	end
 
-	-- worker thread for intervals creation --
-	self:slots("Entered",function()
-		self:schedule(once(function()
-			repeat
-				if nCurrentPart < nPart or pCurrentPart < pPart then
-					local start = math.floor(nPart/10)
-					local count = math.floor(nCurrentPart/10)
-					local length = #vs
-					if start > count then
-						for i = count,start do
-							if i ~= 0 then
-								local posX = -i*10
-								table.insert(vs,1,oVec2(posX,halfH))
-								table.insert(vs,1,oVec2(posX,halfH - (i%10 == 0 and 8 or 4)))
-								table.insert(vs,1,oVec2(posX,halfH))
-								if i%10 == 0 then
-									local label = CCLabelTTF(tostring(-i*10),"Arial",10)
-									label.texture.antiAlias = false
-									label.scaleX = 1/self.scaleX
-									label.position = oVec2(posX,halfH - 18)
-									intervalNode:addChild(label)
-									coroutine.yield()
-								end
-							end
-							nCurrentPart = nCurrentPart + 10
-						end
+	local labels = {}
+	local labelList = {}
+	local function setupLabels()
+		local right = math.floor((-intervalNode.positionX+rulerWidth+100)/100)
+		local left = math.floor((-intervalNode.positionX-100)/100)
+		for i = left,right do
+			local pos = i*100
+			local label = CCLabelTTF(tostring(pos),"Arial",10)
+			label.texture.antiAlias = false
+			label.scaleX = 1/self.scaleX
+			label.position = oVec2(pos,halfH - 18)
+			intervalNode:addChild(label)
+			labels[pos] = label
+			table.insert(labelList,label)
+		end
+	end
+	local function moveLabel(label,pos)
+		labels[tonumber(label.text)] = nil
+		label.text = tostring(pos)
+		label.texture.antiAlias = false
+		label.scaleX = 1/self.scaleX
+		label.position = oVec2(pos,halfH-18)
+		labels[pos] = label
+	end
+	local function updateLabels()
+		local right = math.floor((-intervalNode.positionX+rulerWidth+50)/100)
+		local left = math.floor((-intervalNode.positionX-50)/100)
+		local insertPos = 1
+		for i = left,right do
+			local pos = i*100
+			if labels[pos] then
+				break
+			else
+				local label = table.remove(labelList)
+				table.insert(labelList,insertPos,label)
+				insertPos = insertPos+1
+				moveLabel(label,pos)
+			end
+		end
+		for i = right,left,-1 do
+			local pos = i*100
+			if labels[pos] then
+				break
+			else
+				local label = table.remove(labelList,1)
+				table.insert(labelList,label)
+				moveLabel(label,pos)
+			end
+		end
+		if nCurrentPart < nPart or pCurrentPart < pPart then
+			local start = math.floor(nPart/10)
+			local count = math.floor(nCurrentPart/10)
+			local length = #vs
+			if start > count then
+				for i = count,start do
+					if i ~= 0 then
+						local posX = -i*10
+						table.insert(vs,1,oVec2(posX,halfH))
+						table.insert(vs,1,oVec2(posX,halfH - (i%10 == 0 and 8 or 4)))
+						table.insert(vs,1,oVec2(posX,halfH))
 					end
-					start = math.floor(pCurrentPart/10)
-					count = math.floor(pPart/10)
-					if start < count then
-						for i = start,count do
-							local posX = i*10
-							table.insert(vs,oVec2(posX,halfH))
-							table.insert(vs,oVec2(posX,halfH - (i%10 == 0 and 8 or 4)))
-							table.insert(vs,oVec2(posX,halfH))
-							if i%10 == 0 then
-								local label = CCLabelTTF(tostring(i*10),"Arial",10)
-								label.texture.antiAlias = false
-								label.scaleX = 1/self.scaleX
-								label.position = oVec2(posX,halfH - 18)
-								intervalNode:addChild(label)
-								coroutine.yield()
-							end
-							pCurrentPart = pCurrentPart + 10
-						end
-					end
-					if #vs ~= length then
-						intervalNode:set(vs)
-					end
+					nCurrentPart = nCurrentPart + 10
 				end
-				coroutine.yield()
-			until false
-		end))
-	end)
+			end
+			start = math.floor(pCurrentPart/10)
+			count = math.floor(pPart/10)
+			if start < count then
+				for i = start,count do
+					local posX = i*10
+					table.insert(vs,oVec2(posX,halfH))
+					table.insert(vs,oVec2(posX,halfH - (i%10 == 0 and 8 or 4)))
+					table.insert(vs,oVec2(posX,halfH))
+					pCurrentPart = pCurrentPart + 10
+				end
+			end
+			if #vs ~= length then
+				intervalNode:set(vs)
+			end
+		end
+	end
 
 	-- set default interval negtive & positive part length --
+	setupLabels()
 	updatePart(origin.x,winSize.width-origin.x)
-	intervalNode.position = oVec2(origin.x,halfH)
-	self:addChild(intervalNode)
-
-	local function updateVisible()
-		local posX = intervalNode.positionX
-		intervalNode:eachChild(function(child)
-			local loc = posX+child.positionX
-			local visible = true
-			if loc < 0 then
-				visible = loc+child.width/2 > 0
-			elseif loc > rulerWidth then
-				visible = loc-child.width/2 < rulerWidth
-			end
-			child.visible = visible
-		end)
-	end
+	updateLabels()
 
 	-- listen view move event --
 	intervalNode:gslot("Body.viewArea.move",function(delta)
 		intervalNode.positionX = intervalNode.positionX + delta.x/self.scaleX
-		updateVisible()
 		updatePart(delta.x > 0 and intervalNode.positionX or 0,
 			delta.x < 0 and winSize.width-intervalNode.positionX or 0)
+		updateLabels()
 	end)
 	intervalNode:gslot("Body.viewArea.toPos",function(pos)
 		pos = pos+center
 		intervalNode:runAction(oPos(0.5,pos.x,halfH,oEase.OutQuad))
 		oRoutine(once(function()
 			cycle(0.5,function()
-				updateVisible()
+				updateLabels()
 			end)
 		end))
 		updatePart(pos.x,winSize.width-pos.x)

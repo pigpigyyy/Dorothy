@@ -66,54 +66,43 @@ local function oControlBar()
 	bar:setPos(0)
 
 	-- ruler
-	local ruler = CCDrawNode()
+	local ruler = CCNode()
+	local drawNode = CCDrawNode()
+	ruler:addChild(drawNode)
 	ruler._size = 0
 	ruler.setSize = function(self,size)
 		local delta = barIterval
 		if size < self._size then
-			self:removeAllChildrenWithCleanup()
-			self:clear()
-			self:drawSegment(oVec2.zero,oVec2(delta*size,0),0.5,ccColor4(0xffffffff))
+			drawNode:removeAllChildrenWithCleanup()
+			drawNode:clear()
+			drawNode:drawSegment(oVec2.zero,oVec2(delta*size,0),0.5,ccColor4(0xffffffff))
 		else
-			self:drawSegment(oVec2(delta*self._size,0),oVec2(delta*size),0.5,ccColor4(0xffffffff))
+			drawNode:drawSegment(oVec2(delta*self._size,0),oVec2(delta*size),0.5,ccColor4(0xffffffff))
 		end
 		local lastSize = self._size
 		self._size = size
-		if self._isUpdating then
-			return
-		end
-		self._isUpdating = true
 		local i = lastSize
 		-- update ruler interval by step, not all at once
-		self:schedule(function()
-			if i <= self._size then
-				local posX = delta*i
-				if i == 0 or (i%10 == 0 and i ~= lastSize) then
-					local label = CCLabelTTF(tostring(i),"Arial",10)--CCLabelAtlas(tostring(i),"rulerNum.png",7,11,string.byte("0"))
-					label.texture.antiAlias = false
-					label.position = oVec2(posX, 14)
-					self:addChild(label)
-					self:drawSegment(
-						oVec2(posX,0),
-						oVec2(posX,6),
-						0.5,ccColor4(0xffffffff))
-				elseif i%10 ~= 0 then					
-					self:drawSegment(
-						oVec2(posX,0),
-						oVec2(posX,3),
-						0.5,ccColor4(0xffffffff))
-				end
-				i = i + 1
-			else
-				self:unschedule()
-				self._isUpdating = false
+		while i <= self._size do
+			local posX = delta*i
+			if i == 0 or (i%10 == 0 and i ~= lastSize) then
+				drawNode:drawSegment(
+					oVec2(posX,0),
+					oVec2(posX,6),
+					0.5,ccColor4(0xffffffff))
+			elseif i%10 ~= 0 then
+				drawNode:drawSegment(
+					oVec2(posX,0),
+					oVec2(posX,3),
+					0.5,ccColor4(0xffffffff))
 			end
-		end)
+			i = i + 1
+		end
 	end
 	ruler.getSize = function(self)
 		return self._size
 	end
-	ruler:setSize(60)
+	ruler:setSize(90)
 	ruler.position = oVec2(30,35)
 
 	local cursorNode = CCDrawNode()
@@ -150,6 +139,54 @@ local function oControlBar()
 		end
 	end
 
+	local labels = {}
+	local labelList = {}
+	local function setupLabels()
+		for i = 0,70,10 do
+			local posX = i*barIterval
+			local label = CCLabelTTF(tostring(i),"Arial",10)
+			label.texture.antiAlias = false
+			label.position = oVec2(posX,14)
+			ruler:addChild(label)
+			labels[i] = label
+			table.insert(labelList,label)
+		end
+	end
+	local function moveLabel(label,i)
+		local posX = i*barIterval
+		labels[tonumber(label.text)] = nil
+		label.text = tostring(i)
+		label.texture.antiAlias = false
+		label.position = oVec2(posX,14)
+		labels[i] = label
+	end
+	local function updateLabels(maxPos)
+		local right = math.floor(maxPos/10)*10+10
+		local left = right-70
+		local insertPos = 1
+		for i = left,right,10 do
+			if labels[i] then
+				break
+			else
+				local label = table.remove(labelList)
+				table.insert(labelList,insertPos,label)
+				insertPos = insertPos+1
+				moveLabel(label,i)
+			end
+		end
+		for i = right,left,-10 do
+			if labels[i] then
+				break
+			else
+				local label = table.remove(labelList,1)
+				table.insert(labelList,label)
+				moveLabel(label,i)
+			end
+		end
+	end
+
+	setupLabels()
+
 	-- controlNode
 	local controlNode = CCNode()
 	controlNode:addChild(ruler)
@@ -158,11 +195,22 @@ local function oControlBar()
 	controlNode.setOffset = function(self,value)
 		self.positionX = value
 		local displaySize = math.floor((barLength-value)/barIterval)
-		if displaySize >= ruler:getSize() then
-			ruler:setSize(ruler:getSize()+60)
+		updateLabels(displaySize)
+		local displayPos = (displaySize-60)*barIterval
+		local deltaSize = displayPos - drawNode.positionX
+		if deltaSize >= 20*barIterval then
+			repeat
+				drawNode.positionX = drawNode.positionX + 10*barIterval
+				deltaSize = displayPos - drawNode.positionX
+			until deltaSize < 20*barIterval
+		elseif deltaSize <= 10*barIterval then
+			repeat
+				drawNode.positionX = math.max(drawNode.positionX-10*barIterval,0)
+				deltaSize = displayPos - drawNode.positionX
+			until deltaSize > 10*barIterval or drawNode.positionX == 0
 		end
 	end
-	
+
 	-- stencil
 	local stencil = CCDrawNode()
 	stencil:drawPolygon(
@@ -175,7 +223,7 @@ local function oControlBar()
 	stencil.position = oVec2(10,10)
 	local clipNode = CCClipNode(stencil)
 	clipNode:addChild(controlNode)
-	
+
 	-- build controlBar
 	controlBar:addChild(border)
 	controlBar:addChild(clipNode)
@@ -197,7 +245,7 @@ local function oControlBar()
 				controlBar.touchEnabled = true
 			end
 		end)
-	
+
 	controlBar.show = function(self)
 		if not fade.done then
 			self:stopAction(fade)
@@ -213,7 +261,7 @@ local function oControlBar()
 
 	local jumpPos = false
 	controlBar.swallowTouches = true
-	
+
 	local function isTouchValid(touch)
 		if not controlBar.visible or touch.id ~= 0 then
 			return false
