@@ -2,7 +2,7 @@
 <LayerColor Name="mask" X="{ @X }" Y="{ @Y }"
 	Color="0x0" Opacity="0"
 	SwallowTouches="True" TouchEnabled="True"
-	TouchPriority="{ editor.touchLevel10 }">
+	TouchPriority="{ editor.levelInputBox }">
 	<Import Module="Control.Basic.TextField"/>
 	<Import Module="Control.Basic.CircleButton"/>
 
@@ -33,7 +33,7 @@
 		</TextField>
 
 		<Menu Name="activateArea" Width="240" Height="50" SwallowTouches="True"
-			TouchPriority="{ editor.touchLevel10-1 }" Ref="True">
+			TouchPriority="{ editor.levelInputBox-1 }" Ref="True">
 			<MenuItem X="{ $X }" Y="{ $Y }" Width="240" Height="50">
 				<Slot Name="Tapped">
 					textField:attachWithIME()
@@ -44,7 +44,7 @@
 		</Menu>
 
 		<Menu Name="opMenu" Y="-76" Width="130" Height="60" SwallowTouches="True"
-			TouchPriority="{ editor.touchLevel10-2 }" Ref="True">
+			TouchPriority="{ editor.levelInputBox-2 }" Ref="True">
 			<CircleButton Name="okBtn" X="30" Y="30" Radius="30" FontSize="17" Text="OK" Ref="True">
 				<DrawNode X="30" Y="30">
 					<Dot X="0" Y="0" Radius="30" Color="0x22ffffff"/>

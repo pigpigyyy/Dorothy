@@ -1,5 +1,2 @@
 <Scene>
-	<Import Module="View.Shape.SolidRect"/>
-
-	<SolidRect Width="{ $W }" Height="{ $H }" Color="0xff1a1a1a"/>
 </Scene>

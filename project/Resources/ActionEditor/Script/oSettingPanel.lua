@@ -929,7 +929,7 @@ local function oSettingPanel()
 			spriteItems[i].positionX = 0
 			spriteItems[i].positionY = posY()
 		end
-		viewHeight = 30*(#spriteItems)+20
+		viewHeight = math.max(30*(#spriteItems)+20,borderSize.height)
 		viewWidth = borderSize.width
 		moveY = viewHeight-borderSize.height
 		moveX = borderSize.width-viewWidth
@@ -963,7 +963,7 @@ local function oSettingPanel()
 			animationItems[i].positionX = 0
 			animationItems[i].positionY = posY()
 		end
-		viewHeight = 30*(#animationItems)+20
+		viewHeight = math.max(30*(#animationItems)+20,borderSize.height)
 		viewWidth = borderSize.width
 		moveY = viewHeight-borderSize.height
 		moveX = borderSize.width-viewWidth

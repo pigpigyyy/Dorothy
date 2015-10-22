@@ -2,7 +2,7 @@
 <LayerColor Name="mask" X="{ @X }" Y="{ @Y }"
 	Color="0x0" Opacity="0"
 	SwallowTouches="True" TouchEnabled="True"
-	TouchPriority="{ editor.touchLevel10 }">
+	TouchPriority="{ editor.levelMessageBox }">
 	<Import Module="Control.Basic.CircleButton"/>
 	<Import Module="Control.Basic.ScrollArea"/>
 
@@ -14,14 +14,14 @@
 			<Vec2 X="-130" Y="110"/>
 		</Polygon>
 
-		<ScrollArea Name="scrollArea" X="0" Y="45" Width="240" Height="90" PaddingX="50" PaddingY="50" TouchPriority="{ editor.touchLevel10-1 }" Ref="True">
+		<ScrollArea Name="scrollArea" X="0" Y="45" Width="240" Height="90" PaddingX="50" PaddingY="50" TouchPriority="{ editor.levelMessageBox-1 }" Ref="True">
 			<Item Name="view">
 				<LabelTTF Name="title" Text="{ text }" FontName="Arial" FontSize="24" X="{ $X }" Y="{ $Y }" Color="0x00ffff" AntiAlias="False" Ref="True"/>
 			</Item>
 		</ScrollArea>
 
 		<Menu Name="opMenu" Y="-45" Width="130" Height="60" SwallowTouches="True"
-			TouchPriority="{ editor.touchLevel10-2 }" Ref="True">
+			TouchPriority="{ editor.levelMessageBox-2 }" Ref="True">
 			<CircleButton Name="okBtn" X="{ okOnly and $X or 30 }" Y="30" Radius="30" FontSize="17" Text="OK" Ref="True">
 				<DrawNode X="30" Y="30">
 					<Dot X="0" Y="0" Radius="30" Color="0x22ffffff"/>

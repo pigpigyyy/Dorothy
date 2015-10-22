@@ -1,6 +1,6 @@
-Dorothy!
 Class,property = unpack require "class"
 TabButtonView = require "View.Control.Item.TabButton"
+
 -- [signal]
 -- "Checked",(checked,tabButton)->
 -- "Expanded",(expanded)->

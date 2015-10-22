@@ -108,6 +108,7 @@ Class
 				elseif @_selectedItem == item
 					@_selectedItem = nil
 				checkFolding item
+
 			addItem = (x,y,text,data)->
 				realW = width-(x-itemW/2)-10
 				realX = (x-itemW/2)+realW/2

@@ -1,5 +1,14 @@
-Dorothy!
+CCTextFieldTTF = require "CCTextFieldTTF"
+oVec2 = require "oVec2"
+oLine = require "oLine"
+ccColor4 = require "ccColor4"
+CCRepeatForever = require "CCRepeatForever"
+CCSequence = require "CCSequence"
+CCShow = require "CCShow"
+CCDelay = require "CCDelay"
+CCHide = require "CCHide"
 Class = unpack require "class"
+
 -- [signals]
 -- "TextChanged",(textField)->
 -- [params]
@@ -42,7 +51,7 @@ Class
 		@\slots "InputInserting",(addText)->
 			string.len(@text) < limit or addText == "\n"
 
-		inputed = (text)->
+		inputed = ->
 			with cursor
 				.positionX = @width
 				\perform blink

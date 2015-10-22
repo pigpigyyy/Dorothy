@@ -1,6 +1,12 @@
-Dorothy!
+CCMenu = require "CCMenu"
+CCDirector = require "CCDirector"
+oVec2 = require "oVec2"
+oEase = require "oEase"
+CCRect = require "CCRect"
+CCSize = require "CCSize"
 Class,property = unpack require "class"
 ScrollAreaView = require "View.Control.Basic.ScrollArea"
+
 -- [signals]
 -- "ScrollTouchBegan",->
 -- "ScrollTouchEnded",->

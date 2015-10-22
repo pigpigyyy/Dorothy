@@ -1,7 +1,22 @@
-Dorothy!
+oRoutine = require "oRoutine"
+oCache = require "oCache"
+thread = require "thread"
+CCLabelTTF = require "CCLabelTTF"
+oVec2 = require "oVec2"
+ccColor3 = require "ccColor3"
+CCSprite = require "CCSprite"
+CCRenderTarget = require "CCRenderTarget"
+sleep = require "sleep"
+CCRect = require "CCRect"
+oOpacity = require "oOpacity"
+oScale = require "oScale"
+oEase = require "oEase"
+CCSequence = require "CCSequence"
+CCCall = require "CCCall"
 Class,property = unpack require "class"
 SpriteViewView = require "View.Control.Item.SpriteView"
 NumberDot = require "Control.Item.NumberDot"
+
 -- [signals]
 -- "Selected",(viewItem)->
 -- "Checked",(checked,viewItem)->

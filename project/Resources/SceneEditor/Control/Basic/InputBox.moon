@@ -1,13 +1,20 @@
-Dorothy!
-Class,property = unpack require "class"
+CCDirector = require "CCDirector"
+oOpacity = require "oOpacity"
+CCSequence = require "CCSequence"
+CCSpawn = require "CCSpawn"
+oScale = require "oScale"
+oEase = require "oEase"
+CCCall = require "CCCall"
+Class = unpack require "class"
 InputBoxView = require "View.Control.Basic.InputBox"
+
 -- [signals]
 -- "Inputed",(text)->
 -- [params]
 -- text
 Class
 	__partial: (args)=> InputBoxView args
-	__init: (args)=>
+	__init: =>
 		@textField\attachWithIME!
 		@textField\slots "TextChanged", ->
 			if @textField.text ~= ""

@@ -63,11 +63,14 @@ local function oVRuler()
 		end
 	end
 
+	local rightOffset = (rulerHeight-origin.y)+100
+	local leftOffset = -origin.y-100
+
 	local labels = {}
 	local labelList = {}
 	local function setupLabels()
-		local right = math.floor((-intervalNode.positionY+rulerHeight+100)/100)
-		local left = math.floor((-intervalNode.positionY-100)/100)
+		local right = math.floor(rightOffset/100)
+		local left = math.ceil(leftOffset/100)
 		for i = left,right do
 			local pos = i*100
 			local label = CCLabelTTF(tostring(pos),"Arial",10)
@@ -90,8 +93,8 @@ local function oVRuler()
 		labels[pos] = label
 	end
 	local function updateLabels()
-		local right = math.floor((-intervalNode.positionY+rulerHeight+50)/100)
-		local left = math.floor((-intervalNode.positionY-50)/100)
+		local right = math.floor((rightOffset-(intervalNode.positionY-origin.y))/100)
+		local left = math.ceil((leftOffset-(intervalNode.positionY-origin.y))/100)
 		local insertPos = 1
 		for i = left,right do
 			local pos = i*100

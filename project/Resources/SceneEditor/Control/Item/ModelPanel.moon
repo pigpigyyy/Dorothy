@@ -1,4 +1,23 @@
-Dorothy!
+emit = require "emit"
+CCRect = require "CCRect"
+oRoutine = require "oRoutine"
+oContent = require "oContent"
+sleep = require "sleep"
+CCSequence = require "CCSequence"
+CCDelay = require "CCDelay"
+oOpacity = require "oOpacity"
+oVec2 = require "oVec2"
+CCSize = require "CCSize"
+CCScene = require "CCScene"
+oCache = require "oCache"
+thread = require "thread"
+oEase = require "oEase"
+CCHide = require "CCHide"
+ccColor3 = require "ccColor3"
+CCShow = require "CCShow"
+oScale = require "oScale"
+CCSpawn = require "CCSpawn"
+CCCall = require "CCCall"
 Class,property = unpack require "class"
 ModelPanelView = require "View.Control.Item.ModelPanel"
 ModelView = require "Control.Item.ModelView"
@@ -6,6 +25,7 @@ MessageBox = require "Control.Basic.MessageBox"
 InputBox = require "Control.Basic.InputBox"
 import CompareTable from require "Data.Utils"
 Reference = require "Data.Reference"
+
 -- [signals]
 -- "Selected",(modelFile)->
 -- "Hide",->
@@ -13,7 +33,7 @@ Reference = require "Data.Reference"
 -- x, y, width, height
 Class
 	__partial: (args)=> ModelPanelView args
-	__init: (args)=>
+	__init: =>
 		@_isCheckMode = false
 		@modelItems = {}
 		@_selectedItem = nil
@@ -91,7 +111,7 @@ Class
 
 				{:width,:height} = @scrollArea
 
-				i = 0
+				index = 0
 				if @models
 					modelsToAdd,modelsToDel = CompareTable @models,models
 					for model in *modelsToDel
@@ -113,10 +133,10 @@ Class
 						@modelItems[model] = viewItem
 						viewItem.opacity = 0
 						viewItem\perform CCSequence {
-							CCDelay i*0.1
+							CCDelay index*0.1
 							oOpacity 0.3,1
 						}
-						i += 1
+						index += 1
 				else
 					if @modelItems
 						@\playUpdateHint!
@@ -137,10 +157,10 @@ Class
 						@modelItems[model] = viewItem
 						viewItem.opacity = 0
 						viewItem\perform CCSequence {
-							CCDelay i*0.1
+							CCDelay index*0.1
 							oOpacity 0.3,1
 						}
-						i += 1
+						index += 1
 				table.sort models,(a,b)->
 					a\match("[\\/]([^\\/]*)$") < b\match("[\\/]([^\\/]*)$")
 				@models = models
@@ -244,7 +264,7 @@ Class
 	clearSelection: =>
 		if @_selectedItem
 			viewItem = @modelItems[@_selectedItem]
-			if viewItem and viewItem ~= item
+			if viewItem
 				viewItem.checked = false
 				viewItem.face\runAction oOpacity 0.3,0.5,oEase.OutQuad
 				@_selectedItem = nil

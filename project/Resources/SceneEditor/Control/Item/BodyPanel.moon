@@ -1,4 +1,23 @@
-Dorothy!
+emit = require("emit")
+CCRect = require("CCRect")
+oRoutine = require "oRoutine"
+oCache = require "oCache"
+oContent = require "oContent"
+CCSequence = require "CCSequence"
+CCDelay = require "CCDelay"
+oOpacity = require "oOpacity"
+oVec2 = require "oVec2"
+CCSize = require "CCSize"
+CCScene = require "CCScene"
+oEase = require "oEase"
+CCHide = require "CCHide"
+ccColor3 = require "ccColor3"
+CCShow = require "CCShow"
+oScale = require "oScale"
+CCSpawn = require "CCSpawn"
+CCCall = require "CCCall"
+sleep = require "sleep"
+thread = require "thread"
 Class,property = unpack require "class"
 BodyPanelView = require "View.Control.Item.BodyPanel"
 BodyView = require "Control.Item.BodyView"
@@ -6,6 +25,7 @@ MessageBox = require "Control.Basic.MessageBox"
 InputBox = require "Control.Basic.InputBox"
 import CompareTable from require "Data.Utils"
 Reference = require "Data.Reference"
+
 -- [signals]
 -- "Selected",(BodyFile)->
 -- "Hide",->
@@ -13,7 +33,7 @@ Reference = require "Data.Reference"
 -- x, y, width, height
 Class
 	__partial: (args)=> BodyPanelView args
-	__init: (args)=>
+	__init: =>
 		@_isCheckMode = false
 		@bodyItems = {}
 		@_selectedItem = nil
@@ -92,7 +112,7 @@ Class
 
 				{:width,:height} = @scrollArea
 
-				i = 0
+				index = 0
 				if @bodies
 					bodiesToAdd,bodiesToDel = CompareTable @bodies,bodies
 					for body in *bodiesToDel
@@ -114,10 +134,10 @@ Class
 						@bodyItems[body] = viewItem
 						viewItem.opacity = 0
 						viewItem\perform CCSequence {
-							CCDelay i*0.1
+							CCDelay index*0.1
 							oOpacity 0.3,1
 						}
-						i += 1
+						index += 1
 				else
 					if @bodyItems
 						@\playUpdateHint!
@@ -138,10 +158,10 @@ Class
 						@bodyItems[body] = viewItem
 						viewItem.opacity = 0
 						viewItem\perform CCSequence {
-							CCDelay i*0.1
+							CCDelay index*0.1
 							oOpacity 0.3,1
 						}
-						i += 1
+						index += 1
 				@bodies = bodies
 
 				itemCount = math.floor (@panel.width-10)/110
@@ -242,7 +262,7 @@ Class
 	clearSelection: =>
 		if @_selectedItem
 			viewItem = @bodyItems[@_selectedItem]
-			if viewItem and viewItem ~= item
+			if viewItem
 				viewItem.checked = false
 				viewItem.face\runAction oOpacity 0.3,0.5,oEase.OutQuad
 				@_selectedItem = nil

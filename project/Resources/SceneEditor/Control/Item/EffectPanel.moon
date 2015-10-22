@@ -1,4 +1,24 @@
-Dorothy!
+emit = require "emit"
+CCRect = require "CCRect"
+oRoutine = require "oRoutine"
+oCache = require "oCache"
+editor = require "editor"
+oContent = require "oContent"
+sleep = require "sleep"
+oVec2 = require "oVec2"
+CCSequence = require "CCSequence"
+CCDelay = require "CCDelay"
+oOpacity = require "oOpacity"
+CCSize = require "CCSize"
+CCScene = require "CCScene"
+thread = require "thread"
+oEase = require "oEase"
+CCHide = require "CCHide"
+ccColor3 = require "ccColor3"
+CCShow = require "CCShow"
+oScale = require "oScale"
+CCSpawn = require "CCSpawn"
+CCCall = require "CCCall"
 Class,property = unpack require "class"
 EffectPanelView = require "View.Control.Item.EffectPanel"
 EffectView = require "Control.Item.EffectView"
@@ -6,6 +26,7 @@ MessageBox = require "Control.Basic.MessageBox"
 InputBox = require "Control.Basic.InputBox"
 import CompareTable from require "Data.Utils"
 Reference = require "Data.Reference"
+
 -- [signals]
 -- "Selected",(BodyFile)->
 -- "Hide",->
@@ -13,7 +34,7 @@ Reference = require "Data.Reference"
 -- x, y, width, height
 Class
 	__partial: (args)=> EffectPanelView args
-	__init: (args)=>
+	__init: =>
 		@_isCheckMode = false
 		@effectItems = {}
 		@_selectedItem = nil
@@ -137,7 +158,6 @@ Class
 				@effects = effects
 				@effectFiles = effectFiles
 
-				i = 0
 				itemCount = 2
 				startY = height-40
 				y = startY
@@ -266,7 +286,7 @@ Class
 	clearSelection: =>
 		if @_selectedItem
 			viewItem = @effectItems[@_selectedItem]
-			if viewItem and viewItem ~= item
+			if viewItem
 				viewItem.checked = false
 				viewItem.face\runAction oOpacity 0.3,0.5,oEase.OutQuad
 				@_selectedItem = nil

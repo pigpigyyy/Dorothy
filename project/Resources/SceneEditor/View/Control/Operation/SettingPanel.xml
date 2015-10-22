@@ -2,6 +2,6 @@
 	<Import Module="Control.Operation.OperationPanel"/>
 	
 	<Item Name="menu">
-		<LabelTTF Name="title" X="{ $X }" Y="{ $T-18 }" Text="Editor" FontName="Arial" FontSize="16" Color="0x00ffff" AntiAlias="False" Ref="True"/>
+		<LabelTTF Name="title" X="{ $X }" Y="{ $T-18 }" Text="Dorothy Editor" FontName="Arial" FontSize="16" Color="0x00ffff" AntiAlias="False" Ref="True"/>
 	</Item>
 </OperationPanel>

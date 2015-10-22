@@ -1,11 +1,35 @@
-Dorothy!
-Class,property = unpack require "class"
+emit = require "emit"
+CCRect = require "CCRect"
+oRoutine = require "oRoutine"
+oContent = require "oContent"
+sleep = require "sleep"
+CCSequence = require "CCSequence"
+CCDelay = require "CCDelay"
+oOpacity = require "oOpacity"
+oVec2 = require "oVec2"
+CCSize = require "CCSize"
+oCache = require "oCache"
+thread = require "thread"
+CCImage = require "CCImage"
+ccBlendFunc = require "ccBlendFunc"
+CCSprite = require "CCSprite"
+CCRenderTarget = require "CCRenderTarget"
+tolua = require "tolua"
+oEase = require "oEase"
+CCHide = require "CCHide"
+ccColor3 = require "ccColor3"
+CCShow = require "CCShow"
+oScale = require "oScale"
+CCSpawn = require "CCSpawn"
+CCCall = require "CCCall"
+Class = unpack require "class"
 SpritePanelView = require "View.Control.Item.SpritePanel"
 TabButton = require "Control.Item.TabButton"
 SpriteView = require "Control.Item.SpriteView"
 MessageBox = require "Control.Basic.MessageBox"
 import CompareTable from require "Data.Utils"
 Reference = require "Data.Reference"
+
 -- [signals]
 -- "Selected",(spriteStr)->
 -- "Hide",->
@@ -13,7 +37,7 @@ Reference = require "Data.Reference"
 -- x, y, width, height
 Class
 	__partial: (args)=> SpritePanelView args
-	__init: (args)=>
+	__init: =>
 		@_isSelecting = false
 		@selectedImages = {}
 		@selectedClips = {}
@@ -87,7 +111,7 @@ Class
 				compareClip = (a,b)->
 					a\match("[\\/]([^\\/]*)$") < b\match("[\\/]([^\\/]*)$")
 
-				i = 0
+				index = 0
 				if @clips -- already loaded clips
 					clipsToAdd,clipsToDel = CompareTable @clips,clips
 					for clipDel in *clipsToDel
@@ -103,10 +127,10 @@ Class
 					table.sort clipsToAdd,compareClip
 					table.sort clips,compareClip
 					for clipAdd in *clipsToAdd
-						@clipItems[clipAdd] = @\_addClipTab clipAdd,i
+						@clipItems[clipAdd] = @\_addClipTab clipAdd,index
 						@\playUpdateHint!
 						sleep!
-						i += 1
+						index += 1
 				else -- first load clips
 					if @clipItems
 						@\playUpdateHint!
@@ -121,10 +145,10 @@ Class
 					@clipExpands = {}
 					table.sort clips,compareClip
 					for clip in *clips
-						clipTab = @\_addClipTab clip,i
+						clipTab = @\_addClipTab clip,index
 						@\playUpdateHint!
 						sleep!
-						i += 1
+						index += 1
 						clipTab.visible = false
 						@clipItems[clip] = clipTab
 				@clips = clips
@@ -154,10 +178,10 @@ Class
 						@imageItems[imageAdd] = viewItem
 						viewItem.opacity = 0
 						viewItem\perform CCSequence {
-							CCDelay i*0.1
+							CCDelay index*0.1
 							oOpacity 0.3,1
 						}
-						i += 1
+						index += 1
 				else
 					if @imageItems
 						@\playUpdateHint!
@@ -182,10 +206,10 @@ Class
 						@imageItems[image] = viewItem
 						viewItem.opacity = 0
 						viewItem\perform CCSequence {
-							CCDelay i*0.1
+							CCDelay index*0.1
 							oOpacity 0.3,1
 						}
-						i += 1
+						index += 1
 				@images = images
 
 				itemCount = math.floor (@panel.width-10)/110

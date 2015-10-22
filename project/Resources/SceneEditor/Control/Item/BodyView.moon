@@ -1,9 +1,25 @@
-Dorothy!
+CCDrawNode = require "CCDrawNode"
+ccColor4 = require "ccColor4"
+oVec2 = require "oVec2"
+oCache = require "oCache"
+CCLabelTTF = require "CCLabelTTF"
+ccColor3 = require "ccColor3"
+oOpacity = require "oOpacity"
+oWorld = require "oWorld"
+tolua = require "tolua"
+CCRenderTarget = require "CCRenderTarget"
+CCRect = require "CCRect"
+oScale = require "oScale"
+oEase = require "oEase"
+CCSequence = require "CCSequence"
+CCHide = require "CCHide"
+thread = require "thread"
+sleep = require "sleep"
 Class,property = unpack require "class"
 SpriteViewView = require "View.Control.Item.SpriteView"
-MessageBox = require "Control.Basic.MessageBox"
 oBody = require "oBodyEx"
 oStar = require "EffectEditor.Script.oStar"
+
 -- [signals]
 -- "Selected",(viewItem)->
 -- [params]
@@ -60,7 +76,7 @@ Class
 					oVec2 rc.right,rc.up
 					oVec2 rc.right,rc.bottom
 				}
-				for i,v in ipairs vs
+				for v in *vs
 					v = child\convertToWorldSpace v
 					minX = v.x if not minX
 					maxX = v.x if not maxX

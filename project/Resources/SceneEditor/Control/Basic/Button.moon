@@ -1,6 +1,6 @@
-Dorothy!
 Class,property = unpack require "class"
 ButtonView = require "View.Control.Basic.Button"
+
 -- [signals]
 -- "Tapped",(button)->
 -- [params]

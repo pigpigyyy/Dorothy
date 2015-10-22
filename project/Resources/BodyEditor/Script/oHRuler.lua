@@ -64,11 +64,14 @@ local function oHRuler()
 		end
 	end
 
+	local rightOffset = (rulerWidth-origin.x)+100
+	local leftOffset = -origin.x-100
+
 	local labels = {}
 	local labelList = {}
 	local function setupLabels()
-		local right = math.floor((-intervalNode.positionX+rulerWidth+100)/100)
-		local left = math.floor((-intervalNode.positionX-100)/100)
+		local right = math.floor(rightOffset/100)
+		local left = math.ceil(leftOffset/100)
 		for i = left,right do
 			local pos = i*100
 			local label = CCLabelTTF(tostring(pos),"Arial",10)
@@ -89,8 +92,8 @@ local function oHRuler()
 		labels[pos] = label
 	end
 	local function updateLabels()
-		local right = math.floor((-intervalNode.positionX+rulerWidth+50)/100)
-		local left = math.floor((-intervalNode.positionX-50)/100)
+		local right = math.floor((rightOffset-(intervalNode.positionX-origin.x))/100)
+		local left = math.ceil((leftOffset-(intervalNode.positionX-origin.x))/100)
 		local insertPos = 1
 		for i = left,right do
 			local pos = i*100

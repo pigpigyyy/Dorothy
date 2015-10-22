@@ -1,12 +1,4 @@
 <OperationPanel X="{ @R-10-90 }" Y="{ @T-10-(@H-30)*350/(600-30)/2 }" Width="180" Height="{ (@H-30)*350/(600-30) }">
 	<Import Module="Control.Operation.OperationPanel"/>
-	<Import Module="Control.Basic.CheckButton"/>
 
-	<Item Name="menu">
-		<CheckButton X="{ $L+60 }" Y="{ $T-30 }" Width="100" Height="40" Text="Scene" FontSize="16">
-			<Slot Name="TapEnded" Args="btn">
-				btn.cascadeOpacity = not btn.checked
-			</Slot>
-		</CheckButton>
-	</Item>
 </OperationPanel>

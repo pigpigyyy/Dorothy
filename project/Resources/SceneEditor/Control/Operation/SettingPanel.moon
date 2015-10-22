@@ -139,9 +139,9 @@ Class
 					.visible = true
 					.text = data.typeName
 					.texture.antiAlias = false
-					.position = oVec2 @width/2,@height-18
 			else
-				@title.positionX = -itemWidth
+				@title.text = "Dorothy Editor"
+				@title.texture.antiAlias = false
 				return
 
 			currentGroup = groups[data.typeName]

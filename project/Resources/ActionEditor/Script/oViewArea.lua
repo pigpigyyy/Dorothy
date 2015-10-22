@@ -768,10 +768,10 @@ local function oViewArea()
 	},ccColor4(0xff00ffff))
 	yBar.position = oVec2(6,6)
 	opacityEditor:addChild(yBar)
-	opacityEditor.position = oVec2(winSize.width-223,winSize.height*0.5-48)
+	opacityEditor.position = oVec2(23,winSize.height*0.5-48)
 	opacityEditor.visible = false
 	view:addChild(opacityEditor)
-	
+
 	-- opacity
 	local totalOpacity = 0
 	view.editOpacity = function(self)

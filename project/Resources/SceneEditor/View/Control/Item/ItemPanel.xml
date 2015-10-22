@@ -1,6 +1,6 @@
 <!-- params: X, Y, Width, Height -->
 <LayerColor X="{ @X }" Y="{ @Y }"
-	TouchPriority="{ editor.touchLevel8 }"
+	TouchPriority="{ editor.levelItemPanel }"
 	Color="0x0" Opacity="0"
 	SwallowTouches="True" TouchEnabled="True">
 	<Import Module="Control.Basic.ScrollArea"/>
@@ -11,21 +11,21 @@
 
 	<Node Name="panel" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" Ref="True">
 		<SolidRect Width="{ width }" Height="{ height }" Color="0xee100000"/>
-		<ScrollArea Name="scrollArea" X="{ $X }" Y="{ $T-(height-70)/2 }" Width="{ width }" Height="{ height-70 }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.touchLevel8-2 }" Ref="True">
+		<ScrollArea Name="scrollArea" X="{ $X }" Y="{ $T-(height-70)/2 }" Width="{ width }" Height="{ height-70 }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelItemPanel-2 }" Ref="True">
 			<Item Name="view">
-				<Menu Name="menu" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height-70 }" TouchPriority="{ editor.touchLevel8-1 }" Ref="True">
+				<Menu Name="menu" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height-70 }" TouchPriority="{ editor.levelItemPanel-1 }" Ref="True">
 					<LabelTTF Name="title" X="{ $X }" Y="{ $T-20 }" Text="{ title }" FontName="Arial" FontSize="24" Color="0x00ffff" Opacity="0.5" AntiAlias="False"/>
 				</Menu>
 			</Item>
 		</ScrollArea>
 		<LineRect X="-1" Y="-1" Width="{ width+2 }" Height="{ height+2 }" Color="0x88ffafaf"/>
 
-		<Menu Name="opMenu" AnchorX="0" AnchorY="0" X="0" Y="0" Width="{ width }" Height="70" TouchPriority="{ editor.touchLevel8-3 }" Ref="True"/>
+		<Menu Name="opMenu" AnchorX="0" AnchorY="0" X="0" Y="0" Width="{ width }" Height="70" TouchPriority="{ editor.levelItemPanel-3 }" Ref="True"/>
 
 		<LabelTTF Name="hint" X="{ $W-($W-50)/2 }" Y="30" Text="Updating" FontName="Arial" FontSize="16" Color="0x00ffff" Opacity="0" AntiAlias="False" Visible="False" Ref="True"/>
 	</Node>
 
-	<Menu X="{ @X+width/2 }" Y="{ @Y+height/2 }" Width="60" Height="60" TouchPriority="{ editor.touchLevel8-3 }">
+	<Menu X="{ @X+width/2 }" Y="{ @Y+height/2 }" Width="60" Height="60" TouchPriority="{ editor.levelItemPanel-3 }">
 		<CircleButton Name="closeBtn" X="{ $X }" Y="{ $Y }" Radius="30" Text="Cancel" FontSize="16" Ref="True">
 			<DrawNode>
 				<Dot X="30" Y="30" Radius="30" Color="0x22ffffff"/>

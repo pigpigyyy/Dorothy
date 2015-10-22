@@ -1,13 +1,13 @@
-Dorothy!
 Class,property = unpack require "class"
 Button = require "Control.Basic.Button"
+
 -- [signals]
 -- "Tapped",(button)->
 -- [params]
 -- x, y, width, height, fontSize, text
 Class
 	__partial: (args)=> Button args
-	__init: (args)=>
+	__init: =>
 		@_checked = false
 		@\slots("TapEnded")\set ->
 			@_checked = not @_checked

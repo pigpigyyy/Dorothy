@@ -1313,7 +1313,7 @@ local controls =
 	"oViewPanel",
 }
 
-oRoutine(once(function()
+oEditor:schedule(once(function()
 	coroutine.yield()
 	for index,name in ipairs(controls) do
 		local createFunc = require(name)

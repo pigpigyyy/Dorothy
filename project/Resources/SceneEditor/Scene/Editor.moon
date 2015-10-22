@@ -8,6 +8,7 @@ Reference = require "Data.Reference"
 Class
 	__partial: => EditorView!
 	__init: =>
+		{:width,:height} = CCDirector.winSize
 		@_gameName = ""
 		@_gameFullPath = ""
 		@_actionEditor = nil
@@ -15,6 +16,7 @@ Class
 		@_effectEditor = nil
 		@game = "Test"
 		@initRoutine = nil
+		@origin = oVec2 60+(width-250)/2,height/2
 
 		_G["editor"] = @
 		builtin["editor"] = @
@@ -32,11 +34,32 @@ Class
 		CCScene\transition "rollIn",{"zoomFlip",0.5,CCOrientation.Down}
 		CCScene\transition "rollOut",{"zoomFlip",0.5,CCOrientation.Up}
 
-		for i = 1,10
-			@["touchLevel"..tostring(i)] = CCMenu.DefaultHandlerPriority-i*10
+		level = (level)-> CCMenu.DefaultHandlerPriority-level*10
+		@levelViewArea = level 5
+		@levelHRuler = level 6
+		@levelVRuler = level 6
+		@levelEditMenu = level 7
+		@levelOperationPanel = level 7
+		@levelItemPanel = level 8
+		@levelClipEditor = level 9
+		@levelMessageBox = level 10
+		@levelInputBox = level 10
+		@levelSelectionPanel = level 10
 
 		@initRoutine = thread ->
-			{:width,:height} = CCDirector.winSize
+			controlNames = {
+				"ViewArea"
+				"HRuler"
+				"VRuler"
+				"EditMenu"
+				"ViewPanel"
+				"SettingPanel"
+			}
+			for name in *controlNames
+				Control = require "Control.Operation."..name
+				sleep!
+				@\addChild Control!
+
 			panelWidth = 10+110*4
 			panelHeight = height*0.6
 			panelNames = {
@@ -45,7 +68,6 @@ Class
 				"BodyPanel"
 				"EffectPanel"
 			}
-			sleep!
 			for name in *panelNames
 				Panel = require "Control.Item."..name
 				sleep!
@@ -57,20 +79,32 @@ Class
 				}
 				panel.visible = false
 				@[name\sub(1,1)\lower!..name\sub(2,-1)] = panel
-				@\addChild panel,1
+				@\addChild panel
 
-			EditMenu = require "Control.Operation.EditMenu"
-			sleep!
-			@editMenu = EditMenu!
-			@\addChild @editMenu
-
-			ViewPanel = require "Control.Operation.ViewPanel"
-			@viewPanel = ViewPanel!
-			@\addChild @viewPanel
-
-			SettingPanel = require "Control.Operation.SettingPanel"
-			@settingPanel = SettingPanel!
-			@\addChild @settingPanel
+			worldDef = Model.PlatformWorld!
+			worldDef.camera = Model.Camera!
+			worldDef.ui = Model.UILayer!
+			modelDef = Model.Model!
+			modelDef.name = "model1"
+			worldDef.ui.children = {modelDef}
+			layerDef = Model.Layer!
+			bodyDef = Model.Body!
+			modelDef = Model.Model!
+			layerDef.children = {bodyDef,modelDef,Model.Sprite!}
+			layerDef1 = Model.Layer!
+			layerDef1.name = "layer1"
+			layerDef2 = Model.Layer!
+			layerDef2.name = "layer2"
+			layerDef3 = Model.Layer!
+			layerDef3.name = "layer3"
+			layerDef4 = Model.Layer!
+			layerDef4.name = "layer4"
+			bodyDef = Model.Body!
+			bodyDef.name = "body1"
+			layerDef4.children = {bodyDef}
+			worldDef.children = {layerDef1,layerDef2,layerDef3,layerDef4,layerDef}
+			@sceneData = worldDef
+			emit "Scene.DataLoaded",worldDef
 
 		@\gslot "Editor.ItemChooser",(args)->
 			handler = args[#args]
@@ -106,33 +140,6 @@ Class
 		@\gslot "Scene.EffectUpdated",refreshRef
 		@\gslot "Scene.ClipUpdated",refreshRef
 
-		thread ->
-			sleep 1
-			worldDef = Model.PlatformWorld!
-			worldDef.camera = Model.Camera!
-			worldDef.ui = Model.UILayer!
-			modelDef = Model.Model!
-			modelDef.name = "model1"
-			worldDef.ui.children = {modelDef}
-			layerDef = Model.Layer!
-			bodyDef = Model.Body!
-			modelDef = Model.Model!
-			layerDef.children = {bodyDef,modelDef,Model.Sprite!}
-			layerDef1 = Model.Layer!
-			layerDef1.name = "layer1"
-			layerDef2 = Model.Layer!
-			layerDef2.name = "layer2"
-			layerDef3 = Model.Layer!
-			layerDef3.name = "layer3"
-			layerDef4 = Model.Layer!
-			layerDef4.name = "layer4"
-			bodyDef = Model.Body!
-			bodyDef.name = "body1"
-			layerDef4.children = {bodyDef}
-			worldDef.children = {layerDef1,layerDef2,layerDef3,layerDef4,layerDef}
-			@sceneData = worldDef
-			emit "Scene.DataLoaded",worldDef
-
 	updateSprites: =>
 		emit "Scene.LoadSprite", @graphicFolder
 
@@ -161,7 +168,7 @@ Class
 			if @_bodyEditor
 				bodyEditor.input = @gameFullPath
 				bodyEditor.output = @gameFullPath
-			--Reference.update!
+			Reference.update!
 
 	gameFullPath: property => @_gameFullPath
 	graphicFolder: property => "Graphic/"
