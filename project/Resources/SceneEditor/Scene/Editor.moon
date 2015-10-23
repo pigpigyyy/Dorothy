@@ -58,7 +58,9 @@ Class
 			for name in *controlNames
 				Control = require "Control.Operation."..name
 				sleep!
-				@\addChild Control!
+				control = Control!
+				@[name\sub(1,1)\lower!..name\sub(2,-1)] = control
+				@\addChild control
 
 			panelWidth = 10+110*4
 			panelHeight = height*0.6
@@ -81,30 +83,17 @@ Class
 				@[name\sub(1,1)\lower!..name\sub(2,-1)] = panel
 				@\addChild panel
 
-			worldDef = Model.PlatformWorld!
-			worldDef.camera = Model.Camera!
-			worldDef.ui = Model.UILayer!
-			modelDef = Model.Model!
-			modelDef.name = "model1"
-			worldDef.ui.children = {modelDef}
+
+			bodyDef = Model.Body!
+			bodyDef.file = "Physics/car.body"
 			layerDef = Model.Layer!
-			bodyDef = Model.Body!
-			modelDef = Model.Model!
-			layerDef.children = {bodyDef,modelDef,Model.Sprite!}
-			layerDef1 = Model.Layer!
-			layerDef1.name = "layer1"
-			layerDef2 = Model.Layer!
-			layerDef2.name = "layer2"
-			layerDef3 = Model.Layer!
-			layerDef3.name = "layer3"
-			layerDef4 = Model.Layer!
-			layerDef4.name = "layer4"
-			bodyDef = Model.Body!
-			bodyDef.name = "body1"
-			layerDef4.children = {bodyDef}
-			worldDef.children = {layerDef1,layerDef2,layerDef3,layerDef4,layerDef}
-			@sceneData = worldDef
-			emit "Scene.DataLoaded",worldDef
+			layerDef.children = {bodyDef}
+			@sceneData = with Model.PlatformWorld!
+				.camera = Model.Camera!
+				.ui = Model.UILayer!
+				.children = {layerDef}
+			@viewArea.scaleNode\addChild @sceneData!
+			emit "Scene.DataLoaded",@sceneData
 
 		@\gslot "Editor.ItemChooser",(args)->
 			handler = args[#args]
@@ -230,3 +219,17 @@ Class
 			CCScene\add "effectEditor",effectEditor
 			@_effectEditor = effectEditor
 		return @_effectEditor
+
+	getUsableName: (originalName)=>
+		originalName = "name" if originalName == ""
+		if @items[originalName]
+			counter = 1
+			nawName = nil
+			usable = false
+			while not usable
+				nawName = originalName..tostring counter
+				usable = (@items[nawName] == nil)
+				counter += 1
+			nawName
+		else
+			originalName

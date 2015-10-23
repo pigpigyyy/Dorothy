@@ -8,17 +8,17 @@ Class
 		@opacity = 0.4
 		@_menuEnabled = true
 
-		fadeOut = CCSequence {
+		@fadeOut = CCSequence {
 			CCDelay 1
 			oOpacity 0.5,0.4,oEase.InExpo
 		}
 
 		@\slots "ScrollTouchBegan",->
-			@\stopAction fadeOut
+			@\stopAction @fadeOut unless @fadeOut.done
 			@opacity = 1
 
 		@\slots "ScrollEnd",->
-			@perform fadeOut
+			@perform @fadeOut
 
 		@\slots "ScrollStart",->
 			@menu.enabled = false
@@ -42,3 +42,6 @@ Class
 		(value)=>
 			@_menuEnabled = value
 			@menu.enabled = value
+
+	fade: =>
+			@perform @fadeOut

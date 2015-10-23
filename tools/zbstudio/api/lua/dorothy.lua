@@ -5547,6 +5547,13 @@ local Dorothy =
 				returns = "()",
 				type = "method"
 			},
+			swapLayer =
+			{
+				args = "(orderA: int, orderB: int)",
+				description = "",
+				returns = "()",
+				type = "method"
+			},
 			setLayerRatio =
 			{
 				args = "(zOrder: int, ratio: oVec2)",

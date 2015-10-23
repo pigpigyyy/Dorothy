@@ -28,7 +28,6 @@ Class
 			{"Animation","%s"}
 			{"FaceRight","%s"}
 			{"Contact","%s"}
-			{"Index","%d"}
 			{"Target","%s"}
 			{"Gravity","%.2f"}
 			{"Name","%s"}
@@ -77,7 +76,6 @@ Class
 			}
 			Layer: {
 				items.Name
-				items.Index
 				items.RatioX
 				items.RatioY
 				items.Offset
@@ -89,6 +87,10 @@ Class
 				items.Contact
 				items.Simulation
 				items.Outline
+				items.RatioX
+				items.RatioY
+				items.Offset
+				items.Zoom
 			}
 			Body: {
 				items.Name

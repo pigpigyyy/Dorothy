@@ -46,6 +46,7 @@ public:
 	oLayer* getLayer(int zOrder);
 	void removeLayer(int zOrder);
 	void removeAllLayers();
+	void swapLayer(int orderA, int orderB);
 	void setLayerRatio(int zOrder, const oVec2& ratio);
 	const oVec2& getLayerRatio(int zOrder);
 	void setLayerOffset(int zOrder, const oVec2& offset);

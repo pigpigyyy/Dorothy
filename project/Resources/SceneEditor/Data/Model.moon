@@ -13,8 +13,8 @@ Simulation = (level)->
 			8,3
 Children = (parent,children)->
 	if children
-		for child in *children
-			child = child parent
+		for i,child in ipairs children
+			child = child parent,i
 			if child
 				parent\addChild child
 Contact = (world,contacts)->
@@ -39,7 +39,7 @@ DataCreater = (dataDef)->
 	create = dataDef.create
 	dataDef.create = nil
 	dataMt =
-		__call:(parent)-> create parent
+		__call:(parent,index)=> create @,parent,index
 		__newindex:(k,v)=>
 			itemDef = dataDef[k]
 			if itemDef
@@ -84,8 +84,6 @@ DataCreater = (dataDef)->
 		setmetatable data,dataMt
 		data
 
-items = nil
-
 local Items
 Items =
 	loadData:(filename)->
@@ -119,21 +117,21 @@ Items =
 				.gravity = @gravity
 				.showDebug = @outline
 				\setIterations Simulation @simulation
-			items = {:world}
+			editor.items = {Scene:world}
+			@camera world if @camera!
+			@ui world if @ui
 			Contact world,@contact
 			Children world,@children
-			@ui\create! if @ui
-			tmpItems = items
-			items = nil
-			tmpItems
+			world
 
 	UILayer:DataCreater
 		-- property
 		itemType:{1,Types.UILayer}
 		children:{2,false}
 		-- helper
-		create:=>
-			layer = items.world.UILayer
+		create:(scene)=>
+			layer = scene.UILayer
+			editor.items.UI = layer
 			Children layer,@children
 			nil
 
@@ -146,27 +144,27 @@ Items =
 		ratioX:{5,1}
 		ratioY:{6,1}
 		-- helper
-		create:=> nil
+		create:(scene)=>
+			editor.items.Camera = scene.camera
+			nil
 
 	Layer:DataCreater
 		-- property
 		itemType:{1,Types.Layer}
 		name:{2,"layer"}
-		index:{3,0}
-		ratioX:{4,0}
-		ratioY:{5,0}
-		offset:{6,Point(0,0)}
-		zoom:{7,1}
-		children:{8,false}
+		ratioX:{3,0}
+		ratioY:{4,0}
+		offset:{5,Point(0,0)}
+		zoom:{6,1}
+		children:{7,false}
 		-- helper
-		create:=>
-			world = with items.world
-				\setLayerRatio @index,oVec2(@ratioX,@ratioY)
-				\setLayerOffset @index,@offset
-			layer = with world\getLayer @index
+		create:(scene,index)=>
+			scene\setLayerRatio index,oVec2(@ratioX,@ratioY)
+			scene\setLayerOffset index,@offset
+			layer = with scene\getLayer index
 				.scaleX = @zoom
 				.scaleY = @zoom
-			items[@name] = layer
+			editor.items[@name] = layer
 			Children layer,@children
 			nil
 
@@ -177,18 +175,29 @@ Items =
 		gravity:{3,Point(0,-10)}
 		contact:{4,false}
 		simulation:{5,1}
-		children:{6,false}
+		ratioX:{6,0}
+		ratioY:{7,0}
+		offset:{8,Point(0,0)}
+		zoom:{9,1}
+		children:{10,false}
 		-- design
-		outline:{7,false}
+		outline:{11,false}
 		-- helper
-		create:=>
+		create:(scene,index)=>
+			scene\setLayerRatio index,oVec2(@ratioX,@ratioY)
+			scene\setLayerOffset index,@offset
+			layer = with scene\getLayer index
+				.scaleX = @zoom
+				.scaleY = @zoom
 			world = with oWorld!
 				.gravity = @gravity
 				.showDebug = @outline
 				\setIterations Simulation @simulation
 			Contact world,@contact
+			layer\addChild world
+			editor.items[@name] = world
 			Children world,@children
-			world
+			nil
 
 	Body:DataCreater
 		-- property
@@ -199,11 +208,11 @@ Items =
 		angle:{5,0}
 		-- helper
 		create:(parent)=>
-			world = items.world
+			world = editor.items.Scene
 			if "oWorld" == tolua.type parent
 				world = parent
 			body = oBody @file,world,@position,@angle
-			items[@name] = body
+			editor.items[@name] = body
 			body
 
 	Model:DataCreater
@@ -234,7 +243,7 @@ Items =
 				.loop = @loop
 				.faceRight = @faceRight
 				\play @animation
-			items[@name] = model
+			editor.items[@name] = model
 			model
 
 	Sprite:DataCreater
@@ -257,7 +266,7 @@ Items =
 				.skewX = @skew.x
 				.skewY = @skew.y
 				.opacity = @opacity
-			items[@name] = sprite
+			editor.items[@name] = sprite
 			sprite
 
 	Effect:DataCreater

@@ -5,6 +5,7 @@ class oPlatformWorld: public oWorld
 	oNode3D* getLayer(int zOrder);
 	void removeLayer(int zOrder);
 	void removeAllLayers();
+	void swapLayer(int orderA, int orderB);
 	void setLayerRatio(int zOrder, oVec2& ratio);
 	oVec2& getLayerRatio(int zOrder);
 	void setLayerOffset(int zOrder, oVec2& offset);

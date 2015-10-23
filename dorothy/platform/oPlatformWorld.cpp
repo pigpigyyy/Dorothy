@@ -104,6 +104,16 @@ oLayer* oPlatformWorld::getLayer( int zOrder )
 	}
 }
 
+void oPlatformWorld::swapLayer(int orderA, int orderB)
+{
+	oLayer* layerA = oPlatformWorld::getLayer(orderA);
+	oLayer* layerB = oPlatformWorld::getLayer(orderB);
+	_layers[orderA] = layerB;
+	_layers[orderB] = layerA;
+	_camera->reorderChild(layerA, orderB);
+	_camera->reorderChild(layerB, orderA);
+}
+
 bool oPlatformWorld::init()
 {
 	if (!oWorld::init())
