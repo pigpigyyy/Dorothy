@@ -30,35 +30,29 @@ Class
 		@spriteBtn\slots "Tapped",->
 			emit "Scene.ViewSprite" unless spriteSelected
 			clearSelection!
-
-		@spriteBtn\gslot "Scene.SpriteSelected",(item)->
-			if item
-				spriteSelected = true
-				@spriteBtn.color = ccColor3 0xff0088
-
 		@modelBtn\slots "Tapped",->
 			emit "Scene.ViewModel" unless modelSelected
 			clearSelection!
-
-		@modelBtn\gslot "Scene.ModelSelected",(item)->
-			if item
-				modelSelected = true
-				@modelBtn.color = ccColor3 0xff0088
-
 		@bodyBtn\slots "Tapped",->
 			emit "Scene.ViewBody" unless bodySelected
 			clearSelection!
-
-		@bodyBtn\gslot "Scene.BodySelected",(item)->
-			if item
-				bodySelected = true
-				@bodyBtn.color = ccColor3 0xff0088
-
 		@effectBtn\slots "Tapped",->
 			emit "Scene.ViewEffect" unless effectSelected
 			clearSelection!
 
-		@effectBtn\gslot "Scene.EffectSelected",(item)->
+		@gslot "Scene.SpriteSelected",(item)->
+			if item
+				spriteSelected = true
+				@spriteBtn.color = ccColor3 0xff0088
+		@gslot "Scene.ModelSelected",(item)->
+			if item
+				modelSelected = true
+				@modelBtn.color = ccColor3 0xff0088
+		@gslot "Scene.BodySelected",(item)->
+			if item
+				bodySelected = true
+				@bodyBtn.color = ccColor3 0xff0088
+		@gslot "Scene.EffectSelected",(item)->
 			if item
 				effectSelected = true
 				@effectBtn.color = ccColor3 0xff0088

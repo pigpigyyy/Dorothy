@@ -133,6 +133,13 @@ Class
 		@gslot "Scene.EffectUpdated",refreshRef
 		@gslot "Scene.ClipUpdated",refreshRef
 
+		selectItem = (typeName,item)->
+			@selectedType,@selectedItem = if item then typeName,item else nil,nil
+		@gslot "Scene.SpriteSelected",(item)-> selectItem "Sprite",item
+		@gslot "Scene.ModelSelected",(item)-> selectItem "Model",item
+		@gslot "Scene.BodySelected",(item)-> selectItem "Body",item
+		@gslot "Scene.EffectSelected",(item)-> selectItem "Effect",item
+
 	updateSprites: =>
 		emit "Scene.LoadSprite", @graphicFolder
 

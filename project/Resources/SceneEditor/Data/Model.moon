@@ -301,7 +301,7 @@ Items =
 		name:{2,"effect"}
 		effect:{3,""}
 		offset:{4,Point(0,0)}
-		play:{5,false}
+		play:{5,true}
 		-- helper
 		create:(parent)=>
 			effect = oEffect @effect
@@ -311,6 +311,6 @@ Items =
 				effect\start!
 			editor.items[@name] = effect
 			editor.itemDefs[effect] = @
-			effect
+			nil
 
 Items

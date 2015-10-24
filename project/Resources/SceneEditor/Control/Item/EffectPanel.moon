@@ -98,6 +98,8 @@ Class
 					file\write "<A></A>"
 					file\close!
 
+				oCache.Effect\load effectFilename
+
 				file = io.open effectFilename,"r"
 				for item in file\read("*a")\gmatch("%b<>")
 					if not item\sub(2,2)\match("[A/]")

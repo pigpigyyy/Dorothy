@@ -61,9 +61,9 @@ Class
 			else
 				emit "Scene.ViewArea.Move",V*dt
 
-		pick = false
+		tap = false
 		@slots "TouchBegan",(touches)->
-			pick = true
+			tap = true
 			S = oVec2.zero
 			V = oVec2.zero
 			@schedule updateDragSpeed
@@ -74,7 +74,7 @@ Class
 				delta = touches[1].delta
 				if delta ~= oVec2.zero
 					S = delta
-					pick = false
+					tap = false
 					emit "Scene.ViewArea.Move",delta
 			elseif #touches >= 2 -- scale view
 				preDistance = touches[1].preLocation\distance touches[2].preLocation
@@ -86,14 +86,14 @@ Class
 				@scaleNode.scaleX = scale
 				@scaleNode.scaleY = scale
 				editor.scale = scale
-				pick = false
+				tap = false
 				emit "Scene.ViewArea.Scale",scale
 
 		touchEnded = (touches)->
-			if pick then
+			if tap then
 				@unschedule!
 				loc = touches[1].location
-				emit "Scene.ViewArea.Pick",loc
+				emit "Scene.ViewArea.Tap",loc
 			elseif V ~= oVec2.zero
 					@schedule updateDragPos
 		@slots "TouchEnded",touchEnded

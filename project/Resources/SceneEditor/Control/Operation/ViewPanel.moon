@@ -2,6 +2,7 @@ Dorothy!
 Class,property = unpack require "class"
 ViewPanelView = require "View.Control.Operation.ViewPanel"
 ViewItem = require "Control.Operation.ViewItem"
+Model = require "Data.Model"
 
 Class
 	__partial: (args)=> ViewPanelView args
@@ -257,3 +258,35 @@ Class
 			drawNode = CCDrawNode!
 			@menu\addChild drawNode
 			setupData data
+
+		@gslot "Scene.ViewArea.Tap",(loc)->
+			if @_selectedItem and editor.selectedType
+				itemData = @_selectedItem.itemData
+				switch itemData.typeName
+					when "PlatformWorld","Camera"
+						return
+					when "UI"
+						return if editor.selectedType == "Body"
+
+				newData = nil
+				switch editor.selectedType
+					when "Sprite","Model","Body"
+						newData = Model[editor.selectedType]!
+						newData.file = editor.selectedItem
+						newData.name = editor\getUsableName newData.name
+					when "Effect"
+						newData = Model.Effect!
+						newData.effect = editor.selectedItem
+						newData.name = editor\getUsableName newData.name
+
+				switch itemData.typeName
+					when "Layer","UILayer","World"
+						if not itemData.children
+							itemData.children = {}
+						table.insert itemData.children,newData
+						parent = editor.items[itemData.name or "UI"]
+						child = newData parent,#itemData.children
+						if child
+							parent\addChild child
+					else
+						print itemData.typeName,editor.selectedType
