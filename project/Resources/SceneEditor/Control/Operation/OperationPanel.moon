@@ -13,23 +13,23 @@ Class
 			oOpacity 0.5,0.4,oEase.InExpo
 		}
 
-		@\slots "ScrollTouchBegan",->
-			@\stopAction @fadeOut unless @fadeOut.done
+		@slots "ScrollTouchBegan",->
+			@stopAction @fadeOut unless @fadeOut.done
 			@opacity = 1
 
-		@\slots "ScrollEnd",->
+		@slots "ScrollEnd",->
 			@perform @fadeOut
 
-		@\slots "ScrollStart",->
+		@slots "ScrollStart",->
 			@menu.enabled = false
 
-		@\slots "ScrollTouchEnded",->
+		@slots "ScrollTouchEnded",->
 			if @_menuEnabled
 				@menu.enabled = true
 
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
-		@\slots "Scrolled",(delta)->
+		@slots "Scrolled",(delta)->
 			contentRect\set 0,0,@width,@height
 			@menu\eachChild (child)->
 				child.position += delta

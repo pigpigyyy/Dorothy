@@ -14,15 +14,15 @@
 		@root = {:x, :y, :w, :h}
 		for block in *blocks
 			with block
-				node = @\findNode @root,.w,.h
+				node = @findNode @root,.w,.h
 				.fit = if node
-					@\splitNode node,.w,.h
+					@splitNode node,.w,.h
 				else
-					@\growNode .w,.h
+					@growNode .w,.h
 
 	findNode: (root,w,h)=>
 		if root.used
-			@\findNode(root.right,w,h) or @\findNode(root.down,w,h)
+			@findNode(root.right,w,h) or @findNode(root.down,w,h)
 		elseif w <= root.w and h <= root.h
 			root
 		else
@@ -50,13 +50,13 @@
 		shouldGrowRight = canGrowRight and (@root.h >= @root.w + w) -- attempt to keep square-ish by growing right when height is much greater than width
 		shouldGrowDown = canGrowDown and (@root.w >= @root.h + h) -- attempt to keep square-ish by growing down	when width is much greater than height
 		if shouldGrowRight
-			@\growRight w,h
+			@growRight w,h
 		elseif shouldGrowDown
-			@\growDown w,h
+			@growDown w,h
 		elseif canGrowRight
-			@\growRight w,h
+			@growRight w,h
 		elseif canGrowDown
-			@\growDown w,h
+			@growDown w,h
 		else
 			nil -- need to ensure sensible root starting size to avoid this happening
 
@@ -75,9 +75,9 @@
 				h: @root.h
 			}
 		}
-		node = @\findNode @root,w,h
+		node = @findNode @root,w,h
 		if node
-			@\splitNode node,w,h
+			@splitNode node,w,h
 		else
 			nil
 
@@ -96,9 +96,9 @@
 			},
 			right: @root
 		}
-		node = @\findNode @root,w,h
+		node = @findNode @root,w,h
 		if node
-			@\splitNode node,w,h
+			@splitNode node,w,h
 		else
 			nil
 }

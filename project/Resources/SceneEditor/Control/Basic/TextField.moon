@@ -24,7 +24,7 @@ Class
 		cursor = with oLine {oVec2.zero,oVec2(0,fontSize)},ccColor4 0xff00ffff
 			.visible = true
 			.positionX = @width
-		@\addChild cursor
+		@addChild cursor
 
 		blink = CCRepeatForever CCSequence {
 			CCShow!
@@ -33,22 +33,22 @@ Class
 			CCDelay 0.5
 		}
 
-		@\slots "InputAttach", ->
+		@slots "InputAttach", ->
 			with cursor
 				.visible = true
 				.positionX = @width
 				\perform blink
 			true
 
-		@\slots "InputDetach", ->
+		@slots "InputDetach", ->
 			with cursor
 				.visible = false
 				\stopAllActions!
 				if @text ~= ""
-					@\emit "TextChanged",@
+					@emit "TextChanged",@
 			true
 
-		@\slots "InputInserting",(addText)->
+		@slots "InputInserting",(addText)->
 			string.len(@text) < limit or addText == "\n"
 
 		inputed = ->
@@ -57,5 +57,5 @@ Class
 				\perform blink
 				@texture.antiAlias = false
 
-		@\slots "InputInserted",inputed
-		@\slots "InputDeleted",inputed
+		@slots "InputInserted",inputed
+		@slots "InputDeleted",inputed

@@ -9,6 +9,7 @@ Class
 		itemWidth = @width
 		itemHeight = 30
 		itemNames = {
+			{"Name","%s"}
 			{"Outline","%s"}
 			{"RatioX","%.2f"}
 			{"RatioY","%.2f"}
@@ -27,10 +28,11 @@ Class
 			{"Loop","%s"}
 			{"Animation","%s"}
 			{"FaceRight","%s"}
-			{"Contact","%s"}
+			{"Group","%s"}
+			{"Groups","%s"}
+			{"Contacts","%s"}
 			{"Target","%s"}
 			{"Gravity","%.2f"}
-			{"Name","%s"}
 			{"Opacity","%.2f"}
 		}
 
@@ -49,7 +51,7 @@ Class
 		for i = 1,#itemNames
 			itemName = itemNames[i][1]
 			valueFormat = itemNames[i][2]
-			item = SettingItem itemName.." :",itemWidth,itemHeight,-itemWidth,getPosY(),i == 1,valueFormat,editCallback
+			item = SettingItem itemName.." :",itemWidth,itemHeight,-itemWidth,getPosY(),(i == 1),valueFormat,editCallback
 			item.anchor = oVec2 0.5,0.5
 			item.name = itemName\sub(1,1)\lower!..itemName\sub(2,-1)
 			items[itemName] = item
@@ -61,7 +63,8 @@ Class
 		groups = {
 			PlatformWorld: {
 				items.Gravity
-				items.Contact
+				items.Groups
+				items.Contacts
 				items.Simulation
 				items.Outline
 			}
@@ -84,7 +87,8 @@ Class
 			World: {
 				items.Name
 				items.Gravity
-				items.Contact
+				items.Groups
+				items.Contacts
 				items.Simulation
 				items.Outline
 				items.RatioX
@@ -95,6 +99,7 @@ Class
 			Body: {
 				items.Name
 				items.File
+				items.Group
 				items.Position
 				items.Angle
 			}
@@ -130,7 +135,7 @@ Class
 		}
 
 		currentGroup = nil
-		@\gslot "Scene.ViewPanel.Select",(data)->
+		@gslot "Scene.ViewPanel.Select",(data)->
 			if currentGroup
 				for item in *currentGroup
 					item.positionX = -itemWidth
@@ -163,7 +168,7 @@ Class
 								"Medium"
 							when 3
 								"High"
-					when "contact"
+					when "contacts","groups"
 						". . ."
 					when "outline"
 						data[item.name] and "Show" or "Hide"

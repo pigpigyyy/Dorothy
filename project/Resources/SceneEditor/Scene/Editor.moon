@@ -21,7 +21,7 @@ Class
 		_G["editor"] = @
 		builtin["editor"] = @
 
-		@\slots "Cleanup",->
+		@slots "Cleanup",->
 			Reference.stopUpdate!
 			oRoutine\remove @initRoutine if @initRoutine
 			_G["editor"] = nil
@@ -60,7 +60,7 @@ Class
 				sleep!
 				control = Control!
 				@[name\sub(1,1)\lower!..name\sub(2,-1)] = control
-				@\addChild control
+				@addChild control
 
 			panelWidth = 10+110*4
 			panelHeight = height*0.6
@@ -81,21 +81,25 @@ Class
 				}
 				panel.visible = false
 				@[name\sub(1,1)\lower!..name\sub(2,-1)] = panel
-				@\addChild panel
-
+				@addChild panel
 
 			bodyDef = Model.Body!
+			bodyDef.group = "One"
 			bodyDef.file = "Physics/car.body"
-			layerDef = Model.Layer!
-			layerDef.children = {bodyDef}
+			worldDef = with Model.World!
+				.groups = {One:1}
+				.contacts = {{"One","One",true}}
+				.children = {bodyDef}
 			@sceneData = with Model.PlatformWorld!
 				.camera = Model.Camera!
 				.ui = Model.UILayer!
-				.children = {layerDef}
+				.children = {worldDef}
 			@viewArea.scaleNode\addChild @sceneData!
+			@gslot "Scene.ViewArea.Move",(delta)->
+				@items.Camera.position -= delta
 			emit "Scene.DataLoaded",@sceneData
 
-		@\gslot "Editor.ItemChooser",(args)->
+		@gslot "Editor.ItemChooser",(args)->
 			handler = args[#args]
 			table.remove args
 			chooseItem = (itemType)->
@@ -105,14 +109,14 @@ Class
 						@spritePanel.parent\removeChild @spritePanel,false
 						@spritePanel\slots("Hide")\set ->
 							@spritePanel.parent\removeChild @spritePanel,false
-							@\addChild @spritePanel,1
+							@addChild @spritePanel,1
 						handler @spritePanel
 					when "Model"
 						@modelPanel\slots "Selected",nil
 						@modelPanel.parent\removeChild @modelPanel,false
 						@modelPanel\slots("Hide")\set ->
 							@modelPanel.parent\removeChild @modelPanel,false
-							@\addChild @modelPanel,1
+							@addChild @modelPanel,1
 						handler @modelPanel
 					else
 						handler nil
@@ -124,10 +128,10 @@ Class
 						chooseItem itemType
 
 		refreshRef = Reference.refreshRef
-		@\gslot "Scene.ModelUpdated",refreshRef
-		@\gslot "Scene.BodyUpdated",refreshRef
-		@\gslot "Scene.EffectUpdated",refreshRef
-		@\gslot "Scene.ClipUpdated",refreshRef
+		@gslot "Scene.ModelUpdated",refreshRef
+		@gslot "Scene.BodyUpdated",refreshRef
+		@gslot "Scene.EffectUpdated",refreshRef
+		@gslot "Scene.ClipUpdated",refreshRef
 
 	updateSprites: =>
 		emit "Scene.LoadSprite", @graphicFolder
@@ -181,7 +185,7 @@ Class
 				emit "Scene.ModelUpdated",model
 			actionEditor\slots "Quit",->
 				CCScene\back "rollIn"
-				@\updateModels!
+				@updateModels!
 			CCScene\add "actionEditor",actionEditor
 			@_actionEditor = actionEditor
 		return @_actionEditor
@@ -197,7 +201,7 @@ Class
 				emit "Scene.BodyUpdated",body
 			bodyEditor\slots "Quit",->
 				CCScene\back "rollIn"
-				@\updateBodies!
+				@updateBodies!
 			CCScene\add "bodyEditor",bodyEditor
 			@_bodyEditor = bodyEditor
 		return @_bodyEditor
@@ -215,7 +219,7 @@ Class
 				emit "Scene.EffectUpdated",effect
 			effectEditor\slots "Quit",->
 				CCScene\back "rollIn"
-				@\updateEffects!
+				@updateEffects!
 			CCScene\add "effectEditor",effectEditor
 			@_effectEditor = effectEditor
 		return @_effectEditor

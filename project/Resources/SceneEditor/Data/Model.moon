@@ -3,6 +3,7 @@ Dorothy!
 oBody = require "oBodyEx"
 
 Point = (x,y)-> -> oVec2(x,y)
+
 Simulation = (level)->
 	switch level
 		when 1
@@ -11,16 +12,25 @@ Simulation = (level)->
 			4,2
 		when 3
 			8,3
-Children = (parent,children)->
+
+Children = (parent,data)->
+	children = data.children
 	if children
 		for i,child in ipairs children
 			child = child parent,i
 			if child
 				parent\addChild child
-Contact = (world,contacts)->
-	if contacts
+
+Contact = (world,data)->
+	groups = data.groups
+	contacts = data.contacts
+	if groups and contacts
 		for contact in *contacts
-			world\setShouldContact unpack contact
+			groupA = groups[contact[1]]
+			groupB = groups[contact[2]]
+			shouldContact = contact[3]
+			if groupA and groupB
+				world\setShouldContact groupA,groupB,shouldContact
 
 Types =
 	PlatformWorld:1
@@ -104,13 +114,14 @@ Items =
 		-- property
 		itemType:{1,Types.PlatformWorld}
 		gravity:{2,Point(0,-10)}
-		contact:{3,false}
-		simulation:{4,1}
-		camera:{5,false}
-		ui:{6,false}
-		children:{7,false}
+		contacts:{3,false}
+		groups:{4,false}
+		simulation:{5,1}
+		camera:{6,false}
+		ui:{7,false}
+		children:{8,false}
 		-- design
-		outline:{8,true}
+		outline:{9,true}
 		-- helper
 		create:=>
 			world = with oPlatformWorld!
@@ -118,10 +129,12 @@ Items =
 				.showDebug = @outline
 				\setIterations Simulation @simulation
 			editor.items = {Scene:world}
-			@camera world if @camera!
-			@ui world if @ui
-			Contact world,@contact
-			Children world,@children
+			editor.itemDefs = {[world]:@}
+			world.itemData = @
+			@.camera world if @camera
+			@.ui world if @ui
+			Contact world,@
+			Children world,@
 			world
 
 	UILayer:DataCreater
@@ -132,7 +145,8 @@ Items =
 		create:(scene)=>
 			layer = scene.UILayer
 			editor.items.UI = layer
-			Children layer,@children
+			editor.itemDefs[layer] = @
+			Children layer,@
 			nil
 
 	Camera:DataCreater
@@ -145,7 +159,9 @@ Items =
 		ratioY:{6,1}
 		-- helper
 		create:(scene)=>
-			editor.items.Camera = scene.camera
+			camera = scene.camera
+			editor.items.Camera = camera
+			editor.itemDefs[camera] = @
 			nil
 
 	Layer:DataCreater
@@ -165,7 +181,8 @@ Items =
 				.scaleX = @zoom
 				.scaleY = @zoom
 			editor.items[@name] = layer
-			Children layer,@children
+			editor.itemDefs[layer] = @
+			Children layer,@
 			nil
 
 	World:DataCreater
@@ -173,15 +190,16 @@ Items =
 		itemType:{1,Types.World}
 		name:{2,"world"}
 		gravity:{3,Point(0,-10)}
-		contact:{4,false}
-		simulation:{5,1}
-		ratioX:{6,0}
-		ratioY:{7,0}
-		offset:{8,Point(0,0)}
-		zoom:{9,1}
-		children:{10,false}
+		contacts:{4,false}
+		groups:{5,false}
+		simulation:{6,1}
+		ratioX:{7,0}
+		ratioY:{8,0}
+		offset:{9,Point(0,0)}
+		zoom:{10,1}
+		children:{11,false}
 		-- design
-		outline:{11,false}
+		outline:{12,true}
 		-- helper
 		create:(scene,index)=>
 			scene\setLayerRatio index,oVec2(@ratioX,@ratioY)
@@ -193,10 +211,11 @@ Items =
 				.gravity = @gravity
 				.showDebug = @outline
 				\setIterations Simulation @simulation
-			Contact world,@contact
 			layer\addChild world
 			editor.items[@name] = world
-			Children world,@children
+			editor.itemDefs[world] = @
+			Contact world,@
+			Children world,@
 			nil
 
 	Body:DataCreater
@@ -204,15 +223,20 @@ Items =
 		itemType:{1,Types.Body}
 		name:{2,"body"}
 		file:{3,""}
-		position:{4,Point(0,0)}
-		angle:{5,0}
+		group:{4,""}
+		position:{5,Point(0,0)}
+		angle:{6,0}
 		-- helper
 		create:(parent)=>
 			world = editor.items.Scene
 			if "oWorld" == tolua.type parent
 				world = parent
 			body = oBody @file,world,@position,@angle
+			group = editor.itemDefs[parent].groups[@group]
+			body\each (_,v)->
+				v.group = group if "oBody" == tolua.type v
 			editor.items[@name] = body
+			editor.itemDefs[body] = @
 			body
 
 	Model:DataCreater
@@ -244,6 +268,7 @@ Items =
 				.faceRight = @faceRight
 				\play @animation
 			editor.items[@name] = model
+			editor.itemDefs[model] = @
 			model
 
 	Sprite:DataCreater
@@ -267,6 +292,7 @@ Items =
 				.skewY = @skew.y
 				.opacity = @opacity
 			editor.items[@name] = sprite
+			editor.itemDefs[sprite] = @
 			sprite
 
 	Effect:DataCreater
@@ -278,11 +304,13 @@ Items =
 		play:{5,false}
 		-- helper
 		create:(parent)=>
-			effect = oEffect(@effect)
+			effect = oEffect @effect
 			effect\attachTo parent
 			effect\setOffset @offset
 			if @play
 				effect\start!
+			editor.items[@name] = effect
+			editor.itemDefs[effect] = @
 			effect
 
 Items

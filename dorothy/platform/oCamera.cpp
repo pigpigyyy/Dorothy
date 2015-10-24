@@ -56,11 +56,19 @@ void oCamera::setPosition(const CCPoint& var)
 	{
 		float halfW = CCNode::getWidth() * 0.5f;
 		float halfH = CCNode::getHeight() * 0.5f;
-		CCPoint from(_boudary.origin.x + halfW, _boudary.origin.y + halfH);
-		CCPoint to(
-			_boudary.origin.x + _boudary.size.width - halfW,
-			_boudary.origin.y + _boudary.size.height - halfH);
-		CCPoint pos = ccpClamp(var, from, to);
+		CCPoint pos;
+		if (_boudary != CCRect::zero)
+		{
+			CCPoint from(_boudary.origin.x + halfW, _boudary.origin.y + halfH);
+			CCPoint to(
+				_boudary.origin.x + _boudary.size.width - halfW,
+				_boudary.origin.y + _boudary.size.height - halfH);
+			pos = ccpClamp(var, from, to);
+		}
+		else
+		{
+			pos = var;
+		}
 		float deltaX = pos.x - _camPos.x;
 		float deltaY = pos.y - _camPos.y;
 		_camPos = pos;

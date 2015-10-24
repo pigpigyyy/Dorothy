@@ -48,8 +48,8 @@ Class
 			if @selectedClips
 				@selectedClips[item.file] = if checked then true else nil
 		@selected = (item)->
-			@\hide!
-			@\emit "Selected",item.spriteStr
+			@hide!
+			@emit "Selected",item.spriteStr
 			if @parent == editor
 				emit "Scene.SpriteSelected",item.spriteStr
 
@@ -69,18 +69,18 @@ Class
 		@scrollArea\slots "ScrollTouchEnded",->
 			@menu.enabled = true
 
-		@\slots "Cleanup",->
+		@slots "Cleanup",->
 			oRoutine\remove @routine if @routine
 
-		@\gslot "Scene.ViewSprite",->
-			@\show!
+		@gslot "Scene.ViewSprite",->
+			@show!
 
-		@\gslot "Scene.ClearSprite",->
+		@gslot "Scene.ClearSprite",->
 			@clips = nil
 			@images = nil
 
-		@\gslot "Scene.LoadSprite",(resPath)->
-			@\runThread ->
+		@gslot "Scene.LoadSprite",(resPath)->
+			@runThread ->
 				-- get image and clip files
 				images = {}
 				clips = {}
@@ -123,17 +123,17 @@ Class
 							for expItem in *expandItems
 								expItem.parent\removeChild expItem
 							@clipExpands[clipDel] = nil
-						@\playUpdateHint!
+						@playUpdateHint!
 					table.sort clipsToAdd,compareClip
 					table.sort clips,compareClip
 					for clipAdd in *clipsToAdd
-						@clipItems[clipAdd] = @\_addClipTab clipAdd,index
-						@\playUpdateHint!
+						@clipItems[clipAdd] = @_addClipTab clipAdd,index
+						@playUpdateHint!
 						sleep!
 						index += 1
 				else -- first load clips
 					if @clipItems
-						@\playUpdateHint!
+						@playUpdateHint!
 						for clip,item in pairs @clipItems
 							item.parent\removeChild item
 							expandItems = @clipExpands[clip]
@@ -145,8 +145,8 @@ Class
 					@clipExpands = {}
 					table.sort clips,compareClip
 					for clip in *clips
-						clipTab = @\_addClipTab clip,index
-						@\playUpdateHint!
+						clipTab = @_addClipTab clip,index
+						@playUpdateHint!
 						sleep!
 						index += 1
 						clipTab.visible = false
@@ -159,7 +159,7 @@ Class
 						item = @imageItems[imageDel]
 						item.parent\removeChild item
 						@imageItems[imageDel] = nil
-						@\playUpdateHint!
+						@playUpdateHint!
 					for imageAdd in *imagesToAdd
 						viewItem = SpriteView {
 							file: imageAdd
@@ -173,7 +173,7 @@ Class
 						viewItem\slots "Checked",@viewItemChecked
 						viewItem\slots "Selected",@selected
 						@menu\addChild viewItem
-						@\playUpdateHint!
+						@playUpdateHint!
 						sleep!
 						@imageItems[imageAdd] = viewItem
 						viewItem.opacity = 0
@@ -184,7 +184,7 @@ Class
 						index += 1
 				else
 					if @imageItems
-						@\playUpdateHint!
+						@playUpdateHint!
 						for _,item in pairs @imageItems
 							item.parent\removeChild item
 					@imageItems = {}
@@ -201,7 +201,7 @@ Class
 						viewItem.enabled = false
 						viewItem.isCheckMode = @_isSelecting
 						@menu\addChild viewItem
-						@\playUpdateHint!
+						@playUpdateHint!
 						sleep!
 						@imageItems[image] = viewItem
 						viewItem.opacity = 0
@@ -249,7 +249,7 @@ Class
 
 		@modeBtn\slots "Tapped",->
 			return if Reference.isUpdating!
-			@\_setCheckMode not @_isSelecting
+			@_setCheckMode not @_isSelecting
 
 		@addBtn\slots "Tapped",->
 			MessageBox text:"Place Images In\n/Graphic/ folder",okOnly:true
@@ -274,7 +274,7 @@ Class
 						with MessageBox text:"Confirm This\nDeletion"
 							\slots "OK",(result)->
 								return unless result
-								@\runThread ->
+								@runThread ->
 									for image in *images
 										sleep!
 										@imageItems[image].isCheckMode = false
@@ -327,7 +327,7 @@ Class
 				msgBox = MessageBox text:"Break Selected\nGroups"
 				msgBox\slots "OK",(result)->
 					return unless result
-					@\runThread ->
+					@runThread ->
 						for clip in *clips
 							sleep!
 							folder = editor.graphicFullPath..clip\match "[\\/]([^\\/]*)%.[^%.\\/]*$"
@@ -374,7 +374,7 @@ Class
 					MessageBox text:"No Group Selected",okOnly:true
 
 		@closeBtn\slots "Tapped",->
-			@\hide!
+			@hide!
 
 	playUpdateHint: =>
 		if not @hint.visible
@@ -504,7 +504,7 @@ Class
 				child.enabled = not isSelecting
 
 	show: =>
-		@\perform CCSequence {
+		@perform CCSequence {
 			CCShow!
 			oOpacity 0.3,0.6,oEase.OutQuad
 		}
@@ -527,7 +527,7 @@ Class
 		}
 
 	hide: =>
-		@\_setCheckMode false
+		@_setCheckMode false
 		@scrollArea.touchEnabled = false
 		@menu.enabled = false
 		@opMenu.enabled = false
@@ -536,8 +536,8 @@ Class
 			oOpacity 0.3,0,oEase.OutQuad
 			oScale 0.3,0,0,oEase.InBack
 		}
-		@\perform CCSequence {
+		@perform CCSequence {
 			oOpacity 0.3,0,oEase.OutQuad
 			CCHide!
-			CCCall -> @\emit "Hide"
+			CCCall -> @emit "Hide"
 		}

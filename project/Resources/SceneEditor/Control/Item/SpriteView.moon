@@ -36,20 +36,20 @@ Class
 		@_checked = false
 		@_loaded = false
 
-		@\slots "Tapped", @_tapped
-		@\slots "Cleanup",->
+		@slots "Tapped", @_tapped
+		@slots "Cleanup",->
 			oRoutine\remove @routine if @routine
 			oCache.Texture\unload @_prevFile if @_prevFile
-			@\_setBoxChecked false
+			@_setBoxChecked false
 
-		@\updateImage file,spriteStr,alias,needUnload
+		@updateImage file,spriteStr,alias,needUnload
 		@isCheckMode = false
 
 	_tapped: =>
 		if @isCheckMode
-			@\_setBoxChecked not @_checked
+			@_setBoxChecked not @_checked
 		elseif @_loaded
-			@\emit "Selected",@
+			@emit "Selected",@
 
 	updateImage: (file,spriteStr,alias,needUnload)=>
 		@routine = thread ->
@@ -119,7 +119,7 @@ Class
 				@face\addChild @numberDot
 				table.insert selectedItems,@numberDot
 				@_checked = true
-				@\emit "Checked",true,@
+				@emit "Checked",true,@
 		else
 			dot = @numberDot
 			num = dot.number + 1
@@ -133,7 +133,7 @@ Class
 			}
 			@numberDot = nil
 			@_checked = false
-			@\emit "Checked",false,@
+			@emit "Checked",false,@
 
 	checked: property => @_checked
 
@@ -152,6 +152,6 @@ Class
 				}
 				@numberDot = nil
 				@_checked = false
-				@\emit "Checked",false,@
-			@\emit "TapEnded"
+				@emit "Checked",false,@
+			@emit "TapEnded"
 			@_isCheckMode = value

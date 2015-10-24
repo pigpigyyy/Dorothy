@@ -61,10 +61,10 @@ Class
 					y = deltaY - tmp
 			x or= 0
 			y or= 0
-			@\emit "Scrolled",oVec2(x,y)
+			@emit "Scrolled",oVec2(x,y)
 			if t == 1
-				@\unschedule!
-				@\emit "ScrollEnd"
+				@unschedule!
+				@emit "ScrollEnd"
 
 		isReseting = ->
 			deltaX > 0 or deltaX < -moveX or deltaY > moveY or deltaY < 0
@@ -73,7 +73,7 @@ Class
 			posX = deltaX
 			posY = deltaY
 			timePassed = 0
-			@\schedule updateReset
+			@schedule updateReset
 
 		setOffset = (delta, touching)->
 			dPosX = delta.x
@@ -110,7 +110,7 @@ Class
 			deltaX += dPosX
 			deltaY += dPosY
 
-			@\emit "Scrolled",oVec2(dPosX,dPosY)
+			@emit "Scrolled",oVec2(dPosX,dPosY)
 
 			startReset! if not touching and
 			(newPosY < -paddingY*0.5 or 
@@ -139,52 +139,52 @@ Class
 				if isReseting!
 					startReset!
 				else
-					@\unschedule!
-					@\emit "ScrollEnd"
+					@unschedule!
+					@emit "ScrollEnd"
 			else
 				dS = V * dt
 				setOffset dS,false
 
 		@touchEnabled = true
 		@touchPriority = touchPriority
-		@\slots "TouchBegan",(touch)->
+		@slots "TouchBegan",(touch)->
 			return false unless touch.id == 0
 
-			pos = @\convertToNodeSpace touch.location
+			pos = @convertToNodeSpace touch.location
 			rect = CCRect oVec2(-@width*0.5,-@height*0.5),CCSize(@width,@height)
 			return false unless rect\containsPoint pos
 
 			deltaMoveLength = 0
 			S = oVec2.zero
 			V = oVec2.zero
-			@\schedule updateSpeed
-			@\emit "ScrollTouchBegan"
+			@schedule updateSpeed
+			@emit "ScrollTouchBegan"
 			true
 
 		touchEnded = ->
 			if isReseting!
 				startReset!
 			elseif V ~= oVec2.zero and deltaMoveLength > 10
-				@\schedule updatePos
+				@schedule updatePos
 			else
-				@\emit "ScrollEnd"
-			@\emit "ScrollTouchEnded"
+				@emit "ScrollEnd"
+			@emit "ScrollTouchEnded"
 
-		@\slots "TouchEnded",touchEnded
-		@\slots "TouchCancelled",touchEnded
-		@\slots "TouchMoved",(touch)->
+		@slots "TouchEnded",touchEnded
+		@slots "TouchCancelled",touchEnded
+		@slots "TouchMoved",(touch)->
 			lastMoveLength = deltaMoveLength
 			S = touch.delta
 			deltaMoveLength += S.length
 			if deltaMoveLength > 10
 				setOffset S,true
 				if lastMoveLength <= 10
-					@\emit "ScrollStart"
+					@emit "ScrollStart"
 
 		@scroll = (delta)=>
 			deltaX += delta.x
 			deltaY += delta.y
-			@\emit "Scrolled",oVec2(delta.x,delta.y)
+			@emit "Scrolled",oVec2(delta.x,delta.y)
 			startReset! if isReseting!
 
 		@updateViewSize = (wView,hView)=>

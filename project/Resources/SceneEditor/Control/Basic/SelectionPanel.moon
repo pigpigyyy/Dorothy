@@ -50,7 +50,7 @@ Class
 						oOpacity 0.3,0
 					}
 					CCCall ->
-						@\emit "Selected",item
+						@emit "Selected",item
 						@parent\removeChild @
 				}
 			@menu\addChild button

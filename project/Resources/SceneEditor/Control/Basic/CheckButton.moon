@@ -9,13 +9,13 @@ Class
 	__partial: (args)=> Button args
 	__init: =>
 		@_checked = false
-		@\slots("TapEnded")\set ->
+		@slots("TapEnded")\set ->
 			@_checked = not @_checked
 			if not @_checked
 				if not @fade.done
 					@face\stopAction @fade
 				@face\runAction @fade
-			@\emit "Checked",@_checked
+			@emit "Checked",@_checked
 
 	checked: property => @_checked,
 		(value)=>
@@ -28,4 +28,4 @@ Class
 				if not @fade.done
 					@face\stopAction @fade
 				@face\runAction @fade
-			@\emit "Checked",value
+			@emit "Checked",value

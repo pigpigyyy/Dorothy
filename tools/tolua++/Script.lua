@@ -3,7 +3,7 @@ for k,v in pairs(package.loaded) do
 	package.loaded[k] = nil
 end
 
-local builtin = _G["builtin"]
+local builtin = _G.builtin
 
 builtin.CCView = builtin.CCView()
 builtin.CCApplication = builtin.CCApplication()
@@ -12,6 +12,7 @@ builtin.CCUserDefault = builtin.CCUserDefault()
 builtin.CCKeyboard = builtin.CCKeyboard()
 builtin.oContent = builtin.oContent()
 builtin.oData = builtin.oData()
+local tolua = builtin.tolua
 
 local CCLuaLog = builtin.CCLuaLog
 builtin.cclog = function(...)
@@ -160,9 +161,15 @@ CCDictionary.__index = function(self,key)
 	return CCDictionary_index(self,key)
 end
 
+local CCDictionary_newindex = CCDictionary.__newindex
 local CCDictionary_set = CCDictionary.set
 CCDictionary.__newindex = function(self,key,value)
-	CCDictionary_set(self,key,value)
+	local vtype = tolua.type(value)
+	if vtype == "function" or vtype == "table" then
+		CCDictionary_newindex(self,key,value)
+	else
+		CCDictionary_set(self,key,value)
+	end
 end
 
 local CCUserDefaultClass = getmetatable(builtin.CCUserDefault)

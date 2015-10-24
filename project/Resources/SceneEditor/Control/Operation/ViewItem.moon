@@ -6,7 +6,7 @@ Class
 	__partial: (args)=> ViewItemView args
 	__init: (args)=>
 		@_checked = false
-		@\slots "Tapped",-> @checked = not @checked
+		@slots "Tapped",-> @checked = not @checked
 
 	checked: property => @_checked,
 		(value)=>
@@ -31,7 +31,7 @@ Class
 		(value)=>
 			@_fold = value
 			if value
-				@\addChild with CCDrawNode!
+				@addChild with CCDrawNode!
 					.tag = 1
 					.position = oVec2 @width-7.5,@height-7.5
 					\drawPolygon {
@@ -41,4 +41,4 @@ Class
 						oVec2 -2.5,2.5
 					},ccColor4(0x88ffffff),0.5,ccColor4!
 			else
-				@\removeChildByTag 1
+				@removeChildByTag 1

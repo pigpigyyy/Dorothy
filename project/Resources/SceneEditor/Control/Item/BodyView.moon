@@ -37,10 +37,10 @@ Class
 			.position = oVec2 width-20,20
 		@face\addChild @star
 
-		@\slots "Tapped",->
-			@\emit "Selected",@
+		@slots "Tapped",->
+			@emit "Selected",@
 
-		@\slots "Cleanup",->
+		@slots "Cleanup",->
 			oCache.Texture\unload @_prevFile if @_prevFile
 
 		thread ->
@@ -59,7 +59,7 @@ Class
 				.visible = false
 				.cascadeOpacity = false
 				.cascadeColor = false
-			@\addChild world
+			@addChild world
 			body = oBody file,world
 			world\addChild body
 			sleep!
@@ -110,7 +110,7 @@ Class
 			renderTarget\beginDraw!
 			renderTarget\draw world
 			renderTarget\endDraw!
-			@\removeChild world
+			@removeChild world
 			@_prevFile = file\match("(.*)%.[^%.\\/]*$").."Small."..file\match("%.([^%.\\/]*)$")
 			tex = oCache.Texture\add renderTarget,@_prevFile
 			if @sprite

@@ -38,7 +38,7 @@ cycle = require "cycle"
 	-- init interval --
 	intervalNode = with oLine!
 		.position = oVec2 halfW,origin.y
-	@\addChild intervalNode
+	@addChild intervalNode
 
 	nPart = 0
 	nCurrentPart = 0
@@ -134,13 +134,13 @@ cycle = require "cycle"
 	updateLabels!
 
 	-- listen view move event --
-	@\gslot "Scene.ViewArea.Move",(delta)->
+	@gslot "Scene.ViewArea.Move",(delta)->
 		intervalNode.positionY += delta.y/@scaleY
 		updatePart delta.y < 0 and winSize.height-intervalNode.positionY or 0,
 			delta.y > 0 and intervalNode.positionY or 0
 		updateLabels!
 
-	@\gslot "Scene.ViewArea.MoveTo",(pos)->
+	@gslot "Scene.ViewArea.MoveTo",(pos)->
 		pos += center
 		intervalNode\runAction oPos 0.5,halfW,pos.y,oEase.OutQuad
 		oRoutine once -> cycle 0.5,-> updateLabels!
@@ -158,27 +158,27 @@ cycle = require "cycle"
 			updateIntervalTextScale 1
 	}
 	fadeIn = oOpacity 0.3,0.3
-	@\gslot "Scene.ViewArea.Scale",(scale)->
+	@gslot "Scene.ViewArea.Scale",(scale)->
 		if scale < 1.0 and @opacity > 0 and fadeOut.done
 			@touchEnabled = false
-			@\perform fadeOut
+			@perform fadeOut
 		elseif scale >= 1.0
 			if @opacity == 0 and fadeIn.done
 				@touchEnabled = true
-				@\perform fadeIn
+				@perform fadeIn
 			@scaleY = scale
 			-- unscale interval text --
 			updateIntervalTextScale 1/scale
 
-	@\gslot "Scene.ViewArea.ScaleTo",(scale)->
+	@gslot "Scene.ViewArea.ScaleTo",(scale)->
 		if scale < 1.0 and self.opacity > 0 and fadeOut.done
 			@touchEnabled = false
-			@\perform fadeOut
+			@perform fadeOut
 		elseif scale >= 1.0 and @opacity == 0 and fadeIn.done
 			@touchEnabled = true
-			@\perform fadeIn
+			@perform fadeIn
 		if scale >= 1.0
-			@\runAction oScale 0.5,1,scale,oEase.OutQuad
+			@runAction oScale 0.5,1,scale,oEase.OutQuad
 			-- manually update and unscale interval text --
 			time = 0
 			intervalNode\schedule (deltaTime)->
@@ -188,11 +188,11 @@ cycle = require "cycle"
 					intervalNode\unschedule!
 
 	-- handle touch event --
-	@\slots "TouchBegan",(touch)->
-		loc = @\convertToNodeSpace touch.location
+	@slots "TouchBegan",(touch)->
+		loc = @convertToNodeSpace touch.location
 		CCRect(-halfW,-halfH,rulerWidth,rulerHeight)\containsPoint loc
 
-	@\slots "TouchMoved",(touch)->
+	@slots "TouchMoved",(touch)->
 		@positionX += touch.delta.x
 		if @positionX > winSize.width-190-halfW-10
 			@positionX = winSize.width-190-halfW-10

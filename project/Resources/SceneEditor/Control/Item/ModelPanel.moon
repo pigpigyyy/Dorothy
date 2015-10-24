@@ -40,12 +40,12 @@ Class
 		@selected = (item)->
 			file = item.file
 			if @_isCheckMode
-				@\clearSelection! if @_selectedItem ~= file
+				@clearSelection! if @_selectedItem ~= file
 				item.checked = not item.checked
 				@_selectedItem = if item.checked then file else nil
 			elseif item.isLoaded
-				@\hide!
-				@\emit "Selected",file
+				@hide!
+				@emit "Selected",file
 				if @parent == editor
 					emit "Scene.ModelSelected",file
 			else
@@ -68,16 +68,16 @@ Class
 		@scrollArea\slots "ScrollTouchEnded",->
 			@menu.enabled = true
 
-		@\slots "Cleanup",->
+		@slots "Cleanup",->
 			oRoutine\remove @routine if @routine
 
-		@\gslot "Scene.ViewModel",->
-			@\show!
+		@gslot "Scene.ViewModel",->
+			@show!
 
-		@\gslot "Scene.ClearModel",->
+		@gslot "Scene.ClearModel",->
 			@models = nil
 
-		@\gslot "Scene.ModelUpdated",(target)->
+		@gslot "Scene.ModelUpdated",(target)->
 			viewItem = @modelItems[target]
 			if viewItem and @models
 				for i,model in ipairs @models
@@ -87,8 +87,8 @@ Class
 				viewItem.parent\removeChild viewItem
 				@modelItems[target] = nil
 
-		@\gslot "Scene.LoadModel",(resPath)->
-			@\runThread ->
+		@gslot "Scene.LoadModel",(resPath)->
+			@runThread ->
 				-- get model files
 				models = {}
 				resPath = resPath\gsub("[\\/]*$","")
@@ -118,7 +118,7 @@ Class
 						item = @modelItems[model]
 						item.parent\removeChild item
 						@modelItems[model] = nil
-						@\playUpdateHint!
+						@playUpdateHint!
 					for model in *modelsToAdd
 						viewItem = ModelView {
 							width: 100
@@ -128,7 +128,7 @@ Class
 						viewItem.visible = false
 						viewItem\slots "Selected",@selected
 						@menu\addChild viewItem
-						@\playUpdateHint!
+						@playUpdateHint!
 						sleep!
 						@modelItems[model] = viewItem
 						viewItem.opacity = 0
@@ -139,7 +139,7 @@ Class
 						index += 1
 				else
 					if @modelItems
-						@\playUpdateHint!
+						@playUpdateHint!
 						for _,item in pairs @modelItems
 							item.parent\removeChild item
 					@modelItems = {}
@@ -152,7 +152,7 @@ Class
 						viewItem\slots "Selected",@selected
 						viewItem.visible = false
 						@menu\addChild viewItem
-						@\playUpdateHint!
+						@playUpdateHint!
 						sleep!
 						@modelItems[model] = viewItem
 						viewItem.opacity = 0
@@ -182,7 +182,7 @@ Class
 			@isCheckMode = not @isCheckMode
 
 		@addBtn\slots "Tapped",->
-			@\clearSelection!
+			@clearSelection!
 			with InputBox text:"New Model Name"
 				\slots "Inputed",(name)->
 					return unless name
@@ -209,11 +209,11 @@ Class
 					return unless result
 					MessageBox(text:"Confirm This\nDeletion")\slots "OK",(result)->
 						return unless result
-						@\runThread ->
+						@runThread ->
 							oCache.Model\unload @_selectedItem
 							oContent\remove @_selectedItem
 							Reference.removeRef @_selectedItem
-							@\clearSelection!
+							@clearSelection!
 							sleep 0.3
 							editor\updateModels!
 
@@ -224,7 +224,7 @@ Class
 			targetItem = @_selectedItem
 			viewItem = @modelItems[targetItem]
 			if viewItem.isLoaded
-				@\clearSelection!
+				@clearSelection!
 				actionEditor = editor.actionEditor
 				actionEditor\slots("Activated")\set ->
 					actionEditor\edit targetItem
@@ -233,7 +233,7 @@ Class
 				MessageBox text:"Broken Model\nWith Data Error\nOr Missing Image",okOnly:true
 
 		@closeBtn\slots "Tapped",->
-			@\hide!
+			@hide!
 
 		@addBtn.visible = false
 		@delBtn.visible = false
@@ -273,7 +273,7 @@ Class
 		(value)=>
 			return if @_isCheckMode == value
 			@_isCheckMode = value
-			@\clearSelection! unless value
+			@clearSelection! unless value
 			@modeBtn.color = ccColor3(value and 0xff0088 or 0x00ffff)
 			show = (index)-> CCSequence {
 				CCDelay 0.1*index
@@ -298,7 +298,7 @@ Class
 				@hint.positionX = @panel.width-(@panel.width-60)/2
 
 	show: =>
-		@\perform CCSequence {
+		@perform CCSequence {
 			CCShow!
 			oOpacity 0.3,0.6,oEase.OutQuad
 		}
@@ -330,8 +330,8 @@ Class
 			oOpacity 0.3,0,oEase.OutQuad
 			oScale 0.3,0,0,oEase.InBack
 		}
-		@\perform CCSequence {
+		@perform CCSequence {
 			oOpacity 0.3,0,oEase.OutQuad
 			CCHide!
-			CCCall -> @\emit "Hide"
+			CCCall -> @emit "Hide"
 		}

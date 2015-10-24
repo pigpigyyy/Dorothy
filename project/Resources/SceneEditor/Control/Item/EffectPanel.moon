@@ -41,11 +41,11 @@ Class
 		@selected = (item)->
 			effectName = item.effect
 			if @_isCheckMode
-				@\clearSelection! if @_selectedItem ~= effectName
+				@clearSelection! if @_selectedItem ~= effectName
 				item.checked = not item.checked
 				@_selectedItem = if item.checked then effectName else nil
 			elseif item.isLoaded
-				@\hide!
+				@hide!
 				emit "Scene.EffectSelected",effectName
 			else
 				MessageBox text:"Broken Effect\nWith Data Error",okOnly:true
@@ -66,16 +66,16 @@ Class
 		@scrollArea\slots "ScrollTouchEnded",->
 			@menu.enabled = true
 
-		@\slots "Cleanup",->
+		@slots "Cleanup",->
 			oRoutine\remove @routine if @routine
 
-		@\gslot "Scene.ViewEffect",->
-			@\show!
+		@gslot "Scene.ViewEffect",->
+			@show!
 
-		@\gslot "Scene.ClearEffect",->
+		@gslot "Scene.ClearEffect",->
 			@effects = nil
 
-		@\gslot "Scene.EffectUpdated",(target)->
+		@gslot "Scene.EffectUpdated",(target)->
 			if not oCache.Particle\unload target
 				oCache.Animation\unload target
 			viewItem = @effectItems[target]
@@ -87,8 +87,8 @@ Class
 				viewItem.parent\removeChild viewItem
 				@effectItems[target] = nil
 
-		@\gslot "Scene.LoadEffect",->
-			@\runThread ->
+		@gslot "Scene.LoadEffect",->
+			@runThread ->
 				-- get effect files
 				effects = {}
 				effectFiles = {}
@@ -119,7 +119,7 @@ Class
 						item = @effectItems[effect]
 						item.parent\removeChild item
 						@effectItems[effect] = nil
-						@\playUpdateHint!
+						@playUpdateHint!
 					for effect in *effectsToAdd
 						viewItem = EffectView {
 							width: itemWidth
@@ -130,13 +130,13 @@ Class
 						viewItem.visible = false
 						viewItem\slots "Selected",@selected
 						@menu\addChild viewItem
-						@\playUpdateHint!
+						@playUpdateHint!
 						sleep!
 						@effectItems[effect] = viewItem
 						viewItem.opacity = 0
 				else
 					if @effectItems
-						@\playUpdateHint!
+						@playUpdateHint!
 						for _,item in pairs @effectItems
 							item.parent\removeChild item
 					@effectItems = {}
@@ -150,7 +150,7 @@ Class
 						viewItem\slots "Selected",@selected
 						viewItem.visible = false
 						@menu\addChild viewItem
-						@\playUpdateHint!
+						@playUpdateHint!
 						sleep!
 						@effectItems[effect] = viewItem
 						viewItem.opacity = 0
@@ -181,7 +181,7 @@ Class
 			@isCheckMode = not @isCheckMode
 
 		@newBtn\slots "Tapped",->
-			@\clearSelection!
+			@clearSelection!
 			SelectionPanel = require "Control.Basic.SelectionPanel"
 			with SelectionPanel items:{"Particle","Frame"}
 				\slots "Selected",(itemType)->
@@ -201,7 +201,7 @@ Class
 							CCScene\forward "effectEditor","rollOut"
 
 		@addBtn\slots "Tapped",->
-			@\clearSelection!
+			@clearSelection!
 			with InputBox text:"New Effect Name"
 				\slots "Inputed",(name)->
 					return unless name
@@ -227,14 +227,14 @@ Class
 					return unless result
 					MessageBox(text:"Confirm This\nDeletion")\slots "OK",(result)->
 						return unless result
-						@\runThread ->
+						@runThread ->
 							@effectFiles[@_selectedItem] = nil
 							content = "<A>"
 							for k,v in pairs @effectFiles
 								content = content..string.format("<B A=\"%s\" B=\"%s\"/>",k,v)
 								content = content.."</A>"
 							oContent\saveToFile editor.gameFullPath..editor.graphicFolder.."list.effect",content
-							@\clearSelection!
+							@clearSelection!
 							sleep 0.3
 							editor\updateEffects!
 
@@ -245,7 +245,7 @@ Class
 			targetItem = @_selectedItem
 			viewItem = @effectItems[targetItem]
 			if viewItem.isLoaded
-				@\clearSelection!
+				@clearSelection!
 				effectEditor = editor.effectEditor
 				effectEditor\slots("Activated")\set ->
 					effectEditor\edit targetItem
@@ -254,7 +254,7 @@ Class
 				MessageBox text:"Broken Effect\nWith Data Error",okOnly:true
 
 		@closeBtn\slots "Tapped",->
-			@\hide!
+			@hide!
 
 		@newBtn.visible = false
 		@addBtn.visible = false
@@ -295,7 +295,7 @@ Class
 		(value)=>
 			return if @_isCheckMode == value
 			@_isCheckMode = value
-			@\clearSelection! unless value
+			@clearSelection! unless value
 			@modeBtn.color = ccColor3(value and 0xff0088 or 0x00ffff)
 			show = (index)-> CCSequence {
 				CCDelay 0.1*index
@@ -322,7 +322,7 @@ Class
 				@hint.positionX = @panel.width-(@panel.width-60)/2
 
 	show: =>
-		@\perform CCSequence {
+		@perform CCSequence {
 			CCShow!
 			oOpacity 0.3,0.6,oEase.OutQuad
 		}
@@ -354,8 +354,8 @@ Class
 			oOpacity 0.3,0,oEase.OutQuad
 			oScale 0.3,0,0,oEase.InBack
 		}
-		@\perform CCSequence {
+		@perform CCSequence {
 			oOpacity 0.3,0,oEase.OutQuad
 			CCHide!
-			CCCall -> @\emit "Hide"
+			CCCall -> @emit "Hide"
 		}

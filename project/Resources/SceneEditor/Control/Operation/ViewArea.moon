@@ -7,7 +7,7 @@ Class
 	__init: =>
 		{:width,:height} = CCDirector.winSize
 
-		@\gslot "Scene.ViewArea.ScaleTo",(scale)->
+		@gslot "Scene.ViewArea.ScaleTo",(scale)->
 			editor.scale = scale
 			@touchEnabled = false
 			@scaleNode\runAction CCSequence {
@@ -18,8 +18,8 @@ Class
 						@touchEnabled = true
 			}
 
-		@\gslot "Scene.ViewArea.MoveTo",(pos)->
-			@\unschedule!
+		@gslot "Scene.ViewArea.MoveTo",(pos)->
+			@unschedule!
 			@touchEnabled = false
 			@crossNode\runAction CCSequence {
 				oPos 0.5,pos.x,pos.y,oEase.OutQuad
@@ -31,7 +31,7 @@ Class
 			@xcross\runAction oPos 0.5,0,-pos.y,oEase.OutQuad
 			@ycross\runAction oPos 0.5,-pos.x,0,oEase.OutQuad
 
-		@\gslot "Scene.ViewArea.Move",(delta)->
+		@gslot "Scene.ViewArea.Move",(delta)->
 			delta = delta/@scaleNode.scaleX
 			@crossNode.position += delta
 			@xcross.positionY -= delta.y
@@ -57,19 +57,19 @@ Class
 			decX = V.x < 0
 			decY = V.y < 0
 			if incX == decX and incY == decY
-				@\unschedule!
+				@unschedule!
 			else
 				emit "Scene.ViewArea.Move",V*dt
 
 		pick = false
-		@\slots "TouchBegan",(touches)->
+		@slots "TouchBegan",(touches)->
 			pick = true
 			S = oVec2.zero
 			V = oVec2.zero
-			@\schedule updateDragSpeed
+			@schedule updateDragSpeed
 			true
 
-		@\slots "TouchMoved",(touches)->
+		@slots "TouchMoved",(touches)->
 			if #touches == 1 -- move view
 				delta = touches[1].delta
 				if delta ~= oVec2.zero
@@ -91,10 +91,10 @@ Class
 
 		touchEnded = (touches)->
 			if pick then
-				@\unschedule!
+				@unschedule!
 				loc = touches[1].location
 				emit "Scene.ViewArea.Pick",loc
 			elseif V ~= oVec2.zero
-					@\schedule updateDragPos
-		@\slots "TouchEnded",touchEnded
-		@\slots "TouchCancelled",touchEnded
+					@schedule updateDragPos
+		@slots "TouchEnded",touchEnded
+		@slots "TouchCancelled",touchEnded

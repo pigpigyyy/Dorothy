@@ -30,7 +30,7 @@ Class
 	__partial: (args)=> ClipEditorView args
 	__init: (args)=>
 		{:images} = args
-		@\addImages images
+		@addImages images
 		@scrollArea\slots "Scrolled",(delta)->
 			@scrollArea.view\eachChild (child)->
 				child.position += delta
@@ -71,16 +71,16 @@ Class
 								oCache.Texture\unload image
 								oContent\remove image
 								Reference.removeRef image
-							@\close true
+							@close true
 
 		@cancelBtn\slots "Tapped",->
-			@\close false
+			@close false
 
 		CCDirector.currentScene\addChild @,2
 
 	close: (result)=>
 		@opMenu.enabled = false
-		@\perform oOpacity 0.3,0
+		@perform oOpacity 0.3,0
 		@okBtn\perform oScale 0.3,0,0,oEase.InBack
 		@cancelBtn\perform oScale 0.3,0,0,oEase.InBack
 		@panel\perform CCSequence {
@@ -89,7 +89,7 @@ Class
 				oOpacity 0.3,0
 			}
 			CCCall ->
-				@\emit "Grouped",result
+				@emit "Grouped",result
 				@parent\removeChild @
 		}
 

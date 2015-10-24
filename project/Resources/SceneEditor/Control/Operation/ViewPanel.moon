@@ -51,7 +51,7 @@ Class
 								it.positionY += offset
 						viewSize = @viewSize
 						@viewSize = CCSize viewSize.width,viewSize.height-offset
-						@\updateLine!
+						@updateLine!
 						for _,it in pairs @items
 							if it.positionY < item.positionY and it.visible
 								it.scaleY = 0
@@ -70,7 +70,7 @@ Class
 							@items[child].positionX = width-10-@items[child].width/2
 						viewSize = @viewSize
 						@viewSize = CCSize viewSize.width,viewSize.height+offset
-						@\updateLine!
+						@updateLine!
 						for child in *itemData.children
 							with @items[child]
 								if .visible
@@ -87,10 +87,12 @@ Class
 						emit "Scene.ViewPanel.Select",nil
 					foldingItem = nil
 					foldingRoutine = nil
+			elseif @_selectedItem == nil
+				emit "Scene.ViewPanel.Select",nil
 
 		checkFolding = (item)->
 			switch item.itemData.typeName
-				when "UILayer","Layer"
+				when "UILayer","Layer","World"
 					handleFolding item
 				else
 					if @_selectedItem == nil
@@ -104,7 +106,6 @@ Class
 				emit "Scene.ViewPanel.Select",item.itemData
 			elseif @_selectedItem == item
 				@_selectedItem = nil
-				emit "Scene.ViewPanel.Select",nil
 			checkFolding item
 
 		addItem = (x,y,text,data,parentData)->
@@ -249,7 +250,7 @@ Class
 			traverseData data,itemX,itemY
 			@viewSize = CCSize right,bottom
 
-		@\gslot "Scene.DataLoaded",(data)->
+		@gslot "Scene.DataLoaded",(data)->
 			sceneData = data
 			@menu\removeAllChildrenWithCleanup!
 			@items = {}

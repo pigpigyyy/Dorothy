@@ -13,13 +13,13 @@ Class
 		@_expanded = false
 		@_checked = false
 		@_isCheckMode = false
-		@\slots "Tapped", ->
+		@slots "Tapped", ->
 			if @_isCheckMode
 				@_checked = not @_checked
-				@\emit "Checked",@_checked,@
+				@emit "Checked",@_checked,@
 			else
 				@_expanded = not @_expanded
-				@\emit "Expanded",@_expanded
+				@emit "Expanded",@_expanded
 
 	expanded: property => @_expanded
 
@@ -30,5 +30,5 @@ Class
 			@_isCheckMode = value
 			if not value and @_checked
 				@_checked = false
-				@\emit "Checked",false,@
-				@\emit "TapEnded"
+				@emit "Checked",false,@
+				@emit "TapEnded"

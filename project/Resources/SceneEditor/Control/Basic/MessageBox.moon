@@ -17,11 +17,11 @@ Class
 	__partial: (args)=> MessageBoxView args
 	__init: (args)=>
 		@okBtn\slots "Tapped", ->
-			@\clicked true
+			@clicked true
 
 		if not args.okOnly
 			@cancelBtn\slots "Tapped", ->
-				@\clicked false
+				@clicked false
 
 		@scrollArea\slots "Scrolled",(delta)->
 			@scrollArea.view\eachChild (child)->
@@ -29,7 +29,7 @@ Class
 
 		if @title.height > 90 or @title.width > 240
 			@scrollArea.viewSize = @title.contentSize
-			xPos = math.max(@title.width/2,120)
+			xPos = math.max @title.width/2,120
 			@title.position = oVec2 xPos,90-@title.height/2
 			@scrollArea.offset = oVec2 120-xPos,0
 
@@ -37,13 +37,13 @@ Class
 
 	clicked: (result)=>
 		@opMenu.enabled = false
-		@\perform oOpacity 0.4,0
+		@perform oOpacity 0.4,0
 		@box\perform CCSequence {
 			CCSpawn {
 				oScale 0.4,0,0,oEase.InBack
 				oOpacity 0.4,0
 			}
 			CCCall ->
-				@\emit "OK",result
+				@emit "OK",result
 				@parent\removeChild @
 		}

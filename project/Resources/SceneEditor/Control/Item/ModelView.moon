@@ -35,10 +35,10 @@ Class
 			.position = oVec2 width-20,20
 		@face\addChild @star
 
-		@\slots "Tapped",->
-			@\emit "Selected",@
+		@slots "Tapped",->
+			@emit "Selected",@
 
-		@\slots "Cleanup",->
+		@slots "Cleanup",->
 			oCache.Texture\unload @_prevFile if @_prevFile
 
 		thread ->
