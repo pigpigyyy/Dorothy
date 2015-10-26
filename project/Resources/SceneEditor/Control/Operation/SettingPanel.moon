@@ -87,8 +87,6 @@ Class
 			World: {
 				items.Name
 				items.Gravity
-				items.Groups
-				items.Contacts
 				items.Simulation
 				items.Outline
 				items.RatioX
@@ -170,6 +168,8 @@ Class
 								"High"
 					when "contacts","groups"
 						". . ."
+					when "group"
+						editor.sceneData.groups[data[item.name]]
 					when "outline"
 						data[item.name] and "Show" or "Hide"
 					else

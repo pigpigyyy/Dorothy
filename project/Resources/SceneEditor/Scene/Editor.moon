@@ -83,20 +83,32 @@ Class
 				@[name\sub(1,1)\lower!..name\sub(2,-1)] = panel
 				@addChild panel
 
+			@gslot "Scene.ViewArea.Move",(delta)->
+				return unless @items
+				@items.Camera.position -= delta/@viewArea.scaleNode.scaleX
+			@gslot "Scene.ViewArea.MoveTo",(pos)->
+				return unless @items
+				posX = pos.x-@origin.x+width/2
+				posY = pos.y-@origin.y+height/2
+				@items.Camera\perform oPos 0.5,posX,posY,oEase.OutQuad
+
 			bodyDef = Model.Body!
-			bodyDef.group = "One"
 			bodyDef.file = "Physics/car.body"
 			worldDef = with Model.World!
-				.groups = {One:1}
-				.contacts = {{"One","One",true}}
 				.children = {bodyDef}
 			@sceneData = with Model.PlatformWorld!
 				.camera = Model.Camera!
 				.ui = Model.UILayer!
+				.groups = {
+					[1]: "P1"
+					[oData.GroupDetect]: "Detect"
+					[oData.GroupDetectPlayer]: "DetectPlayer"
+					[oData.GroupHide]: "Hide"
+					[oData.GroupTerrain]: "Terrain"
+				}
+				.contacts = {{1,1,true}}
 				.children = {worldDef}
 			@viewArea.scaleNode\addChild @sceneData!
-			@gslot "Scene.ViewArea.Move",(delta)->
-				@items.Camera.position -= delta
 			emit "Scene.DataLoaded",@sceneData
 
 		@gslot "Editor.ItemChooser",(args)->

@@ -26,11 +26,7 @@ Contact = (world,data)->
 	contacts = data.contacts
 	if groups and contacts
 		for contact in *contacts
-			groupA = groups[contact[1]]
-			groupB = groups[contact[2]]
-			shouldContact = contact[3]
-			if groupA and groupB
-				world\setShouldContact groupA,groupB,shouldContact
+			world\setShouldContact unpack contact
 
 Types =
 	PlatformWorld:1
@@ -190,16 +186,14 @@ Items =
 		itemType:{1,Types.World}
 		name:{2,"world"}
 		gravity:{3,Point(0,-10)}
-		contacts:{4,false}
-		groups:{5,false}
-		simulation:{6,1}
-		ratioX:{7,0}
-		ratioY:{8,0}
-		offset:{9,Point(0,0)}
-		zoom:{10,1}
-		children:{11,false}
+		simulation:{4,1}
+		ratioX:{5,0}
+		ratioY:{6,0}
+		offset:{7,Point(0,0)}
+		zoom:{8,1}
+		children:{9,false}
 		-- design
-		outline:{12,true}
+		outline:{10,true}
 		-- helper
 		create:(scene,index)=>
 			scene\setLayerRatio index,oVec2(@ratioX,@ratioY)
@@ -212,6 +206,7 @@ Items =
 				.showDebug = @outline
 				\setIterations Simulation @simulation
 			layer\addChild world
+			Contact world,editor.sceneData
 			editor.items[@name] = world
 			editor.itemDefs[world] = @
 			Contact world,@
@@ -223,7 +218,7 @@ Items =
 		itemType:{1,Types.Body}
 		name:{2,"body"}
 		file:{3,""}
-		group:{4,""}
+		group:{4,1}
 		position:{5,Point(0,0)}
 		angle:{6,0}
 		-- helper
@@ -232,9 +227,8 @@ Items =
 			if "oWorld" == tolua.type parent
 				world = parent
 			body = oBody @file,world,@position,@angle
-			group = editor.itemDefs[parent].groups[@group]
 			body\each (_,v)->
-				v.group = group if "oBody" == tolua.type v
+				v.group = @group if "oBody" == tolua.type v
 			editor.items[@name] = body
 			editor.itemDefs[body] = @
 			body

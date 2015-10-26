@@ -6,6 +6,8 @@
 	<Button Name="modelBtn" X="35" Y="{ $T-155 }" Width="50" Height="50" Text="Model" FontSize="16" Ref="True"/>
 	<Button Name="bodyBtn" X="35" Y="{ $T-215 }" Width="50" Height="50" Text="Body" FontSize="16" Ref="True"/>
 	<Button Name="effectBtn" X="35" Y="{ $T-275 }" Width="50" Height="50" Text="Effect" FontSize="16" Ref="True"/>
+	<Button Name="zoomBtn" X="{ $R-225 }" Y="{ $T-35 }" Width="50" Height="50" Text="100%" FontSize="16" Ref="True"/>
+	<Button Name="originBtn" X="{ $R-285 }" Y="{ $T-35 }" Width="50" Height="50" Text="Origin" FontSize="16" Ref="True"/>
 	<!--<Button Name="unitBtn" X="35" Y="{ $T-335 }" Width="50" Height="50" Text="Unit" FontSize="16" Ref="True"/>
 	<Button Name="uiBtn" X="35" Y="{ $T-395 }" Width="50" Height="50" Text="UI" FontSize="16" Ref="True"/>-->
 </Menu>

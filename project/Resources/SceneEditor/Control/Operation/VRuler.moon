@@ -17,7 +17,6 @@ cycle = require "cycle"
 
 ->
 	winSize = CCDirector.winSize
-	center = oVec2 winSize.width*0.5,winSize.height*0.5
 	rulerWidth = 30
 	rulerHeight = winSize.height
 	halfW = rulerWidth*0.5
@@ -141,7 +140,6 @@ cycle = require "cycle"
 		updateLabels!
 
 	@gslot "Scene.ViewArea.MoveTo",(pos)->
-		pos += center
 		intervalNode\runAction oPos 0.5,halfW,pos.y,oEase.OutQuad
 		oRoutine once -> cycle 0.5,-> updateLabels!
 		updatePart winSize.height-pos.y,pos.y

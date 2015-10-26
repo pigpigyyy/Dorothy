@@ -17,7 +17,6 @@ cycle = require "cycle"
 
 ->
 	winSize = CCDirector.winSize
-	center = oVec2 winSize.width*0.5,winSize.height*0.5
 	rulerWidth = winSize.width
 	rulerHeight = 30
 	halfW = rulerWidth*0.5
@@ -141,7 +140,6 @@ cycle = require "cycle"
 		updateLabels!
 
 	@gslot "Scene.ViewArea.MoveTo",(pos)->
-		pos += center
 		intervalNode\runAction oPos 0.5,pos.x,halfH,oEase.OutQuad
 		oRoutine once -> cycle 0.5,-> updateLabels!
 		updatePart pos.x,winSize.width-pos.x
@@ -154,7 +152,7 @@ cycle = require "cycle"
 	fadeOut = CCSequence {
 		oOpacity 0.3,0
 		CCCall ->
-			layer.scaleX = 1
+			@scaleX = 1
 			updateIntervalTextScale 1
 	}
 	fadeIn = oOpacity 0.3,0.3

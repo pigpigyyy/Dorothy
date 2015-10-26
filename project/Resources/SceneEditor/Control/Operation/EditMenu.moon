@@ -56,3 +56,23 @@ Class
 			if item
 				effectSelected = true
 				@effectBtn.color = ccColor3 0xff0088
+
+		@gslot "Scene.ViewArea.Scale",(scale)->
+			@zoomBtn.text = tostring(scale*100).."%"
+
+		mode = 0
+		@zoomBtn\slots "Tapped",->
+			scale = switch mode
+				when 0
+					2
+				when 1
+					0.5
+				when 2
+					1
+			mode += 1
+			mode %= 3
+			@zoomBtn.text = tostring(scale*100).."%"
+			emit "Scene.ViewArea.ScaleTo",scale
+
+		@originBtn\slots "Tapped",->
+			emit "Scene.ViewArea.MoveTo",editor.origin

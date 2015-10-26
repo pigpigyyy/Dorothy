@@ -269,15 +269,23 @@ Class
 						return if editor.selectedType == "Body"
 
 				newData = nil
+				pos = editor.viewArea.crossNode\convertToNodeSpace loc
+				spos = editor.items.Camera\convertToNodeSpace loc
+				spos.x += @width/2
+				spos.y += @height/2
+				print "pos",pos.x,pos.y
+				print "spos",spos.x,spos.y
 				switch editor.selectedType
 					when "Sprite","Model","Body"
 						newData = Model[editor.selectedType]!
 						newData.file = editor.selectedItem
 						newData.name = editor\getUsableName newData.name
+						newData.position = pos
 					when "Effect"
 						newData = Model.Effect!
 						newData.effect = editor.selectedItem
 						newData.name = editor\getUsableName newData.name
+						newData.position = pos
 
 				switch itemData.typeName
 					when "Layer","UILayer","World"

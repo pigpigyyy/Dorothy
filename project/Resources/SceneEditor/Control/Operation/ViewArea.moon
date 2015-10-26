@@ -12,18 +12,19 @@ Class
 			@touchEnabled = false
 			@scaleNode\runAction CCSequence {
 				oScale 0.5,scale,scale,oEase.OutQuad
-				CCCall ()->
+				CCCall ->
 					if @scaleNode.numberOfRunningActions+
 						@crossNode.numberOfRunningActions == 1
 						@touchEnabled = true
 			}
 
 		@gslot "Scene.ViewArea.MoveTo",(pos)->
+			pos -= editor.origin
 			@unschedule!
 			@touchEnabled = false
 			@crossNode\runAction CCSequence {
 				oPos 0.5,pos.x,pos.y,oEase.OutQuad
-				CCCall ()->
+				CCCall ->
 					if @scaleNode.numberOfRunningActions+
 						@crossNode.numberOfRunningActions == 1
 						@touchEnabled = true
