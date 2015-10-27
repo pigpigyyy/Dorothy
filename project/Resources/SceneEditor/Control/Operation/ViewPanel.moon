@@ -11,8 +11,7 @@ Class
 		height = @height
 		itemW = 120
 		itemH = 40
-		right = 0
-		bottom = 0
+		viewSize = CCSize.zero
 		offsetY = 0
 		drawNode = nil
 		sceneData = nil
@@ -37,8 +36,8 @@ Class
 					for _,it in pairs @items
 						if it.positionY < lastChildBottom
 							it.positionY += offset
-					viewSize = @viewSize
-					@viewSize = CCSize viewSize.width,viewSize.height-offset
+					viewSize.height -= offset
+					@viewSize = viewSize
 					@updateLine!
 					for _,it in pairs @items
 						if it.positionY < item.positionY and it.visible
@@ -56,8 +55,8 @@ Class
 							it.positionY -= offset
 					for child in *itemData.children
 						@items[child].positionX = width-10-@items[child].width/2
-					viewSize = @viewSize
-					@viewSize = CCSize viewSize.width,viewSize.height+offset
+					viewSize.height += offset
+					@viewSize = viewSize
 					@updateLine!
 					for child in *itemData.children
 						with @items[child]
@@ -127,8 +126,8 @@ Class
 			item\slots "Tapped",itemTapped
 			@menu\addChild item
 			@items[data] = item
-			right = math.max x+realW/2+10,right
-			bottom = math.max height-y+itemH/2+10,bottom
+			viewSize.width = x+realW/2+10
+			viewSize.height = height-y+itemH/2+10
 
 		getChildCount = (parent)->
 			item = @items[parent]
@@ -246,13 +245,12 @@ Class
 			updateLine sceneData
 
 		setupData = (data)->
-			right = 0
-			bottom = 0
+			viewSize = CCSize.zero
 			offsetY = @offset.y
 			itemX = 10+itemW/2
 			itemY = height-10-itemH/2
 			traverseData data,itemX,itemY
-			@viewSize = CCSize right,bottom
+			@viewSize = viewSize
 
 		@gslot "Scene.DataLoaded",(data)->
 			sceneData = data
@@ -268,7 +266,7 @@ Class
 			if targetData
 				for i,child in ipairs parentData.children
 					if child == targetData
-						index = i
+						index = i+1
 						break
 			table.insert parentData.children,index,newData
 
@@ -300,24 +298,36 @@ Class
 				childItem = @items[childData]
 				childItem.position = oVec2 posX,posY-(i-1)*(itemH+10)
 
-			viewSize = @viewSize
-			viewSize.height += (itemH+10)
+			if not parentItem.fold
+				viewSize.height += (itemH+10)
 			@viewSize = viewSize
 			@updateLine!
 			index
 
+		@gslot "Scene.ViewPanel.Pick",(itemData)->
+			item = @items[itemData]
+			if item
+				item.checked = true
+				itemTapped item
+
 		@gslot "Scene.ViewArea.Tap",(loc)->
+			return unless @menuEnabled
 			if @_selectedItem and editor.selectedType
 				itemData = @_selectedItem.itemData
+				parentData = @_selectedItem.parentData
 				pos = nil
 				switch itemData.typeName
 					when "Camera"
 						return
 					when "UILayer"
-						pos = loc-editor.origin
+						pos = loc
 						return if editor.selectedType == "Body"
 					else
-						pos = editor.viewArea.crossNode\convertToNodeSpace loc
+						if parentData.typeName == "UILayer"
+							pos = loc
+							return if editor.selectedType == "Body"
+						else
+							pos = editor.viewArea.crossNode\convertToNodeSpace loc
 
 				newData = nil
 				switch editor.selectedType
@@ -343,8 +353,8 @@ Class
 						child = newData parentInst,#itemData.children
 						if child
 							parentInst\addChild child
+						doFolding @_selectedItem if @_selectedItem.fold
 					else
-						parentData = @_selectedItem.parentData
 						index = insertItem parentData,newData,itemData
 						name = switch parentData.typeName
 							when "PlatformWorld"
@@ -357,3 +367,7 @@ Class
 						child = newData parentInst,index
 						if child
 							parentInst\addChild child--insertChild
+						parentItem = @items[parentData]
+						doFolding parentItem if parentItem.fold
+
+				emit "Scene.ViewPanel.Pick",newData

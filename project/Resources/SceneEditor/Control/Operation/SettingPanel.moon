@@ -158,6 +158,8 @@ Class
 				item.positionY = getPosY!
 				contentHeight = contentHeight + itemHeight
 				item.value = switch item.name
+					when "file"
+						data[item.name]\match "[^\\/]*$"
 					when "simulation"
 						switch data[item.name]
 							when 1

@@ -144,6 +144,7 @@ Items =
 		create:(scene)=>
 			layer = scene.UILayer
 			editor.items.UI = layer
+			layer.position -= editor.origin
 			editor.itemDefs[layer] = @
 			Children layer,@
 			nil
