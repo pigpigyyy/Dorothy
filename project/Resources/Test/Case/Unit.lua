@@ -1,4 +1,4 @@
-local oButton = require("ActionEditor/Script/oButton")
+local oButton = require("ActionEditor.Script.oButton")
 
 local oPlatformWorld = require("oPlatformWorld")
 local oAI = require("oAI")

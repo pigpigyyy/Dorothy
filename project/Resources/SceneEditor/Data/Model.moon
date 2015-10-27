@@ -71,11 +71,14 @@ DataCreater = (dataDef)->
 					when "string"
 						str ..= "\""..item.."\""
 					when "table"
-						str ..= "{"
-						for i,v in ipairs item
-							str ..= tostring v
-							str ..= "," unless i == #item
-						str ..= "}"
+						if #item > 0
+							str ..= "{"
+							for i,v in ipairs item
+								str ..= tostring v
+								str ..= "," unless i == #item
+							str ..= "}"
+						else
+							str ..= "f"
 					else
 						str ..= tostring item
 				str ..= "," unless i == #@

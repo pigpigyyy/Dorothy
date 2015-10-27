@@ -92,10 +92,10 @@ Class
 				posY = pos.y-@origin.y+height/2
 				@items.Camera\perform oPos 0.5,posX,posY,oEase.OutQuad
 
-			bodyDef = Model.Body!
-			bodyDef.file = "Physics/car.body"
-			worldDef = with Model.World!
-				.children = {bodyDef}
+			--bodyDef = Model.Body!
+			--bodyDef.file = "Physics/car.body"
+			worldDef = Model.World!--with Model.World!
+			--	.children = {bodyDef}
 			@sceneData = with Model.PlatformWorld!
 				.camera = Model.Camera!
 				.ui = Model.UILayer!

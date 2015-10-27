@@ -19,6 +19,55 @@ Class
 		@items = nil
 		@_selectedItem = nil
 
+		doFolding = (item)->
+			item.fold = not item.fold
+			itemData = item.itemData
+			thread ->
+				@menuEnabled = false
+				if item.fold
+					for child in *itemData.children
+						@items[child]\perform oScale 0.3,1,0,oEase.OutQuad
+					sleep 0.3
+					for child in *itemData.children
+						@items[child].positionX = -200
+					len = #itemData.children
+					offset = len*(10+itemH)
+					lastChild = @items[itemData.children[len]]
+					lastChildBottom = lastChild.positionY-lastChild.height/2
+					for _,it in pairs @items
+						if it.positionY < lastChildBottom
+							it.positionY += offset
+					viewSize = @viewSize
+					@viewSize = CCSize viewSize.width,viewSize.height-offset
+					@updateLine!
+					for _,it in pairs @items
+						if it.positionY < item.positionY and it.visible
+							it.scaleY = 0
+							it\perform oScale 0.3,1,1,oEase.OutBack
+					sleep 0.3
+				else
+					for child in *itemData.children
+						@items[child].positionX = 400
+					len = #itemData.children
+					offset = len*(10+itemH)
+					itemBottom = item.positionY-item.height/2
+					for _,it in pairs @items
+						if it.positionY < itemBottom and it.positionX < 400
+							it.positionY -= offset
+					for child in *itemData.children
+						@items[child].positionX = width-10-@items[child].width/2
+					viewSize = @viewSize
+					@viewSize = CCSize viewSize.width,viewSize.height+offset
+					@updateLine!
+					for child in *itemData.children
+						with @items[child]
+							if .visible
+								\perform oScale 0.3,1,1,oEase.OutBack
+							else
+								.scaleY = 1
+					sleep 0.3
+				@menuEnabled = true
+
 		foldingItem = nil
 		foldingRoutine = nil
 		handleFolding = (item)->
@@ -33,53 +82,7 @@ Class
 						@_selectedItem.checked = false
 					@_selectedItem = item
 					emit "Scene.ViewPanel.Select",item.itemData
-				item.fold = not item.fold
-				itemData = item.itemData
-				thread ->
-					@menuEnabled = false
-					if item.fold
-						for child in *itemData.children
-							@items[child]\perform oScale 0.3,1,0,oEase.OutQuad
-						sleep 0.3
-						for child in *itemData.children
-							@items[child].positionX = -200
-						len = #itemData.children
-						offset = len*(10+itemH)
-						lastChild = @items[itemData.children[len]]
-						lastChildBottom = lastChild.positionY-lastChild.height/2
-						for _,it in pairs @items
-							if it.positionY < lastChildBottom
-								it.positionY += offset
-						viewSize = @viewSize
-						@viewSize = CCSize viewSize.width,viewSize.height-offset
-						@updateLine!
-						for _,it in pairs @items
-							if it.positionY < item.positionY and it.visible
-								it.scaleY = 0
-								it\perform oScale 0.3,1,1,oEase.OutBack
-						sleep 0.3
-					else
-						for child in *itemData.children
-							@items[child].positionX = 400
-						len = #itemData.children
-						offset = len*(10+itemH)
-						itemBottom = item.positionY-item.height/2
-						for _,it in pairs @items
-							if it.positionY < itemBottom and it.positionX < 400
-								it.positionY -= offset
-						for child in *itemData.children
-							@items[child].positionX = width-10-@items[child].width/2
-						viewSize = @viewSize
-						@viewSize = CCSize viewSize.width,viewSize.height+offset
-						@updateLine!
-						for child in *itemData.children
-							with @items[child]
-								if .visible
-									\perform oScale 0.3,1,1,oEase.OutBack
-								else
-									.scaleY = 1
-						sleep 0.3
-					@menuEnabled = true
+				doFolding item
 			elseif item.itemData.children and #item.itemData.children > 0
 				foldingItem = item
 				foldingRoutine = thread ->
@@ -259,22 +262,64 @@ Class
 			@menu\addChild drawNode
 			setupData data
 
+		insertItem = (parentData,newData,targetData)->
+			parentData.children = {} unless parentData.children
+			index = #parentData.children+1
+			if targetData
+				for i,child in ipairs parentData.children
+					if child == targetData
+						index = i
+						break
+			table.insert parentData.children,index,newData
+
+			parentItem = @items[parentData]
+			if not parentItem.fold
+				lastChildData = parentData.children[#parentData.children]
+				lastChildItem = lastChildData and @items[lastChildData] or @items[parentData]
+				bottom = lastChildItem.positionY-itemH/2
+				for _,item in pairs @items
+					if item.positionY < bottom
+						item.positionY -= (itemH+10)
+
+			item = ViewItem {
+				text:newData.name
+				x:0
+				y:0
+				width:parentItem.width-20
+				height:itemH
+			}
+			item.itemData = newData
+			item.parentData = parentData
+			item\slots "Tapped",itemTapped
+			@menu\addChild item
+			@items[newData] = item
+
+			posX = parentItem.fold and -200 or parentItem.positionX+10
+			posY = parentItem.positionY-itemH-10
+			for i,childData in ipairs parentData.children
+				childItem = @items[childData]
+				childItem.position = oVec2 posX,posY-(i-1)*(itemH+10)
+
+			viewSize = @viewSize
+			viewSize.height += (itemH+10)
+			@viewSize = viewSize
+			@updateLine!
+			index
+
 		@gslot "Scene.ViewArea.Tap",(loc)->
 			if @_selectedItem and editor.selectedType
 				itemData = @_selectedItem.itemData
+				pos = nil
 				switch itemData.typeName
-					when "PlatformWorld","Camera"
+					when "Camera"
 						return
-					when "UI"
+					when "UILayer"
+						pos = loc-editor.origin
 						return if editor.selectedType == "Body"
+					else
+						pos = editor.viewArea.crossNode\convertToNodeSpace loc
 
 				newData = nil
-				pos = editor.viewArea.crossNode\convertToNodeSpace loc
-				spos = editor.items.Camera\convertToNodeSpace loc
-				spos.x += @width/2
-				spos.y += @height/2
-				print "pos",pos.x,pos.y
-				print "spos",spos.x,spos.y
 				switch editor.selectedType
 					when "Sprite","Model","Body"
 						newData = Model[editor.selectedType]!
@@ -289,12 +334,26 @@ Class
 
 				switch itemData.typeName
 					when "Layer","UILayer","World"
-						if not itemData.children
-							itemData.children = {}
-						table.insert itemData.children,newData
-						parent = editor.items[itemData.name or "UI"]
-						child = newData parent,#itemData.children
+						insertItem itemData,newData
+						name = if itemData.typeName == "UILayer"
+							"UI"
+						else
+							itemData.name
+						parentInst = editor.items[name]
+						child = newData parentInst,#itemData.children
 						if child
-							parent\addChild child
+							parentInst\addChild child
 					else
-						print itemData.typeName,editor.selectedType
+						parentData = @_selectedItem.parentData
+						index = insertItem parentData,newData,itemData
+						name = switch parentData.typeName
+							when "PlatformWorld"
+								"Scene"
+							when "UILayer"
+								"UI"
+							else
+								parentData.name
+						parentInst = editor.items[name]
+						child = newData parentInst,index
+						if child
+							parentInst\addChild child--insertChild
