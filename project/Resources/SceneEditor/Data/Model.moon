@@ -51,7 +51,7 @@ DataCreater = (dataDef)->
 			if itemDef
 				@[itemDef[1]] = v
 			else
-				error "assign invalid field to data"
+				error "assign invalid field #{k} to data"
 		__index:(k)=>
 			itemDef = dataDef[k]
 			if itemDef
@@ -298,13 +298,13 @@ Items =
 		itemType:{1,Types.Effect}
 		name:{2,"effect"}
 		effect:{3,""}
-		offset:{4,Point(0,0)}
+		position:{4,Point(0,0)}
 		play:{5,true}
 		-- helper
 		create:(parent)=>
 			effect = oEffect @effect
 			effect\attachTo parent
-			effect\setOffset @offset
+			effect\setOffset @position
 			if @play
 				effect\start!
 			editor.items[@name] = effect

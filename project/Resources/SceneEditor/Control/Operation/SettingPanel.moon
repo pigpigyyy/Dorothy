@@ -127,7 +127,7 @@ Class
 			Effect: {
 				items.Name
 				items.Effect
-				items.Offset
+				items.Position
 				items.Play
 			}
 		}
