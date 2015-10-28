@@ -572,42 +572,6 @@ tolua_lerror :
 #endif
 }
 
-int CCNode_getChildren(lua_State* L)
-{
-#ifndef TOLUA_RELEASE
-	tolua_Error tolua_err;
-	if (
-		!tolua_isusertype(L, 1, "CCNode", 0, &tolua_err) ||
-		!tolua_isnoobj(L, 2, &tolua_err)
-		)
-		goto tolua_lerror;
-	else
-#endif
-	{
-		CCNode* self = (CCNode*)tolua_tousertype(L, 1, 0);
-#ifndef TOLUA_RELEASE
-		if (!self) tolua_error(L, "invalid 'self' in function 'CCNode_getChildren'", NULL);
-#endif
-		CCArray* children = self->getChildren();
-		if (children)
-		{
-			lua_createtable(L, children->count(), 0);
-			for (unsigned int i = 0; i < children->count(); i++)
-			{
-				tolua_pushccobject(L, children->objectAtIndex(i));
-				lua_rawseti(L, -2, i + 1);
-			}
-		}
-		else lua_createtable(L, 0, 0);
-	}
-	return 1;
-#ifndef TOLUA_RELEASE
-tolua_lerror :
-	tolua_error(L, "#ferror in function 'getChildren'.", &tolua_err);
-	return 0;
-#endif
-}
-
 int CCNode_traverse(lua_State* L)
 {
 #ifndef TOLUA_RELEASE
@@ -676,17 +640,6 @@ tolua_lerror :
 	tolua_error(L, "#ferror in function 'eachChild'.", &tolua_err);
 	return 0;
 #endif
-}
-
-CCNode* CCNode_getChildByIndex(CCNode* self, int index)
-{
-	index--;
-	CCArray* children = self->getChildren();
-	if (children && 0 <= index && index < (int)children->count())
-	{
-		return (CCNode*)children->objectAtIndex(index);
-	}
-	return nullptr;
 }
 
 void CCDrawNode_drawPolygon(
@@ -1285,6 +1238,39 @@ void CArray_set(CCArray* array, unsigned int index, CCObject* object)
 {
 	array->replaceObjectAtIndex(index - 1, object);
 }
+int CCArray_each(lua_State* L)
+{
+#ifndef TOLUA_RELEASE
+	tolua_Error tolua_err;
+	if (
+		!tolua_isusertype(L, 1, "CCArray", 0, &tolua_err) ||
+		!toluafix_isfunction(L, 2, &tolua_err) ||
+		!tolua_isnoobj(L, 3, &tolua_err)
+		)
+		goto tolua_lerror;
+	else
+#endif
+	{
+		CCArray* self = (CCArray*)tolua_tousertype(L, 1, 0);
+#ifndef TOLUA_RELEASE
+		if (!self) tolua_error(L, "invalid 'self' in function 'CCArray_each'", NULL);
+#endif
+		CCARRAY_START(CCObject, item, self)
+		{
+			int top = lua_gettop(L);
+			tolua_pushccobject(L, item);
+			CCLuaEngine::call(L, 1, 0);
+			lua_settop(L, top);
+		}
+		CCARRAY_END
+	}
+	return 0;
+#ifndef TOLUA_RELEASE
+tolua_lerror:
+	tolua_error(L, "#ferror in function 'eachChild'.", &tolua_err);
+	return 0;
+#endif
+}
 
 CCTexture2D* CCTextureCache_add(CCTextureCache* self, CCRenderTexture* renderTexture, const char* name)
 {
@@ -1426,49 +1412,6 @@ int CCDictionary_set(lua_State* L)
 #ifndef TOLUA_RELEASE
 tolua_lerror :
 	tolua_error(L, "#ferror in function 'CCDictionary_set'.", &tolua_err);
-	return 0;
-#endif
-}
-
-int CCDictionary_getKeys(lua_State* L)
-{
-#ifndef TOLUA_RELEASE
-	tolua_Error tolua_err;
-	if (
-		!tolua_isusertype(L, 1, "CCDictionary", 0, &tolua_err) ||
-		!tolua_isnoobj(L, 2, &tolua_err)
-		)
-	{
-		goto tolua_lerror;
-	}
-#endif
-	{
-		CCDictionary* self = (CCDictionary*)tolua_tousertype(L, 1, 0);
-#ifndef TOLUA_RELEASE
-		if (!self) tolua_error(L, "invalid 'self' in function 'CCDictionary_getKeys'", nullptr);
-#endif
-		CCArray* keys = self->allKeys();
-		lua_createtable(L, keys ? keys->count() : 0, 0);
-		int i = 1;
-		CCARRAY_START(CCObject, key, keys)
-		{
-			if (key->getLuaType() == CCLuaType<CCString>())
-			{
-				lua_pushstring(L, ((CCString*)key)->getCString());
-				lua_rawseti(L, -2, i++);
-			}
-			else if (key->getLuaType() == CCLuaType<CCInteger>())
-			{
-				lua_pushinteger(L, ((CCInteger*)key)->getValue());
-				lua_rawseti(L, -2, i++);
-			}
-		}
-		CCARRAY_END
-	}
-	return 1;
-#ifndef TOLUA_RELEASE
-tolua_lerror :
-	tolua_error(L, "#ferror in function 'getKeys'.", &tolua_err);
 	return 0;
 #endif
 }

@@ -64,24 +64,23 @@ Class
 
 			panelWidth = 10+110*4
 			panelHeight = height*0.6
-			panelNames = {
-				"SpritePanel"
-				"ModelPanel"
-				"BodyPanel"
-				"EffectPanel"
-			}
-			for name in *panelNames
-				Panel = require "Control.Item."..name
-				sleep!
-				panel = Panel {
-					x:width/2
-					y:height/2
-					width:panelWidth
-					height:panelHeight
-				}
-				panel.visible = false
-				@[name\sub(1,1)\lower!..name\sub(2,-1)] = panel
-				@addChild panel
+			setupPanel = (name)->
+				realName = name\sub(1,1)\lower!..name\sub(2,-1)
+				if not @[realName]
+					Panel = require "Control.Item."..name
+					panel = Panel {
+						x:width/2
+						y:height/2
+						width:panelWidth
+						height:panelHeight
+					}
+					panel.visible = false
+					@[realName] = panel
+					@addChild panel
+			@gslot "Scene.ViewSprite",-> setupPanel "SpritePanel"
+			@gslot "Scene.ViewModel",-> setupPanel "ModelPanel"
+			@gslot "Scene.ViewBody",-> setupPanel "BodyPanel"
+			@gslot "Scene.ViewEffect",-> setupPanel "EffectPanel"
 
 			@gslot "Scene.ViewArea.Move",(delta)->
 				return unless @items

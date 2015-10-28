@@ -366,7 +366,10 @@ Class
 						parentInst = editor.items[name]
 						child = newData parentInst,index
 						if child
-							parentInst\addChild child--insertChild
+							parentInst\addChild child
+							children = parentInst.children
+							children\removeLast!
+							children\insert child,index
 						parentItem = @items[parentData]
 						doFolding parentItem if parentItem.fold
 

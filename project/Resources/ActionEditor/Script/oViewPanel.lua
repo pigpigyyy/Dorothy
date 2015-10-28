@@ -544,7 +544,7 @@ local function oViewPanel()
 		menu:addChild(drawNode)
 		local size = 60
 		local indent = 10
-		local root = model:getChildByIndex(1)
+		local root = model.children[1]
 		local function visitSprite(sp,x,y,child)
 			local clip = sp[oSd.clip]
 			if not sp[oSd.sprite] then
@@ -569,7 +569,7 @@ local function oViewPanel()
 					children[i][oSd.parent] = sp
 					children[i][oSd.index] = i
 					local sprite = children[i][oSd.sprite]
-					local lenY, subLayer = visitSprite(children[i],x+indent*2,y+nextY,sprite or child:getChildByIndex(i)) -- reuse data computed from updateSprite()
+					local lenY, subLayer = visitSprite(children[i],x+indent*2,y+nextY,sprite or child.children[i]) -- reuse data computed from updateSprite()
 					nextY = nextY + lenY
 					if maxSubLayer < subLayer then maxSubLayer = subLayer end
 					if i == childrenSize then
@@ -583,7 +583,7 @@ local function oViewPanel()
 			return nextY, layer+maxSubLayer
 		end
 
-		local height, layer = visitSprite(data,indent,borderSize.height-indent,model:getChildByIndex(1))
+		local height, layer = visitSprite(data,indent,borderSize.height-indent,model.children[1])
 		viewHeight = -height+indent
 		if viewHeight < borderSize.height then viewHeight = borderSize.height end
 		viewWidth = layer*indent*2+size
@@ -728,10 +728,10 @@ local function oViewPanel()
 			sp[oSd.sprite] = child
 			local children = sp[oSd.children]
 			for i = 1, #children do
-				visitSprite(children[i],child:getChildByIndex(i))
+				visitSprite(children[i],child.children[i])
 			end
 		end
-		visitSprite(data,model:getChildByIndex(1))
+		visitSprite(data,model.children[1])
 		if selectedItem ~= nil then
 			local sp,node = selectedItem:getData()
 			local withFrame = node.contentSize ~= CCSize.zero

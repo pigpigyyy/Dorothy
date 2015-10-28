@@ -461,6 +461,12 @@ local Dorothy =
 				description = "[bool][Readonly]",
 				type = "value",
 			},
+			children =
+			{
+				description = "[CCArray][Readonly]",
+				typeName = "CCArray",
+				type = "value",
+			},
 			addChild =
 			{
 				args = "(child: CCNode)",
@@ -529,22 +535,6 @@ local Dorothy =
 				args = "(tag: int)",
 				description = "",
 				returns = "(child: CCNode)",
-				typeName = "CCNode",
-				type = "method",
-			},
-			getChildByIndex =
-			{
-				args = "(index: int)",
-				description = "",
-				returns = "(child: CCNode)",
-				typeName = "CCNode",
-				type = "method",
-			},
-			getChildren =
-			{
-				args = "()",
-				description = "",
-				returns = "(children: table{CCNode})",
 				typeName = "CCNode",
 				type = "method",
 			},
@@ -948,6 +938,13 @@ local Dorothy =
 				returns = "()",
 				type = "method",
 			},
+			each =
+			{
+				args = "(handler: function)",
+				description = " -- handler: function{item: CCObject}",
+				returns = "()",
+				type = "method",
+			},
 		},
 		description = "class CCArray(CCObject).\n args -- ()\n args1 -- (capacity: int)\n args2 -- (other: CCArray)\n args3 -- (objects: table{CCObject})",
 		parents = {"CCObject",},
@@ -969,12 +966,11 @@ local Dorothy =
 				typeName = "CCObject",
 				type = "value",
 			},
-			getKeys =
+			keys =
 			{
-				args = "()",
-				description = "",
-				returns = "(keys: table{int|string})",
-				type = "method",
+				description = "[CCArray][Readonly]",
+				typeName = "CCArray",
+				type = "value",
 			},
 			get =
 			{

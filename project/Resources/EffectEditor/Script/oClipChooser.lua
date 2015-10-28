@@ -228,7 +228,7 @@ local function oClipChooser(clipName)
 					menu:eachChild(function(child)
 						if tolua.type(child) == "CCMenuItem" and child.circles then
 							child.face.cascadeOpacity = true
-							local node = child.node:getChildByIndex(1)
+							local node = child.node.children[1]
 							node.opacity = 0.4
 							node.color = ccColor3(0x666666)
 							local count = #panel.frameData

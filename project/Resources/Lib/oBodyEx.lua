@@ -57,10 +57,7 @@ local function create(itemDict,world,pos,angle)
 	local items = CCDictionary()
 	local center = nil
 	local centerBody = nil
-	local keys = itemDict:getKeys()
-	for i = 1,#keys do
-		local key = keys[i]
-		local itemDef = itemDict[key]
+	itemDict:each(function(key,itemDef)
 		if type(itemDef) == "oBodyDef" then
 			local newPos = pos
 			if not center then
@@ -107,7 +104,7 @@ local function create(itemDict,world,pos,angle)
 				items[key] = joint
 			end
 		end
-	end
+	end)
 	if centerBody then
 		centerBody.data = items
 	end

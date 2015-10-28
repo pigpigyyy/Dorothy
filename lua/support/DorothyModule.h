@@ -68,8 +68,6 @@ int CCNode_slots(lua_State* L);
 int CCNode_emit(lua_State* L);
 int CCNode_traverse(lua_State* L);
 int CCNode_eachChild(lua_State* L);
-int CCNode_getChildren(lua_State* L);
-CCNode* CCNode_getChildByIndex(CCNode* self, int index);
 oSlotList* CCNode_getSlotList(CCNode* self, const char* name);
 oSlotList* CCNode_tryGetSlotList(CCNode* self, const char* name);
 #define CCNODE_ZORDER self->getZOrder()
@@ -171,12 +169,12 @@ void CArray_removeAt(CCArray* array, unsigned int index);
 void CArray_exchange(CCArray* array, unsigned int index1, unsigned int index2);
 void CArray_fastRemoveAt(CCArray* array, unsigned int index);
 void CArray_set(CCArray* array, unsigned int uIndex, CCObject* pObject);
+int CCArray_each(lua_State* L);
 
 CCTexture2D* CCTextureCache_add(CCTextureCache* self, CCRenderTexture* renderTexture, const char* name);
 
 int CCDictionary_get(lua_State* L);
 int CCDictionary_set(lua_State* L);
-int CCDictionary_getKeys(lua_State* L);
 int CCDictionary_randomObject(lua_State* L);
 int CCDictionary_each(lua_State* L);
 

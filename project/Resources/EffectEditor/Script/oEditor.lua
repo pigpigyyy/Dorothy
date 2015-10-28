@@ -149,7 +149,6 @@ oEditor.edit = function(self,name)
 	local extension = string.match(file, "%.([^%.\\/]*)$")
 	if extension == "par" then
 		local dict = CCDictionary(targetFile)
-		local keys = dict:getKeys()
 		local parData = {}
 		local dataWrapper = {}
 		setmetatable(dataWrapper,
@@ -167,9 +166,9 @@ oEditor.edit = function(self,name)
 				return parData
 			end
 		})
-		for _,v in ipairs(keys) do
-			parData[v] = dict[v]
-		end
+		dict:each(function(k,v)
+			parData[k] = v
+		end)
 		oEditor.effectData = dataWrapper
 		if not parData.textureRectx then
 			parData.textureRectx = 0

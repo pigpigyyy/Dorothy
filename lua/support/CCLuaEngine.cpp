@@ -273,14 +273,15 @@ CCLuaEngine::CCLuaEngine()
 			tolua_function(L, "emit", CCNode_emit);
 			tolua_function(L, "traverse", CCNode_traverse);
 			tolua_function(L, "eachChild", CCNode_eachChild);
-			tolua_function(L, "getChildren", CCNode_getChildren);
 		tolua_endmodule(L);
 		tolua_beginmodule(L, "CCDictionary");//stack: package.loaded CCDictionary
 			tolua_variable(L, "randomObject", CCDictionary_randomObject, nullptr);
-			tolua_function(L, "getKeys", CCDictionary_getKeys);
 			tolua_function(L, "set", CCDictionary_set);
 			tolua_function(L, "get", CCDictionary_get);
 			tolua_function(L, "each", CCDictionary_each);
+		tolua_endmodule(L);
+		tolua_beginmodule(L, "CCArray");
+			tolua_function(L, "each", CCArray_each);
 		tolua_endmodule(L);
 		tolua_beginmodule(L, "CCTextureCache");
 			tolua_function(L, "loadAsync", CCTextureCache_loadAsync);

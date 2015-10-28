@@ -253,8 +253,8 @@ local function oEditControl()
 	posVisual.transformTarget = oEditor.world
 	posEditor:addChild(posVisual)
 	posVisual:gslot("Body.editor.fix",function(args)
-		posVisual:getChildByIndex(1).visible = not args.fixY
-		posVisual:getChildByIndex(2).visible = not args.fixX
+		posVisual.children[1].visible = not args.fixY
+		posVisual.children[2].visible = not args.fixX
 	end)
 
 	-- posEditor touch callback
@@ -406,8 +406,8 @@ local function oEditControl()
 	sizeVisual.transformTarget = worldNode
 	sizeEditor:addChild(sizeVisual)
 	sizeVisual:gslot("Body.editor.fix",function(args)
-		sizeVisual:getChildByIndex(1).visible = not args.fixY
-		sizeVisual:getChildByIndex(2).visible = not args.fixX
+		sizeVisual.children[1].visible = not args.fixY
+		sizeVisual.children[2].visible = not args.fixX
 	end)
 	
 	-- sizeEditor touch callback
@@ -500,8 +500,8 @@ local function oEditControl()
 	centerEditor.scaleX = 0.5
 	centerEditor.scaleY = 0.5
 	centerVisual:gslot("Body.editor.fix",function(args)
-		centerVisual:getChildByIndex(1).visible = not args.fixY
-		centerVisual:getChildByIndex(2).visible = not args.fixX
+		centerVisual.children[1].visible = not args.fixY
+		centerVisual.children[2].visible = not args.fixX
 	end)
 
 	-- centerEditor touch callback
@@ -739,16 +739,16 @@ local function oEditControl()
 				axisChanged(newAxis)
 			end
 		end)
-		rotVisual:getChildByIndex(1).visible = false
-		rotVisual:getChildByIndex(2).visible = false
-		rotVisual:getChildByIndex(3).visible = false
+		rotVisual.children[1].visible = false
+		rotVisual.children[2].visible = false
+		rotVisual.children[3].visible = false
 		axisVisual.visible = true
 	end
 	editControl.hideAxisEditor = function(self)
 		if not axisVisual.visible then return end
-		rotVisual:getChildByIndex(1).visible = true
-		rotVisual:getChildByIndex(2).visible = true
-		rotVisual:getChildByIndex(3).visible = true
+		rotVisual.children[1].visible = true
+		rotVisual.children[2].visible = true
+		rotVisual.children[3].visible = true
 		axisVisual.visible = false
 		editControl:hideRotEditor()
 	end
@@ -1018,7 +1018,7 @@ local function oEditControl()
 				end})
 			elseif name == "FacePos" then
 				local target = oEditor:getItem(data)
-				local face = target:getChildByIndex(1)
+				local face = target.children[1]
 				editControl:showCenterEditor(oEditor:getItem(data),data:get("FacePos"),function(center)
 					item.value = center
 					data:set("FacePos",center)

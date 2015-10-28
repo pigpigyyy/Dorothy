@@ -25,6 +25,7 @@ class CCNode: public CCObject
 	tolua_property__common CCScheduler* scheduler;
 	tolua_property__common CCObject* userObject @ data;
 	tolua_readonly tolua_property__common CCNode* parent;
+	tolua_readonly tolua_property__common CCArray* children;
 	tolua_readonly tolua_property__qt CCRect boundingBox;
 	tolua_readonly tolua_property__qt const char* description;
 	tolua_readonly tolua_property__qt int numberOfRunningActions;
@@ -44,8 +45,6 @@ class CCNode: public CCObject
 	void cleanup();
 
 	CCNode* getChildByTag(int tag);
-	tolua_outside CCNode* CCNode_getChildByIndex @ getChildByIndex(int index);
-
 	
 	void scheduleUpdateWithPriorityLua @ schedule(tolua_function nHandler, int priority = 0);
 	void unscheduleUpdateLua @ unschedule();

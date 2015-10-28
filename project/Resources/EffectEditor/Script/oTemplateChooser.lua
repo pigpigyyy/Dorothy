@@ -360,7 +360,6 @@ local function oTemplateChooser(filename)
 				oEditor:dumpEffectFile()
 
 				local dict = CCDictionary(file)
-				local keys = dict:getKeys()
 				local parData = {}
 				local dataWrapper = {}
 				setmetatable(dataWrapper,
@@ -379,9 +378,9 @@ local function oTemplateChooser(filename)
 					end
 				})
 				oEditor.effectData = dataWrapper
-				for _,v in ipairs(keys) do
-					parData[v] = dict[v]
-				end
+				dict:each(function(k,v)
+					parData[k] = v
+				end)
 				parData.textureRectx = 0
 				parData.textureRecty = 0
 				parData.textureRectw = 0

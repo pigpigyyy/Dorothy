@@ -448,8 +448,7 @@ Class
 				deltaY = clipTab.deltaY
 				clipTab.deltaY = 0
 				posY = clipTab.positionY-20-deltaY
-				children = @menu\getChildren!
-				for child in *children
+				@menu\eachChild (child)->
 					if child.clip == clip
 						child.parent\removeChild child
 					else

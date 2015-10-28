@@ -475,7 +475,7 @@ public:
      *
      * @return a CCNode object whose tag equals to the input parameter
      */
-    virtual CCNode * getChildByTag(int tag);
+    virtual CCNode* getChildByTag(int tag);
     /**
      * Return an array of children
      *

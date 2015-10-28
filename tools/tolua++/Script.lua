@@ -151,6 +151,9 @@ CCArray.__newindex = function(self,key,value)
 		CCArray_newindex(self,key,value)
 	end
 end
+CCArray.__len = function(self)
+	return self.count
+end
 
 local CCDictionary = builtin.CCDictionary
 local CCDictionary_index = CCDictionary.__index
@@ -170,6 +173,9 @@ CCDictionary.__newindex = function(self,key,value)
 	else
 		CCDictionary_set(self,key,value)
 	end
+end
+CCDictionary.__len = function(self)
+	return self.count
 end
 
 local CCUserDefaultClass = getmetatable(builtin.CCUserDefault)
