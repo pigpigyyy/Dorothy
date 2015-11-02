@@ -45,16 +45,17 @@ Class
 							it\perform oScale 0.3,1,1,oEase.OutBack
 					sleep 0.3
 				else
-					for child in *itemData.children
-						@items[child].positionX = 400
 					len = #itemData.children
 					offset = len*(10+itemH)
 					itemBottom = item.positionY-item.height/2
 					for _,it in pairs @items
-						if it.positionY < itemBottom and it.positionX < 400
+						if it.positionY < itemBottom
 							it.positionY -= offset
-					for child in *itemData.children
-						@items[child].positionX = width-10-@items[child].width/2
+					posX = item.fold and -200 or item.positionX+10
+					posY = item.positionY-itemH-10
+					for i,childData in ipairs itemData.children
+						childItem = @items[childData]
+						childItem.position = oVec2 posX,posY-(i-1)*(itemH+10)
 					viewSize.height += offset
 					@viewSize = viewSize
 					@updateLine!
@@ -68,13 +69,10 @@ Class
 				@menuEnabled = true
 
 		foldingItem = nil
-		foldingRoutine = nil
 		handleFolding = (item)->
 			if foldingItem and foldingItem == item
 				foldingItem = nil
-				if foldingRoutine
-					oRoutine\remove foldingRoutine
-					foldingRoutine = nil
+				@menu\unschedule!
 				item.checked = true
 				if @_selectedItem ~= item
 					if @_selectedItem
@@ -84,12 +82,11 @@ Class
 				doFolding item
 			elseif item.itemData.children and #item.itemData.children > 0
 				foldingItem = item
-				foldingRoutine = thread ->
+				@menu\schedule once ->
 					sleep 0.3
 					if @_selectedItem == nil
 						emit "Scene.ViewPanel.Select",nil
 					foldingItem = nil
-					foldingRoutine = nil
 			elseif @_selectedItem == nil
 				emit "Scene.ViewPanel.Select",nil
 
@@ -306,9 +303,24 @@ Class
 
 		@gslot "Scene.ViewPanel.Pick",(itemData)->
 			item = @items[itemData]
-			if item
+			if item and not item.checked
 				item.checked = true
 				itemTapped item
+
+		@gslot "Scene.ViewPanel.Fold",(itemData)->
+			return unless itemData
+			switch itemData.typeName
+				when "UILayer","Layer","World"
+					item = @items[itemData]
+					doFolding item if itemData.children and #itemData.children > 0
+					emit "Scene.ViewPanel.Pick",itemData
+				when "PlatformWorld","Camera"
+					return
+				else
+					parentData = @items[itemData].parentData
+					item = @items[parentData]
+					doFolding item if parentData.children and #parentData.children > 0
+					emit "Scene.ViewPanel.Pick",parentData
 
 		@gslot "Scene.ViewArea.Tap",(loc)->
 			return unless @menuEnabled

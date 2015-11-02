@@ -1,5 +1,6 @@
 <Menu X="{ @X }" Y="{ @Y }" TouchPriority="{ editor.levelEditMenu }">
 	<Import Module="Control.Basic.Button"/>
+	<Import Module="Control.Operation.LittleProgress"/>
 
 	<Button Name="editBtn" X="35" Y="{ $T-35 }" Width="50" Height="50" Text="Edit" FontSize="16" Ref="True"/>
 	<Button Name="spriteBtn" X="35" Y="{ $T-95 }" Width="50" Height="50" Text="Sprite" FontSize="16" Ref="True"/>
@@ -8,6 +9,11 @@
 	<Button Name="effectBtn" X="35" Y="{ $T-275 }" Width="50" Height="50" Text="Effect" FontSize="16" Ref="True"/>
 	<Button Name="zoomBtn" X="{ $R-225 }" Y="{ $T-35 }" Width="50" Height="50" Text="100%" FontSize="16" Ref="True"/>
 	<Button Name="originBtn" X="{ $R-285 }" Y="{ $T-35 }" Width="50" Height="50" Text="Origin" FontSize="16" Ref="True"/>
+	<Button Name="upBtn" X="{ $R-225 }" Y="{ $T-95 }" Width="50" Height="50" Text="Up" FontSize="16" Ref="True"/>
+	<LittleProgress Name="progressUp" X="{ $R-225-25-14.5 }" Y="{ $T-95 }" Ref="True"/>
+	<Button Name="downBtn" X="{ $R-225 }" Y="{ $T-155 }" Width="50" Height="50" Text="Down" FontSize="16" Ref="True"/>
+	<LittleProgress Name="progressDown" X="{ $R-225-25-14.5 }" Y="{ $T-155 }" Ref="True"/>
+	<Button Name="foldBtn" X="{ $R-225 }" Y="{ $T-215 }" Width="50" Height="50" Text="Fold" FontSize="16" Ref="True"/>
 	<!--<Button Name="unitBtn" X="35" Y="{ $T-335 }" Width="50" Height="50" Text="Unit" FontSize="16" Ref="True"/>
 	<Button Name="uiBtn" X="35" Y="{ $T-395 }" Width="50" Height="50" Text="UI" FontSize="16" Ref="True"/>-->
 </Menu>

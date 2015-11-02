@@ -1,0 +1,20 @@
+<Node X="{ x }" Y="{ y }" Opacity="0.5">
+	<DrawNode Name="bar" X="-2.5" Y="-20" Ref="True">
+		<Polygon FillColor="0xff00ffff">
+			<Vec2 X="0" Y="0"/>
+			<Vec2 X="5" Y="0"/>
+			<Vec2 X="5" Y="40"/>
+			<Vec2 X="0" Y="40"/>
+		</Polygon>
+	</DrawNode>
+	<Line X="-4.5" Y="-22" Color="0x00ffff">
+		<Vec2 X="0" Y="0"/>
+		<Vec2 X="9" Y="0"/>
+		<Vec2 X="9" Y="44"/>
+		<Vec2 X="0" Y="44"/>
+		<Vec2 X="0" Y="0"/>
+	</Line>
+	<Action>
+		<Scale Name="scale" Time="0.5" X="1" Y="1" Ease="InQuad" Ref="True"/>
+	</Action>
+</Node>

@@ -17,6 +17,7 @@ local emit = require("emit")
 local oOpacity = require("oOpacity")
 local CCRect = require("CCRect")
 local CCSequence = require("CCSequence")
+local CCDelay = require("CCDelay")
 local oEditor = require("oEditor")
 local oSd = require("oEditor").oSd
 local oKd = require("oEditor").oKd
@@ -304,7 +305,7 @@ local function oSettingPanel()
 		return menuItem
 	end
 
-	local opacity = oOpacity(0.5,0.4,oEase.InExpo)
+	local opacity = CCSequence{CCDelay(1),oOpacity(0.5,0.4,oEase.InExpo)}
 	panel.show = function(self)
 		if not opacity.done then
 			self:stopAction(opacity)

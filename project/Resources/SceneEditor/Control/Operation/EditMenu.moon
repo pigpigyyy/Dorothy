@@ -76,3 +76,44 @@ Class
 
 		@originBtn\slots "Tapped",->
 			emit "Scene.ViewArea.MoveTo",editor.origin
+
+		@progressUp.visible = false
+		@progressDown.visible = false
+
+		@upBtn\slots "TapBegan",->
+			@upBtn\schedule once ->
+				sleep 0.4
+				@progressUp.visible = true
+				@progressUp\play!
+		@upBtn\slots "Tapped",->
+			if @progressUp.visible
+				if @progressUp.done
+					print "long tap"
+			else
+				print "tap"
+		@upBtn\slots "TapEnded",->
+			@upBtn\unschedule!
+			if @progressUp.visible
+				@progressUp.visible = false
+
+		@downBtn\slots "TapBegan",->
+			@downBtn\schedule once ->
+				sleep 0.4
+				@progressDown.visible = true
+				@progressDown\play!
+		@downBtn\slots "Tapped",->
+			if @progressDown.visible
+				if @progressDown.done
+					print "long tap"
+			else
+				print "tap"
+		@downBtn\slots "TapEnded",->
+			@downBtn\unschedule!
+			if @progressDown.visible
+				@progressDown.visible = false
+
+		@foldBtn\slots "Tapped",->
+			emit "Scene.ViewPanel.Fold",editor.currentData
+
+	nodeButtonVisible: property =>
+		

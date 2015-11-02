@@ -15,17 +15,15 @@ Class
 		@_bodyEditor = nil
 		@_effectEditor = nil
 		@game = "Test"
-		@initRoutine = nil
 		@origin = oVec2 60+(width-250)/2,height/2
 
-		_G["editor"] = @
-		builtin["editor"] = @
+		_G.editor = @
+		builtin.editor = @
 
 		@slots "Cleanup",->
 			Reference.stopUpdate!
-			oRoutine\remove @initRoutine if @initRoutine
-			_G["editor"] = nil
-			builtin["editor"] = nil
+			_G.editor = nil
+			builtin.editor = nil
 			oCache\clear!
 			CCScene\remove "actionEditor"
 			CCScene\remove "bodyEditor"
@@ -46,7 +44,7 @@ Class
 		@levelInputBox = level 10
 		@levelSelectionPanel = level 10
 
-		@initRoutine = thread ->
+		@schedule once ->
 			controlNames = {
 				"ViewArea"
 				"HRuler"
@@ -150,6 +148,9 @@ Class
 		@gslot "Scene.ModelSelected",(item)-> selectItem "Model",item
 		@gslot "Scene.BodySelected",(item)-> selectItem "Body",item
 		@gslot "Scene.EffectSelected",(item)-> selectItem "Effect",item
+
+		@gslot "Scene.ViewPanel.Select",(itemData)->
+			@currentData = itemData
 
 	updateSprites: =>
 		emit "Scene.LoadSprite", @graphicFolder

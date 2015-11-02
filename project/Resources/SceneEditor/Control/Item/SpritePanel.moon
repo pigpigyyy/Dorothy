@@ -449,10 +449,10 @@ Class
 				clipTab.deltaY = 0
 				posY = clipTab.positionY-20-deltaY
 				@menu\eachChild (child)->
-					if child.clip == clip
-						child.parent\removeChild child
-					else
+					if child.clip ~= clip
 						child.positionY += deltaY if child.positionY < posY
+				for child in *@clipExpands[clip]
+					@menu\removeChild child
 				@clipExpands[clip] = nil
 				with @scrollArea.viewSize
 					@scrollArea.viewSize = CCSize .width,.height-deltaY
