@@ -80,6 +80,8 @@ Class
 		@progressUp.visible = false
 		@progressDown.visible = false
 
+		@upBtn.visible = false
+		@upBtn.enabled = false
 		@upBtn\slots "TapBegan",->
 			@upBtn\schedule once ->
 				sleep 0.4
@@ -88,14 +90,16 @@ Class
 		@upBtn\slots "Tapped",->
 			if @progressUp.visible
 				if @progressUp.done
-					print "long tap"
+					emit "Scene.EditMenu.Top"
 			else
-				print "tap"
+				emit "Scene.EditMenu.Up"
 		@upBtn\slots "TapEnded",->
 			@upBtn\unschedule!
 			if @progressUp.visible
 				@progressUp.visible = false
 
+		@downBtn.visible = false
+		@downBtn.enabled = false
 		@downBtn\slots "TapBegan",->
 			@downBtn\schedule once ->
 				sleep 0.4
@@ -104,16 +108,58 @@ Class
 		@downBtn\slots "Tapped",->
 			if @progressDown.visible
 				if @progressDown.done
-					print "long tap"
+					emit "Scene.EditMenu.Bottom"
 			else
-				print "tap"
+				emit "Scene.EditMenu.Down"
 		@downBtn\slots "TapEnded",->
 			@downBtn\unschedule!
 			if @progressDown.visible
 				@progressDown.visible = false
 
+		@foldBtn.visible = false
+		@foldBtn.enabled = false
 		@foldBtn\slots "Tapped",->
 			emit "Scene.ViewPanel.Fold",editor.currentData
 
-	nodeButtonVisible: property =>
-		
+		itemChoosed = (itemData)->
+			emit "Scene.ViewPanel.FoldState",
+				itemData:itemData
+				handler:(state)->
+					if state ~= nil
+						@setButtonVisible @foldBtn,true
+						text = @foldBtn.text
+						targetText = state and "Un\nFold" or "Fold"
+						if text ~= targetText
+							@foldBtn.text = targetText
+							if @foldBtn.scale.done
+								@setButtonVisible @foldBtn,true
+					else
+						@setButtonVisible @foldBtn,false
+			return unless itemData
+			switch itemData.typeName
+				when "Camera","PlatformWorld","UILayer"
+					@setButtonVisible @upBtn,false
+					@setButtonVisible @downBtn,false
+					{:x,:y} = @upBtn.position
+					@foldBtn\runAction oPos 0.3,x,y,oEase.OutQuad
+				else
+					@setButtonVisible @upBtn,true
+					@setButtonVisible @downBtn,true
+					{:x,:y} = @downBtn.position
+					@foldBtn\runAction oPos 0.3,x,y-60,oEase.OutQuad
+		@gslot "Scene.ViewPanel.Pick",itemChoosed
+		@gslot "Scene.ViewPanel.Select",itemChoosed
+
+	setButtonVisible: (button,visible)=>
+		return if visible == button.enabled
+		button.enabled = visible
+		if visible
+			button.visible = true
+			button.scaleX = 0
+			button.scaleY = 0
+			button\perform oScale 0.3,1,1,oEase.OutBack
+		else
+			button\perform CCSequence {
+				oScale 0.3,0,0,oEase.InBack
+				CCHide!
+			}

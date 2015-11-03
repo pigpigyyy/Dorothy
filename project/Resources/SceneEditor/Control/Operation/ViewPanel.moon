@@ -322,6 +322,24 @@ Class
 					doFolding item if parentData.children and #parentData.children > 0
 					emit "Scene.ViewPanel.Pick",parentData
 
+		@gslot "Scene.ViewPanel.FoldState",(args)->
+			state = nil
+			{:itemData,:handler} = args
+			if itemData
+				switch itemData.typeName
+					when "UILayer","Layer","World"
+						item = @items[itemData]
+						if itemData.children and #itemData.children > 0
+							state = (item.fold == true)
+					when "PlatformWorld","Camera"
+						state = nil
+					else
+						parentData = @items[itemData].parentData
+						item = @items[parentData]
+						if parentData.children and #parentData.children > 0
+							state = (item.fold == true)
+			handler state
+
 		@gslot "Scene.ViewArea.Tap",(loc)->
 			return unless @menuEnabled
 			if @_selectedItem and editor.selectedType
