@@ -18,6 +18,15 @@ Class
 		@items = nil
 		@_selectedItem = nil
 
+		reorderChildItems = (itemData)->
+			item = @items[itemData]
+			posX = item.fold and -200 or item.positionX+10
+			posY = item.positionY-itemH-10
+			for i,childData in ipairs itemData.children
+				childItem = @items[childData]
+				childItem.position = oVec2 posX,posY-(i-1)*(itemH+10)
+			@viewSize = viewSize
+
 		doFolding = (item)->
 			item.fold = not item.fold
 			itemData = item.itemData
@@ -402,5 +411,103 @@ Class
 							children\insert child,index
 						parentItem = @items[parentData]
 						doFolding parentItem if parentItem.fold
-
 				emit "Scene.ViewPanel.Pick",newData
+
+		@gslot "Scene.EditMenu.Up",->
+			return unless @_selectedItem
+			itemData = @_selectedItem.itemData
+			parentData = @_selectedItem.parentData
+			parentItem = @items[parentData]
+			index = 1
+			for i,v in ipairs parentData.children
+				if itemData == v
+					index = i
+					break
+			if index > 1
+				parentData.children[index] = parentData.children[index-1]
+				parentData.children[index-1] = itemData
+				parentName = switch parentData.typeName
+					when "UILayer"
+						"UI"
+					when "PlatformWorld"
+						"Scene"
+					else
+						parentData.name
+				parent = editor.items[parentName]
+				if parentName == "Scene"
+					parent\swapLayer index,index-1
+				else
+					parent.children\exchange index,index-1
+				posX = parentItem.positionX+10
+				posY = parentItem.positionY-itemH-10
+				for i,childData in ipairs parentData.children
+					childItem = @items[childData]
+					childItem.position = oVec2 posX,posY-(i-1)*(itemH+10)
+
+		@gslot "Scene.EditMenu.Down",->
+			return unless @_selectedItem
+			itemData = @_selectedItem.itemData
+			parentData = @_selectedItem.parentData
+			parentItem = @items[parentData]
+			index = #parentData.children
+			for i,v in ipairs parentData.children
+				if itemData == v
+					index = i
+					break
+			if index < #parentData.children
+				parentData.children[index] = parentData.children[index+1]
+				parentData.children[index+1] = itemData
+				parentName = switch parentData.typeName
+					when "UILayer"
+						"UI"
+					when "PlatformWorld"
+						"Scene"
+					else
+						parentData.name
+				parent = editor.items[parentName]
+				if parentName == "Scene"
+					parent\swapLayer index,index+1
+				else
+					parent.children\exchange index,index+1
+				posX = parentItem.positionX+10
+				posY = parentItem.positionY-itemH-10
+				for i,childData in ipairs parentData.children
+					childItem = @items[childData]
+					childItem.position = oVec2 posX,posY-(i-1)*(itemH+10)
+
+		@gslot "Scene.EditMenu.Top",->
+			return unless @_selectedItem
+			itemData = @_selectedItem.itemData
+			parentData = @_selectedItem.parentData
+			parentItem = @items[parentData]
+			index = 1
+			for i,v in ipairs parentData.children
+				if itemData == v
+					index = i
+					break
+			if index > 1
+				table.remove parentData.children,index
+				table.insert parentData.children,1,itemData
+				parentName = switch parentData.typeName
+					when "UILayer"
+						"UI"
+					when "PlatformWorld"
+						"Scene"
+					else
+						parentData.name
+				parent = editor.items[parentName]
+				if parentName == "Scene"
+					prev = index-1
+					while prev >= 1
+						parent\swapLayer index,prev
+						prev -= 1
+				else
+					prev = index-1
+					while prev >= 1
+						parent.children\exchange index,prev
+						prev -= 1
+				posX = parentItem.positionX+10
+				posY = parentItem.positionY-itemH-10
+				for i,childData in ipairs parentData.children
+					childItem = @items[childData]
+					childItem.position = oVec2 posX,posY-(i-1)*(itemH+10)
