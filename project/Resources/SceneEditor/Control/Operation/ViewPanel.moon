@@ -501,11 +501,13 @@ Class
 					while prev >= 1
 						parent\swapLayer index,prev
 						prev -= 1
+						index -= 1
 				else
 					prev = index-1
 					while prev >= 1
 						parent.children\exchange index,prev
 						prev -= 1
+						index -= 1
 				posX = parentItem.positionX+10
 				posY = parentItem.positionY-itemH-10
 				for i,childData in ipairs parentData.children
