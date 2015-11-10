@@ -67,7 +67,7 @@ Class
 			minY = nil
 			maxX = nil
 			maxY = nil
-			body\each (_,child)->
+			body.data\each (_,child)->
 				return unless tolua.type(child) == "oBody"
 				rc = child.boundingBox
 				vs = {

@@ -1,64 +1,41 @@
 Dorothy!
 Class,property,classfield = unpack require "class"
 EditMenuView = require "View.Control.Operation.EditMenu"
+SelectionPanel = require "Control.Basic.SelectionPanel"
 
 Class
 	__partial: => EditMenuView!
 	__init: =>
-		spriteSelected = false
-		modelSelected = false
-		bodySelected = false
-		effectSelected = false
+		buttonNames = {
+			"sprite"
+			"model"
+			"body"
+			"effect"
+			"layer"
+		}
+
 		clearSelection = ->
-			if spriteSelected
-				spriteSelected = false
-				@spriteBtn.color = ccColor3 0x00ffff
-				emit "Scene.SpriteSelected",nil
-			if modelSelected
-				modelSelected = false
-				@modelBtn.color = ccColor3 0x00ffff
-				emit "Scene.ModelSelected",nil
-			if bodySelected
-				bodySelected = false
-				@bodyBtn.color = ccColor3 0x00ffff
-				emit "Scene.BodySelected",nil
-			if effectSelected
-				effectSelected = false
-				@effectBtn.color = ccColor3 0x00ffff
-				emit "Scene.EffectSelected",nil
+			for name in *buttonNames
+				button = @[name.."Btn"]
+				if button.selected
+					button.selected = false
+					button.color = ccColor3 0x00ffff
+					emit button.event,nil
 
-		@spriteBtn\slots "Tapped",->
-			emit "Scene.ViewSprite" unless spriteSelected
-			clearSelection!
-		@modelBtn\slots "Tapped",->
-			emit "Scene.ViewModel" unless modelSelected
-			clearSelection!
-		@bodyBtn\slots "Tapped",->
-			emit "Scene.ViewBody" unless bodySelected
-			clearSelection!
-		@effectBtn\slots "Tapped",->
-			emit "Scene.ViewEffect" unless effectSelected
-			clearSelection!
+		for name in *buttonNames
+			button = @[name.."Btn"]
+			button.selected = false
+			upperName = name\sub(1,1)\upper!..name\sub(2,-1)
+			@gslot "Scene."..upperName.."Selected",(item)->
+				if item
+					button.selected = true
+					button.color = ccColor3 0xff0088
+			button\slots "Tapped",->
+				if not button.selected
+					emit "Scene.View"..upperName
+				clearSelection!
 
-		@gslot "Scene.SpriteSelected",(item)->
-			if item
-				spriteSelected = true
-				@spriteBtn.color = ccColor3 0xff0088
-		@gslot "Scene.ModelSelected",(item)->
-			if item
-				modelSelected = true
-				@modelBtn.color = ccColor3 0xff0088
-		@gslot "Scene.BodySelected",(item)->
-			if item
-				bodySelected = true
-				@bodyBtn.color = ccColor3 0xff0088
-		@gslot "Scene.EffectSelected",(item)->
-			if item
-				effectSelected = true
-				@effectBtn.color = ccColor3 0xff0088
-
-		@gslot "Scene.ViewArea.Scale",(scale)->
-			@zoomBtn.text = tostring(scale*100).."%"
+		@delBtn\slots "Tapped",-> emit "Scene.EditMenu.Delete"
 
 		mode = 0
 		@zoomBtn\slots "Tapped",->
@@ -143,12 +120,27 @@ Class
 					{:x,:y} = @upBtn.position
 					@foldBtn\runAction oPos 0.3,x,y,oEase.OutQuad
 				else
-					@setButtonVisible @upBtn,true
-					@setButtonVisible @downBtn,true
-					{:x,:y} = @downBtn.position
-					@foldBtn\runAction oPos 0.3,x,y-60,oEase.OutQuad
+					item = editor\getItem itemData
+					hasChildren = false
+					if itemData.typeName == "World"
+						hasChildren = #item.parent.parent.children > 1
+					else
+						hasChildren = #item.parent.children > 1
+					if item.parent.children and hasChildren
+						@setButtonVisible @upBtn,true
+						@setButtonVisible @downBtn,true
+						{:x,:y} = @downBtn.position
+						@foldBtn\runAction oPos 0.3,x,y-60,oEase.OutQuad
+					else
+						@setButtonVisible @upBtn,false
+						@setButtonVisible @downBtn,false
+						{:x,:y} = @upBtn.position
+						@foldBtn\runAction oPos 0.3,x,y,oEase.OutQuad
 		@gslot "Scene.ViewPanel.Pick",itemChoosed
 		@gslot "Scene.ViewPanel.Select",itemChoosed
+
+		@gslot "Scene.ViewArea.Scale",(scale)->
+			@zoomBtn.text = tostring(scale*100).."%"
 
 	setButtonVisible: (button,visible)=>
 		return if visible == button.enabled

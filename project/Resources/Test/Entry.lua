@@ -99,11 +99,10 @@ local gcButton = oButton("GC",17,60,false,
 		cclog("Pool alloc: %.2f MB(%d KB)",size/1024/1024,size/1024)
 		size = oCache.Pool:collect()
 		cclog("Pool collect: %.2f MB(%d KB)",size/1024/1024,size/1024)
-		--[[[
 		print("Loaded:")
 		for k,_ in pairs(package.loaded) do
 			print(k)
-		end]]
+		end
 		local itemMap = {}
 		for _,item in pairs(ubox()) do
 			local typeName = tolua.type(item)

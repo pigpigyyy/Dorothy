@@ -14,6 +14,7 @@ Class
 		@_actionEditor = nil
 		@_bodyEditor = nil
 		@_effectEditor = nil
+		@items = nil
 		@game = "Test"
 		@origin = oVec2 60+(width-250)/2,height/2
 
@@ -79,6 +80,10 @@ Class
 			@gslot "Scene.ViewModel",-> setupPanel "ModelPanel"
 			@gslot "Scene.ViewBody",-> setupPanel "BodyPanel"
 			@gslot "Scene.ViewEffect",-> setupPanel "EffectPanel"
+			@gslot "Scene.ViewLayer",->
+				with SelectionPanel items:{"Layer","World"}
+					\slots "Selected",(item)->
+						emit "Scene.LayerSelected",item
 
 			@gslot "Scene.ViewArea.Move",(delta)->
 				return unless @items
@@ -89,10 +94,6 @@ Class
 				posY = pos.y-@origin.y+height/2
 				@items.Camera\perform oPos 0.5,posX,posY,oEase.OutQuad
 
-			--bodyDef = Model.Body!
-			--bodyDef.file = "Physics/car.body"
-			worldDef = Model.World!--with Model.World!
-			--	.children = {bodyDef}
 			@sceneData = with Model.PlatformWorld!
 				.camera = Model.Camera!
 				.ui = Model.UILayer!
@@ -104,7 +105,6 @@ Class
 					[oData.GroupTerrain]: "Terrain"
 				}
 				.contacts = {{1,1,true}}
-				.children = {worldDef}
 			@viewArea.scaleNode\addChild @sceneData!
 			emit "Scene.DataLoaded",@sceneData
 
@@ -148,6 +148,7 @@ Class
 		@gslot "Scene.ModelSelected",(item)-> selectItem "Model",item
 		@gslot "Scene.BodySelected",(item)-> selectItem "Body",item
 		@gslot "Scene.EffectSelected",(item)-> selectItem "Effect",item
+		@gslot "Scene.LayerSelected",(item)-> selectItem item,item
 
 		@gslot "Scene.ViewPanel.Select",(itemData)->
 			@currentData = itemData
@@ -256,3 +257,33 @@ Class
 			nawName
 		else
 			originalName
+
+	getItem: (itemData)=>
+		itemName = switch itemData.typeName
+			when "UILayer"
+				"UI"
+			when "PlatformWorld"
+				"Scene"
+			when "Camera"
+				"Camera"
+			else
+				itemData.name
+		editor.items[itemName]
+
+	removeData: (itemData,parentData)=>
+		item = @getItem itemData
+		parent = @getItem parentData
+		index = nil
+		for i,child in ipairs parentData.children
+			if child == itemData
+				index = i
+				break
+		return unless index
+		switch itemData.typeName
+			when "Layer","World"
+				parent\removeLayer index
+			else
+				parent\removeChild item
+		table.remove parentData.children,index
+		parentData.children = false if #parentData.children == 0
+		editor.items[itemData.name] = nil

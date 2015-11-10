@@ -7,8 +7,7 @@ Model = require "Data.Model"
 Class
 	__partial: (args)=> ViewPanelView args
 	__init: (args)=>
-		width = @width
-		height = @height
+		{:width,:height} = @
 		itemW = 120
 		itemH = 40
 		viewSize = CCSize.zero
@@ -20,11 +19,28 @@ Class
 
 		reorderChildItems = (itemData)->
 			item = @items[itemData]
-			posX = item.fold and -200 or item.positionX+10
-			posY = item.positionY-itemH-10
-			for i,childData in ipairs itemData.children
-				childItem = @items[childData]
-				childItem.position = oVec2 posX,posY-(i-1)*(itemH+10)
+			switch itemData.typeName
+				when "PlatformWorld"
+					{:x,:y} = item.position
+					y -= 2*(itemH+10)
+					if itemData.ui.children
+						y -= (itemH+10)*#itemData.ui.children
+					if itemData.children
+						for i,childData in ipairs itemData.children
+							childItem = @items[childData]
+							y -= (itemH+10)
+							childItem.position = oVec2 x+10,y
+							if childData.children
+								if not childItem.fold
+									y -= (itemH+10)*#childData.children
+								reorderChildItems childData
+					@updateLine!
+				else
+					posX = item.fold and -200 or item.positionX+10
+					posY = item.positionY-itemH-10
+					for i,childData in ipairs itemData.children
+						childItem = @items[childData]
+						childItem.position = oVec2 posX,posY-(i-1)*(itemH+10)
 			@viewSize = viewSize
 
 		doFolding = (item)->
@@ -83,12 +99,12 @@ Class
 				foldingItem = nil
 				@menu\unschedule!
 				item.checked = true
+				doFolding item
 				if @_selectedItem ~= item
 					if @_selectedItem
 						@_selectedItem.checked = false
 					@_selectedItem = item
 					emit "Scene.ViewPanel.Select",item.itemData
-				doFolding item
 			elseif item.itemData.children and #item.itemData.children > 0
 				foldingItem = item
 				@menu\schedule once ->
@@ -112,10 +128,11 @@ Class
 				if @_selectedItem
 					@_selectedItem.checked = false
 				@_selectedItem = item
+				checkFolding item
 				emit "Scene.ViewPanel.Select",item.itemData
 			elseif @_selectedItem == item
 				@_selectedItem = nil
-			checkFolding item
+				checkFolding item
 
 		addItem = (x,y,text,data,parentData)->
 			realW = width-(x-itemW/2)-10
@@ -223,7 +240,7 @@ Class
 		updateLine = (itemData)->
 			if itemData == sceneData
 				itemUI = @items[itemData.ui]
-				extra = 2 + if not (itemUI and itemUI.fold) and itemData.ui.children
+				extra = 2 + if not (itemUI and itemUI.fold) and itemData.ui.children and sceneData.children
 					#itemData.ui.children
 				else
 					0
@@ -266,50 +283,6 @@ Class
 			@menu\addChild drawNode
 			setupData data
 
-		insertItem = (parentData,newData,targetData)->
-			parentData.children = {} unless parentData.children
-			index = #parentData.children+1
-			if targetData
-				for i,child in ipairs parentData.children
-					if child == targetData
-						index = i+1
-						break
-			table.insert parentData.children,index,newData
-
-			parentItem = @items[parentData]
-			if not parentItem.fold
-				lastChildData = parentData.children[#parentData.children]
-				lastChildItem = lastChildData and @items[lastChildData] or @items[parentData]
-				bottom = lastChildItem.positionY-itemH/2
-				for _,item in pairs @items
-					if item.positionY < bottom
-						item.positionY -= (itemH+10)
-
-			item = ViewItem {
-				text:newData.name
-				x:0
-				y:0
-				width:parentItem.width-20
-				height:itemH
-			}
-			item.itemData = newData
-			item.parentData = parentData
-			item\slots "Tapped",itemTapped
-			@menu\addChild item
-			@items[newData] = item
-
-			posX = parentItem.fold and -200 or parentItem.positionX+10
-			posY = parentItem.positionY-itemH-10
-			for i,childData in ipairs parentData.children
-				childItem = @items[childData]
-				childItem.position = oVec2 posX,posY-(i-1)*(itemH+10)
-
-			if not parentItem.fold
-				viewSize.height += (itemH+10)
-			@viewSize = viewSize
-			@updateLine!
-			index
-
 		@gslot "Scene.ViewPanel.Pick",(itemData)->
 			item = @items[itemData]
 			if item and not item.checked
@@ -349,25 +322,74 @@ Class
 							state = (item.fold == true)
 			handler state
 
-		@gslot "Scene.ViewArea.Tap",(loc)->
+		insertItem = (parentData,newData,targetData)->
+			-- insert to data.children
+			parentData.children = {} unless parentData.children
+			index = #parentData.children+1
+			if targetData
+				for i,child in ipairs parentData.children
+					if child == targetData
+						index = i+1
+						break
+			table.insert parentData.children,index,newData
+			-- make room for new item
+			parentItem = @items[parentData]
+			if parentData.typeName ~= "PlatformWorld"
+				if not parentItem.fold
+					lastChildData = parentData.children[#parentData.children]
+					lastChildItem = lastChildData and @items[lastChildData] or @items[parentData]
+					bottom = lastChildItem.positionY-itemH/2
+					for _,item in pairs @items
+						if item.positionY < bottom
+							item.positionY -= (itemH+10)
+			-- add new item
+			item = ViewItem {
+				text:newData.name
+				x:0
+				y:0
+				width:parentItem.width-20
+				height:itemH
+			}
+			item.itemData = newData
+			item.parentData = parentData
+			item\slots "Tapped",itemTapped
+			@menu\addChild item
+			@items[newData] = item
+			-- reoder items
+			reorderChildItems parentData
+			-- adjust view size
+			if not parentItem.fold
+				viewSize.height += (itemH+10)
+			@viewSize = viewSize
+			@updateLine! if parentData.typeName ~= "PlatformWorld"
+			index
+
+		@gslot "Scene.ViewArea.Tap",(loc using nil)->
 			return unless @menuEnabled
 			if @_selectedItem and editor.selectedType
 				itemData = @_selectedItem.itemData
+				return if itemData.typeName == "Camera"
 				parentData = @_selectedItem.parentData
+				-- check new item is addable
 				pos = nil
-				switch itemData.typeName
-					when "Camera"
-						return
-					when "UILayer"
+				switch editor.selectedType
+					when "Body"
+						return if switch itemData.typeName
+							when "UILayer","PlatformWorld" then true
+							else false
+						pos = editor.viewArea.crossNode\convertToNodeSpace loc
+					when "Layer","World"
+						return if switch itemData.typeName
+							when "Layer","World","PlatformWorld" then false
+							else true
 						pos = loc
-						return if editor.selectedType == "Body"
 					else
-						if parentData.typeName == "UILayer"
+						return if itemData.typeName == "PlatformWorld"
+						if parentData.typeName == "UILayer" or itemData.typeName == "UILayer"
 							pos = loc
-							return if editor.selectedType == "Body"
 						else
 							pos = editor.viewArea.crossNode\convertToNodeSpace loc
-
+				-- create new item data
 				newData = nil
 				switch editor.selectedType
 					when "Sprite","Model","Body"
@@ -380,44 +402,67 @@ Class
 						newData.effect = editor.selectedItem
 						newData.name = editor\getUsableName newData.name
 						newData.position = pos
+					when "Layer"
+						newData = Model.Layer!
+						newData.name = editor\getUsableName newData.name
+					when "World"
+						newData = Model.World!
+						newData.name = editor\getUsableName newData.name
 
-				switch itemData.typeName
-					when "Layer","UILayer","World"
-						insertItem itemData,newData
-						name = if itemData.typeName == "UILayer"
-							"UI"
-						else
-							itemData.name
-						parentInst = editor.items[name]
-						child = newData parentInst,#itemData.children
-						if child
-							parentInst\addChild child
-						doFolding @_selectedItem if @_selectedItem.fold
-					else
-						index = insertItem parentData,newData,itemData
-						name = switch parentData.typeName
+				insertAtParentLevel = ->
+					insertItem itemData,newData
+					parent = editor\getItem itemData
+					child = newData parent,#itemData.children
+					if child
+						parent\addChild child
+					doFolding @_selectedItem if @_selectedItem.fold
+				insertAtChildLevel = ->
+					index = insertItem parentData,newData,itemData
+					parent = editor\getItem parentData
+					child = newData parent,index
+					if child
+						parent\addChild child
+						children = parent.children
+						children\removeLast!
+						children\insert child,index
+					elseif parentData.typeName == "PlatformWorld"
+						if index < #parentData.children
+							for i = #parentData.children,index,-1
+								parent\swapLayer i,i+1
+					parentItem = @items[parentData]
+					doFolding parentItem if parentItem.fold
+				switch editor.selectedType
+					when "Layer","World"
+						switch itemData.typeName
 							when "PlatformWorld"
-								"Scene"
-							when "UILayer"
-								"UI"
+								insertAtParentLevel!
 							else
-								parentData.name
-						parentInst = editor.items[name]
-						child = newData parentInst,index
-						if child
-							parentInst\addChild child
-							children = parentInst.children
-							children\removeLast!
-							children\insert child,index
-						parentItem = @items[parentData]
-						doFolding parentItem if parentItem.fold
+								insertAtChildLevel!
+						{:width,:height} = CCDirector.winSize
+						length = oVec2(width,height).length
+						circle = with CCDrawNode!
+							\drawDot oVec2.zero,5,ccColor4 0xff00ffff
+							.position = pos
+							\perform CCSequence {
+								CCSpawn {
+									oScale 1,length/10,length/10,oEase.OutQuad
+									oOpacity 1,0,oEase.OutQuad
+								}
+								CCCall -> circle.parent\removeChild circle
+							}
+						editor.items.UI\addChild circle
+					else
+						switch itemData.typeName
+							when "Layer","UILayer","World"
+								insertAtParentLevel!
+							else
+								insertAtChildLevel!
 				emit "Scene.ViewPanel.Pick",newData
 
 		@gslot "Scene.EditMenu.Up",->
 			return unless @_selectedItem
 			itemData = @_selectedItem.itemData
 			parentData = @_selectedItem.parentData
-			parentItem = @items[parentData]
 			index = 1
 			for i,v in ipairs parentData.children
 				if itemData == v
@@ -426,29 +471,17 @@ Class
 			if index > 1
 				parentData.children[index] = parentData.children[index-1]
 				parentData.children[index-1] = itemData
-				parentName = switch parentData.typeName
-					when "UILayer"
-						"UI"
-					when "PlatformWorld"
-						"Scene"
-					else
-						parentData.name
-				parent = editor.items[parentName]
-				if parentName == "Scene"
+				parent = editor\getItem parentData
+				if parentData.typeName == "PlatformWorld"
 					parent\swapLayer index,index-1
 				else
 					parent.children\exchange index,index-1
-				posX = parentItem.positionX+10
-				posY = parentItem.positionY-itemH-10
-				for i,childData in ipairs parentData.children
-					childItem = @items[childData]
-					childItem.position = oVec2 posX,posY-(i-1)*(itemH+10)
+				reorderChildItems parentData
 
 		@gslot "Scene.EditMenu.Down",->
 			return unless @_selectedItem
 			itemData = @_selectedItem.itemData
 			parentData = @_selectedItem.parentData
-			parentItem = @items[parentData]
 			index = #parentData.children
 			for i,v in ipairs parentData.children
 				if itemData == v
@@ -457,29 +490,17 @@ Class
 			if index < #parentData.children
 				parentData.children[index] = parentData.children[index+1]
 				parentData.children[index+1] = itemData
-				parentName = switch parentData.typeName
-					when "UILayer"
-						"UI"
-					when "PlatformWorld"
-						"Scene"
-					else
-						parentData.name
-				parent = editor.items[parentName]
-				if parentName == "Scene"
+				parent = editor\getItem parentData
+				if parentData.typeName == "PlatformWorld"
 					parent\swapLayer index,index+1
 				else
 					parent.children\exchange index,index+1
-				posX = parentItem.positionX+10
-				posY = parentItem.positionY-itemH-10
-				for i,childData in ipairs parentData.children
-					childItem = @items[childData]
-					childItem.position = oVec2 posX,posY-(i-1)*(itemH+10)
+				reorderChildItems parentData
 
 		@gslot "Scene.EditMenu.Top",->
 			return unless @_selectedItem
 			itemData = @_selectedItem.itemData
 			parentData = @_selectedItem.parentData
-			parentItem = @items[parentData]
 			index = 1
 			for i,v in ipairs parentData.children
 				if itemData == v
@@ -488,15 +509,8 @@ Class
 			if index > 1
 				table.remove parentData.children,index
 				table.insert parentData.children,1,itemData
-				parentName = switch parentData.typeName
-					when "UILayer"
-						"UI"
-					when "PlatformWorld"
-						"Scene"
-					else
-						parentData.name
-				parent = editor.items[parentName]
-				if parentName == "Scene"
+				parent = editor\getItem parentData
+				if parentData.typeName == "PlatformWorld"
 					prev = index-1
 					while prev >= 1
 						parent\swapLayer index,prev
@@ -508,8 +522,54 @@ Class
 						parent.children\exchange index,prev
 						prev -= 1
 						index -= 1
-				posX = parentItem.positionX+10
-				posY = parentItem.positionY-itemH-10
-				for i,childData in ipairs parentData.children
-					childItem = @items[childData]
-					childItem.position = oVec2 posX,posY-(i-1)*(itemH+10)
+				reorderChildItems parentData
+
+		@gslot "Scene.EditMenu.Bottom",->
+			return unless @_selectedItem
+			itemData = @_selectedItem.itemData
+			parentData = @_selectedItem.parentData
+			count = #parentData.children
+			index = count
+			for i,v in ipairs parentData.children
+				if itemData == v
+					index = i
+					break
+			if index < count
+				table.remove parentData.children,index
+				table.insert parentData.children,itemData
+				parent = editor\getItem parentData
+				if parentData.typeName == "PlatformWorld"
+					nextIndex = index+1
+					while nextIndex <= count
+						parent\swapLayer index,nextIndex
+						nextIndex += 1
+						index += 1
+				else
+					nextIndex = index+1
+					while nextIndex <= count
+						parent.children\exchange index,nextIndex
+						nextIndex += 1
+						index += 1
+				reorderChildItems parentData
+
+		@gslot "Scene.EditMenu.Delete",->
+			return unless @_selectedItem
+			itemData = @_selectedItem.itemData
+			switch itemData.typeName
+				when "Camera","UILayer","PlatformWorld"
+					return
+			-- TODO: check item reference needed here
+			parentData = @_selectedItem.parentData
+			editor\removeData itemData,parentData
+
+			item = @items[itemData]
+			@menu\removeChild item
+			@items[itemData] = nil
+			if itemData.children
+				for child in *itemData.children
+					item = @items[child]
+					@menu\removeChild item
+					@items[child] = nil
+			reorderChildItems editor.sceneData
+			@_selectedItem = nil
+

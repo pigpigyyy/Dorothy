@@ -54,9 +54,11 @@ oEditor.world = oWorld()
 oEditor.world.scheduler = oEditor.worldScheduler
 oEditor.world.showDebug = true
 oEditor.world:setShouldContact(0,0,true)
-CCDirector.scheduler:shedule(oEditor.worldScheduler)
 
 oEditor:slots("Cleanup",function()
+	if not oEditor.world.parent then
+		oEditor.world:cleanup()
+	end
 	CCDirector.scheduler:unshedule(oEditor.worldScheduler)
 	oEditor:clearData()
 end)
@@ -1363,7 +1365,11 @@ oEditor:slots("Entering",function()
 			coroutine.yield()
 		until oEditor.isLoaded
 		oEditor:emit("Activated")
+		CCDirector.scheduler:shedule(oEditor.worldScheduler)
 	end))
+end)
+oEditor:slots("Exiting",function()
+	CCDirector.scheduler:unshedule(oEditor.worldScheduler)
 end)
 
 return oEditor

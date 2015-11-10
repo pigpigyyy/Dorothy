@@ -11,10 +11,15 @@ Class = unpack require "class"
 SelectionPanelView = require "View.Control.Basic.SelectionPanel"
 Button = require "Control.Basic.Button"
 
+-- [signals]
+-- "Selected",(item)->
+-- [params]
+-- width, height, items
 Class
 	__partial: (args)=>
 		args.width = args.width or 120
 		args.height = args.height or (10+#args.items*60+(args.title and 60 or 0))
+		args.height = math.min CCDirector.winSize.height*0.6,args.height
 		SelectionPanelView args
 
 	__init: (args)=>

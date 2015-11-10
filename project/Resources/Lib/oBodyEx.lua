@@ -9,6 +9,7 @@ local oCache = require("oCache")
 local oContent = require("oContent")
 local CCSprite = require("CCSprite")
 local oModel = require("oModel")
+local CCNode = require("CCNode")
 local type = tolua.type
 
 local bodyCache = CCDictionary()
@@ -56,7 +57,8 @@ end
 local function create(itemDict,world,pos,angle)
 	local items = CCDictionary()
 	local center = nil
-	local centerBody = nil
+	local centerBody = CCNode()
+	centerBody.data = items
 	itemDict:each(function(key,itemDef)
 		if type(itemDef) == "oBodyDef" then
 			local newPos = pos
@@ -71,9 +73,7 @@ local function create(itemDict,world,pos,angle)
 				newPos = newPos + pos - oldPos
 			end
 			local body = oBody._create(oBody,itemDef,world,newPos,angle)
-			if not centerBody then
-				centerBody = body
-			end
+			centerBody:addChild(body)
 			local face = nil
 			local faceStr = itemDef.face
 			if faceStr ~= "" then
@@ -105,10 +105,7 @@ local function create(itemDict,world,pos,angle)
 			end
 		end
 	end)
-	if centerBody then
-		centerBody.data = items
-	end
-	return items
+	return centerBody
 end
 
 oBody[2] = function(self,data,world,pos,angle)

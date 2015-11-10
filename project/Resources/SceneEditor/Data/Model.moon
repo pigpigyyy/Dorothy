@@ -231,7 +231,7 @@ Items =
 			if "oWorld" == tolua.type parent
 				world = parent
 			body = oBody @file,world,@position,@angle
-			body\each (_,v)->
+			body.data\each (_,v)->
 				v.group = @group if "oBody" == tolua.type v
 			editor.items[@name] = body
 			editor.itemDefs[body] = @
@@ -304,6 +304,7 @@ Items =
 		create:(parent)=>
 			effect = oEffect @effect
 			effect\attachTo parent
+			effect.parent = parent
 			effect\setOffset @position
 			if @play
 				effect\start!

@@ -13,9 +13,9 @@
 			<Vec2 X="{ -width/2-1 }" Y="{ height/2+1 }"/>
 		</Polygon>
 
-		<ScrollArea Name="scrollArea" Width="{ width }" Height="{ height }" TouchPriority="{ editor.levelSelectionPanel-1 }" PaddingY="100" Ref="True">
+		<ScrollArea Name="scrollArea" Width="{ width }" Height="{ height }" TouchPriority="{ editor.levelSelectionPanel-2 }" PaddingX ="0" PaddingY="100" Ref="True">
 			<Item Name="view">
-				<Menu Name="menu" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" TouchPriority="{ editor.levelSelectionPanel-2 }" Ref="True">
+				<Menu Name="menu" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" TouchPriority="{ editor.levelSelectionPanel-1 }" Ref="True">
 					<Script>if title then</Script>
 					<Node X="{ $X }" Y="{ $T-20 }" Width="{ width }" Height="50">
 						<LabelTTF Text="{ title }" X="{ $X }" Y="{ $Y }" AntiAlias="False" FontName="Arial" FontSize="24" Color="0x00ffff" Opacity="0.8"/>
