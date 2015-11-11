@@ -282,8 +282,11 @@ Class
 		switch itemData.typeName
 			when "Layer","World"
 				parent\removeLayer index
+				for i = index,#parentData.children-1
+					parent\swapLayer i,i+1
 			else
 				parent\removeChild item
 		table.remove parentData.children,index
 		parentData.children = false if #parentData.children == 0
 		editor.items[itemData.name] = nil
+		index

@@ -112,6 +112,8 @@ Class
 								@setButtonVisible @foldBtn,true
 					else
 						@setButtonVisible @foldBtn,false
+						@setButtonVisible @upBtn,false
+						@setButtonVisible @downBtn,false
 			return unless itemData
 			switch itemData.typeName
 				when "Camera","PlatformWorld","UILayer"

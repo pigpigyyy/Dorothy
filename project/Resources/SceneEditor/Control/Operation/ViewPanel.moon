@@ -25,6 +25,7 @@ Class
 					y -= 2*(itemH+10)
 					if itemData.ui.children
 						y -= (itemH+10)*#itemData.ui.children
+						reorderChildItems itemData.ui
 					if itemData.children
 						for i,childData in ipairs itemData.children
 							childItem = @items[childData]
@@ -288,6 +289,23 @@ Class
 			if item and not item.checked
 				item.checked = true
 				itemTapped item
+				deltaY = height/2-item.positionY
+				offset = @offset
+				startY = offset.y
+				endY = startY+deltaY
+				if viewSize.height <= height
+					endY = 0
+				else
+					endY = math.max endY,0
+					endY = math.min endY,viewSize.height-height
+				@schedule once ->
+					t = 0
+					cycle 0.3,(dt)->
+						t += dt
+						offset.y = oEase\func oEase.OutQuad,t,startY,endY
+						@offset = offset
+					offset.y = endY
+					@offset = offset
 
 		@gslot "Scene.ViewPanel.Fold",(itemData)->
 			return unless itemData
@@ -558,18 +576,29 @@ Class
 			switch itemData.typeName
 				when "Camera","UILayer","PlatformWorld"
 					return
-			-- TODO: check item reference needed here
+			-- TODO: should check item reference before deletion here
 			parentData = @_selectedItem.parentData
-			editor\removeData itemData,parentData
+			index = editor\removeData itemData,parentData
 
 			item = @items[itemData]
+			count = 1
 			@menu\removeChild item
 			@items[itemData] = nil
 			if itemData.children
+				count += item.fold and 0 or #itemData.children
 				for child in *itemData.children
 					item = @items[child]
 					@menu\removeChild item
 					@items[child] = nil
 			reorderChildItems editor.sceneData
 			@_selectedItem = nil
-
+			viewSize.height -= count*(10+itemH)
+			@viewSize = viewSize
+			if parentData.children
+				total = #parentData.children
+				if index <= total
+					emit "Scene.ViewPanel.Pick",parentData.children[index]
+				else
+					emit "Scene.ViewPanel.Pick",parentData.children[total]
+			else
+				emit "Scene.ViewPanel.Pick",parentData
