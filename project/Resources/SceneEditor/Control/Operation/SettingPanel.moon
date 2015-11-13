@@ -26,6 +26,7 @@ Class
 			{"File","%s"}
 			{"Speed","%.2f"}
 			{"Loop","%s"}
+			{"Visible","%s"}
 			{"Animation","%s"}
 			{"FaceRight","%s"}
 			{"Group","%s"}
@@ -69,6 +70,7 @@ Class
 				items.Outline
 			}
 			UILayer: {
+				items.Visible
 			}
 			Camera: {
 				items.Position
@@ -83,6 +85,7 @@ Class
 				items.RatioY
 				items.Offset
 				items.Zoom
+				items.Visible
 			}
 			World: {
 				items.Name
@@ -93,6 +96,7 @@ Class
 				items.RatioY
 				items.Offset
 				items.Zoom
+				items.Visible
 			}
 			Body: {
 				items.Name
@@ -100,6 +104,7 @@ Class
 				items.Group
 				items.Position
 				items.Angle
+				items.Visible
 			}
 			Model: {
 				items.Name
@@ -114,6 +119,7 @@ Class
 				items.Loop
 				items.Speed
 				items.FaceRight
+				items.Visible
 			}
 			Sprite: {
 				items.Name
@@ -123,6 +129,7 @@ Class
 				items.Scale
 				items.Skew
 				items.Opacity
+				items.Visible
 			}
 			Effect: {
 				items.Name

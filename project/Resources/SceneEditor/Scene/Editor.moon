@@ -15,8 +15,12 @@ Class
 		@_bodyEditor = nil
 		@_effectEditor = nil
 		@items = nil
+		@itemDefs = nil
+		@dirty = false
+		@sceneName = "Test"
 		@game = "Test"
 		@origin = oVec2 60+(width-250)/2,height/2
+		@scale = 1
 
 		_G.editor = @
 		builtin.editor = @
@@ -90,21 +94,13 @@ Class
 				@items.Camera.position -= delta/@viewArea.scaleNode.scaleX
 			@gslot "Scene.ViewArea.MoveTo",(pos)->
 				return unless @items
-				posX = pos.x-@origin.x+width/2
-				posY = pos.y-@origin.y+height/2
+				posX = -(pos.x-@origin.x)+width/2
+				posY = -(pos.y-@origin.y)+height/2
 				@items.Camera\perform oPos 0.5,posX,posY,oEase.OutQuad
 
 			@sceneData = with Model.PlatformWorld!
 				.camera = Model.Camera!
 				.ui = Model.UILayer!
-				.groups = {
-					[1]: "P1"
-					[oData.GroupDetect]: "Detect"
-					[oData.GroupDetectPlayer]: "DetectPlayer"
-					[oData.GroupHide]: "Hide"
-					[oData.GroupTerrain]: "Terrain"
-				}
-				.contacts = {{1,1,true}}
 			@viewArea.scaleNode\addChild @sceneData!
 			emit "Scene.DataLoaded",@sceneData
 
@@ -150,20 +146,14 @@ Class
 		@gslot "Scene.EffectSelected",(item)-> selectItem "Effect",item
 		@gslot "Scene.LayerSelected",(item)-> selectItem item,item
 
-		@gslot "Scene.ViewPanel.Select",(itemData)->
-			@currentData = itemData
+		@gslot "Scene.ViewPanel.Select",(itemData)-> @currentData = itemData
+		@gslot "Scene.ViewArea.ScaleTo",(scale)-> editor.scale = scale
+		@gslot "Scene.ViewArea.Scale",(scale)-> editor.scale = scale
 
-	updateSprites: =>
-		emit "Scene.LoadSprite", @graphicFolder
-
-	updateModels: =>
-		emit "Scene.LoadModel", @graphicFolder
-
-	updateBodies: =>
-		emit "Scene.LoadBody", @physicsFolder
-
-	updateEffects: =>
-		emit "Scene.LoadEffect", @graphicFolder
+	updateSprites: => emit "Scene.LoadSprite",@graphicFolder
+	updateModels: => emit "Scene.LoadModel",@graphicFolder
+	updateBodies: => emit "Scene.LoadBody",@physicsFolder
+	updateEffects: => emit "Scene.LoadEffect",@graphicFolder
 
 	game: property => @_gameName,
 		(name)=>
@@ -270,6 +260,8 @@ Class
 				itemData.name
 		editor.items[itemName]
 
+	getItemDef: (item)=> editor.itemDefs[item]
+
 	removeData: (itemData,parentData)=>
 		item = @getItem itemData
 		parent = @getItem parentData
@@ -290,3 +282,15 @@ Class
 		parentData.children = false if #parentData.children == 0
 		editor.items[itemData.name] = nil
 		index
+
+	save: =>
+		ui = @sceneData.ui
+		@sceneData.ui = false
+		Model.dumpData @sceneData,@sceneFullPath..@sceneName..".scene"
+		Model.dumpData ui,@sceneFullPath.."UI.scene"
+		@sceneData.ui = ui
+
+	load: (sceneName)=>
+		@sceneName = sceneName
+		@sceneData = Model.loadData @sceneFullPath..@sceneName..".scene"
+		@sceneData.ui = Model.loadData @sceneFullPath.."UI.scene"

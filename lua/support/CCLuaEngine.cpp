@@ -104,9 +104,12 @@ static int cclua_loadfile(lua_State* L, const string& file)
 	}
 	else
 	{
-		string extension = filename.substr(pos);
-		isXml = extension == ".xml";
-		if (!isXml && extension != ".lua" && extension != ".body")
+		string extension = oString::toLower(filename.substr(pos+1));
+		isXml = extension == "xml";
+		if (!isXml &&
+			extension != "lua" &&
+			extension != "body" &&
+			extension != "scene")
 		{
 			lua_pushnil(L);
 			lua_pushliteral(L, "Xml and Lua files not found");

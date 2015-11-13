@@ -1,4 +1,4 @@
-<!-- params: X, Y, Width, Height -->
+<!-- params: X, Y, Title, Width, Height -->
 <LayerColor X="{ @X }" Y="{ @Y }"
 	TouchPriority="{ editor.levelItemPanel }"
 	Color="0x0" Opacity="0"

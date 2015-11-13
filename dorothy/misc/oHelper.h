@@ -16,6 +16,7 @@ struct oString
 	static const string Empty;
 	static string getFilePath(const string& filename);
 	static string getFileName(const string& filename);
+	static string toLower(const string& str);
 };
 
 struct oHelper

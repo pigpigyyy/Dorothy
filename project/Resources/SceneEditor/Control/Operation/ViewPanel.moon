@@ -149,6 +149,13 @@ Class
 			item.parentData = parentData
 			item\slots "Tapped",itemTapped
 			@menu\addChild item
+			@menu\addChild ViewItem {
+				text:"V"
+				x:realX+realW/2-(itemH-10)/2-5
+				y:y
+				width:itemH-10
+				height:itemH-10
+			}
 			@items[data] = item
 			viewSize.width = x+realW/2+10
 			viewSize.height = height-y+itemH/2+10
@@ -298,14 +305,16 @@ Class
 				else
 					endY = math.max endY,0
 					endY = math.min endY,viewSize.height-height
-				@schedule once ->
-					t = 0
-					cycle 0.3,(dt)->
-						t += dt
-						offset.y = oEase\func oEase.OutQuad,t,startY,endY
-						@offset = offset
-					offset.y = endY
-					@offset = offset
+				if not item.visible
+					@schedule once ->
+						t = 0
+						changeY = endY-startY
+						cycle 0.3,(dt)->
+							t += dt
+							offset.y = oEase\func oEase.OutQuad,t/0.3,startY,changeY
+							@scrollTo offset
+						offset.y = endY
+						@scrollTo offset
 
 		@gslot "Scene.ViewPanel.Fold",(itemData)->
 			return unless itemData
@@ -382,100 +391,117 @@ Class
 			@updateLine! if parentData.typeName ~= "PlatformWorld"
 			index
 
-		@gslot "Scene.ViewArea.Tap",(loc using nil)->
+		@gslot "Scene.ViewArea.Tap",(args using nil)->
+			uiPos,worldPos = args[1],args[2]
+			-- check conditions for adding items
 			return unless @menuEnabled
-			if @_selectedItem and editor.selectedType
+			itemData = nil
+			parentData = nil
+			if @_selectedItem
+				return unless editor.selectedType
 				itemData = @_selectedItem.itemData
-				return if itemData.typeName == "Camera"
 				parentData = @_selectedItem.parentData
-				-- check new item is addable
-				pos = nil
+			else
 				switch editor.selectedType
-					when "Body"
-						return if switch itemData.typeName
-							when "UILayer","PlatformWorld" then true
-							else false
-						pos = editor.viewArea.crossNode\convertToNodeSpace loc
 					when "Layer","World"
-						return if switch itemData.typeName
-							when "Layer","World","PlatformWorld" then false
-							else true
-						pos = loc
+						itemData = editor.sceneData
 					else
-						return if itemData.typeName == "PlatformWorld"
-						if parentData.typeName == "UILayer" or itemData.typeName == "UILayer"
-							pos = loc
-						else
-							pos = editor.viewArea.crossNode\convertToNodeSpace loc
-				-- create new item data
-				newData = nil
-				switch editor.selectedType
-					when "Sprite","Model","Body"
-						newData = Model[editor.selectedType]!
-						newData.file = editor.selectedItem
-						newData.name = editor\getUsableName newData.name
-						newData.position = pos
-					when "Effect"
-						newData = Model.Effect!
-						newData.effect = editor.selectedItem
-						newData.name = editor\getUsableName newData.name
-						newData.position = pos
-					when "Layer"
-						newData = Model.Layer!
-						newData.name = editor\getUsableName newData.name
-					when "World"
-						newData = Model.World!
-						newData.name = editor\getUsableName newData.name
+						return
+			return if itemData.typeName == "Camera"
+			-- check new item is addable
+			pos = nil
+			switch editor.selectedType
+				when "Body"
+					return if switch itemData.typeName
+						when "UILayer","PlatformWorld" then true
+						else false
+					pos = worldPos
+				when "Layer","World"
+					return if switch itemData.typeName
+						when "Layer","World","PlatformWorld" then false
+						else true
+					pos = uiPos
+				else
+					return if itemData.typeName == "PlatformWorld"
+					if parentData.typeName == "UILayer" or itemData.typeName == "UILayer"
+						pos = uiPos
+					else
+						pos = worldPos
+			-- create new item data
+			newData = nil
+			offset = switch itemData.typeName
+				when "Layer","World" then itemData.offset
+				else
+					if parentData then parentData.offset or oVec2.zero
+					else oVec2.zero
+			switch editor.selectedType
+				when "Sprite","Model","Body"
+					newData = Model[editor.selectedType]!
+					newData.file = editor.selectedItem
+					newData.name = editor\getUsableName newData.name
+					newData.position = pos-offset
+				when "Effect"
+					newData = Model.Effect!
+					newData.effect = editor.selectedItem
+					newData.name = editor\getUsableName newData.name
+					newData.position = pos-offset
+				when "Layer"
+					newData = Model.Layer!
+					newData.name = editor\getUsableName newData.name
+				when "World"
+					newData = Model.World!
+					newData.offset = oVec2(200,200)
+					newData.name = editor\getUsableName newData.name
 
-				insertAtParentLevel = ->
-					insertItem itemData,newData
-					parent = editor\getItem itemData
-					child = newData parent,#itemData.children
-					if child
-						parent\addChild child
-					doFolding @_selectedItem if @_selectedItem.fold
-				insertAtChildLevel = ->
-					index = insertItem parentData,newData,itemData
-					parent = editor\getItem parentData
-					child = newData parent,index
-					if child
-						parent\addChild child
-						children = parent.children
-						children\removeLast!
-						children\insert child,index
-					elseif parentData.typeName == "PlatformWorld"
-						if index < #parentData.children
-							for i = #parentData.children,index,-1
-								parent\swapLayer i,i+1
-					parentItem = @items[parentData]
-					doFolding parentItem if parentItem.fold
-				switch editor.selectedType
-					when "Layer","World"
-						switch itemData.typeName
-							when "PlatformWorld"
-								insertAtParentLevel!
-							else
-								insertAtChildLevel!
-						{:width,:height} = CCDirector.winSize
-						length = oVec2(width,height).length
-						circle = with CCDrawNode!
-							\drawDot oVec2.zero,5,ccColor4 0xff00ffff
-							.position = pos
-							\perform CCSequence {
-								CCSpawn {
-									oScale 1,length/10,length/10,oEase.OutQuad
-									oOpacity 1,0,oEase.OutQuad
-								}
-								CCCall -> circle.parent\removeChild circle
+			insertAtParentLevel = ->
+				insertItem itemData,newData
+				parent = editor\getItem itemData
+				child = newData parent,#itemData.children
+				if child
+					parent\addChild child
+				doFolding @_selectedItem if @_selectedItem and @_selectedItem.fold
+			insertAtChildLevel = ->
+				index = insertItem parentData,newData,itemData
+				parent = editor\getItem parentData
+				child = newData parent,index
+				if child
+					parent\addChild child
+					children = parent.children
+					children\removeLast!
+					children\insert child,index
+				elseif parentData.typeName == "PlatformWorld"
+					if index < #parentData.children
+						for i = #parentData.children,index,-1
+							parent\swapLayer i,i+1
+				parentItem = @items[parentData]
+				doFolding parentItem if parentItem.fold
+			switch editor.selectedType
+				when "Layer","World"
+					switch itemData.typeName
+						when "PlatformWorld"
+							insertAtParentLevel!
+						else
+							insertAtChildLevel!
+					{:width,:height} = CCDirector.winSize
+					length = oVec2(width,height).length
+					circle = with CCDrawNode!
+						\drawDot oVec2.zero,5,ccColor4 0xff00ffff
+						.position = pos
+						\perform CCSequence {
+							CCSpawn {
+								oScale 1,length/10,length/10,oEase.OutQuad
+								oOpacity 1,0,oEase.OutQuad
 							}
-						editor.items.UI\addChild circle
-					else
-						switch itemData.typeName
-							when "Layer","UILayer","World"
-								insertAtParentLevel!
-							else
-								insertAtChildLevel!
-				emit "Scene.ViewPanel.Pick",newData
+							CCCall -> circle.parent\removeChild circle
+						}
+					editor.items.UI\addChild circle
+				else
+					switch itemData.typeName
+						when "Layer","UILayer","World"
+							insertAtParentLevel!
+						else
+							insertAtChildLevel!
+			emit "Scene.ViewPanel.Pick",newData
 
 		@gslot "Scene.EditMenu.Up",->
 			return unless @_selectedItem

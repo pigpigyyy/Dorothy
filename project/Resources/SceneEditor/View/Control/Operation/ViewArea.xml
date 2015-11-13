@@ -11,4 +11,24 @@
 			</Line>
 		</Node>
 	</Node>
+
+	<Line Name="cross" Color="0xff00ffff" Opacity="0" Ref="True">
+		<Vec2 X="-10" Y="0"/>
+		<Vec2 X="0" Y="10"/>
+		<Vec2 X="10" Y="0"/>
+		<Vec2 X="0" Y="-10"/>
+		<Vec2 X="-10" Y="0"/>
+		<Vec2 X="10" Y="0"/>
+		<Line Color="0xff00ffff">
+			<Vec2 X="0" Y="10"/>
+			<Vec2 X="0" Y="-10"/>
+		</Line>
+		<Action>
+			<Sequence Name="fadeCross" Ref="True">
+				<Opacity Time="0" Alpha="1"/>
+				<Delay Time="0.7"/>
+				<Opacity Time="0.3" Alpha="0"/>
+			</Sequence>
+		</Action>
+	</Line>
 </LayerColor>

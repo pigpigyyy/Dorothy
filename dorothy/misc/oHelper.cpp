@@ -55,6 +55,15 @@ string oString::getFileName(const string& filename)
 	}
 	return filename.substr(pos+1);
 }
+string oString::toLower(const string& str)
+{
+	string tmp = str;
+	for (size_t i = 0; i < tmp.length(); i++)
+	{
+		tmp[i] = (char)tmp[i];
+	}
+	return tmp;
+}
 char* oHelper::convert(float value, int precision, char* buf, int buflen)
 {
 	snprintf(buf, buflen, "%f", value);

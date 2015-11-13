@@ -98,6 +98,9 @@ Class
 		@foldBtn\slots "Tapped",->
 			emit "Scene.ViewPanel.Fold",editor.currentData
 
+		@editBtn\slots "Tapped",->
+			editor\save!
+
 		itemChoosed = (itemData)->
 			emit "Scene.ViewPanel.FoldState",
 				itemData:itemData

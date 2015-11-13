@@ -5,38 +5,7 @@ ViewAreaView = require "View.Control.Operation.ViewArea"
 Class
 	__partial: => ViewAreaView!
 	__init: =>
-		{:width,:height} = CCDirector.winSize
-
-		@gslot "Scene.ViewArea.ScaleTo",(scale)->
-			editor.scale = scale
-			@touchEnabled = false
-			@scaleNode\runAction CCSequence {
-				oScale 0.5,scale,scale,oEase.OutQuad
-				CCCall ->
-					if @scaleNode.numberOfRunningActions+
-						@crossNode.numberOfRunningActions == 1
-						@touchEnabled = true
-			}
-
-		@gslot "Scene.ViewArea.MoveTo",(pos)->
-			pos -= editor.origin
-			@unschedule!
-			@touchEnabled = false
-			@crossNode\runAction CCSequence {
-				oPos 0.5,pos.x,pos.y,oEase.OutQuad
-				CCCall ->
-					if @scaleNode.numberOfRunningActions+
-						@crossNode.numberOfRunningActions == 1
-						@touchEnabled = true
-			}
-			@xcross\runAction oPos 0.5,0,-pos.y,oEase.OutQuad
-			@ycross\runAction oPos 0.5,-pos.x,0,oEase.OutQuad
-
-		@gslot "Scene.ViewArea.Move",(delta)->
-			delta = delta/@scaleNode.scaleX
-			@crossNode.position += delta
-			@xcross.positionY -= delta.y
-			@ycross.positionX -= delta.x
+		{:width,:height} = @
 
 		S = oVec2.zero
 		V = oVec2.zero
@@ -86,16 +55,78 @@ Class
 					scale = 0.5
 				@scaleNode.scaleX = scale
 				@scaleNode.scaleY = scale
-				editor.scale = scale
 				tap = false
 				emit "Scene.ViewArea.Scale",scale
 
 		touchEnded = (touches)->
 			if tap then
 				@unschedule!
-				loc = touches[1].location
-				emit "Scene.ViewArea.Tap",loc
+				uiPos = touches[1].location
+				worldPos = @crossNode\convertToNodeSpace uiPos
+				emit "Scene.ViewArea.Tap",{uiPos,worldPos}
 			elseif V ~= oVec2.zero
 					@schedule updateDragPos
 		@slots "TouchEnded",touchEnded
 		@slots "TouchCancelled",touchEnded
+
+		@gslot "Scene.ViewArea.ScaleTo",(scale)->
+			editor.scale = scale
+			@touchEnabled = false
+			@scaleNode\runAction CCSequence {
+				oScale 0.5,scale,scale,oEase.OutQuad
+				CCCall ->
+					if @scaleNode.numberOfRunningActions+
+						@crossNode.numberOfRunningActions == 1
+						@touchEnabled = true
+			}
+
+		@gslot "Scene.ViewArea.MoveTo",(pos)->
+			pos -= editor.origin
+			@unschedule!
+			@touchEnabled = false
+			@crossNode\runAction CCSequence {
+				oPos 0.5,pos.x,pos.y,oEase.OutQuad
+				CCCall ->
+					if @scaleNode.numberOfRunningActions+
+						@crossNode.numberOfRunningActions == 1
+						@touchEnabled = true
+			}
+			@xcross\runAction oPos 0.5,0,-pos.y,oEase.OutQuad
+			@ycross\runAction oPos 0.5,-pos.x,0,oEase.OutQuad
+
+		@gslot "Scene.ViewArea.Move",(delta)->
+			delta = delta/@scaleNode.scaleX
+			@crossNode.position += delta
+			@xcross.positionY -= delta.y
+			@ycross.positionX -= delta.x
+
+		itemChoosed = (itemData)->
+			if itemData
+				switch itemData.typeName
+					when "PlatformWorld","UILayer","Camera","Layer","World"
+						@cross.transformTarget = nil
+						@cross.position = editor.origin
+						@cross\perform @fadeCross
+					when "Body"
+						item = editor\getItem itemData
+						if item.children
+							pos = item.children[1].position
+							@cross.position = pos
+							@cross.transformTarget = item
+							@cross\perform @fadeCross
+							if item.parent ~= editor.items.UI
+								parentData = editor\getItemDef item.parent
+								pos += parentData.offset
+								emit "Scene.ViewArea.MoveTo",editor.origin-pos
+					else
+						item = editor\getItem itemData
+						pos = item.position
+						@cross.position = pos
+						@cross.transformTarget = item.parent
+						@cross\perform @fadeCross
+						if item.parent ~= editor.items.UI
+							parentData = editor\getItemDef item.parent
+							pos += parentData.offset
+							emit "Scene.ViewArea.MoveTo",editor.origin-pos
+		@gslot "Scene.ViewPanel.Pick",itemChoosed
+		@gslot "Scene.ViewPanel.Select",itemChoosed

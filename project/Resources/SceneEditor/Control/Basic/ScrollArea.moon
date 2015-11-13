@@ -187,6 +187,12 @@ Class
 			@emit "Scrolled",oVec2(delta.x,delta.y)
 			startReset! if isReseting!
 
+		@scrollTo = (offset)=>
+			delta = offset - oVec2 deltaX,deltaY
+			deltaX = offset.x
+			deltaY = offset.y
+			@emit "Scrolled",delta
+
 		@updateViewSize = (wView,hView)=>
 			{:width,:height} = @
 			viewWidth = math.max wView,width

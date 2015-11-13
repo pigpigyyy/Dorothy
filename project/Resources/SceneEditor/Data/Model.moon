@@ -28,6 +28,42 @@ Contact = (world,data)->
 		for contact in *contacts
 			world\setShouldContact unpack contact
 
+Groups = ->
+	setmetatable {
+		[1]: "P1"
+		[oData.GroupDetect]: "Detect"
+		[oData.GroupDetectPlayer]: "DetectPlayer"
+		[oData.GroupHide]: "Hide"
+		[oData.GroupTerrain]: "Terrain"
+	}, {
+		__tostring:=>
+			str = "{"
+			for k,v in pairs @
+				str ..= "["..k.."]=\""..v.."\","
+			str = str\sub 1,-2
+			str ..= "}"
+			str
+		}
+
+Contacts = ->
+	setmetatable {{1,1,true}},{
+		__tostring:=>
+			str = "{"
+			for i,contact in ipairs @
+				str ..= "{"
+				for i,item in ipairs contact
+					switch tolua.type item
+						when "boolean"
+							str ..= item and "t" or "f"
+						else
+							str ..= tostring item
+					str ..= "," unless i == #contact
+				str ..= "}"
+				str ..= "," unless i == #@
+			str ..= "}"
+			str
+		}
+
 Types =
 	PlatformWorld:1
 	UILayer:2
@@ -71,7 +107,9 @@ DataCreater = (dataDef)->
 					when "string"
 						str ..= "\""..item.."\""
 					when "table"
-						if #item > 0
+						if getmetatable item
+							str ..= tostring item
+						elseif #item > 0
 							str ..= "{"
 							for i,v in ipairs item
 								str ..= tostring v
@@ -83,11 +121,11 @@ DataCreater = (dataDef)->
 						str ..= tostring item
 				str ..= "," unless i == #@
 			str ..= "}"
-			str = str\gsub ".00",""
+			str = str\gsub "%.00",""
 			str
 	(data)->
 		if not data
-			data = {v[1],type(v[2]) == "function" and v[2]! or v[2] for _,v in pairs dataDef}
+			data = {v[1],(type(v[2]) == "function" and v[2]! or v[2]) for _,v in pairs dataDef}
 		data.typeName = TypeNames[data[1]]
 		data.getItems = => {v[1],k for k,v in pairs dataDef}
 		setmetatable data,dataMt
@@ -101,20 +139,20 @@ Items =
 			if data.children
 				for child in *data.children
 					setupData child
-		data = dofile editor.sceneFullPath..filename
+		data = dofile filename
 		setupData data
 		data
 
 	dumpData:(data,filename)->
-		str = "local v,s,t,f = require(\"oVec2\"),require(\"CCSize\"),true,false\nreturn "..tostring data
-		oContent\saveToFile editor.sceneFullPath..filename,str
+		str = "local v,t,f = require(\"oVec2\"),true,false\nreturn "..tostring data
+		oContent\saveToFile filename,str
 
 	PlatformWorld:DataCreater
 		-- property
 		itemType:{1,Types.PlatformWorld}
 		gravity:{2,Point(0,-10)}
-		contacts:{3,false}
-		groups:{4,false}
+		contacts:{3,Contacts}
+		groups:{4,Groups}
 		simulation:{5,1}
 		camera:{6,false}
 		ui:{7,false}
@@ -127,6 +165,7 @@ Items =
 				.gravity = @gravity
 				.showDebug = @outline
 				\setIterations Simulation @simulation
+			setmetatable 
 			editor.items = {Scene:world}
 			editor.itemDefs = {[world]:@}
 			world.itemData = @
@@ -139,12 +178,14 @@ Items =
 	UILayer:DataCreater
 		-- property
 		itemType:{1,Types.UILayer}
-		children:{2,false}
+		visible:{2,true}
+		children:{3,false}
 		-- helper
 		create:(scene)=>
 			layer = scene.UILayer
 			editor.items.UI = layer
 			layer.position -= editor.origin
+			layer.visible = @visible
 			editor.itemDefs[layer] = @
 			Children layer,@
 			nil
@@ -172,14 +213,15 @@ Items =
 		ratioY:{4,0}
 		offset:{5,Point(0,0)}
 		zoom:{6,1}
-		children:{7,false}
+		visible:{7,true}
+		children:{8,false}
 		-- helper
 		create:(scene,index)=>
-			scene\setLayerRatio index,oVec2(@ratioX,@ratioY)
 			scene\setLayerOffset index,@offset
 			layer = with scene\getLayer index
 				.scaleX = @zoom
 				.scaleY = @zoom
+				.visible = @visible
 			editor.items[@name] = layer
 			editor.itemDefs[layer] = @
 			Children layer,@
@@ -195,9 +237,10 @@ Items =
 		ratioY:{6,0}
 		offset:{7,Point(0,0)}
 		zoom:{8,1}
-		children:{9,false}
+		visible:{9,true}
+		children:{10,false}
 		-- design
-		outline:{10,true}
+		outline:{11,true}
 		-- helper
 		create:(scene,index)=>
 			scene\setLayerRatio index,oVec2(@ratioX,@ratioY)
@@ -208,6 +251,7 @@ Items =
 			world = with oWorld!
 				.gravity = @gravity
 				.showDebug = @outline
+				.visible = @visible
 				\setIterations Simulation @simulation
 			layer\addChild world
 			Contact world,editor.sceneData
@@ -225,14 +269,16 @@ Items =
 		group:{4,1}
 		position:{5,Point(0,0)}
 		angle:{6,0}
+		visible:{7,true}
 		-- helper
 		create:(parent)=>
 			world = editor.items.Scene
 			if "oWorld" == tolua.type parent
 				world = parent
-			body = oBody @file,world,@position,@angle
-			body.data\each (_,v)->
-				v.group = @group if "oBody" == tolua.type v
+			body = with oBody @file,world,@position,@angle
+				.data\each (_,v)->
+					v.group = @group if "oBody" == tolua.type v
+				.visible = @visible
 			editor.items[@name] = body
 			editor.itemDefs[body] = @
 			body
@@ -252,6 +298,7 @@ Items =
 		speed:{11,1}
 		loop:{12,false}
 		faceRight:{13,true}
+		visible:{14,true}
 		-- helper
 		create:=>
 			model = with oModel @file
@@ -264,6 +311,7 @@ Items =
 				.speed = @speed
 				.loop = @loop
 				.faceRight = @faceRight
+				.visible = @visible
 				\play @animation
 			editor.items[@name] = model
 			editor.itemDefs[model] = @
@@ -279,6 +327,7 @@ Items =
 		scale:{6,Point(1,1)}
 		skew:{7,Point(0,0)}
 		opacity:{8,1}
+		visible:{9,true}
 		-- helper
 		create:=>
 			sprite = with CCSprite @file
@@ -289,6 +338,7 @@ Items =
 				.skewX = @skew.x
 				.skewY = @skew.y
 				.opacity = @opacity
+				.visible = @visible
 			editor.items[@name] = sprite
 			editor.itemDefs[sprite] = @
 			sprite
