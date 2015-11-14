@@ -2,11 +2,65 @@ Dorothy!
 Class,property = unpack require "class"
 ViewItemView = require "View.Control.Operation.ViewItem"
 
-Class
+VisibleChecker = Class
 	__partial: (args)=> ViewItemView args
 	__init: (args)=>
 		@_checked = false
 		@slots "Tapped",-> @checked = not @checked
+
+	checked: property => @_checked,
+		(value)=>
+			return if value == @_checked
+			@_checked = not @_checked
+			@border.visible = not value
+			if value then
+				@label.text = "H"
+				@cascadeColor = false
+				@borderBold.color = ccColor3 0xff0088
+				@label.color = ccColor3 0xff0088
+				@cascadeOpacity = false
+				with @borderBold
+					.visible = true
+					.opacity = 1
+					.scaleX = 0
+					.scaleY = 0
+					\perform @scale
+			else
+				@label.text = "V"
+				@cascadeColor = true
+				@borderBold.color = ccColor3 0xffffff
+				@label.color = ccColor3 0xffffff
+				@cascadeOpacity = true
+				@borderBold\runAction @fade
+
+-- params:
+-- x, y, width, height, text
+Class
+	__partial: (args)=> ViewItemView args
+	__init: (args)=>
+		@_checked = false
+		@_visibleChecker = nil
+		@slots "Tapped",-> @checked = not @checked
+
+	visibleChecker: property => @_visibleChecker ~= nil,
+		(value)=>
+			if value
+				return if @_visibleChecker
+				size = @height-10
+				@_visibleChecker = VisibleChecker {
+						text:"V"
+						x:size/2+5
+						y:@height/2
+						width:size
+						height:size
+					}
+				@addChild @_visibleChecker
+				@label.positionX = @width-(@width-size-5)/2
+			else
+				return unless @_visibleChecker
+				@removeChild @_visibleChecker
+				@_visibleChecker = nil
+				@label.positionX = @width/2
 
 	checked: property => @_checked,
 		(value)=>

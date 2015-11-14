@@ -149,13 +149,9 @@ Class
 			item.parentData = parentData
 			item\slots "Tapped",itemTapped
 			@menu\addChild item
-			@menu\addChild ViewItem {
-				text:"V"
-				x:realX+realW/2-(itemH-10)/2-5
-				y:y
-				width:itemH-10
-				height:itemH-10
-			}
+			item.visibleChecker = switch text
+				when "Camera","Scene" then false
+				else true
 			@items[data] = item
 			viewSize.width = x+realW/2+10
 			viewSize.height = height-y+itemH/2+10
@@ -377,6 +373,9 @@ Class
 				width:parentItem.width-20
 				height:itemH
 			}
+			item.visibleChecker = switch text
+				when "Camera","Scene" then false
+				else true
 			item.itemData = newData
 			item.parentData = parentData
 			item\slots "Tapped",itemTapped

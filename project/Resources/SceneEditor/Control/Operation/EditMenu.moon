@@ -20,6 +20,7 @@ Class
 				if button.selected
 					button.selected = false
 					button.color = ccColor3 0x00ffff
+					button.face.cascadeOpacity = true
 					emit button.event,nil
 
 		for name in *buttonNames
@@ -30,6 +31,7 @@ Class
 				if item
 					button.selected = true
 					button.color = ccColor3 0xff0088
+					button.face.cascadeOpacity = false
 			button\slots "Tapped",->
 				if not button.selected
 					emit "Scene.View"..upperName

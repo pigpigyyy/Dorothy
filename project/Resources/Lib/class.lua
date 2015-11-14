@@ -85,11 +85,13 @@ local function class(arg1,arg2)
 		__newindex = __newindex,
 		__call = __call,
 	}
+	base.__class = {function() return base end}
 	local cls = {
 		__index = __index,
 		__newindex = __newindex,
 		__call = __call,
 	}
+	cls.__class = {function() return cls end}
 	for k,v in pairs(typeDef) do
 		if type(v) == "table" and v.__classfield then
 			rawset(base,k,v)

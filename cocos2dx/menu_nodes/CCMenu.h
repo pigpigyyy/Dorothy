@@ -36,19 +36,19 @@ NS_CC_BEGIN
  * @addtogroup menu
  * @{
  */
-typedef enum  
+	typedef enum
 {
-    kCCMenuStateWaiting,
-    kCCMenuStateTrackingTouch
+	kCCMenuStateWaiting,
+	kCCMenuStateTrackingTouch
 } tCCMenuState;
 
 enum {
-    //* priority used by the menu for the event handler
-    kCCMenuHandlerPriority = -128,
+	//* priority used by the menu for the event handler
+	kCCMenuHandlerPriority = -128,
 };
 
 /** @brief A CCMenu
-* 
+*
 * Features and Limitation:
 *  - You can add MenuItem objects in runtime using addChild:
 *  - But the only accepted children are MenuItem objects
@@ -57,68 +57,68 @@ class CC_DLL CCMenu : public CCLayer
 {
 public:
 	CCMenu() : m_pSelectedItem(NULL) { }
-    virtual ~CCMenu(){}
+	virtual ~CCMenu() {}
 
-    /** creates an empty CCMenu */
-    static CCMenu* create();
+	/** creates an empty CCMenu */
+	static CCMenu* create();
 
-    /** creates a CCMenu with CCMenuItem objects */
+	/** creates a CCMenu with CCMenuItem objects */
 	static CCMenu* create(CCMenuItem* item, ...);
 
-    /** creates a CCMenu with a CCArray of CCMenuItem objects */
+	/** creates a CCMenu with a CCArray of CCMenuItem objects */
 	static CCMenu* createWithArray(CCArray* pArrayOfItems);
 
-    /** creates a CCMenu with it's item, then use addChild() to add 
-      * other items. It is used for script, it can't init with undetermined
-      * number of variables.
-    */
+	/** creates a CCMenu with it's item, then use addChild() to add
+	  * other items. It is used for script, it can't init with undetermined
+	  * number of variables.
+	*/
 	static CCMenu* createWithItem(CCMenuItem* item);
 
-    /** initializes an empty CCMenu */
-    bool init();
+	/** initializes an empty CCMenu */
+	bool init();
 
-    /** initializes a CCMenu with a NSArray of CCMenuItem objects */
-    bool initWithArray(CCArray* pArrayOfItems);
+	/** initializes a CCMenu with a NSArray of CCMenuItem objects */
+	bool initWithArray(CCArray* pArrayOfItems);
 
-    /** align items vertically with padding
-    @since v0.7.2
-    */
-    float alignItemsVerticallyWithPadding(float padding = 10);
+	/** align items vertically with padding
+	@since v0.7.2
+	*/
+	float alignItemsVerticallyWithPadding(float padding = 10);
 
-    /** align items horizontally with padding
-    @since v0.7.2
-    */
-    float alignItemsHorizontallyWithPadding(float padding = 10);
+	/** align items horizontally with padding
+	@since v0.7.2
+	*/
+	float alignItemsHorizontallyWithPadding(float padding = 10);
 
 	CCSize alignItemsWithPadding(float padding = 10);
 
-    //super methods
-    virtual void registerWithTouchDispatcher();
-    virtual void removeChild(CCNode* child, bool cleanup);
+	//super methods
+	virtual void registerWithTouchDispatcher();
+	virtual void removeChild(CCNode* child, bool cleanup);
 
-    /**
-    @brief For phone event handle functions
-    */
-    virtual bool ccTouchBegan(CCTouch* touch, CCEvent* event);
-    virtual void ccTouchEnded(CCTouch* touch, CCEvent* event);
-    virtual void ccTouchCancelled(CCTouch *touch, CCEvent* event);
-    virtual void ccTouchMoved(CCTouch* touch, CCEvent* event);
+	/**
+	@brief For phone event handle functions
+	*/
+	virtual bool ccTouchBegan(CCTouch* touch, CCEvent* event);
+	virtual void ccTouchEnded(CCTouch* touch, CCEvent* event);
+	virtual void ccTouchCancelled(CCTouch *touch, CCEvent* event);
+	virtual void ccTouchMoved(CCTouch* touch, CCEvent* event);
 
-    /**
-    @since v0.99.5
-    override onExit
-    */
-    virtual void onExit();
+	/**
+	@since v0.99.5
+	override onExit
+	*/
+	virtual void onExit();
 
 	inline bool isEnabled() { return m_bEnabled; }
 	inline void setEnabled(bool value) { m_bEnabled = value; }
 
 protected:
-	CCMenuItem* itemForTouch(CCTouch * touch);
+	CCMenuItem* itemForTouch(CCTouch* touch);
 	/** whether or not the menu will receive events */
 	bool m_bEnabled;
-    tCCMenuState m_eState;
-    CCMenuItem* m_pSelectedItem;
+	tCCMenuState m_eState;
+	CCMenuItem* m_pSelectedItem;
 	CC_LUA_TYPE(CCMenu)
 };
 

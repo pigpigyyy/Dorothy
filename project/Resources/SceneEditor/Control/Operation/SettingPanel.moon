@@ -58,7 +58,6 @@ Class
 			items[itemName] = item
 
 		for _,item in pairs items
-			item.visible = true
 			@menu\addChild item
 
 		groups = {
