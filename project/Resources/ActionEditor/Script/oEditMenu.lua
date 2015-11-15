@@ -61,6 +61,7 @@ local function oEditMenu()
 					menu:markEditButton(false)
 					oEditor.viewArea:getModel()
 					oCache.Model:save(oEditor.model,oEditor.model)
+					oCache.Model:unload(oEditor.modelFile)
 					oEditor:emit("Edited",oEditor.modelFile)
 					return
 				end
