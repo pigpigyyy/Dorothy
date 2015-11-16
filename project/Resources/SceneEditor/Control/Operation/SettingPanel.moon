@@ -55,6 +55,7 @@ Class
 			item = SettingItem itemName.." :",itemWidth,itemHeight,-itemWidth,getPosY(),(i == 1),valueFormat,editCallback
 			item.anchor = oVec2 0.5,0.5
 			item.name = itemName\sub(1,1)\lower!..itemName\sub(2,-1)
+			item.visible = false
 			items[itemName] = item
 
 		for _,item in pairs items

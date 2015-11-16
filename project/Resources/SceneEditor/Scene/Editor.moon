@@ -1,5 +1,5 @@
 Dorothy!
-Class,property,classfield = unpack require "class"
+Class,property = unpack require "class"
 EditorView = require "View.Scene.Editor"
 SelectionPanel = require "Control.Basic.SelectionPanel"
 Model = require "Data.Model"
@@ -166,12 +166,13 @@ Class
 			oContent\mkdir @graphicFullPath unless oContent\exist @graphicFullPath
 			oContent\mkdir @physicsFullPath unless oContent\exist @physicsFullPath
 			oContent\mkdir @logicFullPath unless oContent\exist @logicFullPath
+			oContent\mkdir @sceneFullPath unless oContent\exist @sceneFullPath
 			if @_actionEditor
-				actionEditor.input = @gameFullPath
-				actionEditor.output = @gameFullPath
+				@actionEditor.input = @gameFullPath
+				@actionEditor.output = @gameFullPath
 			if @_bodyEditor
-				bodyEditor.input = @gameFullPath
-				bodyEditor.output = @gameFullPath
+				@bodyEditor.input = @gameFullPath
+				@bodyEditor.output = @gameFullPath
 			Reference.update!
 
 	gameFullPath: property => @_gameFullPath
@@ -199,7 +200,7 @@ Class
 				@updateModels!
 			CCScene\add "actionEditor",actionEditor
 			@_actionEditor = actionEditor
-		return @_actionEditor
+		@_actionEditor
 
 	bodyEditor: property =>
 		if not @_bodyEditor
@@ -215,7 +216,7 @@ Class
 				@updateBodies!
 			CCScene\add "bodyEditor",bodyEditor
 			@_bodyEditor = bodyEditor
-		return @_bodyEditor
+		@_bodyEditor
 
 	effectEditor: property =>
 		if not @_effectEditor
@@ -233,7 +234,7 @@ Class
 				@updateEffects!
 			CCScene\add "effectEditor",effectEditor
 			@_effectEditor = effectEditor
-		return @_effectEditor
+		@_effectEditor
 
 	getUsableName: (originalName)=>
 		originalName = "name" if originalName == ""
@@ -343,5 +344,7 @@ Class
 		parentNode = @viewArea.scaleNode
 		if #parentNode.children == 2
 			parentNode\removeChild parentNode.children[2]
+		effectFilename = editor.gameFullPath..editor.graphicFolder.."list.effect"
+		oCache.Effect\load effectFilename if oContent\exist effectFilename
 		parentNode\addChild @sceneData!
 		emit "Scene.DataLoaded",@sceneData
