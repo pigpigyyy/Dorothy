@@ -1,23 +1,25 @@
 Dorothy!
 MessageBox = require "Control.Basic.MessageBox"
+Model = require "Data.Model"
 
 downRefMap = nil
 upRefMap = nil
 sceneRefMap = nil
-
 updating = false
 
-addSceneItemRef = (item)->
+addSceneItemRef = (sceneName,item)->
 	file = item.file
 	if file
+		file = file\gsub "|.*",""
 		itemNames = sceneRefMap[file] or {}
-		table.insert itemNames,"Node "..item.name
+		table.insert itemNames,item.name.." of "..sceneName
 		sceneRefMap[file] = itemNames
 
-removeSceneItemRef = (item)->
+removeSceneItemRef = (sceneName,item)->
 	file = item.file
 	if file
-		name = "Node "..item.name
+		file = file\gsub "|.*",""
+		name = item.name.." of "..sceneName
 		itemNames = sceneRefMap[file]
 		if itemNames
 			for i,itemName in ipairs itemNames
@@ -26,12 +28,15 @@ removeSceneItemRef = (item)->
 					break
 			sceneRefMap[file] = nil if #itemNames == 0
 
-updateSceneRef = ->
-	itemDefs = editor.itemDefs
-	return unless itemDefs
-	sceneRefMap = {}
-	for def,_ in pairs itemDefs
-		addSceneItemRef def
+addSceneRef = (filename)->
+	data = Model.loadData filename
+	sceneName = filename\match "[^\\/]*$"
+	addChildren = (parentData)->
+		if parentData.children
+			for childData in *parentData.children
+				addSceneItemRef sceneName,childData
+				addChildren childData
+	addChildren data
 
 updateItemRef = (filename)->
 	extension = filename\match "%.([^%.\\/]*)$"
@@ -96,6 +101,8 @@ updateItemRef = (filename)->
 				if not upRefMap[texFile]
 					upRefMap[texFile] = {}
 				table.insert upRefMap[texFile],parFile
+		when "scene"
+			addSceneRef filename
 
 routine = nil
 update = ()->
@@ -116,6 +123,7 @@ update = ()->
 	routine = thread ->
 		downRefMap = {}
 		upRefMap = {}
+		sceneRefMap = {}
 		resPath = editor.gameFullPath\gsub("[\\/]*$","")
 		visitResource resPath
 		updating = false

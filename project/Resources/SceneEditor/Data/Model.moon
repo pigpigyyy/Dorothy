@@ -28,8 +28,8 @@ Contact = (world,data)->
 		for contact in *contacts
 			world\setShouldContact unpack contact
 
-Groups = ->
-	setmetatable {
+Groups = (data)->
+	setmetatable data or {
 		[1]: "P1"
 		[oData.GroupDetect]: "Detect"
 		[oData.GroupDetectPlayer]: "DetectPlayer"
@@ -45,8 +45,8 @@ Groups = ->
 			str
 		}
 
-Contacts = ->
-	setmetatable {{1,1,true}},{
+Contacts = (data)->
+	setmetatable data or {{1,1,true}},{
 		__tostring:=>
 			str = "{"
 			for i,contact in ipairs @
@@ -76,6 +76,8 @@ Types =
 	Effect:9
 
 TypeNames = {v,k for k,v in pairs Types}
+
+local Items
 
 DataCreater = (dataDef)->
 	create = dataDef.create
@@ -131,7 +133,6 @@ DataCreater = (dataDef)->
 		setmetatable data,dataMt
 		data
 
-local Items
 Items =
 	loadData:(filename)->
 		setupData = (data)->
@@ -141,6 +142,9 @@ Items =
 					setupData child
 		data = dofile filename
 		setupData data
+		Items.Camera data.camera if data.camera
+		Contacts data.contacts if data.contacts
+		Groups data.groups if data.groups
 		data
 
 	dumpData:(data,filename)->

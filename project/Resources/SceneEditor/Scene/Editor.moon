@@ -17,7 +17,7 @@ Class
 		@items = nil
 		@itemDefs = nil
 		@dirty = false
-		@sceneName = "Test"
+		@currentScene = "Scene/Test.scene"
 		@game = "Test"
 		@origin = oVec2 60+(width-250)/2,height/2
 		@scale = 1
@@ -98,12 +98,12 @@ Class
 				posY = -(pos.y-@origin.y)+height/2
 				@items.Camera\perform oPos 0.5,posX,posY,oEase.OutQuad
 
-			@sceneData = with Model.PlatformWorld!
-				.camera = Model.Camera!
-				.ui = Model.UILayer!
-			@viewArea.scaleNode\addChild @sceneData!
-			Reference.updateSceneRef!
-			emit "Scene.DataLoaded",@sceneData
+			if not oContent\exist @gameFullPath..@currentScene
+				@sceneData = with Model.PlatformWorld!
+					.camera = Model.Camera!
+					.ui = Model.UILayer!
+				@save!
+			@load @currentScene
 
 		@gslot "Editor.ItemChooser",(args)->
 			handler = args[#args]
@@ -290,7 +290,11 @@ Class
 			child = newData parent,index
 			if child
 				parent\addChild child
-		Reference.addSceneItemRef newData
+		sceneName = if parentData.typeName == "UILayer"
+				"UI.scene"
+			else
+				@currentScene\match("[^\\/]*$")
+		Reference.addSceneItemRef sceneName,newData
 		index
 
 	removeData: (itemData,parentData)=>
@@ -302,6 +306,10 @@ Class
 				index = i
 				break
 		return unless index
+		sceneName = if parentData.typeName == "UILayer"
+				"UI.scene"
+			else
+				@currentScene\match("[^\\/]*$")
 		switch itemData.typeName
 			when "Layer","World"
 				if itemData.children
@@ -309,7 +317,7 @@ Class
 						childItem = @items[childData.name]
 						@itemDefs[childItem] = nil
 						@items[childData.name] = nil
-						Reference.removeSceneItemRef childData
+						Reference.removeSceneItemRef sceneName,childData
 				parent\removeLayer index
 				for i = index,#parentData.children-1
 					parent\swapLayer i,i+1
@@ -318,17 +326,22 @@ Class
 		table.remove parentData.children,index
 		parentData.children = false if #parentData.children == 0
 		editor.items[itemData.name] = nil
-		Reference.removeSceneItemRef itemData
+		Reference.removeSceneItemRef sceneName,itemData
 		index
 
 	save: =>
 		ui = @sceneData.ui
 		@sceneData.ui = false
-		Model.dumpData @sceneData,@sceneFullPath..@sceneName..".scene"
+		Model.dumpData @sceneData,@gameFullPath..@currentScene
 		Model.dumpData ui,@sceneFullPath.."UI.scene"
 		@sceneData.ui = ui
 
-	load: (sceneName)=>
-		@sceneName = sceneName
-		@sceneData = Model.loadData @sceneFullPath..@sceneName..".scene"
+	load: (sceneFile)=>
+		@currentScene = sceneFile
+		@sceneData = Model.loadData @gameFullPath..@currentScene
 		@sceneData.ui = Model.loadData @sceneFullPath.."UI.scene"
+		parentNode = @viewArea.scaleNode
+		if #parentNode.children == 2
+			parentNode\removeChild parentNode.children[2]
+		parentNode\addChild @sceneData!
+		emit "Scene.DataLoaded",@sceneData
