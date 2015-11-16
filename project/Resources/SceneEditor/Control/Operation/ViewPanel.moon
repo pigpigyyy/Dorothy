@@ -346,15 +346,8 @@ Class
 			handler state
 
 		insertItem = (parentData,newData,targetData)->
-			-- insert to data.children
-			parentData.children = {} unless parentData.children
-			index = #parentData.children+1
-			if targetData
-				for i,child in ipairs parentData.children
-					if child == targetData
-						index = i+1
-						break
-			table.insert parentData.children,index,newData
+			-- insert newData to parentData.children before targetData
+			index = editor\insertData parentData,newData,targetData
 			-- make room for new item
 			parentItem = @items[parentData]
 			if parentData.typeName ~= "PlatformWorld"
@@ -454,24 +447,9 @@ Class
 
 			insertAtParentLevel = ->
 				insertItem itemData,newData
-				parent = editor\getItem itemData
-				child = newData parent,#itemData.children
-				if child
-					parent\addChild child
 				doFolding @_selectedItem if @_selectedItem and @_selectedItem.fold
 			insertAtChildLevel = ->
-				index = insertItem parentData,newData,itemData
-				parent = editor\getItem parentData
-				child = newData parent,index
-				if child
-					parent\addChild child
-					children = parent.children
-					children\removeLast!
-					children\insert child,index
-				elseif parentData.typeName == "PlatformWorld"
-					if index < #parentData.children
-						for i = #parentData.children,index,-1
-							parent\swapLayer i,i+1
+				insertItem parentData,newData,itemData
 				parentItem = @items[parentData]
 				doFolding parentItem if parentItem.fold
 			switch editor.selectedType

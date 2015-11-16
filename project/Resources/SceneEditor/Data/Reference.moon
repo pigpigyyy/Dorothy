@@ -3,8 +3,35 @@ MessageBox = require "Control.Basic.MessageBox"
 
 downRefMap = nil
 upRefMap = nil
+sceneRefMap = nil
 
 updating = false
+
+addSceneItemRef = (item)->
+	file = item.file
+	if file
+		itemNames = sceneRefMap[file] or {}
+		table.insert itemNames,"Node "..item.name
+		sceneRefMap[file] = itemNames
+
+removeSceneItemRef = (item)->
+	file = item.file
+	if file
+		name = "Node "..item.name
+		itemNames = sceneRefMap[file]
+		if itemNames
+			for i,itemName in ipairs itemNames
+				if itemName = name
+					table.remove itemNames,i
+					break
+			sceneRefMap[file] = nil if #itemNames == 0
+
+updateSceneRef = ->
+	itemDefs = editor.itemDefs
+	return unless itemDefs
+	sceneRefMap = {}
+	for def,_ in pairs itemDefs
+		addSceneItemRef def
 
 updateItemRef = (filename)->
 	extension = filename\match "%.([^%.\\/]*)$"
@@ -107,7 +134,14 @@ isUpdating = ()->
 	updating
 
 getUpRefs = (item)->
-	upRefMap[item] or {}
+	upRefs = if upRefMap[item]
+		[it for it in *upRefMap[item]]
+	else
+		{}
+	if sceneRefMap and sceneRefMap[item]
+		for it in *sceneRefMap[item]
+			table.insert upRefs,it
+	upRefs
 
 getDownRefs = (item)->
 	downRefMap[item] or {}
@@ -124,7 +158,7 @@ refreshRef = (item)->
 	updateItemRef item
 
 isRemovable = (item)->
-	upRefs = upRefMap[item]
+	upRefs = getUpRefs item
 	if upRefs and #upRefs > 0
 		refStr = ""
 		for ref in *upRefs do refStr ..= ref\match("[^\\/]*$").."\n"
@@ -157,4 +191,7 @@ removeRef = (item)->
 	:removeRef
 	:refreshRef
 	:isUpdating
+	:updateSceneRef
+	:addSceneItemRef
+	:removeSceneItemRef
 }

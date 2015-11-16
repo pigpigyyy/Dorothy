@@ -115,7 +115,7 @@ Class
 							@cross.transformTarget = item
 							@cross\perform @fadeCross
 							if item.parent ~= editor.items.UI
-								parentData = editor\getItemDef item.parent
+								parentData = editor\getData item.parent
 								pos += parentData.offset
 								emit "Scene.ViewArea.MoveTo",editor.origin-pos
 					else
@@ -125,7 +125,7 @@ Class
 						@cross.transformTarget = item.parent
 						@cross\perform @fadeCross
 						if item.parent ~= editor.items.UI
-							parentData = editor\getItemDef item.parent
+							parentData = editor\getData item.parent
 							pos += parentData.offset
 							emit "Scene.ViewArea.MoveTo",editor.origin-pos
 		@gslot "Scene.ViewPanel.Pick",itemChoosed

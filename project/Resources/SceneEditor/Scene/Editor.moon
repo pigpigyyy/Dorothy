@@ -102,6 +102,7 @@ Class
 				.camera = Model.Camera!
 				.ui = Model.UILayer!
 			@viewArea.scaleNode\addChild @sceneData!
+			Reference.updateSceneRef!
 			emit "Scene.DataLoaded",@sceneData
 
 		@gslot "Editor.ItemChooser",(args)->
@@ -260,7 +261,37 @@ Class
 				itemData.name
 		editor.items[itemName]
 
-	getItemDef: (item)=> editor.itemDefs[item]
+	getData: (item)=> editor.itemDefs[item]
+
+	insertData: (parentData,newData,targetData)=>
+		-- insert newData to parentData.children before targetData
+		parentData.children = {} unless parentData.children
+		index = #parentData.children+1
+		if targetData
+			for i,child in ipairs parentData.children
+				if child == targetData
+					index = i+1
+					break
+		table.insert parentData.children,index,newData
+		if targetData
+			parent = editor\getItem parentData
+			child = newData parent,index
+			if parentData.typeName == "PlatformWorld"
+				if index < #parentData.children
+					for i = #parentData.children,index,-1
+						parent\swapLayer i,i+1
+			elseif child
+				parent\addChild child
+				children = parent.children
+				children\removeLast!
+				children\insert child,index
+		else
+			parent = @getItem parentData
+			child = newData parent,index
+			if child
+				parent\addChild child
+		Reference.addSceneItemRef newData
+		index
 
 	removeData: (itemData,parentData)=>
 		item = @getItem itemData
@@ -273,6 +304,12 @@ Class
 		return unless index
 		switch itemData.typeName
 			when "Layer","World"
+				if itemData.children
+					for childData in *itemData.children
+						childItem = @items[childData.name]
+						@itemDefs[childItem] = nil
+						@items[childData.name] = nil
+						Reference.removeSceneItemRef childData
 				parent\removeLayer index
 				for i = index,#parentData.children-1
 					parent\swapLayer i,i+1
@@ -281,6 +318,7 @@ Class
 		table.remove parentData.children,index
 		parentData.children = false if #parentData.children == 0
 		editor.items[itemData.name] = nil
+		Reference.removeSceneItemRef itemData
 		index
 
 	save: =>
