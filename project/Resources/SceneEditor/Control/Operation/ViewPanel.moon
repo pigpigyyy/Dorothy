@@ -283,9 +283,15 @@ Class
 			sceneData = data
 			@menu\removeAllChildrenWithCleanup!
 			@items = {}
-			drawNode = CCDrawNode!
-			@menu\addChild drawNode
-			setupData data
+			if data
+				@offset = oVec2.zero
+				drawNode = CCDrawNode!
+				@menu\addChild drawNode
+				setupData data
+			else
+				drawNode = nil
+			@_selectedItem = nil
+			emit "Scene.ViewPanel.Select",nil
 
 		@gslot "Scene.ViewPanel.Pick",(itemData)->
 			item = @items[itemData]
@@ -397,6 +403,7 @@ Class
 				switch editor.selectedType
 					when "Layer","World"
 						itemData = editor.sceneData
+						return unless itemData
 					else
 						return
 			return if itemData.typeName == "Camera"
@@ -484,65 +491,24 @@ Class
 			return unless @_selectedItem
 			itemData = @_selectedItem.itemData
 			parentData = @_selectedItem.parentData
-			index = 1
-			for i,v in ipairs parentData.children
-				if itemData == v
-					index = i
-					break
+			index = editor\moveDataUp itemData,parentData
 			if index > 1
-				parentData.children[index] = parentData.children[index-1]
-				parentData.children[index-1] = itemData
-				parent = editor\getItem parentData
-				if parentData.typeName == "PlatformWorld"
-					parent\swapLayer index,index-1
-				else
-					parent.children\exchange index,index-1
 				reorderChildItems parentData
 
 		@gslot "Scene.EditMenu.Down",->
 			return unless @_selectedItem
 			itemData = @_selectedItem.itemData
 			parentData = @_selectedItem.parentData
-			index = #parentData.children
-			for i,v in ipairs parentData.children
-				if itemData == v
-					index = i
-					break
+			index = editor\moveDataDown itemData,parentData
 			if index < #parentData.children
-				parentData.children[index] = parentData.children[index+1]
-				parentData.children[index+1] = itemData
-				parent = editor\getItem parentData
-				if parentData.typeName == "PlatformWorld"
-					parent\swapLayer index,index+1
-				else
-					parent.children\exchange index,index+1
 				reorderChildItems parentData
 
 		@gslot "Scene.EditMenu.Top",->
 			return unless @_selectedItem
 			itemData = @_selectedItem.itemData
 			parentData = @_selectedItem.parentData
-			index = 1
-			for i,v in ipairs parentData.children
-				if itemData == v
-					index = i
-					break
+			index = editor\moveDataTop itemData,parentData
 			if index > 1
-				table.remove parentData.children,index
-				table.insert parentData.children,1,itemData
-				parent = editor\getItem parentData
-				if parentData.typeName == "PlatformWorld"
-					prev = index-1
-					while prev >= 1
-						parent\swapLayer index,prev
-						prev -= 1
-						index -= 1
-				else
-					prev = index-1
-					while prev >= 1
-						parent.children\exchange index,prev
-						prev -= 1
-						index -= 1
 				reorderChildItems parentData
 
 		@gslot "Scene.EditMenu.Bottom",->
@@ -550,27 +516,8 @@ Class
 			itemData = @_selectedItem.itemData
 			parentData = @_selectedItem.parentData
 			count = #parentData.children
-			index = count
-			for i,v in ipairs parentData.children
-				if itemData == v
-					index = i
-					break
+			index = editor\moveDataBottom itemData,parentData
 			if index < count
-				table.remove parentData.children,index
-				table.insert parentData.children,itemData
-				parent = editor\getItem parentData
-				if parentData.typeName == "PlatformWorld"
-					nextIndex = index+1
-					while nextIndex <= count
-						parent\swapLayer index,nextIndex
-						nextIndex += 1
-						index += 1
-				else
-					nextIndex = index+1
-					while nextIndex <= count
-						parent.children\exchange index,nextIndex
-						nextIndex += 1
-						index += 1
 				reorderChildItems parentData
 
 		@gslot "Scene.EditMenu.Delete",->
@@ -582,7 +529,6 @@ Class
 			-- TODO: should check item reference before deletion here
 			parentData = @_selectedItem.parentData
 			index = editor\removeData itemData,parentData
-
 			item = @items[itemData]
 			count = 1
 			@menu\removeChild item

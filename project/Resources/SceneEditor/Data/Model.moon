@@ -87,7 +87,9 @@ DataCreater = (dataDef)->
 		__newindex:(k,v)=>
 			itemDef = dataDef[k]
 			if itemDef
-				@[itemDef[1]] = v
+				if @[itemDef[1]] ~= v
+					@[itemDef[1]] = v
+					emit "Scene.Dirty"
 			else
 				error "assign invalid field #{k} to data"
 		__index:(k)=>

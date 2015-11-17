@@ -17,7 +17,7 @@ Class
 		@items = nil
 		@itemDefs = nil
 		@dirty = false
-		@currentScene = "Scene/Test.scene"
+		@_currentScene = nil
 		@game = "Test"
 		@origin = oVec2 60+(width-250)/2,height/2
 		@scale = 1
@@ -64,46 +64,48 @@ Class
 				control = Control!
 				@[name\sub(1,1)\lower!..name\sub(2,-1)] = control
 				@addChild control
+			sleep!
+			ScenePanel = require "Control.Item.ScenePanel"
+			@addChild ScenePanel!
 
-			panelWidth = 10+110*4
-			panelHeight = height*0.6
-			setupPanel = (name)->
-				realName = name\sub(1,1)\lower!..name\sub(2,-1)
-				if not @[realName]
-					Panel = require "Control.Item."..name
-					panel = Panel {
-						x:width/2
-						y:height/2
-						width:panelWidth
-						height:panelHeight
-					}
-					panel.visible = false
-					@[realName] = panel
-					@addChild panel
-			@gslot "Scene.ViewSprite",-> setupPanel "SpritePanel"
-			@gslot "Scene.ViewModel",-> setupPanel "ModelPanel"
-			@gslot "Scene.ViewBody",-> setupPanel "BodyPanel"
-			@gslot "Scene.ViewEffect",-> setupPanel "EffectPanel"
-			@gslot "Scene.ViewLayer",->
-				with SelectionPanel items:{"Layer","World"}
-					\slots "Selected",(item)->
-						emit "Scene.LayerSelected",item
+		panelWidth = 10+110*4
+		panelHeight = height*0.6
+		setupPanel = (name)->
+			realName = name\sub(1,1)\lower!..name\sub(2,-1)
+			if not @[realName]
+				Panel = require "Control.Item."..name
+				panel = Panel {
+					x:width/2
+					y:height/2
+					width:panelWidth
+					height:panelHeight
+				}
+				panel.visible = false
+				@[realName] = panel
+				@addChild panel
+		@gslot "Scene.ViewSprite",-> setupPanel "SpritePanel"
+		@gslot "Scene.ViewModel",-> setupPanel "ModelPanel"
+		@gslot "Scene.ViewBody",-> setupPanel "BodyPanel"
+		@gslot "Scene.ViewEffect",-> setupPanel "EffectPanel"
+		@gslot "Scene.ViewLayer",->
+			with SelectionPanel items:{"Layer","World"}
+				\slots "Selected",(item)->
+					emit "Scene.LayerSelected",item
 
-			@gslot "Scene.ViewArea.Move",(delta)->
-				return unless @items
-				@items.Camera.position -= delta/@viewArea.scaleNode.scaleX
-			@gslot "Scene.ViewArea.MoveTo",(pos)->
-				return unless @items
-				posX = -(pos.x-@origin.x)+width/2
-				posY = -(pos.y-@origin.y)+height/2
-				@items.Camera\perform oPos 0.5,posX,posY,oEase.OutQuad
+		@gslot "Scene.ViewArea.Move",(delta)->
+			return unless @items
+			@items.Camera.position -= delta/@viewArea.scaleNode.scaleX
+		@gslot "Scene.ViewArea.MoveTo",(pos)->
+			return unless @items
+			posX = -(pos.x-@origin.x)+width/2
+			posY = -(pos.y-@origin.y)+height/2
+			@items.Camera\perform oPos 0.5,posX,posY,oEase.OutQuad
 
-			if not oContent\exist @gameFullPath..@currentScene
-				@sceneData = with Model.PlatformWorld!
-					.camera = Model.Camera!
-					.ui = Model.UILayer!
-				@save!
-			@load @currentScene
+		if not oContent\exist @gameFullPath.."Scene/Test.scene"
+			@sceneData = with Model.PlatformWorld!
+				.camera = Model.Camera!
+				.ui = Model.UILayer!
+			@save!
 
 		@gslot "Editor.ItemChooser",(args)->
 			handler = args[#args]
@@ -150,6 +152,8 @@ Class
 		@gslot "Scene.ViewPanel.Select",(itemData)-> @currentData = itemData
 		@gslot "Scene.ViewArea.ScaleTo",(scale)-> editor.scale = scale
 		@gslot "Scene.ViewArea.Scale",(scale)-> editor.scale = scale
+
+		@gslot "Scene.LoadScene",(sceneFile)-> @currentScene = sceneFile
 
 	updateSprites: => emit "Scene.LoadSprite",@graphicFolder
 	updateModels: => emit "Scene.LoadModel",@graphicFolder
@@ -294,8 +298,9 @@ Class
 		sceneName = if parentData.typeName == "UILayer"
 				"UI.scene"
 			else
-				@currentScene\match("[^\\/]*$")
+				@currentScene\match "[^\\/]*$"
 		Reference.addSceneItemRef sceneName,newData
+		emit "Scene.Dirty"
 		index
 
 	removeData: (itemData,parentData)=>
@@ -310,7 +315,7 @@ Class
 		sceneName = if parentData.typeName == "UILayer"
 				"UI.scene"
 			else
-				@currentScene\match("[^\\/]*$")
+				@currentScene\match "[^\\/]*$"
 		switch itemData.typeName
 			when "Layer","World"
 				if itemData.children
@@ -328,23 +333,118 @@ Class
 		parentData.children = false if #parentData.children == 0
 		editor.items[itemData.name] = nil
 		Reference.removeSceneItemRef sceneName,itemData
+		emit "Scene.Dirty"
 		index
 
+	moveDataUp:(itemData,parentData)=>
+		index = 1
+		for i,v in ipairs parentData.children
+			if itemData == v
+				index = i
+				break
+		if index > 1
+			parentData.children[index] = parentData.children[index-1]
+			parentData.children[index-1] = itemData
+			parent = @getItem parentData
+			if parentData.typeName == "PlatformWorld"
+				parent\swapLayer index,index-1
+			else
+				parent.children\exchange index,index-1
+			emit "Scene.Dirty"
+		index
+
+	moveDataDown: (itemData,parentData)=>
+		index = #parentData.children
+		for i,v in ipairs parentData.children
+			if itemData == v
+				index = i
+				break
+		if index < #parentData.children
+			parentData.children[index] = parentData.children[index+1]
+			parentData.children[index+1] = itemData
+			parent = @getItem parentData
+			if parentData.typeName == "PlatformWorld"
+				parent\swapLayer index,index+1
+			else
+				parent.children\exchange index,index+1
+			emit "Scene.Dirty"
+		index
+
+	moveDataTop: (itemData,parentData)=>
+		index = 1
+		for i,v in ipairs parentData.children
+			if itemData == v
+				index = i
+				break
+		tmpIndex = index
+		if index > 1
+			table.remove parentData.children,index
+			table.insert parentData.children,1,itemData
+			parent = @getItem parentData
+			if parentData.typeName == "PlatformWorld"
+				prev = index-1
+				while prev >= 1
+					parent\swapLayer index,prev
+					prev -= 1
+					index -= 1
+			else
+				prev = index-1
+				while prev >= 1
+					parent.children\exchange index,prev
+					prev -= 1
+					index -= 1
+			emit "Scene.Dirty"
+		tmpIndex
+
+	moveDataBottom: (itemData,parentData)=>
+		count = #parentData.children
+		index = count
+		for i,v in ipairs parentData.children
+			if itemData == v
+				index = i
+				break
+		tmpIndex = index
+		if index < count
+			table.remove parentData.children,index
+			table.insert parentData.children,itemData
+			parent = editor\getItem parentData
+			if parentData.typeName == "PlatformWorld"
+				nextIndex = index+1
+				while nextIndex <= count
+					parent\swapLayer index,nextIndex
+					nextIndex += 1
+					index += 1
+			else
+				nextIndex = index+1
+				while nextIndex <= count
+					parent.children\exchange index,nextIndex
+					nextIndex += 1
+					index += 1
+			emit "Scene.Dirty"
+		tmpIndex
+
 	save: =>
+		return unless @sceneData
 		ui = @sceneData.ui
 		@sceneData.ui = false
 		Model.dumpData @sceneData,@gameFullPath..@currentScene
 		Model.dumpData ui,@sceneFullPath.."UI.scene"
 		@sceneData.ui = ui
 
-	load: (sceneFile)=>
-		@currentScene = sceneFile
-		@sceneData = Model.loadData @gameFullPath..@currentScene
-		@sceneData.ui = Model.loadData @sceneFullPath.."UI.scene"
-		parentNode = @viewArea.scaleNode
-		if #parentNode.children == 2
-			parentNode\removeChild parentNode.children[2]
-		effectFilename = editor.gameFullPath..editor.graphicFolder.."list.effect"
-		oCache.Effect\load effectFilename if oContent\exist effectFilename
-		parentNode\addChild @sceneData!
-		emit "Scene.DataLoaded",@sceneData
+	currentScene: property => @_currentScene,
+		(sceneFile)=>
+			@_currentScene = sceneFile
+			parentNode = @viewArea.scaleNode
+			if #parentNode.children == 2
+				parentNode\removeChild parentNode.children[2]
+			if sceneFile
+				@sceneData = Model.loadData @gameFullPath..sceneFile
+				@sceneData.ui = Model.loadData @sceneFullPath.."UI.scene"
+				effectFilename = editor.gameFullPath..editor.graphicFolder.."list.effect"
+				oCache.Effect\load effectFilename if oContent\exist effectFilename
+				parentNode\addChild @sceneData!
+			else
+				@sceneData = nil
+				@items = nil
+				@itemDefs = nil
+			emit "Scene.DataLoaded",@sceneData

@@ -299,6 +299,7 @@ Class
 			@_isCheckMode = value
 			@clearSelection! unless value
 			@modeBtn.color = ccColor3(value and 0xff0088 or 0x00ffff)
+			@modeBtn.face.cascadeOpacity = not value
 			show = (index)-> CCSequence {
 				CCDelay 0.1*index
 				CCShow!

@@ -108,7 +108,6 @@ routine = nil
 update = ()->
 	return if updating
 	visitResource = (path)->
-		return unless oContent\exist path
 		files = oContent\getEntries path,false
 		sleep!
 		for file in *files
@@ -124,8 +123,8 @@ update = ()->
 		downRefMap = {}
 		upRefMap = {}
 		sceneRefMap = {}
-		resPath = editor.gameFullPath\gsub("[\\/]*$","")
-		visitResource resPath
+		resPath = editor.gameFullPath\gsub "[\\/]*$",""
+		visitResource resPath if oContent\exist resPath
 		updating = false
 		sleep 0.1
 		collectgarbage!

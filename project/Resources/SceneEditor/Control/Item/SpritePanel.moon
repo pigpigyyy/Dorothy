@@ -473,6 +473,7 @@ Class
 		return if isSelecting == @_isSelecting
 		@_isSelecting = isSelecting
 		@modeBtn.color = ccColor3(isSelecting and 0xff0088 or 0x00ffff)
+		@modeBtn.face.cascadeOpacity = not isSelecting
 		show = (index)-> CCSequence {
 			CCDelay 0.1*index
 			CCShow!

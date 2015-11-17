@@ -101,6 +101,8 @@ Class
 			emit "Scene.ViewPanel.Fold",editor.currentData
 
 		@editBtn\slots "Tapped",->
+			ScenePanel = require "Control.Item.ScenePanel"
+			editor\addChild ScenePanel!
 			editor\save!
 
 		itemChoosed = (itemData)->
@@ -153,9 +155,10 @@ Class
 		return if visible == button.enabled
 		button.enabled = visible
 		if visible
-			button.visible = true
-			button.scaleX = 0
-			button.scaleY = 0
+			if not button.visible
+				button.visible = true
+				button.scaleX = 0
+				button.scaleY = 0
 			button\perform oScale 0.3,1,1,oEase.OutBack
 		else
 			button\perform CCSequence {

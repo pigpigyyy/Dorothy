@@ -1,5 +1,5 @@
 <!-- params: X, Y, Width, Height, FontSize, Text -->
-<ButtonBase X="{ x }" Y="{ y }" Width="{ width }" Height="{ height }">
+<ButtonBase X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }">
 	<Import Module="View.Control.Basic.ButtonBase"/>
 	<Import Module="View.Shape.SolidRect"/>
 	<Import Module="View.Shape.LineRect"/>
