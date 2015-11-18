@@ -100,10 +100,37 @@ Class
 		@foldBtn\slots "Tapped",->
 			emit "Scene.ViewPanel.Fold",editor.currentData
 
+		@editBtn.dirty = false
 		@editBtn\slots "Tapped",->
-			ScenePanel = require "Control.Item.ScenePanel"
-			editor\addChild ScenePanel!
-			editor\save!
+			if not @editBtn.dirty
+				ScenePanel = require "Control.Item.ScenePanel"
+				editor\addChild ScenePanel!
+			else
+				editor\save!
+				emit "Scene.Dirty",false
+		@gslot "Scene.Dirty",(dirty)->
+			if @editBtn.dirty ~= dirty
+				@editBtn.dirty = dirty
+				if dirty
+					@editBtn.color = ccColor3 0xff0088
+					@editBtn.text = "Save"
+					if not @undoBtn.visible
+						@undoBtn.enabled = true
+						@undoBtn.visible = true
+						@undoBtn.scaleX = 0
+						@undoBtn.scaleY = 0
+						@undoBtn\perform oScale 0.3,1,1,oEase.OutBack
+				else
+					@editBtn.color = ccColor3 0x00ffff
+					@editBtn.text = "Edit"
+					if @undoBtn.visible
+						@undoBtn.enabled = false
+						@undoBtn\perform CCSequence {
+							oScale 0.3,0,0,oEase.InBack
+							CCHide!
+						}
+
+		@undoBtn.visible = false
 
 		itemChoosed = (itemData)->
 			emit "Scene.ViewPanel.FoldState",

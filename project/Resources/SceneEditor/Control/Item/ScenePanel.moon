@@ -2,12 +2,9 @@ Dorothy!
 Class = unpack require "class"
 ScenePanelView = require "View.Control.Item.ScenePanel"
 MessageBox = require "Control.Basic.MessageBox"
+InputBox = require "Control.Basic.InputBox"
 Button = require "Control.Basic.Button"
 
--- [signals]
--- "Selected",(spriteStr)->
--- "Hide",->
--- [params]
 local ScenePanel
 ScenePanel = Class
 	__partial: =>
@@ -70,11 +67,7 @@ ScenePanel = Class
 						if folder ~= "." and folder ~= ".."
 							visitResource path.."/"..folder
 				-- create title for scene
-				currentItem = if editor.currentScene
-					editor.currentScene\match("([^\\/]*)%.[^%.\\/]*$")
-				else
-					nil
-				yStart = @createTitle "Choose  Scene",currentItem,yStart
+				yStart = @createTitle "Choose  Scene",editor.scene,yStart
 				-- get scene files
 				scenePath = editor.sceneFullPath\gsub "[\\/]*$",""
 				visitResource scenePath if oContent\exist scenePath
@@ -85,8 +78,36 @@ ScenePanel = Class
 					x = xStart+10+((i-1)%itemNum)*(itemWidth+10)
 					y = yStart-itemHeight/2-10-math.floor((i-1)/itemNum)*60
 					@createItem sceneName,x,y,itemWidth,itemHeight,->
-						editor.currentScene = sceneFile
+						editor.currentSceneFile = sceneFile
 						@hide!
+				i = #sceneFiles
+				x = xStart+10+(i%itemNum)*(itemWidth+10)
+				y = yStart-itemHeight/2-10-math.floor(i/itemNum)*60
+				button = @createItem "<NEW>",x,y,itemWidth,itemHeight,->
+					with InputBox text:"New Scene Name"
+						\slots "Inputed",(name)->
+							return unless name
+							if name == "" or name\match("[\\/|:*?<>\"%.]") or oContent\exist(editor.sceneFolder..name..".scene")
+								MessageBox text:"Invalid Name!",okOnly:true
+								return
+							editor\newScene name
+							@hide!
+				button.color = ccColor3 0x80ff00
+				if editor.scene
+					x = xStart+10+((i+1)%itemNum)*(itemWidth+10)
+					y = yStart-itemHeight/2-10-math.floor((i+1)/itemNum)*60
+					button = @createItem "<DEL>",x,y,itemWidth,itemHeight,->
+						with MessageBox text:"Delete Scene\n"..editor.scene
+							\slots "OK",(result)->
+								return unless result
+								MessageBox(text:"Confirm This\nDeletion")\slots "OK",(result)->
+									return unless result
+									editor\deleteCurrentScene!
+									@hide!
+									thread ->
+										sleep 0.3
+										editor\addChild ScenePanel!
+					button.color = ccColor3 0xff0080
 				yStart = y - itemHeight/2
 			-- function to get game folders
 			games = {}
@@ -109,19 +130,48 @@ ScenePanel = Class
 				@createItem game,x,y,itemWidth,itemHeight,->
 					editor.game = game
 					@hide!
-					editor\addChild ScenePanel!
+					thread ->
+						sleep 0.3
+						editor\addChild ScenePanel!
+			i = #games
+			x = xStart+10+(i%itemNum)*(itemWidth+10)
+			y = yStart-itemHeight/2-10-math.floor(i/itemNum)*60
+			button = @createItem "<NEW>",x,y,itemWidth,itemHeight,->
+				with InputBox text:"New Game Name"
+					\slots "Inputed",(name)->
+						return unless name
+						if name == "" or name\match("[\\/|:*?<>\"%.]") or oContent\exist(editor.gamesFullPath..name)
+							MessageBox text:"Invalid Name!",okOnly:true
+							return
+						editor.game = name
+						@hide!
+			button.color = ccColor3 0x80ff00
+			if editor.game
+				x = xStart+10+((i+1)%itemNum)*(itemWidth+10)
+				y = yStart-itemHeight/2-10-math.floor((i+1)/itemNum)*60
+				button = @createItem "<DEL>",x,y,itemWidth,itemHeight,->
+					with MessageBox text:"Delete Game\n"..editor.scene
+						\slots "OK",(result)->
+							return unless result
+							MessageBox(text:"Confirm This\nDeletion")\slots "OK",(result)->
+								return unless result
+								editor\deleteCurrentGame!
+								@hide!
+								thread ->
+									sleep 0.3
+									editor\addChild ScenePanel!
+				button.color = ccColor3 0xff0080
 			yStart = y - itemHeight/2
 			@scrollArea.viewSize = CCSize width,height-yStart+10
 
 	createTitle: (title,currentItem,yStart)=>
 		y = yStart-20
-		title = with CCLabelTTF "Choose  Scene","Arial",24
+		title = with CCLabelTTF title,"Arial",24
 			.texture.antiAlias = false
 			.color = ccColor3 0x00ffff
-			.anchor = oVec2 0.5,1
-			.position = oVec2 @panel.width/2,y
 			.opacity = 0
 			\runAction oOpacity 0.3,0.5
+		title.position = oVec2 @panel.width/2,y-title.height/2
 		@menu\addChild title
 		yStart = y-title.height-(currentItem and -10 or 20)
 		if currentItem
@@ -130,10 +180,10 @@ ScenePanel = Class
 			title = with CCLabelTTF text,"Arial",16
 				.texture.antiAlias = false
 				.color = ccColor3 0x00ffff
-				.anchor = oVec2 0.5,1
 				.position = oVec2 @panel.width/2,y
 				.opacity = 0
 				\runAction oOpacity 0.3,0.5
+			title.position = oVec2 @panel.width/2,y-title.height/2
 			@menu\addChild title
 			yStart = y-title.height-10
 		yStart
@@ -141,17 +191,18 @@ ScenePanel = Class
 	createItem: (name,x,y,width,height,callback)=>
 		name = #name > 10 and name\sub(1,7).."..." or name
 		button = with Button {
-			x:x
-			y:y
-			width:width
-			height:height
-			fontSize:16
-			text:name
+				x:x
+				y:y
+				width:width
+				height:height
+				fontSize:16
+				text:name
 			}
 			.opacity = 0
 			\runAction oOpacity 0.2,1
 			\slots "Tapped",callback
 		@menu\addChild button
+		button
 
 	show: =>
 		@perform CCSequence {

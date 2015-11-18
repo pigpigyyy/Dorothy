@@ -17,7 +17,8 @@ Class
 		@items = nil
 		@itemDefs = nil
 		@dirty = false
-		@_currentScene = nil
+		@_sceneName = nil
+		@_currentSceneFile = nil
 		@origin = oVec2 60+(width-250)/2,height/2
 		@scale = 1
 
@@ -148,8 +149,6 @@ Class
 		@gslot "Scene.ViewArea.ScaleTo",(scale)-> editor.scale = scale
 		@gslot "Scene.ViewArea.Scale",(scale)-> editor.scale = scale
 
-		@gslot "Scene.LoadScene",(sceneFile)-> @currentScene = sceneFile
-
 	updateSprites: => emit "Scene.LoadSprite",@graphicFolder
 	updateModels: => emit "Scene.LoadModel",@graphicFolder
 	updateBodies: => emit "Scene.LoadBody",@physicsFolder
@@ -173,15 +172,9 @@ Class
 				if @_bodyEditor
 					@bodyEditor.input = @gameFullPath
 					@bodyEditor.output = @gameFullPath
-				-- test codes below
-				if not oContent\exist @gameFullPath.."Scene/Test.scene"
-					@sceneData = with Model.PlatformWorld!
-						.camera = Model.Camera!
-						.ui = Model.UILayer!
-					@save!
 			else
 				@_gameFullPath = nil
-			@currentScene = nil
+			@currentSceneFile = nil
 			oCache\clear!
 			Reference.update!
 
@@ -195,6 +188,7 @@ Class
 	logicFullPath: property => @_gameFullPath.."Logic/"
 	sceneFolder: property => "Scene/"
 	sceneFullPath: property => @_gameFullPath.."Scene/"
+	uiFileFullPath: property => @sceneFullPath.."UI.scene"
 
 	actionEditor: property =>
 		if not @_actionEditor
@@ -305,9 +299,9 @@ Class
 		sceneName = if parentData.typeName == "UILayer"
 				"UI.scene"
 			else
-				@currentScene\match "[^\\/]*$"
+				@scene..".scene"
 		Reference.addSceneItemRef sceneName,newData
-		emit "Scene.Dirty"
+		emit "Scene.Dirty",true
 		index
 
 	removeData: (itemData,parentData)=>
@@ -322,7 +316,7 @@ Class
 		sceneName = if parentData.typeName == "UILayer"
 				"UI.scene"
 			else
-				@currentScene\match "[^\\/]*$"
+				@scene..".scene"
 		switch itemData.typeName
 			when "Layer","World"
 				if itemData.children
@@ -340,7 +334,7 @@ Class
 		parentData.children = false if #parentData.children == 0
 		editor.items[itemData.name] = nil
 		Reference.removeSceneItemRef sceneName,itemData
-		emit "Scene.Dirty"
+		emit "Scene.Dirty",true
 		index
 
 	moveDataUp:(itemData,parentData)=>
@@ -357,7 +351,7 @@ Class
 				parent\swapLayer index,index-1
 			else
 				parent.children\exchange index,index-1
-			emit "Scene.Dirty"
+			emit "Scene.Dirty",true
 		index
 
 	moveDataDown: (itemData,parentData)=>
@@ -374,7 +368,7 @@ Class
 				parent\swapLayer index,index+1
 			else
 				parent.children\exchange index,index+1
-			emit "Scene.Dirty"
+			emit "Scene.Dirty",true
 		index
 
 	moveDataTop: (itemData,parentData)=>
@@ -400,7 +394,7 @@ Class
 					parent.children\exchange index,prev
 					prev -= 1
 					index -= 1
-			emit "Scene.Dirty"
+			emit "Scene.Dirty",true
 		tmpIndex
 
 	moveDataBottom: (itemData,parentData)=>
@@ -427,25 +421,70 @@ Class
 					parent.children\exchange index,nextIndex
 					nextIndex += 1
 					index += 1
-			emit "Scene.Dirty"
+			emit "Scene.Dirty",true
 		tmpIndex
 
 	save: =>
 		return unless @sceneData
 		ui = @sceneData.ui
 		@sceneData.ui = false
-		Model.dumpData @sceneData,@gameFullPath..@currentScene
-		Model.dumpData ui,@sceneFullPath.."UI.scene"
+		Model.dumpData @sceneData,@gameFullPath..@currentSceneFile
+		Model.dumpData ui,@uiFileFullPath
 		@sceneData.ui = ui
 
-	currentScene: property => @_currentScene,
+	scene: property => @_sceneName,
+		(value)=>
+			@currentSceneFile = if value
+				editor.sceneFolder..value..".scene"
+			else
+				nil
+
+	currentSceneFile: property => @_currentSceneFile,
 		(sceneFile)=>
-			@_currentScene = sceneFile
+			@_currentSceneFile = sceneFile
 			if sceneFile
+				@_sceneName = sceneFile\match "([^\\/]*)%.[^%.\\/]*$"
 				@sceneData = Model.loadData @gameFullPath..sceneFile
-				@sceneData.ui = Model.loadData @sceneFullPath.."UI.scene"
+				@sceneData.ui = Model.loadData @uiFileFullPath
 			else
 				@sceneData = nil
 				@items = nil
 				@itemDefs = nil
+				@_sceneName = nil
 			emit "Scene.DataLoaded",@sceneData
+
+	newScene: (sceneName)=>
+		sceneFile = editor.sceneFolder..sceneName..".scene"
+		return if oContent\exist sceneFile
+		@sceneData = with Model.PlatformWorld!
+			.camera = Model.Camera!
+			.ui = if oContent\exist @uiFileFullPath
+					Model.loadData @uiFileFullPath
+				else
+					Model.UILayer!
+		@_sceneName = sceneFile\match "([^\\/]*)%.[^%.\\/]*$"
+		@_currentSceneFile = sceneFile
+		@save!
+		emit "Scene.DataLoaded",@sceneData
+
+	deleteCurrentScene: =>
+		return unless @currentSceneFile
+		oContent\remove @currentSceneFile
+		Reference.removeSceneRef @currentSceneFile,@sceneData
+		@currentSceneFile = nil
+
+	deleteCurrentGame: =>
+		return unless @game
+		visitResource = (path)->
+			return unless oContent\exist path
+			files = oContent\getEntries path,false
+			for file in *files
+				filename = path..file
+				oContent\remove filename
+			folders = oContent\getEntries path,true
+			for folder in *folders
+				if folder ~= "." and folder ~= ".."
+					visitResource path..folder.."/"
+			oContent\remove path
+		visitResource @gameFullPath
+		@game = nil

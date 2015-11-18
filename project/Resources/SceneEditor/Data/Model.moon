@@ -89,7 +89,8 @@ DataCreater = (dataDef)->
 			if itemDef
 				if @[itemDef[1]] ~= v
 					@[itemDef[1]] = v
-					emit "Scene.Dirty"
+					if k ~= "ui"
+						emit "Scene.Dirty",true
 			else
 				error "assign invalid field #{k} to data"
 		__index:(k)=>

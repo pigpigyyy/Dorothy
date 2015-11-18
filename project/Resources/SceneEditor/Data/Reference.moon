@@ -38,6 +38,16 @@ addSceneRef = (filename)->
 				addChildren childData
 	addChildren data
 
+removeSceneRef = (filename,data)->
+	sceneName = filename\match "[^\\/]*$"
+	data = Model.loadData filename unless data
+	removeChildren = (parentData)->
+		if parentData.children
+			for childData in *parentData.children
+				removeSceneItemRef sceneName,childData
+				removeChildren childData
+	removeChildren data
+
 updateItemRef = (filename)->
 	extension = filename\match "%.([^%.\\/]*)$"
 	extension = extension\lower! if extension
@@ -201,4 +211,6 @@ removeRef = (item)->
 	:updateSceneRef
 	:addSceneItemRef
 	:removeSceneItemRef
+	:addSceneRef
+	:removeSceneRef
 }
