@@ -198,6 +198,7 @@ local function oEditMenu()
 	node:addChild(paint)
 	items.Circle.face:addChild(node)
 
+
 	-- polygon button --
 	paint = oLine(
 	{

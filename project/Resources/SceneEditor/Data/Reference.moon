@@ -106,7 +106,7 @@ updateItemRef = (filename)->
 
 routine = nil
 update = ()->
-	return if updating
+	return if updating or not editor.game
 	visitResource = (path)->
 		files = oContent\getEntries path,false
 		sleep!

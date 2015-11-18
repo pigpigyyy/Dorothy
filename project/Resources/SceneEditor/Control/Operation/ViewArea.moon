@@ -130,3 +130,12 @@ Class
 							emit "Scene.ViewArea.MoveTo",editor.origin-pos
 		@gslot "Scene.ViewPanel.Pick",itemChoosed
 		@gslot "Scene.ViewPanel.Select",itemChoosed
+
+		@gslot "Scene.DataLoaded",(sceneData)->
+			scaleNode = @scaleNode
+			if #scaleNode.children == 2
+				scaleNode\removeChild scaleNode.children[2]
+			if sceneData
+				effectFilename = editor.gameFullPath..editor.graphicFolder.."list.effect"
+				oCache.Effect\load effectFilename if oContent\exist effectFilename
+				scaleNode\addChild sceneData!

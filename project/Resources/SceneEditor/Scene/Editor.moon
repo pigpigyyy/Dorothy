@@ -9,8 +9,8 @@ Class
 	__partial: => EditorView!
 	__init: =>
 		{:width,:height} = CCDirector.winSize
-		@_gameName = ""
-		@_gameFullPath = ""
+		@_gameName = nil
+		@_gameFullPath = nil
 		@_actionEditor = nil
 		@_bodyEditor = nil
 		@_effectEditor = nil
@@ -18,7 +18,6 @@ Class
 		@itemDefs = nil
 		@dirty = false
 		@_currentScene = nil
-		@game = "Test"
 		@origin = oVec2 60+(width-250)/2,height/2
 		@scale = 1
 
@@ -71,6 +70,7 @@ Class
 		panelWidth = 10+110*4
 		panelHeight = height*0.6
 		setupPanel = (name)->
+			return unless @game
 			realName = name\sub(1,1)\lower!..name\sub(2,-1)
 			if not @[realName]
 				Panel = require "Control.Item."..name
@@ -88,6 +88,7 @@ Class
 		@gslot "Scene.ViewBody",-> setupPanel "BodyPanel"
 		@gslot "Scene.ViewEffect",-> setupPanel "EffectPanel"
 		@gslot "Scene.ViewLayer",->
+			return unless @game
 			with SelectionPanel items:{"Layer","World"}
 				\slots "Selected",(item)->
 					emit "Scene.LayerSelected",item
@@ -100,12 +101,6 @@ Class
 			posX = -(pos.x-@origin.x)+width/2
 			posY = -(pos.y-@origin.y)+height/2
 			@items.Camera\perform oPos 0.5,posX,posY,oEase.OutQuad
-
-		if not oContent\exist @gameFullPath.."Scene/Test.scene"
-			@sceneData = with Model.PlatformWorld!
-				.camera = Model.Camera!
-				.ui = Model.UILayer!
-			@save!
 
 		@gslot "Editor.ItemChooser",(args)->
 			handler = args[#args]
@@ -162,23 +157,35 @@ Class
 
 	game: property => @_gameName,
 		(name)=>
-			oContent\removeSearchPath oContent.writablePath..@_gameName
+			oContent\removeSearchPath @_gameFullPath if @_gameFullPath
 			@_gameName = name
-			@_gameFullPath = oContent.writablePath..name.."/"
-			oContent\addSearchPath @_gameFullPath
-			oContent\mkdir @_gameFullPath unless oContent\exist @_gameFullPath
-			oContent\mkdir @graphicFullPath unless oContent\exist @graphicFullPath
-			oContent\mkdir @physicsFullPath unless oContent\exist @physicsFullPath
-			oContent\mkdir @logicFullPath unless oContent\exist @logicFullPath
-			oContent\mkdir @sceneFullPath unless oContent\exist @sceneFullPath
-			if @_actionEditor
-				@actionEditor.input = @gameFullPath
-				@actionEditor.output = @gameFullPath
-			if @_bodyEditor
-				@bodyEditor.input = @gameFullPath
-				@bodyEditor.output = @gameFullPath
+			if name
+				@_gameFullPath = @gamesFullPath..name.."/"
+				oContent\addSearchPath @_gameFullPath
+				oContent\mkdir @_gameFullPath unless oContent\exist @_gameFullPath
+				oContent\mkdir @graphicFullPath unless oContent\exist @graphicFullPath
+				oContent\mkdir @physicsFullPath unless oContent\exist @physicsFullPath
+				oContent\mkdir @logicFullPath unless oContent\exist @logicFullPath
+				oContent\mkdir @sceneFullPath unless oContent\exist @sceneFullPath
+				if @_actionEditor
+					@actionEditor.input = @gameFullPath
+					@actionEditor.output = @gameFullPath
+				if @_bodyEditor
+					@bodyEditor.input = @gameFullPath
+					@bodyEditor.output = @gameFullPath
+				-- test codes below
+				if not oContent\exist @gameFullPath.."Scene/Test.scene"
+					@sceneData = with Model.PlatformWorld!
+						.camera = Model.Camera!
+						.ui = Model.UILayer!
+					@save!
+			else
+				@_gameFullPath = nil
+			@currentScene = nil
+			oCache\clear!
 			Reference.update!
 
+	gamesFullPath: property => oContent.writablePath.."Game/"
 	gameFullPath: property => @_gameFullPath
 	graphicFolder: property => "Graphic/"
 	graphicFullPath: property => @_gameFullPath.."Graphic/"
@@ -434,15 +441,9 @@ Class
 	currentScene: property => @_currentScene,
 		(sceneFile)=>
 			@_currentScene = sceneFile
-			parentNode = @viewArea.scaleNode
-			if #parentNode.children == 2
-				parentNode\removeChild parentNode.children[2]
 			if sceneFile
 				@sceneData = Model.loadData @gameFullPath..sceneFile
 				@sceneData.ui = Model.loadData @sceneFullPath.."UI.scene"
-				effectFilename = editor.gameFullPath..editor.graphicFolder.."list.effect"
-				oCache.Effect\load effectFilename if oContent\exist effectFilename
-				parentNode\addChild @sceneData!
 			else
 				@sceneData = nil
 				@items = nil
