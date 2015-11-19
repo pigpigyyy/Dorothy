@@ -1,3 +1,4 @@
+<!-- no params -->
 <OperationPanel X="{ @R-10-90 }" Y="{ @T-10-(@H-30)*350/(600-30)/2 }" Width="180" Height="{ (@H-30)*350/(600-30) }">
 	<Import Module="Control.Operation.OperationPanel"/>
 </OperationPanel>

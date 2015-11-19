@@ -2,6 +2,9 @@ Dorothy!
 Class,property = unpack require "class"
 ViewItemView = require "View.Control.Operation.ViewItem"
 
+-- [no signals]
+-- [params]
+-- width, height, items
 VisibleChecker = Class
 	__partial: (args)=> ViewItemView args
 	__init: (args)=>
@@ -33,7 +36,8 @@ VisibleChecker = Class
 				@cascadeOpacity = true
 				@borderBold\runAction @fade
 
--- params:
+-- [no signals]
+-- [params]
 -- x, y, width, height, text
 Class
 	__partial: (args)=> ViewItemView args

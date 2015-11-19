@@ -2,6 +2,9 @@ Dorothy!
 Class,property = unpack require "class"
 OperationPanelView = require "View.Control.Operation.OperationPanel"
 
+-- [no signals]
+-- [params]
+-- x, y, width, height
 Class
 	__partial: (args)=> OperationPanelView args
 	__init: (args)=>

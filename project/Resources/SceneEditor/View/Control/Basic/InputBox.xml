@@ -3,8 +3,8 @@
 	Color="0x0" Opacity="0"
 	SwallowTouches="True" TouchEnabled="True"
 	TouchPriority="{ editor.levelInputBox }">
-	<Import Module="Control.Basic.TextField"/>
 	<Import Module="Control.Basic.CircleButton"/>
+	<Import Module="Control.Basic.TextBox"/>
 
 	<DrawNode Name="box" X="{ $X }" Y="{ $Y }" Ref="True">
 		<Polygon FillColor="0xe5100000" BorderWidth="0.5" BorderColor="0x88ffafaf">
@@ -16,31 +16,9 @@
 
 		<LabelTTF Name="title" Text="{ text }" FontName="Arial" FontSize="24" X="0" Y="76" Color="0x00ffff" AntiAlias="False"/>
 
-		<DrawNode Name="frame">
-			<Polygon FillColor="0x0" BorderWidth="0.5" BorderColor="0xff00ffff">
-				<Vec2 X="-120" Y="-18"/>
-				<Vec2 X="120" Y="-18"/>
-				<Vec2 X="120" Y="18"/>
-				<Vec2 X="-120" Y="18"/>
-			</Polygon>
-		</DrawNode>
-		<TextField Name="textField" X="0" Y="-9" FontSize="16" Limit="15" Ref="True">
-			<Slot Name="InputDetach" Args="item">
-				item.opacity = 0.3
-				frame.opacity = 0.3
-				return true
-			</Slot>
-		</TextField>
-
 		<Menu Name="activateArea" Width="240" Height="50" SwallowTouches="True"
 			TouchPriority="{ editor.levelInputBox-1 }" Ref="True">
-			<MenuItem X="{ $X }" Y="{ $Y }" Width="240" Height="50">
-				<Slot Name="Tapped">
-					textField:attachWithIME()
-					textField.opacity = 1
-					frame.opacity = 1
-				</Slot>
-			</MenuItem>
+			<TextBox Name="textBox" X="{ $X }" Y="{ $Y }" Width="240" Height="30" FontSize="16" Limit="15" Ref="True"/>
 		</Menu>
 
 		<Menu Name="opMenu" Y="-76" Width="130" Height="60" SwallowTouches="True"

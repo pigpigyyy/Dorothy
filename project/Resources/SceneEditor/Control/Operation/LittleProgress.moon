@@ -1,6 +1,9 @@
 Class,property = unpack require "class"
 LittleProgressView = require "View.Control.Operation.LittleProgress"
 
+-- [no signals]
+-- [params]
+-- x, y
 Class
 	__partial: (args)=>
 		LittleProgressView args

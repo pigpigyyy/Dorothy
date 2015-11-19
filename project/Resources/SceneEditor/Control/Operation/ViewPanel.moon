@@ -4,6 +4,9 @@ ViewPanelView = require "View.Control.Operation.ViewPanel"
 ViewItem = require "Control.Operation.ViewItem"
 Model = require "Data.Model"
 
+-- [no signals]
+-- [params]
+-- width, height
 Class
 	__partial: (args)=> ViewPanelView args
 	__init: (args)=>
@@ -205,7 +208,7 @@ Class
 		traverseData = (itemData,x,y,parentData)->
 			if itemData == sceneData
 				addItem x,y,"Scene",itemData
-				extra = 2 + if itemData.ui.children
+				extra = 2 + if itemData.ui.children and itemData.children
 					#itemData.ui.children
 				else
 					0

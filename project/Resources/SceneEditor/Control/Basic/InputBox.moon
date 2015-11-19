@@ -15,13 +15,13 @@ InputBoxView = require "View.Control.Basic.InputBox"
 Class
 	__partial: (args)=> InputBoxView args
 	__init: =>
-		@textField\attachWithIME!
-		@textField\slots "TextChanged", ->
-			if @textField.text ~= ""
-				@inputed @textField.text
+		@textBox\attachWithIME!
+		@textBox\slots "TextChanged", ->
+			if @textBox.text ~= ""
+				@inputed @textBox.text
 
 		@okBtn\slots "Tapped", ->
-			@inputed @textField.text
+			@inputed @textBox.text
 
 		@cancelBtn\slots "Tapped", ->
 			@inputed nil

@@ -1,0 +1,28 @@
+<!-- params: X, Y, Width, Height -->
+<LayerColor X="{ @X }" Y="{ @Y }"
+	TouchPriority="{ editor.levelItemPanel }"
+	Color="0x0" Opacity="0"
+	SwallowTouches="True" TouchEnabled="True">
+	<Import Module="Control.Basic.ScrollArea"/>
+	<Import Module="View.Shape.LineRect"/>
+	<Import Module="View.Shape.SolidRect"/>
+	<Import Module="View.Control.Basic.CircleButton"/>
+
+	<Node Name="panel" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" Ref="True">
+		<SolidRect Width="{ width }" Height="{ height }" Color="0xee100000"/>
+		<ScrollArea Name="scrollArea" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelItemPanel-2 }" Ref="True">
+			<Item Name="view">
+				<Menu Name="menu" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" TouchPriority="{ editor.levelItemPanel-1 }" Ref="True"/>
+			</Item>
+		</ScrollArea>
+		<LineRect X="-1" Y="-1" Width="{ width+2 }" Height="{ height+2 }" Color="0x88ffafaf"/>
+	</Node>
+
+	<Menu Name="opMenu" X="{ @X+width/2-35 }" Y="{ @Y+height/2 }" Width="130" Height="60" TouchPriority="{ editor.levelItemPanel-3 }" Ref="True">
+		<CircleButton Name="closeBtn" X="{ $R-30 }" Y="{ $Y }" Radius="30" Text="Cancel" FontSize="16" Ref="True">
+			<DrawNode>
+				<Dot X="30" Y="30" Radius="30" Color="0x22ffffff"/>
+			</DrawNode>
+		</CircleButton>
+	</Menu>
+</LayerColor>

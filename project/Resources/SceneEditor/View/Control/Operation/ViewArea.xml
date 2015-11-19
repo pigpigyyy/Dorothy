@@ -1,3 +1,4 @@
+<!-- no params -->
 <LayerColor X="{ @X }" Y="{ @Y }" Color="0xff1a1a1a" MultiTouches="True" TouchPriority="{ editor.levelViewArea }" TouchEnabled="True">
 	<Node Name="scaleNode" X="{ editor.origin.x }" Y="{ editor.origin.y }" Ref="True">
 		<Node Name="crossNode" Ref="True">

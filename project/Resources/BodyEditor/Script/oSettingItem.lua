@@ -25,14 +25,14 @@ local oSettingItem = class(
 	__init = function(self,name,width,height, x, y, isInput, valueFormat, toggled)
 		--local halfW = width*0.5
 		local halfH = height*0.5
-		
+
 		self._isInput = isInput
 		self._valueFormat = valueFormat
 		self._toggled = toggled
 		self.anchor = oVec2(0,1)
 		self.contentSize = CCSize(width,height)
 		self.position = oVec2(x, y)
-		
+
 		local label = CCLabelTTF(name,"Arial",14)
 		label.color = ccColor3(0xffffff)
 		label.position = oVec2(10+label.contentSize.width*0.5,halfH)

@@ -67,7 +67,7 @@ ScenePanel = Class
 						if folder ~= "." and folder ~= ".."
 							visitResource path.."/"..folder
 				-- create title for scene
-				yStart = @createTitle "Choose  Scene",editor.scene,yStart
+				yStart = @createTitle "Select  Scene",editor.scene,yStart
 				-- get scene files
 				scenePath = editor.sceneFullPath\gsub "[\\/]*$",""
 				visitResource scenePath if oContent\exist scenePath
@@ -118,7 +118,7 @@ ScenePanel = Class
 					if folder ~= "." and folder ~= ".."
 						table.insert games,folder
 			-- create title for game
-			yStart = @createTitle "Choose  Game",editor.game,yStart
+			yStart = @createTitle "Select  Game",editor.game,yStart
 			-- get game folders
 			gamesPath = editor.gamesFullPath\gsub "[\\/]*$",""
 			visitResource gamesPath if oContent\exist gamesPath
@@ -150,7 +150,7 @@ ScenePanel = Class
 				x = xStart+10+((i+1)%itemNum)*(itemWidth+10)
 				y = yStart-itemHeight/2-10-math.floor((i+1)/itemNum)*60
 				button = @createItem "<DEL>",x,y,itemWidth,itemHeight,->
-					with MessageBox text:"Delete Game\n"..editor.scene
+					with MessageBox text:"Delete Game\n"..editor.game
 						\slots "OK",(result)->
 							return unless result
 							MessageBox(text:"Confirm This\nDeletion")\slots "OK",(result)->

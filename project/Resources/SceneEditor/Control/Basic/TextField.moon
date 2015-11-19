@@ -7,6 +7,7 @@ CCSequence = require "CCSequence"
 CCShow = require "CCShow"
 CCDelay = require "CCDelay"
 CCHide = require "CCHide"
+ccColor3 = require "ccColor3"
 Class = unpack require "class"
 
 -- [signals]
@@ -17,12 +18,14 @@ Class
 	__partial: (args)=>
 		CCTextFieldTTF "","Arial",args.fontSize
 	__init: (args)=>
-		{:x,:y,:fontSize,:limit} = args
+		{:x,:y,:fontSize,:limit,:placeHolder} = args
 		@anchor = oVec2 0.5,0
 		@position = oVec2 x,y
+		@placeHolder = placeHolder or ""
+		@colorPlaceHolder = ccColor3 0x00ffff
 
 		cursor = with oLine {oVec2.zero,oVec2(0,fontSize)},ccColor4 0xff00ffff
-			.visible = true
+			.visible = false
 			.positionX = @width
 		@addChild cursor
 
@@ -56,6 +59,5 @@ Class
 				.positionX = @width
 				\perform blink
 				@texture.antiAlias = false
-
 		@slots "InputInserted",inputed
 		@slots "InputDeleted",inputed

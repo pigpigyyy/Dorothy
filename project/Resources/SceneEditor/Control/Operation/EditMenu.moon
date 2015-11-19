@@ -3,6 +3,8 @@ Class,property,classfield = unpack require "class"
 EditMenuView = require "View.Control.Operation.EditMenu"
 SelectionPanel = require "Control.Basic.SelectionPanel"
 
+-- [no signals]
+-- [no params]
 Class
 	__partial: => EditMenuView!
 	__init: =>
@@ -108,6 +110,12 @@ Class
 			else
 				editor\save!
 				emit "Scene.Dirty",false
+
+		@undoBtn.visible = false
+		@undoBtn\slots "Tapped",->
+			editor.currentSceneFile = editor.currentSceneFile
+			emit "Scene.Dirty",false
+
 		@gslot "Scene.Dirty",(dirty)->
 			if @editBtn.dirty ~= dirty
 				@editBtn.dirty = dirty
@@ -129,8 +137,6 @@ Class
 							oScale 0.3,0,0,oEase.InBack
 							CCHide!
 						}
-
-		@undoBtn.visible = false
 
 		itemChoosed = (itemData)->
 			emit "Scene.ViewPanel.FoldState",

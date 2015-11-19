@@ -3,9 +3,11 @@ Class,property = unpack require "class"
 SettingPanelView = require "View.Control.Operation.SettingPanel"
 SettingItem = require "BodyEditor.Script.oSettingItem"
 
+-- [no signals]
+-- [no params]
 Class
-	__partial: (args)=> SettingPanelView args
-	__init: (args)=>
+	__partial: => SettingPanelView!
+	__init: =>
 		itemWidth = @width
 		itemHeight = 30
 		itemNames = {

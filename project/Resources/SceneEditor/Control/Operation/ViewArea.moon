@@ -2,6 +2,8 @@ Dorothy!
 Class,property = unpack require "class"
 ViewAreaView = require "View.Control.Operation.ViewArea"
 
+-- [no signals]
+-- [no params]
 Class
 	__partial: => ViewAreaView!
 	__init: =>

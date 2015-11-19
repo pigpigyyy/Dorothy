@@ -15,6 +15,8 @@ once = require "once"
 oRoutine = require "oRoutine"
 cycle = require "cycle"
 
+-- [no signals]
+-- [no params]
 ->
 	winSize = CCDirector.winSize
 	rulerWidth = 30

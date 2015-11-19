@@ -1,0 +1,29 @@
+<!-- params: X, Y, Width, Height -->
+<Panel Name="panel" X="{ @X }" Y="{ @Y }" Width="300" Height="{ @H*0.6 }">
+	<Import Module="View.Control.Basic.Panel"/>
+	<Import Module="Control.Basic.TextField"/>
+	<Import Module="Control.Basic.TextBox"/>
+
+	<Item Name="menu">
+		<LabelTTF Text="Player Group" FontName="Arial" FontSize="24" Color="0x00ffff" AntiAlias="False"/>
+		<LabelTTF Text="Users" Width="200" FontName="Arial" FontSize="24" X="{ $L }" Y="{ $T-32 }" Color="0x00ffff" AntiAlias="False"/>
+		<TextBox PlaceHolder="P1" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
+		<TextBox PlaceHolder="P2" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
+		<TextBox PlaceHolder="P3" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
+		<TextBox PlaceHolder="P4" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
+		<TextBox PlaceHolder="P5" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
+		<TextBox PlaceHolder="P6" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
+		<TextBox PlaceHolder="P7" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
+		<TextBox PlaceHolder="P8" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
+		<TextBox PlaceHolder="P9" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
+		<TextBox PlaceHolder="P10" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
+		<TextBox PlaceHolder="P11" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
+		<TextBox PlaceHolder="P12" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
+		<TextBox PlaceHolder="P12" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
+		<LabelTTF Text="Terrain" Height="30" FontName="Arial" FontSize="20" Color="0x00ffff" AntiAlias="False"/>
+		<LabelTTF Text="DetectPlayer" Height="30" FontName="Arial" FontSize="20" Color="0x00ffff" AntiAlias="False"/>
+		<LabelTTF Text="Detect" Height="30" FontName="Arial" FontSize="20" Color="0x00ffff" AntiAlias="False"/>
+		<LabelTTF Text="Hide" Height="30" FontName="Arial" FontSize="20" Color="0x00ffff" AntiAlias="False"/>
+	</Item>
+	<Script>panel.scrollArea.viewSize = CCSize(0,menu:alignItemsVertically())</Script>
+</Panel>

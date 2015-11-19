@@ -1,3 +1,4 @@
+<!-- no params -->
 <Menu X="{ @X }" Y="{ @Y }" TouchPriority="{ editor.levelEditMenu }">
 	<Import Module="Control.Basic.Button"/>
 	<Import Module="Control.Operation.LittleProgress"/>
