@@ -1,29 +1,42 @@
 <!-- params: X, Y, Width, Height -->
-<Panel Name="panel" X="{ @X }" Y="{ @Y }" Width="300" Height="{ @H*0.6 }">
+<Panel Name="panel" X="{ @X }" Y="{ @Y }" Width="200" Height="{ @H*0.6 }">
 	<Import Module="View.Control.Basic.Panel"/>
 	<Import Module="Control.Basic.TextField"/>
 	<Import Module="Control.Basic.TextBox"/>
+	<Import Module="View.Shape.LineRect"/>
 
 	<Item Name="menu">
-		<LabelTTF Text="Player Group" FontName="Arial" FontSize="24" Color="0x00ffff" AntiAlias="False"/>
-		<LabelTTF Text="Users" Width="200" FontName="Arial" FontSize="24" X="{ $L }" Y="{ $T-32 }" Color="0x00ffff" AntiAlias="False"/>
-		<TextBox PlaceHolder="P1" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
-		<TextBox PlaceHolder="P2" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
-		<TextBox PlaceHolder="P3" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
-		<TextBox PlaceHolder="P4" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
-		<TextBox PlaceHolder="P5" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
-		<TextBox PlaceHolder="P6" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
-		<TextBox PlaceHolder="P7" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
-		<TextBox PlaceHolder="P8" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
-		<TextBox PlaceHolder="P9" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
-		<TextBox PlaceHolder="P10" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
-		<TextBox PlaceHolder="P11" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
-		<TextBox PlaceHolder="P12" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
-		<TextBox PlaceHolder="P12" Width="200" Height="30" FontSize="18" Limit="10" FadeOpacity="1" HideFrame="{ true }"/>
-		<LabelTTF Text="Terrain" Height="30" FontName="Arial" FontSize="20" Color="0x00ffff" AntiAlias="False"/>
-		<LabelTTF Text="DetectPlayer" Height="30" FontName="Arial" FontSize="20" Color="0x00ffff" AntiAlias="False"/>
-		<LabelTTF Text="Detect" Height="30" FontName="Arial" FontSize="20" Color="0x00ffff" AntiAlias="False"/>
-		<LabelTTF Text="Hide" Height="30" FontName="Arial" FontSize="20" Color="0x00ffff" AntiAlias="False"/>
+		<LabelTTF Text="Player Groups" FontName="Arial" FontSize="24" Color="0x00ffff" AntiAlias="False"/>
+		<LabelTTF Text="User Define" Width="160" FontName="Arial" FontSize="20" Color="0x00ffff" AntiAlias="False"/>
+		<TextBox Name="p1" PlaceHolder="P1" Width="180" Height="30" FontSize="18" Limit="10" Ref="True"/>
+		<TextBox Name="p2" PlaceHolder="P2" Width="180" Height="30" FontSize="18" Limit="10" Ref="True"/>
+		<TextBox Name="p3" PlaceHolder="P3" Width="180" Height="30" FontSize="18" Limit="10" Ref="True"/>
+		<TextBox Name="p4" PlaceHolder="P4" Width="180" Height="30" FontSize="18" Limit="10" Ref="True"/>
+		<TextBox Name="p5" PlaceHolder="P5" Width="180" Height="30" FontSize="18" Limit="10" Ref="True"/>
+		<TextBox Name="p6" PlaceHolder="P6" Width="180" Height="30" FontSize="18" Limit="10" Ref="True"/>
+		<TextBox Name="p7" PlaceHolder="P7" Width="180" Height="30" FontSize="18" Limit="10" Ref="True"/>
+		<TextBox Name="p8" PlaceHolder="P8" Width="180" Height="30" FontSize="18" Limit="10" Ref="True"/>
+		<TextBox Name="p9" PlaceHolder="P9" Width="180" Height="30" FontSize="18" Limit="10" Ref="True"/>
+		<TextBox Name="p10" PlaceHolder="P10" Width="180" Height="30" FontSize="18" Limit="10" Ref="True"/>
+		<TextBox Name="p11" PlaceHolder="P11" Width="180" Height="30" FontSize="18" Limit="10" Ref="True"/>
+		<TextBox Name="p12" PlaceHolder="P12" Width="180" Height="30" FontSize="18" Limit="10" Ref="True"/>
+		<LabelTTF Text="Built-in" Width="160" FontName="Arial" FontSize="20" Color="0x00ffff" AntiAlias="False"/>
+		<Node Width="180" Height="30">
+			<LabelTTF Text="Terrain" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="20" Color="0x00ffff" AntiAlias="False"/>
+			<LineRect Width="180" Height="30" Color="0xff00ffff"/>
+		</Node>
+		<Node Width="180" Height="30">
+			<LabelTTF Text="DetectPlayer" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="20" Color="0x00ffff" AntiAlias="False"/>
+			<LineRect Width="180" Height="30" Color="0xff00ffff"/>
+		</Node>
+		<Node Width="180" Height="30">
+			<LabelTTF Text="Detect" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="20" Color="0x00ffff" AntiAlias="False"/>
+			<LineRect Width="180" Height="30" Color="0xff00ffff"/>
+		</Node>
+		<Node Width="180" Height="30">
+			<LabelTTF Text="Hide" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="20" Color="0x00ffff" AntiAlias="False"/>
+			<LineRect Width="180" Height="30" Color="0xff00ffff"/>
+		</Node>
 	</Item>
 	<Script>panel.scrollArea.viewSize = CCSize(0,menu:alignItemsVertically())</Script>
 </Panel>

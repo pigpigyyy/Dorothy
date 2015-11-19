@@ -122,7 +122,7 @@ Class
 								emit "Scene.ViewArea.MoveTo",editor.origin-pos
 					else
 						item = editor\getItem itemData
-						pos = item.position
+						pos = itemData.position
 						@cross.position = pos
 						@cross.transformTarget = item.parent
 						@cross\perform @fadeCross

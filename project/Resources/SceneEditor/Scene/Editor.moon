@@ -65,10 +65,8 @@ Class
 				@[name\sub(1,1)\lower!..name\sub(2,-1)] = control
 				@addChild control
 			sleep!
-			--ScenePanel = require "Control.Item.ScenePanel"
-			--@addChild ScenePanel!
-			GroupEditor = require "Control.Edit.GroupEditor"
-			@addChild GroupEditor!
+			ScenePanel = require "Control.Item.ScenePanel"
+			@addChild ScenePanel!
 
 		panelWidth = 10+110*4
 		panelHeight = height*0.6
