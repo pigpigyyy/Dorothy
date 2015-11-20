@@ -4,13 +4,12 @@ TextBoxView = require "View.Control.Basic.TextBox"
 -- [signals]
 -- "Inputed",(text)->
 -- [params]
--- x, y, width, height, fontSize
--- placeHolder = "", fadeOpacity = 0.3
--- hideFrame = false
+-- x, y, width, height, fontSize, placeHolder = ""
 Class
 	__partial: (args)=> TextBoxView args
-	__init: (args)=>
-		@textField.opacity = args.fadeOpacity or 0.3
+	__init: =>
+		@textField.opacity = 0.3
+		@textField\slots "TextChanged",(text)-> @emit "TextChanged",text
 
 	attachWithIME: => @textField\attachWithIME!
 	detachWithIME: => @textField\detachWithIME!

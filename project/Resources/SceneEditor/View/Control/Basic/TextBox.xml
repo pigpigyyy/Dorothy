@@ -1,8 +1,8 @@
-<!-- params: X, Y, Width, FontSize, Limit, FadeOpacity = 0.3, HideFrame = false -->
+<!-- params: X, Y, Width, FontSize, Limit -->
 <MenuItem X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }">
 	<Import Module="Control.Basic.TextField"/>
 
-	<DrawNode Name="frame" X="{ $X }" Y="{ $Y }" Opacity="{ fadeOpacity or 0.3 }" Visible="{ not hideFrame }">
+	<DrawNode Name="frame" X="{ $X }" Y="{ $Y }" Opacity="0.3">
 		<Polygon FillColor="0x0" BorderWidth="0.5" BorderColor="0xff00ffff">
 			<Vec2 X="{ -width/2 }" Y="{ -height/2 }"/>
 			<Vec2 X="{ width/2 }" Y="{ -height/2 }"/>
@@ -14,19 +14,13 @@
 	<Node X="{ $X }" Y="{ $Y }">
 		<TextField Name="textField" X="0" Y="{ -fontSize/2 }" FontSize="{ fontSize }" Limit="{ limit }" PlaceHolder="{ placeHolder }" Ref="True">
 			<Slot Name="InputDetach" Args="item">
-				item.opacity = fadeOpacity or 0.3
-				frame.opacity = fadeOpacity or 0.3
-				if hideFrame then
-					frame.visible = false
-				end
+				item.opacity =  0.3
+				frame.opacity = 0.3
 				return true
 			</Slot>
 			<Slot Name="InputAttach" Args="item">
 				item.opacity = 1
 				frame.opacity = 1
-				if hideFrame then
-					frame.visible = true
-				end
 				return true
 			</Slot>
 		</TextField>

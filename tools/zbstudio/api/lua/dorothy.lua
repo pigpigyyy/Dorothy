@@ -1998,14 +1998,14 @@ local Dorothy =
 				description = "[float]",
 				type = "value",
 			},
-			shedule =
+			schedule =
 			{
 				args = "(handler: function, interval: float = 0)",
 				description = " -- handler: function(deltaTime: float)\n\n args1 -- (target: CCScheduler, priority: int = 0)",
 				returns = "()",
 				type = "method",
 			},
-			unshedule =
+			unschedule =
 			{
 				args = "(handler: function)",
 				description = " args1 -- (target: CCScheduler)",
@@ -4963,7 +4963,7 @@ local Dorothy =
 				returns = "(value: float)",
 				static = true,
 				type = "method"
-			},		
+			},
 		},
 		description = "class oEase.",
 		type = "class",
@@ -5629,7 +5629,7 @@ local Dorothy =
 		parents = {"CCObject",},
 		type = "class",
 		index = index()
-	},	
+	},
 	oUnit =
 	{
 		childs =
@@ -5712,35 +5712,35 @@ local Dorothy =
 			{
 				description = "[int]",
 				type = "value"
-			},	
+			},
 			model =
 			{
 				description = "[oModel]",
 				typeName = "oModel",
 				type = "value"
-			},	
+			},
 			detectDistance =
 			{
 				description = "[float]",
 				type = "value"
-			},	
+			},
 			attackRange =
 			{
 				description = "[CCSize]",
 				typeName = "CCSize",
 				type = "value"
-			},	
+			},
 			faceRight =
 			{
 				description = "[bool]",
 				type = "value"
-			},	
+			},
 			bulletDef =
 			{
 				description = "[oBulletDef]",
 				typeName = "oBulletDef",
 				type = "value"
-			},	
+			},
 			onSurface =
 			{
 				description = "[bool][Readonly]",

@@ -30,11 +30,22 @@ Contact = (world,data)->
 
 Groups = (data)->
 	setmetatable data or {
-		[1]: "P1"
-		[oData.GroupDetect]: "Detect"
-		[oData.GroupDetectPlayer]: "DetectPlayer"
-		[oData.GroupHide]: "Hide"
-		[oData.GroupTerrain]: "Terrain"
+		[0]:"Hide" -- 0
+		"P1" -- 1
+		"P2" -- 2
+		"P3" -- 3
+		"P4" -- 4
+		"P5" -- 5
+		"P6" --  6
+		"P7" -- 7
+		"P8" -- 8
+		"P9" -- 9
+		"P10" -- 10
+		"P11" -- 11
+		"P12" -- 12
+		"DetectPlayer" -- 13
+		"Terrain" -- 14
+		"Detect" -- 15
 	}, {
 		__tostring:=>
 			str = "{"
@@ -89,7 +100,7 @@ DataCreater = (dataDef)->
 			if itemDef
 				if @[itemDef[1]] ~= v
 					@[itemDef[1]] = v
-					if k ~= "ui"
+					if k ~= "ui" and k ~= "camera"
 						emit "Scene.Dirty",true
 			else
 				error "assign invalid field #{k} to data"
@@ -172,7 +183,11 @@ Items =
 				.gravity = @gravity
 				.showDebug = @outline
 				\setIterations Simulation @simulation
-			setmetatable 
+			world.scheduler = with CCScheduler!
+				.timeScale = 0
+			CCDirector.scheduler\schedule world.scheduler
+			world\slots "Cleanup",->
+				CCDirector.scheduler\unschedule world.scheduler
 			editor.items = {Scene:world}
 			editor.itemDefs = {[world]:@}
 			world.itemData = @
@@ -261,6 +276,11 @@ Items =
 				.visible = @visible
 				\setIterations Simulation @simulation
 			layer\addChild world
+			world.scheduler = with CCScheduler!
+				.timeScale = 0
+			CCDirector.scheduler\schedule world.scheduler
+			world\slots "Cleanup",->
+				CCDirector.scheduler\unschedule world.scheduler
 			Contact world,editor.sceneData
 			editor.items[@name] = world
 			editor.itemDefs[world] = @

@@ -145,6 +145,9 @@ ScenePanel = Class
 							return
 						editor.game = name
 						@hide!
+						thread ->
+							sleep 0.3
+							editor\addChild ScenePanel!
 			button.color = ccColor3 0x80ff00
 			if editor.game
 				x = xStart+10+((i+1)%itemNum)*(itemWidth+10)

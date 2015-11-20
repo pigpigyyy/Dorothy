@@ -59,7 +59,7 @@ oEditor:slots("Cleanup",function()
 	if not oEditor.world.parent then
 		oEditor.world:cleanup()
 	end
-	CCDirector.scheduler:unshedule(oEditor.worldScheduler)
+	CCDirector.scheduler:unschedule(oEditor.worldScheduler)
 	oEditor:clearData()
 end)
 
@@ -1365,11 +1365,11 @@ oEditor:slots("Entering",function()
 			coroutine.yield()
 		until oEditor.isLoaded
 		oEditor:emit("Activated")
-		CCDirector.scheduler:shedule(oEditor.worldScheduler)
+		CCDirector.scheduler:schedule(oEditor.worldScheduler)
 	end))
 end)
 oEditor:slots("Exiting",function()
-	CCDirector.scheduler:unshedule(oEditor.worldScheduler)
+	CCDirector.scheduler:unschedule(oEditor.worldScheduler)
 end)
 
 return oEditor
