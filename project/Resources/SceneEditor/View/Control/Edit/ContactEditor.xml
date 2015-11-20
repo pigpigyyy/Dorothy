@@ -1,0 +1,79 @@
+<!-- params: X, Y, Width, Height -->
+<Panel Name="panel" X="{ @X }" Y="{ @Y }" Width="280" Height="{ @H*0.6 }">
+	<Import Module="View.Control.Basic.Panel"/>
+	<Import Module="Control.Basic.Button"/>
+
+	<Item Name="menu">
+		<Node Width="260" Height="30">
+			<LabelTTF Text="Group P1" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="24" Color="0x00ffff" AntiAlias="False"/>
+		</Node>
+		<Node Width="260" Height="30">
+			<LabelTTF Text="Should Contact With" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="24" Color="0x00ffff" AntiAlias="False"/>
+		</Node>
+		<Node Width="160" Height="40">
+			<LabelTTF Text="P1" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="18"  Color="0x00ffff" AntiAlias="False"/>
+		</Node>
+		<Button Text="true" Width="80" Height="40" FontSize="18"/>
+		<Node Width="160" Height="40">
+			<LabelTTF Text="P2" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="18"  Color="0x00ffff" AntiAlias="False"/>
+		</Node>
+		<Button Text="true" Width="80" Height="40" FontSize="18"/>
+		<Node Width="160" Height="40">
+			<LabelTTF Text="P3" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="18"  Color="0x00ffff" AntiAlias="False"/>
+		</Node>
+		<Button Text="true" Width="80" Height="40" FontSize="18"/>
+		<Node Width="160" Height="40">
+			<LabelTTF Text="P4" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="18"  Color="0x00ffff" AntiAlias="False"/>
+		</Node>
+		<Button Text="true" Width="80" Height="40" FontSize="18"/>
+		<Node Width="160" Height="40">
+			<LabelTTF Text="P5" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="18"  Color="0x00ffff" AntiAlias="False"/>
+		</Node>
+		<Button Text="true" Width="80" Height="40" FontSize="18"/>
+		<Node Width="160" Height="40">
+			<LabelTTF Text="P6" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="18"  Color="0x00ffff" AntiAlias="False"/>
+		</Node>
+		<Button Text="true" Width="80" Height="40" FontSize="18"/>
+		<Node Width="160" Height="40">
+			<LabelTTF Text="P7" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="18"  Color="0x00ffff" AntiAlias="False"/>
+		</Node>
+		<Button Text="true" Width="80" Height="40" FontSize="18"/>
+		<Node Width="160" Height="40">
+			<LabelTTF Text="P8" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="18"  Color="0x00ffff" AntiAlias="False"/>
+		</Node>
+		<Button Text="true" Width="80" Height="40" FontSize="18"/>
+		<Node Width="160" Height="40">
+			<LabelTTF Text="P9" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="18"  Color="0x00ffff" AntiAlias="False"/>
+		</Node>
+		<Button Text="true" Width="80" Height="40" FontSize="18"/>
+		<Node Width="160" Height="40">
+			<LabelTTF Text="P10" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="18"  Color="0x00ffff" AntiAlias="False"/>
+		</Node>
+		<Button Text="true" Width="80" Height="40" FontSize="18"/>
+		<Node Width="160" Height="40">
+			<LabelTTF Text="P11" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="18"  Color="0x00ffff" AntiAlias="False"/>
+		</Node>
+		<Button Text="true" Width="80" Height="40" FontSize="18"/>
+		<Node Width="160" Height="40">
+			<LabelTTF Text="P12" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="18"  Color="0x00ffff" AntiAlias="False"/>
+		</Node>
+		<Button Text="true" Width="80" Height="40" FontSize="18"/>
+		<Node Width="160" Height="40">
+			<LabelTTF Text="Terrain" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="18"  Color="0x00ffff" AntiAlias="False"/>
+		</Node>
+		<Button Text="true" Width="80" Height="40" FontSize="18"/>
+		<Node Width="160" Height="40">
+			<LabelTTF Text="DetectPlayer" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="18"  Color="0x00ffff" AntiAlias="False"/>
+		</Node>
+		<Button Text="true" Width="80" Height="40" FontSize="18"/>
+		<Node Width="160" Height="40">
+			<LabelTTF Text="Detect" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="18"  Color="0x00ffff" AntiAlias="False"/>
+		</Node>
+		<Button Text="true" Width="80" Height="40" FontSize="18"/>
+		<Node Width="160" Height="40">
+			<LabelTTF Text="Hide" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="18"  Color="0x00ffff" AntiAlias="False"/>
+		</Node>
+		<Button Text="true" Width="80" Height="40" FontSize="18"/>
+	</Item>
+	<Script>panel.scrollArea.viewSize = menu:alignItems()</Script>
+</Panel>
