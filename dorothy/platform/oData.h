@@ -9,15 +9,18 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifndef __DOROTHY_PLATFORM_ODATA_H__
 #define __DOROTHY_PLATFORM_ODATA_H__
 
+NS_DOROTHY_BEGIN
+class oWorld;
+NS_DOROTHY_END
+
 NS_DOROTHY_PLATFORM_BEGIN
 
 class oUnit;
-class oPlatformWorld;
 
 class oData
 {
 public:
-	void apply(oPlatformWorld* world);
+	void apply(oWorld* world);
 	void setRelation(int groupA, int groupB, oRelation relation);
 	oRelation getRelation(int groupA, int groupB) const;
 	oRelation getRelation(oUnit* unitA, oUnit* unitB) const;

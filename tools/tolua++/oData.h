@@ -4,6 +4,7 @@ class oData
 	tolua_readonly tolua_property__common int GroupDetectPlayer;
 	tolua_readonly tolua_property__common int GroupTerrain;
 	tolua_readonly tolua_property__common int GroupDetect;
+	void apply(oWorld* world);
 	void setRelation(int groupA, int groupB, oRelation relation);
 	oRelation getRelation(int groupA, int groupB);
 	oRelation getRelation(oUnit* unitA, oUnit* unitB);

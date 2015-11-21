@@ -281,6 +281,7 @@ Items =
 			CCDirector.scheduler\schedule world.scheduler
 			world\slots "Cleanup",->
 				CCDirector.scheduler\unschedule world.scheduler
+			oData\apply world
 			Contact world,editor.sceneData
 			editor.items[@name] = world
 			editor.itemDefs[world] = @

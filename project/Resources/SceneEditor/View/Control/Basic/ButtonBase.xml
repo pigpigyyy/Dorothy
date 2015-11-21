@@ -1,5 +1,5 @@
-<!-- params: X, Y, Width, Height -->
-<MenuItem Name="menuItem" X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }" Color="0x00ffff">
+<!-- params: X, Y, Width, Height, Tag=0 -->
+<MenuItem Name="menuItem" X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }" Color="0x00ffff" Tag="{ tag or 0 }">
 	<!-- Animations -->
 	<Action>
 		<Sequence Name="scale" Ref="True">

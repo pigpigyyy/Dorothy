@@ -488,3 +488,28 @@ Class
 			oContent\remove path
 		visitResource @gameFullPath
 		@game = nil
+
+	updateGroupName: (groupIndex,name)=>
+		@sceneData.groups[groupIndex] = name
+		emit "Scene.Dirty",true
+
+	updateContact: (groupA,groupB,shouldContact)=>
+		updated = false
+		for i,contact in ipairs @sceneData.contacts
+			group1,group2 = unpack contact
+			if (group1 == groupA and group2 == groupB) or (group1 == groupB and group2 == groupA)
+				if shouldContact
+					contact[3] = shouldContact
+				else
+					table.remove @sceneData.contacts,i
+				updated = true
+				break
+		if not updated
+			table.insert @sceneData.contacts,{groupA,groupB,shouldContact}
+		@items.Scene\setShouldContact groupA,groupB,shouldContact
+		if @sceneData.children
+			for child in @sceneData.children
+				if child.typeName == "World"
+					subWorld = @getItem child
+					subWorld\setShouldContact groupA,groupB,shouldContact
+		emit "Scene.Dirty",true

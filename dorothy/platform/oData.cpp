@@ -10,7 +10,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "platform/oPlatformDefine.h"
 #include "platform/oUnit.h"
 #include "platform/oData.h"
-#include "platform/oPlatformWorld.h"
+#include "physics/oWorld.h"
 #include "physics/oBody.h"
 
 NS_DOROTHY_PLATFORM_BEGIN
@@ -27,7 +27,7 @@ NS_DOROTHY_PLATFORM_BEGIN
 #define Terrain 14
 #define SenseAll 15
 
-void oData::apply( oPlatformWorld* world )
+void oData::apply( oWorld* world )
 {
 	for (int p = P1;p <= P12;p++)
 	{

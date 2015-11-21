@@ -21,7 +21,8 @@ Class
 		{:x,:y,:fontSize,:limit,:placeHolder} = args
 		@anchor = oVec2 0.5,0
 		@position = oVec2 x,y
-		@placeHolder = placeHolder or ""
+		@_placeHolder = placeHolder or ""
+		@placeHolder = @_placeHolder
 		@colorPlaceHolder = ccColor3 0x00ffff
 
 		cursor = with oLine {oVec2.zero,oVec2(0,fontSize)},ccColor4 0xff00ffff
@@ -37,6 +38,7 @@ Class
 		}
 
 		@slots "InputAttach", ->
+			@placeHolder = ""
 			with cursor
 				.visible = true
 				.positionX = @width
@@ -44,6 +46,7 @@ Class
 			true
 
 		@slots "InputDetach", ->
+			@placeHolder = @_placeHolder
 			with cursor
 				.visible = false
 				\stopAllActions!

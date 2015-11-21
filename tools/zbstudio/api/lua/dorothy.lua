@@ -4712,6 +4712,14 @@ local Dorothy =
 				static = true,
 				type = "value"
 			},
+			apply =
+			{
+				args = "(world: oWorld)",
+				description = "[Class Method]",
+				returns = "()",
+				static = true,
+				type = "method"
+			},
 			setRelation =
 			{
 				args = "(groupA: int,  groupB: int, relation: oRelation)",

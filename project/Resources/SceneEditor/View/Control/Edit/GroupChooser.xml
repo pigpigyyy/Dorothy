@@ -1,26 +1,8 @@
 <!-- params: X, Y, Width, Height -->
-<Panel Name="panel" X="{ @X }" Y="{ @Y }" Width="200" Height="{ @H*0.6 }">
-	<Import Module="View.Control.Basic.Panel"/>
-	<Import Module="Control.Basic.Button"/>
+<PopupPanel Name="panel" X="{ @X }" Y="{ @Y }" Width="200" Height="{ @H*0.6 }">
+	<Import Module="Control.Basic.PopupPanel"/>
 
 	<Item Name="menu">
 		<LabelTTF Text="Select  Group" FontName="Arial" FontSize="24" Color="0x00ffff" AntiAlias="False"/>
-		<Button Name="p1" Text=" " Width="180" Height="40" FontSize="16" Ref="True"/>
-		<Button Name="p2" Text=" " Width="180" Height="40" FontSize="16" Ref="True"/>
-		<Button Name="p3" Text=" " Width="180" Height="40" FontSize="16" Ref="True"/>
-		<Button Name="p4" Text=" " Width="180" Height="40" FontSize="16" Ref="True"/>
-		<Button Name="p5" Text=" " Width="180" Height="40" FontSize="16" Ref="True"/>
-		<Button Name="p6" Text=" " Width="180" Height="40" FontSize="16" Ref="True"/>
-		<Button Name="p7" Text=" " Width="180" Height="40" FontSize="16" Ref="True"/>
-		<Button Name="p8" Text=" " Width="180" Height="40" FontSize="16" Ref="True"/>
-		<Button Name="p9" Text=" " Width="180" Height="40" FontSize="16" Ref="True"/>
-		<Button Name="p10" Text=" " Width="180" Height="40" FontSize="16" Ref="True"/>
-		<Button Name="p11" Text=" " Width="180" Height="40" FontSize="16" Ref="True"/>
-		<Button Name="p12" Text=" " Width="180" Height="40" FontSize="16" Ref="True"/>
-		<Button Name="terrainBtn" Text="Terrain" Width="180" Height="40" FontSize="16" Ref="True"/>
-		<Button Name="detectPlayerBtn" Text="DetectPlayer" Width="180" Height="40" FontSize="16" Ref="True"/>
-		<Button Name="detectBtn" Text="Detect" Width="180" Height="40" FontSize="16" Ref="True"/>
-		<Button Name="hideBtn" Text="Hide" Width="180" Height="40" FontSize="16" Ref="True"/>
 	</Item>
-	<Script>panel.scrollArea.viewSize = CCSize(0,menu:alignItemsVertically())</Script>
-</Panel>
+</PopupPanel>

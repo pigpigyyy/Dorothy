@@ -794,13 +794,7 @@ static const char* _toBoolean(const char* str)
 		const oItem& parent = elementStack.top();\
 		if (!parent.name.empty())\
 		{\
-			stream << parent.name << ":addChild(" << self;\
-			if (zOrder) {\
-				stream << ',' << Val(zOrder);\
-				if (tag) stream << ',' << Val(tag);\
-			}\
-			else if (tag) stream << ",0," << Val(tag);\
-			stream << ")\n";\
+			stream << parent.name << ":addChild(" << self << ")\n";\
 			if (hasSelf && ref)\
 			{\
 				stream << firstItem << "." << self << " = " << self << "\n";\
@@ -887,6 +881,8 @@ static const char* _toBoolean(const char* str)
 	if (skewY) stream << self << ".skewY = " << Val(skewY) << '\n';\
 	if (transformTarget) stream << self << ".transformTarget = " << Val(transformTarget) << '\n';\
 	if (visible) stream << self << ".visible = " << toBoolean(visible) << '\n';\
+	if (zOrder) stream << self << ".zOrder = " << Val(zOrder) << '\n';\
+	if (tag) stream << self << ".tag = " << Val(tag) << '\n';\
 	if (width && height) stream << self << ".contentSize = CCSize(" << Val(width) << ',' << Val(height) << ")\n";\
 	else if (width && !height) stream << self << ".width = " << Val(width) << '\n';\
 	else if (!width && height) stream << self << ".height = " << Val(height) << '\n';

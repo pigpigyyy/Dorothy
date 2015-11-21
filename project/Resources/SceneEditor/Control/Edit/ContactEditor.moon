@@ -1,58 +1,69 @@
 Dorothy!
 Class = unpack require "class"
 ContactEditorView = require "View.Control.Edit.ContactEditor"
+Model = require "Data.Model"
+Button = require "Control.Basic.Button"
 
 Class
 	__partial: => ContactEditorView!
-	__init: =>
-		contentRect = CCRect.zero
-		itemRect = CCRect.zero
-		@scrollArea\slots "Scrolled",(delta)->
-			contentRect\set 0,0,@scrollArea.width,@scrollArea.height
-			@menu\eachChild (child)->
-				child.position += delta
-				{:positionX,:positionY,:width,:height} = child
-				itemRect\set positionX-width/2,positionY-height/2,width,height
-				child.visible = contentRect\intersectsRect itemRect -- reduce draw calls
-		@scrollArea\slots "ScrollStart",->
-			@menu.enabled = false
-		@scrollArea\slots "ScrollTouchEnded",->
-			@menu.enabled = true
-		@closeBtn\slots "Tapped",-> @hide!
-		@show!
+	__init: (args)=>
+		groupIndex = args.group
 
-	show: =>
-		@perform CCSequence {
-			CCShow!
-			oOpacity 0.3,0.6,oEase.OutQuad
-		}
-		@closeBtn.scaleX = 0
-		@closeBtn.scaleY = 0
-		@closeBtn\perform oScale 0.3,1,1,oEase.OutBack
-		@panel.opacity = 0
-		@panel.scaleX = 0
-		@panel.scaleY = 0
-		@panel\perform CCSequence {
-			CCSpawn {
-				oOpacity 0.3,1,oEase.OutQuad
-				oScale 0.3,1,1,oEase.OutBack
-			}
-			CCCall ->
-				@scrollArea.touchEnabled = true
-				@menu.enabled = true
-				@opMenu.enabled = true
-		}
+		sceneData = editor.sceneData
+		@labelName.text = "Group #{sceneData.groups[groupIndex]}"
+		contactData = {}
+		for i = 0,15
+			shouldContact = editor.items.Scene\getShouldContact groupIndex,i
+			contactData[i] = shouldContact
 
-	hide: =>
-		@scrollArea.touchEnabled = false
-		@menu.enabled = false
-		@opMenu.enabled = false
-		@closeBtn\perform oScale 0.3,0,0,oEase.InBack
-		@panel\perform CCSpawn {
-			oOpacity 0.3,0,oEase.OutQuad
-			oScale 0.3,0,0,oEase.InBack
-		}
-		@perform CCSequence {
-			oOpacity 0.3,0,oEase.OutQuad
-			CCCall -> @parent\removeChild @
-		}
+		for contact in *sceneData.contacts
+			groupA,groupB,shouldContact = unpack contact
+			if groupA == groupIndex
+				contactData[groupB] = shouldContact
+			elseif groupB == groupIndex
+				contactData[groupA] = shouldContact
+
+		isBuiltin = switch groupIndex
+			when oData.GroupTerrain,oData.GroupDetectPlayer,oData.GroupDetect,oData.GroupHide
+				true
+			else
+				false
+		for i = 1,12
+			@menu\addChild with CCNode!
+				.contentSize = CCSize 160,40
+				\addChild with CCLabelTTF sceneData.groups[i],"Arial",18
+					.position = oVec2 80,20
+					.color = ccColor3 0x00ffff
+					.texture.antiAlias = false
+			color = contactData[i] and 0x00ffff or 0xff0088
+			if isBuiltin
+				@menu\addChild with CCNode!
+					.contentSize = CCSize 80,40
+					\addChild with CCLabelTTF tostring(contactData[i]),"Arial",18
+						.position = oVec2 40,20
+						.color = ccColor3 color
+			else
+				button = with Button text:tostring(contactData[i]),width:80,height:40,fontSize:18
+					.color = ccColor3 color
+					\slots "Tapped", ->
+						contactData[i] = not contactData[i]
+						shouldContact = contactData[i]
+						button.text = tostring shouldContact
+						button.color = ccColor3 shouldContact and 0x00ffff or 0xff0088
+						editor\updateContact groupIndex,i,shouldContact
+				@menu\addChild button
+
+		for i in *{oData.GroupTerrain,oData.GroupDetectPlayer,oData.GroupDetect,oData.GroupHide}
+			@menu\addChild with CCNode!
+				.contentSize = CCSize 160,40
+				\addChild with CCLabelTTF sceneData.groups[i],"Arial",18
+					.position = oVec2 80,20
+					.color = ccColor3 0x00ffff
+					.texture.antiAlias = false
+			@menu\addChild with CCNode!
+				.contentSize = CCSize 80,40
+				\addChild with CCLabelTTF tostring(contactData[i]),"Arial",18
+					.position = oVec2 40,20
+					.color = ccColor3 contactData[i] and 0x00ffff or 0xff0088
+
+		@scrollArea.viewSize = @menu\alignItems!
