@@ -49,7 +49,7 @@ Class
 		items = {}
 		getPosY = genPosY()
 		editCallback = (settingItem)->
-			emit "Scene.settingPanel.edit",settingItem
+			emit "Scene.SettingPanel.Edit",settingItem
 
 		for i = 1,#itemNames
 			itemName = itemNames[i][1]
@@ -187,3 +187,12 @@ Class
 						data[item.name] == "" and "None" or data[item.name]
 
 			@viewSize = CCSize @width,contentHeight
+
+		currentItem = nil
+		@gslot "Scene.SettingPanel.Edit",(item)->
+			if not item or item.selected
+				if currentItem
+					currentItem.selected = false
+				currentItem = item
+			else
+				currentItem = nil

@@ -24,8 +24,8 @@ Class
 		@scrollArea\slots "ScrollTouchEnded",->
 			@menu.enabled = true
 		@closeBtn\slots "Tapped",-> @hide!
-		@show!
 		CCDirector.currentScene\addChild @,998
+		thread -> @show!
 
 	show: =>
 		@perform CCSequence {

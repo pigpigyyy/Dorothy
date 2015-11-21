@@ -66,7 +66,7 @@ Class
 				@addChild control
 			sleep!
 			ScenePanel = require "Control.Item.ScenePanel"
-			@addChild ScenePanel!
+			ScenePanel!
 
 		panelWidth = 10+110*4
 		panelHeight = height*0.6

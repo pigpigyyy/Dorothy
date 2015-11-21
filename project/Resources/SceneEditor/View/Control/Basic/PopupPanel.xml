@@ -2,7 +2,7 @@
 <LayerColor X="{ @X }" Y="{ @Y }"
 	TouchPriority="{ editor.levelItemPanel }"
 	Color="0x0" Opacity="0"
-	SwallowTouches="True" TouchEnabled="True">
+	SwallowTouches="True" TouchEnabled="True" Visible="False">
 	<Import Module="Control.Basic.ScrollArea"/>
 	<Import Module="View.Shape.LineRect"/>
 	<Import Module="View.Shape.SolidRect"/>

@@ -106,7 +106,7 @@ Class
 		@editBtn\slots "Tapped",->
 			if not @editBtn.dirty
 				ScenePanel = require "Control.Item.ScenePanel"
-				editor\addChild ScenePanel!
+				ScenePanel!
 			else
 				editor\save!
 				emit "Scene.Dirty",false

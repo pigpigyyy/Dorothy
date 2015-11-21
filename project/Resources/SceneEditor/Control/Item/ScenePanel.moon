@@ -26,21 +26,7 @@ ScenePanel = Class
 		ScenePanelView args
 
 	__init: =>
-		contentRect = CCRect.zero
-		itemRect = CCRect.zero
-		@scrollArea\slots "Scrolled",(delta)->
-			contentRect\set 0,0,@scrollArea.width,@scrollArea.height
-			@menu\eachChild (child)->
-				child.position += delta
-				{:positionX,:positionY,:width,:height} = child
-				itemRect\set positionX-width/2,positionY-height/2,width,height
-				child.visible = contentRect\intersectsRect itemRect -- reduce draw calls
-		@scrollArea\slots "ScrollStart",->
-			@menu.enabled = false
-		@scrollArea\slots "ScrollTouchEnded",->
-			@menu.enabled = true
-		@closeBtn\slots "Tapped",-> @hide!
-		@show!
+		@slots "Show",-> @displayItems!
 
 	displayItems: =>
 		@panel\schedule once ->
@@ -106,7 +92,7 @@ ScenePanel = Class
 									@hide!
 									thread ->
 										sleep 0.3
-										editor\addChild ScenePanel!
+										ScenePanel!
 					button.color = ccColor3 0xff0080
 				yStart = y - itemHeight/2
 			-- function to get game folders
@@ -132,7 +118,7 @@ ScenePanel = Class
 					@hide!
 					thread ->
 						sleep 0.3
-						editor\addChild ScenePanel!
+						ScenePanel!
 			i = #games
 			x = xStart+10+(i%itemNum)*(itemWidth+10)
 			y = yStart-itemHeight/2-10-math.floor(i/itemNum)*60
@@ -147,7 +133,7 @@ ScenePanel = Class
 						@hide!
 						thread ->
 							sleep 0.3
-							editor\addChild ScenePanel!
+							ScenePanel!
 			button.color = ccColor3 0x80ff00
 			if editor.game
 				x = xStart+10+((i+1)%itemNum)*(itemWidth+10)
@@ -162,7 +148,7 @@ ScenePanel = Class
 								@hide!
 								thread ->
 									sleep 0.3
-									editor\addChild ScenePanel!
+									ScenePanel!
 				button.color = ccColor3 0xff0080
 			yStart = y - itemHeight/2
 			@scrollArea.viewSize = CCSize width,height-yStart+10
@@ -208,44 +194,13 @@ ScenePanel = Class
 		button
 
 	show: =>
-		@perform CCSequence {
-			CCShow!
-			oOpacity 0.3,0.6,oEase.OutQuad
-		}
-		@closeBtn.scaleX = 0
-		@closeBtn.scaleY = 0
-		@closeBtn\perform oScale 0.3,1,1,oEase.OutBack
+		@__base.show @
 		@quitBtn.scaleX = 0
 		@quitBtn.scaleY = 0
 		@quitBtn\perform oScale 0.3,1,1,oEase.OutBack
-		@panel.opacity = 0
-		@panel.scaleX = 0
-		@panel.scaleY = 0
-		@panel\perform CCSequence {
-			CCSpawn {
-				oOpacity 0.3,1,oEase.OutQuad
-				oScale 0.3,1,1,oEase.OutBack
-			}
-			CCCall ->
-				@scrollArea.touchEnabled = true
-				@menu.enabled = true
-				@opMenu.enabled = true
-				@displayItems!
-		}
 
 	hide: =>
-		@scrollArea.touchEnabled = false
-		@menu.enabled = false
-		@opMenu.enabled = false
+		@__base.hide @
 		@quitBtn\perform oScale 0.3,0,0,oEase.InBack
-		@closeBtn\perform oScale 0.3,0,0,oEase.InBack
-		@panel\perform CCSpawn {
-			oOpacity 0.3,0,oEase.OutQuad
-			oScale 0.3,0,0,oEase.InBack
-		}
-		@perform CCSequence {
-			oOpacity 0.3,0,oEase.OutQuad
-			CCCall -> @parent\removeChild @
-		}
 
 ScenePanel

@@ -1,6 +1,6 @@
 <!-- params: X, Y, Width, Height -->
-<Panel X="{ x }" Y="{ y }" Width="{ width }" Height="{ height }">
-	<Import Module="View.Control.Basic.Panel"/>
+<PopupPanel X="{ x }" Y="{ y }" Width="{ width }" Height="{ height }">
+	<Import Module="Control.Basic.PopupPanel"/>
 	<Import Module="Control.Basic.CircleButton"/>
 
 	<Item Name="opMenu">
@@ -10,4 +10,4 @@
 			</DrawNode>
 		</CircleButton>
 	</Item>
-</Panel>
+</PopupPanel>

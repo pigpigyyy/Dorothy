@@ -78,20 +78,30 @@ local function __newindex(self,name,value)
 	end
 end
 
+local __base = {function(self) return getmetatable(self.__class) end}
+
 local function class(arg1,arg2)
 	local typeDef = arg2 or arg1
-	local base = arg2 and arg1 or {
+	local base
+	if arg2 then
+		base = arg1
+	else
+		base = {
+			__index = __index,
+			__newindex = __newindex,
+			__call = __call,
+			__base = __base,
+			__class = {function() return base end},
+		}
+	end
+	local cls
+	cls = {
 		__index = __index,
 		__newindex = __newindex,
 		__call = __call,
+		__base = __base,
+		__class = {function() return cls end},
 	}
-	base.__class = {function() return base end}
-	local cls = {
-		__index = __index,
-		__newindex = __newindex,
-		__call = __call,
-	}
-	cls.__class = {function() return cls end}
 	for k,v in pairs(typeDef) do
 		if type(v) == "table" and v.__classfield then
 			rawset(base,k,v)
