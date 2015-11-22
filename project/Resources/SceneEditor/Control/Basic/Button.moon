@@ -9,7 +9,7 @@ Class
 	__partial: (args)=> ButtonView args
 	__init: (args)=>
 		@_text = args.text
-		@label.texture.antiAlias = false
+		@label.texture.antiAlias = false if @label
 
 	text: property => @_text,
 		(value)=>

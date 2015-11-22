@@ -21,6 +21,8 @@ Class
 		@_currentSceneFile = nil
 		@origin = oVec2 60+(width-250)/2,height/2
 		@scale = 1
+		@xFix = false
+		@yFix = false
 
 		_G.editor = @
 		builtin.editor = @
@@ -39,15 +41,16 @@ Class
 
 		level = (level)-> CCMenu.DefaultHandlerPriority-level*10
 		@levelViewArea = level 5
-		@levelHRuler = level 6
-		@levelVRuler = level 6
-		@levelEditMenu = level 7
-		@levelOperationPanel = level 7
-		@levelItemPanel = level 8
-		@levelClipEditor = level 9
-		@levelMessageBox = level 10
-		@levelInputBox = level 10
-		@levelSelectionPanel = level 10
+		@levelEditControl = level 6
+		@levelHRuler = level 7
+		@levelVRuler = level 7
+		@levelEditMenu = level 8
+		@levelOperationPanel = level 8
+		@levelItemPanel = level 9
+		@levelClipEditor = level 10
+		@levelMessageBox = level 11
+		@levelInputBox = level 11
+		@levelSelectionPanel = level 11
 
 		@schedule once ->
 			controlNames = {

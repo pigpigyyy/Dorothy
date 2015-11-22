@@ -116,6 +116,35 @@ Class
 			editor.currentSceneFile = editor.currentSceneFile
 			emit "Scene.Dirty",false
 
+		@xFixBtn.visible = false
+		@xFixBtn\slots "Tapped",(button)->
+			editor.xFix = not editor.xFix
+			button.color = ccColor3 editor.xFix and 0x8800ff or 0x00ffff
+			emit "Scene.FixChange"
+		@yFixBtn.visible = false
+		@yFixBtn\slots "Tapped",(button)->
+			editor.yFix = not editor.yFix
+			button.color = ccColor3 editor.yFix and 0x8800ff or 0x00ffff
+			emit "Scene.FixChange"
+
+		@gslot "Scene.ShowFix",(value)->
+			editor.xFix = false
+			editor.yFix = false
+			if value
+				@xFixBtn.visible = true
+				@xFixBtn.color = ccColor3 0x00ffff
+				@xFixBtn.scaleX = 0
+				@xFixBtn.scaleY = 0
+				@xFixBtn\perform oScale 0.5,1,1,oEase.OutBack
+				@yFixBtn.visible = true
+				@yFixBtn.color = ccColor3 0x00ffff
+				@yFixBtn.scaleX = 0
+				@yFixBtn.scaleY = 0
+				@yFixBtn\perform oScale 0.5,1,1,oEase.OutBack
+			else
+				@xFixBtn.visible = false
+				@yFixBtn.visible = false
+
 		@gslot "Scene.Dirty",(dirty)->
 			if @editBtn.dirty ~= dirty
 				@editBtn.dirty = dirty

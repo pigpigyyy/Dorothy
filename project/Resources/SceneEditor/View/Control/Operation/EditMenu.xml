@@ -13,6 +13,58 @@
 	<Button Name="delBtn" X="35" Y="{ $T-395 }" Width="50" Height="50" Text="Delete" FontSize="16" Ref="True"/>
 	<Button Name="zoomBtn" X="{ $R-225 }" Y="{ $T-35 }" Width="50" Height="50" Text="100%" FontSize="16" Ref="True"/>
 	<Button Name="originBtn" X="{ $R-285 }" Y="{ $T-35 }" Width="50" Height="50" Text="Origin" FontSize="16" Ref="True"/>
+	<Button Name="yFixBtn" X="{ $R-345 }" Y="{ $T-35 }" Width="50" Height="50" Ref="True">
+		<Item Name="face">
+			<Node X="{ $X }" Y="{ $Y }" ScaleX="1.2" ScaleY="1.2" Angle="-90" PassColor="False">
+				<Line Color="0xaaff0080">
+					<Vec2 X="-15" Y="0"/>
+					<Vec2 X="15" Y="0"/>
+					<Vec2 X="10" Y="5"/>
+					<Vec2 X="15" Y="0"/>
+					<Vec2 X="10" Y="-5"/>
+					<Vec2 X="15" Y="0"/>
+					<Vec2 X="-15" Y="0"/>
+				</Line>
+			</Node>
+			<Line Color="0xaaffffff">
+				<Vec2 X="25" Y="25"/>
+				<Vec2 X="20" Y="30"/>
+				<Vec2 X="25" Y="25"/>
+				<Vec2 X="30" Y="30"/>
+				<Vec2 X="25" Y="25"/>
+				<Vec2 X="30" Y="20"/>
+				<Vec2 X="25" Y="25"/>
+				<Vec2 X="20" Y="20"/>
+				<Vec2 X="25" Y="25"/>
+			</Line>
+		</Item>
+	</Button>
+	<Button Name="xFixBtn" X="{ $R-405 }" Y="{ $T-35 }" Width="50" Height="50" Ref="True">
+		<Item Name="face">
+			<Node X="{ $X }" Y="{ $Y }" ScaleX="1.2" ScaleY="1.2" PassColor="False">
+				<Line Color="0xaaff0080">
+					<Vec2 X="-15" Y="0"/>
+					<Vec2 X="15" Y="0"/>
+					<Vec2 X="10" Y="5"/>
+					<Vec2 X="15" Y="0"/>
+					<Vec2 X="10" Y="-5"/>
+					<Vec2 X="15" Y="0"/>
+					<Vec2 X="-15" Y="0"/>
+				</Line>
+			</Node>
+			<Line Color="0xaaffffff">
+				<Vec2 X="25" Y="25"/>
+				<Vec2 X="20" Y="30"/>
+				<Vec2 X="25" Y="25"/>
+				<Vec2 X="30" Y="30"/>
+				<Vec2 X="25" Y="25"/>
+				<Vec2 X="30" Y="20"/>
+				<Vec2 X="25" Y="25"/>
+				<Vec2 X="20" Y="20"/>
+				<Vec2 X="25" Y="25"/>
+			</Line>
+		</Item>
+	</Button>
 	<Button Name="upBtn" X="{ $R-225 }" Y="{ $T-95 }" Width="50" Height="50" Text="Up" FontSize="16" Ref="True"/>
 	<LittleProgress Name="progressUp" X="{ $R-225-25-14.5 }" Y="{ $T-95 }" Ref="True"/>
 	<Button Name="downBtn" X="{ $R-225 }" Y="{ $T-155 }" Width="50" Height="50" Text="Down" FontSize="16" Ref="True"/>
