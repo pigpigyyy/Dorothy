@@ -75,9 +75,9 @@ Class
 		panelHeight = height*0.6
 		setupPanel = (name)->
 			return unless @game
-			realName = name\sub(1,1)\lower!..name\sub(2,-1)
-			if not @[realName]
-				Panel = require "Control.Item."..name
+			panelName = name\sub(1,1)\lower!..name\sub(2,-1).."Panel"
+			if not @[panelName]
+				Panel = require "Control.Item."..name.."Panel"
 				panel = Panel {
 					x:width/2
 					y:height/2
@@ -85,12 +85,16 @@ Class
 					height:panelHeight
 				}
 				panel.visible = false
-				@[realName] = panel
+				@[panelName] = panel
 				@addChild panel
-		@gslot "Scene.ViewSprite",-> setupPanel "SpritePanel"
-		@gslot "Scene.ViewModel",-> setupPanel "ModelPanel"
-		@gslot "Scene.ViewBody",-> setupPanel "BodyPanel"
-		@gslot "Scene.ViewEffect",-> setupPanel "EffectPanel"
+				eventName = "Scene.#{name}Selected"
+				panel.notifyEditor = (file)-> emit eventName,file
+				panel\slots "Selected",panel.notifyEditor
+
+		@gslot "Scene.ViewSprite",-> setupPanel "Sprite"
+		@gslot "Scene.ViewModel",-> setupPanel "Model"
+		@gslot "Scene.ViewBody",-> setupPanel "Body"
+		@gslot "Scene.ViewEffect",-> setupPanel "Effect"
 		@gslot "Scene.ViewLayer",->
 			return unless @game
 			with SelectionPanel items:{"Layer","World"}
@@ -112,18 +116,22 @@ Class
 			chooseItem = (itemType)->
 				switch itemType
 					when "Sprite"
+						setupPanel "Sprite"
 						@spritePanel\slots "Selected",nil
 						@spritePanel.parent\removeChild @spritePanel,false
 						@spritePanel\slots("Hide")\set ->
 							@spritePanel.parent\removeChild @spritePanel,false
 							@addChild @spritePanel,1
+							@spritePanel\slots("Selected")\set @spritePanel.notifyEditor
 						handler @spritePanel
 					when "Model"
+						setupPanel "Model"
 						@modelPanel\slots "Selected",nil
 						@modelPanel.parent\removeChild @modelPanel,false
 						@modelPanel\slots("Hide")\set ->
 							@modelPanel.parent\removeChild @modelPanel,false
 							@addChild @modelPanel,1
+							@modelPanel\slots("Selected")\set @modelPanel.notifyEditor
 						handler @modelPanel
 					else
 						handler nil

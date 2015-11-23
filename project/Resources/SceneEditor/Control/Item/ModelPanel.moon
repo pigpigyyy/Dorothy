@@ -46,8 +46,6 @@ Class
 			elseif item.isLoaded
 				@hide!
 				@emit "Selected",file
-				if @parent == editor
-					emit "Scene.ModelSelected",file
 			else
 				MessageBox text:"Broken Model\nWith Data Error\nOr Missing Image",okOnly:true
 
@@ -232,8 +230,7 @@ Class
 			else
 				MessageBox text:"Broken Model\nWith Data Error\nOr Missing Image",okOnly:true
 
-		@closeBtn\slots "Tapped",->
-			@hide!
+		@closeBtn\slots "Tapped",-> @hide!
 
 		@addBtn.visible = false
 		@delBtn.visible = false
