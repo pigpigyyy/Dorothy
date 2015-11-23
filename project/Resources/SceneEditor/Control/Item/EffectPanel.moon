@@ -46,7 +46,7 @@ Class
 				@_selectedItem = if item.checked then effectName else nil
 			elseif item.isLoaded
 				@hide!
-				emit "Scene.EffectSelected",effectName
+				@emit "Selected",effectName
 			else
 				MessageBox text:"Broken Effect\nWith Data Error",okOnly:true
 

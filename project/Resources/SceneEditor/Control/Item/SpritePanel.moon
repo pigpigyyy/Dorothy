@@ -50,8 +50,6 @@ Class
 		@selected = (item)->
 			@hide!
 			@emit "Selected",item.spriteStr
-			if @parent == editor
-				emit "Scene.SpriteSelected",item.spriteStr
 
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero

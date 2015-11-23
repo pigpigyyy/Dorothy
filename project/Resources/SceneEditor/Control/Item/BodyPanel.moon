@@ -45,7 +45,7 @@ Class
 				@_selectedItem = if item.checked then file else nil
 			elseif item.isLoaded
 				@hide!
-				emit "Scene.BodySelected",file
+				@emit "Selected",file
 			else
 				MessageBox text:"Broken Body\nWith Data Error",okOnly:true
 
