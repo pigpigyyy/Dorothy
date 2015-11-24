@@ -135,9 +135,14 @@ Class
 
 		@gslot "Scene.DataLoaded",(sceneData)->
 			scaleNode = @scaleNode
+			lastScene = nil
 			if #scaleNode.children == 2
-				scaleNode\removeChild scaleNode.children[2]
+				lastScene = scaleNode.children[2]
+				scaleNode\removeChild lastScene
 			if sceneData
 				effectFilename = editor.gameFullPath..editor.graphicFolder.."list.effect"
 				oCache.Effect\load effectFilename if oContent\exist effectFilename
-				scaleNode\addChild sceneData!
+				newScene = sceneData!
+				scaleNode\addChild newScene
+				if lastScene
+					newScene.camera.position = lastScene.camera.position

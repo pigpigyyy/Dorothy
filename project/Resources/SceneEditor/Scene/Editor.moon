@@ -103,6 +103,7 @@ Class
 
 		@gslot "Scene.ViewArea.Move",(delta)->
 			return unless @items
+			pos = @items.Camera.position + delta/@viewArea.scaleNode.scaleX
 			@items.Camera.position -= delta/@viewArea.scaleNode.scaleX
 		@gslot "Scene.ViewArea.MoveTo",(pos)->
 			return unless @items
