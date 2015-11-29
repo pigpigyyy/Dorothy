@@ -17,6 +17,7 @@ Class = unpack require "class"
 Class
 	__partial: (args)=>
 		CCTextFieldTTF "","Arial",args.fontSize
+
 	__init: (args)=>
 		{:x,:y,:fontSize,:limit,:placeHolder} = args
 		@anchor = oVec2 0.5,0

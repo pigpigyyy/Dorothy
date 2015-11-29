@@ -18,8 +18,7 @@ ScrollAreaView = require "View.Control.Basic.ScrollArea"
 -- paddingX,paddingY,
 -- viewWidth,viewHeight,
 -- touchPriority
-Class
-	__partial: (args)=> ScrollAreaView args
+Class ScrollAreaView,
 	__init: (args)=>
 		{:width,:height,:touchPriority} = args
 		touchPriority = touchPriority or CCMenu.DefaultHandlerPriority

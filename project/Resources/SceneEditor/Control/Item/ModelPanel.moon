@@ -31,8 +31,7 @@ Reference = require "Data.Reference"
 -- "Hide",->
 -- [params]
 -- x, y, width, height
-Class
-	__partial: (args)=> ModelPanelView args
+Class ModelPanelView,
 	__init: =>
 		@_isCheckMode = false
 		@modelItems = {}

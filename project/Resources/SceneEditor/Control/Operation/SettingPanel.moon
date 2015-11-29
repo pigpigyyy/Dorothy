@@ -5,8 +5,7 @@ SettingItem = require "BodyEditor.Script.oSettingItem"
 
 -- [no signals]
 -- [no params]
-Class
-	__partial: => SettingPanelView!
+Class SettingPanelView,
 	__init: =>
 		itemWidth = @width
 		itemHeight = 30

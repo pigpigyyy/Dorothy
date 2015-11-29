@@ -3,8 +3,7 @@ NumberDotView = require "View.Control.Item.NumberDot"
 
 -- [params]
 -- x, y, number
-Class
-	__partial: (args)=> NumberDotView args
+Class NumberDotView,
 	__init: (args)=>
 		@_number = args.number
 		@label.texture.antiAlias = false

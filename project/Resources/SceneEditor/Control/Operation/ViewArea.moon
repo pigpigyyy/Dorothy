@@ -4,8 +4,7 @@ ViewAreaView = require "View.Control.Operation.ViewArea"
 
 -- [no signals]
 -- [no params]
-Class
-	__partial: => ViewAreaView!
+Class ViewAreaView,
 	__init: =>
 		{:width,:height} = @
 

@@ -26,8 +26,7 @@ MessageBox = require "Control.Basic.MessageBox"
 Packer = require "Data.Packer"
 Reference = require "Data.Reference"
 
-Class
-	__partial: (args)=> ClipEditorView args
+Class ClipEditorView,
 	__init: (args)=>
 		{:images} = args
 		@addImages images

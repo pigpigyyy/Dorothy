@@ -5,8 +5,7 @@ SelectionPanel = require "Control.Basic.SelectionPanel"
 Model = require "Data.Model"
 Reference = require "Data.Reference"
 
-Class
-	__partial: => EditorView!
+Class EditorView,
 	__init: =>
 		{:width,:height} = CCDirector.winSize
 		@_gameName = nil

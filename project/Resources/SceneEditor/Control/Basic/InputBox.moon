@@ -12,8 +12,7 @@ InputBoxView = require "View.Control.Basic.InputBox"
 -- "Inputed",(text)->
 -- [params]
 -- text
-Class
-	__partial: (args)=> InputBoxView args
+Class InputBoxView,
 	__init: =>
 		@textBox\attachWithIME!
 		@textBox\slots "TextChanged", ->

@@ -2,8 +2,7 @@ Dorothy!
 Class = unpack require "class"
 GroupEditorView = require "View.Control.Edit.GroupEditor"
 
-Class
-	__partial: => GroupEditorView!
+Class GroupEditorView,
 	__init: =>
 		sceneData = editor.sceneData
 		for i  = 1,12

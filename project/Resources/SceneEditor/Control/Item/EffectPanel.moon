@@ -32,8 +32,7 @@ Reference = require "Data.Reference"
 -- "Hide",->
 -- [params]
 -- x, y, width, height
-Class
-	__partial: (args)=> EffectPanelView args
+Class EffectPanelView,
 	__init: =>
 		@_isCheckMode = false
 		@effectItems = {}

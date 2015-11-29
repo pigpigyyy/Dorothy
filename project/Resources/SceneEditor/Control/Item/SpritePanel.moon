@@ -35,8 +35,7 @@ Reference = require "Data.Reference"
 -- "Hide",->
 -- [params]
 -- x, y, width, height
-Class
-	__partial: (args)=> SpritePanelView args
+Class SpritePanelView,
 	__init: =>
 		@_isSelecting = false
 		@selectedImages = {}

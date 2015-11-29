@@ -5,8 +5,7 @@ TextBoxView = require "View.Control.Basic.TextBox"
 -- "Inputed",(text)->
 -- [params]
 -- x, y, width, height, fontSize, placeHolder = ""
-Class
-	__partial: (args)=> TextBoxView args
+Class TextBoxView,
 	__init: =>
 		@textField.opacity = 0.3
 		@textField\slots "TextChanged",(text)-> @emit "TextChanged",text

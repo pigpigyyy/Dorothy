@@ -4,8 +4,7 @@ ContactEditorView = require "View.Control.Edit.ContactEditor"
 Model = require "Data.Model"
 Button = require "Control.Basic.Button"
 
-Class
-	__partial: => ContactEditorView!
+Class ContactEditorView,
 	__init: (args)=>
 		groupIndex = args.group
 

@@ -4,10 +4,7 @@ LittleProgressView = require "View.Control.Operation.LittleProgress"
 -- [no signals]
 -- [params]
 -- x, y
-Class
-	__partial: (args)=>
-		LittleProgressView args
-
+Class LittleProgressView,
 	play: =>
 		@bar.scaleY = 0
 		@bar\perform @scale

@@ -6,8 +6,7 @@ TabButtonView = require "View.Control.Item.TabButton"
 -- "Expanded",(expanded)->
 -- [params]
 -- x, y, width, height, text, file
-Class
-	__partial: (args)=> TabButtonView args
+Class TabButtonView,
 	__init: (args)=>
 		@file = args.file
 		@_expanded = false

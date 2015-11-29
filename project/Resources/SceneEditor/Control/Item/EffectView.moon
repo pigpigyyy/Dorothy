@@ -16,8 +16,7 @@ oStar = require "EffectEditor.Script.oStar"
 -- "Selected",(viewItem)->
 -- [params]
 -- x, y, width, height, file
-Class
-	__partial: (args)=> ItemViewView args
+Class ItemViewView,
 	__init: (args)=>
 		{:width,:height,:file,:effect} = args
 		@_checked = false

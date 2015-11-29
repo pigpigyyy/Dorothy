@@ -22,8 +22,7 @@ oStar = require "EffectEditor.Script.oStar"
 -- "Selected",(viewItem)->
 -- [params]
 -- x, y, width, height, file
-Class
-	__partial: (args)=> SpriteViewView args
+Class SpriteViewView,
 	__init: (args)=>
 		{:width,:height,:file} = args
 		@_loaded = false

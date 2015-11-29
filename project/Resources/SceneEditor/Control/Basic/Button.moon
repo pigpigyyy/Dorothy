@@ -5,8 +5,7 @@ ButtonView = require "View.Control.Basic.Button"
 -- "Tapped",(button)->
 -- [params]
 -- x, y, width, height, fontSize, text
-Class
-	__partial: (args)=> ButtonView args
+Class ButtonView,
 	__init: (args)=>
 		@_text = args.text
 		@label.texture.antiAlias = false if @label

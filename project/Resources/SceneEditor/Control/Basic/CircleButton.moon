@@ -5,11 +5,11 @@ CircleButtonView = require "View.Control.Basic.CircleButton"
 -- "Tapped",(button)->
 -- [params]
 -- x, y, radius, fontSize, text
-Class
-	__partial: (args)=> CircleButtonView args
+Class CircleButtonView,
 	__init: (args)=>
 		@_text = args.text
 		@label.texture.antiAlias = false
+
 	text: property => @_text,
 		(value)=>
 			@_text = value

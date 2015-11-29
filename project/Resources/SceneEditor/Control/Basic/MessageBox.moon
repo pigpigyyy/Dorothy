@@ -13,8 +13,7 @@ MessageBoxView = require "View.Control.Basic.MessageBox"
 -- "OK",(result)->
 -- [params]
 -- text, okOnly
-Class
-	__partial: (args)=> MessageBoxView args
+Class MessageBoxView,
 	__init: (args)=>
 		@okBtn\slots "Tapped", ->
 			@clicked true

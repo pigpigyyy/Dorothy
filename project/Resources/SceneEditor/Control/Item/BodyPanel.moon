@@ -31,8 +31,7 @@ Reference = require "Data.Reference"
 -- "Hide",->
 -- [params]
 -- x, y, width, height
-Class
-	__partial: (args)=> BodyPanelView args
+Class BodyPanelView,
 	__init: =>
 		@_isCheckMode = false
 		@bodyItems = {}

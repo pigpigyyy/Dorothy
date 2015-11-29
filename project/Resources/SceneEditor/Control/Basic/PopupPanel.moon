@@ -7,8 +7,7 @@ PopupPanelView = require "View.Control.Basic.PopupPanel"
 -- "Hide",->
 -- [params]
 -- width,height
-Class
-	__partial: (args)=> PopupPanelView args
+Class PopupPanelView,
 	__init: =>
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero

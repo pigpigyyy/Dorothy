@@ -5,8 +5,7 @@ SelectionPanel = require "Control.Basic.SelectionPanel"
 
 -- [no signals]
 -- [no params]
-Class
-	__partial: => EditMenuView!
+Class EditMenuView,
 	__init: =>
 		buttonNames = {
 			"sprite"

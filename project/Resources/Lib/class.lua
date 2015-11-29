@@ -23,10 +23,14 @@ Inherit a lua table class:
 
 Inherit a C++ instance class:
 	MyClass = class({
-		__partial = function(self)
+		__partial = function(self,args)
 			return CCNode()
 		end,
 	})
+or
+	MyClass = class(function(args)
+		return CCNode()
+	end, { ... })
 
 Use number index to add field to a class
 is deprecated. Example below may cause error.
@@ -38,11 +42,11 @@ is deprecated. Example below may cause error.
 	})
 ]]
 
-local function __call(self,...)
+local function __call(cls,...)
 	local inst = {}
-	setmetatable(inst,self)
-	if self.__partial then
-		local c_inst = self.__partial(inst,...)
+	setmetatable(inst,cls)
+	if cls.__partial then
+		local c_inst = cls.__partial(inst,...)
 		if c_inst then
 			local peer = tolua.getpeer(c_inst)
 			if peer then
@@ -51,7 +55,7 @@ local function __call(self,...)
 				end
 				local peerClass = getmetatable(peer)
 				if peerClass then
-					local baseClass = getmetatable(self)
+					local baseClass = getmetatable(cls)
 					setmetatable(baseClass,peerClass) -- chaining partial class`s metatable
 				end
 			end
@@ -60,8 +64,8 @@ local function __call(self,...)
 		end
 		inst = c_inst or inst
 	end
-	if self.__init then
-		self.__init(inst,...)
+	if cls.__init then
+		cls.__init(inst,...)
 	end
 	return inst
 end
@@ -121,9 +125,20 @@ local function assignReadOnly()
 end
 
 local function class(arg1,arg2)
-	local typeDef = arg2 or arg1
+	local partial
+	if type(arg1) == "function" then
+		partial = function(self,...)
+			return arg1(...)
+		end
+	end
+	local typeDef
+	if partial then
+		typeDef = arg2
+	else
+		typeDef = arg2 or arg1
+	end
 	local base
-	if arg2 then
+	if arg2 and not partial then
 		base = arg1
 	else
 		base = {
@@ -152,6 +167,9 @@ local function class(arg1,arg2)
 		__newindex = __newindex,
 		__call = __call,
 	}
+	if partial then
+		cls.__partial = partial
+	end
 	if typeDef then
 		for k,v in pairs(typeDef) do
 			if type(v) == "table" then

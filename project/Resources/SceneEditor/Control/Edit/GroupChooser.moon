@@ -4,8 +4,7 @@ GroupChooserView = require "View.Control.Edit.GroupChooser"
 ContactEditor = require "Control.Edit.ContactEditor"
 Button = require "Control.Basic.Button"
 
-Class
-	__partial: => GroupChooserView!
+Class GroupChooserView,
 	__init: =>
 		indices = [i for i = 1,12]
 		for i in *{oData.GroupTerrain,oData.GroupDetectPlayer,oData.GroupDetect,oData.GroupHide}

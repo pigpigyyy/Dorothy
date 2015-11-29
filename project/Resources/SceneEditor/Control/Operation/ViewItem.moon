@@ -5,8 +5,7 @@ ViewItemView = require "View.Control.Operation.ViewItem"
 -- [no signals]
 -- [params]
 -- width, height, items
-VisibleChecker = Class
-	__partial: (args)=> ViewItemView args
+VisibleChecker = Class ViewItemView,
 	__init: (args)=>
 		@_checked = false
 		@slots "Tapped",-> @checked = not @checked
@@ -39,8 +38,7 @@ VisibleChecker = Class
 -- [no signals]
 -- [params]
 -- x, y, width, height, text
-Class
-	__partial: (args)=> ViewItemView args
+Class ViewItemView,
 	__init: (args)=>
 		@_checked = false
 		@_visibleChecker = nil

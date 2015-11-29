@@ -5,8 +5,7 @@ Button = require "Control.Basic.Button"
 -- "Tapped",(button)->
 -- [params]
 -- x, y, width, height, fontSize, text
-Class
-	__partial: (args)=> Button args
+Class Button,
 	__init: =>
 		@_checked = false
 		@slots("TapEnded")\set ->

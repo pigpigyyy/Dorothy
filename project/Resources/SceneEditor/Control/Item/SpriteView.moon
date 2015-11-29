@@ -23,9 +23,7 @@ NumberDot = require "Control.Item.NumberDot"
 -- [params]
 -- x, y, width, height,
 -- file, spriteStr, alias, needUnload
-selectedItems = {}
-Class
-	__partial: (args)=> SpriteViewView args
+Class SpriteViewView,
 	__init: (args)=>
 		{:width,:height,:file,:spriteStr,:alias,:needUnload} = args
 		spriteStr or= file
@@ -44,6 +42,8 @@ Class
 
 		@updateImage file,spriteStr,alias,needUnload
 		@isCheckMode = false
+
+	selectedItems:{}
 
 	_tapped: =>
 		if @isCheckMode
@@ -104,7 +104,7 @@ Class
 		if checked == @_checked
 			return
 		if checked
-			currentNumber = #selectedItems
+			currentNumber = #@@selectedItems
 			if currentNumber < 99
 				@numberDot = NumberDot {
 					x: @width-17.5
@@ -117,15 +117,15 @@ Class
 				@numberDot.scaleY = 0
 				@numberDot\perform oScale 0.3,1,1,oEase.OutBack
 				@face\addChild @numberDot
-				table.insert selectedItems,@numberDot
+				table.insert @@selectedItems,@numberDot
 				@_checked = true
 				@emit "Checked",true,@
 		else
 			dot = @numberDot
 			num = dot.number + 1
-			for item in *selectedItems[num,]
+			for item in *@@selectedItems[num,]
 				item.number -= 1
-			table.remove selectedItems,num - 1
+			table.remove @@selectedItems,num - 1
 			dot\perform CCSequence {
 				oScale 0.3,0,0,oEase.OutQuad
 				CCCall ->
@@ -141,9 +141,9 @@ Class
 		(value)=>
 			if @_checked
 				dot = @numberDot
-				for i,item in ipairs selectedItems
+				for i,item in ipairs @@selectedItems
 					if item == dot
-						table.remove selectedItems,i
+						table.remove @@selectedItems,i
 						break
 				dot\perform CCSequence {
 					oScale 0.3,0,0,oEase.OutQuad

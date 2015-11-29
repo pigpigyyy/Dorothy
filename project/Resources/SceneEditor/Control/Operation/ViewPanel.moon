@@ -7,8 +7,7 @@ Model = require "Data.Model"
 -- [no signals]
 -- [params]
 -- width, height
-Class
-	__partial: (args)=> ViewPanelView args
+Class ViewPanelView,
 	__init: (args)=>
 		{:width,:height} = @
 		itemW = 120
