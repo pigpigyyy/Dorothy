@@ -347,6 +347,8 @@ local function oSettingPanel()
 			label.visible = false
 			return
 		end
+		local y = items.emitterType.positionY
+		self:setOffset(oVec2.zero)
 		label.visible = true
 		label.positionY = borderSize.height - 18
 		local contentHeight = 40
@@ -357,7 +359,6 @@ local function oSettingPanel()
 			item.visible = true
 			contentHeight = contentHeight + itemHeight
 		end
-		self:setPos(oVec2.zero)
 		if group == modeFrame then
 			label.text = "Frame"
 			label.texture.antiAlias = false
@@ -392,23 +393,12 @@ local function oSettingPanel()
 			oEditor.origin = oVec2(winSize.width*0.5,(winSize.height-150)*0.5+150)
 			emit("Effect.editor.frame")
 		else
-			label.text = "Particle"
-			label.texture.antiAlias = false
-			background:clear()
-			if not currentGroup then
-				background:drawPolygon(
-				{
-					oVec2(-halfBW,-halfBH),
-					oVec2(halfBW,-halfBH),
-					oVec2(halfBW,halfBH),
-					oVec2(-halfBW,halfBH)
-				},ccColor4(0xe5100000),0.5,ccColor4(0x88ffafaf))
-				self:runAction(oPos(0.3,particlePos.x,particlePos.y,oEase.OutQuad))
-			else
-				oRoutine(once(function()
-					self:runAction(oPos(0.3,framePos.x+borderSize.width+10,framePos.y,oEase.OutQuad))
-					wait(seconds(0.3))
-					background:clear()
+			self:reset(borderSize.width,contentHeight,0,50)
+			if currentGroup == nil or currentGroup == modeFrame then
+				label.text = "Particle"
+				label.texture.antiAlias = false
+				background:clear()
+				if not currentGroup then
 					background:drawPolygon(
 					{
 						oVec2(-halfBW,-halfBH),
@@ -416,13 +406,28 @@ local function oSettingPanel()
 						oVec2(halfBW,halfBH),
 						oVec2(-halfBW,halfBH)
 					},ccColor4(0xe5100000),0.5,ccColor4(0x88ffafaf))
-					self.position = oVec2(startPos.x,startPos.y)
 					self:runAction(oPos(0.3,particlePos.x,particlePos.y,oEase.OutQuad))
-				end))
+				else
+					oRoutine(once(function()
+						self:runAction(oPos(0.3,framePos.x+borderSize.width+10,framePos.y,oEase.OutQuad))
+						wait(seconds(0.3))
+						background:clear()
+						background:drawPolygon(
+						{
+							oVec2(-halfBW,-halfBH),
+							oVec2(halfBW,-halfBH),
+							oVec2(halfBW,halfBH),
+							oVec2(-halfBW,halfBH)
+						},ccColor4(0xe5100000),0.5,ccColor4(0x88ffafaf))
+						self.position = oVec2(startPos.x,startPos.y)
+						self:runAction(oPos(0.3,particlePos.x,particlePos.y,oEase.OutQuad))
+					end))
+				end
+				oEditor.origin = oVec2((winSize.width-240-10)*0.5,winSize.height*0.5)
+				emit("Effect.editor.particle")
+			else
+				self:setOffset(oVec2(0,y-items.emitterType.positionY))
 			end
-			self:reset(borderSize.width,contentHeight,0,50)
-			oEditor.origin = oVec2((winSize.width-240-10)*0.5,winSize.height*0.5)
-			emit("Effect.editor.particle")
 		end
 		currentGroup = group
 	end
@@ -450,9 +455,6 @@ local function oSettingPanel()
 	self:gslot("Effect.settingPanel.hide",function()
 		setGroup(nil)
 		emit("Effect.settingPanel.cancel")
-	end)
-	self:gslot("Effect.settingPanel.moveToMode",function()
-		self:setPos(oVec2(0,borderSize.height*0.5+30-items.emitterType.positionY))
 	end)
 
 	return self

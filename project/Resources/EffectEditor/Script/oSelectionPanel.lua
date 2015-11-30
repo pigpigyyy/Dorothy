@@ -248,9 +248,9 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 	end
 
 	local function setPos(self,delta)
-		local newPos = totalDelta+delta
+		local newPos = totalDelta + delta
 		if newPos.x > 0 then
-			newPos.x = 0 
+			newPos.x = 0
 		elseif newPos.x-moveX < 0 then
 			newPos.x = moveX
 		end
@@ -368,7 +368,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 					end)
 			}))
 	end
-	
+
 	panel.reset = function(self,width,height,padX,padY)
 		viewWidth = math.max(width,borderSize.width)
 		viewHeight = math.max(height,borderSize.height)
@@ -383,7 +383,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 		_v = oVec2.zero
 		deltaMoveLength = 0
 	end
-	
+
 	panel.getTotalDelta = function(self)
 		return totalDelta
 	end
@@ -393,6 +393,14 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 		viewHeight = math.max(height,borderSize.height)
 		moveY = viewHeight-borderSize.height
 		moveX = borderSize.width-viewWidth
+	end
+
+	panel.setOffset = function(self,offset)
+		setOffset(offset-totalDelta,false)
+	end
+
+	panel.getOffset = function(self)
+		return oVec2(totalDelta.x,totalDelta.y)
 	end
 
 	return panel

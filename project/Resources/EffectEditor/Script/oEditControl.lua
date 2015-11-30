@@ -75,6 +75,7 @@ local function oEditControl()
 	halfTH = modeSize.height*0.5
 	local modeSelector = oSelectionPanel(modeSize,true,true,false)
 	modeSelector.visible = false
+	modeSelector.removeOnHide = false
 
 	-- modeBackground
 	local modeBackground = CCDrawNode()
@@ -95,7 +96,6 @@ local function oEditControl()
 			modeSelected(button.text == "Gravity" and oEditor.EmitterGravity or oEditor.EmitterRadius)
 		end
 		emit("Effect.settingPanel.cancel")
-		emit("Effect.settingPanel.moveToMode")
 	end
 	modeSelector.menu:addChild(oButton("Gravity",16,100,50,60,modeSize.height-35,modeCallback))
 	modeSelector.menu:addChild(oButton("Radius",16,100,50,60,modeSize.height-95,modeCallback))

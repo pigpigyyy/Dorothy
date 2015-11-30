@@ -69,6 +69,10 @@ Class EditorView,
 			sleep!
 			ScenePanel = require "Control.Item.ScenePanel"
 			ScenePanel!
+			
+			EditRuler = require "Control.Edit.EditRuler"
+			@addChild with EditRuler!
+				\show 0,0,1000,10,(val)-> print val
 
 		panelWidth = 10+110*4
 		panelHeight = height*0.6

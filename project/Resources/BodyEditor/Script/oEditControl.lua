@@ -162,7 +162,7 @@ local function oEditControl()
 		switchMenu.visible = false
 		switchMenu.touchEnabled = false
 	end
-	
+
 	-- init type selector --
 	-- typeSelector
 	local typeSize = CCSize(120,190)

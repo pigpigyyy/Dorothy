@@ -23,14 +23,14 @@ Inherit a lua table class:
 
 Inherit a C++ instance class:
 	MyClass = class({
-		__partial = function(self,args)
+		__partial = function(self, args)
 			return CCNode()
 		end,
 	})
 or
 	MyClass = class(function(args)
 		return CCNode()
-	end, { ... })
+	end,{ ... })
 
 Use number index to add field to a class
 is deprecated. Example below may cause error.

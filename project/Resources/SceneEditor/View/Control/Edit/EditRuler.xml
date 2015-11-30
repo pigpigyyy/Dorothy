@@ -1,0 +1,23 @@
+<!-- params: X, Y, Width, Height -->
+<LayerColor Name="ruler" X="{ @X }" Y="{ @Y }" Width="{ width }" Height="{ height }" Color="0x0" Visible="False" Opacity="0.8" PassOpacity="True" SwallowTouches="True" TouchPriority="{ editor.levelEditControl }">
+	<Line Name="border" X="{ $X }" Y="{ $Y }" Color="0xffffff">
+		<Vec2 X="{ -width/2 }" Y="{ height/2 }"/>
+		<Vec2 X="{ width/2 }" Y="{ height/2 }"/>
+		<Vec2 X="{ width/2 }" Y="{ -height/2 }"/>
+		<Vec2 X="{ -width/2 }" Y="{ -height/2 }"/>
+		<Vec2 X="{ -width/2 }" Y="{ height/2 }"/>
+	</Line>
+	<ClipNode X="{ $X }" Y="{ $Y }">
+		<Stencil>
+			<DrawNode>
+				<Polygon FillColor="0x0">
+					<Vec2 X="{ -width/2 }" Y="{ height/2-1 }"/>
+					<Vec2 X="{ width/2 }" Y="{ height/2-1 }"/>
+					<Vec2 X="{ width/2 }" Y="{ -height/2+1 }"/>
+					<Vec2 X="{ -width/2 }" Y="{ -height/2+1 }"/>
+				</Polygon>
+			</DrawNode>
+		</Stencil>
+		<Line Name="intervalNode" Width="{ width }" Height="{ height }" Ref="True"/>
+	</ClipNode>
+</LayerColor>
