@@ -31,7 +31,7 @@ local function oEditRuler()
 	ruler.opacity = 0.8
 	ruler.cascadeOpacity = true
 	ruler.position = oEditor.origin+center
-	
+
 	local border = oLine(
 	{
 		oVec2(-halfW,halfH),
@@ -55,10 +55,10 @@ local function oEditRuler()
 	local clipNode = CCClipNode(stencil)
 	clipNode.position = oVec2(halfW,halfH)
 	ruler:addChild(clipNode)
-	
+
 	local content = CCNode()
 	clipNode:addChild(content)
-	
+
 	local intervalNode = oLine()
 	intervalNode.contentSize = CCSize(width,height)
 	content:addChild(intervalNode)
@@ -70,7 +70,7 @@ local function oEditRuler()
 	local bottom = math.ceil(halfH/interval)
 	local vs = {}
 	local indent = 100
-	
+
 	local labels = {}
 	local labelList = {}
 	local function setupLabels()
@@ -89,7 +89,7 @@ local function oEditRuler()
 			table.insert(labelList,label)
 		end
 	end
-	
+
 	local function moveLabel(label,pos)
 		labels[math.ceil(tonumber(label.text)/indent)*100] = nil
 		label.text = tostring(pos/100*indent)
@@ -99,7 +99,7 @@ local function oEditRuler()
 		label.position = oVec2(-halfW+28,pos)
 		labels[pos] = label
 	end
-	
+
 	local function updateLabels()
 		local posY = intervalNode.anchor.y*height
 		local right = math.floor((posY+height)/100)

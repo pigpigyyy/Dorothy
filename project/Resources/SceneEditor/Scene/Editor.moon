@@ -22,6 +22,7 @@ Class EditorView,
 		@scale = 1
 		@xFix = false
 		@yFix = false
+		@isFixed = true
 
 		_G.editor = @
 		builtin.editor = @
@@ -69,9 +70,14 @@ Class EditorView,
 			sleep!
 			ScenePanel = require "Control.Item.ScenePanel"
 			ScenePanel!
-			
+
 			EditRuler = require "Control.Edit.EditRuler"
-			@addChild with EditRuler!
+			@addChild with EditRuler {
+					x:width/2
+					y:height/2
+					width:width*0.6
+					height:60
+				}
 				\show 0,0,1000,10,(val)-> print val
 
 		panelWidth = 10+110*4

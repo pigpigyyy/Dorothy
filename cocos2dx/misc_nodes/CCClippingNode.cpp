@@ -103,7 +103,7 @@ bool CCClippingNode::init(CCNode *pStencil)
     m_pStencil = pStencil;
     CC_SAFE_RETAIN(m_pStencil);
     
-    m_fAlphaThreshold = 1;
+    m_fAlphaThreshold = 1.0f;
     m_bInverted = false;
     // get (only once) the number of bits of the stencil buffer
     static bool once = true;
@@ -235,7 +235,7 @@ void CCClippingNode::visit()
     GLboolean currentDepthWriteMask = GL_TRUE;
     //currentDepthTestEnabled = glIsEnabled(GL_DEPTH_TEST);
     glGetBooleanv(GL_DEPTH_WRITEMASK, &currentDepthWriteMask);
-    
+
     // disable depth test while drawing the stencil
     //glDisable(GL_DEPTH_TEST);
     // disable update to the depth buffer while drawing the stencil,

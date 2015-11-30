@@ -67,10 +67,10 @@ local function oEditRuler()
 	content:addChild(intervalNode)
 
 	local interval = 10
-	local top = math.ceil(halfH/interval)
+	local top = math.ceil(height/interval)
 	local up = 0
 	local down = 1
-	local bottom = math.ceil(halfH/interval)
+	local bottom = math.ceil(height/interval)
 	local vs = {}
 	local indent = 100
 
@@ -78,8 +78,8 @@ local function oEditRuler()
 	local labelList = {}
 	local function setupLabels()
 		local posY = intervalNode.anchor.y*height
-		local right = math.floor((posY+height/2+50)/100)
-		local left = math.floor((posY-height/2-50)/100)
+		local right = math.floor((posY+height+50)/100)
+		local left = math.floor((posY-height-50)/100)
 		for i = left,right do
 			local pos = i*100
 			local label = CCLabelTTF(tostring(pos/100*indent),"Arial",10)
@@ -92,7 +92,7 @@ local function oEditRuler()
 			table.insert(labelList,label)
 		end
 	end
-	
+
 	local function moveLabel(label,pos)
 		labels[math.ceil(tonumber(label.text)/indent)*100] = nil
 		label.text = tostring(pos/100*indent)
@@ -102,11 +102,11 @@ local function oEditRuler()
 		label.position = oVec2(-halfW+28,pos)
 		labels[pos] = label
 	end
-	
+
 	local function updateLabels()
 		local posY = intervalNode.anchor.y*height
-		local right = math.floor((posY+height/2)/100)
-		local left = math.floor((posY-height/2)/100)
+		local right = math.floor((posY+height)/100)
+		local left = math.floor((posY-height)/100)
 		local insertPos = 1
 		for i = left,right do
 			local pos = i*100
@@ -153,7 +153,7 @@ local function oEditRuler()
 			intervalNode:set(vs)
 		end
 	end
-	
+
 	setupLabels()
 
 	local arrow = CCNode()
@@ -174,14 +174,14 @@ local function oEditRuler()
 		updateIntervalTextScale(1/scale)
 		local posY = intervalNode.anchor.y*height
 		if posY >= 0 then
-			local newTop = math.ceil((posY+halfH/scale)/interval)
+			local newTop = math.ceil((posY+height/scale)/interval)
 			if top < newTop then top = newTop end
 		else
-			local newBottom = math.ceil((-posY+halfH/scale)/interval)
+			local newBottom = math.ceil((-posY+height/scale)/interval)
 			if bottom < newBottom then bottom = newBottom end
 		end
 	end)
-	ruler:gslot("Effect.viewArea.toScale",function(scale)
+	ruler:gslot("Effect.viewArea.scroll",function(scale)
 		intervalNode:runAction(oScale(0.5,1,scale,oEase.OutQuad))
 		-- manually update and unscale interval text --
 		local time = 0
@@ -193,9 +193,9 @@ local function oEditRuler()
 			end
 		end)
 		local posY = intervalNode.anchor.y*height
-		local newTop = math.ceil((posY+halfH/scale)/interval)
+		local newTop = math.ceil((posY+height/scale)/interval)
 		if top < newTop then top = newTop end
-		local newBottom = math.ceil((-posY+halfH/scale)/interval)
+		local newBottom = math.ceil((-posY+height/scale)/interval)
 		if bottom < newBottom then bottom = newBottom end
 	end)
 
@@ -226,10 +226,10 @@ local function oEditRuler()
 		intervalNode.anchor = oVec2(0,posY/height)
 		local scale = intervalNode.scaleY
 		if posY >= 0 then
-			local newTop = math.ceil((posY+halfH/scale)/interval)
+			local newTop = math.ceil((posY+height/scale)/interval)
 			if top < newTop then top = newTop end
 		else
-			local newBottom = math.ceil((-posY+halfH/scale)/interval)
+			local newBottom = math.ceil((-posY+height/scale)/interval)
 			if bottom < newBottom then bottom = newBottom end
 		end
 		updateLabels()

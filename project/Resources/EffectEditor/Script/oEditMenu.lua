@@ -150,7 +150,7 @@ local function oEditMenu()
 			items.Play.position = oVec2(winSize.width-35,45+150)
 			items.Play:runAction(CCSequence({CCShow(),oScale(0,0,0),oScale(0.3,1,1,oEase.OutBack)}))
 		end
-		
+
 		if not items.Set.visible then
 			items.Set:runAction(CCSequence({CCShow(),oScale(0,0,0),oScale(0.3,1,1,oEase.OutBack)}))
 		end
@@ -181,7 +181,10 @@ local function oEditMenu()
 		end
 		oEditor.dirty = true
 	end)
-
+	menu:gslot("Effect.viewArea.scale",function(scale)
+		if scale ~= 1 then items.Zoom.mode = 2 end
+		items.Zoom.text = tostring(math.floor(scale*100)).."%"
+	end)
 	return menu
 end
 

@@ -9,10 +9,10 @@ Class EditRulerView,
 		halfW = width/2
 		halfH = height/2
 		interval = 10
-		top = math.ceil halfW/interval
+		top = math.ceil width/interval
 		up = 0
 		down = 1
-		bottom = math.ceil halfW/interval
+		bottom = math.ceil width/interval
 		vs = {}
 		indent = 100
 
@@ -20,13 +20,13 @@ Class EditRulerView,
 		labelList = {}
 		setupLabels = ->
 			posX = @intervalNode.anchor.x*width
-			right = math.floor (posX+width/2+50)/100
-			left = math.floor (posX-width/2-50)/100
+			right = math.floor (posX+width+50)/100
+			left = math.floor (posX-width-50)/100
 			for i = left,right
 				pos = i*100
 				label = with CCLabelTTF tostring(pos/100*indent),"Arial",10
 					.texture.antiAlias = false
-					.scaleX = 1/intervalNode.scaleY
+					.scaleX = 1/@intervalNode.scaleX
 					.position = oVec2 pos,halfH-28
 				@intervalNode\addChild label
 				labels[pos] = label
@@ -42,8 +42,8 @@ Class EditRulerView,
 
 		updateLabels = ->
 			posX = @intervalNode.anchor.x*width
-			right = math.floor (posX+width/2)/100
-			left = math.floor (posX-width/2)/100
+			right = math.floor (posX+width)/100
+			left = math.floor (posX-width)/100
 			insertPos = 1
 			for i = left,right
 				pos = i*100
@@ -98,32 +98,34 @@ Class EditRulerView,
 
 		@gslot "Scene.ViewArea.Scale",(scale)->
 			scale = math.min scale,5
-			@intervalNode.scaleY = scale
+			@intervalNode.scaleX= scale
 			-- unscale interval text --
 			updateIntervalTextScale 1/scale
 			posX = @intervalNode.anchor.x*width
 			if posX >= 0 then
-				newTop = math.ceil (posX+halfW/scale)/interval
+				newTop = math.ceil (posX+width/scale)/interval
 				top = math.max top,newTop
 			else
-				newBottom = math.ceil (-posX+halfW/scale)/interval
+				newBottom = math.ceil (-posX+width/scale)/interval
 				bottom = math.max bottom,newBottom
+			updateLabels!
 
 		@gslot "Scene.ViewArea.ScaleTo",(scale)->
-			@intervalNode\perform oScale 0.5,1,scale,oEase.OutQuad
+			@intervalNode\perform oScale 0.5,scale,1,oEase.OutQuad
 			-- manually update and unscale interval text --
 			time = 0
 			@intervalNode\schedule (deltaTime)->
-				updateIntervalTextScale 1/intervalNode.scaleX
+				updateIntervalTextScale 1/@intervalNode.scaleX
 				time = time + deltaTime
 				if math.min(time/0.5,1) == 1
 					@intervalNode\unschedule!
 
-			posY = @intervalNode.anchor.x*width
-			newTop = math.ceil (posX+halfW/scale)/interval
+			posX = @intervalNode.anchor.x*width
+			newTop = math.ceil (posX+width/scale)/interval
 			top = math.max top,newTop
-			newBottom = math.ceil (-posX+halfW/scale)/interval
+			newBottom = math.ceil (-posX+width/scale)/interval
 			bottom = math.max bottom,newBottom
+			updateLabels!
 
 		@setIndent = (ind)=>
 			indent = ind
@@ -146,12 +148,12 @@ Class EditRulerView,
 
 			posX = v*10*interval/indent
 			@intervalNode.anchor = oVec2 posX/width,0
-			scale = intervalNode.scaleX
+			scale = @intervalNode.scaleX
 			if posX >= 0
-				newTop = math.ceil (posX+halfW/scale)/interval
+				newTop = math.ceil (posX+width/scale)/interval
 				top = math.max top,newTop
 			else
-				newBottom = math.ceil (-posX+halfW/scale)/interval
+				newBottom = math.ceil (-posX+width/scale)/interval
 				bottom = math.max bottom,newBottom
 			updateLabels!
 
@@ -204,7 +206,7 @@ Class EditRulerView,
 				a = 0
 			ds = _v * deltaTime + a*(0.5*deltaTime*deltaTime)
 			newValue = _value-ds*indent/(interval*10)
-			@setValue (newValue-_value)/intervalNode.scaleY+_value
+			@setValue (newValue-_value)/@intervalNode.scaleY+_value
 			if _v == 0 or (_min < _max and (_value < _min or _value > _max))
 				if isReseting!
 					startReset!

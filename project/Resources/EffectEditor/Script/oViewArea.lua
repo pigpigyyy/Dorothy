@@ -72,6 +72,7 @@ local function oViewArea()
 --]]
 
 	view.touchEnabled = true
+	view.multiTouches = true
 
 	local S = oVec2.zero
 	local V = oVec2.zero
@@ -109,9 +110,22 @@ local function oViewArea()
 		return true
 	end)
 
-	view:slots("TouchMoved",function(touch)
-		S = touch.delta
-		scrollNode.position = scrollNode.position + S
+	view:slots("TouchMoved",function(touches)
+		if #touches == 1 then
+			S = touches[1].delta
+			scrollNode.position = scrollNode.position + S
+		elseif #touches >= 2 then -- scale view
+			local preDistance = touches[1].preLocation:distance(touches[2].preLocation)
+			local distance = touches[1].location:distance(touches[2].location)
+			local delta = (distance - preDistance) * 4 / winSize.height
+			local scale = scrollNode.scaleX + delta
+			if scale <= 0.5 then
+				scale = 0.5
+			end
+			scrollNode.scaleX = scale
+			scrollNode.scaleY = scale
+			emit("Effect.viewArea.scale",scale)
+		end
 		xcross.positionX = -(scrollNode.positionX - origin.x)/scrollNode.scaleX
 		ycross.positionY = -(scrollNode.positionY - origin.y)/scrollNode.scaleX
 	end)
@@ -143,9 +157,9 @@ local function oViewArea()
 		xcross:runAction(oPos(0.5,-(scrollNode.positionX - origin.x)/scale,0,oEase.OutQuad))
 		ycross:runAction(oPos(0.5,0,-(scrollNode.positionY - origin.y)/scale,oEase.OutQuad))
 	end)
-	view:gslot("Effect.viewArea.toOrigin",function(origin)
+	view:gslot("Effect.viewArea.toOrigin",function(pos)
 		view:unschedule()
-		scrollNode:runAction(oPos(0.3,origin.x,origin.y,oEase.OutQuad))
+		scrollNode:runAction(oPos(0.3,pos.x,pos.y,oEase.OutQuad))
 		xcross:runAction(oPos(0.5,0,0,oEase.OutQuad))
 		ycross:runAction(oPos(0.5,0,0,oEase.OutQuad))
 	end)
