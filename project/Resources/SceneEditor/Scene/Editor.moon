@@ -16,6 +16,7 @@ Class EditorView,
 		@items = nil
 		@itemDefs = nil
 		@dirty = false
+		@sceneData = nil
 		@_sceneName = nil
 		@_currentSceneFile = nil
 		@origin = oVec2 60+(width-250)/2,height/2
@@ -70,15 +71,10 @@ Class EditorView,
 			sleep!
 			ScenePanel = require "Control.Item.ScenePanel"
 			ScenePanel!
-
-			EditRuler = require "Control.Edit.EditRuler"
-			@addChild with EditRuler {
-					x:width/2
-					y:height/2
-					width:width*0.6
-					height:60
-				}
-				\show 0,0,1000,10,(val)-> print val
+			sleep!
+			Manager = require "Control.Edit.Manager"
+			@editManager = Manager!
+			@addChild @editManager
 
 		panelWidth = 10+110*4
 		panelHeight = height*0.6
@@ -169,6 +165,10 @@ Class EditorView,
 		@gslot "Scene.ViewPanel.Select",(itemData)-> @currentData = itemData
 		@gslot "Scene.ViewArea.ScaleTo",(scale)-> editor.scale = scale
 		@gslot "Scene.ViewArea.Scale",(scale)-> editor.scale = scale
+
+		setCurrentData = (itemData)-> @currentData = itemData
+		@gslot "Scene.ViewPanel.Select",setCurrentData
+		@gslot "Scene.ViewPanel.Pick",setCurrentData
 
 	updateSprites: => emit "Scene.LoadSprite",@graphicFolder
 	updateModels: => emit "Scene.LoadModel",@graphicFolder

@@ -1,7 +1,6 @@
 Dorothy!
 Class = unpack require "class"
 GroupChooserView = require "View.Control.Edit.GroupChooser"
-ContactEditor = require "Control.Edit.ContactEditor"
 Button = require "Control.Basic.Button"
 
 Class GroupChooserView,
@@ -19,6 +18,6 @@ Class GroupChooserView,
 					fontSize:18
 				}
 				\slots "Tapped",(button)->
-					ContactEditor group:button.tag
+					@emit "Selected",button.tag
 
 		@scrollArea.viewSize = CCSize 0,@menu\alignItemsVertically!

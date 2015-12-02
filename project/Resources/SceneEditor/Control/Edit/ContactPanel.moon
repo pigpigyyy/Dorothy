@@ -1,10 +1,10 @@
 Dorothy!
 Class = unpack require "class"
-ContactEditorView = require "View.Control.Edit.ContactEditor"
+ContactPanelView = require "View.Control.Edit.ContactPanel"
 Model = require "Data.Model"
 Button = require "Control.Basic.Button"
 
-Class ContactEditorView,
+Class ContactPanelView,
 	__init: (args)=>
 		groupIndex = args.group
 

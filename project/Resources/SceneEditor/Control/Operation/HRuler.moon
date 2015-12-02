@@ -190,7 +190,11 @@ cycle = require "cycle"
 	-- handle touch event --
 	@slots "TouchBegan",(touch)->
 		loc = @convertToNodeSpace touch.location
-		CCRect(-halfW,-halfH,rulerWidth,rulerHeight)\containsPoint loc
+		if CCRect(-halfW,-halfH,rulerWidth,rulerHeight)\containsPoint loc
+			@opacity = 1
+			true
+		else
+			false
 
 	@slots "TouchMoved",(touch)->
 		@positionY += touch.delta.y
@@ -198,5 +202,9 @@ cycle = require "cycle"
 			@positionY = winSize.height-halfH-10
 		elseif @positionY < halfH+10
 			@positionY = halfH+10
+
+	touchEnded = -> @perform oOpacity 0.3,0.3
+	@slots "TouchCancelled",touchEnded
+	@slots "TouchEnded",touchEnded
 
 	@ -- return

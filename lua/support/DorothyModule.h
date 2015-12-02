@@ -122,6 +122,10 @@ bool oModelCache_unload(const char* filename = nullptr);
 void oModelCache_removeUnused();
 void __oModelCache_getClipFile(lua_State* L, const char* filename);
 #define oModelCache_getClipFile(filename) {__oModelCache_getClipFile(tolua_S,filename);return 1;}
+void __oModelCache_getLookNames(lua_State* L, const char* filename);
+#define oModelCache_getLookNames(filename) {__oModelCache_getLookNames(tolua_S,filename);return 1;}
+void __oModelCache_getAnimationNames(lua_State* L, const char* filename);
+#define oModelCache_getAnimationNames(filename) {__oModelCache_getAnimationNames(tolua_S, filename);return 1;}
 
 void oCache_removeUnused();
 void oCache_clear();

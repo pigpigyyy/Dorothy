@@ -33,6 +33,8 @@ module oCache
 		static tolua_outside void oModelCache_loadData @ loadData( const char* filename, tolua_table table_idx);
 		static tolua_outside void oModelCache_save @ save(const char* itemName, const char* targetName);
 		static tolua_outside void oModelCache_getClipFile @ getClipFile(const char* filename);
+		static tolua_outside void oModelCache_getLookNames @ getLookNames(const char* filename);
+		static tolua_outside void oModelCache_getAnimationNames @ getAnimationNames(const char* filename);
 	};
 
 	class oClipCache @ Clip

@@ -1,8 +1,8 @@
 Dorothy!
 Class = unpack require "class"
-EditRulerView = require "View.Control.Edit.EditRuler"
+RulerView = require "View.Control.Edit.Ruler"
 
-Class EditRulerView,
+Class RulerView,
 	__init: (args)=>
 		{:width,:height} = args
 		winSize = CCDirector.winSize
@@ -246,11 +246,15 @@ Class EditRulerView,
 		@setValue default
 		@slots("Changed")\set callback
 		@visible = true
-		@emit "Show"
+		@scaleX = 0
+		@scaleY = 0
+		@perform oScale 0.3,1,1,oEase.OutBack
 
 	hide: =>
 		return if not @visible
 		@slots "Changed",nil
-		@touchEnabled = false
 		@unschedule!
-		@emit "Hide"
+		@perform CCSequence {
+			oScale 0.3,0,0,oEase.InBack
+			CCHide!
+		}

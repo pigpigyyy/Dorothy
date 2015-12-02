@@ -29,7 +29,7 @@ Contact = (world,data)->
 			world\setShouldContact unpack contact
 
 Groups = (data)->
-	setmetatable data or {
+	default = {
 		[0]:"Hide" -- 0
 		"P1" -- 1
 		"P2" -- 2
@@ -46,7 +46,9 @@ Groups = (data)->
 		"DetectPlayer" -- 13
 		"Terrain" -- 14
 		"Detect" -- 15
-	}, {
+	}
+	setmetatable data or {}, {
+		__index: (key)=> default[key]
 		__tostring:=>
 			str = "{"
 			for k,v in pairs @

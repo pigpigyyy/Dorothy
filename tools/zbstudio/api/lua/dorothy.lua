@@ -5381,6 +5381,20 @@ local Dorothy =
 				description = "",
 				returns = "(clipFile: string)",
 				type = "method"
+			},
+			getLookNames =
+			{
+				args = "(filename: string)",
+				description = "",
+				returns = "(looks: table{string})",
+				type = "method"
+			},
+			getAnimationNames =
+			{
+				args = "(filename: string)",
+				description = "",
+				returns = "(animations: table{string})",
+				type = "method"
 			}
 		},
 		description = "class oModelCache.",

@@ -1,8 +1,8 @@
 Dorothy!
 Class = unpack require "class"
-GroupEditorView = require "View.Control.Edit.GroupEditor"
+GroupPanelView = require "View.Control.Edit.GroupPanel"
 
-Class GroupEditorView,
+Class GroupPanelView,
 	__init: =>
 		sceneData = editor.sceneData
 		for i  = 1,12

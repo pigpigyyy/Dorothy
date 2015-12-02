@@ -929,6 +929,42 @@ void __oModelCache_getClipFile(lua_State* L, const char* filename)
 	const string& clipFile = modelDef->getClipFile();
 	lua_pushlstring(L, clipFile.c_str(), clipFile.size());
 }
+void __oModelCache_getLookNames(lua_State* L, const char* filename)
+{
+	oModelDef* modelDef = oSharedModelCache.load(filename);
+	if (modelDef)
+	{
+		auto names = modelDef->getLookNames();
+		lua_createtable(L, names.size(), 0);
+		for (size_t i = 0; i < names.size();i++)
+		{
+			lua_pushlstring(L, names[i].c_str(), names[i].size());
+			lua_rawseti(L, -2, i + 1);
+		}
+	}
+	else
+	{
+		lua_pushnil(L);
+	}
+}
+void __oModelCache_getAnimationNames(lua_State* L, const char* filename)
+{
+	oModelDef* modelDef = oSharedModelCache.load(filename);
+	if (modelDef)
+	{
+		auto names = modelDef->getAnimationNames();
+		lua_createtable(L, names.size(), 0);
+		for (size_t i = 0; i < names.size(); i++)
+		{
+			lua_pushlstring(L, names[i].c_str(), names[i].size());
+			lua_rawseti(L, -2, i + 1);
+		}
+	}
+	else
+	{
+		lua_pushnil(L);
+	}
+}
 
 void oCache_removeUnused()
 {

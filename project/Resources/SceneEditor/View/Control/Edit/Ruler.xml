@@ -1,5 +1,5 @@
 <!-- params: X, Y, Width, Height -->
-<LayerColor Name="ruler" X="{ x }" Y="{ x }" Width="{ width }" Height="{ height }" Color="0x0" Visible="False" Opacity="0.8" PassOpacity="True" SwallowTouches="True" TouchEnabled="True" TouchPriority="{ editor.levelEditControl }">
+<LayerColor Name="ruler" X="{ x }" Y="{ y }" Width="{ width }" Height="{ height }" Color="0x0" Visible="False" Opacity="0.8" PassOpacity="True" SwallowTouches="True" TouchEnabled="True" TouchPriority="{ editor.levelEditControl }">
 	<Line Name="border" X="{ $X }" Y="{ $Y }" Color="0xffffff">
 		<Vec2 X="{ -width/2 }" Y="{ height/2 }"/>
 		<Vec2 X="{ width/2 }" Y="{ height/2 }"/>
