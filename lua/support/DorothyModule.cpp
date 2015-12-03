@@ -935,8 +935,9 @@ void __oModelCache_getLookNames(lua_State* L, const char* filename)
 	if (modelDef)
 	{
 		auto names = modelDef->getLookNames();
-		lua_createtable(L, names.size(), 0);
-		for (size_t i = 0; i < names.size();i++)
+		int size = (int)names.size();
+		lua_createtable(L, size, 0);
+		for (int i = 0; i < size;i++)
 		{
 			lua_pushlstring(L, names[i].c_str(), names[i].size());
 			lua_rawseti(L, -2, i + 1);
@@ -953,8 +954,9 @@ void __oModelCache_getAnimationNames(lua_State* L, const char* filename)
 	if (modelDef)
 	{
 		auto names = modelDef->getAnimationNames();
-		lua_createtable(L, names.size(), 0);
-		for (size_t i = 0; i < names.size(); i++)
+		int size = (int)names.size();
+		lua_createtable(L, size, 0);
+		for (int i = 0; i < size; i++)
 		{
 			lua_pushlstring(L, names[i].c_str(), names[i].size());
 			lua_rawseti(L, -2, i + 1);

@@ -48,8 +48,8 @@ Groups = (data)->
 		"Detect" -- 15
 	}
 	setmetatable data or {}, {
-		__index: (key)=> default[key]
-		__tostring:=>
+		__index: default
+		__tostring: =>
 			str = "{"
 			for k,v in pairs @
 				str ..= "["..k.."]=\""..v.."\","

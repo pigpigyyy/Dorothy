@@ -511,7 +511,9 @@ Class EditorView,
 		@game = nil
 
 	updateGroupName: (groupIndex,name)=>
+		print "before",groupIndex,name
 		@sceneData.groups[groupIndex] = name
+		print "after",@sceneData.groups[groupIndex]
 		emit "Scene.Dirty",true
 
 	updateContact: (groupA,groupB,shouldContact)=>

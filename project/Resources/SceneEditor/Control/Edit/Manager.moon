@@ -3,11 +3,15 @@ Class = unpack require "class"
 Button = require "Control.Basic.Button"
 SelectionPanel = require "Control.Basic.SelectionPanel"
 GroupChooser = require "Control.Edit.GroupChooser"
+GroupPanel = require "Control.Edit.GroupPanel"
+ContactPanel = require "Control.Edit.ContactPanel"
 
 Class => CCNode!,
 	__init:=>
 		{:width,:height} = CCDirector.winSize
-		stopEditing = nil
+		_stopEditing = nil
+		stopEditing = -> _stopEditing! if _stopEditing
+		cancelEditing = -> emit "Scene.SettingPanel.Edit",nil
 
 		@schedule once ->
 			sleep 0.1
@@ -15,14 +19,14 @@ Class => CCNode!,
 			@ruler = Ruler {
 				x:(width-330)/2+70
 				y:100
-				width:width-330
+				width:width-340
 				height:60
 			}
 			@addChild @ruler
 		showRuler = (...)->
 			@ruler\show ...
-			stopEditing = ->
-				stopEditing = nil
+			_stopEditing = ->
+				_stopEditing = nil
 				@ruler\hide!
 
 		@boolSwitcher = with CCMenu!
@@ -55,16 +59,17 @@ Class => CCNode!,
 				.scaleX = 0
 				.scaleY = 0
 				\perform oScale 0.3,1,1,oEase.OutBack
-			stopEditing = ->
-				stopEditing = nil
+			_stopEditing = ->
+				_stopEditing = nil
 				@boolSwitcher\perform CCSequence {
 					oScale 0.3,0,0,oEase.InBack
 					CCHide!
 				}
 
+		@gslot "Scene.ViewPanel.Select",-> cancelEditing!
+
 		@gslot "Scene.SettingPanel.Edit",(item)->
-			assert editor.currentData,"Invalid editor.currentData"
-			if item and item.selected
+			if item and item.selected and editor.currentData
 				data = editor.currentData
 				switch item.name
 					when "outline","loop","visible","faceRight","play"
@@ -87,7 +92,7 @@ Class => CCNode!,
 							\slots "Selected",(value)->
 								data[item.name] = (value == "None" and "" or value)
 								item.value = value
-								emit "Scene.SettingPanel.Edit",nil
+								cancelEditing!
 					when "animation"
 						file = data.file
 						looks = oCache.Model\getAnimationNames file
@@ -96,11 +101,10 @@ Class => CCNode!,
 							\slots "Selected",(value)->
 								data[item.name] = (value == "None" and "" or value)
 								item.value = value
-								emit "Scene.SettingPanel.Edit",nil
+								cancelEditing!
 					when "group"
 						groupChooser = with GroupChooser!
-							\slots "Hide",->
-								emit "Scene.SettingPanel.Edit",nil
+							\slots "Hide",-> cancelEditing!
 							\slots "Selected",(group)->
 								data[item.name] = group
 								item.value = editor.sceneData.groups[group]
@@ -118,14 +122,21 @@ Class => CCNode!,
 					when "skew"
 						print 1
 					when "groups"
-						print 1
+						with GroupPanel!
+							\slots "Hide",-> cancelEditing!
 					when "contacts"
-						print 1
+						groupChooser = with GroupChooser!
+							\slots "Hide",-> cancelEditing!
+							\slots "Selected",(group)->
+								groupChooser\slots "Hide",nil
+								groupChooser\hide!
+								with ContactPanel group:group
+									\slots "Hide",-> cancelEditing!
 					when "target"
 						print 1
 					when "gravity"
 						print 1
 					when "opacity"
 						print 1
-			elseif stopEditing
+			else
 				stopEditing!

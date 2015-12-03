@@ -15,9 +15,8 @@ InputBoxView = require "View.Control.Basic.InputBox"
 Class InputBoxView,
 	__init: =>
 		@textBox\attachWithIME!
-		@textBox\slots "TextChanged", ->
-			if @textBox.text ~= ""
-				@inputed @textBox.text
+		@textBox\slots "Inputed",(text) ->
+			@inputed text unless text == ""
 
 		@okBtn\slots "Tapped", ->
 			@inputed @textBox.text

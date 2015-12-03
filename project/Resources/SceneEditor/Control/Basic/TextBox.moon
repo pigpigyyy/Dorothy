@@ -8,8 +8,11 @@ TextBoxView = require "View.Control.Basic.TextBox"
 Class TextBoxView,
 	__init: =>
 		@textField.opacity = 0.3
-		@textField\slots "TextChanged",(text)-> @emit "TextChanged",text
+		@textField\slots "TextChanged",-> @emit "Inputed",@textField.text
 
 	attachWithIME: => @textField\attachWithIME!
 	detachWithIME: => @textField\detachWithIME!
-	text: property => @textField.text
+	text: property => @textField.text,
+		(value)=> @textField.text = value
+	placeHolder: property => @textField.placeHolder,
+		(value)=> @textField.placeHolder = value

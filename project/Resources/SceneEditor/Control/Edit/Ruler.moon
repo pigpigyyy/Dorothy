@@ -4,7 +4,7 @@ RulerView = require "View.Control.Edit.Ruler"
 
 Class RulerView,
 	__init: (args)=>
-		{:width,:height} = args
+		{:y,:width,:height} = args
 		winSize = CCDirector.winSize
 		halfW = width/2
 		halfH = height/2
@@ -15,6 +15,7 @@ Class RulerView,
 		bottom = math.ceil width/interval
 		vs = {}
 		indent = 100
+		@endPosY = y
 
 		labels = {}
 		labelList = {}
@@ -25,7 +26,7 @@ Class RulerView,
 			for i = left,right
 				pos = i*100
 				label = with CCLabelTTF tostring(pos/100*indent),"Arial",10
-					.texture.antiAlias = false
+					--.texture.antiAlias = false
 					.scaleX = 1/@intervalNode.scaleX
 					.position = oVec2 pos,halfH-28
 				@intervalNode\addChild label
@@ -246,15 +247,21 @@ Class RulerView,
 		@setValue default
 		@slots("Changed")\set callback
 		@visible = true
-		@scaleX = 0
-		@scaleY = 0
-		@perform oScale 0.3,1,1,oEase.OutBack
+		@positionY = @endPosY+30
+		@opacity = 0
+		@perform CCSpawn {
+			oPos 0.5,@positionX,@endPosY,oEase.OutBack
+			oOpacity 0.3, 0.8
+		}
 
 	hide: =>
 		return if not @visible
 		@slots "Changed",nil
 		@unschedule!
 		@perform CCSequence {
-			oScale 0.3,0,0,oEase.InBack
+			CCSpawn {
+				oPos 0.5,@positionX,@endPosY+30,oEase.InBack
+				oOpacity 0.5,0
+			}
 			CCHide!
 		}
