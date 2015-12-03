@@ -451,7 +451,7 @@ Class ViewPanelView,
 					newData.name = editor\getUsableName newData.name
 				when "World"
 					newData = Model.World!
-					newData.offset = oVec2(200,200)
+					newData.offset = oVec2 200,200
 					newData.name = editor\getUsableName newData.name
 
 			insertAtParentLevel = ->

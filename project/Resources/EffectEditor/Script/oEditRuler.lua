@@ -368,10 +368,10 @@ local function oEditRuler()
 		isUsedForFrame = true
 	end
 
-	ruler.show = function(self,default,min,max,indent,callback)
-		self:setIndent(indent)
+	ruler.show = function(self,default,min,max,ind,callback)
+		self:setValue(default*indent/ind)
+		self:setIndent(ind)
 		self:setLimit(min,max)
-		self:setValue(default)
 		self.changed = callback
 		self.visible = true
 		self.opacity = 0

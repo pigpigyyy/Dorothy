@@ -51,7 +51,7 @@ Class EditMenuView,
 					1
 			mode += 1
 			mode %= 3
-			@zoomBtn.text = tostring(scale*100).."%"
+			@zoomBtn.text = string.format("%d%%",scale*100)
 			emit "Scene.ViewArea.ScaleTo",scale
 
 		@originBtn\slots "Tapped",->
@@ -210,7 +210,8 @@ Class EditMenuView,
 		@gslot "Scene.ViewPanel.Select",itemChoosed
 
 		@gslot "Scene.ViewArea.Scale",(scale)->
-			@zoomBtn.text = tostring(scale*100).."%"
+			mode = 2
+			@zoomBtn.text = string.format("%d%%",scale*100)
 
 	setButtonVisible: (button,visible)=>
 		return if visible == button.enabled

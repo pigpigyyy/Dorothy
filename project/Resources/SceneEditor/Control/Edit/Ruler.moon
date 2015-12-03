@@ -133,6 +133,7 @@ Class RulerView,
 			for i,label in pairs labels
 				label.text = tostring ind*i/100
 				label.texture.antiAlias = false
+		@getIndent = => indent
 
 		_value = 0
 		_max = 0
@@ -241,10 +242,10 @@ Class RulerView,
 		@slots "TouchEnded",touchEnded
 		@slots "TouchCancelled",touchEnded
 
-	show: (default,min,max,indent,callback)=>
-		@setIndent indent
+	show: (default,min,max,ind,callback)=>
+		@setValue (default/ind)*@getIndent!
+		@setIndent ind
 		@setLimit min,max
-		@setValue default
 		@slots("Changed")\set callback
 		@visible = true
 		@positionY = @endPosY+30

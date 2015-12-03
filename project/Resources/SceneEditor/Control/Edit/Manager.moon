@@ -77,9 +77,15 @@ Class => CCNode!,
 							data[item.name] = value
 							item.value = value
 					when "ratioX","ratioY"
-						showRuler data[item.name],-10,10,1,(value)->
+						default = data[item.name]
+						valueChanged = (value)->
 							data[item.name] = value
 							item.value = value
+						start,stop,interval = if data.typeName == "Camera"
+							0,1,0.1
+						else
+							-10,10,1
+						showRuler default,start,stop,interval,valueChanged
 					when "speed"
 						showRuler data[item.name],0,10,1,(value)->
 							data[item.name] = value
