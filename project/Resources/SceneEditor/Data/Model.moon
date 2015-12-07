@@ -53,7 +53,7 @@ Groups = (data)->
 			str = "{"
 			for k,v in pairs @
 				str ..= "["..k.."]=\""..v.."\","
-			str = str\sub 1,-2
+			str = str\sub 1,-2 if #str > 1
 			str ..= "}"
 			str
 		}
