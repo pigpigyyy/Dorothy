@@ -78,11 +78,10 @@ NS_CC_BEGIN
 // XXX it should be a Director ivar. Move it there once support for multiple directors is added
 
 // singleton stuff
-static CCDisplayLinkDirector *s_SharedDirector = NULL;
+static CCDisplayLinkDirector* s_SharedDirector = NULL;
 
 /* last time the main loop was updated */
 static cc_timeval s_obLastUpdate;
-static cc_timeval s_obTickStart;
 
 #define kDefaultFPS 60  // 60 frames per second
 extern const char* cocos2dVersion();
@@ -140,7 +139,6 @@ bool CCDirector::init()
 	m_fRealDeltaTime = 0.0f;
 	m_fUpdateInterval = 0.0f;
 	m_fDrawInterval = 0.0f;
-	CCTime::gettimeofdayCocos2d(&s_obTickStart, NULL);
 
 	// paused ?
 	m_bPaused = false;
@@ -566,8 +564,8 @@ CCPoint CCDirector::getVisibleOrigin()
 void CCDirector::runWithScene(CCScene *pScene)
 {
 	CCAssert(pScene != NULL, "the scene should not be null");
+	if (m_pobScenesStack->count() == 0) startAnimation();
 	pushScene(pScene);
-	if (m_pobScenesStack->count() == 1) startAnimation();
 }
 
 void CCDirector::replaceScene(CCScene *pScene, bool cleanup)
@@ -988,7 +986,7 @@ float CCDirector::getInterval(const struct cc_timeval& begin)
 
 float CCDirector::getEclapsedInterval()
 {
-	return CCDirector::getInterval(s_obTickStart);
+	return CCDirector::getInterval(s_obLastUpdate);
 }
 
 unsigned int CCDirector::getSceneStackSize()
@@ -1053,7 +1051,6 @@ void CCDisplayLinkDirector::mainLoop()
 		if (!m_bPaused)
 		{
 			CCDirector::calculateDeltaTime();
-			CCTime::gettimeofdayCocos2d(&s_obTickStart, NULL);
 			if (m_nHandler)
 			{
 				if (CCScriptEngine::sharedEngine()->executeFunction(m_nHandler, 0) != 0)
@@ -1064,9 +1061,9 @@ void CCDisplayLinkDirector::mainLoop()
 			if (!m_bInvalid)
 			{
 				m_pScheduler->update(m_fDeltaTime);
-				m_fUpdateInterval = CCDirector::getInterval(s_obTickStart);
+				m_fUpdateInterval = CCDirector::getInterval(s_obLastUpdate);
 				CCDirector::drawScene();
-				m_fDrawInterval = CCDirector::getInterval(s_obTickStart) - m_fUpdateInterval;
+				m_fDrawInterval = CCDirector::getInterval(s_obLastUpdate) - m_fUpdateInterval;
 				// release the objects
 				CCPoolManager::sharedPoolManager()->pop();
 			}

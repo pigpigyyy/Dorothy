@@ -40,7 +40,7 @@ int CCTime::gettimeofdayCocos2d(struct cc_timeval *tp, void *tzp)
 
 double CCTime::timersubCocos2d(struct cc_timeval *start, struct cc_timeval *end)
 {
-    if (! start || ! end)
+    if (!start || !end)
     {
         return 0;
     }

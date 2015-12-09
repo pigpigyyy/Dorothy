@@ -148,7 +148,6 @@ Class EditMenuView,
 			if @editBtn.dirty ~= dirty
 				@editBtn.dirty = dirty
 				if dirty
-					@editBtn.color = ccColor3 0xff0088
 					@editBtn.text = "Save"
 					if not @undoBtn.visible
 						@undoBtn.enabled = true
