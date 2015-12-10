@@ -12,7 +12,7 @@ SelectionPanelView = require "View.Control.Basic.SelectionPanel"
 Button = require "Control.Basic.Button"
 
 -- [signals]
--- "Selected",(item)->
+-- "Selected",(item,index)->
 -- [params]
 -- width, height, items
 Class
@@ -41,7 +41,7 @@ Class
 		@scrollArea\slots "ScrollTouchEnded",->
 			@menu.enabled = true
 
-		for item in *items
+		for i,item in ipairs items
 			button = Button {
 				text:item
 				fontSize:16
@@ -55,7 +55,7 @@ Class
 						oOpacity 0.3,0
 					}
 					CCCall ->
-						@emit "Selected",item
+						@emit "Selected",item,i
 						@parent\removeChild @
 				}
 			@menu\addChild button

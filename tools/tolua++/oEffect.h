@@ -1,5 +1,6 @@
 class oEffect: public CCObject
 {
+	tolua_property__bool bool visible;
 	tolua_readonly tolua_property__bool bool playing;
 	void start();
 	void stop();

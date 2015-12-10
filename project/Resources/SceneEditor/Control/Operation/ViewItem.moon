@@ -2,7 +2,8 @@ Dorothy!
 Class,property = unpack require "class"
 ViewItemView = require "View.Control.Operation.ViewItem"
 
--- [no signals]
+-- [signals]
+-- "Checked",(item)->
 -- [params]
 -- width, height, items
 VisibleChecker = Class ViewItemView,
@@ -34,6 +35,7 @@ VisibleChecker = Class ViewItemView,
 				@label.color = ccColor3 0xffffff
 				@cascadeOpacity = true
 				@borderBold\runAction @fade
+			@emit "Checked",@parent
 
 -- [no signals]
 -- [params]
@@ -44,7 +46,9 @@ Class ViewItemView,
 		@_visibleChecker = nil
 		@slots "Tapped",-> @checked = not @checked
 
-	visibleChecker: property => @_visibleChecker ~= nil,
+	checker: property => @_visibleChecker
+
+	enableChecker: property => @_visibleChecker ~= nil,
 		(value)=>
 			if value
 				return if @_visibleChecker

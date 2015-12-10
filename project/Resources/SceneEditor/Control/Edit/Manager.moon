@@ -66,38 +66,55 @@ Class => CCNode!,
 					CCHide!
 				}
 
-		@gslot "Scene.ViewPanel.Select",-> cancelEditing!
+		@gslot "Scene.ViewPanel.Select",cancelEditing
 
-		@gslot "Scene.SettingPanel.Edit",(item)->
-			if item and item.selected and editor.currentData
+		@gslot "Scene.SettingPanel.Edit",(menuItem)->
+			if menuItem and menuItem.selected and editor.currentData
 				data = editor.currentData
-				switch item.name
+				item = editor\getItem data
+				switch menuItem.name
 					when "outline","loop","visible","faceRight","play"
-						showSwitcher data[item.name],(value)->
-							data[item.name] = value
-							item.value = value
+						showSwitcher data[menuItem.name],(value)->
+							data[menuItem.name] = value
+							menuItem.value = value
+							switch menuItem.name
+								when "outline"
+									item.showDebug = value
+								when "loop"
+									item.loop = value
+								when "visible"
+									item.visible = value and data.display
+								when "faceRight"
+									item.faceRight = value
+								when "play"
+									if value
+										item\start!
+									else
+										item\stop!
 					when "ratioX","ratioY"
-						default = data[item.name]
+						default = data[menuItem.name]
 						valueChanged = (value)->
-							data[item.name] = value
-							item.value = value
+							data[menuItem.name] = value
+							menuItem.value = value
 						start,stop,interval = if data.typeName == "Camera"
 							0,1,0.1
 						else
 							-10,10,1
 						showRuler default,start,stop,interval,valueChanged
 					when "speed"
-						showRuler data[item.name],0,10,1,(value)->
-							data[item.name] = value
-							item.value = value
+						showRuler data[menuItem.name],0,10,1,(value)->
+							data[menuItem.name] = value
+							menuItem.value = value
+							item.speed = value
 					when "look"
 						file = data.file
 						looks = oCache.Model\getLookNames file
 						table.insert looks,1,"None"
 						with SelectionPanel items:looks
 							\slots "Selected",(value)->
-								data[item.name] = (value == "None" and "" or value)
-								item.value = value
+								data[menuItem.name] = (value == "None" and "" or value)
+								menuItem.value = value
+								item.look = value
 								cancelEditing!
 					when "animation"
 						file = data.file
@@ -105,22 +122,27 @@ Class => CCNode!,
 						table.insert looks,1,"None"
 						with SelectionPanel items:looks
 							\slots "Selected",(value)->
-								data[item.name] = (value == "None" and "" or value)
-								item.value = value
+								data[menuItem.name] = (value == "None" and "" or value)
+								menuItem.value = value
+								item\play value
 								cancelEditing!
 					when "group"
 						groupChooser = with GroupChooser!
-							\slots "Hide",-> cancelEditing!
+							\slots "Hide",cancelEditing
 							\slots "Selected",(group)->
-								data[item.name] = group
-								item.value = editor.sceneData.groups[group]
+								data[menuItem.name] = group
+								menuItem.value = editor.sceneData.groups[group]
 								groupChooser\hide!
 					when "effect"
 						print 1
 					when "offset","position"
 						print 1
 					when "simulation"
-						print 1
+						with SelectionPanel items:{"Low","Medium","High"}
+							\slots "Selected",(value,index)->
+								data[menuItem.name] = index
+								menuItem.value = value
+								cancelEditing!
 					when "zoom","scale"
 						print 1
 					when "angle"

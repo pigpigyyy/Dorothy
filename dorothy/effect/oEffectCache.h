@@ -19,6 +19,8 @@ public:
 	virtual void start() = 0;
 	virtual bool isPlaying() = 0;
 	virtual void stop() = 0;
+	virtual void setVisible(bool visible) = 0;
+	virtual bool isVisible() const = 0;
 	virtual oEffect* setOffset(const oVec2& pos) = 0;
 	virtual oEffect* attachTo(CCNode* parent, int zOrder = 0) = 0;
 	virtual oEffect* autoRemove() = 0;
@@ -32,6 +34,8 @@ public:
 	virtual void start();
 	virtual bool isPlaying();
 	virtual void stop();
+	virtual void setVisible(bool visible);
+	virtual bool isVisible() const;
 	virtual oEffect* setOffset( const oVec2& pos );
 	virtual oEffect* attachTo( CCNode* parent, int zOrder = 0);
 	virtual oEffect* autoRemove();
@@ -47,6 +51,8 @@ public:
 	virtual void start();
 	virtual bool isPlaying();
 	virtual void stop();
+	virtual void setVisible(bool visible);
+	virtual bool isVisible() const;
 	virtual oEffect* setOffset( const oVec2& pos );
 	virtual oEffect* attachTo( CCNode* parent, int zOrder = 0);
 	virtual oEffect* autoRemove();

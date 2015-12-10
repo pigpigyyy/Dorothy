@@ -137,6 +137,12 @@ Class ViewPanelView,
 				@_selectedItem = nil
 				checkFolding item
 
+		displayChanged = (menuItem)->
+			data = menuItem.itemData
+			item = editor\getItem data
+			data.display = not menuItem.checker.checked
+			item.visible = data.display and data.visible
+
 		addItem = (x,y,text,data,parentData)->
 			realW = width-(x-itemW/2)-10
 			realX = (x-itemW/2)+realW/2
@@ -151,9 +157,12 @@ Class ViewPanelView,
 			item.parentData = parentData
 			item\slots "Tapped",itemTapped
 			@menu\addChild item
-			item.visibleChecker = switch text
+			item.enableChecker = switch text
 				when "Camera","Scene" then false
 				else true
+			if item.enableChecker
+				item.checker.checked = not data.display
+				item.checker\slots "Checked",displayChanged
 			@items[data] = item
 			viewSize.width = x+realW/2+10
 			viewSize.height = height-y+itemH/2+10
@@ -374,9 +383,11 @@ Class ViewPanelView,
 				width:parentItem.width-20
 				height:itemH
 			}
-			item.visibleChecker = switch text
+			item.enableChecker = switch text
 				when "Camera","Scene" then false
 				else true
+			if item.enableChecker
+				item.checker\slots "Checked",displayChanged
 			item.itemData = newData
 			item.parentData = parentData
 			item\slots "Tapped",itemTapped

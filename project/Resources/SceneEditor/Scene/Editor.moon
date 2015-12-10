@@ -349,6 +349,9 @@ Class EditorView,
 				parent\removeLayer index
 				for i = index,#parentData.children-1
 					parent\swapLayer i,i+1
+			when "Effect"
+				item\autoRemove!
+				item\stop!
 			else
 				parent\removeChild item
 		table.remove parentData.children,index

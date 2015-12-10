@@ -144,6 +144,14 @@ void oParticleEffect::stop()
 	_particle->setVisible(false);
 	_particle->stopSystem();
 }
+void oParticleEffect::setVisible(bool visible)
+{
+	_particle->setVisible(visible);
+}
+bool oParticleEffect::isVisible() const
+{
+	return _particle->isVisible();
+}
 oEffect* oParticleEffect::attachTo( CCNode* parent, int zOrder )
 {
 	if (!parent)
@@ -214,6 +222,14 @@ void oSpriteEffect::stop()
 	{
 		_sprite->getParent()->removeChild(_sprite, true);
 	}
+}
+void oSpriteEffect::setVisible(bool visible)
+{
+	_sprite->setVisible(visible);
+}
+bool oSpriteEffect::isVisible() const
+{
+	return _sprite->isVisible();
 }
 oEffect* oSpriteEffect::attachTo( CCNode* parent, int zOrder )
 {

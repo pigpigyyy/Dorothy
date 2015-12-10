@@ -98,14 +98,17 @@ DataCreater = (dataDef)->
 	dataMt =
 		__call:(parent,index)=> create @,parent,index
 		__newindex:(k,v)=>
-			itemDef = dataDef[k]
-			if itemDef
-				if @[itemDef[1]] ~= v
-					@[itemDef[1]] = v
-					if k ~= "ui" and k ~= "camera"
-						emit "Scene.Dirty",true
+			if "number" == type k
+				rawset @,k,v
 			else
-				error "assign invalid field #{k} to data"
+				itemDef = dataDef[k]
+				if itemDef
+					if @[itemDef[1]] ~= v
+						@[itemDef[1]] = v
+						if k ~= "ui" and k ~= "camera"
+							emit "Scene.Dirty",true
+				else
+					error "assign invalid field #{k} to data"
 		__index:(k)=>
 			itemDef = dataDef[k]
 			if itemDef
@@ -204,12 +207,14 @@ Items =
 		itemType:{1,Types.UILayer}
 		visible:{2,true}
 		children:{3,false}
+		-- design
+		display:{4,true}
 		-- helper
 		create:(scene)=>
 			layer = scene.UILayer
 			editor.items.UI = layer
 			layer.position -= editor.origin
-			layer.visible = @visible
+			layer.visible = @visible and @display
 			editor.itemDefs[layer] = @
 			Children layer,@
 			nil
@@ -239,13 +244,15 @@ Items =
 		zoom:{6,1}
 		visible:{7,true}
 		children:{8,false}
+		-- design
+		display:{9,true}
 		-- helper
 		create:(scene,index)=>
 			scene\setLayerOffset index,@offset
 			layer = with scene\getLayer index
 				.scaleX = @zoom
 				.scaleY = @zoom
-				.visible = @visible
+				.visible = @visible and @display
 			editor.items[@name] = layer
 			editor.itemDefs[layer] = @
 			Children layer,@
@@ -265,6 +272,7 @@ Items =
 		children:{10,false}
 		-- design
 		outline:{11,true}
+		display:{12,true}
 		-- helper
 		create:(scene,index)=>
 			scene\setLayerRatio index,oVec2(@ratioX,@ratioY)
@@ -275,7 +283,7 @@ Items =
 			world = with oWorld!
 				.gravity = @gravity
 				.showDebug = @outline
-				.visible = @visible
+				.visible = @visible and @display
 				\setIterations Simulation @simulation
 			layer\addChild world
 			world.scheduler = with CCScheduler!
@@ -300,6 +308,8 @@ Items =
 		position:{5,Point(0,0)}
 		angle:{6,0}
 		visible:{7,true}
+		-- design
+		display:{8,true}
 		-- helper
 		create:(parent)=>
 			world = editor.items.Scene
@@ -308,7 +318,7 @@ Items =
 			body = with oBody @file,world,@position,@angle
 				.data\each (_,v)->
 					v.group = @group if "oBody" == tolua.type v
-				.visible = @visible
+				.visible = @visible and @display
 			editor.items[@name] = body
 			editor.itemDefs[body] = @
 			body
@@ -329,6 +339,8 @@ Items =
 		loop:{12,false}
 		faceRight:{13,true}
 		visible:{14,true}
+		-- design
+		display:{15,true}
 		-- helper
 		create:=>
 			model = with oModel @file
@@ -341,7 +353,7 @@ Items =
 				.speed = @speed
 				.loop = @loop
 				.faceRight = @faceRight
-				.visible = @visible
+				.visible = @visible and @display
 				\play @animation
 			editor.items[@name] = model
 			editor.itemDefs[model] = @
@@ -358,6 +370,8 @@ Items =
 		skew:{7,Point(0,0)}
 		opacity:{8,1}
 		visible:{9,true}
+		-- design
+		display:{10,true}
 		-- helper
 		create:=>
 			sprite = with CCSprite @file
@@ -368,7 +382,7 @@ Items =
 				.skewX = @skew.x
 				.skewY = @skew.y
 				.opacity = @opacity
-				.visible = @visible
+				.visible = @visible and @display
 			editor.items[@name] = sprite
 			editor.itemDefs[sprite] = @
 			sprite
@@ -380,14 +394,17 @@ Items =
 		effect:{3,""}
 		position:{4,Point(0,0)}
 		play:{5,true}
+		visible:{6,true}
+		-- design
+		display:{7,true}
 		-- helper
 		create:(parent)=>
-			effect = oEffect @effect
-			effect\attachTo parent
-			effect.parent = parent
-			effect\setOffset @position
-			if @play
-				effect\start!
+			effect = with oEffect @effect
+				.parent = parent
+				.visible = @visible and @display
+				\attachTo parent
+				\setOffset @position
+				\start! if @play
 			editor.items[@name] = effect
 			editor.itemDefs[effect] = @
 			nil

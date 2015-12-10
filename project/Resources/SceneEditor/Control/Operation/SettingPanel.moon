@@ -137,6 +137,7 @@ Class SettingPanelView,
 				items.Effect
 				items.Position
 				items.Play
+				items.Visible
 			}
 		}
 
@@ -180,8 +181,6 @@ Class SettingPanelView,
 						". . ."
 					when "group"
 						editor.sceneData.groups[data[item.name]]
-					when "outline"
-						data[item.name] and "Show" or "Hide"
 					else
 						data[item.name] == "" and "None" or data[item.name]
 

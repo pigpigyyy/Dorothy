@@ -146,6 +146,7 @@ void oWorld::setShowDebug(bool var)
 	else
 	{
 		b2Draw* draw = _world.GetDebugDraw();
+		_world.SetDebugDraw(nullptr);
 		CC_SAFE_DELETE(draw);
 	}
 }
