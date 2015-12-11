@@ -118,12 +118,18 @@ Class EditMenuView,
 		@xFixBtn.visible = false
 		@xFixBtn\slots "Tapped",(button)->
 			editor.xFix = not editor.xFix
-			button.color = ccColor3 editor.xFix and 0x8800ff or 0x00ffff
+			if editor.yFix
+				editor.yFix = false
+				@yFixBtn.color = ccColor3 0x00ffff
+			button.color = ccColor3 editor.xFix and 0xff0088 or 0x00ffff
 			emit "Scene.FixChange"
 		@yFixBtn.visible = false
 		@yFixBtn\slots "Tapped",(button)->
 			editor.yFix = not editor.yFix
-			button.color = ccColor3 editor.yFix and 0x8800ff or 0x00ffff
+			if editor.xFix
+				editor.xFix = false
+				@xFixBtn.color = ccColor3 0x00ffff
+			button.color = ccColor3 editor.yFix and 0xff0088 or 0x00ffff
 			emit "Scene.FixChange"
 
 		@gslot "Scene.ShowFix",(value)->

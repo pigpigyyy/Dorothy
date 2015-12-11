@@ -61,10 +61,74 @@ Class => CCNode!,
 				\perform oScale 0.3,1,1,oEase.OutBack
 			_stopEditing = ->
 				_stopEditing = nil
-				@boolSwitcher\perform CCSequence {
-					oScale 0.3,0,0,oEase.InBack
-					CCHide!
-				}
+				with @boolSwitcher
+					\slots "Changed",nil
+					\perform CCSequence {
+						oScale 0.3,0,0,oEase.InBack
+						CCHide!
+					}
+
+		-- init position editor --
+		round = (value)-> value > 0 and math.floor(value+0.5) or math.ceil(value-0.5)
+		deltaPos = oVec2.zero
+		posChanged = nil
+		posVisual = with CCNode!
+			\addChild oLine {
+					oVec2 0,150
+					oVec2 -20,150
+					oVec2 0,190
+					oVec2 20,150
+					oVec2 0,150
+					oVec2.zero
+				},ccColor4!
+			\addChild oLine {
+					oVec2.zero
+					oVec2 150,0
+					oVec2 150,20
+					oVec2 190,0
+					oVec2 150,-20
+					oVec2 150,0
+				},ccColor4!
+			\gslot "Scene.FixChange",->
+				posVisual.children[1].visible = not editor.yFix
+				posVisual.children[2].visible = not editor.xFix
+		posEditor = with CCLayer!
+			.visible = false
+			.swallowTouches = true
+			.touchPriority = editor.levelEditControl
+			\addChild posVisual
+			\slots "TouchMoved",(touch)->
+				delta = touch.delta
+				delta.x = 0 if editor.xFix
+				delta.y = 0 if editor.yFix
+				if editor.isFixed
+					deltaPos += delta/editor.scale
+					if 1 < math.abs deltaPos.x
+						posVisual.positionX = round posVisual.positionX + deltaPos.x
+						deltaPos.x = 0
+					if 1 < math.abs deltaPos.y
+						posVisual.positionY = round posVisual.positionY + deltaPos.y
+						deltaPos.y = 0
+				else
+					posVisual.position += delta/editor.scale
+				if posChanged
+					posChanged posVisual.position
+		@addChild posEditor
+
+		showPosEditor = (pos,target,callback)->
+			emit "Scene.ShowFix",true
+			posChanged = callback
+			with posEditor
+				.visible = true
+				.touchEnabled = true
+			posVisual.transformTarget = target
+			posVisual.position = pos
+			deltaPos = oVec2.zero
+			_stopEditing = ->
+				return unless posEditor.visible
+				emit "Scene.ShowFix",false
+				posEditor.touchEnabled = false
+				posEditor.visible = false
 
 		@gslot "Scene.ViewPanel.Select",cancelEditing
 
@@ -135,8 +199,33 @@ Class => CCNode!,
 								groupChooser\hide!
 					when "effect"
 						print 1
-					when "offset","position"
-						print 1
+					when "offset"
+						startPos = editor.origin
+						showPosEditor startPos,editor.viewArea,(value)->
+							delta = value-startPos
+							startPos = value
+							data[menuItem.name] += delta
+							offset = data[menuItem.name]
+							menuItem.value = offset
+							switch data.typeName
+								when "Layer"
+									item.parent.parent\setLayerOffset item.zOrder,offset
+								when "World"
+									item.parent.parent.parent\setLayerOffset item.parent.zOrder,offset
+					when "position"
+						showPosEditor data[menuItem.name],item.parent,(value)->
+							data[menuItem.name] = value
+							menuItem.value = value
+							switch data.typeName
+								when "Effect"
+									item\setOffset value
+								when "Body"
+									pos = item.children[1].position
+									delta = value - pos
+									item\eachChild (child)->
+										child.position += delta
+								else
+									item.position = value
 					when "simulation"
 						with SelectionPanel items:{"Low","Medium","High"}
 							\slots "Selected",(value,index)->

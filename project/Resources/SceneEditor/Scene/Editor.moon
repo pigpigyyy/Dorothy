@@ -361,6 +361,22 @@ Class EditorView,
 		emit "Scene.Dirty",true
 		index
 
+	resetData: (itemData)=>
+		switch itemData.typeName
+			when "Layer","World","Camera","PlatformWorld"
+				return
+		item = @getItem itemData
+		parent = item.parent
+		parentData = @getData parent
+		index = nil
+		for i,child in ipairs parentData.children
+			if child == itemData
+				index = i
+				break
+		targetData = parentData.children[index+1]
+		@removeData itemData,parentData
+		@insertData parentData,itemData,targetData
+
 	moveDataUp:(itemData,parentData)=>
 		index = 1
 		for i,v in ipairs parentData.children
