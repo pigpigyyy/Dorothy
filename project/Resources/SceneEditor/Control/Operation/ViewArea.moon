@@ -110,15 +110,15 @@ Class ViewAreaView,
 						@cross\perform @fadeCross
 					when "Body"
 						item = editor\getItem itemData
-						if item.children
-							pos = item.children[1].position
-							@cross.position = pos
-							@cross.transformTarget = item
-							@cross\perform @fadeCross
-							if item.parent ~= editor.items.UI
-								parentData = editor\getData item.parent
-								pos += parentData.offset
-								emit "Scene.ViewArea.MoveTo",editor.origin-pos
+						pos = itemData.position
+						@cross.position = pos
+						@cross.transformTarget = item
+						@cross\perform @fadeCross
+						if item.parent ~= editor.items.UI
+							-- TODO: show can`t add body message here
+							parentData = editor\getData item.parent
+							pos += parentData.offset
+							emit "Scene.ViewArea.MoveTo",editor.origin-pos
 					else
 						item = editor\getItem itemData
 						pos = itemData.position

@@ -109,6 +109,7 @@ Class EditMenuView,
 			else
 				editor\save!
 				emit "Scene.Dirty",false
+			emit "Scene.SettingPanel.Edit",nil
 
 		@undoBtn.visible = false
 		@undoBtn\slots "Tapped",->

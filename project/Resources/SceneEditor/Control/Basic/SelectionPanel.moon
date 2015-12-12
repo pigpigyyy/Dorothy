@@ -49,14 +49,13 @@ Class
 				height:50
 			}
 			button\slots "Tapped",->
+				@emit "Selected",item,i
 				@box\perform CCSequence {
 					CCSpawn {
 						oScale 0.3,0,0,oEase.InBack
 						oOpacity 0.3,0
 					}
-					CCCall ->
-						@emit "Selected",item,i
-						@parent\removeChild @
+					CCCall -> @parent\removeChild @
 				}
 			@menu\addChild button
 

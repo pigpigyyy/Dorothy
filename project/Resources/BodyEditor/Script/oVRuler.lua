@@ -107,13 +107,15 @@ local function oVRuler()
 				moveLabel(label,pos)
 			end
 		end
+		insertPos = #labelList
 		for i = right,left,-1 do
 			local pos = i*100
 			if labels[pos] then
 				break
 			else
 				local label = table.remove(labelList,1)
-				table.insert(labelList,label)
+				table.insert(labelList,insertPos,label)
+				insertPos = insertPos-1
 				moveLabel(label,pos)
 			end
 		end
@@ -229,7 +231,11 @@ local function oVRuler()
 	self.touchEnabled = true
 	self:slots("TouchBegan",function(touch)
 		local loc = self:convertToNodeSpace(touch.location)
-		return CCRect(-halfW,-halfH,rulerWidth,rulerHeight):containsPoint(loc)
+		local hit = CCRect(-halfW,-halfH,rulerWidth,rulerHeight):containsPoint(loc)
+		if hit then
+			self.opacity = 1
+		end
+		return hit
 	end)
 	self:slots("TouchMoved",function(touch)
 		self.positionX = self.positionX + touch.delta.x
@@ -239,6 +245,11 @@ local function oVRuler()
 			self.positionX = halfW+10
 		end
 	end)
+	local function touchEnded()
+		self:perform(oOpacity(0.3,0.3))
+	end
+	self:slots("TouchCancelled",touchEnded)
+	self:slots("TouchEnded",touchEnded)
 
 	return self
 end

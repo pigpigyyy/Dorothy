@@ -5,6 +5,7 @@ SelectionPanel = require "Control.Basic.SelectionPanel"
 GroupChooser = require "Control.Edit.GroupChooser"
 GroupPanel = require "Control.Edit.GroupPanel"
 ContactPanel = require "Control.Edit.ContactPanel"
+import Simulation from require "Data.Model"
 
 Class => CCNode!,
 	__init:=>
@@ -213,26 +214,27 @@ Class => CCNode!,
 								when "World"
 									item.parent.parent.parent\setLayerOffset item.parent.zOrder,offset
 					when "position"
-						showPosEditor data[menuItem.name],item.parent,(value)->
-							data[menuItem.name] = value
+						showPosEditor data.position,item.parent,(value)->
 							menuItem.value = value
 							switch data.typeName
 								when "Effect"
 									item\setOffset value
 								when "Body"
-									pos = item.children[1].position
-									delta = value - pos
-									item\eachChild (child)->
-										child.position += delta
+									delta = value - data.position
+									item\eachChild (child)-> child.position += delta
 								else
 									item.position = value
+							data.position = value
 					when "simulation"
 						with SelectionPanel items:{"Low","Medium","High"}
 							\slots "Selected",(value,index)->
-								data[menuItem.name] = index
+								data.simulation = index
 								menuItem.value = value
+								item\setIterations Simulation index
 								cancelEditing!
-					when "zoom","scale"
+					when "zoom"
+						print 1
+					when"scale"
 						print 1
 					when "angle"
 						print 1
@@ -252,7 +254,10 @@ Class => CCNode!,
 					when "target"
 						print 1
 					when "gravity"
-						print 1
+						showRuler data.gravity,-50,50,10,(value)->
+							data.gravity = value
+							menuItem.value = value
+							item.gravity = oVec2 0,value
 					when "opacity"
 						print 1
 			else

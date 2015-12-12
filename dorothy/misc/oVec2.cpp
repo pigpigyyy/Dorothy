@@ -39,21 +39,51 @@ oVec2 oVec2::operator+(const oVec2& vec) const
 {
 	return oVec2(x + vec.x, y + vec.y);
 }
+oVec2& oVec2::operator+=(const oVec2& vec)
+{
+	x += vec.x;
+	y += vec.y;
+	return *this;
+}
 oVec2 oVec2::operator-(const oVec2& vec) const
 {
 	return oVec2(x - vec.x, y - vec.y);
+}
+oVec2& oVec2::operator-=(const oVec2& vec)
+{
+	x -= vec.x;
+	y -= vec.y;
+	return *this;
 }
 oVec2 oVec2::operator*(float value) const
 {
 	return oVec2(x * value, y * value);
 }
+oVec2& oVec2::operator*=(float value)
+{
+	x *= value;
+	y *= value;
+	return *this;
+}
 oVec2 oVec2::operator*(const oVec2& vec) const
 {
 	return oVec2(x * vec.x, y * vec.y);
 }
+oVec2& oVec2::operator*=(const oVec2& vec)
+{
+	x *= vec.x;
+	y *= vec.y;
+	return *this;
+}
 oVec2 oVec2::operator/(float value) const
 {
 	return oVec2(x / value, y / value);
+}
+oVec2& oVec2::operator/=(float value)
+{
+	x /= value;
+	y /= value;
+	return *this;
 }
 bool oVec2::operator==(const oVec2& vec) const
 {

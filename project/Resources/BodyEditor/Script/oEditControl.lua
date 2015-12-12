@@ -1018,7 +1018,7 @@ local function oEditControl()
 				end})
 			elseif name == "FacePos" then
 				local target = oEditor:getItem(data)
-				local face = target.children[1]
+				local face = target.children and target.children[1]
 				editControl:showCenterEditor(oEditor:getItem(data),data:get("FacePos"),function(center)
 					item.value = center
 					data:set("FacePos",center)

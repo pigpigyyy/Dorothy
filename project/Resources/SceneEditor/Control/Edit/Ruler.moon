@@ -19,32 +19,37 @@ Class RulerView,
 
 		labels = {}
 		labelList = {}
-		setupLabels = ->
+		len = nil
+		do
 			posX = @intervalNode.anchor.x*width
-			right = math.floor (posX+width+50)/100
-			left = math.floor (posX-width-50)/100
-			for i = left,right
+			center = math.floor posX/100
+			len = math.floor (posX+width+50)/100 - center
+			len = math.max (center - math.floor (posX-width-50)/100),len
+			for i = center-len,center+len
 				pos = i*100
 				label = with CCLabelTTF tostring(pos/100*indent),"Arial",10
-					--.texture.antiAlias = false
+					--.texture.antiAlias = false -- cause render glitch on osx 10.11.1
 					.scaleX = 1/@intervalNode.scaleX
 					.position = oVec2 pos,halfH-28
+					.tag = pos
 				@intervalNode\addChild label
 				labels[pos] = label
 				table.insert labelList,label
 
 		moveLabel = (label,pos)->
-			labels[math.ceil(tonumber(label.text)/indent)*100] = nil
+			labels[label.tag] = nil
 			labels[pos] = with label
 				.text = tostring pos/100*indent
 				.texture.antiAlias = false
 				.scaleX = 1/@intervalNode.scaleX
 				.position = oVec2 pos,halfH-28
+				.tag = pos
 
 		updateLabels = ->
 			posX = @intervalNode.anchor.x*width
-			right = math.floor (posX+width)/100
-			left = math.floor (posX-width)/100
+			center = math.floor posX/100
+			right = center+len
+			left = center-len
 			insertPos = 1
 			for i = left,right
 				pos = i*100
@@ -53,15 +58,17 @@ Class RulerView,
 				else
 					label = table.remove labelList
 					table.insert labelList,insertPos,label
-					insertPos = insertPos+1
+					insertPos += 1
 					moveLabel label,pos
+			insertPos = #labelList
 			for i = right,left,-1
 				pos = i*100
 				if labels[pos]
 					break
 				else
 					label = table.remove labelList,1
-					table.insert labelList,label
+					table.insert labelList,insertPos,label
+					insertPos -= 1
 					moveLabel label,pos
 			if up < top or down < bottom
 				if up < top
@@ -81,8 +88,6 @@ Class RulerView,
 						table.insert vs,oVec2(posX,halfH)
 					down = target+1
 				@intervalNode\set vs
-
-		setupLabels!
 
 		arrow = with CCNode!
 			.cascadeOpacity = false
@@ -243,9 +248,9 @@ Class RulerView,
 		@slots "TouchCancelled",touchEnded
 
 	show: (default,min,max,ind,callback)=>
-		@setValue (default/ind)*@getIndent!
-		@setIndent ind
 		@setLimit min,max
+		@setIndent ind
+		@setValue default
 		@slots("Changed")\set callback
 		@visible = true
 		@positionY = @endPosY+30

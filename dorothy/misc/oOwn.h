@@ -23,6 +23,11 @@ public:
 	{
 		return std::unique_ptr<Item, Del>::get();
 	}
+	inline oOwn& operator=(std::nullptr_t)
+	{
+		std::unique_ptr<Item, Del>::reset();
+		return (*this);
+	}
 	inline const oOwn& operator=(oOwn&& own)
 	{
 		std::unique_ptr<Item, Del>::operator=(std::move(own));

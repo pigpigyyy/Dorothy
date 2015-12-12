@@ -76,10 +76,14 @@ local function oEditRuler()
 
 	local labels = {}
 	local labelList = {}
+	local len = nil
 	local function setupLabels()
 		local posY = intervalNode.anchor.y*height
-		local right = math.floor((posY+height+50)/100)
-		local left = math.floor((posY-height-50)/100)
+		local center = math.floor(posY/100)
+		len = math.floor((posY+height+50)/100)-center
+		len = math.max(center-math.floor((posY-height-50)/100),len)
+		local right = center+len
+		local left = center-len
 		for i = left,right do
 			local pos = i*100
 			local label = CCLabelTTF(tostring(pos/100*indent),"Arial",10)
@@ -87,26 +91,30 @@ local function oEditRuler()
 			label.scaleX = 1/intervalNode.scaleY
 			label.angle = -90
 			label.position = oVec2(-halfW+28,pos)
+			label.tag = pos
 			intervalNode:addChild(label)
 			labels[pos] = label
 			table.insert(labelList,label)
 		end
 	end
+	setupLabels()
 
 	local function moveLabel(label,pos)
-		labels[math.ceil(tonumber(label.text)/indent)*100] = nil
+		labels[label.tag] = nil
 		label.text = tostring(pos/100*indent)
 		label.texture.antiAlias = false
 		label.scaleX = 1/intervalNode.scaleY
 		label.angle = -90
 		label.position = oVec2(-halfW+28,pos)
+		label.tag = pos
 		labels[pos] = label
 	end
 
 	local function updateLabels()
 		local posY = intervalNode.anchor.y*height
-		local right = math.floor((posY+height)/100)
-		local left = math.floor((posY-height)/100)
+		local center = math.floor(posY/100)
+		local right = center+len
+		local left = center-len
 		local insertPos = 1
 		for i = left,right do
 			local pos = i*100
@@ -119,13 +127,15 @@ local function oEditRuler()
 				moveLabel(label,pos)
 			end
 		end
+		insertPos = #labelList
 		for i = right,left,-1 do
 			local pos = i*100
 			if labels[pos] then
 				break
 			else
 				local label = table.remove(labelList,1)
-				table.insert(labelList,label)
+				table.insert(labelList,insertPos,label)
+				insertPos = insertPos-1
 				moveLabel(label,pos)
 			end
 		end
@@ -153,8 +163,6 @@ local function oEditRuler()
 			intervalNode:set(vs)
 		end
 	end
-
-	setupLabels()
 
 	local arrow = CCNode()
 	arrow.cascadeOpacity = false
@@ -369,9 +377,9 @@ local function oEditRuler()
 	end
 
 	ruler.show = function(self,default,min,max,ind,callback)
-		self:setValue(default*indent/ind)
-		self:setIndent(ind)
 		self:setLimit(min,max)
+		self:setIndent(ind)
+		self:setValue(default)
 		self.changed = callback
 		self.visible = true
 		self.opacity = 0

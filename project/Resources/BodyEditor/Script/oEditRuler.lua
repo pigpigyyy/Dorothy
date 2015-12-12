@@ -17,11 +17,13 @@ local CCSpawn = require("CCSpawn")
 local oOpacity = require("oOpacity")
 local CCSequence = require("CCSequence")
 local CCCall = require("CCCall")
+local oPos = require("oPos")
+local CCHide = require("CCHide")
 
 local function oEditRuler()
 	local winSize = CCDirector.winSize
-	local center = oVec2(winSize.width*0.5,winSize.height*0.5)
-	local width = 100
+	local center = oVec2(winSize.width*0.5,100)
+	local width = 60
 	local height = 460*winSize.height/600
 	local halfW = width*0.5
 	local halfH = height*0.5
@@ -30,6 +32,7 @@ local function oEditRuler()
 	ruler.visible = false
 	ruler.opacity = 0.8
 	ruler.cascadeOpacity = true
+	ruler.angle = 90
 	ruler.position = oEditor.origin+center
 
 	local border = oLine(
@@ -73,10 +76,13 @@ local function oEditRuler()
 
 	local labels = {}
 	local labelList = {}
+	local len = nil
 	local function setupLabels()
 		local posY = intervalNode.anchor.y*height
-		local right = math.floor((posY+height+50)/100)
-		local left = math.ceil((posY-height-50)/100)
+		local center = math.floor(posY/100)
+		len = math.floor((posY+height+50)/100)-center
+		len = math.max(center-math.ceil((posY-height-50)/100),len)
+		local left,right = center-len,center+len
 		for i = left,right do
 			local pos = i*100
 			local label = CCLabelTTF(tostring(pos/100*indent),"Arial",10)
@@ -84,6 +90,7 @@ local function oEditRuler()
 			label.scaleX = 1/intervalNode.scaleY
 			label.angle = -90
 			label.position = oVec2(-halfW+28,pos)
+			label.tag = pos
 			intervalNode:addChild(label)
 			labels[pos] = label
 			table.insert(labelList,label)
@@ -91,19 +98,20 @@ local function oEditRuler()
 	end
 
 	local function moveLabel(label,pos)
-		labels[math.ceil(tonumber(label.text)/indent)*100] = nil
+		labels[label.tag] = nil
 		label.text = tostring(pos/100*indent)
 		label.texture.antiAlias = false
 		label.scaleX = 1/intervalNode.scaleY
 		label.angle = -90
 		label.position = oVec2(-halfW+28,pos)
+		label.tag = pos
 		labels[pos] = label
 	end
 
 	local function updateLabels()
 		local posY = intervalNode.anchor.y*height
-		local right = math.floor((posY+height)/100)
-		local left = math.ceil((posY-height)/100)
+		local center = math.floor(posY/100)
+		local left,right = center-len,center+len
 		local insertPos = 1
 		for i = left,right do
 			local pos = i*100
@@ -116,13 +124,15 @@ local function oEditRuler()
 				moveLabel(label,pos)
 			end
 		end
+		insertPos = #labelList
 		for i = right,left,-1 do
 			local pos = i*100
 			if labels[pos] then
 				break
 			else
 				local label = table.remove(labelList,1)
-				table.insert(labelList,label)
+				table.insert(labelList,insertPos,label)
+				insertPos = insertPos-1
 				moveLabel(label,pos)
 			end
 		end
@@ -353,33 +363,30 @@ local function oEditRuler()
 	ruler:slots("TouchCancelled",touchEnded)
 
 	ruler.show = function(self,default,min,max,indent,callback)
-		self:setIndent(indent)
 		self:setLimit(min,max)
+		self:setIndent(indent)
 		self:setValue(default)
 		self.changed = callback
 		self.visible = true
-		self.scaleX = 0
-		self.scaleY = 0
 		self.opacity = 0
-		self:stopAllActions()
-		self:runAction(CCSpawn({oScale(0.5,1,1,oEase.OutBack),oOpacity(0.5,0.8)}))
+		local pos = oEditor.origin+center
+		self.position = oVec2(pos.x,pos.y+30)
+		self:perform(CCSpawn({oPos(0.5,pos.x,pos.y,oEase.OutBack),oOpacity(0.5,0.8)}))
 		self.touchEnabled = true
 	end
 	ruler.hide = function(self)
 		if not ruler.visible then return end
 		self.changed = nil
 		self.touchEnabled = false
-		self:stopAllActions()
-		self:runAction(CCSequence(
+		local pos = oEditor.origin+center
+		self:perform(CCSequence(
 		{
 			CCSpawn(
 			{
-				oScale(0.5,0,0,oEase.InBack),
-				oOpacity(0.5,0)
+				oPos(0.3,pos.x,pos.y+30,oEase.OutQuad),
+				oOpacity(0.3,0)
 			}),
-			CCCall(function()
-				ruler.visible = false
-			end),
+			CCHide()
 		}))
 	end
 	return ruler

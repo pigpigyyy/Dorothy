@@ -9,6 +9,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifndef __DOROTHY_PHYSICS_OWORLD_H__
 #define __DOROTHY_PHYSICS_OWORLD_H__
 
+class GLESDebugDraw;
+
 NS_DOROTHY_BEGIN
 
 class oBody;
@@ -140,6 +142,8 @@ private:
 		virtual float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point,
 			const b2Vec2& normal, float32 fraction);
 	} _rayCastCallBack;
+protected:
+	oOwn<GLESDebugDraw> _debugDraw;
 private:
 	b2Filter _filters[16];
 	b2World _world;

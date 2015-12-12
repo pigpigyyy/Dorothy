@@ -109,8 +109,6 @@ oWorld::~oWorld()
 			}
 		}
 	}
-	b2Draw* draw = _world.GetDebugDraw();
-	CC_SAFE_DELETE(draw);
 }
 
 bool oWorld::init()
@@ -140,14 +138,14 @@ void oWorld::setShowDebug(bool var)
 	{
 		if (!_world.GetDebugDraw())
 		{
-			_world.SetDebugDraw(new GLESDebugDraw());
+			_debugDraw = oOwnNew<GLESDebugDraw>();
+			_world.SetDebugDraw(_debugDraw);
 		}
 	}
 	else
 	{
-		b2Draw* draw = _world.GetDebugDraw();
 		_world.SetDebugDraw(nullptr);
-		CC_SAFE_DELETE(draw);
+		_debugDraw = nullptr;
 	}
 }
 
@@ -189,11 +187,10 @@ void oWorld::update( float dt )
 
 void oWorld::draw()
 {
-	GLESDebugDraw* draw = (GLESDebugDraw*)_world.GetDebugDraw();
-	if (draw)
+	if (_debugDraw)
 	{
-		draw->ratio = b2Factor;
-		draw->Begin();
+		_debugDraw->ratio = oWorld::b2Factor;
+		_debugDraw->Begin();
 		_world.DrawDebugData();
 	}
 }

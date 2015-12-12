@@ -170,10 +170,12 @@ Items =
 		str = "local v,t,f = require(\"oVec2\"),true,false\nreturn "..tostring data
 		oContent\saveToFile filename,str
 
+	:Simulation
+
 	PlatformWorld:DataCreater
 		-- property
 		itemType:{1,Types.PlatformWorld}
-		gravity:{2,Point(0,-10)}
+		gravity:{2,-10}
 		contacts:{3,Contacts}
 		groups:{4,Groups}
 		simulation:{5,1}
@@ -185,7 +187,7 @@ Items =
 		-- helper
 		create:=>
 			world = with oPlatformWorld!
-				.gravity = @gravity
+				.gravity = oVec2 0,@gravity
 				.showDebug = @outline
 				\setIterations Simulation @simulation
 			world.scheduler = with CCScheduler!

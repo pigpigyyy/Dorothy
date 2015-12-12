@@ -491,7 +491,7 @@ Class ViewPanelView,
 							}
 							CCCall -> circle.parent\removeChild circle
 						}
-					editor.items.UI\addChild circle
+					editor.viewArea\addChild circle
 				else
 					switch itemData.typeName
 						when "Layer","UILayer","World"

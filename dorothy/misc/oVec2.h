@@ -24,10 +24,15 @@ public:
 	inline operator CCPoint() const { return *(CCPoint*)this; }
 	void set(float x, float y);
 	oVec2 operator+(const oVec2& vec) const;
+	oVec2& operator+=(const oVec2& vec);
 	oVec2 operator-(const oVec2& vec) const;
+	oVec2& operator-=(const oVec2& vec);
 	oVec2 operator*(float value) const;
+	oVec2& operator*=(float value);
 	oVec2 operator*(const oVec2& vec) const;
+	oVec2& operator*=(const oVec2& vec);
 	oVec2 operator/(float value) const;
+	oVec2& operator/=(float value);
 	bool operator==(const oVec2& vec) const;
 	bool operator!=(const oVec2& vec) const;
 	float distance(const oVec2& vec) const;

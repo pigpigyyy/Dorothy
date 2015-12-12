@@ -97,13 +97,15 @@ cycle = require "cycle"
 				table.insert labelList,insertPos,label
 				insertPos += 1
 				moveLabel label,pos
+		insertPos = #labelList
 		for i = right,left,-1
 			pos = i*100
 			if labels[pos]
 				break
 			else
 				label = table.remove labelList,1
-				table.insert labelList,label
+				table.insert labelList,insertPos,label
+				insertPos -= 1
 				moveLabel label,pos
 		if nCurrentPart < nPart or pCurrentPart < pPart
 			start = math.floor nCurrentPart/10
