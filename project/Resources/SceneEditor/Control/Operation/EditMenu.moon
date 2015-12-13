@@ -136,6 +136,7 @@ Class EditMenuView,
 		@gslot "Scene.ShowFix",(value)->
 			editor.xFix = false
 			editor.yFix = false
+			emit "Scene.FixChange"
 			if value
 				@xFixBtn.visible = true
 				@xFixBtn.color = ccColor3 0x00ffff
@@ -173,7 +174,7 @@ Class EditMenuView,
 						}
 
 		itemChoosed = (itemData)->
-			emit "Scene.ViewPanel.FoldState",
+			emit "Scene.ViewPanel.FoldState",{
 				itemData:itemData
 				handler:(state)->
 					if state ~= nil
@@ -188,6 +189,7 @@ Class EditMenuView,
 						@setButtonVisible @foldBtn,false
 						@setButtonVisible @upBtn,false
 						@setButtonVisible @downBtn,false
+			}
 			return unless itemData
 			switch itemData.typeName
 				when "Camera","PlatformWorld","UILayer"

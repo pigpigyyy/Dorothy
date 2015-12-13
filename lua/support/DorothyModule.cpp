@@ -885,6 +885,10 @@ bool oEffectCache_update(const char* content)
 {
 	return oSharedEffectCache.update(content);
 }
+const char* oEffectCache_getFileByName(const char* name)
+{
+	return oSharedEffectCache.getFileByName(name).c_str();
+}
 bool oEffectCache_unload()
 {
 	return oSharedEffectCache.unload();

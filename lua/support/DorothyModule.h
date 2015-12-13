@@ -109,6 +109,7 @@ void __oClipCache_getTextureFile(lua_State* L, const char* filename);
 
 bool oEffectCache_load(const char* filename);
 bool oEffectCache_update(const char* content);
+const char* oEffectCache_getFileByName(const char* name);
 bool oEffectCache_unload();
 
 bool oParticleCache_load(const char* filename);

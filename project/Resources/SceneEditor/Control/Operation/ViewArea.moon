@@ -118,7 +118,7 @@ Class ViewAreaView,
 							-- TODO: show can`t add body message here
 							parentData = editor\getData item.parent
 							pos += parentData.offset
-							emit "Scene.ViewArea.MoveTo",editor.origin-pos
+							emit "Scene.ViewArea.MoveTo",editor.origin-pos*item.parent.scaleX
 					else
 						item = editor\getItem itemData
 						pos = itemData.position
@@ -128,7 +128,7 @@ Class ViewAreaView,
 						if item.parent ~= editor.items.UI
 							parentData = editor\getData item.parent
 							pos += parentData.offset
-							emit "Scene.ViewArea.MoveTo",editor.origin-pos
+							emit "Scene.ViewArea.MoveTo",editor.origin-pos*item.parent.scaleX
 		@gslot "Scene.ViewPanel.Pick",itemChoosed
 		@gslot "Scene.ViewPanel.Select",itemChoosed
 

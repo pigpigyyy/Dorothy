@@ -337,7 +337,7 @@ local function oEditRuler()
 		return true
 	end)
 	ruler:slots("TouchMoved",function(touch)
-		local v = _value-touch.delta.y*indent/(interval*10)
+		local v = _value-touch.delta.x*indent/(interval*10)
 		local padding = 0.5*indent
 		if _max > _min then
 			local d = 1
@@ -349,7 +349,7 @@ local function oEditRuler()
 			v = _value+(v - _value)/(d < 1 and 1 or d*d)
 		end
 		ruler:setValue((v-_value)/intervalNode.scaleY+_value)
-		_s = _s + touch.delta.y
+		_s = _s + touch.delta.x
 	end)
 
 	local function touchEnded()

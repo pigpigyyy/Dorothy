@@ -115,21 +115,198 @@ Class => CCNode!,
 				if posChanged
 					posChanged posVisual.position
 		@addChild posEditor
-
 		showPosEditor = (pos,target,callback)->
 			emit "Scene.ShowFix",true
 			posChanged = callback
 			with posEditor
 				.visible = true
 				.touchEnabled = true
-			posVisual.transformTarget = target
-			posVisual.position = pos
+			with posVisual
+				.transformTarget = target
+				.scaleX = 1/target.scaleX
+				.scaleY = 1/target.scaleY
+				.position = pos
 			deltaPos = oVec2.zero
 			_stopEditing = ->
 				return unless posEditor.visible
 				emit "Scene.ShowFix",false
 				posEditor.touchEnabled = false
 				posEditor.visible = false
+
+		rotVisual = with CCNode!
+			newP = (i)->
+				a = 2*math.pi*i/40
+				oVec2 200*math.cos(a),200*math.sin(a)
+			\addChild oLine [newP i for i = 0,40],ccColor4!
+			\addChild oLine {oVec2(-200,0),oVec2(200,0)},ccColor4!
+			\addChild oLine {oVec2(0,-200),oVec2(0,200)},ccColor4!
+		totalRot = 0
+		rotChanged = nil
+		rotEditor = with CCLayer!
+			.visible = false
+			.swallowTouches = true
+			.touchPriority = editor.levelEditControl
+			\addChild rotVisual
+			\slots "TouchMoved",(touch)->
+				oldPos = rotVisual\convertToNodeSpace touch.preLocation
+				newPos = rotVisual\convertToNodeSpace touch.location
+				v1 = oVec2.zero-oldPos
+				v2 = oVec2.zero-newPos
+				len1 = v1.length
+				len2 = v2.length
+				if len1 ~= 0 and len2 ~= 0
+					res = (v1.x*v2.x+v1.y*v2.y)/(len1*len2)
+					res = math.min res,1
+					res = math.max res,-1
+					s = oldPos.x*newPos.y-oldPos.y*newPos.x
+					delta = (s > 0 and -1 or 1)*math.acos(res)*180/math.pi/editor.scale
+					if editor.isFixed
+						totalRot = totalRot + delta
+						if totalRot < 1 and totalRot > -1
+							delta = 0
+						else
+							delta = totalRot > 0 and math.floor(totalRot) or math.ceil(totalRot)
+							totalRot = 0
+							angle = rotVisual.angle + delta
+							angle = angle > 0 and math.floor(angle) or math.ceil(angle)
+							rotVisual.angle = angle
+					else
+						rotVisual.angle = rotVisual.angle + delta
+					if rotChanged
+						rotChanged rotVisual.angle
+		@addChild rotEditor
+		showRotEditor = (pos,angle,target,callback)->
+			rotChanged = callback
+			totalRot = 0
+			rotEditor.visible = true
+			rotEditor.touchEnabled = true
+			with rotVisual
+				.transformTarget = target
+				.scaleX = 1/target.scaleX
+				.scaleY = 1/target.scaleY
+				.position = pos
+				.angle = angle
+			_stopEditing = ->
+				return unless rotEditor.visible
+				rotEditor.touchEnabled = false
+				rotEditor.visible = false
+
+		scaleVisual = with CCNode!
+			.visible = false
+			\addChild oLine {
+					oVec2 0,150
+					oVec2 -20,150
+					oVec2 -20,190
+					oVec2 20,190
+					oVec2 20,150
+					oVec2 0,150
+					oVec2.zero
+				},ccColor4!
+			\addChild oLine {
+					oVec2.zero
+					oVec2 150,0
+					oVec2 150,20
+					oVec2 190,20
+					oVec2 190,-20
+					oVec2 150,-20
+					oVec2 150,0
+				},ccColor4!
+			\gslot "Scene.FixChange",->
+				scaleVisual.children[1].visible = not editor.yFix
+				scaleVisual.children[2].visible = not editor.xFix
+		deltaScaleX = 0
+		deltaScaleY = 0
+		totalScale = oVec2.zero
+		scaleChanged = nil
+		scaleEditor = with CCLayer!
+			.visible = false
+			.touchPriority = editor.levelEditControl
+			.swallowTouches = true
+			\addChild scaleVisual
+			\slots "TouchMoved",(touch)->
+				delta = scaleVisual\convertToNodeSpace(touch.location) - 
+					scaleVisual\convertToNodeSpace(touch.preLocation)
+				if delta ~= oVec2.zero
+					delta = delta*editor.scale
+					delta.x = 0 if editor.xFix
+					delta.y = 0 if editor.yFix
+					if editor.isFixed
+						deltaScaleX += delta.x
+						deltaScaleY += delta.y
+						if deltaScaleX > 1 or deltaScaleX < -1
+							totalScale.x = round totalScale.x+deltaScaleX
+							deltaScaleX = 0
+						if deltaScaleY > 1 or deltaScaleY < -1
+							totalScale.y = round totalScale.y+deltaScaleY
+							deltaScaleY = 0
+					else
+						totalScale.x += delta.x
+						totalScale.y += delta.y
+					if scaleChanged
+						scaleChanged totalScale/100
+		@addChild scaleEditor
+		showScaleEditor = (pos,angle,scale,target,callback)->
+			emit "Scene.ShowFix",true
+			totalScale = scale*100
+			scaleChanged = callback
+			scaleEditor.visible = true
+			scaleEditor.touchEnabled = true
+			with scaleVisual
+				.visible = true
+				.transformTarget = target
+				.scaleX = 1/target.scaleX
+				.scaleY = 1/target.scaleY
+				.position = pos
+				.angle = angle
+			deltaScaleX = 0
+			deltaScaleY = 0
+			_stopEditing = ->
+				return unless scaleEditor.visible
+				emit "Scene.ShowFix",false
+				scaleVisual.visible = false
+				scaleEditor.touchEnabled = false
+				scaleEditor.visible = false
+
+		skewVisual = with CCNode!
+			.visible = false
+			\addChild oLine {
+					oVec2 -20,100
+					oVec2 0,140
+					oVec2 20,100
+					oVec2 0,140
+					oVec2 0,-140
+					oVec2 -20,-100
+					oVec2 0,-140
+					oVec2 20,-100
+				},ccColor4!
+			\addChild oLine {
+					oVec2 100,20
+					oVec2 140,0
+					oVec2 100,-20
+					oVec2 140,0
+					oVec2 -140,0
+					oVec2 -100,20
+					oVec2 -140,0
+					oVec2 -100,-20
+				},ccColor4!
+			\gslot "Scene.FixChange",->
+				skewVisual.children[1].visible = not editor.yFix
+				skewVisual.children[2].visible = not editor.xFix
+		scaleEditor\addChild skewVisual
+		showSkewEditor = (pos,angle,scale,target,callback)->
+			showScaleEditor pos,angle,scale,target,callback
+			scaleVisual.visible = false
+			with skewVisual
+				.visible = true
+				.transformTarget = target
+				.scaleX = 1/target.scaleX
+				.scaleY = 1/target.scaleY
+				.position = pos
+				.angle = angle
+			stopHandler = _stopEditing
+			_stopEditing = ->
+				stopHandler!
+				skewVisual.visible = false
 
 		@gslot "Scene.ViewPanel.Select",cancelEditing
 
@@ -138,6 +315,26 @@ Class => CCNode!,
 				data = editor.currentData
 				item = editor\getItem data
 				switch menuItem.name
+					when "name"
+						menuItem\slots("TextChanged")\set (value)->
+							menuItem\slots "TextChanged",nil
+							value = editor\renameData data,value
+							return unless value
+							menuItem.value = value
+							emit "Scene.ViewPanel.NameChange",data
+					when "file"
+						emit "Editor.ItemChooser",{data.typeName,(itemChooser)->
+							if not itemChooser
+								cancelEditing!
+								return
+							editor\addChild itemChooser,editor.topMost
+							itemChooser\show!
+							itemChooser\slots("Selected")\set (filename)->
+								data.file = filename
+								editor\resetData data
+								menuItem.value = filename\match "[^\\/]*$"
+							itemChooser\slots "Hide",cancelEditing
+						}
 					when "outline","loop","visible","faceRight","play"
 						showSwitcher data[menuItem.name],(value)->
 							data[menuItem.name] = value
@@ -147,6 +344,7 @@ Class => CCNode!,
 									item.showDebug = value
 								when "loop"
 									item.loop = value
+									item\play data.animation
 								when "visible"
 									item.visible = value and data.display
 								when "faceRight"
@@ -199,7 +397,18 @@ Class => CCNode!,
 								menuItem.value = editor.sceneData.groups[group]
 								groupChooser\hide!
 					when "effect"
-						print 1
+						emit "Editor.ItemChooser",{"Effect",(itemChooser)->
+							if not itemChooser
+								cancelEditing!
+								return
+							editor\addChild itemChooser,editor.topMost
+							itemChooser\show!
+							itemChooser\slots("Selected")\set (effectName)->
+								data.effect = effectName
+								editor\resetData data
+								menuItem.value = effectName
+							itemChooser\slots "Hide",cancelEditing
+						}
 					when "offset"
 						startPos = editor.origin
 						showPosEditor startPos,editor.viewArea,(value)->
@@ -233,13 +442,35 @@ Class => CCNode!,
 								item\setIterations Simulation index
 								cancelEditing!
 					when "zoom"
-						print 1
+						showRuler data.zoom,0.5,10,1,(value)->
+							data.zoom = value
+							menuItem.value = value
+							item.scaleX = value
+							item.scaleY = value
 					when"scale"
-						print 1
+						showScaleEditor data.position,
+							data.angle,
+							data.scale,
+							item.parent,(value)->
+								menuItem.value = value
+								item.scaleX = value.x
+								item.scaleY = value.y
+								data.scale = value
 					when "angle"
-						print 1
+						showRotEditor data.position,data.angle,item.parent,(value)->
+							menuItem.value = value
+							item.angle = value
+							data.angle = value
 					when "skew"
-						print 1
+						showSkewEditor data.position,
+							data.angle,
+							data.skew/10,
+							item.parent,(value)->
+								value *= 10
+								menuItem.value = value
+								item.skewX = value.x
+								item.skewY = value.y
+								data.skew = value
 					when "groups"
 						with GroupPanel!
 							\slots "Hide",-> cancelEditing!
@@ -251,8 +482,6 @@ Class => CCNode!,
 								groupChooser\hide!
 								with ContactPanel group:group
 									\slots "Hide",-> cancelEditing!
-					when "target"
-						print 1
 					when "gravity"
 						showRuler data.gravity,-50,50,10,(value)->
 							data.gravity = value

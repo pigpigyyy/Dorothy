@@ -135,9 +135,9 @@ local function oEditControl()
 	-- switchButton
 	local switched = nil
 	local switchValue = true
-	local switchButton = oButton("true",16,50,50,winSize.width-345,winSize.height-35,function(button)
+	local switchButton = oButton("True",16,50,50,winSize.width-225,95,function(button)
 		switchValue = not switchValue
-		button.text = tostring(switchValue)
+		button.text = switchValue and "True" or "False"
 		if switched then
 			switched(switchValue)
 		end
@@ -150,7 +150,7 @@ local function oEditControl()
 		switchMenu.visible = true
 		switchMenu.touchEnabled = true
 		switchValue = defaultValue
-		switchButton.text = tostring(switchValue)
+		switchButton.text = switchValue and "True" or "False"
 		switchButton:stopAllActions()
 		switchButton.scaleX = 0
 		switchButton.scaleY = 0

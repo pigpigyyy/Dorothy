@@ -43,6 +43,11 @@ oEffect* oEffectType::toEffect()
 	return nullptr;
 }
 
+const string& oEffectType::getFilename() const
+{
+	return _file;
+}
+
 //oEffectCache
 oEffectCache::oEffectCache()
 {
@@ -97,6 +102,15 @@ oEffect* oEffectCache::create( const string& name )
 		return it->second->toEffect();
 	}
 	return nullptr;
+}
+const string& oEffectCache::getFileByName(const string & name)
+{
+	auto it = _effects.find(name);
+	if (it != _effects.end())
+	{
+		return it->second->getFilename();
+	}
+	return oString::Empty;
 }
 oEffectCache* oEffectCache::shared()
 {

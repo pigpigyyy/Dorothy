@@ -17,6 +17,7 @@ local CCSprite = require("CCSprite")
 local oModel = require("oModel")
 local oRoutine = require("oRoutine")
 local once = require("once")
+local oCache = require("oCache")
 
 local oEditor = CCScene()
 
@@ -1205,6 +1206,9 @@ return {]]
 	str = str.."}"
 	str = str:gsub("%.00","")
 	oContent:saveToFile(oEditor.output..filename,str)
+	if oCache.Body then
+		oCache.Body:unload(filename)
+	end
 end
 
 oEditor.transformData = function(self,bodyData)

@@ -102,3 +102,6 @@ Class ViewItemView,
 					},ccColor4(0x88ffffff),0.5,ccColor4!
 			else
 				@removeChildByTag 1
+
+	text: property => @label.text,
+		(value)=> @label.text = value

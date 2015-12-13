@@ -24,6 +24,7 @@ Class EditorView,
 		@xFix = false
 		@yFix = false
 		@isFixed = true
+		@topMost = 998
 
 		_G.editor = @
 		builtin.editor = @
@@ -95,6 +96,7 @@ Class EditorView,
 				eventName = "Scene.#{name}Selected"
 				panel.notifyEditor = (file)-> emit eventName,file
 				panel\slots "Selected",panel.notifyEditor
+			@[panelName]
 
 		@gslot "Scene.ViewSprite",-> setupPanel "Sprite"
 		@gslot "Scene.ViewModel",-> setupPanel "Model"
@@ -121,24 +123,15 @@ Class EditorView,
 			table.remove args
 			chooseItem = (itemType)->
 				switch itemType
-					when "Sprite"
-						setupPanel "Sprite"
-						@spritePanel\slots "Selected",nil
-						@spritePanel.parent\removeChild @spritePanel,false
-						@spritePanel\slots("Hide")\set ->
-							@spritePanel.parent\removeChild @spritePanel,false
-							@addChild @spritePanel,1
-							@spritePanel\slots("Selected")\set @spritePanel.notifyEditor
-						handler @spritePanel
-					when "Model"
-						setupPanel "Model"
-						@modelPanel\slots "Selected",nil
-						@modelPanel.parent\removeChild @modelPanel,false
-						@modelPanel\slots("Hide")\set ->
-							@modelPanel.parent\removeChild @modelPanel,false
-							@addChild @modelPanel,1
-							@modelPanel\slots("Selected")\set @modelPanel.notifyEditor
-						handler @modelPanel
+					when "Sprite","Model","Effect","Body"
+						panel = setupPanel itemType
+						panel\slots "Selected",nil
+						panel.parent\removeChild panel,false
+						panel\slots("Hide")\set ->
+							panel.parent\removeChild panel,false
+							@addChild panel,1
+							panel\slots("Selected")\set panel.notifyEditor
+						handler panel
 					else
 						handler nil
 			if #args == 1
@@ -148,11 +141,17 @@ Class EditorView,
 					\slots "Selected",(itemType)->
 						chooseItem itemType
 
-		refreshRef = Reference.refreshRef
-		@gslot "Scene.ModelUpdated",refreshRef
-		@gslot "Scene.BodyUpdated",refreshRef
-		@gslot "Scene.EffectUpdated",refreshRef
-		@gslot "Scene.ClipUpdated",refreshRef
+		itemUpdated = (itemName)->
+			Reference.refreshRef itemName
+			@eachSceneItem (itemData)->
+				if (itemData.typeName == "Effect" and
+					itemName == oCache.Effect\getFileByName(itemData.effect)\sub(-#itemName,-1)) or
+					itemData.file == itemName
+						@resetData itemData
+		@gslot "Scene.ModelUpdated",itemUpdated
+		@gslot "Scene.BodyUpdated",itemUpdated
+		@gslot "Scene.EffectUpdated",itemUpdated
+		@gslot "Scene.ClipUpdated",itemUpdated
 
 		selectItem = (typeName,item)->
 			@selectedType,@selectedItem = if item then typeName,item else nil,nil
@@ -198,6 +197,17 @@ Class EditorView,
 			@currentSceneFile = nil
 			oCache\clear!
 			Reference.update!
+
+	eachSceneItem: (handler)=>
+		if @sceneData
+			if @sceneData.ui and @sceneData.ui.children
+				for child in *@sceneData.ui.children
+					handler child
+			if @sceneData.children
+				for layer in *@sceneData.children
+					if layer.children
+						for child in *layer.children
+							handler child
 
 	gamesFullPath: property => oContent.writablePath.."Game/"
 	gameFullPath: property => @_gameFullPath
@@ -276,6 +286,19 @@ Class EditorView,
 		else
 			originalName
 
+	renameData: (itemData,name)=>
+		return nil if itemData.name == name
+		switch itemData.typeName
+			when "UILayer","PlatformWorld","Camera"
+				return nil
+		itemName = itemData.name
+		name = @getUsableName name
+		item = @items[itemName]
+		@items[itemName] = nil
+		@items[name] = item
+		itemData.name = name
+		name
+
 	getItem: (itemData)=>
 		itemName = switch itemData.typeName
 			when "UILayer"
@@ -286,9 +309,9 @@ Class EditorView,
 				"Camera"
 			else
 				itemData.name
-		editor.items[itemName]
+		@items[itemName]
 
-	getData: (item)=> editor.itemDefs[item]
+	getData: (item)=> @itemDefs[item]
 
 	insertData: (parentData,newData,targetData)=>
 		-- insert newData to parentData.children before targetData

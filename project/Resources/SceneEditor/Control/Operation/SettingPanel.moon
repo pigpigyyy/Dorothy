@@ -33,7 +33,6 @@ Class SettingPanelView,
 			{"Group","%s"}
 			{"Groups","%s"}
 			{"Contacts","%s"}
-			{"Target","%s"}
 			{"Gravity","%.2f"}
 			{"Opacity","%.2f"}
 		}
@@ -74,11 +73,6 @@ Class SettingPanelView,
 				items.Visible
 			}
 			Camera: {
-				items.Position
-				items.Target
-				items.RatioX
-				items.RatioY
-				items.Zoom
 			}
 			Layer: {
 				items.Name

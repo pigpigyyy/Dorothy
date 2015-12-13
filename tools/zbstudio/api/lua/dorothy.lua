@@ -5308,6 +5308,13 @@ local Dorothy =
 				returns = "(loaded: bool)",
 				type = "method"
 			},
+			getFileByName =
+			{
+				args = "(name: string)",
+				description = "",
+				returns = "(filename: string)",
+				type = "method"
+			},
 			unload =
 			{
 				args = "(nil|filename: string)",

@@ -211,6 +211,7 @@ Items =
 		children:{3,false}
 		-- design
 		display:{4,true}
+		fold:{5,false}
 		-- helper
 		create:(scene)=>
 			layer = scene.UILayer
@@ -224,11 +225,6 @@ Items =
 	Camera:DataCreater
 		-- property
 		itemType:{1,Types.Camera}
-		position:{2,Point(0,0)}
-		zoom:{3,1}
-		target:{4,""}
-		ratioX:{5,1}
-		ratioY:{6,1}
 		-- helper
 		create:(scene)=>
 			camera = scene.camera
@@ -248,6 +244,7 @@ Items =
 		children:{8,false}
 		-- design
 		display:{9,true}
+		fold:{10,false}
 		-- helper
 		create:(scene,index)=>
 			scene\setLayerOffset index,@offset
@@ -275,6 +272,7 @@ Items =
 		-- design
 		outline:{11,true}
 		display:{12,true}
+		fold:{13,false}
 		-- helper
 		create:(scene,index)=>
 			scene\setLayerRatio index,oVec2(@ratioX,@ratioY)
@@ -350,6 +348,8 @@ Items =
 				.angle = @angle
 				.scaleX = @scale.x
 				.scaleY = @scale.y
+				.skewX = @skew.x
+				.skewY = @skew.y
 				.opacity = @opacity
 				.look = @look
 				.speed = @speed

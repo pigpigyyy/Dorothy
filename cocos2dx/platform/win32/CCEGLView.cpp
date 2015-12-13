@@ -33,6 +33,7 @@ THE SOFTWARE.
 #include "support/CCPointExtension.h"
 #include "CCApplication.h"
 #include "platform/CCKeyboard.h"
+#include "GL/wglew.h"
 
 NS_CC_BEGIN
 

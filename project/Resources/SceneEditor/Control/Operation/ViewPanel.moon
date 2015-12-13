@@ -49,6 +49,7 @@ Class ViewPanelView,
 		doFolding = (item)->
 			item.fold = not item.fold
 			itemData = item.itemData
+			itemData.fold = item.fold
 			thread ->
 				@menuEnabled = false
 				if item.fold
@@ -290,6 +291,27 @@ Class ViewPanelView,
 			traverseData data,itemX,itemY
 			@viewSize = viewSize
 
+		foldData = (itemData,withPick=true)->
+			return unless itemData
+			switch itemData.typeName
+				when "UILayer","Layer","World"
+					item = @items[itemData]
+					doFolding item if itemData.children and #itemData.children > 0
+					emit "Scene.ViewPanel.Pick",itemData if withPick
+				when "PlatformWorld","Camera"
+					return
+				else
+					parentData = @items[itemData].parentData
+					item = @items[parentData]
+					doFolding item if parentData.children and #parentData.children > 0
+					emit "Scene.ViewPanel.Pick",parentData if withPick
+		@gslot "Scene.ViewPanel.Fold",foldData
+
+		@gslot "Scene.ViewPanel.NameChange",(itemData)->
+			item = @items[itemData]
+			return unless item
+			item.text = itemData.name
+
 		@gslot "Scene.DataLoaded",(data)->
 			sceneData = data
 			@menu\removeAllChildrenWithCleanup!
@@ -299,6 +321,15 @@ Class ViewPanelView,
 				drawNode = CCDrawNode!
 				@menu\addChild drawNode
 				setupData data
+				drawNode\schedule once ->
+					if data.ui.fold
+						foldData data.ui
+						sleep 0.6
+					if data.children
+						for child in *data.children
+							if child.fold
+								foldData child
+								sleep 0.6
 			else
 				drawNode = nil
 			@_selectedItem = nil
@@ -328,21 +359,6 @@ Class ViewPanelView,
 							@scrollTo offset
 						offset.y = endY
 						@scrollTo offset
-
-		@gslot "Scene.ViewPanel.Fold",(itemData)->
-			return unless itemData
-			switch itemData.typeName
-				when "UILayer","Layer","World"
-					item = @items[itemData]
-					doFolding item if itemData.children and #itemData.children > 0
-					emit "Scene.ViewPanel.Pick",itemData
-				when "PlatformWorld","Camera"
-					return
-				else
-					parentData = @items[itemData].parentData
-					item = @items[parentData]
-					doFolding item if parentData.children and #parentData.children > 0
-					emit "Scene.ViewPanel.Pick",parentData
 
 		@gslot "Scene.ViewPanel.FoldState",(args)->
 			state = nil

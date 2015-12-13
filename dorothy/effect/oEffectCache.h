@@ -73,6 +73,7 @@ public:
 	oEffectType(const char* filename);
 	/** Get a running effect instance of this effect type. */
 	oEffect* toEffect();
+	const string& getFilename() const;
 private:
 	string _file;
 	uint32 _type;
@@ -93,6 +94,7 @@ public:
 	bool unload();
 	/** Create a new effect instance. */
 	oEffect* create(const string& name);
+	const string& getFileByName(const string& name);
 	/** Singleton method. */
 	static oEffectCache* shared();
 private:

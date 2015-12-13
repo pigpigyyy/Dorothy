@@ -20,6 +20,7 @@ module oCache
 	{
 		static tolua_outside bool oEffectCache_load @ load( const char* filename );
 		static tolua_outside bool oEffectCache_update @ update(const char* content);
+		static tolua_outside const char* oEffectCache_getFileByName @ getFileByName(const char* name);
 		static tolua_outside bool oEffectCache_unload @ unload();
 	};
 

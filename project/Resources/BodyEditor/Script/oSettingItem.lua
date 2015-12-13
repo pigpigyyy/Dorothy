@@ -22,7 +22,7 @@ local oSettingItem = class(
 	end,
 
 	-- self = CCMenuItem
-	__init = function(self,name,width,height, x, y, isInput, valueFormat, toggled)
+	__init = function(self, name, width, height, x, y, isInput, valueFormat, toggled)
 		--local halfW = width*0.5
 		local halfH = height*0.5
 
@@ -49,6 +49,7 @@ local oSettingItem = class(
 			label = oTextField(x,y,fontSize,limit,
 				function()
 					self.selected = false
+					self:emit("TextChanged",label.text)
 				end)
 		else
 			label = CCLabelTTF("","Arial",14)
