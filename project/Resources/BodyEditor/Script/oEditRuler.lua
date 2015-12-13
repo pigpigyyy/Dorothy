@@ -24,7 +24,7 @@ local function oEditRuler()
 	local winSize = CCDirector.winSize
 	local center = oVec2(winSize.width*0.5,100)
 	local width = 60
-	local height = 460*winSize.height/600
+	local height = (oEditor.origin.x+center.x-70)*2
 	local halfW = width*0.5
 	local halfH = height*0.5
 

@@ -141,16 +141,20 @@ Class EditorView,
 					\slots "Selected",(itemType)->
 						chooseItem itemType
 
+		effectUpdated = (itemName)->
+			Reference.refreshRef itemName
+			@eachSceneItem (itemData)->
+				if itemData.typeName == "Effect" and
+					itemName == oCache.Effect\getFileByName(itemData.effect)\sub(-#itemName,-1)
+					@resetData itemData
 		itemUpdated = (itemName)->
 			Reference.refreshRef itemName
 			@eachSceneItem (itemData)->
-				if (itemData.typeName == "Effect" and
-					itemName == oCache.Effect\getFileByName(itemData.effect)\sub(-#itemName,-1)) or
-					itemData.file == itemName
-						@resetData itemData
+				if itemData.file == itemName
+					@resetData itemData
 		@gslot "Scene.ModelUpdated",itemUpdated
 		@gslot "Scene.BodyUpdated",itemUpdated
-		@gslot "Scene.EffectUpdated",itemUpdated
+		@gslot "Scene.EffectUpdated",effectUpdated
 		@gslot "Scene.ClipUpdated",itemUpdated
 
 		selectItem = (typeName,item)->
@@ -313,14 +317,14 @@ Class EditorView,
 
 	getData: (item)=> @itemDefs[item]
 
-	insertData: (parentData,newData,targetData)=>
+	insertData: (parentData,newData,targetData,afterTarget=true)=>
 		-- insert newData to parentData.children before targetData
 		parentData.children = {} unless parentData.children
 		index = #parentData.children+1
 		if targetData
 			for i,child in ipairs parentData.children
 				if child == targetData
-					index = i+1
+					index = afterTarget and i+1 or i
 					break
 		table.insert parentData.children,index,newData
 		if targetData
@@ -398,7 +402,7 @@ Class EditorView,
 				break
 		targetData = parentData.children[index+1]
 		@removeData itemData,parentData
-		@insertData parentData,itemData,targetData
+		@insertData parentData,itemData,targetData,false
 
 	moveDataUp:(itemData,parentData)=>
 		index = 1

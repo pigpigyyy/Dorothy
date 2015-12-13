@@ -69,7 +69,6 @@ Class => CCNode!,
 						CCHide!
 					}
 
-		-- init position editor --
 		round = (value)-> value > 0 and math.floor(value+0.5) or math.ceil(value-0.5)
 		deltaPos = oVec2.zero
 		posChanged = nil
