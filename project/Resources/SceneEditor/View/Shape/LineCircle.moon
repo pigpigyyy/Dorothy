@@ -9,4 +9,5 @@ newP = (index, radius)->
 	oVec2(radius*math.cos(angle),radius*math.sin(angle)) + oVec2(radius,radius)
 
 (args)->
-	oLine [newP index, args.radius for index = 0, num], args.color and ccColor4 args.color or 0xffffffff
+	with oLine [newP index, args.radius for index = 0, num], args.color and ccColor4 args.color or 0xffffffff
+		.position = oVec2 args.x or 0,args.y or 0

@@ -24,7 +24,6 @@ Class EditorView,
 		@xFix = false
 		@yFix = false
 		@isFixed = true
-		@topMost = 998
 
 		_G.editor = @
 		builtin.editor = @
@@ -317,6 +316,14 @@ Class EditorView,
 
 	getData: (item)=> @itemDefs[item]
 
+	getSceneName: (itemData)=>
+		item = @getItem itemData
+		parentData = @getData item.parent
+		if parentData.typeName == "UILayer"
+			"UI.scene"
+		else
+			@scene..".scene"
+
 	insertData: (parentData,newData,targetData,afterTarget=true)=>
 		-- insert newData to parentData.children before targetData
 		parentData.children = {} unless parentData.children
@@ -393,8 +400,7 @@ Class EditorView,
 			when "Layer","World","Camera","PlatformWorld"
 				return
 		item = @getItem itemData
-		parent = item.parent
-		parentData = @getData parent
+		parentData = @getData item.parent
 		index = nil
 		for i,child in ipairs parentData.children
 			if child == itemData

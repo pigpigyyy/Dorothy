@@ -1035,7 +1035,9 @@ local function oEditControl()
 		else
 			if name == "Name" then
 				local oldName = data:get("Name")
-				if value ~= oldName then
+				if value == "" then
+					item.value = oldName
+				elseif value ~= oldName then
 					value = oEditor:getUsableName(value)
 					item.value = value
 					data:set("Name",value)

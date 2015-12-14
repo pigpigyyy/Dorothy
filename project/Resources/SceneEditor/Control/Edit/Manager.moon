@@ -5,7 +5,9 @@ SelectionPanel = require "Control.Basic.SelectionPanel"
 GroupChooser = require "Control.Edit.GroupChooser"
 GroupPanel = require "Control.Edit.GroupPanel"
 ContactPanel = require "Control.Edit.ContactPanel"
+Reference = require "Data.Reference"
 import Simulation from require "Data.Model"
+Camera = require "View.Shape.Camera"
 
 Class => CCNode!,
 	__init:=>
@@ -13,6 +15,11 @@ Class => CCNode!,
 		_stopEditing = nil
 		stopEditing = -> _stopEditing! if _stopEditing
 		cancelEditing = -> emit "Scene.SettingPanel.Edit",nil
+
+		@addChild with Camera!
+			.scaleX = 0.5
+			.scaleY = 0.5
+			.position = oVec2 width/2,height-80
 
 		@schedule once ->
 			sleep 0.1
@@ -128,6 +135,7 @@ Class => CCNode!,
 			deltaPos = oVec2.zero
 			_stopEditing = ->
 				return unless posEditor.visible
+				posChanged = nil
 				emit "Scene.ShowFix",false
 				posEditor.touchEnabled = false
 				posEditor.visible = false
@@ -187,6 +195,7 @@ Class => CCNode!,
 				.angle = angle
 			_stopEditing = ->
 				return unless rotEditor.visible
+				rotChanged = nil
 				rotEditor.touchEnabled = false
 				rotEditor.visible = false
 
@@ -261,6 +270,7 @@ Class => CCNode!,
 			deltaScaleY = 0
 			_stopEditing = ->
 				return unless scaleEditor.visible
+				scaleChanged = nil
 				emit "Scene.ShowFix",false
 				scaleVisual.visible = false
 				scaleEditor.touchEnabled = false
@@ -307,6 +317,58 @@ Class => CCNode!,
 				stopHandler!
 				skewVisual.visible = false
 
+		yBar = with CCDrawNode!
+			\drawPolygon {
+					oVec2 0,0
+					oVec2 24,0
+					oVec2 24,144
+					oVec2 0,144
+				},ccColor4 0xff00ffff
+			.position = oVec2 6,6
+		totalOpacity = 0
+		opacityChanged = nil
+		opacityEditor = with CCLayer!
+			.visible = false
+			.swallowTouches = true
+			.touchPriority = editor.levelEditControl
+			.contentSize = CCSize.zero
+			.position = oVec2 95-18,height/2-156/2
+			\addChild yBar
+			\addChild oLine {
+					oVec2 0,0
+					oVec2 36,0
+					oVec2 36,156
+					oVec2 0,156
+					oVec2 0,0
+				},ccColor4!
+			\slots "TouchMoved",(touch)->
+				delta = 10*touch.delta.y/math.max(editor.scale,1)/144
+				if editor.isFixed
+					totalOpacity = totalOpacity + delta
+					if 1 > math.abs totalOpacity
+						delta = 0
+					else
+						delta = round totalOpacity
+						totalOpacity = 0
+				delta /= 10
+				yBar.scaleY += delta
+				yBar.scaleY = math.min yBar.scaleY,1
+				yBar.scaleY = math.max yBar.scaleY,0
+				opacityChanged yBar.scaleY if opacityChanged
+		@addChild opacityEditor
+
+		showOpacityEditor = (default,callback)->
+			yBar.scaleY = default
+			opacityEditor.visible = true
+			opacityEditor.touchEnabled = true
+			opacityChanged = callback
+			totalOpacity = 0
+			_stopEditing = ->
+				return unless opacityEditor.visible
+				opacityChanged = nil
+				opacityEditor.visible = false
+				opacityEditor.touchEnabled = false
+
 		@gslot "Scene.ViewPanel.Select",cancelEditing
 
 		@gslot "Scene.SettingPanel.Edit",(menuItem)->
@@ -315,8 +377,10 @@ Class => CCNode!,
 				item = editor\getItem data
 				switch menuItem.name
 					when "name"
+						lastName = data.name
 						menuItem\slots("TextChanged")\set (value)->
 							menuItem\slots "TextChanged",nil
+							value = lastName if value == ""
 							value = editor\renameData data,value
 							return unless value
 							menuItem.value = value
@@ -326,9 +390,10 @@ Class => CCNode!,
 							if not itemChooser
 								cancelEditing!
 								return
-							editor\addChild itemChooser,editor.topMost
+							editor\addChild itemChooser,998
 							itemChooser\show!
 							itemChooser\slots("Selected")\set (filename)->
+								Reference.removeSceneItemRef editor\getSceneName(data),data
 								data.file = filename
 								editor\resetData data
 								menuItem.value = filename\match "[^\\/]*$"
@@ -487,6 +552,9 @@ Class => CCNode!,
 							menuItem.value = value
 							item.gravity = oVec2 0,value
 					when "opacity"
-						print 1
+						showOpacityEditor data.opacity,(value)->
+							data.opacity = value
+							menuItem.value = value
+							item.opacity = value
 			else
 				stopEditing!

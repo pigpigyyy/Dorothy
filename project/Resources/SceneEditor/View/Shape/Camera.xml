@@ -1,0 +1,30 @@
+<Node>
+	<Import Module="View.Shape.LineCircle"/>
+	<Import Module="View.Shape.LineRect"/>
+
+	<DrawNode>
+		<Polygon FillColor="0x8800ffff">
+			<Vec2 X="-20" Y="-10"/>
+			<Vec2 X="20" Y="-10"/>
+			<Vec2 X="20" Y="10"/>
+			<Vec2 X="-20" Y="10"/>
+		</Polygon>
+		<Polygon FillColor="0x8800ffff">
+			<Vec2 X="20" Y="3"/>
+			<Vec2 X="32" Y="10"/>
+			<Vec2 X="32" Y="-10"/>
+			<Vec2 X="20" Y="-3"/>
+		</Polygon>
+		<Dot X="-11" Y="20" Radius="10" Color="0x8800ffff"/>
+		<Dot X="11" Y="20" Radius="10" Color="0x8800ffff"/>
+	</DrawNode>
+	<LineRect X="-20" Y="-10" Width="40" Height="20" Color="0xff00ffff"/>
+	<LineCircle X="-21" Y="10" Radius="10" Color="0xff00ffff"/>
+	<LineCircle X="1" Y="10" Radius="10" Color="0xff00ffff"/>
+	<Line Color="0x00ffff">
+		<Vec2 X="20" Y="3"/>
+		<Vec2 X="32" Y="10"/>
+		<Vec2 X="32" Y="-10"/>
+		<Vec2 X="20" Y="-3"/>
+	</Line>
+</Node>
