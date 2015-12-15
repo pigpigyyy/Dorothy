@@ -24,6 +24,7 @@ Class EditorView,
 		@xFix = false
 		@yFix = false
 		@isFixed = true
+		@camPos = oVec2 width/2,height/2
 
 		_G.editor = @
 		builtin.editor = @
@@ -108,16 +109,18 @@ Class EditorView,
 					emit "Scene.LayerSelected",item
 
 		@gslot "Scene.ViewArea.Move",(delta)->
-			return unless @items
 			delta = delta/@viewArea.scaleNode.scaleX
-			@items.Camera.position -= delta
-			emit "Scene.Camera.Move",delta
+			@camPos -= delta
+			if @items
+				@items.Camera.position -= delta
+				emit "Scene.Camera.Move",delta
 		@gslot "Scene.ViewArea.MoveTo",(pos)->
-			return unless @items
 			posX = -(pos.x-@origin.x)+width/2
 			posY = -(pos.y-@origin.y)+height/2
-			@items.Camera\perform oPos 0.5,posX,posY,oEase.OutQuad
-			emit "Scene.Camera.MoveTo",oVec2(posX,posY)
+			@camPos = oVec2 posX,posY
+			if @items
+				@items.Camera\perform oPos 0.5,posX,posY,oEase.OutQuad
+				emit "Scene.Camera.MoveTo",oVec2(posX,posY)
 
 		@gslot "Editor.ItemChooser",(args)->
 			handler = args[#args]

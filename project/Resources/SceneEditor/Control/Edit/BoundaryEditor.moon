@@ -15,16 +15,17 @@ BoundaryBar = (size,vertical,flip)->
 	with CCLayerColor ccColor4(0),width,height
 		.opacity = 0.5
 		.anchor = anchor
-		.touchEnabled = true
 		.swallowTouches = true
 		.touchPriority = editor.levelEditControl
 		.position = oVec2 width/2,height/2
 		\addChild with oLine line,ccColor4 0xff00ffff
-			.position = oVec2(width,height)*(oVec2(1,1)-anchor)
+			.position = oVec2(width,height)*anchor
 		\slots "TouchBegan",(touch)->
 			loc = \convertToNodeSpace touch.location
-			x = vertical and 0 or -width/2
-			y = vertical and -height/2 or 0
+			x,y = if vertical
+				flip and 0 or -width,-height/2
+			else
+				-width/2,flip and -height or 0
 			if CCRect(x,y,width,height)\containsPoint loc
 				.opacity = 0.8
 				true
@@ -42,29 +43,69 @@ BoundaryBar = (size,vertical,flip)->
 
 Class => CCNode!,
 	__init:=>
-		{:width,:height} = CCDirector.winSize
-		@addChild BoundaryBar 40,true,true
-		@addChild BoundaryBar 40,true,false
-		@addChild BoundaryBar 40,false,true
-		@addChild BoundaryBar 40,false,false
-		@gslot "Scene.DataLoaded",(sceneData)->
-			return unless sceneData
-			area = sceneData.camera.area
+		@visible = false
+		@rightBar = BoundaryBar 40,true,true
+		@addChild @rightBar
+		@leftBar = BoundaryBar 40,true,false
+		@addChild @leftBar
+		@bottomBar = BoundaryBar 40,false,true
+		@addChild @bottomBar
+		@topBar = BoundaryBar 40,false,false
+		@addChild @topBar
+		@onLoad = @gslot "Scene.DataLoaded",(sceneData)-> @setup! if sceneData
+		@onMove = @gslot "Scene.Camera.Move",(delta)->
+			@leftBar.positionX += delta.x
+			@rightBar.positionX += delta.x
+			@topBar.positionY += delta.y
+			@bottomBar.positionY += delta.y
+		@onMoveTo = @gslot "Scene.Camera.MoveTo",(camPos)->
+			return unless editor.sceneData
+			{:width,:height} = CCDirector.winSize
+			area = editor.sceneData.camera.area
 			center = oVec2 width/2,height/2
 			origin = editor.origin
-			print string.format("%d,%d",editor.items.Camera.position.x,editor.items.Camera.position.y)
-			pos = center-editor.items.Camera.position+origin
-			@children[1].positionX = area.left+pos.x
-			@children[2].positionX = area.right+pos.x
-			@children[3].positionY = area.top+pos.y
-			@children[4].positionY = area.bottom+pos.y
-			print @children[1].positionX,
-				@children[2].positionX,
-				@children[3].positionY,
-				@children[4].positionY
-		@gslot "Scene.Camera.Move",(delta)->
-			@children[1].positionX += delta.x
-			@children[2].positionX += delta.x
-			@children[3].positionY += delta.y
-			@children[4].positionY += delta.y
-			
+			pos = center-camPos+origin
+			@leftBar\perform oPos 0.5,area.left+pos.x,@leftBar.positionY,oEase.OutQuad
+			@rightBar\perform oPos 0.5,area.right+pos.x,@leftBar.positionY,oEase.OutQuad
+			@topBar\perform oPos 0.5,@topBar.positionX,area.top+pos.y,oEase.OutQuad
+			@bottomBar\perform oPos 0.5,@bottomBar.positionX,area.bottom+pos.y,oEase.OutQuad
+		@onLoad.enabled = false
+		@onMove.enabled = false
+		@onMoveTo.enabled = false
+		@gslot "Scene.ViewPanel.Select",(itemData)->
+			if itemData and itemData.typeName == "Camera" and itemData.boundary == true
+				@show!
+			elseif @visible
+				@hide!
+
+	setup:=>
+		{:width,:height} = CCDirector.winSize
+		area = editor.sceneData.camera.area
+		center = oVec2 width/2,height/2
+		origin = editor.origin
+		pos = center-editor.camPos+origin
+		@leftBar.positionX = area.left+pos.x
+		@rightBar.positionX = area.right+pos.x
+		@topBar.positionY = area.top+pos.y
+		@bottomBar.positionY = area.bottom+pos.y
+
+	show:=>
+		@visible = true
+		@onLoad.enabled = true
+		@onMove.enabled = true
+		@onMoveTo.enabled = true
+		@leftBar.touchEnabled = true
+		@rightBar.touchEnabled = true
+		@topBar.touchEnabled = true
+		@bottomBar.touchEnabled = true
+		@setup!
+
+	hide:=>
+		@visible = false
+		@onLoad.enabled = false
+		@onMove.enabled = false
+		@onMoveTo.enabled = false
+		@leftBar.touchEnabled = false
+		@rightBar.touchEnabled = false
+		@topBar.touchEnabled = false
+		@bottomBar.touchEnabled = false

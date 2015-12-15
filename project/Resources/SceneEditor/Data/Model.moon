@@ -128,7 +128,7 @@ DataCreater = (dataDef)->
 					when "CCSize"
 						str ..= string.format "s(%d,%d)",item.width,item.height
 					when "CCRect"
-						str ..= string.format "r(%d,%d,%d,%d)",item.x,item.y,item.width,item.height
+						str ..= string.format "r(%d,%d,%d,%d)",item.origin.x,item.origin.y,item.size.width,item.size.height
 					when "string"
 						str ..= "\""..item.."\""
 					when "table"

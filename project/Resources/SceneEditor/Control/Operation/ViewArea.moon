@@ -38,7 +38,6 @@ Class ViewAreaView,
 			S = oVec2.zero
 			V = oVec2.zero
 			@schedule updateDragSpeed
-			true
 
 		@slots "TouchMoved",(touches)->
 			if #touches == 1 -- move view
@@ -134,14 +133,11 @@ Class ViewAreaView,
 
 		@gslot "Scene.DataLoaded",(sceneData)->
 			scaleNode = @scaleNode
-			lastScene = nil
 			if #scaleNode.children == 2
-				lastScene = scaleNode.children[2]
-				scaleNode\removeChild lastScene
+				scaleNode\removeChild scaleNode.children[2]
 			if sceneData
 				effectFilename = editor.gameFullPath..editor.graphicFolder.."list.effect"
 				oCache.Effect\load effectFilename if oContent\exist effectFilename
 				newScene = sceneData!
 				scaleNode\addChild newScene
-				if lastScene
-					newScene.camera.position = lastScene.camera.position
+				newScene.camera.position = editor.camPos
