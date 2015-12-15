@@ -8,6 +8,7 @@ ContactPanel = require "Control.Edit.ContactPanel"
 Reference = require "Data.Reference"
 import Simulation from require "Data.Model"
 Camera = require "View.Shape.Camera"
+BoundaryEditor = require "Control.Edit.BoundaryEditor"
 
 Class => CCNode!,
 	__init:=>
@@ -20,6 +21,8 @@ Class => CCNode!,
 			.scaleX = 0.5
 			.scaleY = 0.5
 			.position = oVec2 width/2,height-80
+
+		@addChild BoundaryEditor!
 
 		@schedule once ->
 			sleep 0.1
@@ -399,7 +402,7 @@ Class => CCNode!,
 								menuItem.value = filename\match "[^\\/]*$"
 							itemChooser\slots "Hide",cancelEditing
 						}
-					when "outline","loop","visible","faceRight","play"
+					when "outline","loop","visible","faceRight","play","boundary"
 						showSwitcher data[menuItem.name],(value)->
 							data[menuItem.name] = value
 							menuItem.value = value

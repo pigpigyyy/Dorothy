@@ -71,8 +71,8 @@ Class SpriteViewView,
 				rc = child.boundingBox
 				vs = {
 					oVec2 rc.left,rc.bottom
-					oVec2 rc.left,rc.up
-					oVec2 rc.right,rc.up
+					oVec2 rc.left,rc.top
+					oVec2 rc.right,rc.top
 					oVec2 rc.right,rc.bottom
 				}
 				for v in *vs

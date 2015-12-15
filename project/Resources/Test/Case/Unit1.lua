@@ -123,7 +123,7 @@ end
 local world = oPlatformWorld()
 world.gravity = oVec2(0,-20)
 world.showDebug = false
-world.camera.boudary = CCRect(0,0,20480,2048)
+world.camera.boundary = CCRect(0,0,20480,2048)
 world.camera.followRatio = oVec2(0.02,0.02)
 
 local bk = CCSprite("bk.jpg")

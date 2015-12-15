@@ -151,7 +151,7 @@ local Dorothy =
 				description = "[float][Readonly]",
 				type = "value",
 			},
-			up =
+			top =
 			{
 				description = "[float][Readonly]",
 				type = "value",
@@ -4500,7 +4500,7 @@ local Dorothy =
 	{
 		childs =
 		{
-			boudary =
+			boundary =
 			{
 				description = "[CCRect]",
 				typeName = "CCRect",

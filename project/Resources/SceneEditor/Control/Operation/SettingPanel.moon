@@ -35,6 +35,7 @@ Class SettingPanelView,
 			{"Contacts","%s"}
 			{"Gravity","%.2f"}
 			{"Opacity","%.2f"}
+			{"Boundary","%d"}
 		}
 
 		genPosY = ->
@@ -73,6 +74,7 @@ Class SettingPanelView,
 				items.Visible
 			}
 			Camera: {
+				items.Boundary
 			}
 			Layer: {
 				items.Name

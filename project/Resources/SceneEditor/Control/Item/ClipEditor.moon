@@ -143,8 +143,8 @@ Class ClipEditorView,
 				line = oLine {
 					oVec2 rect.left+2,rect.bottom+2
 					oVec2 rect.right-2,rect.bottom+2
-					oVec2 rect.right-2,rect.up-2
-					oVec2 rect.left+2,rect.up-2
+					oVec2 rect.right-2,rect.top-2
+					oVec2 rect.left+2,rect.top-2
 					oVec2 rect.left+2,rect.bottom+2
 				}, ccColor4!
 				frame\addChild line

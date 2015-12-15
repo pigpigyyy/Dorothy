@@ -77,8 +77,8 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 			{
 				oVec2(rc.left,rc.bottom),
 				oVec2(rc.right,rc.bottom),
-				oVec2(rc.right,rc.up),
-				oVec2(rc.left,rc.up),
+				oVec2(rc.right,rc.top),
+				oVec2(rc.left,rc.top),
 				oVec2(rc.left,rc.bottom)
 			},ccColor4(0xffffffff))
 			frame:addChild(line)
@@ -157,8 +157,8 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 				{
 					oVec2(rect.left+2,rect.bottom+2),
 					oVec2(rect.right-2,rect.bottom+2),
-					oVec2(rect.right-2,rect.up-2),
-					oVec2(rect.left+2,rect.up-2),
+					oVec2(rect.right-2,rect.top-2),
+					oVec2(rect.left+2,rect.top-2),
 					oVec2(rect.left+2,rect.bottom+2)
 				},ccColor4())
 				frame:addChild(line)

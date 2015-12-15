@@ -74,7 +74,7 @@ Class EditorView,
 			sleep!
 			Manager = require "Control.Edit.Manager"
 			@editManager = Manager!
-			@addChild @editManager
+			@viewArea\addChild @editManager
 
 		panelWidth = 10+110*4
 		panelHeight = height*0.6
@@ -109,13 +109,15 @@ Class EditorView,
 
 		@gslot "Scene.ViewArea.Move",(delta)->
 			return unless @items
-			pos = @items.Camera.position + delta/@viewArea.scaleNode.scaleX
-			@items.Camera.position -= delta/@viewArea.scaleNode.scaleX
+			delta = delta/@viewArea.scaleNode.scaleX
+			@items.Camera.position -= delta
+			emit "Scene.Camera.Move",delta
 		@gslot "Scene.ViewArea.MoveTo",(pos)->
 			return unless @items
 			posX = -(pos.x-@origin.x)+width/2
 			posY = -(pos.y-@origin.y)+height/2
 			@items.Camera\perform oPos 0.5,posX,posY,oEase.OutQuad
+			emit "Scene.Camera.MoveTo",oVec2(posX,posY)
 
 		@gslot "Editor.ItemChooser",(args)->
 			handler = args[#args]

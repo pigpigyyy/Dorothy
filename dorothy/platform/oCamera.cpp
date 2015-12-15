@@ -25,14 +25,14 @@ bool oCamera::init()
 	return true;
 }
 
-void oCamera::setBoudary(const CCRect& var)
+void oCamera::setBoundary(const CCRect& var)
 {
-	_boudary = var;
+	_boundary = var;
 }
 
-const CCRect& oCamera::getBoudary() const
+const CCRect& oCamera::getBoundary() const
 {
-	return _boudary;
+	return _boundary;
 }
 
 void oCamera::setFollowRatio(const oVec2& var)
@@ -57,12 +57,12 @@ void oCamera::setPosition(const CCPoint& var)
 		float halfW = CCNode::getWidth() * 0.5f;
 		float halfH = CCNode::getHeight() * 0.5f;
 		CCPoint pos;
-		if (_boudary != CCRect::zero)
+		if (_boundary != CCRect::zero)
 		{
-			CCPoint from(_boudary.origin.x + halfW, _boudary.origin.y + halfH);
+			CCPoint from(_boundary.origin.x + halfW, _boundary.origin.y + halfH);
 			CCPoint to(
-				_boudary.origin.x + _boudary.size.width - halfW,
-				_boudary.origin.y + _boudary.size.height - halfH);
+				_boundary.origin.x + _boundary.size.width - halfW,
+				_boundary.origin.y + _boundary.size.height - halfH);
 			pos = ccpClamp(var, from, to);
 		}
 		else

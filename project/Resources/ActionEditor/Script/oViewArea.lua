@@ -782,7 +782,7 @@ local function oViewArea()
 			editState = EDIT_OPACITY
 		end
 	end
-	
+
 	view.stopEditOpacity = function(self)
 		if editState == EDIT_OPACITY then			
 			updateModel()

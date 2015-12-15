@@ -2,7 +2,8 @@ Dorothy!
 
 oBody = require "oBodyEx"
 
-Point = (x,y)-> -> oVec2(x,y)
+Point = (x,y)-> -> oVec2 x or 0,y or 0
+Rect = (x,y,width,height)-> -> CCRect x or 0,y or 0,width or 0,height or 0
 
 Simulation = (level)->
 	switch level
@@ -87,6 +88,7 @@ Types =
 	Model:7
 	Sprite:8
 	Effect:9
+	SubCam:10
 
 TypeNames = {v,k for k,v in pairs Types}
 
@@ -125,6 +127,8 @@ DataCreater = (dataDef)->
 						str ..= string.format "v(%.2f,%.2f)",item.x,item.y
 					when "CCSize"
 						str ..= string.format "s(%d,%d)",item.width,item.height
+					when "CCRect"
+						str ..= string.format "r(%d,%d,%d,%d)",item.x,item.y,item.width,item.height
 					when "string"
 						str ..= "\""..item.."\""
 					when "table"
@@ -167,7 +171,7 @@ Items =
 		data
 
 	dumpData:(data,filename)->
-		str = "local v,t,f = require(\"oVec2\"),true,false\nreturn "..tostring data
+		str = "local v,r,t,f = require(\"oVec2\"),require(\"CCRect\"),true,false\nreturn "..tostring data
 		oContent\saveToFile filename,str
 
 	:Simulation
@@ -225,12 +229,25 @@ Items =
 	Camera:DataCreater
 		-- property
 		itemType:{1,Types.Camera}
+		boundary:{2,false}
+		area:{3,Rect!}
+		children:{4,false}
 		-- helper
 		create:(scene)=>
 			camera = scene.camera
 			editor.items.Camera = camera
 			editor.itemDefs[camera] = @
 			nil
+
+	SubCam:DataCreater
+		-- property
+		itemType:{1,Types.SubCam}
+		name:{2,"cam"}
+		position:{3,Point(0,0)}
+		zoom:{4,1}
+		angle:{5,0}
+		-- helper
+		create:=>
 
 	Layer:DataCreater
 		-- property
