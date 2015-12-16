@@ -72,7 +72,7 @@ local function oEditChooser(withCancel)
 		title.position = oVec2(winSize.width*0.5,y)
 		menu:addChild(title)
 		title.opacity = 0
-		title:runAction(oOpacity(0.3,0.5))
+		title:runAction(oOpacity(0.3,1))
 		yStart = y-title.contentSize.height
 		
 		local function addNewAnimation(sp,index)
@@ -175,7 +175,7 @@ local function oEditChooser(withCancel)
 		title.position = oVec2(winSize.width*0.5,y)
 		menu:addChild(title)
 		title.opacity = 0
-		title:runAction(oOpacity(0.3,0.5))
+		title:runAction(oOpacity(0.3,1))
 		yStart = y-title.contentSize.height
 
 		local lNames = oEditor.modelData[oSd.lookNames]
@@ -265,7 +265,7 @@ local function oEditChooser(withCancel)
 			title.position = oVec2(winSize.width*0.5,y)
 			menu:addChild(title)
 			title.opacity = 0
-			title:runAction(oOpacity(0.3,0.5))
+			title:runAction(oOpacity(0.3,1))
 			yStart = y-title.contentSize.height
 
 			y = yStart-20
@@ -302,7 +302,7 @@ local function oEditChooser(withCancel)
 		title.position = oVec2(winSize.width*0.5,y)
 		menu:addChild(title)
 		title.opacity = 0
-		title:runAction(oOpacity(0.3,0.5))
+		title:runAction(oOpacity(0.3,1))
 		yStart = y-title.contentSize.height
 
 		y = yStart-20
@@ -339,7 +339,7 @@ local function oEditChooser(withCancel)
 			title.position = oVec2(winSize.width*0.5,y)
 			menu:addChild(title)
 			title.opacity = 0
-			title:runAction(oOpacity(0.3,0.5))
+			title:runAction(oOpacity(0.3,1))
 			yStart = y-title.contentSize.height
 
 			y = yStart-20

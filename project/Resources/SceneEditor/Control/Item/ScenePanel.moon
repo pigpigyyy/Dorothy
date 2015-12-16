@@ -160,7 +160,7 @@ ScenePanel = Class
 			.texture.antiAlias = false
 			.color = ccColor3 0x00ffff
 			.opacity = 0
-			\runAction oOpacity 0.3,0.5
+			\runAction oOpacity 0.3,1
 		title.position = oVec2 @panel.width/2,y-title.height/2
 		@menu\addChild title
 		yStart = y-title.height-(currentItem and -10 or 20)
@@ -172,7 +172,7 @@ ScenePanel = Class
 				.color = ccColor3 0x00ffff
 				.position = oVec2 @panel.width/2,y
 				.opacity = 0
-				\runAction oOpacity 0.3,0.5
+				\runAction oOpacity 0.3,1
 			title.position = oVec2 @panel.width/2,y-title.height/2
 			@menu\addChild title
 			yStart = y-title.height-10

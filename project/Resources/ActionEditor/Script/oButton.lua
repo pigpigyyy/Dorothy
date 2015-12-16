@@ -9,7 +9,6 @@ local CCMenuItem = require("CCMenuItem")
 local CCLabelTTF = require("CCLabelTTF")
 local oScale = require("oScale")
 local oEase = require("oEase")
-local oOpacity = require("oOpacity")
 local ccColor3 = require("ccColor3")
 
 local function oButton(text, fontSize, width, height, x, y,tapped)
@@ -66,26 +65,14 @@ local function oButton(text, fontSize, width, height, x, y,tapped)
 		menuItem.label = label
 	end
 
-	face.opacity = 0.4
 	local scale = oScale(0.3,1.0,1.0,oEase.OutBack)
-	local fade = oOpacity(0.3,0.4,oEase.InExpo)
 	menuItem:slots("TapBegan",function()
-		if not fade.done then
-			face:stopAction(fade)
-		end
 		if not scale.done then
 			face:stopAction(scale)
 		end
-		face.opacity = 1.0
 		face.scaleX = 0.3
 		face.scaleY = 0.3
 		face:runAction(scale)
-	end)
-	menuItem:slots("TapEnded",function()
-		if not fade.done then
-			face:stopAction(fade)
-		end
-		face:runAction(fade)
 	end)
 	menuItem:slots("Tapped",function()
 		if tapped then

@@ -9,7 +9,6 @@ local emit = require("emit")
 local CCLabelTTF = require("CCLabelTTF")
 local CCNode = require("CCNode")
 local CCClipNode = require("CCClipNode")
-local oOpacity = require("oOpacity")
 local oEase = require("oEase")
 local CCRect = require("CCRect")
 local oEditor = require("oEditor")
@@ -25,7 +24,6 @@ local function oControlBar()
 	local controlBar = CCLayer()
 	controlBar.anchor = oVec2.zero
 	controlBar.contentSize = CCSize(winSize.width,60)
-	controlBar.opacity = 0.4
 	controlBar.touchEnabled = true
 	controlBar.visible = false
 
@@ -227,7 +225,6 @@ local function oControlBar()
 	-- build controlBar
 	controlBar:addChild(border)
 	controlBar:addChild(clipNode)
-	local fade = oOpacity(0.5,0.4,oEase.InExpo)
 	local lastPos = 0
 	local offset = 0
 	local moveBar = false
@@ -236,7 +233,6 @@ local function oControlBar()
 		function(state)
 			if state == "Play" then
 				controlBar.touchEnabled = false
-				controlBar:hide()
 				if moveBar then
 					lastPos = locLength
 					moveBar = false
@@ -245,19 +241,6 @@ local function oControlBar()
 				controlBar.touchEnabled = true
 			end
 		end)
-
-	controlBar.show = function(self)
-		if not fade.done then
-			self:stopAction(fade)
-		end
-		self.opacity = 1.0
-	end
-	controlBar.hide = function(self)
-		if not fade.done then
-			self:stopAction(fade)
-		end
-		self:runAction(fade)
-	end
 
 	local jumpPos = false
 	controlBar.swallowTouches = true
@@ -282,7 +265,6 @@ local function oControlBar()
 		if not CCRect(oVec2.zero, controlBar.contentSize):containsPoint(loc) then
 			return false
 		end
-		controlBar:show()
 		--cclog("Start %d,%d",lastPos,offset)
 		if lastPos-barDragPos <= locLength and locLength <= lastPos+barDragPos then
 			moveBar = true
@@ -292,7 +274,6 @@ local function oControlBar()
 
 	local function touchEnded(touch)
 		if not isTouchValid(touch) then return end
-		controlBar:hide()
 		if moveBar then
 			lastPos = locLength
 			moveBar = false

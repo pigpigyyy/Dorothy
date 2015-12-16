@@ -14,7 +14,7 @@ SwallowTouches="True" TouchEnabled="True">
 					<Vec2 X="{ -200-1 }" Y="{ @H*0.3+1 }"/>
 				</Polygon>
 			</DrawNode>
-			<LabelTTF Name="title" X="{ $X }" Y="{ $T-25 }" Text="New Image Group" FontName="Arial" FontSize="24" Color="0x00ffff" Opacity="0.5" AntiAlias="False"/>
+			<LabelTTF Name="title" X="{ $X }" Y="{ $T-25 }" Text="New Image Group" FontName="Arial" FontSize="24" Color="0x00ffff" AntiAlias="False"/>
 			<ScrollArea Name="scrollArea" X="{ $X }" Y="{ $B+($H-50)/2 }" Width="{ $W }" Height="{ $H-50 }" TouchPriority="{ editor.levelClipEditor-1 }" Ref="True"/>
 		</Node>
 		<Menu Name="opMenu" X="{ $R-35 }" Y="{ $T }" Width="130" Height="60" TouchPriority="{ editor.levelClipEditor-2 }" Ref="True">

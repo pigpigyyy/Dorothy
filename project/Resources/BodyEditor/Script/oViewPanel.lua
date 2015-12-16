@@ -16,7 +16,7 @@ local oOpacity = require("oOpacity")
 local function oViewPanel()
 	local winSize = CCDirector.winSize
 	local borderSize = CCSize(180,310*(winSize.height-30)/(600-30))
-	local self = oSelectionPanel(borderSize,false,true,true)
+	local self = oSelectionPanel(borderSize,false,true)
 	self.touchPriority = oEditor.touchPriorityViewPanel
 	local menu = self.menu
 	menu.touchPriority = oEditor.touchPriorityViewPanel+1

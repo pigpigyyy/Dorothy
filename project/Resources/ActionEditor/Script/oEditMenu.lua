@@ -811,7 +811,7 @@ oEditor.spriteData[oSd.index]
 		oEditor.controlBar:setTime(0)
 		oEditor.controlBar.visible = true
 		oEditor.controlBar.opacity = 0
-		oEditor.controlBar:runAction(oOpacity(0.3,0.3))
+		oEditor.controlBar:runAction(oOpacity(0.3,1))
 		local model = oEditor.viewArea:getModel()
 		model.look = oEditor.look
 		model:play(oEditor.animation)

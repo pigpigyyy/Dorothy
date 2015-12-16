@@ -76,13 +76,8 @@ local oButton = class(
 			self._label = label
 		end
 
-		face.opacity = 0.4
 		local scale = oScale(0.3,1.0,1.0,oEase.OutBack)
-		local fade = oOpacity(0.3,0.4,oEase.InExpo)
 		self:slots("TapBegan",function()
-			if not fade.done then
-				face:stopAction(fade)
-			end
 			if not scale.done then
 				face:stopAction(scale)
 			end
@@ -90,12 +85,6 @@ local oButton = class(
 			face.scaleX = 0.3
 			face.scaleY = 0.3
 			face:runAction(scale)
-		end)
-		self:slots("TapEnded",function()
-			if not fade.done then
-				face:stopAction(fade)
-			end
-			face:runAction(fade)
 		end)
 		self:slots("Tapped",function()
 			if tapped then

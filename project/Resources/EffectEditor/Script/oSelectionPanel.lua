@@ -17,7 +17,7 @@ local oScale = require("oScale")
 local CCCall = require("CCCall")
 local CCDelay = require("CCDelay")
 
-local function oSelectionPanel(borderSize,noCliping,noMask,fading)
+local function oSelectionPanel(borderSize,noCliping,noMask)
 	local winSize = CCDirector.winSize
 	local halfBW = borderSize.width*0.5
 	local halfBH = borderSize.height*0.5
@@ -36,8 +36,6 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 	local panel = CCLayer()
 	panel.anchor = oVec2.zero
 	panel.touchEnabled = true
-
-	if fading then panel.opacity = 0.4 end
 	
 	if not noMask then
 		local mask = CCLayer()
@@ -134,7 +132,6 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 		startPos = totalDelta
 		time = 0
 		panel:schedule(updateReset)
-		if fading then panel:fadeOut() end
 	end
 
 	local function setOffset(deltaPos, touching)
@@ -229,23 +226,6 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 			setOffset(ds, false)
 		end
 	end
-	
-	if fading then
-		local opacity = CCSequence({CCDelay(1),oOpacity(0.5,0.4,oEase.InExpo)})
-		panel.fadeIn = function(self)
-			if not opacity.done then
-				self:stopAction(opacity)
-			end
-			self.opacity = 1.0
-		end
-		panel.fadeOut = function(self)
-			self:stopAllActions()
-			self:runAction(opacity)
-		end
-		panel.isFading = function(self)
-			return not opacity.done
-		end
-	end
 
 	local function setPos(self,delta)
 		local newPos = totalDelta + delta
@@ -278,8 +258,6 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 			return false
 		end
 
-		if fading then panel:fadeIn() end
-
 		deltaMoveLength = 0
 		menu.enabled = true
 		_s = oVec2.zero
@@ -295,8 +273,6 @@ local function oSelectionPanel(borderSize,noCliping,noMask,fading)
 		else
 			if _v ~= oVec2.zero and deltaMoveLength > 10 then
 				panel:schedule(updatePos)
-			elseif fading then
-				panel:fadeOut()
 			end
 		end
 	end

@@ -51,7 +51,6 @@ local function oSettingPanel()
 	local panel = CCLayer()
 	panel.anchor = oVec2.zero
 	panel.contentSize = borderSize
-	panel.opacity = 0.4
 	panel.touchEnabled = true
 	panel.position = oVec2(winSize.width-170,70)
 
@@ -127,10 +126,6 @@ local function oSettingPanel()
 
 		if t == 1.0 then
 			panel:unschedule()
-		end
-		
-		if time >= 1.0 and not panel:isHiding() then
-			panel:hide()
 		end
 	end
 
@@ -305,21 +300,6 @@ local function oSettingPanel()
 		return menuItem
 	end
 
-	local opacity = CCSequence{CCDelay(1),oOpacity(0.5,0.4,oEase.InExpo)}
-	panel.show = function(self)
-		if not opacity.done then
-			self:stopAction(opacity)
-		end
-		self.opacity = 1.0
-	end
-	panel.hide = function(self)
-		self:stopAllActions()
-		self:runAction(opacity)
-	end
-	panel.isHiding = function(self)
-		return not opacity.done
-	end
-
 	local function updateSpeed(deltaTime)
 		_v = _s / deltaTime
 		_s = oVec2.zero
@@ -342,7 +322,6 @@ local function oSettingPanel()
 			if isReseting() then
 				startReset()
 			else
-				panel:hide()
 				panel:unschedule()
 			end
 		end
@@ -357,8 +336,6 @@ local function oSettingPanel()
 			return false
 		end
 
-		panel:show()
-
 		deltaMoveLength = 0
 		menu.enabled = true
 		panel:schedule(updateSpeed)
@@ -370,9 +347,7 @@ local function oSettingPanel()
 		if isReseting() then
 			startReset()
 		else
-			if _v == oVec2.zero or deltaMoveLength <= 10 then
-				panel:hide()
-			else
+			if _v ~= oVec2.zero and deltaMoveLength > 10 then
 				panel:schedule(updatePos)
 			end
 		end
@@ -1051,8 +1026,8 @@ local function oSettingPanel()
 		panel:runAction(
 			CCSequence
 			{
-				oOpacity(0.15,0.2),
-				oOpacity(0.15,0.4)
+				oOpacity(0.15,0.8),
+				oOpacity(0.15,1)
 			})
 	end
 

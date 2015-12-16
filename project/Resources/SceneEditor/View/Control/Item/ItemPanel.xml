@@ -14,7 +14,7 @@
 		<ScrollArea Name="scrollArea" X="{ $X }" Y="{ $T-(height-70)/2 }" Width="{ width }" Height="{ height-70 }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelItemPanel-2 }" Ref="True">
 			<Item Name="view">
 				<Menu Name="menu" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height-70 }" TouchPriority="{ editor.levelItemPanel-1 }" Ref="True">
-					<LabelTTF Name="title" X="{ $X }" Y="{ $T-20 }" Text="{ title }" FontName="Arial" FontSize="24" Color="0x00ffff" Opacity="0.5" AntiAlias="False"/>
+					<LabelTTF Name="title" X="{ $X }" Y="{ $T-20 }" Text="{ title }" FontName="Arial" FontSize="24" Color="0x00ffff" AntiAlias="False"/>
 				</Menu>
 			</Item>
 		</ScrollArea>

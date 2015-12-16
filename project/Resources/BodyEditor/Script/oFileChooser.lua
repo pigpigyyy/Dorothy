@@ -74,7 +74,7 @@ local function oFileChooser()
 	title.position = oVec2(halfBW,y)
 	menu:addChild(title)
 	title.opacity = 0
-	title:runAction(oOpacity(0.3,0.5))
+	title:runAction(oOpacity(0.3,1))
 	yStart = y-title.contentSize.height-(oEditor.currentFile and -10 or 20)
 
 	if oEditor.currentFile then
@@ -86,7 +86,7 @@ local function oFileChooser()
 		title.position = oVec2(halfBW,y)
 		menu:addChild(title)
 		title.opacity = 0
-		title:runAction(oOpacity(0.3,0.5))
+		title:runAction(oOpacity(0.3,1))
 		yStart = y-title.contentSize.height-10
 	end
 

@@ -27,8 +27,7 @@ local function oVRuler()
 	local halfH = rulerHeight*0.5
 	local origin = oEditor.origin+center
 
-	self.cascadeOpacity = true
-	self.opacity = 0.3
+	self.opacity = 0.5
 	self.position = oVec2(winSize.width-200-halfW,halfH)
 
 	-- borders --
@@ -184,11 +183,14 @@ local function oVRuler()
 		self.scaleY = 1
 		updateIntervalTextScale(1)
 	end)})
-	local fadeIn = oOpacity(0.3,0.3)
+	local fadeIn = CCSequence({oOpacity(0.3,0.5),CCCall(function()
+		self.cascadeOpacity = false
+	end)})
 	self:gslot("Body.viewArea.scale",function(scale)
 		if scale < 1.0 and self.opacity > 0 and fadeOut.done then
 			self.touchEnabled = false
 			self:stopAllActions()
+			self.cascadeOpacity = true
 			self:runAction(fadeOut)
 		elseif scale >= 1.0 then
 			if self.opacity == 0 and fadeIn.done then
@@ -205,6 +207,7 @@ local function oVRuler()
 		if scale < 1.0 and self.opacity > 0 and fadeOut.done then
 			self.touchEnabled = false
 			self:stopAllActions()
+			self.cascadeOpacity = true
 			self:runAction(fadeOut)
 		elseif scale >= 1.0 and self.opacity == 0 and fadeIn.done then
 			self.touchEnabled = true
@@ -246,7 +249,7 @@ local function oVRuler()
 		end
 	end)
 	local function touchEnded()
-		self:perform(oOpacity(0.3,0.3))
+		self:perform(oOpacity(0.3,0.5))
 	end
 	self:slots("TouchCancelled",touchEnded)
 	self:slots("TouchEnded",touchEnded)

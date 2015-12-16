@@ -7,20 +7,7 @@ OperationPanelView = require "View.Control.Operation.OperationPanel"
 -- x, y, width, height
 Class OperationPanelView,
 	__init: (args)=>
-		@opacity = 0.4
 		@_menuEnabled = true
-
-		@fadeOut = CCSequence {
-			CCDelay 1
-			oOpacity 0.5,0.4,oEase.InExpo
-		}
-
-		@slots "ScrollTouchBegan",->
-			@stopAction @fadeOut unless @fadeOut.done
-			@opacity = 1
-
-		@slots "ScrollEnd",->
-			@perform @fadeOut
 
 		@slots "ScrollStart",->
 			@menu.enabled = false
@@ -44,6 +31,3 @@ Class OperationPanelView,
 		(value)=>
 			@_menuEnabled = value
 			@menu.enabled = value
-
-	fade: =>
-			@perform @fadeOut

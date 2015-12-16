@@ -324,7 +324,7 @@ local function oTemplateChooser(filename)
 	title.position = oVec2(halfBW,y)
 	menu:addChild(title)
 	title.opacity = 0
-	title:runAction(oOpacity(0.3,0.5))
+	title:runAction(oOpacity(0.3,1))
 	yStart = y-title.contentSize.height-10
 
 	local pair = {true,true}

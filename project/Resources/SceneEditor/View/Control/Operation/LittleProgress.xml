@@ -1,5 +1,5 @@
 <!-- params: X, Y -->
-<Node X="{ x }" Y="{ y }" Opacity="0.5">
+<Node X="{ x }" Y="{ y }">
 	<DrawNode Name="bar" X="-2.5" Y="-20" Ref="True">
 		<Polygon FillColor="0xff00ffff">
 			<Vec2 X="0" Y="0"/>

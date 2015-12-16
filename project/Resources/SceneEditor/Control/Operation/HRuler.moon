@@ -24,9 +24,7 @@ cycle = require "cycle"
 	halfW = rulerWidth*0.5
 	halfH = rulerHeight*0.5
 	origin = editor.origin
-	@ = with CCLayerColor ccColor4(0),rulerWidth,rulerHeight
-		.cascadeOpacity = true
-		.opacity = 0.3
+	@ = with CCLayerColor ccColor4(0x88000000),rulerWidth,rulerHeight
 		.position = oVec2 origin.x,halfH+10
 		.anchor = oVec2 origin.x/rulerWidth,0.5
 		.touchPriority = editor.levelHRuler
@@ -158,10 +156,15 @@ cycle = require "cycle"
 			@scaleX = 1
 			updateIntervalTextScale 1
 	}
-	fadeIn = oOpacity 0.3,0.3
+	fadeIn = CCSequence {
+		oOpacity 0.3,0.5
+		CCCall ->
+			@cascadeOpacity = false
+	}
 	@gslot "Scene.ViewArea.Scale",(scale)->
 		if scale < 1.0 and @opacity > 0 and fadeOut.done
 			@touchEnabled = false
+			@cascadeOpacity = true
 			@perform fadeOut
 		elseif scale >= 1.0
 			if @opacity == 0 and fadeIn.done
@@ -174,6 +177,7 @@ cycle = require "cycle"
 	@gslot "Scene.ViewArea.ScaleTo",(scale)->
 		if scale < 1.0 and @opacity > 0 and fadeOut.done
 			@touchEnabled = false
+			@cascadeOpacity = true
 			@perform fadeOut
 		elseif scale >= 1.0 and self.opacity == 0 and fadeIn.done
 			@touchEnabled = true
@@ -204,7 +208,7 @@ cycle = require "cycle"
 		elseif @positionY < halfH+10
 			@positionY = halfH+10
 
-	touchEnded = -> @perform oOpacity 0.3,0.3
+	touchEnded = -> @perform oOpacity 0.3,0.5
 	@slots "TouchCancelled",touchEnded
 	@slots "TouchEnded",touchEnded
 
