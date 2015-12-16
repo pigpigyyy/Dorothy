@@ -27,6 +27,7 @@ ScenePanel = Class
 
 	__init: =>
 		@slots "Show",-> @displayItems!
+		@quitBtn\slots "Tapped",-> editor\emit "Quit"
 
 	displayItems: =>
 		@panel\schedule once ->

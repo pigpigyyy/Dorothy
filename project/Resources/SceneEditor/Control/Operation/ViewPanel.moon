@@ -25,7 +25,7 @@ Class ViewPanelView,
 				when "PlatformWorld"
 					{:x,:y} = item.position
 					y -= 2*(itemH+10)
-					if itemData.ui.children
+					if itemData.ui.children and not @items[itemData.ui].fold
 						y -= (itemH+10)*#itemData.ui.children
 						reorderChildItems itemData.ui
 					if itemData.children
@@ -340,6 +340,7 @@ Class ViewPanelView,
 			if item and not item.checked
 				item.checked = true
 				itemTapped item
+			if not item.visible
 				deltaY = height/2-item.positionY
 				offset = @offset
 				startY = offset.y
@@ -349,16 +350,15 @@ Class ViewPanelView,
 				else
 					endY = math.max endY,0
 					endY = math.min endY,viewSize.height-height
-				if not item.visible
-					@schedule once ->
-						t = 0
-						changeY = endY-startY
-						cycle 0.3,(dt)->
-							t += dt
-							offset.y = oEase\func oEase.OutQuad,t/0.3,startY,changeY
-							@scrollTo offset
-						offset.y = endY
+				@schedule once ->
+					t = 0
+					changeY = endY-startY
+					cycle 0.3,(dt)->
+						t += dt
+						offset.y = oEase\func oEase.OutQuad,t/0.3,startY,changeY
 						@scrollTo offset
+					offset.y = endY
+					@scrollTo offset
 
 		@gslot "Scene.ViewPanel.FoldState",(args)->
 			state = nil
@@ -523,6 +523,7 @@ Class ViewPanelView,
 			index = editor\moveDataUp itemData,parentData
 			if index > 1
 				reorderChildItems parentData
+			emit "Scene.ViewPanel.Pick",itemData
 
 		@gslot "Scene.EditMenu.Down",->
 			return unless @_selectedItem
@@ -531,6 +532,7 @@ Class ViewPanelView,
 			index = editor\moveDataDown itemData,parentData
 			if index < #parentData.children
 				reorderChildItems parentData
+			emit "Scene.ViewPanel.Pick",itemData
 
 		@gslot "Scene.EditMenu.Top",->
 			return unless @_selectedItem
@@ -539,6 +541,7 @@ Class ViewPanelView,
 			index = editor\moveDataTop itemData,parentData
 			if index > 1
 				reorderChildItems parentData
+			emit "Scene.ViewPanel.Pick",itemData
 
 		@gslot "Scene.EditMenu.Bottom",->
 			return unless @_selectedItem
@@ -548,6 +551,7 @@ Class ViewPanelView,
 			index = editor\moveDataBottom itemData,parentData
 			if index < count
 				reorderChildItems parentData
+			emit "Scene.ViewPanel.Pick",itemData
 
 		@gslot "Scene.EditMenu.Delete",->
 			return unless @_selectedItem

@@ -57,7 +57,7 @@ Class => CCNode!,
 				switcher.text = value and "True" or "False"
 				switcher.color = ccColor3 value and 0x00ffff or 0xff0088
 				\emit "Changed",value
-		@addChild @boolSwitcher
+		editor\addChild @boolSwitcher
 		showSwitcher = (default,callback)->
 			with @boolSwitcher
 				\setValue default

@@ -28,7 +28,8 @@ Class EditMenuView,
 			button = @[name.."Btn"]
 			button.selected = false
 			upperName = name\sub(1,1)\upper!..name\sub(2,-1)
-			@gslot "Scene."..upperName.."Selected",(item)->
+			button.event = "Scene."..upperName.."Selected"
+			@gslot button.event,(item)->
 				if item
 					button.selected = true
 					button.color = ccColor3 0xff0088
