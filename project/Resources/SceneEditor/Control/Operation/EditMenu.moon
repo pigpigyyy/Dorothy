@@ -133,6 +133,8 @@ Class EditMenuView,
 			button.color = ccColor3 editor.yFix and 0xff0088 or 0x00ffff
 			emit "Scene.FixChange"
 
+		@iconCam.visible = false
+
 		@gslot "Scene.ShowFix",(value)->
 			editor.xFix = false
 			editor.yFix = false
@@ -174,6 +176,7 @@ Class EditMenuView,
 						}
 
 		itemChoosed = (itemData)->
+			@iconCam.visible = false
 			emit "Scene.ViewPanel.FoldState",{
 				itemData:itemData
 				handler:(state)->
@@ -197,6 +200,8 @@ Class EditMenuView,
 					@setButtonVisible @downBtn,false
 					{:x,:y} = @upBtn.position
 					@foldBtn\runAction oPos 0.3,x,y,oEase.OutQuad
+					if itemData.typeName == "Camera"
+						@iconCam.visible = true
 				else
 					item = editor\getItem itemData
 					hasChildren = false

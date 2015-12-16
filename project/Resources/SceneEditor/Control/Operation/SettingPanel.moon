@@ -2,6 +2,8 @@ Dorothy!
 Class,property = unpack require "class"
 SettingPanelView = require "View.Control.Operation.SettingPanel"
 SettingItem = require "BodyEditor.Script.oSettingItem"
+ViewItem = require "Control.Operation.ViewItem"
+Button = require "Control.Basic.Button"
 
 -- [no signals]
 -- [no params]
@@ -137,12 +139,17 @@ Class SettingPanelView,
 			}
 		}
 
+		camItems = {}
 		currentGroup = nil
 		@gslot "Scene.ViewPanel.Select",(data)->
 			if currentGroup
 				for item in *currentGroup
 					item.positionX = -itemWidth
 					item.visible = false
+				if currentGroup == groups.Camera
+					for item in *camItems
+						item.positionX = -itemWidth
+						item.visible = false
 			if data
 				@offset = oVec2.zero
 				with @title
@@ -180,6 +187,12 @@ Class SettingPanelView,
 					else
 						data[item.name] == "" and "None" or data[item.name]
 
+			if data.typeName == "Camera"
+				for i,item in ipairs camItems
+					item.visible = true
+					item.positionX = itemWidth/2
+					item.positionY = getPosY!-10*i
+					contentHeight = contentHeight+itemHeight+10
 			@viewSize = CCSize @width,contentHeight
 
 		currentItem = nil
@@ -190,3 +203,34 @@ Class SettingPanelView,
 				currentItem = item
 			else
 				currentItem = nil
+
+		@gslot "Scene.DataLoaded",(sceneData)->
+			for item in *camItems
+				@menu\removeChild item
+			camItems = {}
+			return unless sceneData
+			cameraData = sceneData.camera
+			if cameraData.subCams
+				for child in *cameraData.subCams
+					viewItem = ViewItem {
+						text:child.name
+						x:-itemWidth
+						y:0
+						width:itemWidth-20
+						height:itemHeight
+					}
+					viewItem.visible = false
+					viewItem.itemData = child
+					@menu\addChild viewItem
+					table.insert camItems,viewItem
+			viewItem = Button {
+				text:"<NEW>"
+				x:-itemWidth
+				y:0
+				width:itemWidth-20
+				height:itemHeight
+				fontSize:16
+			}
+			viewItem.visible = false
+			@menu\addChild viewItem
+			table.insert camItems,viewItem

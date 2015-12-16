@@ -165,9 +165,14 @@ Items =
 					setupData child
 		data = dofile filename
 		setupData data
-		Items.Camera data.camera if data.camera
 		Contacts data.contacts if data.contacts
 		Groups data.groups if data.groups
+		if data.camera
+			camera = data.camera
+			Items.Camera camera 
+			if camera.subCams
+				for cam in *camera.subCams
+					Items.SubCam cam
 		data
 
 	dumpData:(data,filename)->
@@ -231,7 +236,7 @@ Items =
 		itemType:{1,Types.Camera}
 		boundary:{2,false}
 		area:{3,Rect!}
-		children:{4,false}
+		subCams:{4,false}
 		-- helper
 		create:(scene)=>
 			camera = scene.camera
@@ -242,7 +247,7 @@ Items =
 	SubCam:DataCreater
 		-- property
 		itemType:{1,Types.SubCam}
-		name:{2,"cam"}
+		name:{2,"camera"}
 		position:{3,Point(0,0)}
 		zoom:{4,1}
 		angle:{5,0}

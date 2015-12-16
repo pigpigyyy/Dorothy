@@ -1,4 +1,5 @@
-<Node>
+<!-- params: X, Y, Scale -->
+<Node X="{ x }" Y="{ y }" ScaleX="{ scale or 1 }" ScaleY="{ scale or 1 }">
 	<Import Module="View.Shape.LineCircle"/>
 	<Import Module="View.Shape.LineRect"/>
 

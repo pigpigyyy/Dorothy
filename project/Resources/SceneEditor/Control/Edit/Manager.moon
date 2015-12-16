@@ -7,8 +7,6 @@ GroupPanel = require "Control.Edit.GroupPanel"
 ContactPanel = require "Control.Edit.ContactPanel"
 Reference = require "Data.Reference"
 import Simulation from require "Data.Model"
-Camera = require "View.Shape.Camera"
-BoundaryEditor = require "Control.Edit.BoundaryEditor"
 
 Class => CCNode!,
 	__init:=>
@@ -16,13 +14,6 @@ Class => CCNode!,
 		_stopEditing = nil
 		stopEditing = -> _stopEditing! if _stopEditing
 		cancelEditing = -> emit "Scene.SettingPanel.Edit",nil
-
-		@addChild with Camera!
-			.scaleX = 0.5
-			.scaleY = 0.5
-			.position = oVec2 width/2,height-80
-
-		@addChild BoundaryEditor!
 
 		@schedule once ->
 			sleep 0.1
@@ -34,6 +25,11 @@ Class => CCNode!,
 				height:60
 			}
 			@addChild @ruler
+			BoundaryEditor = require "Control.Edit.BoundaryEditor"
+			sleep 0.1
+			@boundaryEditor = BoundaryEditor!
+			@addChild @boundaryEditor
+
 		showRuler = (...)->
 			@ruler\show ...
 			_stopEditing = ->
@@ -421,6 +417,11 @@ Class => CCNode!,
 										item\start!
 									else
 										item\stop!
+								when "boundary"
+									if value
+										@boundaryEditor\show!
+									else
+										@boundaryEditor\hide!
 					when "ratioX","ratioY"
 						default = data[menuItem.name]
 						valueChanged = (value)->
