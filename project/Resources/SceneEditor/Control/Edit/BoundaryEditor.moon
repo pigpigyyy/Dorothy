@@ -14,9 +14,9 @@ BoundaryBar = (size,vertical,flip)->
 		oVec2(flip and 0 or 1,0.5)
 	else
 		oVec2(0.5,flip and 1 or 0)
-	getCamPos = ->
-		center = oVec2 winWidth/2,winHeight/2
-		center-editor.camPos+editor.origin
+	getPos = (worldPos)->
+		dummyLayer = editor.items.Scene\getLayer -1
+		dummyLayer\convertToNodeSpace worldPos
 	with CCLayerColor ccColor4(0),width,height
 		.opacity = 0.5
 		.anchor = anchor
@@ -68,11 +68,11 @@ BoundaryBar = (size,vertical,flip)->
 							deltaX = winWidth*dt*.acc/activeArea
 							.positionX += deltaX
 							emit "Scene.ViewArea.Move",oVec2(-deltaX,0)
-							\emit "ValueChanged",(.positionX-getCamPos().x)/editor.scale
+							\emit "ValueChanged",getPos(\convertToWorldSpace oVec2.zero).x
 				elseif .scheduled
 					.scheduled = false
 					\unschedule!
-				\emit "ValueChanged",(.positionX-getCamPos().x)/editor.scale
+				\emit "ValueChanged",getPos(\convertToWorldSpace oVec2.zero).x
 			else
 				posY = pos.y
 				bottomOffset = flip and size+50 or 50
@@ -95,11 +95,11 @@ BoundaryBar = (size,vertical,flip)->
 							deltaY = winHeight*dt*.acc/activeArea
 							.positionY += deltaY
 							emit "Scene.ViewArea.Move",oVec2(0,-deltaY)
-							\emit "ValueChanged",(.positionY-getCamPos().y)/editor.scale
+							\emit "ValueChanged",getPos(\convertToWorldSpace oVec2.zero).y
 				elseif .scheduled
 					.scheduled = false
 					\unschedule!
-				\emit "ValueChanged",(.positionY-getCamPos().y)/editor.scale
+				\emit "ValueChanged",getPos(\convertToWorldSpace oVec2.zero).y
 		touchEnded = ->
 			\perform oOpacity 0.3,0.5
 			if .scheduled
@@ -123,22 +123,22 @@ Class => CCNode!,
 			CCRect left,bottom,right-left,top-bottom
 		@leftBar = with BoundaryBar 40,true,false
 			\slots "ValueChanged",(value)->
-				@area = getRect left:value
+				@area = getRect left:math.floor value
 				editor.sceneData.camera.area = @area
 		@addChild @leftBar
 		@rightBar = with BoundaryBar 40,true,true
 			\slots "ValueChanged",(value)->
-				@area = getRect right:value
+				@area = getRect right:math.floor value
 				editor.sceneData.camera.area = @area
 		@addChild @rightBar
 		@bottomBar = with BoundaryBar 40,false,true
 			\slots "ValueChanged",(value)->
-				@area = getRect bottom:value
+				@area = getRect bottom:math.floor value
 				editor.sceneData.camera.area = @area
 		@addChild @bottomBar
 		@topBar = with BoundaryBar 40,false,false
 			\slots "ValueChanged",(value)->
-				@area = getRect top:value
+				@area = getRect top:math.floor value
 				editor.sceneData.camera.area = @area
 		@addChild @topBar
 		@onLoad = @gslot "Scene.DataLoaded",(sceneData)-> @setup! if sceneData
@@ -148,8 +148,7 @@ Class => CCNode!,
 			@rightBar.positionX += delta.x
 			@topBar.positionY += delta.y
 			@bottomBar.positionY += delta.y
-		resetPos = (camPos)->
-			thread -> cycle 0.5,-> @update!
+		resetPos = (camPos)-> @schedule once -> cycle 0.6,-> @update!
 		@onMoveTo = @gslot "Scene.Camera.MoveTo",resetPos
 		@gslot "Scene.ViewArea.ScaleTo",-> resetPos editor.camPos
 		@gslot "Scene.ViewArea.Scale",-> @update!
