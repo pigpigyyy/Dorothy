@@ -462,7 +462,7 @@ Class SpritePanelView,
 		clipTab.opacity = 0
 		clipTab\perform CCSequence {
 			CCDelay (index or 0)*0.1
-			oOpacity 0.3,0.5
+			oOpacity 0.3,0.7
 		}
 		clipTab
 

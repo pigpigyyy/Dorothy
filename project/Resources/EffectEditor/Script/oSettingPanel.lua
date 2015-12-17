@@ -370,7 +370,7 @@ local function oSettingPanel()
 					oVec2(halfBW,halfBH-150),
 					oVec2(halfBW,halfBH),
 					oVec2(-halfBW,halfBH)
-				},ccColor4(0xe5100000),0.5,ccColor4(0x88ffafaf))
+				},ccColor4(0x88100000),0.5,ccColor4(0xffffafaf))
 				self.position = oVec2(framePos.x+borderSize.width+10,framePos.y)
 				self:runAction(oPos(0.3,framePos.x,framePos.y,oEase.OutQuad))
 			else
@@ -384,7 +384,7 @@ local function oSettingPanel()
 						oVec2(halfBW,halfBH-150),
 						oVec2(halfBW,halfBH),
 						oVec2(-halfBW,halfBH)
-					},ccColor4(0xe5100000),0.5,ccColor4(0x88ffafaf))
+					},ccColor4(0x88100000),0.5,ccColor4(0xffffafaf))
 					self.position = oVec2(framePos.x+borderSize.width+10,framePos.y)
 					self:runAction(oPos(0.3,framePos.x,framePos.y,oEase.OutQuad))
 				end))
@@ -405,7 +405,7 @@ local function oSettingPanel()
 						oVec2(halfBW,-halfBH),
 						oVec2(halfBW,halfBH),
 						oVec2(-halfBW,halfBH)
-					},ccColor4(0xe5100000),0.5,ccColor4(0x88ffafaf))
+					},ccColor4(0x88100000),0.5,ccColor4(0xffffafaf))
 					self:runAction(oPos(0.3,particlePos.x,particlePos.y,oEase.OutQuad))
 				else
 					oRoutine(once(function()
@@ -418,7 +418,7 @@ local function oSettingPanel()
 							oVec2(halfBW,-halfBH),
 							oVec2(halfBW,halfBH),
 							oVec2(-halfBW,halfBH)
-						},ccColor4(0xe5100000),0.5,ccColor4(0x88ffafaf))
+						},ccColor4(0x88100000),0.5,ccColor4(0xffffafaf))
 						self.position = oVec2(startPos.x,startPos.y)
 						self:runAction(oPos(0.3,particlePos.x,particlePos.y,oEase.OutQuad))
 					end))

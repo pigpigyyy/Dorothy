@@ -55,6 +55,7 @@ Class EditorView,
 		@levelSelectionPanel = level 11
 
 		@schedule once ->
+			sleep!
 			controlNames = {
 				"ViewArea"
 				"HRuler"
@@ -170,8 +171,8 @@ Class EditorView,
 		@gslot "Scene.LayerSelected",(item)-> selectItem item,item
 
 		@gslot "Scene.ViewPanel.Select",(itemData)-> @currentData = itemData
-		@gslot "Scene.ViewArea.ScaleTo",(scale)-> editor.scale = scale
-		@gslot "Scene.ViewArea.Scale",(scale)-> editor.scale = scale
+		@gslot "Scene.ViewArea.ScaleTo",(scale)-> @scale = scale
+		@gslot "Scene.ViewArea.Scale",(scale)-> @scale = scale
 
 		setCurrentData = (itemData)-> @currentData = itemData
 		@gslot "Scene.ViewPanel.Select",setCurrentData

@@ -49,7 +49,7 @@ local oBox = class({
 			oVec2(size,-size),
 			oVec2(size,size),
 			oVec2(-size,size)
-		},ccColor4(0xe5100000),0.5,ccColor4(0x88ffafaf))
+		},ccColor4(0xe5100000),0.5,ccColor4(0xffffafaf))
 		border.position = oVec2(w,h)
 		self:addChild(border)
 		self._border = border

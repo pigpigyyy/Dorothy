@@ -114,7 +114,7 @@ Class ViewAreaView,
 						@cross.transformTarget = item
 						@cross\perform @fadeCross
 						if item.parent ~= editor.items.UI
-							-- TODO: show can`t add body message here
+							-- TODO: show "can`t add body" message here
 							parentData = editor\getData item.parent
 							pos += parentData.offset
 							emit "Scene.ViewArea.MoveTo",editor.origin-pos*item.parent.scaleX

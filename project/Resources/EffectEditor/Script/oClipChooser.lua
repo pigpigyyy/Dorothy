@@ -69,7 +69,7 @@ local function oClipChooser(clipName)
 		oVec2(halfBW,-halfBH),
 		oVec2(halfBW,halfBH),
 		oVec2(-halfBW,halfBH)
-	},ccColor4(clipName and 0xe5133333 or 0xe5100000),0.5,ccColor4(0x88ffafaf))
+	},ccColor4(clipName and 0xe5133333 or 0xe5100000),0.5,ccColor4(0xffffafaf))
 	border:addChild(background,-1)
 
 	local opMenu = CCMenu()
@@ -170,13 +170,13 @@ local function oClipChooser(clipName)
 			oEditor.currentFile = prefix..oEditor.currentFile
 			for index = 1,#names do
 				n = n + 1
-				y = borderSize.height-10-itemHeight*0.5-math.floor((n-1)/itemNum)*(itemHeight+10)
+				y = borderSize.height-10-math.floor((n-1)/itemNum)*(itemHeight+10)
 				local clipStr = filename.."|"..names[index]
 				local rect = CCSprite(clipStr).textureRect
 				local sprite = nil
 				local button = oButton("",0,
 					100,100,
-					itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
+					10+((n-1)%itemNum)*(itemWidth+10),y,
 					function(item)
 						if panel.number > 99 then return end
 						sprite.opacity = 1
@@ -207,7 +207,7 @@ local function oClipChooser(clipName)
 				sprite.position = oVec2(100*0.5,100*0.5)
 				sprite.opacity = 0
 				sprite.color = ccColor3(0x666666)
-				sprite:runAction(oOpacity(0.3,0.4))
+				sprite:runAction(oOpacity(0.3,1))
 				local node = CCNode()
 				node.cascadeColor = false
 				node.cascadeOpacity = false
@@ -215,21 +215,21 @@ local function oClipChooser(clipName)
 				table.insert(panel.sprites,node)
 				button.face:addChild(node)
 				button.node = node
+				button.anchor = oVec2(0,1)
 				button.position = button.position + panel:getTotalDelta()
 				menu:addChild(button)
 			end
 
 			n = n + 1
-			y = borderSize.height-10-itemHeight*0.5-math.floor((n-1)/itemNum)*(itemHeight+10)
+			y = borderSize.height-10-math.floor((n-1)/itemNum)*(itemHeight+10)
 			local button = oButton("Clear\nSelection",17,
 				100,100,
-				itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
+				10+((n-1)%itemNum)*(itemWidth+10),y,
 				function()
 					menu:eachChild(function(child)
 						if tolua.type(child) == "CCMenuItem" and child.circles then
 							child.face.cascadeOpacity = true
 							local node = child.node.children[1]
-							node.opacity = 0.4
 							node.color = ccColor3(0x666666)
 							local count = #panel.frameData
 							while count > 0 do
@@ -246,6 +246,7 @@ local function oClipChooser(clipName)
 					end)
 					panel.number = 1
 				end)
+			button.anchor = oVec2(0,1)
 			button.position = button.position + panel:getTotalDelta()
 			menu:addChild(button)
 
@@ -258,7 +259,7 @@ local function oClipChooser(clipName)
 			end
 		end
 
-		local yTo = borderSize.height+itemHeight*0.5+10-y
+		local yTo = borderSize.height+itemHeight+10-y
 		local viewHeight = yTo < borderSize.height and borderSize.height or yTo
 		local viewWidth = borderSize.width
 		panel:updateSize(viewWidth,viewHeight)

@@ -10,7 +10,7 @@
 	<Import Module="View.Control.Basic.CircleButton"/>
 
 	<Node Name="panel" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" Ref="True">
-		<SolidRect Width="{ width }" Height="{ height }" Color="0xee100000"/>
+		<SolidRect Width="{ width }" Height="{ height }" Color="0xe5100000"/>
 		<ScrollArea Name="scrollArea" X="{ $X }" Y="{ $T-(height-70)/2 }" Width="{ width }" Height="{ height-70 }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelItemPanel-2 }" Ref="True">
 			<Item Name="view">
 				<Menu Name="menu" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height-70 }" TouchPriority="{ editor.levelItemPanel-1 }" Ref="True">
@@ -18,7 +18,7 @@
 				</Menu>
 			</Item>
 		</ScrollArea>
-		<LineRect X="-1" Y="-1" Width="{ width+2 }" Height="{ height+2 }" Color="0x88ffafaf"/>
+		<LineRect X="-1" Y="-1" Width="{ width+2 }" Height="{ height+2 }" Color="0xffffafaf"/>
 
 		<Menu Name="opMenu" AnchorX="0" AnchorY="0" X="0" Y="0" Width="{ width }" Height="70" TouchPriority="{ editor.levelItemPanel-3 }" Ref="True"/>
 

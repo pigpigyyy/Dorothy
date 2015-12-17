@@ -6,7 +6,7 @@
 	<Import Module="Control.Basic.ScrollArea"/>
 
 	<DrawNode Name="box" X="{ $X }" Y="{ $Y }" Ref="True">
-		<Polygon FillColor="0xe5100000" BorderWidth="0.5" BorderColor="0x88ffafaf">
+		<Polygon FillColor="0xe5100000" BorderWidth="0.5" BorderColor="0xffffafaf">
 			<Vec2 X="{ -width/2-1 }" Y="{ -height/2-1 }"/>
 			<Vec2 X="{ width/2+1 }" Y="{ -height/2-1 }"/>
 			<Vec2 X="{ width/2+1 }" Y="{ height/2+1 }"/>

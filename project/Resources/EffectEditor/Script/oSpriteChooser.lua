@@ -40,7 +40,7 @@ local function oSpriteChooser()
 		oVec2(halfBW,-halfBH),
 		oVec2(halfBW,halfBH),
 		oVec2(-halfBW,halfBH)
-	},ccColor4(0xe5133333),0.5,ccColor4(0x88ffafaf))
+	},ccColor4(0xe5133333),0.5,ccColor4(0xffffafaf))
 	border:addChild(background,-1)
 
 	local opMenu = CCMenu()

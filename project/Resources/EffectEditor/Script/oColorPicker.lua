@@ -34,7 +34,7 @@ local function oColorPicker(color,callback)
 	local background = CCLayerColor(ccColor4(0x88000000),borderWidth,borderHeight)
 	panel:addChild(background)
 
-	local border = oLine({oVec2(-halfW,halfH),oVec2(halfW,halfH),oVec2(halfW,-halfH),oVec2(-halfW,-halfH),oVec2(-halfW,halfH)},ccColor4(0x88ffafaf))
+	local border = oLine({oVec2(-halfW,halfH),oVec2(halfW,halfH),oVec2(halfW,-halfH),oVec2(-halfW,-halfH),oVec2(-halfW,halfH)},ccColor4(0xffffafaf))
 	border.position = oVec2(halfW,halfH)
 	background:addChild(border)
 

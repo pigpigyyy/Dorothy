@@ -25,6 +25,13 @@ BoundaryBar = (size,vertical,flip)->
 		.position = oVec2 width/2,height/2
 		\addChild with oLine line,ccColor4 0xff00ffff
 			.position = oVec2(width,height)*anchor
+		dir = if vertical
+			if flip then "right" else "left"
+		else
+			if flip then "bottom" else "top"
+		\addChild with CCLabelTTF dir,"Arial",16
+			.position = oVec2 width/2,height/2
+			.texture.antiAlias = false
 		\slots "TouchBegan",(touch)->
 			loc = \convertToNodeSpace touch.location
 			x,y = if vertical
@@ -36,13 +43,13 @@ BoundaryBar = (size,vertical,flip)->
 				true
 			else
 				false
-		activeArea = size*2
+		activeArea = size*1.5
 		\slots "TouchMoved",(touch)->
 			pos = \convertToWorldSpace oVec2.zero
 			if vertical
 				posX = pos.x
-				leftOffset = flip and 0 or size
-				rightOffset = flip and winWidth-size or winWidth
+				leftOffset = flip and 70 or size+70
+				rightOffset = flip and winWidth-size-240 or winWidth-240
 				if (posX >= leftOffset and posX <= rightOffset) or 
 					(posX < leftOffset and touch.delta.x > 0) or
 					(posX > rightOffset and touch.delta.x < 0)
@@ -53,6 +60,7 @@ BoundaryBar = (size,vertical,flip)->
 					math.min posX-rightOffset+activeArea,activeArea
 				else
 					0
+				.acc /= math.max editor.scale,1
 				if .acc ~= 0
 					if not .scheduled
 						.scheduled = true
@@ -60,15 +68,15 @@ BoundaryBar = (size,vertical,flip)->
 							deltaX = winWidth*dt*.acc/activeArea
 							.positionX += deltaX
 							emit "Scene.ViewArea.Move",oVec2(-deltaX,0)
-							\emit "ValueChanged",.positionX-getCamPos().x
+							\emit "ValueChanged",(.positionX-getCamPos().x)/editor.scale
 				elseif .scheduled
 					.scheduled = false
 					\unschedule!
-				\emit "ValueChanged",.positionX-getCamPos().x
+				\emit "ValueChanged",(.positionX-getCamPos().x)/editor.scale
 			else
 				posY = pos.y
-				bottomOffset = flip and size or 0
-				topOffset = flip and winHeight or winHeight-size
+				bottomOffset = flip and size+50 or 50
+				topOffset = flip and winHeight-70 or winHeight-size-70
 				if (posY >= bottomOffset and posY <= topOffset) or 
 					(posY < bottomOffset and touch.delta.y > 0) or
 					(posY > topOffset and touch.delta.y < 0)
@@ -79,6 +87,7 @@ BoundaryBar = (size,vertical,flip)->
 					math.min posY-topOffset+activeArea,activeArea
 				else
 					0
+				.acc /= math.max editor.scale,1
 				if .acc ~= 0
 					if not .scheduled
 						.scheduled = true
@@ -86,11 +95,11 @@ BoundaryBar = (size,vertical,flip)->
 							deltaY = winHeight*dt*.acc/activeArea
 							.positionY += deltaY
 							emit "Scene.ViewArea.Move",oVec2(0,-deltaY)
-							\emit "ValueChanged",.positionY-getCamPos().y
+							\emit "ValueChanged",(.positionY-getCamPos().y)/editor.scale
 				elseif .scheduled
 					.scheduled = false
 					\unschedule!
-				\emit "ValueChanged",.positionY-getCamPos().y
+				\emit "ValueChanged",(.positionY-getCamPos().y)/editor.scale
 		touchEnded = ->
 			\perform oOpacity 0.3,0.5
 			if .scheduled
@@ -134,20 +143,16 @@ Class => CCNode!,
 		@addChild @topBar
 		@onLoad = @gslot "Scene.DataLoaded",(sceneData)-> @setup! if sceneData
 		@onMove = @gslot "Scene.Camera.Move",(delta)->
+			delta *= editor.scale
 			@leftBar.positionX += delta.x
 			@rightBar.positionX += delta.x
 			@topBar.positionY += delta.y
 			@bottomBar.positionY += delta.y
-		@onMoveTo = @gslot "Scene.Camera.MoveTo",(camPos)->
-			return unless editor.sceneData
-			area = editor.sceneData.camera.area
-			center = oVec2 width/2,height/2
-			origin = editor.origin
-			pos = center-camPos+origin
-			@leftBar\perform oPos 0.5,area.left+pos.x,@leftBar.positionY,oEase.OutQuad
-			@rightBar\perform oPos 0.5,area.right+pos.x,@leftBar.positionY,oEase.OutQuad
-			@topBar\perform oPos 0.5,@topBar.positionX,area.top+pos.y,oEase.OutQuad
-			@bottomBar\perform oPos 0.5,@bottomBar.positionX,area.bottom+pos.y,oEase.OutQuad
+		resetPos = (camPos)->
+			thread -> cycle 0.5,-> @update!
+		@onMoveTo = @gslot "Scene.Camera.MoveTo",resetPos
+		@gslot "Scene.ViewArea.ScaleTo",-> resetPos editor.camPos
+		@gslot "Scene.ViewArea.Scale",-> @update!
 		@onLoad.enabled = false
 		@onMove.enabled = false
 		@onMoveTo.enabled = false
@@ -157,15 +162,15 @@ Class => CCNode!,
 			elseif @visible
 				@hide!
 
-	setup:=>
-		{:width,:height} = CCDirector.winSize
+	update:=>
 		area = editor.sceneData.camera.area
-		center = oVec2 width/2,height/2
-		pos = center-editor.camPos+editor.origin
-		@leftBar.positionX = area.left+pos.x
-		@rightBar.positionX = area.right+pos.x
-		@topBar.positionY = area.top+pos.y
-		@bottomBar.positionY = area.bottom+pos.y
+		dummyLayer = editor.items.Scene\getLayer -1
+		lower = @convertToNodeSpace dummyLayer\convertToWorldSpace oVec2 area.left,area.bottom
+		upper = @convertToNodeSpace dummyLayer\convertToWorldSpace oVec2 area.right,area.top
+		@leftBar.positionX = lower.x
+		@rightBar.positionX = upper.x
+		@topBar.positionY = upper.y
+		@bottomBar.positionY = lower.y
 
 	show:=>
 		@area = editor.sceneData.camera.area
@@ -177,7 +182,7 @@ Class => CCNode!,
 		@rightBar.touchEnabled = true
 		@topBar.touchEnabled = true
 		@bottomBar.touchEnabled = true
-		@setup!
+		@update!
 
 	hide:=>
 		@visible = false

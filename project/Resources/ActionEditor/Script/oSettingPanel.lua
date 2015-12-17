@@ -61,7 +61,7 @@ local function oSettingPanel()
 		oVec2(borderSize.width,0),
 		oVec2(borderSize.width,borderSize.height),
 		oVec2(0,borderSize.height)
-	},ccColor4(0x88000000))
+	},ccColor4(0x88100000))
 	border:addChild(
 		oLine(
 		{
@@ -70,7 +70,7 @@ local function oSettingPanel()
 			oVec2(borderSize.width,borderSize.height),
 			oVec2(0,borderSize.height),
 			oVec2.zero
-		},ccColor4()))
+		},ccColor4(0xffffafaf)))
 	panel:addChild(border)
 
 	local stencil = CCDrawNode()
@@ -80,7 +80,7 @@ local function oSettingPanel()
 		oVec2(borderSize.width-2,0),
 		oVec2(borderSize.width-2,borderSize.height-2),
 		oVec2(0,borderSize.height-2)
-	},ccColor4(0xffffffff))
+	},ccColor4())
 	stencil.position = oVec2(1,1)
 
 	local view = CCClipNode(stencil)
