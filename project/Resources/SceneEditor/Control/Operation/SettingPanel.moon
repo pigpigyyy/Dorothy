@@ -4,6 +4,9 @@ SettingPanelView = require "View.Control.Operation.SettingPanel"
 SettingItem = require "BodyEditor.Script.oSettingItem"
 ViewItem = require "Control.Operation.ViewItem"
 Button = require "Control.Basic.Button"
+InputBox = require "Control.Basic.InputBox"
+MessageBox = require "Control.Basic.MessageBox"
+Model = require "Data.Model"
 
 -- [no signals]
 -- [no params]
@@ -42,7 +45,7 @@ Class SettingPanelView,
 
 		genPosY = ->
 			index = 0
-			()->
+			->
 				v = index
 				index += 1
 				@height-30-itemHeight/2-itemHeight*v
@@ -140,8 +143,24 @@ Class SettingPanelView,
 		}
 
 		camItems = {}
+		currentCamItem = nil
+		camItemTapped = (camItem)->
+			if not camItem or camItem.checked
+				if currentCamItem
+					currentCamItem.checked = false
+					--subCam = currentCamItem.itemData
+				currentCamItem = camItem
+				editor.items.Camera.boundary = editor.sceneData.camera.area
+				print editor.sceneData.camera.area.left
+				print editor.sceneData.camera.area.right
+				print editor.sceneData.camera.area.bottom
+				print editor.sceneData.camera.area.top
+			else
+				currentCamItem = nil
+				editor.items.Camera.boundary = CCRect.zero
+
 		currentGroup = nil
-		@gslot "Scene.ViewPanel.Select",(data)->
+		selectGroup = (data)->
 			if currentGroup
 				for item in *currentGroup
 					item.positionX = -itemWidth
@@ -160,7 +179,6 @@ Class SettingPanelView,
 				@title.text = "Dorothy Editor"
 				@title.texture.antiAlias = false
 				return
-
 			currentGroup = groups[data.typeName]
 			getPosY = genPosY!
 			contentHeight = 40
@@ -186,14 +204,16 @@ Class SettingPanelView,
 						editor.sceneData.groups[data[item.name]]
 					else
 						data[item.name] == "" and "None" or data[item.name]
-
 			if data.typeName == "Camera"
+				currentCamItem.checked = false if currentCamItem
 				for i,item in ipairs camItems
 					item.visible = true
 					item.positionX = itemWidth/2
 					item.positionY = getPosY!-10*i
 					contentHeight = contentHeight+itemHeight+10
 			@viewSize = CCSize @width,contentHeight
+
+		@gslot "Scene.ViewPanel.Select",selectGroup
 
 		currentItem = nil
 		@gslot "Scene.SettingPanel.Edit",(item)->
@@ -204,33 +224,52 @@ Class SettingPanelView,
 			else
 				currentItem = nil
 
-		@gslot "Scene.DataLoaded",(sceneData)->
+		loadCameras = (sceneData)->
 			for item in *camItems
 				@menu\removeChild item
 			camItems = {}
+			currentCamItem = nil
 			return unless sceneData
 			cameraData = sceneData.camera
 			if cameraData.subCams
 				for child in *cameraData.subCams
-					viewItem = ViewItem {
-						text:child.name
-						x:-itemWidth
-						y:0
-						width:itemWidth-20
-						height:itemHeight
-					}
-					viewItem.visible = false
-					viewItem.itemData = child
+					viewItem = with ViewItem {
+							text:child.name
+							x:-itemWidth
+							y:0
+							width:itemWidth-20
+							height:itemHeight
+						}
+						.visible = false
+						.itemData = child
+						\slots "Tapped",camItemTapped
 					@menu\addChild viewItem
 					table.insert camItems,viewItem
-			viewItem = Button {
-				text:"<NEW>"
-				x:-itemWidth
-				y:0
-				width:itemWidth-20
-				height:itemHeight
-				fontSize:16
-			}
-			viewItem.visible = false
+			viewItem = with Button {
+					text:"<NEW>"
+					x:-itemWidth
+					y:0
+					width:itemWidth-20
+					height:itemHeight
+					fontSize:16
+				}
+				.visible = false
+				\slots "Tapped",->
+					with InputBox text:"New Camera Name"
+						\slots "Inputed",(text)->
+							if cameraData.subCams
+								for child in *cameraData.subCams
+									if child.name == text
+										MessageBox text:"Name Exist!",okOnly:true
+										return
+							else
+								cameraData.subCams = {}
+							subCam = Model.SubCam!
+							subCam.name = text
+							table.insert cameraData.subCams,subCam
+							loadCameras sceneData
+							selectGroup cameraData
 			@menu\addChild viewItem
 			table.insert camItems,viewItem
+
+		@gslot "Scene.DataLoaded",loadCameras

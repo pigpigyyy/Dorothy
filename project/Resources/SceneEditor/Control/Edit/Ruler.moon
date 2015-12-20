@@ -261,7 +261,7 @@ Class RulerView,
 		}
 
 	hide: =>
-		return if not @visible
+		return unless @visible
 		@slots "Changed",nil
 		@unschedule!
 		@perform CCSequence {

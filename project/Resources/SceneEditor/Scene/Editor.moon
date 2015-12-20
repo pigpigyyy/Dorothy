@@ -110,7 +110,7 @@ Class EditorView,
 					emit "Scene.LayerSelected",item
 
 		@gslot "Scene.ViewArea.Move",(delta)->
-			delta = delta/@viewArea.scaleNode.scaleX
+			delta = delta/@scale
 			@camPos -= delta
 			if @items
 				@items.Camera.position -= delta
