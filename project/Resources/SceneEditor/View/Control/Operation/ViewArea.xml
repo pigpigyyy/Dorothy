@@ -1,6 +1,6 @@
 <!-- no params -->
 <LayerColor X="{ @X }" Y="{ @Y }" Color="0xff1a1a1a" MultiTouches="True" TouchPriority="{ editor.levelViewArea }" TouchEnabled="True">
-	<Node Name="scaleNode" X="{ editor.origin.x }" Y="{ editor.origin.y }" Ref="True">
+	<Node Name="scaleNode" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" Ref="True">
 		<Node Name="crossNode" Ref="True">
 			<Line Name="xcross" Color="0xffffff" Opacity="0.2" Ref="True">
 				<Vec2 X="0" Y="{ -@H*2 }"/>
@@ -12,6 +12,8 @@
 			</Line>
 		</Node>
 	</Node>
+
+	<Node Name="sceneNode" Ref="True"/>
 
 	<Line Name="cross" Color="0xff00ffff" Opacity="0" Ref="True">
 		<Vec2 X="-10" Y="0"/>

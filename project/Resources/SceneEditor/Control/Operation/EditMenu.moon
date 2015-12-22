@@ -55,8 +55,7 @@ Class EditMenuView,
 			@zoomBtn.text = string.format("%d%%",scale*100)
 			emit "Scene.ViewArea.ScaleTo",scale
 
-		@originBtn\slots "Tapped",->
-			emit "Scene.ViewArea.MoveTo",editor.origin
+		@originBtn\slots "Tapped",-> editor\moveTo oVec2.zero
 
 		@progressUp.visible = false
 		@progressDown.visible = false
@@ -224,7 +223,7 @@ Class EditMenuView,
 		@gslot "Scene.ViewPanel.Select",itemChoosed
 
 		@gslot "Scene.ViewArea.Scale",(scale)->
-			mode = 2
+			mode = 2 if scale ~= 1
 			@zoomBtn.text = string.format("%d%%",scale*100)
 
 	setButtonVisible: (button,visible)=>

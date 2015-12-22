@@ -6815,6 +6815,14 @@ local Dorothy =
 		type = "function",
 		index = index()
 	},
+	CamMoved =
+	{
+		args = "",
+		description = " a builtin slot string for oCamera\n\n -- handler : function(delta: oVec2)",
+		returns = "",
+		type = "function",
+		index = index()
+	},
 }
 
 local function makeDerivation(pack)

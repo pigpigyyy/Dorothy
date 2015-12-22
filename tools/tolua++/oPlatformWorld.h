@@ -10,5 +10,6 @@ class oPlatformWorld: public oWorld
 	oVec2& getLayerRatio(int zOrder);
 	void setLayerOffset(int zOrder, oVec2& offset);
 	oVec2& getLayerOffset(int zOrder);
-	static oPlatformWorld* create();
+	
+	static tolua_outside oBullet* oPlatformWorld_create @ create();
 };

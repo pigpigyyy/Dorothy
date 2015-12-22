@@ -36,7 +36,7 @@ cycle = require "cycle"
 
 	-- init interval --
 	intervalNode = with oLine!
-		.position = oVec2 halfW,origin.y
+		.position = oVec2 halfW,0
 	@addChild intervalNode
 
 	nPart = 0
@@ -131,20 +131,23 @@ cycle = require "cycle"
 
 	-- set default interval negtive & positive part length --
 	setupLabels!
-	updatePart origin.y, winSize.height-origin.y
+	updatePart winSize.height-intervalNode.positionY, intervalNode.positionY
 	updateLabels!
 
 	-- listen view move event --
-	@gslot "Scene.ViewArea.Move",(delta)->
-		intervalNode.positionY += delta.y/@scaleY
-		updatePart delta.y < 0 and winSize.height-intervalNode.positionY or 0,
-			delta.y > 0 and intervalNode.positionY or 0
+	@gslot "Scene.Camera.Move",(delta)->
+		deltaY = -delta.y
+		intervalNode.positionY += deltaY
+		updatePart deltaY < 0 and winSize.height-intervalNode.positionY or 0,
+			deltaY > 0 and intervalNode.positionY or 0
 		updateLabels!
 
-	@gslot "Scene.ViewArea.MoveTo",(pos)->
-		intervalNode\runAction oPos 0.5,halfW,pos.y,oEase.OutQuad
+	@gslot "Scene.Camera.MoveTo",(pos)->
+		height = winSize.height
+		posY = editor.origin.y-pos.y
+		intervalNode\runAction oPos 0.5,halfW,posY,oEase.OutQuad
 		oRoutine once -> cycle 0.5,-> updateLabels!
-		updatePart winSize.height-pos.y,pos.y
+		updatePart winSize.height-posY,posY
 
 	-- listen view scale event --
 	updateIntervalTextScale = (scale)->

@@ -52,32 +52,29 @@ void oCamera::follow( CCNode* target )
 
 void oCamera::setPosition(const CCPoint& var)
 {
-	if (_camPos != var)
+	float halfW = CCNode::getWidth() * 0.5f;
+	float halfH = CCNode::getHeight() * 0.5f;
+	CCPoint pos;
+	if (_boundary != CCRect::zero)
 	{
-		float halfW = CCNode::getWidth() * 0.5f;
-		float halfH = CCNode::getHeight() * 0.5f;
-		CCPoint pos;
-		if (_boundary != CCRect::zero)
-		{
-			CCPoint from(_boundary.origin.x + halfW, _boundary.origin.y + halfH);
-			CCPoint to(
-				_boundary.origin.x + _boundary.size.width - halfW,
-				_boundary.origin.y + _boundary.size.height - halfH);
-			pos = ccpClamp(var, from, to);
-		}
-		else
-		{
-			pos = var;
-		}
-		float deltaX = pos.x - _camPos.x;
-		float deltaY = pos.y - _camPos.y;
-		_camPos = pos;
-		const CCPoint& anchor = CCNode::getAnchorPoint();
-		CCNode::setAnchorPoint(ccp(anchor.x+deltaX/CCNode::getWidth(), anchor.y+deltaY/CCNode::getHeight()));
-		if (moved)
-		{
-			moved(deltaX, deltaY);
-		}
+		oVec2 from(_boundary.origin.x + halfW, _boundary.origin.y + halfH);
+		oVec2 to(
+			_boundary.origin.x + _boundary.size.width - halfW,
+			_boundary.origin.y + _boundary.size.height - halfH);
+		pos = ccpClamp(var, from, to);
+	}
+	else
+	{
+		pos = var;
+	}
+	float deltaX = pos.x - _camPos.x;
+	float deltaY = pos.y - _camPos.y;
+	_camPos = pos;
+	const CCPoint& anchor = CCNode::getAnchorPoint();
+	CCNode::setAnchorPoint(ccp(anchor.x + deltaX / CCNode::getWidth(), anchor.y + deltaY / CCNode::getHeight()));
+	if (moved)
+	{
+		moved(deltaX, deltaY);
 	}
 }
 

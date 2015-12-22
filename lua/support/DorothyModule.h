@@ -49,6 +49,8 @@ public:
 	static const char* ActionEnd;
 	//Bullet
 	static const char* HitTarget;
+	//Camera
+	static const char* CamMoved;
 	//builtin slot end
 	oSlotList();
 	virtual ~oSlotList();
@@ -88,6 +90,8 @@ oVec2 oModel_getKey(oModel* model, const char* key);
 
 void oWorld_query(oWorld* world, const CCRect& rect, int nHandler);
 void oWorld_cast(oWorld* world, const oVec2& start, const oVec2& end, bool closest, int handler);
+
+oPlatformWorld* oPlatformWorld_create();
 
 oBody* oBody_create(oBodyDef* def, oWorld* world, oVec2 pos, float rot);
 oUnit* oUnit_create(oUnitDef* unitDef, oWorld* world, const oVec2& pos, float rot);

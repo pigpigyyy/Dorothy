@@ -471,7 +471,6 @@ int CCLuaEngine::executeMenuItemEvent(int eventType, CCMenuItem* menuItem)
 		oRef<oSlotList> ref(slotList);
 		tolua_pushccobject(L, menuItem);
 		slotList->invoke(L, 1);
-		lua_pop(L, 1);
 	}
 	return 0;
 }
@@ -486,7 +485,6 @@ int CCLuaEngine::executeSchedule(int nHandler, float dt)
 int CCLuaEngine::executeLayerTouchEvent(CCLayer* layer, int eventType, CCTouch* touch)
 {
 	const char* name = nullptr;
-	int ret = 1;
 	switch (eventType)
 	{
 		case CCTouch::Began:
@@ -509,16 +507,14 @@ int CCLuaEngine::executeLayerTouchEvent(CCLayer* layer, int eventType, CCTouch* 
 	{
 		oRef<oSlotList> ref(slotList);
 		tolua_pushccobject(L, touch);
-		ret = slotList->invoke(L, 1);
-		lua_pop(L, 1);
+		return slotList->invoke(L, 1);
 	}
-	return ret;
+	return 1;
 }
 
 int CCLuaEngine::executeLayerTouchesEvent(CCLayer* layer, int eventType, CCSet* touches)
 {
 	const char* name = nullptr;
-	int ret = 1;
 	switch (eventType)
 	{
 		case CCTouch::Began:
@@ -548,10 +544,9 @@ int CCLuaEngine::executeLayerTouchesEvent(CCLayer* layer, int eventType, CCSet* 
 			tolua_pushccobject(L, touch);
 			lua_rawseti(L, -2, i++);
 		}
-		ret = slotList->invoke(L, 1);
-		lua_pop(L, 1);
+		return slotList->invoke(L, 1);
 	}
-	return ret;
+	return 1;
 }
 
 int CCLuaEngine::executeLayerKeypadEvent(CCLayer* layer, int eventType)
@@ -588,7 +583,6 @@ int CCLuaEngine::executeAccelerometerEvent(CCLayer* layer, CCAcceleration* accel
 		lua_pushnumber(L, accelerationValue->z);
 		lua_pushnumber(L, accelerationValue->timestamp);
 		slotList->invoke(L, 4);
-		lua_pop(L, 4);
 	}
 	return 0;
 }

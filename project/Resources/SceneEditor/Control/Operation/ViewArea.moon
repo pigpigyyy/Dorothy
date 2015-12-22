@@ -50,11 +50,9 @@ Class ViewAreaView,
 				preDistance = touches[1].preLocation\distance touches[2].preLocation
 				distance = touches[1].location\distance touches[2].location
 				delta = (distance - preDistance) * 4 / height
-				scale = @scaleNode.scaleX + delta
+				scale = editor.scale + delta
 				if scale <= 0.5
 					scale = 0.5
-				@scaleNode.scaleX = scale
-				@scaleNode.scaleY = scale
 				tap = false
 				emit "Scene.ViewArea.Scale",scale
 
@@ -69,8 +67,11 @@ Class ViewAreaView,
 		@slots "TouchEnded",touchEnded
 		@slots "TouchCancelled",touchEnded
 
+		@gslot "Scene.ViewArea.Scale",(scale)->
+			@scaleNode.scaleX = scale
+			@scaleNode.scaleY = scale
+
 		@gslot "Scene.ViewArea.ScaleTo",(scale)->
-			editor.scale = scale
 			@touchEnabled = false
 			@scaleNode\runAction CCSequence {
 				oScale 0.5,scale,scale,oEase.OutQuad
@@ -80,8 +81,8 @@ Class ViewAreaView,
 						@touchEnabled = true
 			}
 
-		@gslot "Scene.ViewArea.MoveTo",(pos)->
-			pos -= editor.origin
+		@gslot "Scene.Camera.MoveTo",(pos)->
+			pos = oVec2(width/2,height/2)-pos
 			@unschedule!
 			@touchEnabled = false
 			@crossNode\runAction CCSequence {
@@ -94,18 +95,17 @@ Class ViewAreaView,
 			@xcross\runAction oPos 0.5,0,-pos.y,oEase.OutQuad
 			@ycross\runAction oPos 0.5,-pos.x,0,oEase.OutQuad
 
-		@gslot "Scene.ViewArea.Move",(delta)->
-			delta = delta/@scaleNode.scaleX
-			@crossNode.position += delta
-			@xcross.positionY -= delta.y
-			@ycross.positionX -= delta.x
+		@gslot "Scene.Camera.Move",(delta)->
+			@crossNode.position -= delta
+			@xcross.positionY += delta.y
+			@ycross.positionX += delta.x
 
 		itemChoosed = (itemData)->
 			if itemData
 				switch itemData.typeName
 					when "PlatformWorld","UILayer","Camera","Layer","World"
 						@cross.transformTarget = nil
-						@cross.position = editor.origin
+						@cross.position = editor.offset
 						@cross\perform @fadeCross
 					when "Body"
 						item = editor\getItem itemData
@@ -117,7 +117,7 @@ Class ViewAreaView,
 							-- TODO: show "can`t add body" message here
 							parentData = editor\getData item.parent
 							pos += parentData.offset
-							emit "Scene.ViewArea.MoveTo",editor.origin-pos*item.parent.scaleX
+							editor\moveTo pos
 					else
 						item = editor\getItem itemData
 						pos = itemData.position
@@ -127,17 +127,22 @@ Class ViewAreaView,
 						if item.parent ~= editor.items.UI
 							parentData = editor\getData item.parent
 							pos += parentData.offset
-							emit "Scene.ViewArea.MoveTo",editor.origin-pos*item.parent.scaleX
+							editor\moveTo pos
 		@gslot "Scene.ViewPanel.Pick",itemChoosed
 		@gslot "Scene.ViewPanel.Select",itemChoosed
 
 		@gslot "Scene.DataLoaded",(sceneData)->
-			scaleNode = @scaleNode
-			if #scaleNode.children == 2
-				scaleNode\removeChild scaleNode.children[2]
+			@sceneNode\removeAllChildrenWithCleanup!
 			if sceneData
 				effectFilename = editor.gameFullPath..editor.graphicFolder.."list.effect"
 				oCache.Effect\load effectFilename if oContent\exist effectFilename
 				newScene = sceneData!
-				scaleNode\addChild newScene
-				newScene.camera.position = editor.camPos
+				@sceneNode\addChild newScene
+				with newScene.camera
+					.scaleX = editor.scale
+					.scaleY = editor.scale
+					.position = editor.camPos
+					\slots "CamMoved",(delta)->
+						emit "Scene.Camera.Move",delta
+
+		@gslot "Scene.Camera.Activate",(subCam)-> editor\activateCam subCam

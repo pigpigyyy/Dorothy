@@ -38,7 +38,10 @@ oSlotName(InputDeleted)
 oSlotName(AnimationEnd)
 oSlotName(ActionStart)
 oSlotName(ActionEnd)
+//Bullet
 oSlotName(HitTarget)
+//Camera
+oSlotName(CamMoved)
 
 class oSlotData : public CCObject
 {
@@ -365,6 +368,7 @@ bool oSlotList::invoke(lua_State* L, int args)
 			result = 0;
 		}
 	}
+	lua_settop(L, top - args);
 	return result != 0;
 }
 
@@ -662,7 +666,6 @@ oModel* oModel_create(const char* filename)
 				lua_pushstring(L, name);
 				tolua_pushccobject(L, model);
 				slotList->invoke(L, 2);
-				lua_pop(L, 2);
 			}
 		};
 	});
@@ -683,7 +686,6 @@ inline void oHandleSensor(oSensor* sensor, oBody* other, const char* slotName)
 		tolua_pushccobject(L, other);
 		tolua_pushccobject(L, sensor);
 		slotList->invoke(L, 2);
-		lua_pop(L, 2);
 	}
 }
 
@@ -697,7 +699,6 @@ inline void oHandleContact(oBody* self, oBody* other, const oVec2& point, const 
 		tolua_pushusertype(L, new oVec2(point), CCLuaType<oVec2>());
 		tolua_pushusertype(L, new oVec2(normal), CCLuaType<oVec2>());
 		slotList->invoke(L, 3);
-		lua_pop(L, 3);
 	}
 }
 
@@ -737,7 +738,6 @@ inline void oHandleAction(oAction* action, const char* slotName)
 		lua_pushlstring(L, action->getName().c_str(), action->getName().size());
 		tolua_pushusertype(L, action, CCLuaType<oAction>());
 		slotList->invoke(L, 2);
-		lua_pop(L, 2);
 	}
 }
 
@@ -771,9 +771,7 @@ oBullet* oBullet_create(oBulletDef* def, oUnit* unit)
 			lua_State* L = CCLuaEngine::sharedEngine()->getState();
 			tolua_pushccobject(L, target);
 			tolua_pushccobject(L, bullet);
-			bool ret = slotList->invoke(L, 2);
-			lua_pop(L, 2);
-			return ret;
+			return slotList->invoke(L, 2);
 		}
 		return true;
 	};
@@ -825,6 +823,22 @@ void oWorld_cast(oWorld* world, const oVec2& start, const oVec2& end, bool close
 	});
 	lua_pop(L, 1);
 	CCLuaEngine::sharedEngine()->removeScriptHandler(handler);
+}
+
+oPlatformWorld* oPlatformWorld_create()
+{
+	oPlatformWorld* world = oPlatformWorld::create();
+	world->getCamera()->moved = [world](float deltaX, float deltaY)
+	{
+		oSlotList* slotList = CCNode_tryGetSlotList(world->getCamera(), oSlotList::CamMoved);
+		if (slotList)
+		{
+			lua_State* L = CCLuaEngine::sharedEngine()->getState();
+			tolua_pushusertype(L, new oVec2(deltaX, deltaY), CCLuaType<oVec2>());
+			slotList->invoke(L, 1);
+		}
+	};
+	return world;
 }
 
 bool oAnimationCache_load(const char* filename)
@@ -1915,9 +1929,7 @@ public:
 		{
 			lua_State* L = CCLuaEngine::sharedEngine()->getState();
 			tolua_pushccobject(L, sender);
-			bool ret = slotList->invoke(L, 1);
-			lua_pop(L, 1);
-			return ret;
+			return slotList->invoke(L, 1);
 		}
 		return true;
 	}
@@ -1928,9 +1940,7 @@ public:
 		{
 			lua_State* L = CCLuaEngine::sharedEngine()->getState();
 			tolua_pushccobject(L, sender);
-			bool ret = slotList->invoke(L, 1);
-			lua_pop(L, 1);
-			return ret;
+			return slotList->invoke(L, 1);
 		}
 		return true;
 	}
@@ -1942,9 +1952,7 @@ public:
 			lua_State* L = CCLuaEngine::sharedEngine()->getState();
 			lua_pushlstring(L, text, nLen);
 			tolua_pushccobject(L, sender);
-			bool ret = !slotList->invoke(L, 2);
-			lua_pop(L, 2);
-			return ret;
+			return !slotList->invoke(L, 2);
 		}
 		return false;
 	}
@@ -1957,7 +1965,6 @@ public:
 			lua_pushstring(L, text);
 			tolua_pushccobject(L, sender);
 			slotList->invoke(L, 2);
-			lua_pop(L, 2);
 		}
 	}
 	virtual bool onTextFieldDeleteBackward(CCTextFieldTTF* sender, const char* delText, int nLen)
@@ -1968,9 +1975,7 @@ public:
 			lua_State* L = CCLuaEngine::sharedEngine()->getState();
 			lua_pushlstring(L, delText, nLen);
 			tolua_pushccobject(L, sender);
-			bool ret = !slotList->invoke(L, 2);
-			lua_pop(L, 2);
-			return ret;
+			return !slotList->invoke(L, 2);
 		}
 		return false;
 	}
@@ -1983,7 +1988,6 @@ public:
 			lua_pushstring(L, delText);
 			tolua_pushccobject(L, sender);
 			slotList->invoke(L, 2);
-			lua_pop(L, 2);
 		}
 	}
 };

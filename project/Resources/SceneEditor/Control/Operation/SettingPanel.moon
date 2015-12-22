@@ -145,22 +145,19 @@ Class SettingPanelView,
 		camItems = {}
 		currentCamItem = nil
 		camItemTapped = (camItem)->
-			if not camItem or camItem.checked
+			if camItem.checked
 				if currentCamItem
 					currentCamItem.checked = false
-					--subCam = currentCamItem.itemData
+					emit "Scene.Camera.Activate",nil
 				currentCamItem = camItem
-				editor.items.Camera.boundary = editor.sceneData.camera.area
-				print editor.sceneData.camera.area.left
-				print editor.sceneData.camera.area.right
-				print editor.sceneData.camera.area.bottom
-				print editor.sceneData.camera.area.top
+				subCam = currentCamItem.itemData
+				emit "Scene.Camera.Activate",subCam
 			else
 				currentCamItem = nil
-				editor.items.Camera.boundary = CCRect.zero
+				emit "Scene.Camera.Activate",nil
 
 		currentGroup = nil
-		selectGroup = (data)->
+		selectGroup = (data,reset=true)->
 			if currentGroup
 				for item in *currentGroup
 					item.positionX = -itemWidth
@@ -170,7 +167,7 @@ Class SettingPanelView,
 						item.positionX = -itemWidth
 						item.visible = false
 			if data
-				@offset = oVec2.zero
+				@offset = oVec2.zero if reset
 				with @title
 					.visible = true
 					.text = data.typeName
@@ -185,7 +182,7 @@ Class SettingPanelView,
 			for item in *currentGroup
 				item.visible = true
 				item.positionX = itemWidth/2
-				item.positionY = getPosY!
+				item.positionY = getPosY!+(reset and 0 or @offset.y)
 				contentHeight = contentHeight + itemHeight
 				item.value = switch item.name
 					when "file"
@@ -209,7 +206,7 @@ Class SettingPanelView,
 				for i,item in ipairs camItems
 					item.visible = true
 					item.positionX = itemWidth/2
-					item.positionY = getPosY!-10*i
+					item.positionY = getPosY!-10*i+(reset and 0 or @offset.y)
 					contentHeight = contentHeight+itemHeight+10
 			@viewSize = CCSize @width,contentHeight
 
@@ -229,6 +226,7 @@ Class SettingPanelView,
 				@menu\removeChild item
 			camItems = {}
 			currentCamItem = nil
+			emit "Scene.Camera.Activate",nil
 			return unless sceneData
 			cameraData = sceneData.camera
 			if cameraData.subCams
@@ -257,6 +255,7 @@ Class SettingPanelView,
 				\slots "Tapped",->
 					with InputBox text:"New Camera Name"
 						\slots "Inputed",(text)->
+							return unless text
 							if cameraData.subCams
 								for child in *cameraData.subCams
 									if child.name == text
@@ -268,7 +267,10 @@ Class SettingPanelView,
 							subCam.name = text
 							table.insert cameraData.subCams,subCam
 							loadCameras sceneData
-							selectGroup cameraData
+							selectGroup cameraData,false
+							lastItem = camItems[#camItems-1]
+							lastItem.checked = true
+							camItemTapped lastItem
 			@menu\addChild viewItem
 			table.insert camItems,viewItem
 

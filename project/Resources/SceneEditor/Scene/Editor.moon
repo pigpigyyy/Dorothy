@@ -19,7 +19,8 @@ Class EditorView,
 		@sceneData = nil
 		@_sceneName = nil
 		@_currentSceneFile = nil
-		@origin = oVec2 60+(width-250)/2,height/2
+		@origin = oVec2 width/2,height/2
+		@offset = oVec2 60+(width-250)/2,height/2
 		@scale = 1
 		@xFix = false
 		@yFix = false
@@ -77,6 +78,7 @@ Class EditorView,
 			Manager = require "Control.Edit.Manager"
 			@editManager = Manager!
 			@viewArea\addChild @editManager
+			@moveTo oVec2.zero
 
 		panelWidth = 10+110*4
 		panelHeight = height*0.6
@@ -109,19 +111,35 @@ Class EditorView,
 				\slots "Selected",(item)->
 					emit "Scene.LayerSelected",item
 
+		currentCam = nil
+		@gslot "Scene.Camera.Activate",(cam)-> currentCam = cam
+		@gslot "Scene.ViewArea.ScaleTo",(scale)->
+			if @items
+				@items.Camera\perform oScale 0.5,scale,scale,oEase.OutQuad
+				currentCam.zoom = scale if currentCam
+			@scale = scale
+		@gslot "Scene.ViewArea.Scale",(scale)->
+			if @items
+				with @items.Camera
+					.scaleX = scale
+					.scaleY = scale
+				currentCam.zoom = scale if currentCam
+			@scale = scale
 		@gslot "Scene.ViewArea.Move",(delta)->
-			delta = delta/@scale
-			@camPos -= delta
+			delta /= -@scale
 			if @items
-				@items.Camera.position -= delta
+				@items.Camera.position += delta
+				currentCam.position = @items.Camera.position if currentCam
+			else
 				emit "Scene.Camera.Move",delta
+		@gslot "Scene.Camera.Move",(delta)-> @camPos += delta
 		@gslot "Scene.ViewArea.MoveTo",(pos)->
-			posX = -(pos.x-@origin.x)+width/2
-			posY = -(pos.y-@origin.y)+height/2
-			@camPos = oVec2 posX,posY
 			if @items
-				@items.Camera\perform oPos 0.5,posX,posY,oEase.OutQuad
-				emit "Scene.Camera.MoveTo",oVec2(posX,posY)
+				@items.Camera\perform oPos 0.5,pos.x,pos.y,oEase.OutQuad
+				currentCam.position = pos if currentCam
+			else
+				emit "Scene.Camera.MoveTo",pos
+		@gslot "Scene.Camera.MoveTo",(pos)-> @camPos = pos
 
 		@gslot "Editor.ItemChooser",(args)->
 			handler = args[#args]
@@ -171,8 +189,6 @@ Class EditorView,
 		@gslot "Scene.LayerSelected",(item)-> selectItem item,item
 
 		@gslot "Scene.ViewPanel.Select",(itemData)-> @currentData = itemData
-		@gslot "Scene.ViewArea.ScaleTo",(scale)-> @scale = scale
-		@gslot "Scene.ViewArea.Scale",(scale)-> @scale = scale
 
 		setCurrentData = (itemData)-> @currentData = itemData
 		@gslot "Scene.ViewPanel.Select",setCurrentData
@@ -592,3 +608,25 @@ Class EditorView,
 					subWorld = @getItem child
 					subWorld\setShouldContact groupA,groupB,shouldContact
 		emit "Scene.Dirty",true
+
+	moveTo:(pos)=>
+		pos = oVec2.zero-pos
+		{:width,:height} = CCDirector.winSize
+		posX = pos.x+width/2-(width/2-@offset.x)/@scale
+		posY = pos.y+height/2-(height/2-@offset.y)/@scale
+		emit "Scene.ViewArea.MoveTo",oVec2(width/2-posX,height/2-posY)
+
+	activateCam:(subCam)=>
+		return unless @items
+		camera = @items.Camera
+		if subCam
+			camera.boundary = @sceneData.camera.area
+			pos = subCam.position
+			camera\perform CCSpawn {
+				oPos 0.5,pos.x,pos.y,oEase.OutQuad
+				oScale 0.5,subCam.zoom,subCam.zoom,oEase.OutQuad
+			}
+			@schedule once -> cycle 0.6,->
+				emit "Scene.ViewArea.Scale",camera.scaleX
+		else
+			camera.boundary = CCRect.zero

@@ -143,14 +143,14 @@ Class => CCNode!,
 		@addChild @topBar
 		@onLoad = @gslot "Scene.DataLoaded",(sceneData)-> @setup! if sceneData
 		@onMove = @gslot "Scene.Camera.Move",(delta)->
-			delta *= editor.scale
+			delta *= -editor.scale
 			@leftBar.positionX += delta.x
 			@rightBar.positionX += delta.x
 			@topBar.positionY += delta.y
 			@bottomBar.positionY += delta.y
-		resetPos = (camPos)-> @schedule once -> cycle 0.6,-> @update!
+		resetPos = -> @schedule once -> cycle 0.6,-> @update!
 		@onMoveTo = @gslot "Scene.Camera.MoveTo",resetPos
-		@gslot "Scene.ViewArea.ScaleTo",-> resetPos editor.camPos
+		@gslot "Scene.ViewArea.ScaleTo",resetPos
 		@gslot "Scene.ViewArea.Scale",-> @update!
 		@onLoad.enabled = false
 		@onMove.enabled = false
