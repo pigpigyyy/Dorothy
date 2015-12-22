@@ -4,7 +4,7 @@
 	<Import Module="Control.Operation.LittleProgress"/>
 	<Import Module="View.Shape.Camera"/>
 
-	<Button Name="editBtn" X="35" Y="{ $T-35 }" Width="50" Height="50" Text="Edit" FontSize="16" Ref="True"/>
+	<Button Name="editBtn" X="35" Y="{ $T-35 }" Width="50" Height="50" Text="Menu" FontSize="16" Ref="True"/>
 	<Button Name="undoBtn" X="95" Y="{ $T-35 }" Width="50" Height="50" Text="Undo" FontSize="16" Ref="True"/>
 	<Button Name="spriteBtn" X="35" Y="{ $T-95 }" Width="50" Height="50" Text="Sprite" FontSize="16" Ref="True"/>
 	<Button Name="modelBtn" X="35" Y="{ $T-155 }" Width="50" Height="50" Text="Model" FontSize="16" Ref="True"/>
@@ -14,7 +14,14 @@
 	<Button Name="delBtn" X="35" Y="{ $T-395 }" Width="50" Height="50" Text="Delete" FontSize="16" Ref="True"/>
 	<Button Name="zoomBtn" X="{ $R-225 }" Y="{ $T-35 }" Width="50" Height="50" Text="100%" FontSize="16" Ref="True"/>
 	<Button Name="originBtn" X="{ $R-285 }" Y="{ $T-35 }" Width="50" Height="50" Text="Origin" FontSize="16" Ref="True"/>
-	<Camera Name="iconCam" X="{ $R-345 }" Y="{ $T-35 }" Scale="0.5" Ref="True"/>
+	<Button Name="camBtn" X="{ $R-345 }" Y="{ $T-35 }" Width="50" Height="50" FontSize="16" Ref="True">
+		<Item Name="face">
+			<Node X="{ $X-2 }" Y="{ $Y-3 }" PassColor="False">
+				<Camera Color="0xff00ffff" Scale="0.5"/>
+			</Node>
+		</Item>
+	</Button>
+	<Camera Name="iconCam" X="{ $R-345-2 }" Y="{ $T-35-3 }" Color="0xff00ffff" Scale="0.5" Ref="True"/>
 	<Button Name="yFixBtn" X="{ $R-345 }" Y="{ $T-35 }" Width="50" Height="50" Ref="True">
 		<Item Name="face">
 			<Node X="{ $X }" Y="{ $Y }" ScaleX="1.2" ScaleY="1.2" Angle="-90" PassColor="False">

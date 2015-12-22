@@ -73,14 +73,14 @@ local function oEditMenu()
 	local items
 	items =
 	{
-		Edit = oButton("Edit",16,50,50,35,winSize.height-35,function(button)
+		Edit = oButton("Menu",16,50,50,35,winSize.height-35,function(button)
 			emit("Body.settingPanel.edit",nil)
 			if not oEditor.dirty then
 				oEditor:addChild(oFileChooser(),oEditor.topMost)
 			else
 				if oEditor.currentFile then
 					oEditor.dirty = false
-					button.text = "Edit"
+					button.text = "Menu"
 					oEditor:dumpData(oEditor.currentFile)
 					items.Undo:hide()
 					oEditor:emit("Edited",oEditor.currentFile)
@@ -90,7 +90,7 @@ local function oEditMenu()
 							oEditor:addChild(oBox("Invalid Name"),oEditor.topMost)
 						else
 							oEditor.dirty = false
-							button.text = "Edit"
+							button.text = "Menu"
 							oEditor.currentFile = name..".body"
 							oEditor:dumpData(oEditor.currentFile)
 							items.Undo:hide()
@@ -102,7 +102,7 @@ local function oEditMenu()
 		Undo = oButton("Undo",16,50,50,95,winSize.height-35,function(button)
 			emit("Body.settingPanel.edit",nil)
 			oEditor.dirty = false
-			items.Edit.text = "Edit"
+			items.Edit.text = "Menu"
 			oEditor:edit(oEditor.currentFile)
 			button:hide()
 		end),

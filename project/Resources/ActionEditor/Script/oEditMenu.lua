@@ -54,7 +54,7 @@ local function oEditMenu()
 	local frameCopy = nil
 	local items =
 	{
-		Edit = oButton("Edit",16,50,50,35,winSize.height-35,
+		Edit = oButton("Menu",16,50,50,35,winSize.height-35,
 			function()
 				oEditor.settingPanel:clearSelection()
 				if oEditor.needSave then
@@ -644,7 +644,7 @@ oEditor.spriteData[oSd.index]
 			items.Undo.scaleY = 0
 			items.Undo:perform(oScale(0.3,1,1,oEase.OutBack))
 		else
-			label.text = "Edit"
+			label.text = "Menu"
 			label.texture.antiAlias = false
 			items.Undo.enabled = false
 			items.Undo:perform(CCSequence({

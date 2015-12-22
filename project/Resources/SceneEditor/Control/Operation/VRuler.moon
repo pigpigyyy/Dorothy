@@ -216,4 +216,10 @@ cycle = require "cycle"
 	@slots "TouchCancelled",touchEnded
 	@slots "TouchEnded",touchEnded
 
+	@gslot "Scene.Camera.Activate",(subCam)->
+		{:width} = CCDirector.winSize
+		return if (subCam == nil) == (@positionX < width)
+		@touchEnabled = (subCam == nil)
+		@perform oPos 0.5,width*2-@positionX,@positionY,oEase.OutQuad
+
 	@

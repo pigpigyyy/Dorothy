@@ -215,4 +215,9 @@ cycle = require "cycle"
 	@slots "TouchCancelled",touchEnded
 	@slots "TouchEnded",touchEnded
 
+	@gslot "Scene.Camera.Activate",(subCam)->
+		return if (subCam == nil) == (@positionY > 0)
+		@touchEnabled = (subCam == nil)
+		@perform oPos 0.5,@positionX,-@positionY,oEase.OutQuad
+
 	@ -- return

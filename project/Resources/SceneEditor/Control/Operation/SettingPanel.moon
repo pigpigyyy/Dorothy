@@ -148,13 +148,13 @@ Class SettingPanelView,
 			if camItem.checked
 				if currentCamItem
 					currentCamItem.checked = false
-					emit "Scene.Camera.Activate",nil
+					emit "Scene.Camera.Select",nil
 				currentCamItem = camItem
 				subCam = currentCamItem.itemData
-				emit "Scene.Camera.Activate",subCam
+				emit "Scene.Camera.Select",subCam
 			else
 				currentCamItem = nil
-				emit "Scene.Camera.Activate",nil
+				emit "Scene.Camera.Select",nil
 
 		currentGroup = nil
 		selectGroup = (data,reset=true)->
@@ -201,8 +201,11 @@ Class SettingPanelView,
 						editor.sceneData.groups[data[item.name]]
 					else
 						data[item.name] == "" and "None" or data[item.name]
+			if currentCamItem
+				currentCamItem.checked = false
+				camItemTapped currentCamItem
+				currentCamItem = nil
 			if data.typeName == "Camera"
-				currentCamItem.checked = false if currentCamItem
 				for i,item in ipairs camItems
 					item.visible = true
 					item.positionX = itemWidth/2
@@ -226,6 +229,7 @@ Class SettingPanelView,
 				@menu\removeChild item
 			camItems = {}
 			currentCamItem = nil
+			emit "Scene.Camera.Select",nil
 			emit "Scene.Camera.Activate",nil
 			return unless sceneData
 			cameraData = sceneData.camera
@@ -275,3 +279,8 @@ Class SettingPanelView,
 			table.insert camItems,viewItem
 
 		@gslot "Scene.DataLoaded",loadCameras
+
+		@gslot "Scene.Camera.Activate",(subCam)->
+			winWidth = CCDirector.winSize.width
+			return if (subCam == nil) == (@positionX < winWidth)
+			@perform oPos 0.5,winWidth*2-@positionX,@positionY,oEase.OutQuad

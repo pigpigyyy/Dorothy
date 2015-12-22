@@ -134,6 +134,14 @@ Class EditMenuView,
 			emit "Scene.FixChange"
 
 		@iconCam.visible = false
+		@camBtn.visible = false
+		@camBtn.editing = false
+		@camBtn\gslot "Scene.Camera.Select",(subCam)-> @camBtn.subCam = subCam
+		@camBtn\slots "Tapped",->
+			if @camBtn.editing
+				emit "Scene.Camera.Activate",nil
+			else
+				emit "Scene.Camera.Activate",@camBtn.subCam
 
 		@gslot "Scene.ShowFix",(value)->
 			editor.xFix = false
@@ -167,7 +175,7 @@ Class EditMenuView,
 						@undoBtn\perform oScale 0.3,1,1,oEase.OutBack
 				else
 					@editBtn.color = ccColor3 0x00ffff
-					@editBtn.text = "Edit"
+					@editBtn.text = "Menu"
 					if @undoBtn.visible
 						@undoBtn.enabled = false
 						@undoBtn\perform CCSequence {
@@ -176,7 +184,11 @@ Class EditMenuView,
 						}
 
 		itemChoosed = (itemData)->
-			@iconCam.visible = false
+			if @camBtn.visible or @iconCam.visible
+				@iconCam.visible = false
+				@camBtn.visible = false
+				emit "Scene.Camera.Select",nil
+				emit "Scene.Camera.Activate",nil
 			emit "Scene.ViewPanel.FoldState",{
 				itemData:itemData
 				handler:(state)->
@@ -201,7 +213,11 @@ Class EditMenuView,
 					{:x,:y} = @upBtn.position
 					@foldBtn\runAction oPos 0.3,x,y,oEase.OutQuad
 					if itemData.typeName == "Camera"
-						@iconCam.visible = true
+						with @iconCam
+							.visible = true
+							.scaleX = 0
+							.scaleY = 0
+							\perform oScale 0.3,0.5,0.5,oEase.OutBack
 				else
 					item = editor\getItem itemData
 					hasChildren = false
@@ -225,6 +241,41 @@ Class EditMenuView,
 		@gslot "Scene.ViewArea.Scale",(scale)->
 			mode = 2 if scale ~= 1
 			@zoomBtn.text = string.format("%d%%",scale*100)
+
+		@gslot "Scene.Camera.Select",(subCam)->
+			if subCam and not @camBtn.visible
+				@iconCam.opacity = 0
+				with @camBtn
+					.visible = true
+					.scaleX = 0
+					.scaleY = 0
+					\perform oScale 0.3,1,1,oEase.OutBack
+			else
+				@camBtn.visible = false
+				with @iconCam
+					.opacity = 1
+					.scaleX = 0
+					.scaleY = 0
+					\perform oScale 0.3,0.5,0.5,oEase.OutBack
+
+		@gslot "Scene.Camera.Activate",(subCam)->
+			editing = (subCam ~= nil)
+			return if editing == @camBtn.editing
+			@camBtn.editing = editing
+			{:width} = CCDirector.winSize
+			for i = 1,#@children
+				child = @children[i]
+				switch child
+					when @camBtn
+						posX = @camBtn.editing and width-35 or width-345
+						child\perform oPos 0.5,posX,child.positionY,oEase.OutQuad
+					when @editBtn,@undoBtn
+						continue
+					else
+						if child.positionX < width/2
+							child\perform oPos 0.5,-child.positionX,child.positionY,oEase.OutQuad
+						else
+							child\perform oPos 0.5,width*2-child.positionX,child.positionY,oEase.OutQuad
 
 	setButtonVisible: (button,visible)=>
 		return if visible == button.enabled

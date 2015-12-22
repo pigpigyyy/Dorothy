@@ -584,3 +584,8 @@ Class ViewPanelView,
 					emit "Scene.ViewPanel.Pick",parentData.children[total]
 			else
 				emit "Scene.ViewPanel.Pick",parentData
+
+		@gslot "Scene.Camera.Activate",(subCam)->
+			winWidth = CCDirector.winSize.width
+			return if (subCam == nil) == (@positionX < winWidth)
+			@perform oPos 0.5,winWidth*2-@positionX,@positionY,oEase.OutQuad

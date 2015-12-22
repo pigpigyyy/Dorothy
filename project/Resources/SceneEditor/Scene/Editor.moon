@@ -113,6 +113,7 @@ Class EditorView,
 
 		currentCam = nil
 		@gslot "Scene.Camera.Activate",(cam)-> currentCam = cam
+		@gslot "Scene.Camera.Select",(subCam)-> @applyCam subCam
 		@gslot "Scene.ViewArea.ScaleTo",(scale)->
 			if @items
 				@items.Camera\perform oScale 0.5,scale,scale,oEase.OutQuad
@@ -616,7 +617,7 @@ Class EditorView,
 		posY = pos.y+height/2-(height/2-@offset.y)/@scale
 		emit "Scene.ViewArea.MoveTo",oVec2(width/2-posX,height/2-posY)
 
-	activateCam:(subCam)=>
+	applyCam:(subCam)=>
 		return unless @items
 		camera = @items.Camera
 		if subCam

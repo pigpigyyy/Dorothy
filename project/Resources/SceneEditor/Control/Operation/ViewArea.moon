@@ -145,4 +145,8 @@ Class ViewAreaView,
 					\slots "CamMoved",(delta)->
 						emit "Scene.Camera.Move",delta
 
-		@gslot "Scene.Camera.Activate",(subCam)-> editor\activateCam subCam
+		@gslot "Scene.Camera.Select",(subCam)->
+			@touchEnabled = (subCam == nil)
+
+		@gslot "Scene.Camera.Activate",(subCam)->
+			@touchEnabled = (subCam ~= nil)

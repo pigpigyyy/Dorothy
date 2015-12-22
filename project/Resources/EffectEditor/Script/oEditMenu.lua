@@ -26,13 +26,13 @@ local function oEditMenu()
 	local items
 	items =
 	{
-		Edit = oButton("Edit",16,50,50,35,winSize.height-35,function(button)
+		Edit = oButton("Menu",16,50,50,35,winSize.height-35,function(button)
 			if not oEditor.dirty then
 				oEditor:addChild(oFileChooser(),oEditor.topMost)
 			else
 				if oEditor.currentFile then
 					oEditor.dirty = false
-					button.text = "Edit"
+					button.text = "Menu"
 					oEditor:dumpData(oEditor.currentFile)
 					items.Undo:hide()
 				end
@@ -42,7 +42,7 @@ local function oEditMenu()
 
 		Undo = oButton("Undo",16,50,50,95,winSize.height-35,function(button)
 			oEditor.dirty = false
-			items.Edit.text = "Edit"
+			items.Edit.text = "Menu"
 			emit("Effect.settingPanel.cancel")
 			oEditor:edit(oEditor.currentName)
 			button:hide()
