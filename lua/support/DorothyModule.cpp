@@ -145,7 +145,7 @@ public:
 				{
 					(*_gslot)[item.first] = std::move(item.second);
 				}
-				_gslotArray.reset(nullptr);
+				_gslotArray = nullptr;
 				auto vec = new oRefVector<oListener>();
 				(*_gslot)[name] = oOwnMake(vec);
 				vec->push_back(listener);
@@ -271,7 +271,7 @@ public:
 				{
 					(*_slots)[item.first] = item.second;
 				}
-				_slotsArray.reset(nullptr);
+				_slotsArray = nullptr;
 				(*_slots)[name] = slotList;
 			}
 			return slotList;
