@@ -50,7 +50,7 @@ Class => CCNode!,
 					fontSize:18
 				}
 				.value = true
-				\slots "Tapped",-> @boolSwitcher\setValue not .value
+				\slot "Tapped",-> @boolSwitcher\setValue not .value
 			\addChild switcher
 			.setValue = (value)=>
 				switcher.value = value
@@ -61,7 +61,7 @@ Class => CCNode!,
 		showSwitcher = (default,callback)->
 			with @boolSwitcher
 				\setValue default
-				\slots("Changed")\set callback
+				\slot("Changed")\set callback
 				.visible = true
 				.scaleX = 0
 				.scaleY = 0
@@ -69,7 +69,7 @@ Class => CCNode!,
 			_stopEditing = ->
 				_stopEditing = nil
 				with @boolSwitcher
-					\slots "Changed",nil
+					\slot "Changed",nil
 					\perform CCSequence {
 						oScale 0.3,0,0,oEase.InBack
 						CCHide!
@@ -103,7 +103,7 @@ Class => CCNode!,
 			.swallowTouches = true
 			.touchPriority = editor.levelEditControl
 			\addChild posVisual
-			\slots "TouchMoved",(touch)->
+			\slot "TouchMoved",(touch)->
 				delta = touch.delta
 				delta.x = 0 if editor.xFix
 				delta.y = 0 if editor.yFix
@@ -153,7 +153,7 @@ Class => CCNode!,
 			.swallowTouches = true
 			.touchPriority = editor.levelEditControl
 			\addChild rotVisual
-			\slots "TouchMoved",(touch)->
+			\slot "TouchMoved",(touch)->
 				oldPos = rotVisual\convertToNodeSpace touch.preLocation
 				newPos = rotVisual\convertToNodeSpace touch.location
 				v1 = oVec2.zero-oldPos
@@ -230,7 +230,7 @@ Class => CCNode!,
 			.touchPriority = editor.levelEditControl
 			.swallowTouches = true
 			\addChild scaleVisual
-			\slots "TouchMoved",(touch)->
+			\slot "TouchMoved",(touch)->
 				delta = scaleVisual\convertToNodeSpace(touch.location) - 
 					scaleVisual\convertToNodeSpace(touch.preLocation)
 				if delta ~= oVec2.zero
@@ -340,7 +340,7 @@ Class => CCNode!,
 					oVec2 0,156
 					oVec2 0,0
 				},ccColor4!
-			\slots "TouchMoved",(touch)->
+			\slot "TouchMoved",(touch)->
 				delta = 10*touch.delta.y/math.max(editor.scale,1)/144
 				if editor.isFixed
 					totalOpacity = totalOpacity + delta
@@ -377,8 +377,8 @@ Class => CCNode!,
 				switch menuItem.name
 					when "name"
 						lastName = data.name
-						menuItem\slots("TextChanged")\set (value)->
-							menuItem\slots "TextChanged",nil
+						menuItem\slot("TextChanged")\set (value)->
+							menuItem\slot "TextChanged",nil
 							value = lastName if value == ""
 							value = editor\renameData data,value
 							return unless value
@@ -391,12 +391,12 @@ Class => CCNode!,
 								return
 							editor\addChild itemChooser,998
 							itemChooser\show!
-							itemChooser\slots("Selected")\set (filename)->
+							itemChooser\slot("Selected")\set (filename)->
 								Reference.removeSceneItemRef editor\getSceneName(data),data
 								data.file = filename
 								editor\resetData data
 								menuItem.value = filename\match "[^\\/]*$"
-							itemChooser\slots "Hide",cancelEditing
+							itemChooser\slot "Hide",cancelEditing
 						}
 					when "outline","loop","visible","faceRight","play","boundary"
 						showSwitcher data[menuItem.name],(value)->
@@ -442,7 +442,7 @@ Class => CCNode!,
 						looks = oCache.Model\getLookNames file
 						table.insert looks,1,"None"
 						with SelectionPanel items:looks
-							\slots "Selected",(value)->
+							\slot "Selected",(value)->
 								data[menuItem.name] = (value == "None" and "" or value)
 								menuItem.value = value
 								item.look = value
@@ -452,15 +452,15 @@ Class => CCNode!,
 						looks = oCache.Model\getAnimationNames file
 						table.insert looks,1,"None"
 						with SelectionPanel items:looks
-							\slots "Selected",(value)->
+							\slot "Selected",(value)->
 								data[menuItem.name] = (value == "None" and "" or value)
 								menuItem.value = value
 								item\play value
 								cancelEditing!
 					when "group"
 						groupChooser = with GroupChooser!
-							\slots "Hide",cancelEditing
-							\slots "Selected",(group)->
+							\slot "Hide",cancelEditing
+							\slot "Selected",(group)->
 								data[menuItem.name] = group
 								menuItem.value = editor.sceneData.groups[group]
 								groupChooser\hide!
@@ -471,11 +471,11 @@ Class => CCNode!,
 								return
 							editor\addChild itemChooser,editor.topMost
 							itemChooser\show!
-							itemChooser\slots("Selected")\set (effectName)->
+							itemChooser\slot("Selected")\set (effectName)->
 								data.effect = effectName
 								editor\resetData data
 								menuItem.value = effectName
-							itemChooser\slots "Hide",cancelEditing
+							itemChooser\slot "Hide",cancelEditing
 						}
 					when "offset"
 						startPos = editor.origin
@@ -504,7 +504,7 @@ Class => CCNode!,
 							data.position = value
 					when "simulation"
 						with SelectionPanel items:{"Low","Medium","High"}
-							\slots "Selected",(value,index)->
+							\slot "Selected",(value,index)->
 								data.simulation = index
 								menuItem.value = value
 								item\setIterations Simulation index
@@ -541,15 +541,15 @@ Class => CCNode!,
 								data.skew = value
 					when "groups"
 						with GroupPanel!
-							\slots "Hide",-> cancelEditing!
+							\slot "Hide",-> cancelEditing!
 					when "contacts"
 						groupChooser = with GroupChooser!
-							\slots "Hide",-> cancelEditing!
-							\slots "Selected",(group)->
-								groupChooser\slots "Hide",nil
+							\slot "Hide",-> cancelEditing!
+							\slot "Selected",(group)->
+								groupChooser\slot "Hide",nil
 								groupChooser\hide!
 								with ContactPanel group:group
-									\slots "Hide",-> cancelEditing!
+									\slot "Hide",-> cancelEditing!
 					when "gravity"
 						showRuler data.gravity,-50,50,10,(value)->
 							data.gravity = value

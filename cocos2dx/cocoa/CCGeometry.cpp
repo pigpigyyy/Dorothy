@@ -146,6 +146,46 @@ void CCRect::set(float x, float y, float width, float height)
     size.height = height;
 }
 
+float CCRect::getX() const
+{
+	return origin.x;
+}
+
+void CCRect::setX(float x)
+{
+	origin.x = x;
+}
+
+float CCRect::getY() const
+{
+	return origin.y;
+}
+
+void CCRect::setY(float y)
+{
+	origin.y = y;
+}
+
+float CCRect::getWidth() const
+{
+	return size.width;
+}
+
+void CCRect::setWidth(float width)
+{
+	size.width = width;
+}
+
+float CCRect::getHeight() const
+{
+	return size.height;
+}
+
+void CCRect::setHeight(float height)
+{
+	size.height = height;
+}
+
 bool CCRect::operator==(const CCRect& rect) const
 {
     return origin == rect.origin && size == rect.size;
@@ -156,42 +196,76 @@ bool CCRect::operator!=(const CCRect& rect) const
 	return origin != rect.origin || size != rect.size;
 }
 
-float CCRect::getMaxX() const
+float CCRect::getRight() const
 {
-    return (float)(origin.x + size.width);
+    return origin.x + size.width;
 }
 
-float CCRect::getMidX() const
+void CCRect::setRight(float right)
 {
-    return (float)(origin.x + size.width * 0.5f);
+	size.width = right - getLeft();
 }
 
-float CCRect::getMinX() const
+float CCRect::getCenterX() const
+{
+	return origin.x + size.width * 0.5f;
+}
+
+void CCRect::setCenterX(float centerX)
+{
+	origin.x = centerX - size.width * 0.5f;
+}
+
+float CCRect::getLeft() const
 {
     return origin.x;
 }
 
-float CCRect::getMaxY() const
+void CCRect::setLeft(float left)
+{
+	float right = getRight();
+	origin.x = left;
+	size.width = right - left;
+}
+
+float CCRect::getTop() const
 {
     return origin.y + size.height;
 }
 
-float CCRect::getMidY() const
+void CCRect::setTop(float top)
 {
-    return (float)(origin.y + size.height * 0.5f);
+	size.height = top - getBottom();
 }
 
-float CCRect::getMinY() const
+float CCRect::getCenterY() const
 {
-    return origin.y;
+	return origin.y + size.height * 0.5f;
+}
+
+void CCRect::setCenterY(float centerY)
+{
+	origin.y = centerY - size.height*0.5f;
+}
+
+float CCRect::getBottom() const
+{
+	return origin.y;
+}
+
+void CCRect::setBottom(float bottom)
+{
+	float top = getTop();
+	origin.y = bottom;
+	size.height = top - bottom;
 }
 
 bool CCRect::containsPoint(const CCPoint& point) const
 {
     bool bRet = false;
 
-    if (point.x >= getMinX() && point.x <= getMaxX()
-        && point.y >= getMinY() && point.y <= getMaxY())
+    if (point.x >= getLeft() && point.x <= getRight()
+        && point.y >= getBottom() && point.y <= getTop())
     {
         bRet = true;
     }
@@ -201,10 +275,10 @@ bool CCRect::containsPoint(const CCPoint& point) const
 
 bool CCRect::intersectsRect(const CCRect& rect) const
 {
-    return !(     getMaxX() < rect.getMinX() ||
-             rect.getMaxX() <      getMinX() ||
-                  getMaxY() < rect.getMinY() ||
-             rect.getMaxY() <      getMinY());
+    return !(getRight() < rect.getLeft() ||
+			rect.getRight() < getLeft() ||
+			getTop() < rect.getBottom() ||
+			rect.getTop() < getBottom());
 }
 
 NS_CC_END

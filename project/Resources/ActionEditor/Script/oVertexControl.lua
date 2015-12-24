@@ -112,8 +112,8 @@ local function oVertexControl()
 	end
 	local function oVertex(pos,name)
 		local menuItem = CCMenuItem()
-		menuItem:slots("TapBegan",itemTapBegan)
-		menuItem:slots("Tapped",itemTapped)
+		menuItem:slot("TapBegan",itemTapBegan)
+		menuItem:slot("Tapped",itemTapped)
 		menuItem.contentSize = CCSize(vertSize,vertSize)
 		menuItem.opacity = 0.4
 		menuItem.highlighted = false
@@ -180,7 +180,7 @@ local function oVertexControl()
 
 	local totalDelta = oVec2.zero
 	layer.touchPriority = CCMenu.DefaultHandlerPriority
-	layer:slots("TouchBegan",function(touch)
+	layer:slot("TouchBegan",function(touch)
 		if vertexToAdd then
 			local pos = menu:convertToNodeSpace(touch.location)
 			if oEditor.viewArea.isValueFixed then
@@ -205,7 +205,7 @@ local function oVertexControl()
 		totalDelta = oVec2.zero
 		return true
 	end)
-	layer:slots("TouchMoved",function(touch)
+	layer:slot("TouchMoved",function(touch)
 		if touch.delta ~= oVec2.zero and selectedVert then
 			selectedVert.selected = false
 			local delta = menu:convertToNodeSpace(touch.location) - menu:convertToNodeSpace(touch.preLocation)
@@ -239,7 +239,7 @@ local function oVertexControl()
 	mask.contentSize = CCSize.zero
 	mask.touchPriority = CCMenu.DefaultHandlerPriority+2
 	mask.swallowTouches = true
-	mask:slots("TouchBegan",function() return selectedVert ~= nil end)
+	mask:slot("TouchBegan",function() return selectedVert ~= nil end)
 	layer:addChild(mask)
 
 	local editMenu = CCMenu()

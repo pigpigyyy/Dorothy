@@ -43,7 +43,7 @@ unitDef:setActions(
 local unit = oUnit(unitDef,world,oVec2(400,300))
 unit.moveSpeed = 0.9
 unit.group = 1
-unit:slots("ActionEnd",function(name) print(name,"end") end)
+unit:slot("ActionEnd",function(name) print(name,"end") end)
 world:addChild(unit)
 
 local terrainDef = oBodyDef()
@@ -103,7 +103,7 @@ layer.anchor = oVec2.zero
 scene:addChild(layer)
 
 local joint = nil
-layer:slots("TouchBegan",function(touch)
+layer:slot("TouchBegan",function(touch)
 	local pos = world:convertToNodeSpace(touch.location)
 	world:query(CCRect(pos.x-0.5,pos.y-0.5,1,1),function(body)
 		if oData:isTerrain(body) then
@@ -118,7 +118,7 @@ layer:slots("TouchBegan",function(touch)
 	return true
 end)
 
-layer:slots("TouchMoved",function(touch)
+layer:slot("TouchMoved",function(touch)
 	local pos = world:convertToNodeSpace(touch.location)
 	if joint then
 		joint.position = pos
@@ -131,7 +131,7 @@ local function touchEnded()
 		joint = nil
 	end
 end
-layer:slots("TouchEnded",touchEnded)
-layer:slots("TouchCancelled",touchEnded)
+layer:slot("TouchEnded",touchEnded)
+layer:slot("TouchCancelled",touchEnded)
 
 CCDirector:run(CCScene:crossFade(0.5,scene))

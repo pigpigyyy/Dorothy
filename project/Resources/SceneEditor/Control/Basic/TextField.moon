@@ -38,7 +38,7 @@ Class
 			CCDelay 0.5
 		}
 
-		@slots "InputAttach", ->
+		@slot "InputAttach", ->
 			@placeHolder = ""
 			with cursor
 				.visible = true
@@ -46,7 +46,7 @@ Class
 				\perform blink
 			true
 
-		@slots "InputDetach", ->
+		@slot "InputDetach", ->
 			@placeHolder = @_placeHolder
 			with cursor
 				.visible = false
@@ -55,7 +55,7 @@ Class
 					@emit "TextChanged",@
 			true
 
-		@slots "InputInserting",(addText)->
+		@slot "InputInserting",(addText)->
 			string.len(@text) < limit or addText == "\n"
 
 		inputed = ->
@@ -63,5 +63,5 @@ Class
 				.positionX = @width
 				\perform blink
 				@texture.antiAlias = false
-		@slots "InputInserted",inputed
-		@slots "InputDeleted",inputed
+		@slot "InputInserted",inputed
+		@slot "InputDeleted",inputed

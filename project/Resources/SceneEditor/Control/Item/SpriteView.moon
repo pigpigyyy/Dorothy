@@ -34,8 +34,8 @@ Class SpriteViewView,
 		@_checked = false
 		@_loaded = false
 
-		@slots "Tapped", @_tapped
-		@slots "Cleanup",->
+		@slot "Tapped", @_tapped
+		@slot "Cleanup",->
 			oRoutine\remove @routine if @routine
 			oCache.Texture\unload @_prevFile if @_prevFile
 			@_setBoxChecked false

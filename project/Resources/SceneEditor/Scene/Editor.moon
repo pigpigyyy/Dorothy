@@ -30,7 +30,7 @@ Class EditorView,
 		_G.editor = @
 		builtin.editor = @
 
-		@slots "Cleanup",->
+		@slot "Cleanup",->
 			Reference.stopUpdate!
 			_G.editor = nil
 			builtin.editor = nil
@@ -98,7 +98,7 @@ Class EditorView,
 				@addChild panel
 				eventName = "Scene.#{name}Selected"
 				panel.notifyEditor = (file)-> emit eventName,file
-				panel\slots "Selected",panel.notifyEditor
+				panel\slot "Selected",panel.notifyEditor
 			@[panelName]
 
 		@gslot "Scene.ViewSprite",-> setupPanel "Sprite"
@@ -108,11 +108,18 @@ Class EditorView,
 		@gslot "Scene.ViewLayer",->
 			return unless @game
 			with SelectionPanel items:{"Layer","World"}
-				\slots "Selected",(item)->
+				\slot "Selected",(item)->
 					emit "Scene.LayerSelected",item
 
 		currentCam = nil
-		@gslot "Scene.Camera.Activate",(cam)-> currentCam = cam
+		@gslot "Scene.Camera.Activate",(cam)->
+			if cam
+				@applyCam cam
+				thread ->
+					sleep 0.6
+					currentCam = cam
+			else
+				currentCam = nil
 		@gslot "Scene.Camera.Select",(subCam)-> @applyCam subCam
 		@gslot "Scene.ViewArea.ScaleTo",(scale)->
 			if @items
@@ -149,12 +156,12 @@ Class EditorView,
 				switch itemType
 					when "Sprite","Model","Effect","Body"
 						panel = setupPanel itemType
-						panel\slots "Selected",nil
+						panel\slot "Selected",nil
 						panel.parent\removeChild panel,false
-						panel\slots("Hide")\set ->
+						panel\slot("Hide")\set ->
 							panel.parent\removeChild panel,false
 							@addChild panel,1
-							panel\slots("Selected")\set panel.notifyEditor
+							panel\slot("Selected")\set panel.notifyEditor
 						handler panel
 					else
 						handler nil
@@ -162,7 +169,7 @@ Class EditorView,
 				chooseItem args[1]
 			else
 				with SelectionPanel items:args
-					\slots "Selected",(itemType)->
+					\slot "Selected",(itemType)->
 						chooseItem itemType
 
 		effectUpdated = (itemName)->
@@ -255,9 +262,9 @@ Class EditorView,
 			actionEditor.input = @gameFullPath
 			actionEditor.output = @gameFullPath
 			actionEditor.prefix = @graphicFolder
-			actionEditor\slots "Edited",(model)->
+			actionEditor\slot "Edited",(model)->
 				emit "Scene.ModelUpdated",model
-			actionEditor\slots "Quit",->
+			actionEditor\slot "Quit",->
 				CCScene\back "rollIn"
 				@updateModels!
 			CCScene\add "actionEditor",actionEditor
@@ -271,9 +278,9 @@ Class EditorView,
 			bodyEditor.quitable = true
 			bodyEditor.input = @gameFullPath
 			bodyEditor.output = @gameFullPath
-			bodyEditor\slots "Edited",(body)->
+			bodyEditor\slot "Edited",(body)->
 				emit "Scene.BodyUpdated",body
-			bodyEditor\slots "Quit",->
+			bodyEditor\slot "Quit",->
 				CCScene\back "rollIn"
 				@updateBodies!
 			CCScene\add "bodyEditor",bodyEditor
@@ -289,9 +296,9 @@ Class EditorView,
 			effectEditor.prefix = @graphicFolder
 			effectEditor.input = @gameFullPath
 			effectEditor.output = @gameFullPath
-			effectEditor\slots "Edited",(effect)->
+			effectEditor\slot "Edited",(effect)->
 				emit "Scene.EffectUpdated",effect
-			effectEditor\slots "Quit",->
+			effectEditor\slot "Quit",->
 				CCScene\back "rollIn"
 				@updateEffects!
 			CCScene\add "effectEditor",effectEditor

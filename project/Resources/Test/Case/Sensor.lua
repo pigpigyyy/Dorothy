@@ -48,12 +48,12 @@ world.data.joint = oJoint:rope(
 	true,terrain,circle,oVec2.zero,oVec2.zero,300)
 
 circle.receivingContact = true
-circle:slots("ContactStart",function(body,point)
+circle:slot("ContactStart",function(body,point)
 	drawNode.position = point
 	print(string.format("[%d,%d]",point.x,point.y))
 	label.text = "Contact: "..string.format("[%d,%d]",point.x,point.y)
 end)
-circle:slots("ContactEnd",function(body,point)
+circle:slot("ContactEnd",function(body,point)
 	--label.text = "End"
 end)
 

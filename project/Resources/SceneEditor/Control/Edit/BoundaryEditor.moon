@@ -32,7 +32,7 @@ BoundaryBar = (size,vertical,flip)->
 		\addChild with CCLabelTTF dir,"Arial",16
 			.position = oVec2 width/2,height/2
 			.texture.antiAlias = false
-		\slots "TouchBegan",(touch)->
+		\slot "TouchBegan",(touch)->
 			loc = \convertToNodeSpace touch.location
 			x,y = if vertical
 				flip and 0 or -width,-height/2
@@ -44,7 +44,7 @@ BoundaryBar = (size,vertical,flip)->
 			else
 				false
 		activeArea = size*1.5
-		\slots "TouchMoved",(touch)->
+		\slot "TouchMoved",(touch)->
 			pos = \convertToWorldSpace oVec2.zero
 			if vertical
 				posX = pos.x
@@ -105,8 +105,8 @@ BoundaryBar = (size,vertical,flip)->
 			if .scheduled
 				.scheduled = false
 				\unschedule!
-		\slots "TouchCancelled",touchEnded
-		\slots "TouchEnded",touchEnded
+		\slot "TouchCancelled",touchEnded
+		\slot "TouchEnded",touchEnded
 
 Class => CCNode!,
 	__init:=>
@@ -122,22 +122,22 @@ Class => CCNode!,
 				top or= .top
 			CCRect left,bottom,right-left,top-bottom
 		@leftBar = with BoundaryBar 40,true,false
-			\slots "ValueChanged",(value)->
+			\slot "ValueChanged",(value)->
 				@area = getRect left:math.floor value
 				editor.sceneData.camera.area = @area
 		@addChild @leftBar
 		@rightBar = with BoundaryBar 40,true,true
-			\slots "ValueChanged",(value)->
+			\slot "ValueChanged",(value)->
 				@area = getRect right:math.floor value
 				editor.sceneData.camera.area = @area
 		@addChild @rightBar
 		@bottomBar = with BoundaryBar 40,false,true
-			\slots "ValueChanged",(value)->
+			\slot "ValueChanged",(value)->
 				@area = getRect bottom:math.floor value
 				editor.sceneData.camera.area = @area
 		@addChild @bottomBar
 		@topBar = with BoundaryBar 40,false,false
-			\slots "ValueChanged",(value)->
+			\slot "ValueChanged",(value)->
 				@area = getRect top:math.floor value
 				editor.sceneData.camera.area = @area
 		@addChild @topBar

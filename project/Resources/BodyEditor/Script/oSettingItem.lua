@@ -72,7 +72,7 @@ local oSettingItem = class(
 		self:addChild(border)
 		self._border = border
 
-		self:slots("Tapped",function()
+		self:slot("Tapped",function()
 			self.selected = not self.selected
 		end)
 	end,

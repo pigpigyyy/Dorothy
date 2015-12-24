@@ -64,11 +64,11 @@ extern const CCAffineTransform CCAffineTransformIdentity = CCAffineTransformMake
 
 CCRect CCRectApplyAffineTransform(const CCRect& rect, const CCAffineTransform& anAffineTransform)
 {
-    float top    = rect.getMinY();
-    float left   = rect.getMinX();
-    float right  = rect.getMaxX();
-    float bottom = rect.getMaxY();
-    
+    float bottom = rect.getBottom();
+    float left = rect.getLeft();
+    float right = rect.getRight();
+    float top = rect.getTop();
+
     CCPoint topLeft = CCPointApplyAffineTransform(CCPointMake(left, top), anAffineTransform);
     CCPoint topRight = CCPointApplyAffineTransform(CCPointMake(right, top), anAffineTransform);
     CCPoint bottomLeft = CCPointApplyAffineTransform(CCPointMake(left, bottom), anAffineTransform);

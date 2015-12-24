@@ -26,8 +26,8 @@ ScenePanel = Class
 		ScenePanelView args
 
 	__init: =>
-		@slots "Show",-> @displayItems!
-		@quitBtn\slots "Tapped",-> editor\emit "Quit"
+		@slot "Show",-> @displayItems!
+		@quitBtn\slot "Tapped",-> editor\emit "Quit"
 
 	displayItems: =>
 		@panel\schedule once ->
@@ -72,7 +72,7 @@ ScenePanel = Class
 				y = yStart-itemHeight/2-10-math.floor(i/itemNum)*60
 				button = @createItem "<NEW>",x,y,itemWidth,itemHeight,->
 					with InputBox text:"New Scene Name"
-						\slots "Inputed",(name)->
+						\slot "Inputed",(name)->
 							return unless name
 							if name == "" or name\match("[\\/|:*?<>\"%.]") or oContent\exist(editor.sceneFolder..name..".scene")
 								MessageBox text:"Invalid Name!",okOnly:true
@@ -85,9 +85,9 @@ ScenePanel = Class
 					y = yStart-itemHeight/2-10-math.floor((i+1)/itemNum)*60
 					button = @createItem "<DEL>",x,y,itemWidth,itemHeight,->
 						with MessageBox text:"Delete Scene\n"..editor.scene
-							\slots "OK",(result)->
+							\slot "OK",(result)->
 								return unless result
-								MessageBox(text:"Confirm This\nDeletion")\slots "OK",(result)->
+								MessageBox(text:"Confirm This\nDeletion")\slot "OK",(result)->
 									return unless result
 									editor\deleteCurrentScene!
 									@hide!
@@ -125,7 +125,7 @@ ScenePanel = Class
 			y = yStart-itemHeight/2-10-math.floor(i/itemNum)*60
 			button = @createItem "<NEW>",x,y,itemWidth,itemHeight,->
 				with InputBox text:"New Game Name"
-					\slots "Inputed",(name)->
+					\slot "Inputed",(name)->
 						return unless name
 						if name == "" or name\match("[\\/|:*?<>\"%.]") or oContent\exist(editor.gamesFullPath..name)
 							MessageBox text:"Invalid Name!",okOnly:true
@@ -141,9 +141,9 @@ ScenePanel = Class
 				y = yStart-itemHeight/2-10-math.floor((i+1)/itemNum)*60
 				button = @createItem "<DEL>",x,y,itemWidth,itemHeight,->
 					with MessageBox text:"Delete Game\n"..editor.game
-						\slots "OK",(result)->
+						\slot "OK",(result)->
 							return unless result
-							MessageBox(text:"Confirm This\nDeletion")\slots "OK",(result)->
+							MessageBox(text:"Confirm This\nDeletion")\slot "OK",(result)->
 								return unless result
 								editor\deleteCurrentGame!
 								@hide!
@@ -190,7 +190,7 @@ ScenePanel = Class
 			}
 			.opacity = 0
 			\runAction oOpacity 0.2,1
-			\slots "Tapped",callback
+			\slot "Tapped",callback
 		@menu\addChild button
 		button
 

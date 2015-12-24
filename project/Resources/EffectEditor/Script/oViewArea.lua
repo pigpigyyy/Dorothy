@@ -103,14 +103,14 @@ local function oViewArea()
 		end
 	end
 
-	view:slots("TouchBegan",function()
+	view:slot("TouchBegan",function()
 		S = oVec2.zero
 		V = oVec2.zero
 		view:schedule(updateDragSpeed)
 		return true
 	end)
 
-	view:slots("TouchMoved",function(touches)
+	view:slot("TouchMoved",function(touches)
 		if #touches == 1 then
 			S = touches[1].delta
 			scrollNode.position = scrollNode.position + S
@@ -135,8 +135,8 @@ local function oViewArea()
 			view:schedule(updateDragPos)
 		end
 	end
-	view:slots("TouchEnded",touchEnded)
-	view:slots("TouchCancelled",touchEnded)
+	view:slot("TouchEnded",touchEnded)
+	view:slot("TouchCancelled",touchEnded)
 
 	view:gslot("Effect.viewArea.changeEffect",function(effectName)
 		emit("Effect.viewArea.toOrigin",oEditor.origin)

@@ -280,14 +280,14 @@ oRoutine(once(function()
 	end
 end))
 
-oEditor:slots("Cleanup",function()
+oEditor:slot("Cleanup",function()
 	-- do editor cleanup
 	if oEditor.standAlone then
 		oContent:removeSearchPath(oEditor.input)
 	end
 end)
 
-oEditor:slots("Entering",function()
+oEditor:slot("Entering",function()
 	oRoutine(once(function()
 		repeat
 			coroutine.yield()

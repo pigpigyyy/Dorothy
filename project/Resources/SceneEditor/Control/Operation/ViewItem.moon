@@ -8,8 +8,16 @@ ViewItemView = require "View.Control.Operation.ViewItem"
 -- width, height, items
 VisibleChecker = Class ViewItemView,
 	__init: (args)=>
+		{:width,:height} = args
+		width += 10
+		height += 10
 		@_checked = false
-		@slots "Tapped",-> @checked = not @checked
+		@contentSize = CCSize width,height
+		center = oVec2 width/2,height/2
+		@borderBold.position = center
+		@label.position = center
+		@border.position = center
+		@slot "Tapped",-> @checked = not @checked
 
 	checked: property => @_checked,
 		(value)=>
@@ -44,7 +52,7 @@ Class ViewItemView,
 	__init: (args)=>
 		@_checked = false
 		@_visibleChecker = nil
-		@slots "Tapped",-> @checked = not @checked
+		@slot "Tapped",-> @checked = not @checked
 
 	checker: property => @_visibleChecker
 

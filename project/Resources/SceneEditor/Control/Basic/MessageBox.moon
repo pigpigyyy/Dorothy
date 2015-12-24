@@ -15,14 +15,14 @@ MessageBoxView = require "View.Control.Basic.MessageBox"
 -- text, okOnly
 Class MessageBoxView,
 	__init: (args)=>
-		@okBtn\slots "Tapped", ->
+		@okBtn\slot "Tapped", ->
 			@clicked true
 
 		if not args.okOnly
-			@cancelBtn\slots "Tapped", ->
+			@cancelBtn\slot "Tapped", ->
 				@clicked false
 
-		@scrollArea\slots "Scrolled",(delta)->
+		@scrollArea\slot "Scrolled",(delta)->
 			@scrollArea.view\eachChild (child)->
 				child.position += delta
 

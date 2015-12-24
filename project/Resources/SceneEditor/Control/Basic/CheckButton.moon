@@ -8,7 +8,7 @@ Button = require "Control.Basic.Button"
 Class Button,
 	__init: =>
 		@_checked = false
-		@slots("TapEnded")\set ->
+		@slot("TapEnded")\set ->
 			@_checked = not @_checked
 			if not @_checked
 				if not @fade.done

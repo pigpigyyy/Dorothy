@@ -27,7 +27,7 @@ Class
 
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
-		@scrollArea\slots "Scrolled",(delta)->
+		@scrollArea\slot "Scrolled",(delta)->
 			contentRect\set 0,0,@scrollArea.width,@scrollArea.height
 			@menu\eachChild (child)->
 				child.position += delta
@@ -35,10 +35,10 @@ Class
 				itemRect\set positionX-width/2,positionY-height/2,width,height
 				child.visible = contentRect\intersectsRect itemRect -- reduce draw calls
 
-		@scrollArea\slots "ScrollStart",->
+		@scrollArea\slot "ScrollStart",->
 			@menu.enabled = false
 
-		@scrollArea\slots "ScrollTouchEnded",->
+		@scrollArea\slot "ScrollTouchEnded",->
 			@menu.enabled = true
 
 		for i,item in ipairs items
@@ -48,7 +48,7 @@ Class
 				width:width-20
 				height:50
 			}
-			button\slots "Tapped",->
+			button\slot "Tapped",->
 				@emit "Selected",item,i
 				@box\perform CCSequence {
 					CCSpawn {

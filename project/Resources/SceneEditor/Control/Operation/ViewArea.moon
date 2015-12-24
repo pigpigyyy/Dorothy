@@ -33,13 +33,13 @@ Class ViewAreaView,
 				emit "Scene.ViewArea.Move",V*dt
 
 		tap = false
-		@slots "TouchBegan",(touches)->
+		@slot "TouchBegan",(touches)->
 			tap = true
 			S = oVec2.zero
 			V = oVec2.zero
 			@schedule updateDragSpeed
 
-		@slots "TouchMoved",(touches)->
+		@slot "TouchMoved",(touches)->
 			if #touches == 1 -- move view
 				delta = touches[1].delta
 				if delta ~= oVec2.zero
@@ -64,8 +64,8 @@ Class ViewAreaView,
 				emit "Scene.ViewArea.Tap",{uiPos,worldPos}
 			elseif V ~= oVec2.zero
 					@schedule updateDragPos
-		@slots "TouchEnded",touchEnded
-		@slots "TouchCancelled",touchEnded
+		@slot "TouchEnded",touchEnded
+		@slot "TouchCancelled",touchEnded
 
 		@gslot "Scene.ViewArea.Scale",(scale)->
 			@scaleNode.scaleX = scale
@@ -142,7 +142,7 @@ Class ViewAreaView,
 					.scaleX = editor.scale
 					.scaleY = editor.scale
 					.position = editor.camPos
-					\slots "CamMoved",(delta)->
+					\slot "CamMoved",(delta)->
 						emit "Scene.Camera.Move",delta
 
 		@gslot "Scene.Camera.Select",(subCam)->

@@ -34,15 +34,16 @@ Class EditMenuView,
 					button.selected = true
 					button.color = ccColor3 0xff0088
 					button.face.cascadeOpacity = false
-			button\slots "Tapped",->
+			button\slot "Tapped",->
 				if not button.selected
 					emit "Scene.View"..upperName
 				clearSelection!
 
-		@delBtn\slots "Tapped",-> emit "Scene.EditMenu.Delete"
+		@delBtn\slot "Tapped",-> emit "Scene.EditMenu.Delete"
 
 		mode = 0
-		@zoomBtn\slots "Tapped",->
+		@zoomBtn\slot "Tapped",->
+			mode = 0 if @zoomBtn.text == "100%"
 			scale = switch mode
 				when 0
 					2
@@ -55,54 +56,54 @@ Class EditMenuView,
 			@zoomBtn.text = string.format("%d%%",scale*100)
 			emit "Scene.ViewArea.ScaleTo",scale
 
-		@originBtn\slots "Tapped",-> editor\moveTo oVec2.zero
+		@originBtn\slot "Tapped",-> editor\moveTo oVec2.zero
 
 		@progressUp.visible = false
 		@progressDown.visible = false
 
 		@upBtn.visible = false
 		@upBtn.enabled = false
-		@upBtn\slots "TapBegan",->
+		@upBtn\slot "TapBegan",->
 			@upBtn\schedule once ->
 				sleep 0.4
 				@progressUp.visible = true
 				@progressUp\play!
-		@upBtn\slots "Tapped",->
+		@upBtn\slot "Tapped",->
 			if @progressUp.visible
 				if @progressUp.done
 					emit "Scene.EditMenu.Top"
 			else
 				emit "Scene.EditMenu.Up"
-		@upBtn\slots "TapEnded",->
+		@upBtn\slot "TapEnded",->
 			@upBtn\unschedule!
 			if @progressUp.visible
 				@progressUp.visible = false
 
 		@downBtn.visible = false
 		@downBtn.enabled = false
-		@downBtn\slots "TapBegan",->
+		@downBtn\slot "TapBegan",->
 			@downBtn\schedule once ->
 				sleep 0.4
 				@progressDown.visible = true
 				@progressDown\play!
-		@downBtn\slots "Tapped",->
+		@downBtn\slot "Tapped",->
 			if @progressDown.visible
 				if @progressDown.done
 					emit "Scene.EditMenu.Bottom"
 			else
 				emit "Scene.EditMenu.Down"
-		@downBtn\slots "TapEnded",->
+		@downBtn\slot "TapEnded",->
 			@downBtn\unschedule!
 			if @progressDown.visible
 				@progressDown.visible = false
 
 		@foldBtn.visible = false
 		@foldBtn.enabled = false
-		@foldBtn\slots "Tapped",->
+		@foldBtn\slot "Tapped",->
 			emit "Scene.ViewPanel.Fold",editor.currentData
 
 		@editBtn.dirty = false
-		@editBtn\slots "Tapped",->
+		@editBtn\slot "Tapped",->
 			if not @editBtn.dirty
 				ScenePanel = require "Control.Item.ScenePanel"
 				ScenePanel!
@@ -112,12 +113,12 @@ Class EditMenuView,
 			emit "Scene.SettingPanel.Edit",nil
 
 		@undoBtn.visible = false
-		@undoBtn\slots "Tapped",->
+		@undoBtn\slot "Tapped",->
 			editor.currentSceneFile = editor.currentSceneFile
 			emit "Scene.Dirty",false
 
 		@xFixBtn.visible = false
-		@xFixBtn\slots "Tapped",(button)->
+		@xFixBtn\slot "Tapped",(button)->
 			editor.xFix = not editor.xFix
 			if editor.yFix
 				editor.yFix = false
@@ -125,7 +126,7 @@ Class EditMenuView,
 			button.color = ccColor3 editor.xFix and 0xff0088 or 0x00ffff
 			emit "Scene.FixChange"
 		@yFixBtn.visible = false
-		@yFixBtn\slots "Tapped",(button)->
+		@yFixBtn\slot "Tapped",(button)->
 			editor.yFix = not editor.yFix
 			if editor.xFix
 				editor.xFix = false
@@ -137,7 +138,7 @@ Class EditMenuView,
 		@camBtn.visible = false
 		@camBtn.editing = false
 		@camBtn\gslot "Scene.Camera.Select",(subCam)-> @camBtn.subCam = subCam
-		@camBtn\slots "Tapped",->
+		@camBtn\slot "Tapped",->
 			if @camBtn.editing
 				emit "Scene.Camera.Activate",nil
 			else

@@ -9,16 +9,16 @@ Class OperationPanelView,
 	__init: (args)=>
 		@_menuEnabled = true
 
-		@slots "ScrollStart",->
+		@slot "ScrollStart",->
 			@menu.enabled = false
 
-		@slots "ScrollTouchEnded",->
+		@slot "ScrollTouchEnded",->
 			if @_menuEnabled
 				@menu.enabled = true
 
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
-		@slots "Scrolled",(delta)->
+		@slot "Scrolled",(delta)->
 			contentRect\set 0,0,@width,@height
 			@menu\eachChild (child)->
 				child.position += delta

@@ -229,8 +229,8 @@ Class SettingPanelView,
 				@menu\removeChild item
 			camItems = {}
 			currentCamItem = nil
-			emit "Scene.Camera.Select",nil
 			emit "Scene.Camera.Activate",nil
+			emit "Scene.Camera.Select",nil
 			return unless sceneData
 			cameraData = sceneData.camera
 			if cameraData.subCams
@@ -244,7 +244,7 @@ Class SettingPanelView,
 						}
 						.visible = false
 						.itemData = child
-						\slots "Tapped",camItemTapped
+						\slot "Tapped",camItemTapped
 					@menu\addChild viewItem
 					table.insert camItems,viewItem
 			viewItem = with Button {
@@ -256,9 +256,9 @@ Class SettingPanelView,
 					fontSize:16
 				}
 				.visible = false
-				\slots "Tapped",->
+				\slot "Tapped",->
 					with InputBox text:"New Camera Name"
-						\slots "Inputed",(text)->
+						\slot "Inputed",(text)->
 							return unless text
 							if cameraData.subCams
 								for child in *cameraData.subCams

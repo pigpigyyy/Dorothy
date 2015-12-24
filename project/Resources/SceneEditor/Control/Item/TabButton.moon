@@ -12,7 +12,7 @@ Class TabButtonView,
 		@_expanded = false
 		@_checked = false
 		@_isCheckMode = false
-		@slots "Tapped", ->
+		@slot "Tapped", ->
 			if @_isCheckMode
 				@_checked = not @_checked
 				@emit "Checked",@_checked,@

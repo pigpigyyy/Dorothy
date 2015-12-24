@@ -146,7 +146,7 @@ Class ScrollAreaView,
 
 		@touchEnabled = true
 		@touchPriority = touchPriority
-		@slots "TouchBegan",(touch)->
+		@slot "TouchBegan",(touch)->
 			return false unless touch.id == 0
 
 			pos = @convertToNodeSpace touch.location
@@ -169,9 +169,9 @@ Class ScrollAreaView,
 				@emit "ScrollEnd"
 			@emit "ScrollTouchEnded"
 
-		@slots "TouchEnded",touchEnded
-		@slots "TouchCancelled",touchEnded
-		@slots "TouchMoved",(touch)->
+		@slot "TouchEnded",touchEnded
+		@slot "TouchCancelled",touchEnded
+		@slot "TouchMoved",(touch)->
 			lastMoveLength = deltaMoveLength
 			S = touch.delta
 			deltaMoveLength += S.length

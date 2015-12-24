@@ -51,7 +51,7 @@ Class ModelPanelView,
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
 
-		@scrollArea\slots "Scrolled",(delta)->
+		@scrollArea\slot "Scrolled",(delta)->
 			contentRect\set 0,0,@scrollArea.width,@scrollArea.height
 			@menu\eachChild (child)->
 				child.position += delta
@@ -59,13 +59,13 @@ Class ModelPanelView,
 				itemRect\set positionX-width/2,positionY-height/2,width,height
 				child.visible = contentRect\intersectsRect itemRect -- reduce draw calls
 
-		@scrollArea\slots "ScrollStart",->
+		@scrollArea\slot "ScrollStart",->
 			@menu.enabled = false
 
-		@scrollArea\slots "ScrollTouchEnded",->
+		@scrollArea\slot "ScrollTouchEnded",->
 			@menu.enabled = true
 
-		@slots "Cleanup",->
+		@slot "Cleanup",->
 			oRoutine\remove @routine if @routine
 
 		@gslot "Scene.ViewModel",->
@@ -123,7 +123,7 @@ Class ModelPanelView,
 							file: model
 						}
 						viewItem.visible = false
-						viewItem\slots "Selected",@selected
+						viewItem\slot "Selected",@selected
 						@menu\addChild viewItem
 						@playUpdateHint!
 						sleep!
@@ -146,7 +146,7 @@ Class ModelPanelView,
 							height: 100
 							file: model
 						}
-						viewItem\slots "Selected",@selected
+						viewItem\slot "Selected",@selected
 						viewItem.visible = false
 						@menu\addChild viewItem
 						@playUpdateHint!
@@ -174,14 +174,14 @@ Class ModelPanelView,
 				y -= 60 if #@models > 0
 				@scrollArea.viewSize = CCSize width,height-y
 
-		@modeBtn\slots "Tapped",->
+		@modeBtn\slot "Tapped",->
 			return if Reference.isUpdating!
 			@isCheckMode = not @isCheckMode
 
-		@addBtn\slots "Tapped",->
+		@addBtn\slot "Tapped",->
 			@clearSelection!
 			with InputBox text:"New Model Name"
-				\slots "Inputed",(name)->
+				\slot "Inputed",(name)->
 					return unless name
 					if name == "" or name\match("[\\/|:*?<>\"%.]")
 						MessageBox text:"Invalid Name!",okOnly:true
@@ -191,20 +191,20 @@ Class ModelPanelView,
 							MessageBox text:"Name Exist!",okOnly:true
 							return
 					actionEditor = editor.actionEditor
-					actionEditor\slots("Activated")\set ->
+					actionEditor\slot("Activated")\set ->
 						oFileChooser = require "ActionEditor.Script.oFileChooser"
 						oFileChooser(true,true,name)
 					CCScene\forward "actionEditor","rollOut"
 
-		@delBtn\slots "Tapped",->
+		@delBtn\slot "Tapped",->
 			if not @_selectedItem
 				MessageBox text:"No Model Selected",okOnly:true
 				return
 			return unless Reference.isRemovable @_selectedItem
 			with MessageBox text:"Delete Model\n"..@_selectedItem\match("([^\\/]*)%.[^%.\\/]*$")
-				\slots "OK",(result)->
+				\slot "OK",(result)->
 					return unless result
-					MessageBox(text:"Confirm This\nDeletion")\slots "OK",(result)->
+					MessageBox(text:"Confirm This\nDeletion")\slot "OK",(result)->
 						return unless result
 						@runThread ->
 							oCache.Model\unload @_selectedItem
@@ -214,7 +214,7 @@ Class ModelPanelView,
 							sleep 0.3
 							editor\updateModels!
 
-		@editBtn\slots "Tapped",->
+		@editBtn\slot "Tapped",->
 			if not @_selectedItem
 				MessageBox text:"No Model Selected",okOnly:true
 				return
@@ -223,13 +223,13 @@ Class ModelPanelView,
 			if viewItem.isLoaded
 				@clearSelection!
 				actionEditor = editor.actionEditor
-				actionEditor\slots("Activated")\set ->
+				actionEditor\slot("Activated")\set ->
 					actionEditor\edit targetItem
 				CCScene\forward "actionEditor","rollOut"
 			else
 				MessageBox text:"Broken Model\nWith Data Error\nOr Missing Image",okOnly:true
 
-		@closeBtn\slots "Tapped",-> @hide!
+		@closeBtn\slot "Tapped",-> @hide!
 
 		@addBtn.visible = false
 		@delBtn.visible = false

@@ -40,7 +40,7 @@ local oBox = class({
 		mask.touchPriority = CCMenu.DefaultHandlerPriority-4
 		mask.swallowTouches = true
 		mask.touchEnabled = true
-		mask:slots("TouchBegan",function() return true end)
+		mask:slot("TouchBegan",function() return true end)
 		self:addChild(mask)
 
 		local border = CCDrawNode()
@@ -100,7 +100,7 @@ local oBox = class({
 			local menuItem = CCMenuItem()
 			menuItem.contentSize = CCSize(120,50)
 			menuItem.anchor = oVec2.zero
-			menuItem:slots("Tapped",function()
+			menuItem:slot("Tapped",function()
 				textField:attachWithIME()
 				textField.opacity = 1
 				frame.opacity = 1
@@ -108,7 +108,7 @@ local oBox = class({
 			menu:addChild(menuItem)
 		end
 
-		self:slots("Entered",function()
+		self:slot("Entered",function()
 			self:show()
 		end)
 	end,

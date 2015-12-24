@@ -51,7 +51,7 @@ Class BodyPanelView,
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
 
-		@scrollArea\slots "Scrolled",(delta)->
+		@scrollArea\slot "Scrolled",(delta)->
 			contentRect\set 0,0,@scrollArea.width,@scrollArea.height
 			@menu\eachChild (child)->
 				child.position += delta
@@ -59,13 +59,13 @@ Class BodyPanelView,
 				itemRect\set positionX-width/2,positionY-height/2,width,height
 				child.visible = contentRect\intersectsRect itemRect -- reduce draw calls
 
-		@scrollArea\slots "ScrollStart",->
+		@scrollArea\slot "ScrollStart",->
 			@menu.enabled = false
 
-		@scrollArea\slots "ScrollTouchEnded",->
+		@scrollArea\slot "ScrollTouchEnded",->
 			@menu.enabled = true
 
-		@slots "Cleanup",->
+		@slot "Cleanup",->
 			oRoutine\remove @routine if @routine
 
 		@gslot "Scene.ViewBody",->
@@ -126,7 +126,7 @@ Class BodyPanelView,
 							file: body
 						}
 						viewItem.visible = false
-						viewItem\slots "Selected",@selected
+						viewItem\slot "Selected",@selected
 						@menu\addChild viewItem
 						@playUpdateHint!
 						sleep!
@@ -149,7 +149,7 @@ Class BodyPanelView,
 							height: 100
 							file: body
 						}
-						viewItem\slots "Selected",@selected
+						viewItem\slot "Selected",@selected
 						viewItem.visible = false
 						@menu\addChild viewItem
 						@playUpdateHint!
@@ -175,14 +175,14 @@ Class BodyPanelView,
 				y -= 60 if #@bodies > 0
 				@scrollArea.viewSize = CCSize width,height-y
 
-		@modeBtn\slots "Tapped",->
+		@modeBtn\slot "Tapped",->
 			return if Reference.isUpdating!
 			@isCheckMode = not @isCheckMode
 
-		@addBtn\slots "Tapped",->
+		@addBtn\slot "Tapped",->
 			@clearSelection!
 			with InputBox text:"New Body Name"
-				\slots "Inputed",(name)->
+				\slot "Inputed",(name)->
 					return unless name
 					if name == "" or name\match("[\\/|:*?<>\"%.]")
 						MessageBox text:"Invalid Name!",okOnly:true
@@ -192,19 +192,19 @@ Class BodyPanelView,
 							MessageBox text:"Name Exist!",okOnly:true
 							return
 					bodyEditor = editor.bodyEditor
-					bodyEditor\slots("Activated")\set ->
+					bodyEditor\slot("Activated")\set ->
 						bodyEditor\new editor.physicsFolder..name..".body"
 					CCScene\forward "bodyEditor","rollOut"
 
-		@delBtn\slots "Tapped",->
+		@delBtn\slot "Tapped",->
 			if not @_selectedItem
 				MessageBox text:"No Body Selected",okOnly:true
 				return
 			return unless Reference.isRemovable @_selectedItem
 			with MessageBox text:"Delete Body\n"..@_selectedItem\match("([^\\/]*)%.[^%.\\/]*$")
-				\slots "OK",(result)->
+				\slot "OK",(result)->
 					return unless result
-					MessageBox(text:"Confirm This\nDeletion")\slots "OK",(result)->
+					MessageBox(text:"Confirm This\nDeletion")\slot "OK",(result)->
 						return unless result
 						@runThread ->
 							oCache.Body\unload @_selectedItem
@@ -214,7 +214,7 @@ Class BodyPanelView,
 							sleep 0.3
 							editor\updateBodies!
 
-		@editBtn\slots "Tapped",->
+		@editBtn\slot "Tapped",->
 			if not @_selectedItem
 				MessageBox text:"No Body Selected",okOnly:true
 				return
@@ -223,13 +223,13 @@ Class BodyPanelView,
 			if viewItem.isLoaded
 				@clearSelection!
 				bodyEditor = editor.bodyEditor
-				bodyEditor\slots("Activated")\set ->
+				bodyEditor\slot("Activated")\set ->
 					bodyEditor\edit targetItem
 				CCScene\forward "bodyEditor","rollOut"
 			else
 				MessageBox text:"Broken Body\nWith Data Error",okOnly:true
 
-		@closeBtn\slots "Tapped",->
+		@closeBtn\slot "Tapped",->
 			@hide!
 
 		@addBtn.visible = false

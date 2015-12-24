@@ -276,7 +276,7 @@ local function oSettingPanel()
 			end
 		end
 
-		menuItem:slots("Tapped",function()
+		menuItem:slot("Tapped",function()
 			if not isInput then
 				if enableFunc ~= nil and disableFunc ~= nil then
 					emit("Action.SettingSelected",menuItem)
@@ -328,7 +328,7 @@ local function oSettingPanel()
 	end
 
 	panel.touchPriority = CCMenu.DefaultHandlerPriority-2
-	panel:slots("TouchBegan",function(touch)
+	panel:slot("TouchBegan",function(touch)
 		if touch.id ~= 0 or oEditor.isPlaying or not panel.visible then
 			return false
 		end		
@@ -352,10 +352,10 @@ local function oSettingPanel()
 			end
 		end
 	end
-	panel:slots("TouchEnded",touchEnded)
-	panel:slots("TouchCancelled",touchEnded)
+	panel:slot("TouchEnded",touchEnded)
+	panel:slot("TouchCancelled",touchEnded)
 
-	panel:slots("TouchMoved",function(touch)
+	panel:slot("TouchMoved",function(touch)
 		deltaMoveLength = deltaMoveLength + touch.delta.length
 		_s = _s + touch.delta
 		if deltaMoveLength > 10 then

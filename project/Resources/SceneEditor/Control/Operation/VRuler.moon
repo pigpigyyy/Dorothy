@@ -197,7 +197,7 @@ cycle = require "cycle"
 					intervalNode\unschedule!
 
 	-- handle touch event --
-	@slots "TouchBegan",(touch)->
+	@slot "TouchBegan",(touch)->
 		loc = @convertToNodeSpace touch.location
 		if CCRect(-halfW,-halfH,rulerWidth,rulerHeight)\containsPoint loc
 			@opacity = 1
@@ -205,7 +205,7 @@ cycle = require "cycle"
 		else
 			false
 
-	@slots "TouchMoved",(touch)->
+	@slot "TouchMoved",(touch)->
 		@positionX += touch.delta.x
 		if @positionX > winSize.width-190-halfW-10
 			@positionX = winSize.width-190-halfW-10
@@ -213,8 +213,8 @@ cycle = require "cycle"
 			@positionX = halfW+10
 
 	touchEnded = -> @perform oOpacity 0.3,0.5
-	@slots "TouchCancelled",touchEnded
-	@slots "TouchEnded",touchEnded
+	@slot "TouchCancelled",touchEnded
+	@slot "TouchEnded",touchEnded
 
 	@gslot "Scene.Camera.Activate",(subCam)->
 		{:width} = CCDirector.winSize

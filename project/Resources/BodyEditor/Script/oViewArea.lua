@@ -165,7 +165,7 @@ local function oViewArea()
 			emit("Body.viewArea.move",V * dt)
 		end
 	end
-	view:slots("TouchBegan",function(touches)
+	view:slot("TouchBegan",function(touches)
 		if not oEditor.isPlaying and shapeToCreate ~= nil then
 			createShape(shapeToCreate,touches[1].location)
 			shapeToCreate = nil
@@ -177,7 +177,7 @@ local function oViewArea()
 		view:schedule(updateDragSpeed)
 		return true
 	end)
-	view:slots("TouchMoved",function(touches)
+	view:slot("TouchMoved",function(touches)
 		if #touches == 1 then -- move view
 			local delta = touches[1].delta
 			if delta ~= oVec2.zero then
@@ -216,8 +216,8 @@ local function oViewArea()
 			end
 		end
 	end
-	view:slots("TouchEnded",touchEnded)
-	view:slots("TouchCancelled",touchEnded)
+	view:slot("TouchEnded",touchEnded)
+	view:slot("TouchCancelled",touchEnded)
 
 	-- test codes below
 	--[[local CCDrawNode = require("CCDrawNode")

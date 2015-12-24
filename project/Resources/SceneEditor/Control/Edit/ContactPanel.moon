@@ -44,7 +44,7 @@ Class ContactPanelView,
 			else
 				button = with Button text:tostring(contactData[i]),width:80,height:40,fontSize:18
 					.color = ccColor3 color
-					\slots "Tapped", ->
+					\slot "Tapped", ->
 						contactData[i] = not contactData[i]
 						shouldContact = contactData[i]
 						button.text = tostring shouldContact

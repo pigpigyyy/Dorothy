@@ -40,7 +40,7 @@ local oViewItem = class({
 		self._tapped = tapped
 		self.contentSize = CCSize(width,height)
 		self.position = oVec2(x+(isSub and 15 or 0),y)
-		self:slots("Tapped",function() self:tapped() end)
+		self:slot("Tapped",function() self:tapped() end)
 
 		local node = CCNode()
 		node.position = oVec2(halfW,halfH)

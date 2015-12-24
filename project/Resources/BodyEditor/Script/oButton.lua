@@ -77,7 +77,7 @@ local oButton = class(
 		end
 
 		local scale = oScale(0.3,1.0,1.0,oEase.OutBack)
-		self:slots("TapBegan",function()
+		self:slot("TapBegan",function()
 			if not scale.done then
 				face:stopAction(scale)
 			end
@@ -85,7 +85,7 @@ local oButton = class(
 			face.scaleY = 0.3
 			face:runAction(scale)
 		end)
-		self:slots("Tapped",function()
+		self:slot("Tapped",function()
 			if tapped then
 				tapped(self)
 			end

@@ -43,7 +43,7 @@ void oContactListener::oContactPair::release()
 
 void oWorld::oQueryAABB::setInfo(const CCRect& rc)
 {
-	transform.Set(b2Vec2(b2Val(rc.getMidX()), b2Val(rc.getMidY())), 0);
+	transform.Set(b2Vec2(b2Val(rc.getCenterX()), b2Val(rc.getCenterY())), 0);
 	testShape.SetAsBox(b2Val(rc.size.width), b2Val(rc.size.height));
 }
 bool oWorld::oQueryAABB::ReportFixture( b2Fixture* fixture )
@@ -240,8 +240,8 @@ void oWorld::visit()
 void oWorld::query( const CCRect& rect, const function<bool(oBody*)>& callback )
 {
 	b2AABB b2aabb;
-	b2aabb.lowerBound.Set(b2Val(rect.getMinX()), b2Val(rect.getMinY()));
-	b2aabb.upperBound.Set(b2Val(rect.getMaxX()), b2Val(rect.getMaxY()));
+	b2aabb.lowerBound.Set(b2Val(rect.getLeft()), b2Val(rect.getBottom()));
+	b2aabb.upperBound.Set(b2Val(rect.getRight()), b2Val(rect.getTop()));
 	_queryCallback.setInfo(rect);
 	_world.QueryAABB(&_queryCallback, b2aabb);
 	for (oBody* item : _queryCallback.resultsOfCommonShapes)

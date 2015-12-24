@@ -270,11 +270,11 @@ panel:show()
 scene:addChild(panel)
 
 panel.keypadEnabled = true
-panel:slots("KeyBack",function()
+panel:slot("KeyBack",function()
 	CCDirector:stop() -- end is Lua keyword, so this function use name stop
 end)
 
-panel:slots("Entered",function()
+panel:slot("Entered",function()
 	for _,name in ipairs(loaded) do
 		package.loaded[name] = nil
 	end

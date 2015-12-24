@@ -142,13 +142,13 @@ local function oViewArea()
 			yCross.positionY = -(crossNode.positionY - origin.y)/crossNode.scaleX
 		end
 	end
-	view:slots("TouchBegan",function()
+	view:slot("TouchBegan",function()
 		S = oVec2.zero
 		V = oVec2.zero
 		view:schedule(updateDragSpeed)
 		return true
 	end)
-	view:slots("TouchMoved",function(touches)
+	view:slot("TouchMoved",function(touches)
 		if not view:isControlEnabled() then
 			return
 		end
@@ -199,8 +199,8 @@ local function oViewArea()
 			view:schedule(updateDragPos)
 		end
 	end
-	view:slots("TouchEnded",touchEnded)
-	view:slots("TouchCancelled",touchEnded)
+	view:slot("TouchEnded",touchEnded)
+	view:slot("TouchCancelled",touchEnded)
 
 	view.zoomReset = function(self)
 		local scale = 0

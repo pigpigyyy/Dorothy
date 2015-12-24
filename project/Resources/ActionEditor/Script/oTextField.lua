@@ -25,14 +25,14 @@ local function oTextField(x,y,fontSize,limit,textChanged)
 	cursor.visible = false
 	cursor.positionX = textField.contentSize.width
 	textField:addChild(cursor)
-	textField:slots("InputAttach",function(self)
+	textField:slot("InputAttach",function(self)
 		cursor.visible = true
 		cursor:stopAllActions()
 		cursor:runAction(blink)
 		cursor.positionX = self.contentSize.width
 		return true
 	end)
-	textField:slots("InputDetach",function(self)
+	textField:slot("InputDetach",function(self)
 		cursor.visible = false
 		cursor:stopAllActions()
 		if textChanged then
@@ -40,7 +40,7 @@ local function oTextField(x,y,fontSize,limit,textChanged)
 		end
 		return true
 	end)
-	textField:slots("InputInserting",function(addText,self)
+	textField:slot("InputInserting",function(addText,self)
 		if string.len(self.text) >= limit and addText ~= "\n" then
 			return false
 		end
@@ -52,8 +52,8 @@ local function oTextField(x,y,fontSize,limit,textChanged)
 		cursor.positionX = textField.contentSize.width
 		self.texture.antiAlias = false
 	end
-	textField:slots("InputInserted",inputed)
-	textField:slots("InputDeleted",inputed)
+	textField:slot("InputInserted",inputed)
+	textField:slot("InputDeleted",inputed)
 	return textField
 end
 

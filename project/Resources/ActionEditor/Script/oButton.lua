@@ -66,7 +66,7 @@ local function oButton(text, fontSize, width, height, x, y,tapped)
 	end
 
 	local scale = oScale(0.3,1.0,1.0,oEase.OutBack)
-	menuItem:slots("TapBegan",function()
+	menuItem:slot("TapBegan",function()
 		if not scale.done then
 			face:stopAction(scale)
 		end
@@ -74,7 +74,7 @@ local function oButton(text, fontSize, width, height, x, y,tapped)
 		face.scaleY = 0.3
 		face:runAction(scale)
 	end)
-	menuItem:slots("Tapped",function()
+	menuItem:slot("Tapped",function()
 		if tapped then
 			tapped(menuItem)
 		end

@@ -28,7 +28,7 @@ local function oPointControl()
 	local jumpNow = false
 	control.touchPriority = oEditor.touchPriorityEditControl
 	control.swallowTouches = true
-	control:slots("TouchBegan",function(touch)
+	control:slot("TouchBegan",function(touch)
 		if not jump then
 			jump = true
 			jumpNow = true
@@ -51,7 +51,7 @@ local function oPointControl()
 		end
 		return true
 	end)
-	control:slots("TouchMoved",function(touch)
+	control:slot("TouchMoved",function(touch)
 		local delta = target:convertToNodeSpace(touch.location) - target:convertToNodeSpace(touch.preLocation)
 		if oEditor.isFixed then
 			totalDelta = totalDelta + delta

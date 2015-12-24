@@ -34,10 +34,10 @@ Class SpriteViewView,
 			.position = oVec2 width-20,20
 		@face\addChild @star
 
-		@slots "Tapped",->
+		@slot "Tapped",->
 			@emit "Selected",@
 
-		@slots "Cleanup",->
+		@slot "Cleanup",->
 			oCache.Texture\unload @_prevFile if @_prevFile
 
 		thread ->

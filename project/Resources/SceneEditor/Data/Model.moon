@@ -202,7 +202,7 @@ Items =
 			world.scheduler = with CCScheduler!
 				.timeScale = 0
 			CCDirector.scheduler\schedule world.scheduler
-			world\slots "Cleanup",->
+			world\slot "Cleanup",->
 				CCDirector.scheduler\unschedule world.scheduler
 			editor.items = {Scene:world}
 			editor.itemDefs = {[world]:@}
@@ -311,7 +311,7 @@ Items =
 			world.scheduler = with CCScheduler!
 				.timeScale = 0
 			CCDirector.scheduler\schedule world.scheduler
-			world\slots "Cleanup",->
+			world\slot "Cleanup",->
 				CCDirector.scheduler\unschedule world.scheduler
 			oData\apply world
 			Contact world,editor.sceneData

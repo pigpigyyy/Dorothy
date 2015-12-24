@@ -190,7 +190,7 @@ local menu = CCMenu()
 menu.anchor = oVec2.zero
 world.UILayer:addChild(menu)
 
-scene:slots("Cleanup",function()
+scene:slot("Cleanup",function()
 	oContent:setSearchPaths({"Lib"})
 end)
 

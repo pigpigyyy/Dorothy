@@ -272,7 +272,7 @@ CCLuaEngine::CCLuaEngine()
 	tolua_beginmodule(L, 0);//stack: package.loaded
 		tolua_beginmodule(L, "CCNode");
 			tolua_function(L, "gslot", CCNode_gslot);
-			tolua_function(L, "slots", CCNode_slots);
+			tolua_function(L, "slot", CCNode_slot);
 			tolua_function(L, "emit", CCNode_emit);
 			tolua_function(L, "traverse", CCNode_traverse);
 			tolua_function(L, "eachChild", CCNode_eachChild);

@@ -257,7 +257,7 @@ oRoutine(once(function() -- load UI asynchronously
 	end
 end))
 
-oEditor:slots("Entering",function()
+oEditor:slot("Entering",function()
 	oRoutine(once(function()
 		repeat
 			coroutine.yield()

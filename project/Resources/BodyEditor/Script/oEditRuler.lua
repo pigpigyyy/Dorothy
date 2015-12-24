@@ -330,13 +330,13 @@ local function oEditRuler()
 
 	ruler.touchPriority = oEditor.touchPriorityEditControl
 	ruler.swallowTouches = true
-	ruler:slots("TouchBegan",function()
+	ruler:slot("TouchBegan",function()
 		_s = 0
 		_v = 0
 		ruler:schedule(updateSpeed)
 		return true
 	end)
-	ruler:slots("TouchMoved",function(touch)
+	ruler:slot("TouchMoved",function(touch)
 		local v = _value-touch.delta.x*indent/(interval*10)
 		local padding = 0.5*indent
 		if _max > _min then
@@ -359,8 +359,8 @@ local function oEditRuler()
 			ruler:schedule(updatePos)
 		end
 	end
-	ruler:slots("TouchEnded",touchEnded)
-	ruler:slots("TouchCancelled",touchEnded)
+	ruler:slot("TouchEnded",touchEnded)
+	ruler:slot("TouchCancelled",touchEnded)
 
 	ruler.show = function(self,default,min,max,indent,callback)
 		self:setLimit(min,max)

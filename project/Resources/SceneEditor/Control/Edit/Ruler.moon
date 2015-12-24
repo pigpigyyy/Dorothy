@@ -220,13 +220,13 @@ Class RulerView,
 				else
 					@unschedule!
 
-		@slots "TouchBegan",->
+		@slot "TouchBegan",->
 			_s = 0
 			_v = 0
 			@schedule updateSpeed
 			true
 
-		@slots "TouchMoved",(touch)->
+		@slot "TouchMoved",(touch)->
 			v = _value-touch.delta.x*indent/(interval*10)
 			padding = 0.5*indent
 			if _max > _min
@@ -244,14 +244,14 @@ Class RulerView,
 				startReset!
 			elseif _v ~= 0
 				@schedule updatePos
-		@slots "TouchEnded",touchEnded
-		@slots "TouchCancelled",touchEnded
+		@slot "TouchEnded",touchEnded
+		@slot "TouchCancelled",touchEnded
 
 	show: (default,min,max,ind,callback)=>
 		@setLimit min,max
 		@setIndent ind
 		@setValue default
-		@slots("Changed")\set callback
+		@slot("Changed")\set callback
 		@visible = true
 		@positionY = @endPosY+30
 		@opacity = 0
@@ -262,7 +262,7 @@ Class RulerView,
 
 	hide: =>
 		return unless @visible
-		@slots "Changed",nil
+		@slot "Changed",nil
 		@unschedule!
 		@perform CCSequence {
 			CCSpawn {

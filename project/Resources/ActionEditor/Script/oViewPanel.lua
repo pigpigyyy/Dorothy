@@ -339,7 +339,7 @@ local function oViewPanel()
 		end
 
 		local isFolding = false
-		menuItem:slots("Tapped",function(self)
+		menuItem:slot("Tapped",function(self)
 			if oEditor.isPlaying then
 				return false
 			end
@@ -457,7 +457,7 @@ local function oViewPanel()
 	end
 
 	panel.touchPriority = CCMenu.DefaultHandlerPriority-2
-	panel:slots("TouchBegan",function(touch)
+	panel:slot("TouchBegan",function(touch)
 		if touch.id ~= 0 then
 			return false
 		end
@@ -483,10 +483,10 @@ local function oViewPanel()
 			end
 		end
 	end
-	panel:slots("TouchEnded",touchEnded)
-	panel:slots("TouchCancelled",touchEnded)
+	panel:slot("TouchEnded",touchEnded)
+	panel:slot("TouchCancelled",touchEnded)
 
-	panel:slots("TouchMoved",function(touch)
+	panel:slot("TouchMoved",function(touch)
 		deltaMoveLength = deltaMoveLength + touch.delta.length
 		_s = _s + touch.delta
 		if deltaMoveLength > 10 then

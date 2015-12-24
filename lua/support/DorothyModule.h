@@ -66,7 +66,7 @@ private:
 };
 
 int CCNode_gslot(lua_State* L);
-int CCNode_slots(lua_State* L);
+int CCNode_slot(lua_State* L);
 int CCNode_emit(lua_State* L);
 int CCNode_traverse(lua_State* L);
 int CCNode_eachChild(lua_State* L);
@@ -106,7 +106,7 @@ bool oClipCache_load(const char* filename);
 bool oClipCache_update(const char* name, const char* content);
 bool oClipCache_unload(const char* filename = nullptr);
 void oClipCache_removeUnused();
-void __oClipCache_getNames(lua_State* L,  const char* filename);
+void __oClipCache_getNames(lua_State* L, const char* filename);
 #define oClipCache_getNames(filename) {__oClipCache_getNames(tolua_S,filename);return 1;}
 void __oClipCache_getTextureFile(lua_State* L, const char* filename);
 #define oClipCache_getTextureFile(filename) {__oClipCache_getTextureFile(tolua_S,filename);return 1;}

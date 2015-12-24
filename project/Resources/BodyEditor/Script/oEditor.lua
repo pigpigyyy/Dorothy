@@ -56,7 +56,7 @@ oEditor.world.scheduler = oEditor.worldScheduler
 oEditor.world.showDebug = true
 oEditor.world:setShouldContact(0,0,true)
 
-oEditor:slots("Cleanup",function()
+oEditor:slot("Cleanup",function()
 	if not oEditor.world.parent then
 		oEditor.world:cleanup()
 	end
@@ -1363,7 +1363,7 @@ oEditor:schedule(once(function()
 	end
 end))
 
-oEditor:slots("Entering",function()
+oEditor:slot("Entering",function()
 	oRoutine(once(function()
 		repeat
 			coroutine.yield()
@@ -1372,7 +1372,7 @@ oEditor:slots("Entering",function()
 		CCDirector.scheduler:schedule(oEditor.worldScheduler)
 	end))
 end)
-oEditor:slots("Exiting",function()
+oEditor:slot("Exiting",function()
 	CCDirector.scheduler:unschedule(oEditor.worldScheduler)
 end)
 

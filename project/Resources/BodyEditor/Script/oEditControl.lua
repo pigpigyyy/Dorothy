@@ -263,7 +263,7 @@ local function oEditControl()
 	posEditor.touchPriority = oEditor.touchPriorityEditControl
 	posEditor.swallowTouches = true
 
-	posEditor:slots("TouchMoved",function(touch)
+	posEditor:slot("TouchMoved",function(touch)
 		local delta = touch.delta
 		if fixX then delta.x = 0 end
 		if fixY then delta.y = 0 end
@@ -328,7 +328,7 @@ local function oEditControl()
 	local totalRot = 0
 	rotEditor.touchPriority = oEditor.touchPriorityEditControl
 	rotEditor.swallowTouches = true
-	rotEditor:slots("TouchMoved",function(touch)
+	rotEditor:slot("TouchMoved",function(touch)
 		local oldPos = rotVisual:convertToNodeSpace(touch.preLocation)
 		local newPos = rotVisual:convertToNodeSpace(touch.location)
 		local v1 = rotCenter - oldPos
@@ -417,7 +417,7 @@ local function oEditControl()
 	local sizeChanged = nil
 	sizeEditor.touchPriority = oEditor.touchPriorityEditControl
 	sizeEditor.swallowTouches = true
-	sizeEditor:slots("TouchMoved",function(touch)
+	sizeEditor:slot("TouchMoved",function(touch)
 		local delta = sizeVisual:convertToNodeSpace(touch.location) - 
 			sizeVisual:convertToNodeSpace(touch.preLocation)
 		if delta ~= oVec2.zero then
@@ -510,7 +510,7 @@ local function oEditControl()
 	local centerChanged = nil
 	centerEditor.touchPriority = oEditor.touchPriorityEditControl
 	centerEditor.swallowTouches = true
-	centerEditor:slots("TouchMoved",function(touch)
+	centerEditor:slot("TouchMoved",function(touch)
 		local delta = touch.delta
 		if fixX then delta.x = 0 end
 		if fixY then delta.y = 0 end
@@ -580,7 +580,7 @@ local function oEditControl()
 	local radiusChanged = nil
 	radiusEditor.touchPriority = oEditor.touchPriorityEditControl
 	radiusEditor.swallowTouches = true
-	radiusEditor:slots("TouchMoved",function(touch)
+	radiusEditor:slot("TouchMoved",function(touch)
 		local prevPos = touch.preLocation
 		local pos = touch.location
 		if pos ~= radiusCenter then
@@ -643,7 +643,7 @@ local function oEditControl()
 	bodyChooser.touchPriority = oEditor.touchPriorityEditControl
 	bodyChooser.swallowTouches = true
 	bodyChooser.touchEnabled = false
-	bodyChooser:slots("TouchEnded",function(touch)
+	bodyChooser:slot("TouchEnded",function(touch)
 		local pos = oEditor.world:convertToNodeSpace(touch.location)
 		oEditor.world:query(CCRect(pos.x-0.5,pos.y-0.5,1,1),function(body)
 			local data = body.dataItem
@@ -1006,13 +1006,13 @@ local function oEditControl()
 					end
 					oEditor:addChild(itemChooser,oEditor.topMost)
 					itemChooser:show()
-					itemChooser:slots("Selected"):set(function(filename)
+					itemChooser:slot("Selected"):set(function(filename)
 						if oEditor.standAlone then
 							filename = filename:sub(#(oEditor.input)+1,-1)
 						end
 						selected(filename)
 					end)
-					itemChooser:slots("Hide",function()
+					itemChooser:slot("Hide",function()
 						emit("Body.settingPanel.edit",nil)
 					end)
 				end})

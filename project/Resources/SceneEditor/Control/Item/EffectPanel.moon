@@ -51,7 +51,7 @@ Class EffectPanelView,
 
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
-		@scrollArea\slots "Scrolled",(delta)->
+		@scrollArea\slot "Scrolled",(delta)->
 			contentRect\set 0,0,@scrollArea.width,@scrollArea.height
 			@menu\eachChild (child)->
 				child.position += delta
@@ -59,13 +59,13 @@ Class EffectPanelView,
 				itemRect\set positionX-width/2,positionY-height/2,width,height
 				child.visible = contentRect\intersectsRect itemRect -- reduce draw calls
 
-		@scrollArea\slots "ScrollStart",->
+		@scrollArea\slot "ScrollStart",->
 			@menu.enabled = false
 
-		@scrollArea\slots "ScrollTouchEnded",->
+		@scrollArea\slot "ScrollTouchEnded",->
 			@menu.enabled = true
 
-		@slots "Cleanup",->
+		@slot "Cleanup",->
 			oRoutine\remove @routine if @routine
 
 		@gslot "Scene.ViewEffect",->
@@ -129,7 +129,7 @@ Class EffectPanelView,
 							file: effectFiles[effect]
 						}
 						viewItem.visible = false
-						viewItem\slots "Selected",@selected
+						viewItem\slot "Selected",@selected
 						@menu\addChild viewItem
 						@playUpdateHint!
 						sleep!
@@ -148,7 +148,7 @@ Class EffectPanelView,
 							effect: effect
 							file: effectFiles[effect]
 						}
-						viewItem\slots "Selected",@selected
+						viewItem\slot "Selected",@selected
 						viewItem.visible = false
 						@menu\addChild viewItem
 						@playUpdateHint!
@@ -177,17 +177,17 @@ Class EffectPanelView,
 				y -= (itemHeight/2+10) if #@effects > 0
 				@scrollArea.viewSize = CCSize width,height-y
 
-		@modeBtn\slots "Tapped",->
+		@modeBtn\slot "Tapped",->
 			return if Reference.isUpdating!
 			@isCheckMode = not @isCheckMode
 
-		@newBtn\slots "Tapped",->
+		@newBtn\slot "Tapped",->
 			@clearSelection!
 			SelectionPanel = require "Control.Basic.SelectionPanel"
 			with SelectionPanel items:{"Particle","Frame"}
-				\slots "Selected",(itemType)->
+				\slot "Selected",(itemType)->
 					with InputBox text:"New "..itemType.." Name"
-						\slots "Inputed",(name)->
+						\slot "Inputed",(name)->
 							return unless name
 							if name == "" or name\match("[\\/|:*?<>\"%.]")
 								MessageBox text:"Invalid Name!",okOnly:true
@@ -197,14 +197,14 @@ Class EffectPanelView,
 									MessageBox text:"Name Exist!",okOnly:true
 									return
 							effectEditor = editor.effectEditor
-							effectEditor\slots("Activated")\set ->
+							effectEditor\slot("Activated")\set ->
 								effectEditor["new"..itemType] effectEditor,name
 							CCScene\forward "effectEditor","rollOut"
 
-		@addBtn\slots "Tapped",->
+		@addBtn\slot "Tapped",->
 			@clearSelection!
 			with InputBox text:"New Effect Name"
-				\slots "Inputed",(name)->
+				\slot "Inputed",(name)->
 					return unless name
 					if name == "" or name\match("[\\/|:*?<>\"%.]")
 						MessageBox text:"Invalid Name!",okOnly:true
@@ -214,19 +214,19 @@ Class EffectPanelView,
 							MessageBox text:"Name Exist!",okOnly:true
 							return
 					effectEditor = editor.effectEditor
-					effectEditor\slots("Activated")\set ->
+					effectEditor\slot("Activated")\set ->
 						effectEditor\addExistFile name
 					CCScene\forward "effectEditor","rollOut"
 
-		@delBtn\slots "Tapped",->
+		@delBtn\slot "Tapped",->
 			if not @_selectedItem
 				MessageBox text:"No Effect Selected",okOnly:true
 				return
 			return unless Reference.isRemovable @_selectedItem
 			with MessageBox text:"Delete Effect\n"..@_selectedItem
-				\slots "OK",(result)->
+				\slot "OK",(result)->
 					return unless result
-					MessageBox(text:"Confirm This\nDeletion")\slots "OK",(result)->
+					MessageBox(text:"Confirm This\nDeletion")\slot "OK",(result)->
 						return unless result
 						@runThread ->
 							@effectFiles[@_selectedItem] = nil
@@ -239,7 +239,7 @@ Class EffectPanelView,
 							sleep 0.3
 							editor\updateEffects!
 
-		@editBtn\slots "Tapped",->
+		@editBtn\slot "Tapped",->
 			if not @_selectedItem
 				MessageBox text:"No Effect Selected",okOnly:true
 				return
@@ -248,13 +248,13 @@ Class EffectPanelView,
 			if viewItem.isLoaded
 				@clearSelection!
 				effectEditor = editor.effectEditor
-				effectEditor\slots("Activated")\set ->
+				effectEditor\slot("Activated")\set ->
 					effectEditor\edit targetItem
 				CCScene\forward "effectEditor","rollOut"
 			else
 				MessageBox text:"Broken Effect\nWith Data Error",okOnly:true
 
-		@closeBtn\slots "Tapped",->
+		@closeBtn\slot "Tapped",->
 			@hide!
 
 		@newBtn.visible = false

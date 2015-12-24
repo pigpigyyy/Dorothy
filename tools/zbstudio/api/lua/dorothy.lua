@@ -138,32 +138,52 @@ local Dorothy =
 			},
 			left =
 			{
-				description = "[float][Readonly]",
+				description = "[float]",
+				type = "value",
+			},
+			x =
+			{
+				description = "[float]",
+				type = "value",
+			},
+			y =
+			{
+				description = "[float]",
+				type = "value",
+			},
+			width =
+			{
+				description = "[float]",
+				type = "value",
+			},
+			height =
+			{
+				description = "[float]",
 				type = "value",
 			},
 			right =
 			{
-				description = "[float][Readonly]",
+				description = "[float]",
 				type = "value",
 			},
 			bottom =
 			{
-				description = "[float][Readonly]",
+				description = "[float]",
 				type = "value",
 			},
 			top =
 			{
-				description = "[float][Readonly]",
+				description = "[float]",
 				type = "value",
 			},
-			midX =
+			centerX =
 			{
-				description = "[float][Readonly]",
+				description = "[float]",
 				type = "value",
 			},
-			midY =
+			centerY =
 			{
-				description = "[float][Readonly]",
+				description = "[float]",
 				type = "value",
 			},
 			zero =

@@ -259,7 +259,7 @@ local function oControlBar()
 		return true
 	end
 	
-	controlBar:slots("TouchBegan",function(touch)
+	controlBar:slot("TouchBegan",function(touch)
 		if not isTouchValid(touch) then return false end
 		local loc = controlBar:convertToNodeSpace(touch.location)
 		if not CCRect(oVec2.zero, controlBar.contentSize):containsPoint(loc) then
@@ -305,10 +305,10 @@ local function oControlBar()
 		end
 		--cclog("End %d,%d",lastPos,offset)
 	end
-	controlBar:slots("TouchEnded",touchEnded)
-	controlBar:slots("TouchCancelled",touchEnded)
+	controlBar:slot("TouchEnded",touchEnded)
+	controlBar:slot("TouchCancelled",touchEnded)
 
-	controlBar:slots("TouchMoved",function(touch)
+	controlBar:slot("TouchMoved",function(touch)
 		if not isTouchValid(touch) then return end
 		if moveBar then
 			local model = oEditor.viewArea:getModel()

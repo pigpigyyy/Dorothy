@@ -482,7 +482,7 @@ tolua_lerror :
 	return 0;
 }
 
-int CCNode_slots(lua_State* L)
+int CCNode_slot(lua_State* L)
 {
 #ifndef TOLUA_RELEASE
 	tolua_Error tolua_err;
@@ -500,7 +500,7 @@ int CCNode_slots(lua_State* L)
 	{
 		CCNode* self = (CCNode*)tolua_tousertype(L, 1, 0);
 #ifndef TOLUA_RELEASE
-		if (!self) tolua_error(L, "invalid 'self' in function 'CCNode_slots'", NULL);
+		if (!self) tolua_error(L, "invalid 'self' in function 'CCNode_slot'", NULL);
 #endif
 		const char* name = tolua_tostring(L, 2, 0);
 		if (lua_isfunction(L, 3))
@@ -525,7 +525,7 @@ int CCNode_slots(lua_State* L)
 	return 1;
 #ifndef TOLUA_RELEASE
 tolua_lerror :
-	tolua_error(L, "#ferror in function 'slots'.", &tolua_err);
+	tolua_error(L, "#ferror in function 'slot'.", &tolua_err);
 	return 0;
 #endif
 }

@@ -156,14 +156,14 @@ Class ViewPanelView,
 			}
 			item.itemData = data
 			item.parentData = parentData
-			item\slots "Tapped",itemTapped
+			item\slot "Tapped",itemTapped
 			@menu\addChild item
 			item.enableChecker = switch text
 				when "Camera","Scene" then false
 				else true
 			if item.enableChecker
 				item.checker.checked = not data.display
-				item.checker\slots "Checked",displayChanged
+				item.checker\slot "Checked",displayChanged
 			@items[data] = item
 			viewSize.width = x+realW/2+10
 			viewSize.height = height-y+itemH/2+10
@@ -403,10 +403,10 @@ Class ViewPanelView,
 				when "Camera","Scene" then false
 				else true
 			if item.enableChecker
-				item.checker\slots "Checked",displayChanged
+				item.checker\slot "Checked",displayChanged
 			item.itemData = newData
 			item.parentData = parentData
-			item\slots "Tapped",itemTapped
+			item\slot "Tapped",itemTapped
 			@menu\addChild item
 			@items[newData] = item
 			-- reoder items

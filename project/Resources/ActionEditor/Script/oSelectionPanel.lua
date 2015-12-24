@@ -41,7 +41,7 @@ local function oSelectionPanel(borderSize,noCliping)
 	mask.touchPriority = CCMenu.DefaultHandlerPriority-3
 	mask.swallowTouches = true
 	mask.touchEnabled = true
-	mask:slots("TouchBegan",function() return panel.visible end)
+	mask:slot("TouchBegan",function() return panel.visible end)
 	panel:addChild(mask)
 
 	local border = CCNode()
@@ -229,7 +229,7 @@ local function oSelectionPanel(borderSize,noCliping)
 
 	panel.touchPriority = CCMenu.DefaultHandlerPriority-5
 	
-	panel:slots("TouchBegan",function(touch)
+	panel:slot("TouchBegan",function(touch)
 		if touch.id ~= 0 then
 			return false
 		end
@@ -252,10 +252,10 @@ local function oSelectionPanel(borderSize,noCliping)
 			end
 		end
 	end
-	panel:slots("TouchEnded",touchEnded)
-	panel:slots("TouchCancelled",touchEnded)
+	panel:slot("TouchEnded",touchEnded)
+	panel:slot("TouchCancelled",touchEnded)
 
-	panel:slots("TouchMoved",function(touch)
+	panel:slot("TouchMoved",function(touch)
 		_s = touch.delta
 		deltaMoveLength = deltaMoveLength + _s.length
 		if deltaMoveLength > 10 then

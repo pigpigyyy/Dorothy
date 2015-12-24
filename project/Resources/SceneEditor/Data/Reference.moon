@@ -180,7 +180,7 @@ isRemovable = (item)->
 		refStr = ""
 		for ref in *upRefs do refStr ..= ref\match("[^\\/]*$").."\n"
 		with MessageBox text:"Selected Item\n"..item\match("[^\\/]*$").."\nIs Referenced!",okOnly:true
-			\slots "OK",->
+			\slot "OK",->
 				MessageBox text:"By\n"..refStr,okOnly:true
 		false
 	else

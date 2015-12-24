@@ -1445,7 +1445,7 @@ static const char* _toBoolean(const char* str)
 	CASE_STR(Name) { name = atts[++i]; break; }\
 	CASE_STR(Args) { args = atts[++i]; break; }
 #define Slot_Create \
-	oFunc func = {elementStack.top().name+":slots("+toText(name)+",function("+(args ? args : "")+")", "end)"};\
+	oFunc func = {elementStack.top().name+":slot("+toText(name)+",function("+(args ? args : "")+")", "end)"};\
 	funcs.push(func);
 
 #define Item_Define(name) name##_Define

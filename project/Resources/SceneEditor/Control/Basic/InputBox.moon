@@ -15,13 +15,13 @@ InputBoxView = require "View.Control.Basic.InputBox"
 Class InputBoxView,
 	__init: =>
 		@textBox\attachWithIME!
-		@textBox\slots "Inputed",(text) ->
+		@textBox\slot "Inputed",(text) ->
 			@inputed text unless text == ""
 
-		@okBtn\slots "Tapped", ->
+		@okBtn\slot "Tapped", ->
 			@inputed @textBox.text
 
-		@cancelBtn\slots "Tapped", ->
+		@cancelBtn\slot "Tapped", ->
 			@inputed nil
 
 		CCDirector.currentScene\addChild @,998

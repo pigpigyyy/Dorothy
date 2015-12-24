@@ -79,13 +79,27 @@ public:
 	CCRect& operator=(const CCRect& other);
 	bool operator==(const CCRect& other) const;
 	bool operator!=(const CCRect& other) const;
-    void set(float x, float y, float width, float height);
-    float getMinX() const; /// return the leftmost x-value of current rect
-    float getMidX() const; /// return the midpoint x-value of current rect
-    float getMaxX() const; /// return the rightmost x-value of current rect
-    float getMinY() const; /// return the bottommost y-value of current rect
-    float getMidY() const; /// return the midpoint y-value of current rect
-    float getMaxY() const; /// return the topmost y-value of current rect
+	void set(float x, float y, float width, float height);
+	float getX() const;
+	void setX(float x);
+	float getY() const;
+	void setY(float y);
+	float getWidth() const;
+	void setWidth(float width);
+	float getHeight() const;
+	void setHeight(float height);
+    float getLeft() const;
+	void setLeft(float left);
+    float getCenterX() const;
+	void setCenterX(float centerX);
+    float getRight() const;
+	void setRight(float right);
+    float getBottom() const;
+	void setBottom(float bottom);
+    float getCenterY() const;
+	void setCenterY(float centerY);
+    float getTop() const;
+	void setTop(float top);
     bool containsPoint(const CCPoint& point) const;
 	bool intersectsRect(const CCRect& rect) const;
 	static const CCRect zero;

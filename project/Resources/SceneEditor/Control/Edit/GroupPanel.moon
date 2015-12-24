@@ -12,7 +12,7 @@ Class GroupPanelView,
 			with @["p#{i}"]
 				btnText = .placeHolder == groupName and "" or groupName
 				.text = btnText
-				\slots "Inputed",(newName)->
+				\slot "Inputed",(newName)->
 					nameExist = false
 					for n = 0,15
 						if newName == sceneData.groups[n] and n ~= i

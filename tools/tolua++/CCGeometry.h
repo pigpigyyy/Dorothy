@@ -21,12 +21,16 @@ class CCRect
 	
     oVec2 origin;
     CCSize size;
-	tolua_readonly tolua_property__common float minX @ left;
-	tolua_readonly tolua_property__common float maxX @ right;
-	tolua_readonly tolua_property__common float minY @ bottom;
-	tolua_readonly tolua_property__common float maxY @ top;
-	tolua_readonly tolua_property__common float midX;
-	tolua_readonly tolua_property__common float midY;
+	tolua_property__common float x;
+	tolua_property__common float y;
+	tolua_property__common float width;
+	tolua_property__common float height;
+	tolua_property__common float left;
+	tolua_property__common float right;
+	tolua_property__common float bottom;
+	tolua_property__common float top;
+	tolua_property__common float centerX;
+	tolua_property__common float centerY;
 
 	bool operator==(CCRect & rect);
 	bool containsPoint(oVec2 & point);

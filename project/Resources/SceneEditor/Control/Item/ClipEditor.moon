@@ -30,13 +30,13 @@ Class ClipEditorView,
 	__init: (args)=>
 		{:images} = args
 		@addImages images
-		@scrollArea\slots "Scrolled",(delta)->
+		@scrollArea\slot "Scrolled",(delta)->
 			@scrollArea.view\eachChild (child)->
 				child.position += delta
 
-		@okBtn\slots "Tapped",->
+		@okBtn\slot "Tapped",->
 			inputBox = InputBox text:"New Group Name"
-			inputBox\slots "Inputed",(name)->
+			inputBox\slot "Inputed",(name)->
 				return unless name
 				if name == "" or name\match("[\\/|:*?<>\"%.]")
 					MessageBox text:"Invalid Name!",okOnly:true
@@ -44,7 +44,7 @@ Class ClipEditorView,
 					MessageBox text:"Name Exist!",okOnly:true
 				else
 					msgBox = MessageBox text:"Group Name\n"..name
-					msgBox\slots "OK",(result)->
+					msgBox\slot "OK",(result)->
 						if result
 							-- save clip
 							xml = "<A A=\""..name..".png\">"
@@ -72,7 +72,7 @@ Class ClipEditorView,
 								Reference.removeRef image
 							@close true
 
-		@cancelBtn\slots "Tapped",->
+		@cancelBtn\slot "Tapped",->
 			@close false
 
 		CCDirector.currentScene\addChild @,2

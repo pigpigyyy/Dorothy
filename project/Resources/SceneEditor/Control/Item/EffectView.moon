@@ -29,7 +29,7 @@ Class ItemViewView,
 			.position = oVec2 width-20,20
 		@face\addChild @star
 
-		@slots "Tapped",-> @emit "Selected",@
+		@slot "Tapped",-> @emit "Selected",@
 
 		label = with CCLabelTTF effect,"Arial",16
 			.position = oVec2 width/2,height/2

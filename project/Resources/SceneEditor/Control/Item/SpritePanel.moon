@@ -52,7 +52,7 @@ Class SpritePanelView,
 
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
-		@scrollArea\slots "Scrolled",(delta)->
+		@scrollArea\slot "Scrolled",(delta)->
 			contentRect\set 0,0,@scrollArea.width,@scrollArea.height
 			@menu\eachChild (child)->
 				child.position += delta
@@ -60,13 +60,13 @@ Class SpritePanelView,
 				itemRect\set positionX-width/2,positionY-height/2,width,height
 				child.visible = contentRect\intersectsRect itemRect -- reduce draw calls
 
-		@scrollArea\slots "ScrollStart",->
+		@scrollArea\slot "ScrollStart",->
 			@menu.enabled = false
 
-		@scrollArea\slots "ScrollTouchEnded",->
+		@scrollArea\slot "ScrollTouchEnded",->
 			@menu.enabled = true
 
-		@slots "Cleanup",->
+		@slot "Cleanup",->
 			oRoutine\remove @routine if @routine
 
 		@gslot "Scene.ViewSprite",->
@@ -167,8 +167,8 @@ Class SpritePanelView,
 						viewItem.visible = false
 						viewItem.enabled = false
 						viewItem.isCheckMode = @_isSelecting
-						viewItem\slots "Checked",@viewItemChecked
-						viewItem\slots "Selected",@selected
+						viewItem\slot "Checked",@viewItemChecked
+						viewItem\slot "Selected",@selected
 						@menu\addChild viewItem
 						@playUpdateHint!
 						sleep!
@@ -192,8 +192,8 @@ Class SpritePanelView,
 							height: 100
 							needUnload: true
 						}
-						viewItem\slots "Checked",@viewItemChecked
-						viewItem\slots "Selected",@selected
+						viewItem\slot "Checked",@viewItemChecked
+						viewItem\slot "Selected",@selected
 						viewItem.visible = false
 						viewItem.enabled = false
 						viewItem.isCheckMode = @_isSelecting
@@ -244,14 +244,14 @@ Class SpritePanelView,
 		@groupBtn.visible = false
 		@delGroupBtn.visible = false
 
-		@modeBtn\slots "Tapped",->
+		@modeBtn\slot "Tapped",->
 			return if Reference.isUpdating!
 			@_setCheckMode not @_isSelecting
 
-		@addBtn\slots "Tapped",->
+		@addBtn\slot "Tapped",->
 			MessageBox text:"Place Images In\n/Graphic/ folder",okOnly:true
 
-		@delBtn\slots "Tapped",->
+		@delBtn\slot "Tapped",->
 			images = [image for image,_ in pairs @selectedImages]
 			clips = [clip for clip,_ in pairs @selectedClips]
 			if #images + #clips > 0
@@ -266,10 +266,10 @@ Class SpritePanelView,
 					if #Reference.getUpRefs(texFile) > 1 and not Reference.isRemovable texFile
 						return
 				with MessageBox text:"Delete "..(#images+#clips == 1 and "item" or "items")
-					\slots "OK",(result)->
+					\slot "OK",(result)->
 						return unless result
 						with MessageBox text:"Confirm This\nDeletion"
-							\slots "OK",(result)->
+							\slot "OK",(result)->
 								return unless result
 								@runThread ->
 									for image in *images
@@ -293,7 +293,7 @@ Class SpritePanelView,
 			else
 				MessageBox text:"No Item Selected",okOnly:true
 
-		@groupBtn\slots "Tapped",->
+		@groupBtn\slot "Tapped",->
 			images = [image for image,_ in pairs @selectedImages]
 			if #images > 0
 				for image in *images
@@ -301,7 +301,7 @@ Class SpritePanelView,
 						return
 				ClipEditor = require "Control.Item.ClipEditor"
 				clipEditor = ClipEditor :images
-				clipEditor\slots "Grouped",(result)->
+				clipEditor\slot "Grouped",(result)->
 					return unless result
 					for image in *images
 						@imageItems[image].isCheckMode = false
@@ -311,7 +311,7 @@ Class SpritePanelView,
 			else
 				MessageBox text:"No Sprite Selected",okOnly:true
 
-		@delGroupBtn\slots "Tapped",->
+		@delGroupBtn\slot "Tapped",->
 			clips = [clip for clip,_ in pairs @selectedClips]
 			if #clips > 0
 				for clip in *clips
@@ -322,7 +322,7 @@ Class SpritePanelView,
 					if #Reference.getUpRefs(texFile) > 1 and not Reference.isRemovable texFile
 						return
 				msgBox = MessageBox text:"Break Selected\nGroups"
-				msgBox\slots "OK",(result)->
+				msgBox\slot "OK",(result)->
 					return unless result
 					@runThread ->
 						for clip in *clips
@@ -370,7 +370,7 @@ Class SpritePanelView,
 				else
 					MessageBox text:"No Group Selected",okOnly:true
 
-		@closeBtn\slots "Tapped",->
+		@closeBtn\slot "Tapped",->
 			@hide!
 
 	playUpdateHint: =>
@@ -406,7 +406,7 @@ Class SpritePanelView,
 			height: 40
 			text: clip\match "[\\/]([^\\/]*)%.[^%.\\/]*$"
 		}
-		clipTab\slots "Expanded",(expanded)->
+		clipTab\slot "Expanded",(expanded)->
 			if expanded
 				posY = clipTab.positionY-20
 				names = oCache.Clip\getNames clip
@@ -430,7 +430,7 @@ Class SpritePanelView,
 						needUnload: i == #names-1
 					}
 					viewItem.clip = clip
-					viewItem\slots "Selected",@selected
+					viewItem\slot "Selected",@selected
 					@menu\addChild viewItem
 					table.insert @clipExpands[clip],viewItem
 				newY -= 50
@@ -457,7 +457,7 @@ Class SpritePanelView,
 		clipTab.position += @scrollArea.offset
 		clipTab.enabled = false
 		clipTab.isCheckMode = @_isSelecting
-		clipTab\slots "Checked",@clipItemChecked
+		clipTab\slot "Checked",@clipItemChecked
 		@menu\addChild clipTab
 		clipTab.opacity = 0
 		clipTab\perform CCSequence {
