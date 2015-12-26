@@ -31,6 +31,7 @@ Class => CCNode!,
 			@addChild @boundaryEditor
 
 		showRuler = (...)->
+			@ruler.positionX = (width-330)/2+70
 			@ruler\show ...
 			_stopEditing = ->
 				_stopEditing = nil
@@ -231,7 +232,7 @@ Class => CCNode!,
 			.swallowTouches = true
 			\addChild scaleVisual
 			\slot "TouchMoved",(touch)->
-				delta = scaleVisual\convertToNodeSpace(touch.location) - 
+				delta = scaleVisual\convertToNodeSpace(touch.location) -
 					scaleVisual\convertToNodeSpace(touch.preLocation)
 				if delta ~= oVec2.zero
 					delta = delta*editor.scale
@@ -368,6 +369,13 @@ Class => CCNode!,
 				opacityEditor.visible = false
 				opacityEditor.touchEnabled = false
 
+		@gslot "Scene.Edit.ShowRuler",(showArgs)->
+			if showArgs
+				@ruler.positionX = width/2
+				@ruler\show unpack showArgs
+			else
+				@ruler\hide!
+
 		@gslot "Scene.ViewPanel.Select",cancelEditing
 
 		@gslot "Scene.SettingPanel.Edit",(menuItem)->
@@ -419,6 +427,8 @@ Class => CCNode!,
 										item\stop!
 								when "boundary"
 									if value
+										if data.area == CCRect.zero
+											data.area = CCRect -width/2,-height/2,width,height
 										@boundaryEditor\show!
 									else
 										@boundaryEditor\hide!

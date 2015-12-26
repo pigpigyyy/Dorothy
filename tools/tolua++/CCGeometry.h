@@ -32,9 +32,9 @@ class CCRect
 	tolua_property__common float centerX;
 	tolua_property__common float centerY;
 
-	bool operator==(CCRect & rect);
-	bool containsPoint(oVec2 & point);
-	bool intersectsRect(CCRect & rect);
+	bool operator==(CCRect& rect);
+	bool containsPoint(oVec2& point);
+	bool intersectsRect(CCRect& rect);
 	void set(float x, float y, float width, float height);
 
 	static tolua_readonly CCRect zero;

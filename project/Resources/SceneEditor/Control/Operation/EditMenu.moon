@@ -137,12 +137,24 @@ Class EditMenuView,
 		@iconCam.visible = false
 		@camBtn.visible = false
 		@camBtn.editing = false
-		@camBtn\gslot "Scene.Camera.Select",(subCam)-> @camBtn.subCam = subCam
+		currentSubCam = nil
+		@camBtn\gslot "Scene.Camera.Select",(subCam)-> currentSubCam = subCam
 		@camBtn\slot "Tapped",->
 			if @camBtn.editing
 				emit "Scene.Camera.Activate",nil
 			else
-				emit "Scene.Camera.Activate",@camBtn.subCam
+				emit "Scene.Camera.Activate",currentSubCam
+
+		@zoomEditBtn.visible = false
+		@zoomEditBtn.editing = false
+		@zoomEditBtn\slot "Tapped",->
+			@zoomEditBtn.editing = not @zoomEditBtn.editing
+			if @zoomEditBtn.editing and currentSubCam
+				emit "Scene.Edit.ShowRuler", {currentSubCam.zoom,0.5,10,1,(value)->
+					emit "Scene.ViewArea.Scale",value
+				}
+			else
+				emit "Scene.Edit.ShowRuler",nil
 
 		@gslot "Scene.ShowFix",(value)->
 			editor.xFix = false
@@ -262,7 +274,21 @@ Class EditMenuView,
 		@gslot "Scene.Camera.Activate",(subCam)->
 			editing = (subCam ~= nil)
 			return if editing == @camBtn.editing
+			editor.isFixed = not editing
 			@camBtn.editing = editing
+			if editing
+				with @zoomEditBtn
+					.scaleX = 0
+					.scaleY = 0
+					.visible = true
+					\perform CCSequence {
+						CCDelay 0.5
+						oScale 0.3,1,1,oEase.OutBack
+					}
+			else
+				@zoomEditBtn.visible = false
+				@zoomEditBtn.editing = false
+				emit "Scene.Edit.ShowRuler",nil
 			{:width} = CCDirector.winSize
 			for i = 1,#@children
 				child = @children[i]
@@ -270,7 +296,7 @@ Class EditMenuView,
 					when @camBtn
 						posX = @camBtn.editing and width-35 or width-345
 						child\perform oPos 0.5,posX,child.positionY,oEase.OutQuad
-					when @editBtn,@undoBtn
+					when @editBtn,@undoBtn,@zoomEditBtn
 						continue
 					else
 						if child.positionX < width/2

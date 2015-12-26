@@ -327,12 +327,9 @@ local function oColorPicker(color,callback)
 		end
 		self:schedule(once(function()
 			local begin = self.angleX
-			local time = 0
-			cycle(0.3,function(deltaTime)
-				time = time + deltaTime
-				self.angleX = oEase:func(oEase.OutBack,time/0.3,begin,-90)
+			cycle(0.3,function(progress)
+				self.angleX = oEase:func(oEase.OutBack,progress,begin,-90)
 			end)
-			self.angleX = -90
 			self.visible = false
 		end))
 	end
@@ -343,12 +340,9 @@ local function oColorPicker(color,callback)
 		changed = callback
 		self:schedule(once(function()
 			self.angleX = -90
-			local time = 0
-			cycle(0.3,function(deltaTime)
-				time = time + deltaTime
-				self.angleX = oEase:func(oEase.OutBack,time/0.3,-90,90)
+			cycle(0.3,function(progress)
+				self.angleX = oEase:func(oEase.OutBack,progress,-90,90)
 			end)
-			self.angleX = 0
 		end))
 	end
 

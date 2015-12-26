@@ -79,6 +79,7 @@
 	<Button Name="downBtn" X="{ $R-225 }" Y="{ $T-155 }" Width="50" Height="50" Text="Down" FontSize="16" Ref="True"/>
 	<LittleProgress Name="progressDown" X="{ $R-225-25-14.5 }" Y="{ $T-155 }" Ref="True"/>
 	<Button Name="foldBtn" X="{ $R-225 }" Y="{ $T-215 }" Width="50" Height="50" Text="Fold" FontSize="16" Ref="True"/>
+	<Button Name="zoomEditBtn" X="{ $R-35 }" Y="{ $T-95 }" Width="50" Height="50" Text="Zoom" FontSize="16" Ref="True"/>
 	<!--<Button Name="unitBtn" X="35" Y="{ $T-335 }" Width="50" Height="50" Text="Unit" FontSize="16" Ref="True"/>
 	<Button Name="uiBtn" X="35" Y="{ $T-395 }" Width="50" Height="50" Text="UI" FontSize="16" Ref="True"/>-->
 </Menu>

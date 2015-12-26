@@ -149,12 +149,15 @@ Class SettingPanelView,
 				if currentCamItem
 					currentCamItem.checked = false
 					emit "Scene.Camera.Select",nil
+				items.Boundary.enabled = false
 				currentCamItem = camItem
 				subCam = currentCamItem.itemData
 				emit "Scene.Camera.Select",subCam
 			else
+				items.Boundary.enabled = true
 				currentCamItem = nil
 				emit "Scene.Camera.Select",nil
+			emit "Scene.SettingPanel.Edit",nil
 
 		currentGroup = nil
 		selectGroup = (data,reset=true)->
@@ -211,6 +214,7 @@ Class SettingPanelView,
 					item.positionX = itemWidth/2
 					item.positionY = getPosY!-10*i+(reset and 0 or @offset.y)
 					contentHeight = contentHeight+itemHeight+10
+				items.Boundary.enabled = true
 			@viewSize = CCSize @width,contentHeight
 
 		@gslot "Scene.ViewPanel.Select",selectGroup
@@ -257,6 +261,7 @@ Class SettingPanelView,
 				}
 				.visible = false
 				\slot "Tapped",->
+					emit "Scene.SettingPanel.Edit",nil
 					with InputBox text:"New Camera Name"
 						\slot "Inputed",(text)->
 							return unless text

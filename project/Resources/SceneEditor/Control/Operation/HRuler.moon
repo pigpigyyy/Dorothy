@@ -145,7 +145,7 @@ cycle = require "cycle"
 		width = winSize.width
 		posX = editor.origin.x-pos.x
 		intervalNode\runAction oPos 0.5,posX,halfH,oEase.OutQuad
-		oRoutine once -> cycle 0.5,-> updateLabels!
+		oRoutine once -> cycle 0.5,updateLabels
 		updatePart posX,width-posX
 
 	-- listen view scale event --

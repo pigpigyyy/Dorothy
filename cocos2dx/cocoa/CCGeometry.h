@@ -100,6 +100,10 @@ public:
 	void setCenterY(float centerY);
     float getTop() const;
 	void setTop(float top);
+	CCPoint getLowerBound() const;
+	void setLowerBound(const CCPoint& point);
+	CCPoint getUpperBound() const;
+	void setUpperBound(const CCPoint& point);
     bool containsPoint(const CCPoint& point) const;
 	bool intersectsRect(const CCRect& rect) const;
 	static const CCRect zero;

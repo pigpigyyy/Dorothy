@@ -72,14 +72,9 @@ Class ViewAreaView,
 			@scaleNode.scaleY = scale
 
 		@gslot "Scene.ViewArea.ScaleTo",(scale)->
-			@touchEnabled = false
-			@scaleNode\runAction CCSequence {
-				oScale 0.5,scale,scale,oEase.OutQuad
-				CCCall ->
-					if @scaleNode.numberOfRunningActions+
-						@crossNode.numberOfRunningActions == 1
-						@touchEnabled = true
-			}
+			@scaleNode\runAction oScale 0.5,scale,scale,oEase.OutQuad
+
+		@gslot "Scene.ViewArea.MoveTo",-> @unschedule!
 
 		@gslot "Scene.Camera.MoveTo",(pos)->
 			pos = oVec2(width/2,height/2)-pos
@@ -150,3 +145,4 @@ Class ViewAreaView,
 
 		@gslot "Scene.Camera.Activate",(subCam)->
 			@touchEnabled = (subCam ~= nil)
+			@unschedule! if @touchEnabled

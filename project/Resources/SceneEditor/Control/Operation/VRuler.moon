@@ -146,7 +146,7 @@ cycle = require "cycle"
 		height = winSize.height
 		posY = editor.origin.y-pos.y
 		intervalNode\runAction oPos 0.5,halfW,posY,oEase.OutQuad
-		oRoutine once -> cycle 0.5,-> updateLabels!
+		oRoutine once -> cycle 0.5,updateLabels
 		updatePart winSize.height-posY,posY
 
 	-- listen view scale event --

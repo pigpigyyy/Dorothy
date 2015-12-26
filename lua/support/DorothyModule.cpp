@@ -311,7 +311,7 @@ private:
 	oOwn<vector<std::pair<string,oRef<oSlotList>>>> _slotsArray;
 	CC_LUA_TYPE(oSlotData)
 };
-const int oSlotData::MAX_SLOT_ARRAY = 3;
+const int oSlotData::MAX_SLOT_ARRAY = 5;
 
 oSlotList::oSlotList():_list()
 { }

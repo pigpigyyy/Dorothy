@@ -634,7 +634,7 @@ Class EditorView,
 				oPos 0.5,pos.x,pos.y,oEase.OutQuad
 				oScale 0.5,subCam.zoom,subCam.zoom,oEase.OutQuad
 			}
-			@schedule once -> cycle 0.6,->
+			@schedule once -> cycle 0.5,->
 				emit "Scene.ViewArea.Scale",camera.scaleX
 		else
 			camera.boundary = CCRect.zero

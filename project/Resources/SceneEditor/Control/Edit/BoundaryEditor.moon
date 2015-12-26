@@ -50,7 +50,7 @@ BoundaryBar = (size,vertical,flip)->
 				posX = pos.x
 				leftOffset = flip and 70 or size+70
 				rightOffset = flip and winWidth-size-240 or winWidth-240
-				if (posX >= leftOffset and posX <= rightOffset) or 
+				if (posX >= leftOffset and posX <= rightOffset) or
 					(posX < leftOffset and touch.delta.x > 0) or
 					(posX > rightOffset and touch.delta.x < 0)
 					.positionX += touch.delta.x
@@ -60,7 +60,7 @@ BoundaryBar = (size,vertical,flip)->
 					math.min posX-rightOffset+activeArea,activeArea
 				else
 					0
-				.acc /= math.max editor.scale,1
+				.acc /= 2*math.max editor.scale,1
 				if .acc ~= 0
 					if not .scheduled
 						.scheduled = true
@@ -77,7 +77,7 @@ BoundaryBar = (size,vertical,flip)->
 				posY = pos.y
 				bottomOffset = flip and size+50 or 50
 				topOffset = flip and winHeight-70 or winHeight-size-70
-				if (posY >= bottomOffset and posY <= topOffset) or 
+				if (posY >= bottomOffset and posY <= topOffset) or
 					(posY < bottomOffset and touch.delta.y > 0) or
 					(posY > topOffset and touch.delta.y < 0)
 					.positionY += touch.delta.y
@@ -87,7 +87,7 @@ BoundaryBar = (size,vertical,flip)->
 					math.min posY-topOffset+activeArea,activeArea
 				else
 					0
-				.acc /= math.max editor.scale,1
+				.acc /= 2*math.max editor.scale,1
 				if .acc ~= 0
 					if not .scheduled
 						.scheduled = true
@@ -148,10 +148,16 @@ Class => CCNode!,
 			@rightBar.positionX += delta.x
 			@topBar.positionY += delta.y
 			@bottomBar.positionY += delta.y
-		resetPos = -> @schedule once -> cycle 0.6,-> @update!
+		resetPos = -> @schedule once -> cycle 0.5,-> @update!
 		@onMoveTo = @gslot "Scene.Camera.MoveTo",resetPos
 		@gslot "Scene.ViewArea.ScaleTo",resetPos
 		@gslot "Scene.ViewArea.Scale",-> @update!
+		@gslot "Scene.Camera.Activate",(subCam)->
+			enable = (subCam == nil)
+			@leftBar.touchEnabled = enable
+			@rightBar.touchEnabled = enable
+			@bottomBar.touchEnabled = enable
+			@topBar.touchEnabled = enable
 		@onLoad.enabled = false
 		@onMove.enabled = false
 		@onMoveTo.enabled = false

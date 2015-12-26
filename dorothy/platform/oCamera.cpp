@@ -50,18 +50,38 @@ void oCamera::follow( CCNode* target )
 	_target = target;
 }
 
+void oCamera::setScaleX(float scaleX)
+{
+	CCNode::setScaleX(scaleX);
+	setPosition(getPosition());
+}
+
+void oCamera::setScaleY(float scaleY)
+{
+	CCNode::setScaleY(scaleY);
+	setPosition(getPosition());
+}
+
 void oCamera::setPosition(const CCPoint& var)
 {
-	float halfW = CCNode::getWidth() * 0.5f;
-	float halfH = CCNode::getHeight() * 0.5f;
+	float halfW = CCNode::getWidth() * 0.5f / getScaleX();
+	float halfH = CCNode::getHeight() * 0.5f / getScaleY();
 	CCPoint pos;
 	if (_boundary != CCRect::zero)
 	{
-		oVec2 from(_boundary.origin.x + halfW, _boundary.origin.y + halfH);
+		oVec2 from(_boundary.getX() + halfW, _boundary.getY() + halfH);
 		oVec2 to(
-			_boundary.origin.x + _boundary.size.width - halfW,
-			_boundary.origin.y + _boundary.size.height - halfH);
+			_boundary.getX() + _boundary.getWidth() - halfW,
+			_boundary.getY() + _boundary.getHeight() - halfH);
 		pos = ccpClamp(var, from, to);
+		if (from.x > to.x)
+		{
+			pos.x = (_boundary.getLeft() + _boundary.getRight()) * 0.5f;
+		}
+		if (from.y > to.y)
+		{
+			pos.y = (_boundary.getBottom() + _boundary.getTop()) * 0.5f;
+		}
 	}
 	else
 	{

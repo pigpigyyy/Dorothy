@@ -260,6 +260,28 @@ void CCRect::setBottom(float bottom)
 	size.height = top - bottom;
 }
 
+CCPoint CCRect::getLowerBound() const
+{
+	return CCPoint(getLeft(), getBottom());
+}
+
+void CCRect::setLowerBound(const CCPoint& point)
+{
+	setLeft(point.x);
+	setBottom(point.y);
+}
+
+CCPoint CCRect::getUpperBound() const
+{
+	return CCPoint(getRight(), getTop());
+}
+
+void CCRect::setUpperBound(const CCPoint& point)
+{
+	setRight(point.x);
+	setTop(point.y);
+}
+
 bool CCRect::containsPoint(const CCPoint& point) const
 {
     bool bRet = false;

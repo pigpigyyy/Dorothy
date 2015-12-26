@@ -67,10 +67,12 @@ local function cycle(duration,work)
 		local deltaTime = CCDirector.deltaTime
 		time = time + deltaTime
 		if time < duration then
-			work(deltaTime)
+			work(time/duration)
 			return true
+		else
+			work(1)
+			return false
 		end
-		return false
 	end
 	while worker() do
 		yield()

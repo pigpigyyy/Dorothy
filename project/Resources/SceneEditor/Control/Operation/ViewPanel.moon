@@ -351,11 +351,9 @@ Class ViewPanelView,
 					endY = math.max endY,0
 					endY = math.min endY,viewSize.height-height
 				@schedule once ->
-					t = 0
 					changeY = endY-startY
-					cycle 0.3,(dt)->
-						t += dt
-						offset.y = oEase\func oEase.OutQuad,t/0.3,startY,changeY
+					cycle 0.3,(progress)->
+						offset.y = oEase\func oEase.OutQuad,progress,startY,changeY
 						@scrollTo offset
 					offset.y = endY
 					@scrollTo offset

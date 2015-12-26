@@ -20,6 +20,8 @@ public:
 	PROPERTY_REF(CCRect, _boundary, Boundary);
 	PROPERTY_REF(oVec2, _ratio, FollowRatio);
 	virtual bool init();
+	virtual void setScaleX(float scaleX);
+	virtual void setScaleY(float scaleY);
 	virtual void setPosition(const CCPoint& var);
 	virtual const CCPoint& getPosition();
 	void follow(CCNode* target);
