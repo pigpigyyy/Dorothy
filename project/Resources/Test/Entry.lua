@@ -78,7 +78,7 @@ end
 
 opMenu = CCMenu()
 opMenu.swallowTouches = true
-opMenu.contentSize = CCSize(200,60)
+opMenu.contentSize = CCSize(200,130)
 opMenu.touchPriority = CCMenu.DefaultHandlerPriority-4
 opMenu.anchor = oVec2.zero
 opMenu.position = oVec2(10,10)
@@ -135,12 +135,14 @@ local gcButton = oButton("GC",17,60,false,
 gcButton.anchor = oVec2.zero
 opMenu:addChild(gcButton)
 
-local function compile(dir,clean)
+local function compile(dir,clean,minify)
+	local ParseLua = require("luaminify.ParseLua").ParseLua
+	local FormatMini = require("luaminify.FormatMini")
 	local entries = oContent:getEntries(dir,true)
 	for _,item in ipairs(entries) do
 		local entry = dir.."/"..item
 		if item ~= "." and item ~= ".." then
-			if not compile(entry,clean) then
+			if not compile(entry,clean,minify) then
 				return false
 			end
 		end
@@ -161,6 +163,14 @@ local function compile(dir,clean)
 					print(err)
 					return false
 				else
+					if minify then
+						local st, ast = ParseLua(codes)
+						if not st then
+							print(ast)
+							return false
+						end
+						codes = FormatMini(ast)
+					end
 					oContent:saveToFile(dir.."/"..name..".lua",codes)
 					print("Moon compiled: "..entry)
 				end
@@ -182,6 +192,14 @@ local function compile(dir,clean)
 					print("Compile errors in "..entry)
 					return false
 				else
+					if minify then
+						local st, ast = ParseLua(codes)
+						if not st then
+							print(ast)
+							return false
+						end
+						codes = FormatMini(ast)
+					end
 					oContent:saveToFile(dir.."/"..name..".lua",codes)
 					print("xml compiled: "..entry)
 				end
@@ -197,10 +215,18 @@ local function compile(dir,clean)
 	return true
 end
 local compileButton = oButton("Compile",12,60,false,
-	70,0,
+	70,70,
 	function()
 		compile(".",false)
 		print("Compile done.")
+	end)
+compileButton.anchor = oVec2.zero
+opMenu:addChild(compileButton)
+compileButton = oButton("Compile\nMinify",12,60,false,
+	70,0,
+	function()
+		compile(".",false,true)
+		print("Compile & Minify done.")
 	end)
 compileButton.anchor = oVec2.zero
 opMenu:addChild(compileButton)
