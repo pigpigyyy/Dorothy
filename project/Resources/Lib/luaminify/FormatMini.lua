@@ -22,14 +22,15 @@ local Symbols = lookupify{'+', '-', '*', '/', '^', '%', ',', '{', '}', '[', ']',
 
 local function Format_Mini(ast)
 	local formatStatlist, formatExpr;
-	local count = 0
+	--local count = 0
 	--
 	local function joinStatementsSafe(a, b, sep)
 	--print(a, b)
+		--[[
 		if count > 150 then
 			count = 0
 			return a.."\n"..b
-		end
+		end]]
 		sep = sep or ' '
 		local aa, bb = a:sub(-1,-1), b:sub(1,1)
 		if UpperChars[aa] or LowerChars[aa] or aa == '_' then
@@ -183,7 +184,7 @@ local function Format_Mini(ast)
 			out = out .. string.rep(')', expr.ParenCount or 0)
 			--print("", out)
 		end
-		count = count + #out
+		--count = count + #out
 		return --[[print(out) or]] out
 	end
 
@@ -344,7 +345,7 @@ local function Format_Mini(ast)
 		else
 			print("Unknown AST Type: " .. statement.AstType)
 		end
-		count = count + #out
+		--count = count + #out
 		return out
 	end
 
