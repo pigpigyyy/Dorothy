@@ -628,7 +628,10 @@ Class EditorView,
 		return unless @items
 		camera = @items.Camera
 		if subCam
-			camera.boundary = @sceneData.camera.area
+			if @sceneData.camera.boundary
+				camera.boundary = @sceneData.camera.area
+			else
+				camera.boundary = CCRect.zero
 			pos = subCam.position
 			camera\perform CCSpawn {
 				oPos 0.5,pos.x,pos.y,oEase.OutQuad

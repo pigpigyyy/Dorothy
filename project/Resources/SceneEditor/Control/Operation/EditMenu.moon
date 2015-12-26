@@ -200,8 +200,8 @@ Class EditMenuView,
 			if @camBtn.visible or @iconCam.visible
 				@iconCam.visible = false
 				@camBtn.visible = false
-				emit "Scene.Camera.Select",nil
 				emit "Scene.Camera.Activate",nil
+				emit "Scene.Camera.Select",nil
 			emit "Scene.ViewPanel.FoldState",{
 				itemData:itemData
 				handler:(state)->
@@ -296,7 +296,7 @@ Class EditMenuView,
 					when @camBtn
 						posX = @camBtn.editing and width-35 or width-345
 						child\perform oPos 0.5,posX,child.positionY,oEase.OutQuad
-					when @editBtn,@undoBtn,@zoomEditBtn
+					when @editBtn,@undoBtn,@zoomEditBtn,@iconCam
 						continue
 					else
 						if child.positionX < width/2

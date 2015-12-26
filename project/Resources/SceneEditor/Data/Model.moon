@@ -142,6 +142,8 @@ DataCreater = (dataDef)->
 							str ..= "}"
 						else
 							str ..= "f"
+					when "number"
+						str ..= string.format "%.2f",item
 					else
 						str ..= tostring item
 				str ..= "," unless i == #@
@@ -169,7 +171,7 @@ Items =
 		Groups data.groups if data.groups
 		if data.camera
 			camera = data.camera
-			Items.Camera camera 
+			Items.Camera camera
 			if camera.subCams
 				for cam in *camera.subCams
 					Items.SubCam cam
