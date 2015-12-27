@@ -275,6 +275,7 @@ Class SpritePanelView,
 									for image in *images
 										sleep!
 										@imageItems[image].isCheckMode = false
+										@imageItems[image]\perform oOpacity 0.3,0
 										oCache.Texture\unload image
 										oContent\remove image
 										Reference.removeRef image
@@ -365,6 +366,7 @@ Class SpritePanelView,
 							oContent\remove texFile
 							Reference.removeRef texFile
 							@clipItems[clip].isCheckMode = false
+							@clipItems[clip]\perform oOpacity 0.3,0
 						sleep 0.3
 						editor\updateSprites!
 				else
@@ -462,7 +464,7 @@ Class SpritePanelView,
 		clipTab.opacity = 0
 		clipTab\perform CCSequence {
 			CCDelay (index or 0)*0.1
-			oOpacity 0.3,0.7
+			oOpacity 0.3,1
 		}
 		clipTab
 

@@ -585,8 +585,9 @@ int CCNode_traverse(lua_State* L)
 			int top = lua_gettop(L);
 			lua_pushvalue(L, 2);
 			tolua_pushccobject(L, child);
-			CCLuaEngine::call(L, 1, 0);
+			int ret = CCLuaEngine::execute(L, 1);
 			lua_settop(L, top);
+			return false;
 		});
 	}
 	return 0;

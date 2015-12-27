@@ -235,7 +235,8 @@ Class EffectPanelView,
 								content = content..string.format("<B A=\"%s\" B=\"%s\"/>",k,v)
 								content = content.."</A>"
 							oContent\saveToFile editor.gameFullPath..editor.graphicFolder.."list.effect",content
-							@clearSelection!
+							viewItem = @clearSelection!
+							viewItem\perform oOpacity 0.3,0
 							sleep 0.3
 							editor\updateEffects!
 
@@ -289,8 +290,9 @@ Class EffectPanelView,
 			viewItem = @effectItems[@_selectedItem]
 			if viewItem
 				viewItem.checked = false
-				viewItem.face\runAction oOpacity 0.3,0.5,oEase.OutQuad
 				@_selectedItem = nil
+			viewItem
+		else nil
 
 	isCheckMode: property => @_isCheckMode,
 		(value)=>

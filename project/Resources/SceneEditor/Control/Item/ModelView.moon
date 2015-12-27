@@ -54,29 +54,12 @@ Class SpriteViewView,
 				@sprite = nil
 				return
 			model = oModel file
-			minX = nil
-			minY = nil
-			maxX = nil
-			maxY = nil
-			model\traverse (child)->
-				vs = {
-					oVec2 0,0
-					oVec2 0,child.height
-					oVec2 child.width,child.height
-					oVec2 child.width,0
-				}
-				for v in *vs
-					v = child\convertToWorldSpace v
-					minX = v.x if not minX
-					maxX = v.x if not maxX
-					minY = v.y if not minY
-					maxY = v.y if not maxY
-					minX = v.x if v.x < minX
-					maxX = v.x if v.x > maxX
-					minY = v.y if v.y < minY
-					maxY = v.y if v.y > maxY
-			sizeW = maxX-minX
-			sizeH = maxY-minY
+			looks = oCache.Model\getLookNames file
+			model.look = looks[1] if #looks > 0
+			box = model.boundingBox
+			sizeW = box.width
+			sizeH = box.height
+			offset = oVec2 box.centerX,box.centerY
 			if sizeW == 0 and sizeH == 0
 				name = file\match "([^\\/]*)%.[^%.\\/]*$"
 				@face\addChild with CCLabelTTF "Empty\nModel\n"..name,"Arial",16
@@ -90,10 +73,10 @@ Class SpriteViewView,
 			scale = 1
 			if width < sizeW or height < sizeH
 				scale = math.min width/sizeW,height/sizeH
-			scale *= 1.2
+			scale *= 0.9
 			model.scaleX = scale
 			model.scaleY = scale
-			model.position = oVec2 width/2,height/2
+			model.position = oVec2(width/2,height/2)-offset*scale
 			renderTarget = CCRenderTarget width,height
 			renderTarget\beginDraw!
 			renderTarget\draw model

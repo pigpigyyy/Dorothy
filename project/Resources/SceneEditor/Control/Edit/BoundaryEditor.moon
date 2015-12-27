@@ -63,14 +63,12 @@ BoundaryBar = (size,vertical,flip)->
 				.acc /= 2*math.max editor.scale,1
 				if .acc ~= 0
 					if not .scheduled
-						.scheduled = true
 						\schedule (dt)->
 							deltaX = winWidth*dt*.acc/activeArea
 							.positionX += deltaX
 							emit "Scene.ViewArea.Move",oVec2(-deltaX,0)
 							\emit "ValueChanged",getPos(\convertToWorldSpace oVec2.zero).x
 				elseif .scheduled
-					.scheduled = false
 					\unschedule!
 				\emit "ValueChanged",getPos(\convertToWorldSpace oVec2.zero).x
 			else
@@ -90,20 +88,17 @@ BoundaryBar = (size,vertical,flip)->
 				.acc /= 2*math.max editor.scale,1
 				if .acc ~= 0
 					if not .scheduled
-						.scheduled = true
 						\schedule (dt)->
 							deltaY = winHeight*dt*.acc/activeArea
 							.positionY += deltaY
 							emit "Scene.ViewArea.Move",oVec2(0,-deltaY)
 							\emit "ValueChanged",getPos(\convertToWorldSpace oVec2.zero).y
 				elseif .scheduled
-					.scheduled = false
 					\unschedule!
 				\emit "ValueChanged",getPos(\convertToWorldSpace oVec2.zero).y
 		touchEnded = ->
 			\perform oOpacity 0.3,0.5
 			if .scheduled
-				.scheduled = false
 				\unschedule!
 		\slot "TouchCancelled",touchEnded
 		\slot "TouchEnded",touchEnded

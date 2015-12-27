@@ -383,6 +383,39 @@ void oModel::cleanup()
 	}
 }
 
+CCRect oModel::getBoundingBox()
+{
+	bool firstBox = true;
+	oVec2 lower,upper;
+	CCNode::traverse([&](CCNode* child)
+	{
+		if (child != this && child->isVisible())
+		{
+			CCRect box = child->getBoundingBox();
+			if (box.size != CCSize::zero)
+			{
+				for (CCNode* parent = child->getParent(); parent != this; parent = parent->getParent())
+				{
+					box = CCRectApplyAffineTransform(box, parent->nodeToParentTransform());
+				}
+				if (firstBox)
+				{
+					firstBox = false;
+					lower = box.getLowerBound();
+					upper = box.getUpperBound();
+				}
+				lower.x = min(lower.x, box.getLeft());
+				lower.y = min(lower.y, box.getBottom());
+				upper.x = max(upper.x, box.getRight());
+				upper.y = max(upper.y, box.getTop());
+			}
+		}
+		return false;
+	});
+	CCRect rect(lower.x, lower.y, upper.x - lower.x, upper.y - lower.y);
+	return CCRectApplyAffineTransform(rect, this->nodeToParentTransform());
+}
+
 oModel* oModel::none()
 {
 	return oModelDef::create()->toModel();

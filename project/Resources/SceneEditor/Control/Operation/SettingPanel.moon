@@ -53,6 +53,7 @@ Class SettingPanelView,
 		items = {}
 		getPosY = genPosY()
 		editCallback = (settingItem)->
+			emit "Scene.EditMenu.ClearSelection"
 			emit "Scene.SettingPanel.Edit",settingItem
 
 		for i = 1,#itemNames
@@ -145,6 +146,7 @@ Class SettingPanelView,
 		camItems = {}
 		currentCamItem = nil
 		camItemTapped = (camItem)->
+			emit "Scene.EditMenu.ClearSelection"
 			if camItem.checked
 				if currentCamItem
 					currentCamItem.checked = false
@@ -263,6 +265,7 @@ Class SettingPanelView,
 				}
 				.visible = false
 				\slot "Tapped",->
+					emit "Scene.EditMenu.ClearSelection"
 					emit "Scene.SettingPanel.Edit",nil
 					with InputBox text:"New Camera Name"
 						\slot "Inputed",(text)->

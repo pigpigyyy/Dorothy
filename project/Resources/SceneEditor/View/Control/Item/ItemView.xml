@@ -3,25 +3,17 @@
 	<Import Module="View.Shape.LineRect"/>
 	<Import Module="View.Shape.SolidRect"/>
 
-	<Node Name="face" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" Opacity="0.7" Ref="True">
+	<Node Name="face" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" Ref="True">
 		<LineRect X="-1" Y="-1" Width="{ width+2 }" Height="{ height+2 }" Color="0xff00ffff"/>
 	</Node>
 
 	<Action>
 		<Scale Name="scale" Time="0.3" X="1" Y="1" Ease="OutBack"/>
-		<Opacity Name="fade" Time="0.3" Alpha="0.7" Ease="InExpo"/>
 	</Action>
 
 	<Slot Name="TapBegan">
-		face.opacity = 1
 		face.scaleX = 0.3
 		face.scaleY = 0.3
 		face:perform(scale)
-	</Slot>
-	<Slot Name="TapEnded">
-		if not item.checked then
-			if not fade.done then face:stopAction(fade) end
-			face:runAction(fade)
-		end
 	</Slot>
 </MenuItem>

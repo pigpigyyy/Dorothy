@@ -537,8 +537,12 @@ Class => CCNode!,
 					when "angle"
 						showRotEditor data.position,data.angle,item.parent,(value)->
 							menuItem.value = value
-							item.angle = value
 							data.angle = value
+							if data.typeName == "Body"
+								editor\resetData data
+								emit "Scene.ViewArea.Frame",data
+							else
+								item.angle = value
 					when "skew"
 						showSkewEditor data.position,
 							data.angle,

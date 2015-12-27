@@ -3,7 +3,7 @@
 	<Import Module="View.Shape.LineCircle"/>
 	<Import Module="View.Shape.SolidCircle"/>	
 	
-	<SolidCircle Radius="12.5" Color="0x2200ffff"/>
-	<LineCircle Radius="12.5" Color="0xff00ffff"/>
-	<LabelTTF Name="label" X="{ $X }" Y="{ $Y }" Text="{ tostring(number) }" FontName="Arial" FontSize="16" Color="0x00ffff" Ref="True"/>
+	<SolidCircle Radius="12.5" Color="0x44ff0080"/>
+	<LineCircle Radius="12.5" Color="0xffff0080"/>
+	<LabelTTF Name="label" X="{ $X }" Y="{ $Y }" Text="{ tostring(number) }" FontName="Arial" FontSize="18" Color="0xff0080" Ref="True"/>
 </Node>

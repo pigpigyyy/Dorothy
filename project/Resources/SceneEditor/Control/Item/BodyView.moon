@@ -62,31 +62,25 @@ Class SpriteViewView,
 			body = oBody file,world
 			world\addChild body
 			sleep!
-			minX = nil
-			minY = nil
-			maxX = nil
-			maxY = nil
+			minX,minY,maxX,maxY = nil,nil,nil,nil
 			body.data\each (_,child)->
 				return unless tolua.type(child) == "oBody"
 				rc = child.boundingBox
-				vs = {
-					oVec2 rc.left,rc.bottom
-					oVec2 rc.left,rc.top
-					oVec2 rc.right,rc.top
-					oVec2 rc.right,rc.bottom
-				}
-				for v in *vs
-					v = child\convertToWorldSpace v
-					minX = v.x if not minX
-					maxX = v.x if not maxX
-					minY = v.y if not minY
-					maxY = v.y if not maxY
-					minX = v.x if v.x < minX
-					maxX = v.x if v.x > maxX
-					minY = v.y if v.y < minY
-					maxY = v.y if v.y > maxY
-			sizeW = maxX and minX and maxX-minX or 0
-			sizeH = maxY and minY and maxY-minY or 0
+				minX = rc.left unless minX
+				maxX = rc.right unless maxX
+				minY = rc.bottom unless minY
+				maxY = rc.top unless maxY
+				minX = math.min minX,rc.left
+				maxX = math.max maxX,rc.right
+				minY = math.min minY,rc.bottom
+				maxY = math.max maxY,rc.top
+			minX or= 0
+			minY or= 0
+			maxX or= 0
+			maxY or= 0
+			sizeW = maxX-minX
+			sizeH = maxY-minY
+			offset = oVec2 (maxX+minX)/2,(maxY+minY)/2
 			if sizeW == 0 and sizeH == 0
 				name = file\match "([^\\/]*)%.[^%.\\/]*$"
 				@face\addChild with CCLabelTTF "Empty\nBody\n"..name,"Arial",16
@@ -100,9 +94,10 @@ Class SpriteViewView,
 			scale = 1
 			if width < sizeW or height < sizeH
 				scale = math.min width/sizeW,height/sizeH
+			scale *= 0.9
 			world.scaleX = scale
 			world.scaleY = scale
-			world.position = oVec2 width/2,height/2
+			world.position = oVec2(width/2,height/2)-offset*scale
 			renderTarget = CCRenderTarget width,height
 			world.visible = true
 			world.showDebug = true

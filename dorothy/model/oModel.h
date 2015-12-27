@@ -126,6 +126,7 @@ public:
 	} handlers;
 	virtual bool init();
 	virtual void cleanup();
+	virtual CCRect getBoundingBox();
 	static oModel* create(oModelDef* modelDef);
 	static oModel* create(const char* filename);
 	static oModel* none();

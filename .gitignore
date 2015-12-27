@@ -81,3 +81,4 @@ DerivedData/
 !/tools/moonscite/moon.exe
 !/tools/moonscite/moonc.exe
 !/tools/moonscite/Scite.exe
+*.opendb

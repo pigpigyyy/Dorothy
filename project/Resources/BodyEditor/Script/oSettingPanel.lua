@@ -122,6 +122,7 @@ local function oSettingPanel()
 	local items = {}
 	local getPosY = genPosY()
 	local function editCallback(settingItem)
+		emit("Body.editMenu.created")
 		emit("Body.settingPanel.edit",settingItem)
 	end
 	for i = 1,#itemNames do

@@ -56,15 +56,13 @@ end
 
 local function create(itemDict,world,pos,angle)
 	local items = CCDictionary()
-	local center = nil
+	local center = oVec2.zero
 	local centerBody = CCNode()
 	centerBody.data = items
 	itemDict:each(function(key,itemDef)
 		if type(itemDef) == "oBodyDef" then
 			local newPos = pos
-			if not center then
-				center = itemDef.position
-			elseif angle ~= 0 then
+			if angle ~= 0 then
 				local oldPos = itemDef.position
 				newPos = oldPos - center
 				local realAngle = -math.rad(angle) + math.atan2(newPos.y, newPos.x)

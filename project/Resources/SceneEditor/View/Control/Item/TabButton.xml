@@ -1,10 +1,6 @@
 <!-- params: X=0, Y=0, Width, Height, Text -->
-<MenuItem Name="item" X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }" Text="{ text }" Color="0x00ffff" Opacity="0.7">
+<MenuItem Name="item" X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }" Text="{ text }" Color="0x00ffff">
 	<Import Module="View.Shape.LineRect"/>
-
-	<Action>
-		<Opacity Name="fade" Time="0.3" Alpha="0.7" Ease="InQuad"/>
-	</Action>	
 
 	<LineRect Width="{ width }" Height="{ height }" Color="0xffffffff"/>
 	<LabelTTF X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="16" AntiAlias="False" Text="{ text }"/>
@@ -18,17 +14,11 @@
 		</DrawNode>
 	</Node>
 
-	<Slot Name="TapBegan">
-		item.opacity = 1
-	</Slot>
-	<Slot Name="TapEnded">
-		if not item.checked then
-			item:perform(fade)
-		end
-	</Slot>
 	<Slot Name="Checked" Args="checked">
 		if checked then
-			item.opacity = 1
+			item.color = ccColor3(0xff0080)
+		else
+			item.color = ccColor3(0x00ffff)
 		end
 	</Slot>
 	<Slot Name="Expanded" Args="expend">

@@ -454,7 +454,7 @@ void CCNode::setShaderProgram(CCGLProgram* pShaderProgram)
 	m_pShaderProgram = pShaderProgram;
 }
 
-CCRect CCNode::boundingBox()
+CCRect CCNode::getBoundingBox()
 {
 	CCRect rect(0, 0, m_obContentSize.width, m_obContentSize.height);
 	return CCRectApplyAffineTransform(rect, nodeToParentTransform());
@@ -484,7 +484,7 @@ void CCNode::cleanup()
 	CCNode::unscheduleAllSelectors();
 
 	// clear lua callbacks
-	CCNode::unscheduleUpdateLua();
+	CCNode::unscheduleUpdate();
 
 	// clear user object
 	CC_SAFE_RELEASE_NULL(m_pUserObject);
@@ -948,26 +948,21 @@ void CCNode::scheduleUpdateWithPriorityLua(int nHandler, int priority)
 
 void CCNode::unscheduleUpdate()
 {
-	_isScheduled = false;
-	m_pScheduler->unscheduleUpdateForTarget(this);
-	if (m_nUpdateScriptHandler)
+	if (_isScheduled)
 	{
-		CCScriptEngine::sharedEngine()->removeScriptHandler(m_nUpdateScriptHandler);
-		m_nUpdateScriptHandler = 0;
+		_isScheduled = false;
+		m_pScheduler->unscheduleUpdateForTarget(this);
+		if (m_nUpdateScriptHandler)
+		{
+			CCScriptEngine::sharedEngine()->removeScriptHandler(m_nUpdateScriptHandler);
+			m_nUpdateScriptHandler = 0;
+		}
 	}
 }
 
-void CCNode::unscheduleUpdateLua()
+bool CCNode::isUpdateScheduled()
 {
-	if (!_isScheduled)
-	{
-		m_pScheduler->unscheduleUpdateForTarget(this);
-	}
-	if (m_nUpdateScriptHandler)
-	{
-		CCScriptEngine::sharedEngine()->removeScriptHandler(m_nUpdateScriptHandler);
-		m_nUpdateScriptHandler = 0;
-	}
+	return _isScheduled;
 }
 
 void CCNode::schedule(SEL_SCHEDULE selector)
@@ -997,8 +992,9 @@ void CCNode::unschedule(SEL_SCHEDULE selector)
 {
 	// explicit nil handling
 	if (selector == 0)
+	{
 		return;
-
+	}
 	m_pScheduler->unscheduleSelector(selector, this);
 }
 
@@ -1026,7 +1022,7 @@ void CCNode::update(float fDelta)
 	{
 		if (CCScriptEngine::sharedEngine()->executeSchedule(m_nUpdateScriptHandler, fDelta) != 0)
 		{
-			CCNode::unscheduleUpdateLua();
+			CCNode::unscheduleUpdate();
 		}
 	}
 }

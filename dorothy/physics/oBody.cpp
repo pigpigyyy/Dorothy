@@ -319,6 +319,33 @@ void oBody::setPosition( float x, float y )
 	this->setPosition(CCPoint(x,y));
 }
 
+CCRect oBody::getBoundingBox()
+{
+	b2AABB aabb = {
+		b2Vec2_zero,
+		b2Vec2_zero
+	};
+	b2Fixture* f = _bodyB2->GetFixtureList();
+	if (f && f->GetChildCount() > 0)
+	{
+		aabb = f->GetAABB(0);
+	}
+	for (b2Fixture* f = _bodyB2->GetFixtureList(); f; f = f->GetNext())
+	{
+		for (int32 i = 0; i < f->GetChildCount(); ++i)
+		{
+			const b2AABB& ab = f->GetAABB(i);
+			aabb.lowerBound.x = min(aabb.lowerBound.x, ab.lowerBound.x);
+			aabb.lowerBound.y = min(aabb.lowerBound.y, ab.lowerBound.y);
+			aabb.upperBound.x = max(aabb.upperBound.x, ab.upperBound.x);
+			aabb.upperBound.y = max(aabb.upperBound.y, ab.upperBound.y);
+		}
+	}
+	oVec2 lower = oWorld::oVal(aabb.lowerBound);
+	oVec2 upper = oWorld::oVal(aabb.upperBound);
+	return CCRect(lower.x, lower.y, upper.x - lower.x, upper.y - lower.y);
+}
+
 void oBody::setReceivingContact(bool var)
 {
 	_receivingContact = var;

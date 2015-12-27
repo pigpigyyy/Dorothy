@@ -481,6 +481,11 @@ local Dorothy =
 				description = "[bool][Readonly]",
 				type = "value",
 			},
+			scheduled =
+			{
+				description = "[bool][Readonly]",
+				type = "value",
+			},
 			children =
 			{
 				description = "[CCArray][Readonly]",

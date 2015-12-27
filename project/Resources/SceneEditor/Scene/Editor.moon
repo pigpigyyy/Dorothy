@@ -398,6 +398,7 @@ Class EditorView,
 				index = i
 				break
 		return unless index
+		@itemDefs[item] = nil
 		sceneName = if parentData.typeName == "UILayer"
 				"UI.scene"
 			else
@@ -420,7 +421,7 @@ Class EditorView,
 				parent\removeChild item
 		table.remove parentData.children,index
 		parentData.children = false if #parentData.children == 0
-		editor.items[itemData.name] = nil
+		@items[itemData.name] = nil
 		Reference.removeSceneItemRef sceneName,itemData
 		emit "Scene.Dirty",true
 		index

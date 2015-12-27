@@ -191,6 +191,7 @@ public:
 	/// If you need a more accurate AABB, compute it using the shape and
 	/// the body transform.
 	const b2AABB& GetAABB(int32 childIndex) const;
+	int32 GetChildCount() const;
 
 	/// Dump this fixture to the log file.
 	void Dump(int32 bodyIndex);
@@ -340,6 +341,11 @@ inline const b2AABB& b2Fixture::GetAABB(int32 childIndex) const
 {
 	b2Assert(0 <= childIndex && childIndex < m_proxyCount);
 	return m_proxies[childIndex].aabb;
+}
+
+inline int32 b2Fixture::GetChildCount() const
+{
+	return m_proxyCount;
 }
 
 #endif

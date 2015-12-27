@@ -30,6 +30,14 @@ local function oEditMenu()
 	menu.anchor = oVec2.zero
 
 	local lastSelected = nil
+	local function clearSelectedShape()
+		if lastSelected then
+			lastSelected.scaleX = 0
+			lastSelected.scaleY = 0
+			lastSelected:perform(oScale(0.3,1,1,oEase.OutBack))
+			lastSelected.selected = false
+		end
+	end
 	local oShapeButton = class(oButton,
 	{
 		__partial = function(self)
@@ -54,6 +62,11 @@ local function oEditMenu()
 					emit("Body.settingPanel.toState",nil)
 					self.color = ccColor3(0xff0080)
 					if lastSelected then
+						if lastSelected ~= self then
+							lastSelected.scaleX = 0
+							lastSelected.scaleY = 0
+							lastSelected:perform(oScale(0.3,1,1,oEase.OutBack))
+						end
 						lastSelected.selected = false
 					end
 					lastSelected = self
@@ -98,8 +111,10 @@ local function oEditMenu()
 					end,true),oEditor.topMost)
 				end
 			end
+			clearSelectedShape()
 		end),
 		Undo = oButton("Undo",16,50,50,95,winSize.height-35,function(button)
+			clearSelectedShape()
 			emit("Body.settingPanel.edit",nil)
 			oEditor.dirty = false
 			items.Edit.text = "Menu"
@@ -112,6 +127,7 @@ local function oEditMenu()
 		Chain = oShapeButton("Chain",35,winSize.height-275),
 		Loop = oShapeButton("Loop",35,winSize.height-335),
 		Delete = oButton("Delete",16,50,50,35,winSize.height-395,function()
+			clearSelectedShape()
 			if oEditor.currentData then
 				emit("Body.settingPanel.toState",nil)
 				oEditor:removeData(oEditor.currentData)
@@ -123,6 +139,7 @@ local function oEditMenu()
 			end
 		end),
 		Joint = oButton("",0,50,50,35,35,function()
+			clearSelectedShape()
 			oEditor:addChild(oJointChooser(),oEditor.topMost)
 		end),
 
@@ -146,6 +163,9 @@ local function oEditMenu()
 		end),
 
 		Play = oPlayButton(50,winSize.width-225,35,function(button)
+			if button.isPlaying then
+				clearSelectedShape()
+			end
 			emit("Body.editControl.hide")
 			emit("Body.settingPanel.edit",nil)
 			emit("Body.settingPanel.enable",not button.isPlaying)
@@ -315,12 +335,7 @@ local function oEditMenu()
 		end
 	end)
 
-	menu:gslot("Body.editMenu.created",function()
-		if lastSelected then
-			lastSelected.selected = false
-			lastSelected = nil
-		end
-	end)
+	menu:gslot("Body.editMenu.created",clearSelectedShape)
 	menu:gslot("Body.editor.change",function()
 		if not oEditor.dirty and items.Edit.text ~= "Save" then
 			items.Edit.text = "Save"

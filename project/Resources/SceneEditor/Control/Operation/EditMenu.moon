@@ -17,29 +17,39 @@ Class EditMenuView,
 
 		clearSelection = ->
 			for name in *buttonNames
-				button = @[name.."Btn"]
-				if button.selected
-					button.selected = false
-					button.color = ccColor3 0x00ffff
-					button.face.cascadeOpacity = true
-					emit button.event,nil
+				with @[name.."Btn"]
+					if .selected
+						.selected = false
+						.color = ccColor3 0x00ffff
+						.scaleX = 0
+						.scaleY = 0
+						\perform oScale 0.3,1,1,oEase.OutBack
+						emit .event,nil
 
 		for name in *buttonNames
-			button = @[name.."Btn"]
-			button.selected = false
-			upperName = name\sub(1,1)\upper!..name\sub(2,-1)
-			button.event = "Scene."..upperName.."Selected"
-			@gslot button.event,(item)->
-				if item
-					button.selected = true
-					button.color = ccColor3 0xff0088
-					button.face.cascadeOpacity = false
-			button\slot "Tapped",->
-				if not button.selected
-					emit "Scene.View"..upperName
-				clearSelection!
+			with @[name.."Btn"]
+				.selected = false
+				upperName = name\sub(1,1)\upper!..name\sub(2,-1)
+				.event = "Scene."..upperName.."Selected"
+				@gslot .event,(item)->
+					if item
+						.selected = true
+						.color = ccColor3 0xff0088
+						.scaleX = 0
+						.scaleY = 0
+						\perform oScale 0.3,1,1,oEase.OutBack
+				\slot "Tapped",->
+					if not .selected
+						emit "Scene.View"..upperName
+						clearSelection!
+					else
+						.selected = false
+						.color = ccColor3 0x00ffff
+						emit .event,nil
 
-		@delBtn\slot "Tapped",-> emit "Scene.EditMenu.Delete"
+		@delBtn\slot "Tapped",->
+			clearSelection!
+			emit "Scene.EditMenu.Delete"
 
 		mode = 0
 		@zoomBtn\slot "Tapped",->
@@ -64,6 +74,7 @@ Class EditMenuView,
 		@upBtn.visible = false
 		@upBtn.enabled = false
 		@upBtn\slot "TapBegan",->
+			clearSelection!
 			@upBtn\schedule once ->
 				sleep 0.4
 				@progressUp.visible = true
@@ -82,6 +93,7 @@ Class EditMenuView,
 		@downBtn.visible = false
 		@downBtn.enabled = false
 		@downBtn\slot "TapBegan",->
+			clearSelection!
 			@downBtn\schedule once ->
 				sleep 0.4
 				@progressDown.visible = true
@@ -100,10 +112,12 @@ Class EditMenuView,
 		@foldBtn.visible = false
 		@foldBtn.enabled = false
 		@foldBtn\slot "Tapped",->
+			clearSelection!
 			emit "Scene.ViewPanel.Fold",editor.currentData
 
 		@editBtn.dirty = false
 		@editBtn\slot "Tapped",->
+			clearSelection!
 			if not @editBtn.dirty
 				ScenePanel = require "Control.Item.ScenePanel"
 				ScenePanel!
@@ -114,6 +128,7 @@ Class EditMenuView,
 
 		@undoBtn.visible = false
 		@undoBtn\slot "Tapped",->
+			clearSelection!
 			editor.currentSceneFile = editor.currentSceneFile
 			emit "Scene.Dirty",false
 
@@ -226,6 +241,7 @@ Class EditMenuView,
 					{:x,:y} = @upBtn.position
 					@foldBtn\runAction oPos 0.3,x,y,oEase.OutQuad
 					if itemData.typeName == "Camera"
+						clearSelection!
 						with @iconCam
 							.visible = true
 							.scaleX = 0
@@ -303,6 +319,8 @@ Class EditMenuView,
 							child\perform oPos 0.5,-child.positionX,child.positionY,oEase.OutQuad
 						else
 							child\perform oPos 0.5,width*2-child.positionX,child.positionY,oEase.OutQuad
+
+		@gslot "Scene.EditMenu.ClearSelection",clearSelection
 
 	setButtonVisible: (button,visible)=>
 		return if visible == button.enabled

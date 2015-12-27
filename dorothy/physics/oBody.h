@@ -52,6 +52,7 @@ public:
 	void setPosition(float x, float y);
 	virtual void setRotation(float var); 
 	virtual void setPosition(const CCPoint& var);
+	virtual CCRect getBoundingBox();
 	oSensor* getSensorByTag(int tag);
 	void eachSensor(const oSensorHandler& func);
 	bool removeSensorByTag(int tag);

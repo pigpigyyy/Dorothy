@@ -210,7 +210,8 @@ Class BodyPanelView,
 							oCache.Body\unload @_selectedItem
 							oContent\remove @_selectedItem
 							Reference.removeRef @_selectedItem
-							@clearSelection!
+							viewItem = @clearSelection!
+							viewItem\perform oOpacity 0.3,0
 							sleep 0.3
 							editor\updateBodies!
 
@@ -263,8 +264,9 @@ Class BodyPanelView,
 			viewItem = @bodyItems[@_selectedItem]
 			if viewItem
 				viewItem.checked = false
-				viewItem.face\runAction oOpacity 0.3,0.5,oEase.OutQuad
 				@_selectedItem = nil
+			viewItem
+		else nil
 
 	isCheckMode: property => @_isCheckMode,
 		(value)=>

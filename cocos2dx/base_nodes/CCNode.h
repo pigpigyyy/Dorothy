@@ -743,6 +743,7 @@ public:
      */
     void scheduleUpdateWithPriorityLua(int nHandler, int priority);
     
+	bool isUpdateScheduled();
     /// @}  end Script Bindings
 
 
@@ -805,14 +806,13 @@ public:
     
     /** 
      * Returns a "local" axis aligned bounding box of the node.
-     * The returned box is relative only to its parent.
+     * The returned box is relative only to itself.
      *
      * @note This method returns a temporaty variable, so it can't returns const CCRect&
-     * @todo Rename to getBoundingBox() in the future versions.
      * 
      * @return A "local" axis aligned boudning box of the node.
      */
-    CCRect boundingBox();
+	virtual CCRect getBoundingBox();
 
     /// @{
     /// @name Actions
@@ -1122,19 +1122,24 @@ public:
 	
 	CCNode* getTargetParent() const;
 
-	void unscheduleUpdateLua();
-
 	template<typename NodeFunc>
-	void traverse(const NodeFunc& func)
+	bool traverse(const NodeFunc& func)
 	{
-		func(this);
-		CCArray* children = this->getChildren();
-		CCObject* object;
-		CCARRAY_FOREACH(children, object)
+		if (!func(this))
 		{
-			CCNode* child = (CCNode*)object;
-			child->traverse(func);
+			CCArray* children = this->getChildren();
+			CCObject* object;
+			CCARRAY_FOREACH(children, object)
+			{
+				CCNode* child = (CCNode*)object;
+				if (child->traverse(func))
+				{
+					return true;
+				}
+			}
+			return false;
 		}
+		else return true;
 	}
 
 	template<typename NodeFunc>
