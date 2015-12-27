@@ -28,9 +28,8 @@
 		</Line>
 		<Action>
 			<Sequence Name="fadeCross" Ref="True">
-				<Opacity Time="0" Alpha="1"/>
-				<!--<Delay Time="0.7"/>
-				<Opacity Time="0.3" Alpha="0"/>-->
+				<Delay Time="0.7"/>
+				<Opacity Time="0.3" Alpha="0"/>
 			</Sequence>
 		</Action>
 	</Line>

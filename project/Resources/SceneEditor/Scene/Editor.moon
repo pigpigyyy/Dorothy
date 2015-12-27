@@ -17,6 +17,7 @@ Class EditorView,
 		@itemDefs = nil
 		@dirty = false
 		@sceneData = nil
+		@currentData = nil
 		@_sceneName = nil
 		@_currentSceneFile = nil
 		@origin = oVec2 width/2,height/2
@@ -627,8 +628,15 @@ Class EditorView,
 
 	applyCam:(subCam)=>
 		return unless @items
+		scene = @items.Scene
 		camera = @items.Camera
 		if subCam
+			if @sceneData.children
+				lastPos = camera.position
+				camera.position = oVec2.zero
+				for index,layerData in ipairs @sceneData.children
+					scene\setLayerRatio index,oVec2(layerData.ratioX,layerData.ratioY)
+				camera.position = lastPos
 			if @sceneData.camera.boundary
 				camera.boundary = @sceneData.camera.area
 			else
@@ -642,3 +650,28 @@ Class EditorView,
 				emit "Scene.ViewArea.Scale",camera.scaleX
 		else
 			camera.boundary = CCRect.zero
+			if @sceneData.children
+				lastPos = camera.position
+				camera.position = oVec2.zero
+				for index,layerData in ipairs @sceneData.children
+					scene\setLayerRatio index,oVec2.zero
+				camera.position = lastPos
+
+	getBodyBoundingBox:(item)=>
+		minX,minY,maxX,maxY = nil,nil,nil,nil
+		item.data\each (_,child)->
+			return unless tolua.type(child) == "oBody"
+			rc = child.boundingBox
+			minX = rc.left unless minX
+			maxX = rc.right unless maxX
+			minY = rc.bottom unless minY
+			maxY = rc.top unless maxY
+			minX = math.min minX,rc.left
+			maxX = math.max maxX,rc.right
+			minY = math.min minY,rc.bottom
+			maxY = math.max maxY,rc.top
+		minX or= 0
+		minY or= 0
+		maxX or= 0
+		maxY or= 0
+		CCRect minX,minY,maxX-minX,maxY-minY

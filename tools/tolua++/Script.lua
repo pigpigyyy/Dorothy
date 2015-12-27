@@ -216,13 +216,6 @@ builtin.CCNode.gslot = function(self,name,...)
 	end
 end
 
-local oSlot = builtin.oSlot
-builtin.oSlot = function(name,handler)
-	return oSlot(name, function(event)
-		handler(oEvent_args[argsCount],event)
-	end)
-end
-
 local oAction = builtin.oAction
 local oAction_add = oAction.add
 oAction.add = function(self,id,priority,reaction,recovery,access,routine,stop)

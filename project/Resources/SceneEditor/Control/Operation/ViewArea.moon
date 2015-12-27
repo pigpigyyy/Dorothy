@@ -100,41 +100,29 @@ Class ViewAreaView,
 			return unless item
 			@frame.transformTarget = item.parent
 			@frame.visible = true
-			if itemData.typeName == "Body"
-				minX,minY,maxX,maxY = nil,nil,nil,nil
-				item.data\each (_,child)->
-					return unless tolua.type(child) == "oBody"
-					rc = child.boundingBox
-					minX = rc.left unless minX
-					maxX = rc.right unless maxX
-					minY = rc.bottom unless minY
-					maxY = rc.top unless maxY
-					minX = math.min minX,rc.left
-					maxX = math.max maxX,rc.right
-					minY = math.min minY,rc.bottom
-					maxY = math.max maxY,rc.top
-				minX or= 0
-				minY or= 0
-				maxX or= 0
-				maxY or= 0
-				if maxX-minX ~= 0 and maxY-minY ~= 0
+			switch itemData.typeName
+				when "Body"
+					box = editor\getBodyBoundingBox item
+					if box.width ~= 0 and box.height ~= 0
+						@frame\set {
+							oVec2 box.left-3,box.bottom-3
+							oVec2 box.right+3,box.bottom-3
+							oVec2 box.right+3,box.top+3
+							oVec2 box.left-3,box.top+3
+							oVec2 box.left-3,box.bottom-3
+						}
+					else @frame\set {}
+				when "Effect"
+					@frame\set {}
+				else
+					box = item.boundingBox
 					@frame\set {
-						oVec2 minX-3,minY-3
-						oVec2 maxX+3,minY-3
-						oVec2 maxX+3,maxY+3
-						oVec2 minX-3,maxY+3
-						oVec2 minX-3,minY-3
+						oVec2 box.left-3,box.bottom-3
+						oVec2 box.right+3,box.bottom-3
+						oVec2 box.right+3,box.top+3
+						oVec2 box.left-3,box.top+3
+						oVec2 box.left-3,box.bottom-3
 					}
-				else @frame\set {}
-			else
-				box = item.boundingBox
-				@frame\set {
-					oVec2 box.left-3,box.bottom-3
-					oVec2 box.right+3,box.bottom-3
-					oVec2 box.right+3,box.top+3
-					oVec2 box.left-3,box.top+3
-					oVec2 box.left-3,box.bottom-3
-				}
 		hideFrame = ->
 			@frame.transformTarget = nil
 			@frame.visible = false
@@ -148,9 +136,11 @@ Class ViewAreaView,
 		itemChoosed = (itemData)->
 			if itemData
 				@cross.visible = true
+				@cross.opacity = 1
 				switch itemData.typeName
 					when "PlatformWorld","UILayer","Camera","Layer","World"
 						@cross.transformTarget = nil
+						@cross\unschedule!
 						@cross.position = editor.offset
 						@cross\perform @fadeCross
 						hideFrame!
@@ -159,7 +149,6 @@ Class ViewAreaView,
 						pos = itemData.position
 						@cross.position = pos
 						@cross.transformTarget = item.parent
-						@cross\perform @fadeCross
 						@cross\schedule -> @cross.position = itemData.position
 						showFrame itemData
 						if item.parent ~= editor.items.UI
@@ -172,9 +161,8 @@ Class ViewAreaView,
 						pos = itemData.position
 						@cross.position = pos
 						@cross.transformTarget = item.parent
-						@cross\perform @fadeCross
 						@cross\schedule -> @cross.position = itemData.position
-						showFrame itemData if itemData.typeName ~= "Effect"
+						showFrame itemData
 						if item.parent ~= editor.items.UI
 							parentData = editor\getData item.parent
 							pos += parentData.offset

@@ -142,8 +142,6 @@ int oCache_poolSize();
 void oUnitDef_setActions(oUnitDef* def, char* actions[], int count);
 void oUnitDef_setInstincts(oUnitDef* def, int instincts[], int count);
 
-oListener* oListener_create(const string& name, int handler);
-
 void __oContent_getDirEntries(lua_State* L, oContent* self, const char* path, bool isFolder);
 #define oContent_getDirEntries(self,path,isFolder) {__oContent_getDirEntries(tolua_S,self,path,isFolder);return 1;}
 void oContent_copyFileAsync(oContent* self, const char* src, const char* dst, int handler);

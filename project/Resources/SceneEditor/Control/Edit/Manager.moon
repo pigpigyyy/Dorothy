@@ -134,6 +134,7 @@ Class => CCNode!,
 				.position = pos
 			deltaPos = oVec2.zero
 			_stopEditing = ->
+				_stopEditing = nil
 				return unless posEditor.visible
 				posChanged = nil
 				emit "Scene.ShowFix",false
@@ -194,6 +195,7 @@ Class => CCNode!,
 				.position = pos
 				.angle = angle
 			_stopEditing = ->
+				_stopEditing = nil
 				return unless rotEditor.visible
 				rotChanged = nil
 				rotEditor.touchEnabled = false
@@ -269,6 +271,7 @@ Class => CCNode!,
 			deltaScaleX = 0
 			deltaScaleY = 0
 			_stopEditing = ->
+				_stopEditing = nil
 				return unless scaleEditor.visible
 				scaleChanged = nil
 				emit "Scene.ShowFix",false
@@ -364,6 +367,7 @@ Class => CCNode!,
 			opacityChanged = callback
 			totalOpacity = 0
 			_stopEditing = ->
+				_stopEditing = nil
 				return unless opacityEditor.visible
 				opacityChanged = nil
 				opacityEditor.visible = false
@@ -379,7 +383,7 @@ Class => CCNode!,
 		@gslot "Scene.ViewPanel.Select",cancelEditing
 
 		@gslot "Scene.SettingPanel.Edit",(menuItem)->
-			if menuItem and menuItem.selected and editor.currentData
+			if menuItem and menuItem.selected
 				data = editor.currentData
 				item = editor\getItem data
 				switch menuItem.name
@@ -403,6 +407,7 @@ Class => CCNode!,
 								Reference.removeSceneItemRef editor\getSceneName(data),data
 								data.file = filename
 								editor\resetData data
+								emit "Scene.ViewArea.Frame",data
 								menuItem.value = filename\match "[^\\/]*$"
 							itemChooser\slot "Hide",cancelEditing
 						}
@@ -479,7 +484,7 @@ Class => CCNode!,
 							if not itemChooser
 								cancelEditing!
 								return
-							editor\addChild itemChooser,editor.topMost
+							editor\addChild itemChooser,998
 							itemChooser\show!
 							itemChooser\slot("Selected")\set (effectName)->
 								data.effect = effectName

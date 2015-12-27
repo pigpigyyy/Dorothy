@@ -2,6 +2,19 @@
 #include "CCLuaEngine.h"
 #include "tolua++.h"
 
+HANDLER_WRAP_START(oListenerHandlerWrapper)
+void call(oEvent* event) const
+{
+	void* params[] = { event };
+	int names[] = { CCLuaType<oEvent>() };
+	CCLuaEngine::sharedEngine()->executeFunction(getHandler(), 1, params, names);
+}
+HANDLER_WRAP_END
+static oListener* oListener_create(const string& name, int handler)
+{
+	return oListener::create(name, std::make_pair(oListenerHandlerWrapper(handler), &oListenerHandlerWrapper::call));
+}
+
 #define oSlotName(name) const char* oSlotList::name(#name);
 //Node
 oSlotName(Entering)
@@ -368,7 +381,7 @@ bool oSlotList::invoke(lua_State* L, int args)
 			result = 0;
 		}
 	}
-	lua_settop(L, top - args);
+	lua_pop(L, args);
 	return result != 0;
 }
 
@@ -393,19 +406,6 @@ oSlotList* CCNode_tryGetSlotList(CCNode* self, const char* name)
 		return slotData->tryGetSlotList(name);
 	}
 	return nullptr;
-}
-
-HANDLER_WRAP_START(oListenerHandlerWrapper)
-void call(oEvent* event) const
-{
-	void* params[] = { event };
-	int names[] = {CCLuaType<oEvent>()};
-	CCLuaEngine::sharedEngine()->executeFunction(getHandler(), 1, params, names);
-}
-HANDLER_WRAP_END
-oListener* oListener_create(const string& name, int handler)
-{
-	return oListener::create(name, std::make_pair(oListenerHandlerWrapper(handler), &oListenerHandlerWrapper::call));
 }
 
 int CCNode_gslot(lua_State* L)
@@ -582,12 +582,10 @@ int CCNode_traverse(lua_State* L)
 #endif
 		self->traverse([L](CCNode* child)
 		{
-			int top = lua_gettop(L);
 			lua_pushvalue(L, 2);
 			tolua_pushccobject(L, child);
 			int ret = CCLuaEngine::execute(L, 1);
-			lua_settop(L, top);
-			return false;
+			return ret != 0;
 		});
 	}
 	return 0;
@@ -829,7 +827,7 @@ void oWorld_cast(oWorld* world, const oVec2& start, const oVec2& end, bool close
 oPlatformWorld* oPlatformWorld_create()
 {
 	oPlatformWorld* world = oPlatformWorld::create();
-	world->getCamera()->moved = [world](float deltaX, float deltaY)
+	world->getCamera()->moved += [world](float deltaX, float deltaY)
 	{
 		oSlotList* slotList = CCNode_tryGetSlotList(world->getCamera(), oSlotList::CamMoved);
 		if (slotList)

@@ -62,25 +62,10 @@ Class SpriteViewView,
 			body = oBody file,world
 			world\addChild body
 			sleep!
-			minX,minY,maxX,maxY = nil,nil,nil,nil
-			body.data\each (_,child)->
-				return unless tolua.type(child) == "oBody"
-				rc = child.boundingBox
-				minX = rc.left unless minX
-				maxX = rc.right unless maxX
-				minY = rc.bottom unless minY
-				maxY = rc.top unless maxY
-				minX = math.min minX,rc.left
-				maxX = math.max maxX,rc.right
-				minY = math.min minY,rc.bottom
-				maxY = math.max maxY,rc.top
-			minX or= 0
-			minY or= 0
-			maxX or= 0
-			maxY or= 0
-			sizeW = maxX-minX
-			sizeH = maxY-minY
-			offset = oVec2 (maxX+minX)/2,(maxY+minY)/2
+			box = editor\getBodyBoundingBox body
+			sizeW = box.width
+			sizeH = box.height
+			offset = oVec2 box.centerX,box.centerY
 			if sizeW == 0 and sizeH == 0
 				name = file\match "([^\\/]*)%.[^%.\\/]*$"
 				@face\addChild with CCLabelTTF "Empty\nBody\n"..name,"Arial",16
