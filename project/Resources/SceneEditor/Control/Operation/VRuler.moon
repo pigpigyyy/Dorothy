@@ -189,12 +189,8 @@ cycle = require "cycle"
 		if scale >= 1.0
 			@runAction oScale 0.5,1,scale,oEase.OutQuad
 			-- manually update and unscale interval text --
-			time = 0
-			intervalNode\schedule (deltaTime)->
-				updateIntervalTextScale 1/@scaleY
-				time = time + deltaTime
-				if 1 == math.min time/0.5,1
-					intervalNode\unschedule!
+			intervalNode\schedule once ->
+				cycle 0.5,-> updateIntervalTextScale 1/@scaleY
 
 	-- handle touch event --
 	@slot "TouchBegan",(touch)->
