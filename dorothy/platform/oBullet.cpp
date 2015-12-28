@@ -95,6 +95,7 @@ void oBullet::onExit()
 		{
 			oIDisposable* item = dynamic_cast<oIDisposable*>(node);
 			item->disposing.Clear();
+			return false;
 		});
 		_face = nullptr;
 	}

@@ -168,11 +168,11 @@ cycle = require "cycle"
 		if scale < 1.0 and @opacity > 0 and fadeOut.done
 			@touchEnabled = false
 			@cascadeOpacity = true
-			@perform fadeOut
+			@runAction fadeOut
 		elseif scale >= 1.0
 			if @opacity == 0 and fadeIn.done
 				@touchEnabled = true
-				@perform fadeIn
+				@runAction fadeIn
 			@scaleX = scale
 			-- unscale interval text --
 			updateIntervalTextScale 1/scale
@@ -181,10 +181,10 @@ cycle = require "cycle"
 		if scale < 1.0 and @opacity > 0 and fadeOut.done
 			@touchEnabled = false
 			@cascadeOpacity = true
-			@perform fadeOut
+			@runAction fadeOut
 		elseif scale >= 1.0 and self.opacity == 0 and fadeIn.done
 			@touchEnabled = true
-			@perform fadeIn
+			@runAction fadeIn
 		if scale >= 1.0
 			@runAction oScale 0.5,scale,1,oEase.OutQuad
 			-- manually update and unscale interval text --
@@ -218,6 +218,6 @@ cycle = require "cycle"
 	@gslot "Scene.Camera.Activate",(subCam)->
 		return if (subCam == nil) == (@positionY > 0)
 		@touchEnabled = (subCam == nil)
-		@perform oPos 0.5,@positionX,-@positionY,oEase.OutQuad
+		@runAction oPos 0.5,@positionX,-@positionY,oEase.OutQuad
 
 	@ -- return

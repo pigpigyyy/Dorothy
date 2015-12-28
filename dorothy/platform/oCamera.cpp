@@ -64,11 +64,12 @@ void oCamera::setScaleY(float scaleY)
 
 void oCamera::setPosition(const CCPoint& var)
 {
-	float halfW = CCNode::getWidth() * 0.5f / getScaleX();
-	float halfH = CCNode::getHeight() * 0.5f / getScaleY();
-	CCPoint pos;
-	if (_boundary != CCRect::zero)
+	CCPoint pos = var;
+	if (_boundary.size.width > 0 &&
+		_boundary.size.height > 0)
 	{
+		float halfW = CCNode::getWidth() * 0.5f / getScaleX();
+		float halfH = CCNode::getHeight() * 0.5f / getScaleY();
 		oVec2 from(_boundary.getX() + halfW, _boundary.getY() + halfH);
 		oVec2 to(
 			_boundary.getX() + _boundary.getWidth() - halfW,
@@ -82,10 +83,6 @@ void oCamera::setPosition(const CCPoint& var)
 		{
 			pos.y = (_boundary.getBottom() + _boundary.getTop()) * 0.5f;
 		}
-	}
-	else
-	{
-		pos = var;
 	}
 	float deltaX = pos.x - _camPos.x;
 	float deltaY = pos.y - _camPos.y;

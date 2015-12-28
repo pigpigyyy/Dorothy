@@ -418,6 +418,12 @@ Class ViewPanelView,
 
 		@gslot "Scene.ViewArea.Tap",(args using nil)->
 			uiPos,worldPos = args[1],args[2]
+			-- pick item
+			if not editor.selectedType
+				itemData = editor\pickItem uiPos
+				if itemData
+					emit "Scene.ViewPanel.Pick",itemData
+				return
 			-- check conditions for adding items
 			return unless @menuEnabled
 			itemData = nil

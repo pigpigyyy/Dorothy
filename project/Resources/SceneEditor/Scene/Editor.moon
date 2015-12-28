@@ -20,6 +20,8 @@ Class EditorView,
 		@currentData = nil
 		@_sceneName = nil
 		@_currentSceneFile = nil
+		@selectedType = nil
+		@selectedItem = nil
 		@origin = oVec2 width/2,height/2
 		@offset = oVec2 60+(width-250)/2,height/2
 		@scale = 1
@@ -675,3 +677,52 @@ Class EditorView,
 		maxX or= 0
 		maxY or= 0
 		CCRect minX,minY,maxX-minX,maxY-minY
+
+	pickItem:(originPos)=>
+		return unless @items
+		pos = @items.Scene\getLayer(-1)\convertToNodeSpace originPos
+		bodies = {}
+		addBody = (body)->
+			bodyData = @getData body.parent
+			bodies[bodyData] = true
+			true
+		@items.Scene\query CCRect(pos.x-0.5,pos.y-0.5,1,1),addBody
+
+		if @sceneData.children
+			for layerData in *@sceneData.children
+				if layerData.typeName == "World"
+					world = @getItem layerData
+					pos = world\convertToNodeSpace originPos
+					world\query CCRect(pos.x-0.5,pos.y-0.5,1,1),addBody
+
+		if @sceneData.ui
+			children = @sceneData.ui.children
+			if children
+				pos = @items.UI\convertToNodeSpace originPos
+				for j = #children,1,-1
+					switch itemData.typeName
+						when "Effect"
+							continue
+						else
+							itemData = children[j]
+							item = @getItem itemData
+							return itemData if item.boundingBox\containsPoint pos
+
+		if @sceneData.children
+			for i = #@sceneData.children,1,-1
+				layerData = @sceneData.children[i]
+				if layerData.children
+					layer = @getItem layerData
+					pos = layer\convertToNodeSpace originPos
+					for j = #layerData.children,1,-1
+						itemData = layerData.children[j]
+						switch itemData.typeName
+							when "Body"
+								if bodies[itemData]
+									return itemData
+							when "Effect"
+								continue
+							else
+								item = @getItem itemData
+								return itemData if item.boundingBox\containsPoint pos
+		nil

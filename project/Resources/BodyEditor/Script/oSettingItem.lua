@@ -49,6 +49,9 @@ local oSettingItem = class(
 			label = oTextField(x,y,fontSize,limit,
 				function()
 					self.selected = false
+					if self._toggled then
+						self._toggled(self)
+					end
 					self:emit("TextChanged",label.text)
 				end)
 		else
@@ -74,6 +77,9 @@ local oSettingItem = class(
 
 		self:slot("Tapped",function()
 			self.selected = not self.selected
+			if self._toggled then
+				self._toggled(self)
+			end
 		end)
 	end,
 
@@ -107,7 +113,6 @@ local oSettingItem = class(
 		end,
 		function(self,value)
 			self._border.visible = value
-			self.cascadeOpacity = not value
 		end),
 
 	-- boolean
@@ -126,9 +131,6 @@ local oSettingItem = class(
 					self._label:detachWithIME()
 				end
 			end
-			if self._toggled then
-				self._toggled(self)
-			end
 		end),
 
 	-- boolean
@@ -138,7 +140,12 @@ local oSettingItem = class(
 		end,
 		function(self, enabled)
 			self.enabled = enabled
-			if not enabled then self.selected = false end
+			if not enabled then
+				self.selected = false
+				if self._toggled then
+					self._toggled(self)
+				end
+			end
 		end),
 })
 

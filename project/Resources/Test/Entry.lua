@@ -135,6 +135,7 @@ local gcButton = oButton("GC",17,60,false,
 gcButton.anchor = oVec2.zero
 opMenu:addChild(gcButton)
 
+local totalFiles = 0
 local function compile(dir,clean,minify)
 	local ParseLua = require("luaminify.ParseLua").ParseLua
 	local FormatMini = require("luaminify.FormatMini")
@@ -173,6 +174,7 @@ local function compile(dir,clean,minify)
 					end
 					oContent:saveToFile(dir.."/"..name..".lua",codes)
 					print("Moon compiled: "..entry)
+					totalFiles = totalFiles+1
 				end
 			else
 				local filename = dir.."/"..name..".lua"
@@ -202,6 +204,7 @@ local function compile(dir,clean,minify)
 					end
 					oContent:saveToFile(dir.."/"..name..".lua",codes)
 					print("xml compiled: "..entry)
+					totalFiles = totalFiles+1
 				end
 			else
 				local filename = dir.."/"..name..".lua"
@@ -217,16 +220,18 @@ end
 local compileButton = oButton("Compile",12,60,false,
 	70,70,
 	function()
+		totalFiles = 0
 		compile(".",false)
-		print("Compile done.")
+		print(string.format("Compile done. %d files in total.",totalFiles))
 	end)
 compileButton.anchor = oVec2.zero
 opMenu:addChild(compileButton)
 compileButton = oButton("Compile\nMinify",12,60,false,
 	70,0,
 	function()
+		totalFiles = 0
 		compile(".",false,true)
-		print("Compile & Minify done.")
+		print(string.format("Compile and Minify done. %d files in total.",totalFiles))
 	end)
 compileButton.anchor = oVec2.zero
 opMenu:addChild(compileButton)

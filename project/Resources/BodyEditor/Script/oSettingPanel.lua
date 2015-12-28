@@ -121,9 +121,18 @@ local function oSettingPanel()
 
 	local items = {}
 	local getPosY = genPosY()
+	local currentItem = nil
 	local function editCallback(settingItem)
 		emit("Body.editMenu.created")
-		emit("Body.settingPanel.edit",settingItem)
+		if currentItem then
+			currentItem.selected = false
+			emit("Body.settingPanel.edit",currentItem)
+			currentItem = nil
+		end
+		if settingItem.selected then
+			currentItem = settingItem
+			emit("Body.settingPanel.edit",currentItem)
+		end
 	end
 	for i = 1,#itemNames do
 		local itemName = itemNames[i][1]
@@ -503,15 +512,14 @@ local function oSettingPanel()
 			end
 		end
 	end)
-	local currentItem = nil
 	self:gslot("Body.settingPanel.edit",function(item)
-		if not item or item.selected then
-			if currentItem then
-				currentItem.selected = false
-			end
-			currentItem = item
-		else
+		if currentItem ~= item then
+			currentItem.selected = false
 			currentItem = nil
+			if item then
+				item.selected = true
+				currentItem = item
+			end
 		end
 	end)
 	self:gslot("Body.settingPanel.enable",function(enable)

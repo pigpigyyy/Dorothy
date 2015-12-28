@@ -145,22 +145,20 @@ Class => CCNode!,
 			@bottomBar.positionY += delta.y
 		resetPos = -> @schedule once -> cycle 0.5,-> @update!
 		@onMoveTo = @gslot "Scene.Camera.MoveTo",resetPos
-		@gslot "Scene.ViewArea.ScaleTo",resetPos
-		@gslot "Scene.ViewArea.Scale",-> @update!
-		@gslot "Scene.Camera.Activate",(subCam)->
+		@onSceleTo = @gslot "Scene.ViewArea.ScaleTo",resetPos
+		@onScele = @gslot "Scene.ViewArea.Scale",-> @update!
+		@onActivate = @gslot "Scene.Camera.Activate",(subCam)->
 			enable = (subCam == nil)
 			@leftBar.touchEnabled = enable
 			@rightBar.touchEnabled = enable
 			@bottomBar.touchEnabled = enable
 			@topBar.touchEnabled = enable
-		@onLoad.enabled = false
-		@onMove.enabled = false
-		@onMoveTo.enabled = false
 		@gslot "Scene.ViewPanel.Select",(itemData)->
 			if itemData and itemData.typeName == "Camera" and itemData.boundary == true
 				@show!
 			elseif @visible
 				@hide!
+		@hide!
 
 	update:=>
 		area = editor.sceneData.camera.area
@@ -178,6 +176,9 @@ Class => CCNode!,
 		@onLoad.enabled = true
 		@onMove.enabled = true
 		@onMoveTo.enabled = true
+		@onScele.enabled = true
+		@onSceleTo.enabled = true
+		@onActivate.enabled = true
 		@leftBar.touchEnabled = true
 		@rightBar.touchEnabled = true
 		@topBar.touchEnabled = true
@@ -189,6 +190,9 @@ Class => CCNode!,
 		@onLoad.enabled = false
 		@onMove.enabled = false
 		@onMoveTo.enabled = false
+		@onScele.enabled = false
+		@onSceleTo.enabled = false
+		@onActivate.enabled = false
 		@leftBar.touchEnabled = false
 		@rightBar.touchEnabled = false
 		@topBar.touchEnabled = false

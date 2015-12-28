@@ -52,9 +52,16 @@ Class SettingPanelView,
 
 		items = {}
 		getPosY = genPosY()
+		currentItem = nil
 		editCallback = (settingItem)->
 			emit "Scene.EditMenu.ClearSelection"
-			emit "Scene.SettingPanel.Edit",settingItem
+			if currentItem
+				currentItem.selected = false
+				emit "Scene.SettingPanel.Edit",currentItem
+				currentItem = nil
+			if settingItem.selected
+				currentItem = settingItem
+				emit "Scene.SettingPanel.Edit",currentItem
 
 		for i = 1,#itemNames
 			itemName = itemNames[i][1]
@@ -223,14 +230,13 @@ Class SettingPanelView,
 
 		@gslot "Scene.ViewPanel.Select",selectGroup
 
-		currentItem = nil
 		@gslot "Scene.SettingPanel.Edit",(item)->
-			if not item or item.selected
-				if currentItem
-					currentItem.selected = false
-				currentItem = item
-			else
+			if currentItem ~= item
+				currentItem.selected = false
 				currentItem = nil
+				if item
+					item.selected = true
+					currentItem = item
 
 		loadCameras = (sceneData)->
 			for item in *camItems
