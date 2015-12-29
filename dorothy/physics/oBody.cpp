@@ -335,10 +335,10 @@ CCRect oBody::getBoundingBox()
 		for (int32 i = 0; i < f->GetChildCount(); ++i)
 		{
 			const b2AABB& ab = f->GetAABB(i);
-			aabb.lowerBound.x = min(aabb.lowerBound.x, ab.lowerBound.x);
-			aabb.lowerBound.y = min(aabb.lowerBound.y, ab.lowerBound.y);
-			aabb.upperBound.x = max(aabb.upperBound.x, ab.upperBound.x);
-			aabb.upperBound.y = max(aabb.upperBound.y, ab.upperBound.y);
+			aabb.lowerBound.x = MIN(aabb.lowerBound.x, ab.lowerBound.x);
+			aabb.lowerBound.y = MIN(aabb.lowerBound.y, ab.lowerBound.y);
+			aabb.upperBound.x = MAX(aabb.upperBound.x, ab.upperBound.x);
+			aabb.upperBound.y = MAX(aabb.upperBound.y, ab.upperBound.y);
 		}
 	}
 	oVec2 lower = oWorld::oVal(aabb.lowerBound);

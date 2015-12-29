@@ -34,7 +34,7 @@ THE SOFTWARE.
 #include <unordered_set>
 
 NS_CC_BEGIN
-
+/*
 inline void str_tolower(std::string& out)
 {
 	for (size_t i = 0;i < out.size();i++)
@@ -42,7 +42,7 @@ inline void str_tolower(std::string& out)
 		out[i] = tolower(out[i]);
 	}
 }
-
+*/
 // --------------------- ZipUtils ---------------------
 
 // memory in iPhone is precious
@@ -345,7 +345,7 @@ bool ZipFile::setFilter(const std::string& filterStr)
         CC_BREAK_IF(!m_data->zipFile);
 
 		std::string filter(filterStr);
-		str_tolower(filter);
+		//str_tolower(filter);
 
         // clear existing file list
         m_data->fileList.clear();
@@ -365,7 +365,7 @@ bool ZipFile::setFilter(const std::string& filterStr)
             if (posErr == UNZ_OK)
             {
                 std::string currentFileName = szCurrentFileName;
-				str_tolower(currentFileName);
+				//str_tolower(currentFileName);
 
 				// cache info about filtered files only (like 'assets/')
                 if (filter.empty()
@@ -399,7 +399,7 @@ bool ZipFile::setFilter(const std::string& filterStr)
 std::vector<std::string> ZipFile::getDirEntries(const std::string& path, bool isFolder)
 {
 	std::string searchName = path;
-	str_tolower(searchName);
+	//str_tolower(searchName);
 
 	char last = searchName[searchName.length() - 1];
 	if (last == '/' || last == '\\')
@@ -457,7 +457,7 @@ bool ZipFile::fileExists(const std::string& fileName) const
 	{
 		CC_BREAK_IF(!m_data);
 		std::string file(fileName);
-		str_tolower(file);
+		//str_tolower(file);
 
 		ret = m_data->fileList.find(file) != m_data->fileList.end() || m_data->folderList.find(file) != m_data->folderList.end();
 	}
@@ -468,7 +468,7 @@ bool ZipFile::fileExists(const std::string& fileName) const
 bool ZipFile::isFolder(const std::string& pathStr) const
 {
 	std::string path(pathStr);
-	str_tolower(path);
+	//str_tolower(path);
 	return m_data->folderList.find(path) != m_data->folderList.end();
 }
 
@@ -486,7 +486,7 @@ unsigned char* ZipFile::getFileData(const std::string& fileName, unsigned long* 
         CC_BREAK_IF(fileName.empty());
 		
 		std::string file(fileName);
-		str_tolower(file);
+		//str_tolower(file);
 
         ZipFilePrivate::FileListContainer::const_iterator it = m_data->fileList.find(file);
         CC_BREAK_IF(it == m_data->fileList.end());

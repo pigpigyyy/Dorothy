@@ -154,11 +154,12 @@ unsigned char* CCFileUtilsAndroid::getFileData(const char* pszFileName, const ch
         return 0;
     }
 
+    string fullPath = fullPathForFilename(pszFileName);
+	pszFileName = fullPath.c_str();
     if (pszFileName[0] != '/')
     {
         //CCLOG("GETTING FILE RELATIVE DATA: %s", pszFileName);
-        string fullPath = fullPathForFilename(pszFileName);
-        pData = s_pZipFile->getFileData(fullPath.c_str(), pSize);
+        pData = s_pZipFile->getFileData(pszFileName, pSize);
     }
     else
     {

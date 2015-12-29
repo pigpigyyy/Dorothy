@@ -171,6 +171,8 @@ void oContent::extractGameFileAsync(const char* file, const char* target, const 
 void oContent::copyFile(const char* src, const char* dst)
 {
 	string srcPath = oContent::getFullPath(src);
+	//CCLOG("copy file from %s",srcPath.c_str());
+	//CCLOG("copy file to %s",dst);
 	if (CCFileUtils::sharedFileUtils()->isFolder(srcPath))
 	{
 		string dstPath = dst;
@@ -179,10 +181,12 @@ void oContent::copyFile(const char* src, const char* dst)
 		{
 			if (folder != "." && folder != "..")
 			{
+				//CCLOG("now copy folder %s",folder.c_str());
 				string dstFolder = dstPath+'/'+folder;
 				if (!oContent::isFileExist(dstFolder.c_str()))
 				{
-					oContent::mkdir(dstFolder.c_str());
+					bool result = oContent::mkdir(dstFolder.c_str());
+					if (!result) CCLOG("Create folder failed! %s",dstFolder.c_str());
 				}
 				oContent::copyFile((srcPath+'/'+folder).c_str(),dstFolder.c_str());
 			}
@@ -191,9 +195,10 @@ void oContent::copyFile(const char* src, const char* dst)
 		for (const string& file : files)
 		{
 			unsigned long size;
+			//CCLOG("now copy file %s",file.c_str());
 			char* buffer = this->loadFileUnsafe((srcPath + '/' + file).c_str(), size);
 			ofstream stream((dstPath + '/' + file).c_str(), std::ios::out | std::ios::trunc | std::ios::binary);
-			stream.write(buffer, size);
+			if (!stream.write(buffer, size)) CCLOG("write file failed! %s",(dstPath + '/' + file).c_str());
 			delete buffer;
 		}
 	}

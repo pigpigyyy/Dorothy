@@ -404,10 +404,10 @@ CCRect oModel::getBoundingBox()
 					lower = box.getLowerBound();
 					upper = box.getUpperBound();
 				}
-				lower.x = min(lower.x, box.getLeft());
-				lower.y = min(lower.y, box.getBottom());
-				upper.x = max(upper.x, box.getRight());
-				upper.y = max(upper.y, box.getTop());
+				lower.x = MIN(lower.x, box.getLeft());
+				lower.y = MIN(lower.y, box.getBottom());
+				upper.x = MAX(upper.x, box.getRight());
+				upper.y = MAX(upper.y, box.getTop());
 			}
 		}
 		return false;

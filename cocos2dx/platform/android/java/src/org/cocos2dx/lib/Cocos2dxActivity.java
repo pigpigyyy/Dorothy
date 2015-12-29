@@ -147,7 +147,9 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
 	}
 	
     public Cocos2dxGLSurfaceView onCreateView() {
-    	return new Cocos2dxGLSurfaceView(this);
+    	Cocos2dxGLSurfaceView glSurfaceView = new Cocos2dxGLSurfaceView(this);
+    	glSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 24, 8);
+    	return glSurfaceView;
     }
 
 	// ===========================================================
