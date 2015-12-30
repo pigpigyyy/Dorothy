@@ -432,9 +432,6 @@
     <ClCompile Include="..\platform\CCFileUtils.cpp">
       <Filter>platform</Filter>
     </ClCompile>
-    <ClCompile Include="..\platform\CCImageCommonWebp.cpp">
-      <Filter>platform</Filter>
-    </ClCompile>
     <ClCompile Include="..\platform\win32\CCDevice.cpp">
       <Filter>platform\win32</Filter>
     </ClCompile>
@@ -494,6 +491,12 @@
     </ClCompile>
     <ClCompile Include="..\extensions\network\HttpClient.cpp">
       <Filter>extensions\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\platform\stb_image.c">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\platform\stb_image_write.c">
+      <Filter>platform</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -985,6 +988,12 @@
     </ClInclude>
     <ClInclude Include="..\support\file_system\tinydir.h">
       <Filter>support\file_system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\platform\stb_image.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\platform\stb_image_write.h">
+      <Filter>platform</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

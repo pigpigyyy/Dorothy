@@ -135,15 +135,6 @@ public:
 	// return copy of premultiplied data or passed data from image
 	static unsigned char* convertToPremultipliedData(CCImage* image);
 protected:
-    bool _initWithJpgData(void *pData, int nDatalen);
-    bool _initWithPngData(void *pData, int nDatalen);
-    bool _initWithTiffData(void *pData, int nDataLen);
-    bool _initWithWebpData(void *pData, int nDataLen);
-    // @warning kFmtRawData only support RGBA8888
-    bool _initWithRawData(void *pData, int nDatalen, int nWidth, int nHeight, int nBitsPerComponent);
-
-    bool _saveImageToPNG(const char *pszFilePath, bool bIsToRGB = true);
-    bool _saveImageToJPG(const char *pszFilePath);
 
     unsigned char* m_pData;
     bool m_bHasAlpha;
@@ -153,6 +144,9 @@ private:
     // noncopyable
     CCImage(const CCImage&    rImg);
     CCImage & operator=(const CCImage&);
+    typedef void(*image_free_func)(void*);
+    image_free_func _img_free_func;
+
 	CC_LUA_TYPE(CCImage)
 };
 
