@@ -1,8 +1,9 @@
 #ifndef __CCPLATFORMDEFINE_H__
 #define __CCPLATFORMDEFINE_H__
 
-
-#if defined(_USRDLL)
+#if COCOS2D_STATIC
+    #define CC_DLL
+#elif defined(_USRDLL)
     #define CC_DLL     __declspec(dllexport)
 #else         /* use a DLL library */
     #define CC_DLL     __declspec(dllimport)
