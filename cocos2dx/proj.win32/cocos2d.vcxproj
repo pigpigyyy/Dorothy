@@ -131,7 +131,7 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
 xcopy /Y /Q "$(ProjectDir)..\..\external\sqlite3\libraries\win32\*.*" "$(OutDir)"</Command>
     </PreLinkEvent>
     <Link>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;libzlib.lib;libpng.lib;libjpeg.lib;libtiff.lib;libwebp.lib;libiconv.lib;pthreadVCE2.lib;libcurl_imp.lib;sqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;libzlib.lib;libiconv.lib;pthreadVCE2.lib;libcurl_imp.lib;sqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -206,8 +206,6 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\sqlite3\libraries\win32\*.*" "$(OutDir)
     <ClCompile Include="..\platform\CCSAXParser.cpp" />
     <ClCompile Include="..\platform\CCThread.cpp" />
     <ClCompile Include="..\platform\platform.cpp" />
-    <ClCompile Include="..\platform\stb_image.c" />
-    <ClCompile Include="..\platform\stb_image_write.c" />
     <ClCompile Include="..\platform\win32\CCAccelerometer.cpp" />
     <ClCompile Include="..\platform\win32\CCApplication.cpp" />
     <ClCompile Include="..\platform\win32\CCCommon.cpp" />
@@ -230,10 +228,11 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\sqlite3\libraries\win32\*.*" "$(OutDir)
     <ClCompile Include="..\support\ccUtils.cpp" />
     <ClCompile Include="..\support\CCVertex.cpp" />
     <ClCompile Include="..\support\CCZip.cpp" />
+    <ClCompile Include="..\support\image_support\stb_image.c" />
+    <ClCompile Include="..\support\image_support\stb_image_write.c" />
     <ClCompile Include="..\support\tinyxml2\tinyxml2.cpp" />
     <ClCompile Include="..\support\TransformUtils.cpp" />
     <ClCompile Include="..\support\data_support\ccCArray.cpp" />
-    <ClCompile Include="..\support\image_support\TGAlib.cpp" />
     <ClCompile Include="..\support\user_default\CCUserDefault.cpp" />
     <ClCompile Include="..\support\zip_support\ioapi.cpp" />
     <ClCompile Include="..\support\zip_support\unzip.cpp" />
@@ -352,8 +351,6 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\sqlite3\libraries\win32\*.*" "$(OutDir)
     <ClInclude Include="..\platform\CCSAXParser.h" />
     <ClInclude Include="..\platform\CCThread.h" />
     <ClInclude Include="..\platform\platform.h" />
-    <ClInclude Include="..\platform\stb_image.h" />
-    <ClInclude Include="..\platform\stb_image_write.h" />
     <ClInclude Include="..\platform\win32\CCAccelerometer.h" />
     <ClInclude Include="..\platform\win32\CCApplication.h" />
     <ClInclude Include="..\platform\win32\CCEGLView.h" />
@@ -392,12 +389,13 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\sqlite3\libraries\win32\*.*" "$(OutDir)
     <ClInclude Include="..\support\CCVertex.h" />
     <ClInclude Include="..\support\CCZip.h" />
     <ClInclude Include="..\support\file_system\tinydir.h" />
+    <ClInclude Include="..\support\image_support\stb_image.h" />
+    <ClInclude Include="..\support\image_support\stb_image_write.h" />
     <ClInclude Include="..\support\tinyxml2\tinyxml2.h" />
     <ClInclude Include="..\support\TransformUtils.h" />
     <ClInclude Include="..\support\data_support\ccCArray.h" />
     <ClInclude Include="..\support\data_support\uthash.h" />
     <ClInclude Include="..\support\data_support\utlist.h" />
-    <ClInclude Include="..\support\image_support\TGAlib.h" />
     <ClInclude Include="..\support\user_default\CCUserDefault.h" />
     <ClInclude Include="..\support\zip_support\crypt.h" />
     <ClInclude Include="..\support\zip_support\ioapi.h" />

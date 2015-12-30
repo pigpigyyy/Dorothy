@@ -33,9 +33,8 @@ THE SOFTWARE.
 #include "textures/CCTexture2D.h"
 #include <string>
 #include <ctype.h>
-
-#include "stb_image.h"
-#include "stb_image_write.h"
+#include "support/image_support/stb_image.h"
+#include "support/image_support/stb_image_write.h"
 
 NS_CC_BEGIN
 
@@ -60,6 +59,7 @@ CCImage::CCImage()
 , m_pData(0)
 , m_bHasAlpha(false)
 , m_bPreMulti(false)
+, _img_free_func(nullptr)
 {
 
 }
@@ -99,7 +99,7 @@ bool CCImage::initWithImageFileThreadSafe(const char *fullpath, EImageFormat ima
     return bRet;
 }
 
-bool CCImage::initWithImageData(void * pData, 
+bool CCImage::initWithImageData(void* pData, 
                                 int nDataLen, 
                                 EImageFormat eFmt/* = eSrcFmtPng*/, 
                                 int nWidth/* = 0*/,
@@ -114,7 +114,6 @@ bool CCImage::initWithImageData(void * pData,
 
         // always 4 components. May be very slow for some formats.
         m_pData = stbi_load_from_memory((stbi_uc*)pData, nDataLen, &w, &h, (int*)&components, 4);
-
         _img_free_func = stbi_image_free;
 
         m_nWidth = w;
@@ -149,65 +148,49 @@ bool CCImage::initWithImageData(void * pData,
 
 static std::string getExt(const std::string& filename)
 {
-    int i = filename.find_last_of('.');
-
-    if (i != -1)
-        return filename.substr(i + 1);
-    else
-        return "";
+	int index = filename.find_last_of('.');
+	if (index != -1)
+	{
+		std::string ext = filename.substr(index + 1);
+		for (unsigned int i = 0; i < ext.length(); ++i)
+		{
+			ext[i] = tolower(ext[i]);
+		}
+		return ext;
+	}
+	else return std::string();
 }
 
-static void lowerCase(std::string& filename)
+bool CCImage::saveToFile(const char* pszFilePath)
 {
-    for (unsigned int i = 0; i < filename.length(); ++i)
-    {
-        filename[i] = tolower(filename[i]);
-    }
-}
-
-bool CCImage::saveToFile(const char *pszFilePath, bool bIsToRGB)
-{
-    bool bRet = false;
-
-    do 
-    {
-        CC_BREAK_IF(NULL == pszFilePath);
-
-        std::string strFilePath(pszFilePath);
-        CC_BREAK_IF(strFilePath.size() <= 4);
-
-        lowerCase(strFilePath);
-
-        std::string ext = getExt(strFilePath);
-
-        if (ext == ".png")
-            stbi_write_png(strFilePath.c_str(), m_nWidth, m_nHeight, 4, m_pData, 0);
-        else if (ext == ".bmp")
-            stbi_write_bmp(strFilePath.c_str(), m_nWidth, m_nHeight, 4, m_pData);
-        else if (ext == ".tga")
-            stbi_write_tga(strFilePath.c_str(), m_nWidth, m_nHeight, 4, m_pData);
-
-        bRet = true;
-    } while (0);
-
-    return bRet;
+	int bRet = 0;
+	std::string strFilePath(pszFilePath);
+	if (getExt(strFilePath) == "png")
+	{
+		bRet = stbi_write_png(strFilePath.c_str(), m_nWidth, m_nHeight, 4, m_pData, 0);
+	}
+	else if (getExt(strFilePath) == "bmp")
+	{
+		bRet = stbi_write_bmp(strFilePath.c_str(), m_nWidth, m_nHeight, 4, m_pData);
+	}
+	else if (getExt(strFilePath) == "tga")
+	{
+		bRet = stbi_write_tga(strFilePath.c_str(), m_nWidth, m_nHeight, 4, m_pData);
+	}
+	return bRet != 0;
 }
 
 CCImage::EImageFormat CCImage::computeImageFormatType(const std::string& filename)
 {
 	CCImage::EImageFormat ret = CCImage::kFmtUnKnown;
-
-    std::string ext = getExt(filename);
-    lowerCase(ext);
-
-
-	if (ext == ".jpg"|| ext == ".jpeg")
+	if (getExt(filename) == "jpg" || getExt(filename) == "jpeg")
+	{
 		ret = CCImage::kFmtJpg;
-	else if (ext == ".png")
+	}
+	else if (getExt(filename) == "png")
+	{
 		ret = CCImage::kFmtPng;
-
-    // no more tiff webp
-
+	}
 	return ret;
 }
 

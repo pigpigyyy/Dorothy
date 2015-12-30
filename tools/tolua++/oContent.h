@@ -19,6 +19,7 @@ class oContent
 
 	void addSearchPath(const char* path);
 	void removeSearchPath(const char* path);
+	tolua_outside void oContent_loadFile @ loadFile(const char* filename);
     tolua_outside void oContent_setSearchPaths @ setSearchPaths(char* paths[tolua_len]);
     tolua_outside void oContent_setSearchResolutionsOrder @ setSearchResolutionsOrder(char* paths[tolua_len]);
 

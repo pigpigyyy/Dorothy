@@ -193,8 +193,6 @@
 		1551A847158F2ADF00E66CFE /* ccCArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A5F6158F2ADE00E66CFE /* ccCArray.h */; };
 		1551A848158F2ADF00E66CFE /* uthash.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A5F7158F2ADE00E66CFE /* uthash.h */; };
 		1551A849158F2ADF00E66CFE /* utlist.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A5F8158F2ADE00E66CFE /* utlist.h */; };
-		1551A84A158F2ADF00E66CFE /* TGAlib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1551A5FA158F2ADE00E66CFE /* TGAlib.cpp */; };
-		1551A84B158F2ADF00E66CFE /* TGAlib.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A5FB158F2ADE00E66CFE /* TGAlib.h */; };
 		1551A84C158F2ADF00E66CFE /* TransformUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1551A5FC158F2ADE00E66CFE /* TransformUtils.cpp */; };
 		1551A84D158F2ADF00E66CFE /* TransformUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A5FD158F2ADE00E66CFE /* TransformUtils.h */; };
 		1551A84E158F2ADF00E66CFE /* ioapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1551A5FF158F2ADE00E66CFE /* ioapi.cpp */; };
@@ -242,11 +240,6 @@
 		1A589DA516EC7B2F00C6B691 /* CCUserDefault.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A589DA116EC7B2F00C6B691 /* CCUserDefault.mm */; };
 		1A78B70616DEED020038FAD0 /* ccUTF8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A78B70416DEED020038FAD0 /* ccUTF8.cpp */; };
 		1A78B70716DEED020038FAD0 /* ccUTF8.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A78B70516DEED020038FAD0 /* ccUTF8.h */; };
-		1A94D34516C1FF8800D79D09 /* decode.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A94D34116C1FF8800D79D09 /* decode.h */; };
-		1A94D34616C1FF8800D79D09 /* encode.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A94D34216C1FF8800D79D09 /* encode.h */; };
-		1A94D34716C1FF8800D79D09 /* types.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A94D34316C1FF8800D79D09 /* types.h */; };
-		1A94D34916C2001000D79D09 /* CCImageCommonWebp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A94D34816C2001000D79D09 /* CCImageCommonWebp.cpp */; };
-		1A94D35016C2072800D79D09 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A94D34C16C2014900D79D09 /* libwebp.a */; };
 		1A94D35116C2072800D79D09 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1551A342158F2AB200E66CFE /* Foundation.framework */; };
 		1A950DF916BB6651003F4508 /* CCFileUtilsMac.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A950DF716BB6651003F4508 /* CCFileUtilsMac.h */; };
 		1A950DFA16BB6651003F4508 /* CCFileUtilsMac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A950DF816BB6651003F4508 /* CCFileUtilsMac.mm */; };
@@ -288,6 +281,10 @@
 		3C969E131B41999A00C3BF37 /* CCScheduler.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C969E091B41999A00C3BF37 /* CCScheduler.h */; };
 		3C969E151B4199AB00C3BF37 /* cocos2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C969E141B4199AB00C3BF37 /* cocos2d.cpp */; };
 		3CBD1C881A40754E00602936 /* CCApplicationProtocol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD1C871A40754E00602936 /* CCApplicationProtocol.cpp */; };
+		3CEA04E41C33BA72002CD33C /* stb_image_write.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CEA04E01C33BA72002CD33C /* stb_image_write.c */; };
+		3CEA04E51C33BA72002CD33C /* stb_image_write.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CEA04E11C33BA72002CD33C /* stb_image_write.h */; };
+		3CEA04E61C33BA72002CD33C /* stb_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CEA04E21C33BA72002CD33C /* stb_image.c */; };
+		3CEA04E71C33BA72002CD33C /* stb_image.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CEA04E31C33BA72002CD33C /* stb_image.h */; };
 		41BC70B915BF7EA2006A0A6C /* CCThread.mm in Sources */ = {isa = PBXBuildFile; fileRef = 41BC70B815BF7EA2006A0A6C /* CCThread.mm */; };
 		41CD6C3515BF7382005E6F29 /* CCAccelerometer.h in Headers */ = {isa = PBXBuildFile; fileRef = 41CD6C2215BF7382005E6F29 /* CCAccelerometer.h */; };
 		41CD6C3615BF7382005E6F29 /* CCApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 41CD6C2315BF7382005E6F29 /* CCApplication.h */; };
@@ -502,8 +499,6 @@
 		1551A5F6158F2ADE00E66CFE /* ccCArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ccCArray.h; sourceTree = "<group>"; };
 		1551A5F7158F2ADE00E66CFE /* uthash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uthash.h; sourceTree = "<group>"; };
 		1551A5F8158F2ADE00E66CFE /* utlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utlist.h; sourceTree = "<group>"; };
-		1551A5FA158F2ADE00E66CFE /* TGAlib.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TGAlib.cpp; sourceTree = "<group>"; };
-		1551A5FB158F2ADE00E66CFE /* TGAlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAlib.h; sourceTree = "<group>"; };
 		1551A5FC158F2ADE00E66CFE /* TransformUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransformUtils.cpp; sourceTree = "<group>"; };
 		1551A5FD158F2ADE00E66CFE /* TransformUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformUtils.h; sourceTree = "<group>"; };
 		1551A5FF158F2ADE00E66CFE /* ioapi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ioapi.cpp; sourceTree = "<group>"; };
@@ -551,12 +546,6 @@
 		1A589DA116EC7B2F00C6B691 /* CCUserDefault.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CCUserDefault.mm; sourceTree = "<group>"; };
 		1A78B70416DEED020038FAD0 /* ccUTF8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ccUTF8.cpp; sourceTree = "<group>"; };
 		1A78B70516DEED020038FAD0 /* ccUTF8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ccUTF8.h; sourceTree = "<group>"; };
-		1A94D33F16C1FF8800D79D09 /* libwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwebp.a; sourceTree = "<group>"; };
-		1A94D34116C1FF8800D79D09 /* decode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = decode.h; sourceTree = "<group>"; };
-		1A94D34216C1FF8800D79D09 /* encode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = encode.h; sourceTree = "<group>"; };
-		1A94D34316C1FF8800D79D09 /* types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
-		1A94D34816C2001000D79D09 /* CCImageCommonWebp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCImageCommonWebp.cpp; sourceTree = "<group>"; };
-		1A94D34C16C2014900D79D09 /* libwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwebp.a; path = ../platform/third_party/mac/libraries/libwebp.a; sourceTree = "<group>"; };
 		1A950DF716BB6651003F4508 /* CCFileUtilsMac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCFileUtilsMac.h; sourceTree = "<group>"; };
 		1A950DF816BB6651003F4508 /* CCFileUtilsMac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CCFileUtilsMac.mm; sourceTree = "<group>"; };
 		1A950DFB16BB6661003F4508 /* CCFileUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCFileUtils.cpp; sourceTree = "<group>"; };
@@ -597,6 +586,10 @@
 		3C969E091B41999A00C3BF37 /* CCScheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCScheduler.h; path = basics/CCScheduler.h; sourceTree = "<group>"; };
 		3C969E141B4199AB00C3BF37 /* cocos2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cocos2d.cpp; sourceTree = "<group>"; };
 		3CBD1C871A40754E00602936 /* CCApplicationProtocol.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCApplicationProtocol.cpp; sourceTree = "<group>"; };
+		3CEA04E01C33BA72002CD33C /* stb_image_write.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stb_image_write.c; sourceTree = "<group>"; };
+		3CEA04E11C33BA72002CD33C /* stb_image_write.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image_write.h; sourceTree = "<group>"; };
+		3CEA04E21C33BA72002CD33C /* stb_image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stb_image.c; sourceTree = "<group>"; };
+		3CEA04E31C33BA72002CD33C /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
 		41BC70B815BF7EA2006A0A6C /* CCThread.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CCThread.mm; sourceTree = "<group>"; };
 		41CD6C2215BF7382005E6F29 /* CCAccelerometer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAccelerometer.h; sourceTree = "<group>"; };
 		41CD6C2315BF7382005E6F29 /* CCApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCApplication.h; sourceTree = "<group>"; };
@@ -625,7 +618,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A94D35016C2072800D79D09 /* libwebp.a in Frameworks */,
 				1A94D35116C2072800D79D09 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -665,7 +657,6 @@
 		1551A341158F2AB200E66CFE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				1A94D34C16C2014900D79D09 /* libwebp.a */,
 				1551A342158F2AB200E66CFE /* Foundation.framework */,
 			);
 			name = Frameworks;
@@ -964,7 +955,6 @@
 			isa = PBXGroup;
 			children = (
 				41CD6C2115BF7382005E6F29 /* mac */,
-				1A94C9D316C1FF6C00D79D09 /* third_party */,
 				3C5AC9FF1A21BB60006EDD2B /* CCKeyboard.cpp */,
 				3C5ACA001A21BB60006EDD2B /* CCKeyboard.h */,
 				3C5ACA011A21BB60006EDD2B /* CCThread.cpp */,
@@ -978,7 +968,6 @@
 				1A950DFB16BB6661003F4508 /* CCFileUtils.cpp */,
 				1551A471158F2ADE00E66CFE /* CCFileUtils.h */,
 				1551A473158F2ADE00E66CFE /* CCImage.h */,
-				1A94D34816C2001000D79D09 /* CCImageCommonWebp.cpp */,
 				1551A475158F2ADE00E66CFE /* CCPlatformConfig.h */,
 				1551A476158F2ADE00E66CFE /* CCPlatformMacros.h */,
 				1551A477158F2ADE00E66CFE /* CCSAXParser.cpp */,
@@ -1083,8 +1072,10 @@
 		1551A5F9158F2ADE00E66CFE /* image_support */ = {
 			isa = PBXGroup;
 			children = (
-				1551A5FA158F2ADE00E66CFE /* TGAlib.cpp */,
-				1551A5FB158F2ADE00E66CFE /* TGAlib.h */,
+				3CEA04E01C33BA72002CD33C /* stb_image_write.c */,
+				3CEA04E11C33BA72002CD33C /* stb_image_write.h */,
+				3CEA04E21C33BA72002CD33C /* stb_image.c */,
+				3CEA04E31C33BA72002CD33C /* stb_image.h */,
 			);
 			path = image_support;
 			sourceTree = "<group>";
@@ -1172,41 +1163,6 @@
 				1A589DA116EC7B2F00C6B691 /* CCUserDefault.mm */,
 			);
 			path = user_default;
-			sourceTree = "<group>";
-		};
-		1A94C9D316C1FF6C00D79D09 /* third_party */ = {
-			isa = PBXGroup;
-			children = (
-				1A94D33D16C1FF8800D79D09 /* mac */,
-			);
-			path = third_party;
-			sourceTree = "<group>";
-		};
-		1A94D33D16C1FF8800D79D09 /* mac */ = {
-			isa = PBXGroup;
-			children = (
-				1A94D33E16C1FF8800D79D09 /* libraries */,
-				1A94D34016C1FF8800D79D09 /* webp */,
-			);
-			path = mac;
-			sourceTree = "<group>";
-		};
-		1A94D33E16C1FF8800D79D09 /* libraries */ = {
-			isa = PBXGroup;
-			children = (
-				1A94D33F16C1FF8800D79D09 /* libwebp.a */,
-			);
-			path = libraries;
-			sourceTree = "<group>";
-		};
-		1A94D34016C1FF8800D79D09 /* webp */ = {
-			isa = PBXGroup;
-			children = (
-				1A94D34116C1FF8800D79D09 /* decode.h */,
-				1A94D34216C1FF8800D79D09 /* encode.h */,
-				1A94D34316C1FF8800D79D09 /* types.h */,
-			);
-			path = webp;
 			sourceTree = "<group>";
 		};
 		3C969CA91B41908500C3BF37 /* extensions */ = {
@@ -1329,6 +1285,7 @@
 				1551A643158F2ADE00E66CFE /* CCAtlasNode.h in Headers */,
 				1551A645158F2ADE00E66CFE /* CCNode.h in Headers */,
 				3C969E0B1B41999A00C3BF37 /* CCCamera.h in Headers */,
+				3CEA04E71C33BA72002CD33C /* stb_image.h in Headers */,
 				3C969CBA1B41908500C3BF37 /* cocos-ext.h in Headers */,
 				1551A651158F2ADE00E66CFE /* CCAffineTransform.h in Headers */,
 				1551A653158F2ADE00E66CFE /* CCArray.h in Headers */,
@@ -1353,6 +1310,7 @@
 				1551A6B6158F2ADE00E66CFE /* cocos2d.h in Headers */,
 				1551A6B8158F2ADE00E66CFE /* aabb.h in Headers */,
 				3C969CB91B41908500C3BF37 /* AssetsManager.h in Headers */,
+				3CEA04E51C33BA72002CD33C /* stb_image_write.h in Headers */,
 				1551A6B9158F2ADE00E66CFE /* mat4stack.h in Headers */,
 				1551A6BA158F2ADE00E66CFE /* matrix.h in Headers */,
 				1551A6BB158F2ADE00E66CFE /* kazmath.h in Headers */,
@@ -1432,7 +1390,6 @@
 				1551A847158F2ADF00E66CFE /* ccCArray.h in Headers */,
 				1551A848158F2ADF00E66CFE /* uthash.h in Headers */,
 				1551A849158F2ADF00E66CFE /* utlist.h in Headers */,
-				1551A84B158F2ADF00E66CFE /* TGAlib.h in Headers */,
 				1551A84D158F2ADF00E66CFE /* TransformUtils.h in Headers */,
 				3C969E0D1B41999A00C3BF37 /* CCConfiguration.h in Headers */,
 				1551A84F158F2ADF00E66CFE /* ioapi.h in Headers */,
@@ -1476,10 +1433,7 @@
 				3C5ACAFC1A21C89D006EDD2B /* zip.h in Headers */,
 				15C647F0165F2B77007D4F18 /* CCClippingNode.h in Headers */,
 				1A950DF916BB6651003F4508 /* CCFileUtilsMac.h in Headers */,
-				1A94D34516C1FF8800D79D09 /* decode.h in Headers */,
-				1A94D34616C1FF8800D79D09 /* encode.h in Headers */,
 				3C5ACA041A21BB60006EDD2B /* CCKeyboard.h in Headers */,
-				1A94D34716C1FF8800D79D09 /* types.h in Headers */,
 				469A7DFA16C247C8006FFCB2 /* tinyxml2.h in Headers */,
 				1AB7FB3F16D0D31800D35305 /* CCDevice.h in Headers */,
 				1A78B70716DEED020038FAD0 /* ccUTF8.h in Headers */,
@@ -1543,6 +1497,7 @@
 				1551A62A158F2ADE00E66CFE /* CCActionCamera.cpp in Sources */,
 				1551A62C158F2ADE00E66CFE /* CCActionCatmullRom.cpp in Sources */,
 				1551A62E158F2ADE00E66CFE /* CCActionEase.cpp in Sources */,
+				3CEA04E61C33BA72002CD33C /* stb_image.c in Sources */,
 				1551A630158F2ADE00E66CFE /* CCActionGrid.cpp in Sources */,
 				1551A632158F2ADE00E66CFE /* CCActionGrid3D.cpp in Sources */,
 				1551A634158F2ADE00E66CFE /* CCActionInstant.cpp in Sources */,
@@ -1623,9 +1578,9 @@
 				1551A842158F2ADF00E66CFE /* ccUtils.cpp in Sources */,
 				1551A844158F2ADF00E66CFE /* CCVertex.cpp in Sources */,
 				1551A846158F2ADF00E66CFE /* ccCArray.cpp in Sources */,
-				1551A84A158F2ADF00E66CFE /* TGAlib.cpp in Sources */,
 				1551A84C158F2ADF00E66CFE /* TransformUtils.cpp in Sources */,
 				1551A84E158F2ADF00E66CFE /* ioapi.cpp in Sources */,
+				3CEA04E41C33BA72002CD33C /* stb_image_write.c in Sources */,
 				1551A850158F2ADF00E66CFE /* unzip.cpp in Sources */,
 				1551A852158F2ADF00E66CFE /* ZipUtils.cpp in Sources */,
 				3C5ACAF51A21C709006EDD2B /* CCZip.cpp in Sources */,
@@ -1662,7 +1617,6 @@
 				15C647EF165F2B77007D4F18 /* CCClippingNode.cpp in Sources */,
 				1A950DFA16BB6651003F4508 /* CCFileUtilsMac.mm in Sources */,
 				1A950DFC16BB6661003F4508 /* CCFileUtils.cpp in Sources */,
-				1A94D34916C2001000D79D09 /* CCImageCommonWebp.cpp in Sources */,
 				469A7DF916C247C8006FFCB2 /* tinyxml2.cpp in Sources */,
 				1AB7FB4116D0D4C600D35305 /* CCDevice.mm in Sources */,
 				1A78B70616DEED020038FAD0 /* ccUTF8.cpp in Sources */,
@@ -1765,10 +1719,7 @@
 					"\"$(SRCROOT)/../kazmath/include\"",
 					"\"$(SDKROOT)/usr/include/libxml2\"",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../platform/third_party/mac/libraries\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -1798,10 +1749,7 @@
 					"\"$(SRCROOT)/../kazmath/include\"",
 					"\"$(SDKROOT)/usr/include/libxml2\"",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../platform/third_party/mac/libraries\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;

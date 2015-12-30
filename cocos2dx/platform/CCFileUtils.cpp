@@ -419,7 +419,7 @@ unsigned char* CCFileUtils::getFileData(const char* pszFileName, const char* psz
         fclose(fp);
     } while (0);
     
-    if (! pBuffer)
+    if (!pBuffer)
     {
 		CCLOG("Get data from file(%s) failed!", pszFileName);
     }
@@ -505,10 +505,15 @@ std::string CCFileUtils::getPathForFilename(const std::string& filename, const s
 }
 
 
-std::string CCFileUtils::fullPathForFilename(const char* pszFileName)
+std::string CCFileUtils::fullPathForFilename(const char* fileName)
 {
-    CCAssert(pszFileName != NULL, "CCFileUtils: Invalid path");
-
+    CCAssert(fileName != NULL, "CCFileUtils: Invalid path");
+	const char* pszFileName = fileName;
+	if (fileName[0] == '.' && (fileName[1] == '/' || fileName[1] == '\\'))
+	{
+		pszFileName = fileName + 2;
+	}
+	
     if (isAbsolutePath(pszFileName))
     {
         //CCLOG("Return absolute path( %s ) directly.", pszFileName);

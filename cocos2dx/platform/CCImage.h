@@ -45,8 +45,6 @@ public:
     {
         kFmtJpg = 0,
         kFmtPng,
-        kFmtTiff,
-        kFmtWebp,
         kFmtRawData,
         kFmtUnKnown
     }EImageFormat;
@@ -121,11 +119,10 @@ public:
     bool isPremultipliedAlpha() { return m_bPreMulti; }
 
     /**
-    @brief    Save CCImage data to the specified file, with specified format.
+    @brief    Save CCImage data to the specified file, with specified format of png, bmp and tga.
     @param    pszFilePath        the file's absolute path, including file suffix.
-    @param    bIsToRGB        whether the image is saved as RGB format.
     */
-    bool saveToFile(const char *pszFilePath, bool bIsToRGB = true);
+    bool saveToFile(const char* pszFilePath);
 
     CC_SYNTHESIZE_READONLY(unsigned short, m_nWidth, Width);
     CC_SYNTHESIZE_READONLY(unsigned short, m_nHeight, Height);

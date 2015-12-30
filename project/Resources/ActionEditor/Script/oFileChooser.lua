@@ -172,7 +172,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 		target:beginDraw(ccColor4(0))
 		target:draw(node)
 		target:endDraw()
-		target:save(oEditor.output..file..".png",CCImage.PNG)
+		target:save(oEditor.output..file..".png")
 		local xml = "<A A=\""..file..".png\">"
 		for i = 1,#blocks do
 			local block = blocks[i]

@@ -116,15 +116,11 @@ public:
      */
     CCImage* newCCImage(bool flipImage = true);
 
-    /** saves the texture into a file using JPEG format. The file will be saved in the Documents folder.
+    /** saves the texture into a file using PNG, BMP or TGA format. The file will be saved in the Documents folder.
         Returns YES if the operation is successful.
      */
-    bool saveToFile(const char *szFilePath);
+    bool saveToFile(const char* szFilePath);
 
-    /** saves the texture into a file. The format could be JPG or PNG. The file will be saved in the Documents folder.
-        Returns YES if the operation is successful.
-     */
-    bool saveToFile(const char *name, tCCImageFormat format);
     
     /** Listen "come to background" message, and save render texture.
      It only has effect on Android.

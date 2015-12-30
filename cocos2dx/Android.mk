@@ -75,7 +75,6 @@ particle_nodes/CCParticleSystem.cpp \
 particle_nodes/CCParticleBatchNode.cpp \
 particle_nodes/CCParticleSystemQuad.cpp \
 platform/CCApplicationProtocol.cpp \
-platform/CCImageCommonWebp.cpp \
 platform/CCSAXParser.cpp \
 platform/CCThread.cpp \
 platform/CCFileUtils.cpp \
@@ -115,7 +114,8 @@ support/ccUtils.cpp \
 support/CCVertex.cpp \
 support/CCZip.cpp \
 support/data_support/ccCArray.cpp \
-support/image_support/TGAlib.cpp \
+support/image_support/stb_image.c \
+support/image_support/stb_image_write.c \
 support/tinyxml2/tinyxml2.cpp \
 support/zip_support/ZipUtils.cpp \
 support/zip_support/ioapi.cpp \
@@ -161,11 +161,7 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH) \
 #                -llog \
 #                -lz
 
-LOCAL_WHOLE_STATIC_LIBRARIES := cocos_libpng_static
-LOCAL_WHOLE_STATIC_LIBRARIES += cocos_jpeg_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocos_libxml2_static
-LOCAL_WHOLE_STATIC_LIBRARIES += cocos_libtiff_static
-LOCAL_WHOLE_STATIC_LIBRARIES += cocos_libwebp_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocos_curl_static
 
 # define the macro to compile through support/zip_support/ioapi.c
@@ -174,8 +170,4 @@ LOCAL_EXPORT_CFLAGS := -Wno-psabi -DUSE_FILE32API
 
 include $(BUILD_STATIC_LIBRARY)
 
-$(call import-module,libjpeg)
-$(call import-module,libpng)
-$(call import-module,libtiff)
-$(call import-module,libwebp)
 $(call import-module,cocos2dx/platform/third_party/android/prebuilt/libcurl)

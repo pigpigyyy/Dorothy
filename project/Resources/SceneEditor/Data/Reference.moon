@@ -88,9 +88,7 @@ updateItemRef = (filename)->
 			table.insert upRefMap[texFile],clipFile
 		when "frame"
 			frameFile = filename\gsub editor.gameFullPath,""
-			file = io.open filename,"r"
-			texFile = (file\read "*a")\match "<A A=\"([^\"]*)"
-			file\close!
+			texFile = (oContent\loadFile filename)\match "<A A=\"([^\"]*)"
 			frameFileName = filename\match "[^\\/]*$"
 			texFile = (filename\sub(1,-#frameFileName-1)..texFile)\gsub editor.gameFullPath,""
 			if not downRefMap[frameFile]
@@ -101,9 +99,7 @@ updateItemRef = (filename)->
 			table.insert upRefMap[texFile],frameFile
 		when "par"
 			parFile = filename\gsub editor.gameFullPath,""
-			file = io.open filename,"r"
-			texFile = (file\read "*a")\match "<string>([^<]*)"
-			file\close!
+			texFile = (oContent\loadFile filename)\match "<string>([^<]*)"
 			if texFile ~= "__firePngData"
 				if not downRefMap[parFile]
 					downRefMap[parFile] = {}

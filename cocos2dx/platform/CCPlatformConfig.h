@@ -38,12 +38,7 @@ Config of cocos2d-x project, per target platform.
 #define CC_PLATFORM_IOS                1
 #define CC_PLATFORM_ANDROID            2
 #define CC_PLATFORM_WIN32              3
-#define CC_PLATFORM_MARMALADE          4
-#define CC_PLATFORM_LINUX              5
-#define CC_PLATFORM_BADA               6
-#define CC_PLATFORM_BLACKBERRY         7
-#define CC_PLATFORM_MAC                8
-#define CC_PLATFORM_NACL               9
+#define CC_PLATFORM_MAC                4
 
 // Determine target platform by compile environment macro.
 #define CC_TARGET_PLATFORM             CC_PLATFORM_UNKNOWN

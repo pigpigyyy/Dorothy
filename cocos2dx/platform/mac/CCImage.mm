@@ -32,6 +32,7 @@ THE SOFTWARE.
 #include <sys/stat.h>
 #include <stdio.h>
 #include <unistd.h>
+#include "stb_image_write.h"
 
 typedef struct
 {
@@ -571,9 +572,7 @@ CCImage::CCImage()
 , m_pData(0)
 , m_bHasAlpha(false)
 , m_bPreMulti(false)
-{
-    
-}
+{ }
 
 CCImage::~CCImage()
 {
@@ -594,22 +593,7 @@ bool CCImage::initWithImageFile(const char * strPath, EImageFormat eImgFmt/* = e
 				{
 					strTemp.insert(t, "@2x");
 				}
-/*				CCSize size = CCDirector::sharedDirector()->getWinSize();		
-	#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-				m_dScaleX = size.width/800.0f;
-				m_dScaleY = size.height/480.0f;
-	#else
-				m_dScaleX = size.width/960.0f;
-				m_dScaleY = size.height/640.0f;
-				
-	#endif
-*/
 			}
-		}    
-		else
-		{
-//			m_dScaleX = 1.0;
-//			m_dScaleY = 1.0;
 		}
 	}
 	
@@ -639,189 +623,6 @@ bool CCImage::initWithImageFileThreadSafe(const char *fullpath, EImageFormat ima
     return bRet;
 }
 
-
-
-/*
-// please uncomment this and integrate it somehow if you know what your doing, thanks
-bool CCImage::potImageData(unsigned int POTWide, unsigned int POTHigh)
-{
-	unsigned char*			data = NULL;
-	unsigned char*			tempData =NULL;
-	unsigned int*				inPixel32 = NULL;
-	unsigned short*			outPixel16 = NULL;
-	bool					hasAlpha;
-	CCTexture2DPixelFormat	pixelFormat;
-	
-	hasAlpha = this->hasAlpha();
-	
-	size_t bpp = this->getBitsPerComponent();
-	
-    // compute pixel format
-	if(hasAlpha)
-	{
-		pixelFormat = CCTexture2D::defaultAlphaPixelFormat();
-	}
-	else
-	{
-		if (bpp >= 8)
-		{
-			pixelFormat = kCCTexture2DPixelFormat_RGB888;
-		}
-		else
-		{
-			CCLOG("cocos2d: CCTexture2D: Using RGB565 texture since image has no alpha");
-			pixelFormat = kCCTexture2DPixelFormat_RGB565;
-		}
-	}
-	
-	switch(pixelFormat) {          
-		case kCCTexture2DPixelFormat_RGBA8888:
-		case kCCTexture2DPixelFormat_RGBA4444:
-		case kCCTexture2DPixelFormat_RGB5A1:
-		case kCCTexture2DPixelFormat_RGB565:
-		case kCCTexture2DPixelFormat_A8:
-			tempData = (unsigned char*)(this->getData());
-			CCAssert(tempData != NULL, "NULL image data.");
-			
-			if(this->getWidth() == (short)POTWide && this->getHeight() == (short)POTHigh)
-			{
-				data = new unsigned char[POTHigh * POTWide * 4];
-				memcpy(data, tempData, POTHigh * POTWide * 4);
-			}
-			else
-			{
-				data = new unsigned char[POTHigh * POTWide * 4];
-				memset(data, 0, POTHigh * POTWide * 4);
-				
-				unsigned char* pPixelData = (unsigned char*) tempData;
-				unsigned char* pTargetData = (unsigned char*) data;
-				
-				int imageHeight = this->getHeight();
-				for(int y = 0; y < imageHeight; ++y)
-				{
-					memcpy(pTargetData+POTWide*4*y, pPixelData+(this->getWidth())*4*y, (this->getWidth())*4);
-				}
-			}
-			
-			break;    
-		case kCCTexture2DPixelFormat_RGB888:
-			tempData = (unsigned char*)(this->getData());
-			CCAssert(tempData != NULL, "NULL image data.");
-			if(this->getWidth() == (short)POTWide && this->getHeight() == (short)POTHigh)
-			{
-				data = new unsigned char[POTHigh * POTWide * 3];
-				memcpy(data, tempData, POTHigh * POTWide * 3);
-			}
-			else
-			{
-				data = new unsigned char[POTHigh * POTWide * 3];
-				memset(data, 0, POTHigh * POTWide * 3);
-				
-				unsigned char* pPixelData = (unsigned char*) tempData;
-				unsigned char* pTargetData = (unsigned char*) data;
-				
-				int imageHeight = this->getHeight();
-				for(int y = 0; y < imageHeight; ++y)
-				{
-					memcpy(pTargetData+POTWide*3*y, pPixelData+(this->getWidth())*3*y, (this->getWidth())*3);
-				}
-			}
-			break;   
-		default:
-			CCAssert(0, "Invalid pixel format");
-	}
-	
-	// Repack the pixel data into the right format
-	
-	if(pixelFormat == kCCTexture2DPixelFormat_RGB565) {
-		//Convert "RRRRRRRRRGGGGGGGGBBBBBBBBAAAAAAAA" to "RRRRRGGGGGGBBBBB"
-		tempData = new unsigned char[POTHigh * POTWide * 2];
-		inPixel32 = (unsigned int*)data;
-		outPixel16 = (unsigned short*)tempData;
-		
-		unsigned int length = POTWide * POTHigh;
-		for(unsigned int i = 0; i < length; ++i, ++inPixel32)
-		{
-			*outPixel16++ = 
-			((((*inPixel32 >> 0) & 0xFF) >> 3) << 11) |  // R
-			((((*inPixel32 >> 8) & 0xFF) >> 2) << 5) |   // G
-			((((*inPixel32 >> 16) & 0xFF) >> 3) << 0);   // B
-		}
-		
-		delete [] data;
-		data = tempData;
-	}
-	else if (pixelFormat == kCCTexture2DPixelFormat_RGBA4444) {
-		//Convert "RRRRRRRRRGGGGGGGGBBBBBBBBAAAAAAAA" to "RRRRGGGGBBBBAAAA"
-		tempData = new unsigned char[POTHigh * POTWide * 2];
-		inPixel32 = (unsigned int*)data;
-		outPixel16 = (unsigned short*)tempData;
-		
-		unsigned int length = POTWide * POTHigh;
-		for(unsigned int i = 0; i < length; ++i, ++inPixel32)
-		{
-			*outPixel16++ = 
-			((((*inPixel32 >> 0) & 0xFF) >> 4) << 12) | // R
-			((((*inPixel32 >> 8) & 0xFF) >> 4) << 8) | // G
-			((((*inPixel32 >> 16) & 0xFF) >> 4) << 4) | // B
-			((((*inPixel32 >> 24) & 0xFF) >> 4) << 0); // A
-		}
-		
-		delete [] data;
-		data = tempData;
-	}
-	else if (pixelFormat == kCCTexture2DPixelFormat_RGB5A1) {
-		//Convert "RRRRRRRRRGGGGGGGGBBBBBBBBAAAAAAAA" to "RRRRRGGGGGBBBBBA"
-		tempData = new unsigned char[POTHigh * POTWide * 2];
-		inPixel32 = (unsigned int*)data;
-		outPixel16 = (unsigned short*)tempData;
-		
-		unsigned int length = POTWide * POTHigh;
-		for(unsigned int i = 0; i < length; ++i, ++inPixel32)
-		{
-			*outPixel16++ = 
-			((((*inPixel32 >> 0) & 0xFF) >> 3) << 11) | // R
-			((((*inPixel32 >> 8) & 0xFF) >> 3) << 6) | // G
-			((((*inPixel32 >> 16) & 0xFF) >> 3) << 1) | // B
-			((((*inPixel32 >> 24) & 0xFF) >> 7) << 0); // A
-		}
-		
-		delete []data;
-		data = tempData;
-	}
-	else if (pixelFormat == kCCTexture2DPixelFormat_A8)
-	{
-		// fix me, how to convert to A8
-		pixelFormat = kCCTexture2DPixelFormat_RGBA8888;
-		
-		//
-		//The code can not work, how to convert to A8?
-		//
-		//tempData = new unsigned char[POTHigh * POTWide];
-		//inPixel32 = (unsigned int*)data;
-		//outPixel8 = tempData;
-		 
-		//unsigned int length = POTWide * POTHigh;
-		//for(unsigned int i = 0; i < length; ++i, ++inPixel32)
-		//{
-		//    *outPixel8++ = (*inPixel32 >> 24) & 0xFF;
-		//}
-		 
-		//delete []data;
-		//data = tempData;
-		 
-	}
-	
-	if (data)
-	{
-		CC_SAFE_DELETE_ARRAY(m_pData);
-		m_pData = data;
-	}
-	return true;	
-}
-*/
-
-//bool CCImage::initWithImageData(void * pData, int nDataLen, EImageFormat eFmt/* = eSrcFmtPng*/)
 bool CCImage::initWithImageData(void * pData, 
                            int nDataLen, 
                            EImageFormat eFmt,
@@ -843,34 +644,27 @@ bool CCImage::initWithImageData(void * pData,
     do 
     {
         CC_BREAK_IF(! pData || nDataLen <= 0);
-        
-        if (eFmt == CCImage::kFmtWebp)
-        {
-            bRet = _initWithWebpData(pData, nDataLen);
-        }
-        else
-        {
-            bRet = _initWithData(pData, nDataLen, &info, 1.0f, 1.0f);//m_dScaleX, m_dScaleY);
-            if (bRet)
-            {
-                m_nHeight = (short)info.height;
-                m_nWidth = (short)info.width;
-                m_nBitsPerComponent = info.bitsPerComponent;
-                if (eFmt == kFmtJpg)
-                {
-                    m_bHasAlpha = true;
-                    m_bPreMulti = false;
-                }
-                else
-                {
-                    m_bHasAlpha = info.hasAlpha;
-                    m_bPreMulti = info.isPremultipliedAlpha;
-                }
-                m_pData = info.data;
-            }
-        }
-    } while (0);
-	
+		
+		bRet = _initWithData(pData, nDataLen, &info, 1.0f, 1.0f);//m_dScaleX, m_dScaleY);
+		if (bRet)
+		{
+			m_nHeight = (short)info.height;
+			m_nWidth = (short)info.width;
+			m_nBitsPerComponent = info.bitsPerComponent;
+			if (eFmt == kFmtJpg)
+			{
+				m_bHasAlpha = true;
+				m_bPreMulti = false;
+			}
+			else
+			{
+				m_bHasAlpha = info.hasAlpha;
+				m_bPreMulti = info.isPremultipliedAlpha;
+			}
+			m_pData = info.data;
+		}
+	} while (0);
+
     return bRet;
 }
 
@@ -903,92 +697,37 @@ bool CCImage::initWithString(
     return true;
 }
 
-bool CCImage::saveToFile(const char* pszFilePath, bool bIsToRGB)
+static std::string getExt(const std::string& filename)
 {
-    bool saveToPNG = false;
-    bool needToCopyPixels = false;
-    std::string filePath(pszFilePath);
-    if (std::string::npos != filePath.find(".png"))
-    {
-        saveToPNG = true;
-    }
-        
-    int bitsPerComponent = 8;            
-    int bitsPerPixel = m_bHasAlpha ? 32 : 24;
-    if ((! saveToPNG) || bIsToRGB)
-    {
-        bitsPerPixel = 24;
-    }            
-    
-    int bytesPerRow = (bitsPerPixel/8) * m_nWidth;
-    int myDataLength = bytesPerRow * m_nHeight;
-    
-    unsigned char* pixels = m_pData;
-    
-    // The data has alpha channel, and want to save it with an RGB png file,
-    // or want to save as jpg,  remove the alpha channel.
-    if ((saveToPNG && m_bHasAlpha && bIsToRGB)
-       || (! saveToPNG))
-    {
-        pixels = new unsigned char[myDataLength];
-        
-        for (int i = 0; i < m_nHeight; ++i)
-        {
-            for (int j = 0; j < m_nWidth; ++j)
-            {
-                pixels[(i * m_nWidth + j) * 3] = m_pData[(i * m_nWidth + j) * 4];
-                pixels[(i * m_nWidth + j) * 3 + 1] = m_pData[(i * m_nWidth + j) * 4 + 1];
-                pixels[(i * m_nWidth + j) * 3 + 2] = m_pData[(i * m_nWidth + j) * 4 + 2];
-            }
-        }
-        
-        needToCopyPixels = true;
-    }
-        
-    // make data provider with data.
-    CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault;
-    if (saveToPNG && m_bHasAlpha && !bIsToRGB)
-    {
-        bitmapInfo |= kCGImageAlphaPremultipliedLast;
-    }
-    CGDataProviderRef provider = CGDataProviderCreateWithData(NULL, pixels, myDataLength, NULL);
-    CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
-    CGImageRef iref = CGImageCreate(m_nWidth, m_nHeight,
-							bitsPerComponent, bitsPerPixel, bytesPerRow,
-							colorSpaceRef, bitmapInfo, provider,
-							NULL, false,
-							kCGRenderingIntentDefault);
-	
-	NSImage* image = [[NSImage alloc] initWithCGImage:iref size:NSSize{(CGFloat)m_nWidth,(CGFloat)m_nHeight}];
-
-    CGImageRelease(iref);    
-    CGColorSpaceRelease(colorSpaceRef);
-    CGDataProviderRelease(provider);
-	
-	CGImageRef cgRef = [image CGImageForProposedRect:NULL context:nil hints:nil];
-	NSBitmapImageRep* newRep = [[NSBitmapImageRep alloc] initWithCGImage:cgRef];
-	[newRep setSize:[image size]];
-
-    NSData* data;
-    if (saveToPNG)
-    {
-   		data = [newRep representationUsingType:NSPNGFileType properties:[[NSDictionary alloc] init]];
-    }
-    else
-    {
-   		data = [newRep representationUsingType:NSJPEGFileType properties:[[NSDictionary alloc] init]];
-    }
-
-    [data writeToFile:[NSString stringWithUTF8String:pszFilePath] atomically:YES];
-	[newRep autorelease];
-    [image release];
-        
-    if (needToCopyPixels)
-    {
-        delete [] pixels;
-    }
-    
-    return true;
+	int index = (int)filename.find_last_of('.');
+	if (index != -1)
+	{
+		std::string ext = filename.substr(index + 1);
+		for (unsigned int i = 0; i < ext.length(); ++i)
+		{
+			ext[i] = tolower(ext[i]);
+		}
+		return ext;
+	}
+	else return std::string();
+}
+bool CCImage::saveToFile(const char* pszFilePath)
+{
+	int bRet = 0;
+	std::string strFilePath(pszFilePath);
+	if (getExt(strFilePath) == "png")
+	{
+		bRet = stbi_write_png(strFilePath.c_str(), m_nWidth, m_nHeight, 4, m_pData, 0);
+	}
+	else if (getExt(strFilePath) == "bmp")
+	{
+		bRet = stbi_write_bmp(strFilePath.c_str(), m_nWidth, m_nHeight, 4, m_pData);
+	}
+	else if (getExt(strFilePath) == "tga")
+	{
+		bRet = stbi_write_tga(strFilePath.c_str(), m_nWidth, m_nHeight, 4, m_pData);
+	}
+	return bRet != 0;
 }
 
 CCImage::EImageFormat CCImage::computeImageFormatType(const std::string& filename)
@@ -1006,16 +745,6 @@ CCImage::EImageFormat CCImage::computeImageFormatType(const std::string& filenam
 		|| (std::string::npos != filename.find(".PNG", filename.size() - 4, 4)))
 	{
 		ret = CCImage::kFmtPng;
-	}
-	else if ((std::string::npos != filename.find(".tiff", filename.size() - 5, 5))
-		|| (std::string::npos != filename.find(".TIFF", filename.size() - 5, 5)))
-	{
-		ret = CCImage::kFmtTiff;
-	}
-	else if ((std::string::npos != filename.find(".webp", filename.size() - 5, 5))
-		|| (std::string::npos != filename.find(".WEBP", filename.size() - 5, 5)))
-	{
-		ret = CCImage::kFmtWebp;
 	}
 
 	return ret;

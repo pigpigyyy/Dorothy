@@ -26,12 +26,12 @@ THE SOFTWARE.
 #include "CCTileMapAtlas.h"
 #include "platform/CCFileUtils.h"
 #include "textures/CCTextureAtlas.h"
-#include "support/image_support/TGAlib.h"
 #include "ccConfig.h"
 #include "cocoa/CCDictionary.h"
 #include "cocoa/CCInteger.h"
 #include "basics/CCDirector.h"
 #include "support/CCPointExtension.h"
+#include "support/image_support/stb_image.h"
 
 NS_CC_BEGIN
 
@@ -49,7 +49,7 @@ CCTileMapAtlas * CCTileMapAtlas::create(const char *tile, const char *mapFile, i
     return NULL;
 }
 
-bool CCTileMapAtlas::initWithTileFile(const char *tile, const char *mapFile, int tileWidth, int tileHeight)
+bool CCTileMapAtlas::initWithTileFile(const char* tile, const char* mapFile, int tileWidth, int tileHeight)
 {
     this->loadTGAfile(mapFile);
     this->calculateItemsToRender();
@@ -58,51 +58,44 @@ bool CCTileMapAtlas::initWithTileFile(const char *tile, const char *mapFile, int
     {
         m_pPosToAtlasIndex = new CCDictionary();
         this->updateAtlasValues();
-        this->setContentSize(CCSizeMake((float)(m_pTGAInfo->width*m_uItemWidth),
-                                        (float)(m_pTGAInfo->height*m_uItemHeight)));
+        this->setContentSize(CCSizeMake((float)(_imageWidth*m_uItemWidth),
+                                        (float)(_imageWidth*m_uItemHeight)));
         return true;
     }
     return false;
 }
 
 CCTileMapAtlas::CCTileMapAtlas()
-    :m_pTGAInfo(NULL)
-    ,m_pPosToAtlasIndex(NULL)
-    ,m_nItemsToRender(0)
+: _imageData(NULL)
+, _imageWidth(0)
+, _imageHeight(0)
+, m_pPosToAtlasIndex(NULL)
+, m_nItemsToRender(0)
 {
 }
 
 CCTileMapAtlas::~CCTileMapAtlas()
 {
-    if (m_pTGAInfo)
-    {
-        tgaDestroy(m_pTGAInfo);
-    }
+	CC_SAFE_DELETE_ARRAY(_imageData);
     CC_SAFE_RELEASE(m_pPosToAtlasIndex);
 }
 
 void CCTileMapAtlas::releaseMap()
 {
-    if (m_pTGAInfo)
-    {
-        tgaDestroy(m_pTGAInfo);
-    }
-    m_pTGAInfo = NULL;
-
+	CC_SAFE_DELETE_ARRAY(_imageData);
     CC_SAFE_RELEASE_NULL(m_pPosToAtlasIndex);
 }
 
 void CCTileMapAtlas::calculateItemsToRender()
 {
-    CCAssert( m_pTGAInfo != NULL, "tgaInfo must be non-nil");
-
+	CCAssert(_imageData != NULL, "image must not be nil");
     m_nItemsToRender = 0;
-    for(int x=0;x < m_pTGAInfo->width; x++ ) 
+    for(int x=0;x < _imageWidth; x++ ) 
     {
-        for( int y=0; y < m_pTGAInfo->height; y++ ) 
+        for( int y=0; y < _imageHeight; y++ )
         {
-            ccColor3B *ptr = (ccColor3B*) m_pTGAInfo->imageData;
-            ccColor3B value = ptr[x + y * m_pTGAInfo->width];
+            ccColor3B *ptr = (ccColor3B*)_imageData;
+            ccColor3B value = ptr[x + y * _imageWidth];
             if( value.r )
             {
                 ++m_nItemsToRender;
@@ -121,34 +114,31 @@ void CCTileMapAtlas::loadTGAfile(const char *file)
     //    NSBundle *mainBndl = [CCDirector sharedDirector].loadingBundle;
     //    CCString *resourcePath = [mainBndl resourcePath];
     //    CCString * path = [resourcePath stringByAppendingPathComponent:file];
-
-    m_pTGAInfo = tgaLoad( fullPath.c_str() );
-#if 1
-    if( m_pTGAInfo->status != TGA_OK ) 
-    {
-        CCAssert(0, "TileMapAtlasLoadTGA : TileMapAtlas cannot load TGA file");
-    }
-#endif
+	unsigned long nSize = 0;
+	unsigned char* pBuffer = CCFileUtils::sharedFileUtils()->getFileData(fullPath.c_str(), "rb", &nSize);
+	int components;
+	// always 4 components. May be very slow for some formats.
+	_imageData = stbi_load_from_memory((stbi_uc*)pBuffer, (int)nSize, &_imageWidth, &_imageHeight, (int*)&components, 4);
 }
 
 // CCTileMapAtlas - Atlas generation / updates
 void CCTileMapAtlas::setTile(const ccColor3B& tile, const CCPoint& position)
 {
-    CCAssert(m_pTGAInfo != NULL, "tgaInfo must not be nil");
+    CCAssert(_imageData != NULL, "image must not be nil");
     CCAssert(m_pPosToAtlasIndex != NULL, "posToAtlasIndex must not be nil");
-    CCAssert(position.x < m_pTGAInfo->width, "Invalid position.x");
-    CCAssert(position.y < m_pTGAInfo->height, "Invalid position.x");
+    CCAssert(position.x < _imageWidth, "Invalid position.x");
+    CCAssert(position.y < _imageHeight, "Invalid position.x");
     CCAssert(tile.r != 0, "R component must be non 0");
 
-    ccColor3B *ptr = (ccColor3B*)m_pTGAInfo->imageData;
-    ccColor3B value = ptr[(unsigned int)(position.x + position.y * m_pTGAInfo->width)];
+    ccColor3B *ptr = (ccColor3B*)_imageData;
+    ccColor3B value = ptr[(unsigned int)(position.x + position.y * _imageWidth)];
     if( value.r == 0 )
     {
         CCLOG("cocos2d: Value.r must be non 0.");
     } 
     else
     {
-        ptr[(unsigned int)(position.x + position.y * m_pTGAInfo->width)] = tile;
+        ptr[(unsigned int)(position.x + position.y * _imageWidth)] = tile;
 
         // XXX: this method consumes a lot of memory
         // XXX: a tree of something like that shall be implemented
@@ -161,12 +151,12 @@ void CCTileMapAtlas::setTile(const ccColor3B& tile, const CCPoint& position)
 
 ccColor3B CCTileMapAtlas::tileAt(const CCPoint& position)
 {
-    CCAssert( m_pTGAInfo != NULL, "tgaInfo must not be nil");
-    CCAssert( position.x < m_pTGAInfo->width, "Invalid position.x");
-    CCAssert( position.y < m_pTGAInfo->height, "Invalid position.y");
+    CCAssert( _imageData != NULL, "image must not be nil");
+    CCAssert( position.x < _imageWidth, "Invalid position.x");
+    CCAssert( position.y < _imageHeight, "Invalid position.y");
 
-    ccColor3B *ptr = (ccColor3B*)m_pTGAInfo->imageData;
-    ccColor3B value = ptr[(unsigned int)(position.x + position.y * m_pTGAInfo->width)];
+    ccColor3B *ptr = (ccColor3B*)_imageData;
+    ccColor3B value = ptr[(unsigned int)(position.x + position.y * _imageWidth)];
 
     return value;    
 }
@@ -237,18 +227,18 @@ void CCTileMapAtlas::updateAtlasValueAt(const CCPoint& pos, const ccColor3B& val
 
 void CCTileMapAtlas::updateAtlasValues()
 {
-    CCAssert( m_pTGAInfo != NULL, "tgaInfo must be non-nil");
+    CCAssert( _imageData != NULL, "image must be non-nil");
 
     int total = 0;
 
-    for(int x=0;x < m_pTGAInfo->width; x++ ) 
+    for(int x=0;x < _imageWidth; x++ )
     {
-        for( int y=0; y < m_pTGAInfo->height; y++ ) 
+        for( int y=0; y < _imageHeight; y++ )
         {
             if( total < m_nItemsToRender ) 
             {
-                ccColor3B *ptr = (ccColor3B*) m_pTGAInfo->imageData;
-                ccColor3B value = ptr[x + y * m_pTGAInfo->width];
+                ccColor3B *ptr = (ccColor3B*)_imageData;
+                ccColor3B value = ptr[x + y * _imageWidth];
 
                 if( value.r != 0 )
                 {
@@ -263,16 +253,6 @@ void CCTileMapAtlas::updateAtlasValues()
             }
         }
     }
-}
-
-void CCTileMapAtlas::setTGAInfo(struct sImageTGA* var)
-{
-    m_pTGAInfo = var;
-}
-
-struct sImageTGA * CCTileMapAtlas::getTGAInfo()
-{
-    return m_pTGAInfo;
 }
 
 NS_CC_END

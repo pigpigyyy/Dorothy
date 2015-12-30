@@ -177,7 +177,7 @@ static int cclua_loader(lua_State* L)
 {
 	string filename(luaL_checkstring(L, 1));
 	size_t pos = 0;
-	while ((pos = filename.find(".", pos)) != string::npos)
+	while ((pos = filename.find('.', pos)) != string::npos)
 	{
 		filename[pos] = '/';
 	}

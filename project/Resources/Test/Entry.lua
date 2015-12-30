@@ -155,10 +155,8 @@ local function compile(dir,clean,minify)
 		if extension == "moon" then
 			if not clean then
 				local entry = dir.."/"..item
-				local file = io.open(entry,"r")
-				local moonCodes = file:read("*a")
+				local moonCodes = oContent:loadFile(entry)
 				local codes,err = moonscript.to_lua(moonCodes)
-				file:close()
 				if not codes then
 					print("Compile errors in "..entry)
 					print(err)
@@ -186,10 +184,8 @@ local function compile(dir,clean,minify)
 		elseif extension == "xml" then
 			if not clean then
 				local entry = dir.."/"..item
-				local file = io.open(entry,"r")
-				local xmlCodes = file:read("*a")
+				local xmlCodes = oContent:loadFile(entry)
 				local codes = xmlToLua(xmlCodes)
-				file:close()
 				if not codes then
 					print("Compile errors in "..entry)
 					return false

@@ -358,7 +358,7 @@ Class SpritePanelView,
 								target\draw sp
 								target\endDraw!
 								sleep!
-								target\save folder..name..".png",CCImage.PNG
+								target\save folder..name..".png"
 							oCache.Clip\unload clip
 							oContent\remove clip
 							Reference.removeRef clip

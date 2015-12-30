@@ -1054,6 +1054,19 @@ void oUnitDef_setInstincts(oUnitDef* def, int instincts[], int count)
 	}
 }
 
+void __oContent_loadFile(lua_State* L, oContent* self, const char* filename)
+{
+	unsigned long size = 0;
+	oOwnArray<char> data = self->loadFile(filename, size);
+	if (!data)
+	{
+		lua_pushnil(L);
+	}
+	else
+	{
+		lua_pushlstring(L, data, size);
+	}
+}
 void __oContent_getDirEntries(lua_State* L, oContent* self, const char* path, bool isFolder)
 {
 	auto dirs = self->getDirEntries(path, isFolder);

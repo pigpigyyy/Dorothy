@@ -214,8 +214,6 @@
 		1551A847158F2ADF00E66CFE /* ccCArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A5F6158F2ADE00E66CFE /* ccCArray.h */; };
 		1551A848158F2ADF00E66CFE /* uthash.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A5F7158F2ADE00E66CFE /* uthash.h */; };
 		1551A849158F2ADF00E66CFE /* utlist.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A5F8158F2ADE00E66CFE /* utlist.h */; };
-		1551A84A158F2ADF00E66CFE /* TGAlib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1551A5FA158F2ADE00E66CFE /* TGAlib.cpp */; };
-		1551A84B158F2ADF00E66CFE /* TGAlib.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A5FB158F2ADE00E66CFE /* TGAlib.h */; };
 		1551A84C158F2ADF00E66CFE /* TransformUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1551A5FC158F2ADE00E66CFE /* TransformUtils.cpp */; };
 		1551A84D158F2ADF00E66CFE /* TransformUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A5FD158F2ADE00E66CFE /* TransformUtils.h */; };
 		1551A84E158F2ADF00E66CFE /* ioapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1551A5FF158F2ADE00E66CFE /* ioapi.cpp */; };
@@ -252,11 +250,6 @@
 		15FBEE6D164BBF77008CB2C3 /* CCDrawNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15FBEE6C164BBF77008CB2C3 /* CCDrawNode.cpp */; };
 		1A2802B016DF1C5B00189CBF /* ccUTF8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A2802AE16DF1C5B00189CBF /* ccUTF8.cpp */; };
 		1A2802B116DF1C5B00189CBF /* ccUTF8.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A2802AF16DF1C5B00189CBF /* ccUTF8.h */; };
-		1A3187F416C0B30600207637 /* CCImageCommonWebp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A3187F316C0B30600207637 /* CCImageCommonWebp.cpp */; };
-		1A31963016C0DDE800207637 /* decode.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A3191B616C0DDE700207637 /* decode.h */; };
-		1A31963116C0DDE800207637 /* encode.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A3191B716C0DDE700207637 /* encode.h */; };
-		1A31963216C0DDE800207637 /* types.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A3191B816C0DDE700207637 /* types.h */; };
-		1A3199AE16C0E3A200207637 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A3199AD16C0E3A200207637 /* libwebp.a */; };
 		1A5B48EA16F084CC008568FC /* CCBool.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A5B48E716F084CC008568FC /* CCBool.h */; };
 		1A5B48EB16F084CC008568FC /* CCDouble.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A5B48E816F084CC008568FC /* CCDouble.h */; };
 		1A5B48EC16F084CC008568FC /* CCFloat.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A5B48E916F084CC008568FC /* CCFloat.h */; };
@@ -293,6 +286,10 @@
 		3CB40CF61A20DC5400D7A3A6 /* CCZip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CB40CF41A20DC5400D7A3A6 /* CCZip.cpp */; };
 		3CB40CF71A20DC5400D7A3A6 /* CCZip.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CB40CF51A20DC5400D7A3A6 /* CCZip.h */; };
 		3CBD1C851A406A8F00602936 /* CCApplicationProtocol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD1C841A406A8F00602936 /* CCApplicationProtocol.cpp */; };
+		3CE519CA1C34203300835B2A /* stb_image_write.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CE519C61C34203300835B2A /* stb_image_write.c */; };
+		3CE519CB1C34203300835B2A /* stb_image_write.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CE519C71C34203300835B2A /* stb_image_write.h */; };
+		3CE519D01C3420C100835B2A /* stb_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CE519CE1C3420C100835B2A /* stb_image.c */; };
+		3CE519D11C3420C100835B2A /* stb_image.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CE519CF1C3420C100835B2A /* stb_image.h */; };
 		469A7DF316C24787006FFCB2 /* tinyxml2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 469A7DF116C24787006FFCB2 /* tinyxml2.cpp */; };
 		469A7DF416C24787006FFCB2 /* tinyxml2.h in Headers */ = {isa = PBXBuildFile; fileRef = 469A7DF216C24787006FFCB2 /* tinyxml2.h */; };
 		46A393F616E5D01B00210B16 /* CCUserDefault.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46A393F216E5D01B00210B16 /* CCUserDefault.cpp */; };
@@ -525,8 +522,6 @@
 		1551A5F6158F2ADE00E66CFE /* ccCArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ccCArray.h; sourceTree = "<group>"; };
 		1551A5F7158F2ADE00E66CFE /* uthash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uthash.h; sourceTree = "<group>"; };
 		1551A5F8158F2ADE00E66CFE /* utlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utlist.h; sourceTree = "<group>"; };
-		1551A5FA158F2ADE00E66CFE /* TGAlib.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TGAlib.cpp; sourceTree = "<group>"; };
-		1551A5FB158F2ADE00E66CFE /* TGAlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAlib.h; sourceTree = "<group>"; };
 		1551A5FC158F2ADE00E66CFE /* TransformUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransformUtils.cpp; sourceTree = "<group>"; };
 		1551A5FD158F2ADE00E66CFE /* TransformUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformUtils.h; sourceTree = "<group>"; };
 		1551A5FF158F2ADE00E66CFE /* ioapi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ioapi.cpp; sourceTree = "<group>"; };
@@ -563,10 +558,6 @@
 		15FBEE6C164BBF77008CB2C3 /* CCDrawNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCDrawNode.cpp; sourceTree = "<group>"; };
 		1A2802AE16DF1C5B00189CBF /* ccUTF8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ccUTF8.cpp; sourceTree = "<group>"; };
 		1A2802AF16DF1C5B00189CBF /* ccUTF8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ccUTF8.h; sourceTree = "<group>"; };
-		1A3187F316C0B30600207637 /* CCImageCommonWebp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCImageCommonWebp.cpp; sourceTree = "<group>"; };
-		1A3191B616C0DDE700207637 /* decode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = decode.h; sourceTree = "<group>"; };
-		1A3191B716C0DDE700207637 /* encode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = encode.h; sourceTree = "<group>"; };
-		1A3191B816C0DDE700207637 /* types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
 		1A3199AD16C0E3A200207637 /* libwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwebp.a; path = ../platform/third_party/ios/libraries/libwebp.a; sourceTree = "<group>"; };
 		1A5B48E716F084CC008568FC /* CCBool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCBool.h; sourceTree = "<group>"; };
 		1A5B48E816F084CC008568FC /* CCDouble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCDouble.h; sourceTree = "<group>"; };
@@ -604,6 +595,10 @@
 		3CB40CF41A20DC5400D7A3A6 /* CCZip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCZip.cpp; sourceTree = "<group>"; };
 		3CB40CF51A20DC5400D7A3A6 /* CCZip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCZip.h; sourceTree = "<group>"; };
 		3CBD1C841A406A8F00602936 /* CCApplicationProtocol.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCApplicationProtocol.cpp; sourceTree = "<group>"; };
+		3CE519C61C34203300835B2A /* stb_image_write.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stb_image_write.c; sourceTree = "<group>"; };
+		3CE519C71C34203300835B2A /* stb_image_write.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image_write.h; sourceTree = "<group>"; };
+		3CE519CE1C3420C100835B2A /* stb_image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stb_image.c; sourceTree = "<group>"; };
+		3CE519CF1C3420C100835B2A /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
 		469A7DF116C24787006FFCB2 /* tinyxml2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml2.cpp; sourceTree = "<group>"; };
 		469A7DF216C24787006FFCB2 /* tinyxml2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml2.h; sourceTree = "<group>"; };
 		46A393F216E5D01B00210B16 /* CCUserDefault.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCUserDefault.cpp; sourceTree = "<group>"; };
@@ -631,7 +626,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1551A343158F2AB200E66CFE /* Foundation.framework in Frameworks */,
-				1A3199AE16C0E3A200207637 /* libwebp.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -957,7 +951,6 @@
 			isa = PBXGroup;
 			children = (
 				1551A47B158F2ADE00E66CFE /* ios */,
-				1A31912016C0DDE700207637 /* third_party */,
 				3CB40CED1A20DC1800D7A3A6 /* CCKeyboard.cpp */,
 				3CB40CEE1A20DC1800D7A3A6 /* CCKeyboard.h */,
 				3CB40CEF1A20DC1800D7A3A6 /* CCThread.cpp */,
@@ -971,7 +964,6 @@
 				1AC6CE8616B910CD00330EFD /* CCFileUtils.cpp */,
 				1AC6CE8716B910CD00330EFD /* CCFileUtils.h */,
 				1551A473158F2ADE00E66CFE /* CCImage.h */,
-				1A3187F316C0B30600207637 /* CCImageCommonWebp.cpp */,
 				1551A475158F2ADE00E66CFE /* CCPlatformConfig.h */,
 				1551A476158F2ADE00E66CFE /* CCPlatformMacros.h */,
 				1551A477158F2ADE00E66CFE /* CCSAXParser.cpp */,
@@ -1110,8 +1102,10 @@
 		1551A5F9158F2ADE00E66CFE /* image_support */ = {
 			isa = PBXGroup;
 			children = (
-				1551A5FA158F2ADE00E66CFE /* TGAlib.cpp */,
-				1551A5FB158F2ADE00E66CFE /* TGAlib.h */,
+				3CE519CE1C3420C100835B2A /* stb_image.c */,
+				3CE519CF1C3420C100835B2A /* stb_image.h */,
+				3CE519C61C34203300835B2A /* stb_image_write.c */,
+				3CE519C71C34203300835B2A /* stb_image_write.h */,
 			);
 			path = image_support;
 			sourceTree = "<group>";
@@ -1198,32 +1192,6 @@
 				15FBEE6C164BBF77008CB2C3 /* CCDrawNode.cpp */,
 			);
 			path = draw_nodes;
-			sourceTree = "<group>";
-		};
-		1A31912016C0DDE700207637 /* third_party */ = {
-			isa = PBXGroup;
-			children = (
-				1A3191A716C0DDE700207637 /* ios */,
-			);
-			path = third_party;
-			sourceTree = "<group>";
-		};
-		1A3191A716C0DDE700207637 /* ios */ = {
-			isa = PBXGroup;
-			children = (
-				1A3191B516C0DDE700207637 /* webp */,
-			);
-			path = ios;
-			sourceTree = "<group>";
-		};
-		1A3191B516C0DDE700207637 /* webp */ = {
-			isa = PBXGroup;
-			children = (
-				1A3191B616C0DDE700207637 /* decode.h */,
-				1A3191B716C0DDE700207637 /* encode.h */,
-				1A3191B816C0DDE700207637 /* types.h */,
-			);
-			path = webp;
 			sourceTree = "<group>";
 		};
 		3C969CC51B41947A00C3BF37 /* basics */ = {
@@ -1325,6 +1293,7 @@
 				1551A639158F2ADE00E66CFE /* CCActionManager.h in Headers */,
 				1551A63B158F2ADE00E66CFE /* CCActionPageTurn3D.h in Headers */,
 				1551A63D158F2ADE00E66CFE /* CCActionProgressTimer.h in Headers */,
+				3CE519D11C3420C100835B2A /* stb_image.h in Headers */,
 				1551A63F158F2ADE00E66CFE /* CCActionTiledGrid.h in Headers */,
 				1551A643158F2ADE00E66CFE /* CCAtlasNode.h in Headers */,
 				1551A645158F2ADE00E66CFE /* CCNode.h in Headers */,
@@ -1340,6 +1309,7 @@
 				1551A662158F2ADE00E66CFE /* CCString.h in Headers */,
 				1551A664158F2ADE00E66CFE /* CCZone.h in Headers */,
 				1551A667158F2ADE00E66CFE /* CCGrabber.h in Headers */,
+				3CE519CB1C34203300835B2A /* stb_image_write.h in Headers */,
 				1551A669158F2ADE00E66CFE /* CCGrid.h in Headers */,
 				1551A6B1158F2ADE00E66CFE /* ccConfig.h in Headers */,
 				1551A6B2158F2ADE00E66CFE /* CCEventType.h in Headers */,
@@ -1443,7 +1413,6 @@
 				1551A847158F2ADF00E66CFE /* ccCArray.h in Headers */,
 				1551A848158F2ADF00E66CFE /* uthash.h in Headers */,
 				1551A849158F2ADF00E66CFE /* utlist.h in Headers */,
-				1551A84B158F2ADF00E66CFE /* TGAlib.h in Headers */,
 				1551A84D158F2ADF00E66CFE /* TransformUtils.h in Headers */,
 				1551A84F158F2ADF00E66CFE /* ioapi.h in Headers */,
 				1551A851158F2ADF00E66CFE /* unzip.h in Headers */,
@@ -1466,9 +1435,6 @@
 				15FBEE6B164BBB20008CB2C3 /* CCDrawNode.h in Headers */,
 				1AC6CE8116B9075B00330EFD /* CCFileUtilsIOS.h in Headers */,
 				1AC6CE8916B910CD00330EFD /* CCFileUtils.h in Headers */,
-				1A31963016C0DDE800207637 /* decode.h in Headers */,
-				1A31963116C0DDE800207637 /* encode.h in Headers */,
-				1A31963216C0DDE800207637 /* types.h in Headers */,
 				469A7DF416C24787006FFCB2 /* tinyxml2.h in Headers */,
 				1AA6226216CF6BDF0028C05E /* CCDevice.h in Headers */,
 				1A2802B116DF1C5B00189CBF /* ccUTF8.h in Headers */,
@@ -1580,6 +1546,7 @@
 				1551A6CF158F2ADE00E66CFE /* utility.c in Sources */,
 				1551A6D0158F2ADE00E66CFE /* vec2.c in Sources */,
 				1551A6D1158F2ADE00E66CFE /* vec3.c in Sources */,
+				3CE519CA1C34203300835B2A /* stb_image_write.c in Sources */,
 				3C969E251B419A4D00C3BF37 /* CCDirector.cpp in Sources */,
 				1551A6D2158F2ADE00E66CFE /* vec4.c in Sources */,
 				1551A6D3158F2ADE00E66CFE /* CCKeypadDelegate.cpp in Sources */,
@@ -1635,7 +1602,6 @@
 				1551A842158F2ADF00E66CFE /* ccUtils.cpp in Sources */,
 				1551A844158F2ADF00E66CFE /* CCVertex.cpp in Sources */,
 				1551A846158F2ADF00E66CFE /* ccCArray.cpp in Sources */,
-				1551A84A158F2ADF00E66CFE /* TGAlib.cpp in Sources */,
 				1551A84C158F2ADF00E66CFE /* TransformUtils.cpp in Sources */,
 				1551A84E158F2ADF00E66CFE /* ioapi.cpp in Sources */,
 				3C969CD91B4194B300C3BF37 /* LocalStorage.cpp in Sources */,
@@ -1644,6 +1610,7 @@
 				1551A855158F2ADF00E66CFE /* CCIMEDispatcher.cpp in Sources */,
 				1551A857158F2ADF00E66CFE /* CCTextFieldTTF.cpp in Sources */,
 				1551A859158F2ADF00E66CFE /* CCTexture2D.cpp in Sources */,
+				3CE519D01C3420C100835B2A /* stb_image.c in Sources */,
 				1551A85B158F2ADF00E66CFE /* CCTextureAtlas.cpp in Sources */,
 				1551A85D158F2ADF00E66CFE /* CCTextureCache.cpp in Sources */,
 				1551A85F158F2ADF00E66CFE /* CCTexturePVR.cpp in Sources */,
@@ -1655,7 +1622,6 @@
 				15FBEE68164BBA98008CB2C3 /* CCDrawingPrimitives.cpp in Sources */,
 				15FBEE6D164BBF77008CB2C3 /* CCDrawNode.cpp in Sources */,
 				1AC6CE8816B910CD00330EFD /* CCFileUtils.cpp in Sources */,
-				1A3187F416C0B30600207637 /* CCImageCommonWebp.cpp in Sources */,
 				3C969E231B419A4D00C3BF37 /* CCConfiguration.cpp in Sources */,
 				469A7DF316C24787006FFCB2 /* tinyxml2.cpp in Sources */,
 				1AA6226016CF6BD00028C05E /* CCDevice.mm in Sources */,

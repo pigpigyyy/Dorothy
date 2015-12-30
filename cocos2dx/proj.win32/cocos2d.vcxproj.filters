@@ -300,9 +300,6 @@
     <ClCompile Include="..\support\data_support\ccCArray.cpp">
       <Filter>support\data_support</Filter>
     </ClCompile>
-    <ClCompile Include="..\support\image_support\TGAlib.cpp">
-      <Filter>support\image_support</Filter>
-    </ClCompile>
     <ClCompile Include="..\support\zip_support\ioapi.cpp">
       <Filter>support\zip_support</Filter>
     </ClCompile>
@@ -492,11 +489,11 @@
     <ClCompile Include="..\extensions\network\HttpClient.cpp">
       <Filter>extensions\network</Filter>
     </ClCompile>
-    <ClCompile Include="..\platform\stb_image.c">
-      <Filter>platform</Filter>
+    <ClCompile Include="..\support\image_support\stb_image.c">
+      <Filter>support\image_support</Filter>
     </ClCompile>
-    <ClCompile Include="..\platform\stb_image_write.c">
-      <Filter>platform</Filter>
+    <ClCompile Include="..\support\image_support\stb_image_write.c">
+      <Filter>support\image_support</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -730,9 +727,6 @@
     </ClInclude>
     <ClInclude Include="..\support\data_support\utlist.h">
       <Filter>support\data_support</Filter>
-    </ClInclude>
-    <ClInclude Include="..\support\image_support\TGAlib.h">
-      <Filter>support\image_support</Filter>
     </ClInclude>
     <ClInclude Include="..\support\zip_support\ioapi.h">
       <Filter>support\zip_support</Filter>
@@ -989,11 +983,11 @@
     <ClInclude Include="..\support\file_system\tinydir.h">
       <Filter>support\file_system</Filter>
     </ClInclude>
-    <ClInclude Include="..\platform\stb_image.h">
-      <Filter>platform</Filter>
+    <ClInclude Include="..\support\image_support\stb_image.h">
+      <Filter>support\image_support</Filter>
     </ClInclude>
-    <ClInclude Include="..\platform\stb_image_write.h">
-      <Filter>platform</Filter>
+    <ClInclude Include="..\support\image_support\stb_image_write.h">
+      <Filter>support\image_support</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

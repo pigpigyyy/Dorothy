@@ -264,4 +264,15 @@ public: virtual void set##funName(varType var)   \
 #define CC_UNUSED
 #endif
 
+/*
+ *	for stb image library in image_support
+ */
+#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+	#define STBI_ONLY_JPEG
+	#define STBI_ONLY_PNG
+	#define STBI_ONLY_TGA
+#elif CC_TARGET_PLATFORM == CC_PLAFORM_IOS || CC_TARGET_PLATFORM == CC_PLAFORM_MAC
+	#define STBI_ONLY_TGA
+#endif
+
 #endif // __CC_PLATFORM_MACROS_H__

@@ -590,33 +590,15 @@ void CCRenderTexture::draw()
 	}
 }
 
-bool CCRenderTexture::saveToFile(const char *szFilePath)
+bool CCRenderTexture::saveToFile(const char* szFilePath)
 {
     bool bRet = false;
-
-    CCImage *pImage = newCCImage(true);
+    CCImage* pImage = newCCImage(true);
     if (pImage)
     {
-        bRet = pImage->saveToFile(szFilePath, kCCImageFormatJPEG);
+        bRet = pImage->saveToFile(szFilePath);
     }
-
     CC_SAFE_DELETE(pImage);
-    return bRet;
-}
-bool CCRenderTexture::saveToFile(const char *fileName, tCCImageFormat format)
-{
-    bool bRet = false;
-    CCAssert(format == kCCImageFormatJPEG || format == kCCImageFormatPNG,
-             "the image can only be saved as JPG or PNG format");
-
-    CCImage *pImage = newCCImage(true);
-    if (pImage)
-    {
-		bRet = pImage->saveToFile(fileName, false);
-    }
-
-    CC_SAFE_DELETE(pImage);
-
     return bRet;
 }
 

@@ -93,14 +93,11 @@ Class EffectPanelView,
 				effectFiles = {}
 				effectFilename = editor.gameFullPath..editor.graphicFolder.."list.effect"
 				if not oContent\exist effectFilename
-					file = io.open effectFilename,"w"
-					file\write "<A></A>"
-					file\close!
+					oContent\save effectFilename,"<A></A>"
 
 				oCache.Effect\load effectFilename
 
-				file = io.open effectFilename,"r"
-				for item in file\read("*a")\gmatch("%b<>")
+				for item in oContent\loadFile(effectFilename)\gmatch("%b<>")
 					if not item\sub(2,2)\match("[A/]")
 						line = item\gsub "%s",""
 						name = line\match "A=\"(.-)\""
@@ -108,7 +105,6 @@ Class EffectPanelView,
 						if oContent\exist editor.graphicFolder..filename
 							table.insert effects,name
 							effectFiles[name] = filename
-				file\close()
 
 				{:width,:height} = @scrollArea
 				itemHeight = 40

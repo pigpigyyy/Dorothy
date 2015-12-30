@@ -1664,18 +1664,6 @@ local Dorothy =
 	{
 		childs =
 		{
-			JPG =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
-			PNG =
-			{
-				description = "[int][Const]",
-				static = true,
-				type = "value",
-			},
 			isPngAlphaPremultiplied =
 			{
 				description = "[bool]",
@@ -1730,8 +1718,8 @@ local Dorothy =
 			},
 			save =
 			{
-				args = "(filename: string, format: CCImageFormat = CCImage.JPG)",
-				description = " -- CCImageFormat: CCImage.JPG|CCImage.PNG",
+				args = "(filename: string)",
+				description = "filename can only end with .png|bmp|tga",
 				returns = "()",
 				type = "method",
 			},
@@ -4653,6 +4641,14 @@ local Dorothy =
 				description = "",
 				typeName = "string",
 				returns = "(relativeName: string)",
+				static = true,
+				type = "method",
+			},
+			loadFile =
+			{
+				args = "(filename: string)",
+				description = "",
+				returns = "(data: string, size: int)",
 				static = true,
 				type = "method",
 			},

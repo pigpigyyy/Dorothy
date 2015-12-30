@@ -1,5 +1,6 @@
 local compile = require("moonscript.compile")
 local parse = require("moonscript.parse")
+local oContent = require("oContent")
 local concat, insert, remove
 do
   local _obj_0 = table
@@ -65,17 +66,17 @@ to_lua = function(text, options)
 end
 moon_loader = function(name)
   local name_path = name:gsub("%.", dirsep)
-  local file, file_path
+  local fileExist, file_path
   for path in package.moonpath:gmatch("[^;]+") do
     file_path = path:gsub("?", name_path)
-    file = io.open(file_path)
-    if file then
+    fileExist = oContent:exist(file_path)
+    if fileExist then
       break
     end
   end
-  if file then
-    local text = file:read("*a")
-    file:close()
+  if fileExist then
+    local text = oContent:loadFile(file_path)
+	assert(text,"file "..file_path.." load failed!")
     local res, err = loadstring(text, "@" .. tostring(file_path))
     if not res then
       error(file_path .. ": " .. err)
@@ -100,12 +101,10 @@ loadstring = function(...)
   }))
 end
 loadfile = function(fname, ...)
-  local file, err = io.open(fname)
-  if not (file) then
-    return nil, err
+  local text = oContent:loadFile(fname)
+  if not text then
+    return nil, "file "..fname.." load failed!"
   end
-  local text = assert(file:read("*a"))
-  file:close()
   return loadstring(text, "@" .. tostring(fname), ...)
 end
 dofile = function(...)

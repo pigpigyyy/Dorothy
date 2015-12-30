@@ -1,5 +1,6 @@
 local util = require("moonscript.util")
 local lpeg = require("lpeg")
+local oContent = require("oContent")
 local concat, insert
 do
   local _obj_0 = table
@@ -17,11 +18,7 @@ end
 local lookup_line
 lookup_line = function(fname, pos, cache)
   if not cache[fname] then
-    do
-      local _with_0 = assert(io.open(fname))
-      cache[fname] = _with_0:read("*a")
-      _with_0:close()
-    end
+    cache[fname] = oContent:loadFile(fname)
   end
   return pos_to_line(cache[fname], pos)
 end

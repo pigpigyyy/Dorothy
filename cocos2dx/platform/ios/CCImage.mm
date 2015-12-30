@@ -25,6 +25,7 @@ THE SOFTWARE.
 #import "CCFileUtils.h"
 #import "CCCommon.h"
 #import "CCTexture2D.h"
+#import "stb_image_write.h"
 #import <string>
 
 #import <Foundation/Foundation.h>
@@ -366,12 +367,25 @@ bool CCImage::initWithImageData(void * pData,
         CC_BREAK_IF(! pData || nDataLen <= 0);
         if (eFmt == kFmtRawData)
         {
-            bRet = _initWithRawData(pData, nDataLen, nWidth, nHeight, nBitsPerComponent);
-        }
-        else if (eFmt == kFmtWebp)
-        {
-            bRet = _initWithWebpData(pData, nDataLen);
-        }
+			do
+    		{
+        		CC_BREAK_IF(0 == nWidth || 0 == nHeight);
+
+        		m_nBitsPerComponent = nBitsPerComponent;
+        		m_nHeight   = (short)nHeight;
+        		m_nWidth    = (short)nWidth;
+        		m_bHasAlpha = true;
+
+		        // only RGBA8888 supported
+        		int nBytesPerComponent = 4;
+        		int nSize = nHeight * nWidth * nBytesPerComponent;
+        		m_pData = new unsigned char[nSize];
+        		CC_BREAK_IF(! m_pData);
+        		memcpy(m_pData, pData, nSize);
+
+		        bRet = true;
+    		} while (0);
+		}
         else // init with png or jpg file data
         {
             bRet = _initWithData(pData, nDataLen, &info);
@@ -388,54 +402,6 @@ bool CCImage::initWithImageData(void * pData,
     } while (0);
     
     return bRet;
-}
-
-bool CCImage::_initWithRawData(void *pData, int nDatalen, int nWidth, int nHeight, int nBitsPerComponent)
-{
-    bool bRet = false;
-    do 
-    {
-        CC_BREAK_IF(0 == nWidth || 0 == nHeight);
-
-        m_nBitsPerComponent = nBitsPerComponent;
-        m_nHeight   = (short)nHeight;
-        m_nWidth    = (short)nWidth;
-        m_bHasAlpha = true;
-
-        // only RGBA8888 supported
-        int nBytesPerComponent = 4;
-        int nSize = nHeight * nWidth * nBytesPerComponent;
-        m_pData = new unsigned char[nSize];
-        CC_BREAK_IF(! m_pData);
-        memcpy(m_pData, pData, nSize);
-
-        bRet = true;
-    } while (0);
-    return bRet;
-}
-
-bool CCImage::_initWithJpgData(void *pData, int nDatalen)
-{
-    assert(0);
-	return false;
-}
-
-bool CCImage::_initWithPngData(void *pData, int nDatalen)
-{
-    assert(0);
-	return false;
-}
-
-bool CCImage::_saveImageToPNG(const char *pszFilePath, bool bIsToRGB)
-{
-    assert(0);
-	return false;
-}
-
-bool CCImage::_saveImageToJPG(const char *pszFilePath)
-{
-    assert(0);
-	return false;
 }
 
 bool CCImage::initWithString(
@@ -464,89 +430,37 @@ bool CCImage::initWithString(
     return true;
 }
 
-bool CCImage::saveToFile(const char *pszFilePath, bool bIsToRGB)
+static std::string getExt(const std::string& filename)
 {
-    bool saveToPNG = false;
-    bool needToCopyPixels = false;
-    std::string filePath(pszFilePath);
-    if (std::string::npos != filePath.find(".png"))
-    {
-        saveToPNG = true;
-    }
-        
-    int bitsPerComponent = 8;            
-    int bitsPerPixel = m_bHasAlpha ? 32 : 24;
-    if ((! saveToPNG) || bIsToRGB)
-    {
-        bitsPerPixel = 24;
-    }            
-    
-    int bytesPerRow    = (bitsPerPixel/8) * m_nWidth;
-    int myDataLength = bytesPerRow * m_nHeight;
-    
-    unsigned char *pixels    = m_pData;
-    
-    // The data has alpha channel, and want to save it with an RGB png file,
-    // or want to save as jpg,  remove the alpha channel.
-    if ((saveToPNG && m_bHasAlpha && bIsToRGB)
-       || (! saveToPNG))
-    {
-        pixels = new unsigned char[myDataLength];
-        
-        for (int i = 0; i < m_nHeight; ++i)
-        {
-            for (int j = 0; j < m_nWidth; ++j)
-            {
-                pixels[(i * m_nWidth + j) * 3] = m_pData[(i * m_nWidth + j) * 4];
-                pixels[(i * m_nWidth + j) * 3 + 1] = m_pData[(i * m_nWidth + j) * 4 + 1];
-                pixels[(i * m_nWidth + j) * 3 + 2] = m_pData[(i * m_nWidth + j) * 4 + 2];
-            }
-        }
-        
-        needToCopyPixels = true;
-    }
-        
-    // make data provider with data.
-    CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault;
-    if (saveToPNG && m_bHasAlpha && (! bIsToRGB))
-    {
-        bitmapInfo |= kCGImageAlphaPremultipliedLast;
-    }
-    CGDataProviderRef provider        = CGDataProviderCreateWithData(NULL, pixels, myDataLength, NULL);
-    CGColorSpaceRef colorSpaceRef    = CGColorSpaceCreateDeviceRGB();
-    CGImageRef iref                    = CGImageCreate(m_nWidth, m_nHeight,
-                                                        bitsPerComponent, bitsPerPixel, bytesPerRow,
-                                                        colorSpaceRef, bitmapInfo, provider,
-                                                        NULL, false,
-                                                        kCGRenderingIntentDefault);
-        
-    UIImage* image                    = [[UIImage alloc] initWithCGImage:iref];
-        
-    CGImageRelease(iref);    
-    CGColorSpaceRelease(colorSpaceRef);
-    CGDataProviderRelease(provider);
-    
-    NSData *data;
-                
-    if (saveToPNG)
-    {
-        data = UIImagePNGRepresentation(image);
-    }
-    else
-    {
-        data = UIImageJPEGRepresentation(image, 1.0f);
-    }
-    
-    [data writeToFile:[NSString stringWithUTF8String:pszFilePath] atomically:YES];
-        
-    [image release];
-        
-    if (needToCopyPixels)
-    {
-        delete [] pixels;
-    }
-    
-    return true;
+	int index = (int)filename.find_last_of('.');
+	if (index != -1)
+	{
+		std::string ext = filename.substr(index + 1);
+		for (unsigned int i = 0; i < ext.length(); ++i)
+		{
+			ext[i] = tolower(ext[i]);
+		}
+		return ext;
+	}
+	else return std::string();
+}
+bool CCImage::saveToFile(const char* pszFilePath)
+{
+	int bRet = 0;
+	std::string strFilePath(pszFilePath);
+	if (getExt(strFilePath) == "png")
+	{
+		bRet = stbi_write_png(strFilePath.c_str(), m_nWidth, m_nHeight, 4, m_pData, 0);
+	}
+	else if (getExt(strFilePath) == "bmp")
+	{
+		bRet = stbi_write_bmp(strFilePath.c_str(), m_nWidth, m_nHeight, 4, m_pData);
+	}
+	else if (getExt(strFilePath) == "tga")
+	{
+		bRet = stbi_write_tga(strFilePath.c_str(), m_nWidth, m_nHeight, 4, m_pData);
+	}
+	return bRet != 0;
 }
 
 CCImage::EImageFormat CCImage::computeImageFormatType(const std::string& filename)
@@ -564,16 +478,6 @@ CCImage::EImageFormat CCImage::computeImageFormatType(const std::string& filenam
 		|| (std::string::npos != filename.find(".PNG", filename.size() - 4, 4)))
 	{
 		ret = CCImage::kFmtPng;
-	}
-	else if ((std::string::npos != filename.find(".tiff", filename.size() - 5, 5))
-		|| (std::string::npos != filename.find(".TIFF", filename.size() - 5, 5)))
-	{
-		ret = CCImage::kFmtTiff;
-	}
-	else if ((std::string::npos != filename.find(".webp", filename.size() - 5, 5))
-		|| (std::string::npos != filename.find(".WEBP", filename.size() - 5, 5)))
-	{
-		ret = CCImage::kFmtWebp;
 	}
 
 	return ret;

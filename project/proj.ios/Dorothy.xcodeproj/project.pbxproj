@@ -63,9 +63,8 @@
 		15C15688168311CB00D239F2 /* tolua_push.c in Sources */ = {isa = PBXBuildFile; fileRef = 15C15656168311CB00D239F2 /* tolua_push.c */; };
 		15C15689168311CB00D239F2 /* tolua_to.c in Sources */ = {isa = PBXBuildFile; fileRef = 15C15657168311CB00D239F2 /* tolua_to.c */; };
 		15C1568E1683131500D239F2 /* libcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15C1568D1683131500D239F2 /* libcurl.a */; };
-		3C1C6FBC1BAD589B00607FF4 /* Font in Resources */ = {isa = PBXBuildFile; fileRef = 3C1C6FBB1BAD589B00607FF4 /* Font */; settings = {ASSET_TAGS = (); }; };
+		3C1C6FBC1BAD589B00607FF4 /* Font in Resources */ = {isa = PBXBuildFile; fileRef = 3C1C6FBB1BAD589B00607FF4 /* Font */; };
 		3C3843001A890B9D0047E2DF /* EffectEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C3842FF1A890B9D0047E2DF /* EffectEditor */; };
-		3C504D8E1A237B97000C79D6 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C504D8D1A237B97000C79D6 /* libwebp.a */; };
 		3C5AC9FC1A21A71F006EDD2B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5AC9FB1A21A71F006EDD2B /* CoreMotion.framework */; };
 		3C7AA4E11A4731AD007836D2 /* ActionEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4D81A4731AD007836D2 /* ActionEditor */; };
 		3C7AA4E31A4731AD007836D2 /* BodyEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4DA1A4731AD007836D2 /* BodyEditor */; };
@@ -122,13 +121,13 @@
 		3CA03A6F1A2900460008F80F /* libluajit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CA03A6E1A2900460008F80F /* libluajit.a */; };
 		3CAE8C4A1A685B1000D92541 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3CAE8C491A685B1000D92541 /* Images.xcassets */; };
 		3CB40CFA1A20E6C200D7A3A6 /* b2MotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CB40CF81A20E6C200D7A3A6 /* b2MotorJoint.cpp */; };
-		3CB40D261A20ECC500D7A3A6 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CB40D251A20ECC500D7A3A6 /* libsqlite3.0.dylib */; };
 		3CDECC591AFC22A100AF8490 /* lpcap.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CDECC4E1AFC22A100AF8490 /* lpcap.c */; };
 		3CDECC5A1AFC22A100AF8490 /* lpcode.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CDECC501AFC22A100AF8490 /* lpcode.c */; };
 		3CDECC5B1AFC22A100AF8490 /* lpprint.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CDECC521AFC22A100AF8490 /* lpprint.c */; };
 		3CDECC5C1AFC22A100AF8490 /* lptree.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CDECC541AFC22A100AF8490 /* lptree.c */; };
 		3CDECC5D1AFC22A100AF8490 /* lpvm.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CDECC571AFC22A100AF8490 /* lpvm.c */; };
 		3CDECC5F1AFC274B00AF8490 /* Lib in Resources */ = {isa = PBXBuildFile; fileRef = 3CDECC5E1AFC274B00AF8490 /* Lib */; };
+		3CEA04F61C33C70C002CD33C /* SceneEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3CEA04F51C33C70C002CD33C /* SceneEditor */; };
 		3CECB16C1AC331B300BA17F3 /* DorothyXml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CECB16A1AC331B300BA17F3 /* DorothyXml.cpp */; };
 		46C1008D16BF786A00F74D54 /* CCLuaEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46C1007C16BF786A00F74D54 /* CCLuaEngine.cpp */; };
 		46C1009116BF786A00F74D54 /* LuaCocos2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46C1008416BF786A00F74D54 /* LuaCocos2d.cpp */; };
@@ -279,7 +278,6 @@
 		15C1568D1683131500D239F2 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = ../../cocos2dx/platform/third_party/ios/libraries/libcurl.a; sourceTree = "<group>"; };
 		3C1C6FBB1BAD589B00607FF4 /* Font */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Font; path = ../../../Dorothy/project/Resources/Font; sourceTree = "<group>"; };
 		3C3842FF1A890B9D0047E2DF /* EffectEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; name = EffectEditor; path = ../../../Dorothy/project/Resources/EffectEditor; sourceTree = "<group>"; };
-		3C504D8D1A237B97000C79D6 /* libwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwebp.a; path = ../../cocos2dx/platform/third_party/mac/libraries/libwebp.a; sourceTree = "<group>"; };
 		3C5AC9FB1A21A71F006EDD2B /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreMotion.framework; sourceTree = DEVELOPER_DIR; };
 		3C7AA4D81A4731AD007836D2 /* ActionEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ActionEditor; path = ../../../Dorothy/project/Resources/ActionEditor; sourceTree = "<group>"; };
 		3C7AA4DA1A4731AD007836D2 /* BodyEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; name = BodyEditor; path = ../../../Dorothy/project/Resources/BodyEditor; sourceTree = "<group>"; };
@@ -394,7 +392,6 @@
 		3C969D531B4194EA00C3BF37 /* oUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oUnit.h; sourceTree = "<group>"; };
 		3C969D541B4194EA00C3BF37 /* oUnitDef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oUnitDef.cpp; sourceTree = "<group>"; };
 		3C969D551B4194EA00C3BF37 /* oUnitDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oUnitDef.h; sourceTree = "<group>"; };
-		3CA03A161A289CFE0008F80F /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = ../../lua/luajit/ios/liblua.a; sourceTree = "<group>"; };
 		3CA03A671A28BD1F0008F80F /* lauxlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lauxlib.h; sourceTree = "<group>"; };
 		3CA03A681A28BD1F0008F80F /* lua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua.h; sourceTree = "<group>"; };
 		3CA03A6A1A28BD1F0008F80F /* lualib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lualib.h; sourceTree = "<group>"; };
@@ -403,7 +400,6 @@
 		3CAE8C491A685B1000D92541 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Dorothy/Images.xcassets; sourceTree = SOURCE_ROOT; };
 		3CB40CF81A20E6C200D7A3A6 /* b2MotorJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2MotorJoint.cpp; sourceTree = "<group>"; };
 		3CB40CF91A20E6C200D7A3A6 /* b2MotorJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2MotorJoint.h; sourceTree = "<group>"; };
-		3CB40D251A20ECC500D7A3A6 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		3CDECC4E1AFC22A100AF8490 /* lpcap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpcap.c; sourceTree = "<group>"; };
 		3CDECC4F1AFC22A100AF8490 /* lpcap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lpcap.h; sourceTree = "<group>"; };
 		3CDECC501AFC22A100AF8490 /* lpcode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpcode.c; sourceTree = "<group>"; };
@@ -416,6 +412,7 @@
 		3CDECC571AFC22A100AF8490 /* lpvm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpvm.c; sourceTree = "<group>"; };
 		3CDECC581AFC22A100AF8490 /* lpvm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lpvm.h; sourceTree = "<group>"; };
 		3CDECC5E1AFC274B00AF8490 /* Lib */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Lib; path = ../../../Dorothy/project/Resources/Lib; sourceTree = "<group>"; };
+		3CEA04F51C33C70C002CD33C /* SceneEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SceneEditor; path = ../../../Dorothy/project/Resources/SceneEditor; sourceTree = "<group>"; };
 		3CECB16A1AC331B300BA17F3 /* DorothyXml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DorothyXml.cpp; sourceTree = "<group>"; };
 		3CECB16B1AC331B300BA17F3 /* DorothyXml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DorothyXml.h; sourceTree = "<group>"; };
 		46C1007C16BF786A00F74D54 /* CCLuaEngine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCLuaEngine.cpp; sourceTree = "<group>"; };
@@ -447,8 +444,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3C504D8E1A237B97000C79D6 /* libwebp.a in Frameworks */,
-				3CB40D261A20ECC500D7A3A6 /* libsqlite3.0.dylib in Frameworks */,
 				3C89A6C31A20C5B5001D5009 /* libcocos2dx.a in Frameworks */,
 				15C1568E1683131500D239F2 /* libcurl.a in Frameworks */,
 				3CA03A6F1A2900460008F80F /* libluajit.a in Frameworks */,
@@ -955,9 +950,6 @@
 			isa = PBXGroup;
 			children = (
 				3CA03A6E1A2900460008F80F /* libluajit.a */,
-				3CA03A161A289CFE0008F80F /* liblua.a */,
-				3C504D8D1A237B97000C79D6 /* libwebp.a */,
-				3CB40D251A20ECC500D7A3A6 /* libsqlite3.0.dylib */,
 				15C1568D1683131500D239F2 /* libcurl.a */,
 				3C5AC9FB1A21A71F006EDD2B /* CoreMotion.framework */,
 				F293B3CC15EB7BE500256477 /* QuartzCore.framework */,
@@ -997,12 +989,13 @@
 		F293BC4615EB859D00256477 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3CAE8C491A685B1000D92541 /* Images.xcassets */,
 				3C1C6FBB1BAD589B00607FF4 /* Font */,
 				3CDECC5E1AFC274B00AF8490 /* Lib */,
-				3CAE8C491A685B1000D92541 /* Images.xcassets */,
 				3C7AA4D81A4731AD007836D2 /* ActionEditor */,
 				3C7AA4DA1A4731AD007836D2 /* BodyEditor */,
 				3C3842FF1A890B9D0047E2DF /* EffectEditor */,
+				3CEA04F51C33C70C002CD33C /* SceneEditor */,
 				3C7AA4E01A4731AD007836D2 /* Test */,
 				3C7AA4DE1A4731AD007836D2 /* main.lua */,
 			);
@@ -1090,6 +1083,7 @@
 				3C3843001A890B9D0047E2DF /* EffectEditor in Resources */,
 				3CAE8C4A1A685B1000D92541 /* Images.xcassets in Resources */,
 				3C7AA4E31A4731AD007836D2 /* BodyEditor in Resources */,
+				3CEA04F61C33C70C002CD33C /* SceneEditor in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1346,7 +1340,7 @@
 					"\"$(SRCROOT)/../../dorothy\"",
 				);
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../../cocos2dx/platform/third_party/ios/libraries\"",
 					"\"$(SRCROOT)/../../lua/lib/ios\"",
@@ -1396,7 +1390,7 @@
 					"\"$(SRCROOT)/../../dorothy\"",
 				);
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../../cocos2dx/platform/third_party/ios/libraries\"",
 					"\"$(SRCROOT)/../../lua/lib/ios\"",

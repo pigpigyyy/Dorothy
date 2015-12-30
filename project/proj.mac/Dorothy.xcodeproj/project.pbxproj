@@ -21,7 +21,6 @@
 		3C504D7D1A237767000C79D6 /* libcocos2dx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C504D7C1A23775B000C79D6 /* libcocos2dx.a */; };
 		3C504D861A237B0B000C79D6 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C504D851A237B0B000C79D6 /* libsqlite3.0.dylib */; };
 		3C504D881A237B29000C79D6 /* libcurl.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C504D871A237B29000C79D6 /* libcurl.4.dylib */; };
-		3C504D8B1A237B70000C79D6 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C504D8A1A237B70000C79D6 /* libwebp.a */; };
 		3C504E231A237D2A000C79D6 /* CDAudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C504DBD1A237D2A000C79D6 /* CDAudioManager.m */; };
 		3C504E241A237D2A000C79D6 /* CDOpenALSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C504DC01A237D2A000C79D6 /* CDOpenALSupport.m */; };
 		3C504E251A237D2A000C79D6 /* CDXMacOSXSupport.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3C504DC21A237D2A000C79D6 /* CDXMacOSXSupport.mm */; };
@@ -183,7 +182,6 @@
 		3C504D771A23775B000C79D6 /* cocos2dx.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cocos2dx.xcodeproj; path = ../../cocos2dx/proj.mac/cocos2dx.xcodeproj; sourceTree = "<group>"; };
 		3C504D851A237B0B000C79D6 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		3C504D871A237B29000C79D6 /* libcurl.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.4.dylib; path = usr/lib/libcurl.4.dylib; sourceTree = SDKROOT; };
-		3C504D8A1A237B70000C79D6 /* libwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwebp.a; path = ../../cocos2dx/platform/third_party/mac/libraries/libwebp.a; sourceTree = "<group>"; };
 		3C504DA91A237D2A000C79D6 /* Export.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Export.h; sourceTree = "<group>"; };
 		3C504DAA1A237D2A000C79D6 /* SimpleAudioEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleAudioEngine.h; sourceTree = "<group>"; };
 		3C504DBC1A237D2A000C79D6 /* CDAudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDAudioManager.h; sourceTree = "<group>"; };
@@ -432,7 +430,6 @@
 			files = (
 				3C504D861A237B0B000C79D6 /* libsqlite3.0.dylib in Frameworks */,
 				3C504E481A237E21000C79D6 /* libz.1.2.5.dylib in Frameworks */,
-				3C504D8B1A237B70000C79D6 /* libwebp.a in Frameworks */,
 				3C45629C1A29931E00A3406E /* libluajit.a in Frameworks */,
 				3C504D881A237B29000C79D6 /* libcurl.4.dylib in Frameworks */,
 				3C504D7D1A237767000C79D6 /* libcocos2dx.a in Frameworks */,
@@ -520,7 +517,6 @@
 			children = (
 				3C45629B1A29931E00A3406E /* libluajit.a */,
 				3C504E471A237E21000C79D6 /* libz.1.2.5.dylib */,
-				3C504D8A1A237B70000C79D6 /* libwebp.a */,
 				3C504D871A237B29000C79D6 /* libcurl.4.dylib */,
 				3C504D851A237B0B000C79D6 /* libsqlite3.0.dylib */,
 			);
@@ -1352,10 +1348,7 @@
 				);
 				INFOPLIST_FILE = Dorothy/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../../cocos2dx/platform/third_party/mac/libraries\"",
-					"\"$(SRCROOT)/../../lua/lib/mac\"",
-				);
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../lua/lib/mac\"";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-pagezero_size",
@@ -1395,10 +1388,7 @@
 				);
 				INFOPLIST_FILE = Dorothy/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../../cocos2dx/platform/third_party/mac/libraries\"",
-					"\"$(SRCROOT)/../../lua/lib/mac\"",
-				);
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../lua/lib/mac\"";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-pagezero_size",

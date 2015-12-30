@@ -63,7 +63,7 @@ Class ClipEditorView,
 							emit "Scene.ClipUpdated",clipFile
 							-- save texture
 							texFile = editor.graphicFolder..name..".png"
-							@target\save editor.gameFullPath..texFile,CCImage.PNG
+							@target\save editor.gameFullPath..texFile
 							oCache.Texture\add @target,texFile
 							-- remove images
 							for image in *images

@@ -76,12 +76,10 @@ end
 oEditor.loadEffectFile = function(self)
 	local listFile = oEditor.output..oEditor.listFile
 	if not oContent:exist(listFile) then
-		local file = io.open(listFile,"w")
-		file:write("<A></A>")
-		file:close()
+		oContent:saveToFile(listFile,"<A></A>")
 	end
-	local file = io.open(listFile,"r")
-	for item in file:read("*a"):gmatch("%b<>") do
+
+	for item in oContent:loadFile(listFile):gmatch("%b<>") do
 		if not item:sub(2,2):match("[A/]") then
 			local line = item:gsub("%s","")
 			local name = line:match("A=\"(.-)\"")
@@ -91,7 +89,6 @@ oEditor.loadEffectFile = function(self)
 			end
 		end
 	end
-	file:close()
 	oCache.Effect:load(listFile)
 end
 
@@ -182,11 +179,9 @@ oEditor.edit = function(self,name)
 		updateAttr("name",name)
 		updateAttr("file",file)
 	elseif extension == "frame" then
-		local frameFile = io.open(targetFile)
 		local fileName = file:match("[^\\/]*$")
 		local filePath = (#fileName < #file and file:sub(1,-#fileName-1) or "")
-		local data = frameFile:read("*a")
-		frameFile:close()
+		local data = oContent:loadFile(targetFile)
 		local img = filePath..data:match("A%s*=%s*\"([^\"]*)\"")
 		local interval = tonumber(data:match("<A.*B%s*=%s*\"([^\"]*)\""))
 		local frameData = {file=img,interval=interval}

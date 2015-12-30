@@ -394,6 +394,7 @@ distribute, and modify this file as you see fit.
 // and only if iPhone convert-to-rgb processing is on).
 //
 
+#include "platform/CCPlatformMacros.h"
 
 #ifndef STBI_NO_STDIO
 #include <stdio.h>

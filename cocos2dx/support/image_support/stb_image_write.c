@@ -2,8 +2,12 @@
 
 
 #ifdef _WIN32
-   #define _CRT_SECURE_NO_WARNINGS
-   #define _CRT_NONSTDC_NO_DEPRECATE
+	#ifndef _CRT_SECURE_NO_WARNINGS
+		#define _CRT_SECURE_NO_WARNINGS
+	#endif
+	#ifndef _CRT_NONSTDC_NO_DEPRECATE
+		#define _CRT_NONSTDC_NO_DEPRECATE
+	#endif
 #endif
 
 #ifndef STBI_WRITE_NO_STDIO
@@ -653,7 +657,7 @@ unsigned char * stbi_zlib_compress(unsigned char *data, int data_len, int *out_l
 
    {
       // compute adler32 on input
-      unsigned int k=0, s1=1, s2=0;
+      unsigned int s1=1, s2=0;
       int blocklen = (int) (data_len % 5552);
       j=0;
       while (j < data_len) {
