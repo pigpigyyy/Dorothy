@@ -1,10 +1,12 @@
 if not _PREMAKE_VERSION then
-	os.execute('premake4 vs2013')
+	os.execute('premake4 --to=build vs2013')
+	-- android os not in the os list. so we use the linux os.
+	os.execute('premake4 --platform=android --os=linux --to=build jni')
 	return
 end
 
 
-newoption
+newoption 
 {
 	trigger = "to",
 	value   = "path",
@@ -15,7 +17,7 @@ newoption
 solution "Dorothy-premake"
 	configurations { "Debug", "Release" }
 
-	location ("build")
+	location (path.join(_OPTIONS['to'] or "build", _ACTION))
 
 	language "C++"
 
@@ -26,10 +28,6 @@ solution "Dorothy-premake"
 		"cocos2dx/kazmath/include",
 		"cocos2dx/platform",
 
-		"cocos2dx/platform/win32",
-		"cocos2dx/platform/third_party/win32",
-		"cocos2dx/platform/third_party/win32/*",
-
 		"external/sqlite3/include",
 		"external/Box2D",
 		"external",
@@ -37,15 +35,7 @@ solution "Dorothy-premake"
 		"cocosDenshion/include",
 	}
 
-	buildoptions {
-		"/MTd",--vs only
-	}
-
-
-	defines {
-		"_WINDOWS", "WIN32", "COCOS2D_STATIC", "_CRT_SECURE_NO_WARNINGS"
-	}
-
+	defines { "COCOS2D_STATIC", }
 
 	configuration "Debug"
 		targetdir "bin/debug"
@@ -61,6 +51,25 @@ solution "Dorothy-premake"
 		defines     { "NDEBUG" }
 		flags       { "OptimizeSize" }
 
+	configuration "vs*"
+		buildoptions { "/MTd" }
+		defines { "_CRT_SECURE_NO_WARNINGS" }
+
+	configuration "windows"
+		defines { "_WINDOWS", "WIN32", }
+
+		includedirs {
+			"cocos2dx/platform/win32",
+			"cocos2dx/platform/third_party/win32",
+			"cocos2dx/platform/third_party/win32/*",
+		}
+	configuration "android"
+		includedirs {
+			"cocos2dx/platform/android",
+			"cocos2dx/platform/third_party/android/prebuilt/libcurl/include",
+		}
+
+
 	project "libCocos2d"
 		kind "StaticLib"
 
@@ -70,12 +79,20 @@ solution "Dorothy-premake"
 			"cocos2dx/**.h",
 		}
 
-		excludes {
-			"cocos2dx/platform/third_party/**.*",
-			"cocos2dx/platform/ios/**.*",
-			"cocos2dx/platform/android/**.*",
-			"cocos2dx/platform/mac/**.*",
-		}
+		configuration "windows"
+			excludes {
+				"cocos2dx/platform/third_party/**.*",
+				"cocos2dx/platform/ios/**.*",
+				"cocos2dx/platform/android/**.*",
+				"cocos2dx/platform/mac/**.*",
+			}
+		configuration "android"
+			excludes {
+				"cocos2dx/platform/third_party/**.*",
+				"cocos2dx/platform/ios/**.*",
+				"cocos2dx/platform/win32/**.*",
+				"cocos2dx/platform/mac/**.*",
+			}
 
 	project "libDorothy"
 		kind "StaticLib"
@@ -121,39 +138,18 @@ solution "Dorothy-premake"
 	project "libCocosDenshion"
 		kind "StaticLib"
 
-		files {
-			"cocosDenshion/win32/*.*",
-			"cocosDenshion/include/*.*",
-		}
+		files { "cocosDenshion/include/*.*", }
+
+		configuration "windows"
+			files { "cocosDenshion/win32/*.*", }
+		configuration "android"
+			files { "cocosDenshion/android/*.*", }
 
 	project "Dorothy"
-		kind "ConsoleApp"--"WindowedApp"
 
 		debugdir "project/Resources"
 
-		files {
-			"project/Classes/*.cpp",
-			"project/proj.win32/*.cpp",
-		}
-
-		includedirs {
-			"project/Classes",
-			unpack(lua_inc),
-		}
-
-		libdirs {
-			"lua/lib/win32",
-			"cocos2dx/platform/third_party/win32/libraries"
-		}
-
-		local function T(d)
-			return path.translate(path.join(os.getcwd(), d), "\\")
-		end
-
-		prelinkcommands {
-			'xcopy /Y /Q ' .. T("cocos2dx\\platform\\third_party\\win32\\libraries\\*.dll") ..  ' "$(OutDir)"',
-			'xcopy /Y /Q ' .. T("external\\sqlite3\\libraries\\win32\\*.*") .. ' "$(OutDir)"',
-		}
+		files { "project/Classes/*.cpp", }
 
 		links {
 			"libCocos2d",
@@ -161,20 +157,50 @@ solution "Dorothy-premake"
 			"libBox2D",
 			"libLua",
 			"libCocosDenshion",
-
-			"opengl32",
-			"ws2_32",
-	        "wsock32",
-	        -- sound.
-	        "Strmiids",
-			"winmm",
-			"Ole32",
-			"dsound",
-
-			"lua51",
-			"libcurl_imp",
-			"libiconv",
-			"pthreadVCE2",
-			"glew32",
-			"libzlib",
 		}
+
+		includedirs {
+			"project/Classes",
+			unpack(lua_inc),
+		}
+
+		configuration "windows"
+			kind "ConsoleApp"--"WindowedApp"
+
+			files { "project/proj.win32/**.cpp", }
+			libdirs { "lua/lib/win32", "cocos2dx/platform/third_party/win32/libraries" }
+
+			local function T(d) return path.translate(path.join(os.getcwd(), d), "\\") end
+
+			prelinkcommands {
+				'xcopy /Y /Q ' .. T("cocos2dx\\platform\\third_party\\win32\\libraries\\*.dll") ..  ' "$(OutDir)"',
+				'xcopy /Y /Q ' .. T("external\\sqlite3\\libraries\\win32\\*.*") .. ' "$(OutDir)"',
+			}
+
+			links {
+				"opengl32",
+				"ws2_32",
+		        "wsock32",
+		        -- sound.
+		        "Strmiids",
+				"winmm",
+				"Ole32",
+				"dsound",
+
+				"lua51",
+				"libcurl_imp",
+				"libiconv",
+				"pthreadVCE2",
+				"glew32",
+				"libzlib",
+			}
+
+		configuration "android"
+			kind "SharedLib"
+			files { "project/proj.android/**.cpp",}
+
+
+if _ACTION == "clean" then
+	os.rmdir("bin")
+	os.rmdir("build")
+end
