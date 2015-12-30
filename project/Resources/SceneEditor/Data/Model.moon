@@ -109,7 +109,8 @@ DataCreater = (dataDef)->
 						@[itemDef[1]] = v
 						if k ~= "ui" and k ~= "camera"
 							emit "Scene.Dirty",true
-							emit "Scene.ViewArea.Frame",@
+							if k ~= "fold" and k ~= "display"
+								emit "Scene.ViewArea.Frame",@
 				else
 					error "assign invalid field #{k} to data"
 		__index:(k)=>

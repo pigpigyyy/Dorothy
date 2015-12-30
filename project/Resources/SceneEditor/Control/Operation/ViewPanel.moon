@@ -417,7 +417,7 @@ Class ViewPanelView,
 			index
 
 		@gslot "Scene.ViewArea.Tap",(args using nil)->
-			uiPos,worldPos = args[1],args[2]
+			{uiPos,worldPos} = args
 			-- pick item
 			if not editor.selectedType
 				itemData = editor\pickItem uiPos

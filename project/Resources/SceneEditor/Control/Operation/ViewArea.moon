@@ -135,6 +135,7 @@ Class ViewAreaView,
 
 		itemChoosed = (itemData)->
 			if itemData
+				@cross\stopAllActions!
 				@cross.visible = true
 				@cross.opacity = 1
 				switch itemData.typeName

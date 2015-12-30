@@ -115,10 +115,13 @@ Class EditMenuView,
 			clearSelection!
 			emit "Scene.ViewPanel.Fold",editor.currentData
 
-		@editBtn.dirty = false
-		@editBtn\slot "Tapped",->
+		@editBtn.visible = false
+		@editBtn.enabled = false
+
+		@menuBtn.dirty = false
+		@menuBtn\slot "Tapped",->
 			clearSelection!
-			if not @editBtn.dirty
+			if not @menuBtn.dirty
 				ScenePanel = require "Control.Item.ScenePanel"
 				ScenePanel!
 			else
@@ -191,10 +194,10 @@ Class EditMenuView,
 				@yFixBtn.visible = false
 
 		@gslot "Scene.Dirty",(dirty)->
-			if @editBtn.dirty ~= dirty
-				@editBtn.dirty = dirty
+			if @menuBtn.dirty ~= dirty
+				@menuBtn.dirty = dirty
 				if dirty
-					@editBtn.text = "Save"
+					@menuBtn.text = "Save"
 					if not @undoBtn.visible
 						@undoBtn.enabled = true
 						@undoBtn.visible = true
@@ -202,8 +205,8 @@ Class EditMenuView,
 						@undoBtn.scaleY = 0
 						@undoBtn\perform oScale 0.3,1,1,oEase.OutBack
 				else
-					@editBtn.color = ccColor3 0x00ffff
-					@editBtn.text = "Menu"
+					@menuBtn.color = ccColor3 0x00ffff
+					@menuBtn.text = "Menu"
 					if @undoBtn.visible
 						@undoBtn.enabled = false
 						@undoBtn\perform CCSequence {
@@ -222,6 +225,11 @@ Class EditMenuView,
 				handler:(state)->
 					if state ~= nil
 						@setButtonVisible @foldBtn,true
+						switch itemData.typeName
+							when "Body","Model","Effect"
+								@setButtonVisible @editBtn,true
+							else
+								@setButtonVisible @editBtn,false
 						text = @foldBtn.text
 						targetText = state and "Un\nFold" or "Fold"
 						if text ~= targetText
@@ -232,6 +240,7 @@ Class EditMenuView,
 						@setButtonVisible @foldBtn,false
 						@setButtonVisible @upBtn,false
 						@setButtonVisible @downBtn,false
+						@setButtonVisible @editBtn,false
 			}
 			return unless itemData
 			switch itemData.typeName
@@ -259,11 +268,13 @@ Class EditMenuView,
 						@setButtonVisible @downBtn,true
 						{:x,:y} = @downBtn.position
 						@foldBtn\runAction oPos 0.3,x,y-60,oEase.OutQuad
+						@editBtn\runAction oPos 0.3,x,y-120,oEase.OutQuad
 					else
 						@setButtonVisible @upBtn,false
 						@setButtonVisible @downBtn,false
 						{:x,:y} = @upBtn.position
 						@foldBtn\runAction oPos 0.3,x,y,oEase.OutQuad
+						@editBtn\runAction oPos 0.3,x,y-60,oEase.OutQuad
 		@gslot "Scene.ViewPanel.Pick",itemChoosed
 		@gslot "Scene.ViewPanel.Select",itemChoosed
 
@@ -312,7 +323,7 @@ Class EditMenuView,
 					when @camBtn
 						posX = @camBtn.editing and width-35 or width-345
 						child\perform oPos 0.5,posX,child.positionY,oEase.OutQuad
-					when @editBtn,@undoBtn,@zoomEditBtn,@iconCam
+					when @menuBtn,@undoBtn,@zoomEditBtn,@iconCam
 						continue
 					else
 						if child.positionX < width/2
