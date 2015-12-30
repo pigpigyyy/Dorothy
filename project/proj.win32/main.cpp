@@ -12,6 +12,13 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     LPTSTR    lpCmdLine,
     int       nCmdShow)
 {
+
+#ifdef _DEBUG
+    AllocConsole();
+    freopen("CONIN$", "r", stdin);
+    freopen("CONOUT$", "w", stdout);
+    freopen("CONOUT$", "w", stderr);
+#endif
     if (lpCmdLine && lpCmdLine[0])
     {
         string filename = lpCmdLine;
@@ -38,18 +45,22 @@ int main(int argc, char** argv)
     CCEGLView* eglView = CCEGLView::sharedOpenGLView();
     eglView->setViewName("Dorothy");
 
-	//SetClassLong(eglView->getHWnd(), GCL_HICON, (long)LoadIcon(hInstance, MAKEINTRESOURCE(IDR_MAINFRAME)));
-	int width = CCUserDefault::sharedUserDefault()->getIntegerForKey("Width");
-	int height = CCUserDefault::sharedUserDefault()->getIntegerForKey("Height");
-	if (width == 0 || height == 0)
-	{
-		width = 800;
-		height = 600;
-		CCUserDefault::sharedUserDefault()->setIntegerForKey("Width", width);
-		CCUserDefault::sharedUserDefault()->setIntegerForKey("Height", height);
-	}
+    //SetClassLong(eglView->getHWnd(), GCL_HICON, (long)LoadIcon(hInstance, MAKEINTRESOURCE(IDR_MAINFRAME)));
+    int width = CCUserDefault::sharedUserDefault()->getIntegerForKey("Width");
+    int height = CCUserDefault::sharedUserDefault()->getIntegerForKey("Height");
+    if (width == 0 || height == 0)
+    {
+        width = 800;
+        height = 600;
+        CCUserDefault::sharedUserDefault()->setIntegerForKey("Width", width);
+        CCUserDefault::sharedUserDefault()->setIntegerForKey("Height", height);
+    }
 
-	eglView->setFrameSize(CCSize(width, height));
+    eglView->setFrameSize(CCSize(width, height));
 
-	return CCApplication::sharedApplication()->run();
+    int ret = CCApplication::sharedApplication()->run();
+#if defined(USE_WINMAIN) && defined(_DEBUG)
+    FreeConsole();
+#endif
+    return ret;
 }
