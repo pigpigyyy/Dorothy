@@ -1,10 +1,22 @@
 if not _PREMAKE_VERSION then
-	os.execute('premake4 --to=build vs2013')
-	-- android os not in the os list. so we use the linux os.
-	os.execute('premake4 --platform=android --os=linux --to=build jni')
+	os.execute('premake5 tolua')
+	os.execute('premake5 vs2015')
 	return
 end
 
+newaction {
+   trigger     = "tolua",
+   description = "binding cpp to lua",
+   execute     = function ()
+   		if os.is('windows') then
+   			local toluapp = path.join(os.getcwd(), 'tools/tolua++/tolua++.exe')
+   			os.execute(string.format('%s -t -D -L tools/tolua++/basic.lua -o "lua/support/LuaCocos2d.cpp" tools/tolua++/Cocos2d.pkg', toluapp))
+   			os.execute(string.format('%s -t -D -L tools/tolua++/basic.lua -o "lua/support/LuaCode.cpp" tools/tolua++/LuaCode.pkg', toluapp))
+		else
+			error "this action not impl yet."
+		end
+   end
+}
 
 newoption 
 {
