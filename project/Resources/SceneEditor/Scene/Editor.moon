@@ -683,6 +683,7 @@ Class EditorView,
 		pos = @items.Scene\getLayer(-1)\convertToNodeSpace originPos
 		bodies = {}
 		addBody = (body)->
+			return true unless body.parent.visible
 			bodyData = @getData body.parent
 			bodies[bodyData] = true
 			true
@@ -695,8 +696,9 @@ Class EditorView,
 					pos = world\convertToNodeSpace originPos
 					world\query CCRect(pos.x-0.5,pos.y-0.5,1,1),addBody
 
-		if @sceneData.ui
-			children = @sceneData.ui.children
+		uiLayer = @sceneData.ui
+		if uiLayer and uiLayer.visible and uiLayer.display
+			children = uiLayer.children
 			if children
 				pos = @items.UI\convertToNodeSpace originPos
 				for j = #children,1,-1
@@ -706,12 +708,12 @@ Class EditorView,
 						else
 							itemData = children[j]
 							item = @getItem itemData
-							return itemData if item.boundingBox\containsPoint pos
+							return itemData if item.visible and item.boundingBox\containsPoint pos
 
 		if @sceneData.children
 			for i = #@sceneData.children,1,-1
 				layerData = @sceneData.children[i]
-				if layerData.children
+				if layerData.display and layerData.visible and layerData.children
 					layer = @getItem layerData
 					pos = layer\convertToNodeSpace originPos
 					for j = #layerData.children,1,-1
@@ -724,5 +726,20 @@ Class EditorView,
 								continue
 							else
 								item = @getItem itemData
-								return itemData if item.boundingBox\containsPoint pos
+								return itemData if item.visible and item.boundingBox\containsPoint pos
 		nil
+
+	edit:(typeName,file)=>
+		editor,editorName = switch typeName
+			when "Model"
+				@actionEditor,"actionEditor"
+			when "Body"
+				@bodyEditor,"bodyEditor"
+			when "Effect"
+				@effectEditor,"effectEditor"
+			else
+				nil,nil
+		if editor and editorName
+			with editor
+				\slot("Activated")\set -> \edit file
+			CCScene\forward editorName,"rollOut"

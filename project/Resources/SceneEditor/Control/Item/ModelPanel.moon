@@ -223,10 +223,7 @@ Class ModelPanelView,
 			viewItem = @modelItems[targetItem]
 			if viewItem.isLoaded
 				@clearSelection!
-				actionEditor = editor.actionEditor
-				actionEditor\slot("Activated")\set ->
-					actionEditor\edit targetItem
-				CCScene\forward "actionEditor","rollOut"
+				editor\edit "Model",targetItem
 			else
 				MessageBox text:"Broken Model\nWith Data Error\nOr Missing Image",okOnly:true
 

@@ -223,10 +223,7 @@ Class BodyPanelView,
 			viewItem = @bodyItems[targetItem]
 			if viewItem.isLoaded
 				@clearSelection!
-				bodyEditor = editor.bodyEditor
-				bodyEditor\slot("Activated")\set ->
-					bodyEditor\edit targetItem
-				CCScene\forward "bodyEditor","rollOut"
+				editor\edit "Body",targetItem
 			else
 				MessageBox text:"Broken Body\nWith Data Error",okOnly:true
 
