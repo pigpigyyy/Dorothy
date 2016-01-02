@@ -723,7 +723,7 @@ Class EditorView,
 								if bodies[itemData]
 									return itemData
 							when "Effect"
-								continue
+								return itemData if CCRect(itemData.position-oVec2(50,50),CCSize(100,100))\containsPoint pos
 							else
 								item = @getItem itemData
 								return itemData if item.visible and item.boundingBox\containsPoint pos
