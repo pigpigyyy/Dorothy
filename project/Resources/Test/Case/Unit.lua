@@ -24,7 +24,7 @@ scene:addChild(world)
 oAI:add("doNothing",oAct("idle"))
 
 local unitDef = oUnitDef()
-unitDef.model = "ActionEditor/Model/Output/jiandunA.model"
+unitDef.model = "res/Model/Output/jiandunA.model"
 unitDef.static = false
 unitDef.move = 100
 unitDef.density = 1
@@ -81,13 +81,13 @@ btn = oButton("Attack",16,60,nil,150,10,
 			print("Begin loading")
 			wait(seconds(3))
 			oCache:loadAsync({
-				"ActionEditor/Model/Output/jixienv.png",
-				"ActionEditor/Model/Output/boy.png",
-				"ActionEditor/Model/Output/doll.png",
-				"ActionEditor/Model/Output/flandre.png",
-				"ActionEditor/Model/Output/girl.png",
-				"ActionEditor/Model/Output/jixienv.model",
-				"ActionEditor/Model/Output/nothing",
+				"res/Model/Output/jixienv.png",
+				"res/Model/Output/boy.png",
+				"res/Model/Output/doll.png",
+				"res/Model/Output/flandre.png",
+				"res/Model/Output/girl.png",
+				"res/Model/Output/jixienv.model",
+				"res/Model/Output/nothing",
 			},function(filename) print(filename) end)
 			wait(seconds(3))
 			print("End loading")

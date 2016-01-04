@@ -25,7 +25,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		filename.erase(std::remove(filename.begin(),filename.end(),'\"'),filename.end());
 		CCUserDefault::sharedUserDefault()->setStringForKey("ScriptEntry", filename.c_str());
 	}
-    SetClassLong(eglView->getHWnd(), GCL_HICON, (long)LoadIcon(hInstance, MAKEINTRESOURCE(IDR_MAINFRAME)));
+    SetClassLong(CCEGLView::sharedOpenGLView()->getHWnd(), GCL_HICON, (long)LoadIcon(hInstance, MAKEINTRESOURCE(IDR_MAINFRAME)));
 
 #else
 int main(int argc, char** argv)

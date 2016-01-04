@@ -201,7 +201,8 @@ solution "Dorothy-premake"
 		configuration "windows"
 			kind "ConsoleApp"--"WindowedApp"
 
-			files { "project/proj.win32/**.cpp", }
+			files { "project/proj.win32/**.cpp", "project/proj.win32/**.rc",}
+			
 			libdirs { "lua/lib/win32", "cocos2dx/platform/third_party/win32/libraries" }
 
 			local function T(d) return path.translate(path.join(os.getcwd(), d), "\\") end
