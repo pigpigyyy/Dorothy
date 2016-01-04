@@ -244,10 +244,7 @@ Class EffectPanelView,
 			viewItem = @effectItems[targetItem]
 			if viewItem.isLoaded
 				@clearSelection!
-				effectEditor = editor.effectEditor
-				effectEditor\slot("Activated")\set ->
-					effectEditor\edit targetItem
-				CCScene\forward "effectEditor","rollOut"
+				editor\edit "Effect",targetItem
 			else
 				MessageBox text:"Broken Effect\nWith Data Error",okOnly:true
 

@@ -117,6 +117,15 @@ Class EditMenuView,
 
 		@editBtn.visible = false
 		@editBtn.enabled = false
+		@editBtn\slot "Tapped",->
+			itemData = editor.currentData
+			if itemData
+				file = if itemData.typeName == "Effect"
+					oCache.Effect\getFileByName itemData.effect
+				else
+					itemData.file
+				if file
+					editor\edit itemData.typeName,file
 
 		@menuBtn.dirty = false
 		@menuBtn\slot "Tapped",->
