@@ -56,25 +56,12 @@ void CCAutoreleasePool::clear()
 {
 	if (m_pManagedObjectArray->count() > 0)
 	{
-		//CCAutoreleasePool* pReleasePool;
-#ifdef _DEBUG
-		int nIndex = m_pManagedObjectArray->count() - 1;
-#endif
-
 		CCObject* pObj = NULL;
 		CCARRAY_FOREACH_REVERSE(m_pManagedObjectArray, pObj)
 		{
-			if (!pObj)
-				break;
-
+			if (!pObj) break;
 			pObj->_isManaged = false;
-			//(*it)->release();
-			//delete (*it);
-#ifdef _DEBUG
-			nIndex--;
-#endif
 		}
-
 		m_pManagedObjectArray->removeAllObjects();
 	}
 }

@@ -67,37 +67,6 @@ Config of cocos2d-x project, per target platform.
     #define CC_TARGET_PLATFORM         CC_PLATFORM_WIN32
 #endif
 
-// linux
-#if defined(LINUX)
-    #undef  CC_TARGET_PLATFORM
-    #define CC_TARGET_PLATFORM         CC_PLATFORM_LINUX
-#endif
-
-// marmalade
-#if defined(MARMALADE)
-#undef  CC_TARGET_PLATFORM
-#define CC_TARGET_PLATFORM         CC_PLATFORM_MARMALADE
-#endif
-
-// bada
-#if defined(SHP)
-#undef  CC_TARGET_PLATFORM
-#define CC_TARGET_PLATFORM         CC_PLATFORM_BADA
-#endif
-
-// qnx
-#if defined(__QNX__)
-    #undef  CC_TARGET_PLATFORM
-    #define CC_TARGET_PLATFORM     CC_PLATFORM_BLACKBERRY
-#endif
-
-// native client
-#if defined(__native_client__)
-    #undef  CC_TARGET_PLATFORM
-    #define CC_TARGET_PLATFORM     CC_PLATFORM_NACL
-#endif
-
-
 //////////////////////////////////////////////////////////////////////////
 // post configure
 //////////////////////////////////////////////////////////////////////////

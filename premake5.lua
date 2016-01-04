@@ -80,7 +80,7 @@ solution "Dorothy-premake"
 		targetdir "bin/debug"
 		objdir	  "bin/obj/debug"
 
-  		defines { "_DEBUG" }
+  		defines { "_DEBUG","COCOS2D_DEBUG=1" }
 		flags   { "Symbols" }
 
 	configuration "Release"
