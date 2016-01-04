@@ -21,6 +21,9 @@
 
 #include <Box2D/Common/b2Math.h>
 
+class b2Fixture;
+class b2Body;
+
 /// Color for debug drawing. Each value has the range [0,1].
 struct b2Color
 {
@@ -79,6 +82,8 @@ public:
 	/// @param xf a transform.
 	virtual void DrawTransform(const b2Transform& xf) = 0;
 
+	virtual bool IsVisible(b2Fixture* fixture);
+	virtual bool IsVisible(b2Body* body);
 protected:
 	uint32 m_drawFlags;
 };

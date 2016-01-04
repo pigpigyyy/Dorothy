@@ -71,6 +71,7 @@ local function create(itemDict,world,pos,angle)
 				newPos = newPos + pos - oldPos
 			end
 			local body = oBody._create(oBody,itemDef,world,newPos,angle)
+			body.owner = centerBody
 			centerBody:addChild(body)
 			local face = nil
 			local faceStr = itemDef.face

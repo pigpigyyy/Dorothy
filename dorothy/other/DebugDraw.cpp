@@ -18,13 +18,15 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
+#include "const/oDefine.h"
 #include "DebugDraw.h"
 #include "cocos2d.h"
+USING_NS_CC;
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
-
-USING_NS_CC;
+#include "physics/oBody.h"
+using namespace Dorothy;
 
 GLESDebugDraw::GLESDebugDraw() :
 ratio(1.0f)
@@ -45,6 +47,18 @@ void GLESDebugDraw::Begin()
 	ccGLEnableVertexAttribs(kCCVertexAttribFlag_Position);
 	_shaderProgram->use();
 	_shaderProgram->setUniformsForBuiltins();
+}
+
+bool GLESDebugDraw::IsVisible(b2Fixture* fixture)
+{
+	return IsVisible(fixture->GetBody());
+}
+
+bool GLESDebugDraw::IsVisible(b2Body* bodyB2)
+{
+	oBody* body = (oBody*)bodyB2->GetUserData();
+	CCNode* owner = (CCNode*)body->getOwner();
+	return body->isVisible() && (owner == nullptr || (owner->isVisible() && (owner->getParent() == nullptr || owner->getParent()->isVisible())));
 }
 
 void GLESDebugDraw::DrawPolygon(const b2Vec2* old_vertices, int vertexCount, const b2Color& color)

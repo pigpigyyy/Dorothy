@@ -1150,6 +1150,7 @@ void b2World::DrawDebugData()
 	{
 		for (b2Body* b = m_bodyList; b; b = b->GetNext())
 		{
+			if (!m_debugDraw->IsVisible(b)) continue;
 			const b2Transform& xf = b->GetTransform();
 			for (b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext())
 			{
@@ -1185,7 +1186,11 @@ void b2World::DrawDebugData()
 	{
 		for (b2Joint* j = m_jointList; j; j = j->GetNext())
 		{
-			DrawJoint(j);
+			if (m_debugDraw->IsVisible(j->GetBodyA()) &&
+				m_debugDraw->IsVisible(j->GetBodyB()))
+			{
+				DrawJoint(j);
+			}
 		}
 	}
 
@@ -1194,13 +1199,15 @@ void b2World::DrawDebugData()
 		b2Color color(0.3f, 0.9f, 0.9f);
 		for (b2Contact* c = m_contactManager.m_contactList; c; c = c->GetNext())
 		{
-			//b2Fixture* fixtureA = c->GetFixtureA();
-			//b2Fixture* fixtureB = c->GetFixtureB();
-
-			//b2Vec2 cA = fixtureA->GetAABB().GetCenter();
-			//b2Vec2 cB = fixtureB->GetAABB().GetCenter();
-
-			//m_debugDraw->DrawSegment(cA, cB, color);
+			b2Fixture* fixtureA = c->GetFixtureA();
+			b2Fixture* fixtureB = c->GetFixtureB();
+			if (m_debugDraw->IsVisible(fixtureA) &&
+				m_debugDraw->IsVisible(fixtureB))
+			{
+				b2Vec2 cA = fixtureA->GetAABB(0).GetCenter();
+				b2Vec2 cB = fixtureB->GetAABB(0).GetCenter();
+				m_debugDraw->DrawSegment(cA, cB, color);
+			}
 		}
 	}
 
@@ -1211,7 +1218,7 @@ void b2World::DrawDebugData()
 
 		for (b2Body* b = m_bodyList; b; b = b->GetNext())
 		{
-			if (b->IsActive() == false)
+			if (b->IsActive() == false || !m_debugDraw->IsVisible(b))
 			{
 				continue;
 			}
@@ -1238,9 +1245,12 @@ void b2World::DrawDebugData()
 	{
 		for (b2Body* b = m_bodyList; b; b = b->GetNext())
 		{
-			b2Transform xf = b->GetTransform();
-			xf.p = b->GetWorldCenter();
-			m_debugDraw->DrawTransform(xf);
+			if (m_debugDraw->IsVisible(b))
+			{
+				b2Transform xf = b->GetTransform();
+				xf.p = b->GetWorldCenter();
+				m_debugDraw->DrawTransform(xf);
+			}
 		}
 	}
 }

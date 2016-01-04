@@ -17,6 +17,8 @@
 */
 
 #include <Box2D/Common/b2Draw.h>
+#include <Box2D/Dynamics/b2Body.h>
+#include <Box2D/Dynamics/b2Fixture.h>
 
 b2Draw::b2Draw()
 {
@@ -41,4 +43,13 @@ void b2Draw::AppendFlags(uint32 flags)
 void b2Draw::ClearFlags(uint32 flags)
 {
 	m_drawFlags &= ~flags;
+}
+
+bool b2Draw::IsVisible(b2Fixture* fixture)
+{
+	return true;
+}
+bool b2Draw::IsVisible(b2Body* body)
+{
+	return true;
 }

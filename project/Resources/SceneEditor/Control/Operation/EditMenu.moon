@@ -121,7 +121,7 @@ Class EditMenuView,
 			itemData = editor.currentData
 			if itemData
 				file = if itemData.typeName == "Effect"
-					oCache.Effect\getFileByName itemData.effect
+					itemData.effect
 				else
 					itemData.file
 				if file
