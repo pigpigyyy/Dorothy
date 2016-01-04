@@ -14,7 +14,7 @@ world:setShouldContact(0,0,true)
 world.showDebug = true
 scene:addChild(world)
 
-local car = oBody("BodyEditor/Body/Output/car.body",world)
+local car = oBody("res/Body/Output/car.body",world)
 car.data.wheel.enabled = true
 world:addChild(car)
 

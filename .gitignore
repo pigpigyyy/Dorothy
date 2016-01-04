@@ -82,6 +82,3 @@ DerivedData/
 !/tools/moonscite/moonc.exe
 !/tools/moonscite/Scite.exe
 *.opendb
-
-.*
-/tools/tolua++/LuaCode.cpp

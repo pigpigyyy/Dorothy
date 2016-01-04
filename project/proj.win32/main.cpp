@@ -25,7 +25,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		filename.erase(std::remove(filename.begin(),filename.end(),'\"'),filename.end());
 		CCUserDefault::sharedUserDefault()->setStringForKey("ScriptEntry", filename.c_str());
 	}
-    SetClassLong(CCEGLView::sharedOpenGLView()->getHWnd(), GCL_HICON, (long)LoadIcon(hInstance, MAKEINTRESOURCE(IDR_MAINFRAME)));
 
 #else
 int main(int argc, char** argv)
@@ -38,6 +37,7 @@ int main(int argc, char** argv)
 	CCEGLView* eglView = CCEGLView::sharedOpenGLView();
 	eglView->setViewName("Dorothy");
 
+	SetClassLong(eglView->getHWnd(), GCL_HICON, (long)LoadIcon(hInstance, MAKEINTRESOURCE(IDR_MAINFRAME)));
 	int width = CCUserDefault::sharedUserDefault()->getIntegerForKey("Width");
 	int height = CCUserDefault::sharedUserDefault()->getIntegerForKey("Height");
 	if (width == 0 || height == 0)

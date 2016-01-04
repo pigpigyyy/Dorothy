@@ -204,7 +204,7 @@ TOLUA_API void tolua_typeid(lua_State *L, int typeId, const char* className);
 }
 #endif
 
-#if _DEBUG == 0
+#if COCOS2D_DEBUG == 0
 #define TOLUA_RELEASE
 #endif
 

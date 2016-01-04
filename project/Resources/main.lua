@@ -28,15 +28,7 @@ builtin.CCLabelTTF = function(text,fontName,fontSize)
 	return CCLabelTTF(text,fontName,fontSize)
 end
 
-xpcall(function()
-	require "utils"
-	require "Test.Entry"
-end, function(errorMessage)
-	print("----------------------------------------")
-    print("LUA ERROR: " .. tostring(errorMessage) .. "\n")
-    print(debug.traceback("", 2))
-    print("----------------------------------------")
-end)
+require("Test.Entry")
 
 --[[
 Dorothy()

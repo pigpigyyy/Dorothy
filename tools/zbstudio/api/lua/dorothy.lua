@@ -4605,6 +4605,14 @@ local Dorothy =
 				static = true,
 				type = "method"
 			},
+			isdir =
+			{
+				args = "(path: string)",
+				description = "[Class Method]",
+				returns = "(isFolder: bool)",
+				static = true,
+				type = "method"
+			},
 			remove =
 			{
 				args = "(path: string)",
