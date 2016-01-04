@@ -196,19 +196,17 @@ void oContent::copyFile(const char* src, const char* dst)
 		{
 			unsigned long size;
 			//CCLOG("now copy file %s",file.c_str());
-			char* buffer = this->loadFileUnsafe((srcPath + '/' + file).c_str(), size);
+			auto buffer = this->loadFile((srcPath + '/' + file).c_str(), size);
 			ofstream stream((dstPath + '/' + file).c_str(), std::ios::out | std::ios::trunc | std::ios::binary);
 			if (!stream.write(buffer, size)) CCLOG("write file failed! %s",(dstPath + '/' + file).c_str());
-			delete buffer;
 		}
 	}
 	else
 	{
 		unsigned long size;
-		char* buffer = this->loadFileUnsafe(src, size);
+		auto buffer = this->loadFile(src, size);
 		ofstream stream(dst, std::ios::out | std::ios::trunc | std::ios::binary);
 		stream.write(buffer, size);
-		delete buffer;
 	}
 }
 
