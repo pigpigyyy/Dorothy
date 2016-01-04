@@ -4,14 +4,20 @@ if not _PREMAKE_VERSION then
 	return
 end
 
+local function runCmd(...)
+	local cmd = string.format(...)
+	print(cmd)
+	os.execute(cmd)
+end
+
 newaction {
 	trigger     = "tolua",
 	description = "binding cpp to lua",
 	execute     = function ()
 			if os.is('windows') then
 				local toluapp = path.join(os.getcwd(), 'tools/tolua++/tolua++.exe')
-				os.execute(string.format('%s -t -D -L tools/tolua++/basic.lua -o "lua/support/LuaCocos2d.cpp" tools/tolua++/Cocos2d.pkg', toluapp))
-				os.execute(string.format('%s -t -D -L tools/tolua++/basic.lua -o "lua/support/LuaCode.cpp" tools/tolua++/LuaCode.pkg', toluapp))
+				runCmd('%s -t -D -L tools/tolua++/basic.lua -o "lua/support/LuaCocos2d.cpp" tools/tolua++/Cocos2d.pkg', toluapp)
+				runCmd('%s -t -D -L tools/tolua++/basic.lua -o "lua/support/LuaCode.cpp" tools/tolua++/LuaCode.pkg', toluapp)
 		else
 			error "this action not impl yet."
 		end
@@ -27,8 +33,7 @@ newaction {
 		local NDK_MODULE_PATH = {
 			os.getcwd(),
 		}
-		local cmd = string.format("ndk-build -j4 NDK_DEBUG=%d -C %s NDK_MODULE_PATH=%s", NDK_DEBUG, APP_ANDROID_ROOT, table.concat(NDK_MODULE_PATH, ';'))
-		os.execute("cd project\\proj.android &" .. cmd)
+		runCmd("cd project\\proj.android &ndk-build -j4 NDK_DEBUG=%d -C %s NDK_MODULE_PATH=%s", NDK_DEBUG, APP_ANDROID_ROOT, table.concat(NDK_MODULE_PATH, ';'))
 	end
 }
 
@@ -36,7 +41,7 @@ newaction {
 	trigger		= 'apk',
 	description = 'pack apk.',
 	execute		= function()
-		os.execute("gradlew build")
+		runCmd("gradlew build")
 	end
 }
 

@@ -48,8 +48,9 @@ public:
 	void saveToFile(const string& filename, const string& content);
 	vector<string> getDirEntries(const char* path, bool isFolder);
 	bool mkdir(const char* path);
+    bool isdir(const char* path);
 
-	/* from CCFileUtils */
+    /* from CCFileUtils */
 	PROPERTY_READONLY(string, WritablePath);
 	PROPERTY_BOOL_NAME(PopupNotify);
 

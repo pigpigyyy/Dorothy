@@ -4,22 +4,39 @@ if winSize.width >= 1280 and winSize.height >= 960 then
 	CCView:setDesignResolution(winSize.width/2,winSize.height/2,CCView.ExactFit)
 end
 
+local fontSize_cov = {
+	[17] = 17,
+	[20] = 20,
+	[24] = 24,
+
+	[10] = 14,
+	[12] = 14,
+
+	[14] = 17,
+	[16] = 17,
+	[18] = 17,
+}
+
 local CCLabelTTF = builtin.CCLabelTTF
 builtin.CCLabelTTF = function(text,fontName,fontSize)
-	if fontSize == 17
-		or fontSize == 20
-		or fontSize == 24 then
-		return CCLabelBMFont(text,"res/Font/Arial"..tostring(fontSize)..".fnt",CCLabelBMFont.AutomaticWidth,CCTextAlign.HCenter)
-	elseif fontSize == 10
-		or fontSize == 12 then
-		return CCLabelBMFont(text,"res/Font/Arial14.fnt",CCLabelBMFont.AutomaticWidth,CCTextAlign.HCenter)
-	elseif fontSize == 14 or fontSize == 16 or fontSize == 18 then
-		return CCLabelBMFont(text,"res/Font/Arial17.fnt",CCLabelBMFont.AutomaticWidth,CCTextAlign.HCenter)
+	local cov = fontSize_cov[fontSize]
+
+	if cov then
+		return CCLabelBMFont(text,"res/Font/Arial"..cov..".fnt",CCLabelBMFont.AutomaticWidth,CCTextAlign.HCenter)
 	end
+
 	return CCLabelTTF(text,fontName,fontSize)
 end
 
-require("Test.Entry")
+xpcall(function()
+	require "utils"
+	require "Test.Entry"
+end, function(errorMessage)
+	print("----------------------------------------")
+    print("LUA ERROR: " .. tostring(errorMessage) .. "\n")
+    print(debug.traceback("", 2))
+    print("----------------------------------------")
+end)
 
 --[[
 Dorothy()

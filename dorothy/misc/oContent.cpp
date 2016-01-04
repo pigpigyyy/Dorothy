@@ -258,6 +258,27 @@ bool oContent::mkdir(const char* path)
 	return CreateDir(path) == 0;
 }
 
+bool oContent::isdir(const char* name)
+{
+    struct stat fs;
+    char tmp[512] = { 0 };
+
+    if (!name || name[0] == '\0')
+        return false;
+
+    // eat the last seperator if only
+    // for the stupid API
+    strcpy(tmp, name);
+    size_t len = strlen(tmp);
+    if (tmp[len - 1] == '/' || tmp[len - 1] == '\\')
+        tmp[len - 1] = '\0';
+
+    if (stat(tmp, &fs) == 0)
+        return !!(fs.st_mode & S_IFDIR);
+    else
+        return false;
+}
+
 string oContent::getWritablePath() const
 {
 	return CCFileUtils::sharedFileUtils()->getWritablePath();
