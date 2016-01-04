@@ -1,0 +1,2 @@
+include ':project:proj.android'
+include ':cocos2dx:platform:android:java'
