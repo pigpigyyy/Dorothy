@@ -135,108 +135,66 @@ local gcButton = oButton("GC",17,60,false,
 gcButton.anchor = oVec2.zero
 opMenu:addChild(gcButton)
 
-local totalFiles = 0
 local function compile(dir,clean,minify)
 	local ParseLua = require("luaminify.ParseLua").ParseLua
 	local FormatMini = require("luaminify.FormatMini")
-	local entries = oContent:getEntries(dir,true)
-	for _,item in ipairs(entries) do
-		local entry = dir.."/"..item
-		if item ~= "." and item ~= ".." then
-			if not compile(entry,clean,minify) then
-				return false
-			end
-		end
-	end
-	entries = oContent:getEntries(dir,false)
-	for _,item in ipairs(entries) do
-		local name = item:match("(.*)%.[^%.\\/]*$")
-		local extension = string.match(item, "%.([^%.\\/]*)$")
-		if extension == "moon" then
-			if not clean then
-				local entry = dir.."/"..item
-				local moonCodes = oContent:loadFile(entry)
-				local codes,err = moonscript.to_lua(moonCodes)
-				if not codes then
-					print("Compile errors in "..entry)
-					print(err)
-					return false
-				else
-					if minify then
-						local st, ast = ParseLua(codes)
-						if not st then
-							print(ast)
-							return false
-						end
-						codes = FormatMini(ast)
-					end
-					oContent:saveToFile(dir.."/"..name..".lua",codes)
-					print("Moon compiled: "..entry)
-					totalFiles = totalFiles+1
-				end
-			else
-				local filename = dir.."/"..name..".lua"
-				if oContent:exist(filename) then
-					print("Moon cleaned: "..filename)
-					oContent:remove(filename)
-				end
-			end
-		elseif extension == "xml" then
-			if not clean then
-				local entry = dir.."/"..item
-				local xmlCodes = oContent:loadFile(entry)
-				local codes = xmlToLua(xmlCodes)
-				if not codes then
-					print("Compile errors in "..entry)
-					return false
-				else
-					if minify then
-						local st, ast = ParseLua(codes)
-						if not st then
-							print(ast)
-							return false
-						end
-						codes = FormatMini(ast)
-					end
-					oContent:saveToFile(dir.."/"..name..".lua",codes)
-					print("xml compiled: "..entry)
-					totalFiles = totalFiles+1
-				end
-			else
-				local filename = dir.."/"..name..".lua"
-				if oContent:exist(filename) then
-					print("Xml cleaned: "..filename)
-					oContent:remove(filename)
+
+	local files = path.listfile(dir, true, {'.moon', '.xml'})
+
+	local format_name = function(file) return path.join(path.getdir(file), path.getbasename(file), '.lua') end
+
+	if clean then
+		for i, file in ipairs(files) do
+			local name = format_name(file)
+			if path.isfile(name) then
+				if not os.remove() then
+					error("can't remove ".. format_name(file))
 				end
 			end
 		end
+
+		print(string.format("Clean done. %d files in total.", #files))
+
+		return true
 	end
+
+	local compiler = {
+		['.xml'] = xmlToLua,
+		['.moon'] = moonscript.to_lua,
+	}
+
+	for i, file in ipairs(files) do
+		print('compile', file)
+		local ext = path.getext(file)
+		local codes = oContent:loadFile(file)
+		local compiled_codes, err = compiler[ext](codes)
+
+		if not compiled_codes then
+			error(err or 'Compile Filed.')
+		end
+
+		if minify then
+			local st, ast = ParseLua(compiled_codes)
+			if not st then error(ast) end
+			compiled_codes = FormatMini(ast)
+		end
+		oContent:saveToFile(format_name(file), compiled_codes)
+	end
+
+	print(string.format("Compile done. %d files in total.", #files))
+
 	return true
 end
-local compileButton = oButton("Compile",12,60,false,
-	70,70,
-	function()
-		totalFiles = 0
-		compile(".",false)
-		print(string.format("Compile done. %d files in total.",totalFiles))
-	end)
+
+local compileButton = oButton("Compile",12,60,false,70,70, function() compile(".",false) end)
 compileButton.anchor = oVec2.zero
 opMenu:addChild(compileButton)
-compileButton = oButton("Compile\nMinify",12,60,false,
-	70,0,
-	function()
-		totalFiles = 0
-		compile(".",false,true)
-		print(string.format("Compile and Minify done. %d files in total.",totalFiles))
-	end)
+
+compileButton = oButton("Compile\nMinify",12,60,false, 70,0, function() compile(".",false,true)	end)
 compileButton.anchor = oVec2.zero
 opMenu:addChild(compileButton)
-local cleanButton = oButton("Clean",16,60,false,
-	140,0,
-	function()
-		compile(".",true)
-		print("Clean done.")
-	end)
+
+local cleanButton = oButton("Clean",16,60,false, 140,0, function() compile(".",true) end)
 cleanButton.anchor = oVec2.zero
 opMenu:addChild(cleanButton)
 

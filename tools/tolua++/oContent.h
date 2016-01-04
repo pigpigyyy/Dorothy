@@ -8,6 +8,8 @@ class oContent
 	tolua_outside void oContent_copyFileAsync @ copyAsync(const char* src, const char* dst, tolua_function func);
 	bool isFileExist @ exist(const char* path);
 	bool mkdir(const char* path);
+    bool isdir(const char* path);
+
 	bool removeFile @ remove(const char* path);
 
     tolua_readonly tolua_property__common string writablePath;

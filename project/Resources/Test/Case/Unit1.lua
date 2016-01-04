@@ -134,7 +134,7 @@ bk.textureRect = CCRect(0,0,20480,2048)
 world:addChild(bk)
 
 local unitDef = oUnitDef()
-unitDef.model = "ActionEditor/Model/Output/role.model"
+unitDef.model = "res/Model/Output/role.model"
 unitDef.static = false
 unitDef.density = 0.5
 unitDef.restitution = 0

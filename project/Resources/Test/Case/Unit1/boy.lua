@@ -4,7 +4,7 @@ return
 	face =
 	{
 		{
-			"ActionEditor/Model/Output/boy.clip|face",
+			"res/Model/Output/boy.clip|face",
 			{"positionX",-2},
 			{"positionY",2},
 		},
@@ -12,7 +12,7 @@ return
 	fHair =
 	{
 		{
-			"ActionEditor/Model/Output/boy.clip|fHair",
+			"res/Model/Output/boy.clip|fHair",
 			{"positionX",43},
 			{"positionY",70},
 		},
@@ -20,7 +20,7 @@ return
 	bHair =
 	{
 		{
-			"ActionEditor/Model/Output/boy.clip|bHair",
+			"res/Model/Output/boy.clip|bHair",
 			{"positionX",17},
 			{"positionY",24},
 		},
@@ -28,7 +28,7 @@ return
 	fBody =
 	{
 		{
-			"ActionEditor/Model/Output/boy.clip|fBody",
+			"res/Model/Output/boy.clip|fBody",
 			{"positionX",5},
 			{"positionY",-3},
 		},
@@ -36,7 +36,7 @@ return
 	bBody =
 	{
 		{
-			"ActionEditor/Model/Output/boy.clip|bBody",
+			"res/Model/Output/boy.clip|bBody",
 			{"positionX",1},
 			{"positionY",-34},
 		},
@@ -44,7 +44,7 @@ return
 	lArm =
 	{
 		{
-			"ActionEditor/Model/Output/boy.clip|lArm",
+			"res/Model/Output/boy.clip|lArm",
 			{"positionX",14},
 			{"positionY",27},
 		},
@@ -52,7 +52,7 @@ return
 	lHand =
 	{
 		{
-			"ActionEditor/Model/Output/boy.clip|lHand",
+			"res/Model/Output/boy.clip|lHand",
 			{"positionX",22},
 			{"positionY",46},
 		},
@@ -60,7 +60,7 @@ return
 	rArm =
 	{
 		{
-			"ActionEditor/Model/Output/boy.clip|rArm",
+			"res/Model/Output/boy.clip|rArm",
 			{"positionX",10},
 			{"positionY",24},
 		},
@@ -68,7 +68,7 @@ return
 	rHand =
 	{
 		{
-			"ActionEditor/Model/Output/boy.clip|rHand",
+			"res/Model/Output/boy.clip|rHand",
 			{"positionX",10},
 			{"positionY",44},
 		},
@@ -76,7 +76,7 @@ return
 	lLeg =
 	{
 		{
-			"ActionEditor/Model/Output/boy.clip|lLeg",
+			"res/Model/Output/boy.clip|lLeg",
 			{"positionX",7},
 			{"positionY",34},
 		},
@@ -84,12 +84,12 @@ return
 	lFoot =
 	{
 		{
-			"ActionEditor/Model/Output/boy.clip|lLegD",
+			"res/Model/Output/boy.clip|lLegD",
 			{"positionX",14},
 			{"positionY",56},
 		},
 		{
-			"ActionEditor/Model/Output/boy.clip|lFoot",
+			"res/Model/Output/boy.clip|lFoot",
 			{"positionX",6},
 			{"positionY",6},
 			{"angle",15},
@@ -98,7 +98,7 @@ return
 	rLeg =
 	{
 		{
-			"ActionEditor/Model/Output/boy.clip|rLeg",
+			"res/Model/Output/boy.clip|rLeg",
 			{"positionX",14},
 			{"positionY",30},
 		},
@@ -106,12 +106,12 @@ return
 	rFoot =
 	{
 		{
-			"ActionEditor/Model/Output/boy.clip|rLegD",
+			"res/Model/Output/boy.clip|rLegD",
 			{"positionX",8},
 			{"positionY",56},
 		},
 		{
-			"ActionEditor/Model/Output/boy.clip|lFoot",
+			"res/Model/Output/boy.clip|lFoot",
 			{"positionX",5},
 			{"positionY",5},
 			{"angle",15},

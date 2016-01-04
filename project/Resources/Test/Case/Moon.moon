@@ -2,7 +2,7 @@ Dorothy!
  
 {:width,:height} = CCDirector.winSize
 
-model = with oModel "ActionEditor/Model/Output/xiaoli.model"
+model = with oModel "res/Model/Output/xiaoli.model"
 	.look = "happy"
 	.loop = true
 	.position = oVec2 width*0.5, height*0.5

@@ -1,10 +1,49 @@
 if not _PREMAKE_VERSION then
-	os.execute('premake4 --to=build vs2013')
-	-- android os not in the os list. so we use the linux os.
-	os.execute('premake4 --platform=android --os=linux --to=build jni')
+	os.execute('premake5 tolua')
+	os.execute('premake5 vs2015')
 	return
 end
 
+local function runCmd(...)
+	local cmd = string.format(...)
+	print(cmd)
+	os.execute(cmd)
+end
+
+newaction {
+	trigger     = "tolua",
+	description = "binding cpp to lua",
+	execute     = function ()
+			if os.is('windows') then
+				local toluapp = path.join(os.getcwd(), 'tools/tolua++/tolua++.exe')
+				runCmd('%s -t -D -L tools/tolua++/basic.lua -o "lua/support/LuaCocos2d.cpp" tools/tolua++/Cocos2d.pkg', toluapp)
+				runCmd('%s -t -D -L tools/tolua++/basic.lua -o "lua/support/LuaCode.cpp" tools/tolua++/LuaCode.pkg', toluapp)
+		else
+			error "this action not impl yet."
+		end
+	end
+}
+
+newaction {
+	trigger		= 'ndkbuild',
+	description = "android ndk build.",
+	execute     = function ()
+		local APP_ANDROID_ROOT = path.join(os.getcwd(), 'project', 'proj.android')
+		local NDK_DEBUG = 1
+		local NDK_MODULE_PATH = {
+			os.getcwd(),
+		}
+		runCmd("cd project\\proj.android &ndk-build -j4 NDK_DEBUG=%d -C %s NDK_MODULE_PATH=%s", NDK_DEBUG, APP_ANDROID_ROOT, table.concat(NDK_MODULE_PATH, ';'))
+	end
+}
+
+newaction {
+	trigger		= 'apk',
+	description = 'pack apk.',
+	execute		= function()
+		runCmd("gradlew build")
+	end
+}
 
 newoption 
 {
@@ -167,7 +206,8 @@ solution "Dorothy-premake"
 		configuration "windows"
 			kind "ConsoleApp"--"WindowedApp"
 
-			files { "project/proj.win32/**.cpp", }
+			files { "project/proj.win32/**.cpp", "project/proj.win32/**.rc",}
+			
 			libdirs { "lua/lib/win32", "cocos2dx/platform/third_party/win32/libraries" }
 
 			local function T(d) return path.translate(path.join(os.getcwd(), d), "\\") end
