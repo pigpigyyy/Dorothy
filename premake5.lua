@@ -14,10 +14,14 @@ newaction {
 	trigger     = "tolua",
 	description = "binding cpp to lua",
 	execute     = function ()
-			if os.is('windows') then
-				local toluapp = path.join(os.getcwd(), 'tools/tolua++/tolua++.exe')
-				runCmd('%s -t -D -L tools/tolua++/basic.lua -o "lua/support/LuaCocos2d.cpp" tools/tolua++/Cocos2d.pkg', toluapp)
-				runCmd('%s -t -D -L tools/tolua++/basic.lua -o "lua/support/LuaCode.cpp" tools/tolua++/LuaCode.pkg', toluapp)
+		if os.is('windows') then
+			local cmds = {
+				'cd tools\\tolua++',
+				'tolua++ -t -D -L basic.lua -o "../../lua/support/LuaCocos2d.cpp" Cocos2d.pkg',
+				'tolua++ -t -D -L basic.lua -o "../../lua/support/LuaCode.cpp" LuaCode.pkg',
+			}
+
+			runCmd(table.concat(cmds, ' & '))
 		else
 			error "this action not impl yet."
 		end
@@ -204,7 +208,8 @@ solution "Dorothy-premake"
 		}
 
 		configuration "windows"
-			kind "ConsoleApp"--"WindowedApp"
+			kind "WindowedApp"
+			flags { "WinMain" }
 
 			files { "project/proj.win32/**.cpp", "project/proj.win32/**.rc",}
 			
