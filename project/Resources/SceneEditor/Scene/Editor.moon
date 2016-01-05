@@ -4,7 +4,6 @@ EditorView = require "View.Scene.Editor"
 SelectionPanel = require "Control.Basic.SelectionPanel"
 Model = require "Data.Model"
 Reference = require "Data.Reference"
-CCImage.isPngAlphaPremultiplied = true
 
 Class EditorView,
 	__init: =>
@@ -305,6 +304,7 @@ Class EditorView,
 			effectEditor.input = @gameFullPath
 			effectEditor.output = @gameFullPath
 			effectEditor\slot "Edited",(effect,effectFile)->
+				print effect,effectFile
 				emit "Scene.EffectUpdated",{effect,effectFile}
 			effectEditor\slot "Quit",->
 				CCScene\back "rollIn"

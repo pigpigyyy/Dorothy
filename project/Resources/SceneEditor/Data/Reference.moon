@@ -162,11 +162,19 @@ getDownRefs = (item)->
 refreshRef = (item)->
 	downRefs = getDownRefs item
 	for downRef in *downRefs
-		upRefs = getUpRefs downRef
-		for i = 1,#upRefs
-			if upRefs[i] == item
-				table.remove upRefs,i
-				break
+		upRefs = upRefMap[downRef]
+		if upRefs
+			for i = 1,#upRefs
+				if upRefs[i] == item
+					table.remove upRefs,i
+					break
+		if sceneRefMap
+			upRefs = sceneRefMap[downRef]
+			if upRefs
+				for i = 1,#upRefs
+					if upRefs[i] == item
+						table.remove upRefs,i
+						break
 	downRefMap[item] = nil
 	updateItemRef item
 
