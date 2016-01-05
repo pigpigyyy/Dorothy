@@ -22,7 +22,7 @@ builtin.CCLabelTTF = function(text,fontName,fontSize)
 	local cov = fontSize_cov[fontSize]
 
 	if cov then
-		return CCLabelBMFont(text,"res/Font/Arial"..cov..".fnt",CCLabelBMFont.AutomaticWidth,CCTextAlign.HCenter)
+		return CCLabelBMFont(text,"Font/Arial"..cov..".fnt",CCLabelBMFont.AutomaticWidth,CCTextAlign.HCenter)
 	end
 
 	return CCLabelTTF(text,fontName,fontSize)

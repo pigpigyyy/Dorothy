@@ -148,9 +148,11 @@ local function oViewArea()
 		if oEditor.effect then
 			oEditor.effect:autoRemove():stop()
 		end
-		local effect = oEffect(effectName)
-		effect:attachTo(scrollNode):start()
-		oEditor.effect = effect
+		if effectName then
+			local effect = oEffect(effectName)
+			effect:attachTo(scrollNode):start()
+			oEditor.effect = effect
+		end
 	end)
 	view:gslot("Effect.viewArea.scroll",function(scale)
 		scrollNode:runAction(oScale(0.3,scale,scale,oEase.OutQuad))

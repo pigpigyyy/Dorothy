@@ -4,7 +4,7 @@ return
 	face =
 	{
 		{
-			"res/Model/Output/girl.clip|face",
+			"ActionEditor/Model/Output/girl.clip|face",
 			{"positionX",7},
 			{"positionY",21},
 		},
@@ -12,7 +12,7 @@ return
 	fHair =
 	{
 		{
-			"res/Model/Output/girl.clip|hairFront",
+			"ActionEditor/Model/Output/girl.clip|hairFront",
 			{"positionX",47},
 			{"positionY",30},
 		},
@@ -20,20 +20,20 @@ return
 	bHair =
 	{
 		{
-			"res/Model/Output/girl.clip|hairBack",
+			"ActionEditor/Model/Output/girl.clip|hairBack",
 			{"positionY",-20},
 		},
 	},
 	fBody =
 	{
 		{
-			"res/Model/Output/girl.clip|topFront",
+			"ActionEditor/Model/Output/girl.clip|topFront",
 		},
 	},
 	bBody =
 	{
 		{
-			"res/Model/Output/girl.clip|topBack",
+			"ActionEditor/Model/Output/girl.clip|topBack",
 			{"positionY",-8},
 		},
 	},
@@ -41,7 +41,7 @@ return
 	lFoot =
 	{
 		{
-			"res/Model/Output/girl.clip|shoeLeft",
+			"ActionEditor/Model/Output/girl.clip|shoeLeft",
 			{"positionX",8},
 			{"positionY",32},
 			{"scaleX",1.1},
@@ -51,7 +51,7 @@ return
 	rFoot =
 	{
 		{
-			"res/Model/Output/girl.clip|shoeRight",
+			"ActionEditor/Model/Output/girl.clip|shoeRight",
 			{"positionX",8},
 			{"positionY",30},
 			{"scaleX",1.1},

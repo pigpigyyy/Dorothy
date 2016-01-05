@@ -35,6 +35,7 @@ local function oEditMenu()
 					button.text = "Menu"
 					oEditor:dumpData(oEditor.currentFile)
 					items.Undo:hide()
+					oEditor:emit("Edited",oEditor.currentName,oEditor.prefix..oEditor.currentFile)
 				end
 			end
 			emit("Effect.settingPanel.cancel")

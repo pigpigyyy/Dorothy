@@ -313,9 +313,70 @@ oSprite* oSpriteEffect::getSprite() const
 	return _sprite;
 }
 
+class oDummyEffect: public oEffect
+{
+public:
+	oDummyEffect()
+	: _node(CCNode::create())
+	, _isAutoRemoved(false)
+	{ }
+	virtual void start() { stop(); }
+	virtual bool isPlaying() { return false; }
+	virtual void stop()
+	{
+		if (_isAutoRemoved)
+		{
+			_node->getParent()->removeChild(_node, true);
+		}
+	}
+	virtual void setVisible(bool visible)
+	{
+		_node->setVisible(visible);
+	}
+	virtual bool isVisible() const
+	{
+		return _node->isVisible();
+	}
+	virtual oEffect* setOffset( const oVec2& pos )
+	{
+		_node->setPosition(pos);
+		return this;
+	}
+	virtual oEffect* attachTo( CCNode* parent, int zOrder = 0)
+	{
+		CCNode* oldParent = _node->getParent();
+		if (oldParent == parent)
+		{
+			return this;
+		}
+		if (oldParent)
+		{
+			oldParent->removeChild(_node, false);
+		}
+		parent->addChild(_node, zOrder);
+		return this;
+	}
+	virtual oEffect* autoRemove()
+	{
+		_isAutoRemoved = true;
+		return  this;
+	}
+	static oDummyEffect* create()
+	{
+		oDummyEffect* effect = new oDummyEffect();
+		effect->autorelease();
+		return effect;
+	}
+private:
+	bool _isAutoRemoved;
+	oRef<CCNode> _node;
+};
+
 oEffect* oEffect::create( const string& name )
 {
-	return oSharedEffectCache.create(name);
+	oEffect* effect = oSharedEffectCache.create(name);
+	if (!effect) effect = oDummyEffect::create();
+	return effect;
 }
 
 NS_DOROTHY_END

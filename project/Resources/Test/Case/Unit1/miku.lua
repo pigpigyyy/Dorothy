@@ -3,7 +3,7 @@ return
 	head =
 	{
 		{
-			"res/Model/Output/miku.clip|hat",
+			"ActionEditor/Model/Output/miku.clip|hat",
 			{"positionX",36},
 			{"positionY",87},
 		},
@@ -11,14 +11,14 @@ return
 	face =
 	{
 		{
-			"res/Model/Output/miku.clip|face",
+			"ActionEditor/Model/Output/miku.clip|face",
 			{"positionX",-3},
 		},
 	},
 	fHair =
 	{
 		{
-			"res/Model/Output/miku.clip|fHair",
+			"ActionEditor/Model/Output/miku.clip|fHair",
 			{"positionX",55},
 			{"positionY",-29},
 		},
@@ -26,7 +26,7 @@ return
 	bHair =
 	{
 		{
-			"res/Model/Output/miku.clip|bHair",
+			"ActionEditor/Model/Output/miku.clip|bHair",
 			{"positionX",-14},
 			{"positionY",-19},
 		},
@@ -34,7 +34,7 @@ return
 	fBody =
 	{
 		{
-			"res/Model/Output/miku.clip|fTop",
+			"ActionEditor/Model/Output/miku.clip|fTop",
 			{"positionX",-2},
 			{"positionY",7},
 		},
@@ -42,7 +42,7 @@ return
 	bBody =
 	{
 		{
-			"res/Model/Output/miku.clip|bTop",
+			"ActionEditor/Model/Output/miku.clip|bTop",
 			{"positionX",-2},
 			{"positionY",24},
 		},
@@ -50,7 +50,7 @@ return
 	lArm =
 	{
 		{
-			"res/Model/Output/miku.clip|lArm",
+			"ActionEditor/Model/Output/miku.clip|lArm",
 			{"positionX",13},
 			{"positionY",27},
 		},
@@ -58,7 +58,7 @@ return
 	lHand =
 	{
 		{
-			"res/Model/Output/miku.clip|lHand",
+			"ActionEditor/Model/Output/miku.clip|lHand",
 			{"positionX",20},
 			{"positionY",38},
 		},
@@ -66,7 +66,7 @@ return
 	rArm =
 	{
 		{
-			"res/Model/Output/miku.clip|rArm",
+			"ActionEditor/Model/Output/miku.clip|rArm",
 			{"positionX",9},
 			{"positionY",25},
 			{"scaleX",1.1},
@@ -75,7 +75,7 @@ return
 	rHand =
 	{
 		{
-			"res/Model/Output/miku.clip|rHand",
+			"ActionEditor/Model/Output/miku.clip|rHand",
 			{"positionX",10},
 			{"positionY",38},
 		},
@@ -83,7 +83,7 @@ return
 	lLeg =
 	{
 		{
-			"res/Model/Output/miku.clip|lLeg",
+			"ActionEditor/Model/Output/miku.clip|lLeg",
 			{"positionX",10},
 			{"positionY",31},
 			{"scaleX",1.1},
@@ -92,7 +92,7 @@ return
 	lFoot =
 	{
 		{
-			"res/Model/Output/miku.clip|lShoe",
+			"ActionEditor/Model/Output/miku.clip|lShoe",
 			{"positionX",6.34},
 			{"positionY",35},
 			{"scaleX",1.13},
@@ -101,7 +101,7 @@ return
 	rLeg =
 	{
 		{
-			"res/Model/Output/miku.clip|rLeg",
+			"ActionEditor/Model/Output/miku.clip|rLeg",
 			{"positionX",11},
 			{"positionY",30},
 			{"scaleX",1.1},
@@ -110,7 +110,7 @@ return
 	rFoot =
 	{
 		{
-			"res/Model/Output/miku.clip|rShoe",
+			"ActionEditor/Model/Output/miku.clip|rShoe",
 			{"positionX",5.43},
 			{"positionY",34},
 			{"scaleX",1.15},

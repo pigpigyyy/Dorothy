@@ -167,7 +167,7 @@ Class ViewAreaView,
 						if item.parent ~= editor.items.UI
 							parentData = editor\getData item.parent
 							pos += parentData.offset
-							editor\moveTo pos
+							editor\moveTo pos*parentData.zoom
 				else
 					@cross.transformTarget = nil
 					@cross.visible = false
