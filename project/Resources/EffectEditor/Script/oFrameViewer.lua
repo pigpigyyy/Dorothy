@@ -100,6 +100,11 @@ local function oFrameViewer()
 		width = width + 140
 		panel:reset(width,borderSize.height,50,0)
 	end)
+	panel:gslot("Effect.viewArea.changeEffect",function(effectName)
+		if not effectName then
+			menu:removeAllChildrenWithCleanup()
+		end
+	end)
 
 	return panel
 end

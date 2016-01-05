@@ -180,8 +180,13 @@ Class EditorView,
 						chooseItem itemType
 
 		effectUpdated = (args)->
-			{effect,effectFile} = args
-			Reference.refreshRef effectFile if effectFile
+			{effect,effectFile,delete} = args
+			if effectFile
+				if delete
+					print "removeRef",effectFile
+					Reference.removeRef effectFile
+				else
+					Reference.refreshRef effectFile
 			@eachSceneItem (itemData)->
 				if itemData.typeName == "Effect" and effect == itemData.effect
 					@resetData itemData
@@ -303,9 +308,8 @@ Class EditorView,
 			effectEditor.prefix = @graphicFolder
 			effectEditor.input = @gameFullPath
 			effectEditor.output = @gameFullPath
-			effectEditor\slot "Edited",(effect,effectFile)->
-				print effect,effectFile
-				emit "Scene.EffectUpdated",{effect,effectFile}
+			effectEditor\slot "Edited",(effect,effectFile,delete)->
+				emit "Scene.EffectUpdated",{effect,effectFile,delete}
 			effectEditor\slot "Quit",->
 				CCScene\back "rollIn"
 				@updateEffects!

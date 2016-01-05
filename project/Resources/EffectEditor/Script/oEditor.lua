@@ -262,8 +262,8 @@ oRoutine(once(function()
 		coroutine.yield()
 	end
 
-	if oEditor.standAlone then	
-		oEditor:gslot("Editor.ItemChooser",function(args)	
+	if oEditor.standAlone then
+		oEditor:gslot("Editor.ItemChooser",function(args)
 			local oSpriteChooser = require("oSpriteChooser")
 			args[#args](oSpriteChooser())
 		end)

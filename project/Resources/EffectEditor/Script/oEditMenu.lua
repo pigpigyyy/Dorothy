@@ -75,7 +75,9 @@ local function oEditMenu()
 		end),
 
 		Set = oButton("Set",16,50,50,35,45+150,function()
-			oEditor:addChild(oClipChooser(),oEditor.topMost)
+			if oEditor.currentFile then
+				oEditor:addChild(oClipChooser(),oEditor.topMost)
+			end
 		end),
 	}
 	items.Origin.visible = false

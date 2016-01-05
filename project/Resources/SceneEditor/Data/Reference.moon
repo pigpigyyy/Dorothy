@@ -89,14 +89,15 @@ updateItemRef = (filename)->
 		when "frame"
 			frameFile = filename\gsub editor.gameFullPath,""
 			texFile = (oContent\loadFile filename)\match "<A A=\"([^\"]*)"
-			frameFileName = filename\match "[^\\/]*$"
-			texFile = (filename\sub(1,-#frameFileName-1)..texFile)\gsub editor.gameFullPath,""
-			if not downRefMap[frameFile]
-				downRefMap[frameFile] = {}
-			table.insert downRefMap[frameFile],texFile
-			if not upRefMap[texFile]
-				upRefMap[texFile] = {}
-			table.insert upRefMap[texFile],frameFile
+			if texFile ~= ""
+				frameFileName = filename\match "[^\\/]*$"
+				texFile = (filename\sub(1,-#frameFileName-1)..texFile)\gsub editor.gameFullPath,""
+				if not downRefMap[frameFile]
+					downRefMap[frameFile] = {}
+				table.insert downRefMap[frameFile],texFile
+				if not upRefMap[texFile]
+					upRefMap[texFile] = {}
+				table.insert upRefMap[texFile],frameFile
 		when "par"
 			parFile = filename\gsub editor.gameFullPath,""
 			texFile = (oContent\loadFile filename)\match "<string>([^<]*)"
@@ -111,7 +112,7 @@ updateItemRef = (filename)->
 			addSceneRef filename
 
 routine = nil
-update = ()->
+update = ->
 	return if updating or not editor.game
 	visitResource = (path)->
 		files = oContent\getEntries path,false
@@ -138,10 +139,10 @@ update = ()->
 		oCache\removeUnused!
 		routine = nil
 
-stopUpdate = ()->
+stopUpdate = ->
 	oRoutine\remove routine if routine
 
-isUpdating = ()->
+isUpdating = ->
 	if updating
 		MessageBox text:"Please Wait While\nUpdating Reference!",okOnly:true
 	updating
@@ -159,9 +160,10 @@ getUpRefs = (item)->
 getDownRefs = (item)->
 	downRefMap[item] or {}
 
-refreshRef = (item)->
+forceRemoveRef = (item)->
 	downRefs = getDownRefs item
 	for downRef in *downRefs
+		print downRef
 		upRefs = upRefMap[downRef]
 		if upRefs
 			for i = 1,#upRefs
@@ -176,6 +178,9 @@ refreshRef = (item)->
 						table.remove upRefs,i
 						break
 	downRefMap[item] = nil
+
+refreshRef = (item)->
+	forceRemoveRef item
 	updateItemRef item
 
 isRemovable = (item)->
@@ -193,14 +198,7 @@ isRemovable = (item)->
 removeRef = (item)->
 	upRefs = getUpRefs item
 	return false if #upRefs > 0
-	downRefs = getDownRefs item
-	for downRef in *downRefs
-		upRefs = getUpRefs downRef
-		for i = 1,#upRefs
-			if upRefs[i] == item
-				table.remove upRefs,i
-				break
-	downRefMap[item] = nil
+	forceRemoveRef item
 	true
 
 {

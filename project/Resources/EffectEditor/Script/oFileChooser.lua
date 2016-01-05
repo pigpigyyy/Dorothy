@@ -62,7 +62,7 @@ local function oFileChooser(addExisted,newEffectName)
 	btnBk.position = oVec2(30,30)
 	cancelButton:addChild(btnBk,-1)
 	opMenu:addChild(cancelButton)
-	
+
 	oEditor:loadEffectFile()
 
 	local n = 0
@@ -127,7 +127,7 @@ local function oFileChooser(addExisted,newEffectName)
 					oEditor.currentFile = item.file
 					oEditor:dumpEffectFile()
 					oEditor:edit(newEffectName)
-					oEditor:emit("Edited",oEditor.currentName,oEditor.prefix..oEditor.currentFile)				
+					oEditor:emit("Edited",oEditor.currentName,oEditor.prefix..oEditor.currentFile)
 				end)
 			button.file = files[i]
 			button.enabled = false
@@ -325,8 +325,9 @@ local function oFileChooser(addExisted,newEffectName)
 						end
 					end
 					oEditor.items[oEditor.currentName] = nil
+					local lastName = oEditor.currentName
+					local lastFile = oEditor.prefix..oEditor.currentFile
 					oEditor.currentName = nil
-					local lastFile = oEditor.currentFile
 					oEditor.currentFile = nil
 					oEditor:dumpEffectFile()
 					emit("Effect.viewArea.changeEffect",nil)
@@ -334,7 +335,8 @@ local function oFileChooser(addExisted,newEffectName)
 
 					if count <= 1 then
 						local box = oBox("Delete Unused File\n"..lastFile,function()
-							oContent:remove(lastFile)
+							oContent:remove(oEditor.output..lastFile)
+							oEditor:emit("Edited",lastName,lastFile,true)
 							oEditor:addChild(oFileChooser(),oEditor.topMost)
 						end)
 						box.cancelHandler = function()

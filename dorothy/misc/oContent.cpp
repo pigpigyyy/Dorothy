@@ -224,7 +224,7 @@ void oContent::copyFileAsync(const char* src, const char* dst, const function<vo
 	});
 }
 
-string oContent::getExtractedFullName( const char* filename )
+string oContent::getExtractedFullName(const char* filename)
 {
 	return _writablePath + "Extracted/" + filename;
 }
@@ -234,7 +234,7 @@ bool oContent::isFileExist(const char* filename)
 	return CCFileUtils::sharedFileUtils()->isFileExist(oContent::getFullPath(filename));
 }
 
-bool oContent::removeFile( const char* filename )
+bool oContent::removeFile(const char* filename)
 {
 	string fullpath = oContent::getFullPath(filename);
 	return ::remove(fullpath.c_str()) == 0 || RMDIR(fullpath.c_str()) == 0;
