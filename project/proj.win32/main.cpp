@@ -6,8 +6,7 @@
 
 USING_NS_CC;
 
-// fix me
-#if USE_WINMAIN
+
 int APIENTRY _tWinMain(HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
 	LPTSTR lpCmdLine,
@@ -26,12 +25,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		CCUserDefault::sharedUserDefault()->setStringForKey("ScriptEntry", filename.c_str());
 	}
 
-#else
-int main(int argc, char** argv)
-{
-	if (argc == 2)
-		CCUserDefault::sharedUserDefault()->setStringForKey("ScriptEntry", argv[1]);
-#endif
 	// create the application instance
 	AppDelegate app;
 	CCEGLView* eglView = CCEGLView::sharedOpenGLView();
@@ -51,7 +44,7 @@ int main(int argc, char** argv)
 	eglView->setFrameSize(CCSize(width, height));
 
 	int ret = CCApplication::sharedApplication()->run();
-#if defined(USE_WINMAIN) && defined(_DEBUG)
+#if defined(_DEBUG)
 	FreeConsole();
 #endif
 	return ret;
