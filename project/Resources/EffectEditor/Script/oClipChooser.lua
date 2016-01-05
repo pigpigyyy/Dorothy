@@ -168,6 +168,8 @@ local function oClipChooser(clipName)
 			panel.frameData.file = oCache.Clip:getTextureFile(filename):match("[^\\/]*$")
 			oContent:remove(oEditor.output..oEditor.prefix..oEditor.currentFile)
 			oEditor.currentFile = prefix..oEditor.currentFile
+			oEditor.items[oEditor.currentName] = oEditor.currentFile
+			oEditor:dumpEffectFile()
 			for index = 1,#names do
 				n = n + 1
 				y = borderSize.height-10-math.floor((n-1)/itemNum)*(itemHeight+10)

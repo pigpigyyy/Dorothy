@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3C07A5F01A6ED4830036E419 /* BodyEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C07A5E71A6ED4830036E419 /* BodyEditor */; };
-		3C07A5F61A6ED4830036E419 /* Test in Resources */ = {isa = PBXBuildFile; fileRef = 3C07A5ED1A6ED4830036E419 /* Test */; };
 		3C1663741AFBCF3300395AC1 /* lpcap.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C1663691AFBCF3300395AC1 /* lpcap.c */; };
 		3C1663751AFBCF3300395AC1 /* lpcode.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C16636B1AFBCF3300395AC1 /* lpcode.c */; };
 		3C1663761AFBCF3300395AC1 /* lpprint.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C16636D1AFBCF3300395AC1 /* lpprint.c */; };
@@ -80,7 +78,13 @@
 		3C5050021A23802F000C79D6 /* tolua_map.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C504FE31A23802F000C79D6 /* tolua_map.c */; };
 		3C5050031A23802F000C79D6 /* tolua_push.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C504FE41A23802F000C79D6 /* tolua_push.c */; };
 		3C5050041A23802F000C79D6 /* tolua_to.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C504FE51A23802F000C79D6 /* tolua_to.c */; };
-		3C6484CC1B649CB400A44651 /* SceneEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C6484CB1B649CB400A44651 /* SceneEditor */; };
+		3C69B9D71C3BA25A00363786 /* ActionEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C69B9D01C3BA25A00363786 /* ActionEditor */; };
+		3C69B9D81C3BA25A00363786 /* BodyEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C69B9D11C3BA25A00363786 /* BodyEditor */; };
+		3C69B9D91C3BA25A00363786 /* EffectEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C69B9D21C3BA25A00363786 /* EffectEditor */; };
+		3C69B9DA1C3BA25A00363786 /* Font in Resources */ = {isa = PBXBuildFile; fileRef = 3C69B9D31C3BA25A00363786 /* Font */; };
+		3C69B9DB1C3BA25A00363786 /* Lib in Resources */ = {isa = PBXBuildFile; fileRef = 3C69B9D41C3BA25A00363786 /* Lib */; };
+		3C69B9DC1C3BA25A00363786 /* SceneEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C69B9D51C3BA25A00363786 /* SceneEditor */; };
+		3C69B9DD1C3BA25A00363786 /* Test in Resources */ = {isa = PBXBuildFile; fileRef = 3C69B9D61C3BA25A00363786 /* Test */; };
 		3C7AA4D41A47291F007836D2 /* main.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4CB1A47291F007836D2 /* main.lua */; };
 		3C969C7D1B41903900C3BF37 /* oAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C969C0C1B41903900C3BF37 /* oAudio.cpp */; };
 		3C969C7E1B41903900C3BF37 /* oDefine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C969C0F1B41903900C3BF37 /* oDefine.cpp */; };
@@ -126,7 +130,6 @@
 		3C969CA61B41903900C3BF37 /* oProperty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C969C771B41903900C3BF37 /* oProperty.cpp */; };
 		3C969CA71B41903900C3BF37 /* oUnit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C969C791B41903900C3BF37 /* oUnit.cpp */; };
 		3C969CA81B41903900C3BF37 /* oUnitDef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C969C7B1B41903900C3BF37 /* oUnitDef.cpp */; };
-		3C9AF16B1AEFCC4500B649DC /* Lib in Resources */ = {isa = PBXBuildFile; fileRef = 3C9AF16A1AEFCC4500B649DC /* Lib */; };
 		3CC647E21B44F8920082A833 /* CCLuaEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC647D61B44F8920082A833 /* CCLuaEngine.cpp */; };
 		3CC647E31B44F8920082A833 /* DorothyModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC647D81B44F8920082A833 /* DorothyModule.cpp */; };
 		3CC647E41B44F8920082A833 /* DorothyXml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC647DA1B44F8920082A833 /* DorothyXml.cpp */; };
@@ -134,9 +137,6 @@
 		3CC647E61B44F8920082A833 /* LuaCode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC647DE1B44F8920082A833 /* LuaCode.cpp */; };
 		3CC647E71B44F8920082A833 /* tolua_extern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC647DF1B44F8920082A833 /* tolua_extern.cpp */; };
 		3CC647E81B44F8920082A833 /* tolua_fix.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CC647E01B44F8920082A833 /* tolua_fix.c */; };
-		3CD77C591A83A990003B55A0 /* ActionEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3CD77C581A83A990003B55A0 /* ActionEditor */; };
-		3CD77C5B1A83A99E003B55A0 /* EffectEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3CD77C5A1A83A99E003B55A0 /* EffectEditor */; };
-		3CE4C6FC1C3AC78200948DCB /* res in Resources */ = {isa = PBXBuildFile; fileRef = 3CE4C6FB1C3AC78200948DCB /* res */; };
 		9F9E47EC1AE8FC6D00826626 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C504D601A23739B000C79D6 /* MainMenu.xib */; };
 /* End PBXBuildFile section */
 
@@ -158,8 +158,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3C07A5E71A6ED4830036E419 /* BodyEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BodyEditor; sourceTree = "<group>"; };
-		3C07A5ED1A6ED4830036E419 /* Test */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Test; sourceTree = "<group>"; };
 		3C1663691AFBCF3300395AC1 /* lpcap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpcap.c; sourceTree = "<group>"; };
 		3C16636A1AFBCF3300395AC1 /* lpcap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lpcap.h; sourceTree = "<group>"; };
 		3C16636B1AFBCF3300395AC1 /* lpcode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpcode.c; sourceTree = "<group>"; };
@@ -299,7 +297,13 @@
 		3C504FE31A23802F000C79D6 /* tolua_map.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tolua_map.c; sourceTree = "<group>"; };
 		3C504FE41A23802F000C79D6 /* tolua_push.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tolua_push.c; sourceTree = "<group>"; };
 		3C504FE51A23802F000C79D6 /* tolua_to.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tolua_to.c; sourceTree = "<group>"; };
-		3C6484CB1B649CB400A44651 /* SceneEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = SceneEditor; sourceTree = "<group>"; };
+		3C69B9D01C3BA25A00363786 /* ActionEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ActionEditor; sourceTree = "<group>"; };
+		3C69B9D11C3BA25A00363786 /* BodyEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BodyEditor; sourceTree = "<group>"; };
+		3C69B9D21C3BA25A00363786 /* EffectEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = EffectEditor; sourceTree = "<group>"; };
+		3C69B9D31C3BA25A00363786 /* Font */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Font; sourceTree = "<group>"; };
+		3C69B9D41C3BA25A00363786 /* Lib */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Lib; sourceTree = "<group>"; };
+		3C69B9D51C3BA25A00363786 /* SceneEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = SceneEditor; sourceTree = "<group>"; };
+		3C69B9D61C3BA25A00363786 /* Test */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Test; sourceTree = "<group>"; };
 		3C7AA4CB1A47291F007836D2 /* main.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.lua; sourceTree = "<group>"; };
 		3C969C0C1B41903900C3BF37 /* oAudio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oAudio.cpp; sourceTree = "<group>"; };
 		3C969C0D1B41903900C3BF37 /* oAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oAudio.h; sourceTree = "<group>"; };
@@ -405,7 +409,6 @@
 		3C969C7A1B41903900C3BF37 /* oUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oUnit.h; sourceTree = "<group>"; };
 		3C969C7B1B41903900C3BF37 /* oUnitDef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oUnitDef.cpp; sourceTree = "<group>"; };
 		3C969C7C1B41903900C3BF37 /* oUnitDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oUnitDef.h; sourceTree = "<group>"; };
-		3C9AF16A1AEFCC4500B649DC /* Lib */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Lib; sourceTree = "<group>"; };
 		3CC647D61B44F8920082A833 /* CCLuaEngine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CCLuaEngine.cpp; path = ../support/CCLuaEngine.cpp; sourceTree = "<group>"; };
 		3CC647D71B44F8920082A833 /* CCLuaEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCLuaEngine.h; path = ../support/CCLuaEngine.h; sourceTree = "<group>"; };
 		3CC647D81B44F8920082A833 /* DorothyModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DorothyModule.cpp; path = ../support/DorothyModule.cpp; sourceTree = "<group>"; };
@@ -418,9 +421,6 @@
 		3CC647DF1B44F8920082A833 /* tolua_extern.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tolua_extern.cpp; path = ../support/tolua_extern.cpp; sourceTree = "<group>"; };
 		3CC647E01B44F8920082A833 /* tolua_fix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tolua_fix.c; path = ../support/tolua_fix.c; sourceTree = "<group>"; };
 		3CC647E11B44F8920082A833 /* tolua_fix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tolua_fix.h; path = ../support/tolua_fix.h; sourceTree = "<group>"; };
-		3CD77C581A83A990003B55A0 /* ActionEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ActionEditor; sourceTree = "<group>"; };
-		3CD77C5A1A83A99E003B55A0 /* EffectEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = EffectEditor; sourceTree = "<group>"; };
-		3CE4C6FB1C3AC78200948DCB /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; path = res; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -765,13 +765,13 @@
 		3C7AA4C41A4728FC007836D2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				3CE4C6FB1C3AC78200948DCB /* res */,
-				3C9AF16A1AEFCC4500B649DC /* Lib */,
-				3CD77C581A83A990003B55A0 /* ActionEditor */,
-				3C07A5E71A6ED4830036E419 /* BodyEditor */,
-				3CD77C5A1A83A99E003B55A0 /* EffectEditor */,
-				3C6484CB1B649CB400A44651 /* SceneEditor */,
-				3C07A5ED1A6ED4830036E419 /* Test */,
+				3C69B9D01C3BA25A00363786 /* ActionEditor */,
+				3C69B9D11C3BA25A00363786 /* BodyEditor */,
+				3C69B9D21C3BA25A00363786 /* EffectEditor */,
+				3C69B9D31C3BA25A00363786 /* Font */,
+				3C69B9D41C3BA25A00363786 /* Lib */,
+				3C69B9D51C3BA25A00363786 /* SceneEditor */,
+				3C69B9D61C3BA25A00363786 /* Test */,
 				3C7AA4CB1A47291F007836D2 /* main.lua */,
 			);
 			name = Resources;
@@ -1044,16 +1044,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3C07A5F61A6ED4830036E419 /* Test in Resources */,
-				3C07A5F01A6ED4830036E419 /* BodyEditor in Resources */,
-				3C9AF16B1AEFCC4500B649DC /* Lib in Resources */,
-				3CE4C6FC1C3AC78200948DCB /* res in Resources */,
+				3C69B9DB1C3BA25A00363786 /* Lib in Resources */,
+				3C69B9DD1C3BA25A00363786 /* Test in Resources */,
+				3C69B9D81C3BA25A00363786 /* BodyEditor in Resources */,
+				3C69B9D91C3BA25A00363786 /* EffectEditor in Resources */,
 				3C504D5F1A23739B000C79D6 /* Images.xcassets in Resources */,
-				3CD77C591A83A990003B55A0 /* ActionEditor in Resources */,
-				3CD77C5B1A83A99E003B55A0 /* EffectEditor in Resources */,
+				3C69B9DC1C3BA25A00363786 /* SceneEditor in Resources */,
+				3C69B9DA1C3BA25A00363786 /* Font in Resources */,
 				3C7AA4D41A47291F007836D2 /* main.lua in Resources */,
 				9F9E47EC1AE8FC6D00826626 /* MainMenu.xib in Resources */,
-				3C6484CC1B649CB400A44651 /* SceneEditor in Resources */,
+				3C69B9D71C3BA25A00363786 /* ActionEditor in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

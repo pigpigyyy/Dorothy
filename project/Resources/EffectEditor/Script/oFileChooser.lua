@@ -127,6 +127,7 @@ local function oFileChooser(addExisted,newEffectName)
 					oEditor.currentFile = item.file
 					oEditor:dumpEffectFile()
 					oEditor:edit(newEffectName)
+					oEditor:emit("Edited",oEditor.currentName,oEditor.prefix..oEditor.currentFile)				
 				end)
 			button.file = files[i]
 			button.enabled = false
@@ -333,7 +334,7 @@ local function oFileChooser(addExisted,newEffectName)
 
 					if count <= 1 then
 						local box = oBox("Delete Unused File\n"..lastFile,function()
-							oContent:remove(oEditor.output..lastFile)
+							oContent:remove(lastFile)
 							oEditor:addChild(oFileChooser(),oEditor.topMost)
 						end)
 						box.cancelHandler = function()

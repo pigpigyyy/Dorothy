@@ -115,6 +115,7 @@ Class ModelPanelView,
 						item = @modelItems[model]
 						item.parent\removeChild item
 						@modelItems[model] = nil
+						Reference.removeRef model
 						@playUpdateHint!
 					for model in *modelsToAdd
 						viewItem = ModelView {

@@ -126,7 +126,6 @@ Class SpritePanelView,
 					for clipAdd in *clipsToAdd
 						@clipItems[clipAdd] = @_addClipTab clipAdd,index
 						@playUpdateHint!
-						sleep!
 						index += 1
 				else -- first load clips
 					if @clipItems
@@ -144,11 +143,12 @@ Class SpritePanelView,
 					for clip in *clips
 						clipTab = @_addClipTab clip,index
 						@playUpdateHint!
-						sleep!
 						index += 1
 						clipTab.visible = false
 						@clipItems[clip] = clipTab
 				@clips = clips
+
+				sleep!
 
 				if @images
 					imagesToAdd,imagesToDel = CompareTable @images,images
@@ -171,7 +171,6 @@ Class SpritePanelView,
 						viewItem\slot "Selected",@selected
 						@menu\addChild viewItem
 						@playUpdateHint!
-						sleep!
 						@imageItems[imageAdd] = viewItem
 						viewItem.opacity = 0
 						viewItem\perform CCSequence {
@@ -199,7 +198,6 @@ Class SpritePanelView,
 						viewItem.isCheckMode = @_isSelecting
 						@menu\addChild viewItem
 						@playUpdateHint!
-						sleep!
 						@imageItems[image] = viewItem
 						viewItem.opacity = 0
 						viewItem\perform CCSequence {
@@ -210,8 +208,8 @@ Class SpritePanelView,
 				@images = images
 
 				itemCount = math.floor (@panel.width-10)/110
-				y = height
 				startY = height-40
+				y = startY
 				for i,clip in ipairs @clips
 					i -= 1
 					y = startY-30-i*50

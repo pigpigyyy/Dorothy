@@ -4,6 +4,7 @@ EditorView = require "View.Scene.Editor"
 SelectionPanel = require "Control.Basic.SelectionPanel"
 Model = require "Data.Model"
 Reference = require "Data.Reference"
+CCImage.isPngAlphaPremultiplied = true
 
 Class EditorView,
 	__init: =>
@@ -75,6 +76,10 @@ Class EditorView,
 				@[name\sub(1,1)\lower!..name\sub(2,-1)] = control
 				@addChild control
 			sleep!
+			resPath = "SceneEditor/Demo/DemoGame"
+			writePath = @gamesFullPath.."DemoGame"
+			if not oContent\exist(writePath) and oContent\exist(resPath)
+				oContent\copyAsync resPath,writePath
 			ScenePanel = require "Control.Item.ScenePanel"
 			ScenePanel!
 			sleep!
@@ -175,11 +180,11 @@ Class EditorView,
 					\slot "Selected",(itemType)->
 						chooseItem itemType
 
-		effectUpdated = (itemName)->
-			Reference.refreshRef itemName
+		effectUpdated = (args)->
+			{effect,effectFile} = args
+			Reference.refreshRef effectFile if effectFile
 			@eachSceneItem (itemData)->
-				if itemData.typeName == "Effect" and
-					itemName == oCache.Effect\getFileByName(itemData.effect)\sub(-#itemName,-1)
+				if itemData.typeName == "Effect" and effect == itemData.effect
 					@resetData itemData
 		itemUpdated = (itemName)->
 			Reference.refreshRef itemName
@@ -299,8 +304,8 @@ Class EditorView,
 			effectEditor.prefix = @graphicFolder
 			effectEditor.input = @gameFullPath
 			effectEditor.output = @gameFullPath
-			effectEditor\slot "Edited",(effect)->
-				emit "Scene.EffectUpdated",effect
+			effectEditor\slot "Edited",(effect,effectFile)->
+				emit "Scene.EffectUpdated",{effect,effectFile}
 			effectEditor\slot "Quit",->
 				CCScene\back "rollIn"
 				@updateEffects!
@@ -702,11 +707,11 @@ Class EditorView,
 			if children
 				pos = @items.UI\convertToNodeSpace originPos
 				for j = #children,1,-1
+					itemData = children[j]
 					switch itemData.typeName
 						when "Effect"
-							continue
+							return itemData if CCRect(itemData.position-oVec2(50,50),CCSize(100,100))\containsPoint pos
 						else
-							itemData = children[j]
 							item = @getItem itemData
 							return itemData if item.visible and item.boundingBox\containsPoint pos
 

@@ -79,6 +79,7 @@ oEditor.loadEffectFile = function(self)
 		oContent:saveToFile(listFile,"<A></A>")
 	end
 
+	oEditor.items = {}
 	for item in oContent:loadFile(listFile):gmatch("%b<>") do
 		if not item:sub(2,2):match("[A/]") then
 			local line = item:gsub("%s","")
@@ -127,7 +128,7 @@ oEditor.dumpData = function(self,filename)
 		oContent:saveToFile(file,str)
 		oCache.Animation:unload(file)
 	end
-	oEditor:emit("Edited",oEditor.prefix..filename)
+	oEditor:emit("Edited",oEditor.currentName,oEditor.prefix..oEditor.currentFile)
 end
 
 local pair = {true,true}
@@ -140,6 +141,10 @@ end
 oEditor.edit = function(self,name)
 	oEditor:loadEffectFile()
 	local file = oEditor.items[name]
+	if not file then
+		oEditor:addExistFile(name)
+		return
+	end
 	oEditor.currentName = name
 	oEditor.currentFile = file
 	local targetFile = oEditor.output..oEditor.prefix..file
@@ -203,6 +208,8 @@ oEditor.edit = function(self,name)
 end
 
 oEditor.newFrame = function(self,name)
+	emit("Effect.viewArea.changeEffect",nil)
+	emit("Effect.settingPanel.hide")
 	oEditor:loadEffectFile()
 	oEditor.currentName = name
 	oEditor.currentFile = name..".frame"
@@ -214,15 +221,24 @@ oEditor.newFrame = function(self,name)
 	oContent:saveToFile(oEditor.output..oEditor.prefix..oEditor.currentFile,[[<A A="" B="1"></A>]])
 	oEditor:dumpEffectFile()
 	emit("Effect.viewArea.changeEffect",oEditor.currentName)
+	oEditor:emit("Edited",oEditor.currentName,oEditor.prefix..oEditor.currentFile)
 end
 
 oEditor.newParticle = function(self,name)
+	oEditor.currentName = nil
+	oEditor.currentFile = nil
+	emit("Effect.viewArea.changeEffect",nil)
+	emit("Effect.settingPanel.hide")
 	oEditor:loadEffectFile()
 	local oTemplateChooser = require("oTemplateChooser")
 	oEditor:addChild(oTemplateChooser(name..".par"),oEditor.topMost)
 end
 
 oEditor.addExistFile = function(self,name)
+	oEditor.currentName = nil
+	oEditor.currentFile = nil
+	emit("Effect.viewArea.changeEffect",nil)
+	emit("Effect.settingPanel.hide")
 	oEditor:loadEffectFile()
 	local oFileChooser = require("oFileChooser")
 	oEditor:addChild(oFileChooser(true,name),oEditor.topMost)

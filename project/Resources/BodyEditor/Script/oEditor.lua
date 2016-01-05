@@ -1335,9 +1335,9 @@ oEditor:schedule(once(function()
 			args[#args](oSpriteChooser())
 		end)
 
-		local resPath = "res/Body"
+		local resPath = "BodyEditor/Body"
 		local writePath = oContent.writablePath.."Body"
-		if not oContent:exist(oContent.writablePath.."Body") and oContent:exist("res/Body") then
+		if not oContent:exist(writePath) and oContent:exist(resPath) then
 			oContent:copyAsync(resPath,writePath)
 		end
 		if not oContent:exist(oEditor.input) then

@@ -84,9 +84,16 @@ local function oFrameViewer()
 	panel:gslot("Effect.frameViewer.data",function(data)
 		menu:removeAllChildrenWithCleanup()
 		local width = 0
+		local currentFile = oEditor.currentFile
+		local file = currentFile:match("[^\\/]*$")
+		local prefix = (#file == #currentFile and "" or currentFile:sub(1,-1-#file))
+		if data.file:sub(1,#prefix) == prefix then
+			prefix = ""
+		end
+		local imageFile = oEditor.prefix..prefix..data.file
 		for i,item in ipairs(data) do
 			width = 10+140*(i-1)
-			local clip = oClipViewer(oEditor.prefix..data.file,item.rect)
+			local clip = oClipViewer(imageFile,item.rect)
 			clip.position = oVec2(width,10)
 			menu:addChild(clip)
 		end

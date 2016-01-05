@@ -74,17 +74,19 @@ Class EffectPanelView,
 		@gslot "Scene.ClearEffect",->
 			@effects = nil
 
-		@gslot "Scene.EffectUpdated",(target)->
-			if not oCache.Particle\unload target
-				oCache.Animation\unload target
-			viewItem = @effectItems[target]
+		@gslot "Scene.EffectUpdated",(args)->
+			{effect,effectFile} = args
+			return unless effectFile
+			if not oCache.Particle\unload effectFile
+				oCache.Animation\unload effectFile
+			viewItem = @effectItems[effect]
 			if viewItem and @effects
-				for i,effect in ipairs @effects
-					if effect == target
+				for i,effectName in ipairs @effects
+					if effectName == effect
 						table.remove @effects,i
 						break
 				viewItem.parent\removeChild viewItem
-				@effectItems[target] = nil
+				@effectItems[effect] = nil
 
 		@gslot "Scene.LoadEffect",->
 			@runThread ->
@@ -93,7 +95,7 @@ Class EffectPanelView,
 				effectFiles = {}
 				effectFilename = editor.gameFullPath..editor.graphicFolder.."list.effect"
 				if not oContent\exist effectFilename
-					oContent\save effectFilename,"<A></A>"
+					oContent\saveToFile effectFilename,"<A></A>"
 
 				oCache.Effect\load effectFilename
 
@@ -218,7 +220,6 @@ Class EffectPanelView,
 			if not @_selectedItem
 				MessageBox text:"No Effect Selected",okOnly:true
 				return
-			return unless Reference.isRemovable @_selectedItem
 			with MessageBox text:"Delete Effect\n"..@_selectedItem
 				\slot "OK",(result)->
 					return unless result
@@ -230,7 +231,10 @@ Class EffectPanelView,
 							for k,v in pairs @effectFiles
 								content = content..string.format("<B A=\"%s\" B=\"%s\"/>",k,v)
 								content = content.."</A>"
-							oContent\saveToFile editor.gameFullPath..editor.graphicFolder.."list.effect",content
+							effectFilename = editor.gameFullPath..editor.graphicFolder.."list.effect"
+							oContent\saveToFile effectFilename,content
+							oCache.Effect\load effectFilename
+							emit "Scene.EffectUpdated",{@_selectedItem}
 							viewItem = @clearSelection!
 							viewItem\perform oOpacity 0.3,0
 							sleep 0.3
