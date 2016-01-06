@@ -49,6 +49,8 @@ Class
 				height:50
 			}
 			button\slot "Tapped",->
+				@scrollArea.touchEnabled = false
+				@menu.enabled = false
 				@emit "Selected",item,i
 				@box\perform CCSequence {
 					CCSpawn {

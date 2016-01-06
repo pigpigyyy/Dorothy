@@ -147,7 +147,7 @@ local function oClipChooser(clipName)
 				local filename = items[i]
 				n = n + 1
 				y = borderSize.height-10-itemHeight*0.5-math.floor((n-1)/itemNum)*(itemHeight+10)
-				local button = oButton(filename:match("(.*)%.[^%.\\/]*$"),17,
+				local button = oButton(filename:match("([^%.\\/]*)%.[^%.\\/]*$"),17,
 					itemWidth,itemHeight,
 					itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
 					function()
@@ -167,7 +167,7 @@ local function oClipChooser(clipName)
 			local prefix = (#file == #clipName and "" or clipName:sub(1,-1-#file))
 			panel.frameData.file = oCache.Clip:getTextureFile(filename):match("[^\\/]*$")
 			oContent:remove(oEditor.output..oEditor.prefix..oEditor.currentFile)
-			oEditor.currentFile = prefix..oEditor.currentFile
+			oEditor.currentFile = prefix..oEditor.currentFile:match("[^\\/]*$")
 			oEditor.items[oEditor.currentName] = oEditor.currentFile
 			oEditor:dumpEffectFile()
 			for index = 1,#names do

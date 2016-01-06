@@ -98,6 +98,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 			paddingX = 0
 			sprite.positionX = sprite.positionX+borderSize.width*0.5-sprite.contentSize.width*0.5
 		end
+		panel.cullItems = false
 		panel:reset(viewWidth,viewHeight,paddingX,paddingY)
 	end
 
@@ -206,6 +207,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 			paddingX = 0
 			node.positionX = node.positionX+borderSize.width*0.5-w*0.5
 		end
+		panel.cullItems = false
 		panel:reset(viewWidth,viewHeight,paddingX,paddingY)
 	end
 

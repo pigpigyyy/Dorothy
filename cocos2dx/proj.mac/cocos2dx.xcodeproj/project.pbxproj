@@ -281,6 +281,7 @@
 		3C969E131B41999A00C3BF37 /* CCScheduler.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C969E091B41999A00C3BF37 /* CCScheduler.h */; };
 		3C969E151B4199AB00C3BF37 /* cocos2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C969E141B4199AB00C3BF37 /* cocos2d.cpp */; };
 		3CBD1C881A40754E00602936 /* CCApplicationProtocol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD1C871A40754E00602936 /* CCApplicationProtocol.cpp */; };
+		3CCF70021C3D692D00BB9C3A /* CCImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CCF70011C3D692D00BB9C3A /* CCImage.cpp */; };
 		3CEA04E41C33BA72002CD33C /* stb_image_write.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CEA04E01C33BA72002CD33C /* stb_image_write.c */; };
 		3CEA04E51C33BA72002CD33C /* stb_image_write.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CEA04E11C33BA72002CD33C /* stb_image_write.h */; };
 		3CEA04E61C33BA72002CD33C /* stb_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CEA04E21C33BA72002CD33C /* stb_image.c */; };
@@ -586,6 +587,7 @@
 		3C969E091B41999A00C3BF37 /* CCScheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCScheduler.h; path = basics/CCScheduler.h; sourceTree = "<group>"; };
 		3C969E141B4199AB00C3BF37 /* cocos2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cocos2d.cpp; sourceTree = "<group>"; };
 		3CBD1C871A40754E00602936 /* CCApplicationProtocol.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCApplicationProtocol.cpp; sourceTree = "<group>"; };
+		3CCF70011C3D692D00BB9C3A /* CCImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCImage.cpp; sourceTree = "<group>"; };
 		3CEA04E01C33BA72002CD33C /* stb_image_write.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stb_image_write.c; sourceTree = "<group>"; };
 		3CEA04E11C33BA72002CD33C /* stb_image_write.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image_write.h; sourceTree = "<group>"; };
 		3CEA04E21C33BA72002CD33C /* stb_image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stb_image.c; sourceTree = "<group>"; };
@@ -968,6 +970,7 @@
 				1A950DFB16BB6661003F4508 /* CCFileUtils.cpp */,
 				1551A471158F2ADE00E66CFE /* CCFileUtils.h */,
 				1551A473158F2ADE00E66CFE /* CCImage.h */,
+				3CCF70011C3D692D00BB9C3A /* CCImage.cpp */,
 				1551A475158F2ADE00E66CFE /* CCPlatformConfig.h */,
 				1551A476158F2ADE00E66CFE /* CCPlatformMacros.h */,
 				1551A477158F2ADE00E66CFE /* CCSAXParser.cpp */,
@@ -1509,6 +1512,7 @@
 				3C969CBC1B41908500C3BF37 /* LocalStorage.cpp in Sources */,
 				1551A63C158F2ADE00E66CFE /* CCActionProgressTimer.cpp in Sources */,
 				1551A63E158F2ADE00E66CFE /* CCActionTiledGrid.cpp in Sources */,
+				3CCF70021C3D692D00BB9C3A /* CCImage.cpp in Sources */,
 				1551A642158F2ADE00E66CFE /* CCAtlasNode.cpp in Sources */,
 				1551A644158F2ADE00E66CFE /* CCNode.cpp in Sources */,
 				1551A650158F2ADE00E66CFE /* CCAffineTransform.cpp in Sources */,

@@ -183,7 +183,6 @@ Class EditorView,
 			{effect,effectFile,delete} = args
 			if effectFile
 				if delete
-					print "removeRef",effectFile
 					Reference.removeRef effectFile
 				else
 					Reference.refreshRef effectFile

@@ -163,7 +163,6 @@ getDownRefs = (item)->
 forceRemoveRef = (item)->
 	downRefs = getDownRefs item
 	for downRef in *downRefs
-		print downRef
 		upRefs = upRefMap[downRef]
 		if upRefs
 			for i = 1,#upRefs
