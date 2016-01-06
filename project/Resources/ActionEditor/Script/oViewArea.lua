@@ -26,31 +26,42 @@ local oSd = require("oEditor").oSd
 
 local function oViewArea()
 	local winSize = CCDirector.winSize
+	local center = oVec2(winSize.width/2,winSize.height/2)
 	local view = CCLayerColor(ccColor4(0xff1a1a1a),winSize.width, winSize.height)
 	view.anchor = oVec2.zero
 	view.cascadeOpacity = true
 
-	local crossNode = CCNode()
 	local origin = oVec2(
 		60+(winSize.width-120-170)*0.5,
 		120+(winSize.height-60-120)*0.5)
-	crossNode.position = origin
-	view:addChild(crossNode)
+
+	local scaleNode = CCNode()
+	scaleNode.position = origin
+	view:addChild(scaleNode)
+	view.scaleNode = scaleNode
+
+	local crossNode = CCNode()
+	crossNode.anchor = oVec2(0.5,0.5)
+	crossNode.contentSize = winSize
+	crossNode.position = center
+	scaleNode:addChild(crossNode)
 	view.viewNode = crossNode
 
 	local yCross = oLine(
 	{
-		oVec2(0,-origin.y*2),
-		oVec2(0,(winSize.height-origin.y)*2)
+		oVec2(0,-winSize.height*2),
+		oVec2(0,winSize.height*2)
 	},ccColor4())
+	yCross.positionY = center.y
 	yCross.opacity = 0.2
 	crossNode:addChild(yCross)
 	local xCross = oLine(
 	{
-		oVec2(-origin.x*2,0),
-		oVec2((winSize.width-origin.x)*2,0)
+		oVec2(-winSize.width*2,0),
+		oVec2(winSize.width*2,0)
 	},ccColor4())
 	xCross.opacity = 0.2
+	xCross.positionX = center.x
 	crossNode:addChild(xCross)
 
 	local scrollNode = CCNode()
@@ -138,8 +149,9 @@ local function oViewArea()
 		else
 			local d = V * dt
 			crossNode.position = crossNode.position + d
-			xCross.positionX = -(crossNode.positionX - origin.x)/crossNode.scaleX
-			yCross.positionY = -(crossNode.positionY - origin.y)/crossNode.scaleX
+			local scale = scaleNode.scaleX
+			xCross.positionX = (center.x-crossNode.positionX)/scale
+			yCross.positionY = (center.y-crossNode.positionY)/scale
 		end
 	end
 	view:slot("TouchBegan",function()
@@ -173,21 +185,22 @@ local function oViewArea()
 		if #touches == 1 then
 			S = touches[1].delta
 			crossNode.position = crossNode.position + S
-			xCross.positionX = -(crossNode.positionX - origin.x)/crossNode.scaleX
-			yCross.positionY = -(crossNode.positionY - origin.y)/crossNode.scaleX
+			local scale = scaleNode.scaleX
+			xCross.positionX = (center.x-crossNode.positionX)/scale
+			yCross.positionY = (center.y-crossNode.positionY)/scale
 		elseif #touches >= 2 then
 			mode = 2
 			local preDistance = touches[1].preLocation:distance(touches[2].preLocation)
 			local distance = touches[1].location:distance(touches[2].location)
 			local delta = (distance - preDistance) * 4 / winSize.height
-			local scale = crossNode.scaleX + delta
+			local scale = scaleNode.scaleX + delta
 			if scale <= 0.5 then
 				scale = 0.5
 			end
-			crossNode.scaleX = scale
-			crossNode.scaleY = scale
-			xCross.positionX = -(crossNode.positionX - origin.x)/scale
-			yCross.positionY = -(crossNode.positionY - origin.y)/scale
+			scaleNode.scaleX = scale
+			scaleNode.scaleY = scale
+			xCross.positionX = (center.x-crossNode.positionX)/scale
+			yCross.positionY = (center.y-crossNode.positionY)/scale
 
 			local zoomButton = oEditor.editMenu.items.Zoom
 			zoomButton.label.text = tostring(math.floor(scale*100)).."%"
@@ -213,9 +226,9 @@ local function oViewArea()
 		end
 		mode = mode + 1
 		mode = mode % 3
-		crossNode:runAction(oScale(0.5,scale,scale,oEase.OutQuad))
-		xCross:runAction(oPos(0.5,-(crossNode.positionX - origin.x)/scale,0,oEase.OutQuad))
-		yCross:runAction(oPos(0.5,0,-(crossNode.positionY - origin.y)/scale,oEase.OutQuad))
+		scaleNode:runAction(oScale(0.5,scale,scale,oEase.OutQuad))
+		xCross:runAction(oPos(0.5,(center.x-crossNode.positionX)/scale,0,oEase.OutQuad))
+		yCross:runAction(oPos(0.5,0,(center.y-crossNode.positionY)/scale,oEase.OutQuad))
 
 		local zoomButton = oEditor.editMenu.items.Zoom
 		zoomButton.label.text = tostring(scale*100).."%"
@@ -224,9 +237,9 @@ local function oViewArea()
 
 	view.originReset = function(self)
 		view:unschedule()
-		crossNode:runAction(oPos(0.5,origin.x,origin.y,oEase.OutQuad))
-		xCross:runAction(oPos(0.5,0,0,oEase.OutQuad))
-		yCross:runAction(oPos(0.5,0,0,oEase.OutQuad))
+		crossNode:runAction(oPos(0.5,center.x,center.y,oEase.OutQuad))
+		xCross:runAction(oPos(0.5,center.x,0,oEase.OutQuad))
+		yCross:runAction(oPos(0.5,0,center.y,oEase.OutQuad))
 	end
 
 	view.setModel = function(self,model)
@@ -402,7 +415,7 @@ local function oViewArea()
 				if res > 1 then res = 1 end
 				if res < -1 then res = -1 end
 				local s = (oldPos.x*(newPos.y-rotCenter.y)-oldPos.y*(newPos.x-rotCenter.x)+(newPos.x*rotCenter.y-newPos.y*rotCenter.x))
-				local delta = (s>0 and -1 or 1)*math.acos(res)*180/math.pi/crossNode.scaleX
+				local delta = (s>0 and -1 or 1)*math.acos(res)*180/math.pi/scaleNode.scaleX
 				if view.isValueFixed then
 					totalRot = totalRot + delta
 					if totalRot < 1 and totalRot > -1 then
@@ -548,8 +561,8 @@ local function oViewArea()
 			end
 			local x2 = delta.x
 			local y2 = delta.y
-			x2 = x2/crossNode.scaleX
-			y2 = y2/crossNode.scaleX
+			x2 = x2/scaleNode.scaleX
+			y2 = y2/scaleNode.scaleX
 			if view.isValueFixed then
 				totalX = totalX + x2
 				totalY = totalY + y2
@@ -705,7 +718,7 @@ local function oViewArea()
 			elseif editState == EDIT_SCALEY then
 				x3 = 0
 			end
-			local f = 2/crossNode.scaleX/winSize.height
+			local f = 2/scaleNode.scaleX/winSize.height
 			local x1 = x3*f
 			local y1 = y3*f
 			if view.isValueFixed then
@@ -794,7 +807,7 @@ local function oViewArea()
 
 	view.updateOpacity = function(self, delta)
 		if delta.y ~= 0 then
-			local f = 4/crossNode.scaleX/winSize.height
+			local f = 4/scaleNode.scaleX/winSize.height
 			local deltaOp = delta.y*f
 			if view.isValueFixed then
 				totalOpacity = totalOpacity + deltaOp
@@ -937,7 +950,7 @@ local function oViewArea()
 			elseif editState == EDIT_SKEWY then
 				delta.x = 0
 			end
-			local f = 200/crossNode.scaleX/winSize.height
+			local f = 200/scaleNode.scaleX/winSize.height
 			local x1 = delta.x*f
 			local y1 = delta.y*f
 			if view.isValueFixed then
@@ -1302,8 +1315,8 @@ local function oViewArea()
 			end
 			local x2 = delta.x
 			local y2 = delta.y
-			x2 = x2/crossNode.scaleX
-			y2 = y2/crossNode.scaleX
+			x2 = x2/scaleNode.scaleX
+			y2 = y2/scaleNode.scaleX
 			if view.isValueFixed then
 				totalAnchorX = totalAnchorX + x2
 				totalAnchorY = totalAnchorY + y2
@@ -1450,8 +1463,8 @@ local function oViewArea()
 			end
 			local x2 = delta.x
 			local y2 = delta.y
-			x2 = x2/crossNode.scaleX
-			y2 = y2/crossNode.scaleX
+			x2 = x2/scaleNode.scaleX
+			y2 = y2/scaleNode.scaleX
 			if view.isValueFixed then
 				totalSizeX = totalSizeX + x2
 				totalSizeY = totalSizeY + y2

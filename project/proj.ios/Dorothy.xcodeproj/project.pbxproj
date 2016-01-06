@@ -119,6 +119,7 @@
 		3C969DC11B4194EB00C3BF37 /* oUnitDef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C969D541B4194EA00C3BF37 /* oUnitDef.cpp */; };
 		3CA03A6F1A2900460008F80F /* libluajit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CA03A6E1A2900460008F80F /* libluajit.a */; };
 		3CAE8C4A1A685B1000D92541 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3CAE8C491A685B1000D92541 /* Images.xcassets */; };
+		3CB408101C3CE29F002B7CF5 /* Font in Resources */ = {isa = PBXBuildFile; fileRef = 3CB4080F1C3CE29F002B7CF5 /* Font */; };
 		3CB40CFA1A20E6C200D7A3A6 /* b2MotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CB40CF81A20E6C200D7A3A6 /* b2MotorJoint.cpp */; };
 		3CDECC591AFC22A100AF8490 /* lpcap.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CDECC4E1AFC22A100AF8490 /* lpcap.c */; };
 		3CDECC5A1AFC22A100AF8490 /* lpcode.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CDECC501AFC22A100AF8490 /* lpcode.c */; };
@@ -126,7 +127,6 @@
 		3CDECC5C1AFC22A100AF8490 /* lptree.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CDECC541AFC22A100AF8490 /* lptree.c */; };
 		3CDECC5D1AFC22A100AF8490 /* lpvm.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CDECC571AFC22A100AF8490 /* lpvm.c */; };
 		3CDECC5F1AFC274B00AF8490 /* Lib in Resources */ = {isa = PBXBuildFile; fileRef = 3CDECC5E1AFC274B00AF8490 /* Lib */; };
-		3CE4C6FF1C3AC7E400948DCB /* res in Resources */ = {isa = PBXBuildFile; fileRef = 3CE4C6FE1C3AC7E400948DCB /* res */; };
 		3CEA04F61C33C70C002CD33C /* SceneEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3CEA04F51C33C70C002CD33C /* SceneEditor */; };
 		3CECB16C1AC331B300BA17F3 /* DorothyXml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CECB16A1AC331B300BA17F3 /* DorothyXml.cpp */; };
 		46C1008D16BF786A00F74D54 /* CCLuaEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46C1007C16BF786A00F74D54 /* CCLuaEngine.cpp */; };
@@ -397,6 +397,7 @@
 		3CA03A6B1A28BE4E0008F80F /* luaconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = luaconf.h; sourceTree = "<group>"; };
 		3CA03A6E1A2900460008F80F /* libluajit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libluajit.a; path = ../../lua/lib/ios/libluajit.a; sourceTree = "<group>"; };
 		3CAE8C491A685B1000D92541 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Dorothy/Images.xcassets; sourceTree = SOURCE_ROOT; };
+		3CB4080F1C3CE29F002B7CF5 /* Font */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Font; path = ../../../Dorothy/project/Resources/Font; sourceTree = "<group>"; };
 		3CB40CF81A20E6C200D7A3A6 /* b2MotorJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2MotorJoint.cpp; sourceTree = "<group>"; };
 		3CB40CF91A20E6C200D7A3A6 /* b2MotorJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2MotorJoint.h; sourceTree = "<group>"; };
 		3CDECC4E1AFC22A100AF8490 /* lpcap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpcap.c; sourceTree = "<group>"; };
@@ -411,7 +412,6 @@
 		3CDECC571AFC22A100AF8490 /* lpvm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpvm.c; sourceTree = "<group>"; };
 		3CDECC581AFC22A100AF8490 /* lpvm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lpvm.h; sourceTree = "<group>"; };
 		3CDECC5E1AFC274B00AF8490 /* Lib */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Lib; path = ../../../Dorothy/project/Resources/Lib; sourceTree = "<group>"; };
-		3CE4C6FE1C3AC7E400948DCB /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; name = res; path = ../../../Dorothy/project/Resources/res; sourceTree = "<group>"; };
 		3CEA04F51C33C70C002CD33C /* SceneEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SceneEditor; path = ../../../Dorothy/project/Resources/SceneEditor; sourceTree = "<group>"; };
 		3CECB16A1AC331B300BA17F3 /* DorothyXml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DorothyXml.cpp; sourceTree = "<group>"; };
 		3CECB16B1AC331B300BA17F3 /* DorothyXml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DorothyXml.h; sourceTree = "<group>"; };
@@ -990,8 +990,8 @@
 			isa = PBXGroup;
 			children = (
 				3CAE8C491A685B1000D92541 /* Images.xcassets */,
-				3CE4C6FE1C3AC7E400948DCB /* res */,
 				3CDECC5E1AFC274B00AF8490 /* Lib */,
+				3CB4080F1C3CE29F002B7CF5 /* Font */,
 				3C7AA4D81A4731AD007836D2 /* ActionEditor */,
 				3C7AA4DA1A4731AD007836D2 /* BodyEditor */,
 				3C3842FF1A890B9D0047E2DF /* EffectEditor */,
@@ -1075,11 +1075,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3CE4C6FF1C3AC7E400948DCB /* res in Resources */,
 				3CDECC5F1AFC274B00AF8490 /* Lib in Resources */,
 				3C7AA4E11A4731AD007836D2 /* ActionEditor in Resources */,
 				3C7AA4E71A4731AD007836D2 /* main.lua in Resources */,
 				3C7AA4E91A4731AD007836D2 /* Test in Resources */,
+				3CB408101C3CE29F002B7CF5 /* Font in Resources */,
 				3C3843001A890B9D0047E2DF /* EffectEditor in Resources */,
 				3CAE8C4A1A685B1000D92541 /* Images.xcassets in Resources */,
 				3C7AA4E31A4731AD007836D2 /* BodyEditor in Resources */,

@@ -563,7 +563,7 @@ bool isFileExists(const char* szFilePath)
 	return true;
 }
 
-bool CCImage::isPngAlphaPremultiplied = true;
+bool CCImage::isAlphaPremultiplied = true;
 
 CCImage::CCImage()
 : m_nWidth(0)
@@ -572,6 +572,7 @@ CCImage::CCImage()
 , m_pData(0)
 , m_bHasAlpha(false)
 , m_bPreMulti(false)
+, m_format(kFmtUnKnown)
 { }
 
 CCImage::~CCImage()
@@ -631,6 +632,7 @@ bool CCImage::initWithImageData(void * pData,
                            int nBitsPerComponent)
 {
     bool bRet = false;
+	m_format = eFmt;
     tImageInfo info =
 	{
 		(unsigned int)nHeight,
@@ -714,18 +716,18 @@ static std::string getExt(const std::string& filename)
 bool CCImage::saveToFile(const char* pszFilePath)
 {
 	int bRet = 0;
-	std::string strFilePath(pszFilePath);
-	if (getExt(strFilePath) == "png")
+	std::string ext = getExt(pszFilePath);
+	if (ext == "png")
 	{
-		bRet = stbi_write_png(strFilePath.c_str(), m_nWidth, m_nHeight, 4, m_pData, 0);
+		bRet = stbi_write_png(pszFilePath, m_nWidth, m_nHeight, 4, m_pData, 0);
 	}
-	else if (getExt(strFilePath) == "bmp")
+	else if (ext == "bmp")
 	{
-		bRet = stbi_write_bmp(strFilePath.c_str(), m_nWidth, m_nHeight, 4, m_pData);
+		bRet = stbi_write_bmp(pszFilePath, m_nWidth, m_nHeight, 4, m_pData);
 	}
-	else if (getExt(strFilePath) == "tga")
+	else if (ext == "tga")
 	{
-		bRet = stbi_write_tga(strFilePath.c_str(), m_nWidth, m_nHeight, 4, m_pData);
+		bRet = stbi_write_tga(pszFilePath, m_nWidth, m_nHeight, 4, m_pData);
 	}
 	return bRet != 0;
 }
@@ -733,24 +735,19 @@ bool CCImage::saveToFile(const char* pszFilePath)
 CCImage::EImageFormat CCImage::computeImageFormatType(const std::string& filename)
 {
 	CCImage::EImageFormat ret = CCImage::kFmtUnKnown;
-
-	if ((std::string::npos != filename.find(".jpg", filename.size() - 4, 4))
-		|| (std::string::npos != filename.find(".jpeg", filename.size() - 5, 5))
-		|| (std::string::npos != filename.find(".JPG", filename.size() - 4, 4))
-		|| (std::string::npos != filename.find(".JPEG", filename.size() - 5, 5)))
+	std::string ext = getExt(filename);
+	if (ext == "jpg" || ext == "jpeg")
 	{
 		ret = CCImage::kFmtJpg;
 	}
-	else if ((std::string::npos != filename.find(".png", filename.size() - 4, 4))
-		|| (std::string::npos != filename.find(".PNG", filename.size() - 4, 4)))
+	else if (ext == "png")
 	{
 		ret = CCImage::kFmtPng;
 	}
-
 	return ret;
 }
 
-unsigned char* CCImage::convertToPremultipliedData(CCImage* image)
+unsigned char* CCImage::convertToRequiredFormat(CCImage* image)
 {
 	unsigned char* tempData = image->getData();
     bool hasAlpha = image->hasAlpha();

@@ -105,7 +105,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 		panel:removeMenuItems()
 		local blocks = {}
 		local images = oContent:getEntries(oEditor.input..file,false)
-		CCImage.isPngAlphaPremultiplied = false
+		CCImage.isAlphaPremultiplied = false
 		local blendFunc = ccBlendFunc(ccBlendFunc.One,ccBlendFunc.Zero)
 		for i = 1,#images do
 			if images[i]:sub(-4,-1):lower() == ".png" then
@@ -128,7 +128,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 				end
 			end
 		end
-		CCImage.isPngAlphaPremultiplied = true
+		CCImage.isAlphaPremultiplied = true
 
 		oPacker:fit(blocks)
 		local w = oPacker.root.w

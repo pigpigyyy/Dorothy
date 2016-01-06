@@ -279,7 +279,7 @@ bool CCTexture2D::initWithImage(CCImage* uiImage)
 
 bool CCTexture2D::initPremultipliedATextureWithImage(CCImage* image, unsigned int width, unsigned int height)
 {
-	unsigned char* tempData = CCImage::convertToPremultipliedData(image);
+	unsigned char* tempData = CCImage::convertToRequiredFormat(image);
     bool hasAlpha = image->hasAlpha();
     CCSize imageSize = CCSizeMake(image->getWidth(), image->getHeight());
 	size_t bpp = image->getBitsPerComponent();
