@@ -128,7 +128,7 @@ public:
 	CC_SYNTHESIZE_READONLY(unsigned short, m_nWidth, Width);
 	CC_SYNTHESIZE_READONLY(unsigned short, m_nHeight, Height);
 	CC_SYNTHESIZE_READONLY(int, m_nBitsPerComponent, BitsPerComponent);
-	static bool isAlphaPremultiplied;
+
 	static CCImage::EImageFormat computeImageFormatType(const std::string& filename);
 	// return copy of premultiplied data or passed data from image
 	static unsigned char* convertToRequiredFormat(CCImage* image);

@@ -46,11 +46,15 @@ NS_CC_BEGIN
     ((unsigned)((unsigned char)(vb) * ((unsigned char)(va) + 1) >> 8) << 16) | \
     ((unsigned)(unsigned char)(va) << 24))
 
+#define CC_RGB_UNPREMULTIPLY_ALPHA(vr, vg, vb, va) \
+	(((unsigned)(vr)<<8)/((unsigned)(va)+1)) | \
+	((((unsigned)(vg)<<8)/((unsigned)(va)+1)) << 8) | \
+	((((unsigned)(vb)<<8)/((unsigned)(va)+1)) << 16) | \
+	((unsigned)(va) << 24)
+
 //////////////////////////////////////////////////////////////////////////
 // Implement CCImage
 //////////////////////////////////////////////////////////////////////////
-
-bool CCImage::isAlphaPremultiplied = true;
 
 CCImage::CCImage()
 : m_nWidth(0)
@@ -74,7 +78,7 @@ CCImage::~CCImage()
 	}
 }
 
-bool CCImage::initWithImageFile(const char * strPath, EImageFormat eImgFmt/* = eFmtPng*/)
+bool CCImage::initWithImageFile(const char* strPath, EImageFormat eImgFmt/* = eFmtPng*/)
 {
 	bool bRet = false;
 	unsigned long nSize = 0;
@@ -120,7 +124,20 @@ bool CCImage::initWithImageData(void* pData,
 		m_pData = stbi_load_from_memory((stbi_uc*)pData, nDataLen, &w, &h, (int*)&components, nBytesPerComponent);
 		m_nWidth = w;
 		m_nHeight = h;
-		bRet = m_pData != nullptr;
+		if (m_pData)
+		{
+			bRet = true;
+			int rowbytes = m_nWidth * nBytesPerComponent;
+			unsigned int *tmp = (unsigned int*)m_pData;
+			for (int i = 0; i < m_nHeight; i++)
+			{
+				for (int j = 0; j < rowbytes; j += 4)
+				{
+					*tmp++ = CC_RGB_PREMULTIPLY_ALPHA(m_pData[i*rowbytes + j], m_pData[i*rowbytes + j + 1], m_pData[i*rowbytes + j + 2], m_pData[i*rowbytes + j + 3]);
+				}
+			}
+			m_bPreMulti = true;
+		}
 	}
 	else
 	{
@@ -134,21 +151,9 @@ bool CCImage::initWithImageData(void* pData,
 			m_pData = new unsigned char[nSize];
 			CC_BREAK_IF(!m_pData);
 			memcpy(m_pData, pData, nSize);
+			m_bPreMulti = true;
 			bRet = true;
 		} while (0);
-	}
-	if (bRet && CCImage::isAlphaPremultiplied)
-	{
-		int rowbytes = m_nWidth * nBytesPerComponent;
-		unsigned int *tmp = (unsigned int*)m_pData;
-		for (int i = 0; i < m_nHeight; i++)
-		{
-			for (int j = 0; j < rowbytes; j += 4)
-			{
-				*tmp++ = CC_RGB_PREMULTIPLY_ALPHA(m_pData[i*rowbytes + j], m_pData[i*rowbytes + j + 1], m_pData[i*rowbytes + j + 2], m_pData[i*rowbytes + j + 3]);
-			}
-		}
-		m_bPreMulti = true;
 	}
 	return bRet;
 }
@@ -170,19 +175,44 @@ static std::string getExt(const std::string& filename)
 
 bool CCImage::saveToFile(const char* pszFilePath)
 {
+	unsigned char* pData = m_pData;
+	if (m_bPreMulti)
+	{
+		const int nBytesPerComponent = 4;
+		int dataLen = m_nWidth * m_nHeight * nBytesPerComponent;
+		pData = new unsigned char[dataLen];
+		memcpy(pData, m_pData, dataLen);
+		int rowbytes = m_nWidth * nBytesPerComponent;
+		unsigned int* tmp = (unsigned int*)pData;
+		for (int i = 0; i < m_nHeight; i++)
+		{
+			for (int j = 0; j < rowbytes; j += 4)
+			{
+				*tmp++ = CC_RGB_UNPREMULTIPLY_ALPHA(
+					pData[i*rowbytes + j],
+					pData[i*rowbytes + j + 1],
+					pData[i*rowbytes + j + 2],
+					pData[i*rowbytes + j + 3]);
+			}
+		}
+	}
 	int bRet = 0;
 	std::string ext = getExt(pszFilePath);
 	if (ext == "png")
 	{
-		bRet = stbi_write_png(pszFilePath, m_nWidth, m_nHeight, 4, m_pData, 0);
+		bRet = stbi_write_png(pszFilePath, m_nWidth, m_nHeight, 4, pData, 0);
 	}
 	else if (ext == "bmp")
 	{
-		bRet = stbi_write_bmp(pszFilePath, m_nWidth, m_nHeight, 4, m_pData);
+		bRet = stbi_write_bmp(pszFilePath, m_nWidth, m_nHeight, 4, pData);
 	}
 	else if (ext == "tga")
 	{
-		bRet = stbi_write_tga(pszFilePath, m_nWidth, m_nHeight, 4, m_pData);
+		bRet = stbi_write_tga(pszFilePath, m_nWidth, m_nHeight, 4, pData);
+	}
+	if (m_bPreMulti)
+	{
+		delete [] pData;
 	}
 	return bRet != 0;
 }

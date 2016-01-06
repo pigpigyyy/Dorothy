@@ -86,19 +86,19 @@ typedef enum {
     
 } CCTexture2DPixelFormat;
 
-static bool _initPremultipliedATextureWithImage(CGImageRef image, NSUInteger POTWide, NSUInteger POTHigh, tImageInfo *pImageInfo)
+static bool _initPremultipliedATextureWithImage(CGImageRef image, NSUInteger POTWide, NSUInteger POTHigh, tImageInfo* pImageInfo)
 {
-    NSUInteger            i;
-    CGContextRef        context = nil;
-    unsigned char*        data = nil;;
-    CGColorSpaceRef        colorSpace;
-    unsigned char*        tempData;
-    unsigned int*        inPixel32;
-    unsigned short*        outPixel16;
-    bool                hasAlpha;
-    CGImageAlphaInfo    info;
-    CGSize                imageSize;
-    CCTexture2DPixelFormat    pixelFormat;
+    NSUInteger i;
+    CGContextRef context = nil;
+    unsigned char* data = nil;;
+    CGColorSpaceRef colorSpace;
+    unsigned char* tempData;
+    unsigned int* inPixel32;
+    unsigned short* outPixel16;
+    bool hasAlpha;
+    CGImageAlphaInfo info;
+    CGSize imageSize;
+    CCTexture2DPixelFormat pixelFormat;
     
     info = CGImageGetAlphaInfo(image);
     hasAlpha = ((info == kCGImageAlphaPremultipliedLast) || (info == kCGImageAlphaPremultipliedFirst) || (info == kCGImageAlphaLast) || (info == kCGImageAlphaFirst) ? YES : NO);
@@ -108,7 +108,7 @@ static bool _initPremultipliedATextureWithImage(CGImageRef image, NSUInteger POT
     
     if (colorSpace)
     {
-        if(hasAlpha || bpp >= 8)
+        if (hasAlpha || bpp >= 8)
         {
             pixelFormat = kCCTexture2DPixelFormat_Default;
         }
@@ -136,7 +136,7 @@ static bool _initPremultipliedATextureWithImage(CGImageRef image, NSUInteger POT
             colorSpace = CGColorSpaceCreateDeviceRGB();
             data = new unsigned char[POTHigh * POTWide * 4];
             info = hasAlpha ? kCGImageAlphaPremultipliedLast : kCGImageAlphaNoneSkipLast;
-            context = CGBitmapContextCreate(data, POTWide, POTHigh, 8, 4 * POTWide, colorSpace, info | kCGBitmapByteOrder32Big);                
+            context = CGBitmapContextCreate(data, POTWide, POTHigh, 8, 4 * POTWide, colorSpace, info | kCGBitmapByteOrder32Big);
             CGColorSpaceRelease(colorSpace);
             break;
             
@@ -167,7 +167,6 @@ static bool _initPremultipliedATextureWithImage(CGImageRef image, NSUInteger POT
     CGContextDrawImage(context, rect, image);
     
     // Repack the pixel data into the right format
-    
     if(pixelFormat == kCCTexture2DPixelFormat_RGB565) 
     {
         //Convert "RRRRRRRRRGGGGGGGGBBBBBBBBAAAAAAAA" to "RRRRRGGGGGGBBBBB"
@@ -178,10 +177,8 @@ static bool _initPremultipliedATextureWithImage(CGImageRef image, NSUInteger POT
         {
             *outPixel16++ = ((((*inPixel32 >> 0) & 0xFF) >> 3) << 11) | ((((*inPixel32 >> 8) & 0xFF) >> 2) << 5) | ((((*inPixel32 >> 16) & 0xFF) >> 3) << 0);
         }
-
-        delete []data;
+        delete [] data;
         data = tempData;
-        
     }
     else if (pixelFormat == kCCTexture2DPixelFormat_RGBA4444) 
     {
@@ -196,11 +193,9 @@ static bool _initPremultipliedATextureWithImage(CGImageRef image, NSUInteger POT
             ((((*inPixel32 >> 8) & 0xFF) >> 4) << 8) | // G
             ((((*inPixel32 >> 16) & 0xFF) >> 4) << 4) | // B
             ((((*inPixel32 >> 24) & 0xFF) >> 4) << 0); // A
-        }       
-        
-        delete []data;
+        }
+        delete [] data;
         data = tempData;
-        
     }
     else if (pixelFormat == kCCTexture2DPixelFormat_RGB5A1) 
     {
@@ -216,24 +211,21 @@ static bool _initPremultipliedATextureWithImage(CGImageRef image, NSUInteger POT
             ((((*inPixel32 >> 16) & 0xFF) >> 3) << 1) | // B
             ((((*inPixel32 >> 24) & 0xFF) >> 7) << 0); // A
         }
-                
-        delete []data;
+        delete [] data;
         data = tempData;
     }
-    
     // should be after calling super init
     pImageInfo->isPremultipliedAlpha = true;
     pImageInfo->hasAlpha = true;
     pImageInfo->bitsPerComponent = (int)bpp;
     pImageInfo->width = (unsigned int)POTWide;
     pImageInfo->height = (unsigned int)POTHigh;
-    
     if (pImageInfo->data)
     {
         delete [] pImageInfo->data;
     }
     pImageInfo->data = data;
-    
+
     CGContextRelease(context);
     return true;
 }
@@ -246,8 +238,6 @@ static bool _initWithImage(CGImageRef CGImage, tImageInfo *pImageinfo, double sc
     {
         return false;
     }
-    
-	//if (cocos2d::CCImage::getIsScaleEnabled())
 	if (cocos2d::CCDirector::sharedDirector()->getContentScaleFactor() > 1.0f)
 	{
 		POTWide = CGImageGetWidth(CGImage) * scaleX;
@@ -258,7 +248,6 @@ static bool _initWithImage(CGImageRef CGImage, tImageInfo *pImageinfo, double sc
 		POTWide = CGImageGetWidth(CGImage);
 		POTHigh = CGImageGetHeight(CGImage);
 	}
-
     
     // load and draw image
     return _initPremultipliedATextureWithImage(CGImage, POTWide, POTHigh, pImageinfo);
@@ -266,26 +255,17 @@ static bool _initWithImage(CGImageRef CGImage, tImageInfo *pImageinfo, double sc
 
 static bool _initWithFile(const char* path, tImageInfo *pImageinfo)
 {
-    CGImageRef                CGImage;    
-    NSImage                    *jpg;
-    //NSImage                    *png;
-    bool            ret;
-    
-    // convert jpg to png before loading the texture
-    
+    CGImageRef CGImage;
+    NSImage* jpg;
+    bool ret;
     NSString *fullPath = [NSString stringWithUTF8String:path];
     jpg = [[NSImage alloc] initWithContentsOfFile: fullPath];
-    //png = [[NSImage alloc] initWithData:UIImagePNGRepresentation(jpg)];
     CGImageSourceRef source = CGImageSourceCreateWithData((CFDataRef)[jpg TIFFRepresentation], NULL);
     CGImage = CGImageSourceCreateImageAtIndex(source, 0, NULL);
-    
     ret = _initWithImage(CGImage, pImageinfo, 1.0, 1.0);
-    
-    //[png release];
     [jpg release];
     if (CGImage) CFRelease(CGImage);
     if (source) CFRelease(source);
-  
     return ret;
 }
 
@@ -503,68 +483,6 @@ NS_CC_BEGIN
 
 static bool m_bEnabledScale = true;
 
-bool isFileExists(const char* szFilePath)
-{
-#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-	//TCHAR dirpath[MAX_PATH];
-	//MultiByteToWideChar(936,0,szFilePath,-1,dirpath,sizeof(dirpath));
-	DWORD dwFileAttr = GetFileAttributesA(szFilePath);
-	if (INVALID_FILE_ATTRIBUTES == dwFileAttr
-		|| (dwFileAttr&FILE_ATTRIBUTE_DIRECTORY))	{
-		return false;
-	}		
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-	bool bFind = true;
-	do 
-	{
-		struct stat buf;
-		int n = stat(szFilePath, &buf);
-		if ((0 != n)
-			|| !(buf.st_mode&S_IFMT))	
-		{
-			bFind = false;
-		}
-	} while (0);
-	if (!bFind)
-	{
-		//std::string strFilenName = s_strRelativePath + szFilePath;
-		unsigned char * pBuffer = NULL;
-		unzFile pFile = NULL;
-		unsigned long pSize = 0;
-		
-		do 
-		{
-			pFile = unzOpen(s_strAndroidPackagePath.c_str());
-			if(!pFile)break;
-			
-			int nRet = unzLocateFile(pFile, szFilePath, 1);
-			if(UNZ_OK != nRet)
-				bFind = false;
-			else
-				bFind = true;
-		} while (0);
-		
-		if (pFile)
-		{
-			unzClose(pFile);
-		}
-	}
-	
-	return bFind;
-#else
-	struct stat buf;
-	int n = stat(szFilePath, &buf);
-	if ((0 != n)
-		|| !(buf.st_mode&S_IFMT))	{
-		return false;
-	}		
-	
-#endif
-	return true;
-}
-
-bool CCImage::isAlphaPremultiplied = true;
-
 CCImage::CCImage()
 : m_nWidth(0)
 , m_nHeight(0)
@@ -585,7 +503,7 @@ bool CCImage::initWithImageFile(const char * strPath, EImageFormat eImgFmt/* = e
     std::string strTemp = CCFileUtils::sharedFileUtils()->fullPathForFilename(strPath);
 	if (m_bEnabledScale)
 	{
-		if (!isFileExists(strTemp.c_str()))
+		if (!CCFileUtils::sharedFileUtils()->isFileExist(strTemp.c_str()))
 		{
 			if (strTemp.rfind("@2x") == std::string::npos)
 			{
@@ -597,14 +515,11 @@ bool CCImage::initWithImageFile(const char * strPath, EImageFormat eImgFmt/* = e
 			}
 		}
 	}
-	
-//	CCFileData tempData(strTemp.c_str(), "rb");			
-//	return initWithImageData(tempData.getBuffer(), tempData.getSize(), eImgFmt);
 
 	unsigned long fileSize = 0;
 	unsigned char* pFileData = CCFileUtils::sharedFileUtils()->getFileData(strTemp.c_str(), "rb", &fileSize);
 	bool ret = initWithImageData(pFileData, (int)fileSize, eImgFmt);
-	delete []pFileData;
+	delete [] pFileData;
 	return ret;
 }
 
@@ -624,12 +539,13 @@ bool CCImage::initWithImageFileThreadSafe(const char *fullpath, EImageFormat ima
     return bRet;
 }
 
-bool CCImage::initWithImageData(void * pData, 
-                           int nDataLen, 
-                           EImageFormat eFmt,
-                           int nWidth,
-                           int nHeight,
-                           int nBitsPerComponent)
+bool CCImage::initWithImageData(
+	void* pData,
+	int nDataLen,
+	EImageFormat eFmt,
+	int nWidth,
+	int nHeight,
+	int nBitsPerComponent)
 {
     bool bRet = false;
 	m_format = eFmt;
@@ -645,9 +561,8 @@ bool CCImage::initWithImageData(void * pData,
 	};
     do 
     {
-        CC_BREAK_IF(! pData || nDataLen <= 0);
-		
-		bRet = _initWithData(pData, nDataLen, &info, 1.0f, 1.0f);//m_dScaleX, m_dScaleY);
+        CC_BREAK_IF(!pData || nDataLen <= 0);
+		bRet = _initWithData(pData, nDataLen, &info, 1.0f, 1.0f);
 		if (bRet)
 		{
 			m_nHeight = (short)info.height;
@@ -671,17 +586,16 @@ bool CCImage::initWithImageData(void * pData,
 }
 
 bool CCImage::initWithString(
-	const char *    pText, 
-	int             nWidth, 
-	int             nHeight,
-	ETextAlign      eAlignMask,
-	const char *    pFontName,
-	int             nSize)
+	const char* pText,
+	int nWidth,
+	int nHeight,
+	ETextAlign eAlignMask,
+	const char* pFontName,
+	int nSize)
 {
     tImageInfo info = {0};
     info.width = nWidth;
     info.height = nHeight;
-	
     if (! _initWithString(pText, eAlignMask, pFontName, nSize, &info, NULL)) //pStrokeColor))
     {
         return false;
@@ -691,7 +605,8 @@ bool CCImage::initWithString(
     m_nBitsPerComponent = info.bitsPerComponent;
     m_bHasAlpha = info.hasAlpha;
     m_bPreMulti = info.isPremultipliedAlpha;
-	if (m_pData) {
+	if (m_pData)
+	{
 		CC_SAFE_DELETE_ARRAY(m_pData);
 	}
     m_pData = info.data;
@@ -713,21 +628,53 @@ static std::string getExt(const std::string& filename)
 	}
 	else return std::string();
 }
+
+#define CC_RGB_UNPREMULTIPLY_ALPHA(vr, vg, vb, va) \
+	(((unsigned)(vr)<<8)/((unsigned)(va)+1)) | \
+	((((unsigned)(vg)<<8)/((unsigned)(va)+1)) << 8) | \
+	((((unsigned)(vb)<<8)/((unsigned)(va)+1)) << 16) | \
+	((unsigned)(va) << 24)
+
 bool CCImage::saveToFile(const char* pszFilePath)
 {
+	unsigned char* pData = m_pData;
+	if (m_bPreMulti)
+	{
+		const int nBytesPerComponent = 4;
+		int dataLen = m_nWidth * m_nHeight * nBytesPerComponent;
+		pData = new unsigned char[dataLen];
+		memcpy(pData, m_pData, dataLen);
+		int rowbytes = m_nWidth * nBytesPerComponent;
+		unsigned int* tmp = (unsigned int*)pData;
+		for (int i = 0; i < m_nHeight; i++)
+		{
+			for (int j = 0; j < rowbytes; j += 4)
+			{
+				*tmp++ = CC_RGB_UNPREMULTIPLY_ALPHA(
+					pData[i*rowbytes + j],
+					pData[i*rowbytes + j + 1],
+					pData[i*rowbytes + j + 2],
+					pData[i*rowbytes + j + 3]);
+			}
+		}
+	}
 	int bRet = 0;
 	std::string ext = getExt(pszFilePath);
 	if (ext == "png")
 	{
-		bRet = stbi_write_png(pszFilePath, m_nWidth, m_nHeight, 4, m_pData, 0);
+		bRet = stbi_write_png(pszFilePath, m_nWidth, m_nHeight, 4, pData, 0);
 	}
 	else if (ext == "bmp")
 	{
-		bRet = stbi_write_bmp(pszFilePath, m_nWidth, m_nHeight, 4, m_pData);
+		bRet = stbi_write_bmp(pszFilePath, m_nWidth, m_nHeight, 4, pData);
 	}
 	else if (ext == "tga")
 	{
-		bRet = stbi_write_tga(pszFilePath, m_nWidth, m_nHeight, 4, m_pData);
+		bRet = stbi_write_tga(pszFilePath, m_nWidth, m_nHeight, 4, pData);
+	}
+	if (m_bPreMulti)
+	{
+		delete [] pData;
 	}
 	return bRet != 0;
 }
@@ -768,11 +715,9 @@ unsigned char* CCImage::convertToRequiredFormat(CCImage* image)
         if (hasAlpha)
         {
             // Convert "RRRRRRRRRGGGGGGGGBBBBBBBBAAAAAAAA" to "RRRRRGGGGGGBBBBB"
-            
             tempData = new unsigned char[width * height * 2];
             outPixel16 = (unsigned short*)tempData;
             inPixel32 = (unsigned int*)image->getData();
-            
             for (unsigned int i = 0; i < length; ++i, ++inPixel32)
             {
 				unsigned int R = ((((*inPixel32 >>  0) & 0xFF) >> 3) << 11);
@@ -784,11 +729,9 @@ unsigned char* CCImage::convertToRequiredFormat(CCImage* image)
         else 
         {
             // Convert "RRRRRRRRRGGGGGGGGBBBBBBBB" to "RRRRRGGGGGGBBBBB"
-            
             tempData = new unsigned char[width * height * 2];
             outPixel16 = (unsigned short*)tempData;
             inPixel8 = (unsigned char*)image->getData();
-            
             for (unsigned int i = 0; i < length; ++i)
             {
 				unsigned int R = (((*inPixel8++ & 0xFF) >> 3) << 11);
@@ -801,11 +744,9 @@ unsigned char* CCImage::convertToRequiredFormat(CCImage* image)
     else if (pixelFormat == kCCTexture2DPixelFormat_RGBA4444)
     {
         // Convert "RRRRRRRRRGGGGGGGGBBBBBBBBAAAAAAAA" to "RRRRGGGGBBBBAAAA"
-        
         inPixel32 = (unsigned int*)image->getData();  
         tempData = new unsigned char[width * height * 2];
         outPixel16 = (unsigned short*)tempData;
-        
         for (unsigned int i = 0; i < length; ++i, ++inPixel32)
         {
             *outPixel16++ = 
@@ -821,7 +762,6 @@ unsigned char* CCImage::convertToRequiredFormat(CCImage* image)
         inPixel32 = (unsigned int*)image->getData();   
         tempData = new unsigned char[width * height * 2];
         outPixel16 = (unsigned short*)tempData;
-        
         for (unsigned int i = 0; i < length; ++i, ++inPixel32)
         {
             *outPixel16++ = 
@@ -837,7 +777,6 @@ unsigned char* CCImage::convertToRequiredFormat(CCImage* image)
         inPixel32 = (unsigned int*)image->getData();
         tempData = new unsigned char[width * height];
         unsigned char *outPixel8 = tempData;
-        
         for (unsigned int i = 0; i < length; ++i, ++inPixel32)
         {
             *outPixel8++ = (*inPixel32 >> 24) & 0xFF;  // A
@@ -850,7 +789,6 @@ unsigned char* CCImage::convertToRequiredFormat(CCImage* image)
         inPixel32 = (unsigned int*)image->getData();
         tempData = new unsigned char[width * height * 3];
         unsigned char *outPixel8 = tempData;
-        
         for (unsigned int i = 0; i < length; ++i, ++inPixel32)
         {
             *outPixel8++ = (*inPixel32 >> 0) & 0xFF; // R
@@ -862,4 +800,3 @@ unsigned char* CCImage::convertToRequiredFormat(CCImage* image)
 }
 
 NS_CC_END
-
