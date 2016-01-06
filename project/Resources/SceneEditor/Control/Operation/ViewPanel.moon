@@ -143,6 +143,7 @@ Class ViewPanelView,
 			item = editor\getItem data
 			data.display = not menuItem.checker.checked
 			item.visible = data.display and data.visible
+			item\start! if item.visible and data.typeName == "Effect"
 
 		addItem = (x,y,text,data,parentData)->
 			realW = width-(x-itemW/2)-10

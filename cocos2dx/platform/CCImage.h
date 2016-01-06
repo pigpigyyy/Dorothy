@@ -38,111 +38,111 @@ NS_CC_BEGIN
 class CC_DLL CCImage : public CCObject
 {
 public:
-    CCImage();
-    ~CCImage();
+	CCImage();
+	~CCImage();
 
-    typedef enum
-    {
-        kFmtJpg = 0,
-        kFmtPng,
-        kFmtRawData,
-        kFmtUnKnown
-    }EImageFormat;
+	typedef enum
+	{
+		kFmtJpg = 0,
+		kFmtPng,
+		kFmtTga,
+		kFmtRawData,
+		kFmtUnKnown
+	} EImageFormat;
 
-    typedef enum
-    {
-        kAlignCenter = 0x33, ///< Horizontal center and vertical center.
-        kAlignTop = 0x13, ///< Horizontal center and vertical top.
-        kAlignTopRight = 0x12, ///< Horizontal right and vertical top.
-        kAlignRight = 0x32, ///< Horizontal right and vertical center.
-        kAlignBottomRight = 0x22, ///< Horizontal right and vertical bottom.
-        kAlignBottom = 0x23, ///< Horizontal center and vertical bottom.
-        kAlignBottomLeft = 0x21, ///< Horizontal left and vertical bottom.
-        kAlignLeft = 0x31, ///< Horizontal left and vertical center.
-        kAlignTopLeft = 0x11, ///< Horizontal left and vertical top.
-    }ETextAlign;
-    
-    /**
-    @brief  Load the image from the specified path. 
-    @param strPath   the absolute file path.
-    @param imageType the type of image, currently only supporting two types.
-    @return  true if loaded correctly.
-    */
-    bool initWithImageFile(const char * strPath, EImageFormat imageType = kFmtPng);
+	typedef enum
+	{
+		kAlignCenter = 0x33, ///< Horizontal center and vertical center.
+		kAlignTop = 0x13, ///< Horizontal center and vertical top.
+		kAlignTopRight = 0x12, ///< Horizontal right and vertical top.
+		kAlignRight = 0x32, ///< Horizontal right and vertical center.
+		kAlignBottomRight = 0x22, ///< Horizontal right and vertical bottom.
+		kAlignBottom = 0x23, ///< Horizontal center and vertical bottom.
+		kAlignBottomLeft = 0x21, ///< Horizontal left and vertical bottom.
+		kAlignLeft = 0x31, ///< Horizontal left and vertical center.
+		kAlignTopLeft = 0x11, ///< Horizontal left and vertical top.
+	} ETextAlign;
 
-    /*
-     @brief The same result as with initWithImageFile, but thread safe. It is caused by
-            loadImage() in CCTextureCache.cpp.
-     @param fullpath  full path of the file.
-     @param imageType the type of image, currently only supporting two types.
-     @return  true if loaded correctly.
-     */
-    bool initWithImageFileThreadSafe(const char *fullpath, EImageFormat imageType = kFmtPng);
+	/**
+	@brief  Load the image from the specified path.
+	@param strPath   the absolute file path.
+	@param imageType the type of image, currently only supporting two types.
+	@return  true if loaded correctly.
+	*/
+	bool initWithImageFile(const char * strPath, EImageFormat imageType = kFmtPng);
 
-    /**
-    @brief  Load image from stream buffer.
+	/*
+	 @brief The same result as with initWithImageFile, but thread safe. It is caused by
+			loadImage() in CCTextureCache.cpp.
+	 @param fullpath  full path of the file.
+	 @param imageType the type of image, currently only supporting two types.
+	 @return  true if loaded correctly.
+	 */
+	bool initWithImageFileThreadSafe(const char *fullpath, EImageFormat imageType = kFmtPng);
 
-    @warning kFmtRawData only supports RGBA8888.
-    @param pBuffer  stream buffer which holds the image data.
-    @param nLength  data length expressed in (number of) bytes.
-    @param nWidth, nHeight, nBitsPerComponent are used for kFmtRawData.
-    @return true if loaded correctly.
-    */
-    bool initWithImageData(void* pData,
-                           int nDataLen, 
-                           EImageFormat eFmt = kFmtUnKnown,
-                           int nWidth = 0,
-                           int nHeight = 0,
-                           int nBitsPerComponent = 8);
+	/**
+	@brief  Load image from stream buffer.
 
-    /**
-    @brief    Create image with specified string.
-    @param  pText       the text the image will show (cannot be nil).
-    @param  nWidth      the image width, if 0, the width will match the text's width.
-    @param  nHeight     the image height, if 0, the height will match the text's height.
-    @param  eAlignMask  the test Alignment
-    @param  pFontName   the name of the font used to draw the text. If nil, use the default system font.
-    @param  nSize       the font size, if 0, use the system default size.
-    */
-    bool initWithString(
-        const char* pText,
-        int nWidth = 0,
-        int nHeight = 0,
-        ETextAlign eAlignMask = kAlignCenter,
-        const char* pFontName = 0,
-        int nSize = 0);
+	@warning kFmtRawData only supports RGBA8888.
+	@param pBuffer  stream buffer which holds the image data.
+	@param nLength  data length expressed in (number of) bytes.
+	@param nWidth, nHeight, nBitsPerComponent are used for kFmtRawData.
+	@return true if loaded correctly.
+	*/
+	bool initWithImageData(void* pData,
+		int nDataLen,
+		EImageFormat eFmt = kFmtUnKnown,
+		int nWidth = 0,
+		int nHeight = 0,
+		int nBitsPerComponent = 8);
 
-    unsigned char* getData() { return m_pData; }
-    int getDataLen() { return m_nWidth * m_nHeight; }
+	/**
+	@brief    Create image with specified string.
+	@param  pText       the text the image will show (cannot be nil).
+	@param  nWidth      the image width, if 0, the width will match the text's width.
+	@param  nHeight     the image height, if 0, the height will match the text's height.
+	@param  eAlignMask  the test Alignment
+	@param  pFontName   the name of the font used to draw the text. If nil, use the default system font.
+	@param  nSize       the font size, if 0, use the system default size.
+	*/
+	bool initWithString(
+		const char* pText,
+		int nWidth = 0,
+		int nHeight = 0,
+		ETextAlign eAlignMask = kAlignCenter,
+		const char* pFontName = 0,
+		int nSize = 0);
 
-    bool hasAlpha() { return m_bHasAlpha; }
-    bool isPremultipliedAlpha() { return m_bPreMulti; }
+	unsigned char* getData() { return m_pData; }
+	int getDataLen() { return m_nWidth * m_nHeight; }
 
-    /**
-    @brief    Save CCImage data to the specified file, with specified format of png, bmp and tga.
-    @param    pszFilePath        the file's absolute path, including file suffix.
-    */
-    bool saveToFile(const char* pszFilePath);
+	bool hasAlpha() { return m_bHasAlpha; }
+	bool isPremultipliedAlpha() { return m_bPreMulti; }
 
-    CC_SYNTHESIZE_READONLY(unsigned short, m_nWidth, Width);
-    CC_SYNTHESIZE_READONLY(unsigned short, m_nHeight, Height);
-    CC_SYNTHESIZE_READONLY(int, m_nBitsPerComponent, BitsPerComponent);
-	static bool isPngAlphaPremultiplied;
+	/**
+	@brief    Save CCImage data to the specified file, with specified format of png, bmp and tga.
+	@param    pszFilePath        the file's absolute path, including file suffix.
+	*/
+	bool saveToFile(const char* pszFilePath);
+
+	CC_SYNTHESIZE_READONLY(unsigned short, m_nWidth, Width);
+	CC_SYNTHESIZE_READONLY(unsigned short, m_nHeight, Height);
+	CC_SYNTHESIZE_READONLY(int, m_nBitsPerComponent, BitsPerComponent);
+	static bool isAlphaPremultiplied;
 	static CCImage::EImageFormat computeImageFormatType(const std::string& filename);
 	// return copy of premultiplied data or passed data from image
-	static unsigned char* convertToPremultipliedData(CCImage* image);
+	static unsigned char* convertToRequiredFormat(CCImage* image);
 protected:
 
-    unsigned char* m_pData;
-    bool m_bHasAlpha;
-    bool m_bPreMulti;
+	unsigned char* m_pData;
+	bool m_bHasAlpha;
+	bool m_bPreMulti;
 
 private:
-    // noncopyable
-    CCImage(const CCImage&    rImg);
-    CCImage & operator=(const CCImage&);
-    typedef void(*image_free_func)(void*);
-    image_free_func _img_free_func;
+	// noncopyable
+	CCImage(const CCImage& rImg);
+	CCImage& operator=(const CCImage&);
+	EImageFormat m_format;
 
 	CC_LUA_TYPE(CCImage)
 };

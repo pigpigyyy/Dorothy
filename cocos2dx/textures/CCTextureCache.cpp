@@ -149,14 +149,14 @@ static void* loadImage(void* data)
             continue;
         }
 		
-		unsigned char* tempData = CCImage::convertToPremultipliedData(pImage);
+		unsigned char* tempData = CCImage::convertToRequiredFormat(pImage);
 		if (tempData != pImage->getData())
 		{
 			CCSize size = CCSizeMake(pImage->getWidth(), pImage->getHeight());
 			size_t bpp = pImage->getBitsPerComponent();
 		CCTexture2DPixelFormat pixelFormat = pImage->hasAlpha() ? CCTexture2D::getDefaultAlphaPixelFormat() : (bpp >= 8 ? kCCTexture2DPixelFormat_RGB888 : kCCTexture2DPixelFormat_RGB565);
 			pAsyncStruct->image = NULL;
-            CC_SAFE_RELEASE(pImage);
+			CC_SAFE_RELEASE(pImage);
 			pAsyncStruct->data = tempData;
 			pAsyncStruct->size = size;
 			pAsyncStruct->pixelFormat = pixelFormat;
