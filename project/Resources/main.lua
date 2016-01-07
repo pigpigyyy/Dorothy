@@ -28,6 +28,7 @@ builtin.CCLabelTTF = function(text,fontName,fontSize)
 	return CCLabelTTF(text,fontName,fontSize)
 end
 
+builtin.class = require("Lib.class")[1]
 require("Test.Entry")
 
 --[[

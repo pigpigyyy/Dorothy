@@ -1,28 +1,15 @@
+Dorothy()
+
 local oButton = require("ActionEditor.Script.oButton")
 local oSelectionPanel = require("ActionEditor.Script.oSelectionPanel")
 local Tests = require("Test.Tests")
-local CCDirector = require("CCDirector")
-local CCMenu = require("CCMenu")
-local CCSize = require("CCSize")
-local oVec2 = require("oVec2")
-local oOpacity = require("oOpacity")
-local CCScene = require("CCScene")
-local CCObject = require("CCObject")
-local cclog = require("cclog")
-local oCache = require("oCache")
-local oAI = require("oAI")
-local oAction = require("oAction")
-local CCApplication = require("CCApplication")
-local CCTargetPlatform = require("CCTargetPlatform")
-local CCLayerColor = require("CCLayerColor")
-local ccColor4 = require("ccColor4")
-local oContent = require("oContent")
-local tolua = require("tolua")
 
 oContent:addSearchPath("Lib")
+
 local moonscript = require("moonscript")
 local util = require("moonscript.util")
 local errors = require("moonscript.errors")
+
 
 local traceback = debug.traceback
 debug.traceback = function(err)
@@ -244,35 +231,35 @@ panel.init = function(self)
 	menu.opacity = 0
 	menu.enabled = false
 	menu:runAction(oOpacity(0.3,1))
-	for i = 1,#Tests do
-		local button = oButton(
-			Tests[i][1],
-			16,
-			200,50,
-			0,0,
-			function()
-				local result = require(Tests[i][2])
-				package.loaded[Tests[i][2]] = nil
-				if type(result) == "function" then result() end
-				if not Tests[i][3] then
-					local opMenu = CCMenu()
-					opMenu.swallowTouches = true
-					opMenu.contentSize = CCSize(60,60)
-					opMenu.touchPriority = CCMenu.DefaultHandlerPriority-998
-					opMenu.position = oVec2(winSize.width-40,40)
-					CCDirector.currentScene:addChild(opMenu,998)
-					local endBtn = oButton("Back",17,60,false,
-						0,0,
-						function()
-							CCDirector:replaceScene(CCScene:crossFade(0.5,scene),true)
-							if rawget(CCScene,"clearHistory") then
-								CCScene:clearHistory()
-							end
-						end)
-					endBtn.anchor = oVec2.zero
-					opMenu:addChild(endBtn)
-				end
-			end)
+
+	local function goto(conf)
+		local result = require(conf[2])
+		package.loaded[conf[2]] = nil
+
+		if not conf[3] then
+			CCDirector:run(CCScene:crossFade(0.5, result()))
+
+			local opMenu = CCMenu()
+			opMenu.swallowTouches = true
+			opMenu.contentSize = CCSize(60,60)
+			opMenu.touchPriority = CCMenu.DefaultHandlerPriority-998
+			opMenu.position = oVec2(winSize.width-40,40)
+			CCDirector.currentScene:addChild(opMenu,998)
+			local endBtn = oButton("Back",17,60,false,
+				0,0,
+				function()
+					CCDirector:replaceScene(CCScene:crossFade(0.5,scene),true)
+					if rawget(CCScene,"clearHistory") then
+						CCScene:clearHistory()
+					end
+				end)
+			endBtn.anchor = oVec2.zero
+			opMenu:addChild(endBtn)
+		end
+	end
+
+	for i, conf in ipairs(Tests) do
+		local button = oButton(conf[1], 16, 200,50, 0,0,function() goto(conf) end)
 		button.anchor = oVec2(0,1)
 		menu:addChild(button)
 	end

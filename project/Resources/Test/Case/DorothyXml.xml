@@ -30,6 +30,5 @@
 			label.text = "Good"
 			scene:runAction(fade)
 		end))
-		CCDirector:run(CCScene:crossFade(0.5,scene))
 	</Script>
 </Scene>
