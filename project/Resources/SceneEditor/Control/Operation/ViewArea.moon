@@ -7,6 +7,7 @@ ViewAreaView = require "View.Control.Operation.ViewArea"
 Class ViewAreaView,
 	__init: =>
 		{:width,:height} = @
+		@scene = nil
 
 		S = oVec2.zero
 		V = oVec2.zero
@@ -178,10 +179,12 @@ Class ViewAreaView,
 
 		@gslot "Scene.DataLoaded",(sceneData)->
 			@sceneNode\removeAllChildrenWithCleanup!
+			@scene = nil
 			if sceneData
 				effectFilename = editor.gameFullPath..editor.graphicFolder.."list.effect"
 				oCache.Effect\load effectFilename if oContent\exist effectFilename
 				newScene = sceneData!
+				@scene = newScene
 				@sceneNode\addChild newScene
 				with newScene.camera
 					.scaleX = editor.scale

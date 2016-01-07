@@ -103,7 +103,7 @@ BoundaryBar = (size,vertical,flip)->
 		\slot "TouchCancelled",touchEnded
 		\slot "TouchEnded",touchEnded
 
-Class => CCNode!,
+Class CCNode,
 	__init:=>
 		{:width,:height} = CCDirector.winSize
 		@visible = false
