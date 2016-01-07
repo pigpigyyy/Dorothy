@@ -98,7 +98,6 @@ Class ClipEditorView,
 		blocks = {}
 		for image in *images
 			oCache.Texture\unload image
-		CCImage.isAlphaPremultiplied = false
 		blendFunc = ccBlendFunc ccBlendFunc.One,ccBlendFunc.Zero
 		for image in *images
 			sp = CCSprite image
@@ -113,7 +112,6 @@ Class ClipEditorView,
 					name: image\match "[\\/]([^\\/]*)%.[^%.\\/]*$"
 				}
 				table.insert blocks,block
-		CCImage.isAlphaPremultiplied = true
 		for image in *images
 			oCache.Texture\unload image
 

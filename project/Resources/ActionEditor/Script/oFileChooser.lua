@@ -98,6 +98,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 			paddingX = 0
 			sprite.positionX = sprite.positionX+borderSize.width*0.5-sprite.contentSize.width*0.5
 		end
+		panel.cullItems = false
 		panel:reset(viewWidth,viewHeight,paddingX,paddingY)
 	end
 
@@ -105,7 +106,6 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 		panel:removeMenuItems()
 		local blocks = {}
 		local images = oContent:getEntries(oEditor.input..file,false)
-		CCImage.isAlphaPremultiplied = false
 		local blendFunc = ccBlendFunc(ccBlendFunc.One,ccBlendFunc.Zero)
 		for i = 1,#images do
 			if images[i]:sub(-4,-1):lower() == ".png" then
@@ -128,7 +128,6 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 				end
 			end
 		end
-		CCImage.isAlphaPremultiplied = true
 
 		oPacker:fit(blocks)
 		local w = oPacker.root.w
@@ -208,6 +207,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 			paddingX = 0
 			node.positionX = node.positionX+borderSize.width*0.5-w*0.5
 		end
+		panel.cullItems = false
 		panel:reset(viewWidth,viewHeight,paddingX,paddingY)
 	end
 

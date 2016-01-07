@@ -339,9 +339,7 @@ Class SpritePanelView,
 							sleep!
 							texFile = oCache.Clip\getTextureFile clip
 							oCache.Texture\unload texFile
-							CCImage.isAlphaPremultiplied = false
 							oCache\loadAsync texFile
-							CCImage.isAlphaPremultiplied = true
 							blendFunc = ccBlendFunc ccBlendFunc.One,ccBlendFunc.Zero
 							tex = oCache.Texture\load texFile
 							tex.antiAlias = false

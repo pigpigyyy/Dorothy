@@ -729,5 +729,20 @@ bool CCFileUtils::isPopupNotify()
     return s_bPopupNotify;
 }
 
+std::string CCFileUtils::getExt(const std::string& filename)
+{
+	int index = (int)filename.find_last_of('.');
+	if (index != -1)
+	{
+		std::string ext = filename.substr(index + 1);
+		for (unsigned int i = 0; i < ext.length(); ++i)
+		{
+			ext[i] = tolower(ext[i]);
+		}
+		return ext;
+	}
+	else return std::string();
+}
+
 NS_CC_END
 

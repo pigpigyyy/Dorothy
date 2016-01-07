@@ -286,6 +286,7 @@
 		3CB40CF61A20DC5400D7A3A6 /* CCZip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CB40CF41A20DC5400D7A3A6 /* CCZip.cpp */; };
 		3CB40CF71A20DC5400D7A3A6 /* CCZip.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CB40CF51A20DC5400D7A3A6 /* CCZip.h */; };
 		3CBD1C851A406A8F00602936 /* CCApplicationProtocol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD1C841A406A8F00602936 /* CCApplicationProtocol.cpp */; };
+		3CCF70051C3D6B1800BB9C3A /* CCImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CCF70041C3D6B1800BB9C3A /* CCImage.cpp */; };
 		3CE519CA1C34203300835B2A /* stb_image_write.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CE519C61C34203300835B2A /* stb_image_write.c */; };
 		3CE519CB1C34203300835B2A /* stb_image_write.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CE519C71C34203300835B2A /* stb_image_write.h */; };
 		3CE519D01C3420C100835B2A /* stb_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CE519CE1C3420C100835B2A /* stb_image.c */; };
@@ -595,6 +596,7 @@
 		3CB40CF41A20DC5400D7A3A6 /* CCZip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCZip.cpp; sourceTree = "<group>"; };
 		3CB40CF51A20DC5400D7A3A6 /* CCZip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCZip.h; sourceTree = "<group>"; };
 		3CBD1C841A406A8F00602936 /* CCApplicationProtocol.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCApplicationProtocol.cpp; sourceTree = "<group>"; };
+		3CCF70041C3D6B1800BB9C3A /* CCImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCImage.cpp; sourceTree = "<group>"; };
 		3CE519C61C34203300835B2A /* stb_image_write.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stb_image_write.c; sourceTree = "<group>"; };
 		3CE519C71C34203300835B2A /* stb_image_write.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image_write.h; sourceTree = "<group>"; };
 		3CE519CE1C3420C100835B2A /* stb_image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stb_image.c; sourceTree = "<group>"; };
@@ -964,6 +966,7 @@
 				1AC6CE8616B910CD00330EFD /* CCFileUtils.cpp */,
 				1AC6CE8716B910CD00330EFD /* CCFileUtils.h */,
 				1551A473158F2ADE00E66CFE /* CCImage.h */,
+				3CCF70041C3D6B1800BB9C3A /* CCImage.cpp */,
 				1551A475158F2ADE00E66CFE /* CCPlatformConfig.h */,
 				1551A476158F2ADE00E66CFE /* CCPlatformMacros.h */,
 				1551A477158F2ADE00E66CFE /* CCSAXParser.cpp */,
@@ -1609,6 +1612,7 @@
 				1551A852158F2ADF00E66CFE /* ZipUtils.cpp in Sources */,
 				1551A855158F2ADF00E66CFE /* CCIMEDispatcher.cpp in Sources */,
 				1551A857158F2ADF00E66CFE /* CCTextFieldTTF.cpp in Sources */,
+				3CCF70051C3D6B1800BB9C3A /* CCImage.cpp in Sources */,
 				1551A859158F2ADF00E66CFE /* CCTexture2D.cpp in Sources */,
 				3CE519D01C3420C100835B2A /* stb_image.c in Sources */,
 				1551A85B158F2ADF00E66CFE /* CCTextureAtlas.cpp in Sources */,

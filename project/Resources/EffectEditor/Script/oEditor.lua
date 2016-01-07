@@ -128,7 +128,7 @@ oEditor.dumpData = function(self,filename)
 		oContent:saveToFile(file,str)
 		oCache.Animation:unload(file)
 	end
-	oEditor:emit("Edited",oEditor.currentName,oEditor.prefix..oEditor.currentFile)
+	oEditor:emit("Edited",oEditor.currentName,oEditor.prefix..filename)
 end
 
 local pair = {true,true}

@@ -284,6 +284,8 @@ public:
     virtual bool isPopupNotify();
 
 	void setDataSource(CCDataSource* dataSource);
+	
+	static std::string getExt(const std::string& filename);
 protected:
     /**
      *  The default constructor.

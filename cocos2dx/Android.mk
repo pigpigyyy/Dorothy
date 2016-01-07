@@ -78,6 +78,7 @@ platform/CCApplicationProtocol.cpp \
 platform/CCSAXParser.cpp \
 platform/CCThread.cpp \
 platform/CCFileUtils.cpp \
+platform/CCImage.cpp \
 platform/platform.cpp \
 platform/CCEGLViewProtocol.cpp \
 platform/CCKeyboard.cpp \
@@ -87,7 +88,7 @@ platform/android/CCAccelerometer.cpp \
 platform/android/CCApplication.cpp \
 platform/android/CCCommon.cpp \
 platform/android/CCFileUtilsAndroid.cpp \
-platform/android/CCImage.cpp \
+platform/android/CCImageAndroid.cpp \
 platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxBitmap.cpp \
 platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxHelper.cpp \
 platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxRenderer.cpp \

@@ -36,6 +36,7 @@ local function oSelectionPanel(borderSize,noCliping)
 	panel.anchor = oVec2.zero
 	panel.touchEnabled = true
 	panel.visible = false
+	panel.cullItems = true
 	local mask = CCLayer()
 	mask.anchor = oVec2.zero
 	mask.touchPriority = CCMenu.DefaultHandlerPriority-3
@@ -81,9 +82,11 @@ local function oSelectionPanel(borderSize,noCliping)
 	local function moveItems(delta)
 		menu:eachChild(function(child)
 			child.position = child.position + delta
-			local positionX, positionY, width, height = child.positionX, child.positionY, child.width, child.height
-			itemRect:set(positionX, positionY - height, width, height)
-			child.visible = contentRect:intersectsRect(itemRect)
+			if panel.cullItems then
+				local positionX, positionY, width, height = child.positionX, child.positionY, child.width, child.height
+				itemRect:set(positionX, positionY - height, width, height)
+				child.visible = contentRect:intersectsRect(itemRect)
+			end
 		end)
 	end
 
@@ -184,8 +187,8 @@ local function oSelectionPanel(borderSize,noCliping)
 			deltaPos = newPos - totalDelta
 		end
 		
-		if viewWidth < borderSize.width then deltaPos.x = 0 end
-		if viewHeight < borderSize.height then deltaPos.y = 0 end
+		if viewWidth <= borderSize.width then deltaPos.x = 0 end
+		if viewHeight <= borderSize.height then deltaPos.y = 0 end
 
 		totalDelta = totalDelta + deltaPos
 
@@ -313,6 +316,7 @@ local function oSelectionPanel(borderSize,noCliping)
 	end
 
 	panel.reset = function(self,width,height,padX,padY)
+		panel:unschedule()
 		viewWidth = math.max(width,borderSize.width)
 		viewHeight = math.max(height,borderSize.height)
 		moveY = viewHeight-borderSize.height
