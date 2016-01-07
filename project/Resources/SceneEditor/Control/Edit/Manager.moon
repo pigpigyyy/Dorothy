@@ -8,7 +8,7 @@ ContactPanel = require "Control.Edit.ContactPanel"
 Reference = require "Data.Reference"
 import Simulation from require "Data.Model"
 
-Class => CCNode!,
+Class CCNode,
 	__init:=>
 		{:width,:height} = CCDirector.winSize
 		_stopEditing = nil
