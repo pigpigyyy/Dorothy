@@ -1,14 +1,31 @@
-if not _PREMAKE_VERSION then
-	os.execute('premake5 tolua')
-	os.execute('premake5 vs2015')
-	return
-end
+
 
 local function runCmd(...)
 	local cmd = string.format(...)
-	print(cmd)
+	print('>>>', cmd)
 	os.execute(cmd)
 end
+
+if not _PREMAKE_VERSION then
+	runCmd('premake5 tolua')
+	runCmd('premake5 vs2015')
+	runCmd('premake5 androidmk')
+	return
+end
+
+local module_defines = {
+	["androidmk"] = 'https://github.com/Meoo/premake-androidmk.git',
+}
+
+local function import(name)
+	if not os.isfile(name .. "/" .. name .. '.lua') then
+		error(string.format('Module %s[%s] should clone into %s first.', name, module_defines[name], name))
+	end
+
+	require(name .. "." .. name)
+end
+
+import "androidmk"
 
 newaction {
 	trigger     = "tolua",
@@ -37,7 +54,7 @@ newaction {
 		local NDK_MODULE_PATH = {
 			os.getcwd(),
 		}
-		runCmd("cd project\\proj.android &ndk-build -j4 NDK_DEBUG=%d -C %s NDK_MODULE_PATH=%s", NDK_DEBUG, APP_ANDROID_ROOT, table.concat(NDK_MODULE_PATH, ';'))
+		runCmd("cd project\\proj.android &ndk-build -j")-- NDK_DEBUG=%d -C %s NDK_MODULE_PATH=%s", NDK_DEBUG, APP_ANDROID_ROOT, table.concat(NDK_MODULE_PATH, ';'))
 	end
 }
 
@@ -56,8 +73,19 @@ newoption
 	description = "Set the output location for the generated files"
 }
 
+-- platform in [windows, android, ios, macosx ... ]
+-- because there is no andoird ios in the premake os list.
+local os_list = {
+	windows = function() filter { "system:windows", "action:vs*" } end,
+	android = function() filter { "action:androidmk" } end,
+}
 
-solution "Dorothy-premake"
+local function is_build_to(to)
+	os_list[to]()
+end
+
+
+solution "DorothyPremake"
 	configurations { "Debug", "Release" }
 
 	location (path.join(_OPTIONS['to'] or "build", _ACTION))
@@ -94,11 +122,11 @@ solution "Dorothy-premake"
 		defines     { "NDEBUG" }
 		flags       { "OptimizeSize" }
 
-	configuration "vs*"
+	filter "action:vs*"
 		buildoptions { "/MTd" }
 		defines { "_CRT_SECURE_NO_WARNINGS" }
 
-	configuration "windows"
+	is_build_to "windows"
 		defines { "_WINDOWS", "WIN32", }
 
 		includedirs {
@@ -106,7 +134,14 @@ solution "Dorothy-premake"
 			"cocos2dx/platform/third_party/win32",
 			"cocos2dx/platform/third_party/win32/*",
 		}
-	configuration "android"
+
+	is_build_to "android"
+		ndkabi "armeabi"
+		ndkplatform "android-19"
+		ndktoolchainversion "default"
+
+		defines { "USE_FILE32API" }
+
 		includedirs {
 			"cocos2dx/platform/android",
 			"cocos2dx/platform/third_party/android/prebuilt/libcurl/include",
@@ -122,14 +157,15 @@ solution "Dorothy-premake"
 			"cocos2dx/**.h",
 		}
 
-		configuration "windows"
+		is_build_to "windows"
 			excludes {
 				"cocos2dx/platform/third_party/**.*",
 				"cocos2dx/platform/ios/**.*",
 				"cocos2dx/platform/android/**.*",
 				"cocos2dx/platform/mac/**.*",
 			}
-		configuration "android"
+
+		is_build_to "android"
 			excludes {
 				"cocos2dx/platform/third_party/**.*",
 				"cocos2dx/platform/ios/**.*",
@@ -183,12 +219,12 @@ solution "Dorothy-premake"
 
 		files { "cocosDenshion/include/*.*", }
 
-		configuration "windows"
+		is_build_to "windows"
 			files { "cocosDenshion/win32/*.*", }
-		configuration "android"
+		is_build_to "android"
 			files { "cocosDenshion/android/*.*", }
 
-	project "Dorothy"
+	project "Editor"
 
 		debugdir "project/Resources"
 
@@ -207,7 +243,7 @@ solution "Dorothy-premake"
 			unpack(lua_inc),
 		}
 
-		configuration "windows"
+		is_build_to "windows"
 			kind "WindowedApp"
 			flags { "WinMain" }
 
@@ -240,7 +276,7 @@ solution "Dorothy-premake"
 				"libzlib",
 			}
 
-		configuration "android"
+		is_build_to "android"
 			kind "SharedLib"
 			files { "project/proj.android/**.cpp",}
 
