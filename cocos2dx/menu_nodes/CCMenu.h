@@ -83,12 +83,12 @@ public:
 	/** align items vertically with padding
 	@since v0.7.2
 	*/
-	float alignItemsVerticallyWithPadding(float padding = 10);
+	CCSize alignItemsVerticallyWithPadding(float padding = 10);
 
 	/** align items horizontally with padding
 	@since v0.7.2
 	*/
-	float alignItemsHorizontallyWithPadding(float padding = 10);
+	CCSize alignItemsHorizontallyWithPadding(float padding = 10);
 
 	CCSize alignItemsWithPadding(float padding = 10);
 

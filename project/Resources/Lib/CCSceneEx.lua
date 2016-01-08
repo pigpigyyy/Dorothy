@@ -33,7 +33,7 @@ function CCScene:remove(name)
 end
 
 local function runScene(scene,tname)
-	local data = transitions[tname]
+	local data = tname and transitions[tname]
 	local transition
 	if data then
 		local args = {}

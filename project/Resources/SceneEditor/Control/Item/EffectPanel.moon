@@ -195,7 +195,8 @@ Class EffectPanelView,
 									MessageBox text:"Name Exist!",okOnly:true
 									return
 							effectEditor = editor.effectEditor
-							effectEditor\slot("Activated")\set ->
+							effectEditor\setupEvent!
+							effectEditor\slot "Activated",->
 								effectEditor["new"..itemType] effectEditor,name
 							CCScene\forward "effectEditor","rollOut"
 

@@ -21,6 +21,7 @@ local function oViewArea()
 	local scrollNode = CCNode()
 	view:addChild(scrollNode)
 	scrollNode.position = origin
+	view.viewNode = scrollNode
 
 	local winSize = CCDirector.winSize
 	local crossNode = CCNode()

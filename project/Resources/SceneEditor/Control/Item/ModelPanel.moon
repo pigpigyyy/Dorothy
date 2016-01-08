@@ -192,7 +192,8 @@ Class ModelPanelView,
 							MessageBox text:"Name Exist!",okOnly:true
 							return
 					actionEditor = editor.actionEditor
-					actionEditor\slot("Activated")\set ->
+					actionEditor\setupEvent!
+					actionEditor\slot "Activated",->
 						oFileChooser = require "ActionEditor.Script.oFileChooser"
 						oFileChooser(true,true,name)
 					CCScene\forward "actionEditor","rollOut"

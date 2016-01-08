@@ -1318,6 +1318,12 @@ local Dorothy =
 				static = true,
 				type = "value",
 			},
+			eclapsedInterval =
+			{
+				description = "[double][Readonly] Time eclapsed since current frame begin.",
+				static = true,
+				type = "value",
+			},
 			deltaTime =
 			{
 				description = "[float][Readonly]",
@@ -2799,21 +2805,23 @@ local Dorothy =
 			{
 				args = "(padding: float = 10)",
 				description = "",
-				returns = "(contentHeight: float)",
+				returns = "(viewSize: CCSize)",
+				typeName = "CCSize",
 				type = "method",
 			},
 			alignItemsHorizontally =
 			{
 				args = "(padding: float = 10)",
 				description = "",
-				returns = "(contentWidth: float)",
+				returns = "(viewSize: CCSize)",
+				typeName = "CCSize",
 				type = "method",
 			},
 			alignItems =
 			{
 				args = "(padding: float = 10)",
 				description = "",
-				returns = "(contentSize: CCSize)",
+				returns = "(viewSize: CCSize)",
 				typeName = "CCSize",
 				type = "method",
 			},

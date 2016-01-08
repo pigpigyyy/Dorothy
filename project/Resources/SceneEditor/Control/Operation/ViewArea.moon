@@ -156,8 +156,7 @@ Class ViewAreaView,
 						if item.parent ~= editor.items.UI
 							-- TODO: show "can`t add body" message here
 							parentData = editor\getData item.parent
-							pos += parentData.offset
-							editor\moveTo pos
+							editor\moveTo pos*parentData.zoom+parentData.offset
 					else
 						item = editor\getItem itemData
 						pos = itemData.position
@@ -167,8 +166,7 @@ Class ViewAreaView,
 						showFrame itemData
 						if item.parent ~= editor.items.UI
 							parentData = editor\getData item.parent
-							pos += parentData.offset
-							editor\moveTo pos*parentData.zoom
+							editor\moveTo pos*parentData.zoom+parentData.offset
 				else
 					@cross.transformTarget = nil
 					@cross.visible = false

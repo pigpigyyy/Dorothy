@@ -900,11 +900,22 @@ CCNode* CCDirector::getNotificationNode()
 	return m_pNotificationNode;
 }
 
-void CCDirector::setNotificationNode(CCNode *node)
+void CCDirector::setNotificationNode(CCNode* node)
 {
-	CC_SAFE_RELEASE(m_pNotificationNode);
+	if (m_pNotificationNode)
+	{
+		m_pNotificationNode->onExitTransitionDidStart();
+		m_pNotificationNode->onExit();
+		m_pNotificationNode->cleanup();
+		m_pNotificationNode->release();
+	}
 	m_pNotificationNode = node;
-	CC_SAFE_RETAIN(m_pNotificationNode);
+	if (m_pNotificationNode)
+	{
+		m_pNotificationNode->retain();
+		m_pNotificationNode->onEnter();
+		m_pNotificationNode->onEnterTransitionDidFinish();
+	}
 }
 
 CCDirectorDelegate* CCDirector::getDelegate() const

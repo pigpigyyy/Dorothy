@@ -256,6 +256,7 @@ oRoutine(once(function()
 	for index,name in ipairs(controls) do
 		local createFunc = require(name)
 		coroutine.yield()
+		name = name:sub(2,2):lower()..name:sub(3,-1)
 		oEditor[name] = createFunc() -- keep lua reference for control items
 		coroutine.yield()
 		oEditor:addChild(oEditor[name],index)

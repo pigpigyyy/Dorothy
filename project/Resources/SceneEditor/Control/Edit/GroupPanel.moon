@@ -25,4 +25,4 @@ Class GroupPanelView,
 						btnText = newName == .placeHolder and "" or newName
 						editor\updateGroupName i,newName
 
-		@scrollArea.viewSize = CCSize 0,@menu\alignItemsVertically!
+		@scrollArea.viewSize = @menu\alignItemsVertically!

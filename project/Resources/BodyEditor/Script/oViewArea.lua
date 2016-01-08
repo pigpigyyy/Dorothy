@@ -119,7 +119,7 @@ local function oViewArea()
 		else
 			data = oEditor["new"..name](oEditor)
 			pos = oEditor.world:convertToNodeSpace(pos)
-			if oEditor.isFixed then 
+			if oEditor.isFixed then
 				pos = oEditor:round(pos)
 			end
 			data:set("Position",pos)
@@ -132,6 +132,7 @@ local function oViewArea()
 
 	-- init world node --
 	crossNode:addChild(oEditor.world)
+	view.viewNode = oEditor.world
 
 	-- handle view touch event --
 	local pick = false

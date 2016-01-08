@@ -468,9 +468,14 @@ Class CCNode,
 						table.insert looks,1,"None"
 						with SelectionPanel items:looks
 							\slot "Selected",(value)->
-								data[menuItem.name] = (value == "None" and "" or value)
+								value = (value == "None" and "" or value)
+								data[menuItem.name] = value
 								menuItem.value = value
-								item\play value
+								if value == ""
+									item\stop!
+									item\reset!
+								else
+									item\play value
 								cancelEditing!
 					when "group"
 						groupChooser = with GroupChooser!

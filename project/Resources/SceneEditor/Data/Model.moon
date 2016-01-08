@@ -363,7 +363,7 @@ Items =
 		animation:{10,""}
 		speed:{11,1}
 		loop:{12,false}
-		faceRight:{13,true}
+		faceRight:{13,false}
 		visible:{14,true}
 		-- design
 		display:{15,true}

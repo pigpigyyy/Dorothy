@@ -124,8 +124,41 @@ Class EditMenuView,
 					itemData.effect
 				else
 					itemData.file
+				subEditor = editor\edit itemData.typeName,file
 				if file
-					editor\edit itemData.typeName,file
+					scene = editor.viewArea.scene
+					lastCamPos = scene.camera.position
+					lastCamZoom = scene.camera.scaleX
+					item = editor\getItem itemData
+					parentData = editor\getData item.parent
+					layerZoom = parentData.zoom
+					layerOffset = parentData.offset
+					display = itemData.display
+					itemData.display,item.visible = false,false
+					scene.parent\removeChild scene,false
+					subEditor\slot "Activated",->
+						subEditor.viewArea.viewNode\addChild scene,-1
+						{:width,:height} = CCDirector.winSize
+						scene.scaleX = 1/layerZoom
+						scene.scaleY = 1/layerZoom
+						with scene.camera
+							.position = oVec2(width/2,height/2)+itemData.position+layerOffset
+							.scaleX = 1
+							.scaleY = 1
+					subEditor\slot "Quit",->
+						itemData.display = display
+						item = editor\getItem itemData
+						item.visible = itemData.display and itemData.visible
+						scene.parent\removeChild scene,false
+						editor.viewArea.sceneNode\addChild scene
+						scene.scaleX = 1
+						scene.scaleY = 1
+						with scene.camera
+							.position = lastCamPos
+							.scaleX = lastCamZoom
+							.scaleY = lastCamZoom
+						emit "Scene.ViewArea.Frame",itemData
+				emit "Scene.SettingPanel.Edit",nil
 
 		@menuBtn.dirty = false
 		@menuBtn\slot "Tapped",->

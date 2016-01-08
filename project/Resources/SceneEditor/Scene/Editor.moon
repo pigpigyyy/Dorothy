@@ -267,51 +267,57 @@ Class EditorView,
 
 	actionEditor: property =>
 		if not @_actionEditor
-			actionEditor = require "ActionEditor.Script.oEditor"
-			actionEditor.standAlone = false
-			actionEditor.quitable = true
-			actionEditor.input = @gameFullPath
-			actionEditor.output = @gameFullPath
-			actionEditor.prefix = @graphicFolder
-			actionEditor\slot "Edited",(model)->
-				emit "Scene.ModelUpdated",model
-			actionEditor\slot "Quit",->
-				CCScene\back "rollIn"
-				@updateModels!
+			actionEditor = with require "ActionEditor.Script.oEditor"
+				.standAlone = false
+				.quitable = true
+				.input = @gameFullPath
+				.output = @gameFullPath
+				.prefix = @graphicFolder
+				.setupEvent = (editor)->
+					\slot("Edited")\set (model)->
+						emit "Scene.ModelUpdated",model
+					\slot("Quit")\set ->
+						CCScene\back "rollIn"
+						@updateModels!
+					\slot "Activated",nil
 			CCScene\add "actionEditor",actionEditor
 			@_actionEditor = actionEditor
 		@_actionEditor
 
 	bodyEditor: property =>
 		if not @_bodyEditor
-			bodyEditor = require "BodyEditor.Script.oEditor"
-			bodyEditor.standAlone = false
-			bodyEditor.quitable = true
-			bodyEditor.input = @gameFullPath
-			bodyEditor.output = @gameFullPath
-			bodyEditor\slot "Edited",(body)->
-				emit "Scene.BodyUpdated",body
-			bodyEditor\slot "Quit",->
-				CCScene\back "rollIn"
-				@updateBodies!
+			bodyEditor = with require "BodyEditor.Script.oEditor"
+				.standAlone = false
+				.quitable = true
+				.input = @gameFullPath
+				.output = @gameFullPath
+				.setupEvent = (editor)->
+					\slot "Edited",(body)->
+						emit "Scene.BodyUpdated",body
+					\slot "Quit",->
+						CCScene\back "rollIn"
+						@updateBodies!
+					\slot "Activated",nil
 			CCScene\add "bodyEditor",bodyEditor
 			@_bodyEditor = bodyEditor
 		@_bodyEditor
 
 	effectEditor: property =>
 		if not @_effectEditor
-			effectEditor = require "EffectEditor.Script.oEditor"
-			effectEditor.standAlone = false
-			effectEditor.quitable = true
-			effectEditor.listFile = @graphicFolder.."list.effect"
-			effectEditor.prefix = @graphicFolder
-			effectEditor.input = @gameFullPath
-			effectEditor.output = @gameFullPath
-			effectEditor\slot "Edited",(effect,effectFile,delete)->
-				emit "Scene.EffectUpdated",{effect,effectFile,delete}
-			effectEditor\slot "Quit",->
-				CCScene\back "rollIn"
-				@updateEffects!
+			effectEditor = with require "EffectEditor.Script.oEditor"
+				.standAlone = false
+				.quitable = true
+				.listFile = @graphicFolder.."list.effect"
+				.prefix = @graphicFolder
+				.input = @gameFullPath
+				.output = @gameFullPath
+				.setupEvent = (editor)->
+					\slot "Edited",(effect,effectFile,delete)->
+						emit "Scene.EffectUpdated",{effect,effectFile,delete}
+					\slot "Quit",->
+						CCScene\back "rollIn"
+						@updateEffects!
+					\slot "Activated",nil
 			CCScene\add "effectEditor",effectEditor
 			@_effectEditor = effectEditor
 		@_effectEditor
@@ -539,7 +545,7 @@ Class EditorView,
 			emit "Scene.Dirty",true
 		tmpIndex
 
-	save: =>
+	save:=>
 		return unless @sceneData
 		ui = @sceneData.ui
 		@sceneData.ui = false
@@ -547,14 +553,14 @@ Class EditorView,
 		Model.dumpData ui,@uiFileFullPath
 		@sceneData.ui = ui
 
-	scene: property => @_sceneName,
+	scene:property => @_sceneName,
 		(value)=>
 			@currentSceneFile = if value
 				editor.sceneFolder..value..".scene"
 			else
 				nil
 
-	currentSceneFile: property => @_currentSceneFile,
+	currentSceneFile:property => @_currentSceneFile,
 		(sceneFile)=>
 			@_currentSceneFile = sceneFile
 			if sceneFile
@@ -568,7 +574,7 @@ Class EditorView,
 				@_sceneName = nil
 			emit "Scene.DataLoaded",@sceneData
 
-	newScene: (sceneName)=>
+	newScene:(sceneName)=>
 		sceneFile = editor.sceneFolder..sceneName..".scene"
 		return if oContent\exist sceneFile
 		@sceneData = with Model.PlatformWorld!
@@ -582,13 +588,13 @@ Class EditorView,
 		@save!
 		emit "Scene.DataLoaded",@sceneData
 
-	deleteCurrentScene: =>
+	deleteCurrentScene:=>
 		return unless @currentSceneFile
 		oContent\remove @currentSceneFile
 		Reference.removeSceneRef @currentSceneFile,@sceneData
 		@currentSceneFile = nil
 
-	deleteCurrentGame: =>
+	deleteCurrentGame:=>
 		return unless @game
 		visitResource = (path)->
 			return unless oContent\exist path
@@ -604,11 +610,11 @@ Class EditorView,
 		visitResource @gameFullPath
 		@game = nil
 
-	updateGroupName: (groupIndex,name)=>
+	updateGroupName:(groupIndex,name)=>
 		@sceneData.groups[groupIndex] = name
 		emit "Scene.Dirty",true
 
-	updateContact: (groupA,groupB,shouldContact)=>
+	updateContact:(groupA,groupB,shouldContact)=>
 		updated = false
 		for i,contact in ipairs @sceneData.contacts
 			group1,group2 = unpack contact
@@ -737,7 +743,7 @@ Class EditorView,
 								return itemData if item.visible and item.boundingBox\containsPoint pos
 		nil
 
-	edit:(typeName,file)=>
+	edit:(typeName,file,transition="rollOut")=>
 		editor,editorName = switch typeName
 			when "Model"
 				@actionEditor,"actionEditor"
@@ -749,5 +755,7 @@ Class EditorView,
 				nil,nil
 		if editor and editorName
 			with editor
-				\slot("Activated")\set -> \edit file
-			CCScene\forward editorName,"rollOut"
+				\setupEvent!
+				\slot "Activated",-> \edit file
+			CCScene\forward editorName,transition
+		editor

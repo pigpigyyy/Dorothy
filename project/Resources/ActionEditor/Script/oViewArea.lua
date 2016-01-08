@@ -66,6 +66,7 @@ local function oViewArea()
 
 	local scrollNode = CCNode()
 	crossNode:addChild(scrollNode)
+	view.itemNode = scrollNode
 
 	view.outline = CCNode()
 	crossNode:addChild(view.outline)
@@ -300,7 +301,7 @@ local function oViewArea()
 				parent.contentSize.width*parent.anchor.x,
 				parent.contentSize.height*parent.anchor.y)
 			pos = parent:convertToWorldSpace(pos)
-			pos = crossNode:convertToNodeSpace(pos)
+			pos = scrollNode:convertToNodeSpace(pos)
 			editor.position = pos
 			editor:setTarget(editTarget)
 			editor.visible = true
@@ -475,7 +476,7 @@ local function oViewArea()
 					parent.contentSize.width*parent.anchor.x,
 					parent.contentSize.height*parent.anchor.y)
 			self:schedule(function()
-				self.position = crossNode:convertToNodeSpace(
+				self.position = scrollNode:convertToNodeSpace(
 					parent:convertToWorldSpace(
 						target.position-off))
 			end,-2)
@@ -1232,7 +1233,7 @@ local function oViewArea()
 			local off = oVec2(
 					parent.contentSize.width*parent.anchor.x,
 					parent.contentSize.height*parent.anchor.y)
-			self.position = crossNode:convertToNodeSpace(
+			self.position = scrollNode:convertToNodeSpace(
 				parent:convertToWorldSpace(
 					target.position-off))
 			getEditorRot()

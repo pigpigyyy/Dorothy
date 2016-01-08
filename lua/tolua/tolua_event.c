@@ -44,11 +44,14 @@ static int module_index_event(lua_State* L)
 	if (lua_istable(L, -1)) // get is table
 	{
 		lua_pushvalue(L, 2); // tb key get key
-		lua_rawget(L, -2); // get[key], tb key get key cfunc
-		lua_call(L, 0, 1); // cfunc(), tb key get key result
-		return 1;
+		lua_rawget(L, -2); // get[key], tb key get key getter
+		if (lua_isfunction(L, -1)) // getter is function
+		{
+			lua_call(L, 0, 1); // getter(), tb key get key result
+			return 1;
+		}
 	}
-	else lua_pop(L, 1);
+	lua_settop(L, 2); // tb key
 	/* act like old index meta event */
 	if (lua_getmetatable(L, 1)) // tb key mt
 	{
@@ -56,9 +59,10 @@ static int module_index_event(lua_State* L)
 		lua_rawget(L, -2); // mt["__index"], tb key mt index
 		if (lua_isfunction(L, -1)) // index is function
 		{
-			lua_pushvalue(L, 1); // tb key mt index tb
-			lua_pushvalue(L, 2); // tb key mt index tb key
-			lua_call(L, 2, 1); // index(tb,key), tb key mt result
+			lua_pushvalue(L, -2); // tb key mt index mt
+			lua_pushvalue(L, 2); // tb key mt index mt key
+			lua_call(L, 2, 1); // index(mt,key), tb key mt result
+			return 1;
 		}
 		else if (lua_istable(L, -1)) // index is table
 		{
@@ -75,32 +79,24 @@ static int module_index_event(lua_State* L)
 */
 static int module_newindex_event(lua_State* L)
 {
-	// 1 self, 2 name, 3 value
-	lua_rawgeti(L, 1, MT_SET);// self name value cls set
-	if (lua_istable(L, -1))
+	// 1 tb, 2 key, 3 value
+	lua_rawgeti(L, 1, MT_SET);// tb key value set
+	if (lua_istable(L, -1)) // set is table
 	{
-		lua_pushvalue(L, 2);
-		lua_rawget(L, -2);// self name value set item
-		if (lua_isfunction(L, -1))
+		lua_pushvalue(L, 2); // tb key value set key
+		lua_rawget(L, -2); // set[key], tb key value set setter
+		if (lua_isfunction(L, -1)) // setter is function
 		{
-			lua_pushvalue(L, 1);
-			lua_pushvalue(L, 2);
-			lua_pushvalue(L, 3);
-			lua_call(L, 3, 0);// self name value set
+			lua_pushvalue(L, 1); // tb key value set setter tb
+			lua_pushvalue(L, 2); // tb key value set setter tb key
+			lua_pushvalue(L, 3); // tb key value set setter tb key value
+			lua_call(L, 3, 0);// setter(tb,key,value), tb key value set
 			return 0;
 		}
 	}
-	lua_settop(L, 3);
-	lua_pushvalue(L, 2);// self name value name
-	lua_rawget(L, 1);// self[name], self name value item
-	if (!lua_isnil(L, -1))// item != nil
-	{
-		lua_pop(L, 1);// self name value
-		lua_rawset(L, -3);// self[name] = value, self
-		return 0;
-	}
-	else lua_pop(L, 1);// self name value
-	lua_rawset(L, -3);
+	// only assign class field in self class
+	lua_settop(L, 3); // tb name value
+	lua_rawset(L, -3); // tb[name] = value, self
 	return 0;
 }
 

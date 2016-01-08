@@ -1,15 +1,33 @@
-Dorothy()
-
-local oButton = require("ActionEditor.Script.oButton")
-local oSelectionPanel = require("ActionEditor.Script.oSelectionPanel")
-local Tests = require("Test.Tests")
-
+local oContent = require("oContent")
 oContent:addSearchPath("Lib")
 
 local moonscript = require("moonscript")
 local util = require("moonscript.util")
 local errors = require("moonscript.errors")
 
+local oButton = require("ActionEditor.Script.oButton")
+local oSelectionPanel = require("ActionEditor.Script.oSelectionPanel")
+local Set = require("SceneEditor.Data.Utils").Set
+local CCDirector = require("CCDirector")
+local CCMenu = require("CCMenu")
+local CCSize = require("CCSize")
+local oVec2 = require("oVec2")
+local oOpacity = require("oOpacity")
+local CCScene = require("CCScene")
+local CCObject = require("CCObject")
+local cclog = require("cclog")
+local oCache = require("oCache")
+local oAI = require("oAI")
+local oAction = require("oAction")
+local CCApplication = require("CCApplication")
+local CCTargetPlatform = require("CCTargetPlatform")
+local CCLayerColor = require("CCLayerColor")
+local ccColor4 = require("ccColor4")
+local tolua = require("tolua")
+local CCNode = require("CCNode")
+local CCLabelTTF = require("CCLabelTTF")
+local ccColor3 = require("ccColor3")
+local CCLayer = require("CCLayer")
 
 local traceback = debug.traceback
 debug.traceback = function(err)
@@ -50,23 +68,20 @@ panel.border:addChild(background,-1)
 local opMenu = CCMenu()
 opMenu.swallowTouches = true
 opMenu.contentSize = CCSize(60,60)
-opMenu.touchPriority = CCMenu.DefaultHandlerPriority-3
+opMenu.touchPriority = CCMenu.DefaultHandlerPriority-5
 opMenu.position = oVec2(winSize.width-40,40)
 panel:addChild(opMenu)
 if CCApplication.targetPlatform ~= CCTargetPlatform.Ipad and CCApplication.targetPlatform ~= CCTargetPlatform.Iphone then
-	local endButton = oButton("Exit",17,60,false,
-		0,0,
-		function()
-			CCDirector:stop()
-		end)
+	local endButton = oButton("Exit",17,60,false,0,0,function()
+		CCDirector:stop()
+	end)
 	endButton.anchor = oVec2.zero
 	opMenu:addChild(endButton)
 end
 
 opMenu = CCMenu()
-opMenu.swallowTouches = true
 opMenu.contentSize = CCSize(200,130)
-opMenu.touchPriority = CCMenu.DefaultHandlerPriority-4
+opMenu.touchPriority = CCMenu.DefaultHandlerPriority-5
 opMenu.anchor = oVec2.zero
 opMenu.position = oVec2(10,10)
 panel:addChild(opMenu)
@@ -86,10 +101,6 @@ local gcButton = oButton("GC",17,60,false,
 		cclog("Pool alloc: %.2f MB(%d KB)",size/1024/1024,size/1024)
 		size = oCache.Pool:collect()
 		cclog("Pool collect: %.2f MB(%d KB)",size/1024/1024,size/1024)
-		print("Loaded:")
-		for k,_ in pairs(package.loaded) do
-			print(k)
-		end
 		local itemMap = {}
 		for _,item in pairs(ubox()) do
 			local typeName = tolua.type(item)
@@ -113,8 +124,15 @@ local gcButton = oButton("GC",17,60,false,
 		if not leak then
 			print("None!")
 		end
+		--[[
+		print("Loaded Modules:")
+		for k,_ in pairs(package.loaded) do
+			print(k)
+		end
 		--]]
-		--[[for k,v in pairs(_G) do
+		--[[
+		print("Global Values:")
+		for k,v in pairs(_G) do
 			print(k,v)
 		end
 		--]]
@@ -200,30 +218,27 @@ local function compile(dir,clean,minify)
 	end
 	return true
 end
-local compileButton = oButton("Compile",12,60,false,
-	70,70,
-	function()
-		totalFiles = 0
-		compile(".",false)
-		print(string.format("Compile done. %d files in total.",totalFiles))
-	end)
+
+local compileButton = oButton("Compile",13,60,false,70,70,function()
+	totalFiles = 0
+	compile(".",false)
+	print(string.format("Compile done. %d files in total.",totalFiles))
+end)
 compileButton.anchor = oVec2.zero
 opMenu:addChild(compileButton)
-compileButton = oButton("Compile\nMinify",12,60,false,
-	70,0,
-	function()
-		totalFiles = 0
-		compile(".",false,true)
-		print(string.format("Compile and Minify done. %d files in total.",totalFiles))
-	end)
+
+compileButton = oButton("Compile\nMinify",13,60,false,70,0,function()
+	totalFiles = 0
+	compile(".",false,true)
+	print(string.format("Compile and Minify done. %d files in total.",totalFiles))
+end)
 compileButton.anchor = oVec2.zero
 opMenu:addChild(compileButton)
-local cleanButton = oButton("Clean",16,60,false,
-	140,0,
-	function()
-		compile(".",true)
-		print("Clean done.")
-	end)
+
+local cleanButton = oButton("Clean",16,60,false,140,0,function()
+	compile(".",true)
+	print("Clean done.")
+end)
 cleanButton.anchor = oVec2.zero
 opMenu:addChild(cleanButton)
 
@@ -231,43 +246,98 @@ panel.init = function(self)
 	menu.opacity = 0
 	menu.enabled = false
 	menu:runAction(oOpacity(0.3,1))
-
-	local function goto(conf)
-		local result = require(conf[2])
-		package.loaded[conf[2]] = nil
-
-		if not conf[3] then
-			CCDirector:run(CCScene:crossFade(0.5, result()))
-
-			local opMenu = CCMenu()
-			opMenu.swallowTouches = true
-			opMenu.contentSize = CCSize(60,60)
-			opMenu.touchPriority = CCMenu.DefaultHandlerPriority-998
-			opMenu.position = oVec2(winSize.width-40,40)
-			CCDirector.currentScene:addChild(opMenu,998)
-			local endBtn = oButton("Back",17,60,false,
-				0,0,
-				function()
-					CCDirector:replaceScene(CCScene:crossFade(0.5,scene),true)
-					if rawget(CCScene,"clearHistory") then
-						CCScene:clearHistory()
-					end
-				end)
-			endBtn.anchor = oVec2.zero
-			opMenu:addChild(endBtn)
-		end
+	
+	local function addTitle(title,fontSize,color)
+		local width = math.floor((winSize.width-10)/210)*210-10
+		local label = CCLabelTTF(title,"Arial",fontSize)
+		label.texture.antiAlias = false
+		label.position = oVec2(width/2,15)
+		label.color = ccColor3(color)
+		local node = CCNode()
+		node.contentSize = CCSize(width,30)
+		node:addChild(label)
+		menu:addChild(node)
 	end
 
-	for i, conf in ipairs(Tests) do
-		local button = oButton(conf[1], 16, 200,50, 0,0,function() goto(conf) end)
+	local function run(file)
+		local result = require(file)
+		if type(result) == "function" then
+			result()
+		elseif type(result) == "table" and result.isTest then
+			local test = result()
+			test:enterScene()
+			test:profileRun()
+		end
+	end
+	local function runWithBackButton(file)
+		run(file)
+		local opMenu = CCMenu()
+		opMenu.swallowTouches = true
+		opMenu.contentSize = CCSize(60,60)
+		opMenu.touchPriority = CCMenu.DefaultHandlerPriority-998
+		opMenu.position = oVec2(winSize.width-40,40)
+		CCDirector.currentScene:addChild(opMenu,998)
+		local endBtn = oButton("Back",17,60,false,0,0,function()
+			CCDirector:replaceScene(CCScene:crossFade(0.5,scene),true)
+			if CCScene.clearHistory then
+				CCScene:clearHistory()
+			end
+		end)
+		endBtn.anchor = oVec2.zero
+		opMenu:addChild(endBtn)
+	end
+
+	addTitle("Dorothy Project",24,0x00ffff)
+	addTitle("Editors",20,0xff0080)
+	local editors = {
+		{"Action Editor","ActionEditor.Script.main"},
+		{"Body Editor","BodyEditor.Script.main"},
+		{"Effect Editor","EffectEditor.Script.main"},
+		{"Scene Editor","SceneEditor.main"},
+	}
+	for i = 1,#editors do
+		local editor = editors[i]
+		local button = oButton(editor[1],16,200,50,0,0,function()
+			run(editor[2])
+		end)
 		button.anchor = oVec2(0,1)
 		menu:addChild(button)
 	end
-	local viewHeight = menu:alignItemsVertically()
-	local viewWidth = winSize.width
+
+	addTitle("Samples",20,0xff0080)
+	local files = oContent:getEntries("Dev/Sample/",false)
+	for i = 1,#files do files[i] = files[i]:match("^([^%.]*)") end
+	files = Set(files)
+	for file,_ in pairs(files) do
+		if file ~= "" then
+			local button = oButton(file,16,200,50,0,0,function()
+				runWithBackButton("Dev/Sample/"..file)
+			end)
+			button.anchor = oVec2(0,1)
+			menu:addChild(button)
+		end
+	end
+
+	addTitle("Tests",20,0xff0080)
+	files = oContent:getEntries("Dev/Test/",false)
+	for i = 1,#files do files[i] = files[i]:match("^([^%.]*)") end
+	files = Set(files)
+	for file,_ in pairs(files) do
+		if file ~= "" then
+			local button = oButton(file,16,200,50,0,0,function()
+				runWithBackButton("Dev/Test/"..file)
+			end)
+			button.anchor = oVec2(0,1)
+			menu:addChild(button)
+		end
+	end
+
+	local viewSize = menu:alignItems()
 	local paddingX = 0
 	local paddingY = 100
-	panel:reset(viewWidth,viewHeight,paddingX,paddingY)
+	menu.positionX = -viewSize.width/2
+	local viewHeight = math.max(winSize.height,viewSize.height)+100
+	panel:reset(viewSize.width,viewHeight,paddingX,paddingY)
 
 	collectgarbage()
 	for _,item in pairs(ubox()) do
@@ -281,18 +351,21 @@ end
 
 panel:show()
 
-scene:addChild(panel)
-
-panel.keypadEnabled = true
-panel:slot("KeyBack",function()
-	CCDirector:stop() -- end is Lua keyword, so this function use name stop
-end)
-
 panel:slot("Entered",function()
 	for _,name in ipairs(loaded) do
 		package.loaded[name] = nil
 	end
 end)
+scene:addChild(panel)
+
+local layerEnd = CCLayer()
+layerEnd.keypadEnabled = true
+layerEnd:slot("KeyBack",function() -- close app at anytime on keyback event
+	if CCApplication.targetPlatform ~= CCTargetPlatform.Ipad or CCApplication.targetPlatform ~= CCTargetPlatform.Iphone then
+		CCDirector:stop()
+	end
+end)
+CCDirector.notificationNode = layerEnd
 
 CCDirector.displayStats = true
 

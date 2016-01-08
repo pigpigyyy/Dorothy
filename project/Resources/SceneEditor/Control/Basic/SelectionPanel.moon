@@ -61,7 +61,6 @@ Class
 				}
 			@menu\addChild button
 
-		viewHeight = @menu\alignItemsVertically 10
-		@scrollArea.viewSize = CCSize width,viewHeight
+		@scrollArea.viewSize = @menu\alignItemsVertically 10
 
 		CCDirector.currentScene\addChild @,998

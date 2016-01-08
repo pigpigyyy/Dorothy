@@ -192,7 +192,8 @@ Class BodyPanelView,
 							MessageBox text:"Name Exist!",okOnly:true
 							return
 					bodyEditor = editor.bodyEditor
-					bodyEditor\slot("Activated")\set ->
+					bodyEditor\setupEvent!
+					bodyEditor\slot "Activated",->
 						bodyEditor\new editor.physicsFolder..name..".body"
 					CCScene\forward "bodyEditor","rollOut"
 

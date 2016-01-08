@@ -11,7 +11,7 @@ local fontSize_cov = {
 
 	[10] = 14,
 	[12] = 14,
-
+	[13] = 16,
 	[14] = 17,
 	[16] = 17,
 	[18] = 17,
@@ -20,16 +20,13 @@ local fontSize_cov = {
 local CCLabelTTF = builtin.CCLabelTTF
 builtin.CCLabelTTF = function(text,fontName,fontSize)
 	local cov = fontSize_cov[fontSize]
-
 	if cov then
 		return CCLabelBMFont(text,"Font/Arial"..cov..".fnt",CCLabelBMFont.AutomaticWidth,CCTextAlign.HCenter)
 	end
-
 	return CCLabelTTF(text,fontName,fontSize)
 end
 
-builtin.class = require("Lib.class")[1]
-require("Test.Entry")
+require("Dev.Entry")
 
 --[[
 Dorothy()

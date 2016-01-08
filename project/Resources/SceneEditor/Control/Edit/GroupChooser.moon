@@ -20,4 +20,4 @@ Class GroupChooserView,
 				\slot "Tapped",(button)->
 					@emit "Selected",button.tag
 
-		@scrollArea.viewSize = CCSize 0,@menu\alignItemsVertically!
+		@scrollArea.viewSize = @menu\alignItemsVertically!

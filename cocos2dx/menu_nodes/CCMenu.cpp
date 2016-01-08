@@ -263,7 +263,7 @@ void CCMenu::ccTouchMoved(CCTouch* touch, CCEvent* event)
 
 //Menu - Alignment
 
-float CCMenu::alignItemsVerticallyWithPadding(float padding)
+CCSize CCMenu::alignItemsVerticallyWithPadding(float padding)
 {
 	float width = getContentSize().width;
 	float y = getContentSize().height - padding;
@@ -282,12 +282,12 @@ float CCMenu::alignItemsVerticallyWithPadding(float padding)
 			y -= pChild->getAnchorPoint().y * realHeight;
 			y -= padding;
 		}
-		return getContentSize().height - y;
+		return CCSize(getWidth(),getContentSize().height - y);
 	}
-	return 0;
+	return CCSize::zero;
 }
 
-float CCMenu::alignItemsHorizontallyWithPadding(float padding)
+CCSize CCMenu::alignItemsHorizontallyWithPadding(float padding)
 {
 	float height = getContentSize().height;
 	float x = padding;
@@ -306,9 +306,9 @@ float CCMenu::alignItemsHorizontallyWithPadding(float padding)
 			x += (1.0f - pChild->getAnchorPoint().x) * realWidth;
 			x += padding;
 		}
-		return x;
+		return CCSize(x, getHeight());
 	}
-	return 0;
+	return CCSize::zero;
 }
 
 CCSize CCMenu::alignItemsWithPadding(float padding)
@@ -322,6 +322,7 @@ CCSize CCMenu::alignItemsWithPadding(float padding)
 		CCObject* pObject = NULL;
 		int rows = 0;
 		float curY = y;
+		float maxX = 0;
 		CCARRAY_FOREACH(m_pChildren, pObject)
 		{
 			CCNode* pChild = (CCNode*)pObject;
@@ -344,13 +345,15 @@ CCSize CCMenu::alignItemsWithPadding(float padding)
 
 			x += (1.0f - pChild->getAnchorPoint().x) * realWidth;
 			x += padding;
+			
+			maxX = MAX(maxX, x);
 
 			if (curY > y - realHeight)
 			{
 				curY = y - realHeight;
 			}
 		}
-		return CCSize(x, height - curY + 10);
+		return CCSize(maxX, height - curY + 10);
 	}
 	return CCSize::zero;
 }
