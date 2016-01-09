@@ -1,5 +1,5 @@
 Dorothy()
-local class,property,classfield = unpack(require("class"))
+local class,_,classfield = unpack(require("class"))
 
 --[[
 Usage:
@@ -33,4 +33,4 @@ function TestBase:enterScene()
 	CCDirector:run(self)
 end
 
-return MyTest
+return TestBase

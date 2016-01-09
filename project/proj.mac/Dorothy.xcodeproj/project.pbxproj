@@ -78,13 +78,13 @@
 		3C5050021A23802F000C79D6 /* tolua_map.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C504FE31A23802F000C79D6 /* tolua_map.c */; };
 		3C5050031A23802F000C79D6 /* tolua_push.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C504FE41A23802F000C79D6 /* tolua_push.c */; };
 		3C5050041A23802F000C79D6 /* tolua_to.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C504FE51A23802F000C79D6 /* tolua_to.c */; };
+		3C5C4D771C40B165006A5CF5 /* Dev in Resources */ = {isa = PBXBuildFile; fileRef = 3C5C4D761C40B165006A5CF5 /* Dev */; };
 		3C69B9D71C3BA25A00363786 /* ActionEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C69B9D01C3BA25A00363786 /* ActionEditor */; };
 		3C69B9D81C3BA25A00363786 /* BodyEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C69B9D11C3BA25A00363786 /* BodyEditor */; };
 		3C69B9D91C3BA25A00363786 /* EffectEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C69B9D21C3BA25A00363786 /* EffectEditor */; };
 		3C69B9DA1C3BA25A00363786 /* Font in Resources */ = {isa = PBXBuildFile; fileRef = 3C69B9D31C3BA25A00363786 /* Font */; };
 		3C69B9DB1C3BA25A00363786 /* Lib in Resources */ = {isa = PBXBuildFile; fileRef = 3C69B9D41C3BA25A00363786 /* Lib */; };
 		3C69B9DC1C3BA25A00363786 /* SceneEditor in Resources */ = {isa = PBXBuildFile; fileRef = 3C69B9D51C3BA25A00363786 /* SceneEditor */; };
-		3C69B9DD1C3BA25A00363786 /* Test in Resources */ = {isa = PBXBuildFile; fileRef = 3C69B9D61C3BA25A00363786 /* Test */; };
 		3C7AA4D41A47291F007836D2 /* main.lua in Resources */ = {isa = PBXBuildFile; fileRef = 3C7AA4CB1A47291F007836D2 /* main.lua */; };
 		3C969C7D1B41903900C3BF37 /* oAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C969C0C1B41903900C3BF37 /* oAudio.cpp */; };
 		3C969C7E1B41903900C3BF37 /* oDefine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C969C0F1B41903900C3BF37 /* oDefine.cpp */; };
@@ -297,13 +297,13 @@
 		3C504FE31A23802F000C79D6 /* tolua_map.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tolua_map.c; sourceTree = "<group>"; };
 		3C504FE41A23802F000C79D6 /* tolua_push.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tolua_push.c; sourceTree = "<group>"; };
 		3C504FE51A23802F000C79D6 /* tolua_to.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tolua_to.c; sourceTree = "<group>"; };
+		3C5C4D761C40B165006A5CF5 /* Dev */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Dev; sourceTree = "<group>"; };
 		3C69B9D01C3BA25A00363786 /* ActionEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ActionEditor; sourceTree = "<group>"; };
 		3C69B9D11C3BA25A00363786 /* BodyEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BodyEditor; sourceTree = "<group>"; };
 		3C69B9D21C3BA25A00363786 /* EffectEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = EffectEditor; sourceTree = "<group>"; };
 		3C69B9D31C3BA25A00363786 /* Font */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Font; sourceTree = "<group>"; };
 		3C69B9D41C3BA25A00363786 /* Lib */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Lib; sourceTree = "<group>"; };
 		3C69B9D51C3BA25A00363786 /* SceneEditor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = SceneEditor; sourceTree = "<group>"; };
-		3C69B9D61C3BA25A00363786 /* Test */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Test; sourceTree = "<group>"; };
 		3C7AA4CB1A47291F007836D2 /* main.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.lua; sourceTree = "<group>"; };
 		3C969C0C1B41903900C3BF37 /* oAudio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oAudio.cpp; sourceTree = "<group>"; };
 		3C969C0D1B41903900C3BF37 /* oAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oAudio.h; sourceTree = "<group>"; };
@@ -768,10 +768,10 @@
 				3C69B9D01C3BA25A00363786 /* ActionEditor */,
 				3C69B9D11C3BA25A00363786 /* BodyEditor */,
 				3C69B9D21C3BA25A00363786 /* EffectEditor */,
+				3C69B9D51C3BA25A00363786 /* SceneEditor */,
 				3C69B9D31C3BA25A00363786 /* Font */,
 				3C69B9D41C3BA25A00363786 /* Lib */,
-				3C69B9D51C3BA25A00363786 /* SceneEditor */,
-				3C69B9D61C3BA25A00363786 /* Test */,
+				3C5C4D761C40B165006A5CF5 /* Dev */,
 				3C7AA4CB1A47291F007836D2 /* main.lua */,
 			);
 			name = Resources;
@@ -1045,10 +1045,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C69B9DB1C3BA25A00363786 /* Lib in Resources */,
-				3C69B9DD1C3BA25A00363786 /* Test in Resources */,
 				3C69B9D81C3BA25A00363786 /* BodyEditor in Resources */,
 				3C69B9D91C3BA25A00363786 /* EffectEditor in Resources */,
 				3C504D5F1A23739B000C79D6 /* Images.xcassets in Resources */,
+				3C5C4D771C40B165006A5CF5 /* Dev in Resources */,
 				3C69B9DC1C3BA25A00363786 /* SceneEditor in Resources */,
 				3C69B9DA1C3BA25A00363786 /* Font in Resources */,
 				3C7AA4D41A47291F007836D2 /* main.lua in Resources */,
