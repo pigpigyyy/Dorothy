@@ -20,8 +20,8 @@ local oSd = require("oEditor").oSd
 local function oEditChooser(withCancel)
 	local winSize = CCDirector.winSize
 	local itemWidth = 120
-	local itemNum = 2
-	local borderSize = CCSize((itemWidth+10)*itemNum+10,winSize.height-200)
+	local itemNum = 3
+	local borderSize = CCSize((itemWidth+10)*itemNum+10,winSize.height*0.6)
 	local panel = oSelectionPanel(borderSize)
 	local menu = panel.menu
 	local border = panel.border
@@ -45,18 +45,41 @@ local function oEditChooser(withCancel)
 	panel:addChild(opMenu)
 
 	if withCancel then
-		local cancelButton = oButton("Cancel",17,60,false,
-			65,0,
-			function()
-				opMenu.enabled = false
-				panel:hide()
-			end)
+		local cancelButton = oButton("Cancel",17,60,false,70,0,function()
+			opMenu.enabled = false
+			panel:hide()
+		end)
 		cancelButton.anchor = oVec2.zero
 		local btnBk = CCDrawNode()
 		btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
 		btnBk.position = oVec2(30,30)
 		cancelButton:addChild(btnBk,-1)
 		opMenu:addChild(cancelButton)
+	end
+
+	if oEditor.quitable then
+		local quitButton = oButton("Quit",17,60,false,0,0,function()
+			panel.touchEnabled = false
+			menu.enabled = false
+			opMenu.enabled = false
+			panel:hide()
+			oEditor.viewArea:originReset()
+			if oEditor.standAlone then
+				oEditor:emit("Quit")
+			else
+				thread(function()
+					oEditor:hideEditor(true,false)
+					sleep(0.6)
+					oEditor:emit("Quit")
+				end)
+			end
+		end)
+		quitButton.anchor = oVec2.zero
+		local btnBk = CCDrawNode()
+		btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
+		btnBk.position = oVec2(30,30)
+		quitButton:addChild(btnBk,-1)
+		opMenu:addChild(quitButton)
 	end
 
 	panel.sprites = {}
@@ -329,45 +352,6 @@ local function oEditChooser(withCancel)
 				oOpacity(0.3,1)
 			}))
 		yStart = y-45
-
-		if oEditor.quitable then
-			title = CCLabelTTF("Quit  Editor","Arial",24)
-			title.texture.antiAlias = false
-			title.color = ccColor3(0x00ffff)
-			title.anchor = oVec2(0.5,1)
-			y = yStart-20
-			title.position = oVec2(winSize.width*0.5,y)
-			menu:addChild(title)
-			title.opacity = 0
-			title:runAction(oOpacity(0.3,1))
-			yStart = y-title.contentSize.height
-
-			y = yStart-20
-			newButton = oButton(
-				"Quit",17,
-				itemWidth,50,
-				xStart+10,
-				y,
-				function()
-					panel.touchEnabled = false
-					menu.enabled = false
-					opMenu.enabled = false
-					panel:hide()
-					oEditor.viewArea:originReset()
-					oEditor:emit("Quit")
-				end)
-			newButton.color = ccColor3(0xffcc88)
-			menu:addChild(newButton)
-			newButton.anchor = oVec2(0,1)
-			newButton.opacity = 0
-			newButton:runAction(
-				CCSequence(
-				{
-					CCDelay((i%itemNum)*0.05),
-					oOpacity(0.3,1)
-				}))
-			yStart = y-25
-		end
 
 		local yTo = winSize.height*0.5+halfBH-y+60
 		local viewHeight = yTo < borderSize.height and borderSize.height or yTo

@@ -336,6 +336,23 @@ local function oSettingPanel()
 		menu:addChild(item)
 	end
 
+	local isHide = false
+	local transforming = false
+	local function transformingEndAfter(time)
+		thread(function()
+			sleep(time)
+			transforming = false
+		end)
+	end
+	local function hidePanel(instant)
+		local posX = framePos.x+borderSize.width+10
+		if instant then
+			self.positionX = posX
+		else
+			self:perform(oPos(0.3,posX,self.positionY,oEase.OutQuad))
+		end
+	end
+	local targetPos = nil
 	local currentGroup = nil
 	local function setGroup(group)
 		if group == currentGroup then return end
@@ -343,9 +360,17 @@ local function oSettingPanel()
 			item.visible = false
 			item.positionX = -itemWidth
 		end
+		transforming = true
 		if group == nil then
+			isHide = true
 			label.visible = false
+			label.positionX = -itemWidth
+			hidePanel(false)
+			transformingEndAfter(0.3)
+			currentGroup = group
 			return
+		else
+			isHide = false
 		end
 		local y = items.emitterType.positionY
 		self:setOffset(oVec2.zero)
@@ -372,7 +397,9 @@ local function oSettingPanel()
 					oVec2(-halfBW,halfBH)
 				},ccColor4(0x88100000),0.5,ccColor4(0xffffafaf))
 				self.position = oVec2(framePos.x+borderSize.width+10,framePos.y)
+				targetPos = framePos
 				self:runAction(oPos(0.3,framePos.x,framePos.y,oEase.OutQuad))
+				transformingEndAfter(0.3)
 			else
 				oRoutine(once(function()
 					self:runAction(oPos(0.3,startPos.x,startPos.y,oEase.OutQuad))
@@ -385,14 +412,16 @@ local function oSettingPanel()
 						oVec2(halfBW,halfBH),
 						oVec2(-halfBW,halfBH)
 					},ccColor4(0x88100000),0.5,ccColor4(0xffffafaf))
+					targetPos = framePos
 					self.position = oVec2(framePos.x+borderSize.width+10,framePos.y)
 					self:runAction(oPos(0.3,framePos.x,framePos.y,oEase.OutQuad))
+					transformingEndAfter(0.3)
 				end))
 			end
 			self:reset(borderSize.width,contentHeight,0,0)
 			oEditor.origin = oVec2(winSize.width*0.5,(winSize.height-150)*0.5+150)
 			emit("Effect.editor.frame")
-		else
+		elseif group ~= nil then
 			self:reset(borderSize.width,contentHeight,0,50)
 			if currentGroup == nil or currentGroup == modeFrame then
 				label.text = "Particle"
@@ -406,7 +435,9 @@ local function oSettingPanel()
 						oVec2(halfBW,halfBH),
 						oVec2(-halfBW,halfBH)
 					},ccColor4(0x88100000),0.5,ccColor4(0xffffafaf))
+					targetPos = particlePos
 					self:runAction(oPos(0.3,particlePos.x,particlePos.y,oEase.OutQuad))
+					transformingEndAfter(0.3)
 				else
 					oRoutine(once(function()
 						self:runAction(oPos(0.3,framePos.x+borderSize.width+10,framePos.y,oEase.OutQuad))
@@ -419,11 +450,13 @@ local function oSettingPanel()
 							oVec2(halfBW,halfBH),
 							oVec2(-halfBW,halfBH)
 						},ccColor4(0x88100000),0.5,ccColor4(0xffffafaf))
+						targetPos = particlePos
 						self.position = oVec2(startPos.x,startPos.y)
 						self:runAction(oPos(0.3,particlePos.x,particlePos.y,oEase.OutQuad))
+						transformingEndAfter(0.3)
 					end))
 				end
-				oEditor.origin = oVec2((winSize.width-240-10)*0.5,winSize.height*0.5)
+				oEditor.origin = oVec2(60+(winSize.width-300)*0.5,winSize.height*0.5)
 				emit("Effect.editor.particle")
 			else
 				self:setOffset(oVec2(0,y-items.emitterType.positionY))
@@ -457,6 +490,29 @@ local function oSettingPanel()
 		emit("Effect.settingPanel.cancel")
 	end)
 
+	self:gslot("Effect.hideEditor",function(args)
+		local hide,instant = unpack(args)
+		if isHide == hide then
+			return
+		end
+		isHide = hide
+		if hide then
+			if transforming then
+				thread(function()
+					wait(function() return transforming end)
+					hidePanel(instant)
+				end)
+			else
+				hidePanel(instant)
+			end
+		elseif not transforming and targetPos then
+			if instant then
+				self.positionX = targetPos
+			else
+				self:perform(oPos(0.3,targetPos.x,targetPos.y,oEase.OutQuad))
+			end
+		end
+	end)
 	return self
 end
 

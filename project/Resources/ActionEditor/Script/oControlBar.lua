@@ -15,6 +15,7 @@ local oEditor = require("oEditor")
 local oSd = require("oEditor").oSd
 local oAd = require("oEditor").oAd
 local oKd = require("oEditor").oKd
+local oPos = require("oPos")
 
 local function oControlBar()
     local winSize = CCDirector.winSize
@@ -360,6 +361,20 @@ local function oControlBar()
 	controlBar.getTime = function(self)
 		return bar:getPos()/60
 	end
+
+	local isHide = false
+	controlBar:gslot("Action.hideEditor",function(args)
+		local hide,instant = unpack(args)
+		if isHide == hide then
+			return
+		end
+		isHide = hide
+		if instant then
+			controlBar.positionY = hide and -70 or 0
+		else
+			controlBar:runAction(oPos(0.5,controlBar.positionX,hide and -70 or 0,oEase.OutQuad))
+		end
+	end)
 
 	return controlBar
 end

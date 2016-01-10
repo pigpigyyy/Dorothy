@@ -32,7 +32,7 @@ oEditor.touchPriorityEditControl = CCMenu.DefaultHandlerPriority+5
 oEditor.touchPriorityVRuler = CCMenu.DefaultHandlerPriority+8
 oEditor.touchPriorityHRuler = CCMenu.DefaultHandlerPriority+9
 oEditor.touchPriorityViewArea = CCMenu.DefaultHandlerPriority+10
-oEditor.origin = oVec2((winSize.width-240-10)*0.5,winSize.height*0.5)
+oEditor.origin = oVec2(60+(winSize.width-300)*0.5,winSize.height*0.5)
 
 oEditor.EmitterGravity = 0
 oEditor.EmitterRadius = 1
@@ -228,7 +228,6 @@ oEditor.newParticle = function(self,name)
 	oEditor.currentName = nil
 	oEditor.currentFile = nil
 	emit("Effect.viewArea.changeEffect",nil)
-	emit("Effect.settingPanel.hide")
 	oEditor:loadEffectFile()
 	local oTemplateChooser = require("oTemplateChooser")
 	oEditor:addChild(oTemplateChooser(name..".par"),oEditor.topMost)
@@ -244,6 +243,11 @@ oEditor.addExistFile = function(self,name)
 	oEditor:addChild(oFileChooser(true,name),oEditor.topMost)
 end
 
+oEditor.hideEditor = function(self,hide,instant)
+	if instant == nil then instant = true end
+	emit("Effect.hideEditor",{hide,instant})
+end
+
 local controls =
 {
 	"oViewArea",
@@ -252,7 +256,7 @@ local controls =
 	"oEditControl",
 	"oFrameViewer",
 }
-oRoutine(once(function()
+oEditor:schedule(once(function()
 	for index,name in ipairs(controls) do
 		local createFunc = require(name)
 		coroutine.yield()
@@ -292,6 +296,13 @@ oRoutine(once(function()
 	end
 end))
 
+oEditor:gslot("Effect.editor.particle",function()
+	oEditor.type = "Particle"
+end)
+oEditor:gslot("Effect.editor.frame",function()
+	oEditor.type = "Frame"
+end)
+
 oEditor:slot("Cleanup",function()
 	-- do editor cleanup
 	if oEditor.standAlone then
@@ -300,12 +311,17 @@ oEditor:slot("Cleanup",function()
 end)
 
 oEditor:slot("Entering",function()
-	oRoutine(once(function()
-		repeat
-			coroutine.yield()
-		until oEditor.isLoaded
+	if oEditor.isLoaded then
 		oEditor:emit("Activated")
-	end))
+	else
+		oRoutine(once(function()
+			repeat
+				coroutine.yield()
+			until oEditor.isLoaded
+			sleep()
+			oEditor:emit("Activated")
+		end))
+	end
 end)
 
 return oEditor

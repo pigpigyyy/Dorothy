@@ -1305,6 +1305,12 @@ oEditor.new = function(self, file)
 	oEditor:emit("Edited",oEditor.currentFile)
 end
 
+oEditor.hideEditor = function(self,hide,instant)
+	if instant == nil then instant = true end
+	emit("Body.settingPanel.edit",nil)
+	emit("Body.hideEditor",{hide,instant})
+end
+
 -- bodyData[1]: ShapeName
 -- bodyData[2]: ItemName -- SubShapes don`t have names
 
@@ -1365,14 +1371,20 @@ oEditor:schedule(once(function()
 end))
 
 oEditor:slot("Entering",function()
-	oRoutine(once(function()
-		repeat
-			coroutine.yield()
-		until oEditor.isLoaded
+	if oEditor.isLoaded then
 		oEditor:emit("Activated")
 		CCDirector.scheduler:schedule(oEditor.worldScheduler)
-	end))
+	else
+		oRoutine(once(function()
+			repeat
+				coroutine.yield()
+			until oEditor.isLoaded
+			oEditor:emit("Activated")
+			CCDirector.scheduler:schedule(oEditor.worldScheduler)
+		end))
+	end
 end)
+
 oEditor:slot("Exiting",function()
 	CCDirector.scheduler:unschedule(oEditor.worldScheduler)
 end)

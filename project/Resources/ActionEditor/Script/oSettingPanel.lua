@@ -21,6 +21,7 @@ local CCDelay = require("CCDelay")
 local oEditor = require("oEditor")
 local oSd = require("oEditor").oSd
 local oKd = require("oEditor").oKd
+local oPos = require("oPos")
 
 local function oSettingPanel()
 	local winSize = CCDirector.winSize
@@ -36,6 +37,7 @@ local function oSettingPanel()
 	local _s = oVec2.zero
 	local _v = oVec2.zero
 	local deltaMoveLength = 0
+	local isHide = false
 	local function initValues()
 		viewWidth = 0
 		viewHeight = 0
@@ -1001,7 +1003,10 @@ local function oSettingPanel()
 			menu.visible = true
 		end
 		if oEditor.state == oEditor.EDIT_ANIMATION then
-			panel.position = oVec2(winSize.width-170,70)
+			if not isHide then
+				panel.positionX = winSize.width-170
+			end
+			panel.positionY = 70
 			local borderH = 200*(winSize.height-90)/510
 			border.scaleY = 1
 			stencil.scaleY = 1
@@ -1011,7 +1016,10 @@ local function oSettingPanel()
 			menu.positionY = borderSize.height
 			updateAnimationItems()
 		else
-			panel.position = oVec2(winSize.width-170,10)
+			if not isHide then
+				panel.positionX = winSize.width-170
+			end
+			panel.positionY = 10
 			local borderH = 200*(winSize.height-90)/510
 			local scale = (borderH+60)/borderH
 			border.scaleY = scale
@@ -1022,7 +1030,6 @@ local function oSettingPanel()
 			menu.positionY = borderSize.height
 			updateSpriteItems()
 		end
-		panel:stopAllActions()
 		panel:runAction(
 			CCSequence
 			{
@@ -1204,7 +1211,21 @@ local function oSettingPanel()
 			keyItems.Front:setValue(sp[oSd.front])
 		end
 	end
-	
+
+	panel:gslot("Action.hideEditor",function(args)
+		local hide,instant = unpack(args)
+		if isHide == hide then
+			return
+		end
+		isHide = hide
+		local winWidth = CCDirector.winSize.width
+		if instant then
+			panel.positionX = winWidth*2-panel.positionX
+		else
+			panel:perform(oPos(0.5,winWidth*2-panel.positionX,panel.positionY,oEase.OutQuad))
+		end
+	end)
+
 	return panel
 end
 

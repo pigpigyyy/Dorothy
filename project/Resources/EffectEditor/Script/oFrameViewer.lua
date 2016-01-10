@@ -13,6 +13,7 @@ local oEase = require("oEase")
 local CCHide = require("CCHide")
 local CCSprite = require("CCSprite")
 local oLine = require("oLine")
+local CCShow = require("CCShow")
 
 local function oClipViewer(file,rect)
 	local width = 130
@@ -71,15 +72,13 @@ local function oFrameViewer()
 
 	panel:gslot("Effect.editor.particle",function()
 		if panel.visible then
-			panel:stopAllActions()
-			panel:runAction(CCSequence({CCDelay(0.3),oPos(0.5,startPos.x,startPos.y,oEase.InBack),CCHide()}))
+			panel:perform(CCSequence({CCDelay(0.3),oPos(0.5,startPos.x,startPos.y,oEase.InBack),CCHide()}))
 		end
 	end)
 	panel:gslot("Effect.editor.frame",function()
-		panel:stopAllActions()
-		panel.position = startPos
 		panel.visible = true
-		panel:runAction(oPos(0.5,endPos.x,endPos.y,oEase.OutBack))
+		panel.position = startPos
+		panel:perform(oPos(0.5,endPos.x,endPos.y,oEase.OutBack))
 	end)
 	panel:gslot("Effect.frameViewer.data",function(data)
 		menu:removeAllChildrenWithCleanup()
@@ -105,7 +104,22 @@ local function oFrameViewer()
 			menu:removeAllChildrenWithCleanup()
 		end
 	end)
-
+	local isHide = false
+	panel:gslot("Effect.hideEditor",function(args)
+		local hide,instant = unpack(args)
+		if not hide and oEditor.type ~= "Frame" then return end
+		if isHide == hide then
+			return
+		end
+		isHide = hide
+		local winWidth = CCDirector.winSize.width
+		if instant then
+			panel.position = hide and startPos or endPos
+		else
+			local pos = hide and startPos or endPos
+			panel:perform(oPos(0.5,pos.x,pos.y,oEase.OutQuad))
+		end
+	end)
 	return panel
 end
 

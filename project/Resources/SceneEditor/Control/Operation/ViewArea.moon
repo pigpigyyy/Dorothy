@@ -8,6 +8,7 @@ Class ViewAreaView,
 	__init: =>
 		{:width,:height} = @
 		@scene = nil
+		isHide = false
 
 		S = oVec2.zero
 		V = oVec2.zero
@@ -134,11 +135,21 @@ Class ViewAreaView,
 					return
 			showFrame itemData
 
+		@gslot "Scene.HideEditor",(args)->
+			{hide} = args
+			if hide
+				@frame\perform oOpacity 0.5,0
+				@cross\perform oOpacity 0.5,0
+			else
+				@frame\perform oOpacity 0.5,1
+				@cross\perform oOpacity 0.5,1
+
 		itemChoosed = (itemData)->
 			if itemData
-				@cross\stopAllActions!
-				@cross.visible = true
-				@cross.opacity = 1
+				if not isHide
+					@cross\stopAllActions!
+					@cross.visible = true
+					@cross.opacity = 1
 				switch itemData.typeName
 					when "PlatformWorld","UILayer","Camera","Layer","World"
 						@cross.transformTarget = nil
@@ -149,10 +160,11 @@ Class ViewAreaView,
 					when "Body"
 						item = editor\getItem itemData
 						pos = itemData.position
-						@cross.position = pos
-						@cross.transformTarget = item.parent
-						@cross\schedule -> @cross.position = itemData.position
-						showFrame itemData
+						if not isHide
+							@cross.position = pos
+							@cross.transformTarget = item.parent
+							@cross\schedule -> @cross.position = itemData.position
+							showFrame itemData
 						if item.parent ~= editor.items.UI
 							-- TODO: show "can`t add body" message here
 							parentData = editor\getData item.parent
@@ -160,10 +172,11 @@ Class ViewAreaView,
 					else
 						item = editor\getItem itemData
 						pos = itemData.position
-						@cross.position = pos
-						@cross.transformTarget = item.parent
-						@cross\schedule -> @cross.position = itemData.position
-						showFrame itemData
+						if not isHide
+							@cross.position = pos
+							@cross.transformTarget = item.parent
+							@cross\schedule -> @cross.position = itemData.position
+							showFrame itemData
 						if item.parent ~= editor.items.UI
 							parentData = editor\getData item.parent
 							editor\moveTo pos*parentData.zoom+parentData.offset
@@ -194,6 +207,9 @@ Class ViewAreaView,
 		@gslot "Scene.Camera.Select",(subCam)->
 			@touchEnabled = (subCam == nil)
 
-		@gslot "Scene.Camera.Activate",(subCam)->
-			@touchEnabled = (subCam ~= nil)
+		@gslot "Scene.HideEditor",(args)->
+			{hide} = args
+			return if isHide == hide
+			isHide = hide
+			@touchEnabled = not hide
 			@unschedule! if @touchEnabled

@@ -17,6 +17,9 @@ local CCCall = require("CCCall")
 local CCMenu = require("CCMenu")
 local oBox = require("oBox")
 local emit = require("emit")
+local once = require("once")
+local sleep = require("sleep")
+local oRoutine = require("oRoutine")
 
 local function oFileChooser()
 	local winSize = CCDirector.winSize
@@ -154,7 +157,7 @@ local function oFileChooser()
 		}))
 	menu:addChild(newButton)
 
-	if oEditor.currentFile then
+	if oEditor.currentFile and oEditor.standAlone then
 		n = n+1
 		y = yStart-10-math.floor((n-1)/itemNum)*60
 		local delButton = oButton(
@@ -224,7 +227,16 @@ local function oFileChooser()
 				opMenu.enabled = false
 				item.enabled = false
 				panel:hide()
-				oEditor:emit("Quit")
+				if oEditor.standAlone then
+					oEditor:emit("Quit")
+				else
+					oRoutine(once(function()
+						emit("Body.viewArea.toPos",oEditor.origin)
+						oEditor:hideEditor(true,false)
+						sleep(0.6)
+						oEditor:emit("Quit")
+					end))
+				end
 			end)
 		backButton.anchor = oVec2.zero
 		local btnBk = CCDrawNode()

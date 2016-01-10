@@ -298,21 +298,20 @@ local function oSelectionPanel(borderSize,noCliping)
 		menu.enabled = false
 		panel.touchEnabled = false
 		border:stopAllActions()
-		border:runAction(
-			CCSequence(
+		border:runAction(CCSequence(
+		{
+			CCSpawn(
 			{
-				CCSpawn(
-				{
-					oOpacity(0.3,0),
-					oScale(0.3,0.3,0.3,oEase.InBack)
-				}),
-				CCCall(function()
-					panel:removeMenuItems()
-					panel.touchEnabled = false
-					panel:unschedule()
-					panel.parent:removeChild(panel)
-				end)
-			}))
+				oOpacity(0.3,0),
+				oScale(0.3,0.3,0.3,oEase.InBack)
+			}),
+			CCCall(function()
+				panel:removeMenuItems()
+				panel.touchEnabled = false
+				panel:unschedule()
+				panel.parent:removeChild(panel)
+			end)
+		}))
 	end
 
 	panel.reset = function(self,width,height,padX,padY)

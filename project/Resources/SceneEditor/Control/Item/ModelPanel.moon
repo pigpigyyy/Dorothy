@@ -191,11 +191,12 @@ Class ModelPanelView,
 						if name == model\match("([^\\/]*)%.[^%.\\/]*$")
 							MessageBox text:"Name Exist!",okOnly:true
 							return
-					actionEditor = editor.actionEditor
-					actionEditor\setupEvent!
-					actionEditor\slot "Activated",->
-						oFileChooser = require "ActionEditor.Script.oFileChooser"
-						oFileChooser(true,true,name)
+					actionEditor = with editor.actionEditor
+						\setupEvent!
+						\slot "Activated",->
+							oFileChooser = require "ActionEditor.Script.oFileChooser"
+							oFileChooser(true,true,name)
+						\slot "Quit",-> CCScene\back "rollIn"
 					CCScene\forward "actionEditor","rollOut"
 
 		@delBtn\slot "Tapped",->
@@ -225,7 +226,8 @@ Class ModelPanelView,
 			viewItem = @modelItems[targetItem]
 			if viewItem.isLoaded
 				@clearSelection!
-				editor\edit "Model",targetItem
+				subEditor = editor\edit "Model",targetItem,"rollOut","rollIn"
+				subEditor\hideEditor false,false
 			else
 				MessageBox text:"Broken Model\nWith Data Error\nOr Missing Image",okOnly:true
 

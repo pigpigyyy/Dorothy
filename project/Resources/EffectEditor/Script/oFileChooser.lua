@@ -17,6 +17,9 @@ local CCCall = require("CCCall")
 local CCMenu = require("CCMenu")
 local oBox = require("oBox")
 local emit = require("emit")
+local oRoutine = require("oRoutine")
+local once = require("once")
+local sleep = require("sleep")
 
 local function oFileChooser(addExisted,newEffectName)
 	local winSize = CCDirector.winSize
@@ -371,7 +374,16 @@ local function oFileChooser(addExisted,newEffectName)
 				opMenu.enabled = false
 				item.enabled = false
 				panel:hide()
-				oEditor:emit("Quit")
+				if oEditor.standAlone then
+					oEditor:emit("Quit")
+				else
+					oRoutine(once(function()
+						emit("Effect.viewArea.toOrigin",oVec2(60+(winSize.width-300)*0.5,winSize.height*0.5))
+						oEditor:hideEditor(true,false)
+						sleep(0.6)
+						oEditor:emit("Quit")
+					end))
+				end
 			end)
 		backButton.anchor = oVec2.zero
 		local btnBk = CCDrawNode()

@@ -5,8 +5,6 @@ local oVec2 = require("oVec2")
 local oCache = require("oCache")
 local ccColor3 = require("ccColor3")
 local emit = require("emit")
-local cclog = require("cclog")
-local CCObject = require("CCObject")
 local CCSequence = require("CCSequence")
 local CCDelay = require("CCDelay")
 local oOpacity = require("oOpacity")
@@ -23,6 +21,7 @@ local oBox = require("oBox")
 local oScale = require("oScale")
 local oEase = require("oEase")
 local CCHide = require("CCHide")
+local oPos = require("oPos")
 
 local function removeAnimation(sp,index)
 	local aDefs = sp[oSd.animationDefs]
@@ -867,6 +866,34 @@ oEditor.spriteData[oSd.index]
 			items.Size.visible = true
 		else
 			items.Size.visible = false
+		end
+	end)
+
+	local isHide = false
+	menu:gslot("Action.hideEditor",function(args)
+		local hide,instant = unpack(args)
+		if isHide == hide then
+			return
+		end
+		isHide = hide
+		menu.enabled = not hide
+		local width = CCDirector.winSize.width
+		local children = menu.children
+		for i = 1,children.count do
+			local child = children[i]
+			if child.positionX < width/2 then
+				if instant then
+					child.positionX = -child.positionX
+				else
+					child:runAction(oPos(0.5,-child.positionX,child.positionY,oEase.OutQuad))
+				end
+			else
+				if instant then
+					child.positionX = width*2-child.positionX
+				else
+					child:runAction(oPos(0.5,width*2-child.positionX,child.positionY,oEase.OutQuad))
+				end
+			end
 		end
 	end)
 

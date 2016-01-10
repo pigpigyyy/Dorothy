@@ -127,6 +127,7 @@ local function oViewArea()
 			scrollNode.scaleY = scale
 			emit("Effect.viewArea.scale",scale)
 		end
+		print(scrollNode.positionX,scrollNode.positionY)
 		xcross.positionX = -(scrollNode.positionX - origin.x)/scrollNode.scaleX
 		ycross.positionY = -(scrollNode.positionY - origin.y)/scrollNode.scaleX
 	end)
@@ -156,13 +157,13 @@ local function oViewArea()
 		end
 	end)
 	view:gslot("Effect.viewArea.scroll",function(scale)
-		scrollNode:runAction(oScale(0.3,scale,scale,oEase.OutQuad))
+		scrollNode:runAction(oScale(0.5,scale,scale,oEase.OutQuad))
 		xcross:runAction(oPos(0.5,-(scrollNode.positionX - origin.x)/scale,0,oEase.OutQuad))
 		ycross:runAction(oPos(0.5,0,-(scrollNode.positionY - origin.y)/scale,oEase.OutQuad))
 	end)
 	view:gslot("Effect.viewArea.toOrigin",function(pos)
 		view:unschedule()
-		scrollNode:runAction(oPos(0.3,pos.x,pos.y,oEase.OutQuad))
+		scrollNode:runAction(oPos(0.5,pos.x,pos.y,oEase.OutQuad))
 		xcross:runAction(oPos(0.5,0,0,oEase.OutQuad))
 		ycross:runAction(oPos(0.5,0,0,oEase.OutQuad))
 	end)

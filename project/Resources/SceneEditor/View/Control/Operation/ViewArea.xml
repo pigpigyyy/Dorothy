@@ -13,7 +13,7 @@
 		</Node>
 	</Node>
 
-	<Node Name="sceneNode" Ref="True"/>
+	<Node Name="sceneNode" AnchorX="{ editor.offset.x/$W }" AnchorY="{ editor.offset.y/$H }" X="{ editor.offset.x }" Y="{ editor.offset.y }" Width="{ $W }" Height="{ $H }" Ref="True"/>
 
 	<Line Name="cross" Color="0xff00ffff" Opacity="0" Ref="True">
 		<Vec2 X="-10" Y="0"/>

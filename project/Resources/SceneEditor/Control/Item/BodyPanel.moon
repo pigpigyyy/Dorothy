@@ -68,11 +68,9 @@ Class BodyPanelView,
 		@slot "Cleanup",->
 			oRoutine\remove @routine if @routine
 
-		@gslot "Scene.ViewBody",->
-			@show!
+		@gslot "Scene.ViewBody",-> @show!
 
-		@gslot "Scene.ClearBody",->
-			@bodies = nil
+		@gslot "Scene.ClearBody",-> @bodies = nil
 
 		@gslot "Scene.BodyUpdated",(target)->
 			if oCache.Body
@@ -191,10 +189,11 @@ Class BodyPanelView,
 						if name == body\match("([^\\/]*)%.[^%.\\/]*$")
 							MessageBox text:"Name Exist!",okOnly:true
 							return
-					bodyEditor = editor.bodyEditor
-					bodyEditor\setupEvent!
-					bodyEditor\slot "Activated",->
-						bodyEditor\new editor.physicsFolder..name..".body"
+					bodyEditor = with editor.bodyEditor
+						\setupEvent!
+						\slot "Activated",->
+							\new editor.physicsFolder..name..".body"
+						\slot "Quit",-> CCScene\back "rollIn"
 					CCScene\forward "bodyEditor","rollOut"
 
 		@delBtn\slot "Tapped",->
@@ -224,12 +223,12 @@ Class BodyPanelView,
 			viewItem = @bodyItems[targetItem]
 			if viewItem.isLoaded
 				@clearSelection!
-				editor\edit "Body",targetItem
+				subEditor = editor\edit "Body",targetItem,"rollOut","rollIn"
+				subEditor\hideEditor false,false
 			else
 				MessageBox text:"Broken Body\nWith Data Error",okOnly:true
 
-		@closeBtn\slot "Tapped",->
-			@hide!
+		@closeBtn\slot "Tapped",-> @hide!
 
 		@addBtn.visible = false
 		@delBtn.visible = false

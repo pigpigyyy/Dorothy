@@ -301,7 +301,6 @@ Items =
 		fold:{13,false}
 		-- helper
 		create:(scene,index)=>
-			scene\setLayerRatio index,oVec2(@ratioX,@ratioY)
 			scene\setLayerOffset index,@offset
 			layer = with scene\getLayer index
 				.scaleX = @zoom

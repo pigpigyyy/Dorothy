@@ -188,6 +188,33 @@ local function oEditMenu()
 		if scale ~= 1 then items.Zoom.mode = 2 end
 		items.Zoom.text = tostring(math.floor(scale*100)).."%"
 	end)
+
+	local isHide = false
+	menu:gslot("Effect.hideEditor",function(args)
+		local hide,instant = unpack(args)
+		if isHide == hide then
+			return
+		end
+		isHide = hide
+		menu.enabled = not hide
+		local children = menu.children
+		local scale = hide and 0 or 1
+		local isParticleMode = (oEditor.type == "Particle")
+		for i = 1,children.count do
+			local child = children[i]
+			if child == items.Set and isParticleMode then
+				child.scaleX = 0
+				child.scaleY = 0
+			else
+				if instant then
+					child.scaleX = scale
+					child.scaleY = scale
+				else
+					child:runAction(oScale(0.5,scale,scale,oEase.OutQuad))
+				end
+			end
+		end
+	end)
 	return menu
 end
 

@@ -152,7 +152,7 @@ void CCTransitionScene::setNewScene(float dt)
 	this->unschedule(schedule_selector(CCTransitionScene::setNewScene));
 
 	// Before replacing, save the "send cleanup to scene"
-	CCDirector *director = CCDirector::sharedDirector();
+	CCDirector* director = CCDirector::sharedDirector();
 	m_bIsSendCleanupToScene = director->isSendCleanupToScene();
 
 	director->replaceScene(m_pInScene);

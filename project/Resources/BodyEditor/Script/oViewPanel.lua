@@ -12,6 +12,8 @@ local oLine = require("oLine")
 local CCSequence = require("CCSequence")
 local CCDelay = require("CCDelay")
 local oOpacity = require("oOpacity")
+local oPos = require("oPos")
+local oEase = require("oEase")
 
 local function oViewPanel()
 	local winSize = CCDirector.winSize
@@ -275,6 +277,22 @@ local function oViewPanel()
 	self:gslot("Body.viewArea.moveToData",function(data)
 		moveViewToData(data)
 	end)
+
+	local isHide = false
+	self:gslot("Body.hideEditor",function(args)
+		local hide,instant = unpack(args)
+		if isHide == hide then
+			return
+		end
+		isHide = hide
+		local winWidth = CCDirector.winSize.width
+		if instant then
+			self.positionX = winWidth*2-self.positionX
+		else
+			self:perform(oPos(0.5,winWidth*2-self.positionX,self.positionY,oEase.OutQuad))
+		end
+	end)
+
 	return self
 end
 

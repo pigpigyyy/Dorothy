@@ -14,6 +14,8 @@ local tolua = require("tolua")
 local oBodyDef = require("oBodyDef")
 local CCTextAlign = require("CCTextAlign")
 local CCUserDefault = require("CCUserDefault")
+local oPos = require("oPos")
+local oEase = require("oEase")
 
 local function oSettingPanel()
 	local winSize = CCDirector.winSize
@@ -525,6 +527,20 @@ local function oSettingPanel()
 	self:gslot("Body.settingPanel.enable",function(enable)
 		for _,item in pairs(items) do
 			item.enabled = enable
+		end
+	end)
+	local isHide = false
+	self:gslot("Body.hideEditor",function(args)
+		local hide,instant = unpack(args)
+		if isHide == hide then
+			return
+		end
+		isHide = hide
+		local winWidth = CCDirector.winSize.width
+		if instant then
+			self.positionX = winWidth*2-self.positionX
+		else
+			self:perform(oPos(0.5,winWidth*2-self.positionX,self.positionY,oEase.OutQuad))
 		end
 	end)
 	return self

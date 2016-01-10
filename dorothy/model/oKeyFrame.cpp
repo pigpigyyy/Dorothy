@@ -113,9 +113,16 @@ void oKeyPos::startWithTarget( CCNode *pTarget )
 }
 void oKeyPos::update( float time )
 {
-	m_pTarget->setPosition(
-		_ease(time, _startPosX, _deltaPosX),
-		_ease(time, _startPosY, _deltaPosY));
+	if (time == 1.0f)
+	{
+		m_pTarget->setPosition(_endPosX, _endPosY);
+	}
+	else
+	{
+		m_pTarget->setPosition(
+			_ease(time, _startPosX, _deltaPosX),
+			_ease(time, _startPosY, _deltaPosY));
+	}
 }
 oKeyPos* oKeyPos::create( float duration, float posX, float posY, uint8 easeId )
 {
@@ -173,8 +180,16 @@ void oKeyScale::startWithTarget( CCNode *pTarget )
 }
 void oKeyScale::update( float time )
 {
-	m_pTarget->setScaleX(_ease(time, _startScaleX, _deltaScaleX));
-	m_pTarget->setScaleY(_ease(time, _startScaleY, _deltaScaleY));
+	if (time == 1.0f)
+	{
+		m_pTarget->setScaleX(_endScaleX);
+		m_pTarget->setScaleY(_endScaleY);
+	}
+	else
+	{
+		m_pTarget->setScaleX(_ease(time, _startScaleX, _deltaScaleX));
+		m_pTarget->setScaleY(_ease(time, _startScaleY, _deltaScaleY));
+	}
 }
 oKeyScale* oKeyScale::create( float duration, float scaleX, float scaleY, uint8 easeId )
 {
@@ -233,7 +248,14 @@ void oKeyRotate::startWithTarget( CCNode *pTarget )
 }
 void oKeyRotate::update( float time )
 {
-	m_pTarget->setRotation(_ease(time, _startRotate, _deltaRotate));
+	if (time == 1.0f)
+	{
+		m_pTarget->setRotation(_endRotate);
+	}
+	else
+	{
+		m_pTarget->setRotation(_ease(time, _startRotate, _deltaRotate));
+	}
 }
 oKeyRotate* oKeyRotate::create( float duration, float rotate, uint8 easeId )
 {
@@ -287,7 +309,14 @@ void oKeyOpacity::startWithTarget( CCNode *pTarget )
 }
 void oKeyOpacity::update( float time )
 {
-	m_pTarget->setOpacity(_ease(time, _startOpacity, _deltaOpacity));
+	if (time == 1.0f)
+	{
+		m_pTarget->setOpacity(_endOpacity);
+	}
+	else
+	{
+		m_pTarget->setOpacity(_ease(time, _startOpacity, _deltaOpacity));
+	}
 }
 oKeyOpacity* oKeyOpacity::create( float duration, float opacity, uint8 easeId )
 {
@@ -344,8 +373,16 @@ void oKeySkew::startWithTarget( CCNode *pTarget )
 }
 void oKeySkew::update( float time )
 {
-	m_pTarget->setSkewX(_ease(time, _startSkewX, _deltaSkewX));
-	m_pTarget->setSkewY(_ease(time, _startSkewY, _deltaSkewY));
+	if (time == 1.0f)
+	{
+		m_pTarget->setSkewX(_endSkewX);
+		m_pTarget->setSkewY(_endSkewY);
+	}
+	else
+	{
+		m_pTarget->setSkewX(_ease(time, _startSkewX, _deltaSkewX));
+		m_pTarget->setSkewY(_ease(time, _startSkewY, _deltaSkewY));
+	}
 }
 oKeySkew* oKeySkew::create( float duration, float skewX, float skewY, uint8 easeId )
 {
@@ -414,9 +451,16 @@ void oKeyRoll::startWithTarget( CCNode *pTarget )
 		_deltaRoll += 360;
 	}
 }
-void oKeyRoll::update( float time )
+void oKeyRoll::update(float time)
 {
-	m_pTarget->setRotation(_ease(time, _startRoll, _deltaRoll));
+	if (time == 1.0f)
+	{
+		m_pTarget->setRotation(_endRoll);
+	}
+	else
+	{
+		m_pTarget->setRotation(_ease(time, _startRoll, _deltaRoll));
+	}
 }
 oKeyRoll* oKeyRoll::create( float duration, float roll, uint8 easeId )
 {

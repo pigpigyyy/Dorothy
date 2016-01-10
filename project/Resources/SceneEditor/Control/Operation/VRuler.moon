@@ -19,6 +19,7 @@ cycle = require "cycle"
 -- [no params]
 ->
 	winSize = CCDirector.winSize
+	winWidth = winSize.width
 	rulerWidth = 30
 	rulerHeight = winSize.height
 	halfW = rulerWidth*0.5
@@ -212,10 +213,16 @@ cycle = require "cycle"
 	@slot "TouchCancelled",touchEnded
 	@slot "TouchEnded",touchEnded
 
-	@gslot "Scene.Camera.Activate",(subCam)->
+	isHide = false
+	@gslot "Scene.HideEditor",(args)->
+		{hide} = args
+		return if isHide == hide
+		isHide = hide
 		{:width} = CCDirector.winSize
-		return if (subCam == nil) == (@positionX < width)
-		@touchEnabled = (subCam == nil)
-		@runAction oPos 0.5,width*2-@positionX,@positionY,oEase.OutQuad
+		@touchEnabled = not hide
+		if @positionX < winWidth/2
+			@runAction oPos 0.5,-@positionX,@positionY,oEase.OutQuad
+		else
+			@runAction oPos 0.5,winWidth*2-@positionX,@positionY,oEase.OutQuad
 
 	@

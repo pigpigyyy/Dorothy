@@ -10,6 +10,7 @@ local oOpacity = require("oOpacity")
 local oEase = require("oEase")
 local CCSpawn = require("CCSpawn")
 local oScale = require("oScale")
+local emit = require("emit")
 
 local oSd =
 {
@@ -209,6 +210,12 @@ function oEditor:edit(modelFile,clipFile)
 	oEditor.editMenu:toSprite()
 end
 
+oEditor.hideEditor = function(self,hide,instant)
+	if instant == nil then instant = true end
+	emit("Action.settingPanel.edit",nil)
+	emit("Action.hideEditor",{hide,instant})
+end
+
 local controls =
 {
 	"oViewArea",
@@ -218,7 +225,7 @@ local controls =
 	"oSettingPanel",
 }
 
-oRoutine(once(function() -- load UI asynchronously
+oEditor:schedule(once(function() -- load UI asynchronously
 	for i = 1,#controls do
 		local controlName = controls[i]
 		controls[i] = require(controlName) -- load codes
@@ -258,12 +265,16 @@ oRoutine(once(function() -- load UI asynchronously
 end))
 
 oEditor:slot("Entering",function()
-	oRoutine(once(function()
-		repeat
-			coroutine.yield()
-		until oEditor.isLoaded
+	if oEditor.isLoaded then
 		oEditor:emit("Activated")
-	end))
+	else
+		oRoutine(once(function()
+			repeat
+				coroutine.yield()
+			until oEditor.isLoaded
+			oEditor:emit("Activated")
+		end))
+	end
 end)
 
 return oEditor

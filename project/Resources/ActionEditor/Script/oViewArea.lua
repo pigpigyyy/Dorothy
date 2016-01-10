@@ -32,8 +32,8 @@ local function oViewArea()
 	view.cascadeOpacity = true
 
 	local origin = oVec2(
-		60+(winSize.width-120-170)*0.5,
-		120+(winSize.height-60-120)*0.5)
+		60+(winSize.width-300)*0.5,
+		winSize.height*0.5)
 
 	local scaleNode = CCNode()
 	scaleNode.position = origin
@@ -598,7 +598,7 @@ local function oViewArea()
 				oEditor.spriteData[oSd.x] = x
 				oEditor.spriteData[oSd.y] = y
 			end
-			
+
 			oEditor.editMenu:markEditButton(true)
 			valueChanged = true
 		end
@@ -994,7 +994,7 @@ local function oViewArea()
 			valueChanged = true
 		end
 	end
-	
+
 	-- visible
 	local visibleEditor = CCMenu()
 	visibleEditor.swallowTouches = true

@@ -23,7 +23,7 @@ Class EditorView,
 		@selectedType = nil
 		@selectedItem = nil
 		@origin = oVec2 width/2,height/2
-		@offset = oVec2 60+(width-250)/2,height/2
+		@offset = oVec2 60+(width-300)/2,height/2
 		@scale = 1
 		@xFix = false
 		@yFix = false
@@ -32,7 +32,6 @@ Class EditorView,
 
 		_G.editor = @
 		builtin.editor = @
-
 		@slot "Cleanup",->
 			Reference.stopUpdate!
 			_G.editor = nil
@@ -44,6 +43,7 @@ Class EditorView,
 
 		CCScene\transition "rollIn",{"zoomFlip",0.5,CCOrientation.Down}
 		CCScene\transition "rollOut",{"zoomFlip",0.5,CCOrientation.Up}
+		CCScene\transition "crossFade",{"crossFade",0.5}
 
 		level = (level)-> CCMenu.DefaultHandlerPriority-level*10
 		@levelViewArea = level 5
@@ -127,6 +127,9 @@ Class EditorView,
 					currentCam = cam
 			else
 				currentCam = nil
+			hideEditor = (cam ~= nil)
+			hideAllControl = false
+			emit "Scene.HideEditor",{hideEditor,hideAllControl}
 		@gslot "Scene.Camera.Select",(subCam)-> @applyCam subCam
 		@gslot "Scene.ViewArea.ScaleTo",(scale)->
 			if @items
@@ -154,7 +157,7 @@ Class EditorView,
 				currentCam.position = pos if currentCam
 			else
 				emit "Scene.Camera.MoveTo",pos
-		@gslot "Scene.Camera.MoveTo",(pos)-> @camPos = pos
+				@camPos = pos
 
 		@gslot "Editor.ItemChooser",(args)->
 			handler = args[#args]
@@ -213,12 +216,12 @@ Class EditorView,
 		@gslot "Scene.ViewPanel.Select",setCurrentData
 		@gslot "Scene.ViewPanel.Pick",setCurrentData
 
-	updateSprites: => emit "Scene.LoadSprite",@graphicFolder
-	updateModels: => emit "Scene.LoadModel",@graphicFolder
-	updateBodies: => emit "Scene.LoadBody",@physicsFolder
-	updateEffects: => emit "Scene.LoadEffect",@graphicFolder
+	updateSprites:=> emit "Scene.LoadSprite",@graphicFolder
+	updateModels:=> emit "Scene.LoadModel",@graphicFolder
+	updateBodies:=> emit "Scene.LoadBody",@physicsFolder
+	updateEffects:=> emit "Scene.LoadEffect",@graphicFolder
 
-	game: property => @_gameName,
+	game:property => @_gameName,
 		(name)=>
 			oContent\removeSearchPath @_gameFullPath if @_gameFullPath
 			@_gameName = name
@@ -242,7 +245,7 @@ Class EditorView,
 			oCache\clear!
 			Reference.update!
 
-	eachSceneItem: (handler)=>
+	eachSceneItem:(handler)=>
 		if @sceneData
 			if @sceneData.ui and @sceneData.ui.children
 				for child in *@sceneData.ui.children
@@ -253,19 +256,19 @@ Class EditorView,
 						for child in *layer.children
 							handler child
 
-	gamesFullPath: property => oContent.writablePath.."Game/"
-	gameFullPath: property => @_gameFullPath
-	graphicFolder: property => "Graphic/"
-	graphicFullPath: property => @_gameFullPath.."Graphic/"
-	physicsFolder: property => "Physics/"
-	physicsFullPath: property => @_gameFullPath.."Physics/"
-	logicFolder: property => "Logic/"
-	logicFullPath: property => @_gameFullPath.."Logic/"
-	sceneFolder: property => "Scene/"
-	sceneFullPath: property => @_gameFullPath.."Scene/"
-	uiFileFullPath: property => @sceneFullPath.."UI.scene"
+	gamesFullPath:property => oContent.writablePath.."Game/"
+	gameFullPath:property => @_gameFullPath
+	graphicFolder:property => "Graphic/"
+	graphicFullPath:property => @_gameFullPath.."Graphic/"
+	physicsFolder:property => "Physics/"
+	physicsFullPath:property => @_gameFullPath.."Physics/"
+	logicFolder:property => "Logic/"
+	logicFullPath:property => @_gameFullPath.."Logic/"
+	sceneFolder:property => "Scene/"
+	sceneFullPath:property => @_gameFullPath.."Scene/"
+	uiFileFullPath:property => @sceneFullPath.."UI.scene"
 
-	actionEditor: property =>
+	actionEditor:property =>
 		if not @_actionEditor
 			actionEditor = with require "ActionEditor.Script.oEditor"
 				.standAlone = false
@@ -273,36 +276,32 @@ Class EditorView,
 				.input = @gameFullPath
 				.output = @gameFullPath
 				.prefix = @graphicFolder
-				.setupEvent = (editor)->
-					\slot("Edited")\set (model)->
+				.setupEvent = ->
+					(\slot "Edited")\set (model)->
 						emit "Scene.ModelUpdated",model
-					\slot("Quit")\set ->
-						CCScene\back "rollIn"
-						@updateModels!
-					\slot "Activated",nil
+					(\slot "Quit")\set -> @updateModels!
+					(\slot "Activated")\clear!
 			CCScene\add "actionEditor",actionEditor
 			@_actionEditor = actionEditor
 		@_actionEditor
 
-	bodyEditor: property =>
+	bodyEditor:property =>
 		if not @_bodyEditor
 			bodyEditor = with require "BodyEditor.Script.oEditor"
 				.standAlone = false
 				.quitable = true
 				.input = @gameFullPath
 				.output = @gameFullPath
-				.setupEvent = (editor)->
-					\slot "Edited",(body)->
+				.setupEvent = ->
+					(\slot "Edited")\set (body)->
 						emit "Scene.BodyUpdated",body
-					\slot "Quit",->
-						CCScene\back "rollIn"
-						@updateBodies!
-					\slot "Activated",nil
+					(\slot "Quit")\set -> @updateBodies!
+					(\slot "Activated")\clear!
 			CCScene\add "bodyEditor",bodyEditor
 			@_bodyEditor = bodyEditor
 		@_bodyEditor
 
-	effectEditor: property =>
+	effectEditor:property =>
 		if not @_effectEditor
 			effectEditor = with require "EffectEditor.Script.oEditor"
 				.standAlone = false
@@ -311,18 +310,16 @@ Class EditorView,
 				.prefix = @graphicFolder
 				.input = @gameFullPath
 				.output = @gameFullPath
-				.setupEvent = (editor)->
-					\slot "Edited",(effect,effectFile,delete)->
+				.setupEvent = ->
+					(\slot "Edited")\set (effect,effectFile,delete)->
 						emit "Scene.EffectUpdated",{effect,effectFile,delete}
-					\slot "Quit",->
-						CCScene\back "rollIn"
-						@updateEffects!
-					\slot "Activated",nil
+					(\slot "Quit")\set -> @updateEffects!
+					(\slot "Activated")\clear!
 			CCScene\add "effectEditor",effectEditor
 			@_effectEditor = effectEditor
 		@_effectEditor
 
-	getUsableName: (originalName)=>
+	getUsableName:(originalName)=>
 		originalName = "name" if originalName == ""
 		if @items[originalName]
 			counter = 1
@@ -336,7 +333,7 @@ Class EditorView,
 		else
 			originalName
 
-	renameData: (itemData,name)=>
+	renameData:(itemData,name)=>
 		return nil if itemData.name == name
 		switch itemData.typeName
 			when "UILayer","PlatformWorld","Camera"
@@ -349,7 +346,7 @@ Class EditorView,
 		itemData.name = name
 		name
 
-	getItem: (itemData)=>
+	getItem:(itemData)=>
 		itemName = switch itemData.typeName
 			when "UILayer"
 				"UI"
@@ -361,9 +358,9 @@ Class EditorView,
 				itemData.name
 		@items[itemName]
 
-	getData: (item)=> @itemDefs[item]
+	getData:(item)=> @itemDefs[item]
 
-	getSceneName: (itemData)=>
+	getSceneName:(itemData)=>
 		item = @getItem itemData
 		parentData = @getData item.parent
 		if parentData.typeName == "UILayer"
@@ -371,7 +368,7 @@ Class EditorView,
 		else
 			@scene..".scene"
 
-	insertData: (parentData,newData,targetData,afterTarget=true)=>
+	insertData:(parentData,newData,targetData,afterTarget=true)=>
 		-- insert newData to parentData.children before targetData
 		parentData.children = {} unless parentData.children
 		index = #parentData.children+1
@@ -406,7 +403,7 @@ Class EditorView,
 		emit "Scene.Dirty",true
 		index
 
-	removeData: (itemData,parentData)=>
+	removeData:(itemData,parentData)=>
 		item = @getItem itemData
 		parent = @getItem parentData
 		index = nil
@@ -443,7 +440,7 @@ Class EditorView,
 		emit "Scene.Dirty",true
 		index
 
-	resetData: (itemData)=>
+	resetData:(itemData)=>
 		switch itemData.typeName
 			when "Layer","World","Camera","PlatformWorld"
 				return
@@ -475,7 +472,7 @@ Class EditorView,
 			emit "Scene.Dirty",true
 		index
 
-	moveDataDown: (itemData,parentData)=>
+	moveDataDown:(itemData,parentData)=>
 		index = #parentData.children
 		for i,v in ipairs parentData.children
 			if itemData == v
@@ -492,7 +489,7 @@ Class EditorView,
 			emit "Scene.Dirty",true
 		index
 
-	moveDataTop: (itemData,parentData)=>
+	moveDataTop:(itemData,parentData)=>
 		index = 1
 		for i,v in ipairs parentData.children
 			if itemData == v
@@ -518,7 +515,7 @@ Class EditorView,
 			emit "Scene.Dirty",true
 		tmpIndex
 
-	moveDataBottom: (itemData,parentData)=>
+	moveDataBottom:(itemData,parentData)=>
 		count = #parentData.children
 		index = count
 		for i,v in ipairs parentData.children
@@ -743,8 +740,8 @@ Class EditorView,
 								return itemData if item.visible and item.boundingBox\containsPoint pos
 		nil
 
-	edit:(typeName,file,transition="rollOut")=>
-		editor,editorName = switch typeName
+	getSubEditor:(typeName)=>
+		switch typeName
 			when "Model"
 				@actionEditor,"actionEditor"
 			when "Body"
@@ -753,9 +750,128 @@ Class EditorView,
 				@effectEditor,"effectEditor"
 			else
 				nil,nil
+
+	edit:(typeName,file,transitionIn="",transitionOut="")=>
+		editor,editorName = @getSubEditor typeName
 		if editor and editorName
 			with editor
 				\setupEvent!
 				\slot "Activated",-> \edit file
-			CCScene\forward editorName,transition
+				\slot "Quit",-> CCScene\back transitionOut
+			CCScene\forward editorName,transitionIn
 		editor
+
+	editCurrentItemInPlace:=>
+		itemData = @currentData
+		if itemData
+			file = if itemData.typeName == "Effect"
+				itemData.effect
+			else
+				itemData.file
+			emit "Scene.HideEditor",{true,true}
+			thread ->
+				emit "Scene.ViewPanel.Pick",itemData
+				subEditor = @getSubEditor itemData.typeName
+				scene = @viewArea.scene
+				if itemData.typeName == "Body"
+					@viewArea.sceneNode\perform oRotate 0.5,-itemData.angle,oEase.OutQuad
+					scene.UILayer.transformTarget = @viewArea
+				-- wait for editor to be loaded
+				if not subEditor.isLoaded
+					subEditor.visible = false
+					@addChild subEditor
+					sleep 0.5
+					wait -> not subEditor.isLoaded
+					sleep!
+					@removeChild subEditor,false
+					subEditor.visible = true
+					sleep!
+				else
+					sleep 0.6
+				-- save some editor data
+				item = @getItem itemData
+				parentData = @getData item.parent
+				lastCamPos = editor.camPos
+				lastCamZoom = editor.scale
+				layerZoom = parentData.zoom or 1
+				layerOffset = parentData.offset or oVec2.zero
+				display = itemData.display
+				-- edit selected item
+				subEditor = @edit itemData.typeName,file
+				-- make edit in place
+				if parentData.typeName == "UILayer"
+					scene.UILayer.transformTarget = subEditor.viewArea.viewNode
+					scene.UILayer.position = oVec2.zero-itemData.position
+					if @sceneData.children
+						for layerData in *@sceneData.children
+							layer = @getItem layerData
+							layer.visible = false
+				else
+					scene.UILayer.transformTarget = subEditor.viewArea
+				subEditor\hideEditor true,true
+				itemData.display,item.visible = false,false
+				scene.parent\removeChild scene,false
+				subEditor.viewArea.viewNode\addChild scene,-1
+				{:width,:height} = CCDirector.winSize
+				scene.scaleX = 1/layerZoom
+				scene.scaleY = 1/layerZoom
+				with scene.camera
+					.position = if parentData.typeName == "UILayer"
+						oVec2.zero
+					else
+						oVec2(width/2,height/2)+itemData.position+layerOffset
+					.scaleX = 1
+					.scaleY = 1
+				switch itemData.typeName
+					when "Model"
+						with subEditor.viewArea.itemNode
+							.angle = item.angle
+							.scaleX = item.scaleX
+							.scaleY = item.scaleY
+							.skewX = item.skewX
+							.skewY = item.skewY
+							.opacity = item.opacity
+					when "Body"
+						subEditor.viewArea.viewNode.angle = -itemData.angle
+				sleep!
+				sleep!
+				subEditor\hideEditor false,false
+				-- setup rollback function which is called when sub editer ends
+				-- for in place edit
+				subEditor\slot "Quit",->
+					if parentData.typeName == "UILayer"
+						if @sceneData.children
+							for layerData in *@sceneData.children
+								layer = @getItem layerData
+								layer.visible = true
+					emit "Scene.HideEditor",{false,true}
+					itemData.display = display
+					item = @getItem itemData
+					item.visible = itemData.display and itemData.visible
+					scene.parent\removeChild scene,false
+					@viewArea.sceneNode\addChild scene
+					scene.scaleX = 1
+					scene.scaleY = 1
+					scene.UILayer.transformTarget = nil
+					{:width,:height} = CCDirector.winSize
+					scene.UILayer.position = oVec2(-width/2,-height/2)
+					with scene.camera
+						.position = lastCamPos
+						.scaleX = lastCamZoom
+						.scaleY = lastCamZoom
+					switch itemData.typeName
+						when "Model"
+							with subEditor.viewArea.itemNode
+								.angle = 0
+								.scaleX = 1
+								.scaleY = 1
+								.skewX = 0
+								.skewY = 0
+								.opacity = 1
+						when "Body"
+							scene.UILayer.transformTarget = @viewArea
+							@viewArea.sceneNode\perform CCSequence {
+								oRotate 0.5,0,oEase.OutQuad
+								CCCall -> scene.UILayer.transformTarget = nil
+							}
+							subEditor.viewArea.viewNode.angle = 0

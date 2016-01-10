@@ -21,6 +21,7 @@ local oOpacity = require("oOpacity")
 local oScale = require("oScale")
 local oEase = require("oEase")
 local CCHide = require("CCHide")
+local oPos = require("oPos")
 
 local function oEditMenu()
 	local winSize = CCDirector.winSize
@@ -345,6 +346,34 @@ local function oEditMenu()
 	end)
 	menu:gslot("Body.editMenu.reset",function()
 		items.Play.isPlaying = false
+	end)
+
+	local isHide = false
+	menu:gslot("Body.hideEditor",function(args)
+		local hide,instant = unpack(args)
+		if isHide == hide then
+			return
+		end
+		isHide = hide
+		menu.enabled = not hide
+		local width = CCDirector.winSize.width
+		local children = menu.children
+		for i = 1,children.count do
+			local child = children[i]
+			if child.positionX < width/2 then
+				if instant then
+					child.positionX = -child.positionX
+				else
+					child:perform(oPos(0.5,-child.positionX,child.positionY,oEase.OutQuad))
+				end
+			else
+				if instant then
+					child.positionX = width*2-child.positionX
+				else
+					child:perform(oPos(0.5,width*2-child.positionX,child.positionY,oEase.OutQuad))
+				end
+			end
+		end
 	end)
 
 	-- add buttons to menu --

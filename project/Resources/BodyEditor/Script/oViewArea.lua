@@ -131,8 +131,9 @@ local function oViewArea()
 	end
 
 	-- init world node --
+	view.viewNode = CCNode()
+	crossNode:addChild(view.viewNode,-1)
 	crossNode:addChild(oEditor.world)
-	view.viewNode = oEditor.world
 
 	-- handle view touch event --
 	local pick = false

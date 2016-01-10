@@ -421,10 +421,10 @@ int CCLuaEngine::executeNodeEvent(CCNode* pNode, int nAction)
 			name = oSlotList::Entered;
 			break;
 		case CCNode::Exit:
-			name = oSlotList::Exiting;
+			name = oSlotList::Exited;
 			break;
 		case CCNode::ExitTransitionDidStart:
-			name = oSlotList::Exited;
+			name = oSlotList::Exiting;
 			break;
 		case CCNode::Cleanup:
 			name = oSlotList::Cleanup;

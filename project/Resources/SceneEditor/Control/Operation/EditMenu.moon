@@ -7,6 +7,9 @@ SelectionPanel = require "Control.Basic.SelectionPanel"
 -- [no params]
 Class EditMenuView,
 	__init: =>
+		{:width} = CCDirector.winSize
+		isHide = false
+
 		buttonNames = {
 			"sprite"
 			"model"
@@ -71,192 +74,173 @@ Class EditMenuView,
 		@progressUp.visible = false
 		@progressDown.visible = false
 
-		@upBtn.visible = false
-		@upBtn.enabled = false
-		@upBtn\slot "TapBegan",->
-			clearSelection!
-			@upBtn\schedule once ->
-				sleep 0.4
-				@progressUp.visible = true
-				@progressUp\play!
-		@upBtn\slot "Tapped",->
-			if @progressUp.visible
-				if @progressUp.done
-					emit "Scene.EditMenu.Top"
-			else
-				emit "Scene.EditMenu.Up"
-		@upBtn\slot "TapEnded",->
-			@upBtn\unschedule!
-			if @progressUp.visible
-				@progressUp.visible = false
-
-		@downBtn.visible = false
-		@downBtn.enabled = false
-		@downBtn\slot "TapBegan",->
-			clearSelection!
-			@downBtn\schedule once ->
-				sleep 0.4
-				@progressDown.visible = true
-				@progressDown\play!
-		@downBtn\slot "Tapped",->
-			if @progressDown.visible
-				if @progressDown.done
-					emit "Scene.EditMenu.Bottom"
-			else
-				emit "Scene.EditMenu.Down"
-		@downBtn\slot "TapEnded",->
-			@downBtn\unschedule!
-			if @progressDown.visible
-				@progressDown.visible = false
-
-		@foldBtn.visible = false
-		@foldBtn.enabled = false
-		@foldBtn\slot "Tapped",->
-			clearSelection!
-			emit "Scene.ViewPanel.Fold",editor.currentData
-
-		@editBtn.visible = false
-		@editBtn.enabled = false
-		@editBtn\slot "Tapped",->
-			itemData = editor.currentData
-			if itemData
-				file = if itemData.typeName == "Effect"
-					itemData.effect
+		with @upBtn
+			.visible = false
+			.enabled = false
+			\slot "TapBegan",->
+				clearSelection!
+				\schedule once ->
+					sleep 0.4
+					@progressUp.visible = true
+					@progressUp\play!
+			\slot "Tapped",->
+				if @progressUp.visible
+					if @progressUp.done
+						emit "Scene.EditMenu.Top"
 				else
-					itemData.file
-				subEditor = editor\edit itemData.typeName,file
-				if file
-					scene = editor.viewArea.scene
-					lastCamPos = scene.camera.position
-					lastCamZoom = scene.camera.scaleX
-					item = editor\getItem itemData
-					parentData = editor\getData item.parent
-					layerZoom = parentData.zoom
-					layerOffset = parentData.offset
-					display = itemData.display
-					itemData.display,item.visible = false,false
-					scene.parent\removeChild scene,false
-					subEditor\slot "Activated",->
-						subEditor.viewArea.viewNode\addChild scene,-1
-						{:width,:height} = CCDirector.winSize
-						scene.scaleX = 1/layerZoom
-						scene.scaleY = 1/layerZoom
-						with scene.camera
-							.position = oVec2(width/2,height/2)+itemData.position+layerOffset
-							.scaleX = 1
-							.scaleY = 1
-					subEditor\slot "Quit",->
-						itemData.display = display
-						item = editor\getItem itemData
-						item.visible = itemData.display and itemData.visible
-						scene.parent\removeChild scene,false
-						editor.viewArea.sceneNode\addChild scene
-						scene.scaleX = 1
-						scene.scaleY = 1
-						with scene.camera
-							.position = lastCamPos
-							.scaleX = lastCamZoom
-							.scaleY = lastCamZoom
-						emit "Scene.ViewArea.Frame",itemData
+					emit "Scene.EditMenu.Up"
+			\slot "TapEnded",->
+				\unschedule!
+				if @progressUp.visible
+					@progressUp.visible = false
+
+		with @downBtn
+			.visible = false
+			.enabled = false
+			\slot "TapBegan",->
+				clearSelection!
+				\schedule once ->
+					sleep 0.4
+					@progressDown.visible = true
+					@progressDown\play!
+			\slot "Tapped",->
+				if @progressDown.visible
+					if @progressDown.done
+						emit "Scene.EditMenu.Bottom"
+				else
+					emit "Scene.EditMenu.Down"
+			\slot "TapEnded",->
+				\unschedule!
+				if @progressDown.visible
+					@progressDown.visible = false
+
+		with @foldBtn
+			.visible = false
+			.enabled = false
+			\slot "Tapped",->
+				clearSelection!
+				emit "Scene.ViewPanel.Fold",editor.currentData
+
+		with @editBtn
+			.visible = false
+			.enabled = false
+			\slot "Tapped",->
+				emit "Scene.SettingPanel.Edit",nil
+				editor\editCurrentItemInPlace!
+
+		with @menuBtn
+			.dirty = false
+			\slot "Tapped",->
+				clearSelection!
+				if .dirty
+					editor\save!
+					emit "Scene.Dirty",false
+				else
+					ScenePanel = require "Control.Item.ScenePanel"
+					ScenePanel!
 				emit "Scene.SettingPanel.Edit",nil
 
-		@menuBtn.dirty = false
-		@menuBtn\slot "Tapped",->
-			clearSelection!
-			if not @menuBtn.dirty
-				ScenePanel = require "Control.Item.ScenePanel"
-				ScenePanel!
-			else
-				editor\save!
+		with @undoBtn
+			.visible = false
+			\slot "Tapped",->
+				clearSelection!
+				editor.currentSceneFile = editor.currentSceneFile
 				emit "Scene.Dirty",false
-			emit "Scene.SettingPanel.Edit",nil
 
-		@undoBtn.visible = false
-		@undoBtn\slot "Tapped",->
-			clearSelection!
-			editor.currentSceneFile = editor.currentSceneFile
-			emit "Scene.Dirty",false
+		with @xFixBtn
+			.visible = false
+			\slot "Tapped",(button)->
+				editor.xFix = not editor.xFix
+				if editor.yFix
+					editor.yFix = false
+					@yFixBtn.color = ccColor3 0x00ffff
+				button.color = ccColor3 editor.xFix and 0xff0088 or 0x00ffff
+				emit "Scene.FixChange"
 
-		@xFixBtn.visible = false
-		@xFixBtn\slot "Tapped",(button)->
-			editor.xFix = not editor.xFix
-			if editor.yFix
-				editor.yFix = false
-				@yFixBtn.color = ccColor3 0x00ffff
-			button.color = ccColor3 editor.xFix and 0xff0088 or 0x00ffff
-			emit "Scene.FixChange"
-		@yFixBtn.visible = false
-		@yFixBtn\slot "Tapped",(button)->
-			editor.yFix = not editor.yFix
-			if editor.xFix
-				editor.xFix = false
-				@xFixBtn.color = ccColor3 0x00ffff
-			button.color = ccColor3 editor.yFix and 0xff0088 or 0x00ffff
-			emit "Scene.FixChange"
+		with @yFixBtn
+			.visible = false
+			\slot "Tapped",(button)->
+				editor.yFix = not editor.yFix
+				if editor.xFix
+					editor.xFix = false
+					@xFixBtn.color = ccColor3 0x00ffff
+				button.color = ccColor3 editor.yFix and 0xff0088 or 0x00ffff
+				emit "Scene.FixChange"
 
 		@iconCam.visible = false
-		@camBtn.visible = false
-		@camBtn.editing = false
-		currentSubCam = nil
-		@camBtn\gslot "Scene.Camera.Select",(subCam)-> currentSubCam = subCam
-		@camBtn\slot "Tapped",->
-			if @camBtn.editing
-				emit "Scene.Camera.Activate",nil
-			else
-				emit "Scene.Camera.Activate",currentSubCam
 
-		@zoomEditBtn.visible = false
-		@zoomEditBtn.editing = false
-		@zoomEditBtn\slot "Tapped",->
-			@zoomEditBtn.editing = not @zoomEditBtn.editing
-			if @zoomEditBtn.editing and currentSubCam
-				emit "Scene.Edit.ShowRuler", {currentSubCam.zoom,0.5,10,1,(value)->
-					emit "Scene.ViewArea.Scale",value
-				}
-			else
-				emit "Scene.Edit.ShowRuler",nil
+		currentSubCam = nil
+		with @camBtn
+			.visible = false
+			.editing = false
+			\gslot "Scene.Camera.Select",(subCam)->
+				currentSubCam = subCam
+			\slot "Tapped",->
+				.editing = not .editing
+				if .editing
+					emit "Scene.Camera.Activate",currentSubCam
+				else
+					emit "Scene.Camera.Activate",nil
+
+		with @zoomEditBtn
+			.visible = false
+			.editing = false
+			\slot "Tapped",->
+				.editing = not .editing
+				if .editing and currentSubCam
+					emit "Scene.Edit.ShowRuler", {currentSubCam.zoom,0.5,10,1,(value)->
+						emit "Scene.ViewArea.Scale",value
+					}
+				else
+					emit "Scene.Edit.ShowRuler",nil
 
 		@gslot "Scene.ShowFix",(value)->
 			editor.xFix = false
 			editor.yFix = false
 			emit "Scene.FixChange"
 			if value
-				@xFixBtn.visible = true
-				@xFixBtn.color = ccColor3 0x00ffff
-				@xFixBtn.scaleX = 0
-				@xFixBtn.scaleY = 0
-				@xFixBtn\perform oScale 0.5,1,1,oEase.OutBack
-				@yFixBtn.visible = true
-				@yFixBtn.color = ccColor3 0x00ffff
-				@yFixBtn.scaleX = 0
-				@yFixBtn.scaleY = 0
-				@yFixBtn\perform oScale 0.5,1,1,oEase.OutBack
+				with @xFixBtn
+					.visible = true
+					.color = ccColor3 0x00ffff
+					.scaleX = 0
+					.scaleY = 0
+					\perform oScale 0.5,1,1,oEase.OutBack
+				with @yFixBtn
+					.visible = true
+					.color = ccColor3 0x00ffff
+					.scaleX = 0
+					.scaleY = 0
+					\perform oScale 0.5,1,1,oEase.OutBack
 			else
 				@xFixBtn.visible = false
 				@yFixBtn.visible = false
 
 		@gslot "Scene.Dirty",(dirty)->
-			if @menuBtn.dirty ~= dirty
-				@menuBtn.dirty = dirty
-				if dirty
-					@menuBtn.text = "Save"
-					if not @undoBtn.visible
-						@undoBtn.enabled = true
-						@undoBtn.visible = true
-						@undoBtn.scaleX = 0
-						@undoBtn.scaleY = 0
-						@undoBtn\perform oScale 0.3,1,1,oEase.OutBack
-				else
-					@menuBtn.color = ccColor3 0x00ffff
-					@menuBtn.text = "Menu"
-					if @undoBtn.visible
-						@undoBtn.enabled = false
-						@undoBtn\perform CCSequence {
-							oScale 0.3,0,0,oEase.InBack
-							CCHide!
-						}
+			with @menuBtn
+				if .dirty ~= dirty
+					.dirty = dirty
+					if dirty
+						.text = "Save"
+						with @undoBtn
+							if not .visible
+								.enabled = true
+								.visible = true
+								.scaleX = 0
+								.scaleY = 0
+								\perform oScale 0.3,1,1,oEase.OutBack
+					else
+						.color = ccColor3 0x00ffff
+						.text = "Menu"
+						with @undoBtn
+							if .visible
+								.enabled = false
+								\perform CCSequence {
+									oScale 0.3,0,0,oEase.InBack
+									CCHide!
+								}
 
 		itemChoosed = (itemData)->
+			return if isHide
 			if @camBtn.visible or @iconCam.visible
 				@iconCam.visible = false
 				@camBtn.visible = false
@@ -340,12 +324,35 @@ Class EditMenuView,
 					.scaleY = 0
 					\perform oScale 0.3,0.5,0.5,oEase.OutBack
 
+		changeDisplay = (child,hide,instant)->
+			scale = hide and 0 or 1
+			if instant
+				child.scaleX,child.scaleY = scale,scale
+			else
+				child\perform oScale 0.5,scale,scale,oEase.OutQuad
+
+		@gslot "Scene.HideEditor",(args)->
+			{hide,all} = args
+			return if isHide == hide
+			isHide = hide
+			@enabled = @camBtn.editing or not hide
+			for i = 1,#@children
+				child = @children[i]
+				switch child
+					when @camBtn
+						posX = @camBtn.editing and width-35 or width-345
+						child\perform oPos 0.5,posX,child.positionY,oEase.OutQuad
+					when @menuBtn,@undoBtn,@zoomEditBtn,@iconCam
+						if all
+							changeDisplay child,hide,instant
+						else
+							continue
+					else
+						changeDisplay child,hide,instant
+
 		@gslot "Scene.Camera.Activate",(subCam)->
-			editing = (subCam ~= nil)
-			return if editing == @camBtn.editing
-			editor.isFixed = not editing
-			@camBtn.editing = editing
-			if editing
+			editor.isFixed = not @camBtn.editing
+			if @camBtn.editing
 				with @zoomEditBtn
 					.scaleX = 0
 					.scaleY = 0
@@ -358,24 +365,10 @@ Class EditMenuView,
 				@zoomEditBtn.visible = false
 				@zoomEditBtn.editing = false
 				emit "Scene.Edit.ShowRuler",nil
-			{:width} = CCDirector.winSize
-			for i = 1,#@children
-				child = @children[i]
-				switch child
-					when @camBtn
-						posX = @camBtn.editing and width-35 or width-345
-						child\perform oPos 0.5,posX,child.positionY,oEase.OutQuad
-					when @menuBtn,@undoBtn,@zoomEditBtn,@iconCam
-						continue
-					else
-						if child.positionX < width/2
-							child\perform oPos 0.5,-child.positionX,child.positionY,oEase.OutQuad
-						else
-							child\perform oPos 0.5,width*2-child.positionX,child.positionY,oEase.OutQuad
 
 		@gslot "Scene.EditMenu.ClearSelection",clearSelection
 
-	setButtonVisible: (button,visible)=>
+	setButtonVisible:(button,visible)=>
 		return if visible == button.enabled
 		button.enabled = visible
 		if visible

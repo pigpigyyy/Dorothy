@@ -26,6 +26,8 @@ local oEditor = require("oEditor")
 local oSd = require("oEditor").oSd
 local ccBlendFunc = require("ccBlendFunc")
 local oBox = require("oBox")
+local oScale = require("oScale")
+local oEase = require("oEase")
 
 local models = nil
 
@@ -214,9 +216,8 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 	local opMenu = CCMenu()
 	opMenu.swallowTouches = true
 	opMenu.contentSize = CCSize(200,60)
-	opMenu.anchor = oVec2(1,0.5)
 	opMenu.touchPriority = CCMenu.DefaultHandlerPriority-5
-	opMenu.position = oVec2(winSize.width*0.5+borderSize.width*0.5+35,winSize.height*0.5+borderSize.height*0.5)
+	opMenu.position = oVec2(winSize.width*0.5+borderSize.width*0.5-70,winSize.height*0.5+borderSize.height*0.5)
 	panel:addChild(opMenu)
 
 	local backButton
@@ -227,7 +228,16 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 				item.enabled = false
 				opMenu.enabled = false
 				panel:hide()
-				oEditor:emit("Quit")
+				if oEditor.standAlone then
+					oEditor:emit("Quit")
+				else
+					thread(function()
+						oEditor.viewArea:originReset()
+						oEditor:hideEditor(true,false)
+						sleep(0.6)
+						oEditor:emit("Quit")
+					end)
+				end
 			end)
 		backButton.anchor = oVec2.zero
 		local btnBk = CCDrawNode()

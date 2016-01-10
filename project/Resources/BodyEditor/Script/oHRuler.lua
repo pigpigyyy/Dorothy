@@ -19,6 +19,7 @@ local cycle = require("cycle")
 
 local function oHRuler()
 	local winSize = CCDirector.winSize
+	local winHeight = winSize.height
 	local center = oVec2(winSize.width*0.5,winSize.height*0.5)
 	local rulerWidth = winSize.width
 	local rulerHeight = 30
@@ -251,6 +252,28 @@ local function oHRuler()
 	self:slot("TouchCancelled",touchEnded)
 	self:slot("TouchEnded",touchEnded)
 
+	local isHide = false
+	self:gslot("Body.hideEditor",function(args)
+		local hide,instant = unpack(args)
+		if isHide == hide then
+			return
+		end
+		isHide = hide
+		self.touchEnabled = not hide
+		if self.positionY < winHeight/2 then
+			if instant then
+				self.positionY = -self.positionY
+			else
+				self:runAction(oPos(0.5,self.positionX,-self.positionY,oEase.OutQuad))
+			end
+		else
+			if instant then
+				self.positionY = winHeight*2-self.positionY
+			else
+				self:runAction(oPos(0.5,self.positionX,winHeight*2-self.positionY,oEase.OutQuad))
+			end
+		end
+	end)
 	return self
 end
 

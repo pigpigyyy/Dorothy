@@ -337,7 +337,7 @@ void CCParticleSystemQuad::draw()
     ccGLBindTexture2D( m_pTexture->getName() );
     ccGLBlendFunc( m_tBlendFunc.src, m_tBlendFunc.dst );
 
-    CCAssert( m_uParticleIdx == m_uParticleCount, "Abnormal error in particle quad");
+    //CCAssert( m_uParticleIdx == m_uParticleCount, "Abnormal error in particle quad");
 
 #if CC_TEXTURE_ATLAS_USE_VAO
     //

@@ -296,7 +296,10 @@ Class SettingPanelView,
 
 		@gslot "Scene.DataLoaded",loadCameras
 
-		@gslot "Scene.Camera.Activate",(subCam)->
+		isHide = false
+		@gslot "Scene.HideEditor",(args)->
+			{hide} = args
+			return if isHide == hide
+			isHide = hide
 			winWidth = CCDirector.winSize.width
-			return if (subCam == nil) == (@positionX < winWidth)
 			@perform oPos 0.5,winWidth*2-@positionX,@positionY,oEase.OutQuad

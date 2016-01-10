@@ -23,6 +23,7 @@ local tolua = require("tolua")
 local CCNode = require("CCNode")
 local oEditor = require("oEditor")
 local oSd = require("oEditor").oSd
+local oPos = require("oPos")
 
 local function oViewPanel()
 	local winSize = CCDirector.winSize
@@ -38,6 +39,7 @@ local function oViewPanel()
 	local _s = oVec2.zero
 	local _v = oVec2.zero
 	local deltaMoveLength = 0
+	local isHide = false
 	local function initValues()
 		viewWidth = 0
 		viewHeight = 0
@@ -748,7 +750,6 @@ local function oViewPanel()
 		emit("Action.ImageSelected",nil)
 	end
 	panel.glow = function(self)
-		self:stopAllActions()
 		self:runAction(
 			CCSequence
 			{
@@ -769,7 +770,10 @@ local function oViewPanel()
 			stencil.scaleY = 1
 		end
 		panel.contentSize = borderSize
-		panel.position = oVec2(winSize.width-170,winSize.height-borderSize.height-10)
+		if not isHide then
+			panel.positionX = winSize.width-170
+		end
+		panel.positionY = winSize.height-borderSize.height-10
 		menu.contentSize = borderSize
 		menu.positionY = borderSize.height
 		oEditor.dirty = true
@@ -777,6 +781,20 @@ local function oViewPanel()
 		panel:updateImages(oEditor.modelData,oEditor.viewArea:getModel())
 		panel:glow()
 	end
+
+	panel:gslot("Action.hideEditor",function(args)
+		local hide,instant = unpack(args)
+		if isHide == hide then
+			return
+		end
+		isHide = hide
+		local winWidth = CCDirector.winSize.width
+		if instant then
+			panel.positionX = winWidth*2-panel.positionX
+		else
+			panel:runAction(oPos(0.5,winWidth*2-panel.positionX,panel.positionY,oEase.OutQuad))
+		end
+	end)
 
 	return panel
 end
