@@ -239,6 +239,11 @@ Class EditorView,
 				if @_bodyEditor
 					@bodyEditor.input = @gameFullPath
 					@bodyEditor.output = @gameFullPath
+				effectFile = @physicsFullPath.."list.effect"
+				if oContent\exist effectFile
+					oCache.Effect\load effectFile
+				else
+					oCache.Effect\unload!
 			else
 				@_gameFullPath = nil
 			@currentSceneFile = nil

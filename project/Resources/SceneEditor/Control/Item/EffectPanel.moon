@@ -212,9 +212,11 @@ Class EffectPanelView,
 						if name == effect
 							MessageBox text:"Name Exist!",okOnly:true
 							return
-					effectEditor = editor.effectEditor
-					effectEditor\slot("Activated")\set ->
-						effectEditor\addExistFile name
+					effectEditor = with editor.effectEditor
+						\setupEvent!
+						\slot("Activated")\set ->
+							effectEditor\addExistFile name
+						\slot "Quit",-> CCScene\back "rollIn"
 					CCScene\forward "effectEditor","rollOut"
 
 		@delBtn\slot "Tapped",->
@@ -249,7 +251,8 @@ Class EffectPanelView,
 			viewItem = @effectItems[targetItem]
 			if viewItem.isLoaded
 				@clearSelection!
-				editor\edit "Effect",targetItem
+				subEditor = editor\edit "Effect",targetItem,"rollOut","rollIn"
+				subEditor\hideEditor false,false
 			else
 				MessageBox text:"Broken Effect\nWith Data Error",okOnly:true
 

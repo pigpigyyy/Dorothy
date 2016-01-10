@@ -127,7 +127,6 @@ local function oViewArea()
 			scrollNode.scaleY = scale
 			emit("Effect.viewArea.scale",scale)
 		end
-		print(scrollNode.positionX,scrollNode.positionY)
 		xcross.positionX = -(scrollNode.positionX - origin.x)/scrollNode.scaleX
 		ycross.positionY = -(scrollNode.positionY - origin.y)/scrollNode.scaleX
 	end)
