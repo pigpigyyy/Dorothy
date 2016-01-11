@@ -33,6 +33,7 @@ Class EditorView,
 		_G.editor = @
 		builtin.editor = @
 		@slot "Cleanup",->
+			@game = nil
 			Reference.stopUpdate!
 			_G.editor = nil
 			builtin.editor = nil
@@ -59,7 +60,6 @@ Class EditorView,
 		@levelSelectionPanel = level 11
 
 		@schedule once ->
-			sleep!
 			controlNames = {
 				"ViewArea"
 				"HRuler"
@@ -74,7 +74,7 @@ Class EditorView,
 				control = Control!
 				@[name\sub(1,1)\lower!..name\sub(2,-1)] = control
 				@addChild control
-			sleep!
+				sleep!
 			resPath = "SceneEditor/Demo/DemoGame"
 			writePath = @gamesFullPath.."DemoGame"
 			if not oContent\exist(writePath) and oContent\exist(resPath)
@@ -224,6 +224,7 @@ Class EditorView,
 	game:property => @_gameName,
 		(name)=>
 			oContent\removeSearchPath @_gameFullPath if @_gameFullPath
+			oCache\clear!
 			@_gameName = name
 			if name
 				@_gameFullPath = @gamesFullPath..name.."/"
@@ -240,14 +241,10 @@ Class EditorView,
 					@bodyEditor.input = @gameFullPath
 					@bodyEditor.output = @gameFullPath
 				effectFile = @physicsFullPath.."list.effect"
-				if oContent\exist effectFile
-					oCache.Effect\load effectFile
-				else
-					oCache.Effect\unload!
+				oCache.Effect\load effectFile if oContent\exist effectFile
 			else
 				@_gameFullPath = nil
 			@currentSceneFile = nil
-			oCache\clear!
 			Reference.update!
 
 	eachSceneItem:(handler)=>

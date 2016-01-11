@@ -325,11 +325,16 @@ Class EditMenuView,
 					\perform oScale 0.3,0.5,0.5,oEase.OutBack
 
 		changeDisplay = (child,hide,instant)->
-			scale = hide and 0 or 1
-			if instant
-				child.scaleX,child.scaleY = scale,scale
+			if child.positionX < width/2
+				if instant
+					child.positionX = -child.positionX
+				else
+					child\perform oPos 0.5,-child.positionX,child.positionY,oEase.OutQuad
 			else
-				child\perform oScale 0.5,scale,scale,oEase.OutQuad
+				if instant
+					child.positionY = -child.positionY
+				else
+					child\perform oPos 0.5,width*2-child.positionX,child.positionY,oEase.OutQuad
 
 		@gslot "Scene.HideEditor",(args)->
 			{hide,all} = args
