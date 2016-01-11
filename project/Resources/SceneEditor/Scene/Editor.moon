@@ -785,14 +785,13 @@ Class EditorView,
 				if not subEditor.isLoaded
 					subEditor.visible = false
 					@addChild subEditor
-					sleep 0.5
+					sleep 0.6 -- wait for Scene.ViewPanel.Pick to end
 					wait -> not subEditor.isLoaded
 					sleep!
 					@removeChild subEditor,false
 					subEditor.visible = true
-					sleep!
 				else
-					sleep 0.6
+					sleep 0.6 -- wait for Scene.ViewPanel.Pick to end
 				-- save some editor data
 				item = @getItem itemData
 				parentData = @getData item.parent
