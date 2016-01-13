@@ -1,5 +1,5 @@
 Dorothy!
-CCScene = require "CCSceneEx"
+CCScene = require "Lib.CCSceneEx"
 oContent\addSearchPath "SceneEditor"
 
 Editor = require "Scene.Editor"

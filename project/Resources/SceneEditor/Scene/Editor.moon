@@ -3,8 +3,8 @@ EditorView = require "View.Scene.Editor"
 SelectionPanel = require "Control.Basic.SelectionPanel"
 Model = require "Data.Model"
 Reference = require "Data.Reference"
-CCScene = require "CCSceneEx"
-oBody = require "oBodyEx"
+CCScene = require "Lib.CCSceneEx"
+oBody = require "Lib.oBodyEx"
 
 Class EditorView,
 	__init: =>

@@ -1,7 +1,5 @@
 Dorothy!
 
-oBody = require "oBodyEx"
-
 Point = (x,y)-> -> oVec2 x or 0,y or 0
 Rect = (x,y,width,height)-> -> CCRect x or 0,y or 0,width or 0,height or 0
 

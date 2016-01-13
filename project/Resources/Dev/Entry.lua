@@ -141,11 +141,17 @@ local gcButton = oButton("GC",17,60,false,
 gcButton.anchor = oVec2.zero
 opMenu:addChild(gcButton)
 
+local allowedUseOfGlobals =
+{
+	"editor"
+}
+allowedUseOfGlobals = Set(allowedUseOfGlobals)
+
 local function LintMoonGlobals(moonCodes,entry)
 	local globals = LintGlobal(moonCodes)
 	local requireModules = {}
 	for name,_ in pairs(globals) do
-		if name ~= "editor" then
+		if not allowedUseOfGlobals[name] then
 			if builtin[name] then
 				table.insert(requireModules,string.format("local %s = require(\"%s\")",name,name))
 			else

@@ -1,7 +1,10 @@
 --[[
 CCScene:transition("cf",{"crossFade",1,CCOrientation.Left})
 CCScene:add("firstScene",CCScene())
-CCScene:run("firstScene","cf")
+CCScene:run("firstScene","fadeIn")
+CCScene:forward("firstScene","cf")
+CCScene:back("crossFade")
+CCScene:clearHistory()
 --]]
 local CCScene = require("CCScene")
 local CCDirector = require("CCDirector")
