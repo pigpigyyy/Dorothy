@@ -416,7 +416,7 @@ Class ViewPanelView,
 			@updateLine! if parentData.typeName ~= "PlatformWorld"
 			index
 
-		@gslot "Scene.ViewArea.Tap",(args using nil)->
+		@gslot "Scene.ViewArea.Tap",(args)->
 			{uiPos,worldPos} = args
 			-- pick item
 			if not editor.selectedType
@@ -482,7 +482,6 @@ Class ViewPanelView,
 					newData.name = editor\getUsableName newData.name
 				when "World"
 					newData = Model.World!
-					newData.offset = oVec2 200,200
 					newData.name = editor\getUsableName newData.name
 
 			insertAtParentLevel = ->
@@ -499,8 +498,8 @@ Class ViewPanelView,
 							insertAtParentLevel!
 						else
 							insertAtChildLevel!
-					{:width,:height} = CCDirector.winSize
-					length = oVec2(width,height).length
+					{width:w,height:h} = CCDirector.winSize
+					length = oVec2(w,h).length
 					circle = with CCDrawNode!
 						\drawDot oVec2.zero,5,ccColor4 0xff00ffff
 						.position = pos

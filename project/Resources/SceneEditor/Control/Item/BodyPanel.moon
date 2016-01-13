@@ -92,13 +92,11 @@ Class BodyPanelView,
 				if @bodies
 					bodiesToAdd,bodiesToDel = CompareTable @bodies,bodies
 					for body in *bodiesToDel
-						print "to del",body
 						item = @bodyItems[body]
 						item.parent\removeChild item
 						@bodyItems[body] = nil
 						@playUpdateHint!
 					for body in *bodiesToAdd
-						print "to add",body
 						viewItem = BodyView {
 							width: 100
 							height: 100

@@ -650,7 +650,7 @@ Class EditorView,
 			if @sceneData.children
 				lastPos = camera.position
 				camera.position = oVec2.zero
-				for index,_ in ipairs @sceneData.children
+				for index,layerData in ipairs @sceneData.children
 					scene\setLayerRatio index,oVec2(layerData.ratioX,layerData.ratioY)
 				camera.position = lastPos
 			if @sceneData.camera.boundary

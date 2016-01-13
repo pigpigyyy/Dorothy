@@ -141,12 +141,16 @@ local gcButton = oButton("GC",17,60,false,
 gcButton.anchor = oVec2.zero
 opMenu:addChild(gcButton)
 
-local function LintMoonGlobals(moonCodes)
+local function LintMoonGlobals(moonCodes,entry)
 	local globals = LintGlobal(moonCodes)
 	local requireModules = {}
 	for name,_ in pairs(globals) do
-		if builtin[name] then
-			table.insert(requireModules,string.format("local %s = require(\"%s\")",name,name))
+		if name ~= "editor" then
+			if builtin[name] then
+				table.insert(requireModules,string.format("local %s = require(\"%s\")",name,name))
+			else
+				error("Used invalid global value \""..name.."\" in "..entry)
+			end
 		end
 	end
 	return table.concat(requireModules,"\n")
@@ -173,7 +177,7 @@ local function compile(dir,clean,minify)
 			if not clean then
 				local entry = dir.."/"..item
 				local moonCodes = oContent:loadFile(entry)
-				local requires = LintMoonGlobals(moonCodes)
+				local requires = LintMoonGlobals(moonCodes,entry)
 				local codes,err = moonscript.to_lua(moonCodes)
 				if not codes then
 					print("Compile errors in "..entry)
