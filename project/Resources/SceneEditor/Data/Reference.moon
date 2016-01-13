@@ -209,7 +209,6 @@ removeRef = (item)->
 	:removeRef
 	:refreshRef
 	:isUpdating
-	:updateSceneRef
 	:addSceneItemRef
 	:removeSceneItemRef
 	:addSceneRef

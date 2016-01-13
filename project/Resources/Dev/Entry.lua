@@ -4,10 +4,10 @@ oContent:addSearchPath("Lib")
 local moonscript = require("moonscript")
 local util = require("moonscript.util")
 local errors = require("moonscript.errors")
+local Set = require("moonscript.data").Set
 
 local oButton = require("ActionEditor.Script.oButton")
 local oSelectionPanel = require("ActionEditor.Script.oSelectionPanel")
-local Set = require("SceneEditor.Data.Utils").Set
 local CCDirector = require("CCDirector")
 local CCMenu = require("CCMenu")
 local CCSize = require("CCSize")
@@ -28,6 +28,7 @@ local CCNode = require("CCNode")
 local CCLabelTTF = require("CCLabelTTF")
 local ccColor3 = require("ccColor3")
 local CCLayer = require("CCLayer")
+local LintGlobal = require("LintGlobal")
 
 local traceback = debug.traceback
 debug.traceback = function(err)
@@ -140,6 +141,17 @@ local gcButton = oButton("GC",17,60,false,
 gcButton.anchor = oVec2.zero
 opMenu:addChild(gcButton)
 
+local function LintMoonGlobals(moonCodes)
+	local globals = LintGlobal(moonCodes)
+	local requireModules = {}
+	for name,_ in pairs(globals) do
+		if builtin[name] then
+			table.insert(requireModules,string.format("local %s = require(\"%s\")",name,name))
+		end
+	end
+	return table.concat(requireModules,"\n")
+end
+
 local totalFiles = 0
 local function compile(dir,clean,minify)
 	local ParseLua = require("luaminify.ParseLua").ParseLua
@@ -161,12 +173,14 @@ local function compile(dir,clean,minify)
 			if not clean then
 				local entry = dir.."/"..item
 				local moonCodes = oContent:loadFile(entry)
+				local requires = LintMoonGlobals(moonCodes)
 				local codes,err = moonscript.to_lua(moonCodes)
 				if not codes then
 					print("Compile errors in "..entry)
 					print(err)
 					return false
 				else
+					codes = requires..codes:gsub("Dorothy%(%)","")
 					if minify then
 						local st, ast = ParseLua(codes)
 						if not st then

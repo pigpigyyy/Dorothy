@@ -3,6 +3,8 @@ EditorView = require "View.Scene.Editor"
 SelectionPanel = require "Control.Basic.SelectionPanel"
 Model = require "Data.Model"
 Reference = require "Data.Reference"
+CCScene = require "CCSceneEx"
+oBody = require "oBodyEx"
 
 Class EditorView,
 	__init: =>
@@ -380,7 +382,7 @@ Class EditorView,
 					break
 		table.insert parentData.children,index,newData
 		if targetData
-			parent = editor\getItem parentData
+			parent = @getItem parentData
 			child = newData parent,index
 			if parentData.typeName == "PlatformWorld"
 				if index < #parentData.children
@@ -527,7 +529,7 @@ Class EditorView,
 		if index < count
 			table.remove parentData.children,index
 			table.insert parentData.children,itemData
-			parent = editor\getItem parentData
+			parent = @getItem parentData
 			if parentData.typeName == "PlatformWorld"
 				nextIndex = index+1
 				while nextIndex <= count
@@ -554,7 +556,7 @@ Class EditorView,
 	scene:property => @_sceneName,
 		(value)=>
 			@currentSceneFile = if value
-				editor.sceneFolder..value..".scene"
+				@sceneFolder..value..".scene"
 			else
 				nil
 
@@ -573,7 +575,7 @@ Class EditorView,
 			emit "Scene.DataLoaded",@sceneData
 
 	newScene:(sceneName)=>
-		sceneFile = editor.sceneFolder..sceneName..".scene"
+		sceneFile = @sceneFolder..sceneName..".scene"
 		return if oContent\exist sceneFile
 		@sceneData = with Model.PlatformWorld!
 			.camera = Model.Camera!
@@ -648,7 +650,7 @@ Class EditorView,
 			if @sceneData.children
 				lastPos = camera.position
 				camera.position = oVec2.zero
-				for index,layerData in ipairs @sceneData.children
+				for index,_ in ipairs @sceneData.children
 					scene\setLayerRatio index,oVec2(layerData.ratioX,layerData.ratioY)
 				camera.position = lastPos
 			if @sceneData.camera.boundary
@@ -753,14 +755,14 @@ Class EditorView,
 				nil,nil
 
 	edit:(typeName,file,transitionIn="",transitionOut="")=>
-		editor,editorName = @getSubEditor typeName
-		if editor and editorName
-			with editor
+		subEditor,subEditorName = @getSubEditor typeName
+		if subEditor and subEditorName
+			with subEditor
 				\setupEvent!
 				\slot "Activated",-> \edit file
 				\slot "Quit",-> CCScene\back transitionOut
-			CCScene\forward editorName,transitionIn
-		editor
+			CCScene\forward subEditorName,transitionIn
+		subEditor
 
 	editCurrentItemInPlace:=>
 		itemData = @currentData
@@ -791,8 +793,8 @@ Class EditorView,
 				-- save some editor data
 				item = @getItem itemData
 				parentData = @getData item.parent
-				lastCamPos = editor.camPos
-				lastCamZoom = editor.scale
+				lastCamPos = @camPos
+				lastCamZoom = @scale
 				layerZoom = parentData.zoom or 1
 				layerOffset = parentData.offset or oVec2.zero
 				display = itemData.display

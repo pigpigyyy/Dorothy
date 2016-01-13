@@ -1,6 +1,5 @@
 Dorothy!
 SpriteViewView = require "View.Control.Item.SpriteView"
-oBody = require "oBodyEx"
 oStar = require "EffectEditor.Script.oStar"
 
 -- [signals]

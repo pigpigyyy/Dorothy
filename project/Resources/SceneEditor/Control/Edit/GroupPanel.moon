@@ -1,6 +1,5 @@
 Dorothy!
 GroupPanelView = require "View.Control.Edit.GroupPanel"
-TextBox = require "Control.Basic.TextBox"
 MessageBox = require "Control.Basic.MessageBox"
 
 Class GroupPanelView,

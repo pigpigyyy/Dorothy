@@ -1,6 +1,5 @@
 Dorothy!
 ContactPanelView = require "View.Control.Edit.ContactPanel"
-Model = require "Data.Model"
 Button = require "Control.Basic.Button"
 
 Class ContactPanelView,

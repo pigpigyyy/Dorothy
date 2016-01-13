@@ -1,6 +1,5 @@
 Dorothy!
 EditMenuView = require "View.Control.Operation.EditMenu"
-SelectionPanel = require "Control.Basic.SelectionPanel"
 
 -- [no signals]
 -- [no params]
@@ -323,17 +322,11 @@ Class EditMenuView,
 					.scaleY = 0
 					\perform oScale 0.3,0.5,0.5,oEase.OutBack
 
-		changeDisplay = (child,hide,instant)->
+		changeDisplay = (child)->
 			if child.positionX < width/2
-				if instant
-					child.positionX = -child.positionX
-				else
-					child\perform oPos 0.5,-child.positionX,child.positionY,oEase.OutQuad
+				child\perform oPos 0.5,-child.positionX,child.positionY,oEase.OutQuad
 			else
-				if instant
-					child.positionY = -child.positionY
-				else
-					child\perform oPos 0.5,width*2-child.positionX,child.positionY,oEase.OutQuad
+				child\perform oPos 0.5,width*2-child.positionX,child.positionY,oEase.OutQuad
 
 		@gslot "Scene.HideEditor",(args)->
 			{hide,all} = args
@@ -348,15 +341,15 @@ Class EditMenuView,
 						child\perform oPos 0.5,posX,child.positionY,oEase.OutQuad
 					when @menuBtn,@undoBtn,@zoomEditBtn,@iconCam
 						if all
-							changeDisplay child,hide,instant
+							changeDisplay child
 						else
 							continue
 					else
-						changeDisplay child,hide,instant
+						changeDisplay child
 
 		@gslot "Scene.Camera.Activate",(subCam)->
 			editor.isFixed = not @camBtn.editing
-			if @camBtn.editing
+			if subCam
 				with @zoomEditBtn
 					.scaleX = 0
 					.scaleY = 0
