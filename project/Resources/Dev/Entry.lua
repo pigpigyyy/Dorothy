@@ -5,6 +5,7 @@ local moonscript = require("moonscript")
 local util = require("moonscript.util")
 local errors = require("moonscript.errors")
 local Set = require("moonscript.data").Set
+local LintGlobal = require("LintGlobal")
 
 local oButton = require("ActionEditor.Script.oButton")
 local oSelectionPanel = require("ActionEditor.Script.oSelectionPanel")
@@ -28,7 +29,9 @@ local CCNode = require("CCNode")
 local CCLabelTTF = require("CCLabelTTF")
 local ccColor3 = require("ccColor3")
 local CCLayer = require("CCLayer")
-local LintGlobal = require("LintGlobal")
+local builtin = require("builtin")
+local ubox = require("ubox")
+local xmlToLua = require("xmlToLua")
 
 local traceback = debug.traceback
 debug.traceback = function(err)
@@ -54,8 +57,8 @@ local require = function(name)
 	end
 	return result
 end
-_G["require"] = require
-builtin["require"] = require
+_G.require = require
+builtin.require = require
 
 local scene = CCScene()
 
@@ -112,7 +115,7 @@ local gcButton = oButton("GC",17,60,false,
 		end
 		print("Possibly Leaked Objects:")
 		local leak = false
-		for k,v in pairs(itemMap) do
+		for k,_ in pairs(itemMap) do
 			if not startUboxItems[k] then
 				startUboxItems[k] = 0
 			end
@@ -163,6 +166,8 @@ local function LintMoonGlobals(moonCodes,entry)
 end
 
 local totalFiles = 0
+local totalMoonTime = 0
+local totalXmlTime = 0
 local function compile(dir,clean,minify)
 	local ParseLua = require("luaminify.ParseLua").ParseLua
 	local FormatMini = require("luaminify.FormatMini")
@@ -184,7 +189,9 @@ local function compile(dir,clean,minify)
 				local entry = dir.."/"..item
 				local moonCodes = oContent:loadFile(entry)
 				local requires = LintMoonGlobals(moonCodes,entry)
+				local startTime = CCDirector.eclapsedInterval
 				local codes,err = moonscript.to_lua(moonCodes)
+				totalMoonTime = totalMoonTime + CCDirector.eclapsedInterval - startTime
 				if not codes then
 					print("Compile errors in "..entry)
 					print(err)
@@ -214,7 +221,9 @@ local function compile(dir,clean,minify)
 			if not clean then
 				local entry = dir.."/"..item
 				local xmlCodes = oContent:loadFile(entry)
+				local startTime = CCDirector.eclapsedInterval
 				local codes = xmlToLua(xmlCodes)
+				totalXmlTime = totalXmlTime + CCDirector.eclapsedInterval - startTime
 				if not codes then
 					print("Compile errors in "..entry)
 					return false
@@ -243,18 +252,22 @@ local function compile(dir,clean,minify)
 	return true
 end
 
-local compileButton = oButton("Compile",13,60,false,70,70,function()
+local function doCompile(minify)
 	totalFiles = 0
-	compile(".",false)
-	print(string.format("Compile done. %d files in total.",totalFiles))
+	totalMoonTime = 0
+	totalXmlTime = 0
+	compile(".",false,minify)
+	print(string.format("Compile "..(minify and "and minify " or "").."done. %d files in total.\nCompile time, Moon %.3fs, Xml %.3fs.",totalFiles,totalMoonTime,totalXmlTime))
+end
+
+local compileButton = oButton("Compile",13,60,false,70,70,function()
+	doCompile(false)
 end)
 compileButton.anchor = oVec2.zero
 opMenu:addChild(compileButton)
 
 compileButton = oButton("Compile\nMinify",13,60,false,70,0,function()
-	totalFiles = 0
-	compile(".",false,true)
-	print(string.format("Compile and Minify done. %d files in total.",totalFiles))
+	doCompile(true)
 end)
 compileButton.anchor = oVec2.zero
 opMenu:addChild(compileButton)

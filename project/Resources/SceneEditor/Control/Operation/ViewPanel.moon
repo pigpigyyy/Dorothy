@@ -158,7 +158,7 @@ Class ViewPanelView,
 			item.parentData = parentData
 			item\slot "Tapped",itemTapped
 			@menu\addChild item
-			item.enableChecker = switch data.typeName
+			item.enableChecker = switch text
 				when "Camera","Scene" then false
 				else true
 			if item.enableChecker

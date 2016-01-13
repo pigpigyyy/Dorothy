@@ -31,6 +31,7 @@ Class EditorView,
 		@isFixed = true
 		@camPos = oVec2 width/2,height/2
 
+		-- do some hack and I know what I`m doing.
 		rawset _G,"editor",@
 		rawset builtin,"editor",@
 		@slot "Cleanup",->

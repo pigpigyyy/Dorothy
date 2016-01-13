@@ -477,7 +477,12 @@ _G.Dorothy = Dorothy
 builtin.Dorothy = Dorothy
 
 setmetatable(package.loaded,{__index=builtin})
-setmetatable(builtin,{__newindex=disallowAssignGlobal})
+
+local builtinEnvMeta = {
+	__newindex = disallowAssignGlobal
+}
+setmetatable(_G,builtinEnvMeta)
+setmetatable(builtin,builtinEnvMeta)
 
 collectgarbage("setpause", 100)
 collectgarbage("setstepmul", 5000)

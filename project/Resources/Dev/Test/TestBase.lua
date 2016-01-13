@@ -1,18 +1,20 @@
-Dorothy()
-local class,_,classfield = unpack(require("class"))
+local Class = require("Class")
+local CCScene = require("CCScene")
+local classfield = require("classfield")
+local CCDirector = require("CCDirector")
 
 --[[
 Usage:
 -- Extend TestBase and override function run()
 
-local MyTest = class(TestBase)
+local MyTest = Class(TestBase)
 
 function MyTest:run()
 	print("Test is running.")
 end
 --]]
 
-local TestBase = class(CCScene,
+local TestBase = Class(CCScene,
 {
 	isTest = classfield(function()
 		return true
