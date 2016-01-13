@@ -1,2 +1,4 @@
-$#include "LuaCocos2d.h"
-$pfile "Script.lua"
+$#include "LuaBinding.h"
+
+$lfile "Class.lua"
+$lfile "Init.lua"

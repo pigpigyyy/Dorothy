@@ -1,4 +1,4 @@
-Class,property = unpack require "class"
+Dorothy!
 NumberDotView = require "View.Control.Item.NumberDot"
 
 -- [params]

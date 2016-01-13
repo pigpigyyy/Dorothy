@@ -1,5 +1,4 @@
 Dorothy!
-Class,property = unpack require "class"
 OperationPanelView = require "View.Control.Operation.OperationPanel"
 
 -- [no signals]

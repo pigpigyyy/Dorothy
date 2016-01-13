@@ -1,5 +1,4 @@
 Dorothy!
-Class = unpack require "class"
 GroupPanelView = require "View.Control.Edit.GroupPanel"
 TextBox = require "Control.Basic.TextBox"
 MessageBox = require "Control.Basic.MessageBox"

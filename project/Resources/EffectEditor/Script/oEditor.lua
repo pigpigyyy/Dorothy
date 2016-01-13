@@ -1,15 +1,16 @@
 local require = using("EffectEditor.Script")
-local CCScene = require("CCScene")
-local CCMenu = require("CCMenu")
-local oContent = require("oContent")
 local CCDirector = require("CCDirector")
+local CCScene = require("CCScene")
+local oContent = require("oContent")
+local CCMenu = require("CCMenu")
 local oVec2 = require("oVec2")
 local oCache = require("oCache")
-local oRoutine = require("oRoutine")
-local once = require("once")
+local emit = require("emit")
 local CCDictionary = require("CCDictionary")
 local CCRect = require("CCRect")
-local emit = require("emit")
+local once = require("once")
+local oRoutine = require("oRoutine")
+local sleep = require("sleep")
 
 local winSize = CCDirector.winSize
 
@@ -257,6 +258,7 @@ local controls =
 	"oFrameViewer",
 }
 oEditor:schedule(once(function()
+	local require = using("EffectEditor.Script")
 	for index,name in ipairs(controls) do
 		local createFunc = require(name)
 		coroutine.yield()

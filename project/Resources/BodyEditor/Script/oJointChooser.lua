@@ -5,16 +5,16 @@ local oSelectionPanel = require("oSelectionPanel")
 local CCDrawNode = require("CCDrawNode")
 local oVec2 = require("oVec2")
 local ccColor4 = require("ccColor4")
-local oEditor = require("oEditor")
 local CCLabelTTF = require("CCLabelTTF")
 local ccColor3 = require("ccColor3")
 local oOpacity = require("oOpacity")
 local oButton = require("oButton")
+local oEditor = require("oEditor")
+local emit = require("emit")
 local CCSequence = require("CCSequence")
 local CCDelay = require("CCDelay")
 local CCCall = require("CCCall")
 local CCMenu = require("CCMenu")
-local emit = require("emit")
 	
 local joints =
 {

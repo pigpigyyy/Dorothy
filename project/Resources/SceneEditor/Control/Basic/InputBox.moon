@@ -1,11 +1,4 @@
-CCDirector = require "CCDirector"
-oOpacity = require "oOpacity"
-CCSequence = require "CCSequence"
-CCSpawn = require "CCSpawn"
-oScale = require "oScale"
-oEase = require "oEase"
-CCCall = require "CCCall"
-Class = unpack require "class"
+Dorothy!
 InputBoxView = require "View.Control.Basic.InputBox"
 
 -- [signals]

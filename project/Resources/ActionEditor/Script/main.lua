@@ -1,6 +1,6 @@
 local require = using("ActionEditor.Script")
-local CCDirector = require("CCDirector")
 local oEditor = require("oEditor")
+local CCDirector = require("CCDirector")
 
 oEditor.quitable = CCDirector.sceneStackSize > 0
 oEditor:slot("Quit",function()

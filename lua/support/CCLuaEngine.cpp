@@ -26,7 +26,7 @@
 #include "cocos2d.h"
 #include "cocoa/CCArray.h"
 #include "basics/CCScheduler.h"
-#include "LuaCocos2d.h"
+#include "LuaBinding.h"
 #include "DorothyXml.h"
 #include "DorothyModule.h"
 
@@ -104,7 +104,7 @@ static int cclua_loadfile(lua_State* L, const string& file)
 	}
 	else
 	{
-		string extension = oString::toLower(filename.substr(pos+1));
+		string extension = oString::toLower(filename.substr(pos + 1));
 		isXml = extension == "xml";
 		if (!isXml &&
 			extension != "lua" &&
@@ -141,11 +141,11 @@ static int cclua_loadfile(lua_State* L, const string& file)
 	{
 		if (luaL_loadbuffer(L, codeBuffer, codeBufferSize, filename.c_str()) != 0)
 		{
-			delete [] codeBuffer;
+			delete[] codeBuffer;
 			luaL_error(L, "error loading module %s from file %s :\n\t%s",
 				lua_tostring(L, 1), filename.c_str(), lua_tostring(L, -1));
 		}
-		if (!isXml) delete [] codeBuffer;
+		if (!isXml) delete[] codeBuffer;
 	}
 	else luaL_error(L, "can not get file data of %s", filename.c_str());
 
@@ -199,7 +199,7 @@ static int cclua_doXml(lua_State* L)
 			lua_tostring(L, 1), "xml", lua_tostring(L, -1));
 	}
 	int top = lua_gettop(L) - 1;
-	CCLuaEngine::call(L,0, LUA_MULTRET);
+	CCLuaEngine::call(L, 0, LUA_MULTRET);
 	int newTop = lua_gettop(L);
 	return newTop - top;
 }
@@ -251,7 +251,7 @@ CCLuaEngine::CCLuaEngine()
 	cclua_loadlibs(L);
 	luaopen_lpeg(L);
 	toluafix_open(L);
-	tolua_Cocos2d_open(L);
+	tolua_LuaBinding_open(L);
 
 	// Register our version of the global "print" function
 	const luaL_reg global_functions[] =
@@ -270,25 +270,25 @@ CCLuaEngine::CCLuaEngine()
 	addLuaLoader(cclua_loader);
 
 	tolua_beginmodule(L, 0);//stack: package.loaded
-		tolua_beginmodule(L, "CCNode");
-			tolua_function(L, "gslot", CCNode_gslot);
-			tolua_function(L, "slot", CCNode_slot);
-			tolua_function(L, "emit", CCNode_emit);
-			tolua_function(L, "traverse", CCNode_traverse);
-			tolua_function(L, "eachChild", CCNode_eachChild);
-		tolua_endmodule(L);
-		tolua_beginmodule(L, "CCDictionary");//stack: package.loaded CCDictionary
-			tolua_variable(L, "randomObject", CCDictionary_randomObject, nullptr);
-			tolua_function(L, "set", CCDictionary_set);
-			tolua_function(L, "get", CCDictionary_get);
-			tolua_function(L, "each", CCDictionary_each);
-		tolua_endmodule(L);
-		tolua_beginmodule(L, "CCArray");
-			tolua_function(L, "each", CCArray_each);
-		tolua_endmodule(L);
-		tolua_beginmodule(L, "CCTextureCache");
-			tolua_function(L, "loadAsync", CCTextureCache_loadAsync);
-		tolua_endmodule(L);
+	tolua_beginmodule(L, "CCNode");
+	tolua_function(L, "gslot", CCNode_gslot);
+	tolua_function(L, "slot", CCNode_slot);
+	tolua_function(L, "emit", CCNode_emit);
+	tolua_function(L, "traverse", CCNode_traverse);
+	tolua_function(L, "eachChild", CCNode_eachChild);
+	tolua_endmodule(L);
+	tolua_beginmodule(L, "CCDictionary");//stack: package.loaded CCDictionary
+	tolua_variable(L, "randomObject", CCDictionary_randomObject, nullptr);
+	tolua_function(L, "set", CCDictionary_set);
+	tolua_function(L, "get", CCDictionary_get);
+	tolua_function(L, "each", CCDictionary_each);
+	tolua_endmodule(L);
+	tolua_beginmodule(L, "CCArray");
+	tolua_function(L, "each", CCArray_each);
+	tolua_endmodule(L);
+	tolua_beginmodule(L, "CCTextureCache");
+	tolua_function(L, "loadAsync", CCTextureCache_loadAsync);
+	tolua_endmodule(L);
 	tolua_endmodule(L);
 
 	tolua_LuaCode_open(L);
@@ -414,23 +414,23 @@ int CCLuaEngine::executeNodeEvent(CCNode* pNode, int nAction)
 	const char* name = nullptr;
 	switch (nAction)
 	{
-		case CCNode::Enter:
-			name = oSlotList::Entering;
-			break;
-		case CCNode::EnterTransitionDidFinish:
-			name = oSlotList::Entered;
-			break;
-		case CCNode::Exit:
-			name = oSlotList::Exited;
-			break;
-		case CCNode::ExitTransitionDidStart:
-			name = oSlotList::Exiting;
-			break;
-		case CCNode::Cleanup:
-			name = oSlotList::Cleanup;
-			break;
-		default:
-			break;
+	case CCNode::Enter:
+		name = oSlotList::Entering;
+		break;
+	case CCNode::EnterTransitionDidFinish:
+		name = oSlotList::Entered;
+		break;
+	case CCNode::Exit:
+		name = oSlotList::Exited;
+		break;
+	case CCNode::ExitTransitionDidStart:
+		name = oSlotList::Exiting;
+		break;
+	case CCNode::Cleanup:
+		name = oSlotList::Cleanup;
+		break;
+	default:
+		break;
 	}
 	oSlotList* slotList = CCNode_tryGetSlotList(pNode, name);
 	if (slotList)
@@ -453,17 +453,17 @@ int CCLuaEngine::executeMenuItemEvent(int eventType, CCMenuItem* menuItem)
 	const char* name = nullptr;
 	switch (eventType)
 	{
-		case CCMenuItem::TapBegan:
-			name = oSlotList::TapBegan;
-    		break;
-		case CCMenuItem::TapEnded:
-			name = oSlotList::TapEnded;
-    		break;
-		case CCMenuItem::Tapped:
-			name = oSlotList::Tapped;
-    		break;
-		default:
-			break;
+	case CCMenuItem::TapBegan:
+		name = oSlotList::TapBegan;
+		break;
+	case CCMenuItem::TapEnded:
+		name = oSlotList::TapEnded;
+		break;
+	case CCMenuItem::Tapped:
+		name = oSlotList::Tapped;
+		break;
+	default:
+		break;
 	}
 	oSlotList* slotList = CCNode_tryGetSlotList(menuItem, name);
 	if (slotList)
@@ -487,20 +487,20 @@ int CCLuaEngine::executeLayerTouchEvent(CCLayer* layer, int eventType, CCTouch* 
 	const char* name = nullptr;
 	switch (eventType)
 	{
-		case CCTouch::Began:
-			name = oSlotList::TouchBegan;
-    		break;
-		case CCTouch::Moved:
-			name = oSlotList::TouchMoved;
-			break;
-		case CCTouch::Ended:
-			name = oSlotList::TouchEnded;
-    		break;
-		case CCTouch::Cancelled:
-			name = oSlotList::TouchCancelled;
-    		break;
-		default:
-			break;
+	case CCTouch::Began:
+		name = oSlotList::TouchBegan;
+		break;
+	case CCTouch::Moved:
+		name = oSlotList::TouchMoved;
+		break;
+	case CCTouch::Ended:
+		name = oSlotList::TouchEnded;
+		break;
+	case CCTouch::Cancelled:
+		name = oSlotList::TouchCancelled;
+		break;
+	default:
+		break;
 	}
 	oSlotList* slotList(CCNode_tryGetSlotList(layer, name));
 	if (slotList)
@@ -517,20 +517,20 @@ int CCLuaEngine::executeLayerTouchesEvent(CCLayer* layer, int eventType, CCSet* 
 	const char* name = nullptr;
 	switch (eventType)
 	{
-		case CCTouch::Began:
-			name = oSlotList::TouchBegan;
-    		break;
-		case CCTouch::Moved:
-			name = oSlotList::TouchMoved;
-			break;
-		case CCTouch::Ended:
-			name = oSlotList::TouchEnded;
-    		break;
-		case CCTouch::Cancelled:
-			name = oSlotList::TouchCancelled;
-    		break;
-		default:
-			break;
+	case CCTouch::Began:
+		name = oSlotList::TouchBegan;
+		break;
+	case CCTouch::Moved:
+		name = oSlotList::TouchMoved;
+		break;
+	case CCTouch::Ended:
+		name = oSlotList::TouchEnded;
+		break;
+	case CCTouch::Cancelled:
+		name = oSlotList::TouchCancelled;
+		break;
+	default:
+		break;
 	}
 	oSlotList* slotList = CCNode_tryGetSlotList(layer, name);
 	if (slotList)
@@ -554,14 +554,14 @@ int CCLuaEngine::executeLayerKeypadEvent(CCLayer* layer, int eventType)
 	const char* name = nullptr;
 	switch (eventType)
 	{
-		case CCKeypad::Menu:
-			name = oSlotList::KeyMenu;
-    		break;
-		case CCKeypad::Back:
-			name = oSlotList::KeyBack;
-    		break;
-		default:
-			break;
+	case CCKeypad::Menu:
+		name = oSlotList::KeyMenu;
+		break;
+	case CCKeypad::Back:
+		name = oSlotList::KeyBack;
+		break;
+	default:
+		break;
 	}
 	oSlotList* slotList(CCNode_tryGetSlotList(layer, name));
 	if (slotList)

@@ -2,15 +2,16 @@ local require = using("ActionEditor.Script")
 local CCScene = require("CCScene")
 local oContent = require("oContent")
 local oVec2 = require("oVec2")
-local oRoutine = require("oRoutine")
-local once = require("once")
-local CCSize = require("CCSize")
 local oCache = require("oCache")
+local CCSize = require("CCSize")
+local CCSpawn = require("CCSpawn")
 local oOpacity = require("oOpacity")
 local oEase = require("oEase")
-local CCSpawn = require("CCSpawn")
 local oScale = require("oScale")
 local emit = require("emit")
+local once = require("once")
+local thread = require("thread")
+local sleep = require("sleep")
 
 local oSd =
 {
@@ -226,6 +227,7 @@ local controls =
 }
 
 oEditor:schedule(once(function() -- load UI asynchronously
+	local require = using("ActionEditor.Script")
 	for i = 1,#controls do
 		local controlName = controls[i]
 		controls[i] = require(controlName) -- load codes
@@ -268,12 +270,12 @@ oEditor:slot("Entering",function()
 	if oEditor.isLoaded then
 		oEditor:emit("Activated")
 	else
-		oRoutine(once(function()
+		thread(function()
 			repeat
-				coroutine.yield()
+				sleep()
 			until oEditor.isLoaded
 			oEditor:emit("Activated")
-		end))
+		end)
 	end
 end)
 

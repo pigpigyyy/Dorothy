@@ -1,14 +1,4 @@
-CCTextFieldTTF = require "CCTextFieldTTF"
-oVec2 = require "oVec2"
-oLine = require "oLine"
-ccColor4 = require "ccColor4"
-CCRepeatForever = require "CCRepeatForever"
-CCSequence = require "CCSequence"
-CCShow = require "CCShow"
-CCDelay = require "CCDelay"
-CCHide = require "CCHide"
-ccColor3 = require "ccColor3"
-Class = unpack require "class"
+Dorothy!
 
 -- [signals]
 -- "TextChanged",(textField)->

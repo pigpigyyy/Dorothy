@@ -1,5 +1,4 @@
 Dorothy!
-Class,property = unpack require "class"
 EditorView = require "View.Scene.Editor"
 SelectionPanel = require "Control.Basic.SelectionPanel"
 Model = require "Data.Model"
@@ -30,8 +29,8 @@ Class EditorView,
 		@isFixed = true
 		@camPos = oVec2 width/2,height/2
 
-		_G.editor = @
-		builtin.editor = @
+		rawset _G,"editor",@
+		rawset builtin,"editor",@
 		@slot "Cleanup",->
 			@game = nil
 			Reference.stopUpdate!

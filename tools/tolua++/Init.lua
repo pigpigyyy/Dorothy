@@ -1,10 +1,8 @@
-$[
 for k,v in pairs(package.loaded) do
 	package.loaded[k] = nil
 end
 
 local builtin = _G.builtin
-
 builtin.CCView = builtin.CCView()
 builtin.CCApplication = builtin.CCApplication()
 builtin.CCDirector = builtin.CCDirector()
@@ -12,7 +10,14 @@ builtin.CCUserDefault = builtin.CCUserDefault()
 builtin.CCKeyboard = builtin.CCKeyboard()
 builtin.oContent = builtin.oContent()
 builtin.oData = builtin.oData()
+
 local tolua = builtin.tolua
+local yield = coroutine.yield
+local wrap = coroutine.wrap
+local CCDirector = builtin.CCDirector
+local table_insert = table.insert
+local table_remove = table.remove
+local type = type
 
 local CCLuaLog = builtin.CCLuaLog
 builtin.cclog = function(...)
@@ -25,13 +30,6 @@ builtin.ccmsg = function(title, ...)
     CCMessageBox(string.format(...), title)
 end
 builtin.CCMessageBox = nil
-
-local yield = coroutine.yield
-local wrap = coroutine.wrap
-local CCDirector = builtin.CCDirector
-local table_insert = table.insert
-local table_remove = table.remove
-local type = type
 
 local function wait(cond)
 	while cond(CCDirector.deltaTime) do
@@ -423,15 +421,15 @@ io.open = function(file,...)
 	return io_open(oContent:getFullPath(file),...)
 end
 
-_G["thread"] = function(routine)
+builtin.thread = function(routine)
 	return oRoutine(once(routine))
 end
 
-_G["threadLoop"] = function(routine)
+builtin.threadLoop = function(routine)
 	return oRoutine(loop(routine))
 end
 
-_G["sleep"] = function(sec)
+builtin.sleep = function(sec)
 	if sec then
 		wait(seconds(sec))
 	else
@@ -439,34 +437,47 @@ _G["sleep"] = function(sec)
 	end
 end
 
-_G["using"] = function(path)
-	return function(name)
-		local result = package.loaded[name]
-		if not result then
-			result = require(path.."."..name)
+builtin.using = function(path)
+	if path then
+		return function(name)
+			local result = package.loaded[name]
+			if not result then
+				result = require(path.."."..name)
+			end
+			return result
 		end
-		return result
+	else
+		return require
 	end
 end
+_G.using = builtin.using
 
 for k,v in pairs(_G) do
 	builtin[k] = v
 end
+
+local function disallowAssignGlobal(_,name)
+	error("Disallow creating global value \""..name.."\".")
+end
+
+local dorothyEnvMeta = {
+	__index = builtin,
+	__newindex = disallowAssignGlobal
+}
+
+-- env must be a data only table without metatable
 local function Dorothy(env)
 	if env then
-		local newEnv = {}
-		for k,v in pairs(env) do newEnv[k] = v end
-		setmetatable(newEnv,{__index=builtin})
-		setfenv(2,newEnv)
+		setfenv(2,setmetatable(env,dorothyEnvMeta))
 	else
 		setfenv(2,builtin)
 	end
 end
-_G["Dorothy"] = Dorothy
-builtin["Dorothy"] = Dorothy
+_G.Dorothy = Dorothy
+builtin.Dorothy = Dorothy
 
 setmetatable(package.loaded,{__index=builtin})
+setmetatable(builtin,{__newindex=disallowAssignGlobal})
 
 collectgarbage("setpause", 100)
 collectgarbage("setstepmul", 5000)
-$]

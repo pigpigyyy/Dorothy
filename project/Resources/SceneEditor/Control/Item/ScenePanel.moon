@@ -1,5 +1,4 @@
 Dorothy!
-Class = unpack require "class"
 ScenePanelView = require "View.Control.Item.ScenePanel"
 MessageBox = require "Control.Basic.MessageBox"
 InputBox = require "Control.Basic.InputBox"

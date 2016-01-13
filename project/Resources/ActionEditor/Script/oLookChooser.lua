@@ -1,20 +1,20 @@
 local require = using("ActionEditor.Script")
-local oButton = require("oButton")
-local oSelectionPanel = require("oSelectionPanel")
+local oEditor = require("oEditor")
 local CCDirector = require("CCDirector")
 local CCSize = require("CCSize")
+local oSelectionPanel = require("oSelectionPanel")
 local CCDrawNode = require("CCDrawNode")
 local oVec2 = require("oVec2")
 local ccColor4 = require("ccColor4")
 local CCLabelTTF = require("CCLabelTTF")
 local ccColor3 = require("ccColor3")
 local oOpacity = require("oOpacity")
+local oButton = require("oButton")
 local CCSequence = require("CCSequence")
 local CCDelay = require("CCDelay")
-local oEditor = require("oEditor")
-local oSd = require("oEditor").oSd
 
 local function oLookChooser()
+	local oSd = oEditor.oSd
 	local winSize = CCDirector.winSize
 	local itemWidth = 120
 	local itemNum = 1

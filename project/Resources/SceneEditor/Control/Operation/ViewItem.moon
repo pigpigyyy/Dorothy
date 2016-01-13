@@ -1,5 +1,4 @@
 Dorothy!
-Class,property = unpack require "class"
 ViewItemView = require "View.Control.Operation.ViewItem"
 
 -- [signals]

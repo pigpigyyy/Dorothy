@@ -1,5 +1,4 @@
 Dorothy!
-Class = unpack require "class"
 ContactPanelView = require "View.Control.Edit.ContactPanel"
 Model = require "Data.Model"
 Button = require "Control.Basic.Button"

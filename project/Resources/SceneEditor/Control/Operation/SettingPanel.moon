@@ -1,5 +1,4 @@
 Dorothy!
-Class,property = unpack require "class"
 SettingPanelView = require "View.Control.Operation.SettingPanel"
 SettingItem = require "BodyEditor.Script.oSettingItem"
 ViewItem = require "Control.Operation.ViewItem"

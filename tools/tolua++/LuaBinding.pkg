@@ -1,4 +1,4 @@
-$#include "LuaCocos2d.h"
+$#include "LuaBinding.h"
 
 $pfile "ccTypes.h"
 $pfile "CCObject.h"

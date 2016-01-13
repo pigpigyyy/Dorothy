@@ -1,13 +1,4 @@
-CCRect = require "CCRect"
-CCSequence = require "CCSequence"
-CCSpawn = require "CCSpawn"
-oScale = require "oScale"
-oEase = require "oEase"
-oOpacity = require "oOpacity"
-CCCall = require "CCCall"
-CCSize = require "CCSize"
-CCDirector = require "CCDirector"
-Class = unpack require "class"
+Dorothy!
 SelectionPanelView = require "View.Control.Basic.SelectionPanel"
 Button = require "Control.Basic.Button"
 

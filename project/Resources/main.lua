@@ -5,16 +5,15 @@ if winSize.width >= 1280 and winSize.height >= 960 then
 end
 
 local fontSize_cov = {
-	[17] = 17,
-	[20] = 20,
-	[24] = 24,
-
 	[10] = 14,
 	[12] = 14,
 	[13] = 16,
 	[14] = 17,
 	[16] = 17,
+	[17] = 17,
 	[18] = 17,
+	[20] = 20,
+	[24] = 24,
 }
 
 local CCLabelTTF = builtin.CCLabelTTF

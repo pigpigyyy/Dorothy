@@ -12,6 +12,7 @@
 		3C1663761AFBCF3300395AC1 /* lpprint.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C16636D1AFBCF3300395AC1 /* lpprint.c */; };
 		3C1663771AFBCF3300395AC1 /* lptree.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C16636F1AFBCF3300395AC1 /* lptree.c */; };
 		3C1663781AFBCF3300395AC1 /* lpvm.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C1663721AFBCF3300395AC1 /* lpvm.c */; };
+		3C445D651C46234400C0F825 /* LuaBinding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C445D631C46234400C0F825 /* LuaBinding.cpp */; };
 		3C45629C1A29931E00A3406E /* libluajit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C45629B1A29931E00A3406E /* libluajit.a */; };
 		3C504D5B1A23739B000C79D6 /* AppController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3C504D5A1A23739B000C79D6 /* AppController.mm */; };
 		3C504D5D1A23739B000C79D6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C504D5C1A23739B000C79D6 /* main.m */; };
@@ -133,7 +134,6 @@
 		3CC647E21B44F8920082A833 /* CCLuaEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC647D61B44F8920082A833 /* CCLuaEngine.cpp */; };
 		3CC647E31B44F8920082A833 /* DorothyModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC647D81B44F8920082A833 /* DorothyModule.cpp */; };
 		3CC647E41B44F8920082A833 /* DorothyXml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC647DA1B44F8920082A833 /* DorothyXml.cpp */; };
-		3CC647E51B44F8920082A833 /* LuaCocos2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC647DC1B44F8920082A833 /* LuaCocos2d.cpp */; };
 		3CC647E61B44F8920082A833 /* LuaCode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC647DE1B44F8920082A833 /* LuaCode.cpp */; };
 		3CC647E71B44F8920082A833 /* tolua_extern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC647DF1B44F8920082A833 /* tolua_extern.cpp */; };
 		3CC647E81B44F8920082A833 /* tolua_fix.c in Sources */ = {isa = PBXBuildFile; fileRef = 3CC647E01B44F8920082A833 /* tolua_fix.c */; };
@@ -169,6 +169,8 @@
 		3C1663711AFBCF3300395AC1 /* lptypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lptypes.h; sourceTree = "<group>"; };
 		3C1663721AFBCF3300395AC1 /* lpvm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpvm.c; sourceTree = "<group>"; };
 		3C1663731AFBCF3300395AC1 /* lpvm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lpvm.h; sourceTree = "<group>"; };
+		3C445D631C46234400C0F825 /* LuaBinding.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LuaBinding.cpp; sourceTree = "<group>"; };
+		3C445D641C46234400C0F825 /* LuaBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaBinding.h; sourceTree = "<group>"; };
 		3C45629B1A29931E00A3406E /* libluajit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libluajit.a; path = ../../lua/lib/mac/libluajit.a; sourceTree = "<group>"; };
 		3C504D541A23739B000C79D6 /* Dorothy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dorothy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C504D581A23739B000C79D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -415,8 +417,6 @@
 		3CC647D91B44F8920082A833 /* DorothyModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DorothyModule.h; path = ../support/DorothyModule.h; sourceTree = "<group>"; };
 		3CC647DA1B44F8920082A833 /* DorothyXml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DorothyXml.cpp; path = ../support/DorothyXml.cpp; sourceTree = "<group>"; };
 		3CC647DB1B44F8920082A833 /* DorothyXml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DorothyXml.h; path = ../support/DorothyXml.h; sourceTree = "<group>"; };
-		3CC647DC1B44F8920082A833 /* LuaCocos2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LuaCocos2d.cpp; path = ../support/LuaCocos2d.cpp; sourceTree = "<group>"; };
-		3CC647DD1B44F8920082A833 /* LuaCocos2d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LuaCocos2d.h; path = ../support/LuaCocos2d.h; sourceTree = "<group>"; };
 		3CC647DE1B44F8920082A833 /* LuaCode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LuaCode.cpp; path = ../support/LuaCode.cpp; sourceTree = "<group>"; };
 		3CC647DF1B44F8920082A833 /* tolua_extern.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tolua_extern.cpp; path = ../support/tolua_extern.cpp; sourceTree = "<group>"; };
 		3CC647E01B44F8920082A833 /* tolua_fix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tolua_fix.c; path = ../support/tolua_fix.c; sourceTree = "<group>"; };
@@ -738,8 +738,8 @@
 				3CC647D91B44F8920082A833 /* DorothyModule.h */,
 				3CC647DA1B44F8920082A833 /* DorothyXml.cpp */,
 				3CC647DB1B44F8920082A833 /* DorothyXml.h */,
-				3CC647DC1B44F8920082A833 /* LuaCocos2d.cpp */,
-				3CC647DD1B44F8920082A833 /* LuaCocos2d.h */,
+				3C445D631C46234400C0F825 /* LuaBinding.cpp */,
+				3C445D641C46234400C0F825 /* LuaBinding.h */,
 				3CC647DE1B44F8920082A833 /* LuaCode.cpp */,
 				3CC647DF1B44F8920082A833 /* tolua_extern.cpp */,
 				3CC647E01B44F8920082A833 /* tolua_fix.c */,
@@ -1131,7 +1131,6 @@
 				3C969C951B41903900C3BF37 /* oSequence.cpp in Sources */,
 				3C504F991A237F8E000C79D6 /* b2PolygonContact.cpp in Sources */,
 				3C969C8D1B41903900C3BF37 /* oClip.cpp in Sources */,
-				3CC647E51B44F8920082A833 /* LuaCocos2d.cpp in Sources */,
 				3C504FA51A237F8E000C79D6 /* b2WheelJoint.cpp in Sources */,
 				3C5050001A23802F000C79D6 /* tolua_event.c in Sources */,
 				3C969C7D1B41903900C3BF37 /* oAudio.cpp in Sources */,
@@ -1141,6 +1140,7 @@
 				3C969C851B41903900C3BF37 /* oContent.cpp in Sources */,
 				3C969C8E1B41903900C3BF37 /* oEase.cpp in Sources */,
 				3CC647E71B44F8920082A833 /* tolua_extern.cpp in Sources */,
+				3C445D651C46234400C0F825 /* LuaBinding.cpp in Sources */,
 				3C969C9D1B41903900C3BF37 /* oAction.cpp in Sources */,
 				3C504F7C1A237F8E000C79D6 /* b2CollidePolygon.cpp in Sources */,
 				3C504D5B1A23739B000C79D6 /* AppController.mm in Sources */,

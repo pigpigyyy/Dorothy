@@ -14,12 +14,11 @@ local oButton = require("oButton")
 local CCSequence = require("CCSequence")
 local CCDelay = require("CCDelay")
 local CCCall = require("CCCall")
-local CCMenu = require("CCMenu")
 local oBox = require("oBox")
+local CCMenu = require("CCMenu")
+local thread = require("thread")
 local emit = require("emit")
-local once = require("once")
 local sleep = require("sleep")
-local oRoutine = require("oRoutine")
 
 local function oFileChooser()
 	local winSize = CCDirector.winSize
@@ -230,12 +229,12 @@ local function oFileChooser()
 				if oEditor.standAlone then
 					oEditor:emit("Quit")
 				else
-					oRoutine(once(function()
+					thread(function()
 						emit("Body.viewArea.toPos",oEditor.origin)
 						oEditor:hideEditor(true,false)
 						sleep(0.6)
 						oEditor:emit("Quit")
-					end))
+					end)
 				end
 			end)
 		backButton.anchor = oVec2.zero

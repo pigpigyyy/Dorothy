@@ -1,4 +1,4 @@
-Class,property = unpack require "class"
+Dorothy!
 TextBoxView = require "View.Control.Basic.TextBox"
 
 -- [signals]

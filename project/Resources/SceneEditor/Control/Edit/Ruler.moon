@@ -1,5 +1,4 @@
 Dorothy!
-Class = unpack require "class"
 RulerView = require "View.Control.Edit.Ruler"
 
 Class RulerView,

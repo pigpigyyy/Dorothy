@@ -20,7 +20,7 @@ using namespace CocosDenshion;
 using namespace Dorothy;
 using namespace Dorothy::Platform;
 
-TOLUA_API int tolua_Cocos2d_open(lua_State* tolua_S);
+TOLUA_API int tolua_LuaBinding_open(lua_State* tolua_S);
 TOLUA_API int tolua_LuaCode_open(lua_State* tolua_S);
 
 #endif // __LUACOCOS2D_H_

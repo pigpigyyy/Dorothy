@@ -1,25 +1,25 @@
 local require = using("ActionEditor.Script")
 local CCDirector = require("CCDirector")
+local oEditor = require("oEditor")
 local CCLayer = require("CCLayer")
 local oVec2 = require("oVec2")
 local CCSize = require("CCSize")
 local CCDrawNode = require("CCDrawNode")
 local ccColor4 = require("ccColor4")
 local emit = require("emit")
-local CCLabelTTF = require("CCLabelTTF")
 local CCNode = require("CCNode")
+local CCLabelTTF = require("CCLabelTTF")
 local CCClipNode = require("CCClipNode")
-local oEase = require("oEase")
 local CCRect = require("CCRect")
-local oEditor = require("oEditor")
-local oSd = require("oEditor").oSd
-local oAd = require("oEditor").oAd
-local oKd = require("oEditor").oKd
 local oPos = require("oPos")
+local oEase = require("oEase")
 
 local function oControlBar()
     local winSize = CCDirector.winSize
 	local barDragPos = 50
+	local oSd = oEditor.oSd
+	local oAd = oEditor.oAd
+	local oKd = oEditor.oKd
 	
 	-- controlBar
 	local controlBar = CCLayer()

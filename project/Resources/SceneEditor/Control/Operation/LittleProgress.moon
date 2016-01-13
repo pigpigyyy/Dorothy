@@ -1,4 +1,4 @@
-Class,property = unpack require "class"
+Dorothy!
 LittleProgressView = require "View.Control.Operation.LittleProgress"
 
 -- [no signals]

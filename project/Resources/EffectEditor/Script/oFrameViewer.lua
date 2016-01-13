@@ -1,19 +1,18 @@
 local require = using("EffectEditor.Script")
-local CCDirector = require("CCDirector")
-local ccColor4 = require("ccColor4")
+local CCSprite = require("CCSprite")
+local oLine = require("oLine")
 local oVec2 = require("oVec2")
-local CCDrawNode = require("CCDrawNode")
+local ccColor4 = require("ccColor4")
 local CCSize = require("CCSize")
+local CCDirector = require("CCDirector")
 local oSelectionPanel = require("oSelectionPanel")
 local oEditor = require("oEditor")
+local CCDrawNode = require("CCDrawNode")
 local CCSequence = require("CCSequence")
 local CCDelay = require("CCDelay")
 local oPos = require("oPos")
 local oEase = require("oEase")
 local CCHide = require("CCHide")
-local CCSprite = require("CCSprite")
-local oLine = require("oLine")
-local CCShow = require("CCShow")
 
 local function oClipViewer(file,rect)
 	local width = 130
@@ -112,7 +111,6 @@ local function oFrameViewer()
 			return
 		end
 		isHide = hide
-		local winWidth = CCDirector.winSize.width
 		if instant then
 			panel.position = hide and startPos or endPos
 		else

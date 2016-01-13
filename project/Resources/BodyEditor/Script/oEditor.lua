@@ -1,23 +1,23 @@
 local require = using("BodyEditor.Script")
 local CCScene = require("CCScene")
-local CCMenu = require("CCMenu")
-local oBodyDef = require("oBodyDef")
 local oVec2 = require("oVec2")
+local oContent = require("oContent")
+local CCScheduler = require("CCScheduler")
+local oWorld = require("oWorld")
+local CCDirector = require("CCDirector")
+local CCNode = require("CCNode")
+local CCMenu = require("CCMenu")
 local CCSize = require("CCSize")
+local oBodyDef = require("oBodyDef")
 local oBody = require("oBody")
 local oJoint = require("oJoint")
 local emit = require("emit")
-local tolua = require("tolua")
-local oContent = require("oContent")
-local oWorld = require("oWorld")
-local CCScheduler = require("CCScheduler")
-local CCDirector = require("CCDirector")
-local CCNode = require("CCNode")
 local CCSprite = require("CCSprite")
 local oModel = require("oModel")
-local oRoutine = require("oRoutine")
-local once = require("once")
+local tolua = require("tolua")
 local oCache = require("oCache")
+local once = require("once")
+local oRoutine = require("oRoutine")
 
 local oEditor = CCScene()
 
@@ -1222,7 +1222,6 @@ oEditor.transformData = function(self,bodyData)
 		if subShapes then
 			for _,subShape in ipairs(subShapes) do
 				subShape[1] = typeNames[subShape[1]]
-				local subShapeName = subShape[1]
 				subShape.parent = data
 				subShape.set = setFunc
 				subShape.get = getFunc
@@ -1326,7 +1325,7 @@ local controls =
 }
 
 oEditor:schedule(once(function()
-	coroutine.yield()
+	local require = using("BodyEditor.Script")
 	for index,name in ipairs(controls) do
 		local createFunc = require(name)
 		coroutine.yield()

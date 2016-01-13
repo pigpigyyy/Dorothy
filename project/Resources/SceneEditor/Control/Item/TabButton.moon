@@ -1,4 +1,4 @@
-Class,property = unpack require "class"
+Dorothy!
 TabButtonView = require "View.Control.Item.TabButton"
 
 -- [signal]

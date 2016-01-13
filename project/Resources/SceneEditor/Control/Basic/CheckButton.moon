@@ -1,4 +1,4 @@
-Class,property = unpack require "class"
+Dorothy!
 Button = require "Control.Basic.Button"
 
 -- [signals]

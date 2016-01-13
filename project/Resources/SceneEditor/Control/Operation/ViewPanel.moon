@@ -1,5 +1,4 @@
 Dorothy!
-Class,property = unpack require "class"
 ViewPanelView = require "View.Control.Operation.ViewPanel"
 ViewItem = require "Control.Operation.ViewItem"
 Model = require "Data.Model"

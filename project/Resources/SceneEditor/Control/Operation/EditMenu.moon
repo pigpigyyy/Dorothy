@@ -1,5 +1,4 @@
 Dorothy!
-Class,property,classfield = unpack require "class"
 EditMenuView = require "View.Control.Operation.EditMenu"
 SelectionPanel = require "Control.Basic.SelectionPanel"
 

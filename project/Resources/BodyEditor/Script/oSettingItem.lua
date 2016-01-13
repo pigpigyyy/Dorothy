@@ -1,4 +1,5 @@
 local require = using("BodyEditor.Script")
+local Class = require("Class")
 local CCMenuItem = require("CCMenuItem")
 local oVec2 = require("oVec2")
 local CCSize = require("CCSize")
@@ -7,10 +8,10 @@ local ccColor3 = require("ccColor3")
 local oTextField = require("oTextField")
 local oLine = require("oLine")
 local ccColor4 = require("ccColor4")
+local property = require("property")
 local tolua = require("tolua")
-local class,property = unpack(require("class"))
 
-local oSettingItem = class(
+local oSettingItem = Class(
 {
 	__partial = function(self)
 		self._label = nil -- CCLabelTTF

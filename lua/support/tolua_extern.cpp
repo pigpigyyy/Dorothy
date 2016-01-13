@@ -100,10 +100,10 @@ extern "C" int tolua_isccobject(lua_State* L, int lo)
 
 extern "C" void tolua_dobuffer(lua_State* L, char* codes, unsigned int size, const char* name)
 {
-		if (luaL_loadbuffer(L, codes, size, name) != 0)
-		{
-			luaL_error(L, "error loading module %s from %s :\n\t%s",
-				lua_tostring(L, 1), name, lua_tostring(L, -1));
-		}
-		else CCLuaEngine::call(L, 0, 0);
+	if (luaL_loadbuffer(L, codes, size, name) != 0)
+	{
+		CCLOG("error loading module %s from %s :\n\t%s",
+			lua_tostring(L, 1), name, lua_tostring(L, -1));
+	}
+	else CCLuaEngine::call(L, 0, 0);
 }

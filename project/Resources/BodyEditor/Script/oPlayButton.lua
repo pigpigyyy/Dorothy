@@ -1,14 +1,15 @@
-local class,property = unpack(require("class"))
 local require = using("BodyEditor.Script")
+local Class = require("Class")
 local oButton = require("oButton")
-local oVec2 = require("oVec2")
-local ccColor4 = require("ccColor4")
-local CCNode = require("CCNode")
-local CCDrawNode = require("CCDrawNode")
 local oScale = require("oScale")
 local oEase = require("oEase")
+local CCNode = require("CCNode")
+local oVec2 = require("oVec2")
+local CCDrawNode = require("CCDrawNode")
+local ccColor4 = require("ccColor4")
+local property = require("property")
 
-local oPlayButton = class(oButton,
+local oPlayButton = Class(oButton,
 {
 	__partial = function(self)
 		self._playIcon = nil

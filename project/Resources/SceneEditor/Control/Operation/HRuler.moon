@@ -1,19 +1,4 @@
-CCDirector = require "CCDirector"
-oLine = require "oLine"
-oVec2 = require "oVec2"
-ccColor4 = require "ccColor4"
-CCLayerColor = require "CCLayerColor"
-oScale = require "oScale"
-oEase = require "oEase"
-oOpacity = require "oOpacity"
-CCRect = require "CCRect"
-CCLabelTTF = require "CCLabelTTF"
-oPos = require "oPos"
-CCSequence = require "CCSequence"
-CCCall = require "CCCall"
-once = require "once"
-oRoutine = require "oRoutine"
-cycle = require "cycle"
+Dorothy!
 
 -- [no signals]
 -- [no params]

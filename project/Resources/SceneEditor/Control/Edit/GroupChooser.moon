@@ -1,5 +1,4 @@
 Dorothy!
-Class = unpack require "class"
 GroupChooserView = require "View.Control.Edit.GroupChooser"
 Button = require "Control.Basic.Button"
 

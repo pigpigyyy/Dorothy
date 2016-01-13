@@ -1,5 +1,4 @@
 Dorothy!
-Class = unpack require "class"
 
 BoundaryBar = (size,vertical,flip)->
 	winWidth = CCDirector.winSize.width

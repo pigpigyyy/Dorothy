@@ -1,9 +1,9 @@
 local require = using("ActionEditor.Script")
-local oButton = require("oButton")
+local oEditor = require("oEditor")
 local CCDirector = require("CCDirector")
+local oVec2 = require("oVec2")
 local CCLayerColor = require("CCLayerColor")
 local ccColor4 = require("ccColor4")
-local oVec2 = require("oVec2")
 local CCNode = require("CCNode")
 local oLine = require("oLine")
 local oScale = require("oScale")
@@ -14,17 +14,17 @@ local oModel = require("oModel")
 local CCDrawNode = require("CCDrawNode")
 local CCMenu = require("CCMenu")
 local CCSize = require("CCSize")
+local oButton = require("oButton")
 local CCSpawn = require("CCSpawn")
 local oOpacity = require("oOpacity")
 local CCSequence = require("CCSequence")
 local CCCall = require("CCCall")
 local emit = require("emit")
 local ccColor3 = require("ccColor3")
-local oEditor = require("oEditor")
-local oKd = require("oEditor").oKd
-local oSd = require("oEditor").oSd
 
 local function oViewArea()
+	local oKd = oEditor.oKd
+	local oSd = oEditor.oSd
 	local winSize = CCDirector.winSize
 	local center = oVec2(winSize.width/2,winSize.height/2)
 	local view = CCLayerColor(ccColor4(0xff1a1a1a),winSize.width, winSize.height)
@@ -98,7 +98,7 @@ local function oViewArea()
 	--1: scale = 0.5
 	--2: scale = 1.0
 	local mode = 0
-	
+
 	local EDIT_NONE = 0
 	local EDIT_ROT = 1
 	local EDIT_POSX = 2
@@ -120,7 +120,7 @@ local function oViewArea()
 	local EDIT_SIZEY = 18
 	local EDIT_SIZEXY = 19
 	local EDIT_FRONT = 20
-	
+
 	local editState = EDIT_NONE
 	view.multiTouches = true
 	view.touchEnabled = true
@@ -395,7 +395,7 @@ local function oViewArea()
 			editState = EDIT_ROT
 		end
 	end
-	
+
 	view.stopEditRot = function(self)
 		if editState == EDIT_ROT then
 			updateModel()
@@ -485,7 +485,7 @@ local function oViewArea()
 			self:unschedule()
 		end
 	end
-	
+
 	local totalX = 0
 	local totalY = 0
 
@@ -737,7 +737,7 @@ local function oViewArea()
 				else
 					y1 = totalScaleY > 0 and math.floor(totalScaleY*10)*0.1 or math.ceil(totalScaleY*10)*0.1
 					totalScaleY = 0
-					
+
 					editTarget.scaleY = (editTarget.scaleY>0 and 1 or -1)*math.floor(math.abs(editTarget.scaleY*10)+0.5)*0.1
 				end
 			end
@@ -750,7 +750,7 @@ local function oViewArea()
 			local y = editTarget.scaleY
 			oEditor.settingPanel.items.ScaleX:setValue(x)
 			oEditor.settingPanel.items.ScaleY:setValue(y)
-			
+
 			if oEditor.state == oEditor.EDIT_ANIMATION then
 				oEditor.animationData[oEditor.keyIndex][oKd.scaleX] = x
 				oEditor.animationData[oEditor.keyIndex][oKd.scaleY] = y
@@ -763,7 +763,7 @@ local function oViewArea()
 			valueChanged = true
 		end
 	end
-	
+
 	local opacityEditor = CCNode()
 	opacityEditor:addChild(oLine(
 	{
@@ -798,7 +798,7 @@ local function oViewArea()
 	end
 
 	view.stopEditOpacity = function(self)
-		if editState == EDIT_OPACITY then			
+		if editState == EDIT_OPACITY then
 			updateModel()
 			opacityEditor.visible = false
 			editTarget = nil
@@ -825,7 +825,7 @@ local function oViewArea()
 			if opacity > 1 then opacity = 1 end
 			editTarget.opacity = opacity
 			yBar.scaleY = opacity
-			
+
 			oEditor.settingPanel.items.Opacity:setValue(opacity)
 
 			if oEditor.state == oEditor.EDIT_ANIMATION then
@@ -969,7 +969,7 @@ local function oViewArea()
 				else
 					y1 = totalSkewY > 0 and math.floor(totalSkewY) or math.ceil(totalSkewY)
 					totalSkewY = 0
-					
+
 					editTarget.skewY = (editTarget.skewY>0 and 1 or -1)*math.floor(math.abs(editTarget.skewY)+0.5)
 				end
 			end
@@ -1029,7 +1029,7 @@ local function oViewArea()
 	end
 
 	view.stopEditVisible = function(self)
-		if editState == EDIT_VISIBLE then		
+		if editState == EDIT_VISIBLE then
 			updateModel()
 			visibleEditor.visible = false
 			editTarget = nil
@@ -1075,7 +1075,7 @@ local function oViewArea()
 	end
 
 	view.stopEditFront = function(self)
-		if editState == EDIT_FRONT then		
+		if editState == EDIT_FRONT then
 			updateModel()
 			frontEditor.visible = false
 			editTarget = nil
@@ -1239,7 +1239,7 @@ local function oViewArea()
 			getEditorRot()
 		end
 	end
-	
+
 	local totalAnchorX = 0
 	local totalAnchorY = 0
 
@@ -1393,7 +1393,7 @@ local function oViewArea()
 		sizeVisible = oEditor.viewArea:getModelSizeVisible()
 		oEditor.viewArea:showModelSize(true)
 	end
-	
+
 	local totalSizeX = 0
 	local totalSizeY = 0
 
@@ -1500,7 +1500,7 @@ local function oViewArea()
 			valueChanged = true
 		end
 	end
-	
+
 	view.stopEdit = function(self)
 		view:stopEditSizeX()
 		view:stopEditSizeY()

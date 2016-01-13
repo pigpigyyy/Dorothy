@@ -1,12 +1,4 @@
-oVec2 = require "oVec2"
-CCDirector = require "CCDirector"
-oOpacity = require "oOpacity"
-CCSequence = require "CCSequence"
-CCSpawn = require "CCSpawn"
-oScale = require "oScale"
-oEase = require "oEase"
-CCCall = require "CCCall"
-Class = unpack require "class"
+Dorothy!
 MessageBoxView = require "View.Control.Basic.MessageBox"
 
 -- [signals]

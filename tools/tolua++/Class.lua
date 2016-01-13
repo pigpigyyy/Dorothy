@@ -1,4 +1,5 @@
-local tolua = require("tolua")
+local builtin = _G.builtin
+local tolua = builtin.tolua
 local setmetatable = setmetatable
 local getmetatable = getmetatable
 local pairs = pairs
@@ -261,4 +262,7 @@ local function classmethod(method)
 	return method
 end
 
-return {class,property,classfield,classmethod}
+builtin.Class = class
+builtin.property = property
+builtin.classfield = classfield
+builtin.classmethod = classmethod

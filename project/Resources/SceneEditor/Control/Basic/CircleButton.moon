@@ -1,4 +1,4 @@
-Class,property = unpack require "class"
+Dorothy!
 CircleButtonView = require "View.Control.Basic.CircleButton"
 
 -- [signals]

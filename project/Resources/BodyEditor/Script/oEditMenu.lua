@@ -1,26 +1,27 @@
 local require = using("BodyEditor.Script")
-local oButton = require("oButton")
 local CCDirector = require("CCDirector")
 local CCMenu = require("CCMenu")
-local oVec2 = require("oVec2")
-local oLine = require("oLine")
-local ccColor4 = require("ccColor4")
-local ccColor3 = require("ccColor3")
-local CCNode = require("CCNode")
 local oEditor = require("oEditor")
-local oPlayButton = require("oPlayButton")
+local oVec2 = require("oVec2")
+local oScale = require("oScale")
+local oEase = require("oEase")
+local Class = require("Class")
+local oButton = require("oButton")
+local property = require("property")
 local emit = require("emit")
-local class,property = unpack(require("class"))
+local ccColor3 = require("ccColor3")
 local oFileChooser = require("oFileChooser")
 local oBox = require("oBox")
 local oJointChooser = require("oJointChooser")
-local tolua = require("tolua")
+local oPlayButton = require("oPlayButton")
 local CCSequence = require("CCSequence")
+local CCHide = require("CCHide")
+local oLine = require("oLine")
+local ccColor4 = require("ccColor4")
+local CCNode = require("CCNode")
+local tolua = require("tolua")
 local CCDelay = require("CCDelay")
 local oOpacity = require("oOpacity")
-local oScale = require("oScale")
-local oEase = require("oEase")
-local CCHide = require("CCHide")
 local oPos = require("oPos")
 
 local function oEditMenu()
@@ -39,7 +40,7 @@ local function oEditMenu()
 			lastSelected.selected = false
 		end
 	end
-	local oShapeButton = class(oButton,
+	local oShapeButton = Class(oButton,
 	{
 		__partial = function(self)
 			self._selected = false

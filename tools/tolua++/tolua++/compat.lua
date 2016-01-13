@@ -176,26 +176,20 @@ function appendto (name)
 end
 
 function read (...)
+  local args = {...}
   local f = _INPUT
-  if rawtype(select(1,...)) == 'userdata' then
-    f = tab.remove(..., 1)
+  if rawtype(args[1]) == 'userdata' then
+    f = tab.remove(args, 1)
   end
-  if select("#",...) <= 1 then
-	return f:read(...)
-  else
-    return f:read(unpack(...))
-  end
+  return f:read(unpack(args))
 end
 
 function write (...)
+  local args = {...}
   local f = _OUTPUT
-  if rawtype(select(1,...)) == 'userdata' then
-    f = tab.remove(..., 1)
+  if rawtype(args[1]) == 'userdata' then
+    f = tab.remove(args, 1)
   end
-  if select("#",...) <= 1 then
-	return f:write(...)
-  else
-    return f:write(unpack(...))
-  end
+  return f:write(unpack(args))
 end
 

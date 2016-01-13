@@ -1,14 +1,4 @@
-CCDrawNode = require "CCDrawNode"
-ccColor4 = require "ccColor4"
-oVec2 = require "oVec2"
-CCLabelTTF = require "CCLabelTTF"
-ccColor3 = require "ccColor3"
-oOpacity = require "oOpacity"
-oScale = require "oScale"
-oEase = require "oEase"
-CCSequence = require "CCSequence"
-CCHide = require "CCHide"
-Class,property = unpack require "class"
+Dorothy!
 ItemViewView = require "View.Control.Item.ItemView"
 oStar = require "EffectEditor.Script.oStar"
 

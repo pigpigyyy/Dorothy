@@ -57,9 +57,6 @@
     <ClCompile Include="..\support\DorothyXml.cpp">
       <Filter>support</Filter>
     </ClCompile>
-    <ClCompile Include="..\support\LuaCocos2d.cpp">
-      <Filter>support</Filter>
-    </ClCompile>
     <ClCompile Include="..\support\LuaCode.cpp">
       <Filter>support</Filter>
     </ClCompile>
@@ -67,6 +64,9 @@
       <Filter>support</Filter>
     </ClCompile>
     <ClCompile Include="..\support\tolua_fix.c">
+      <Filter>support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\support\LuaBinding.cpp">
       <Filter>support</Filter>
     </ClCompile>
   </ItemGroup>
@@ -116,10 +116,10 @@
     <ClInclude Include="..\support\DorothyXml.h">
       <Filter>support</Filter>
     </ClInclude>
-    <ClInclude Include="..\support\LuaCocos2d.h">
+    <ClInclude Include="..\support\tolua_fix.h">
       <Filter>support</Filter>
     </ClInclude>
-    <ClInclude Include="..\support\tolua_fix.h">
+    <ClInclude Include="..\support\LuaBinding.h">
       <Filter>support</Filter>
     </ClInclude>
   </ItemGroup>

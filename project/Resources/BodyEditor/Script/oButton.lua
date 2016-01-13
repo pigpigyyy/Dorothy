@@ -1,19 +1,19 @@
-local class,property = unpack(require("class"))
 local require = using("BodyEditor.Script")
+local Class = require("Class")
+local CCMenuItem = require("CCMenuItem")
+local CCSize = require("CCSize")
+local oVec2 = require("oVec2")
 local CCNode = require("CCNode")
 local CCDrawNode = require("CCDrawNode")
-local oVec2 = require("oVec2")
 local ccColor4 = require("ccColor4")
-local CCSize = require("CCSize")
 local oLine = require("oLine")
-local CCMenuItem = require("CCMenuItem")
 local CCLabelTTF = require("CCLabelTTF")
 local oScale = require("oScale")
 local oEase = require("oEase")
-local oOpacity = require("oOpacity")
 local ccColor3 = require("ccColor3")
+local property = require("property")
 
-local oButton = class(
+local oButton = Class(
 {
 	__partial = function(self)
 		self._label = nil -- CCLabelTTF

@@ -134,7 +134,7 @@ xcopy /Y /Q "$(ProjectDir)..\lib\win32\*.*" "$(OutDir)"</Command>
     <ClCompile Include="..\support\CCLuaEngine.cpp" />
     <ClCompile Include="..\support\DorothyModule.cpp" />
     <ClCompile Include="..\support\DorothyXml.cpp" />
-    <ClCompile Include="..\support\LuaCocos2d.cpp" />
+    <ClCompile Include="..\support\LuaBinding.cpp" />
     <ClCompile Include="..\support\LuaCode.cpp" />
     <ClCompile Include="..\support\tolua_extern.cpp" />
     <ClCompile Include="..\support\tolua_fix.c" />
@@ -158,7 +158,7 @@ xcopy /Y /Q "$(ProjectDir)..\lib\win32\*.*" "$(OutDir)"</Command>
     <ClInclude Include="..\support\CCLuaEngine.h" />
     <ClInclude Include="..\support\DorothyModule.h" />
     <ClInclude Include="..\support\DorothyXml.h" />
-    <ClInclude Include="..\support\LuaCocos2d.h" />
+    <ClInclude Include="..\support\LuaBinding.h" />
     <ClInclude Include="..\support\tolua_fix.h" />
     <ClInclude Include="..\tolua\tolua++.h" />
     <ClInclude Include="..\tolua\tolua_event.h" />

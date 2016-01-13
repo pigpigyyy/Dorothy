@@ -8,7 +8,7 @@ LOCAL_MODULE_FILENAME := liblua
 LOCAL_SRC_FILES := ../support/CCLuaEngine.cpp \
 		../support/DorothyXml.cpp \
 		../support/DorothyModule.cpp \
-		../support/LuaCocos2d.cpp \
+		../support/LuaBinding.cpp \
 		../support/LuaCode.cpp \
 		../support/tolua_extern.cpp \
 		../support/tolua_fix.c \

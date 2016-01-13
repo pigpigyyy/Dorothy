@@ -1,5 +1,5 @@
 local require = using("ActionEditor.Script")
-local oTextField = require("oTextField")
+local oEditor = require("oEditor")
 local CCDirector = require("CCDirector")
 local CCSize = require("CCSize")
 local oVec2 = require("oVec2")
@@ -9,21 +9,20 @@ local ccColor4 = require("ccColor4")
 local oLine = require("oLine")
 local CCClipNode = require("CCClipNode")
 local CCMenu = require("CCMenu")
+local CCRect = require("CCRect")
 local oEase = require("oEase")
 local CCMenuItem = require("CCMenuItem")
 local CCLabelTTF = require("CCLabelTTF")
 local ccColor3 = require("ccColor3")
+local oTextField = require("oTextField")
 local emit = require("emit")
-local oOpacity = require("oOpacity")
-local CCRect = require("CCRect")
 local CCSequence = require("CCSequence")
-local CCDelay = require("CCDelay")
-local oEditor = require("oEditor")
-local oSd = require("oEditor").oSd
-local oKd = require("oEditor").oKd
+local oOpacity = require("oOpacity")
 local oPos = require("oPos")
 
 local function oSettingPanel()
+	local oSd = oEditor.oSd
+	local oKd = oEditor.oKd
 	local winSize = CCDirector.winSize
 	local borderSize = CCSize(160,200*(winSize.height-90)/510)
 	local viewWidth = 0

@@ -1,5 +1,4 @@
 Dorothy!
-Class = unpack require "class"
 PopupPanelView = require "View.Control.Basic.PopupPanel"
 
 -- [signals]

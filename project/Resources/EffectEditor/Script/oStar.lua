@@ -1,6 +1,4 @@
 local oVec2 = require("oVec2")
-local CCDrawNode = require("CCDrawNode")
-local ccColor4 = require("ccColor4")
 
 local function oStar(radius,offset)
 	offset = offset or oVec2.zero

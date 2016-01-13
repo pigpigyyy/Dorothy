@@ -27,9 +27,9 @@ setmetatable(classCode,classFeature)
 function classCode:register (pre)
  pre = pre or ''
  -- clean Lua code
- local s = clean(self.text)
+-- local s = clean(self.text)
+ local s = self.text
  if not s then
-  --print(self.text)
   error("parser error in embedded code")
  end
 
@@ -38,9 +38,7 @@ function classCode:register (pre)
  if string.find(first_line, "^%s*%-%-") then
 	 if string.find(first_line, "^%-%-##") then
 		first_line = string.gsub(first_line, "^%-%-##", "")
-		if flags['C'] then
-			s = string.gsub(s, "^%-%-##[^\n\r]*\n", "")
-		end
+		s = string.gsub(s, "^%-%-##[^\n\r]*\n", "")
 	 end
  else
  	first_line = ""
@@ -61,7 +59,7 @@ function classCode:register (pre)
  output(pre..' int top = lua_gettop(tolua_S);')
  output(pre..' static const unsigned char B[] = {\n   ')
  local t={n=0}
-
+ 
  local b = gsub(s,'(.)',function (c)
                          local e = ''
                          t.n=t.n+1 if t.n==15 then t.n=0 e='\n'..pre end

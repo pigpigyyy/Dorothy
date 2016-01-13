@@ -46,7 +46,7 @@ local function oTextField(x,y,fontSize,limit,textChanged)
 		end
 		return true
 	end)
-	local function inputed(text,self)
+	local function inputed(_,self)
 		cursor:stopAction(blink)
 		cursor:runAction(blink)
 		cursor.positionX = textField.contentSize.width
