@@ -216,7 +216,7 @@ local function oViewArea()
 	view:slot("TouchEnded",touchEnded)
 	view:slot("TouchCancelled",touchEnded)
 
-	view.zoomReset = function(self)
+	view.zoomCycleReset = function(self)
 		local scale = 0
 		if mode == 0 then
 			scale = 2.0
@@ -231,6 +231,16 @@ local function oViewArea()
 		xCross:runAction(oPos(0.5,(center.x-crossNode.positionX)/scale,0,oEase.OutQuad))
 		yCross:runAction(oPos(0.5,0,(center.y-crossNode.positionY)/scale,oEase.OutQuad))
 
+		local zoomButton = oEditor.editMenu.items.Zoom
+		zoomButton.label.text = tostring(scale*100).."%"
+		zoomButton.label.texture.antiAlias = false
+	end
+	view.zoomReset = function(self)
+		mode = 0
+		local scale = 1.0
+		scaleNode:runAction(oScale(0.5,scale,scale,oEase.OutQuad))
+		xCross:runAction(oPos(0.5,(center.x-crossNode.positionX)/scale,0,oEase.OutQuad))
+		yCross:runAction(oPos(0.5,0,(center.y-crossNode.positionY)/scale,oEase.OutQuad))
 		local zoomButton = oEditor.editMenu.items.Zoom
 		zoomButton.label.text = tostring(scale*100).."%"
 		zoomButton.label.texture.antiAlias = false

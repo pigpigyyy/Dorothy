@@ -70,6 +70,8 @@ local function oEditChooser(withCancel)
 				oEditor:emit("Quit")
 			else
 				thread(function()
+					oEditor.viewArea:originReset()
+					oEditor.viewArea:zoomReset()
 					oEditor:hideEditor(true,false)
 					sleep(0.6)
 					oEditor:emit("Quit")

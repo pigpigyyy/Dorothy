@@ -4,7 +4,7 @@ SelectionPanel = require "Control.Basic.SelectionPanel"
 Model = require "Data.Model"
 Reference = require "Data.Reference"
 CCScene = require "Lib.CCSceneEx"
-oBody = require "Lib.oBodyEx"
+require "Lib.oBodyEx"
 
 Class EditorView,
 	__init: =>
@@ -79,15 +79,17 @@ Class EditorView,
 				sleep!
 			resPath = "SceneEditor/Demo/DemoGame"
 			writePath = @gamesFullPath.."DemoGame"
-			if not oContent\exist(writePath) and oContent\exist(resPath)
-				oContent\copyAsync resPath,writePath
-			ScenePanel = require "Control.Item.ScenePanel"
-			ScenePanel!
-			sleep!
 			Manager = require "Control.Edit.Manager"
 			@editManager = Manager!
 			@viewArea\addChild @editManager
+			sleep!
 			@moveTo oVec2.zero
+			if not oContent\exist(writePath) and oContent\exist(resPath)
+				oContent\copyAsync resPath,writePath
+			--ScenePanel = require "Control.Item.ScenePanel"
+			--ScenePanel!
+			TriggerEditor = require "Control.Trigger.TriggerEditor"
+			@addChild TriggerEditor!
 
 		panelWidth = 10+110*4
 		panelHeight = height*0.6
@@ -227,6 +229,9 @@ Class EditorView,
 		(name)=>
 			oContent\removeSearchPath @_gameFullPath if @_gameFullPath
 			oCache\clear!
+			oAI\clear!
+			oAction\clear!
+			collectgarbage!
 			@_gameName = name
 			if name
 				@_gameFullPath = @gamesFullPath..name.."/"
@@ -774,6 +779,9 @@ Class EditorView,
 				itemData.file
 			emit "Scene.HideEditor",{true,true}
 			thread ->
+				if @scale ~= 1
+					emit "Scene.ViewArea.ScaleReset"
+					sleep 0.6
 				emit "Scene.ViewPanel.Pick",itemData
 				subEditor = @getSubEditor itemData.typeName
 				scene = @viewArea.scene

@@ -413,7 +413,7 @@ local function oEditMenu()
 			end),
 		Zoom = oButton("100%",16,50,50,winSize.width-205,winSize.height-35,
 			function()
-				oEditor.viewArea:zoomReset()
+				oEditor.viewArea:zoomCycleReset()
 			end),
 
 		Batch = oButton("Batch\nUsed",16,54,50,35,35,

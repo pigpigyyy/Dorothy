@@ -231,6 +231,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 				else
 					thread(function()
 						oEditor.viewArea:originReset()
+						oEditor.viewArea:zoomReset()
 						oEditor:hideEditor(true,false)
 						sleep(0.6)
 						oEditor:emit("Quit")

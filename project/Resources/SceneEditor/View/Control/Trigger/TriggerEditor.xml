@@ -1,0 +1,65 @@
+<!-- params: X, Y, Width, Height -->
+<LayerColor X="{ @X }" Y="{ @Y }"
+	TouchPriority="{ editor.levelItemPanel }"
+	Color="0x0" Opacity="0"
+	SwallowTouches="True" TouchEnabled="True" Visible="False">
+	<Import Module="Control.Basic.ScrollArea"/>
+	<Import Module="Control.Basic.Button"/>
+	<Import Module="View.Shape.LineRect"/>
+	<Import Module="View.Shape.SolidRect"/>
+	<Import Module="View.Control.Basic.CircleButton"/>
+
+	<Node Name="panel" X="{ $X }" Y="{ $Y }" Width="{ @W-80 }" Height="{ @H-80 }" Ref="True">
+		<SolidRect Width="{ $W }" Height="{ $H }" Color="0xe5100000"/>
+	
+		<ScrollArea X="105" Y="{ $T-($H-60)/2 }" Width="210" Height="{ $H-60 }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelItemPanel-2 }">
+			<Item Name="view">
+				<Menu Name="triggerMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.levelItemPanel-1 }">
+					<Button Text="Local" Width="{ ($W-30)/2 }" Height="40" FontSize="16" Color="0xff00ffff"/>
+					<Button Text="Global" Width="{ ($W-30)/2 }" Height="40" FontSize="16" Color="0x6600ffff"/>
+					<Button Text="SceneInitialized" Width="190" Height="30" FontSize="16"  Color="0x6600ffff"/>
+					<Button Text="Every5Minutes" Width="190" Height="30" FontSize="16"  Color="0x6600ffff"/>
+					<Button Text="GameStarted" Width="190" Height="30" FontSize="16"  Color="0x6600ffff"/>
+					<Button Text="PlayerCastSpell1" Width="190" Height="30" FontSize="16"  Color="0xff00ffff"/>
+					<Button Text="PlayerCastSpell2" Width="190" Height="30" FontSize="16"  Color="0x6600ffff"/>
+					<Button Text="PlayerCastSpel3l" Width="190" Height="30" FontSize="16"  Color="0x6600ffff"/>
+					<Button Text="PlayerCastSpell4" Width="190" Height="30" FontSize="16"  Color="0x6600ffff"/>
+					<Button Text="PlayerCastSpell5" Width="190" Height="30" FontSize="16"  Color="0x6600ffff"/>
+					<Button Text="PlayerCastSpell6" Width="190" Height="30" FontSize="16"  Color="0x6600ffff"/>
+				</Menu>
+				<Script>triggerMenu:alignItems()</Script>
+			</Item>
+		</ScrollArea>
+
+		<Menu Name="itemMenu" X="{ $X }" Y="{ $B+30 }" Width="{ $W }" Height="60" TouchPriority="{ editor.levelItemPanel-1 }">
+			<Button Text="New" Width="40" Height="40" FontSize="16"/>
+			<Button Text="Add" Width="40" Height="40" FontSize="16"/>
+			<Button Text="Del" Width="40" Height="40" FontSize="16"/>
+			<Button Text="Copy" Width="40" Height="40" FontSize="13"/>
+			<Script>itemMenu:alignItems()</Script>
+		</Menu>
+
+		<ScrollArea Name="scrollArea" X="{ $W/2+105 }" Y="{ $Y }" Width="{ $W-210 }" Height="{ $H }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelItemPanel-2 }" Ref="True">
+			<Item Name="view">
+				<Menu Name="menu" X="{ $X }" Y="{ $Y }" Width="{  $W }" Height="{  $H }" TouchPriority="{ editor.levelItemPanel-1 }" Ref="True">
+					<LabelTTF FontName="Arial" FontSize="20" Text="Event\nCondition\nAction" HorizontalAlign="Left" VerticalAlign="Top" Width="{ $W }" Height="{ $H }"/>
+				</Menu>
+				<Script>menu:alignItems()</Script>
+			</Item>
+		</ScrollArea>
+	
+		<LineRect X="-1" Y="-1" Width="{ $W+2 }" Height="{ $H+2 }" Color="0xffffafaf"/>
+		<Line Color="0xffafaf" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }">
+			<Vec2 X="210" Y="{ $B }"/>
+			<Vec2 X="210" Y="{ $T }"/>
+		</Line>
+	</Node>
+
+	<Menu Name="opMenu" X="{ @X+(@W-80)/2-35 }" Y="{ @Y+(@H-80)/2 }" Width="130" Height="60" TouchPriority="{ editor.levelItemPanel-3 }" Ref="True">
+		<CircleButton Name="closeBtn" X="{ $R-30 }" Y="{ $Y }" Radius="30" Text="Cancel" FontSize="16" Ref="True">
+			<DrawNode>
+				<Dot X="30" Y="30" Radius="30" Color="0x22ffffff"/>
+			</DrawNode>
+		</CircleButton>
+	</Menu>
+</LayerColor>

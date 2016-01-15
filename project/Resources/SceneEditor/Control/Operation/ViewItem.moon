@@ -61,12 +61,12 @@ Class ViewItemView,
 				return if @_visibleChecker
 				size = @height-10
 				@_visibleChecker = VisibleChecker {
-						text:"V"
-						x:size/2+5
-						y:@height/2
-						width:size
-						height:size
-					}
+					text:"V"
+					x:size/2+5
+					y:@height/2
+					width:size
+					height:size
+				}
 				@addChild @_visibleChecker
 				@label.positionX = @width-(@width-size-5)/2
 			else

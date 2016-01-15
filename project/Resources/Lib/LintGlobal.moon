@@ -20,7 +20,6 @@ default_whitelist = Set {
 	'load'
 	'loadfile'
 	'loadstring'
-	'math'
 	'module'
 	'next'
 	'os'
@@ -43,10 +42,11 @@ default_whitelist = Set {
 	'type'
 	'unpack'
 	'xpcall'
-
 	"nil"
 	"true"
 	"false"
+	--'math'
+
 	"Dorothy"
 }
 

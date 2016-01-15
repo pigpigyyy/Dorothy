@@ -7,7 +7,7 @@ PopupPanelView = require "View.Control.Basic.PopupPanel"
 -- [params]
 -- width,height
 Class PopupPanelView,
-	__init: =>
+	__init: (args)=>
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
 		@scrollArea\slot "Scrolled",(delta)->

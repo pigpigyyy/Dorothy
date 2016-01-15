@@ -231,6 +231,7 @@ local function oFileChooser()
 				else
 					thread(function()
 						emit("Body.viewArea.toPos",oEditor.origin)
+						emit("Body.viewArea.scaleReset")
 						oEditor:hideEditor(true,false)
 						sleep(0.6)
 						oEditor:emit("Quit")

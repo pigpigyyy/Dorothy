@@ -54,7 +54,6 @@ Class EditMenuView,
 
 		mode = 0
 		@zoomBtn\slot "Tapped",->
-			mode = 0 if @zoomBtn.text == "100%"
 			scale = switch mode
 				when 0
 					2
@@ -305,6 +304,10 @@ Class EditMenuView,
 		@gslot "Scene.ViewArea.Scale",(scale)->
 			mode = 2 if scale ~= 1
 			@zoomBtn.text = string.format("%d%%",scale*100)
+		@gslot "Scene.ViewArea.ScaleReset",->
+			mode = 0
+			@zoomBtn.text = "100%"
+			emit "Scene.ViewArea.ScaleTo",1
 
 		@gslot "Scene.Camera.Select",(subCam)->
 			if subCam and not @camBtn.visible

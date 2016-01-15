@@ -160,7 +160,7 @@ local function oEditMenu()
 			end
 			button.mode = button.mode + 1
 			button.mode = button.mode % 3
-			button.text = tostring(scale*100).."%"
+			button.text = tostring(math.floor(scale*100)).."%"
 			emit("Body.viewArea.toScale",scale)
 		end),
 
@@ -303,6 +303,12 @@ local function oEditMenu()
 		if scale ~= 1 then items.Zoom.mode = 2 end
 		items.Zoom.text = tostring(math.floor(scale*100)).."%"
 	end)
+	items.Zoom:gslot("Body.viewArea.scaleReset",function(scale)
+		items.Zoom.mode = 0
+		items.Zoom.text = "100%"
+		emit("Body.viewArea.toScale",1)
+	end)
+
 	items.Play:gslot("Body.editor.isPlaying",function(isPlaying)
 		oEditor.isPlaying = isPlaying
 		oEditor.worldScheduler.timeScale = isPlaying and 1 or 0
