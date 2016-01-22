@@ -1048,14 +1048,14 @@ static const char* _toBoolean(const char* str)
 	Node_Define\
 	const char* text = nullptr;\
 	const char* fntFile = nullptr;\
-	const char* fontWidth = nullptr;\
+	const char* textWidth = nullptr;\
 	const char* hAlign = nullptr;\
 	const char* imageOffset = nullptr;
 #define LabelBMFont_Check \
 	Node_Check\
 	CASE_STR(Text) { text = atts[++i]; break; }\
 	CASE_STR(File) { fntFile = atts[++i]; break; }\
-	CASE_STR(FontWidth) { fontWidth = atts[++i]; break; }\
+	CASE_STR(TextWidth) { textWidth = atts[++i]; break; }\
 	CASE_STR(HorizontalAlign) { hAlign = atts[++i]; break; }\
 	CASE_STR(ImageOffset) { imageOffset = atts[++i]; break; }
 #define LabelBMFont_Create \
@@ -1063,7 +1063,7 @@ static const char* _toBoolean(const char* str)
 	if (text && text[0]) stream << toText(text); else stream << "\"\"";\
 	if (fntFile) stream << "," << toText(fntFile);\
 	else stream << ",";\
-	stream << ',' << toVal(fontWidth,"CCLabelBMFont.AutomaticWidth") << "," << toTextAlignH(hAlign) << ',' << toVal(imageOffset,"oVec2.zero") << ")\n";
+	stream << ',' << toVal(textWidth,"CCLabelBMFont.AutomaticWidth") << "," << toTextAlignH(hAlign) << ',' << toVal(imageOffset,"oVec2.zero") << ")\n";
 #define LabelBMFont_Handle \
 	Node_Handle
 #define LabelBMFont_Finish \
@@ -1094,7 +1094,7 @@ static const char* _toBoolean(const char* str)
 	Node_Handle\
 	if (antiAlias) stream << self << ".texture.antiAlias = " << toBoolean(antiAlias) << '\n';\
 	if (width || height) stream << self << ".dimensions = CCSize(" << toVal(width,(string(self)+".width").c_str()) << ',' << toVal(height,(string(self)+".height").c_str()) << ")\n";\
-	if (hAlign) stream << self << ".horizentalAlignment = " << toTextAlignH(hAlign) << '\n';\
+	if (hAlign) stream << self << ".horizontalAlignment = " << toTextAlignH(hAlign) << '\n';\
 	if (vAlign) stream << self << ".verticalAlignment = " << toTextAlignV(vAlign) << '\n';
 #define LabelTTF_Finish \
 	Add_To_Parent
@@ -1221,15 +1221,26 @@ static const char* _toBoolean(const char* str)
 // Menu
 #define Menu_Define \
 	Layer_Define\
-	const char* enabled = nullptr;
+	const char* enabled = nullptr;\
+	const char* alignItems = nullptr;
 #define Menu_Check \
 	Layer_Check\
-	CASE_STR(Enabled) { enabled = atts[++i]; break; }
+	CASE_STR(Enabled) { enabled = atts[++i]; break; }\
+	CASE_STR(AlignItems) { alignItems = atts[++i]; break; }
 #define Menu_Create \
 	stream << "local " << self << " = CCMenu()\n";
 #define Menu_Handle \
 	Layer_Handle\
-	if (enabled) stream << self << ".enabled = " << toBoolean(enabled) << '\n';
+	if (enabled) stream << self << ".enabled = " << toBoolean(enabled) << '\n';\
+	if (alignItems)\
+	{\
+		oFunc func = {string(self) + ":alignItems(" + Val(alignItems), ")\n\n"};\
+		funcs.push(func);\
+	}\
+	else\
+	{\
+		funcs.push(oFunc());\
+	}
 #define Menu_Finish \
 	Add_To_Parent
 
@@ -1929,6 +1940,13 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 			stream << func.begin << (codes ? codes : "") << func.end << '\n';
 			break;
 		}
+		CASE_STR(Menu)
+		{
+			oFunc func = funcs.top();
+			funcs.pop();
+			stream << func.begin << func.end;
+			break;
+		}
 		CASE_STR(Speed) goto FLAG_WRAP_ACTION_BEGIN;
 		CASE_STR(Loop) goto FLAG_WRAP_ACTION_BEGIN;
 		goto FLAG_WRAP_ACTION_END;
@@ -2119,7 +2137,6 @@ void oXmlDelegate::endElement(void *ctx, const char *name)
 		CaseBuiltin(LabelAtlas)
 		CaseBuiltin(LabelBMFont)
 		CaseBuiltin(LabelTTF)
-		CaseBuiltin(Menu)
 		CaseBuiltin(MenuItem)
 		CaseBuiltin(World)
 		CaseBuiltin(PlatformWorld)

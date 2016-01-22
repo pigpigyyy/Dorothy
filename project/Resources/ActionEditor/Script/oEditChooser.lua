@@ -114,7 +114,7 @@ local function oEditChooser(withCancel)
 				addNewAnimation(children[i],index)
 			end
 		end
-	
+
 		local aNames = oEditor.modelData[oSd.animationNames]
 		local i = 0
 		for k,_ in pairs(aNames) do

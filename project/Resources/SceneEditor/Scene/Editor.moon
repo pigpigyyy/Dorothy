@@ -57,9 +57,11 @@ Class EditorView,
 		@levelOperationPanel = level 8
 		@levelItemPanel = level 9
 		@levelClipEditor = level 10
-		@levelMessageBox = level 11
-		@levelInputBox = level 11
-		@levelSelectionPanel = level 11
+		@levelTriggerEditor = level 11
+		@levelExprChooser = level 12
+		@levelMessageBox = level 13
+		@levelInputBox = level 14
+		@levelSelectionPanel = level 15
 
 		@schedule once ->
 			controlNames = {

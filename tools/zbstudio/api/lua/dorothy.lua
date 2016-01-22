@@ -2623,7 +2623,6 @@ local Dorothy =
 		type = "class",
 		index = index()
 	},
-
 	CCLabelAtlas =
 	{
 		childs =
@@ -2668,18 +2667,28 @@ local Dorothy =
 				typeName = "string",
 				type = "value",
 			},
-			setWidth =
+			textWidth =
 			{
-				args = "(width: float)",
-				description = "",
-				returns = "()",
-				type = "method",
+				description = "[float]",
+				type = "value",
 			},
-			setLineBreakWithoutSpace =
+			horizontalAlignment =
 			{
-				args = "(breakWithoutSpace: bool)",
+				description = "[CCTextAlign]",
+				typeName = "CCTextAlign",
+				type = "value",
+			},
+			lineBreakWithoutSpace =
+			{
+				description = "[bool]",
+				type = "value",
+			},
+			getChar =
+			{
+				args = "(index: int)",
 				description = "",
-				returns = "()",
+				returns = "(char: CCSprite)",
+				typeName = "CCSprite",
 				type = "method",
 			},
 			purgeCachedData =

@@ -1,0 +1,55 @@
+<Trigger>
+	<Events>
+		<Event Name="TimeCycle">
+			<Desc>Trigger event every [Number] seconds.</Desc>
+		</Event>
+	</Events>
+	<Expressions>
+		<Expr Name="And" Type="Boolean">
+			<Desc>[Boolean] and [Boolean].</Desc>
+		</Expr>
+		<Expr Name="Or" Type="Boolean">
+			<Desc>[Boolean] or [Boolean].</Desc>
+		</Expr>
+		<Expr Name="Add" Type="Number">
+			<Desc>[Number] + [Number].</Desc>
+		</Expr>
+		<Expr Name="GlobalNumber" Type="GlobalNumber">
+			<Desc>Get global number named [String].</Desc>
+		</Expr>
+		<Expr Name="Number" Type="Number">
+			<Desc>Raw number.</Desc>
+		</Expr>
+		<Expr Name="True", Type="Boolean">
+			<Desc>Boolean true.</Desc>
+		</Expr>
+		<Expr Name="NumberEqual" Type="Boolean">
+			<Desc>Number [Number] equals [Number].</Desc>
+		</Expr>
+		<Expr Name="AssignLocal" Type="Number">
+			<Desc>Assign [LocalNumber] to [Number].</Desc>
+		</Expr>
+		<Expr Name="If" Type="None">
+			<Desc>If [Condition] meet do [Action] otherwise do [Action].</Desc>
+		</Expr>
+		<Expr Name="Loop" Type="None">
+			<Desc>Count numbers from [Number] to [Number] by [Number] and do [Action].</Desc>
+		</Expr>
+		<Expr Name="Sleep" Type="None">
+			<Desc>Pause trigger execution for [Number] seconds.</Desc>
+		</Expr>
+		<Expr Name="Print" Type="None">
+			<Desc>Print message [String] in console.</Desc>
+		</Expr>
+		<Expr Name="DoNothing" Type="None">
+			<Desc>Do nothing.</Desc>
+		</Expr>
+		<Expr Name="CreateModel" Type="Model">
+			<Desc>Create model [Model] at position [Point] of layer [Layer] with angle [Number] and plays [Animation] with loop [Boolean].</Desc>
+		</Expr>
+	</Expressions>
+	<Derivations>
+		<Derv Base="Number" Sub="GlobalNumber"/>
+		<Derv Base="Number" Sub="LocalNumber"/>
+	</Derivations>
+</Trigger>

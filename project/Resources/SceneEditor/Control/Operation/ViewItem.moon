@@ -6,7 +6,7 @@ ViewItemView = require "View.Control.Operation.ViewItem"
 -- [params]
 -- width, height, items
 VisibleChecker = Class ViewItemView,
-	__init: (args)=>
+	__init:(args)=>
 		{:width,:height} = args
 		width += 10
 		height += 10
@@ -18,7 +18,7 @@ VisibleChecker = Class ViewItemView,
 		@border.position = center
 		@slot "Tapped",-> @checked = not @checked
 
-	checked: property => @_checked,
+	checked:property => @_checked,
 		(value)=>
 			return if value == @_checked
 			@_checked = not @_checked
@@ -48,14 +48,14 @@ VisibleChecker = Class ViewItemView,
 -- [params]
 -- x, y, width, height, text
 Class ViewItemView,
-	__init: (args)=>
+	__init:(args)=>
 		@_checked = false
 		@_visibleChecker = nil
 		@slot "Tapped",-> @checked = not @checked
 
-	checker: property => @_visibleChecker
+	checker:property => @_visibleChecker
 
-	enableChecker: property => @_visibleChecker ~= nil,
+	enableChecker:property => @_visibleChecker ~= nil,
 		(value)=>
 			if value
 				return if @_visibleChecker
@@ -75,7 +75,7 @@ Class ViewItemView,
 				@_visibleChecker = nil
 				@label.positionX = @width/2
 
-	checked: property => @_checked,
+	checked:property => @_checked,
 		(value)=>
 			return if value == @_checked
 			@_checked = not @_checked
@@ -94,7 +94,7 @@ Class ViewItemView,
 				@cascadeOpacity = true
 				@borderBold\runAction @fade
 
-	fold: property => @_fold,
+	fold:property => @_fold,
 		(value)=>
 			@_fold = value
 			if value
@@ -110,5 +110,5 @@ Class ViewItemView,
 			else
 				@removeChildByTag 1
 
-	text: property => @label.text,
+	text:property => @label.text,
 		(value)=> @label.text = value

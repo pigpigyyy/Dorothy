@@ -10,17 +10,7 @@ Class PopupPanelView,
 	__init: (args)=>
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
-		@scrollArea\slot "Scrolled",(delta)->
-			contentRect\set 0,0,@scrollArea.width,@scrollArea.height
-			@menu\eachChild (child)->
-				child.position += delta
-				{:positionX,:positionY,:width,:height} = child
-				itemRect\set positionX-width/2,positionY-height/2,width,height
-				child.visible = contentRect\intersectsRect itemRect -- reduce draw calls
-		@scrollArea\slot "ScrollStart",->
-			@menu.enabled = false
-		@scrollArea\slot "ScrollTouchEnded",->
-			@menu.enabled = true
+		@scrollArea\setupMenuScroll @menu
 		@closeBtn\slot "Tapped",-> @hide!
 		CCDirector.currentScene\addChild @,998
 		thread -> @show!

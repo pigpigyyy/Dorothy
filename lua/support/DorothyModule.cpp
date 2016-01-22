@@ -1335,6 +1335,11 @@ CCTexture2D* CCTextureCache_add(CCTextureCache* self, CCRenderTexture* renderTex
 	return texture;
 }
 
+CCSprite* CCLabelBMFont_getChar(CCLabelBMFont* self, int index)
+{
+	return self->getChar(index - 1);
+}
+
 int CCDictionary_get(lua_State* L)
 {
 	/* 1 self, 2 key */

@@ -35,9 +35,6 @@ Use any of these editors to generate BMFonts:
 
 #include "sprite_nodes/CCSpriteBatchNode.h"
 #include "support/data_support/uthash.h"
-#include <map>
-#include <sstream>
-#include <iostream>
 #include <vector>
 
 NS_CC_BEGIN
@@ -50,7 +47,7 @@ NS_CC_BEGIN
  */
 
 enum {
-    kCCLabelAutomaticWidth = -1,
+	kCCLabelAutomaticWidth = -1,
 };
 
 struct _FontDefHashElement;
@@ -60,16 +57,16 @@ struct _FontDefHashElement;
 BMFont definition
 */
 typedef struct _BMFontDef {
-    //! ID of the character
-    unsigned int charID;
-    //! origin and size of the font
-    CCRect rect;
-    //! The X amount the image should be offset when drawing the image (in pixels)
-    short xOffset;
-    //! The Y amount the image should be offset when drawing the image (in pixels)
-    short yOffset;
-    //! The amount to move the current position after drawing the character (in pixels)
-    short xAdvance;
+	//! ID of the character
+	unsigned int charID;
+	//! origin and size of the font
+	CCRect rect;
+	//! The X amount the image should be offset when drawing the image (in pixels)
+	short xOffset;
+	//! The Y amount the image should be offset when drawing the image (in pixels)
+	short yOffset;
+	//! The amount to move the current position after drawing the character (in pixels)
+	short xAdvance;
 } ccBMFontDef;
 
 /** @struct ccBMFontPadding
@@ -77,14 +74,14 @@ BMFont padding
 @since v0.8.2
 */
 typedef struct _BMFontPadding {
-    /// padding left
-    int    left;
-    /// padding top
-    int top;
-    /// padding right
-    int right;
-    /// padding bottom
-    int bottom;
+	/// padding left
+	int    left;
+	/// padding top
+	int top;
+	/// padding right
+	int right;
+	/// padding bottom
+	int bottom;
 } ccBMFontPadding;
 
 typedef struct _FontDefHashElement
@@ -107,46 +104,46 @@ typedef struct _KerningHashElement
 */
 class CC_DLL CCBMFontConfiguration : public CCObject
 {
-    // XXX: Creating a public interface so that the bitmapFontArray[] is accessible
+	// XXX: Creating a public interface so that the bitmapFontArray[] is accessible
 public://@public
-    // BMFont definitions
-    tCCFontDefHashElement *m_pFontDefDictionary;
+	// BMFont definitions
+	tCCFontDefHashElement *m_pFontDefDictionary;
 
-    //! FNTConfig: Common Height Should be signed (issue #1343)
-    int m_nCommonHeight;
-    //! Padding
-    ccBMFontPadding    m_tPadding;
-    //! atlas name
-    std::string m_sAtlasName;
-    //! values for kerning
-    tCCKerningHashElement *m_pKerningDictionary;
-    
-    // Character Set defines the letters that actually exist in the font
-    std::set<unsigned int> *m_pCharacterSet;
+	//! FNTConfig: Common Height Should be signed (issue #1343)
+	int m_nCommonHeight;
+	//! Padding
+	ccBMFontPadding    m_tPadding;
+	//! atlas name
+	std::string m_sAtlasName;
+	//! values for kerning
+	tCCKerningHashElement *m_pKerningDictionary;
+
+	// Character Set defines the letters that actually exist in the font
+	std::set<unsigned int> *m_pCharacterSet;
 public:
-    CCBMFontConfiguration();
-    virtual ~CCBMFontConfiguration();
-    const char * description();
+	CCBMFontConfiguration();
+	virtual ~CCBMFontConfiguration();
+	const char * description();
 
-    /** allocates a CCBMFontConfiguration with a FNT file */
-    static CCBMFontConfiguration * create(const char *FNTfile);
+	/** allocates a CCBMFontConfiguration with a FNT file */
+	static CCBMFontConfiguration * create(const char *FNTfile);
 
-    /** initializes a BitmapFontConfiguration with a FNT file */
-    bool initWithFNTfile(const char *FNTfile);
-    
-    inline const char* getAtlasName(){ return m_sAtlasName.c_str(); }
-    inline void setAtlasName(const char* atlasName) { m_sAtlasName = atlasName; }
-    
-    std::set<unsigned int>* getCharacterSet() const;
+	/** initializes a BitmapFontConfiguration with a FNT file */
+	bool initWithFNTfile(const char *FNTfile);
+
+	inline const char* getAtlasName() { return m_sAtlasName.c_str(); }
+	inline void setAtlasName(const char* atlasName) { m_sAtlasName = atlasName; }
+
+	std::set<unsigned int>* getCharacterSet() const;
 private:
-    std::set<unsigned int>* parseConfigFile(const char *controlFile);
-    void parseCharacterDefinition(std::string line, ccBMFontDef *characterDefinition);
-    void parseInfoArguments(std::string line);
-    void parseCommonArguments(std::string line);
-    void parseImageFileName(std::string line, const char *fntFile);
-    void parseKerningEntry(std::string line);
-    void purgeKerningDictionary();
-    void purgeFontDefDictionary();
+	std::set<unsigned int>* parseConfigFile(const char *controlFile);
+	void parseCharacterDefinition(std::string line, ccBMFontDef *characterDefinition);
+	void parseInfoArguments(std::string line);
+	void parseCommonArguments(std::string line);
+	void parseImageFileName(std::string line, const char *fntFile);
+	void parseKerningEntry(std::string line);
+	void purgeKerningDictionary();
+	void purgeFontDefDictionary();
 };
 
 /** @brief CCLabelBMFont is a subclass of CCSpriteBatchNode.
@@ -182,101 +179,104 @@ http://www.angelcode.com/products/bmfont/ (Free, Windows only)
 class CC_DLL CCLabelBMFont : public CCSpriteBatchNode, public CCLabelProtocol
 {
 public:
-    CCLabelBMFont();
+	CCLabelBMFont();
 
-    virtual ~CCLabelBMFont();
-    /** Purges the cached data.
-    Removes from memory the cached configurations and the atlas name dictionary.
-    @since v0.99.3
-    */
-    static void purgeCachedData();
+	virtual ~CCLabelBMFont();
+	/** Purges the cached data.
+	Removes from memory the cached configurations and the atlas name dictionary.
+	@since v0.99.3
+	*/
+	static void purgeCachedData();
 
-    /** creates a bitmap font atlas with an initial string and the FNT file */
-    static CCLabelBMFont * create(const char *str, const char *fntFile, float width, CCTextAlignment alignment, CCPoint imageOffset);
-    
-	static CCLabelBMFont * create(const char *str, const char *fntFile, float width, CCTextAlignment alignment);
+	/** creates a bitmap font atlas with an initial string and the FNT file */
+	static CCLabelBMFont* create(const char* str, const char* fntFile, float width, CCTextAlignment alignment, CCPoint imageOffset);
 
-	static CCLabelBMFont * create(const char *str, const char *fntFile, float width);
+	static CCLabelBMFont* create(const char* str, const char* fntFile, float width, CCTextAlignment alignment);
 
-	static CCLabelBMFont * create(const char *str, const char *fntFile);
+	static CCLabelBMFont* create(const char* str, const char* fntFile, float width);
 
-    /** Creates an label.
-     */
-    static CCLabelBMFont * create();
+	static CCLabelBMFont* create(const char* str, const char* fntFile);
 
-    bool init();
-    /** init a bitmap font atlas with an initial string and the FNT file */
-    bool initWithString(const char *str, const char *fntFile, float width = kCCLabelAutomaticWidth, CCTextAlignment alignment = kCCTextAlignmentLeft, CCPoint imageOffset = CCPoint::zero);
+	/** Creates an label.
+	 */
+	static CCLabelBMFont* create();
 
-    /** updates the font chars based on the string to render */
-    void createFontChars();
-    // super method
-    virtual void setText(const char *newString);
-    virtual void setText(const char *newString, bool needUpdateLabel);
+	bool init();
+	/** init a bitmap font atlas with an initial string and the FNT file */
+	bool initWithString(const char* str, const char* fntFile, float width = kCCLabelAutomaticWidth, CCTextAlignment alignment = kCCTextAlignmentLeft, CCPoint imageOffset = CCPoint::zero);
 
-    virtual const char* getText();
-    virtual void setCString(const char *label);
-    virtual void setAnchorPoint(const CCPoint& var);
-    virtual void updateLabel();
-    virtual void setAlignment(CCTextAlignment alignment);
-    virtual void setWidth(float width);
-    virtual void setLineBreakWithoutSpace(bool breakWithoutSpace);
-    virtual void setScale(float scale);
-    virtual void setScaleX(float scaleX);
-    virtual void setScaleY(float scaleY);
-    
-    // CCRGBAProtocol 
-    virtual bool isOpacityModifyRGB();
-    virtual void setOpacityModifyRGB(bool isOpacityModifyRGB);
+	/** updates the font chars based on the string to render */
+	void createFontChars();
+	CCSprite* getChar(int index);
 
-    void setFntFile(const char* fntFile);
-    const char* getFntFile();
+	// super method
+	virtual void setText(const char* newString);
+	virtual void setText(const char* newString, bool needUpdateLabel);
+
+	virtual const char* getText();
+	virtual void setAnchorPoint(const CCPoint& var);
+	virtual void updateLabel();
+	virtual void setAlignment(CCTextAlignment alignment);
+	CCTextAlignment getAlignment();
+	virtual void setTextWidth(float width);
+	virtual float getTextWidth();
+	virtual void setLineBreakWithoutSpace(bool breakWithoutSpace);
+	virtual bool isLineBreakWithoutSpace();
+	virtual void setScale(float scale);
+	virtual void setScaleX(float scaleX);
+	virtual void setScaleY(float scaleY);
+
+	// CCRGBAProtocol 
+	virtual bool isOpacityModifyRGB();
+	virtual void setOpacityModifyRGB(bool isOpacityModifyRGB);
+
+	void setFntFile(const char* fntFile);
+	const char* getFntFile();
 #if CC_LABELBMFONT_DEBUG_DRAW
-    virtual void draw();
+	virtual void draw();
 #endif // CC_LABELBMFONT_DEBUG_DRAW
 private:
-    char * atlasNameFromFntFile(const char *fntFile);
-    int kerningAmountForFirst(unsigned short first, unsigned short second);
-    float getLetterPosXLeft( CCSprite* characterSprite );
-    float getLetterPosXRight( CCSprite* characterSprite );
-    
-protected:
-    virtual void setText(unsigned short *newString, bool needUpdateLabel);
-    // string to render
-    unsigned short* m_sString;
-    
-    // name of fntFile
-    std::string m_sFntFile;
-    
-    // initial string without line breaks
-    unsigned short* m_sInitialString;
-    std::string m_sInitialStringUTF8;
-    
-    // alignment of all lines
-    CCTextAlignment m_pAlignment;
-    // max width until a line break is added
-    float m_fWidth;
-    
-    CCBMFontConfiguration *m_pConfiguration;
-    
-    bool m_bLineBreakWithoutSpaces;
-    // offset of the texture atlas
-    CCPoint    m_tImageOffset;
-    
-    // reused char
-    CCSprite *m_pReusedChar;
+	char* atlasNameFromFntFile(const char *fntFile);
+	int kerningAmountForFirst(unsigned short first, unsigned short second);
+	float getLetterPosXLeft(CCSprite* characterSprite);
+	float getLetterPosXRight(CCSprite* characterSprite);
 
-    /** conforms to CCRGBAProtocol protocol */
-    bool        m_bIsOpacityModifyRGB;
+protected:
+	virtual void setText(unsigned short* newString, bool needUpdateLabel);
+	// string to render
+	unsigned short* m_sString;
+
+	// name of fntFile
+	std::string m_sFntFile;
+
+	// initial string without line breaks
+	unsigned short* m_sInitialString;
+	std::string m_sInitialStringUTF8;
+
+	// alignment of all lines
+	CCTextAlignment m_pAlignment;
+	// max width until a line break is added
+	float m_fWidth;
+
+	CCBMFontConfiguration *m_pConfiguration;
+
+	bool m_bLineBreakWithoutSpaces;
+	// offset of the texture atlas
+	CCPoint m_tImageOffset;
+
+	std::vector<CCSprite*> _chars;
+
+	/** conforms to CCRGBAProtocol protocol */
+	bool m_bIsOpacityModifyRGB;
 	CC_LUA_TYPE(CCLabelBMFont)
 };
 
 /** Free function that parses a FNT file a place it on the cache
 */
-CC_DLL CCBMFontConfiguration * FNTConfigLoadFile( const char *file );
+CC_DLL CCBMFontConfiguration * FNTConfigLoadFile(const char *file);
 /** Purges the FNT config cache
 */
-CC_DLL void FNTConfigRemoveCache( void );
+CC_DLL void FNTConfigRemoveCache(void);
 
 // end of GUI group
 /// @}

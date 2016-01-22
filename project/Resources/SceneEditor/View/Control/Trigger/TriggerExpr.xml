@@ -1,0 +1,3 @@
+<MenuItem X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }">
+	<LabelBMFont Name="label" AnchorX="0" AnchorY="1" File="Font/Arial20.fnt" TextWidth="{ width }" HorizontalAlign="Left" Ref="True"/>
+</MenuItem>

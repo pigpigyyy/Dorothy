@@ -214,11 +214,46 @@ Class ScrollAreaView,
 		@getViewSize = -> CCSize viewWidth,viewHeight
 		@getTotalDelta = -> oVec2 deltaX,deltaY
 
-	offset: property => @getTotalDelta!,
+	offset:property => @getTotalDelta!,
 		(offset)=> @scroll offset-@getTotalDelta!
 
-	viewSize: property => @getViewSize!,
+	viewSize:property => @getViewSize!,
 		(size)=> @updateViewSize size.width,size.height
 
-	padding: property => @getPadding!,
+	padding:property => @getPadding!,
 		(padding)=> @updatePadding padding.x,padding.y
+
+	setupMenuScroll:(menu)=>
+		contentRect = CCRect.zero
+		itemRect = CCRect.zero
+		@slot "Scrolled",(delta)->
+			contentRect\set 0,0,@width,@height
+			menu\eachChild (child)->
+				child.position += delta
+				{:positionX,:positionY,:width,:height} = child
+				itemRect\set positionX-width/2,positionY-height/2,width,height
+				child.visible = contentRect\intersectsRect itemRect -- reduce draw calls
+		@slot "ScrollStart",->
+			menu.enabled = false
+		@slot "ScrollTouchEnded",->
+			menu.enabled = true
+
+	scrollToPosY:(posY,time=0.3)=>
+		height = @height
+		offset = @offset
+		viewHeight = @viewSize.height
+		deltaY = height/2-posY
+		startY = offset.y
+		endY = startY+deltaY
+		if viewHeight <= height
+			endY = 0
+		else
+			endY = math.max endY,0
+			endY = math.min endY,viewHeight-height
+			@schedule once ->
+				changeY = endY-startY
+				cycle time,(progress)->
+					offset.y = oEase\func oEase.OutQuad,progress,startY,changeY
+					@scrollTo offset
+				offset.y = endY
+				@scrollTo offset
