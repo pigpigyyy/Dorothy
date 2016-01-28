@@ -7,7 +7,7 @@ CCScene = require "Lib.CCSceneEx"
 require "Lib.oBodyEx"
 
 Class EditorView,
-	__init: =>
+	__init:=>
 		{:width,:height} = CCDirector.winSize
 		@_gameName = nil
 		@_gameFullPath = nil
@@ -64,6 +64,9 @@ Class EditorView,
 		@levelSelectionPanel = level 15
 
 		@schedule once ->
+			TriggerEditor = require "Control.Trigger.TriggerEditor"
+			@addChild TriggerEditor!
+			return if true
 			controlNames = {
 				"ViewArea"
 				"HRuler"
@@ -90,8 +93,6 @@ Class EditorView,
 				oContent\copyAsync resPath,writePath
 			--ScenePanel = require "Control.Item.ScenePanel"
 			--ScenePanel!
-			TriggerEditor = require "Control.Trigger.TriggerEditor"
-			@addChild TriggerEditor!
 
 		panelWidth = 10+110*4
 		panelHeight = height*0.6

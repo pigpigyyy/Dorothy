@@ -6,17 +6,17 @@ Button = require "Control.Basic.Button"
 
 local ScenePanel
 ScenePanel = Class
-	__partial: =>
+	__partial:=>
 		itemNum = 3
 		itemWidth = 120
 		itemHeight = 50
-		winSize = CCDirector.winSize
-		while (itemWidth+10)*itemNum+10 > winSize.width and itemNum > 1
+		{:width,:height} = CCDirector.winSize
+		while (itemWidth+10)*itemNum+10 > width and itemNum > 1
 			itemNum = itemNum - 1
 		args = {
-			x:winSize.width/2
-			y:winSize.height/2
-			height:winSize.height*0.6
+			x:width/2
+			y:height/2
+			height:height*0.6
 			width:10+itemNum*(itemWidth+10)
 		}
 		@itemNum = itemNum
@@ -24,11 +24,11 @@ ScenePanel = Class
 		@itemHeight = itemHeight
 		ScenePanelView args
 
-	__init: =>
+	__init:=>
 		@slot "Show",-> @displayItems!
 		@quitBtn\slot "Tapped",-> editor\emit "Quit"
 
-	displayItems: =>
+	displayItems:=>
 		@panel\schedule once ->
 			{:width,:height} = @panel
 			{:itemNum,:itemWidth,:itemHeight} = @
@@ -44,7 +44,7 @@ ScenePanel = Class
 					sleep!
 					for file in *files
 						filename = path.."/"..file
-						filename = filename\gsub(editor.gameFullPath,"")
+						filename = filename\gsub editor.gameFullPath,""
 						if filename\lower! ~= "scene/ui.scene"
 							table.insert sceneFiles,filename
 						sleep!
@@ -153,14 +153,14 @@ ScenePanel = Class
 			yStart = y - itemHeight/2
 			@scrollArea.viewSize = CCSize width,height-yStart+10
 
-	createTitle: (title,currentItem,yStart)=>
+	createTitle:(title,currentItem,yStart)=>
 		y = yStart-20
 		title = with CCLabelTTF title,"Arial",24
 			.texture.antiAlias = false
 			.color = ccColor3 0x00ffff
 			.opacity = 0
+			.position = oVec2 @panel.width/2,y-title.height/2
 			\runAction oOpacity 0.3,1
-		title.position = oVec2 @panel.width/2,y-title.height/2
 		@menu\addChild title
 		yStart = y-title.height-(currentItem and -10 or 20)
 		if currentItem
@@ -169,15 +169,14 @@ ScenePanel = Class
 			title = with CCLabelTTF text,"Arial",16
 				.texture.antiAlias = false
 				.color = ccColor3 0x00ffff
-				.position = oVec2 @panel.width/2,y
 				.opacity = 0
+				.position = oVec2 @panel.width/2,y-title.height/2
 				\runAction oOpacity 0.3,1
-			title.position = oVec2 @panel.width/2,y-title.height/2
 			@menu\addChild title
 			yStart = y-title.height-10
 		yStart
 
-	createItem: (name,x,y,width,height,callback)=>
+	createItem:(name,x,y,width,height,callback)=>
 		name = #name > 10 and name\sub(1,7).."..." or name
 		button = with Button {
 				x:x

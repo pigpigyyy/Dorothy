@@ -50,10 +50,10 @@
 		</ScrollArea>
 
 		<LineRect X="-1" Y="-1" Width="{ $W+2 }" Height="{ $H+2 }" Color="0xffffafaf"/>
-		<Line Color="0xffafaf" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }">
+		<!--<Line Color="0xffafaf" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }">
 			<Vec2 X="210" Y="{ $B }"/>
 			<Vec2 X="210" Y="{ $T }"/>
-		</Line>
+		</Line>-->
 	</Node>
 
 	<Menu Name="opMenu" X="{ @X+(@W-80)/2-35 }" Y="{ @Y+(@H-80)/2 }" Width="130" Height="60" TouchPriority="{ editor.levelTriggerEditor-3 }" Enabled="False" Ref="True">

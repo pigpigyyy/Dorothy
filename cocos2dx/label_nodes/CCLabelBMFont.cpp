@@ -793,7 +793,7 @@ void CCLabelBMFont::updateLabel()
 	{
 		// Step 1: Make multiline
 		vector<unsigned short> str_whole = cc_utf16_vec_from_utf16_str(m_sString);
-		unsigned int stringLength = str_whole.size();
+		int stringLength = (int)str_whole.size();
 		vector<unsigned short> multiline_string;
 		multiline_string.reserve(stringLength);
 		vector<unsigned short> last_word;
@@ -803,7 +803,7 @@ void CCLabelBMFont::updateLabel()
 		bool start_line = false, start_word = false;
 		float startOfLine = -1, startOfWord = -1;
 
-		for (unsigned int j = 0; j < stringLength; j++)
+		for (int j = 0; j < stringLength; j++)
 		{
 			int justSkipped = 0;
 			CCSprite* characterSprite;
@@ -940,7 +940,7 @@ void CCLabelBMFont::updateLabel()
 
 		multiline_string.insert(multiline_string.end(), last_word.begin(), last_word.end());
 
-		int size = multiline_string.size();
+		int size = (int)multiline_string.size();
 		unsigned short* str_new = new unsigned short[size + 1];
 
 		for (int i = 0; i < size; ++i)
@@ -968,7 +968,7 @@ void CCLabelBMFont::updateLabel()
 			if (m_sString[ctr] == '\n' || m_sString[ctr] == 0)
 			{
 				float lineWidth = 0.0f;
-				unsigned int line_length = last_line.size();
+				int line_length = (int)last_line.size();
 				// if last line is empty we must just increase lineNumber and work with next line
 				if (line_length == 0)
 				{

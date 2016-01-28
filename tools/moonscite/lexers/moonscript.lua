@@ -38,7 +38,7 @@ local keyword = token(l.KEYWORD, word_match {
 	'if', 'else', 'elseif', 'then', 'export',
 	'import', 'from', 'with', 'in', 'and',
 	'or', 'not', 'class', 'extends', 'super', 'do',
-	'using', 'switch', 'when',
+	'using', 'switch', 'when', 'unless', 'local'
 })
 
 local special = token("special", word_match { "true", "false", "nil" }) 

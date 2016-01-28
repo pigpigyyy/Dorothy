@@ -89,7 +89,15 @@ Class TriggerEditorView,
 
 		thread ->
 			sleep!
-			editor\addChild ExprChooser valueType:"None"
+			with ExprChooser valueType:"Action"
+				\slot "Result",(expr)->
+					@triggerMenu\addChild with TriggerExpr {
+							indent:0
+							text:tostring expr
+							width:@triggerMenu.width-20
+						}
+						\slot "Tapped",changeTriggerExpr
+					@triggerMenu\alignItems!
 
 		@show!
 		@closeBtn\slot "Tapped",-> @hide!
