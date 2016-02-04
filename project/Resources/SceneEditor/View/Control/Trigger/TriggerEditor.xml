@@ -1,54 +1,33 @@
 <!-- params: X, Y, Width, Height -->
-<Layer X="{ @X }" Y="{ @Y }"
+<LayerColor X="{ @X }" Y="{ @Y }"
 	TouchPriority="{ editor.levelTriggerEditor }"
+	Color="0x0" Opacity="0"
 	SwallowTouches="True" TouchEnabled="True" Visible="False">
 	<Import Module="Control.Basic.ScrollArea"/>
 	<Import Module="Control.Basic.Button"/>
 	<Import Module="Control.Trigger.TriggerItem"/>
-	<Import Module="Control.Trigger.ExprEditor"/>
 	<Import Module="View.Shape.LineRect"/>
 	<Import Module="View.Shape.SolidRect"/>
 	<Import Module="View.Control.Basic.CircleButton"/>
 
-	<Node Name="panel" X="{ $X }" Y="{ $Y }" Width="{ @W }" Height="{ @H }" Ref="True">
-		<SolidRect Width="{ $W }" Height="{ $H }" Color="0xff100000"/>
-
-		<!-- scope menu -->
-		<Menu Name="scopeMenu" X="105" Y="{ $T-45 }" Width="210" Height="90" AlignItems="10" TouchPriority="{ editor.levelTriggerEditor-1 }" Ref="True">
-			<TriggerItem Name="localBtn" Text="Local" Width="{ ($W-30)/2 }" Height="30" FontSize="20" Ref="True"/>
-			<TriggerItem Name="globalBtn" Text="Global" Width="{ ($W-30)/2 }" Height="30" FontSize="20" Ref="True"/>
-			<Button Name="groupBtn" Text="Skill" Width="190" Height="30" FontSize="20" Ref="True">
-				<Item Name="face">
-					<SolidRect Width="{ $W }" Height="{ $H }" Color="0x2200ffff"/>
-					<Node X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" PassColor="False">
-						<Line X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" Color="0xff0080">
-							<Vec2 X="{ $L+15 }" Y="{ $B+5 }"/>
-							<Vec2 X="{ $L+5 }" Y="{ $B+5 }"/>
-							<Vec2 X="{ $L+5 }" Y="{ $B+15 }"/>
-						</Line>
-						<Line X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" Color="0xff0080">
-							<Vec2 X="{ $R-5 }" Y="{ $T-15 }"/>
-							<Vec2 X="{ $R-5 }" Y="{ $T-5 }"/>
-							<Vec2 X="{ $R-15 }" Y="{ $T-5 }"/>
-						</Line>
-					</Node>
-				</Item>
-			</Button>
-		</Menu>
+	<Node Name="panel" X="{ $X }" Y="{ $Y }" Width="{ @W-80 }" Height="{ @H-80 }" Ref="True">
+		<SolidRect Width="{ $W }" Height="{ $H }" Color="0xe5100000"/>
 
 		<!-- trigger list -->
-		<ScrollArea Name="listScrollArea" X="105" Y="{ $T-90-($H-150)/2 }" Width="210" Height="{ $H-150 }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelTriggerEditor-2 }" AlignItems="10" Ref="True">
+		<ScrollArea Name="listScrollArea" X="105" Y="{ $T-($H-60)/2 }" Width="210" Height="{ $H-60 }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelTriggerEditor-2 }" AlignItems="10" Ref="True">
 			<Item Name="view">
 				<Menu Name="listMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" AlignItems="10" TouchPriority="{ editor.levelTriggerEditor-1 }" Enabled="False" Ref="True">
-					<TriggerItem Text="SceneInitialized" Width="190" Height="35"/>
-					<TriggerItem Text="Every5Minutes" Width="190" Height="35"/>
-					<TriggerItem Text="GameStarted" Width="190" Height="35"/>
-					<TriggerItem Text="PlayerCastSpell1" Width="190" Height="35"/>
-					<TriggerItem Text="PlayerCastSpell2" Width="190" Height="35"/>
-					<TriggerItem Text="PlayerCastSpell3" Width="190" Height="35"/>
-					<TriggerItem Text="PlayerCastSpell4" Width="190" Height="35"/>
-					<TriggerItem Text="PlayerCastSpell5" Width="190" Height="35"/>
-					<TriggerItem Text="PlayerCastSpell6" Width="190" Height="35"/>
+					<TriggerItem Name="localBtn" Text="Local" Width="{ ($W-30)/2 }" Height="40" Ref="True"/>
+					<TriggerItem Name="globalBtn" Text="Global" Width="{ ($W-30)/2 }" Height="40" Ref="True"/>
+					<TriggerItem Text="SceneInitialized" Width="190" Height="30"/>
+					<TriggerItem Text="Every5Minutes" Width="190" Height="30"/>
+					<TriggerItem Text="GameStarted" Width="190" Height="30"/>
+					<TriggerItem Text="PlayerCastSpell1" Width="190" Height="30"/>
+					<TriggerItem Text="PlayerCastSpell2" Width="190" Height="30"/>
+					<TriggerItem Text="PlayerCastSpell3" Width="190" Height="30"/>
+					<TriggerItem Text="PlayerCastSpell4" Width="190" Height="30"/>
+					<TriggerItem Text="PlayerCastSpell5" Width="190" Height="30"/>
+					<TriggerItem Text="PlayerCastSpell6" Width="190" Height="30"/>
 				</Menu>
 			</Item>
 		</ScrollArea>
@@ -62,10 +41,16 @@
 		</Menu>
 
 		<!-- trigger content edit area-->
-		<ExprEditor Name="exprEditor" X="{ $W/2+105 }" Y="{ $Y }" Width="{ $W-210 }" Height="{ $H }" Ref="True"/>
+		<ScrollArea Name="triggerScrollArea" X="{ $W/2+105 }" Y="{ $Y }" Width="{ $W-210 }" Height="{ $H }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelItemPanel-2 }" Ref="True">
+			<Item Name="view">
+				<Menu Name="triggerMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" AlignItems="10" TouchPriority="{ editor.levelTriggerEditor-1 }" Enabled="False" Ref="True">
+					<LabelTTF Name="contentLabel" FontName="Arial" FontSize="20" Text="Count numbers from [Number] to [Number] by [Number] and do [Action]." HorizontalAlign="Left" VerticalAlign="Top" Ref="True"/>
+				</Menu>
+			</Item>
+		</ScrollArea>
 
-		<!--<LineRect X="-1" Y="-1" Width="{ $W+2 }" Height="{ $H+2 }" Color="0xffffafaf"/>
-		<Line Color="0xffafaf" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }">
+		<LineRect X="-1" Y="-1" Width="{ $W+2 }" Height="{ $H+2 }" Color="0xffffafaf"/>
+		<!--<Line Color="0xffafaf" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }">
 			<Vec2 X="210" Y="{ $B }"/>
 			<Vec2 X="210" Y="{ $T }"/>
 		</Line>-->
@@ -78,4 +63,4 @@
 			</DrawNode>
 		</CircleButton>
 	</Menu>
-</Layer>
+</LayerColor>

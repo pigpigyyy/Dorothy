@@ -1,4 +1,4 @@
-<!-- params: Level, ValueType, X, Y, Width, Height -->
+<!-- params: ValueType, X, Y, Width, Height -->
 <Layer X="{ @X }" Y="{ @Y }"
 	TouchPriority="{ editor.levelExprChooser }"
 	SwallowTouches="True" TouchEnabled="True" Visible="False">
@@ -9,26 +9,23 @@
 	<Import Module="Control.Trigger.TriggerItem"/>
 
 	<Node Name="panel" X="{ @X }" Y="{ @Y }" Width="{ width }" Height="{ height }" Ref="True">
-		<SolidRect Width="{ $W }" Height="{ $H }" Color="0xff100000"/>
+		<SolidRect Width="{ $W }" Height="{ $H }" Color="0xee100000"/>
 
-		<Script>local catWidth = 100</Script>
-		<ScrollArea Name="catScrollArea" X="{ $L+catWidth/2 }" Y="{ $Y-15 }" Width="{ catWidth }" Height="{ $H-30 }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelExprChooser-2 }" Ref="True">
+		<LabelTTF Name="labelType" Text="{ valueType }" X="125" Y="{ $T-15 }" AntiAlias="False" FontName="Arial" FontSize="20" Ref="True" Color="0x00ffff"/>
+
+		<ScrollArea Name="catScrollArea" X="{ $L+50 }" Y="{ $Y-15 }" Width="100" Height="{ $H-30 }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelExprChooser-2 }" Ref="True">
 			<Item Name="view">
 				<Menu Name="catMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" AlignItems="10" TouchPriority="{ editor.levelExprChooser-1 }" Ref="True"/>
 			</Item>
 		</ScrollArea>
 
-		<Script>local apiWidth = 200</Script>
-		<ScrollArea Name="apiScrollArea" X="{ $L+catWidth+apiWidth/2 }" Y="{ $Y-15 }" Width="{ apiWidth }" Height="{ $H-30 }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelExprChooser-2 }" Ref="True">
+		<ScrollArea Name="apiScrollArea" X="{ $L+175 }" Y="{ $Y-15 }" Width="150" Height="{ $H-30 }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelExprChooser-2 }" Ref="True">
 			<Item Name="view">
 				<Menu Name="apiMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" AlignItems="10" TouchPriority="{ editor.levelExprChooser-1 }" Ref="True"/>
 			</Item>
 		</ScrollArea>
 
-		<LabelTTF Name="typeLabel" Text="{ 'Level: '..level..', Type: '..valueType }" X="{ (catWidth+apiWidth)/2 }" Y="{ $T-15 }" AntiAlias="False" FontName="Arial" FontSize="20" Ref="True" Color="0x00ffff"/>
-
-		<Script>local bodyWidth = width-catWidth-apiWidth</Script>
-		<ScrollArea Name="bodyScrollArea" X="{ $R-bodyWidth/2 }" Y="{ $Y }" Width="{ bodyWidth }" Height="{ $H }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelExprChooser-2 }" Ref="True">
+		<ScrollArea Name="bodyScrollArea" X="{ $R-(width-250)/2 }" Y="{ $Y }" Width="{ width-250 }" Height="{ $H }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelExprChooser-2 }" Ref="True">
 			<Item Name="view">
 				<Menu Name="bodyMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" AlignItems="10" TouchPriority="{ editor.levelExprChooser-1 }" Ref="True">
 					<LabelBMFont Name="bodyLabel" AnchorX="0" AnchorY="1" File="Font/Arial20.fnt" TextWidth="{ $W-20 }" HorizontalAlign="Left" Ref="True"/>
@@ -42,12 +39,12 @@
 			<Vec2 X="100" Y="{ $T-30 }"/>
 		</Line>
 		<Line Color="0xffafaf" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }">
-			<Vec2 X="300" Y="{ $B }"/>
-			<Vec2 X="300" Y="{ $T }"/>
+			<Vec2 X="250" Y="{ $B }"/>
+			<Vec2 X="250" Y="{ $T }"/>
 		</Line>
 		<Line Color="0xffafaf" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }">
 			<Vec2 X="0" Y="{ $T-30 }"/>
-			<Vec2 X="300" Y="{ $T-30 }"/>
+			<Vec2 X="250" Y="{ $T-30 }"/>
 		</Line>-->
 	</Node>
 

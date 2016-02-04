@@ -7,15 +7,10 @@ import Set from require "Data.Utils"
 
 local ExprChooser
 ExprChooser = Class
-	__initc:=>
-		@level = 1
-
 	__partial:(args)=>
 		{:width,:height} = CCDirector.winSize
-		args.width or= width*0.8
+		args.width or= width*0.6
 		args.height or= height*0.6
-		args.level = @@level
-		@@level += 1
 		ExprChooserView args
 
 	__init:(args)=>
@@ -87,13 +82,16 @@ ExprChooser = Class
 							index = exprIndex
 							\slot "Tapped",->
 								exprDef = @curExprBtn.exprDef
-								with ExprChooser valueType:@curExpr[index].Type,expr:@curExpr[index]
-									\slot "Show",-> @visible = false
-									\slot "Hide",-> @visible = true
+								with ExprChooser {
+										valueType:@curExpr[index].Type
+										expr:@curExpr[index]
+									}
 									\slot "Result",(expr)->
 										if expr
 											@curExpr[index] = expr
 											updateContent exprDef
+									\slot "Show",-> @visible = false
+									\slot "Hide",-> @visible = true
 						table.insert @valueButtons,menuItem
 						@bodyMenu\addChild menuItem
 					startIndex = stopIndex
@@ -140,7 +138,7 @@ ExprChooser = Class
 					text:groupName
 					fontSize:18
 					width:80
-					height:35
+					height:30
 				}
 				\slot "Tapped",selectGroup
 			for exprDef in *TriggerDef.Groups[groupName]
@@ -148,8 +146,8 @@ ExprChooser = Class
 					exprItem = with TriggerItem {
 							text:exprDef.Name
 							fontSize:18
-							width:180
-							height:35
+							width:130
+							height:30
 						}
 						.exprDef = exprDef
 						\slot "Tapped",selectExpr
@@ -157,7 +155,7 @@ ExprChooser = Class
 					@apiMenu\addChild exprItem
 
 		@curGroupBtn = @catMenu.children[1]
-		@curGroupBtn\makeChecked!
+		@curGroupBtn.checked = true
 
 		@catScrollArea\setupMenuScroll @catMenu
 		@catScrollArea.viewSize = @catMenu\alignItems!
@@ -167,12 +165,9 @@ ExprChooser = Class
 
 		if @curExpr
 			exprItem = @exprButtons[getmetatable @curExpr]
-			exprItem\makeChecked!
-			selectExpr exprItem
-			@apiScrollArea\scrollToPosY exprItem.positionY
+			exprItem\emit "Tapped",exprItem
 
 		@okBtn\slot "Tapped",->
-			@@level -= 1
 			@emit "Result",@curExpr
 			@hide!
 
@@ -187,8 +182,13 @@ ExprChooser = Class
 			\perform oScale 0.3,1,1,oEase.OutBack
 		with @panel
 			.opacity = 0
+			.scaleX = 0
+			.scaleY = 0
 			\perform CCSequence {
-				oOpacity 0.3,1,oEase.OutQuad
+				CCSpawn {
+					oOpacity 0.3,1,oEase.OutQuad
+					oScale 0.3,1,1,oEase.OutBack
+				}
 				CCCall ->
 					@catScrollArea.touchEnabled = true
 					@apiScrollArea.touchEnabled = true
@@ -211,7 +211,10 @@ ExprChooser = Class
 		@opMenu.enabled = false
 		@okBtn\perform oScale 0.3,0,0,oEase.InBack
 		@panel\perform CCSequence {
-			oOpacity 0.3,0,oEase.OutQuad
+			CCSpawn {
+				oOpacity 0.3,0,oEase.OutQuad
+				oScale 0.3,0,0,oEase.InBack
+			}
 			CCCall -> @parent\removeChild @
 		}
 

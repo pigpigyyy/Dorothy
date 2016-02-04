@@ -86,7 +86,7 @@ local symbol = token("symbol", S("(){}[]"))
 local operator = token(l.OPERATOR, '~=' + S('+-*!\\/%^#=<>;:,.'))
 
 -- self ref
-local self_var = token("self_ref", "@" * l.word + "@@" * l.word + "self" )
+local self_var = token("self_ref", "@" * l.word + "self")
 
 local proper_ident = token("proper_ident", R("AZ") * l.word)
 

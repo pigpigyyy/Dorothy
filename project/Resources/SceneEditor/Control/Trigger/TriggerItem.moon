@@ -8,16 +8,6 @@ Class TriggerItemView,
 		@_checked = false
 		@slot "Tapped",-> @checked = not @checked
 
-	makeChecked:=>
-		@_checked = true
-		@border.visible = false
-		@opacity = 1
-		with @borderBold
-			.visible = true
-			.opacity = 1
-			.scaleX = 1
-			.scaleY = 1
-
 	checked:property => @_checked,
 		(value)=>
 			return if value == @_checked
@@ -32,7 +22,7 @@ Class TriggerItemView,
 					.scaleY = 0.8
 					\perform @scale
 			else
-				@opacity = 0.6
+				@opacity = 0.5
 				@borderBold\runAction @fade
 
 	text:property => @label.text,
@@ -52,12 +42,12 @@ Class TriggerItemView,
 					oVec2 -width/2,-height/2
 				},ccColor4(0x8800ffff),0.5,ccColor4(0xffffffff)
 			\runAction CCSequence {
-				CCRepeat (CCSequence {
-						oOpacity 0.1,1
-						oOpacity 0.1,0
-					}),2
-				CCCall ->
-					.parent\removeChild tile
-					@cascadeOpacity = true
-			}
+					CCRepeat (CCSequence {
+							oOpacity 0.1,1
+							oOpacity 0.1,0
+						}),2
+					CCCall ->
+						.parent\removeChild tile
+						@cascadeOpacity = true
+				}
 		@addChild tile

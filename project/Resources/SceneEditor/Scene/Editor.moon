@@ -58,7 +58,6 @@ Class EditorView,
 		@levelItemPanel = level 9
 		@levelClipEditor = level 10
 		@levelTriggerEditor = level 11
-		@levelExprEditor = level 11
 		@levelExprChooser = level 12
 		@levelMessageBox = level 13
 		@levelInputBox = level 14
@@ -66,8 +65,7 @@ Class EditorView,
 
 		@schedule once ->
 			TriggerEditor = require "Control.Trigger.TriggerEditor"
-			@addChild with TriggerEditor!
-				\show!
+			@addChild TriggerEditor!
 			return if true
 			controlNames = {
 				"ViewArea"
@@ -93,11 +91,8 @@ Class EditorView,
 			@moveTo oVec2.zero
 			if not oContent\exist(writePath) and oContent\exist(resPath)
 				oContent\copyAsync resPath,writePath
-			ScenePanel = require "Control.Item.ScenePanel"
-			ScenePanel!
-			sleep!
-			TriggerEditor = require "Control.Trigger.TriggerEditor"
-			@addChild TriggerEditor!
+			--ScenePanel = require "Control.Item.ScenePanel"
+			--ScenePanel!
 
 		panelWidth = 10+110*4
 		panelHeight = height*0.6
