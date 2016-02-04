@@ -1,0 +1,18 @@
+<!-- params: X, Y, Width, Height-->
+<ScrollArea X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelExprEditor-3 }">
+	<Import Module="Control.Basic.ScrollArea"/>
+	<Import Module="Control.Basic.Button"/>
+
+	<Item Name="view">
+		<Menu Name="triggerMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" AlignItems="10" TouchPriority="{ editor.levelExprEditor-1 }" Ref="True"/>
+		<Menu Name="editMenu" AnchorX="1" AnchorY="1" Width="310" Height="60" AlignItems="10" TouchPriority="{ editor.levelExprEditor-2 }" Visible="False" Ref="True">
+			<Button Name="editBtn" Text="Edit" Width="40" Height="40" FontSize="16" Ref="True"/>
+			<Button Name="insertBtn" Text="Insert" Width="40" Height="40" FontSize="13" Ref="True"/>
+			<Button Name="addBtn" Text="Append" Width="40" Height="40" FontSize="13" Ref="True"/>
+			<Button Name="delBtn" Text="Del" Width="40" Height="40" FontSize="16" Ref="True"/>
+			<Button Name="upBtn" Text="Up" Width="40" Height="40" FontSize="16" Ref="True"/>
+			<Button Name="downBtn" Text="Down" Width="40" Height="40" FontSize="13" Ref="True"/>
+		</Menu>
+	</Item>
+
+</ScrollArea>

@@ -155,25 +155,25 @@ ScenePanel = Class
 
 	createTitle:(title,currentItem,yStart)=>
 		y = yStart-20
-		title = with CCLabelTTF title,"Arial",24
+		titleLabel = with CCLabelTTF title,"Arial",24
 			.texture.antiAlias = false
 			.color = ccColor3 0x00ffff
 			.opacity = 0
-			.position = oVec2 @panel.width/2,y-title.height/2
+			.position = oVec2 @panel.width/2,y-.height/2
 			\runAction oOpacity 0.3,1
-		@menu\addChild title
-		yStart = y-title.height-(currentItem and -10 or 20)
+		@menu\addChild titleLabel
+		yStart = y-titleLabel.height-(currentItem and -10 or 20)
 		if currentItem
 			y = yStart-20
 			text = "(Current: "..currentItem..")"
-			title = with CCLabelTTF text,"Arial",16
+			titleLabel = with CCLabelTTF text,"Arial",16
 				.texture.antiAlias = false
 				.color = ccColor3 0x00ffff
 				.opacity = 0
-				.position = oVec2 @panel.width/2,y-title.height/2
+				.position = oVec2 @panel.width/2,y-.height/2
 				\runAction oOpacity 0.3,1
-			@menu\addChild title
-			yStart = y-title.height-10
+			@menu\addChild titleLabel
+			yStart = y-titleLabel.height-10
 		yStart
 
 	createItem:(name,x,y,width,height,callback)=>
