@@ -67,8 +67,8 @@
 		},
 	},
 	{"Action",
-		{"AssignLocal",
-			{"LocalNmber","num"},
+		{"SetLocalNumber",
+			{"LocalName","num"},
 			{"Number",3}
 		}
 		{"If",
@@ -104,18 +104,16 @@ Trigger(
 	Event(
 		TimeCycle(10)
 	),
-	Condition(
-		And(
-			NumberEqual(
-				Add(
-					GlobalNumber("var"),
-					Number(3)
-				),
-				Number(10)
+	Condition{
+		NumberEqual(
+			Add(
+				GlobalNumber("var"),
+				Number(3)
 			),
-			True()
-		)
-	),
+			Number(10)
+		),
+		True(),
+	},
 	Action(
 		Assign(
 			LocalNumber("num"),
@@ -149,18 +147,32 @@ Trigger(
 <!-- Form 4 -->
 <!--
 Trigger(
-	TimeCycle(10),
-	function()
-		return (((GlobalNumber("var") + 3) == 10) and true)
-	end,
-	function()
-		local num = 3
-		if num == 3 and true then
-			for i = 3,10,1 do
-				Sleep(10)
-				Print("Hello")
-			end
-		end
-	end
+  Event(
+    TimeCycle(10)
+  ),
+  Condition{
+    ((GlobalNumber("var") + 3) == 10),
+    true,
+  },
+  Action(function()
+    local num
+    num = 3
+    if num == 3 and true then
+      for i = 3,10,1 do
+        Sleep(10)
+        Print("Hello")
+      end
+    end
+  end)
+)
+-->
+<!--
+Trigger(
+  Event(
+  ),
+  Condition{
+  },
+  Action(function()
+  end)
 )
 -->

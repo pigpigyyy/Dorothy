@@ -1,5 +1,7 @@
 <!-- params: X, Y, Width, Height, Text -->
-<MenuItem Name="menuItem" X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }" Color="0x00ffff" Opacity="0.5">
+<MenuItem Name="menuItem" X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }" Color="0x00ffff" Opacity="0.6">
+	<Import Module="View.Shape.LineRect"/>
+
 	<LabelTTF Name="label" X="{ $X }" Y="{ $Y }" Text="{ text }" FontName="Arial" FontSize="{ fontSize or 16 }" Ref="True"/>
 	<Line Name="border" X="{ $X }" Y="{ $Y }" Ref="True">
 		<Vec2 X="{ -width/2 }" Y="{ height/2 }"/>
@@ -8,18 +10,21 @@
 		<Vec2 X="{ -width/2 }" Y="{ -height/2 }"/>
 		<Vec2 X="{ -width/2 }" Y="{ height/2 }"/>
 	</Line>
+
 	<DrawNode Name="borderBold" X="{ $X }" Y="{ $Y }" Visible="False" Ref="True">
-		<Polygon BorderColor="0xffffffff" BorderWidth="0.5" FillColor="0x2200ffff">
+		<Polygon FillColor="0x2200ffff">
 			<Vec2 X="{ -width/2 }" Y="{ height/2 }"/>
 			<Vec2 X="{ width/2 }" Y="{ height/2 }"/>
 			<Vec2 X="{ width/2 }" Y="{ -height/2 }"/>
 			<Vec2 X="{ -width/2 }" Y="{ -height/2 }"/>
 		</Polygon>
+		<LineRect X="{ -width/2 }" Y="{ -height/2 }" Width="{ width }" Height="{ height }" Color="0xff00ffff"/>
 	</DrawNode>
+
 	<Action>
 		<Scale Name="scale" Time="0.25" X="1" Y="1" Ease="OutBack" Ref="True"/>
 		<Sequence Name="fade" Ref="True">
-			<Opacity Time="0.5" Alpha="0"/>
+			<Opacity Time="0.6" Alpha="0"/>
 			<Hide/>
 		</Sequence>
 	</Action>

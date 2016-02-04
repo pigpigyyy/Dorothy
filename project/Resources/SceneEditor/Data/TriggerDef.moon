@@ -6,13 +6,55 @@ SetExprMeta = (expr)->
 	setmetatable expr,TriggerDef.Expressions[expr[1]]
 
 TriggerDef = {
-	Events: {
+	:SetExprMeta
+	Expressions: {
+		Trigger: {
+			Type:"Trigger"
+			Group:"None"
+			Desc:"A trigger."
+			Create:=>
+				SetExprMeta {@Name
+					{"Event"}
+					{"Condition"}
+					{"Action"}
+				}
+			__tostring:=> "Trigger"
+		}
+		Event: {
+			Type:"EventType"
+			Group:"None"
+			Desc:"Event to trigger."
+			Create:=>
+				SetExprMeta {@Name}
+			__tostring:=> "EventType"
+		}
+		Action: {
+			Type:"ActionSequence"
+			Group:"None"
+			Desc:"An action execution sequence."
+			Create:=>
+				SetExprMeta {@Name}
+			__tostring:=> "ActionSequence"
+		}
+		Condition: {
+			Type:"Condition"
+			Group:"None"
+			Desc:"Condition value."
+			Create:=>
+				SetExprMeta {@Name}
+			__tostring:=> "Condition"
+		}
 		TimeCycle: {
+			Type:"Event"
 			Group:"Time"
 			Desc:"Trigger event every [Number] seconds."
+			Create:=>
+				SetExprMeta {@Name
+					{"Number",0}
+				}
+			__tostring:=>
+				"TimeCycle( #{ @[2] } )"
 		}
-	}
-	Expressions: {
 		And: {
 			Type:"Boolean"
 			TypeIgnore:false
@@ -221,7 +263,7 @@ TriggerDef = {
 		If: {
 			Type:"None"
 			Group:"Code Flow"
-			Desc:"If [Condition] meet do [Action] otherwise do [Action]."
+			Desc:"If condition [Boolean] meets do [ActionSequence] otherwise do [ActionSequence]."
 			Create:=>
 				SetExprMeta {@Name
 					{"True"}
@@ -238,7 +280,7 @@ TriggerDef = {
 		Loopi: {
 			Type:"None"
 			Group:"Code Flow"
-			Desc:"Count number i from [Number] to [Number] by [Number] and do [Action]."
+			Desc:"Count number i from [Number] to [Number] by [Number] and do [ActionSequence]."
 			Create:=>
 				SetExprMeta {@Name,
 					{"Number",0}
