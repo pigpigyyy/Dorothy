@@ -1,8 +1,11 @@
 Dorothy!
 TriggerEditorView = require "View.Control.Trigger.TriggerEditor"
+ExprEditor = require "Control.Trigger.ExprEditor"
 
 Class TriggerEditorView,
 	__init:(args)=>
+		{width:panelW,height:panelH} = @panel
+
 		@localBtn.checked = true
 		scopeBtn = @localBtn
 		changeScope = (button)->
@@ -23,7 +26,9 @@ Class TriggerEditorView,
 		@listScrollArea\setupMenuScroll @listMenu
 		@listScrollArea.viewSize = @listMenu\alignItems!
 
-		@exprEditor\loadTrigger "Control/Trigger/TriggerDataTest.lua"
+		exprEditor = ExprEditor x:panelW/2+105,y:panelH/2,width:panelW-210,height:panelH
+		@panel\addChild exprEditor
+		exprEditor\loadExpr "Control/Trigger/TriggerDataTest.lua"
 
 		@closeBtn\slot "Tapped",-> @hide!
 		@gslot "Scene.EditMenu.Delete",-> @show!
@@ -37,7 +42,6 @@ Class TriggerEditorView,
 		@panel\perform CCSequence {
 			oOpacity 0.3,1,oEase.OutQuad
 			CCCall ->
-				@exprEditor.enabled = true
 				@listScrollArea.touchEnabled = true
 				@listMenu.enabled = true
 				@editMenu.enabled = true
@@ -49,7 +53,6 @@ Class TriggerEditorView,
 	hide:=>
 		for control in *editor.children
 			control.visible = true if control ~= @
-		@exprEditor.enabled = false
 		@listScrollArea.touchEnabled = false
 		@listMenu.enabled = false
 		@editMenu.enabled = false

@@ -4,7 +4,7 @@
 	<Import Module="Control.Basic.Button"/>
 
 	<Item Name="view">
-		<Menu Name="triggerMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" AlignItems="10" TouchPriority="{ editor.levelExprEditor-1 }" Ref="True"/>
+		<Menu Name="triggerMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.levelExprEditor-1 }" Ref="True"/>
 		<Menu Name="editMenu" AnchorX="1" AnchorY="1" Width="310" Height="60" AlignItems="10" TouchPriority="{ editor.levelExprEditor-2 }" Visible="False" Ref="True">
 			<Button Name="editBtn" Text="Edit" Width="40" Height="40" FontSize="16" Ref="True"/>
 			<Button Name="insertBtn" Text="Insert" Width="40" Height="40" FontSize="13" Ref="True"/>

@@ -6,12 +6,13 @@ TriggerDef = require "Data.TriggerDef"
 
 Class ExprEditorView,
 	__init:(args)=>
-		@trigger = nil
+		@exprData = nil
+		@asyncLoad = false
 
-		triggerExpr = nil
-		@changeTriggerExpr = (button)->
-			triggerExpr.checked = false if triggerExpr
-			triggerExpr = if button.checked then button else nil
+		selectedExprItem = nil
+		@changeExprItem = (button)->
+			selectedExprItem.checked = false if selectedExprItem
+			selectedExprItem = button.checked and button or nil
 			if button.checked
 				@editMenu.visible = true
 				@editMenu.transformTarget = button
@@ -23,6 +24,7 @@ Class ExprEditorView,
 		@setupMenuScroll @triggerMenu
 
 		locals = nil
+		localSet = nil
 		nextExpr = (parentExpr,index,indent)->
 			expr = index and parentExpr[index] or parentExpr
 			switch expr[1]
@@ -47,7 +49,7 @@ Class ExprEditorView,
 						item.text = item.text\gsub("^%s*","")..","
 					@createExprItem "},",indent
 				when "Action"
-					@createExprItem "Action( function()",indent,expr
+					actionItem = @createExprItem "Action( function()",indent,expr
 					children = @triggerMenu.children
 					index = #children+1
 					for i = 2,#expr
@@ -56,6 +58,12 @@ Class ExprEditorView,
 						exprItem = @createExprItem "local "..table.concat(locals,", "),indent+1
 						children\removeLast!
 						children\insert exprItem,index
+						moveY = exprItem.height+10
+						exprItem.positionY = actionItem.positionY-actionItem.height/2-exprItem.height/2-10
+						start = index+1
+						stop = #children
+						for child in *children[start,stop]
+							child.positionY -= moveY
 					@createExprItem "end )",indent
 				when "If"
 					@createExprItem tostring(expr),indent,expr,parentExpr,index
@@ -71,27 +79,49 @@ Class ExprEditorView,
 						nextExpr expr[5],i,indent+1
 					@createExprItem "end",indent,expr,parentExpr,index
 				when "SetLocalNumber"
-					table.insert locals,expr[2][2]
+					if not localSet[expr[2][2]]
+						localSet[expr[2][2]] = true
+						table.insert locals,expr[2][2]
 					@createExprItem tostring(expr),indent,expr,parentExpr,index
 				else
 					@createExprItem tostring(expr),indent,expr,parentExpr,index
+
 		@nextExpr = (expr,indent)=>
 			locals = {}
+			localSet = {}
 			nextExpr expr,nil,indent
 			locals = nil
+			localSet = nil
 
 		@editBtn\slot "Tapped",->
-			if triggerExpr
-				expr = triggerExpr.expr
-				parentExpr = triggerExpr.parentExpr
-				index = triggerExpr.index
+			if selectedExprItem
+				{:expr,:parentExpr,:index} = selectedExprItem
 				with ExprChooser valueType:expr.Type,expr:expr
-					\slot "Result",(expr)->
+					\slot "Result",(newExpr)->
 						if parentExpr
-							parentExpr[index] = expr
-							triggerExpr.checked = false
-							@.changeTriggerExpr triggerExpr
-							@loadTrigger @trigger
+							parentExpr[index] = newExpr
+							-- update trigger
+							children = @triggerMenu.children
+							itemIndex = children\index selectedExprItem
+							startIndex = #children
+							@nextExpr newExpr,selectedExprItem.indent
+							stopIndex = #children-1
+
+							targetItem = selectedExprItem
+							selectedExprItem.checked = false
+							@.changeExprItem selectedExprItem
+							@triggerMenu\removeChild targetItem
+
+							newItems = [child for child in *children[startIndex,stopIndex]]
+							for item in *newItems
+								children\insert item,itemIndex
+								itemIndex += 1
+							for i = startIndex,stopIndex
+								children\removeLast!
+							offset = @offset
+							@offset = oVec2.zero
+							@viewSize = @triggerMenu\alignItems!
+							@offset = offset
 
 		@addBtn\slot "Tapped",->
 			with ExprChooser valueType:"Action"
@@ -109,9 +139,9 @@ Class ExprEditorView,
 					@viewSize = @triggerMenu\alignItems!
 					@offset = offset
 
-	setupEditMenu:(expr)=>
-
 	createExprItem:(text,indent,expr,parentExpr,index)=>
+		children = @triggerMenu.children
+		lastItem = children and children.last or nil
 		exprItem = with TriggerExpr {
 				:indent
 				:text
@@ -120,21 +150,26 @@ Class ExprEditorView,
 				:index
 				width:@triggerMenu.width-20
 			}
-			\slot "Tapped",@changeTriggerExpr if expr
+			.position = lastItem and
+				(lastItem.position-oVec2(0,lastItem.height/2+.height/2+10)) or
+				oVec2(@triggerMenu.width/2,@triggerMenu.height-.height/2-10)+@offset
+			\slot "Tapped",@changeExprItem if expr
 		@triggerMenu\addChild exprItem
+		{:width,:height} = @viewSize
+		@viewSize = CCSize width,@height-exprItem.positionY+exprItem.height/2+10
+		sleep! if @asyncLoad
 		exprItem
 
-	loadTrigger:(arg)=>
-		@trigger = switch type arg
+	loadExpr:(arg)=>
+		@exprData = switch type arg
 			when "table" then arg
 			when "string" then TriggerDef.SetExprMeta dofile arg
-		@triggerMenu\removeAllChildrenWithCleanup!
-		offset = @offset
-		@offset = oVec2.zero
-		@nextExpr @trigger,0
-		@viewSize = @triggerMenu\alignItems!
-		@offset = offset
-		@trigger
+		@view\schedule once ->
+			@triggerMenu\removeAllChildrenWithCleanup!
+			@asyncLoad = true
+			@nextExpr @exprData,0
+			@asyncLoad = false
+		@exprData
 
 	enabled:property => @touchEnabled,
 		(value)=>

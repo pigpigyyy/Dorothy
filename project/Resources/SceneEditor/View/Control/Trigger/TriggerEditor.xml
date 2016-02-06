@@ -5,7 +5,6 @@
 	<Import Module="Control.Basic.ScrollArea"/>
 	<Import Module="Control.Basic.Button"/>
 	<Import Module="Control.Trigger.TriggerItem"/>
-	<Import Module="Control.Trigger.ExprEditor"/>
 	<Import Module="View.Shape.LineRect"/>
 	<Import Module="View.Shape.SolidRect"/>
 	<Import Module="View.Control.Basic.CircleButton"/>
@@ -60,9 +59,6 @@
 			<Button Name="delBtn" Text="Del" Width="40" Height="40" FontSize="16" Ref="True"/>
 			<Button Name="copyBtn" Text="Copy" Width="40" Height="40" FontSize="13" Ref="True"/>
 		</Menu>
-
-		<!-- trigger content edit area-->
-		<ExprEditor Name="exprEditor" X="{ $W/2+105 }" Y="{ $Y }" Width="{ $W-210 }" Height="{ $H }" Ref="True"/>
 
 		<!--<LineRect X="-1" Y="-1" Width="{ $W+2 }" Height="{ $H+2 }" Color="0xffffafaf"/>
 		<Line Color="0xffafaf" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }">

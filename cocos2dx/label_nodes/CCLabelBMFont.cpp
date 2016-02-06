@@ -799,7 +799,7 @@ void CCLabelBMFont::updateLabel()
 		vector<unsigned short> last_word;
 		last_word.reserve(stringLength);
 
-		unsigned int i = 0;
+		int i = 0;
 		bool start_line = false, start_word = false;
 		float startOfLine = -1, startOfWord = -1;
 
@@ -999,7 +999,7 @@ void CCLabelBMFont::updateLabel()
 
 				if (shift != 0)
 				{
-					for (unsigned j = 0; j < line_length; j++)
+					for (int j = 0; j < line_length; j++)
 					{
 						index = i + j + lineNumber;
 						if (index < 0) continue;
