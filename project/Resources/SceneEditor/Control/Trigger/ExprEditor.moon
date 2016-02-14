@@ -86,10 +86,10 @@ Class ExprEditorView,
 				else
 					@createExprItem tostring(expr),indent,expr,parentExpr,index
 
-		@nextExpr = (expr,indent)=>
+		@nextExpr = (expr,indent,index)=>
 			locals = {}
 			localSet = {}
-			nextExpr expr,nil,indent
+			nextExpr expr,index,indent
 			locals = nil
 			localSet = nil
 
@@ -103,16 +103,31 @@ Class ExprEditorView,
 							-- update trigger
 							children = @triggerMenu.children
 							itemIndex = children\index selectedExprItem
-							startIndex = #children
-							@nextExpr newExpr,selectedExprItem.indent
-							stopIndex = #children-1
-
-							targetItem = selectedExprItem
-							selectedExprItem.checked = false
-							@.changeExprItem selectedExprItem
-							@triggerMenu\removeChild targetItem
+							startIndex = #children+1
+							@nextExpr parentExpr,selectedExprItem.indent,index
+							stopIndex = #children
 
 							newItems = [child for child in *children[startIndex,stopIndex]]
+
+							targetItem = selectedExprItem
+							targetExpr = targetItem.expr
+							selectedExprItem.checked = false
+							@.changeExprItem selectedExprItem
+							switch targetExpr[1]
+								when "If","Loopi"
+									endSearch = false
+									targetItems = for i = itemIndex,#children
+										break if endSearch
+										childItem = children[i]
+										if childItem.expr == targetExpr and childItem.text == "end"
+											endSearch = true
+											childItem
+										childItem
+									for item in *targetItems
+										@triggerMenu\removeChild item
+								else
+									@triggerMenu\removeChild targetItem
+
 							for item in *newItems
 								children\insert item,itemIndex
 								itemIndex += 1

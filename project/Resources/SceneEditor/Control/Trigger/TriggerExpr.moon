@@ -6,6 +6,7 @@ Class TriggerExprView,
 		{:text,:indent,:expr,:parentExpr,:index} = args
 		@_checked = false
 		@_indent = indent or 0
+		@_text = ""
 		@text = text or ""
 		@expr = expr
 		@parentExpr = parentExpr
@@ -59,8 +60,9 @@ Class TriggerExprView,
 			@_indent = value
 			@text = @text\gsub "^%s*",""
 
-	text:property => @label.text,
+	text:property => @_text,
 		(value)=>
+			@_text = value
 			for i = 1,@_indent
 				value = "    "..value
 			@label.text = value
