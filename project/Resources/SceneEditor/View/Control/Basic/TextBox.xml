@@ -2,7 +2,7 @@
 <MenuItem X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }">
 	<Import Module="Control.Basic.TextField"/>
 
-	<DrawNode Name="frame" X="{ $X }" Y="{ $Y }" Opacity="0.5">
+	<DrawNode Name="frame" X="{ $X }" Y="{ $Y }" Opacity="0.6">
 		<Polygon FillColor="0x0" BorderWidth="0.5" BorderColor="0xff00ffff">
 			<Vec2 X="{ -width/2 }" Y="{ -height/2 }"/>
 			<Vec2 X="{ width/2 }" Y="{ -height/2 }"/>
@@ -14,8 +14,8 @@
 	<Node X="{ $X }" Y="{ $Y }">
 		<TextField Name="textField" X="0" Y="{ -fontSize/2 }" FontSize="{ fontSize }" Limit="{ limit }" PlaceHolder="{ placeHolder }" Ref="True">
 			<Slot Name="InputDetach" Args="item">
-				item.opacity =  0.5
-				frame.opacity = 0.5
+				item.opacity =  0.6
+				frame.opacity = 0.6
 				return true
 			</Slot>
 			<Slot Name="InputAttach" Args="item">

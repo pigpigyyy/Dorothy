@@ -101,7 +101,7 @@ TriggerDef = {
 			Desc:"Get global number named [GlobalName]."
 			Create:=>
 				SetExprMeta {@Name
-					{"GlobalName","globalVar"}
+					{"GlobalName","globalName"}
 				}
 			__tostring:=>
 				"GlobalNumber( #{ @[2] } )"
@@ -113,7 +113,7 @@ TriggerDef = {
 			Desc:"Get local number named [LocalName]."
 			Create:=>
 				SetExprMeta {@Name
-					{"LocalName","localVar"}
+					{"LocalName","localName"}
 				}
 			__tostring:=>
 				"#{ @[2] }"

@@ -5,7 +5,7 @@ Button = require "Control.Basic.Button"
 -- [signals]
 -- "Selected",(item,index)->
 -- [params]
--- width, height, items
+-- items, title="", width=120, height=0.6*@H, itemHeight=50, fontSize=16
 Class
 	__partial: (args)=>
 		args.width = args.width or 120
@@ -14,30 +14,16 @@ Class
 		SelectionPanelView args
 
 	__init: (args)=>
-		{:width,:items} = args
-
-		contentRect = CCRect.zero
-		itemRect = CCRect.zero
-		@scrollArea\slot "Scrolled",(delta)->
-			contentRect\set 0,0,@scrollArea.width,@scrollArea.height
-			@menu\eachChild (child)->
-				child.position += delta
-				{:positionX,:positionY,:width,:height} = child
-				itemRect\set positionX-width/2,positionY-height/2,width,height
-				child.visible = contentRect\intersectsRect itemRect -- reduce draw calls
-
-		@scrollArea\slot "ScrollStart",->
-			@menu.enabled = false
-
-		@scrollArea\slot "ScrollTouchEnded",->
-			@menu.enabled = true
+		{:width,:items,:itemHeight,:fontSize} = args
+		itemHeight or= 50
+		fontSize or= 16
 
 		for i,item in ipairs items
 			button = Button {
 				text:item
-				fontSize:16
+				fontSize:fontSize
 				width:width-20
-				height:50
+				height:itemHeight
 			}
 			button\slot "Tapped",->
 				@scrollArea.touchEnabled = false
@@ -53,5 +39,6 @@ Class
 			@menu\addChild button
 
 		@scrollArea.viewSize = @menu\alignItemsVertically 10
+		@scrollArea\setupMenuScroll @menu
 
 		CCDirector.currentScene\addChild @,998

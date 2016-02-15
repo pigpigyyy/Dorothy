@@ -22,11 +22,11 @@ Class InputBoxView,
 	inputed: (text)=>
 		@activateArea.enabled = false
 		@opMenu.enabled = false
-		@perform oOpacity 0.4,0
+		@perform oOpacity 0.6,0
 		@box\perform CCSequence {
 			CCSpawn {
 				oScale 0.4,0,0,oEase.InBack
-				oOpacity 0.4,0
+				oOpacity 0.6,0
 			}
 			CCCall ->
 				@emit "Inputed",text

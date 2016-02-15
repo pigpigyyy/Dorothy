@@ -8,11 +8,15 @@ Class ExprEditorView,
 	__init:(args)=>
 		@exprData = nil
 		@asyncLoad = false
+		@actionItem = nil
+		@localVarItem = nil
+		@locals = nil
+		@localSet = nil
 
-		selectedExprItem = nil
+		@_selectedExprItem = nil
 		@changeExprItem = (button)->
-			selectedExprItem.checked = false if selectedExprItem
-			selectedExprItem = button.checked and button or nil
+			@_selectedExprItem.checked = false if @_selectedExprItem
+			@_selectedExprItem = button.checked and button or nil
 			if button.checked
 				@editMenu.visible = true
 				@editMenu.transformTarget = button
@@ -23,8 +27,35 @@ Class ExprEditorView,
 
 		@setupMenuScroll @triggerMenu
 
-		locals = nil
-		localSet = nil
+		createLocalVarItem = ->
+			indent = @actionItem.indent+1
+			localVarItem = with @createExprItem "local "..table.concat(@locals,", "),indent
+				.positionY = @actionItem.positionY-@actionItem.height/2-.height/2-10
+			children = @triggerMenu.children
+			index = children\index(@actionItem)+1
+			children\removeLast!
+			children\insert localVarItem,index
+			localVarItem
+
+		refreshLocalVars = ->
+			if @actionItem
+				nextExpr = (expr)->
+					return unless "table" == type expr
+					switch expr[1]
+						when "SetLocalNumber"
+							if not @localSet[expr[2][2]]
+								@localSet[expr[2][2]] = "Number"
+								table.insert @locals,expr[2][2]
+					for i = 2,#expr
+						nextExpr expr[i]
+				@locals = {}
+				@localSet = {}
+				nextExpr @actionItem.expr
+				if @localVarItem
+					@localVarItem.text = "local "..table.concat(@locals,", ")
+				else
+					@localVarItem = createLocalVarItem!
+
 		nextExpr = (parentExpr,index,indent)->
 			expr = index and parentExpr[index] or parentExpr
 			switch expr[1]
@@ -49,17 +80,14 @@ Class ExprEditorView,
 						item.text = item.text\gsub("^%s*","")..","
 					@createExprItem "},",indent
 				when "Action"
-					actionItem = @createExprItem "Action( function()",indent,expr
+					@actionItem = @createExprItem "Action( function()",indent,expr
 					children = @triggerMenu.children
 					index = #children+1
 					for i = 2,#expr
 						nextExpr expr,i,indent+1
-					if #locals > 0
-						exprItem = @createExprItem "local "..table.concat(locals,", "),indent+1
-						children\removeLast!
-						children\insert exprItem,index
-						moveY = exprItem.height+10
-						exprItem.positionY = actionItem.positionY-actionItem.height/2-exprItem.height/2-10
+					if #@locals > 0
+						@localVarItem = createLocalVarItem!
+						moveY = @localVarItem.height+10
 						start = index+1
 						stop = #children
 						for child in *children[start,stop]
@@ -72,31 +100,35 @@ Class ExprEditorView,
 					@createExprItem "else",indent,expr[4],expr,4
 					for i = 2,#expr[4]
 						nextExpr expr[4],i,indent+1
-					@createExprItem "end",indent,expr,parentExpr,index
+					item = @createExprItem "end",indent,expr,parentExpr,index
+					item.isExprEnd = true
 				when "Loopi"
 					@createExprItem tostring(expr),indent,expr,parentExpr,index
 					for i = 2,#expr[5]
 						nextExpr expr[5],i,indent+1
-					@createExprItem "end",indent,expr,parentExpr,index
+					item = @createExprItem "end",indent,expr,parentExpr,index
+					item.isExprEnd = true
 				when "SetLocalNumber"
-					if not localSet[expr[2][2]]
-						localSet[expr[2][2]] = true
-						table.insert locals,expr[2][2]
+					if not @localSet[expr[2][2]]
+						@localSet[expr[2][2]] = "Number"
+						table.insert @locals,expr[2][2]
 					@createExprItem tostring(expr),indent,expr,parentExpr,index
 				else
 					@createExprItem tostring(expr),indent,expr,parentExpr,index
 
-		@nextExpr = (expr,indent,index)=>
-			locals = {}
-			localSet = {}
-			nextExpr expr,index,indent
-			locals = nil
-			localSet = nil
+		@nextExpr = (parentExpr,indent,index)=>
+			nextExpr parentExpr,index,indent -- params order changed
 
 		@editBtn\slot "Tapped",->
+			selectedExprItem = @_selectedExprItem
 			if selectedExprItem
 				{:expr,:parentExpr,:index} = selectedExprItem
-				with ExprChooser valueType:expr.Type,expr:expr
+				with ExprChooser {
+						valueType:expr.Type
+						expr:expr
+						parentExpr:parentExpr
+						owner:@
+					}
 					\slot "Result",(newExpr)->
 						if parentExpr
 							parentExpr[index] = newExpr
@@ -113,13 +145,15 @@ Class ExprEditorView,
 							targetExpr = targetItem.expr
 							selectedExprItem.checked = false
 							@.changeExprItem selectedExprItem
+
+							-- remove old exprs
 							switch targetExpr[1]
 								when "If","Loopi"
 									endSearch = false
 									targetItems = for i = itemIndex,#children
 										break if endSearch
 										childItem = children[i]
-										if childItem.expr == targetExpr and childItem.text == "end"
+										if childItem.expr == targetExpr and childItem.isExprEnd
 											endSearch = true
 											childItem
 										childItem
@@ -127,12 +161,19 @@ Class ExprEditorView,
 										@triggerMenu\removeChild item
 								else
 									@triggerMenu\removeChild targetItem
-
+							-- insert new exprs in right position
 							for item in *newItems
 								children\insert item,itemIndex
 								itemIndex += 1
+							-- separate condition exprs by comma
+							if parentExpr[1] == "Condition" and #parentExpr ~= index
+								newItems[1].text ..= ","
+							-- remove duplicated new exprs
 							for i = startIndex,stopIndex
 								children\removeLast!
+
+							refreshLocalVars!
+
 							offset = @offset
 							@offset = oVec2.zero
 							@viewSize = @triggerMenu\alignItems!
@@ -181,10 +222,33 @@ Class ExprEditorView,
 			when "string" then TriggerDef.SetExprMeta dofile arg
 		@view\schedule once ->
 			@triggerMenu\removeAllChildrenWithCleanup!
+			@actionItem = nil
+			@localVarItem = nil
+			@locals = {}
+			@localSet = {}
 			@asyncLoad = true
 			@nextExpr @exprData,0
 			@asyncLoad = false
 		@exprData
+
+	getPrevLocalVars:(varType)=>
+		targetExpr = @_selectedExprItem.expr
+		varSet = {}
+		nextExpr = (expr)->
+			return false unless "table" == type expr
+			return true if expr == targetExpr
+			switch expr[1]
+				when "SetLocalNumber"
+					if not varSet[expr[2][2]]
+						varSet[expr[2][2]] = "Number"
+			for i = 2,#expr
+				if nextExpr expr[i]
+					return true
+			false
+		nextExpr @actionItem.expr
+		return for v,k in pairs varSet
+			if k == varType
+				v
 
 	enabled:property => @touchEnabled,
 		(value)=>

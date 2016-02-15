@@ -82,3 +82,6 @@ DerivedData/
 !/tools/moonscite/moonc.exe
 !/tools/moonscite/Scite.exe
 *.opendb
+
+# include some temp files
+!/project/Resources/SceneEditor/Control/Trigger/TriggerDataTest.lua

@@ -4,8 +4,9 @@
 	SwallowTouches="True" TouchEnabled="True" Visible="False">
 	<Import Module="Control.Basic.ScrollArea"/>
 	<Import Module="Control.Basic.Button"/>
+	<Import Module="Control.Trigger.GroupButton"/>
 	<Import Module="Control.Trigger.TriggerItem"/>
-	<Import Module="View.Shape.LineRect"/>
+	<!--<Import Module="View.Shape.LineRect"/>-->
 	<Import Module="View.Shape.SolidRect"/>
 	<Import Module="View.Control.Basic.CircleButton"/>
 
@@ -16,23 +17,7 @@
 		<Menu Name="scopeMenu" X="105" Y="{ $T-45 }" Width="210" Height="90" AlignItems="10" TouchPriority="{ editor.levelTriggerEditor-1 }" Ref="True">
 			<TriggerItem Name="localBtn" Text="Local" Width="{ ($W-30)/2 }" Height="30" FontSize="20" Ref="True"/>
 			<TriggerItem Name="globalBtn" Text="Global" Width="{ ($W-30)/2 }" Height="30" FontSize="20" Ref="True"/>
-			<Button Name="groupBtn" Text="Skill" Width="190" Height="30" FontSize="20" Ref="True">
-				<Item Name="face">
-					<SolidRect Width="{ $W }" Height="{ $H }" Color="0x2200ffff"/>
-					<Node X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" PassColor="False">
-						<Line X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" Color="0xff0080">
-							<Vec2 X="{ $L+15 }" Y="{ $B+5 }"/>
-							<Vec2 X="{ $L+5 }" Y="{ $B+5 }"/>
-							<Vec2 X="{ $L+5 }" Y="{ $B+15 }"/>
-						</Line>
-						<Line X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" Color="0xff0080">
-							<Vec2 X="{ $R-5 }" Y="{ $T-15 }"/>
-							<Vec2 X="{ $R-5 }" Y="{ $T-5 }"/>
-							<Vec2 X="{ $R-15 }" Y="{ $T-5 }"/>
-						</Line>
-					</Node>
-				</Item>
-			</Button>
+			<GroupButton Name="groupBtn" Text="Skill" Width="190" Height="30" Ref="True"/>
 		</Menu>
 
 		<!-- trigger list -->

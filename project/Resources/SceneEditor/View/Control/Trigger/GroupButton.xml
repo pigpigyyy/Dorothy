@@ -1,0 +1,22 @@
+<!-- params: Text, Width, height -->
+<Button Text="{ text }" Width="{ width }" Height="{ height }" FontSize="20" Ref="True">
+	<Import Module="Control.Basic.Button"/>
+	<Import Module="View.Shape.SolidRect"/>
+
+	<Item Name="face">
+		<SolidRect Width="{ $W }" Height="{ $H }" Color="0x2200ffff"/>
+		<Node X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" PassColor="False">
+			<Line X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" Color="0xff0080">
+				<Vec2 X="{ $L+15 }" Y="{ $B+5 }"/>
+				<Vec2 X="{ $L+5 }" Y="{ $B+5 }"/>
+				<Vec2 X="{ $L+5 }" Y="{ $B+15 }"/>
+			</Line>
+			<Line X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" Color="0xff0080">
+				<Vec2 X="{ $R-5 }" Y="{ $T-15 }"/>
+				<Vec2 X="{ $R-5 }" Y="{ $T-5 }"/>
+				<Vec2 X="{ $R-15 }" Y="{ $T-5 }"/>
+			</Line>
+		</Node>
+	</Item>
+</Button>
+

@@ -6,11 +6,11 @@ ButtonView = require "View.Control.Basic.Button"
 -- [params]
 -- x, y, width, height, fontSize, text
 Class ButtonView,
-	__init: (args)=>
+	__init:(args)=>
 		@_text = args.text
 		@label.texture.antiAlias = false if @label
 
-	text: property => @_text,
+	text:property => @_text,
 		(value)=>
 			@_text = value
 			if @label

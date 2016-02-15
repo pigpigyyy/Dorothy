@@ -3,6 +3,12 @@ ExprChooserView = require "View.Control.Trigger.ExprChooser"
 TriggerDef = require "Data.TriggerDef"
 TriggerItem = require "Control.Trigger.TriggerItem"
 SolidRect = require "View.Shape.SolidRect"
+Button = require "Control.Basic.Button"
+GroupButton = require "Control.Trigger.GroupButton"
+SelectionPanel = require "Control.Basic.SelectionPanel"
+InputBox = require "Control.Basic.InputBox"
+MessageBox = require "Control.Basic.MessageBox"
+TextBox = require "Control.Basic.TextBox"
 import Set from require "Data.Utils"
 
 local ExprChooser
@@ -19,13 +25,14 @@ ExprChooser = Class
 		ExprChooserView args
 
 	__init:(args)=>
-		{:valueType,:expr} = args
+		{:valueType,:expr,:parentExpr,:owner} = args
 		@exprButtons = {}
-		@valueButtons = {}
 		@exprs = {}
 		@curGroupBtn = nil
 		@curExprBtn = nil
 		@curExpr = expr
+		@parentExpr = parentExpr
+		@owner = owner
 		@exprs[getmetatable expr] = expr if expr
 
 		selectGroup = (button)->
@@ -50,9 +57,8 @@ ExprChooser = Class
 			startIndex = 1
 			text = @bodyLabel.text
 			color = ccColor3 colored and 0xff0080 or 0xffffff
-			for btn in *@valueButtons
-				@bodyMenu\removeChild btn
-			@valueButtons = {}
+			for i = #@bodyMenu.children,2,-1
+				@bodyMenu\removeChild @bodyMenu.children[i]
 			labelPos = @bodyLabel.position-oVec2(0,@bodyLabel.height)
 			if not colored
 				for child in *@bodyLabel.children
@@ -87,14 +93,18 @@ ExprChooser = Class
 							index = exprIndex
 							\slot "Tapped",->
 								exprDef = @curExprBtn.exprDef
-								with ExprChooser valueType:@curExpr[index].Type,expr:@curExpr[index]
+								with ExprChooser {
+										valueType:@curExpr[index].Type
+										expr:@curExpr[index]
+										parentExpr:@curExpr
+										owner:@owner
+									}
 									\slot "Show",-> @visible = false
 									\slot "Hide",-> @visible = true
 									\slot "Result",(expr)->
 										if expr
 											@curExpr[index] = expr
 											updateContent exprDef
-						table.insert @valueButtons,menuItem
 						@bodyMenu\addChild menuItem
 					startIndex = stopIndex
 
@@ -122,6 +132,75 @@ ExprChooser = Class
 				setBodyText text
 				@curExpr = exprDef\Create!
 				@exprs[exprDef] = @curExpr
+
+			switch @curExpr[1]
+				when "LocalName"
+					switch @parentExpr[1]
+						when "SetLocalNumber","LocalNumber"
+							isSetVar = @parentExpr[1] == "SetLocalNumber"
+							localNames = @owner\getPrevLocalVars "Number"
+							table.insert localNames,"<NEW>" if isSetVar
+							@bodyMenu\addChild with GroupButton {
+									text:@curExpr[2]
+									width:math.min(170,@bodyMenu.width-20)
+									height:35
+								}
+								.position = oVec2 @bodyMenu.width/2,
+									@bodyLabel.positionY-@bodyLabel.height/2-20-.height/2
+								\slot "Tapped",(button)->
+									with SelectionPanel {
+											title:"Local Name"
+											width:150
+											items:localNames
+											itemHeight:35
+											fontSize:20
+										}
+										.menu.children.last.color = ccColor3 0x80ff00 if isSetVar
+										\slot "Selected",(item)->
+											if item == "<NEW>"
+												with InputBox text:"New Varaible Name"
+													\slot "Inputed",(result)->
+														if not result or not result\match("[_%a][_%w]*")
+															MessageBox text:"Invalid Name!",okOnly:true
+														elseif @owner.localSet[result]
+															MessageBox text:"Name Exist!",okOnly:true
+														else
+															button.text = result
+															@curExpr[2] = result
+											else
+												button.text = item
+												@curExpr[2] = item
+				when "Number"
+					@bodyMenu\addChild with TextBox {
+							x:@bodyMenu.width/2
+							y:@bodyLabel.positionY-@bodyLabel.height/2-20-20
+							width:170
+							height:35
+							fontSize:17
+							limit:15
+						}
+						.text = tostring @curExpr[2]
+						.textField\slot "InputInserting",(addText,textBox)->
+							number = tonumber textBox.text..addText
+							addText == "\n" or number ~= nil
+						.textField\slot "InputInserted",(_,textBox)->
+							@curExpr[2] = tonumber textBox.text
+						.textField\slot "InputDeleted",(_,textBox)->
+							@curExpr[2] = textBox.text == "" and 0 or tonumber textBox.text
+				when "String"
+					@bodyMenu\addChild with TextBox {
+							x:@bodyMenu.width/2
+							y:@bodyLabel.positionY-@bodyLabel.height/2-20-20
+							width:260
+							height:35
+							fontSize:17
+							limit:15
+						}
+						.text = tostring @curExpr[2]
+						.textField\slot "InputInserted",(_,textBox)->
+							@curExpr[2] = textBox.text
+						.textField\slot "InputDeleted",(_,textBox)->
+							@curExpr[2] = textBox.text
 
 		selectExpr = (button)->
 			@curExprBtn.checked = false if @curExprBtn and @curExprBtn ~= button

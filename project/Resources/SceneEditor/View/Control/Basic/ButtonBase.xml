@@ -13,6 +13,6 @@
 
 	<!-- Tap Event -->
 	<Slot Name="TapBegan">
-		face:perform(scale)
+		menuItem.face:perform(scale) -- keep button ref
 	</Slot>
 </MenuItem>
