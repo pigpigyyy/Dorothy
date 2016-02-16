@@ -41,6 +41,7 @@
 			<Opacity Time="0.3" Alpha="1"/>
 			<Scale Time="0.3" X="1" Y="1" Ease="OutBack"/>
 		</Spawn>
+		<Scale Name="scale" Time="0.3" X="1" Y="1" Ease="OutBack"/>
 	</Action>
 
 	<Slot Name="Entered">
@@ -49,5 +50,8 @@
 		box.scaleX = 0
 		box.scaleY = 0
 		box:perform(show)
+		cancelBtn.scaleX = 0
+		cancelBtn.scaleY = 0
+		cancelBtn:perform(scale)
 	</Slot>
 </LayerColor>

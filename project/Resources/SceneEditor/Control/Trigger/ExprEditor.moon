@@ -12,6 +12,8 @@ Class ExprEditorView,
 		@localVarItem = nil
 		@locals = nil
 		@localSet = nil
+		@localVarFrom = nil
+		@localVarTo = nil
 
 		@_selectedExprItem = nil
 		@changeExprItem = (button)->
@@ -27,9 +29,16 @@ Class ExprEditorView,
 
 		@setupMenuScroll @triggerMenu
 
+		getLocalVarText = ->
+			defaultValues = for var in *@locals
+				switch @localSet[var]
+					when "Number" then "0"
+					else "nil"
+			"local "..table.concat(@locals,", ").." = "..table.concat(defaultValues,", ")
+
 		createLocalVarItem = ->
 			indent = @actionItem.indent+1
-			localVarItem = with @createExprItem "local "..table.concat(@locals,", "),indent
+			localVarItem = with @createExprItem getLocalVarText!,indent
 				.positionY = @actionItem.positionY-@actionItem.height/2-.height/2-10
 			children = @triggerMenu.children
 			index = children\index(@actionItem)+1
@@ -52,9 +61,14 @@ Class ExprEditorView,
 				@localSet = {}
 				nextExpr @actionItem.expr
 				if @localVarItem
-					@localVarItem.text = "local "..table.concat(@locals,", ")
+					if #@locals > 0
+						@localVarItem.text = getLocalVarText!
+					else
+						@localVarItem.parent\removeChild @localVarItem
+						@localVarItem = nil
 				else
-					@localVarItem = createLocalVarItem!
+					if #@locals > 0
+						@localVarItem = createLocalVarItem!
 
 		nextExpr = (parentExpr,index,indent)->
 			expr = index and parentExpr[index] or parentExpr
@@ -173,6 +187,9 @@ Class ExprEditorView,
 								children\removeLast!
 
 							refreshLocalVars!
+							if @localVarFrom
+								@renameLocalVar @localVarFrom,@localVarTo
+								@localVarFrom,@localVarTo = nil,nil
 
 							offset = @offset
 							@offset = oVec2.zero
@@ -231,6 +248,14 @@ Class ExprEditorView,
 			@asyncLoad = false
 		@exprData
 
+	isInActions:=>
+		expr = @_selectedExprItem.expr
+		parentExpr = @_selectedExprItem.parentExpr
+		not parentExpr or not (parentExpr[1] == "Condition" or
+			expr[1] == "Condition" or
+			parentExpr[1] == "Event" or
+			expr[1] == "Event")
+
 	getPrevLocalVars:(varType)=>
 		targetExpr = @_selectedExprItem.expr
 		varSet = {}
@@ -249,6 +274,32 @@ Class ExprEditorView,
 		return for v,k in pairs varSet
 			if k == varType
 				v
+
+	markLocalVarRename:(fromName,toName)=>
+		@localVarFrom = fromName
+		@localVarTo = toName
+
+	renameLocalVar:(fromName,toName)=>
+		nextExpr = (expr)->
+			return false unless "table" == type expr
+			renamed = false
+			switch expr[1]
+				when "Action"
+					return false
+				when "LocalName"
+					if expr[2] == fromName
+						expr[2] = toName
+						renamed = true
+			for i = 2,#expr
+				if nextExpr expr[i]
+					renamed = true
+			renamed
+		children = @triggerMenu.children
+		startIndex = children\index(@actionItem)+1
+		for i = startIndex,#children
+			item = children[i]
+			if item.expr and nextExpr item.expr
+				item.text = tostring item.expr
 
 	enabled:property => @touchEnabled,
 		(value)=>

@@ -26,19 +26,27 @@ Class
 				height:itemHeight
 			}
 			button\slot "Tapped",->
-				@scrollArea.touchEnabled = false
-				@menu.enabled = false
 				@emit "Selected",item,i
-				@box\perform CCSequence {
-					CCSpawn {
-						oScale 0.3,0,0,oEase.InBack
-						oOpacity 0.3,0
-					}
-					CCCall -> @parent\removeChild @
-				}
+				@hide!
 			@menu\addChild button
+
+		@cancelBtn\slot "Tapped",-> @hide!
 
 		@scrollArea.viewSize = @menu\alignItemsVertically 10
 		@scrollArea\setupMenuScroll @menu
 
 		CCDirector.currentScene\addChild @,998
+
+	hide:=>
+		@scrollArea.touchEnabled = false
+		@menu.enabled = false
+		@opMenu.enabled = false
+		@cancelBtn\perform oScale 0.3,0,0,oEase.InBack
+		@perform oOpacity 0.3,0
+		@box\perform CCSequence {
+			CCSpawn {
+				oScale 0.3,0,0,oEase.InBack
+				oOpacity 0.3,0
+			}
+			CCCall -> @parent\removeChild @
+		}

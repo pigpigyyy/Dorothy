@@ -10,11 +10,11 @@ Class TextBoxView,
 		@textField.opacity = 0.6
 		@textField\slot "TextChanged",-> @emit "Inputed",@text
 
-	attachWithIME: => @textField\attachWithIME!
-	detachWithIME: => @textField\detachWithIME!
-	text: property => @textField.text,
+	attachWithIME:=> @textField\attachWithIME!
+	detachWithIME:=> @textField\detachWithIME!
+	text:property => @textField.text,
 		(value)=>
 			@textField.text = value
 			@textField.texture.antiAlias = false
-	placeHolder: property => @textField.placeHolder,
+	placeHolder:property => @textField.placeHolder,
 		(value)=> @textField.placeHolder = value

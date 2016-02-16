@@ -59,7 +59,7 @@ TriggerDef = {
 			Type:"Boolean"
 			TypeIgnore:false
 			Group:"Boolean"
-			Desc:"[Boolean] and [Boolean]."
+			Desc:"Boolean [Boolean] and [Boolean]."
 			Create:=>
 				SetExprMeta {@Name
 					{"True"}
@@ -72,7 +72,7 @@ TriggerDef = {
 			Type:"Boolean"
 			TypeIgnore:false
 			Group:"Boolean"
-			Desc:"[Boolean] or [Boolean]."
+			Desc:"Boolean [Boolean] or [Boolean]."
 			Create:=>
 				SetExprMeta {@Name
 					{"True"}
@@ -85,7 +85,7 @@ TriggerDef = {
 			Type:"Number"
 			TypeIgnore:false
 			Group:"Number"
-			Desc:"[Number] + [Number]."
+			Desc:"Number [Number] + [Number]."
 			Create:=>
 				SetExprMeta {@Name
 					{"Number",0}
@@ -97,7 +97,7 @@ TriggerDef = {
 		GlobalNumber: {
 			Type:"Number"
 			TypeIgnore:false
-			Group:"Number"
+			Group:"Variable"
 			Desc:"Get global number named [GlobalName]."
 			Create:=>
 				SetExprMeta {@Name
@@ -109,7 +109,7 @@ TriggerDef = {
 		LocalNumber: {
 			Type:"Number"
 			TypeIgnore:false
-			Group:"Number"
+			Group:"Variable"
 			Desc:"Get local number named [LocalName]."
 			Create:=>
 				SetExprMeta {@Name
@@ -176,7 +176,7 @@ TriggerDef = {
 			Group:"Special"
 			Desc:"A name for local value."
 			Create:=>
-				SetExprMeta {@Name,"localVar"}
+				SetExprMeta {@Name,"localName"}
 			__tostring:=>
 				"#{ @[2] }"
 		}
@@ -185,7 +185,7 @@ TriggerDef = {
 			Group:"Special"
 			Desc:"A name for global value."
 			Create:=>
-				SetExprMeta {@Name,"globalVar"}
+				SetExprMeta {@Name,"globalName"}
 			__tostring:=>
 				"\"#{ @[2] }\""
 		}
@@ -237,11 +237,11 @@ TriggerDef = {
 		SetLocalNumber: {
 			Type:"None"
 			TypeIgnore:true
-			Group:"Code Flow"
+			Group:"Variable"
 			Desc:"Set [LocalName] to [Number]."
 			Create:=>
 				SetExprMeta {@Name
-					{"LocalName","localVar"}
+					{"LocalName","localName"}
 					{"Number",0}
 				}
 			__tostring:=>
@@ -250,11 +250,11 @@ TriggerDef = {
 		SetGlobalNumber: {
 			Type:"None"
 			TypeIgnore:true
-			Group:"Code Flow"
+			Group:"Variable"
 			Desc:"Set [GlobalName] to [Number]."
 			Create:=>
 				SetExprMeta {@Name
-					{"GlobalName","globalVar"}
+					{"GlobalName","globalName"}
 					{"Number",0}
 				}
 			__tostring:=>

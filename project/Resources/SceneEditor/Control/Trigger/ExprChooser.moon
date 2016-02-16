@@ -25,7 +25,7 @@ ExprChooser = Class
 		ExprChooserView args
 
 	__init:(args)=>
-		{:valueType,:expr,:parentExpr,:owner} = args
+		{:valueType,:expr,:parentExpr,:owner,:prev} = args
 		@exprButtons = {}
 		@exprs = {}
 		@curGroupBtn = nil
@@ -33,7 +33,11 @@ ExprChooser = Class
 		@curExpr = expr
 		@parentExpr = parentExpr
 		@owner = owner
+		@prev = prev
 		@exprs[getmetatable expr] = expr if expr
+
+		@backBtn\slot "TapBegan",nil
+		@okBtn\slot "TapBegan",nil
 
 		selectGroup = (button)->
 			@curGroupBtn.checked = false unless @curGroupBtn == button
@@ -92,19 +96,24 @@ ExprChooser = Class
 							\addChild (SolidRect width:.width,height:.height,color:0x2200ffff),-1
 							index = exprIndex
 							\slot "Tapped",->
+								menuItem.enabled = false
 								exprDef = @curExprBtn.exprDef
 								with ExprChooser {
 										valueType:@curExpr[index].Type
 										expr:@curExpr[index]
 										parentExpr:@curExpr
 										owner:@owner
+										prev:@
 									}
 									\slot "Show",-> @visible = false
-									\slot "Hide",-> @visible = true
+									\slot "Hide",->
+										menuItem.enabled = true
+										@visible = true
+										@showButtons!
+										updateContent exprDef
 									\slot "Result",(expr)->
-										if expr
-											@curExpr[index] = expr
-											updateContent exprDef
+										@curExpr[index] = expr if expr
+								@hideButtons!
 						@bodyMenu\addChild menuItem
 					startIndex = stopIndex
 
@@ -140,7 +149,7 @@ ExprChooser = Class
 							isSetVar = @parentExpr[1] == "SetLocalNumber"
 							localNames = @owner\getPrevLocalVars "Number"
 							table.insert localNames,"<NEW>" if isSetVar
-							@bodyMenu\addChild with GroupButton {
+							localVarButton = with GroupButton {
 									text:@curExpr[2]
 									width:math.min(170,@bodyMenu.width-20)
 									height:35
@@ -149,7 +158,7 @@ ExprChooser = Class
 									@bodyLabel.positionY-@bodyLabel.height/2-20-.height/2
 								\slot "Tapped",(button)->
 									with SelectionPanel {
-											title:"Local Name"
+											title:"Select Name"
 											width:150
 											items:localNames
 											itemHeight:35
@@ -160,16 +169,35 @@ ExprChooser = Class
 											if item == "<NEW>"
 												with InputBox text:"New Varaible Name"
 													\slot "Inputed",(result)->
-														if not result or not result\match("[_%a][_%w]*")
+														return unless result
+														if not result\match("[_%a][_%w]*")
 															MessageBox text:"Invalid Name!",okOnly:true
-														elseif @owner.localSet[result]
-															MessageBox text:"Name Exist!",okOnly:true
 														else
+															oldName = @curExpr[2]
+															isNameFirstAppear = true
+															for name in *localNames
+																isNameFirstAppear = false if oldName == name
+																if name == result
+																	MessageBox text:"Name Exist!",okOnly:true
+																	return
+															if isNameFirstAppear and oldName ~= "invalidName"
+																@owner\markLocalVarRename oldName,result
 															button.text = result
 															@curExpr[2] = result
 											else
+												if isSetVar
+													oldName = @curExpr[2]
+													isNameFirstAppear = true
+													for name in *localNames
+														isNameFirstAppear = false if oldName == name
+													if isNameFirstAppear
+														@owner\markLocalVarRename oldName,item
 												button.text = item
 												@curExpr[2] = item
+							@bodyMenu\addChild localVarButton
+							if not @bodyMenu.activate
+								localVarButton\emit "Tapped",localVarButton
+								@bodyMenu.activate = true
 				when "Number"
 					@bodyMenu\addChild with TextBox {
 							x:@bodyMenu.width/2
@@ -181,12 +209,13 @@ ExprChooser = Class
 						}
 						.text = tostring @curExpr[2]
 						.textField\slot "InputInserting",(addText,textBox)->
-							number = tonumber textBox.text..addText
-							addText == "\n" or number ~= nil
+							text = textBox.text..addText
+							number = tonumber text
+							addText == "\n" or number ~= nil or text == "-"
 						.textField\slot "InputInserted",(_,textBox)->
-							@curExpr[2] = tonumber textBox.text
+							@curExpr[2] = tonumber(textBox.text) or 0
 						.textField\slot "InputDeleted",(_,textBox)->
-							@curExpr[2] = textBox.text == "" and 0 or tonumber textBox.text
+							@curExpr[2] = tonumber(textBox.text) or 0
 				when "String"
 					@bodyMenu\addChild with TextBox {
 							x:@bodyMenu.width/2
@@ -214,6 +243,8 @@ ExprChooser = Class
 		groupNames = [groupName for groupName in pairs groups]
 		table.sort groupNames
 
+		isAction = @owner\isInActions!
+
 		for groupName in *groupNames
 			@catMenu\addChild with TriggerItem {
 					text:groupName
@@ -224,6 +255,8 @@ ExprChooser = Class
 				\slot "Tapped",selectGroup
 			for exprDef in *TriggerDef.Groups[groupName]
 				if exprDefSet[exprDef]
+					-- LocalNumber is not allowed to appear outside the actions
+					continue if not isAction and exprDef.Name == "LocalNumber"
 					exprItem = with TriggerItem {
 							text:exprDef.Name
 							fontSize:18
@@ -234,9 +267,6 @@ ExprChooser = Class
 						\slot "Tapped",selectExpr
 					@exprButtons[exprDef] = exprItem
 					@apiMenu\addChild exprItem
-
-		@curGroupBtn = @catMenu.children[1]
-		@curGroupBtn\makeChecked!
 
 		@catScrollArea\setupMenuScroll @catMenu
 		@catScrollArea.viewSize = @catMenu\alignItems!
@@ -249,8 +279,21 @@ ExprChooser = Class
 			exprItem\makeChecked!
 			selectExpr exprItem
 			@apiScrollArea\scrollToPosY exprItem.positionY
+			for child in *@catMenu.children
+				if child.text == @curExpr.Group
+					child\makeChecked!
+					@curGroupBtn = child
+		else
+			@curGroupBtn = @catMenu.children[1]
+			@curGroupBtn\makeChecked!
 
 		@okBtn\slot "Tapped",->
+			@@level -= 1
+			@emit "Result",@curExpr
+			@hide!
+			@prev\finishEdit! if @prev
+
+		@backBtn\slot "Tapped",->
 			@@level -= 1
 			@emit "Result",@curExpr
 			@hide!
@@ -258,12 +301,28 @@ ExprChooser = Class
 		editor\addChild @
 		@show!
 
+	finishEdit:=>
+		@@level -= 1
+		@emit "Result",@curExpr
+		@prev\finishEdit! if @prev
+		@parent\removeChild @
+
+	showButtons:=>
+		showBtn = (btn)->
+			with btn
+				.scaleX = 0
+				.scaleY = 0
+				\perform oScale 0.3,1,1,oEase.OutQuad
+		showBtn @backBtn
+		showBtn @okBtn
+
+	hideButtons:=>
+		@okBtn\perform oScale 0.3,0,0,oEase.OutQuad
+		@backBtn\perform oScale 0.3,0,0,oEase.OutQuad
+
 	show:=>
 		@visible = true
-		with @okBtn
-			.scaleX = 0
-			.scaleY = 0
-			\perform oScale 0.3,1,1,oEase.OutBack
+		@showButtons!
 		with @panel
 			.opacity = 0
 			\perform CCSequence {
@@ -288,7 +347,7 @@ ExprChooser = Class
 		@apiMenu.enabled = false
 		@bodyMenu.enabled = false
 		@opMenu.enabled = false
-		@okBtn\perform oScale 0.3,0,0,oEase.InBack
+		@hideButtons!
 		@panel\perform CCSequence {
 			oOpacity 0.3,0,oEase.OutQuad
 			CCCall -> @parent\removeChild @

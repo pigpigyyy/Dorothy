@@ -52,7 +52,12 @@
 	</Node>
 
 	<Menu Name="opMenu" X="{ @X+width/2-35 }" Y="{ @Y+height/2 }" Width="130" Height="60" TouchPriority="{ editor.levelExprChooser-3 }" Ref="True">
-		<CircleButton Name="okBtn" X="{ $R-30 }" Y="{ $Y }" Radius="30" Text="OK" FontSize="16" Ref="True">
+		<CircleButton Name="backBtn" X="{ $L+30 }" Y="{ $Y }" Radius="30" Text="Back" FontSize="16" Ref="True">
+			<DrawNode>
+				<Dot X="30" Y="30" Radius="30" Color="0x22ffffff"/>
+			</DrawNode>
+		</CircleButton>
+		<CircleButton Name="okBtn" X="{ $R-30 }" Y="{ $Y }" Radius="30" Text="Confirm" FontSize="16" Ref="True">
 			<DrawNode>
 				<Dot X="30" Y="30" Radius="30" Color="0x22ffffff"/>
 			</DrawNode>
