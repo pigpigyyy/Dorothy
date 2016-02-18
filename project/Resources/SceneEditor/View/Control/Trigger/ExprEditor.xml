@@ -1,5 +1,5 @@
 <!-- params: X, Y, Width, Height-->
-<ScrollArea X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelExprEditor-3 }">
+<ScrollArea X="{ x or 0 }" Y="{ y or 0 }" Width="{ width-20 }" Height="{ height }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelExprEditor-3 }">
 	<Import Module="Control.Basic.ScrollArea"/>
 	<Import Module="Control.Basic.Button"/>
 

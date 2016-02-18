@@ -264,6 +264,7 @@ TriggerDef = {
 			Type:"None"
 			Group:"Code Flow"
 			Desc:"If condition [Boolean] meets do [ActionSequence] otherwise do [ActionSequence]."
+			MultiLine:true
 			Create:=>
 				SetExprMeta {@Name
 					{"True"}
@@ -281,6 +282,7 @@ TriggerDef = {
 			Type:"None"
 			Group:"Code Flow"
 			Desc:"Count number i from [Number] to [Number] by [Number] and do [ActionSequence]."
+			MultiLine:true
 			Create:=>
 				SetExprMeta {@Name,
 					{"Number",0}
