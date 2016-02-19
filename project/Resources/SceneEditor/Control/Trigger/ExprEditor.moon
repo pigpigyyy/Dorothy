@@ -46,7 +46,11 @@ Class ExprEditorView,
 						else true
 				del = switch expr[1]
 					when "Condition","Event","Action" then false
-					else not subExprItem
+					else
+						if parentExpr and parentExpr[1] == "Condition" and #parentExpr == 2
+							false
+						else
+							not subExprItem
 				up = index and index > 2 and not subExprItem
 				down = index and index < #parentExpr and not subExprItem
 				buttons = for v,k in pairs {:edit,:insert,:add,:del,:up,:down}
@@ -144,7 +148,7 @@ Class ExprEditorView,
 						.actionExpr = expr[3]
 					for i = 2,#expr[3]
 						nextExpr expr[3],i,indent+1
-					with @createExprItem "else",indent,expr[4],expr,4
+					with @createExprItem "else",indent,expr,parentExpr,index
 						.itemType = "Mid"
 						.actionExpr = expr[4]
 					for i = 2,#expr[4]
@@ -199,11 +203,18 @@ Class ExprEditorView,
 				else
 					@triggerMenu\removeChild targetItem
 			elseif insertAfter
-				if targetExpr.MultiLine
+				currentType = selectedExprItem.itemType
+				if targetExpr.MultiLine and currentType ~= "End"
+					switch currentType
+						when "Start","Mid"
+							itemIndex += 1
 					for i = itemIndex,#children
 						childItem = children[i]
-						if childItem.expr == targetExpr and childItem.itemType == "End"
-							itemIndex = i+1
+						isLineStop = switch childItem.itemType
+							when "End","Mid" then true
+							else false
+						if childItem.expr == targetExpr and isLineStop
+							itemIndex = i
 							break
 				else
 					itemIndex += 1
@@ -212,7 +223,9 @@ Class ExprEditorView,
 				children\insert item,itemIndex
 				itemIndex += 1
 			-- separate condition exprs by comma
-			if not delExpr and parentExpr[1] == "Condition"
+			if not delExpr and
+				parentExpr[1] == "Condition" and
+				selectedExprItem.expr[1] ~= "Condition"
 				selectedExprItem\updateText!
 			-- remove duplicated new exprs
 			for i = startIndex,stopIndex
@@ -235,8 +248,9 @@ Class ExprEditorView,
 			selectedExprItem = @_selectedExprItem
 			if selectedExprItem
 				{:expr,:parentExpr,:index} = selectedExprItem
+				valueType = (expr.TypeIgnore or expr.Type == "None") and "Action" or expr.Type
 				with ExprChooser {
-						valueType:expr.Type
+						valueType:valueType
 						expr:expr
 						parentExpr:parentExpr
 						owner:@
@@ -256,7 +270,7 @@ Class ExprEditorView,
 						parentExpr = selectedExprItem.actionExpr
 						index = #parentExpr+1
 						indent += 1
-						if index > 1
+						if index > 2
 							lastExpr = parentExpr[#parentExpr]
 							isMultiLine = not not lastExpr.MultiLine -- MultiLine can be nil
 							children = @triggerMenu.children
@@ -289,6 +303,40 @@ Class ExprEditorView,
 
 		@insertBtn\slot "Tapped",insertNewExpr false
 		@addBtn\slot "Tapped",insertNewExpr true
+
+		@delBtn\slot "Tapped",->
+			selectedExprItem = @_selectedExprItem
+			{:expr,:parentExpr,:index} = selectedExprItem
+			if parentExpr and index
+				selectedExprItem.checked = false
+				@.changeExprItem selectedExprItem
+				table.remove parentExpr,index
+				children = @triggerMenu.children
+				startIndex = children\index(selectedExprItem)
+				if expr.MultiLine
+					isMultiLine = not not expr.MultiLine -- MultiLine can be nil
+					searchEnd = false
+					delItems = for childItem in *children[startIndex,]
+						break if searchEnd
+						if childItem.expr == expr and (isMultiLine == (childItem.itemType == "End"))
+							searchEnd = true
+						childItem
+					for item in *delItems
+						@triggerMenu\removeChild item
+				else
+					@triggerMenu\removeChild selectedExprItem
+				if expr.Type == "None" or expr.TypeIgnore
+					refreshLocalVars!
+				offset = @offset
+				@offset = oVec2.zero
+				@viewSize = @triggerMenu\alignItems 0
+				@offset = offset
+				prevItem = children[startIndex-1]
+				prevItem.checked = true if prevItem.expr
+				@.changeExprItem prevItem
+				if prevItem.expr and prevItem.expr[1] ~= "Condition" and
+					prevItem.parentExpr and prevItem.parentExpr[1] == "Condition"
+					prevItem\updateText!
 
 	createExprItem:(text,indent,expr,parentExpr,index)=>
 		children = @triggerMenu.children
@@ -329,10 +377,10 @@ Class ExprEditorView,
 	isInActions:=>
 		expr = @_selectedExprItem.expr
 		parentExpr = @_selectedExprItem.parentExpr
-		not parentExpr or not (parentExpr[1] == "Condition" or
-			expr[1] == "Condition" or
-			parentExpr[1] == "Event" or
-			expr[1] == "Event")
+		not (expr[1] == "Condition" or expr[1] == "Event") and
+			parentExpr and
+				not (parentExpr[1] == "Condition" or
+				parentExpr[1] == "Event")
 
 	getPrevLocalVars:(varType)=>
 		targetExpr = @_selectedExprItem.expr

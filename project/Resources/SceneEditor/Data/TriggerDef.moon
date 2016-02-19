@@ -236,7 +236,6 @@ TriggerDef = {
 		}
 		SetLocalNumber: {
 			Type:"None"
-			TypeIgnore:true
 			Group:"Variable"
 			Desc:"Set [LocalName] to [Number]."
 			Create:=>
@@ -249,7 +248,6 @@ TriggerDef = {
 		}
 		SetGlobalNumber: {
 			Type:"None"
-			TypeIgnore:true
 			Group:"Variable"
 			Desc:"Set [GlobalName] to [Number]."
 			Create:=>
@@ -400,21 +398,6 @@ TriggerDef = {
 			__tostring:=>
 				"PlayAnimation( #{ @[2] }, #{ @[3] }, #{ @[4] }, #{ @[5] } )"
 		}
-	}
-	RawData: {
-		LayerName:->
-		LocalName:->
-		GlobalName:->
-		ModelName:->
-		ModelType:->
-		Number:->
-		String:->
-		Look:->
-		Animation:->
-	}
-	Derivations: {
-		{Base:"Number",Sub:"GlobalNumber"}
-		{Base:"Number",Sub:"LocalNumber"}
 	}
 }
 

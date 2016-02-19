@@ -6,7 +6,7 @@ TextBoxView = require "View.Control.Basic.TextBox"
 -- [params]
 -- x, y, width, height, fontSize, placeHolder = ""
 Class TextBoxView,
-	__init: =>
+	__init:=>
 		@textField.opacity = 0.6
 		@textField\slot "TextChanged",-> @emit "Inputed",@text
 
@@ -15,6 +15,6 @@ Class TextBoxView,
 	text:property => @textField.text,
 		(value)=>
 			@textField.text = value
-			@textField.texture.antiAlias = false
+			@textField.texture.antiAlias = false if @textField.texture
 	placeHolder:property => @textField.placeHolder,
 		(value)=> @textField.placeHolder = value
