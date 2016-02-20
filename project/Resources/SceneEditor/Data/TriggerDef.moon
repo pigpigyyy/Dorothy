@@ -405,6 +405,7 @@ Groups = {}
 Types = {}
 for exprName,expr in pairs TriggerDef.Expressions
 	expr.Name = exprName
+	expr.MultiLine = false unless expr.MultiLine
 	expr.__index = expr
 	Groups[expr.Group] or= {}
 	table.insert Groups[expr.Group],expr

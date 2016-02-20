@@ -243,6 +243,7 @@ Class ExprEditorView,
 			-- select new expr item
 			newItems[1].checked = true
 			@.changeExprItem newItems[1]
+			@scrollToPosY newItems[1].positionY
 
 		@editBtn\slot "Tapped",->
 			selectedExprItem = @_selectedExprItem
@@ -272,7 +273,7 @@ Class ExprEditorView,
 						indent += 1
 						if index > 2
 							lastExpr = parentExpr[#parentExpr]
-							isMultiLine = not not lastExpr.MultiLine -- MultiLine can be nil
+							isMultiLine = lastExpr.MultiLine
 							children = @triggerMenu.children
 							startIndex = children\index(selectedExprItem)+1
 							for childItem in *children[startIndex,]
@@ -307,36 +308,122 @@ Class ExprEditorView,
 		@delBtn\slot "Tapped",->
 			selectedExprItem = @_selectedExprItem
 			{:expr,:parentExpr,:index} = selectedExprItem
-			if parentExpr and index
-				selectedExprItem.checked = false
-				@.changeExprItem selectedExprItem
-				table.remove parentExpr,index
-				children = @triggerMenu.children
-				startIndex = children\index(selectedExprItem)
-				if expr.MultiLine
-					isMultiLine = not not expr.MultiLine -- MultiLine can be nil
-					searchEnd = false
-					delItems = for childItem in *children[startIndex,]
-						break if searchEnd
-						if childItem.expr == expr and (isMultiLine == (childItem.itemType == "End"))
-							searchEnd = true
-						childItem
-					for item in *delItems
-						@triggerMenu\removeChild item
-				else
-					@triggerMenu\removeChild selectedExprItem
-				if expr.Type == "None" or expr.TypeIgnore
-					refreshLocalVars!
-				offset = @offset
-				@offset = oVec2.zero
-				@viewSize = @triggerMenu\alignItems 0
-				@offset = offset
-				prevItem = children[startIndex-1]
-				prevItem.checked = true if prevItem.expr
-				@.changeExprItem prevItem
-				if prevItem.expr and prevItem.expr[1] ~= "Condition" and
-					prevItem.parentExpr and prevItem.parentExpr[1] == "Condition"
-					prevItem\updateText!
+			selectedExprItem.checked = false
+			@.changeExprItem selectedExprItem
+			table.remove parentExpr,index
+			children = @triggerMenu.children
+			startIndex = children\index(selectedExprItem)
+			if expr.MultiLine
+				isMultiLine = expr.MultiLine
+				searchEnd = false
+				delItems = for childItem in *children[startIndex,]
+					break if searchEnd
+					if childItem.expr == expr and (isMultiLine == (childItem.itemType == "End"))
+						searchEnd = true
+					childItem
+				for item in *delItems
+					@triggerMenu\removeChild item
+			else
+				@triggerMenu\removeChild selectedExprItem
+			if expr.Type == "None" or expr.TypeIgnore
+				refreshLocalVars!
+			offset = @offset
+			@offset = oVec2.zero
+			@viewSize = @triggerMenu\alignItems 0
+			@offset = offset
+			prevItem = children[startIndex-1]
+			prevItem.checked = true if prevItem.expr
+			@.changeExprItem prevItem
+			if prevItem.expr and
+				prevItem.expr[1] ~= "Condition" and
+				prevItem.parentExpr and
+				prevItem.parentExpr[1] == "Condition"
+				prevItem\updateText!
+
+		@upBtn\slot "Tapped",->
+			selectedExprItem = @_selectedExprItem
+			{:expr,:parentExpr,:index} = selectedExprItem
+			selectedExprItem.checked = false
+			@.changeExprItem selectedExprItem
+			table.remove parentExpr,index
+			table.insert parentExpr,index-1,expr
+			children = @triggerMenu.children
+			startIndex = children\index(selectedExprItem)
+			if parentExpr[1] == "Condition"
+				children[startIndex-1]\updateText!
+				selectedExprItem\updateText!
+			prevIndex = startIndex-1
+			prevItem = children[prevIndex]
+			if prevItem.itemType == "End"
+				prevExpr = prevItem.expr
+				for i = startIndex,1,-1
+					item = children[i]
+					if item.expr == prevExpr and item.itemType == "Start"
+						prevIndex = i
+						break
+			if expr.MultiLine
+				searchEnd = false
+				items = for item in *children[startIndex,]
+					break if searchEnd
+					if item.expr == expr and item.itemType == "End"
+						searchEnd = true
+					item
+				for item in *items
+					children\remove item
+					children\insert item,prevIndex
+					prevIndex += 1
+			else
+					children\remove selectedExprItem
+					children\insert selectedExprItem,prevIndex
+			offset = @offset
+			@offset = oVec2.zero
+			@viewSize = @triggerMenu\alignItems 0
+			@offset = offset
+			selectedExprItem.checked = true
+			@.changeExprItem selectedExprItem
+			@scrollToPosY selectedExprItem.positionY
+
+		@downBtn\slot "Tapped",->
+			selectedExprItem = @_selectedExprItem
+			{:expr,:parentExpr,:index} = selectedExprItem
+			selectedExprItem.checked = false
+			@.changeExprItem selectedExprItem
+			table.remove parentExpr,index
+			table.insert parentExpr,index+1,expr
+			children = @triggerMenu.children
+			startIndex = children\index(selectedExprItem)
+			if parentExpr[1] == "Condition"
+				children[startIndex+1]\updateText!
+				selectedExprItem\updateText!
+			nextIndex = startIndex+1
+			if expr.MultiLine
+				for i = startIndex,#children
+					childItem = children[i]
+					if childItem.expr == expr and childItem.itemType == "End"
+						nextIndex = i+1
+						break
+			nextItem = children[nextIndex]
+			nextItems = if nextItem.itemType == "Start"
+				tmpExpr = nextItem.expr
+				searchEnd = false
+				for item in *children[nextIndex,]
+					break if searchEnd
+					if item.expr == tmpExpr and item.itemType == "End"
+						searchEnd = true
+					item
+			else
+				{nextItem}
+			for item in *nextItems
+				children\remove item
+				children\insert item,startIndex
+				startIndex += 1
+			offset = @offset
+			@offset = oVec2.zero
+			@viewSize = @triggerMenu\alignItems 0
+			@offset = offset
+			selectedExprItem.checked = true
+			@.changeExprItem selectedExprItem
+			@scrollToPosY selectedExprItem.positionY
 
 	createExprItem:(text,indent,expr,parentExpr,index)=>
 		children = @triggerMenu.children
