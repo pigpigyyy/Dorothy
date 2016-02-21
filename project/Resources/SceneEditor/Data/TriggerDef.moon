@@ -11,9 +11,10 @@ TriggerDef = {
 		Trigger: {
 			Type:"Trigger"
 			Group:"None"
-			Desc:"A trigger."
+			Desc:"A trigger named [TriggerName]."
 			Create:=>
 				SetExprMeta {@Name
+					{"TriggerName","triggerName"}
 					{"Event"}
 					{"Condition"}
 					{"Action"}
@@ -170,6 +171,15 @@ TriggerDef = {
 				}
 			__tostring:=>
 				"( #{ @[2] } == #{ @[3] } )"
+		}
+		TriggerName: {
+			Type:"TriggerName"
+			Group:"Special"
+			Desc:"The trigger`s name."
+			Create:=>
+				SetExprMeta {@Name,""}
+			__tostring:=>
+				"\"#{ @[2] }\""
 		}
 		LocalName: {
 			Type:"LocalName"

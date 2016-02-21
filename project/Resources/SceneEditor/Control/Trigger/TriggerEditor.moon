@@ -12,6 +12,14 @@ Class TriggerEditorView,
 			scopeBtn.checked = false unless scopeBtn == button
 			button.checked = true unless button.checked
 			scopeBtn = button
+			if scopeBtn == @localBtn
+				@localListMenu.visible = true
+				@globalListMenu.visible = false
+				@listScrollArea.viewSize = @localListMenu\alignItems!
+			else
+				@localListMenu.visible = false
+				@globalListMenu.visible = true
+				@listScrollArea.viewSize = @globalListMenu\alignItems!
 		@localBtn\slot "Tapped",changeScope
 		@globalBtn\slot "Tapped",changeScope
 
@@ -19,18 +27,23 @@ Class TriggerEditorView,
 		changeTrigger = (button)->
 			triggerBtn.checked = false if triggerBtn
 			triggerBtn = if button.checked then button else nil
-		for child in *@listMenu.children
-			if child ~= @localBtn and child ~= @globalBtn
-				child\slot "Tapped",changeTrigger
 
-		@listScrollArea\setupMenuScroll @listMenu
-		@listScrollArea.viewSize = @listMenu\alignItems!
+		for child in *@localListMenu.children
+			child\slot "Tapped",changeTrigger
+		for child in *@globalListMenu.children
+			child\slot "Tapped",changeTrigger
+
+		@listScrollArea\setupMenuScroll @localListMenu
+		@listScrollArea\setupMenuScroll @globalListMenu
+		@listScrollArea.viewSize = @localListMenu\alignItems!
 
 		exprEditor = ExprEditor x:panelW/2+105,y:panelH/2,width:panelW-210,height:panelH
 		@panel\addChild exprEditor
 		exprEditor\loadExpr "Control/Trigger/TriggerDataTest.lua"
 
-		@closeBtn\slot "Tapped",-> @hide!
+		@closeBtn\slot "Tapped",->
+			exprEditor\save ""
+			@hide!
 		@gslot "Scene.EditMenu.Delete",-> @show!
 
 	show:=>
@@ -43,7 +56,8 @@ Class TriggerEditorView,
 			oOpacity 0.3,1,oEase.OutQuad
 			CCCall ->
 				@listScrollArea.touchEnabled = true
-				@listMenu.enabled = true
+				@localListMenu.enabled = true
+				@globalListMenu.enabled = true
 				@editMenu.enabled = true
 				@opMenu.enabled = true
 				for control in *editor.children
@@ -54,7 +68,8 @@ Class TriggerEditorView,
 		for control in *editor.children
 			control.visible = true if control ~= @
 		@listScrollArea.touchEnabled = false
-		@listMenu.enabled = false
+		@localListMenu.enabled = false
+		@globalListMenu.enabled = false
 		@editMenu.enabled = false
 		@opMenu.enabled = false
 		@closeBtn\perform oScale 0.3,0,0,oEase.InBack

@@ -23,16 +23,11 @@
 		<!-- trigger list -->
 		<ScrollArea Name="listScrollArea" X="105" Y="{ $T-90-($H-150)/2 }" Width="210" Height="{ $H-150 }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelTriggerEditor-2 }" AlignItems="10" Ref="True">
 			<Item Name="view">
-				<Menu Name="listMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" AlignItems="10" TouchPriority="{ editor.levelTriggerEditor-1 }" Enabled="False" Ref="True">
+				<Menu Name="localListMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" AlignItems="10" TouchPriority="{ editor.levelTriggerEditor-1 }" Enabled="False" Ref="True">
 					<TriggerItem Text="SceneInitialized" Width="190" Height="35"/>
-					<TriggerItem Text="Every5Minutes" Width="190" Height="35"/>
-					<TriggerItem Text="GameStarted" Width="190" Height="35"/>
-					<TriggerItem Text="PlayerCastSpell1" Width="190" Height="35"/>
-					<TriggerItem Text="PlayerCastSpell2" Width="190" Height="35"/>
-					<TriggerItem Text="PlayerCastSpell3" Width="190" Height="35"/>
-					<TriggerItem Text="PlayerCastSpell4" Width="190" Height="35"/>
-					<TriggerItem Text="PlayerCastSpell5" Width="190" Height="35"/>
-					<TriggerItem Text="PlayerCastSpell6" Width="190" Height="35"/>
+				</Menu>
+				<Menu Name="globalListMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" AlignItems="10" TouchPriority="{ editor.levelTriggerEditor-1 }" Enabled="False" Ref="True" Visible="False">
+					<TriggerItem Text="CastSpellOnDog" Width="190" Height="35"/>
 				</Menu>
 			</Item>
 		</ScrollArea>

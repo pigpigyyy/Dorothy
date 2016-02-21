@@ -1,4 +1,5 @@
 return {"Trigger",
+	{"TriggerName","TestTrigger"},
 	{"Event",
 		{"TimeCycle",{"Number",10}}
 	},

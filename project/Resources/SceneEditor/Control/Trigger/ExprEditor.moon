@@ -30,27 +30,28 @@ Class ExprEditorView,
 				subExprItem = switch @_selectedExprItem.itemType
 					when "Mid","End" then true
 					else false
+				rootItem = switch expr[1]
+					when "Trigger","Event","Condition","Action" then true
+					else false
 				edit = not subExprItem
-				insert = switch expr[1]
-					when "Condition","Event","Action" then false
-					else
-						if not subExprItem
-							if parentExpr then (parentExpr[1] ~= "Event")
-							else true
-						else false
+				insert = if rootItem then false
+					elseif not subExprItem
+						if parentExpr then (parentExpr[1] ~= "Event")
+						else true
+					else false
 				add = switch expr[1]
+					when "Trigger"
+						false
 					when "Event"
 						#expr == 1
 					else
 						if parentExpr then (parentExpr[1] ~= "Event")
 						else true
-				del = switch expr[1]
-					when "Condition","Event","Action" then false
+				del = if rootItem then false
+					elseif parentExpr and parentExpr[1] == "Condition" and #parentExpr == 2
+						false
 					else
-						if parentExpr and parentExpr[1] == "Condition" and #parentExpr == 2
-							false
-						else
-							not subExprItem
+						not subExprItem
 				up = index and index > 2 and not subExprItem
 				down = index and index < #parentExpr and not subExprItem
 				buttons = for v,k in pairs {:edit,:insert,:add,:del,:up,:down}
@@ -108,8 +109,8 @@ Class ExprEditorView,
 			expr = index and parentExpr[index] or parentExpr
 			switch expr[1]
 				when "Trigger"
-					@createExprItem "Trigger(",indent
-					for i = 2,4
+					@createExprItem "Trigger( #{expr[2]},",indent,expr
+					for i = 3,5
 						nextExpr expr,i,indent+1
 					@createExprItem ")",indent
 				when "Event"
@@ -461,6 +462,31 @@ Class ExprEditorView,
 			@asyncLoad = false
 		@exprData
 
+	save:(filename)=>
+		str = "return "
+		indent = 0
+		nextExpr = (expr)->
+			str ..= "{"
+			for i = 1,#expr
+				item = expr[i]
+				switch type item
+					when "table"
+						indent += 1
+						str ..= "\n"
+						str ..= string.rep "\t",indent
+						nextExpr item
+						indent -= 1
+					when "string"
+						str ..= "\"#{item}\""
+					else
+						str ..= tostring item
+				if i ~= #expr
+					str ..= ","
+			str ..= "}"
+		nextExpr @exprData
+		oContent\saveToFile oContent.writablePath.."triggerEdit.lua",str
+		oContent\saveToFile oContent.writablePath.."triggerExe.lua",table.concat([child.text for child in *@triggerMenu.children],"\n")
+
 	isInActions:=>
 		expr = @_selectedExprItem.expr
 		parentExpr = @_selectedExprItem.parentExpr
@@ -514,7 +540,7 @@ Class ExprEditorView,
 				item.text = tostring item.expr
 
 	showEditButtons:(names)=>
-		posX = @editMenu.width-30
+		posX = @editMenu.width-30-(#names == 1 and names[1] == "edit" and 60 or 0)
 		buttonSet = {@["#{name}Btn"],true for name in *names}
 		for i = #@editMenu.children,1,-1
 			child = @editMenu.children[i]

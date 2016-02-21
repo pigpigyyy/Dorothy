@@ -73,13 +73,12 @@ Class TriggerExprView,
 
 	text:property => @_text,
 		(value)=>
-			@_text = value
-			for i = 1,@_indent
-				value = "    "..value
+			value = string.rep("    ",@_indent)..value
 			parentExpr = @parentExpr
 			if parentExpr and parentExpr[1] == "Condition"
 				if #parentExpr ~= @index
 					value ..= " and"
+			@_text = value
 			@label.text = value
 			@height = @label.height+10
 			@label.positionY = @height-5
