@@ -7,16 +7,47 @@ SetExprMeta = (expr)->
 
 TriggerDef = {
 	:SetExprMeta
+	ToEditText:(expr)->
+		strs = {}
+		insert = table.insert
+		append = (str)-> insert strs,str
+		append "return "
+		indent = 0
+		nextExpr = (expr)->
+			append "{"
+			for i = 1,#expr
+				item = expr[i]
+				switch type item
+					when "table"
+						indent += 1
+						append "\n"
+						append string.rep("\t",indent)
+						nextExpr item
+						indent -= 1
+					when "string"
+						append "\""
+						append item
+						append "\""
+					else
+						append tostring item
+				if i ~= #expr
+					append ","
+			append "}"
+		nextExpr expr
+		table.concat strs
 	Expressions: {
 		Trigger: {
 			Type:"Trigger"
 			Group:"None"
-			Desc:"A trigger named [TriggerName]."
-			Create:=>
+			Desc:"A trigger named [TriggerName] and being enabled [Boolean]."
+			Create:(triggerName)=>
 				SetExprMeta {@Name
-					{"TriggerName","triggerName"}
+					{"TriggerName",triggerName or "triggerName"}
+					{"True"}
 					{"Event"}
-					{"Condition"}
+					{"Condition"
+						{"True"}
+					}
 					{"Action"}
 				}
 			__tostring:=> "Trigger"

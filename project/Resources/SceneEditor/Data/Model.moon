@@ -118,38 +118,42 @@ DataCreater = (dataDef)->
 			else
 				nil
 		__tostring:=>
-			str = "{"
+			strs = {}
+			insert = table.insert
+			append = (str)-> insert strs,str
+			append "{"
 			for i,item in ipairs @
 				switch tolua.type item
 					when "boolean"
-						str ..= item and "t" or "f"
+						append item and "t" or "f"
 					when "oVec2"
-						str ..= string.format "v(%.2f,%.2f)",item.x,item.y
+						append string.format "v(%.2f,%.2f)",item.x,item.y
 					when "CCSize"
-						str ..= string.format "s(%d,%d)",item.width,item.height
+						append string.format "s(%d,%d)",item.width,item.height
 					when "CCRect"
-						str ..= string.format "r(%d,%d,%d,%d)",item.origin.x,item.origin.y,item.size.width,item.size.height
+						append string.format "r(%d,%d,%d,%d)",item.origin.x,item.origin.y,item.size.width,item.size.height
 					when "string"
-						str ..= "\""..item.."\""
+						append "\""
+						append item
+						append "\""
 					when "table"
 						if getmetatable item
-							str ..= tostring item
+							append tostring item
 						elseif #item > 0
-							str ..= "{"
+							append "{"
 							for i,v in ipairs item
-								str ..= tostring v
-								str ..= "," unless i == #item
-							str ..= "}"
+								append tostring v
+								append "," unless i == #item
+							append "}"
 						else
-							str ..= "f"
+							append "f"
 					when "number"
-						str ..= string.format "%.2f",item
+						append string.format "%.2f",item
 					else
-						str ..= tostring item
-				str ..= "," unless i == #@
-			str ..= "}"
-			str = str\gsub "%.00",""
-			str
+						append tostring item
+				append "," unless i == #@
+			append "}"
+			table.concat(strs)\gsub("%.00","")
 	(data)->
 		if not data
 			data = {v[1],(type(v[2]) == "function" and v[2]! or v[2]) for _,v in pairs dataDef}

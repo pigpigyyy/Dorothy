@@ -34,7 +34,7 @@ local number = token(l.NUMBER, l.float + l.integer)
 
 -- Keywords.
 local keyword = token(l.KEYWORD, word_match {
-	'return', 'break', 'for', 'while',
+	'return', 'break', 'continue', 'for', 'while',
 	'if', 'else', 'elseif', 'then', 'export',
 	'import', 'from', 'with', 'in', 'and',
 	'or', 'not', 'class', 'extends', 'super', 'do',

@@ -65,6 +65,7 @@ Class EditorView,
 		@levelSelectionPanel = level 15
 
 		@schedule once ->
+			@game = "DemoGame"
 			TriggerEditor = require "Control.Trigger.TriggerEditor"
 			@addChild with TriggerEditor!
 				\show!
@@ -249,6 +250,9 @@ Class EditorView,
 				oContent\mkdir @physicsFullPath unless oContent\exist @physicsFullPath
 				oContent\mkdir @logicFullPath unless oContent\exist @logicFullPath
 				oContent\mkdir @sceneFullPath unless oContent\exist @sceneFullPath
+				oContent\mkdir @triggerFullPath unless oContent\exist @triggerFullPath
+				oContent\mkdir @triggerLocalFullPath unless oContent\exist @triggerLocalFullPath
+				oContent\mkdir @triggerGlobalFullPath unless oContent\exist @triggerGlobalFullPath
 				if @_actionEditor
 					@actionEditor.input = @gameFullPath
 					@actionEditor.output = @gameFullPath
@@ -281,6 +285,12 @@ Class EditorView,
 	physicsFullPath:property => @_gameFullPath.."Physics/"
 	logicFolder:property => "Logic/"
 	logicFullPath:property => @_gameFullPath.."Logic/"
+	triggerFolder:property => "Logic/Trigger/"
+	triggerFullPath:property => @_gameFullPath.."Logic/Trigger/"
+	triggerLocalFolder:property => "Logic/Trigger/Local/"
+	triggerLocalFullPath:property => @_gameFullPath.."Logic/Trigger/Local/"
+	triggerGlobalFolder:property => "Logic/Trigger/Global/"
+	triggerGlobalFullPath:property => @_gameFullPath.."Logic/Trigger/Global/"
 	sceneFolder:property => "Scene/"
 	sceneFullPath:property => @_gameFullPath.."Scene/"
 	uiFileFullPath:property => @sceneFullPath.."UI.scene"

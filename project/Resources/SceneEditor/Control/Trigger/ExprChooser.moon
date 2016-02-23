@@ -170,7 +170,7 @@ ExprChooser = Class
 												with InputBox text:"New Varaible Name"
 													\slot "Inputed",(result)->
 														return unless result
-														if not result\match("[_%a][_%w]*")
+														if not result\match("^[_%a][_%w]*$")
 															MessageBox text:"Invalid Name!",okOnly:true
 														else
 															oldName = @curExpr[2]

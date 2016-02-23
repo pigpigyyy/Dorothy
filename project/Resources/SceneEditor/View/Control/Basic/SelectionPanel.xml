@@ -1,4 +1,4 @@
-<!-- params: title = nil,width,height -->
+<!-- params: Title = nil, SubTitle = nil, Width, Height -->
 <LayerColor Name="mask" X="{ @X }" Y="{ @Y }"
 	Color="0x0" Opacity="0"
 	SwallowTouches="True" TouchEnabled="True"
@@ -18,8 +18,21 @@
 			<Item Name="view">
 				<Menu Name="menu" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" TouchPriority="{ editor.levelSelectionPanel-1 }" Ref="True">
 					<Script>if title then</Script>
-					<Node X="{ $X }" Y="{ $T-20 }" Width="{ width }" Height="50">
-						<LabelTTF Text="{ title }" X="{ $X }" Y="{ $Y }" AntiAlias="False" FontName="Arial" FontSize="24" Color="0x00ffff"/>
+					<Node Name="titleArea" X="{ $X }" Y="{ $T-20 }" Width="{ width }">
+						<LabelTTF Name="title" Text="{ title }" X="{ $X }" AntiAlias="False" FontName="Arial" FontSize="24" Color="0x00ffff"/>
+						<Script>
+							titleArea.height = title.height+10
+							title.positionY = titleArea.height/2-5
+						</Script>
+					</Node>
+					<Script>end</Script>
+					<Script>if subTitle then</Script>
+					<Node Name="subTitleArea" X="{ $X }" Y="{ $T-20 }" Width="{ width }">
+						<LabelTTF Name="subTitle" Text="{ subTitle }" X="{ $X }" AntiAlias="False" FontName="Arial" FontSize="{ fontSize }" Color="0x00ffff"/>
+						<Script>
+							subTitleArea.height = subTitle.height+10
+							subTitle.positionY = subTitleArea.height/2+5
+						</Script>
 					</Node>
 					<Script>end</Script>
 				</Menu>

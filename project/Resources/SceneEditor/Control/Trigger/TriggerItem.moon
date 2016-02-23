@@ -6,6 +6,7 @@ TriggerItemView = require "View.Control.Trigger.TriggerItem"
 Class TriggerItemView,
 	__init:(args)=>
 		@_checked = false
+		@_text = @label.text
 		@slot "Tapped",-> @checked = not @checked
 
 	makeChecked:=>
@@ -35,8 +36,10 @@ Class TriggerItemView,
 				@opacity = 0.6
 				@borderBold\runAction @fade
 
-	text:property => @label.text,
-		(value)=> @label.text = value
+	text:property => @_text,
+		(value)=>
+			@_text = value
+			@label.text = value
 
 	glow:=>
 		@cascadeOpacity = false

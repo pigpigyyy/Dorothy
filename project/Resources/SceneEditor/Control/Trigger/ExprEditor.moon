@@ -7,6 +7,7 @@ TriggerDef = require "Data.TriggerDef"
 Class ExprEditorView,
 	__init:(args)=>
 		@exprData = nil
+		@filename = nil
 		@asyncLoad = false
 		@actionItem = nil
 		@localVarItem = nil
@@ -109,15 +110,16 @@ Class ExprEditorView,
 			expr = index and parentExpr[index] or parentExpr
 			switch expr[1]
 				when "Trigger"
-					@createExprItem "Trigger( #{expr[2]},",indent,expr
-					for i = 3,5
+					@createExprItem "Trigger( #{expr[2]}, #{expr[3]},",indent,expr
+					for i = 4,#expr
 						nextExpr expr,i,indent+1
 					@createExprItem ")",indent
 				when "Event"
 					with @createExprItem "Event(",indent,expr
 						.itemType = "Start"
 						.actionExpr = expr
-					nextExpr expr,2,indent+1
+					for i = 2,#expr
+						nextExpr expr,i,indent+1
 					@createExprItem "),",indent
 					indent -= 1
 				when "Condition"
@@ -261,6 +263,8 @@ Class ExprEditorView,
 						if parentExpr
 							parentExpr[index] = newExpr
 							addNewItem selectedExprItem,selectedExprItem.indent,parentExpr,index
+						elseif expr[1] == "Trigger"
+							selectedExprItem.text = "Trigger( #{expr[2]}, #{expr[3]},"
 
 		insertNewExpr = (after)-> ->
 			selectedExprItem = @_selectedExprItem
@@ -450,7 +454,9 @@ Class ExprEditorView,
 	loadExpr:(arg)=>
 		@exprData = switch type arg
 			when "table" then arg
-			when "string" then TriggerDef.SetExprMeta dofile arg
+			when "string"
+				@filename = arg
+				TriggerDef.SetExprMeta (loadstring oContent\loadFile arg)!
 		@view\schedule once ->
 			@triggerMenu\removeAllChildrenWithCleanup!
 			@actionItem = nil
@@ -463,29 +469,8 @@ Class ExprEditorView,
 		@exprData
 
 	save:(filename)=>
-		str = "return "
-		indent = 0
-		nextExpr = (expr)->
-			str ..= "{"
-			for i = 1,#expr
-				item = expr[i]
-				switch type item
-					when "table"
-						indent += 1
-						str ..= "\n"
-						str ..= string.rep "\t",indent
-						nextExpr item
-						indent -= 1
-					when "string"
-						str ..= "\"#{item}\""
-					else
-						str ..= tostring item
-				if i ~= #expr
-					str ..= ","
-			str ..= "}"
-		nextExpr @exprData
-		oContent\saveToFile oContent.writablePath.."triggerEdit.lua",str
-		oContent\saveToFile oContent.writablePath.."triggerExe.lua",table.concat([child.text for child in *@triggerMenu.children],"\n")
+		triggerText = TriggerDef.ToEditText @exprData
+		oContent\saveToFile editor.gameFullPath..@filename,triggerText
 
 	isInActions:=>
 		expr = @_selectedExprItem.expr

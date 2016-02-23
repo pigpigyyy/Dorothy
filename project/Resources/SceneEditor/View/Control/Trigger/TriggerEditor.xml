@@ -17,7 +17,7 @@
 		<Menu Name="scopeMenu" X="105" Y="{ $T-45 }" Width="210" Height="90" AlignItems="10" TouchPriority="{ editor.levelTriggerEditor-1 }" Ref="True">
 			<TriggerItem Name="localBtn" Text="Local" Width="{ ($W-30)/2 }" Height="30" FontSize="20" Ref="True"/>
 			<TriggerItem Name="globalBtn" Text="Global" Width="{ ($W-30)/2 }" Height="30" FontSize="20" Ref="True"/>
-			<GroupButton Name="groupBtn" Text="Skill" Width="190" Height="30" Ref="True"/>
+			<GroupButton Name="groupBtn" Text="Default" Width="190" Height="30" Ref="True"/>
 		</Menu>
 
 		<!-- trigger list -->
