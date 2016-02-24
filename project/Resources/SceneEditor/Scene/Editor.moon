@@ -65,11 +65,6 @@ Class EditorView,
 		@levelSelectionPanel = level 15
 
 		@schedule once ->
-			@game = "DemoGame"
-			TriggerEditor = require "Control.Trigger.TriggerEditor"
-			@addChild with TriggerEditor!
-				\show!
-			return if true
 			controlNames = {
 				"ViewArea"
 				"HRuler"
@@ -95,9 +90,11 @@ Class EditorView,
 			if not oContent\exist(writePath) and oContent\exist(resPath)
 				oContent\copyAsync resPath,writePath
 			ScenePanel = require "Control.Item.ScenePanel"
+			sleep!
 			ScenePanel!
 			sleep!
 			TriggerEditor = require "Control.Trigger.TriggerEditor"
+			sleep!
 			@addChild TriggerEditor!
 
 		panelWidth = 10+110*4

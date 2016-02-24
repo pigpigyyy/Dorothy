@@ -456,7 +456,7 @@ Class ExprEditorView,
 			when "table" then arg
 			when "string"
 				@filename = arg
-				TriggerDef.SetExprMeta (loadstring oContent\loadFile arg)!
+				TriggerDef.SetExprMeta dofile arg
 		@view\schedule once ->
 			@triggerMenu\removeAllChildrenWithCleanup!
 			@actionItem = nil

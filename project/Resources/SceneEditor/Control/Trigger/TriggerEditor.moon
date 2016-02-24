@@ -46,8 +46,6 @@ TriggerScope = Class
 		@_groupOffset = {}
 		@items = {}
 		@files = {}
-		@updateItems!
-		@currentGroup = "Default"
 		@_menu\slot "Cleanup",->
 			for _,item in pairs @items
 				if item.parent
@@ -56,18 +54,21 @@ TriggerScope = Class
 					item\cleanup!
 
 	updateItems:=>
-		defaultFolder = @_path.."Default"
+		path = @path
+		prefix = @prefix
+		defaultFolder = path.."Default"
 		oContent\mkdir defaultFolder unless oContent\exist defaultFolder
-		@_groups = Path.getFolders @_path
+		@_groups = Path.getFolders path
 		table.sort @_groups
-		files = Path.getAllFiles @_path,"trigger"
+		files = Path.getAllFiles path,"trigger"
 		for i = 1,#files
-			files[i] = @_prefix..files[i]
+			files[i] = prefix..files[i]
 		filesToAdd,filesToDel = CompareTable @files,files
+		allItemsUpdated = #filesToDel == #@files
 		@files = files
 		for file in *filesToAdd
 			appendix = Path.getFilename file
-			group = file\sub #@_prefix+1,-#appendix-2
+			group = file\sub #prefix+1,-#appendix-2
 			item = with TriggerItem {
 					text:Path.getName file
 					width:190
@@ -86,11 +87,11 @@ TriggerScope = Class
 			else
 				item\cleanup!
 			@items[file] = nil
-		@currentGroup = @_currentGroup
+		@currentGroup = (@_currentGroup == "" or allItemsUpdated) and "Default" or @_currentGroup
 
 	currentGroup:property => @_currentGroup,
 		(group)=>
-			@_groupOffset[group] = @@scrollArea.offset
+			@_groupOffset[@_currentGroup] = @@scrollArea.offset
 			@_currentGroup = group
 			groupItems = for _,item in pairs @items
 				continue if item.group ~= group
@@ -102,11 +103,11 @@ TriggerScope = Class
 					\addChild item
 				@@scrollArea.offset = oVec2.zero
 				@@scrollArea.viewSize = \alignItems!
-				@@scrollArea.offset = @_groupOffset[@_currentGroup] if @_currentGroup
+				@@scrollArea.offset = @_groupOffset[@_currentGroup] or oVec2.zero
 
 	groups:property => @_groups
-	prefix:property => @_prefix
-	path:property => @_path
+	prefix:property => editor[@_prefix]
+	path:property => editor[@_path]
 	menu:property => @_menu
 
 Class TriggerEditorView,
@@ -117,12 +118,12 @@ Class TriggerEditorView,
 		TriggerScope.panel = @panel
 
 		@localScope = TriggerScope @localListMenu,
-			editor.triggerLocalFullPath,
-			editor.triggerLocalFolder
+			"triggerLocalFullPath",
+			"triggerLocalFolder"
 
 		@globalScope = TriggerScope @globalListMenu,
-			editor.triggerGlobalFullPath,
-			editor.triggerGlobalFolder
+			"triggerGlobalFullPath",
+			"triggerGlobalFolder"
 
 		@localBtn.checked = true
 		scopeBtn = @localBtn
@@ -234,31 +235,51 @@ Class TriggerEditorView,
 			else
 				MessageBox text:"No Trigger Selected!",okOnly:true
 
-		@copyBtn.copying = false
-		@copyBtn\slot "Tapped",->
-			triggerBtn = TriggerScope.triggerBtn
-			if not triggerBtn
-				MessageBox text:"No Trigger Selected!",okOnly:true
-				return
-			scope = @localBtn.checked and @localScope or @globalScope
-			@copyBtn.copying = not @copyBtn.copying
-			@copyBtn.targetItem = editor.gameFullPath..triggerBtn.file
-			if @copyBtn.copying
-				@copyBtn.text = "Paste"
-				@copyBtn.color = ccColor3 0xff0080
-			else
-				@copyBtn.text = "Copy"
-				@copyBtn.color = ccColor3 0x00ffff
-				triggerName = Path.getName @copyBtn.targetItem
-				triggerFullPath = scope.path..scope.currentGroup.."/"..triggerName
+		with @copyBtn
+			.copying = false
+			\slot "Tapped",->
+				triggerBtn = TriggerScope.triggerBtn
+				if not triggerBtn
+					MessageBox text:"No Trigger Selected!",okOnly:true
+					return
+				scope = @localBtn.checked and @localScope or @globalScope
+				@copyBtn.copying = not @copyBtn.copying
+				@copyBtn.targetItem = editor.gameFullPath..triggerBtn.file
+				if @copyBtn.copying
+					@copyBtn.text = "Paste"
+					@copyBtn.color = ccColor3 0xff0080
+				else
+					@copyBtn.text = "Copy"
+					@copyBtn.color = ccColor3 0x00ffff
+					triggerName = Path.getName(@copyBtn.targetItem).."Copy"
+					newPath = scope.path..scope.currentGroup.."/"..triggerName
+					count = 1
+					filename = newPath..".trigger"
+					while oContent\exist filename
+						filename = newPath..tostring(count)..".trigger"
+						count += 1
+					triggerName ..= tostring count if count > 1
+					exprData = triggerBtn.exprEditor.exprData
+					oldName = exprData[2][2]
+					exprData[2][2] = triggerName
+					oContent\saveToFile filename,ToEditText(exprData)
+					exprData[2][2] = oldName
+					scope\updateItems!
+			\gslot "Scene.Trigger.CancelCopy",-> print 998
 
-		@closeBtn\slot "Tapped",->
-			exprEditor\save ""
-			@hide!
+		@closeBtn\slot "Tapped",-> @hide!
 
 		@gslot "Scene.EditMenu.Delete",-> @show!
 
 	show:=>
+		@panel\schedule once ->
+			@localScope\updateItems!
+			sleep!
+			@globalScope\updateItems!
+			@groupBtn.text = if @localBtn.checked
+				@localScope.currentGroup
+			else
+				@globalScope.currentGroup
 		@visible = true
 		@closeBtn.scaleX = 0
 		@closeBtn.scaleY = 0
@@ -273,12 +294,13 @@ Class TriggerEditorView,
 				@editMenu.enabled = true
 				@opMenu.enabled = true
 				for control in *editor.children
+					control.visibleState = control.visible
 					control.visible = false if control ~= @
 		}
 
 	hide:=>
 		for control in *editor.children
-			control.visible = true if control ~= @
+			control.visible = control.visibleState if control ~= @
 		@listScrollArea.touchEnabled = false
 		@localListMenu.enabled = false
 		@globalListMenu.enabled = false

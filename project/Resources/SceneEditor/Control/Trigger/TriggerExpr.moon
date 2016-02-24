@@ -80,6 +80,7 @@ Class TriggerExprView,
 					value ..= " and"
 			@_text = value
 			@label.text = value
+			@label.texture.antiAlias = false
 			@height = @label.height+10
 			@label.positionY = @height-5
 

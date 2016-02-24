@@ -426,9 +426,10 @@ TriggerDef = {
 				"CreateModel( #{ @[2] }, #{ @[3] }, #{ @[4] }, #{ @[5] }, #{ @[6] }, #{ @[7] }, #{ @[8] } )"
 		}
 		PlayAnimation: {
-			Type:"None"
+			Type:"Number"
+			TypeIgnore:true
 			Group:"Model"
-			Desc:"Set look of model [Model] to [Look] and play animation [Animation] with loop [Boolean]."
+			Desc:"Set look of model [Model] to [Look] and play animation [Animation] with loop [Boolean], then return animation`s duration."
 			Create:=>
 				SetExprMeta {@Name
 					{"ModelByName",""} -- 2
