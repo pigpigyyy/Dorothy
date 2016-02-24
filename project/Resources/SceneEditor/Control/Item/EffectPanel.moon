@@ -163,6 +163,7 @@ Class EffectPanelView,
 			SelectionPanel = require "Control.Basic.SelectionPanel"
 			with SelectionPanel items:{"Particle","Frame"}
 				\slot "Selected",(itemType)->
+					return unless itemType
 					with InputBox text:"New "..itemType.." Name"
 						\slot "Inputed",(name)->
 							return unless name
@@ -196,6 +197,7 @@ Class EffectPanelView,
 						\slot("Activated")\set ->
 							effectEditor\addExistFile name
 						\slot "Quit",-> CCScene\back "rollIn"
+						\hideEditor false,true
 					CCScene\forward "effectEditor","rollOut"
 
 		@delBtn\slot "Tapped",->

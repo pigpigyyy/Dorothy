@@ -185,8 +185,8 @@ local function oViewArea()
 		end
 		if #touches == 1 then
 			S = touches[1].delta
-			crossNode.position = crossNode.position + S
 			local scale = scaleNode.scaleX
+			crossNode.position = crossNode.position + S/scale
 			xCross.positionX = (center.x-crossNode.positionX)/scale
 			yCross.positionY = (center.y-crossNode.positionY)/scale
 		elseif #touches >= 2 then

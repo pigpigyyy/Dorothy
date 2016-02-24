@@ -177,6 +177,7 @@ Class ModelPanelView,
 							oFileChooser = require "ActionEditor.Script.oFileChooser"
 							oFileChooser(true,true,name)
 						\slot "Quit",-> CCScene\back "rollIn"
+						\hideEditor false,true
 					CCScene\forward "actionEditor","rollOut"
 
 		@delBtn\slot "Tapped",->

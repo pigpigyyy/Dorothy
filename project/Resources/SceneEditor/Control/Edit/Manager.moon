@@ -457,9 +457,10 @@ Class CCNode,
 						table.insert looks,1,"None"
 						with SelectionPanel items:looks
 							\slot "Selected",(value)->
-								data[menuItem.name] = (value == "None" and "" or value)
-								menuItem.value = value
-								item.look = value
+								if value
+									data[menuItem.name] = (value == "None" and "" or value)
+									menuItem.value = value
+									item.look = value
 								cancelEditing!
 					when "animation"
 						file = data.file
@@ -467,14 +468,14 @@ Class CCNode,
 						table.insert looks,1,"None"
 						with SelectionPanel items:looks
 							\slot "Selected",(value)->
-								value = (value == "None" and "" or value)
-								data[menuItem.name] = value
-								menuItem.value = value
-								if value == ""
-									item\stop!
-									item\reset!
-								else
-									item\play value
+								if value
+									data[menuItem.name] = (value == "None" and "" or value)
+									menuItem.value = value
+									if value == "None"
+										item\stop!
+										item\reset!
+									else
+										item\play value
 								cancelEditing!
 					when "group"
 						groupChooser = with GroupChooser!
@@ -524,9 +525,10 @@ Class CCNode,
 					when "simulation"
 						with SelectionPanel items:{"Low","Medium","High"}
 							\slot "Selected",(value,index)->
-								data.simulation = index
-								menuItem.value = value
-								item\setIterations Simulation index
+								if value
+									data.simulation = index
+									menuItem.value = value
+									item\setIterations Simulation index
 								cancelEditing!
 					when "zoom"
 						showRuler data.zoom,0.5,10,1,(value)->

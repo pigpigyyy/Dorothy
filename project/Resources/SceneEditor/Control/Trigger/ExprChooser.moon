@@ -166,6 +166,7 @@ ExprChooser = Class
 										}
 										.menu.children.last.color = ccColor3 0x80ff00 if isSetVar
 										\slot "Selected",(item)->
+											return unless item
 											if item == "<NEW>"
 												with InputBox text:"New Varaible Name"
 													\slot "Inputed",(result)->

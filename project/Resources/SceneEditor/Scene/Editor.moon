@@ -126,7 +126,7 @@ Class EditorView,
 			return unless @game
 			with SelectionPanel items:{"Layer","World"}
 				\slot "Selected",(item)->
-					emit "Scene.LayerSelected",item
+					emit "Scene.LayerSelected",item if item
 
 		currentCam = nil
 		@gslot "Scene.Camera.Activate",(cam)->
@@ -190,7 +190,7 @@ Class EditorView,
 			else
 				with SelectionPanel items:args
 					\slot "Selected",(itemType)->
-						chooseItem itemType
+						chooseItem itemType if itemType
 
 		effectUpdated = (args)->
 			{effect,effectFile,delete} = args

@@ -89,7 +89,7 @@ local function oEditMenu()
 	items =
 	{
 		Edit = oButton("Menu",16,50,50,35,winSize.height-35,function(button)
-			emit("Body.settingPanel.edit",nil)
+			emit("Body.settingPanel.cancel")
 			if not oEditor.dirty then
 				oEditor:addChild(oFileChooser(),oEditor.topMost)
 			else

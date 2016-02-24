@@ -173,6 +173,7 @@ Class BodyPanelView,
 						\slot "Activated",->
 							\new editor.physicsFolder..name..".body"
 						\slot "Quit",-> CCScene\back "rollIn"
+						\hideEditor false,true
 					CCScene\forward "bodyEditor","rollOut"
 
 		@delBtn\slot "Tapped",->

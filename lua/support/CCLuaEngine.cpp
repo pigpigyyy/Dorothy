@@ -106,18 +106,10 @@ static int cclua_loadfile(lua_State* L, const string& file)
 	{
 		string extension = oString::toLower(filename.substr(pos + 1));
 		isXml = extension == "xml";
-		if (!isXml &&
-			extension != "lua" &&
-			extension != "body" &&
-			extension != "scene")
-		{
-			lua_pushnil(L);
-			lua_pushliteral(L, "Xml and Lua files not found");
-			return 2;
-		}
 	}
 
 	unsigned long codeBufferSize = 0;
+	oOwnArray<char> buffer;
 	const char* codeBuffer = nullptr;
 	string codes;
 	if (isXml)
@@ -135,20 +127,21 @@ static int cclua_loadfile(lua_State* L, const string& file)
 	}
 	else
 	{
-		codeBuffer = (const char*)CCFileUtils::sharedFileUtils()->getFileData(filename.c_str(), "rb", &codeBufferSize);
+		buffer = oSharedContent.loadFile(filename.c_str(), codeBufferSize);
+		codeBuffer = buffer;
 	}
 	if (codeBuffer)
 	{
 		if (luaL_loadbuffer(L, codeBuffer, codeBufferSize, filename.c_str()) != 0)
 		{
-			delete[] codeBuffer;
 			luaL_error(L, "error loading module %s from file %s :\n\t%s",
 				lua_tostring(L, 1), filename.c_str(), lua_tostring(L, -1));
 		}
-		if (!isXml) delete[] codeBuffer;
 	}
-	else luaL_error(L, "can not get file data of %s", filename.c_str());
-
+	else
+	{
+		luaL_error(L, "can not get file data of %s", filename.c_str());
+	}
 	return 1;
 
 }

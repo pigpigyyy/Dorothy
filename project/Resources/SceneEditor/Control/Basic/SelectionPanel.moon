@@ -30,7 +30,9 @@ Class
 				@hide!
 			@menu\addChild button
 
-		@cancelBtn\slot "Tapped",-> @hide!
+		@cancelBtn\slot "Tapped",->
+			@emit "Selected",nil,nil
+			@hide!
 
 		@scrollArea.viewSize = @menu\alignItemsVertically 10
 		@scrollArea\setupMenuScroll @menu

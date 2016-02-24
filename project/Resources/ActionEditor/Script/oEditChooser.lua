@@ -155,6 +155,9 @@ local function oEditChooser(withCancel)
 					function(text)
 						if text == "" then
 							return
+						elseif text == "None" then
+							oBox("Invalid Name!")
+							return
 						end
 						for k,_ in pairs(aNames) do
 							if text == k then
@@ -246,6 +249,9 @@ local function oEditChooser(withCancel)
 				oBox("New Look",
 					function(text)
 						if text == "" then
+							return
+						elseif text == "None" then
+							oBox("Invalid Name!")
 							return
 						end
 						for k,_ in pairs(lNames) do

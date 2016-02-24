@@ -169,6 +169,7 @@ Class TriggerEditorView,
 				.menu.children[#.menu.children-1].color = ccColor3 0x80ff00
 				.menu.children.last.color = ccColor3 0xff0080
 				\slot "Selected",(item)->
+					return unless item
 					lastGroupListOffset = .scrollArea.offset
 					switch item
 						when "<NEW>"

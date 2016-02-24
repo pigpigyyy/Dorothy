@@ -248,6 +248,7 @@ void oContent::saveToFile(const string& filename, const string& content)
 
 vector<string> oContent::getDirEntries(const char* path, bool isFolder)
 {
+	CCAssert(path, "Getting entries from invalid path.");
 	return CCFileUtils::sharedFileUtils()->getDirEntries(path, isFolder);
 }
 

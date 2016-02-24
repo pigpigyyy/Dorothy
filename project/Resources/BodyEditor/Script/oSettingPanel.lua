@@ -513,6 +513,12 @@ local function oSettingPanel()
 			end
 		end
 	end)
+	self:gslot("Body.settingPanel.cancel",function()
+		if currentItem and currentItem.selected then
+			currentItem.selected = false
+			editCallback(currentItem)
+		end
+	end)
 	self:gslot("Body.settingPanel.edit",function(item)
 		if currentItem ~= item then
 			currentItem.selected = false
