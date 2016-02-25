@@ -4,6 +4,7 @@ SelectionPanel = require "Control.Basic.SelectionPanel"
 Model = require "Data.Model"
 Reference = require "Data.Reference"
 CCScene = require "Lib.CCSceneEx"
+import Path from require "Data.Utils"
 require "Lib.oBodyEx"
 
 Class EditorView,
@@ -248,7 +249,6 @@ Class EditorView,
 				oContent\mkdir @logicFullPath unless oContent\exist @logicFullPath
 				oContent\mkdir @sceneFullPath unless oContent\exist @sceneFullPath
 				oContent\mkdir @triggerFullPath unless oContent\exist @triggerFullPath
-				oContent\mkdir @triggerLocalFullPath unless oContent\exist @triggerLocalFullPath
 				oContent\mkdir @triggerGlobalFullPath unless oContent\exist @triggerGlobalFullPath
 				if @_actionEditor
 					@actionEditor.input = @gameFullPath
@@ -284,8 +284,8 @@ Class EditorView,
 	logicFullPath:property => @_gameFullPath.."Logic/"
 	triggerFolder:property => "Logic/Trigger/"
 	triggerFullPath:property => @_gameFullPath.."Logic/Trigger/"
-	triggerLocalFolder:property => "Logic/Trigger/Local/"
-	triggerLocalFullPath:property => @_gameFullPath.."Logic/Trigger/Local/"
+	triggerLocalFolder:property => "Logic/Trigger/Local/#{@scene}/"
+	triggerLocalFullPath:property => @_gameFullPath.."Logic/Trigger/Local/#{@scene}/"
 	triggerGlobalFolder:property => "Logic/Trigger/Global/"
 	triggerGlobalFullPath:property => @_gameFullPath.."Logic/Trigger/Global/"
 	sceneFolder:property => "Scene/"
@@ -588,6 +588,7 @@ Class EditorView,
 				@_sceneName = sceneFile\match "([^\\/]*)%.[^%.\\/]*$"
 				@sceneData = Model.loadData @gameFullPath..sceneFile
 				@sceneData.ui = Model.loadData @uiFileFullPath
+				oContent\mkdir @triggerLocalFullPath unless oContent\exist @triggerLocalFullPath
 			else
 				@sceneData = nil
 				@items = nil
@@ -611,24 +612,14 @@ Class EditorView,
 
 	deleteCurrentScene:=>
 		return unless @currentSceneFile
-		oContent\remove @currentSceneFile
 		Reference.removeSceneRef @currentSceneFile,@sceneData
+		oContent\remove @currentSceneFile
+		Path.removeFolder @triggerLocalFullPath
 		@currentSceneFile = nil
 
 	deleteCurrentGame:=>
 		return unless @game
-		visitResource = (path)->
-			return unless oContent\exist path
-			files = oContent\getEntries path,false
-			for file in *files
-				filename = path..file
-				oContent\remove filename
-			folders = oContent\getEntries path,true
-			for folder in *folders
-				if folder ~= "." and folder ~= ".."
-					visitResource path..folder.."/"
-			oContent\remove path
-		visitResource @gameFullPath
+		Path.removeFolder @gameFullPath
 		@game = nil
 
 	updateGroupName:(groupIndex,name)=>

@@ -254,11 +254,11 @@ Class TriggerEditorView,
 					@copyBtn.color = ccColor3 0x00ffff
 					triggerName = Path.getName(@copyBtn.targetItem).."Copy"
 					newPath = scope.path..scope.currentGroup.."/"..triggerName
-					count = 1
+					count = 0
 					filename = newPath..".trigger"
 					while oContent\exist filename
-						filename = newPath..tostring(count)..".trigger"
 						count += 1
+						filename = newPath..tostring(count)..".trigger"
 					triggerName ..= tostring count if count > 1
 					exprData = triggerBtn.exprEditor.exprData
 					oldName = exprData[2][2]

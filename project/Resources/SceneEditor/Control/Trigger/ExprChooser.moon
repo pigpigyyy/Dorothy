@@ -15,11 +15,9 @@ local ExprChooser
 ExprChooser = Class
 	__initc:=>
 		@level = 1
+		@preview = nil
 
 	__partial:(args)=>
-		{:width,:height} = CCDirector.winSize
-		args.width or= width*0.8
-		args.height or= height*0.6
 		args.level = @@level
 		@@level += 1
 		ExprChooserView args
@@ -35,6 +33,10 @@ ExprChooser = Class
 		@owner = owner
 		@prev = prev
 		@exprs[getmetatable expr] = expr if expr
+		if args.level == 1
+			@@preview = with @previewItem
+				.owner = @
+				\update!
 
 		@backBtn\slot "TapBegan",nil
 		@okBtn\slot "TapBegan",nil
@@ -105,10 +107,13 @@ ExprChooser = Class
 										owner:@owner
 										prev:@
 									}
-									\slot "Show",-> @visible = false
+									\slot "Show",->
+										@panel.visible = false
+										@opMenu.visible = false
 									\slot "Hide",->
 										menuItem.enabled = true
-										@visible = true
+										@panel.visible = true
+										@opMenu.visible = true
 										@showButtons!
 										updateContent exprDef
 									\slot "Result",(expr)->
@@ -141,6 +146,8 @@ ExprChooser = Class
 				setBodyText text
 				@curExpr = exprDef\Create!
 				@exprs[exprDef] = @curExpr
+
+			@updatePreview!
 
 			switch @curExpr[1]
 				when "LocalName"
@@ -185,6 +192,7 @@ ExprChooser = Class
 																@owner\markLocalVarRename oldName,result
 															button.text = result
 															@curExpr[2] = result
+															@updatePreview!
 											else
 												if isSetVar
 													oldName = @curExpr[2]
@@ -195,11 +203,15 @@ ExprChooser = Class
 														@owner\markLocalVarRename oldName,item
 												button.text = item
 												@curExpr[2] = item
+												@updatePreview!
 							@bodyMenu\addChild localVarButton
 							if not @bodyMenu.activate
 								localVarButton\emit "Tapped",localVarButton
 								@bodyMenu.activate = true
 				when "Number"
+					inputed = (_,textBox)->
+						@curExpr[2] = tonumber(textBox.text) or 0
+						@updatePreview!
 					@bodyMenu\addChild with TextBox {
 							x:@bodyMenu.width/2
 							y:@bodyLabel.positionY-@bodyLabel.height/2-20-20
@@ -213,11 +225,12 @@ ExprChooser = Class
 							text = textBox.text..addText
 							number = tonumber text
 							addText == "\n" or number ~= nil or text == "-"
-						.textField\slot "InputInserted",(_,textBox)->
-							@curExpr[2] = tonumber(textBox.text) or 0
-						.textField\slot "InputDeleted",(_,textBox)->
-							@curExpr[2] = tonumber(textBox.text) or 0
+						.textField\slot "InputInserted",inputed
+						.textField\slot "InputDeleted",inputed
 				when "String"
+					inputed = (_,textBox)->
+						@curExpr[2] = textBox.text
+						@updatePreview!
 					@bodyMenu\addChild with TextBox {
 							x:@bodyMenu.width/2
 							y:@bodyLabel.positionY-@bodyLabel.height/2-20-20
@@ -227,10 +240,8 @@ ExprChooser = Class
 							limit:15
 						}
 						.text = tostring @curExpr[2]
-						.textField\slot "InputInserted",(_,textBox)->
-							@curExpr[2] = textBox.text
-						.textField\slot "InputDeleted",(_,textBox)->
-							@curExpr[2] = textBox.text
+						.textField\slot "InputInserted",inputed
+						.textField\slot "InputDeleted",inputed
 
 		selectExpr = (button)->
 			@curExprBtn.checked = false if @curExprBtn and @curExprBtn ~= button
@@ -291,6 +302,9 @@ ExprChooser = Class
 		@okBtn\slot "Tapped",->
 			@@level -= 1
 			@emit "Result",@curExpr
+			@@preview.parent\removeChild @@preview,false
+			@addChild @@preview,-1
+			@previewItem = @@preview
 			@hide!
 			@prev\finishEdit! if @prev
 
@@ -301,6 +315,10 @@ ExprChooser = Class
 
 		editor\addChild @
 		@show!
+
+	updatePreview:=>
+		@emit "Result",@curExpr if @@level > 2
+		@@preview\update!
 
 	finishEdit:=>
 		@@level -= 1
@@ -324,6 +342,10 @@ ExprChooser = Class
 	show:=>
 		@visible = true
 		@showButtons!
+		if @previewItem
+			with @previewItem
+				.opacity = 0
+				\perform oOpacity 0.3,1,oEase.OutQuad
 		with @panel
 			.opacity = 0
 			\perform CCSequence {
@@ -353,5 +375,8 @@ ExprChooser = Class
 			oOpacity 0.3,0,oEase.OutQuad
 			CCCall -> @parent\removeChild @
 		}
+		if @previewItem
+			@previewItem\perform oOpacity 0.3,0,oEase.OutQuad
+			@@preview = nil
 
 ExprChooser

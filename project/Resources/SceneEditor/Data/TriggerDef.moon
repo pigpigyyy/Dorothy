@@ -5,7 +5,17 @@ SetExprMeta = (expr)->
 		SetExprMeta expr[i] if "table" == type expr[i]
 	setmetatable expr,TriggerDef.Expressions[expr[1]]
 
+__tostring = (expr)->
+	if TriggerDef.CodeMode or expr.CodeOnly
+		expr\ToCode!
+	else
+		index = 1
+		expr.Desc\gsub "%b[]",->
+			index += 1
+			"(#{tostring expr[index]})"
+
 TriggerDef = {
+	CodeMode:false
 	:SetExprMeta
 	ToEditText:(expr)->
 		strs = {}
@@ -39,7 +49,7 @@ TriggerDef = {
 		Trigger: {
 			Type:"Trigger"
 			Group:"None"
-			Desc:"A trigger named [TriggerName] and being enabled [Boolean]."
+			Desc:"The trigger named [TriggerName] is enabled [Boolean]."
 			Create:(triggerName)=>
 				SetExprMeta {@Name
 					{"TriggerName",triggerName or "triggerName"}
@@ -50,7 +60,9 @@ TriggerDef = {
 					}
 					{"Action"}
 				}
-			__tostring:=> "Trigger"
+			ToCode:=>
+				"Trigger( #{expr[2]}, #{expr[3]},"
+			:__tostring
 		}
 		Event: {
 			Type:"EventType"
@@ -58,7 +70,8 @@ TriggerDef = {
 			Desc:"Event to trigger."
 			Create:=>
 				SetExprMeta {@Name}
-			__tostring:=> "EventType"
+			ToCode:=> "Event("
+			:__tostring
 		}
 		Action: {
 			Type:"ActionSequence"
@@ -66,7 +79,8 @@ TriggerDef = {
 			Desc:"An action execution sequence."
 			Create:=>
 				SetExprMeta {@Name}
-			__tostring:=> "ActionSequence"
+			ToCode:=> "ActionSequence"
+			:__tostring
 		}
 		Condition: {
 			Type:"Condition"
@@ -74,7 +88,8 @@ TriggerDef = {
 			Desc:"Condition value."
 			Create:=>
 				SetExprMeta {@Name}
-			__tostring:=> "Condition"
+			ToCode:=> "Condition( function() return"
+			:__tostring
 		}
 		TimeCycle: {
 			Type:"Event"
@@ -84,8 +99,9 @@ TriggerDef = {
 				SetExprMeta {@Name
 					{"Number",0}
 				}
-			__tostring:=>
+			ToCode:=>
 				"TimeCycle( #{ @[2] } )"
+			:__tostring
 		}
 		And: {
 			Type:"Boolean"
@@ -97,8 +113,9 @@ TriggerDef = {
 					{"True"}
 					{"True"}
 				}
-			__tostring:=>
+			ToCode:=>
 				"( #{ @[2] } and #{ @[3] } )"
+			:__tostring
 		}
 		Or: {
 			Type:"Boolean"
@@ -110,8 +127,9 @@ TriggerDef = {
 					{"True"}
 					{"True"}
 				}
-			__tostring:=>
+			ToCode:=>
 				"( #{ @[2] } or #{ @[3] } )"
+			:__tostring
 		}
 		Add: {
 			Type:"Number"
@@ -123,8 +141,9 @@ TriggerDef = {
 					{"Number",0}
 					{"Number",0}
 				}
-			__tostring:=>
+			ToCode:=>
 				"( #{ @[2] } + #{ @[3] } )"
+			:__tostring
 		}
 		GlobalNumber: {
 			Type:"Number"
@@ -135,60 +154,71 @@ TriggerDef = {
 				SetExprMeta {@Name
 					{"GlobalName","globalName"}
 				}
-			__tostring:=>
+			ToCode:=>
 				"GlobalNumber( #{ @[2] } )"
+			:__tostring
 		}
 		LocalNumber: {
 			Type:"Number"
 			TypeIgnore:false
 			Group:"Variable"
 			Desc:"Get local number named [LocalName]."
+			CodeOnly:true
 			Create:=>
 				SetExprMeta {@Name
 					{"LocalName","localName"}
 				}
-			__tostring:=>
+			ToCode:=>
 				"#{ @[2] }"
+			:__tostring
 		}
 		String: {
 			Type:"String"
 			TypeIgnore:false
 			Group:"String"
 			Desc:"Raw string."
+			CodeOnly:true
 			Create:=>
 				SetExprMeta {@Name,""}
-			__tostring:=>
+			ToCode:=>
 				"\"#{ @[2] }\""
+			:__tostring
 		}
 		Number: {
 			Type:"Number"
 			TypeIgnore:false
 			Group:"Number"
 			Desc:"Raw number."
+			CodeOnly:true
 			Create:=>
 				SetExprMeta {@Name,0}
-			__tostring:=>
+			ToCode:=>
 				"#{ @[2] }"
+			:__tostring
 		}
 		True: {
 			Type:"Boolean"
 			TypeIgnore:false
 			Group:"Boolean"
 			Desc:"Boolean true."
+			CodeOnly:true
 			Create:=>
 				SetExprMeta {@Name}
-			__tostring:=>
+			ToCode:=>
 				"true"
+			:__tostring
 		}
 		False: {
 			Type:"Boolean"
 			TypeIgnore:false
 			Group:"Boolean"
 			Desc:"Boolean false."
+			CodeOnly:true
 			Create:=>
 				SetExprMeta {@Name}
-			__tostring:=>
+			ToCode:=>
 				"false"
+			:__tostring
 		}
 		NumberEqual: {
 			Type:"Boolean"
@@ -200,80 +230,97 @@ TriggerDef = {
 					{"Number",0}
 					{"Number",0}
 				}
-			__tostring:=>
+			ToCode:=>
 				"( #{ @[2] } == #{ @[3] } )"
+			:__tostring
 		}
 		TriggerName: {
 			Type:"TriggerName"
 			Group:"Special"
 			Desc:"The trigger`s name."
+			CodeOnly:true
 			Create:=>
 				SetExprMeta {@Name,""}
-			__tostring:=>
+			ToCode:=>
 				"\"#{ @[2] }\""
+			:__tostring
 		}
 		LocalName: {
 			Type:"LocalName"
 			Group:"Special"
 			Desc:"A name for local value."
+			CodeOnly:true
 			Create:=>
 				SetExprMeta {@Name,"localName"}
-			__tostring:=>
+			ToCode:=>
 				"#{ @[2] }"
+			:__tostring
 		}
 		GlobalName: {
 			Type:"GlobalName"
 			Group:"Special"
 			Desc:"A name for global value."
+			CodeOnly:true
 			Create:=>
 				SetExprMeta {@Name,"globalName"}
-			__tostring:=>
+			ToCode:=>
 				"\"#{ @[2] }\""
+			:__tostring
 		}
 		ModelName: {
 			Type:"ModelName"
 			Group:"Special"
 			Desc:"A name for model."
+			CodeOnly:true
 			Create:=>
 				SetExprMeta {@Name,""}
-			__tostring:=>
+			ToCode:=>
 				"\"#{ @[2] }\""
+			:__tostring
 		}
 		LayerName: {
 			Type:"LayerName"
 			Group:"Special"
 			Desc:"A name for layer."
+			CodeOnly:true
 			Create:=>
 				SetExprMeta {@Name,""}
-			__tostring:=>
+			ToCode:=>
 				"\"#{ @[2] }\""
+			:__tostring
 		}
 		ModelType: {
 			Type:"ModelType"
 			Group:"Special"
 			Desc:"A type name for model."
+			CodeOnly:true
 			Create:=>
 				SetExprMeta {@Name,""}
-			__tostring:=>
+			ToCode:=>
 				"\"#{ @[2] }\""
+			:__tostring
 		}
 		Animation: {
 			Type:"Animation"
 			Group:"Special"
 			Desc:"A name for animation."
+			CodeOnly:true
 			Create:=>
 				SetExprMeta {@Name,""}
-			__tostring:=>
+			ToCode:=>
 				"\"#{ @[2] }\""
+			:__tostring
 		}
 		Look: {
 			Type:"Look"
 			Group:"Special"
 			Desc:"A name for look."
+			CodeOnly:true
 			Create:=>
 				SetExprMeta {@Name,""}
-			__tostring:=>
+			ToCode:=>
 				"\"#{ @[2] }\""
+			:__tostring
 		}
 		SetLocalNumber: {
 			Type:"None"
@@ -284,8 +331,9 @@ TriggerDef = {
 					{"LocalName","localName"}
 					{"Number",0}
 				}
-			__tostring:=>
+			ToCode:=>
 				"#{ @[2] } = #{ @[3] }"
+			:__tostring
 		}
 		SetGlobalNumber: {
 			Type:"None"
@@ -296,13 +344,14 @@ TriggerDef = {
 					{"GlobalName","globalName"}
 					{"Number",0}
 				}
-			__tostring:=>
+			ToCode:=>
 				"SetGlobalNumber( #{ @[2] }, #{ @[3] } )"
+			:__tostring
 		}
 		If: {
 			Type:"None"
 			Group:"Code Flow"
-			Desc:"If condition [Boolean] meets do [ActionSequence] otherwise do [ActionSequence]."
+			Desc:"If condition [Boolean] meets do."
 			MultiLine:true
 			Create:=>
 				SetExprMeta {@Name
@@ -314,13 +363,14 @@ TriggerDef = {
 						{"DoNothing"}
 					}
 				}
-			__tostring:=>
+			ToCode:=>
 				"if #{ @[2] } then"
+			:__tostring
 		}
 		Loopi: {
 			Type:"None"
 			Group:"Code Flow"
-			Desc:"Count number i from [Number] to [Number] by [Number] and do [ActionSequence]."
+			Desc:"Count number i from [Number] to [Number] by [Number] and do."
 			MultiLine:true
 			Create:=>
 				SetExprMeta {@Name,
@@ -331,8 +381,9 @@ TriggerDef = {
 						{"DoNothing"}
 					}
 				}
-			__tostring:=>
+			ToCode:=>
 				"for i = #{ @[2] }, #{ @[3] }, #{ @[4] } do"
+			:__tostring
 		}
 		Sleep: {
 			Type:"None"
@@ -342,8 +393,9 @@ TriggerDef = {
 				SetExprMeta {@Name
 					{"Number",0}
 				}
-			__tostring:=>
+			ToCode:=>
 				"Sleep( #{ @[2] } )"
+			:__tostring
 		}
 		Print: {
 			Type:"None"
@@ -353,8 +405,9 @@ TriggerDef = {
 				SetExprMeta {@Name
 					{"String",""}
 				}
-			__tostring:=>
+			ToCode:=>
 				"Print( #{ @[2] } )"
+			:__tostring
 		}
 		DoNothing: {
 			Type:"None"
@@ -362,8 +415,9 @@ TriggerDef = {
 			Desc:"Do nothing."
 			Create:=>
 				SetExprMeta {@Name}
-			__tostring:=>
+			ToCode:=>
 				"DoNothing()"
+			:__tostring
 		}
 		ModelByName: {
 			Type:"Model"
@@ -374,8 +428,9 @@ TriggerDef = {
 				SetExprMeta {@Name
 					{"ModelName",""}
 				}
-			__tostring:=>
+			ToCode:=>
 				"ModelByName( #{ @[2] } )"
+			:__tostring
 		}
 		LayerByName: {
 			Type:"Layer"
@@ -386,8 +441,9 @@ TriggerDef = {
 				SetExprMeta {@Name
 					{"LayerName",""}
 				}
-			__tostring:=>
+			ToCode:=>
 				"LayerByName( #{ @[2] } )"
+			:__tostring
 		}
 		Point: {
 			Type:"Point"
@@ -399,8 +455,9 @@ TriggerDef = {
 					{"Number",0}
 					{"Number",0}
 				}
-			__tostring:=>
+			ToCode:=>
 				"Point( #{ @[2] }, #{ @[3] } )"
+			:__tostring
 		}
 		CreateModel: {
 			Type:"Model"
@@ -422,23 +479,25 @@ TriggerDef = {
 					{"Animation",""} -- 7
 					{"False"} -- 8
 				}
-			__tostring:=>
+			ToCode:=>
 				"CreateModel( #{ @[2] }, #{ @[3] }, #{ @[4] }, #{ @[5] }, #{ @[6] }, #{ @[7] }, #{ @[8] } )"
+			:__tostring
 		}
 		PlayAnimation: {
 			Type:"Number"
 			TypeIgnore:true
 			Group:"Model"
-			Desc:"Set look of model [Model] to [Look] and play animation [Animation] with loop [Boolean], then return animation`s duration."
+			Desc:"Play animation [Animation] of model [Model] with loop [Boolean] and set model look to [Look], then return animation`s duration."
 			Create:=>
 				SetExprMeta {@Name
-					{"ModelByName",""} -- 2
-					{"Look",""} -- 3
-					{"Animation",""} -- 4
-					{"False"} -- 5
+					{"Animation",""} -- 2
+					{"ModelByName",""} -- 3
+					{"False"} -- 4
+					{"Look",""} -- 5
 				}
-			__tostring:=>
+			ToCode:=>
 				"PlayAnimation( #{ @[2] }, #{ @[3] }, #{ @[4] }, #{ @[5] } )"
+			:__tostring
 		}
 	}
 }

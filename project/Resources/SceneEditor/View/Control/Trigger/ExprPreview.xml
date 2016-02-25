@@ -1,0 +1,15 @@
+<!-- params: -->
+<ScrollArea X="{ @X }" Y="{ @Y+@H*0.04-@H*0.3-@H*0.05 }" Width="{ @W*0.8 }" Height="{ @H*0.1 }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelExprChooser-2 }">
+	<Import Module="Control.Basic.ScrollArea"/>
+	<Import Module="View.Shape.SolidRect"/>
+	<Import Module="View.Shape.LineRect"/>
+	<Import Module="Control.Trigger.TriggerExpr"/>
+
+	<Item Name="view">
+		<SolidRect Width="{ $W }" Height="{ $H }" Color="0xff100000"/>
+		<Menu Name="menu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.levelExprChooser-1 }" Ref="True">
+			<TriggerExpr Name="previewItem" Indent="0" Text=" " Width="{ $W-10 }" Ref="True"/>
+		</Menu>
+		<LineRect X="-1" Y="-1" Width="{ $W+2 }" Height="{ $H+2 }" Color="0xffffafaf"/>
+	</Item>
+</ScrollArea>

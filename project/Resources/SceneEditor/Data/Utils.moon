@@ -25,7 +25,7 @@ Path =
 		filename\match "([^\\/]*)$"
 
 	getName:(filename)->
-		filename\match "([^\\/]*)%..*$"
+		filename\match "([^\\/]+)%..*$"
 
 	getFiles:(path,filters)->
 		filters = if "string" == type filters
