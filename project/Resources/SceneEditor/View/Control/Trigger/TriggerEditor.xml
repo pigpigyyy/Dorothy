@@ -14,14 +14,14 @@
 		<SolidRect Width="{ $W }" Height="{ $H }" Color="0xff100000"/>
 
 		<!-- scope menu -->
-		<Menu Name="scopeMenu" X="105" Y="{ $T-45 }" Width="210" Height="90" AlignItems="10" TouchPriority="{ editor.levelTriggerEditor-1 }" Ref="True">
-			<TriggerItem Name="localBtn" Text="Local" Width="{ ($W-30)/2 }" Height="30" FontSize="20" Ref="True"/>
-			<TriggerItem Name="globalBtn" Text="Global" Width="{ ($W-30)/2 }" Height="30" FontSize="20" Ref="True"/>
-			<GroupButton Name="groupBtn" Text="Default" Width="190" Height="30" Ref="True"/>
+		<Menu Name="scopeMenu" X="105" Y="{ $T-50 }" Width="210" Height="100" AlignItems="10" TouchPriority="{ editor.levelTriggerEditor-1 }" Ref="True">
+			<TriggerItem Name="localBtn" Text="Local" Width="{ ($W-30)/2 }" Height="35" FontSize="20" Ref="True"/>
+			<TriggerItem Name="globalBtn" Text="Global" Width="{ ($W-30)/2 }" Height="35" FontSize="20" Ref="True"/>
+			<GroupButton Name="groupBtn" Text="Default" Width="190" Height="35" Ref="True"/>
 		</Menu>
 
 		<!-- trigger list -->
-		<ScrollArea Name="listScrollArea" X="105" Y="{ $T-90-($H-150)/2 }" Width="210" Height="{ $H-150 }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelTriggerEditor-2 }" Ref="True">
+		<ScrollArea Name="listScrollArea" X="105" Y="{ $T-100-($H-160)/2 }" Width="210" Height="{ $H-160 }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelTriggerEditor-2 }" Ref="True">
 			<Item Name="view">
 				<Menu Name="localListMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.levelTriggerEditor-1 }" Enabled="False" Ref="True"/>
 				<Menu Name="globalListMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.levelTriggerEditor-1 }" Enabled="False" Ref="True" Visible="False"/>
@@ -43,8 +43,8 @@
 		</Line>
 	</Node>
 
-	<Menu Name="opMenu" X="{ @X+(@W-80)/2-35 }" Y="{ @Y+(@H-80)/2 }" Width="130" Height="60" TouchPriority="{ editor.levelTriggerEditor-3 }" Enabled="False" Ref="True">
-		<CircleButton Name="closeBtn" X="{ $R-30 }" Y="{ $Y }" Radius="30" Text="Cancel" FontSize="16" Ref="True">
+	<Menu Name="opMenu" X="{ @R-40 }" Y="{ @T-40 }" Width="60" Height="60" TouchPriority="{ editor.levelTriggerEditor-3 }" Enabled="False" Ref="True">
+		<CircleButton Name="closeBtn" X="{ $X }" Y="{ $Y }" Radius="30" Text="Close" FontSize="16" Ref="True">
 			<DrawNode>
 				<Dot X="30" Y="30" Radius="30" Color="0x22ffffff"/>
 			</DrawNode>

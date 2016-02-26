@@ -1,4 +1,4 @@
-<!-- params: X, Y, Width, Height, FontSize, Text, Tag -->
+<!-- params: X, Y, Width, Height, FontSize, Text, Tag, BackColor -->
 <ButtonBase X="{ x }" Y="{ y }" Width="{ width }" Height="{ height }" Tag="{ tag }">
 	<Import Module="View.Control.Basic.ButtonBase"/>
 	<Import Module="View.Shape.SolidRect"/>
@@ -6,7 +6,7 @@
 
 	<Item Name="face">
 		<Node PassColor="False">
-			<SolidRect Width="{ width }" Height="{ height }" Color="0x66000000"/>
+			<SolidRect Width="{ width }" Height="{ height }" Color="{ backColor or 0x66000000 }"/>
 		</Node>
 		<LineRect Width="{ width }" Height="{ height }" Color="0xffffffff"/>
 

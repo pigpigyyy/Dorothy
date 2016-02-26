@@ -2,6 +2,7 @@ Dorothy!
 ExprEditorView = require "View.Control.Trigger.ExprEditor"
 TriggerExpr = require "Control.Trigger.TriggerExpr"
 ExprChooser = require "Control.Trigger.ExprChooser"
+SelectionPanel = require "Control.Basic.SelectionPanel"
 TriggerDef = require "Data.TriggerDef"
 
 Class ExprEditorView,
@@ -15,6 +16,7 @@ Class ExprEditorView,
 		@localSet = nil
 		@localVarFrom = nil
 		@localVarTo = nil
+		@codeMode = (CCUserDefault.TriggerMode == "Code")
 
 		for child in *@editMenu.children
 			child.scale = oScale 0.3,1,1,oEase.OutQuad
@@ -54,9 +56,10 @@ Class ExprEditorView,
 						false
 					else
 						not subExprItem
+				mode = expr[1] == "Trigger"
 				up = index and index > 2 and not subExprItem
 				down = index and index < #parentExpr and not subExprItem
-				buttons = for v,k in pairs {:edit,:insert,:add,:del,:up,:down}
+				buttons = for v,k in pairs {:edit,:insert,:add,:del,:up,:down,:mode}
 					if k then v
 					else continue
 				@showEditButtons buttons
@@ -126,6 +129,7 @@ Class ExprEditorView,
 					for i = 4,#expr
 						nextExpr expr,i,indent+1
 					@createExprItem mode(")"," "),indent
+					@createExprItem " ",indent if TriggerDef.CodeMode
 				when "Event"
 					with @createExprItem mode(tostring(expr),"Event"),indent,expr
 						.itemType = "Start"
@@ -133,6 +137,7 @@ Class ExprEditorView,
 					for i = 2,#expr
 						nextExpr expr,i,indent+1
 					@createExprItem mode("),"," "),indent
+					@createExprItem " ",indent if TriggerDef.CodeMode
 					indent -= 1
 				when "Condition"
 					with @createExprItem mode(tostring(expr),"Condition"),indent,expr
@@ -141,6 +146,7 @@ Class ExprEditorView,
 					for i = 2,#expr
 						nextExpr expr,i,indent+1
 					@createExprItem mode("end ),"," "),indent
+					@createExprItem " ",indent if TriggerDef.CodeMode
 				when "Action"
 					@actionItem = with @createExprItem mode("Action( function()","Action"),indent,expr
 						.itemType = "Start"
@@ -442,6 +448,27 @@ Class ExprEditorView,
 			@.changeExprItem selectedExprItem
 			@scrollToPosY selectedExprItem.positionY
 
+		@modeBtn\slot "Tapped",->
+			thread ->
+				sleep 0.3
+				@codeMode = not @codeMode
+				CCUserDefault.TriggerMode = @codeMode and "Code" or "Text"
+				TriggerDef.CodeMode = @codeMode
+				@loadExpr @exprData
+				@modeBtn\schedule once ->
+					wait -> @asyncLoad
+					for child in *@triggerMenu.children
+						if child.expr == @exprData
+							child.checked = true
+							@.changeExprItem child
+							break
+
+		@slot "Entered",->
+			codeMode = (CCUserDefault.TriggerMode == "Code")
+			if @codeMode ~= codeMode
+				@codeMode = codeMode
+				@loadExpr @exprData
+
 	createExprItem:(text,indent,expr,parentExpr,index)=>
 		children = @triggerMenu.children
 		lastItem = children and children.last or nil
@@ -464,21 +491,32 @@ Class ExprEditorView,
 		exprItem
 
 	loadExpr:(arg)=>
+		if @_selectedExprItem
+			@_selectedExprItem.checked = false
+			@.changeExprItem @_selectedExprItem
 		@exprData = switch type arg
 			when "table" then arg
 			when "string"
 				@filename = arg
 				TriggerDef.SetExprMeta dofile arg
 		@view\schedule once ->
+			@triggerMenu.enabled = false
 			@triggerMenu\removeAllChildrenWithCleanup!
 			@actionItem = nil
 			@localVarItem = nil
 			@locals = {}
 			@localSet = {}
+			@offset = oVec2.zero
 			@asyncLoad = true
 			@nextExpr @exprData,0
 			@asyncLoad = false
+			@triggerMenu.enabled = true
 		@exprData
+
+	codeMode:property => @_codeMode,
+		(value)=>
+			@_codeMode = value
+			@modeBtn.text = value and "Text" or "Code"
 
 	save:(filename)=>
 		triggerText = TriggerDef.ToEditText @exprData
@@ -537,8 +575,8 @@ Class ExprEditorView,
 				item.text = tostring item.expr
 
 	showEditButtons:(names)=>
-		posX = @editMenu.width-30-(#names == 1 and names[1] == "edit" and 60 or 0)
 		buttonSet = {@["#{name}Btn"],true for name in *names}
+		posX = @editMenu.width-30-(buttonSet[@modeBtn] and 60 or 0)
 		for i = #@editMenu.children,1,-1
 			child = @editMenu.children[i]
 			if buttonSet[child]

@@ -60,7 +60,7 @@ Class ScrollAreaView,
 				@emit "ScrollEnd"
 
 		isReseting = ->
-			deltaX > 0 or deltaX < -moveX or deltaY > moveY or deltaY < 0
+			not @dragging and (deltaX > 0 or deltaX < -moveX or deltaY > moveY or deltaY < 0)
 
 		startReset = ->
 			posX = deltaX
@@ -155,6 +155,7 @@ Class ScrollAreaView,
 			true
 
 		touchEnded = ->
+			@dragging = false
 			if isReseting!
 				startReset!
 			elseif V ~= oVec2.zero and deltaMoveLength > 10
@@ -172,6 +173,7 @@ Class ScrollAreaView,
 			if deltaMoveLength > 10
 				setOffset S,true
 				if lastMoveLength <= 10
+					@dragging = true
 					@emit "ScrollStart"
 
 		@scroll = (delta)=>
@@ -234,10 +236,12 @@ Class ScrollAreaView,
 				{:positionX,:positionY,:width,:height} = child
 				itemRect\set positionX-width*anchorX,positionY-height*anchorY,width,height
 				child.visible = contentRect\intersectsRect itemRect -- reduce draw calls
+		menuEnabled = true
 		@slot "ScrollStart",->
+			menuEnabled = menu.enabled
 			menu.enabled = false
 		@slot "ScrollTouchEnded",->
-			menu.enabled = true
+			menu.enabled = menuEnabled if not menu.enabled
 
 	scrollToPosY:(posY,time=0.3)=>
 		height = @height

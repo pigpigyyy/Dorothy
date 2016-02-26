@@ -65,7 +65,7 @@ TriggerDef = {
 					}
 				}
 			ToCode:=>
-				"Trigger( #{expr[2]}, #{expr[3]},"
+				"Trigger( #{ @[2] }, #{ @[3] },"
 			:__tostring
 		}
 		Event: {
@@ -169,7 +169,7 @@ TriggerDef = {
 					{"GlobalName","globalName"}
 				}
 			ToCode:=>
-				"GlobalNumber( #{ @[2] } )"
+				"G.#{ @[2] }"
 			:__tostring
 		}
 		LocalNumber: {
@@ -278,7 +278,7 @@ TriggerDef = {
 			Create:=>
 				SetExprMeta {@Name,"globalName"}
 			ToCode:=>
-				"\"#{ @[2] }\""
+				"#{ @[2] }"
 			:__tostring
 		}
 		ModelName: {
@@ -359,7 +359,7 @@ TriggerDef = {
 					{"Number",0}
 				}
 			ToCode:=>
-				"SetGlobalNumber( #{ @[2] }, #{ @[3] } )"
+				"G.#{ @[2] } = #{ @[3] }"
 			:__tostring
 		}
 		If: {
@@ -409,6 +409,18 @@ TriggerDef = {
 				}
 			ToCode:=>
 				"Sleep( #{ @[2] } )"
+			:__tostring
+		}
+		Note: {
+			Type:"None"
+			Group:"Code Flow"
+			Desc:"Note: [String]."
+			Create:=>
+				SetExprMeta {@Name
+					{"String",""}
+				}
+			ToCode:=>
+				"-- #{ tostring(@[2])\sub(2,-2) }"
 			:__tostring
 		}
 		Print: {

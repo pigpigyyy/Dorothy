@@ -346,6 +346,8 @@ ExprChooser = Class
 			with @previewItem
 				.opacity = 0
 				\perform oOpacity 0.3,1,oEase.OutQuad
+		if @mask
+			@mask\perform oOpacity 0.3,1,oEase.OutQuad
 		with @panel
 			.opacity = 0
 			\perform CCSequence {
@@ -378,5 +380,7 @@ ExprChooser = Class
 		if @previewItem
 			@previewItem\perform oOpacity 0.3,0,oEase.OutQuad
 			@@preview = nil
+		if @mask
+			@mask\perform oOpacity 0.3,0,oEase.OutQuad
 
 ExprChooser

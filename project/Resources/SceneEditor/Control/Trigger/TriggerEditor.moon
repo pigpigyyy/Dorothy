@@ -5,8 +5,9 @@ TriggerItem = require "Control.Trigger.TriggerItem"
 SelectionPanel = require "Control.Basic.SelectionPanel"
 InputBox = require "Control.Basic.InputBox"
 MessageBox = require "Control.Basic.MessageBox"
+TriggerDef = require "Data.TriggerDef"
+import Expressions,ToEditText from TriggerDef
 import CompareTable,Path from require "Data.Utils"
-import Expressions,ToEditText from require "Data.TriggerDef"
 
 TriggerScope = Class
 	__initc:=>
@@ -46,6 +47,13 @@ TriggerScope = Class
 		@_groupOffset = {}
 		@items = {}
 		@files = {}
+
+		if CCUserDefault.TriggerMode == nil
+			CCUserDefault.TriggerMode = "Text"
+			TriggerDef.CodeMode = false
+		else
+			TriggerDef.CodeMode = (CCUserDefault.TriggerMode == "Code")
+
 		@_menu\slot "Cleanup",->
 			for _,item in pairs @items
 				if item.parent
