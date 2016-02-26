@@ -41,15 +41,16 @@ Class ExprEditorView,
 						else true
 					else false
 				add = switch expr[1]
-					when "Trigger"
+					when "Trigger","Event"
 						false
-					when "Event"
-						#expr == 1
 					else
 						if parentExpr then (parentExpr[1] ~= "Event")
 						else true
 				del = if rootItem then false
-					elseif parentExpr and parentExpr[1] == "Condition" and #parentExpr == 2
+					elseif parentExpr and
+						(parentExpr[1] == "Condition" or
+							parentExpr[1] == "Event") and
+						#parentExpr == 2
 						false
 					else
 						not subExprItem
@@ -73,7 +74,7 @@ Class ExprEditorView,
 			if TriggerDef.CodeMode
 				"local "..table.concat(@locals,", ").." = "..table.concat(defaultValues,", ")
 			else
-				"Declare "..table.concat ["#{ @locals[i] }(#{ defaultValues[i] })" for i = 1, #@locals],", "
+				"Declare "..table.concat(["#{ @locals[i] } (#{ defaultValues[i] })" for i = 1, #@locals],", ").."."
 
 		createLocalVarItem = ->
 			indent = @actionItem.indent+1
@@ -120,18 +121,18 @@ Class ExprEditorView,
 					else
 						@createExprItem "Trigger",indent
 						@createExprItem tostring(expr),indent+1,expr
-						@createExprItem "",indent
+						@createExprItem " ",indent
 						indent -= 1
 					for i = 4,#expr
 						nextExpr expr,i,indent+1
-					@createExprItem mode(")",""),indent
+					@createExprItem mode(")"," "),indent
 				when "Event"
 					with @createExprItem mode(tostring(expr),"Event"),indent,expr
 						.itemType = "Start"
 						.actionExpr = expr
 					for i = 2,#expr
 						nextExpr expr,i,indent+1
-					@createExprItem mode("),",""),indent
+					@createExprItem mode("),"," "),indent
 					indent -= 1
 				when "Condition"
 					with @createExprItem mode(tostring(expr),"Condition"),indent,expr
@@ -139,7 +140,7 @@ Class ExprEditorView,
 						.actionExpr = expr
 					for i = 2,#expr
 						nextExpr expr,i,indent+1
-					@createExprItem mode("end ),",""),indent
+					@createExprItem mode("end ),"," "),indent
 				when "Action"
 					@actionItem = with @createExprItem mode("Action( function()","Action"),indent,expr
 						.itemType = "Start"
@@ -155,7 +156,7 @@ Class ExprEditorView,
 						stop = #children
 						for child in *children[start,stop]
 							child.positionY -= moveY
-					@createExprItem mode("end )",""),indent
+					@createExprItem mode("end )"," "),indent
 				when "If"
 					with @createExprItem tostring(expr),indent,expr,parentExpr,index
 						.itemType = "Start"
@@ -496,11 +497,11 @@ Class ExprEditorView,
 		varSet = {}
 		nextExpr = (expr)->
 			return false unless "table" == type expr
-			return true if expr == targetExpr
 			switch expr[1]
 				when "SetLocalNumber"
 					if not varSet[expr[2][2]]
 						varSet[expr[2][2]] = "Number"
+			return true if expr == targetExpr
 			for i = 2,#expr
 				if nextExpr expr[i]
 					return true

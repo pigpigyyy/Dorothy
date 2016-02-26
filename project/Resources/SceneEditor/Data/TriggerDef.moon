@@ -54,11 +54,15 @@ TriggerDef = {
 				SetExprMeta {@Name
 					{"TriggerName",triggerName or "triggerName"}
 					{"True"}
-					{"Event"}
+					{"Event"
+						{"NoEvent"}
+					}
 					{"Condition"
 						{"True"}
 					}
-					{"Action"}
+					{"Action"
+						{"DoNothing"}
+					}
 				}
 			ToCode:=>
 				"Trigger( #{expr[2]}, #{expr[3]},"
@@ -89,6 +93,16 @@ TriggerDef = {
 			Create:=>
 				SetExprMeta {@Name}
 			ToCode:=> "Condition( function() return"
+			:__tostring
+		}
+		NoEvent: {
+			Type:"Event"
+			Group:"Misc"
+			Desc:"No event."
+			Create:=>
+				SetExprMeta {@Name}
+			ToCode:=>
+				"NoEvent()"
 			:__tostring
 		}
 		TimeCycle: {
