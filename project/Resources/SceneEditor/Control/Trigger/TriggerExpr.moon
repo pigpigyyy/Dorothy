@@ -3,11 +3,12 @@ TriggerExprView = require "View.Control.Trigger.TriggerExpr"
 
 Class TriggerExprView,
 	__init:(args)=>
-		{:text,:indent,:expr,:parentExpr,:index} = args
+		{:text,:indent,:expr,:parentExpr,:index,:lineNumber} = args
 		@_checked = false
 		@_indent = indent or 0
 		@_text = ""
 		@_index = index
+		@_lineNumber = lineNumber
 		@expr = expr
 		@parentExpr = parentExpr
 		@text = text or ""
@@ -71,6 +72,12 @@ Class TriggerExprView,
 						break
 		@_index
 
+	lineNumber:property => @_lineNumber,
+		(value)=>
+			if value ~= @_lineNumber
+				@_lineNumber = value
+				@numberLabel.text = value and tostring(value) or ""
+
 	text:property => @_text,
 		(value)=>
 			value = string.rep("    ",@_indent)..value
@@ -82,7 +89,9 @@ Class TriggerExprView,
 			@label.text = value
 			@label.texture.antiAlias = false
 			@height = @label.height+10
-			@label.positionY = @height-5
+			posY = @height-5
+			@label.positionY = posY
+			@numberLabel.positionY = posY if @numberLabel
 
 	updateText:=>
 		@text = tostring @expr if @expr

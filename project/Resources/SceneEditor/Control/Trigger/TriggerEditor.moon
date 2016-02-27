@@ -113,6 +113,8 @@ TriggerScope = Class
 				@@scrollArea.viewSize = \alignItems!
 				@@scrollArea.offset = @_groupOffset[@_currentGroup] or oVec2.zero
 
+	menuItems:property => @_menu.children
+
 	groups:property => @_groups
 	prefix:property => editor[@_prefix]
 	path:property => editor[@_path]
@@ -246,21 +248,25 @@ Class TriggerEditorView,
 
 		with @copyBtn
 			.copying = false
+			.targetFile = nil
+			.targetData = nil
 			\slot "Tapped",->
-				triggerBtn = TriggerScope.triggerBtn
-				if not triggerBtn
-					MessageBox text:"No Trigger Selected!",okOnly:true
-					return
-				scope = @localBtn.checked and @localScope or @globalScope
 				@copyBtn.copying = not @copyBtn.copying
-				@copyBtn.targetItem = editor.gameFullPath..triggerBtn.file
 				if @copyBtn.copying
 					@copyBtn.text = "Paste"
 					@copyBtn.color = ccColor3 0xff0080
+					triggerBtn = TriggerScope.triggerBtn
+					if not triggerBtn
+						MessageBox text:"No Trigger Selected!",okOnly:true
+						return
+					@copyBtn.targetFile = triggerBtn.file
+					@copyBtn.targetData = triggerBtn.exprEditor.exprData
 				else
 					@copyBtn.text = "Copy"
 					@copyBtn.color = ccColor3 0x00ffff
-					triggerName = Path.getName(@copyBtn.targetItem).."Copy"
+					targetFilePath = editor.gameFullPath..@copyBtn.targetFile
+					triggerName = Path.getName(targetFilePath).."Copy"
+					scope = @localBtn.checked and @localScope or @globalScope
 					newPath = scope.path..scope.currentGroup.."/"..triggerName
 					count = 0
 					filename = newPath..".trigger"
@@ -268,17 +274,28 @@ Class TriggerEditorView,
 						count += 1
 						filename = newPath..tostring(count)..".trigger"
 					triggerName ..= tostring count if count > 1
-					exprData = triggerBtn.exprEditor.exprData
+					exprData = @copyBtn.targetData
 					oldName = exprData[2][2]
 					exprData[2][2] = triggerName
 					oContent\saveToFile filename,ToEditText(exprData)
 					exprData[2][2] = oldName
 					scope\updateItems!
-			\gslot "Scene.Trigger.CancelCopy",-> print 998
+					@copyBtn.targetFile = nil
+					@copyBtn.targetData = nil
 
-		@closeBtn\slot "Tapped",-> @hide!
+		@closeBtn\slot "Tapped",->
+			for scope in *{@localScope,@globalScope}
+				for item in *scope.menuItems
+					exprEditor = item.exprEditor
+					if exprEditor and exprEditor.modified
+						exprEditor.modified = false
+						exprEditor\save!
+			@hide!
 
-		@gslot "Scene.EditMenu.Delete",-> @show!
+		@gslot "Scene.Trigger.ChangeName",(triggerName)->
+			TriggerScope.triggerBtn.text = triggerName
+			file = TriggerScope.triggerBtn.file
+			TriggerScope.triggerBtn.file = Path.getPath(file)..triggerName..".trigger"
 
 	show:=>
 		@panel\schedule once ->

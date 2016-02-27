@@ -1,3 +1,6 @@
 <MenuItem X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }">
-	<LabelBMFont Name="label" AnchorX="0" AnchorY="1" File="Font/Arial20.fnt" TextWidth="{ width }" HorizontalAlign="Left" Ref="True"/>
+	<Script>if lineNumber then</Script>
+		<LabelBMFont Name="numberLabel" Text="{ tonumber(lineNumber) }" X="30" AnchorX="1" AnchorY="1" File="Font/Arial20.fnt" HorizontalAlign="Right" Ref="True"/>
+	<Script>end</Script>
+	<LabelBMFont Name="label" AnchorX="0" AnchorY="1" File="Font/Arial20.fnt" X="{ lineNumber and 50 or 0 }" TextWidth="{ width-(lineNumber and 50 or 0) }" HorizontalAlign="Left" Ref="True"/>
 </MenuItem>

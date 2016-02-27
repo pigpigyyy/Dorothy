@@ -12,7 +12,7 @@ Reference = require "Data.Reference"
 -- [params]
 -- x, y, width, height
 Class EffectPanelView,
-	__init: =>
+	__init:=>
 		@_isCheckMode = false
 		@effectItems = {}
 		@_selectedItem = nil
@@ -174,10 +174,12 @@ Class EffectPanelView,
 								if name == effect
 									MessageBox text:"Name Exist!",okOnly:true
 									return
-							effectEditor = editor.effectEditor
-							effectEditor\setupEvent!
-							effectEditor\slot "Activated",->
-								effectEditor["new"..itemType] effectEditor,name
+							effectEditor = with editor.effectEditor
+								\setupEvent!
+								\slot "Activated",->
+									effectEditor["new"..itemType] effectEditor,name
+								\slot "Quit",-> CCScene\back "rollIn"
+								\hideEditor false,true
 							CCScene\forward "effectEditor","rollOut"
 
 		@addBtn\slot "Tapped",->
@@ -245,13 +247,13 @@ Class EffectPanelView,
 		@delBtn.visible = false
 		@editBtn.visible = false
 
-	playUpdateHint: =>
+	playUpdateHint:=>
 		if not @hint.visible
 			@hint.visible = true
 			@hint.opacity = 1
 			@hint\perform @loopFade
 
-	runThread: (task)=>
+	runThread:(task)=>
 		oRoutine\remove @routine if @routine
 		@routine = thread ->
 			@scrollArea.touchEnabled = false
@@ -267,7 +269,7 @@ Class EffectPanelView,
 			@scrollArea.touchEnabled = true
 			@routine = nil
 
-	clearSelection: =>
+	clearSelection:=>
 		if @_selectedItem
 			viewItem = @effectItems[@_selectedItem]
 			if viewItem
@@ -276,7 +278,7 @@ Class EffectPanelView,
 			viewItem
 		else nil
 
-	isCheckMode: property => @_isCheckMode,
+	isCheckMode:property => @_isCheckMode,
 		(value)=>
 			return if @_isCheckMode == value
 			@_isCheckMode = value
@@ -307,7 +309,7 @@ Class EffectPanelView,
 				@editBtn\perform hide 0
 				@hint.positionX = @panel.width-(@panel.width-60)/2
 
-	show: =>
+	show:=>
 		@perform CCSequence {
 			CCShow!
 			oOpacity 0.3,0.6,oEase.OutQuad
@@ -330,7 +332,7 @@ Class EffectPanelView,
 				editor\updateEffects!
 		}
 
-	hide: =>
+	hide:=>
 		@isCheckMode = false
 		@scrollArea.touchEnabled = false
 		@menu.enabled = false

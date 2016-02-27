@@ -225,17 +225,9 @@ Class ScrollAreaView,
 	padding:property => @getPadding!,
 		(padding)=> @updatePadding padding.x,padding.y
 
-	setupMenuScroll:(menu,itemAnchor=oVec2(0.5,0.5))=>
-		contentRect = CCRect.zero
-		itemRect = CCRect.zero
-		{x:anchorX,y:anchorY} = itemAnchor
+	setupMenuScroll:(menu)=>
 		@slot "Scrolled",(delta)->
-			contentRect\set 0,0,@width,@height
-			menu\eachChild (child)->
-				child.position += delta
-				{:positionX,:positionY,:width,:height} = child
-				itemRect\set positionX-width*anchorX,positionY-height*anchorY,width,height
-				child.visible = contentRect\intersectsRect itemRect -- reduce draw calls
+			menu\moveAndCullItems delta -- reduce draw calls
 		menuEnabled = true
 		@slot "ScrollStart",->
 			menuEnabled = menu.enabled

@@ -4,7 +4,7 @@ TriggerDef = require "Data.TriggerDef"
 TriggerItem = require "Control.Trigger.TriggerItem"
 SolidRect = require "View.Shape.SolidRect"
 Button = require "Control.Basic.Button"
-GroupButton = require "Control.Trigger.GroupButton"
+GroupButton = require "Control.Basic.GroupButton"
 SelectionPanel = require "Control.Basic.SelectionPanel"
 InputBox = require "Control.Basic.InputBox"
 MessageBox = require "Control.Basic.MessageBox"
@@ -227,10 +227,13 @@ ExprChooser = Class
 							addText == "\n" or number ~= nil or text == "-"
 						.textField\slot "InputInserted",inputed
 						.textField\slot "InputDeleted",inputed
-				when "String"
+				when "String","TriggerName"
 					inputed = (_,textBox)->
-						@curExpr[2] = textBox.text
+						text = textBox.text
+						@curExpr[2] = text
 						@updatePreview!
+						if @curExpr[1] == "TriggerName"
+							emit "Scene.Trigger.ChangeName",text
 					@bodyMenu\addChild with TextBox {
 							x:@bodyMenu.width/2
 							y:@bodyLabel.positionY-@bodyLabel.height/2-20-20
@@ -284,7 +287,7 @@ ExprChooser = Class
 		@catScrollArea.viewSize = @catMenu\alignItems!
 		@apiScrollArea\setupMenuScroll @apiMenu
 		@apiScrollArea.viewSize = @apiMenu\alignItems!
-		@bodyScrollArea\setupMenuScroll @bodyMenu,oVec2(0,1)
+		@bodyScrollArea\setupMenuScroll @bodyMenu
 
 		if @curExpr
 			exprItem = @exprButtons[getmetatable @curExpr]

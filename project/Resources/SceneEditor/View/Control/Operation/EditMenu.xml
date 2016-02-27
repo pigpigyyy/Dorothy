@@ -3,15 +3,27 @@
 	<Import Module="Control.Basic.Button"/>
 	<Import Module="Control.Operation.LittleProgress"/>
 	<Import Module="View.Shape.Camera"/>
+	<Import Module="Control.Basic.ScrollArea"/>
+	<Import Module="Control.Basic.GroupButton"/>
 
 	<Button Name="menuBtn" X="35" Y="{ $T-35 }" Width="50" Height="50" Text="Menu" FontSize="16" Ref="True"/>
 	<Button Name="undoBtn" X="95" Y="{ $T-35 }" Width="50" Height="50" Text="Undo" FontSize="16" Ref="True"/>
-	<Button Name="spriteBtn" X="35" Y="{ $T-95 }" Width="50" Height="50" Text="Sprite" FontSize="16" Ref="True"/>
-	<Button Name="modelBtn" X="35" Y="{ $T-155 }" Width="50" Height="50" Text="Model" FontSize="16" Ref="True"/>
-	<Button Name="bodyBtn" X="35" Y="{ $T-215 }" Width="50" Height="50" Text="Body" FontSize="16" Ref="True"/>
-	<Button Name="effectBtn" X="35" Y="{ $T-275 }" Width="50" Height="50" Text="Effect" FontSize="16" Ref="True"/>
-	<Button Name="layerBtn" X="35" Y="{ $T-335 }" Width="50" Height="50" Text="Layer" FontSize="16" Ref="True"/>
-	<Button Name="delBtn" X="35" Y="{ $T-395 }" Width="50" Height="50" Text="Delete" FontSize="16" Ref="True"/>
+	<ScrollArea Name="itemArea" X="35" Y="{ $H/2+30 }" Width="70" Height="{ $H-200 }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelEditMenu-2 }" SwallowTouches="True" Ref="True">
+		<Item Name="view">
+			<Menu Name="itemMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.levelEditMenu-1 }" SwallowTouches="True" AlignItems="10" Ref="True">
+				<GroupButton Name="graphicBtn" Width="50" Height="50" Text="Graphic" FontSize="13" Highlight="{ false }" Ref="True"/>
+				<Button Name="spriteBtn" Width="50" Height="50" Text="Sprite" FontSize="16" Ref="True"/>
+				<Button Name="modelBtn" Width="50" Height="50" Text="Model" FontSize="16" Ref="True"/>
+				<Button Name="effectBtn" Width="50" Height="50" Text="Effect" FontSize="16" Ref="True"/>
+				<Button Name="layerBtn" Width="50" Height="50" Text="Layer" FontSize="16" Ref="True"/>
+				<GroupButton Name="physicsBtn" Width="50" Height="50" Text="Physics" FontSize="13" Highlight="{ false }" Ref="True"/>
+				<Button Name="bodyBtn" Width="50" Height="50" Text="Body" FontSize="16" Ref="True"/>
+				<GroupButton Name="logicBtn" Width="50" Height="50" Text="Logic" FontSize="16" Highlight="{ false }" Ref="True"/>
+				<Button Name="triggerBtn" Width="50" Height="50" Text="Trigger" FontSize="16" Ref="True"/>
+			</Menu>
+		</Item>
+	</ScrollArea>
+	<Button Name="delBtn" X="35" Y="{ $B+95 }" Width="50" Height="50" Text="Delete" FontSize="16" Ref="True"/>
 	<Button Name="zoomBtn" X="{ $R-225 }" Y="{ $T-35 }" Width="50" Height="50" Text="100%" FontSize="16" Ref="True"/>
 	<Button Name="originBtn" X="{ $R-285 }" Y="{ $T-35 }" Width="50" Height="50" Text="Origin" FontSize="16" Ref="True"/>
 	<Button Name="camBtn" X="{ $R-345 }" Y="{ $T-35 }" Width="50" Height="50" FontSize="16" Ref="True">

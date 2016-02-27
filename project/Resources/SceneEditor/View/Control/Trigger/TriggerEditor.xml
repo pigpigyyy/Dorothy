@@ -4,7 +4,7 @@
 	SwallowTouches="True" TouchEnabled="True" Visible="False">
 	<Import Module="Control.Basic.ScrollArea"/>
 	<Import Module="Control.Basic.Button"/>
-	<Import Module="Control.Trigger.GroupButton"/>
+	<Import Module="Control.Basic.GroupButton"/>
 	<Import Module="Control.Trigger.TriggerItem"/>
 	<Import Module="View.Shape.LineRect"/>
 	<Import Module="View.Shape.SolidRect"/>
@@ -44,7 +44,7 @@
 	</Node>
 
 	<Menu Name="opMenu" X="{ @R-40 }" Y="{ @T-40 }" Width="60" Height="60" TouchPriority="{ editor.levelTriggerEditor-3 }" Enabled="False" Ref="True">
-		<CircleButton Name="closeBtn" X="{ $X }" Y="{ $Y }" Radius="30" Text="Close" FontSize="16" Ref="True">
+		<CircleButton Name="closeBtn" X="{ $X }" Y="{ $Y }" Radius="30" Text="Close" FontSize="20" Ref="True">
 			<DrawNode>
 				<Dot X="30" Y="30" Radius="30" Color="0x22ffffff"/>
 			</DrawNode>

@@ -8,6 +8,9 @@ Class EditMenuView,
 		{:width} = CCDirector.winSize
 		isHide = false
 
+		@itemArea\setupMenuScroll @itemMenu
+		@itemArea.viewSize = @itemMenu\alignItems!
+
 		buttonNames = {
 			"sprite"
 			"model"
@@ -47,6 +50,10 @@ Class EditMenuView,
 						.selected = false
 						.color = ccColor3 0x00ffff
 						emit .event,nil
+
+		@triggerBtn\slot "Tapped",->
+			clearSelection!
+			emit "Scene.Trigger.Open"
 
 		@delBtn\slot "Tapped",->
 			clearSelection!

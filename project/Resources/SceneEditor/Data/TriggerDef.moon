@@ -517,7 +517,9 @@ TriggerDef = {
 			Create:=>
 				SetExprMeta {@Name
 					{"Animation",""} -- 2
-					{"ModelByName",""} -- 3
+					{"ModelByName",
+						{"ModelName",""}
+					} -- 3
 					{"False"} -- 4
 					{"Look",""} -- 5
 				}

@@ -153,6 +153,26 @@ void CCMenu::removeChild(CCNode* child, bool cleanup)
 	CCNode::removeChild(child, cleanup);
 }
 
+void CCMenu::moveAndCullItems(const CCPoint& delta)
+{
+	CCRect contentRect(CCPoint::zero, getContentSize());
+	CCObject* child;
+	CCARRAY_FOREACH(m_pChildren, child)
+	{
+		CCNode* item = (CCNode*)child;
+		item->setPosition(ccpAdd(item->getPosition(), delta));
+		const CCPoint& pos = item->getPosition();
+		const CCSize& size = item->getContentSize();
+		const CCPoint& anchor = item->getAnchorPoint();
+		CCRect itemRect(
+			pos.x - size.width * anchor.x,
+			pos.y - size.height * anchor.y,
+			size.width,
+			size.height);
+		item->setVisible(contentRect.intersectsRect(itemRect));
+	}
+}
+
 //Menu - Events
 void CCMenu::registerWithTouchDispatcher()
 {

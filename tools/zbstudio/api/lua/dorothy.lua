@@ -2834,6 +2834,13 @@ local Dorothy =
 				typeName = "CCSize",
 				type = "method",
 			},
+			moveAndCullItems =
+			{
+				args = "(delta: oVec2)",
+				description = "",
+				returns = "()",
+				type = "method",
+			},
 		},
 		description = "class CCMenu(CCLayer).\n args -- (swallowTouches: bool = true)",
 		parents = {"CCLayer",},

@@ -3,7 +3,9 @@ ExprEditorView = require "View.Control.Trigger.ExprEditor"
 TriggerExpr = require "Control.Trigger.TriggerExpr"
 ExprChooser = require "Control.Trigger.ExprChooser"
 SelectionPanel = require "Control.Basic.SelectionPanel"
+MessageBox = require "Control.Basic.MessageBox"
 TriggerDef = require "Data.TriggerDef"
+import Path from require "Data.Utils"
 
 Class ExprEditorView,
 	__init:(args)=>
@@ -16,6 +18,8 @@ Class ExprEditorView,
 		@localSet = nil
 		@localVarFrom = nil
 		@localVarTo = nil
+		@newTriggerName = nil
+		@modified = false
 		@codeMode = (CCUserDefault.TriggerMode == "Code")
 
 		for child in *@editMenu.children
@@ -38,15 +42,16 @@ Class ExprEditorView,
 					else false
 				edit = not subExprItem
 				insert = if rootItem then false
-					elseif not subExprItem
-						if parentExpr then (parentExpr[1] ~= "Event")
-						else true
-					else false
+					elseif subExprItem then false
+					elseif #@triggerMenu.children >= 999 then false
+					elseif parentExpr then (parentExpr[1] ~= "Event")
+					else true
 				add = switch expr[1]
 					when "Trigger","Event"
 						false
 					else
-						if parentExpr then (parentExpr[1] ~= "Event")
+						if #@triggerMenu.children >= 999 then false
+						elseif parentExpr then (parentExpr[1] ~= "Event")
 						else true
 				del = if rootItem then false
 					elseif parentExpr and
@@ -157,10 +162,13 @@ Class ExprEditorView,
 						nextExpr expr,i,indent+1
 					if #@locals > 0
 						@localVarItem = createLocalVarItem!
+						@localVarItem.lineNumber = index
 						moveY = @localVarItem.height
 						start = index+1
 						stop = #children
-						for child in *children[start,stop]
+						for i = start,stop
+							child = children[i]
+							child.lineNumber = i 
 							child.positionY -= moveY
 					@createExprItem mode("end )"," "),indent
 				when "If"
@@ -265,6 +273,7 @@ Class ExprEditorView,
 			newItems[1].checked = true
 			@.changeExprItem newItems[1]
 			@scrollToPosY newItems[1].positionY
+			@notifyEdit!
 
 		@editBtn\slot "Tapped",->
 			selectedExprItem = @_selectedExprItem
@@ -282,7 +291,28 @@ Class ExprEditorView,
 							parentExpr[index] = newExpr
 							addNewItem selectedExprItem,selectedExprItem.indent,parentExpr,index
 						elseif expr[1] == "Trigger"
+							if @newTriggerName
+								oldFileFullname = editor.gameFullPath..@filename
+								filePath = Path.getPath oldFileFullname
+								newFileFullname = filePath..@newTriggerName..".trigger"
+								return if oldFileFullname == newFileFullname
+								if oContent\exist newFileFullname
+									MessageBox text:"Trigger Name Exist!",okOnly:true
+									oldName = Path.getName @filename
+									@triggerName = oldName
+									emit "Scene.Trigger.ChangeName",oldName
+								elseif not Path.isValid newFileFullname
+									MessageBox text:"Invalid Name!",okOnly:true
+									oldName = Path.getName @filename
+									@triggerName = oldName
+									emit "Scene.Trigger.ChangeName",oldName
+								else
+									oContent\saveToFile newFileFullname,TriggerDef.ToEditText @exprData
+									oContent\remove oldFileFullname
+									@filename = Path.getPath(@filename)..@newTriggerName..".trigger"
+								@newTriggerName = nil
 							selectedExprItem.text = tostring expr
+						@notifyEdit!
 
 		insertNewExpr = (after)-> ->
 			selectedExprItem = @_selectedExprItem
@@ -362,6 +392,7 @@ Class ExprEditorView,
 				prevItem.parentExpr and
 				prevItem.parentExpr[1] == "Condition"
 				prevItem\updateText!
+			@notifyEdit!
 
 		@upBtn\slot "Tapped",->
 			selectedExprItem = @_selectedExprItem
@@ -405,6 +436,7 @@ Class ExprEditorView,
 			selectedExprItem.checked = true
 			@.changeExprItem selectedExprItem
 			@scrollToPosY selectedExprItem.positionY
+			@notifyEdit!
 
 		@downBtn\slot "Tapped",->
 			selectedExprItem = @_selectedExprItem
@@ -447,6 +479,7 @@ Class ExprEditorView,
 			selectedExprItem.checked = true
 			@.changeExprItem selectedExprItem
 			@scrollToPosY selectedExprItem.positionY
+			@notifyEdit!
 
 		@modeBtn\slot "Tapped",->
 			thread ->
@@ -469,15 +502,26 @@ Class ExprEditorView,
 				@codeMode = codeMode
 				@loadExpr @exprData
 
+		@gslot "Scene.Trigger.ChangeName",(newName)-> @newTriggerName = newName
+
+	notifyEdit:=>
+		children = @triggerMenu.children
+		for i = 1,#children
+			children[i].lineNumber = i
+		@modified = true
+		emit "Scene.Trigger.Edited",@filename
+
 	createExprItem:(text,indent,expr,parentExpr,index)=>
 		children = @triggerMenu.children
 		lastItem = children and children.last or nil
+		lineNumber = children and #children+1 or 1
 		exprItem = with TriggerExpr {
 				:indent
 				:text
 				:expr
 				:parentExpr
 				:index
+				:lineNumber
 				width:@triggerMenu.width
 			}
 			.position = lastItem and
@@ -486,7 +530,7 @@ Class ExprEditorView,
 			\slot "Tapped",@changeExprItem if expr
 		@triggerMenu\addChild exprItem
 		{:width,:height} = @viewSize
-		@viewSize = CCSize width,@height-exprItem.positionY+exprItem.height/2
+		@viewSize = CCSize width,@height+@offset.y-exprItem.positionY+exprItem.height/2
 		sleep! if @asyncLoad
 		exprItem
 
@@ -517,8 +561,9 @@ Class ExprEditorView,
 		(value)=>
 			@_codeMode = value
 			@modeBtn.text = value and "Text" or "Code"
+			@modeBtn.color = ccColor3 value and 0x80ff00 or 0xff88cc
 
-	save:(filename)=>
+	save:=>
 		triggerText = TriggerDef.ToEditText @exprData
 		oContent\saveToFile editor.gameFullPath..@filename,triggerText
 
@@ -588,6 +633,9 @@ Class ExprEditorView,
 				posX -= 50
 			else
 				child.visible = false
+
+	triggerName:property => @exprData[2][2],
+		(value)=> @exprData[2][2] = value
 
 	enabled:property => @touchEnabled,
 		(value)=>

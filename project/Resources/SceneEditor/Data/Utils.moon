@@ -16,16 +16,28 @@ CompareTable = (olds,news)->
 
 local Path
 Path =
+	-- input: /aa/bb/file.XML
+	-- output: xml
 	getExtension:(filename)->
 		extension = filename\match "%.([^%.\\/]*)$"
 		extension = extension\lower! if extension
 		extension
 
-	getFilename:(filename)->
-		filename\match "([^\\/]*)$"
-
+	-- input: /aa/bb/file.xml
+	-- output: file
 	getName:(filename)->
-		filename\match "([^\\/]+)%..*$"
+		filename\match "([^\\/]+)%.[^%.\\/]*$"
+
+	-- input: /aa/bb/file.xml
+	-- output: file.xml
+	getFilename:(filename)->
+		filename\match "[^\\/]*$"
+
+	-- input: /aa/bb/file.xml
+	-- output: /aa/bb/
+	getPath:(filename)->
+		name = Path.getFilename filename
+		filename\sub(1,-#name-1)
 
 	getFiles:(path,filters)->
 		filters = if "string" == type filters
@@ -83,5 +95,7 @@ Path =
 					visitResource path..folder.."/"
 			oContent\remove path
 		visitResource rootPath
+
+	isValid:(filename)-> not filename\match "[\\/|:*?<>\"]"
 
 {:Set,:CompareTable,:Path}

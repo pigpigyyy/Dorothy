@@ -92,6 +92,8 @@ public:
 
 	CCSize alignItemsWithPadding(float padding = 10);
 
+	void moveAndCullItems(const CCPoint& delta);
+
 	//super methods
 	virtual void registerWithTouchDispatcher();
 	virtual void removeChild(CCNode* child, bool cleanup);

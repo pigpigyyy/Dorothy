@@ -93,10 +93,6 @@ Class EditorView,
 			ScenePanel = require "Control.Item.ScenePanel"
 			sleep!
 			ScenePanel!
-			sleep!
-			TriggerEditor = require "Control.Trigger.TriggerEditor"
-			sleep!
-			@addChild TriggerEditor!
 
 		panelWidth = 10+110*4
 		panelHeight = height*0.6
@@ -226,6 +222,16 @@ Class EditorView,
 		setCurrentData = (itemData)-> @currentData = itemData
 		@gslot "Scene.ViewPanel.Select",setCurrentData
 		@gslot "Scene.ViewPanel.Pick",setCurrentData
+		@gslot "Scene.Trigger.Open",->
+			if @triggerEditor
+				@triggerEditor\show!
+			else
+				@schedule once ->
+					TriggerEditor = require "Control.Trigger.TriggerEditor"
+					sleep!
+					@triggerEditor = TriggerEditor!
+					@triggerEditor\show!
+					@addChild @triggerEditor
 
 	updateSprites:=> emit "Scene.LoadSprite",@graphicFolder
 	updateModels:=> emit "Scene.LoadModel",@graphicFolder
