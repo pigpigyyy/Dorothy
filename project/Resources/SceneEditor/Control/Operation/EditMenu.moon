@@ -11,12 +11,19 @@ Class EditMenuView,
 		@itemArea\setupMenuScroll @itemMenu
 		@itemArea.viewSize = @itemMenu\alignItems!
 
+		for child in *@itemMenu.children
+			child.positionX = -35
+			child.visible = false
+			child.displayed = false
+		@showItemButtons {"graphic","physics","logic"},true,true
+
 		buttonNames = {
 			"sprite"
 			"model"
 			"body"
 			"effect"
 			"layer"
+			"world"
 		}
 
 		clearSelection = ->
@@ -197,6 +204,28 @@ Class EditMenuView,
 					}
 				else
 					emit "Scene.Edit.ShowRuler",nil
+
+		setupItemButton = (button,groupLine,subItems)->
+			groupLine.data = button
+			with button
+				.showItem = false
+				\slot "Tapped",->
+					return if .scheduled
+					.showItem = not .showItem
+					if .showItem
+						groupLine.visible = true
+						groupLine.opacity = 0
+						groupLine\perform oOpacity 0.3,1
+						groupLine.position = button.position-oVec2(25,25)
+					else
+						\schedule once ->
+							groupLine\perform oOpacity 0.3,0
+							sleep 0.3
+							groupLine.visible = false
+					@showItemButtons subItems,.showItem
+		setupItemButton @graphicBtn,@graphicLine,{"sprite","model","effect","layer"}
+		setupItemButton @physicsBtn,@physicsLine,{"body","world"}
+		setupItemButton @logicBtn,@logicLine,{"trigger"}
 
 		@gslot "Scene.ShowFix",(value)->
 			editor.xFix = false
@@ -389,3 +418,59 @@ Class EditMenuView,
 				oScale 0.3,0,0,oEase.InBack
 				CCHide!
 			}
+
+	showItemButtons:(names,visible,instant=false)=>
+		buttonSet = {@["#{name}Btn"],true for name in *names}
+		posX = 35
+		posY = @itemMenu.height-25
+		if visible
+			offset = @itemArea.offset
+			firstItem = nil
+			for child in *@itemMenu.children
+				isTarget = buttonSet[child]
+				firstItem = child if isTarget and not firstItem
+				if child.displayed or isTarget
+					offsetX = switch child
+						when @graphicBtn,@physicsBtn,@logicBtn then 0
+						else 20
+					child.position = offset+oVec2(posX+offsetX,posY)
+					if isTarget
+						child.displayed = true
+						child.visible = true
+						if not instant
+							child.face.scaleY = 0
+							child.face\perform oScale 0.3,1,1,oEase.OutBack
+					posY -= 60
+				elseif child.data
+					child.position = child.data.position-oVec2(25,25)
+			@itemArea.viewSize = CCSize 70,@itemArea.height-posY-35
+			@itemArea\scrollToPosY firstItem.positionY
+		else
+			@itemMenu\schedule once ->
+				if not instant
+					for child in *@itemMenu.children
+						if buttonSet[child]
+							child.face\perform oScale 0.3,1,0,oEase.OutQuad
+					sleep 0.3
+				offset = @itemArea.offset
+				lastPosY = nil
+				for child in *@itemMenu.children
+					if buttonSet[child]
+						child.positionX = -35
+						child.displayed = false
+						child.visible = false
+						lastPosY = child.positionY
+					elseif child.displayed
+						if lastPosY and child.positionY < lastPosY
+							child.face.scaleY = 0
+							child.face\perform oScale 0.3,1,1,oEase.OutBack
+						offsetX = switch child
+							when @graphicBtn,@physicsBtn,@logicBtn then 0
+							else 20
+						child.position = offset+oVec2(posX+offsetX,posY)
+						posY -= 60
+					elseif lastPosY and child.data and child.positionY < lastPosY
+						child.opacity = 0
+						child\perform oOpacity 0.3,1
+						child.position = child.data.position-oVec2(25,25)
+				@itemArea.viewSize = CCSize 70,@itemArea.height-posY-35

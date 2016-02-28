@@ -8,17 +8,34 @@
 
 	<Button Name="menuBtn" X="35" Y="{ $T-35 }" Width="50" Height="50" Text="Menu" FontSize="16" Ref="True"/>
 	<Button Name="undoBtn" X="95" Y="{ $T-35 }" Width="50" Height="50" Text="Undo" FontSize="16" Ref="True"/>
-	<ScrollArea Name="itemArea" X="35" Y="{ $H/2+30 }" Width="70" Height="{ $H-200 }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelEditMenu-2 }" SwallowTouches="True" Ref="True">
+	<ScrollArea Name="itemArea" X="45" Y="{ $H/2+30 }" Width="90" Height="{ $H-200 }" PaddingX="0" PaddingY="50" TouchPriority="{ editor.levelEditMenu-2 }" SwallowTouches="True" Ref="True">
 		<Item Name="view">
-			<Menu Name="itemMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.levelEditMenu-1 }" SwallowTouches="True" AlignItems="10" Ref="True">
+			<Menu Name="itemMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.levelEditMenu-1 }" SwallowTouches="True" Ref="True">
 				<GroupButton Name="graphicBtn" Width="50" Height="50" Text="Graphic" FontSize="13" Highlight="{ false }" Ref="True"/>
+				<DrawNode Name="graphicLine" Color="0x00ffff" Visible="False" Ref="True">
+					<Segment BeginX="10" BeginY="0" EndX="10" EndY="-215"/>
+					<Segment BeginX="10" BeginY="-35" EndX="20" EndY="-35"/>
+					<Segment BeginX="10" BeginY="-95" EndX="20" EndY="-95"/>
+					<Segment BeginX="10" BeginY="-155" EndX="20" EndY="-155"/>
+					<Segment BeginX="10" BeginY="-215" EndX="20" EndY="-215"/>
+				</DrawNode>
 				<Button Name="spriteBtn" Width="50" Height="50" Text="Sprite" FontSize="16" Ref="True"/>
 				<Button Name="modelBtn" Width="50" Height="50" Text="Model" FontSize="16" Ref="True"/>
 				<Button Name="effectBtn" Width="50" Height="50" Text="Effect" FontSize="16" Ref="True"/>
 				<Button Name="layerBtn" Width="50" Height="50" Text="Layer" FontSize="16" Ref="True"/>
 				<GroupButton Name="physicsBtn" Width="50" Height="50" Text="Physics" FontSize="13" Highlight="{ false }" Ref="True"/>
+				<DrawNode Name="physicsLine" Color="0x00ffff" Visible="False" Ref="True">
+					<Segment BeginX="10" BeginY="0" EndX="10" EndY="-95"/>
+					<Segment BeginX="10" BeginY="-35" EndX="20" EndY="-35"/>
+					<Segment BeginX="10" BeginY="-95" EndX="20" EndY="-95"/>
+				</DrawNode>
 				<Button Name="bodyBtn" Width="50" Height="50" Text="Body" FontSize="16" Ref="True"/>
+				<Button Name="worldBtn" Width="50" Height="50" Text="World" FontSize="16" Ref="True"/>
 				<GroupButton Name="logicBtn" Width="50" Height="50" Text="Logic" FontSize="16" Highlight="{ false }" Ref="True"/>
+				<DrawNode Name="logicLine" Color="0x00ffff" Visible="False" Ref="True">
+					<Segment BeginX="10" BeginY="0" EndX="10" EndY="-35"/>
+					<Segment BeginX="10" BeginY="-35" EndX="20" EndY="-35"/>
+				</DrawNode>
 				<Button Name="triggerBtn" Width="50" Height="50" Text="Trigger" FontSize="16" Ref="True"/>
 			</Menu>
 		</Item>

@@ -169,7 +169,10 @@ void CCMenu::moveAndCullItems(const CCPoint& delta)
 			pos.y - size.height * anchor.y,
 			size.width,
 			size.height);
-		item->setVisible(contentRect.intersectsRect(itemRect));
+		if (itemRect.size != CCSize::zero)
+		{
+			item->setVisible(contentRect.intersectsRect(itemRect));
+		}
 	}
 }
 

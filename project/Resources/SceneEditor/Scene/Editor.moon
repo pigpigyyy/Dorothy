@@ -119,11 +119,8 @@ Class EditorView,
 		@gslot "Scene.ViewModel",-> setupPanel "Model"
 		@gslot "Scene.ViewBody",-> setupPanel "Body"
 		@gslot "Scene.ViewEffect",-> setupPanel "Effect"
-		@gslot "Scene.ViewLayer",->
-			return unless @game
-			with SelectionPanel items:{"Layer","World"}
-				\slot "Selected",(item)->
-					emit "Scene.LayerSelected",item if item
+		@gslot "Scene.ViewLayer",-> thread -> emit "Scene.LayerSelected","Layer" if @game
+		@gslot "Scene.ViewWorld",-> thread -> emit "Scene.WorldSelected","World" if @game
 
 		currentCam = nil
 		@gslot "Scene.Camera.Activate",(cam)->
@@ -216,6 +213,7 @@ Class EditorView,
 		@gslot "Scene.BodySelected",(item)-> selectItem "Body",item
 		@gslot "Scene.EffectSelected",(item)-> selectItem "Effect",item
 		@gslot "Scene.LayerSelected",(item)-> selectItem item,item
+		@gslot "Scene.WorldSelected",(item)-> selectItem item,item
 
 		@gslot "Scene.ViewPanel.Select",(itemData)-> @currentData = itemData
 
@@ -223,6 +221,7 @@ Class EditorView,
 		@gslot "Scene.ViewPanel.Select",setCurrentData
 		@gslot "Scene.ViewPanel.Pick",setCurrentData
 		@gslot "Scene.Trigger.Open",->
+			return unless @scene
 			if @triggerEditor
 				@triggerEditor\show!
 			else
