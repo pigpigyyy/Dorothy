@@ -36,7 +36,7 @@ TriggerDef = {
 						indent -= 1
 					when "string"
 						append "\""
-						append item
+						append item\gsub "\"","\\\""
 						append "\""
 					else
 						append tostring item
@@ -195,7 +195,7 @@ TriggerDef = {
 			Create:=>
 				SetExprMeta {@Name,""}
 			ToCode:=>
-				"\"#{ @[2] }\""
+				"\"#{ @[2]\gsub('\"','\\\"') }\""
 			:__tostring
 		}
 		Number: {

@@ -1,5 +1,21 @@
 Dorothy!
 TriggerExprView = require "View.Control.Trigger.TriggerExpr"
+TriggerDef = require "Data.TriggerDef"
+import Set from require "Data.Utils"
+
+keywords = Set {"and", "break", "do", "else", "elseif", "end", "false", "for", "function",
+"if", "in", "local", "nil", "not", "or", "repeat", "return", "then", "true",
+"until", "while"}
+
+textColor = ccColor3 255,255,255
+keywordColor = ccColor3 58,135,212
+classColor = ccColor3 62,197,127
+noteColor = ccColor3 56,142,73
+
+colorText = (label,start,stop,color)->
+	for i = start,stop
+		char = label\getChar i
+		char.color = color if char
 
 Class TriggerExprView,
 	__init:(args)=>
@@ -92,6 +108,24 @@ Class TriggerExprView,
 			posY = @height-5
 			@label.positionY = posY
 			@numberLabel.positionY = posY if @numberLabel
+			label = @label
+			colorText label,1,#value,textColor
+			if TriggerDef.CodeMode
+				if value\match "%s*%-%-"
+					colorText label,1,#value,noteColor
+				else
+					for start,word,stop in value\gmatch "()(%w+)()"
+						if keywords[word]
+							colorText label,start,stop-1,keywordColor
+					value = value\gsub "\\.","xx"
+					for start,stop in value\gmatch "()%b\"\"()"
+						colorText label,start,stop-1,classColor
+			else
+				for start,world,stop in value\gmatch "()(%u%w*)()%s"
+					colorText label,start,stop-1,keywordColor
+					value = value\gsub "\\.","xx"
+				for start,stop in value\gmatch "()%b\"\"()"
+					colorText label,start,stop-1,classColor
 
 	updateText:=>
 		@text = tostring @expr if @expr

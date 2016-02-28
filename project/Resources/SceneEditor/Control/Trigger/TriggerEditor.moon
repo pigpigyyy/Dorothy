@@ -285,11 +285,13 @@ Class TriggerEditorView,
 
 		@closeBtn\slot "Tapped",->
 			for scope in *{@localScope,@globalScope}
-				for item in *scope.menuItems
-					exprEditor = item.exprEditor
-					if exprEditor and exprEditor.modified
-						exprEditor.modified = false
-						exprEditor\save!
+				items = scope.menuItems
+				if items
+					for item in *scope.menuItems
+						exprEditor = item.exprEditor
+						if exprEditor and exprEditor.modified
+							exprEditor.modified = false
+							exprEditor\save!
 			@hide!
 
 		@gslot "Scene.Trigger.ChangeName",(triggerName)->

@@ -301,7 +301,7 @@ Class ExprEditorView,
 									oldName = Path.getName @filename
 									@triggerName = oldName
 									emit "Scene.Trigger.ChangeName",oldName
-								elseif not Path.isValid newFileFullname
+								elseif not Path.isValid Path.getFilename newFileFullname
 									MessageBox text:"Invalid Name!",okOnly:true
 									oldName = Path.getName @filename
 									@triggerName = oldName

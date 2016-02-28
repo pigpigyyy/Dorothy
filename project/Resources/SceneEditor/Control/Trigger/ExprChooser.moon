@@ -230,7 +230,7 @@ ExprChooser = Class
 				when "String","TriggerName"
 					inputed = (_,textBox)->
 						text = textBox.text
-						@curExpr[2] = text
+						@curExpr[2] = text\gsub "\"","\\\""
 						@updatePreview!
 						if @curExpr[1] == "TriggerName"
 							emit "Scene.Trigger.ChangeName",text
