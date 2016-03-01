@@ -94,11 +94,13 @@ Class ExprEditorView,
 			if @actionItem
 				nextExpr = (expr)->
 					return unless "table" == type expr
-					switch expr[1]
-						when "SetLocalNumber"
-							if not @localSet[expr[2][2]]
-								@localSet[expr[2][2]] = "Number"
-								table.insert @locals,expr[2][2]
+					exprName = expr[1]
+					if "SetLocal" == exprName\sub 1,8
+						varType = exprName\sub 9,-1
+						varName = expr[2][2]
+						if not @localSet[varName]
+							@localSet[varName] = varType
+							table.insert @locals,varName
 					for i = 2,#expr
 						nextExpr expr[i]
 				@locals = {}
@@ -186,12 +188,14 @@ Class ExprEditorView,
 						nextExpr expr[5],i,indent+1
 					with @createExprItem mode("end","End."),indent,expr,parentExpr,index
 						.itemType = "End"
-				when "SetLocalNumber"
-					if not @localSet[expr[2][2]]
-						@localSet[expr[2][2]] = "Number"
-						table.insert @locals,expr[2][2]
-					@createExprItem tostring(expr),indent,expr,parentExpr,index
 				else
+					exprName = expr[1]
+					if "SetLocal" == exprName\sub 1,8
+						varType = exprName\sub 9,-1
+						varName = expr[2][2]
+						if not @localSet[varName]
+							@localSet[varName] = varType
+							table.insert @locals,varName
 					@createExprItem tostring(expr),indent,expr,parentExpr,index
 
 		@nextExpr = (parentExpr,indent,index)=>
@@ -579,11 +583,13 @@ Class ExprEditorView,
 		varSet = {}
 		nextExpr = (expr)->
 			return false unless "table" == type expr
-			switch expr[1]
-				when "SetLocalNumber"
-					if not varSet[expr[2][2]]
-						varSet[expr[2][2]] = "Number"
 			return true if expr == targetExpr
+			exprName = expr[1]
+			if "SetLocal" == exprName\sub 1,8
+				varType = exprName\sub 9,-1
+				varName = expr[2][2]
+				if not varSet[varName]
+					varSet[varName] = varType
 			for i = 2,#expr
 				if nextExpr expr[i]
 					return true

@@ -301,9 +301,10 @@ Class TriggerEditorView,
 			file = TriggerScope.triggerBtn.file
 			TriggerScope.triggerBtn.file = Path.getPath(file)..triggerName..".trigger"
 
-		@gslot "Scene.Trigger.Close",-> @hide!
+		@closeEvent = @gslot "Scene.Trigger.Close",-> @hide!
 
 	show:=>
+		@closeEvent.enabled = true
 		@panel\schedule once ->
 			@localScope\updateItems!
 			sleep!
@@ -332,6 +333,7 @@ Class TriggerEditorView,
 		}
 
 	hide:=>
+		@closeEvent.enabled = false
 		for control in *editor.children
 			if control ~= @ and control.__class ~= ExprChooser
 				control.visible = control.visibleState

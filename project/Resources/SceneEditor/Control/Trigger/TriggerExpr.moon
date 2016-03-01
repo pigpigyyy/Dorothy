@@ -111,7 +111,7 @@ Class TriggerExprView,
 			label = @label
 			colorText label,1,#value,textColor
 			if TriggerDef.CodeMode
-				if value\match "%s*%-%-"
+				if value\match "^%s*%-%-"
 					colorText label,1,#value,noteColor
 				else
 					for start,word,stop in value\gmatch "()(%w+)()"
@@ -121,11 +121,14 @@ Class TriggerExprView,
 					for start,stop in value\gmatch "()%b\"\"()"
 						colorText label,start,stop-1,classColor
 			else
-				for start,world,stop in value\gmatch "()(%u%w*)()%s"
-					colorText label,start,stop-1,keywordColor
-					value = value\gsub "\\.","xx"
-				for start,stop in value\gmatch "()%b\"\"()"
-					colorText label,start,stop-1,classColor
+				if value\match "^%s*Note"
+					colorText label,1,#value,noteColor
+				else
+					for start,world,stop in value\gmatch "()(%u%w*)()"
+						colorText label,start,stop-1,keywordColor
+						value = value\gsub "\\.","xx"
+					for start,stop in value\gmatch "()%b\"\"()"
+						colorText label,start,stop-1,classColor
 
 	updateText:=>
 		@text = tostring @expr if @expr

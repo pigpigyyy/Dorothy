@@ -102,12 +102,14 @@ TriggerDef = {
 					for i = 2,#expr[5]
 						nextExpr expr[5],i,indent+1
 					append indent,"end"
-				when "SetLocalNumber"
-					if not localSet[expr[2][2]]
-						localSet[expr[2][2]] = "Number"
-						table.insert locals,expr[2][2]
-					append indent,tostring expr
 				else
+					exprName = expr[1]
+					if "SetLocal" == exprName\sub 1,8
+						varType = exprName\sub 9,-1
+						varName = expr[2][2]
+						if not localSet[varName]
+							localSet[varName] = varType
+							table.insert locals,varName
 					append indent,tostring expr
 		nextExpr exprData,nil,0
 		TriggerDef.CodeMode = codeMode
@@ -240,20 +242,6 @@ TriggerDef = {
 				"G.#{ @[2] }"
 			:__tostring
 		}
-		LocalNumber: {
-			Type:"Number"
-			TypeIgnore:false
-			Group:"Variable"
-			Desc:"Get local number named [LocalName]."
-			CodeOnly:true
-			Create:=>
-				SetExprMeta {@Name
-					{"LocalName","localName"}
-				}
-			ToCode:=>
-				"#{ @[2] }"
-			:__tostring
-		}
 		String: {
 			Type:"String"
 			TypeIgnore:false
@@ -325,6 +313,17 @@ TriggerDef = {
 				SetExprMeta {@Name,""}
 			ToCode:=>
 				"\"#{ @[2] }\""
+			:__tostring
+		}
+		Text: {
+			Type:"Text"
+			Group:"Special"
+			Desc:"The note text."
+			CodeOnly:true
+			Create:=>
+				SetExprMeta {@Name,""}
+			ToCode:=>
+				"#{ @[2] }"
 			:__tostring
 		}
 		LocalName: {
@@ -417,6 +416,74 @@ TriggerDef = {
 				"#{ @[2] } = #{ @[3] }"
 			:__tostring
 		}
+		LocalNumber: {
+			Type:"Number"
+			TypeIgnore:false
+			Group:"Variable"
+			Desc:"Get local number named [LocalName]."
+			CodeOnly:true
+			Create:=>
+				SetExprMeta {@Name
+					{"LocalName","localName"}
+				}
+			ToCode:=>
+				"#{ @[2] }"
+			:__tostring
+		}
+		SetLocalString: {
+			Type:"None"
+			Group:"Variable"
+			Desc:"Set [LocalName] to [String]."
+			Create:=>
+				SetExprMeta {@Name
+					{"LocalName","localName"}
+					{"String",""}
+				}
+			ToCode:=>
+				"#{ @[2] } = #{ @[3] }"
+			:__tostring
+		}
+		LocalString: {
+			Type:"String"
+			TypeIgnore:false
+			Group:"Variable"
+			Desc:"Get local string named [LocalName]."
+			CodeOnly:true
+			Create:=>
+				SetExprMeta {@Name
+					{"LocalName","localName"}
+				}
+			ToCode:=>
+				"#{ @[2] }"
+			:__tostring
+		}
+		SetLocalModel: {
+			Type:"None"
+			Group:"Variable"
+			Desc:"Set [LocalName] to [Model]."
+			Create:=>
+				SetExprMeta {@Name
+					{"LocalName","localName"}
+					{"ModelByName",""}
+				}
+			ToCode:=>
+				"#{ @[2] } = #{ @[3] }"
+			:__tostring
+		}
+		LocalModel: {
+			Type:"Model"
+			TypeIgnore:false
+			Group:"Variable"
+			Desc:"Get local model named [LocalName]."
+			CodeOnly:true
+			Create:=>
+				SetExprMeta {@Name
+					{"LocalName","localName"}
+				}
+			ToCode:=>
+				"#{ @[2] }"
+			:__tostring
+		}
 		SetGlobalNumber: {
 			Type:"None"
 			Group:"Variable"
@@ -482,13 +549,13 @@ TriggerDef = {
 		Note: {
 			Type:"None"
 			Group:"Code Flow"
-			Desc:"Note: [String]."
+			Desc:"Note: [Text]."
 			Create:=>
 				SetExprMeta {@Name
-					{"String",""}
+					{"Text",""}
 				}
 			ToCode:=>
-				"-- #{ tostring(@[2])\sub(2,-2) }"
+				"-- #{ @[2] }"
 			:__tostring
 		}
 		Print: {
@@ -575,6 +642,20 @@ TriggerDef = {
 				}
 			ToCode:=>
 				"CreateModel( #{ @[2] }, #{ @[3] }, #{ @[4] }, #{ @[5] }, #{ @[6] }, #{ @[7] }, #{ @[8] } )"
+			:__tostring
+		}
+		DestroyModel: {
+			Type:"None"
+			Group:"Model"
+			Desc:"Destroy a model [Model]."
+			Create:=>
+				SetExprMeta {@Name
+					{"ModelByName",
+						{"ModelName",""}
+					}
+				}
+			ToCode:=>
+				"DestroyModel( #{ @[2] } )"
 			:__tostring
 		}
 		PlayAnimation: {

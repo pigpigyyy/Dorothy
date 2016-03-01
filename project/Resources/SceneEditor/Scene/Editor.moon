@@ -49,21 +49,24 @@ Class EditorView,
 		CCScene\transition "rollOut",{"zoomFlip",0.5,CCOrientation.Up}
 		CCScene\transition "crossFade",{"crossFade",0.5}
 
-		level = (level)-> CCMenu.DefaultHandlerPriority-level*10
-		@levelViewArea = level 5
-		@levelEditControl = level 6
-		@levelHRuler = level 7
-		@levelVRuler = level 7
-		@levelEditMenu = level 8
-		@levelOperationPanel = level 8
-		@levelClipEditor = level 9
-		@levelTriggerEditor = level 10
-		@levelExprEditor = level 10
-		@levelExprChooser = level 11
-		@levelItemPanel = level 12
-		@levelMessageBox = level 13
-		@levelInputBox = level 14
-		@levelSelectionPanel = level 15
+		for i,name in ipairs {
+				"ViewArea"
+				"EditControl"
+				"HRuler"
+				"VRuler"
+				"EditMenu"
+				"OperationPanel"
+				"ClipEditor"
+				"TriggerEditor"
+				"ExprEditor"
+				"ExprChooser"
+				"TriggerMenu"
+				"ItemPanel"
+				"MessageBox"
+				"InputBox"
+				"SelectionPanel"
+			}
+			@["level#{name}"] = CCMenu.DefaultHandlerPriority-(i+4)*10
 
 		@schedule once ->
 			controlNames = {

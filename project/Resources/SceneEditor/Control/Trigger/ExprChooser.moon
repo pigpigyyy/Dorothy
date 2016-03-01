@@ -130,6 +130,82 @@ ExprChooser = Class
 			@bodyScrollArea.viewSize = @bodyMenu\alignItems!
 			colorBodyText true
 
+		chooseItemType = (itemType)->
+			localVarButton = with GroupButton {
+					text:Path.getName(@curExpr[2]) or ""
+					width:math.min(170,@bodyMenu.width-20)
+					height:35
+				}
+				.position = oVec2 @bodyMenu.width/2,
+					@bodyLabel.positionY-@bodyLabel.height/2-20-.height/2
+				\slot "Tapped",(button)->
+					emit "Editor.ItemChooser",{itemType,(itemChooser)->
+						editor\addChild with itemChooser
+							\slot "Selected",(filename)->
+								localVarButton.text = Path.getName filename
+								@curExpr[2] = filename
+								@updatePreview!
+							\show!
+					}
+			@bodyMenu\addChild localVarButton
+
+		editLocalVariable = (varType)->
+			isSetVar = @parentExpr[1] == "SetLocal#{varType}"
+			localNames = @owner\getPrevLocalVars varType
+			table.insert localNames,"<NEW>" if isSetVar
+			oldName = @curExpr[2]
+			localVarButton = with GroupButton {
+					text:@curExpr[2]
+					width:math.min(170,@bodyMenu.width-20)
+					height:35
+				}
+				.position = oVec2 @bodyMenu.width/2,
+					@bodyLabel.positionY-@bodyLabel.height/2-20-.height/2
+				\slot "Tapped",(button)->
+					with SelectionPanel {
+							title:"Select Name"
+							width:150
+							items:localNames
+							itemHeight:40
+							fontSize:20
+						}
+						.menu.children.last.color = ccColor3 0x80ff00 if isSetVar
+						\slot "Selected",(item)->
+							return unless item
+							if item == "<NEW>"
+								with InputBox text:"New Varaible Name"
+									\slot "Inputed",(result)->
+										return unless result
+										if not result\match("^[_%a][_%w]*$")
+											MessageBox text:"Invalid Name!",okOnly:true
+										else
+											isNameFirstAppear = true
+											for name in *localNames
+												isNameFirstAppear = false if oldName == name
+												if name == result
+													MessageBox text:"Name Exist!",okOnly:true
+													return
+											if isNameFirstAppear and oldName ~= "localName"
+												@owner\markLocalVarRename oldName,result
+											button.text = result
+											@curExpr[2] = result
+											@updatePreview!
+							else
+								if isSetVar
+									oldName = @curExpr[2]
+									isNameFirstAppear = true
+									for name in *localNames
+										isNameFirstAppear = false if oldName == name
+									if isNameFirstAppear
+										@owner\markLocalVarRename oldName,item
+								button.text = item
+								@curExpr[2] = item
+								@updatePreview!
+			@bodyMenu\addChild localVarButton
+			if not @bodyMenu.activate
+				localVarButton\emit "Tapped",localVarButton
+				@bodyMenu.activate = true
+
 		updateContent = (exprDef)->
 			@curExpr = @exprs[exprDef]
 			if @curExpr
@@ -152,81 +228,13 @@ ExprChooser = Class
 
 			switch @curExpr[1]
 				when "ModelType"
-					localVarButton = with GroupButton {
-							text:Path.getName(@curExpr[2]) or ""
-							width:math.min(170,@bodyMenu.width-20)
-							height:35
-						}
-						.position = oVec2 @bodyMenu.width/2,
-							@bodyLabel.positionY-@bodyLabel.height/2-20-.height/2
-						\slot "Tapped",(button)->
-							emit "Editor.ItemChooser",{"Model",(itemChooser)->
-								editor\addChild with itemChooser
-									\show!
-									\slot "Selected",(filename)->
-										localVarButton.text = Path.getName filename
-										@curExpr[2] = filename
-										@updatePreview!
-							}
-					@bodyMenu\addChild localVarButton
+					chooseItemType "Model"
 				when "LocalName"
+					editLocalVariable @parentExpr[1]\match "Local(.*)"
+				when "GlobalName"
 					switch @parentExpr[1]
-						when "SetLocalNumber","LocalNumber"
-							isSetVar = @parentExpr[1] == "SetLocalNumber"
-							localNames = @owner\getPrevLocalVars "Number"
-							table.insert localNames,"<NEW>" if isSetVar
-							localVarButton = with GroupButton {
-									text:@curExpr[2]
-									width:math.min(170,@bodyMenu.width-20)
-									height:35
-								}
-								.position = oVec2 @bodyMenu.width/2,
-									@bodyLabel.positionY-@bodyLabel.height/2-20-.height/2
-								\slot "Tapped",(button)->
-									with SelectionPanel {
-											title:"Select Name"
-											width:150
-											items:localNames
-											itemHeight:40
-											fontSize:20
-										}
-										.menu.children.last.color = ccColor3 0x80ff00 if isSetVar
-										\slot "Selected",(item)->
-											return unless item
-											if item == "<NEW>"
-												with InputBox text:"New Varaible Name"
-													\slot "Inputed",(result)->
-														return unless result
-														if not result\match("^[_%a][_%w]*$")
-															MessageBox text:"Invalid Name!",okOnly:true
-														else
-															oldName = @curExpr[2]
-															isNameFirstAppear = true
-															for name in *localNames
-																isNameFirstAppear = false if oldName == name
-																if name == result
-																	MessageBox text:"Name Exist!",okOnly:true
-																	return
-															if isNameFirstAppear and oldName ~= "invalidName"
-																@owner\markLocalVarRename oldName,result
-															button.text = result
-															@curExpr[2] = result
-															@updatePreview!
-											else
-												if isSetVar
-													oldName = @curExpr[2]
-													isNameFirstAppear = true
-													for name in *localNames
-														isNameFirstAppear = false if oldName == name
-													if isNameFirstAppear
-														@owner\markLocalVarRename oldName,item
-												button.text = item
-												@curExpr[2] = item
-												@updatePreview!
-							@bodyMenu\addChild localVarButton
-							if not @bodyMenu.activate
-								localVarButton\emit "Tapped",localVarButton
-								@bodyMenu.activate = true
+						when "SetGlobalNumber","GlobalNumber"
+							print @parentExpr[1]
 				when "Number"
 					inputed = (_,textBox)->
 						@curExpr[2] = tonumber(textBox.text) or 0
@@ -246,7 +254,7 @@ ExprChooser = Class
 							addText == "\n" or number ~= nil or text == "-"
 						.textField\slot "InputInserted",inputed
 						.textField\slot "InputDeleted",inputed
-				when "String","TriggerName"
+				when "String","TriggerName","Text"
 					inputed = (_,textBox)->
 						text = textBox.text
 						@curExpr[2] = text\gsub "\"","\\\""

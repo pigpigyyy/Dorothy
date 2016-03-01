@@ -44,7 +44,7 @@
 		</Line>
 	</Node>
 
-	<Menu Name="opMenu" X="{ @R-40 }" Y="{ @T-40 }" Width="60" Height="60" TouchPriority="{ editor.levelTriggerEditor-3 }" Enabled="False" Ref="True">
+	<Menu Name="opMenu" X="{ @R-40 }" Y="{ @T-40 }" Width="60" Height="60" TouchPriority="{ editor.levelTriggerMenu }" Enabled="False" Ref="True">
 		<CircleButton Name="closeBtn" X="{ $X }" Y="{ $Y }" Radius="30" Text="Close" FontSize="20" Ref="True">
 			<DrawNode>
 				<Dot X="30" Y="30" Radius="30" Color="0x22ffffff"/>
