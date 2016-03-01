@@ -2,6 +2,7 @@
 <Menu X="{ @X }" Y="{ @Y }" TouchPriority="{ editor.levelEditMenu }">
 	<Import Module="Control.Basic.Button"/>
 	<Import Module="Control.Operation.LittleProgress"/>
+	<Import Module="Control.Operation.PickPanel"/>
 	<Import Module="View.Shape.Camera"/>
 	<Import Module="Control.Basic.ScrollArea"/>
 	<Import Module="Control.Basic.GroupButton"/>
@@ -37,6 +38,8 @@
 					<Segment BeginX="10" BeginY="-35" EndX="20" EndY="-35"/>
 				</DrawNode>
 				<Button Name="triggerBtn" Width="50" Height="50" Text="Trigger" FontSize="16" Ref="True"/>
+				<!--<Button Name="unitBtn" X="35" Y="{ $T-335 }" Width="50" Height="50" Text="Unit" FontSize="16" Ref="True"/>
+				<Button Name="uiBtn" X="35" Y="{ $T-395 }" Width="50" Height="50" Text="UI" FontSize="16" Ref="True"/>-->
 			</Menu>
 		</Item>
 	</ScrollArea>
@@ -110,6 +113,6 @@
 	<Button Name="foldBtn" X="{ $R-225 }" Y="{ $T-215 }" Width="50" Height="50" Text="Fold" FontSize="16" Ref="True"/>
 	<Button Name="editBtn" X="{ $R-225 }" Y="{ $T-275 }" Width="50" Height="50" Text="Edit" FontSize="16" Ref="True"/>
 	<Button Name="zoomEditBtn" X="{ $R-35 }" Y="{ $T-95 }" Width="50" Height="50" Text="Zoom" FontSize="16" Ref="True"/>
-	<!--<Button Name="unitBtn" X="35" Y="{ $T-335 }" Width="50" Height="50" Text="Unit" FontSize="16" Ref="True"/>
-	<Button Name="uiBtn" X="35" Y="{ $T-395 }" Width="50" Height="50" Text="UI" FontSize="16" Ref="True"/>-->
+
+	<PickPanel Name="pickPanel" Width="190" Height="70" Ref="True"/>
 </Menu>
