@@ -2,6 +2,7 @@ Dorothy!
 TriggerEditorView = require "View.Control.Trigger.TriggerEditor"
 ExprEditor = require "Control.Trigger.ExprEditor"
 TriggerItem = require "Control.Trigger.TriggerItem"
+ExprChooser = require "Control.Trigger.ExprChooser"
 SelectionPanel = require "Control.Basic.SelectionPanel"
 InputBox = require "Control.Basic.InputBox"
 MessageBox = require "Control.Basic.MessageBox"
@@ -300,6 +301,8 @@ Class TriggerEditorView,
 			file = TriggerScope.triggerBtn.file
 			TriggerScope.triggerBtn.file = Path.getPath(file)..triggerName..".trigger"
 
+		@gslot "Scene.Trigger.Close",-> @hide!
+
 	show:=>
 		@panel\schedule once ->
 			@localScope\updateItems!
@@ -323,13 +326,15 @@ Class TriggerEditorView,
 				@editMenu.enabled = true
 				@opMenu.enabled = true
 				for control in *editor.children
-					control.visibleState = control.visible
-					control.visible = false if control ~= @
+					if control ~= @ and control.__class ~= ExprChooser
+						control.visibleState = control.visible
+						control.visible = false
 		}
 
 	hide:=>
 		for control in *editor.children
-			control.visible = control.visibleState if control ~= @
+			if control ~= @ and control.__class ~= ExprChooser
+				control.visible = control.visibleState
 		@listScrollArea.touchEnabled = false
 		@localListMenu.enabled = false
 		@globalListMenu.enabled = false

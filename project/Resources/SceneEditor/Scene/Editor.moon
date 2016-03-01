@@ -56,11 +56,11 @@ Class EditorView,
 		@levelVRuler = level 7
 		@levelEditMenu = level 8
 		@levelOperationPanel = level 8
-		@levelItemPanel = level 9
-		@levelClipEditor = level 10
-		@levelTriggerEditor = level 11
-		@levelExprEditor = level 11
-		@levelExprChooser = level 12
+		@levelClipEditor = level 9
+		@levelTriggerEditor = level 10
+		@levelExprEditor = level 10
+		@levelExprChooser = level 11
+		@levelItemPanel = level 12
 		@levelMessageBox = level 13
 		@levelInputBox = level 14
 		@levelSelectionPanel = level 15
@@ -176,6 +176,7 @@ Class EditorView,
 							panel.parent\removeChild panel,false
 							@addChild panel,1
 							panel\slot("Selected")\set panel.notifyEditor
+							panel\slot("Hide")\clear!
 						handler panel
 					else
 						handler nil

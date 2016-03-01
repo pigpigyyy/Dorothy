@@ -75,14 +75,10 @@ Class ExprEditorView,
 		@setupMenuScroll @triggerMenu
 
 		getLocalVarText = ->
-			defaultValues = for var in *@locals
-				switch @localSet[var]
-					when "Number" then "0"
-					else "nil"
 			if TriggerDef.CodeMode
-				"local "..table.concat(@locals,", ").." = "..table.concat(defaultValues,", ")
+				"local "..table.concat(@locals,", ")
 			else
-				"Declare "..table.concat(["#{ @locals[i] } (#{ defaultValues[i] })" for i = 1, #@locals],", ").."."
+				"Declare "..table.concat(@locals,", ").."."
 
 		createLocalVarItem = ->
 			indent = @actionItem.indent+1
@@ -125,6 +121,7 @@ Class ExprEditorView,
 			switch expr[1]
 				when "Trigger"
 					if TriggerDef.CodeMode
+						@createExprItem "return",indent
 						@createExprItem tostring(expr),indent,expr
 					else
 						@createExprItem "Trigger",indent
@@ -134,7 +131,6 @@ Class ExprEditorView,
 					for i = 4,#expr
 						nextExpr expr,i,indent+1
 					@createExprItem mode(")"," "),indent
-					@createExprItem " ",indent if TriggerDef.CodeMode
 				when "Event"
 					with @createExprItem mode(tostring(expr),"Event"),indent,expr
 						.itemType = "Start"
@@ -142,7 +138,6 @@ Class ExprEditorView,
 					for i = 2,#expr
 						nextExpr expr,i,indent+1
 					@createExprItem mode("),"," "),indent
-					@createExprItem " ",indent if TriggerDef.CodeMode
 					indent -= 1
 				when "Condition"
 					with @createExprItem mode(tostring(expr),"Condition"),indent,expr
@@ -151,7 +146,6 @@ Class ExprEditorView,
 					for i = 2,#expr
 						nextExpr expr,i,indent+1
 					@createExprItem mode("end ),"," "),indent
-					@createExprItem " ",indent if TriggerDef.CodeMode
 				when "Action"
 					@actionItem = with @createExprItem mode("Action( function()","Action"),indent,expr
 						.itemType = "Start"

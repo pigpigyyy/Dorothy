@@ -48,7 +48,7 @@ TriggerDef = {
 	ToCodeText:(exprData)->
 		codeMode = TriggerDef.CodeMode
 		TriggerDef.CodeMode = true
-		strs = {"return "}
+		strs = {"return\n"}
 		insert = table.insert
 		rep = string.rep
 		append = (indent,str)->
@@ -63,35 +63,27 @@ TriggerDef = {
 			switch expr[1]
 				when "Trigger"
 					append indent,tostring expr
+					append 0,"" unless codeMode
 					for i = 4,#expr
 						nextExpr expr,i,indent+1
 					append indent,")"
-					append 0,""
 				when "Event"
 					append indent,tostring expr
 					for i = 2,#expr
 						nextExpr expr,i,indent+1
 					append indent,"),"
-					append 0,""
 					indent -= 1
 				when "Condition"
 					append indent,tostring expr
 					for i = 2,#expr
 						nextExpr expr,i,indent+1
 					append indent,"end ),"
-					append 0,""
 				when "Action"
 					append indent,"Action( function()"
 					for i = 2,#expr
 						nextExpr expr,i,indent+1
 					if #locals > 0
-						defaultValues = for var in *locals
-							switch localSet[var]
-								when "Number" then "0"
-								else "nil"
-						localLine = rep("\t",indent+1)..
-							"local "..table.concat(locals,", ")..
-							" = "..table.concat(defaultValues,", ").."\n"
+						localLine = rep("\t",indent+1).."local "..table.concat(locals,", ").."\n"
 						for i = 1,#strs
 							if strs[i] == "Action( function()"
 								insert strs,i+2,localLine

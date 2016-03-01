@@ -8,7 +8,7 @@
 
 	<Button Name="menuBtn" X="35" Y="{ $T-35 }" Width="50" Height="50" Text="Menu" FontSize="16" Ref="True"/>
 	<Button Name="undoBtn" X="95" Y="{ $T-35 }" Width="50" Height="50" Text="Undo" FontSize="16" Ref="True"/>
-	<ScrollArea Name="itemArea" X="45" Y="{ $H/2+30 }" Width="90" Height="{ $H-200 }" PaddingX="0" PaddingY="50" TouchPriority="{ editor.levelEditMenu-2 }" SwallowTouches="True" Ref="True">
+	<ScrollArea Name="itemArea" X="45" Y="{ $H/2 }" Width="90" Height="{ $H-140 }" PaddingX="0" PaddingY="50" TouchPriority="{ editor.levelEditMenu-2 }" SwallowTouches="True" Ref="True">
 		<Item Name="view">
 			<Menu Name="itemMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.levelEditMenu-1 }" SwallowTouches="True" Ref="True">
 				<GroupButton Name="graphicBtn" Width="50" Height="50" Text="Graphic" FontSize="13" Highlight="{ false }" Ref="True"/>
@@ -40,7 +40,7 @@
 			</Menu>
 		</Item>
 	</ScrollArea>
-	<Button Name="delBtn" X="35" Y="{ $B+95 }" Width="50" Height="50" Text="Delete" FontSize="16" Ref="True"/>
+	<Button Name="delBtn" X="35" Y="{ $B+35 }" Width="50" Height="50" Text="Delete" FontSize="16" Ref="True"/>
 	<Button Name="zoomBtn" X="{ $R-225 }" Y="{ $T-35 }" Width="50" Height="50" Text="100%" FontSize="16" Ref="True"/>
 	<Button Name="originBtn" X="{ $R-285 }" Y="{ $T-35 }" Width="50" Height="50" Text="Origin" FontSize="16" Ref="True"/>
 	<Button Name="camBtn" X="{ $R-345 }" Y="{ $T-35 }" Width="50" Height="50" FontSize="16" Ref="True">

@@ -9,7 +9,7 @@ SelectionPanel = require "Control.Basic.SelectionPanel"
 InputBox = require "Control.Basic.InputBox"
 MessageBox = require "Control.Basic.MessageBox"
 TextBox = require "Control.Basic.TextBox"
-import Set from require "Data.Utils"
+import Set,Path from require "Data.Utils"
 
 local ExprChooser
 ExprChooser = Class
@@ -33,6 +33,7 @@ ExprChooser = Class
 		@owner = owner
 		@prev = prev
 		@exprs[getmetatable expr] = expr if expr
+		@needOpen = false
 		if args.level == 1
 			@@preview = with @previewItem
 				.owner = @
@@ -150,6 +151,24 @@ ExprChooser = Class
 			@updatePreview!
 
 			switch @curExpr[1]
+				when "ModelType"
+					localVarButton = with GroupButton {
+							text:Path.getName(@curExpr[2]) or ""
+							width:math.min(170,@bodyMenu.width-20)
+							height:35
+						}
+						.position = oVec2 @bodyMenu.width/2,
+							@bodyLabel.positionY-@bodyLabel.height/2-20-.height/2
+						\slot "Tapped",(button)->
+							emit "Editor.ItemChooser",{"Model",(itemChooser)->
+								editor\addChild with itemChooser
+									\show!
+									\slot "Selected",(filename)->
+										localVarButton.text = Path.getName filename
+										@curExpr[2] = filename
+										@updatePreview!
+							}
+					@bodyMenu\addChild localVarButton
 				when "LocalName"
 					switch @parentExpr[1]
 						when "SetLocalNumber","LocalNumber"
@@ -316,8 +335,44 @@ ExprChooser = Class
 			@emit "Result",@curExpr
 			@hide!
 
+		@gslot "Scene.Trigger.Open",-> @changeDisplay true
+
 		editor\addChild @
 		@show!
+
+	changeDisplay:(display)=>
+		return unless display == @needOpen
+		if display
+			@needOpen = false
+			with @@preview
+				.parent\perform CCSequence {
+					CCShow!
+					oOpacity 0.3,1,oEase.OutQuad
+				}
+				\perform CCSequence {
+					CCShow!
+					oOpacity 0.3,1,oEase.OutQuad
+				}
+			@perform CCSequence {
+				CCShow!
+				oOpacity 0.3,1,oEase.OutQuad
+			}
+		else
+			@needOpen = true
+			with @@preview
+				.parent\perform CCSequence {
+					oOpacity 0.3,0,oEase.OutQuad
+					CCHide!
+				}
+				\perform CCSequence {
+					oOpacity 0.3,0,oEase.OutQuad
+					CCHide!
+				}
+			@perform CCSequence {
+				oOpacity 0.3,0,oEase.OutQuad
+				CCHide!
+			}
+			emit "Scene.Trigger.Close"
 
 	updatePreview:=>
 		@emit "Result",@curExpr if @@level > 2
