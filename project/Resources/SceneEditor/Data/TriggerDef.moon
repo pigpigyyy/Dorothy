@@ -18,10 +18,9 @@ TriggerDef = {
 	CodeMode:false
 	:SetExprMeta
 	ToEditText:(expr)->
-		strs = {}
+		strs = {"return "}
 		insert = table.insert
 		append = (str)-> insert strs,str
-		append "return "
 		indent = 0
 		nextExpr = (expr)->
 			append "{"
@@ -45,6 +44,83 @@ TriggerDef = {
 			append "}"
 		nextExpr expr
 		table.concat strs
+
+	ToCodeText:(exprData)->
+		codeMode = TriggerDef.CodeMode
+		TriggerDef.CodeMode = true
+		strs = {"return "}
+		insert = table.insert
+		rep = string.rep
+		append = (indent,str)->
+			insert strs,rep("\t",indent) if indent > 0
+			insert strs,str if str ~= ""
+			insert strs,"\n"
+		appendTap = (num)-> rep "\t",num
+		localSet = {}
+		locals = {}
+		nextExpr = (parentExpr,index,indent)->
+			expr = index and parentExpr[index] or parentExpr
+			switch expr[1]
+				when "Trigger"
+					append indent,tostring expr
+					for i = 4,#expr
+						nextExpr expr,i,indent+1
+					append indent,")"
+					append 0,""
+				when "Event"
+					append indent,tostring expr
+					for i = 2,#expr
+						nextExpr expr,i,indent+1
+					append indent,"),"
+					append 0,""
+					indent -= 1
+				when "Condition"
+					append indent,tostring expr
+					for i = 2,#expr
+						nextExpr expr,i,indent+1
+					append indent,"end ),"
+					append 0,""
+				when "Action"
+					append indent,"Action( function()"
+					for i = 2,#expr
+						nextExpr expr,i,indent+1
+					if #locals > 0
+						defaultValues = for var in *locals
+							switch localSet[var]
+								when "Number" then "0"
+								else "nil"
+						localLine = rep("\t",indent+1)..
+							"local "..table.concat(locals,", ")..
+							" = "..table.concat(defaultValues,", ").."\n"
+						for i = 1,#strs
+							if strs[i] == "Action( function()"
+								insert strs,i+2,localLine
+								break
+					append indent,"end )"
+				when "If"
+					append indent,tostring expr
+					for i = 2,#expr[3]
+						nextExpr expr[3],i,indent+1
+					append indent,"else"
+					for i = 2,#expr[4]
+						nextExpr expr[4],i,indent+1
+					append indent,"end"
+				when "Loopi"
+					append indent,tostring expr
+					for i = 2,#expr[5]
+						nextExpr expr[5],i,indent+1
+					append indent,"end"
+				when "SetLocalNumber"
+					if not localSet[expr[2][2]]
+						localSet[expr[2][2]] = "Number"
+						table.insert locals,expr[2][2]
+					append indent,tostring expr
+				else
+					append indent,tostring expr
+		nextExpr exprData,nil,0
+		TriggerDef.CodeMode = codeMode
+		table.concat strs
+
 	Expressions: {
 		Trigger: {
 			Type:"Trigger"

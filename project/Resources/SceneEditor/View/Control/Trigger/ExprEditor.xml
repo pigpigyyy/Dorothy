@@ -7,14 +7,14 @@
 	<Item Name="view">
 		<SolidRect Width="40" Height="{ $H }" Color="0x2200ffff"/>
 		<Menu Name="triggerMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.levelExprEditor-1 }" Ref="True"/>
-		<Menu Name="editMenu" AnchorX="1" AnchorY="1" Width="360" Height="60" AlignItems="10" TouchPriority="{ editor.levelExprEditor-2 }" Visible="False" Ref="True">
-			<Button Name="editBtn" Text="Edit" Width="40" Height="40" FontSize="16" BackColor="0xaa000000" Ref="True"/>
-			<Button Name="addBtn" Text="Add" Width="40" Height="40" BackColor="0xaa000000" FontSize="16" Ref="True"/>
-			<Button Name="insertBtn" Text="Insert" Width="40" Height="40" BackColor="0xaa000000" FontSize="13" Ref="True"/>
-			<Button Name="delBtn" Text="Del" Width="40" Height="40" FontSize="16" BackColor="0xaa000000" Ref="True"/>
-			<Button Name="upBtn" Text="Up" Width="40" Height="40" FontSize="16" BackColor="0xaa000000" Ref="True"/>
-			<Button Name="downBtn" Text="Down" Width="40" Height="40" BackColor="0xaa000000" FontSize="13" Ref="True"/>
-			<Button Name="modeBtn" Text="Mode" Width="40" Height="40" BackColor="0xaa000000" FontSize="16" Ref="True"/>
+		<Menu Name="editMenu" AnchorX="1" AnchorY="1" Width="430" Height="70" AlignItems="10" TouchPriority="{ editor.levelExprEditor-2 }" Visible="False" Ref="True">
+			<Button Name="editBtn" Text="Edit" Width="50" Height="50" FontSize="16" BackColor="0xca000000" Ref="True"/>
+			<Button Name="addBtn" Text="Add" Width="50" Height="50" BackColor="0xca000000" FontSize="16" Ref="True"/>
+			<Button Name="insertBtn" Text="Insert" Width="50" Height="50" BackColor="0xca000000" FontSize="16" Ref="True"/>
+			<Button Name="delBtn" Text="Del" Width="50" Height="50" FontSize="16" BackColor="0xca000000" Ref="True"/>
+			<Button Name="upBtn" Text="Up" Width="50" Height="50" FontSize="16" BackColor="0xca000000" Ref="True"/>
+			<Button Name="downBtn" Text="Down" Width="50" Height="50" BackColor="0xca000000" FontSize="16" Ref="True"/>
+			<Button Name="modeBtn" Text="Mode" Width="50" Height="50" BackColor="0xca000000" FontSize="16" Ref="True"/>
 		</Menu>
 	</Item>
 </ScrollArea>

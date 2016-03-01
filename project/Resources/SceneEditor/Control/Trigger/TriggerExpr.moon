@@ -104,8 +104,8 @@ Class TriggerExprView,
 			@_text = value
 			@label.text = value
 			@label.texture.antiAlias = false
-			@height = @label.height+10
-			posY = @height-5
+			@height = @label.height+16
+			posY = @height-8
 			@label.positionY = posY
 			@numberLabel.positionY = posY if @numberLabel
 			label = @label

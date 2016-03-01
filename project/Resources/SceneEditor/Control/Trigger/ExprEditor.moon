@@ -561,11 +561,16 @@ Class ExprEditorView,
 		(value)=>
 			@_codeMode = value
 			@modeBtn.text = value and "Text" or "Code"
-			@modeBtn.color = ccColor3 value and 0x80ff00 or 0xff88cc
+			@modeBtn.color = ccColor3 value and 0xffff88 or 0xff88cc
 
 	save:=>
 		triggerText = TriggerDef.ToEditText @exprData
 		oContent\saveToFile editor.gameFullPath..@filename,triggerText
+		triggerCode = TriggerDef.ToCodeText @exprData
+		-- TODO: validata code here
+		codeFile = editor.gameFullPath..@filename
+		codeFile = Path.getPath(codeFile)..Path.getName(codeFile)..".lua"
+		oContent\saveToFile codeFile,triggerCode
 
 	isInActions:=>
 		expr = @_selectedExprItem.expr
@@ -621,7 +626,7 @@ Class ExprEditorView,
 
 	showEditButtons:(names)=>
 		buttonSet = {@["#{name}Btn"],true for name in *names}
-		posX = @editMenu.width-30-(buttonSet[@modeBtn] and 60 or 0)
+		posX = @editMenu.width-35-(buttonSet[@modeBtn] and 60 or 0)
 		for i = #@editMenu.children,1,-1
 			child = @editMenu.children[i]
 			if buttonSet[child]
@@ -630,7 +635,7 @@ Class ExprEditorView,
 				child.scaleX = 0
 				child.scaleY = 0
 				child\perform child.scale
-				posX -= 50
+				posX -= 60
 			else
 				child.visible = false
 

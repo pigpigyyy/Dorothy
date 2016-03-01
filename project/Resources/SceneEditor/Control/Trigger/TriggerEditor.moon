@@ -22,10 +22,11 @@ TriggerScope = Class
 			if @triggerBtn
 				if not @triggerBtn.exprEditor
 					{width:panelW,height:panelH} = @panel
+					listMenuW = @scrollArea.width
 					exprEditor = with ExprEditor {
-							x:panelW/2+105
+							x:panelW/2+listMenuW/2
 							y:panelH/2
-							width:panelW-210
+							width:panelW-listMenuW
 							height:panelH-20
 						}
 						\loadExpr @triggerBtn.file
@@ -79,7 +80,7 @@ TriggerScope = Class
 			group = file\sub #prefix+1,-#appendix-2
 			item = with TriggerItem {
 					text:Path.getName file
-					width:190
+					width:@_menu.width-20
 					height:35
 				}
 				.file = file
@@ -172,7 +173,7 @@ Class TriggerEditorView,
 					subTitle:scope.currentGroup
 					width:180
 					items:groups
-					itemHeight:35
+					itemHeight:40
 					fontSize:20
 				}
 				.scrollArea.offset = lastGroupListOffset

@@ -13,15 +13,16 @@
 	<Node Name="panel" X="{ $X }" Y="{ $Y }" Width="{ @W }" Height="{ @H }" Ref="True">
 		<SolidRect Width="{ $W }" Height="{ $H }" Color="0xff100000"/>
 
+		<Script>local menuW = 250</Script>
 		<!-- scope menu -->
-		<Menu Name="scopeMenu" X="105" Y="{ $T-50 }" Width="210" Height="100" AlignItems="10" TouchPriority="{ editor.levelTriggerEditor-1 }" Ref="True">
-			<TriggerItem Name="localBtn" Text="Local" Width="{ ($W-30)/2 }" Height="35" FontSize="20" Ref="True"/>
-			<TriggerItem Name="globalBtn" Text="Global" Width="{ ($W-30)/2 }" Height="35" FontSize="20" Ref="True"/>
-			<GroupButton Name="groupBtn" Text="Default" Width="190" Height="35" Ref="True"/>
+		<Menu Name="scopeMenu" X="{ menuW/2 }" Y="{ $T-55 }" Width="{ menuW }" Height="110" AlignItems="10" TouchPriority="{ editor.levelTriggerEditor-1 }" Ref="True">
+			<TriggerItem Name="localBtn" Text="Local" Width="{ ($W-30)/2 }" Height="40" FontSize="20" Ref="True"/>
+			<TriggerItem Name="globalBtn" Text="Global" Width="{ ($W-30)/2 }" Height="40" FontSize="20" Ref="True"/>
+			<GroupButton Name="groupBtn" Text="Default" Width="{ menuW-20 }" Height="40" Ref="True"/>
 		</Menu>
 
 		<!-- trigger list -->
-		<ScrollArea Name="listScrollArea" X="105" Y="{ $T-100-($H-160)/2 }" Width="210" Height="{ $H-160 }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelTriggerEditor-2 }" Ref="True">
+		<ScrollArea Name="listScrollArea" X="{ menuW/2 }" Y="{ $T-110-($H-180)/2 }" Width="{ menuW }" Height="{ $H-180 }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelTriggerEditor-2 }" Ref="True">
 			<Item Name="view">
 				<Menu Name="localListMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.levelTriggerEditor-1 }" Enabled="False" Ref="True"/>
 				<Menu Name="globalListMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.levelTriggerEditor-1 }" Enabled="False" Ref="True" Visible="False"/>
@@ -29,17 +30,17 @@
 		</ScrollArea>
 
 		<!-- trigger edit menu -->
-		<Menu Name="editMenu" X="{ $X }" Y="{ $B+30 }" Width="{ $W }" Height="60" AlignItems="10" TouchPriority="{ editor.levelTriggerEditor-1 }" Enabled="False" Ref="True">
-			<Button Name="newBtn" Text="New" Width="40" Height="40" FontSize="16" Ref="True"/>
-			<Button Name="addBtn" Text="Add" Width="40" Height="40" FontSize="16" Ref="True"/>
-			<Button Name="delBtn" Text="Del" Width="40" Height="40" FontSize="16" Ref="True"/>
-			<Button Name="copyBtn" Text="Copy" Width="40" Height="40" FontSize="13" Ref="True"/>
+		<Menu Name="editMenu" X="{ menuW/2 }" Y="{ $B+35 }" Width="{ menuW }" Height="70" AlignItems="10" TouchPriority="{ editor.levelTriggerEditor-1 }" Enabled="False" Ref="True">
+			<Button Name="newBtn" Text="New" Width="50" Height="50" FontSize="16" Ref="True"/>
+			<Button Name="addBtn" Text="Add" Width="50" Height="50" FontSize="16" Ref="True"/>
+			<Button Name="delBtn" Text="Del" Width="50" Height="50" FontSize="16" Ref="True"/>
+			<Button Name="copyBtn" Text="Copy" Width="50" Height="50" FontSize="16" Ref="True"/>
 		</Menu>
 
 		<LineRect X="1" Y="1" Width="{ $W-2 }" Height="{ $H-2 }" Color="0xffffafaf"/>
 		<Line Color="0xffafaf" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }">
-			<Vec2 X="210" Y="{ $B+1 }"/>
-			<Vec2 X="210" Y="{ $T-1 }"/>
+			<Vec2 X="{ menuW }" Y="{ $B+1 }"/>
+			<Vec2 X="{ menuW }" Y="{ $T-1 }"/>
 		</Line>
 	</Node>
 

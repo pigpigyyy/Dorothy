@@ -168,7 +168,7 @@ ExprChooser = Class
 											title:"Select Name"
 											width:150
 											items:localNames
-											itemHeight:35
+											itemHeight:40
 											fontSize:20
 										}
 										.menu.children.last.color = ccColor3 0x80ff00 if isSetVar
