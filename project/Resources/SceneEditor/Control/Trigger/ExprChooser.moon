@@ -206,6 +206,23 @@ ExprChooser = Class
 				localVarButton\emit "Tapped",localVarButton
 				@bodyMenu.activate = true
 
+		chooseItemFromScene = (itemType)->
+			localVarButton = with GroupButton {
+					text:@curExpr[2]
+					width:math.min(200,@bodyMenu.width-20)
+					height:35
+				}
+				.position = oVec2 @bodyMenu.width/2,
+					@bodyLabel.positionY-@bodyLabel.height/2-20-.height/2
+				\slot "Tapped",->
+					@changeDisplay false
+					emit "Scene.Trigger.Picking",{itemType,@curExpr[2]}
+				\gslot "Scene.Trigger.Picked",(result)->
+					localVarButton.text = result
+					@curExpr[2] = result
+					@updatePreview!
+			@bodyMenu\addChild localVarButton
+
 		updateContent = (exprDef)->
 			@curExpr = @exprs[exprDef]
 			if @curExpr
@@ -234,6 +251,7 @@ ExprChooser = Class
 				when "GlobalName"
 					switch @parentExpr[1]
 						when "SetGlobalNumber","GlobalNumber"
+							-- TODO: handle global variables
 							print @parentExpr[1]
 				when "Number"
 					inputed = (_,textBox)->
@@ -272,6 +290,9 @@ ExprChooser = Class
 						.text = tostring @curExpr[2]
 						.textField\slot "InputInserted",inputed
 						.textField\slot "InputDeleted",inputed
+				else
+					if @curExpr.Item
+						chooseItemFromScene @curExpr[1]\sub 1,-5 -- "TypeName"\sub(1,-5) == "Type"
 
 		selectExpr = (button)->
 			@curExprBtn.checked = false if @curExprBtn and @curExprBtn ~= button
@@ -361,6 +382,7 @@ ExprChooser = Class
 					CCShow!
 					oOpacity 0.3,1,oEase.OutQuad
 				}
+				.parent.mask.touchEnabled = true
 			@perform CCSequence {
 				CCShow!
 				oOpacity 0.3,1,oEase.OutQuad
@@ -376,6 +398,8 @@ ExprChooser = Class
 					oOpacity 0.3,0,oEase.OutQuad
 					CCHide!
 				}
+				.parent.mask.touchEnabled = false
+			@touchEnabled = false
 			@perform CCSequence {
 				oOpacity 0.3,0,oEase.OutQuad
 				CCHide!

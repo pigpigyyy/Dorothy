@@ -114,7 +114,10 @@ DataCreater = (dataDef)->
 		__index:(k)=>
 			itemDef = dataDef[k]
 			if itemDef
-				@[itemDef[1]]
+				if itemDef[1] == 1
+					TypeNames[@[itemDef[1]]]
+				else
+					@[itemDef[1]]
 			else
 				nil
 		__tostring:=>

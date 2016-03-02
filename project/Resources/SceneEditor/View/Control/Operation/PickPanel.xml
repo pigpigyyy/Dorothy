@@ -4,13 +4,16 @@
 	<Import Module="View.Shape.SolidRect"/>
 	<Import Module="View.Shape.LineRect"/>
 
-	<SolidRect Width="{ $W }" Height="{ $H }" Color="0x88100000"/>
-	<LabelTTF Name="title" X="{ ($W-70)/2 }" Y="{ $T-20 }" Text="Model" AntiAlias="False" FontName="Arial" FontSize="20" Color="0x00ffff" Ref="True"/>
-	<LabelTTF Name="label" X="{ ($W-70)/2 }" Y="{ $T-45 }" Text="model1" AntiAlias="False" FontName="Arial" FontSize="20" Color="0xffffff" Ref="True"/>
-	<LineRect Width="{ $W }" Height="{ $H }" Color="0xffffafaf"/>
-	<CircleButton Name="pickBtn" X="{ $R-35 }" Y="{ $Y }" Radius="25" Text="Select" FontSize="20" Ref="True">
+	<Node Name="panel" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" Ref="True">
+		<SolidRect Width="{ $W }" Height="{ $H }" Color="0x88100000"/>
+		<LabelTTF Name="title" X="{ ($W-70)/2 }" Y="{ $T-25 }" Text="Type" AntiAlias="False" FontName="Arial" FontSize="20" Color="0x00ffff" Ref="True"/>
+		<LabelTTF Name="label" X="{ ($W-70)/2 }" Y="{ $T-50 }" Text="None" AntiAlias="False" FontName="Arial" FontSize="20" Color="0xffffff" Ref="True"/>
+		<LineRect Width="{ $W }" Height="{ $H }" Color="0xffffafaf"/>
+	</Node>
+
+	<CircleButton Name="pickBtn" X="{ $R-40 }" Y="{ $Y }" Radius="30" Text="Select" FontSize="20" Ref="True">
 		<DrawNode>
-			<Dot X="25" Y="25" Radius="25" Color="0x22ffffff"/>
+			<Dot X="30" Y="30" Radius="30" Color="0x22ffffff"/>
 		</DrawNode>
 	</CircleButton>
 </Menu>

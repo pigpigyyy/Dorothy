@@ -3,6 +3,7 @@ class oBody: public CCNode
 	tolua_readonly tolua_property__common oWorld* world;
 	tolua_readonly tolua_property__common oBodyDef* bodyDef;
 	tolua_readonly tolua_property__common float mass;
+	tolua_readonly tolua_property__bool bool sensor;
 	tolua_property__common float velocityX;
 	tolua_property__common float velocityY;
 	tolua_property__common oVec2 velocity;

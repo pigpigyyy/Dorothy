@@ -267,6 +267,11 @@ oSensor* oBody::attachSensor( int tag, b2FixtureDef* fixtureDef )
 	return sensor;
 }
 
+bool oBody::isSensor() const
+{
+	return _sensors && _sensors->count() > 0;
+}
+
 void oBody::eachSensor(const oSensorHandler& func)
 {
 	CCARRAY_START(oSensor, sensor, _sensors)

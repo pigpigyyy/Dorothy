@@ -353,6 +353,7 @@ TriggerDef = {
 			Group:"Special"
 			Desc:"A name for model."
 			CodeOnly:true
+			Item:true
 			Create:=>
 				SetExprMeta {@Name,""}
 			ToCode:=>
@@ -364,6 +365,19 @@ TriggerDef = {
 			Group:"Special"
 			Desc:"A name for layer."
 			CodeOnly:true
+			Item:true
+			Create:=>
+				SetExprMeta {@Name,""}
+			ToCode:=>
+				"\"#{ @[2] }\""
+			:__tostring
+		}
+		SensorName: {
+			Type:"SensorName"
+			Group:"Special"
+			Desc:"A name for sensor."
+			CodeOnly:true
+			Item:true
 			Create:=>
 				SetExprMeta {@Name,""}
 			ToCode:=>
@@ -464,7 +478,9 @@ TriggerDef = {
 			Create:=>
 				SetExprMeta {@Name
 					{"LocalName","localName"}
-					{"ModelByName",""}
+					{"ModelByName"
+						{"ModelName",""}
+					}
 				}
 			ToCode:=>
 				"#{ @[2] } = #{ @[3] }"
@@ -475,6 +491,35 @@ TriggerDef = {
 			TypeIgnore:false
 			Group:"Variable"
 			Desc:"Get local model named [LocalName]."
+			CodeOnly:true
+			Create:=>
+				SetExprMeta {@Name
+					{"LocalName","localName"}
+				}
+			ToCode:=>
+				"#{ @[2] }"
+			:__tostring
+		}
+		SetLocalSensor: {
+			Type:"None"
+			Group:"Variable"
+			Desc:"Set [LocalName] to [Sensor]."
+			Create:=>
+				SetExprMeta {@Name
+					{"LocalName","localName"}
+					{"SensorByName"
+						{"SensorName",""}
+					}
+				}
+			ToCode:=>
+				"#{ @[2] } = #{ @[3] }"
+			:__tostring
+		}
+		LocalSensor: {
+			Type:"Sensor"
+			TypeIgnore:false
+			Group:"Variable"
+			Desc:"Get local sensor named [LocalName]."
 			CodeOnly:true
 			Create:=>
 				SetExprMeta {@Name
@@ -590,7 +635,7 @@ TriggerDef = {
 					{"ModelName",""}
 				}
 			ToCode:=>
-				"ModelByName( #{ @[2] } )"
+				"Model( #{ @[2] } )"
 			:__tostring
 		}
 		LayerByName: {
@@ -603,7 +648,20 @@ TriggerDef = {
 					{"LayerName",""}
 				}
 			ToCode:=>
-				"LayerByName( #{ @[2] } )"
+				"Layer( #{ @[2] } )"
+			:__tostring
+		}
+		SensorByName: {
+			Type:"Sensor"
+			TypeIgnore:false
+			Group:"Sensor"
+			Desc:"Get sensor [SensorName] from current scene."
+			Create:=>
+				SetExprMeta {@Name
+					{"SensorName",""}
+				}
+			ToCode:=>
+				"Sensor( #{ @[2] } )"
 			:__tostring
 		}
 		Point: {

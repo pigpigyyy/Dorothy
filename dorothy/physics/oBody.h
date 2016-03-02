@@ -59,6 +59,7 @@ public:
 	bool removeSensor(oSensor* sensor);
 	b2Fixture* attach(b2FixtureDef* fixtureDef);
 	oSensor* attachSensor(int tag, b2FixtureDef* fixtureDef);
+	bool isSensor() const;
 	virtual void destroy();
 	static oBody* create(oBodyDef* bodyDef, oWorld* world, const oVec2& pos = oVec2::zero, float rot = 0);
 protected:

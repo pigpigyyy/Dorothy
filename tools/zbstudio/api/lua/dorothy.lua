@@ -4134,6 +4134,11 @@ local Dorothy =
 				description = "[float][Readonly]",
 				type = "value"
 			},
+			sensor =
+			{
+				description = "[bool][Readonly]",
+				type = "value"
+			},
 			velocityX =
 			{
 				description = "[float]",

@@ -1,7 +1,5 @@
 <!-- params: Level, ValueType, X, Y, Width, Height -->
-<Layer X="{ @X }" Y="{ @Y }"
-	TouchPriority="{ editor.levelExprChooser }"
-	SwallowTouches="True" TouchEnabled="True" Visible="False">
+<Node X="{ @X }" Y="{ @Y }" Width="{ @W }" Height="{ @H }" Visible="False">
 	<Import Module="Control.Basic.ScrollArea"/>
 	<Import Module="View.Shape.LineRect"/>
 	<Import Module="View.Shape.SolidRect"/>
@@ -10,7 +8,9 @@
 	<Import Module="Control.Trigger.ExprPreview"/>
 
 	<Script>if level == 1 then</Script>
-		<SolidRect Name="mask" Width="{ @W }" Height="{ @H }" Color="0xaa000000" Ref="True"/>
+		<Layer Name="mask" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.levelExprChooser }" SwallowTouches="True" TouchEnabled="True" Ref="True">
+			<SolidRect Width="{ $W }" Height="{ $H }" Color="0xaa000000"/>
+		</Layer>
 		<ExprPreview Name="previewItem" Ref="True"/>
 	<Script>end</Script>
 
@@ -70,4 +70,4 @@
 		</CircleButton>
 	</Menu>
 
-</Layer>
+</Node>
