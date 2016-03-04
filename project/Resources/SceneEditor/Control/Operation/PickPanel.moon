@@ -1,6 +1,8 @@
 Dorothy!
 SelectionPanel = require "Control.Basic.SelectionPanel"
 PickPanelView = require "View.Control.Operation.PickPanel"
+PointControl = require "Control.Edit.PointControl"
+import Round from require "Data.Utils"
 
 -- [params]
 -- width, height
@@ -8,27 +10,47 @@ Class PickPanelView,
 	__init:=>
 		@itemType = nil
 		@pickedItem = nil
+		@pointControl = nil
+
+		itemString = ->
+			if tolua.type(@pickedItem) == "oVec2"
+				string.format "%d,%d",@pickedItem.x,@pickedItem.y
+			else
+				tostring @pickedItem
+
 		@gslot "Scene.Trigger.Picking",(args)->
 			{itemType,currentItem} = args
-			itemName = currentItem\match "^[^%.]*"
-			item = editor.items[itemName]
-			if item
-				itemData = editor\getData item
-				emit "Scene.ViewPanel.Pick",itemData if itemData
+			if itemType == "Point"
+				@pointControl = with PointControl!
+					\show currentItem,if editor.currentData
+							editor\getItem editor.currentData
+						else
+							nil
+					\slot "PosChanged",(pos)->
+						@pickedItem = Round pos
+						@label.text = itemString!
+				@parent\addChild @pointControl,-1
+			else
+				itemName = currentItem\match "^[^%.]*"
+				item = editor.items[itemName]
+				if item
+					itemData = editor\getData item
+					emit "Scene.ViewPanel.Pick",itemData if itemData
 			@selectEvent.enabled = true
 			@itemType = itemType
 			@pickedItem = currentItem
 			@visible = true
 			@title.text = itemType
-			@label.text = currentItem
+			@label.text = itemString!
 			@showButton!
 			with @panel
 				.scaleX,.scaleY = 0,0
 				\perform oScale 0.3,1,1,oEase.OutBack
 
 		@selectEvent = @gslot "Scene.ViewPanel.Select",(itemData)->
-			@pickedItem = nil
-			@label.text = ""
+			if @itemType ~= "Point"
+				@pickedItem = nil
+				@label.text = ""
 			if itemData and @itemType
 				switch @itemType
 					when "Sensor"
@@ -49,17 +71,32 @@ Class PickPanelView,
 									\slot "Selected",(item)->
 										return unless item
 										@pickedItem = itemData.name.."."..item
-										@label.text = @pickedItem
+										@label.text = itemString!
 										@showButton!
+					when "Point"
+						isBody = itemData.itemType == "Body"
+						offset = isBody and itemData.position or oVec2.zero
+						with @pointControl
+							\show @pickedItem,editor\getItem(itemData),offset
+							if isBody
+								\schedule ->
+									.offset = itemData.position
+									.targetPos = @pickedItem+.offset
+									.circle.position = .targetPos
+							else
+								\unschedule!
 					when itemData.itemType
 						@pickedItem = itemData.name
-						@label.text = itemData.name
+						@label.text = itemString!
 						@showButton!
 
 		@selectEvent.enabled = false
 
 		hide = ->
 			if @visible and not @scheduled
+				if @pointControl
+					@pointControl.parent\removeChild @pointControl
+					@pointControl = nil
 				@selectEvent.enabled = false
 				@panel\perform oScale 0.3,0,0,oEase.InBack
 				@pickBtn\perform oScale 0.3,0,0,oEase.InBack
@@ -68,7 +105,7 @@ Class PickPanelView,
 					@visible = false
 
 		@pickBtn\slot "Tapped",->
-			emit "Scene.Trigger.Picked",@pickedItem or ""
+			emit "Scene.Trigger.Picked",@pickedItem
 			emit "Scene.Trigger.Open"
 
 		@gslot "Scene.Trigger.Open",hide

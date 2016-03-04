@@ -225,7 +225,9 @@ Class TriggerEditorView,
 						if oContent\exist triggerFullPath
 							MessageBox text:"Trigger Exist!",okOnly:true
 						else
-							oContent\saveToFile triggerFullPath,ToEditText Expressions.Trigger\Create result
+							trigger = Expressions.Trigger\Create!
+							trigger[2][2] = result
+							oContent\saveToFile triggerFullPath,ToEditText trigger
 							scope\updateItems!
 							triggerFile = scope.prefix..scope.currentGroup.."/"..result..".trigger"
 							for item in *scope.menu.children

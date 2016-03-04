@@ -11,6 +11,7 @@ textColor = ccColor3 255,255,255
 keywordColor = ccColor3 58,135,212
 classColor = ccColor3 62,197,127
 noteColor = ccColor3 56,142,73
+errorColor = ccColor3 0xff0080
 
 colorText = (label,start,stop,color)->
 	for i = start,stop
@@ -114,21 +115,32 @@ Class TriggerExprView,
 				if value\match "^%s*%-%-"
 					colorText label,1,#value,noteColor
 				else
-					for start,word,stop in value\gmatch "()(%w+)()"
+					for start,word,stop in value\gmatch "()([%w_]+)()"
 						if keywords[word]
 							colorText label,start,stop-1,keywordColor
+						elseif word == "InvalidName" or word == "g_InvalidName"
+							colorText label,start,stop-1,errorColor
 					value = value\gsub "\\.","xx"
-					for start,stop in value\gmatch "()%b\"\"()"
-						colorText label,start,stop-1,classColor
+					for start,word,stop in value\gmatch "()(%b\"\")()"
+						if word == "\"InvalidName\""
+							colorText label,start,stop-1,errorColor
+						else
+							colorText label,start,stop-1,classColor
 			else
 				if value\match "^%s*Note"
 					colorText label,1,#value,noteColor
 				else
-					for start,world,stop in value\gmatch "()(%u%w*)()"
-						colorText label,start,stop-1,keywordColor
-						value = value\gsub "\\.","xx"
+					for start,word,stop in value\gmatch "()([%w_]*)()"
+						if word == "InvalidName" or word == "g_InvalidName"
+							colorText label,start,stop-1,errorColor
+						elseif word\sub(1,1)\match "%u"
+							colorText label,start,stop-1,keywordColor
+							value = value\gsub "\\.","xx"
 					for start,stop in value\gmatch "()%b\"\"()"
-						colorText label,start,stop-1,classColor
+						if word == "\"InvalidName\""
+							colorText label,start,stop-1,errorColor
+						else
+							colorText label,start,stop-1,classColor
 
 	updateText:=>
 		@text = tostring @expr if @expr

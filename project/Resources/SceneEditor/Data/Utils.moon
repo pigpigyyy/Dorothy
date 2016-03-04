@@ -14,6 +14,13 @@ CompareTable = (olds,news)->
 			table.insert itemsToAdd,item
 	return itemsToAdd,itemsToDel
 
+Round = (val)->
+	if type(val) == "number"
+		val > 0 and math.floor(val+0.5) or math.ceil(val-0.5)
+	else
+		oVec2 val.x > 0 and math.floor(val.x+0.5) or math.ceil(val.x-0.5),
+			val.y > 0 and math.floor(val.y+0.5) or math.ceil(val.y-0.5)
+
 local Path
 Path =
 	-- input: /aa/bb/file.XML
@@ -98,4 +105,9 @@ Path =
 
 	isValid:(filename)-> not filename\match "[\\/|:*?<>\"]"
 
-{:Set,:CompareTable,:Path}
+{
+	:Set
+	:CompareTable
+	:Round
+	:Path
+}

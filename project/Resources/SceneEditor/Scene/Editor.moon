@@ -631,6 +631,12 @@ Class EditorView,
 		Path.removeFolder @gameFullPath
 		@game = nil
 
+	getDummyLayer:=>
+		if @items
+			@items.Scene\getLayer -1
+		else
+			nil
+
 	updateGroupName:(groupIndex,name)=>
 		@sceneData.groups[groupIndex] = name
 		emit "Scene.Dirty",true

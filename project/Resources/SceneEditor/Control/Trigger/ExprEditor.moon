@@ -13,6 +13,7 @@ Class ExprEditorView,
 		@filename = nil
 		@asyncLoad = false
 		@actionItem = nil
+		@conditionItem = nil
 		@localVarItem = nil
 		@locals = nil
 		@localSet = nil
@@ -95,12 +96,13 @@ Class ExprEditorView,
 				nextExpr = (expr)->
 					return unless "table" == type expr
 					exprName = expr[1]
-					if "SetLocal" == exprName\sub 1,8
+					if exprName ~= "SetLocal" and exprName\match "^SetLocal"
 						varType = exprName\sub 9,-1
 						varName = expr[2][2]
-						if not @localSet[varName]
-							@localSet[varName] = varType
-							table.insert @locals,varName
+						if varName ~= "InvalidName" and not @localSet[varName]
+							if not (@exprData[4][2].Args and @exprData[4][2].Args[varName])
+								@localSet[varName] = varType
+								table.insert @locals,varName
 					for i = 2,#expr
 						nextExpr expr[i]
 				@locals = {}
@@ -142,14 +144,14 @@ Class ExprEditorView,
 					@createExprItem mode("),"," "),indent
 					indent -= 1
 				when "Condition"
-					with @createExprItem mode(tostring(expr),"Condition"),indent,expr
+					@conditionItem = with @createExprItem mode(tostring(expr),"Condition"),indent,expr
 						.itemType = "Start"
 						.actionExpr = expr
 					for i = 2,#expr
 						nextExpr expr,i,indent+1
 					@createExprItem mode("end ),"," "),indent
 				when "Action"
-					@actionItem = with @createExprItem mode("Action( function()","Action"),indent,expr
+					@actionItem = with @createExprItem mode(tostring(expr),"Action"),indent,expr
 						.itemType = "Start"
 						.actionExpr = expr
 					children = @triggerMenu.children
@@ -188,14 +190,17 @@ Class ExprEditorView,
 						nextExpr expr[5],i,indent+1
 					with @createExprItem mode("end","End."),indent,expr,parentExpr,index
 						.itemType = "End"
-				else
-					exprName = expr[1]
-					if "SetLocal" == exprName\sub 1,8
-						varType = exprName\sub 9,-1
-						varName = expr[2][2]
-						if not @localSet[varName]
+				when "SetLocal"
+					assignExpr = expr[2]
+					exprName = assignExpr[1]
+					varType = exprName\sub 9,-1
+					varName = assignExpr[2][2]
+					if varName ~= "InvalidName" and not @localSet[varName]
+						if not (@exprData[4][2].Args and @exprData[4][2].Args[varName])
 							@localSet[varName] = varType
 							table.insert @locals,varName
+					@createExprItem tostring(expr),indent,expr,parentExpr,index
+				else
 					@createExprItem tostring(expr),indent,expr,parentExpr,index
 
 		@nextExpr = (parentExpr,indent,index)=>
@@ -288,6 +293,9 @@ Class ExprEditorView,
 						if parentExpr
 							parentExpr[index] = newExpr
 							addNewItem selectedExprItem,selectedExprItem.indent,parentExpr,index
+							if newExpr.Type == "Event"
+								@conditionItem\updateText!
+								@actionItem\updateText!
 						elseif expr[1] == "Trigger"
 							if @newTriggerName
 								oldFileFullname = editor.gameFullPath..@filename
@@ -570,34 +578,62 @@ Class ExprEditorView,
 		codeFile = Path.getPath(codeFile)..Path.getName(codeFile)..".lua"
 		oContent\saveToFile codeFile,triggerCode
 
-	isInActions:=>
+	isInAction:=>
+		not @isInCondition! and not @isInEvent!
+
+	isInCondition:=>
 		expr = @_selectedExprItem.expr
 		parentExpr = @_selectedExprItem.parentExpr
-		not (expr[1] == "Condition" or expr[1] == "Event") and
-			parentExpr and
-				not (parentExpr[1] == "Condition" or
-				parentExpr[1] == "Event")
+		expr[1] == "Condition" or (parentExpr and parentExpr[1] == "Condition")
 
-	getPrevLocalVars:(varType)=>
+	isInEvent:=>
+		expr = @_selectedExprItem.expr
+		parentExpr = @_selectedExprItem.parentExpr
+		expr[1] == "Event" or (parentExpr and parentExpr[1] == "Event")
+
+	getPrevLocalVars:(targetType)=>
 		targetExpr = @_selectedExprItem.expr
-		varSet = {}
+		parentExpr = @_selectedExprItem.parentExpr
+		eventExpr = @exprData[4][2]
+		localVars = if eventExpr.Args
+			for k,v in pairs eventExpr.Args
+				if v\match("^%a*") == targetType
+					k
+				else continue
+		else {}
+		if targetExpr[1] == "Condition" or parentExpr[1] == "Condition"
+			return localVars
+		varScope = {}
 		nextExpr = (expr)->
 			return false unless "table" == type expr
 			return true if expr == targetExpr
-			exprName = expr[1]
-			if "SetLocal" == exprName\sub 1,8
-				varType = exprName\sub 9,-1
-				varName = expr[2][2]
-				if not varSet[varName]
-					varSet[varName] = varType
-			for i = 2,#expr
-				if nextExpr expr[i]
-					return true
+			switch expr[1]
+				when "SetLocal"
+					assignExpr = expr[2]
+					exprName = assignExpr[1]
+					varType = exprName\sub 9,-1
+					varName = assignExpr[2][2]
+					scope = varScope[#varScope]
+					if varName ~= "InvalidName"
+						scope[varName] = varType
+				when "Action"
+					table.insert varScope,{}
+					for i = 2,#expr
+						if nextExpr expr[i]
+							return true
+					table.remove varScope
+				else
+					for i = 2,#expr
+						if nextExpr expr[i]
+							return true
 			false
+		table.insert varScope,{}
 		nextExpr @actionItem.expr
-		return for v,k in pairs varSet
-			if k == varType then v
-			else continue
+		for scope in *varScope
+			for v,k in pairs scope
+				if k == targetType
+					table.insert localVars,v
+		localVars
 
 	markLocalVarRename:(fromName,toName)=>
 		@localVarFrom = fromName

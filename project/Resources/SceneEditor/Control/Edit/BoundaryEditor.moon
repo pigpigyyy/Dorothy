@@ -14,7 +14,7 @@ BoundaryBar = (size,vertical,flip)->
 	else
 		oVec2(0.5,flip and 1 or 0)
 	getPos = (worldPos)->
-		dummyLayer = editor.items.Scene\getLayer -1
+		dummyLayer = editor\getDummyLayer!
 		dummyLayer\convertToNodeSpace worldPos
 	with CCLayerColor ccColor4(0),width,height
 		.opacity = 0.5
@@ -161,7 +161,7 @@ Class CCNode,
 
 	update:=>
 		area = editor.sceneData.camera.area
-		dummyLayer = editor.items.Scene\getLayer -1
+		dummyLayer = editor\getDummyLayer!
 		lower = @convertToNodeSpace dummyLayer\convertToWorldSpace oVec2 area.left,area.bottom
 		upper = @convertToNodeSpace dummyLayer\convertToWorldSpace oVec2 area.right,area.top
 		@leftBar.positionX = lower.x

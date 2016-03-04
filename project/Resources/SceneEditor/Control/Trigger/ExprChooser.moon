@@ -160,7 +160,7 @@ ExprChooser = Class
 					height:35
 				}
 				.position = oVec2 @bodyMenu.width/2,
-					@bodyLabel.positionY-@bodyLabel.height/2-20-.height/2
+					@bodyLabel.positionY-@bodyLabel.height-10-.height/2
 				\slot "Tapped",(button)->
 					with SelectionPanel {
 							title:"Select Name"
@@ -213,15 +213,76 @@ ExprChooser = Class
 					height:35
 				}
 				.position = oVec2 @bodyMenu.width/2,
-					@bodyLabel.positionY-@bodyLabel.height/2-20-.height/2
+					@bodyLabel.positionY-@bodyLabel.height-10-.height/2
 				\slot "Tapped",->
 					@changeDisplay false
 					emit "Scene.Trigger.Picking",{itemType,@curExpr[2]}
 				\gslot "Scene.Trigger.Picked",(result)->
+					return unless result
 					localVarButton.text = result
 					@curExpr[2] = result
 					@updatePreview!
 			@bodyMenu\addChild localVarButton
+
+		pickPointFromScene = ->
+			localVarButton = with GroupButton {
+					text:"Pick"
+					width:math.min(200,@bodyMenu.width-20)
+					height:35
+				}
+				.position = oVec2 @bodyMenu.width/2,
+					@bodyLabel.positionY-@bodyLabel.height-10-.height/2
+				\slot "Tapped",->
+					@changeDisplay false
+					emit "Scene.Trigger.Picking",{"Point",oVec2(@curExpr[2][2],@curExpr[3][2])}
+				\gslot "Scene.Trigger.Picked",(result)->
+					@curExpr[2][2] = result.x
+					@curExpr[3][2] = result.y
+					thread ->
+						updateContent @curExprBtn.exprDef
+			@bodyMenu\addChild localVarButton
+
+		editAnimation = ->
+			switch @parentExpr[1]
+				when "CreateModel"
+					modelFile = @parentExpr[2][2]
+					animations = oCache.Model\getAnimationNames modelFile
+					@bodyMenu\addChild with GroupButton {
+							text:@curExpr[2]
+							width:math.min(170,@bodyMenu.width-20)
+							height:35
+						}
+						.position = oVec2 @bodyMenu.width/2,
+							@bodyLabel.positionY-@bodyLabel.height/2-20-.height/2
+						\slot "Tapped",(button)->
+							with SelectionPanel {
+									title:"Animation"
+									width:150
+									items:animations
+									itemHeight:40
+									fontSize:20
+								}
+								\slot "Selected",(item)->
+									return unless item
+									button.text = item
+									@curExpr[2] = item
+									@updatePreview!
+				when "PlayAnimation"
+					inputed = (_,textBox)->
+						text = textBox.text
+						@curExpr[2] = text\gsub "\"","\\\""
+						@updatePreview!
+					@bodyMenu\addChild with TextBox {
+							x:@bodyMenu.width/2
+							y:@bodyLabel.positionY-@bodyLabel.height/2-20-20
+							width:260
+							height:35
+							fontSize:17
+							limit:15
+						}
+						.text = tostring @curExpr[2]
+						.textField\slot "InputInserted",inputed
+						.textField\slot "InputDeleted",inputed
 
 		updateContent = (exprDef)->
 			@curExpr = @exprs[exprDef]
@@ -253,6 +314,10 @@ ExprChooser = Class
 						when "SetGlobalNumber","GlobalNumber"
 							-- TODO: handle global variables
 							print @parentExpr[1]
+				when "Animation"
+					editAnimation!
+				when "Point"
+					pickPointFromScene!
 				when "Number"
 					inputed = (_,textBox)->
 						@curExpr[2] = tonumber(textBox.text) or 0
@@ -306,7 +371,7 @@ ExprChooser = Class
 		groupNames = [groupName for groupName in pairs groups]
 		table.sort groupNames
 
-		isAction = @owner\isInActions!
+		allowUseLocal = @owner\isInAction! or @owner\isInCondition!
 
 		for groupName in *groupNames
 			@catMenu\addChild with TriggerItem {
@@ -318,8 +383,8 @@ ExprChooser = Class
 				\slot "Tapped",selectGroup
 			for exprDef in *TriggerDef.Groups[groupName]
 				if exprDefSet[exprDef]
-					-- LocalNumber is not allowed to appear outside the actions
-					continue if not isAction and exprDef.Name == "LocalNumber"
+					-- Local variable is not allowed to appear outside the actions and conditions
+					continue if not allowUseLocal and exprDef.Name\sub(1,5) == "Local"
 					exprItem = with TriggerItem {
 							text:exprDef.Name
 							fontSize:18

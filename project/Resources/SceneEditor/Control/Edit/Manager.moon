@@ -334,7 +334,7 @@ Class CCNode,
 			.swallowTouches = true
 			.touchPriority = editor.levelEditControl
 			.contentSize = CCSize.zero
-			.position = oVec2 95-18,height/2-156/2
+			.position = oVec2 95-4,height/2-156/2
 			\addChild yBar
 			\addChild oLine {
 					oVec2 0,0

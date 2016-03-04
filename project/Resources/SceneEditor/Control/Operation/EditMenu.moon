@@ -441,7 +441,7 @@ Class EditMenuView,
 							child.face.scaleY = 0
 							child.face\perform oScale 0.3,1,1,oEase.OutBack
 					posY -= 60
-				elseif child.data
+				elseif child.data -- data is parentButton
 					child.position = child.data.position-oVec2(25,25)
 			@itemArea.viewSize = CCSize 70,@itemArea.height-posY-35
 			@itemArea\scrollToPosY firstItem.positionY

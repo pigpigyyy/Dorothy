@@ -7,6 +7,8 @@
 	<Import Module="Control.Basic.ScrollArea"/>
 	<Import Module="Control.Basic.GroupButton"/>
 
+	<PickPanel Name="pickPanel" Width="195" Height="80" Ref="True"/>
+
 	<Button Name="menuBtn" X="35" Y="{ $T-35 }" Width="50" Height="50" Text="Menu" FontSize="16" Ref="True"/>
 	<Button Name="undoBtn" X="95" Y="{ $T-35 }" Width="50" Height="50" Text="Undo" FontSize="16" Ref="True"/>
 	<ScrollArea Name="itemArea" X="45" Y="{ $H/2 }" Width="90" Height="{ $H-140 }" PaddingX="0" PaddingY="50" TouchPriority="{ editor.levelEditMenu-2 }" SwallowTouches="True" Ref="True">
@@ -114,5 +116,4 @@
 	<Button Name="editBtn" X="{ $R-225 }" Y="{ $T-275 }" Width="50" Height="50" Text="Edit" FontSize="16" Ref="True"/>
 	<Button Name="zoomEditBtn" X="{ $R-35 }" Y="{ $T-95 }" Width="50" Height="50" Text="Zoom" FontSize="16" Ref="True"/>
 
-	<PickPanel Name="pickPanel" Width="195" Height="80" Ref="True"/>
 </Menu>
