@@ -61,6 +61,17 @@ Class TriggerExprView,
 		line.visible = true
 		line
 
+	updateLine:=>
+		line = @getChildByTag 1
+		if line
+			line\set {
+				oVec2 0,1
+				oVec2 @width,1
+				oVec2 @width,@height-1
+				oVec2 0,@height-1
+				oVec2 0,1
+			}
+
 	checked:property => @_checked,
 		(value)=>
 			@_checked = value
@@ -136,7 +147,7 @@ Class TriggerExprView,
 						elseif word\sub(1,1)\match "%u"
 							colorText label,start,stop-1,keywordColor
 							value = value\gsub "\\.","xx"
-					for start,stop in value\gmatch "()%b\"\"()"
+					for start,word,stop in value\gmatch "()(%b\"\")()"
 						if word == "\"InvalidName\""
 							colorText label,start,stop-1,errorColor
 						else
@@ -144,3 +155,4 @@ Class TriggerExprView,
 
 	updateText:=>
 		@text = tostring @expr if @expr
+		@updateLine!

@@ -7,7 +7,7 @@ PopupPanelView = require "View.Control.Basic.PopupPanel"
 -- [params]
 -- width,height
 Class PopupPanelView,
-	__init: (args)=>
+	__init:(args)=>
 		contentRect = CCRect.zero
 		itemRect = CCRect.zero
 		@scrollArea\setupMenuScroll @menu
@@ -15,7 +15,7 @@ Class PopupPanelView,
 		CCDirector.currentScene\addChild @,998
 		thread -> @show!
 
-	show: =>
+	show:=>
 		@perform CCSequence {
 			CCShow!
 			oOpacity 0.3,0.6,oEase.OutQuad
@@ -38,7 +38,7 @@ Class PopupPanelView,
 				@emit "Show"
 		}
 
-	hide: =>
+	hide:=>
 		@scrollArea.touchEnabled = false
 		@menu.enabled = false
 		@opMenu.enabled = false

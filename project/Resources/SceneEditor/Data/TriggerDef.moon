@@ -38,6 +38,16 @@ NewExpr = (...)->
 NewExprVal = (value)-> => setmetatable {@Name,value},@
 
 Expressions = {
+	GlobalVar: {
+		Type:"GlobalVar"
+		Group:"None"
+		Desc:"Global variable declaration and initialization."
+		ToCode:=>
+			codes = [tostring expr for expr in *@[2,]]
+			table.insert codes,1,"GlobalScope()"
+			table.concat codes,"\n"
+		Create:NewExpr!
+	}
 	Trigger: {
 		Type:"Trigger"
 		Group:"None"
@@ -115,14 +125,6 @@ Expressions = {
 		ToCode:=> "( #{ @[2] } + #{ @[3] } )"
 		Create:NewExpr "Number","Number"
 	}
-	GlobalNumber: {
-		Type:"Number"
-		TypeIgnore:false
-		Group:"Variable"
-		Desc:"Get global number named [GlobalName]."
-		ToCode:=> "g_#{ @[2] }"
-		Create:NewExpr "GlobalName"
-	}
 	String: {
 		Type:"String"
 		TypeIgnore:false
@@ -186,7 +188,7 @@ Expressions = {
 	Text: {
 		Type:"Text"
 		Group:"Special"
-		Desc:"The note text."
+		Desc:"The plain text."
 		CodeOnly:true
 		ToCode:=> "#{ @[2] }"
 		Create:NewExprVal ""
@@ -207,6 +209,14 @@ Expressions = {
 		ToCode:=> "#{ @[2] }"
 		Create:NewExprVal "InvalidName"
 	}
+	InitGlobalName: {
+		Type:"InitGlobalName"
+		Group:"Special"
+		Desc:"A name for global value."
+		CodeOnly:true
+		ToCode:=> "#{ @[2] == '' and 'InvalidName' or @[2] }"
+		Create:NewExprVal ""
+	}
 	ModelName: {
 		Type:"ModelName"
 		Group:"Special"
@@ -214,7 +224,7 @@ Expressions = {
 		CodeOnly:true
 		Item:true
 		ToCode:=> "\"#{ @[2] }\""
-		Create:NewExprVal ""
+		Create:NewExprVal "InvalidName"
 	}
 	LayerName: {
 		Type:"LayerName"
@@ -223,7 +233,7 @@ Expressions = {
 		CodeOnly:true
 		Item:true
 		ToCode:=> "\"#{ @[2] }\""
-		Create:NewExprVal ""
+		Create:NewExprVal "InvalidName"
 	}
 	SensorName: {
 		Type:"SensorName"
@@ -232,7 +242,7 @@ Expressions = {
 		CodeOnly:true
 		Item:true
 		ToCode:=> "\"#{ @[2] }\""
-		Create:NewExprVal ""
+		Create:NewExprVal "InvalidName"
 	}
 	BodyName: {
 		Type:"BodyName"
@@ -241,7 +251,7 @@ Expressions = {
 		CodeOnly:true
 		Item:true
 		ToCode:=> "\"#{ @[2] }\""
-		Create:NewExprVal ""
+		Create:NewExprVal "InvalidName"
 	}
 	ModelType: {
 		Type:"ModelType"
@@ -355,12 +365,79 @@ Expressions = {
 		ToCode:=> "#{ @[2] }"
 		Create:NewExpr "SetLocalNumber"
 	}
-	SetGlobalNumber: {
+	SetGlobal: {
 		Type:"None"
+		Group:"Variable"
+		Desc:"Do [GlobalAssign]."
+		CodeOnly:true
+		ToCode:=> "#{ @[2] }"
+		Create:NewExpr "SetGlobalNumber"
+	}
+	InitGlobalNumber: {
+		Type:"GlobalInit"
+		Group:"Variable"
+		Desc:"Init [InitGlobalName] to [Number]."
+		ToCode:=> "g_#{ @[2] } = #{ @[3] }"
+		Create:NewExpr "InitGlobalName","Number"
+	}
+	SetGlobalNumber: {
+		Type:"GlobalAssign"
 		Group:"Variable"
 		Desc:"Set [GlobalName] to [Number]."
 		ToCode:=> "g_#{ @[2] } = #{ @[3] }"
 		Create:NewExpr "GlobalName","Number"
+	}
+	GlobalNumber: {
+		Type:"Number"
+		TypeIgnore:false
+		Group:"Variable"
+		Desc:"Get global number named [GlobalName]."
+		ToCode:=> "g_#{ @[2] }"
+		Create:NewExpr "GlobalName"
+	}
+	InitGlobalModel: {
+		Type:"GlobalInit"
+		Group:"Variable"
+		Desc:"Init [InitGlobalName] to [Model]."
+		ToCode:=> "g_#{ @[2] } = #{ @[3] }"
+		Create:NewExpr "InitGlobalName","ModelByName"
+	}
+	SetGlobalModel: {
+		Type:"GlobalAssign"
+		Group:"Variable"
+		Desc:"Set [GlobalName] to [Model]."
+		ToCode:=> "g_#{ @[2] } = #{ @[3] }"
+		Create:NewExpr "GlobalName","ModelByName"
+	}
+	GlobalModel: {
+		Type:"Number"
+		TypeIgnore:false
+		Group:"Variable"
+		Desc:"Get global model named [GlobalName]."
+		ToCode:=> "g_#{ @[2] }"
+		Create:NewExpr "GlobalName"
+	}
+	InitGlobalBody: {
+		Type:"GlobalInit"
+		Group:"Variable"
+		Desc:"Init [InitGlobalName] to [Body]."
+		ToCode:=> "g_#{ @[2] } = #{ @[3] }"
+		Create:NewExpr "InitGlobalName","BodyByName"
+	}
+	SetGlobalBody: {
+		Type:"GlobalAssign"
+		Group:"Variable"
+		Desc:"Set [GlobalName] to [Body]."
+		ToCode:=> "g_#{ @[2] } = #{ @[3] }"
+		Create:NewExpr "GlobalName","BodyByName"
+	}
+	GlobalBody: {
+		Type:"Number"
+		TypeIgnore:false
+		Group:"Variable"
+		Desc:"Get global body named [GlobalName]."
+		ToCode:=> "g_#{ @[2] }"
+		Create:NewExpr "GlobalName"
 	}
 	If: {
 		Type:"None"
@@ -501,11 +578,10 @@ TriggerDef = {
 	ToCodeText:(exprData)->
 		codeMode = TriggerDef.CodeMode
 		TriggerDef.CodeMode = true
-		args = if exprData[1] == "Trigger"
-			exprData[4][2].Args
+		strs,args = if exprData[1] == "Trigger"
+			{"return\n"},exprData[4][2].Args
 		else
-			nil
-		strs = {"return\n"}
+			{},nil
 		insert = table.insert
 		rep = string.rep
 		append = (indent,str)->

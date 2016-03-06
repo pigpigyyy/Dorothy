@@ -33,9 +33,8 @@ Class PickPanelView,
 			else
 				itemName = currentItem\match "^[^%.]*"
 				item = editor.items[itemName]
-				if item
-					itemData = editor\getData item
-					emit "Scene.ViewPanel.Pick",itemData if itemData
+				itemData = item and editor\getData(item) or nil
+				emit "Scene.ViewPanel.Pick",itemData
 			@selectEvent.enabled = true
 			@itemType = itemType
 			@pickedItem = currentItem

@@ -58,16 +58,18 @@
 	</Node>
 
 	<Menu Name="opMenu" X="{ @X+panel.width/2-35 }" Y="{ @Y+@H*0.04+panel.height/2 }" Width="130" Height="60" TouchPriority="{ editor.levelExprChooser-3 }" Ref="True">
-		<CircleButton Name="backBtn" X="{ $L+30 }" Y="{ $Y }" Radius="30" Text="Back" FontSize="16" Ref="True">
+		<CircleButton Name="backBtn" X="{ backOnly and ($R-30) or ($L+30) }" Y="{ $Y }" Radius="30" Text="Back" FontSize="16" Ref="True">
 			<DrawNode>
 				<Dot X="30" Y="30" Radius="30" Color="0x22ffffff"/>
 			</DrawNode>
 		</CircleButton>
-		<CircleButton Name="okBtn" X="{ $R-30 }" Y="{ $Y }" Radius="30" Text="Confirm" FontSize="16" Ref="True">
-			<DrawNode>
-				<Dot X="30" Y="30" Radius="30" Color="0x22ffffff"/>
-			</DrawNode>
-		</CircleButton>
+		<Script>if not backOnly then</Script>
+			<CircleButton Name="okBtn" X="{ $R-30 }" Y="{ $Y }" Radius="30" Text="Confirm" FontSize="16" Ref="True">
+				<DrawNode>
+					<Dot X="30" Y="30" Radius="30" Color="0x22ffffff"/>
+				</DrawNode>
+			</CircleButton>
+		<Script>end</Script>
 	</Menu>
 
 </Node>

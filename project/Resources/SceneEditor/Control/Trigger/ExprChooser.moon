@@ -23,7 +23,7 @@ ExprChooser = Class
 		ExprChooserView args
 
 	__init:(args)=>
-		{:valueType,:expr,:parentExpr,:owner,:prev} = args
+		{:valueType,:expr,:parentExpr,:owner,:prev,:noVar,:backOnly} = args
 		@exprButtons = {}
 		@exprs = {}
 		@curGroupBtn = nil
@@ -40,7 +40,7 @@ ExprChooser = Class
 				\update!
 
 		@backBtn\slot "TapBegan",nil
-		@okBtn\slot "TapBegan",nil
+		@okBtn\slot "TapBegan",nil if @okBtn
 
 		selectGroup = (button)->
 			@curGroupBtn.checked = false unless @curGroupBtn == button
@@ -107,6 +107,8 @@ ExprChooser = Class
 										parentExpr:@curExpr
 										owner:@owner
 										prev:@
+										:noVar
+										:backOnly
 									}
 									\slot "Show",->
 										@panel.visible = false
@@ -206,8 +208,8 @@ ExprChooser = Class
 				localVarButton\emit "Tapped",localVarButton
 				@bodyMenu.activate = true
 
-		chooseItemFromScene = (itemType)->
-			localVarButton = with GroupButton {
+		editGlobalVariable = ->
+			itemButton = with GroupButton {
 					text:@curExpr[2]
 					width:math.min(200,@bodyMenu.width-20)
 					height:35
@@ -215,14 +217,32 @@ ExprChooser = Class
 				.position = oVec2 @bodyMenu.width/2,
 					@bodyLabel.positionY-@bodyLabel.height-10-.height/2
 				\slot "Tapped",->
-					@changeDisplay false
+					GlobalPanel = require "Control.Trigger.GlobalPanel"
+					with GlobalPanel owner:@
+						\slot "Result",(globalVar)->
+							itemButton.text = globalVar
+							@curExpr[2] = globalVar
+							@updatePreview!
+			@bodyMenu\addChild itemButton
+			itemButton\emit "Tapped"
+
+		chooseItemFromScene = (itemType)->
+			itemButton = with GroupButton {
+					text:@curExpr[2]
+					width:math.min(200,@bodyMenu.width-20)
+					height:35
+				}
+				.position = oVec2 @bodyMenu.width/2,
+					@bodyLabel.positionY-@bodyLabel.height-10-.height/2
+				\slot "Tapped",->
+					emit "Scene.Trigger.Close"
 					emit "Scene.Trigger.Picking",{itemType,@curExpr[2]}
 				\gslot "Scene.Trigger.Picked",(result)->
 					return unless result
-					localVarButton.text = result
+					itemButton.text = result
 					@curExpr[2] = result
 					@updatePreview!
-			@bodyMenu\addChild localVarButton
+			@bodyMenu\addChild itemButton
 
 		pickPointFromScene = ->
 			localVarButton = with GroupButton {
@@ -233,7 +253,7 @@ ExprChooser = Class
 				.position = oVec2 @bodyMenu.width/2,
 					@bodyLabel.positionY-@bodyLabel.height-10-.height/2
 				\slot "Tapped",->
-					@changeDisplay false
+					emit "Scene.Trigger.Close"
 					emit "Scene.Trigger.Picking",{"Point",oVec2(@curExpr[2][2],@curExpr[3][2])}
 				\gslot "Scene.Trigger.Picked",(result)->
 					@curExpr[2][2] = result.x
@@ -242,32 +262,48 @@ ExprChooser = Class
 						updateContent @curExprBtn.exprDef
 			@bodyMenu\addChild localVarButton
 
-		editAnimation = ->
+		editAnimationOrLook = ->
+			selectItem = (modelFile)->
+				return if modelFile == ""
+				items = switch @curExpr[1]
+					when "Animation" then oCache.Model\getAnimationNames(modelFile) or {}
+					when "Look" then oCache.Model\getLookNames(modelFile) or {}
+				itemButton = with GroupButton {
+						text:@curExpr[2]
+						width:math.min(170,@bodyMenu.width-20)
+						height:35
+					}
+					.position = oVec2 @bodyMenu.width/2,
+						@bodyLabel.positionY-@bodyLabel.height/2-20-.height/2
+					\slot "Tapped",(button)->
+						with SelectionPanel {
+								title:@curExpr[1]
+								width:150
+								items:items
+								itemHeight:40
+								fontSize:20
+							}
+							\slot "Selected",(item)->
+								return unless item
+								button.text = item
+								@curExpr[2] = item
+								@updatePreview!
+				@bodyMenu\addChild itemButton
+				if not @bodyMenu.activate
+					itemButton\emit "Tapped",itemButton
+					@bodyMenu.activate = true
+
 			switch @parentExpr[1]
 				when "CreateModel"
-					modelFile = @parentExpr[2][2]
-					animations = oCache.Model\getAnimationNames modelFile
-					@bodyMenu\addChild with GroupButton {
-							text:@curExpr[2]
-							width:math.min(170,@bodyMenu.width-20)
-							height:35
-						}
-						.position = oVec2 @bodyMenu.width/2,
-							@bodyLabel.positionY-@bodyLabel.height/2-20-.height/2
-						\slot "Tapped",(button)->
-							with SelectionPanel {
-									title:"Animation"
-									width:150
-									items:animations
-									itemHeight:40
-									fontSize:20
-								}
-								\slot "Selected",(item)->
-									return unless item
-									button.text = item
-									@curExpr[2] = item
-									@updatePreview!
+					selectItem @parentExpr[2][2]
 				when "PlayAnimation"
+					if @parentExpr[3][1] == "ModelByName"
+						modelName = @parentExpr[3][2][2]
+						model = editor.items[modelName]
+						if model
+							modelData = editor\getData model
+							selectItem modelData.file
+							return
 					inputed = (_,textBox)->
 						text = textBox.text
 						@curExpr[2] = text\gsub "\"","\\\""
@@ -283,6 +319,45 @@ ExprChooser = Class
 						.text = tostring @curExpr[2]
 						.textField\slot "InputInserted",inputed
 						.textField\slot "InputDeleted",inputed
+
+		editNumber = ->
+			inputed = (_,textBox)->
+				@curExpr[2] = tonumber(textBox.text) or 0
+				@updatePreview!
+			@bodyMenu\addChild with TextBox {
+					x:@bodyMenu.width/2
+					y:@bodyLabel.positionY-@bodyLabel.height/2-20-20
+					width:170
+					height:35
+					fontSize:17
+					limit:15
+				}
+				.text = tostring @curExpr[2]
+				.textField\slot "InputInserting",(addText,textBox)->
+					text = textBox.text..addText
+					number = tonumber text
+					addText == "\n" or number ~= nil or text == "-"
+				.textField\slot "InputInserted",inputed
+				.textField\slot "InputDeleted",inputed
+
+		editString = ->
+			inputed = (_,textBox)->
+				text = textBox.text
+				@curExpr[2] = text\gsub "\"","\\\""
+				@updatePreview!
+				if @curExpr[1] == "TriggerName"
+					emit "Scene.Trigger.ChangeName",text
+			@bodyMenu\addChild with TextBox {
+					x:@bodyMenu.width/2
+					y:@bodyLabel.positionY-@bodyLabel.height/2-20-20
+					width:260
+					height:35
+					fontSize:17
+					limit:15
+				}
+				.text = tostring @curExpr[2]
+				.textField\slot "InputInserted",inputed
+				.textField\slot "InputDeleted",inputed
 
 		updateContent = (exprDef)->
 			@curExpr = @exprs[exprDef]
@@ -310,51 +385,15 @@ ExprChooser = Class
 				when "LocalName"
 					editLocalVariable @parentExpr[1]\match "Local(.*)"
 				when "GlobalName"
-					switch @parentExpr[1]
-						when "SetGlobalNumber","GlobalNumber"
-							-- TODO: handle global variables
-							print @parentExpr[1]
-				when "Animation"
-					editAnimation!
+					editGlobalVariable!
+				when "Animation","Look"
+					editAnimationOrLook!
 				when "Point"
 					pickPointFromScene!
 				when "Number"
-					inputed = (_,textBox)->
-						@curExpr[2] = tonumber(textBox.text) or 0
-						@updatePreview!
-					@bodyMenu\addChild with TextBox {
-							x:@bodyMenu.width/2
-							y:@bodyLabel.positionY-@bodyLabel.height/2-20-20
-							width:170
-							height:35
-							fontSize:17
-							limit:15
-						}
-						.text = tostring @curExpr[2]
-						.textField\slot "InputInserting",(addText,textBox)->
-							text = textBox.text..addText
-							number = tonumber text
-							addText == "\n" or number ~= nil or text == "-"
-						.textField\slot "InputInserted",inputed
-						.textField\slot "InputDeleted",inputed
-				when "String","TriggerName","Text"
-					inputed = (_,textBox)->
-						text = textBox.text
-						@curExpr[2] = text\gsub "\"","\\\""
-						@updatePreview!
-						if @curExpr[1] == "TriggerName"
-							emit "Scene.Trigger.ChangeName",text
-					@bodyMenu\addChild with TextBox {
-							x:@bodyMenu.width/2
-							y:@bodyLabel.positionY-@bodyLabel.height/2-20-20
-							width:260
-							height:35
-							fontSize:17
-							limit:15
-						}
-						.text = tostring @curExpr[2]
-						.textField\slot "InputInserted",inputed
-						.textField\slot "InputDeleted",inputed
+					editNumber!
+				when "String","TriggerName","Text","InitGlobalName"
+					editString!
 				else
 					if @curExpr.Item
 						chooseItemFromScene @curExpr[1]\sub 1,-5 -- "TypeName"\sub(1,-5) == "Type"
@@ -371,20 +410,18 @@ ExprChooser = Class
 		groupNames = [groupName for groupName in pairs groups]
 		table.sort groupNames
 
-		allowUseLocal = @owner\isInAction! or @owner\isInCondition!
+		allowUseLocal = @owner and (@owner\isInAction! or @owner\isInCondition!)
 
 		for groupName in *groupNames
-			@catMenu\addChild with TriggerItem {
-					text:groupName
-					fontSize:18
-					width:80
-					height:35
-				}
-				\slot "Tapped",selectGroup
+			hasGroupItem = false
 			for exprDef in *TriggerDef.Groups[groupName]
 				if exprDefSet[exprDef]
 					-- Local variable is not allowed to appear outside the actions and conditions
-					continue if not allowUseLocal and exprDef.Name\sub(1,5) == "Local"
+					exprName = exprDef.Name
+					isGetLocal = exprName\match "^Local"
+					isGetGlobal = exprName\match "^Global"
+					isGetVar = isGetLocal or isGetGlobal
+					continue if (not allowUseLocal and isGetLocal) or (noVar and isGetVar)
 					exprItem = with TriggerItem {
 							text:exprDef.Name
 							fontSize:18
@@ -395,6 +432,15 @@ ExprChooser = Class
 						\slot "Tapped",selectExpr
 					@exprButtons[exprDef] = exprItem
 					@apiMenu\addChild exprItem
+					hasGroupItem = true
+			if hasGroupItem
+				@catMenu\addChild with TriggerItem {
+						text:groupName
+						fontSize:18
+						width:80
+						height:35
+					}
+					\slot "Tapped",selectGroup
 
 		@catScrollArea\setupMenuScroll @catMenu
 		@catScrollArea.viewSize = @catMenu\alignItems!
@@ -415,20 +461,22 @@ ExprChooser = Class
 			@curGroupBtn = @catMenu.children[1]
 			@curGroupBtn\makeChecked!
 
-		@okBtn\slot "Tapped",->
-			@@level -= 1
-			@emit "Result",@curExpr
-			@@preview.parent\removeChild @@preview,false
-			@addChild @@preview,-1
-			@previewItem = @@preview
-			@hide!
-			@prev\finishEdit! if @prev
+		if not backOnly
+			@okBtn\slot "Tapped",->
+				@@level -= 1
+				@emit "Result",@curExpr
+				@@preview.parent\removeChild @@preview,false
+				@addChild @@preview,-1
+				@previewItem = @@preview
+				@hide!
+				@prev\finishEdit! if @prev
 
 		@backBtn\slot "Tapped",->
 			@@level -= 1
 			@emit "Result",@curExpr
 			@hide!
 
+		@gslot "Scene.Trigger.Close",-> @changeDisplay false if @visible
 		@gslot "Scene.Trigger.Open",-> @changeDisplay true
 
 		editor\addChild @
@@ -469,7 +517,6 @@ ExprChooser = Class
 				oOpacity 0.3,0,oEase.OutQuad
 				CCHide!
 			}
-			emit "Scene.Trigger.Close"
 
 	updatePreview:=>
 		@emit "Result",@curExpr if @@level > 2
@@ -488,10 +535,10 @@ ExprChooser = Class
 				.scaleY = 0
 				\perform oScale 0.3,1,1,oEase.OutQuad
 		showBtn @backBtn
-		showBtn @okBtn
+		showBtn @okBtn if @okBtn
 
 	hideButtons:=>
-		@okBtn\perform oScale 0.3,0,0,oEase.OutQuad
+		@okBtn\perform oScale 0.3,0,0,oEase.OutQuad if @okBtn
 		@backBtn\perform oScale 0.3,0,0,oEase.OutQuad
 
 	show:=>

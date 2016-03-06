@@ -336,8 +336,13 @@ Class ViewPanelView,
 			emit "Scene.ViewPanel.Select",nil
 
 		@gslot "Scene.ViewPanel.Pick",(itemData)->
+			if not itemData and @_selectedItem
+				@_selectedItem.checked = false
+				itemTapped @_selectedItem
+				return
 			item = @items[itemData]
-			if item and not item.checked
+			return unless item
+			if not item.checked
 				item.checked = true
 				itemTapped item
 			if not item.visible
