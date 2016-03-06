@@ -7,19 +7,12 @@ import Expressions,SetExprMeta,ToEditText from require "Data.TriggerDef"
 
 Class GlobalPanelView,
 	__init:(args)=>
-		{:owner} = args
+		{:owner,:filterType} = args
 		@curExpr = nil
 		@selectedItem = nil
 		@newBtn = nil
 		@curIndex = nil
-
-		globalVarFile = editor.logicFullPath.."variable.global"
-		@globalExpr = if oContent\exist globalVarFile
-			SetExprMeta dofile globalVarFile
-		else
-			expr = Expressions.GlobalVar\Create!
-			oContent\saveToFile globalVarFile,ToEditText(expr)
-			expr
+		@globalExpr = editor\getGlobalExpr!
 
 		selectVarItem = (exprItem)->
 			@selectedItem.checked = false if @selectedItem
@@ -28,11 +21,24 @@ Class GlobalPanelView,
 				@editMenu.visible = true
 				@editMenu.transformTarget = exprItem
 				@editMenu.position = oVec2 exprItem.width,0
+				if filterType
+					@pickBtn.visible = exprItem.expr[3].Type == filterType
+				else
+					@pickBtn.visible = false
 			else
 				@editMenu.visible = false
 				@editMenu.transformTarget = nil
 
 		updatePanelSize = ->
+			children = @menu.children
+			items = [child for child in *children[2,]]
+			table.sort items,(a,b)-> a.expr[2][2] < b.expr[2][2]
+			@globalExpr = Expressions.GlobalVar\Create!
+			for i = 1,#items
+				item = items[i]
+				item.lineNumber = i
+				children[i+1] = item
+				@globalExpr[i+1] = item.expr
 			offset = @scrollArea.offset
 			@scrollArea.offset = oVec2.zero
 			size = @menu\alignItemsVertically 2
@@ -142,12 +148,6 @@ Class GlobalPanelView,
 			@selectedItem.checked = false
 			selectVarItem @selectedItem
 			@menu\removeChild item
-			lineNumber = 1
-			for child in *@menu.children
-				if child.__class == TriggerExpr
-					child.lineNumber = lineNumber
-					lineNumber += 1
-			updatePanelSize!
 			index -= 1
 			if index > 1
 				item = @menu.children[index]
@@ -159,13 +159,13 @@ Class GlobalPanelView,
 				selectVarItem item
 			else
 				addTheNewButton!
+			updatePanelSize!
 
 		@pickBtn\slot "Tapped",->
-			oContent\saveToFile globalVarFile,ToEditText(@globalExpr)
+			editor\saveGlobalExpr!
 			@hide!
 			name = @selectedItem.expr[2][2]
 			name = name == "" and "InvalidName" or name
 			@emit "Result",name
 
-		@closeBtn\slot "Tapped",->
-			oContent\saveToFile globalVarFile,ToEditText(@globalExpr)
+		@closeBtn\slot "Tapped",-> editor\saveGlobalExpr!

@@ -218,7 +218,11 @@ ExprChooser = Class
 					@bodyLabel.positionY-@bodyLabel.height-10-.height/2
 				\slot "Tapped",->
 					GlobalPanel = require "Control.Trigger.GlobalPanel"
-					with GlobalPanel owner:@
+					filterType = if @parentExpr[1]\match "^Global"
+						@parentExpr.Type
+					else
+						@parentExpr[3].Type
+					with GlobalPanel owner:@,filterType:filterType
 						\slot "Result",(globalVar)->
 							itemButton.text = globalVar
 							@curExpr[2] = globalVar

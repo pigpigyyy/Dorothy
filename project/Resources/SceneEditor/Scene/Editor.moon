@@ -4,6 +4,7 @@ SelectionPanel = require "Control.Basic.SelectionPanel"
 Model = require "Data.Model"
 Reference = require "Data.Reference"
 CCScene = require "Lib.CCSceneEx"
+TriggerDef = require "Data.TriggerDef"
 import Path from require "Data.Utils"
 require "Lib.oBodyEx"
 
@@ -24,6 +25,7 @@ Class EditorView,
 		@_currentSceneFile = nil
 		@selectedType = nil
 		@selectedItem = nil
+		@globalExpr = nil
 		@origin = oVec2 width/2,height/2
 		@offset = oVec2 60+(width-300)/2,height/2
 		@scale = 1
@@ -270,6 +272,7 @@ Class EditorView,
 			else
 				@_gameFullPath = nil
 			@currentSceneFile = nil
+			@globalExpr = nil
 			Reference.update!
 
 	eachSceneItem:(handler)=>
@@ -907,3 +910,18 @@ Class EditorView,
 								CCCall -> scene.UILayer.transformTarget = nil
 							}
 							subEditor.viewArea.viewNode.angle = 0
+
+	getGlobalExpr:=>
+		if not @globalExpr
+			globalVarFile = editor.logicFullPath.."variable.global"
+			@globalExpr = if oContent\exist globalVarFile
+				TriggerDef.SetExprMeta dofile globalVarFile
+			else
+				expr = Expressions.GlobalVar\Create!
+				oContent\saveToFile globalVarFile,TriggerDef.ToEditText(expr)
+				expr
+		@globalExpr
+
+	saveGlobalExpr:=>
+		globalVarFile = editor.logicFullPath.."variable.global"
+		oContent\saveToFile globalVarFile,TriggerDef.ToEditText(@globalExpr)

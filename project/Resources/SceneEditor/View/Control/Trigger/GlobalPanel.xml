@@ -3,8 +3,11 @@
 	<Import Module="Control.Basic.Button"/>
 
 	<Item Name="menu">
-		<Node Width="{ $W }" Height="40">
-			<LabelTTF Text="Global Variables" X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="24" AntiAlias="False" Color="0x00ffff"/>
+		<Node Width="{ $W }" Height="{ filterType and 80 or 60 }">
+			<LabelTTF Text="Global Variables" X="{ $X }" Y="{ $T-30 }" FontName="Arial" FontSize="24" AntiAlias="False" Color="0x00ffff"/>
+			<Script>if filterType then</Script>
+				<LabelTTF Text="{ 'Type to pick: '..filterType }" X="{ $X }" Y="{ $B+20 }" FontName="Arial" FontSize="20" AntiAlias="False" Color="0x00ffff"/>
+			<Script>end</Script>
 		</Node>
 	</Item>
 

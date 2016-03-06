@@ -410,7 +410,7 @@ Expressions = {
 		Create:NewExpr "GlobalName","ModelByName"
 	}
 	GlobalModel: {
-		Type:"Number"
+		Type:"Model"
 		TypeIgnore:false
 		Group:"Variable"
 		Desc:"Get global model named [GlobalName]."
@@ -432,7 +432,7 @@ Expressions = {
 		Create:NewExpr "GlobalName","BodyByName"
 	}
 	GlobalBody: {
-		Type:"Number"
+		Type:"Body"
 		TypeIgnore:false
 		Group:"Variable"
 		Desc:"Get global body named [GlobalName]."
