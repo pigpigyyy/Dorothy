@@ -1,6 +1,7 @@
 Dorothy!
 TriggerExprView = require "View.Control.Trigger.TriggerExpr"
 TriggerDef = require "Data.TriggerDef"
+SolidRect = require "View.Shape.SolidRect"
 import Set from require "Data.Utils"
 
 keywords = Set {"and", "break", "do", "else", "elseif", "end", "false", "for", "function",
@@ -17,6 +18,9 @@ colorText = (label,start,stop,color)->
 	for i = start,stop
 		char = label\getChar i
 		char.color = color if char
+
+LineTag = 1
+ErrorTag = 2
 
 Class TriggerExprView,
 	__init:(args)=>
@@ -48,7 +52,7 @@ Class TriggerExprView,
 				}
 
 	addLazyLine:=>
-		line = @getChildByTag 1
+		line = @getChildByTag LineTag
 		if not line
 			line = oLine {
 				oVec2 0,1
@@ -57,12 +61,12 @@ Class TriggerExprView,
 				oVec2 0,@height-1
 				oVec2 0,1
 			},ccColor4 @expr and 0xff00ffff or 0xff0080
-			@addChild line,0,1
+			@addChild line,0,LineTag
 		line.visible = true
 		line
 
 	updateLine:=>
-		line = @getChildByTag 1
+		line = @getChildByTag LineTag
 		if line
 			line\set {
 				oVec2 0,1
@@ -160,3 +164,17 @@ Class TriggerExprView,
 	updateText:=>
 		@text = tostring @expr if @expr
 		@updateLine!
+
+	markError:(isError)=>
+		if isError
+			if not @getChildByTag ErrorTag
+				@addChild with SolidRect {
+						width:30
+						height:@height-10
+						color:0x88ff0080
+					}
+					.position = oVec2 5,5
+					.tag = ErrorTag
+					.zOrder = -1
+		else
+			@removeChildByTag ErrorTag

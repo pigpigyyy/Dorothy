@@ -93,18 +93,22 @@ Class ExprEditorView,
 
 		refreshLocalVars = ->
 			if @actionItem
+				args = @exprData[4][2].Args
 				nextExpr = (expr)->
 					return unless "table" == type expr
-					exprName = expr[1]
-					if exprName ~= "SetLocal" and exprName\match "^SetLocal"
-						varType = exprName\sub 9,-1
-						varName = expr[2][2]
-						if varName ~= "InvalidName" and not @localSet[varName]
-							if not (@exprData[4][2].Args and @exprData[4][2].Args[varName])
-								@localSet[varName] = varType
-								table.insert @locals,varName
-					for i = 2,#expr
-						nextExpr expr[i]
+					switch expr[1]
+						when "SetLocal"
+							assignExpr = expr[2]
+							varType = assignExpr[1]\sub 9,-1
+							varName = assignExpr[2][2]
+							if varName ~= "InvalidName"
+								if not (args and args[varName])
+									if not @localSet[varName]
+										table.insert @locals,varName
+									@localSet[varName] = varType
+						else
+							for i = 2,#expr
+								nextExpr expr[i]
 				@locals = {}
 				@localSet = {}
 				nextExpr @actionItem.expr
@@ -141,7 +145,8 @@ Class ExprEditorView,
 						.actionExpr = expr
 					for i = 2,#expr
 						nextExpr expr,i,indent+1
-					@createExprItem mode("),"," "),indent
+					with @createExprItem mode("),"," "),indent
+						.itemType = "End"
 					indent -= 1
 				when "Condition"
 					@conditionItem = with @createExprItem mode(tostring(expr),"Condition"),indent,expr
@@ -149,7 +154,8 @@ Class ExprEditorView,
 						.actionExpr = expr
 					for i = 2,#expr
 						nextExpr expr,i,indent+1
-					@createExprItem mode("end ),"," "),indent
+					with @createExprItem mode("end ),"," "),indent
+						.itemType = "End"
 				when "Action"
 					@actionItem = with @createExprItem mode(tostring(expr),"Action"),indent,expr
 						.itemType = "Start"
@@ -168,7 +174,8 @@ Class ExprEditorView,
 							child = children[i]
 							child.lineNumber = i 
 							child.positionY -= moveY
-					@createExprItem mode("end )"," "),indent
+					with @createExprItem mode("end )"," "),indent
+						.itemType = "End"
 				when "If"
 					with @createExprItem tostring(expr),indent,expr,parentExpr,index
 						.itemType = "Start"
@@ -195,10 +202,11 @@ Class ExprEditorView,
 					exprName = assignExpr[1]
 					varType = exprName\sub 9,-1
 					varName = assignExpr[2][2]
-					if varName ~= "InvalidName" and not @localSet[varName]
+					if varName ~= "InvalidName"
 						if not (@exprData[4][2].Args and @exprData[4][2].Args[varName])
+							if not @localSet[varName]
+								table.insert @locals,varName
 							@localSet[varName] = varType
-							table.insert @locals,varName
 					@createExprItem tostring(expr),indent,expr,parentExpr,index
 				else
 					@createExprItem tostring(expr),indent,expr,parentExpr,index
@@ -318,7 +326,7 @@ Class ExprEditorView,
 									@filename = Path.getPath(@filename)..@newTriggerName..".trigger"
 								@newTriggerName = nil
 							selectedExprItem.text = tostring expr
-						@notifyEdit!
+							@notifyEdit!
 
 		insertNewExpr = (after)-> ->
 			selectedExprItem = @_selectedExprItem
@@ -507,6 +515,8 @@ Class ExprEditorView,
 			if @codeMode ~= codeMode
 				@codeMode = codeMode
 				@loadExpr @exprData
+			else
+				@lintCode!
 
 		@gslot "Scene.Trigger.ChangeName",(newName)-> @newTriggerName = newName
 
@@ -515,6 +525,7 @@ Class ExprEditorView,
 		for i = 1,#children
 			children[i].lineNumber = i
 		@modified = true
+		@lintCode!
 		emit "Scene.Trigger.Edited",@filename
 
 	createExprItem:(text,indent,expr,parentExpr,index)=>
@@ -561,6 +572,7 @@ Class ExprEditorView,
 			@nextExpr @exprData,0
 			@asyncLoad = false
 			@triggerMenu.enabled = true
+			@lintCode!
 		@exprData
 
 	codeMode:property => @_codeMode,
@@ -601,7 +613,7 @@ Class ExprEditorView,
 					k
 				else continue
 		else {}
-		if targetExpr[1] == "Condition" or parentExpr[1] == "Condition"
+		if targetExpr[1] == "Condition" or (parentExpr and parentExpr[1] == "Condition")
 			return localVars
 		varScope = {}
 		nextExpr = (expr)->
@@ -682,3 +694,95 @@ Class ExprEditorView,
 			@touchEnabled = value
 			@triggerMenu.enabled = value
 			@editMenu.enabled = value
+
+	lintCode:=>
+		return unless @triggerMenu.children
+		print "Lint Code!"
+		errors = nil
+		args = @exprData[4][2].Args
+		varScope = {args and {k,v\match("^%a*") for k,v in pairs args} or nil}
+		varInScope = (varName)->
+			for scope in *varScope
+				varType = scope[varName]
+				return varType if varType
+			return nil
+
+		globals = {expr[2][2],expr[3].Type for expr in *editor\getGlobalExpr![2,]}
+		nextExpr = (expr,parentExpr)->
+			return if "table" ~= type expr
+			switch expr[1]
+				when "Trigger"
+					nextExpr expr[3]
+				when "Condition","Action"
+					return
+				when "SetLocal"
+					assignExpr = expr[2]
+					varType = assignExpr[1]\match "^SetLocal(.*)"
+					varName = assignExpr[2][2]
+					scope = varScope[#varScope]
+					if varName == "InvalidName"
+						table.insert errors,"Used variable of invalid name."
+					else
+						scope[varName] = varType
+					nextExpr assignExpr[3],assignExpr
+				when "SetGlobal"
+					assignExpr = expr[2]
+					varName = assignExpr[2][2]
+					if varName == "InvalidName"
+						table.insert errors,"Used variable of invalid name."
+					varType = assignExpr[1]\match "^SetGlobal(.*)"
+					globalType = globals[varName]
+					if globalType
+						if globalType ~= varType
+							table.insert errors,"Assign global variable \"g_#{varName[2]}\" of type \"#{globalType}\" to value of type \"#{varType}\"."
+					else
+						table.insert errors,"Assign an uninitialized global variable \"g_#{varName}\" to value of type \"#{varType}\"."
+					nextExpr assignExpr[3],assignExpr
+				when "LocalName"
+					if expr[2] == "InvalidName"
+						table.insert errors,"Used variable of invalid name."
+						return
+					localType = varInScope expr[2]
+					varType = parentExpr[1]\match "^Local(.*)"
+					if localType
+						if localType ~= varType
+							table.insert errors,"Local variable \"#{expr[2]}\" of type \"#{localType}\" is used as type \"#{varType}\"."
+					else
+						table.insert errors,"Local variable \"#{expr[2]}\" of type \"#{varType}\" is used without initialization."
+				when "GlobalName"
+					if expr[2] == "InvalidName"
+						table.insert errors,"Used variable of invalid name."
+						return
+					globalType = globals[expr[2]]
+					varType = parentExpr[1]\match "^Global(.*)"
+					if globalType
+						if globalType ~= varType
+							table.insert errors,"Global variable \"g_#{expr[2]}\" of type \"#{globalType}\" is used as type \"#{varType}\"."
+					else
+						table.insert errors,"Global variable \"g_#{expr[2]}\" of type \"#{varType}\" is used without initialization."
+				else
+					for subExpr in *expr[2,]
+						nextExpr subExpr,expr
+
+		checkError = (item)->
+			if item.expr
+				errors = {} if errors == nil or #errors > 0
+				nextExpr item.expr,item.parentExpr
+				if #errors > 0
+					item\markError true
+					for err in *errors
+						print item.lineNumber,err
+				else
+					item\markError false
+
+		for item in *@triggerMenu.children
+			switch item.itemType
+				when "Start"
+					table.insert varScope,{}
+					checkError item
+				when "Mid"
+					varScope[#varScope] = {}
+				when "End"
+					table.remove varScope
+				else
+					checkError item
