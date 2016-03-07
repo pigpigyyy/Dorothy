@@ -137,6 +137,8 @@ Class TriggerExprView,
 							colorText label,start,stop-1,errorColor
 						else
 							colorText label,start,stop-1,classColor
+					index = value\find "%-%-"
+					colorText label,index,#value,noteColor if index
 			else
 				if value\match "^%s*Note"
 					colorText label,1,#value,noteColor
@@ -152,6 +154,8 @@ Class TriggerExprView,
 							colorText label,start,stop-1,errorColor
 						else
 							colorText label,start,stop-1,classColor
+					index = value\find "note %b()"
+					colorText label,index,#value,noteColor if index
 
 	updateText:=>
 		@text = tostring @expr if @expr

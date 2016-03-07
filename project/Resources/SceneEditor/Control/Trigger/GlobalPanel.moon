@@ -25,6 +25,11 @@ Class GlobalPanelView,
 					@pickBtn.visible = exprItem.expr[3].Type == filterType
 				else
 					@pickBtn.visible = false
+				for item in *@editMenu.children
+					with item
+						if .visible
+							.scaleX,.scaleY = 0,0
+							\perform oScale 0.3,1,1,oEase.OutQuad
 			else
 				@editMenu.visible = false
 				@editMenu.transformTarget = nil
@@ -33,7 +38,6 @@ Class GlobalPanelView,
 			children = @menu.children
 			items = [child for child in *children[2,]]
 			table.sort items,(a,b)-> a.expr[2][2] < b.expr[2][2]
-			@globalExpr = Expressions.GlobalVar\Create!
 			for i = 1,#items
 				item = items[i]
 				item.lineNumber = i
@@ -129,6 +133,8 @@ Class GlobalPanelView,
 					ExprChooser.preview\update!
 					@selectedItem.expr = newExpr
 					@selectedItem\updateText!
+					if filterType
+						@pickBtn.visible = newExpr[3].Type == filterType
 				\slot "Hide",->
 					showItem owner.panel
 					showItem owner.opMenu

@@ -606,7 +606,6 @@ Class ExprEditorView,
 		varScope = {}
 		nextExpr = (expr)->
 			return false unless "table" == type expr
-			return true if expr == targetExpr
 			switch expr[1]
 				when "SetLocal"
 					assignExpr = expr[2]
@@ -620,13 +619,13 @@ Class ExprEditorView,
 					table.insert varScope,{}
 					for i = 2,#expr
 						if nextExpr expr[i]
-							return true
+							return true -- true to stop search
 					table.remove varScope
 				else
 					for i = 2,#expr
 						if nextExpr expr[i]
 							return true
-			false
+			expr == targetExpr
 		table.insert varScope,{}
 		nextExpr @actionItem.expr
 		for scope in *varScope

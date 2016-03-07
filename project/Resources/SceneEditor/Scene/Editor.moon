@@ -917,7 +917,7 @@ Class EditorView,
 			@globalExpr = if oContent\exist globalVarFile
 				TriggerDef.SetExprMeta dofile globalVarFile
 			else
-				expr = Expressions.GlobalVar\Create!
+				expr = TriggerDef.Expressions.GlobalVar\Create!
 				oContent\saveToFile globalVarFile,TriggerDef.ToEditText(expr)
 				expr
 		@globalExpr

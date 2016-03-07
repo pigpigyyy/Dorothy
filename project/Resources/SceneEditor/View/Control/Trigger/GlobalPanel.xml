@@ -1,6 +1,7 @@
-<PopupPanel X="{ @X }" Y="{ @Y }" Width="400" Height="{ @H*0.6 }">
+<PopupPanel X="{ @X }" Y="{ @Y }" Width="500" Height="{ @H*0.6 }">
 	<Import Module="Control.Basic.PopupPanel"/>
 	<Import Module="Control.Basic.Button"/>
+	<Import Module="View.Shape.SolidRect"/>
 
 	<Item Name="menu">
 		<Node Width="{ $W }" Height="{ filterType and 80 or 60 }">
@@ -12,6 +13,7 @@
 	</Item>
 
 	<Item Name="scrollArea">
+		<SolidRect X="10" Width="40" Height="{ $H }" Color="0x2200ffff"/>
 		<Item Name="view">
 			<Menu Name="editMenu" AnchorX="1" AnchorY="1" Width="250" Height="70" AlignItems="10" TouchPriority="{ editor.levelItemPanel-2 }" Visible="False" Ref="True">
 				<Button Name="pickBtn" Text="Pick" Width="50" Height="50" FontSize="16" BackColor="0xca000000" Ref="True"/>

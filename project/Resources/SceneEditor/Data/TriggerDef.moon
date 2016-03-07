@@ -376,9 +376,9 @@ Expressions = {
 	InitGlobalNumber: {
 		Type:"GlobalInit"
 		Group:"Variable"
-		Desc:"Init [InitGlobalName] to [Number]."
-		ToCode:=> "g_#{ @[2] } = #{ @[3] }"
-		Create:NewExpr "InitGlobalName","Number"
+		Desc:"Init [InitGlobalName] to [Number] with note [Text]."
+		ToCode:=> "g_#{ @[2] } = #{ @[3] }"..(tostring(@[4]) == "" and "" or " -- #{ @[4] }")
+		Create:NewExpr "InitGlobalName","Number","Text"
 	}
 	SetGlobalNumber: {
 		Type:"GlobalAssign"
@@ -398,9 +398,9 @@ Expressions = {
 	InitGlobalModel: {
 		Type:"GlobalInit"
 		Group:"Variable"
-		Desc:"Init [InitGlobalName] to [Model]."
-		ToCode:=> "g_#{ @[2] } = #{ @[3] }"
-		Create:NewExpr "InitGlobalName","ModelByName"
+		Desc:"Init [InitGlobalName] to [Model] with note [Text]."
+		ToCode:=> "g_#{ @[2] } = #{ @[3] }"..(tostring(@[4]) == "" and "" or " -- #{ @[4] }")
+		Create:NewExpr "InitGlobalName","ModelByName","Text"
 	}
 	SetGlobalModel: {
 		Type:"GlobalAssign"
@@ -420,9 +420,9 @@ Expressions = {
 	InitGlobalBody: {
 		Type:"GlobalInit"
 		Group:"Variable"
-		Desc:"Init [InitGlobalName] to [Body]."
-		ToCode:=> "g_#{ @[2] } = #{ @[3] }"
-		Create:NewExpr "InitGlobalName","BodyByName"
+		Desc:"Init [InitGlobalName] to [Body] with note [Text]."
+		ToCode:=> "g_#{ @[2] } = #{ @[3] }"..(tostring(@[4]) == "" and "" or " -- #{ @[4] }")
+		Create:NewExpr "InitGlobalName","BodyByName","Text"
 	}
 	SetGlobalBody: {
 		Type:"GlobalAssign"
