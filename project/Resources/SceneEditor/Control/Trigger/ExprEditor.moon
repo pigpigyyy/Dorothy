@@ -553,7 +553,7 @@ Class ExprEditorView,
 			.display = displayButton
 			\slot "Tapped",->
 				{:width,:height} = CCDirector.winSize
-				panelWidth = 300
+				panelWidth = 350
 				with PopupPanel {
 						x:width/2
 						y:height/2
@@ -561,13 +561,13 @@ Class ExprEditorView,
 						height:300
 					}
 					.menu\addChild with CCNode!
-						.contentSize = CCSize panelWidth-20,50
-						\addChild with CCLabelTTF "Error in line #{@_selectedExprItem.lineNumber}","Arial",24
+						.contentSize = CCSize panelWidth-20,40
+						\addChild with CCLabelTTF "Error In Line #{@_selectedExprItem.lineNumber}","Arial",24
 							.color = ccColor3 0x00ffff
-							.position = oVec2 (panelWidth-20)/2,25
-					.menu\addChild with TriggerExpr text:@_selectedExprItem.errorInfo,width:panelWidth-20
+							.position = oVec2 (panelWidth-20)/2,10
+					.menu\addChild with TriggerExpr text:@_selectedExprItem.errorInfo,width:panelWidth-40
 						.enabled = false
-					.scrollArea.viewSize = .menu\alignItems!
+					.scrollArea.viewSize = .menu\alignItemsVertically!
 
 		@slot "Entered",->
 			codeMode = (CCUserDefault.TriggerMode == "Code")
@@ -766,7 +766,7 @@ Class ExprEditorView,
 
 		checkError = (item)->
 			if item.expr
-				errorInfo = lintFunc item.expr,item.parentExpr
+				errorInfo = lintFunc item.expr,item.parentExpr,item.itemType
 				if errorInfo == ""
 					item\markError false
 				else
@@ -774,11 +774,7 @@ Class ExprEditorView,
 					table.insert @errorBtn.errorItems,item
 
 		for item in *@triggerMenu.children
-			switch item.itemType
-				when "Mid","End"
-					continue
-				else
-					checkError item
+			checkError item
 
 		@errorBtn\display #@errorBtn.errorItems > 0
 		@errorInfoBtn\display false if #@errorBtn.errorItems == 0

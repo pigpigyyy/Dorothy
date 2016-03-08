@@ -39,6 +39,7 @@ NewExprVal = (value)-> => setmetatable {@Name,value},@
 
 Expressions = {
 	GlobalVar: {
+		Text:"Global Variable"
 		Type:"GlobalVar"
 		Group:"None"
 		Desc:"Global variable declaration and initialization."
@@ -77,6 +78,7 @@ Expressions = {
 		Create:NewExpr "True"
 	}
 	NoEvent: {
+		Text:"No Event"
 		Type:"Event"
 		Group:"Misc"
 		Desc:"No event."
@@ -84,6 +86,7 @@ Expressions = {
 		Create:NewExpr!
 	}
 	TimeCycle: {
+		Text:"Time Cycle"
 		Type:"Event"
 		Group:"Time"
 		Desc:"Trigger event every [Number] seconds."
@@ -91,6 +94,7 @@ Expressions = {
 		Create:NewExpr "Number"
 	}
 	BodyEnter: {
+		Text:"Body Enter"
 		Type:"Event"
 		Group:"Body"
 		Desc:"Any body enters sensor [Sensor] area."
@@ -162,6 +166,7 @@ Expressions = {
 		Create:NewExpr!
 	}
 	NumberEqual: {
+		Text:"Number Equal"
 		Type:"Boolean"
 		TypeIgnore:false
 		Group:"Boolean"
@@ -170,6 +175,7 @@ Expressions = {
 		Create:NewExpr "Number","Number"
 	}
 	BodyEqual: {
+		Text:"Body Equal"
 		Type:"Boolean"
 		TypeIgnore:false
 		Group:"Boolean"
@@ -178,6 +184,7 @@ Expressions = {
 		Create:NewExpr "BodyByName","BodyByName"
 	}
 	TriggerName: {
+		Text:"Trigger Name"
 		Type:"TriggerName"
 		Group:"Special"
 		Desc:"The trigger`s name."
@@ -194,6 +201,7 @@ Expressions = {
 		Create:NewExprVal ""
 	}
 	LocalName: {
+		Text:"Local Name"
 		Type:"LocalName"
 		Group:"Special"
 		Desc:"A name for local value."
@@ -202,6 +210,7 @@ Expressions = {
 		Create:NewExprVal "InvalidName"
 	}
 	GlobalName: {
+		Text:"Global Name"
 		Type:"GlobalName"
 		Group:"Special"
 		Desc:"A name for global value."
@@ -210,6 +219,7 @@ Expressions = {
 		Create:NewExprVal "InvalidName"
 	}
 	InitGlobalName: {
+		Text:"Global Name"
 		Type:"InitGlobalName"
 		Group:"Special"
 		Desc:"A name for global value."
@@ -218,6 +228,7 @@ Expressions = {
 		Create:NewExprVal ""
 	}
 	ModelName: {
+		Text:"Model Name"
 		Type:"ModelName"
 		Group:"Special"
 		Desc:"A name for model."
@@ -227,6 +238,7 @@ Expressions = {
 		Create:NewExprVal "InvalidName"
 	}
 	LayerName: {
+		Text:"Layer Name"
 		Type:"LayerName"
 		Group:"Special"
 		Desc:"A name for layer."
@@ -236,6 +248,7 @@ Expressions = {
 		Create:NewExprVal "InvalidName"
 	}
 	SensorName: {
+		Text:"Sensor Name"
 		Type:"SensorName"
 		Group:"Special"
 		Desc:"A name for sensor."
@@ -245,6 +258,7 @@ Expressions = {
 		Create:NewExprVal "InvalidName"
 	}
 	BodyName: {
+		Text:"Body Name"
 		Type:"BodyName"
 		Group:"Special"
 		Desc:"A name for body."
@@ -254,6 +268,7 @@ Expressions = {
 		Create:NewExprVal "InvalidName"
 	}
 	ModelType: {
+		Text:"Model Type"
 		Type:"ModelType"
 		Group:"Special"
 		Desc:"A type name for model."
@@ -278,6 +293,7 @@ Expressions = {
 		Create:NewExprVal ""
 	}
 	SetLocalNumber: {
+		Text:"Number"
 		Type:"LocalAssign"
 		Group:"Variable"
 		Desc:"Set [LocalName] to [Number]."
@@ -285,6 +301,7 @@ Expressions = {
 		Create:NewExpr "LocalName","Number"
 	}
 	LocalNumber: {
+		Text:"Local Number"
 		Type:"Number"
 		TypeIgnore:false
 		Group:"Variable"
@@ -294,6 +311,7 @@ Expressions = {
 		Create:NewExpr "LocalName"
 	}
 	SetLocalString: {
+		Text:"String"
 		Type:"LocalAssign"
 		Group:"Variable"
 		Desc:"Set [LocalName] to [String]."
@@ -301,6 +319,7 @@ Expressions = {
 		Create:NewExpr "LocalName","String"
 	}
 	LocalString: {
+		Text:"Local String"
 		Type:"String"
 		TypeIgnore:false
 		Group:"Variable"
@@ -310,6 +329,7 @@ Expressions = {
 		Create:NewExpr "LocalName"
 	}
 	SetLocalModel: {
+		Text:"Model"
 		Type:"LocalAssign"
 		Group:"Variable"
 		Desc:"Set [LocalName] to [Model]."
@@ -317,6 +337,7 @@ Expressions = {
 		Create:NewExpr "LocalName","ModelByName"
 	}
 	LocalModel: {
+		Text:"Local Model"
 		Type:"Model"
 		TypeIgnore:false
 		Group:"Variable"
@@ -326,6 +347,7 @@ Expressions = {
 		Create:NewExpr "LocalName"
 	}
 	SetLocalSensor: {
+		Text:"Sensor"
 		Type:"LocalAssign"
 		Group:"Variable"
 		Desc:"Set [LocalName] to [Sensor]."
@@ -333,6 +355,7 @@ Expressions = {
 		Create:NewExpr "LocalName","SensorByName"
 	}
 	LocalSensor: {
+		Text:"Local Sensor"
 		Type:"Sensor"
 		TypeIgnore:false
 		Group:"Variable"
@@ -342,6 +365,7 @@ Expressions = {
 		Create:NewExpr "LocalName"
 	}
 	SetLocalBody: {
+		Text:"Body"
 		Type:"LocalAssign"
 		Group:"Variable"
 		Desc:"Set [LocalName] to [Body]."
@@ -349,6 +373,7 @@ Expressions = {
 		Create:NewExpr "LocalName","BodyByName"
 	}
 	LocalBody: {
+		Text:"Local Body"
 		Type:"Body"
 		TypeIgnore:false
 		Group:"Variable"
@@ -358,6 +383,7 @@ Expressions = {
 		Create:NewExpr "LocalName"
 	}
 	SetLocal: {
+		Text:"Set Local"
 		Type:"None"
 		Group:"Variable"
 		Desc:"Do [LocalAssign]."
@@ -366,6 +392,7 @@ Expressions = {
 		Create:NewExpr "SetLocalNumber"
 	}
 	SetGlobal: {
+		Text:"Set Global"
 		Type:"None"
 		Group:"Variable"
 		Desc:"Do [GlobalAssign]."
@@ -374,6 +401,7 @@ Expressions = {
 		Create:NewExpr "SetGlobalNumber"
 	}
 	InitGlobalNumber: {
+		Text:"Number"
 		Type:"GlobalInit"
 		Group:"Variable"
 		Desc:"Init [InitGlobalName] to [Number] with note [Text]."
@@ -381,6 +409,7 @@ Expressions = {
 		Create:NewExpr "InitGlobalName","Number","Text"
 	}
 	SetGlobalNumber: {
+		Text:"Number"
 		Type:"GlobalAssign"
 		Group:"Variable"
 		Desc:"Set [GlobalName] to [Number]."
@@ -388,6 +417,7 @@ Expressions = {
 		Create:NewExpr "GlobalName","Number"
 	}
 	GlobalNumber: {
+		Text:"Global Number"
 		Type:"Number"
 		TypeIgnore:false
 		Group:"Variable"
@@ -396,6 +426,7 @@ Expressions = {
 		Create:NewExpr "GlobalName"
 	}
 	InitGlobalModel: {
+		Text:"Model"
 		Type:"GlobalInit"
 		Group:"Variable"
 		Desc:"Init [InitGlobalName] to [Model] with note [Text]."
@@ -403,6 +434,7 @@ Expressions = {
 		Create:NewExpr "InitGlobalName","ModelByName","Text"
 	}
 	SetGlobalModel: {
+		Text:"Model"
 		Type:"GlobalAssign"
 		Group:"Variable"
 		Desc:"Set [GlobalName] to [Model]."
@@ -410,6 +442,7 @@ Expressions = {
 		Create:NewExpr "GlobalName","ModelByName"
 	}
 	GlobalModel: {
+		Text:"Global Model"
 		Type:"Model"
 		TypeIgnore:false
 		Group:"Variable"
@@ -418,6 +451,7 @@ Expressions = {
 		Create:NewExpr "GlobalName"
 	}
 	InitGlobalBody: {
+		Text:"Body"
 		Type:"GlobalInit"
 		Group:"Variable"
 		Desc:"Init [InitGlobalName] to [Body] with note [Text]."
@@ -425,6 +459,7 @@ Expressions = {
 		Create:NewExpr "InitGlobalName","BodyByName","Text"
 	}
 	SetGlobalBody: {
+		Text:"Body"
 		Type:"GlobalAssign"
 		Group:"Variable"
 		Desc:"Set [GlobalName] to [Body]."
@@ -432,6 +467,7 @@ Expressions = {
 		Create:NewExpr "GlobalName","BodyByName"
 	}
 	GlobalBody: {
+		Text:"Global Body"
 		Type:"Body"
 		TypeIgnore:false
 		Group:"Variable"
@@ -477,6 +513,7 @@ Expressions = {
 		Create:NewExpr "String"
 	}
 	DoNothing: {
+		Text:"Do Nothing"
 		Type:"None"
 		Group:"Code Flow"
 		Desc:"Do nothing."
@@ -484,6 +521,7 @@ Expressions = {
 		Create:NewExpr!
 	}
 	ModelByName: {
+		Text:"Model"
 		Type:"Model"
 		Group:"Model"
 		Desc:"Get model [ModelName] from current scene."
@@ -491,6 +529,7 @@ Expressions = {
 		Create:NewExpr "ModelName"
 	}
 	LayerByName: {
+		Text:"Layer"
 		Type:"Layer"
 		Group:"Model"
 		Desc:"Get layer [LayerName] from current scene."
@@ -498,6 +537,7 @@ Expressions = {
 		Create:NewExpr "LayerName"
 	}
 	SensorByName: {
+		Text:"Sensor"
 		Type:"Sensor"
 		Group:"Sensor"
 		Desc:"Get sensor [SensorName] from current scene."
@@ -505,6 +545,7 @@ Expressions = {
 		Create:NewExpr "SensorName"
 	}
 	BodyByName: {
+		Text:"Body"
 		Type:"Body"
 		Group:"Body"
 		Desc:"Get body [BodyName] from current scene."
@@ -519,6 +560,7 @@ Expressions = {
 		Create:NewExpr "Number","Number"
 	}
 	CreateModel: {
+		Text:"Create Model"
 		Type:"Model"
 		TypeIgnore:true
 		Group:"Model"
@@ -527,6 +569,7 @@ Expressions = {
 		Create:NewExpr "ModelType","Point","LayerByName","Number","Look","Animation","False"
 	}
 	DestroyModel: {
+		Text:"Destroy Model"
 		Type:"None"
 		Group:"Model"
 		Desc:"Destroy a model [Model]."
@@ -534,6 +577,7 @@ Expressions = {
 		Create:NewExpr "ModelByName"
 	}
 	PlayAnimation: {
+		Text:"Play Animation"
 		Type:"Number"
 		TypeIgnore:true
 		Group:"Model"
@@ -662,6 +706,8 @@ TriggerDef = {
 				return varType if varType
 			return nil
 		err = (info)-> table.insert errors,info
+		pushScope = -> table.insert varScope,{}
+		popScope = -> table.remove varScope
 		nextExpr = (expr,parentExpr)->
 			return if "table" ~= type expr
 			switch expr[1]
@@ -675,7 +721,7 @@ TriggerDef = {
 					varName = assignExpr[2][2]
 					scope = varScope[#varScope]
 					if varName == "InvalidName"
-						err "Use local variable of invalid name."
+						err "Use local variable with invalid name."
 					else
 						scope[varName] = varType
 					nextExpr assignExpr[3],assignExpr
@@ -683,7 +729,7 @@ TriggerDef = {
 					assignExpr = expr[2]
 					varName = assignExpr[2][2]
 					if varName == "InvalidName"
-						err "Use global variable of invalid name."
+						err "Use global variable with invalid name."
 					varType = assignExpr[1]\match "^SetGlobal(.*)"
 					globalType = globals[varName]
 					if globalType
@@ -694,7 +740,7 @@ TriggerDef = {
 					nextExpr assignExpr[3],assignExpr
 				when "LocalName"
 					if expr[2] == "InvalidName"
-						err "Use local variable of invalid name."
+						err "Use local variable with invalid name."
 						return
 					localType = varInScope expr[2]
 					varType = parentExpr[1]\match "^Local(.*)"
@@ -705,7 +751,7 @@ TriggerDef = {
 						err "Local variable \"#{expr[2]}\" of type \"#{varType}\" is used without initialization."
 				when "GlobalName"
 					if expr[2] == "InvalidName"
-						err "Use global variable of invalid name."
+						err "Use global variable with invalid name."
 						return
 					globalType = globals[expr[2]]
 					varType = parentExpr[1]\match "^Global(.*)"
@@ -717,16 +763,19 @@ TriggerDef = {
 				else
 					for subExpr in *expr[2,]
 						nextExpr subExpr,expr
-		checkExpr = (expr,parentExpr)->
+		checkExpr = (expr,parentExpr,itemType)->
 			errors = {} if errors == nil or #errors > 0
-			scoped = switch expr[1]
-				when "Trigger","Condition","Action" then true
+			switch itemType
+				when "Start"
+					nextExpr expr,parentExpr
+					pushScope!
+				when "Mid"
+					popScope!
+					pushScope!
+				when "End"
+					popScope!
 				else
-					if expr.MultiLine then true
-					else false
-			table.insert varScope,{} if scoped
-			nextExpr expr,parentExpr
-			table.remove varScope if scoped
+					nextExpr expr,parentExpr
 			#errors > 0 and table.concat(errors,"\n") or ""
 		checkExpr
 }

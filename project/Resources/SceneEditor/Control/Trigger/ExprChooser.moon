@@ -427,7 +427,7 @@ ExprChooser = Class
 					isGetVar = isGetLocal or isGetGlobal
 					continue if (not allowUseLocal and isGetLocal) or (noVar and isGetVar)
 					exprItem = with TriggerItem {
-							text:exprDef.Name
+							text:exprDef.Text or exprDef.Name
 							fontSize:18
 							width:180
 							height:35
