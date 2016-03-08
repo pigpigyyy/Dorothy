@@ -17,4 +17,8 @@
 			<Button Name="modeBtn" Text="Mode" Width="50" Height="50" BackColor="0xca000000" FontSize="16" Ref="True"/>
 		</Menu>
 	</Item>
+	<Menu Name="errorMenu" AnchorX="0" AnchorY="0" Width="110" Height="50" TouchPriority="{ editor.levelExprEditor-2 }" Ref="True">
+		<Button Name="errorBtn" Text="!" X="{ $L+25 }" Y="{ $Y }" Width="50" Height="50" BackColor="0xca000000" FontSize="24" Ref="True"/>
+		<Button Name="errorInfoBtn" Text="Error" X="{ $R-25 }" Y="{ $Y }" Width="50" Height="50" BackColor="0xca000000" FontSize="20" Ref="True"/>
+	</Menu>
 </ScrollArea>

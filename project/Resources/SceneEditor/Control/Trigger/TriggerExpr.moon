@@ -30,6 +30,7 @@ Class TriggerExprView,
 		@_text = ""
 		@_index = index
 		@_lineNumber = lineNumber
+		@errorInfo = nil
 		@expr = expr
 		@parentExpr = parentExpr
 		@text = text or ""
@@ -165,13 +166,14 @@ Class TriggerExprView,
 		@text = tostring @expr if @expr
 		@updateLine!
 
-	markError:(isError)=>
+	markError:(isError,info)=>
+		@errorInfo = info
 		if isError
 			if not @getChildByTag ErrorTag
 				@addChild with SolidRect {
 						width:30
 						height:@height-10
-						color:0x88ff0080
+						color:0x66ff0080
 					}
 					.position = oVec2 5,5
 					.tag = ErrorTag

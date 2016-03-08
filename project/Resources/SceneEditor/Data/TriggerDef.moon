@@ -652,6 +652,83 @@ TriggerDef = {
 		nextExpr exprData,nil,0
 		TriggerDef.CodeMode = codeMode
 		table.concat strs
+
+	GetLintFunction:(locals,globals)->
+		errors = nil
+		varScope = {locals}
+		varInScope = (varName)->
+			for scope in *varScope
+				varType = scope[varName]
+				return varType if varType
+			return nil
+		err = (info)-> table.insert errors,info
+		nextExpr = (expr,parentExpr)->
+			return if "table" ~= type expr
+			switch expr[1]
+				when "Trigger"
+					nextExpr expr[3]
+				when "Condition","Action"
+					return
+				when "SetLocal"
+					assignExpr = expr[2]
+					varType = assignExpr[1]\match "^SetLocal(.*)"
+					varName = assignExpr[2][2]
+					scope = varScope[#varScope]
+					if varName == "InvalidName"
+						err "Use local variable of invalid name."
+					else
+						scope[varName] = varType
+					nextExpr assignExpr[3],assignExpr
+				when "SetGlobal"
+					assignExpr = expr[2]
+					varName = assignExpr[2][2]
+					if varName == "InvalidName"
+						err "Use global variable of invalid name."
+					varType = assignExpr[1]\match "^SetGlobal(.*)"
+					globalType = globals[varName]
+					if globalType
+						if globalType ~= varType
+							err "Assign global variable \"g_#{varName[2]}\" of type \"#{globalType}\" to value of type \"#{varType}\"."
+					else
+						err "Assign an uninitialized global variable \"g_#{varName}\" to value of type \"#{varType}\"."
+					nextExpr assignExpr[3],assignExpr
+				when "LocalName"
+					if expr[2] == "InvalidName"
+						err "Use local variable of invalid name."
+						return
+					localType = varInScope expr[2]
+					varType = parentExpr[1]\match "^Local(.*)"
+					if localType
+						if localType ~= varType
+							err "Local variable \"#{expr[2]}\" of type \"#{localType}\" is used as type \"#{varType}\"."
+					else
+						err "Local variable \"#{expr[2]}\" of type \"#{varType}\" is used without initialization."
+				when "GlobalName"
+					if expr[2] == "InvalidName"
+						err "Use global variable of invalid name."
+						return
+					globalType = globals[expr[2]]
+					varType = parentExpr[1]\match "^Global(.*)"
+					if globalType
+						if globalType ~= varType
+							err "Global variable \"g_#{expr[2]}\" of type \"#{globalType}\" is used as type \"#{varType}\"."
+					else
+						err "Global variable \"g_#{expr[2]}\" of type \"#{varType}\" is used without initialization."
+				else
+					for subExpr in *expr[2,]
+						nextExpr subExpr,expr
+		checkExpr = (expr,parentExpr)->
+			errors = {} if errors == nil or #errors > 0
+			scoped = switch expr[1]
+				when "Trigger","Condition","Action" then true
+				else
+					if expr.MultiLine then true
+					else false
+			table.insert varScope,{} if scoped
+			nextExpr expr,parentExpr
+			table.remove varScope if scoped
+			#errors > 0 and table.concat(errors,"\n") or ""
+		checkExpr
 }
 
 Groups = {}

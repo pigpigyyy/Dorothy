@@ -2,6 +2,7 @@ Dorothy!
 ExprEditorView = require "View.Control.Trigger.ExprEditor"
 TriggerExpr = require "Control.Trigger.TriggerExpr"
 ExprChooser = require "Control.Trigger.ExprChooser"
+PopupPanel = require "Control.Basic.PopupPanel"
 SelectionPanel = require "Control.Basic.SelectionPanel"
 MessageBox = require "Control.Basic.MessageBox"
 TriggerDef = require "Data.TriggerDef"
@@ -31,6 +32,10 @@ Class ExprEditorView,
 			@_selectedExprItem.checked = false if @_selectedExprItem
 			@_selectedExprItem = button.checked and button or nil
 			if button.checked
+				if @_selectedExprItem.errorInfo
+					@errorInfoBtn\display true
+				else
+					@errorInfoBtn\display false
 				@editMenu.visible = true
 				@editMenu.transformTarget = button
 				@editMenu.position = oVec2 button.width,0
@@ -70,6 +75,7 @@ Class ExprEditorView,
 					else continue
 				@showEditButtons buttons
 			else
+				@errorInfoBtn\display false
 				@editMenu.visible = false
 				@editMenu.transformTarget = nil
 
@@ -510,6 +516,59 @@ Class ExprEditorView,
 							@.changeExprItem child
 							break
 
+		displayButton = (button,display)->
+			if display
+				with button
+					.visible = true
+					.scaleX,.scaleY = 0,0
+					\perform oScale 0.3,1,1,oEase.OutQuad
+			elseif button.visible
+				button\perform CCSequence {
+					oScale 0.3,0,0,oEase.InBack
+					CCHide!
+				}
+
+		with @errorBtn
+			.visible = false
+			.color = ccColor3 0xff0080
+			\slot "Tapped",->
+				item = @errorBtn.errorItems[@errorBtn.currentIndex]
+				if item.checked
+					@errorBtn.currentIndex %= #@errorBtn.errorItems
+					@errorBtn.currentIndex += 1
+					item = @errorBtn.errorItems[@errorBtn.currentIndex]
+				if @errorBtn.currentIndex > #@errorBtn.errorItems
+					@errorBtn.currentIndex = 1
+				else
+					item.checked = true
+					@.changeExprItem item
+				@scrollToPosY item.positionY
+				@errorBtn.currentIndex %= #@errorBtn.errorItems
+				@errorBtn.currentIndex += 1
+			.display = displayButton
+
+		with @errorInfoBtn
+			.visible = false
+			.color = ccColor3 0xff0080
+			.display = displayButton
+			\slot "Tapped",->
+				{:width,:height} = CCDirector.winSize
+				panelWidth = 300
+				with PopupPanel {
+						x:width/2
+						y:height/2
+						width:panelWidth
+						height:300
+					}
+					.menu\addChild with CCNode!
+						.contentSize = CCSize panelWidth-20,50
+						\addChild with CCLabelTTF "Error in line #{@_selectedExprItem.lineNumber}","Arial",24
+							.color = ccColor3 0x00ffff
+							.position = oVec2 (panelWidth-20)/2,25
+					.menu\addChild with TriggerExpr text:@_selectedExprItem.errorInfo,width:panelWidth-20
+						.enabled = false
+					.scrollArea.viewSize = .menu\alignItems!
+
 		@slot "Entered",->
 			codeMode = (CCUserDefault.TriggerMode == "Code")
 			if @codeMode ~= codeMode
@@ -604,8 +663,6 @@ Class ExprEditorView,
 		expr[1] == "Event" or (parentExpr and parentExpr[1] == "Event")
 
 	getPrevLocalVars:(targetType)=>
-		targetExpr = @_selectedExprItem.expr
-		parentExpr = @_selectedExprItem.parentExpr
 		eventExpr = @exprData[4][2]
 		localVars = if eventExpr.Args
 			for k,v in pairs eventExpr.Args
@@ -613,8 +670,10 @@ Class ExprEditorView,
 					k
 				else continue
 		else {}
-		if targetExpr[1] == "Condition" or (parentExpr and parentExpr[1] == "Condition")
-			return localVars
+
+		return localVars if not @isInAction!
+
+		targetExpr = @_selectedExprItem.expr
 		varScope = {}
 		nextExpr = (expr)->
 			return false unless "table" == type expr
@@ -697,92 +756,32 @@ Class ExprEditorView,
 
 	lintCode:=>
 		return unless @triggerMenu.children
-		print "Lint Code!"
-		errors = nil
-		args = @exprData[4][2].Args
-		varScope = {args and {k,v\match("^%a*") for k,v in pairs args} or nil}
-		varInScope = (varName)->
-			for scope in *varScope
-				varType = scope[varName]
-				return varType if varType
-			return nil
+		@errorBtn.errorItems = {}
+		@errorBtn.currentIndex = 1
 
+		args = @exprData[4][2].Args
+		locals = args and {k,v\match("^%a*") for k,v in pairs args} or nil
 		globals = {expr[2][2],expr[3].Type for expr in *editor\getGlobalExpr![2,]}
-		nextExpr = (expr,parentExpr)->
-			return if "table" ~= type expr
-			switch expr[1]
-				when "Trigger"
-					nextExpr expr[3]
-				when "Condition","Action"
-					return
-				when "SetLocal"
-					assignExpr = expr[2]
-					varType = assignExpr[1]\match "^SetLocal(.*)"
-					varName = assignExpr[2][2]
-					scope = varScope[#varScope]
-					if varName == "InvalidName"
-						table.insert errors,"Used variable of invalid name."
-					else
-						scope[varName] = varType
-					nextExpr assignExpr[3],assignExpr
-				when "SetGlobal"
-					assignExpr = expr[2]
-					varName = assignExpr[2][2]
-					if varName == "InvalidName"
-						table.insert errors,"Used variable of invalid name."
-					varType = assignExpr[1]\match "^SetGlobal(.*)"
-					globalType = globals[varName]
-					if globalType
-						if globalType ~= varType
-							table.insert errors,"Assign global variable \"g_#{varName[2]}\" of type \"#{globalType}\" to value of type \"#{varType}\"."
-					else
-						table.insert errors,"Assign an uninitialized global variable \"g_#{varName}\" to value of type \"#{varType}\"."
-					nextExpr assignExpr[3],assignExpr
-				when "LocalName"
-					if expr[2] == "InvalidName"
-						table.insert errors,"Used variable of invalid name."
-						return
-					localType = varInScope expr[2]
-					varType = parentExpr[1]\match "^Local(.*)"
-					if localType
-						if localType ~= varType
-							table.insert errors,"Local variable \"#{expr[2]}\" of type \"#{localType}\" is used as type \"#{varType}\"."
-					else
-						table.insert errors,"Local variable \"#{expr[2]}\" of type \"#{varType}\" is used without initialization."
-				when "GlobalName"
-					if expr[2] == "InvalidName"
-						table.insert errors,"Used variable of invalid name."
-						return
-					globalType = globals[expr[2]]
-					varType = parentExpr[1]\match "^Global(.*)"
-					if globalType
-						if globalType ~= varType
-							table.insert errors,"Global variable \"g_#{expr[2]}\" of type \"#{globalType}\" is used as type \"#{varType}\"."
-					else
-						table.insert errors,"Global variable \"g_#{expr[2]}\" of type \"#{varType}\" is used without initialization."
-				else
-					for subExpr in *expr[2,]
-						nextExpr subExpr,expr
+		lintFunc = TriggerDef.GetLintFunction locals,globals
 
 		checkError = (item)->
 			if item.expr
-				errors = {} if errors == nil or #errors > 0
-				nextExpr item.expr,item.parentExpr
-				if #errors > 0
-					item\markError true
-					for err in *errors
-						print item.lineNumber,err
-				else
+				errorInfo = lintFunc item.expr,item.parentExpr
+				if errorInfo == ""
 					item\markError false
+				else
+					item\markError true,errorInfo
+					table.insert @errorBtn.errorItems,item
 
 		for item in *@triggerMenu.children
 			switch item.itemType
-				when "Start"
-					table.insert varScope,{}
-					checkError item
-				when "Mid"
-					varScope[#varScope] = {}
-				when "End"
-					table.remove varScope
+				when "Mid","End"
+					continue
 				else
 					checkError item
+
+		@errorBtn\display #@errorBtn.errorItems > 0
+		@errorInfoBtn\display false if #@errorBtn.errorItems == 0
+
+		if @_selectedExprItem and @_selectedExprItem.errorInfo
+			@errorInfoBtn\display true
