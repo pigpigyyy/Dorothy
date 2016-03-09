@@ -705,7 +705,7 @@ TriggerDef = {
 				varType = scope[varName]
 				return varType if varType
 			return nil
-		err = (info)-> table.insert errors,info
+		err = (...)-> table.insert errors,table.concat{...}
 		pushScope = -> table.insert varScope,{}
 		popScope = -> table.remove varScope
 		nextExpr = (expr,parentExpr)->
@@ -734,9 +734,12 @@ TriggerDef = {
 					globalType = globals[varName]
 					if globalType
 						if globalType ~= varType
-							err "Assign global variable \"g_#{varName[2]}\" of type \"#{globalType}\" to value of type \"#{varType}\"."
+							err "Assign global variable \"g_",varName[2],
+								"\" of type \"",globalType,
+								"\" to value of type \"",varType,"\"."
 					else
-						err "Assign an uninitialized global variable \"g_#{varName}\" to value of type \"#{varType}\"."
+						err "Assign an uninitialized global variable \"g_",varName,
+							"\" to value of type \"",varType,"\"."
 					nextExpr assignExpr[3],assignExpr
 				when "LocalName"
 					if expr[2] == "InvalidName"
@@ -746,9 +749,13 @@ TriggerDef = {
 					varType = parentExpr[1]\match "^Local(.*)"
 					if localType
 						if localType ~= varType
-							err "Local variable \"#{expr[2]}\" of type \"#{localType}\" is used as type \"#{varType}\"."
+							err "Local variable \"",expr[2],
+								"\" of type \"",localType,
+								"\" is used as type \"",varType,"\"."
 					else
-						err "Local variable \"#{expr[2]}\" of type \"#{varType}\" is used without initialization."
+						err "Local variable \"",expr[2],
+							"\" of type \"",varType,
+							"\" is used without initialization."
 				when "GlobalName"
 					if expr[2] == "InvalidName"
 						err "Use global variable with invalid name."
@@ -757,9 +764,13 @@ TriggerDef = {
 					varType = parentExpr[1]\match "^Global(.*)"
 					if globalType
 						if globalType ~= varType
-							err "Global variable \"g_#{expr[2]}\" of type \"#{globalType}\" is used as type \"#{varType}\"."
+							err "Global variable \"g_",expr[2],
+								"\" of type \"",globalType,
+								"\" is used as type \"",varType,"\"."
 					else
-						err "Global variable \"g_#{expr[2]}\" of type \"#{varType}\" is used without initialization."
+						err "Global variable \"g_",expr[2],
+							"\" of type \"",varType,
+							"\" is used without initialization."
 				else
 					for subExpr in *expr[2,]
 						nextExpr subExpr,expr
