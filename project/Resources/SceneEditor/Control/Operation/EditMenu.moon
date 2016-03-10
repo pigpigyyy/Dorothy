@@ -62,6 +62,10 @@ Class EditMenuView,
 			clearSelection!
 			emit "Scene.Trigger.Open"
 
+		@actionBtn\slot "Tapped",->
+			clearSelection!
+			emit "Scene.Action.Open"
+
 		@delBtn\slot "Tapped",->
 			clearSelection!
 			emit "Scene.EditMenu.Delete"
@@ -225,7 +229,7 @@ Class EditMenuView,
 					@showItemButtons subItems,.showItem
 		setupItemButton @graphicBtn,@graphicLine,{"sprite","model","effect","layer"}
 		setupItemButton @physicsBtn,@physicsLine,{"body","world"}
-		setupItemButton @logicBtn,@logicLine,{"trigger"}
+		setupItemButton @logicBtn,@logicLine,{"trigger","action"}
 
 		@gslot "Scene.ShowFix",(value)->
 			editor.xFix = false

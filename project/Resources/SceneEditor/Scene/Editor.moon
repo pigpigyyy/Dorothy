@@ -237,6 +237,17 @@ Class EditorView,
 					@triggerEditor = TriggerEditor!
 					@triggerEditor\show!
 					@addChild @triggerEditor
+		@gslot "Scene.Action.Open",->
+			return unless @scene
+			if @actionTriggerEditor
+				@actionTriggerEditor\show!
+			else
+				@schedule once ->
+					ActionTriggerEditor = require "Control.Trigger.ActionTriggerEditor"
+					sleep!
+					@actionTriggerEditor = ActionTriggerEditor!
+					@actionTriggerEditor\show!
+					@addChild @actionTriggerEditor
 
 	updateSprites:=> emit "Scene.LoadSprite",@graphicFolder
 	updateModels:=> emit "Scene.LoadModel",@graphicFolder

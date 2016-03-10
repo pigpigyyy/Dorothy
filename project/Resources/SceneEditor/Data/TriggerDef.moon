@@ -49,12 +49,82 @@ Expressions = {
 			table.concat codes,"\n"
 		Create:NewExpr!
 	}
+	UnitAction: {
+		Type:"UnitAction"
+		Group:"None"
+		Desc:"This action is named [ActionName]."
+		ToCode:=> "UnitAction( #{ @[2] },"
+		Create:NewExpr "ActionName","Priority","Reaction","Recovery","Available","Run","Stop"
+	}
+	ActionName: {
+		Text:"Action Name"
+		Type:"ActionName"
+		Group:"Special"
+		Desc:"The action`s name."
+		CodeOnly:true
+		ToCode:=> "\"#{ @[2] }\""
+		Create:NewExprVal "InvalidName"
+	}
+	Priority: {
+		Type:"Priority"
+		TypeIgnore:false
+		Group:"Special"
+		Desc:"Priority [Number] to cancel other action."
+		ToCode:=> "--[[Priority]] #{ @[2] },"
+		Create:NewExpr "Number"
+	}
+	Reaction: {
+		Type:"Reaction"
+		TypeIgnore:false
+		Group:"Special"
+		Desc:"Reaction [Number] time to response to AI while doing the action."
+		ToCode:=> "--[[Reaction]] #{ @[2] },"
+		Create:NewExpr "Number"
+	}
+	Recovery: {
+		Type:"Recovery"
+		TypeIgnore:false
+		Group:"Special"
+		Desc:"Recovery [Number] time to restore animation."
+		ToCode:=> "--[[Recovery]] #{ @[2] },"
+		Create:NewExpr "Number"
+	}
+	Available: {
+		Type:"Available"
+		Group:"None"
+		Desc:"Tell whether an action is available."
+		ToCode:=> "--[[Available]] function( action ) return"
+		Create:NewExpr "True"
+	}
+	Run: {
+		Type:"Run"
+		Group:"None"
+		Desc:"Run action of an unit action."
+		ToCode:=> "--[[Run]] function( action )"
+		Create:NewExpr "DoNothing"
+	}
+	Stop: {
+		Type:"Stop"
+		Group:"None"
+		Desc:"Stop function of an unit action."
+		ToCode:=> "--[[Stop]] function( action )"
+		Create:NewExpr "DoNothing"
+	}
 	Trigger: {
 		Type:"Trigger"
 		Group:"None"
 		Desc:"The trigger named [TriggerName] is enabled [Boolean]."
 		ToCode:=> "Trigger( #{ @[2] }, #{ @[3] },"
 		Create:NewExpr "TriggerName","True","Event","Condition","Action"
+	}
+	TriggerName: {
+		Text:"Trigger Name"
+		Type:"TriggerName"
+		Group:"Special"
+		Desc:"The trigger`s name."
+		CodeOnly:true
+		ToCode:=> "\"#{ @[2] }\""
+		Create:NewExprVal "InvalidName"
 	}
 	Event: {
 		Type:"EventType"
@@ -182,15 +252,6 @@ Expressions = {
 		Desc:"Body [Body] equals [Body]."
 		ToCode:=> "( #{ @[2] } == #{ @[3] } )"
 		Create:NewExpr "BodyByName","BodyByName"
-	}
-	TriggerName: {
-		Text:"Trigger Name"
-		Type:"TriggerName"
-		Group:"Special"
-		Desc:"The trigger`s name."
-		CodeOnly:true
-		ToCode:=> "\"#{ @[2] }\""
-		Create:NewExprVal "InvalidName"
 	}
 	Text: {
 		Type:"Text"
@@ -796,6 +857,7 @@ Types = {}
 for exprName,expr in pairs Expressions
 	expr.Name = exprName
 	expr.MultiLine = false unless expr.MultiLine
+	expr.TypeIgnore = false unless expr.TypeIgnore
 	expr.__index = expr
 	expr.__tostring = ExprToString
 	Groups[expr.Group] or= {}

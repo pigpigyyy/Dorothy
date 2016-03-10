@@ -115,9 +115,11 @@ Class TriggerExprView,
 		(value)=>
 			value = string.rep("    ",@_indent)..value
 			parentExpr = @parentExpr
-			if parentExpr and parentExpr[1] == "Condition"
-				if #parentExpr ~= @index
-					value ..= " and"
+			if parentExpr
+				switch parentExpr[1]
+					when "Condition","Available"
+						if #parentExpr ~= @index
+							value ..= " and"
 			@_text = value
 			@label.text = value
 			@label.texture.antiAlias = false
