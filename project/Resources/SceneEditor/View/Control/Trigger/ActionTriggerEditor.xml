@@ -15,20 +15,17 @@
 
 		<Node X="125" Y="{ $Y }" Width="250" Height="{ $H }">
 			<!-- scope menu -->
-			<Menu Name="scopeMenu" X="{ $X }" Y="{ $T-75 }" Width="{ $W }" Height="150" AlignItems="10" TouchPriority="{ editor.levelTriggerMenu-1 }" Ref="True">
+			<Menu Name="scopeMenu" X="{ $X }" Y="{ $T-50 }" Width="{ $W }" Height="100" AlignItems="10" TouchPriority="{ editor.levelTriggerMenu-1 }" Ref="True">
 				<Node Width="{ $W }" Height="20">
-					<LabelTTF Text="Trigger Editor" X="{ $X }" Y="{ $Y+5 }" FontName="Arial" FontSize="20" AntiAlias="False" Color="0x00ffff"/>
+					<LabelTTF Text="Action Editor" X="{ $X }" Y="{ $Y+5 }" FontName="Arial" FontSize="20" AntiAlias="False" Color="0x00ffff"/>
 				</Node>
-				<TriggerItem Name="localBtn" Text="Local" Width="{ ($W-30)/2 }" Height="40" FontSize="20" Ref="True"/>
-				<TriggerItem Name="globalBtn" Text="Global" Width="{ ($W-30)/2 }" Height="40" FontSize="20" Ref="True"/>
 				<GroupButton Name="groupBtn" Text="Default" Width="{ $W-20 }" Height="40" Ref="True"/>
 			</Menu>
 
 			<!-- trigger list -->
-			<ScrollArea Name="listScrollArea" X="{ $X }" Y="{ $T-150-($H-220)/2 }" Width="{ $W }" Height="{ $H-220 }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelTriggerMenu-2 }" Ref="True">
+			<ScrollArea Name="listScrollArea" X="{ $X }" Y="{ $T-100-($H-170)/2 }" Width="{ $W }" Height="{ $H-170 }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelTriggerMenu-2 }" Ref="True">
 				<Item Name="view">
 					<Menu Name="localListMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.levelTriggerMenu-1 }" Enabled="False" Ref="True"/>
-					<Menu Name="globalListMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.levelTriggerMenu-1 }" Enabled="False" Ref="True" Visible="False"/>
 				</Item>
 			</ScrollArea>
 

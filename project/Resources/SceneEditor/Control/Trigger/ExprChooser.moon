@@ -349,8 +349,11 @@ ExprChooser = Class
 				text = textBox.text
 				@curExpr[2] = text\gsub "\"","\\\""
 				@updatePreview!
-				if @curExpr[1] == "TriggerName"
-					emit "Scene.Trigger.ChangeName",text
+				switch @curExpr[1]
+					when "TriggerName"
+						emit "Scene.Trigger.ChangeName",text
+					when "ActionName"
+						emit "Scene.Action.ChangeName",text
 			@bodyMenu\addChild with TextBox {
 					x:@bodyMenu.width/2
 					y:@bodyLabel.positionY-@bodyLabel.height/2-20-20
@@ -396,7 +399,7 @@ ExprChooser = Class
 					pickPointFromScene!
 				when "Number"
 					editNumber!
-				when "String","TriggerName","Text","InitGlobalName"
+				when "String","TriggerName","ActionName","Text","InitGlobalName"
 					editString!
 				else
 					if @curExpr.Item
