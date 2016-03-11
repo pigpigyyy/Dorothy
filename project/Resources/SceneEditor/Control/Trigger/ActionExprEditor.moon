@@ -11,7 +11,8 @@ import Path from require "Data.Utils"
 Args = action:"Action"
 
 VarScope = Class
-	__init:(triggerMenu)=>
+	__init:(triggerMenu,createExprItem)=>
+		@createExprItem = createExprItem
 		@triggerMenu = triggerMenu
 		@actionItem = nil
 		@localVarItem = nil
@@ -100,6 +101,8 @@ VarScope = Class
 
 Class ExprEditorView,
 	__init:(args)=>
+		@type = "Action"
+
 		@exprData = nil
 		@filename = nil
 		@asyncLoad = false
@@ -109,8 +112,9 @@ Class ExprEditorView,
 		@stopItem = nil
 
 		@currentScope = nil
-		@runScope = VarScope @triggerMenu
-		@stopScope = VarScope @triggerMenu
+		createExprItem = (_,...)-> @createExprItem ...
+		@runScope = VarScope @triggerMenu,createExprItem
+		@stopScope = VarScope @triggerMenu,createExprItem
 
 		@newActionName = nil
 		@modified = false
@@ -644,7 +648,7 @@ Class ExprEditorView,
 			children[i].lineNumber = i
 		@modified = true
 		@lintCode!
-		emit "Scene.Trigger.Edited",@filename
+		emit "Scene.Action.Edited",@filename
 
 	createExprItem:(text,indent,expr,parentExpr,index)=>
 		children = @triggerMenu.children
@@ -714,7 +718,13 @@ Class ExprEditorView,
 		parentExpr = @_selectedExprItem.parentExpr
 		expr[1] == "Available" or (parentExpr and parentExpr[1] == "Available")
 
-	isInEvent:=> false
+	isInEvent:=>
+		expr = @_selectedExprItem.expr
+		switch expr[1]
+			when "Priority","Reaction","Recovery"
+				true
+			else
+				false
 
 	getPrevLocalVars:(targetType)=>
 		localVars = {k,v for k,v in pairs Args}
@@ -797,6 +807,8 @@ Class ExprEditorView,
 				else
 					item\markError true,errorInfo
 					table.insert @errorBtn.errorItems,item
+			elseif item.itemType == "End"
+				lintFunc nil,nil,"End"
 
 		for item in *@triggerMenu.children
 			checkError item

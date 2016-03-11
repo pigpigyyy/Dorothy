@@ -683,10 +683,15 @@ TriggerDef = {
 	ToCodeText:(exprData)->
 		codeMode = TriggerDef.CodeMode
 		TriggerDef.CodeMode = true
-		strs,args = if exprData[1] == "Trigger"
-			{"return\n"},exprData[4][2].Args
-		else
-			{},nil
+
+		strs,args = switch exprData[1]
+			when "Trigger"
+				{"return\n"},{k,v\match "%a*" for k,v in pairs exprData[4][2].Args}
+			when "UnitAction"
+				{"return\n"},{action:"Action"}
+			else
+				{},{}
+
 		insert = table.insert
 		rep = string.rep
 		append = (indent,str)->
@@ -694,8 +699,29 @@ TriggerDef = {
 			insert strs,str if str ~= ""
 			insert strs,"\n"
 		appendTap = (num)-> rep "\t",num
-		localSet = {}
-		locals = {}
+
+		local localSet
+		local locals
+		local nextExpr
+		createHandleAction = (startPattern,ending="")->
+			(indent,expr)->
+				localSet = {k,v for k,v in pairs args}
+				locals = {}
+				append indent,tostring expr
+				for i = 2,#expr
+					nextExpr expr,i,indent+1
+				if #locals > 0
+					localLine = rep("\t",indent+1).."local "..table.concat(locals,", ").."\n"
+					for i = 1,#strs
+						if strs[i]\match startPattern
+							insert strs,i+2,localLine
+							break
+				append indent,"end )"..ending
+
+		handleAction = createHandleAction "^Action%("
+		handleRun = createHandleAction "^%-%-%[%[Run%]%]",","
+		handleStop = createHandleAction "^%-%-%[%[Stop%]%]"
+
 		nextExpr = (parentExpr,index,indent)->
 			expr = index and parentExpr[index] or parentExpr
 			switch expr[1]
@@ -717,16 +743,22 @@ TriggerDef = {
 						nextExpr expr,i,indent+1
 					append indent,"end ),"
 				when "Action"
+					handleAction indent,expr
+				when "UnitAction"
+					append indent,tostring expr
+					append 0,"" unless codeMode
+					for i = 3,#expr
+						nextExpr expr,i,indent+1
+					append indent,")"
+				when "Available"
 					append indent,tostring expr
 					for i = 2,#expr
 						nextExpr expr,i,indent+1
-					if #locals > 0
-						localLine = rep("\t",indent+1).."local "..table.concat(locals,", ").."\n"
-						for i = 1,#strs
-							if strs[i]\match "^Action%("
-								insert strs,i+2,localLine
-								break
-					append indent,"end )"
+					append indent,"end ),"
+				when "Run"
+					handleRun indent,expr
+				when "Stop"
+					handleStop indent,expr
 				when "If"
 					append indent,tostring expr
 					for i = 2,#expr[3]
@@ -752,8 +784,11 @@ TriggerDef = {
 					append indent,tostring expr
 				else
 					append indent,tostring expr
-			if parentExpr and parentExpr[1] == "Condition" and parentExpr[#parentExpr] ~= expr
-				insert strs,#strs," and"
+			if parentExpr 
+				switch parentExpr[1]
+					when "Condition","Available"
+						if parentExpr[#parentExpr] ~= expr
+							insert strs,#strs," and"
 		nextExpr exprData,nil,0
 		TriggerDef.CodeMode = codeMode
 		table.concat strs
@@ -774,17 +809,23 @@ TriggerDef = {
 			switch expr[1]
 				when "Trigger"
 					nextExpr expr[3]
-				when "Condition","Action"
+				when "Condition","Action","UnitAction","Available","Run","Stop"
 					return
 				when "SetLocal"
 					assignExpr = expr[2]
-					varType = assignExpr[1]\match "^SetLocal(.*)"
 					varName = assignExpr[2][2]
-					scope = varScope[#varScope]
 					if varName == "InvalidName"
 						err "Use local variable with invalid name."
 					else
-						scope[varName] = varType
+						localType = varInScope varName
+						varType = assignExpr[1]\match "^SetLocal(.*)"
+						if localType and localType ~= varType
+							err "Assign local variable \"",varName,
+								"\" of type \"",localType,
+								"\" to value of type \"",varType,"\"."
+						else
+							scope = varScope[#varScope]
+							scope[varName] = varType
 					nextExpr assignExpr[3],assignExpr
 				when "SetGlobal"
 					assignExpr = expr[2]
@@ -795,7 +836,7 @@ TriggerDef = {
 					globalType = globals[varName]
 					if globalType
 						if globalType ~= varType
-							err "Assign global variable \"g_",varName[2],
+							err "Assign global variable \"g_",varName,
 								"\" of type \"",globalType,
 								"\" to value of type \"",varType,"\"."
 					else

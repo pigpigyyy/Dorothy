@@ -271,7 +271,9 @@ Class EditorView,
 				oContent\mkdir @logicFullPath unless oContent\exist @logicFullPath
 				oContent\mkdir @sceneFullPath unless oContent\exist @sceneFullPath
 				oContent\mkdir @triggerFullPath unless oContent\exist @triggerFullPath
+				oContent\mkdir @triggerLocalFullPath unless oContent\exist @triggerLocalFullPath
 				oContent\mkdir @triggerGlobalFullPath unless oContent\exist @triggerGlobalFullPath
+				oContent\mkdir @actionFullPath unless oContent\exist @actionFullPath
 				if @_actionEditor
 					@actionEditor.input = @gameFullPath
 					@actionEditor.output = @gameFullPath
@@ -307,6 +309,8 @@ Class EditorView,
 	logicFullPath:property => @_gameFullPath.."Logic/"
 	triggerFolder:property => "Logic/Trigger/"
 	triggerFullPath:property => @_gameFullPath.."Logic/Trigger/"
+	actionFolder:property => "Logic/Action/"
+	actionFullPath:property => @_gameFullPath.."Logic/Action/"
 	triggerLocalFolder:property => "Logic/Trigger/Local/#{@scene}/"
 	triggerLocalFullPath:property => @_gameFullPath.."Logic/Trigger/Local/#{@scene}/"
 	triggerGlobalFolder:property => "Logic/Trigger/Global/"

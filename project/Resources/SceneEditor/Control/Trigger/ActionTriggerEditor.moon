@@ -130,8 +130,8 @@ Class ActionTriggerEditorView,
 		TriggerScope.panel = @panel
 
 		@localScope = TriggerScope @localListMenu,
-			"triggerLocalFullPath",
-			"triggerLocalFolder"
+			"actionFullPath",
+			"actionFolder"
 
 		@listScrollArea\setupMenuScroll @localListMenu
 		@listScrollArea.viewSize = @localListMenu\alignItems!
@@ -212,7 +212,7 @@ Class ActionTriggerEditorView,
 									break
 
 		@addBtn\slot "Tapped",->
-			MessageBox text:"Place Triggers In\nFolders Under\n/Logic/Trigger/Global/",okOnly:true
+			MessageBox text:"Place Actions In\nFolders Under\n/Logic/Action/",okOnly:true
 
 		@delBtn\slot "Tapped",->
 			triggerBtn = TriggerScope.triggerBtn
@@ -275,7 +275,7 @@ Class ActionTriggerEditorView,
 			file = TriggerScope.triggerBtn.file
 			TriggerScope.triggerBtn.file = Path.getPath(file)..triggerName..".trigger"
 
-		@closeEvent = @gslot "Scene.Trigger.Close",-> @hide!
+		@closeEvent = @gslot "Scene.Action.Close",-> @hide!
 
 	show:=>
 		@closeEvent.enabled = true

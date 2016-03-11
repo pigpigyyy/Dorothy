@@ -239,9 +239,9 @@ ExprChooser = Class
 				.position = oVec2 @bodyMenu.width/2,
 					@bodyLabel.positionY-@bodyLabel.height-10-.height/2
 				\slot "Tapped",->
-					emit "Scene.Trigger.Close"
-					emit "Scene.Trigger.Picking",{itemType,@curExpr[2]}
-				\gslot "Scene.Trigger.Picked",(result)->
+					emit "Scene.#{ @owner.type }.Close"
+					emit "Scene.#{ @owner.type }.Picking",{itemType,@curExpr[2]}
+				\gslot "Scene.#{ @owner.type }.Picked",(result)->
 					return unless result
 					itemButton.text = result
 					@curExpr[2] = result
@@ -257,9 +257,9 @@ ExprChooser = Class
 				.position = oVec2 @bodyMenu.width/2,
 					@bodyLabel.positionY-@bodyLabel.height-10-.height/2
 				\slot "Tapped",->
-					emit "Scene.Trigger.Close"
-					emit "Scene.Trigger.Picking",{"Point",oVec2(@curExpr[2][2],@curExpr[3][2])}
-				\gslot "Scene.Trigger.Picked",(result)->
+					emit "Scene.#{ @owner.type }.Close"
+					emit "Scene.#{ @owner.type }.Picking",{"Point",oVec2(@curExpr[2][2],@curExpr[3][2])}
+				\gslot "Scene.#{ @owner.type }.Picked",(result)->
 					@curExpr[2][2] = result.x
 					@curExpr[3][2] = result.y
 					thread ->
@@ -349,11 +349,7 @@ ExprChooser = Class
 				text = textBox.text
 				@curExpr[2] = text\gsub "\"","\\\""
 				@updatePreview!
-				switch @curExpr[1]
-					when "TriggerName"
-						emit "Scene.Trigger.ChangeName",text
-					when "ActionName"
-						emit "Scene.Action.ChangeName",text
+				emit "Scene.#{ @owner.type }.ChangeName",text
 			@bodyMenu\addChild with TextBox {
 					x:@bodyMenu.width/2
 					y:@bodyLabel.positionY-@bodyLabel.height/2-20-20
@@ -483,8 +479,8 @@ ExprChooser = Class
 			@emit "Result",@curExpr
 			@hide!
 
-		@gslot "Scene.Trigger.Close",-> @changeDisplay false if @visible
-		@gslot "Scene.Trigger.Open",-> @changeDisplay true
+		@gslot "Scene.#{ @owner.type }.Close",-> @changeDisplay false if @visible
+		@gslot "Scene.#{ @owner.type }.Open",-> @changeDisplay true
 
 		editor\addChild @
 		@show!

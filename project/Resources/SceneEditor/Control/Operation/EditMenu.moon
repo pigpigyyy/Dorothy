@@ -1,5 +1,6 @@
 Dorothy!
 EditMenuView = require "View.Control.Operation.EditMenu"
+MessageBox = require "Control.Basic.MessageBox"
 
 -- [no signals]
 -- [no params]
@@ -60,11 +61,17 @@ Class EditMenuView,
 
 		@triggerBtn\slot "Tapped",->
 			clearSelection!
-			emit "Scene.Trigger.Open"
+			if @pickPanel.visible
+				MessageBox text:"Pick An Item First",okOnly:true
+			else
+				emit "Scene.Trigger.Open"
 
 		@actionBtn\slot "Tapped",->
 			clearSelection!
-			emit "Scene.Action.Open"
+			if @pickPanel.visible
+				MessageBox text:"Pick An Item First",okOnly:true
+			else
+				emit "Scene.Action.Open"
 
 		@delBtn\slot "Tapped",->
 			clearSelection!

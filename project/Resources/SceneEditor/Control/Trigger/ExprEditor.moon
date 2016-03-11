@@ -10,6 +10,7 @@ import Path from require "Data.Utils"
 
 Class ExprEditorView,
 	__init:(args)=>
+		@type = "Trigger"
 		@exprData = nil
 		@filename = nil
 		@asyncLoad = false
@@ -775,6 +776,8 @@ Class ExprEditorView,
 				else
 					item\markError true,errorInfo
 					table.insert @errorBtn.errorItems,item
+			elseif item.itemType == "End"
+				lintFunc nil,nil,"End"
 
 		for item in *@triggerMenu.children
 			checkError item

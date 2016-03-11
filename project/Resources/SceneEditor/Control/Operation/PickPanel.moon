@@ -8,6 +8,7 @@ import Round from require "Data.Utils"
 -- width, height
 Class PickPanelView,
 	__init:=>
+		@editorType = nil
 		@itemType = nil
 		@pickedItem = nil
 		@pointControl = nil
@@ -18,33 +19,38 @@ Class PickPanelView,
 			else
 				tostring @pickedItem
 
-		@gslot "Scene.Trigger.Picking",(args)->
-			{itemType,currentItem} = args
-			if itemType == "Point"
-				@pointControl = with PointControl!
-					\show currentItem,if editor.currentData
-							editor\getItem editor.currentData
-						else
-							nil
-					\slot "PosChanged",(pos)->
-						@pickedItem = Round pos
-						@label.text = itemString!
-				@parent\addChild @pointControl,-1
-			else
-				itemName = currentItem\match "^[^%.]*"
-				item = editor.items[itemName]
-				itemData = item and editor\getData(item) or nil
-				emit "Scene.ViewPanel.Pick",itemData
-			@selectEvent.enabled = true
-			@itemType = itemType
-			@pickedItem = currentItem
-			@visible = true
-			@title.text = itemType
-			@label.text = itemString!
-			@showButton!
-			with @panel
-				.scaleX,.scaleY = 0,0
-				\perform oScale 0.3,1,1,oEase.OutBack
+		pickFunction = (editorType)->
+			(args)->
+				{itemType,currentItem} = args
+				if itemType == "Point"
+					@pointControl = with PointControl!
+						\show currentItem,if editor.currentData
+								editor\getItem editor.currentData
+							else
+								nil
+						\slot "PosChanged",(pos)->
+							@pickedItem = Round pos
+							@label.text = itemString!
+					@parent\addChild @pointControl,-1
+				else
+					itemName = currentItem\match "^[^%.]*"
+					item = editor.items[itemName]
+					itemData = item and editor\getData(item) or nil
+					emit "Scene.ViewPanel.Pick",itemData
+				@selectEvent.enabled = true
+				@editorType = editorType
+				@itemType = itemType
+				@pickedItem = currentItem
+				@visible = true
+				@title.text = itemType
+				@label.text = itemString!
+				@showButton!
+				with @panel
+					.scaleX,.scaleY = 0,0
+					\perform oScale 0.3,1,1,oEase.OutBack
+
+		@gslot "Scene.Trigger.Picking",pickFunction "Trigger"
+		@gslot "Scene.Action.Picking",pickFunction "Action"
 
 		@selectEvent = @gslot "Scene.ViewPanel.Select",(itemData)->
 			if @itemType ~= "Point"
@@ -91,7 +97,9 @@ Class PickPanelView,
 
 		@selectEvent.enabled = false
 
-		hide = ->
+		@pickBtn\slot "Tapped",->
+			emit "Scene.#{ @editorType }.Picked",@pickedItem
+			emit "Scene.#{ @editorType }.Open"
 			if @visible and not @scheduled
 				if @pointControl
 					@pointControl.parent\removeChild @pointControl
@@ -102,12 +110,6 @@ Class PickPanelView,
 				@schedule once ->
 					sleep 0.3
 					@visible = false
-
-		@pickBtn\slot "Tapped",->
-			emit "Scene.Trigger.Picked",@pickedItem
-			emit "Scene.Trigger.Open"
-
-		@gslot "Scene.Trigger.Open",hide
 
 	showButton:=>
 		with @pickBtn
