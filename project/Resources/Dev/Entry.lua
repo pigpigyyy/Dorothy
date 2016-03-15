@@ -279,11 +279,11 @@ end)
 cleanButton.anchor = oVec2.zero
 opMenu:addChild(cleanButton)
 
-panel.init = function(self)
+panel.init = function(_)
 	menu.opacity = 0
 	menu.enabled = false
 	menu:runAction(oOpacity(0.3,1))
-	
+
 	local function addTitle(title,fontSize,color)
 		local width = math.floor((winSize.width-10)/210)*210-10
 		local label = CCLabelTTF(title,"Arial",fontSize)
@@ -308,12 +308,6 @@ panel.init = function(self)
 	end
 	local function runWithBackButton(file)
 		run(file)
-		local opMenu = CCMenu()
-		opMenu.swallowTouches = true
-		opMenu.contentSize = CCSize(60,60)
-		opMenu.touchPriority = CCMenu.DefaultHandlerPriority-998
-		opMenu.position = oVec2(winSize.width-40,40)
-		CCDirector.currentScene:addChild(opMenu,998)
 		local endBtn = oButton("Back",17,60,false,0,0,function()
 			CCDirector:replaceScene(CCScene:crossFade(0.5,scene),true)
 			if CCScene.clearHistory then
@@ -321,7 +315,13 @@ panel.init = function(self)
 			end
 		end)
 		endBtn.anchor = oVec2.zero
-		opMenu:addChild(endBtn)
+		local backMenu = CCMenu()
+		backMenu.swallowTouches = true
+		backMenu.contentSize = CCSize(60,60)
+		backMenu.touchPriority = CCMenu.DefaultHandlerPriority-998
+		backMenu.position = oVec2(winSize.width-40,40)
+		backMenu:addChild(endBtn)
+		CCDirector.currentScene:addChild(backMenu,998)
 	end
 
 	addTitle("Dorothy Project",24,0x00ffff)

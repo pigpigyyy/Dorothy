@@ -3,7 +3,6 @@ ExprEditorView = require "View.Control.Trigger.ExprEditor"
 TriggerExpr = require "Control.Trigger.TriggerExpr"
 ExprChooser = require "Control.Trigger.ExprChooser"
 PopupPanel = require "Control.Basic.PopupPanel"
-SelectionPanel = require "Control.Basic.SelectionPanel"
 MessageBox = require "Control.Basic.MessageBox"
 TriggerDef = require "Data.TriggerDef"
 import Path from require "Data.Utils"
@@ -137,13 +136,10 @@ Class ExprEditorView,
 				@editMenu.transformTarget = button
 				@editMenu.position = oVec2 button.width,0
 				{:expr,:index,:parentExpr} = @_selectedExprItem
-				if parentExpr
-					@currentScope = switch parentExpr[1]
-						when "Run" then @runScope
-						when "Stop" then @stopScope
-						else nil
-				else
-					@currentScope = nil
+				@currentScope = switch (parentExpr or expr)[1]
+					when "Run" then @runScope
+					when "Stop" then @stopScope
+					else nil
 				subExprItem = switch @_selectedExprItem.itemType
 					when "Mid","End" then true
 					else false
@@ -225,7 +221,7 @@ Class ExprEditorView,
 							stop = #children
 							for i = start,stop
 								child = children[i]
-								child.lineNumber = i 
+								child.lineNumber = i
 								child.positionY -= moveY
 					with @createExprItem mode("end ),"," "),indent
 						.itemType = "End"
@@ -247,7 +243,7 @@ Class ExprEditorView,
 							stop = #children
 							for i = start,stop
 								child = children[i]
-								child.lineNumber = i 
+								child.lineNumber = i
 								child.positionY -= moveY
 					with @createExprItem mode("end )"," "),indent
 						.itemType = "End"

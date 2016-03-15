@@ -3,7 +3,6 @@ ExprEditorView = require "View.Control.Trigger.ExprEditor"
 TriggerExpr = require "Control.Trigger.TriggerExpr"
 ExprChooser = require "Control.Trigger.ExprChooser"
 PopupPanel = require "Control.Basic.PopupPanel"
-SelectionPanel = require "Control.Basic.SelectionPanel"
 MessageBox = require "Control.Basic.MessageBox"
 TriggerDef = require "Data.TriggerDef"
 import Path from require "Data.Utils"
@@ -179,7 +178,7 @@ Class ExprEditorView,
 						stop = #children
 						for i = start,stop
 							child = children[i]
-							child.lineNumber = i 
+							child.lineNumber = i
 							child.positionY -= moveY
 					with @createExprItem mode("end )"," "),indent
 						.itemType = "End"

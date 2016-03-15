@@ -3,7 +3,6 @@ ExprChooserView = require "View.Control.Trigger.ExprChooser"
 TriggerDef = require "Data.TriggerDef"
 TriggerItem = require "Control.Trigger.TriggerItem"
 SolidRect = require "View.Shape.SolidRect"
-Button = require "Control.Basic.Button"
 GroupButton = require "Control.Basic.GroupButton"
 SelectionPanel = require "Control.Basic.SelectionPanel"
 InputBox = require "Control.Basic.InputBox"
@@ -100,7 +99,6 @@ ExprChooser = Class
 						upperY = (labelPos+char.position+charPoint*(oVec2(1,1)-char.anchor)).y+10
 						char = @bodyLabel\getChar stopIndex
 						lowerY = (labelPos+char.position-charPoint*char.anchor).y-10
-						itemText = text\sub startIndex,stopIndex
 						labelWidth = @bodyMenu.width-20
 						menuItem = with CCMenuItem!
 							.anchor = oVec2 0,1
@@ -424,6 +422,7 @@ ExprChooser = Class
 		table.sort groupNames
 
 		allowUseLocal = @owner and (@owner\isInAction! or @owner\isInCondition!)
+		print "allowUseLocal",allowUseLocal
 
 		for groupName in *groupNames
 			hasGroupItem = false

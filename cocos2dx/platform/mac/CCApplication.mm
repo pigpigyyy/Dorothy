@@ -50,6 +50,7 @@ int CCApplication::run()
 {
     if (/*initInstance() &&*/ applicationDidFinishLaunching()) 
     {
+		[NSApp activateIgnoringOtherApps:YES];
         [[CCDirectorCaller sharedDirectorCaller] startMainLoop];
     }
     return 0;
