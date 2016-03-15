@@ -686,7 +686,8 @@ TriggerDef = {
 
 		strs,args = switch exprData[1]
 			when "Trigger"
-				{"return\n"},{k,v\match "%a*" for k,v in pairs exprData[4][2].Args}
+				eventArgs = exprData[4][2].Args or {}
+				{"return\n"},{k,v\match "%a*" for k,v in pairs eventArgs}
 			when "UnitAction"
 				{"return\n"},{action:"Action"}
 			else

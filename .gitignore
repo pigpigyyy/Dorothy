@@ -42,6 +42,7 @@ local.properties
 /project/proj.android/libs/
 
 # Ignore files build by xcode
+*.nib
 *.mode*v*
 *.pbxuser
 *.xcbkptlist

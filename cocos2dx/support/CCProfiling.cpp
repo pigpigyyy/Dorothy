@@ -148,10 +148,10 @@ void CCProfilingEndTimingBlock(const char *timerName)
 
     CCAssert(timer, "CCProfilingTimer  not found");
 
-    struct timeval currentTime;
+	cc_timeval currentTime;
     gettimeofday(&currentTime, NULL);
 
-    double duration = CCTime::timersubCocos2d((struct cc_timeval *)&timer->m_sStartTime, (struct cc_timeval *)&currentTime);
+    double duration = CCTime::timersubCocos2d((cc_timeval *)&timer->m_sStartTime, (cc_timeval *)&currentTime);
 
     // milliseconds
     timer->m_dAverageTime = (timer->m_dAverageTime + duration) / 2.0f;

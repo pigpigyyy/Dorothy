@@ -72,14 +72,14 @@ public:
     bool initWithName(const char* timerName);
     ~CCProfilingTimer();
     const char* description();
-    inline struct cc_timeval * getStartTime() { return &m_sStartTime; };
+    inline cc_timeval* getStartTime() { return &m_sStartTime; };
     inline void setAverageTime(double value) { m_dAverageTime = value; }
     inline double getAverageTime() { return m_dAverageTime; }
     /** resets the timer properties */
     void reset();
 
     std::string m_NameStr;
-    struct cc_timeval m_sStartTime;
+    cc_timeval m_sStartTime;
     double m_dAverageTime;
     double            minTime;
     double            maxTime;

@@ -28,6 +28,7 @@ THE SOFTWARE.
 #define __CCDIRECTOR_H__
 
 #include "platform/CCPlatformMacros.h"
+#include "platform/platform.h"
 #include "cocoa/CCObject.h"
 #include "ccTypes.h"
 #include "cocoa/CCGeometry.h"
@@ -328,7 +329,7 @@ public:
 	static CCDirector* sharedDirector();
 
 protected:
-	float getInterval(const struct cc_timeval& begin);
+	float getInterval(const cc_timeval& begin);
 	void purgeDirector();
 	bool m_bPurgeDirecotorInNextLoop; // this flag will be set to true in end()
 	void setNextScene();

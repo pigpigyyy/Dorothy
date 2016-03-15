@@ -126,6 +126,7 @@ Class GlobalPanelView,
 					expr:@selectedItem.expr
 					noVar:true
 					backOnly:true
+					editorType:owner.type
 				}
 				\slot "Result",(newExpr)->
 					@curExpr = newExpr

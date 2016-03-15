@@ -28,6 +28,21 @@ THE SOFTWARE.
 #include "CCThread.h"
 #include "CCPlatformMacros.h"
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_MAC
+	#include "CCStdC.h"
+	typedef struct timeval cc_timeval;
+#else
+	struct CC_DLL cc_timeval
+	{
+	#ifdef __native_client__
+		time_t tv_sec;// seconds
+	#else
+		long tv_sec;// seconds
+	#endif
+		long tv_usec;// microSeconds
+	};
+#endif
+
 NS_CC_BEGIN
 
 /**
@@ -35,21 +50,11 @@ NS_CC_BEGIN
  * @{
  */
 
-struct CC_DLL cc_timeval
-{
-#ifdef __native_client__
-    time_t    tv_sec;        // seconds
-#else
-    long    tv_sec;        // seconds
-#endif
-    long    tv_usec;    // microSeconds
-};
-
 class CC_DLL CCTime
 {
 public:
-    static int gettimeofdayCocos2d(struct cc_timeval *tp, void *tzp);
-    static double timersubCocos2d(struct cc_timeval *start, struct cc_timeval *end);
+    static int gettimeofdayCocos2d(cc_timeval *tp, void *tzp);
+    static double timersubCocos2d(cc_timeval *start, cc_timeval *end);
 };
 
 // end of platform group

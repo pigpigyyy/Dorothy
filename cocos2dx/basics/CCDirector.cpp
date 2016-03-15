@@ -302,7 +302,7 @@ void CCDirector::drawScene()
 
 void CCDirector::calculateDeltaTime()
 {
-	struct cc_timeval now;
+	cc_timeval now;
 
 	if (CCTime::gettimeofdayCocos2d(&now, NULL) != 0)
 	{
@@ -984,15 +984,15 @@ CCAccelerometer* CCDirector::getAccelerometer()
 	return m_pAccelerometer;
 }
 
-float CCDirector::getInterval(const struct cc_timeval& begin)
+float CCDirector::getInterval(const cc_timeval& begin)
 {
-	struct cc_timeval now;
+	cc_timeval now;
 	if (CCTime::gettimeofdayCocos2d(&now, NULL) != 0)
 	{
 		CCLOG("error in gettimeofday");
 		return 0;
 	}
-	return (now.tv_sec - begin.tv_sec) + (now.tv_usec - begin.tv_usec) / 1000000.0f;
+	return (float)((now.tv_sec - begin.tv_sec) + (now.tv_usec - begin.tv_usec) / 1000000.0);
 }
 
 float CCDirector::getEclapsedInterval()

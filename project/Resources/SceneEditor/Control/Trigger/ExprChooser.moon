@@ -23,7 +23,16 @@ ExprChooser = Class
 		ExprChooserView args
 
 	__init:(args)=>
-		{:valueType,:expr,:parentExpr,:owner,:prev,:noVar,:backOnly} = args
+		{
+			:valueType
+			:expr
+			:parentExpr
+			:owner
+			:editorType
+			:prev
+			:noVar
+			:backOnly
+		} = args
 		@exprButtons = {}
 		@exprs = {}
 		@curGroupBtn = nil
@@ -32,6 +41,7 @@ ExprChooser = Class
 		@parentExpr = parentExpr
 		@owner = owner
 		@prev = prev
+		@type = editorType or owner.type
 		@exprs[getmetatable expr] = expr if expr
 		@needOpen = false
 		if args.level == 1
@@ -152,7 +162,7 @@ ExprChooser = Class
 			@bodyMenu\addChild localVarButton
 
 		editLocalVariable = (varType)->
-			isSetVar = @parentExpr[1] == "SetLocal#{varType}"
+			isSetVar = @parentExpr[1] == "SetLocal#{ varType }"
 			localNames = @owner\getPrevLocalVars varType
 			table.insert localNames,"<NEW>" if isSetVar
 			oldName = @curExpr[2]
@@ -239,9 +249,9 @@ ExprChooser = Class
 				.position = oVec2 @bodyMenu.width/2,
 					@bodyLabel.positionY-@bodyLabel.height-10-.height/2
 				\slot "Tapped",->
-					emit "Scene.#{ @owner.type }.Close"
-					emit "Scene.#{ @owner.type }.Picking",{itemType,@curExpr[2]}
-				\gslot "Scene.#{ @owner.type }.Picked",(result)->
+					emit "Scene.#{ @type }.Close"
+					emit "Scene.#{ @type }.Picking",{itemType,@curExpr[2]}
+				\gslot "Scene.#{ @type }.Picked",(result)->
 					return unless result
 					itemButton.text = result
 					@curExpr[2] = result
@@ -257,9 +267,9 @@ ExprChooser = Class
 				.position = oVec2 @bodyMenu.width/2,
 					@bodyLabel.positionY-@bodyLabel.height-10-.height/2
 				\slot "Tapped",->
-					emit "Scene.#{ @owner.type }.Close"
-					emit "Scene.#{ @owner.type }.Picking",{"Point",oVec2(@curExpr[2][2],@curExpr[3][2])}
-				\gslot "Scene.#{ @owner.type }.Picked",(result)->
+					emit "Scene.#{ @type }.Close"
+					emit "Scene.#{ @type }.Picking",{"Point",oVec2(@curExpr[2][2],@curExpr[3][2])}
+				\gslot "Scene.#{ @type }.Picked",(result)->
 					@curExpr[2][2] = result.x
 					@curExpr[3][2] = result.y
 					thread ->
@@ -349,7 +359,7 @@ ExprChooser = Class
 				text = textBox.text
 				@curExpr[2] = text\gsub "\"","\\\""
 				@updatePreview!
-				emit "Scene.#{ @owner.type }.ChangeName",text
+				emit "Scene.#{ @type }.ChangeName",text
 			@bodyMenu\addChild with TextBox {
 					x:@bodyMenu.width/2
 					y:@bodyLabel.positionY-@bodyLabel.height/2-20-20
@@ -479,8 +489,8 @@ ExprChooser = Class
 			@emit "Result",@curExpr
 			@hide!
 
-		@gslot "Scene.#{ @owner.type }.Close",-> @changeDisplay false if @visible
-		@gslot "Scene.#{ @owner.type }.Open",-> @changeDisplay true
+		@gslot "Scene.#{ @type }.Close",-> @changeDisplay false if @visible
+		@gslot "Scene.#{ @type }.Open",-> @changeDisplay true
 
 		editor\addChild @
 		@show!
