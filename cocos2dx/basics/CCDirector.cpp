@@ -139,6 +139,7 @@ bool CCDirector::init()
 	m_fRealDeltaTime = 0.0f;
 	m_fUpdateInterval = 0.0f;
 	m_fDrawInterval = 0.0f;
+	m_uLastNumberOfDraws = 0;
 
 	// paused ?
 	m_bPaused = false;
@@ -204,6 +205,11 @@ CCDirector::~CCDirector()
 	}
 
 	s_SharedDirector = NULL;
+}
+
+unsigned int CCDirector::getNumberOfDraws() const
+{	
+	return m_uLastNumberOfDraws;
 }
 
 CCScene* CCDirector::getRunningScene() const
@@ -297,6 +303,7 @@ void CCDirector::drawScene()
 		m_pobOpenGLView->swapBuffers();
 	}
 
+	m_uLastNumberOfDraws = g_uNumberOfDraws;
 	g_uNumberOfDraws = 0;
 }
 

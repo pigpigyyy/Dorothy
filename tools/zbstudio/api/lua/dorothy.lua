@@ -1336,6 +1336,12 @@ local Dorothy =
 				static = true,
 				type = "value",
 			},
+			numberOfDraws =
+			{
+				description = "[int][Readonly]",
+				static = true,
+				type = "value",
+			},
 			eclapsedInterval =
 			{
 				description = "[double][Readonly] Time eclapsed since current frame begin.",

@@ -12,16 +12,15 @@ Class ProfileScreenView,
 		totalDraw = 0
 		totalTime = 0
 		totalFrame = 0
+		totalDrawcall = 0
 		loopWork = loop ->
 			luaMem = collectgarbage "count"
 			poolSize = oCache.Pool.size
 			text = table.concat {
-				"CC Object:    #{ CCObject.count }."
-				"CC Object Max:    #{ CCObject.maxCount }."
-				"Lua Object:    #{ CCObject.luaRefCount }."
-				"Lua Object Max:    #{ CCObject.maxLuaRefCount }."
-				"Callback:    #{ CCObject.callRefCount }."
-				"Callback Max:    #{ CCObject.maxCallRefCount }."
+				"Draw Call:    #{ math.floor totalDrawcall/totalFrame }."
+				"CC Object:    #{ CCObject.count }(#{ CCObject.maxCount })."
+				"Lua Object:    #{ CCObject.luaRefCount }(#{ CCObject.maxLuaRefCount })."
+				"Callback:    #{ CCObject.callRefCount }(#{ CCObject.maxCallRefCount })."
 				"Lua Memory:    #{ string.format '%.2f MB', luaMem/1024 }."
 				"Dorothy Pool:    #{ string.format '%.2f MB', poolSize/1024/1024 }."
 				"Update Interval:    #{ string.format '%d ms', totalUpdate*1000/totalFrame }."
@@ -38,6 +37,7 @@ Class ProfileScreenView,
 			totalDraw = 0
 			totalTime = 0
 			totalFrame = 0
+			totalDrawcall = 0
 
 		with @screen
 			.visible = false
@@ -83,6 +83,7 @@ Class ProfileScreenView,
 							totalTime += deltaTime
 							totalDraw += CCDirector.drawInterval
 							totalUpdate += CCDirector.updateInterval
+							totalDrawcall += CCDirector.numberOfDraws
 							loopWork!
 					else
 						@screen\perform CCSequence {

@@ -14,7 +14,7 @@ TOLUA_API int toluafix_ref_function(lua_State* L, int lo);
 TOLUA_API void toluafix_get_function_by_refid(lua_State* L, int refid);
 TOLUA_API void toluafix_remove_function_by_refid(lua_State* L, int refid);
 TOLUA_API int toluafix_isfunction(lua_State* L, int lo, tolua_Error* err);
-TOLUA_API void toluafix_stack_dump(lua_State* L, const char* label);
+TOLUA_API void toluafix_stack_dump(lua_State* L, int offset, const char* label);
 TOLUA_API int toluafix_get_callback_ref_count();
 TOLUA_API int toluafix_get_max_callback_ref_count();
 TOLUA_API void luaopen_lpeg(lua_State* L);

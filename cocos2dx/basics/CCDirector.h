@@ -102,6 +102,7 @@ public:
 	virtual bool init();
 
 	// attribute
+	unsigned int getNumberOfDraws() const;
 
 	/** Get current running Scene. Director can only run one Scene at the time */
 	CCScene* getRunningScene() const;
@@ -369,6 +370,7 @@ protected:
 	/* How many frames were called since the director started */
 	unsigned int m_uTotalFrames;
 	unsigned int m_uFrames;
+	unsigned int m_uLastNumberOfDraws;
 
 	/* The running scene */
 	CCScene* m_pRunningScene;

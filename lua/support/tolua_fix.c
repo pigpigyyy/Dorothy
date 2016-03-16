@@ -59,10 +59,14 @@ TOLUA_API int toluafix_isfunction(lua_State* L, int lo, tolua_Error* err)
     return 0;
 }
 
-TOLUA_API void toluafix_stack_dump(lua_State* L, const char* label)
+TOLUA_API void toluafix_stack_dump(lua_State* L, int offset, const char* label)
 {
     int i;
-    int top = lua_gettop(L);
+    int top = lua_gettop(L)+offset;
+	if (top == 0)
+	{
+		return;
+	}
     printf("Total [%d] in lua stack: %s\n", top, label != 0 ? label : "");
     for(i = -1; i >= -top; i--)
     {
@@ -70,17 +74,16 @@ TOLUA_API void toluafix_stack_dump(lua_State* L, const char* label)
         switch(t)
         {
             case LUA_TSTRING:
-                printf("  [%02d] string %s\n", i, lua_tostring(L, i));
+                printf("  [%02d] [string] %s\n", i, lua_tostring(L, i));
                 break;
             case LUA_TBOOLEAN:
-                printf("  [%02d] boolean %s\n", i, lua_toboolean(L, i) ? "true" : "false");
+                printf("  [%02d] [boolean] %s\n", i, lua_toboolean(L, i) ? "true" : "false");
                 break;
             case LUA_TNUMBER:
-                printf("  [%02d] number %g\n", i, lua_tonumber(L, i));
+                printf("  [%02d] [number] %g\n", i, lua_tonumber(L, i));
                 break;
             default:
                 printf("  [%02d] %s\n", i, lua_typename(L, t));
         }
     }
-    printf("\n");
 }

@@ -64,7 +64,7 @@ static int cclua_print(lua_State* L)
 
 static int cclua_traceback(lua_State* L)
 {
-	// 1 error_string
+	// -1 error_string
 	lua_getglobal(L, "debug"); // err debug
 	lua_getfield(L, -1, "traceback"); // err debug traceback
 	lua_pushvalue(L, -3); // err debug traceback err
