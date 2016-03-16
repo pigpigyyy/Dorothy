@@ -67,6 +67,7 @@ Class EditorView,
 				"MessageBox"
 				"InputBox"
 				"SelectionPanel"
+				"ProfileScreen"
 			}
 			@["level#{name}"] = CCMenu.DefaultHandlerPriority-(i+4)*10
 
@@ -98,7 +99,10 @@ Class EditorView,
 			ScenePanel = require "Control.Item.ScenePanel"
 			sleep!
 			ScenePanel!
-
+			sleep!
+			ProfileScreen = require "Control.Operation.ProfileScreen"
+			sleep!
+			ProfileScreen!
 		panelWidth = 10+110*4
 		panelHeight = height*0.6
 		setupPanel = (name)->

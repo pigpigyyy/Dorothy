@@ -148,8 +148,6 @@ bool CCGridBase::initWithSize(const CCSize& gridSize)
 
 CCGridBase::~CCGridBase()
 {
-    CCLOGINFO("cocos2d: deallocing %p", this);
-
 //TODO: ? why 2.0 comments this line        setActive(false);
     CC_SAFE_RELEASE(m_pTexture);
     CC_SAFE_RELEASE(m_pGrabber);

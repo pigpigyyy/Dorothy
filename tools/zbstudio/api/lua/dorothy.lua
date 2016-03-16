@@ -90,6 +90,24 @@ local Dorothy =
 				static = true,
 				type = "value",
 			},
+			maxCount =
+			{
+				description = "[int][Readonly] Max CCObjects.",
+				static = true,
+				type = "value",
+			},
+			maxLuaRefCount =
+			{
+				description = "[int][Readonly] Max CCObjects used by lua.",
+				static = true,
+				type = "value",
+			},
+			maxCallRefCount =
+			{
+				description = "[int][Readonly] Max lua functions referenced by C++.",
+				static = true,
+				type = "value",
+			},
 		},
 		description = "class CCObject.",
 		type = "class",
@@ -1325,6 +1343,18 @@ local Dorothy =
 				type = "value",
 			},
 			deltaTime =
+			{
+				description = "[float][Readonly]",
+				static = true,
+				type = "value",
+			},
+			updateInterval =
+			{
+				description = "[float][Readonly]",
+				static = true,
+				type = "value",
+			},
+			drawInterval =
 			{
 				description = "[float][Readonly]",
 				static = true,
@@ -2691,6 +2721,13 @@ local Dorothy =
 				typeName = "CCSprite",
 				type = "method",
 			},
+			colorText =
+			{
+				args = "(start: int, stop: int, color: ccColor3)",
+				description = "",
+				returns = "()",
+				type = "method",
+			},
 			purgeCachedData =
 			{
 				args = "()",
@@ -3466,6 +3503,13 @@ local Dorothy =
 			normalize =
 			{
 				args = "()",
+				description = "",
+				returns = "()",
+				type = "method"
+			},
+			clamp =
+			{
+				args = "(from: oVec2, to: oVec2)",
 				description = "",
 				returns = "()",
 				type = "method"

@@ -40,13 +40,10 @@ CCAction::CCAction()
 :m_pOriginalTarget(NULL)
 ,m_pTarget(NULL)
 ,m_nTag(kCCActionTagInvalid)
-{
-}
+{ }
 
 CCAction::~CCAction()
-{
-    CCLOGINFO("cocos2d: deallocing");
-}
+{ }
 
 CCAction* CCAction::create()
 {

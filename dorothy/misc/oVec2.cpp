@@ -113,15 +113,19 @@ float oVec2::lengthSquared() const
 {
 	return x * x + y * y;
 }
+float oVec2::angle() const
+{
+	return atan2f(y, x);
+}
 void oVec2::normalize()
 {
 	float length = oVec2::length();
 	x /= length;
 	y /= length;
 }
-float oVec2::angle() const
+void oVec2::clamp(const oVec2& from, const oVec2& to)
 {
-	return atan2f(y, x);
+	*this = ccpClamp(*this, from, to);
 }
 
 NS_DOROTHY_END

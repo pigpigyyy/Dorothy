@@ -180,6 +180,7 @@ int CCArray_each(lua_State* L);
 CCTexture2D* CCTextureCache_add(CCTextureCache* self, CCRenderTexture* renderTexture, const char* name);
 
 CCSprite* CCLabelBMFont_getChar(CCLabelBMFont* self, int index);
+void CCLabelBMFont_colorText(CCLabelBMFont* self, int start, int stop, const ccColor3B& color);
 
 int CCDictionary_get(lua_State* L);
 int CCDictionary_set(lua_State* L);

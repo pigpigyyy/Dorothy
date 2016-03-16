@@ -263,11 +263,12 @@ Class ActionTriggerEditorView,
 					@copyBtn.targetData = nil
 
 		@closeBtn\slot "Tapped",->
-			for item in *@localScope.menuItems
-				exprEditor = item.exprEditor
-				if exprEditor and exprEditor.modified
-					exprEditor.modified = false
-					exprEditor\save!
+			if @localScope.menuItems
+				for item in *@localScope.menuItems
+					exprEditor = item.exprEditor
+					if exprEditor and exprEditor.modified
+						exprEditor.modified = false
+						exprEditor\save!
 			@hide!
 
 		@gslot "Scene.Action.ChangeName",(triggerName)->

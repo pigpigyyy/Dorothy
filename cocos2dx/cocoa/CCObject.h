@@ -88,6 +88,8 @@ public:
 	virtual void update(float dt);
 	static unsigned int getObjectCount();
 	static unsigned int getLuaRefCount();
+	static unsigned int getMaxObjectCount();
+	static unsigned int getMaxLuaRefCount();
 	CCWeak* getWeakRef();
 private:
 	bool _isManaged;

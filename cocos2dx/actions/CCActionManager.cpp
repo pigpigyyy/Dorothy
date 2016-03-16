@@ -52,14 +52,10 @@ CCActionManager::CCActionManager()
 : m_pTargets(NULL), 
   m_pCurrentTarget(NULL),
   m_bCurrentTargetSalvaged(false)
-{
-
-}
+{ }
 
 CCActionManager::~CCActionManager()
 {
-    CCLOGINFO("cocos2d: deallocing %p", this);
-
     removeAllActions();
 }
 

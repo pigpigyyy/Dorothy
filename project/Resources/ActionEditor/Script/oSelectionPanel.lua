@@ -142,7 +142,7 @@ local function oSelectionPanel(borderSize,noCliping)
 
 		if touching then
 			if newPos.x > paddingX then
-				newPos.x = paddingX 
+				newPos.x = paddingX
 			elseif newPos.x-moveX < -paddingX then
 				newPos.x = moveX-paddingX
 			end
@@ -152,7 +152,7 @@ local function oSelectionPanel(borderSize,noCliping)
 				newPos.y = moveY+paddingY
 			end
 			deltaPos = newPos - totalDelta
-			
+
 			local lenY = 0
 			local lenX = 0
 			if newPos.y < 0 then
@@ -186,7 +186,7 @@ local function oSelectionPanel(borderSize,noCliping)
 			end
 			deltaPos = newPos - totalDelta
 		end
-		
+
 		if viewWidth <= borderSize.width then deltaPos.x = 0 end
 		if viewHeight <= borderSize.height then deltaPos.y = 0 end
 
@@ -231,7 +231,7 @@ local function oSelectionPanel(borderSize,noCliping)
 	end
 
 	panel.touchPriority = CCMenu.DefaultHandlerPriority-5
-	
+
 	panel:slot("TouchBegan",function(touch)
 		if touch.id ~= 0 then
 			return false
@@ -244,7 +244,7 @@ local function oSelectionPanel(borderSize,noCliping)
 		panel:schedule(updateSpeed)
 		return true
 	end)
-	
+
 	local function touchEnded()
 		menu.enabled = true
 		if isReseting() then

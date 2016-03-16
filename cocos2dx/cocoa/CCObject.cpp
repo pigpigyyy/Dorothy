@@ -151,6 +151,16 @@ unsigned int CCObject::getLuaRefCount()
 	return g_luaRefCount;
 }
 
+unsigned int CCObject::getMaxObjectCount()
+{
+	return g_maxObjectCount;
+}
+
+unsigned int CCObject::getMaxLuaRefCount()
+{
+	return g_maxLuaCount;
+}
+
 CCWeak* CCObject::getWeakRef()
 {
 	if (!_weak)

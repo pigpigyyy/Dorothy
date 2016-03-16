@@ -1340,6 +1340,11 @@ CCSprite* CCLabelBMFont_getChar(CCLabelBMFont* self, int index)
 	return self->getChar(index - 1);
 }
 
+void CCLabelBMFont_colorText(CCLabelBMFont* self, int start, int stop, const ccColor3B& color)
+{
+	self->colorText(start-1, stop-1, color);
+}
+
 int CCDictionary_get(lua_State* L)
 {
 	/* 1 self, 2 key */

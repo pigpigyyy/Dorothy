@@ -34,7 +34,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask)
 	local panel = CCLayer()
 	panel.anchor = oVec2.zero
 	panel.touchEnabled = true
-	
+
 	if not noMask then
 		local mask = CCLayer()
 		mask.anchor = oVec2.zero
@@ -111,7 +111,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask)
 			totalDelta.y = oEase:func(oEase.OutBack,t,startPos.y,moveY-startPos.y)
 			yVal = totalDelta.y - yVal
 		end
-		
+
 		moveItems(oVec2(xVal and xVal or 0, yVal and yVal or 0))
 
 		if t == 1.0 then
@@ -134,10 +134,10 @@ local function oSelectionPanel(borderSize,noCliping,noMask)
 
 	local function setOffset(deltaPos, touching)
 		local newPos = totalDelta + deltaPos
-		
+
 		if touching then
 			if newPos.x > paddingX then
-				newPos.x = paddingX 
+				newPos.x = paddingX
 			elseif newPos.x-moveX < -paddingX then
 				newPos.x = moveX-paddingX
 			end
@@ -147,7 +147,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask)
 				newPos.y = moveY+paddingY
 			end
 			deltaPos = newPos - totalDelta
-			
+
 			local lenY = 0
 			local lenX = 0
 			if newPos.y < 0 then
@@ -181,7 +181,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask)
 			end
 			deltaPos = newPos - totalDelta
 		end
-		
+
 		if viewWidth < borderSize.width then deltaPos.x = 0 end
 		if viewHeight < borderSize.height then deltaPos.y = 0 end
 

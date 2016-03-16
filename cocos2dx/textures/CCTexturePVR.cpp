@@ -242,8 +242,6 @@ CCTexturePVR::CCTexturePVR()
 
 CCTexturePVR::~CCTexturePVR()
 {
-    CCLOGINFO( "cocos2d: deallocing CCTexturePVR" );
-
     if (m_uName != 0 && ! m_bRetainName)
     {
         ccGLDeleteTexture(m_uName);

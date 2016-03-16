@@ -367,7 +367,7 @@ local function oEditControl()
 		rotChanged = callback
 		rotEditor.visible = true
 		rotEditor.touchEnabled = true
-		worldNode.position = position 
+		worldNode.position = position
 		rotVisual.angle = angle
 		rotVisual.position = center
 		rotCenter = center
@@ -409,7 +409,7 @@ local function oEditControl()
 		sizeVisual.children[1].visible = not args.fixY
 		sizeVisual.children[2].visible = not args.fixX
 	end)
-	
+
 	-- sizeEditor touch callback
 	local totalW = 0
 	local totalH = 0
@@ -418,7 +418,7 @@ local function oEditControl()
 	sizeEditor.touchPriority = oEditor.touchPriorityEditControl
 	sizeEditor.swallowTouches = true
 	sizeEditor:slot("TouchMoved",function(touch)
-		local delta = sizeVisual:convertToNodeSpace(touch.location) - 
+		local delta = sizeVisual:convertToNodeSpace(touch.location) -
 			sizeVisual:convertToNodeSpace(touch.preLocation)
 		if delta ~= oVec2.zero then
 			delta = delta*oEditor.scale
@@ -470,7 +470,7 @@ local function oEditControl()
 		sizeEditor.touchEnabled = false
 		sizeEditor.visible = false
 	end
-	
+
 	-- init center editor --
 	-- centerEditor
 	local centerEditor = CCLayer()
@@ -572,7 +572,7 @@ local function oEditControl()
 	},ccColor4()))
 	radiusVisual.transformTarget = worldNode
 	radiusEditor:addChild(radiusVisual)
-	
+
 	-- radiusEditor touch callback
 	local radiusCenter = oVec2.zero
 	local totalDeltaRadius = 0
@@ -638,7 +638,7 @@ local function oEditControl()
 	local bodyChooser = CCLayer()
 	bodyChooser.visible = false
 	editControl:addChild(bodyChooser)
-	
+
 	local bodyChoosed = nil
 	bodyChooser.touchPriority = oEditor.touchPriorityEditControl
 	bodyChooser.swallowTouches = true
@@ -703,7 +703,7 @@ local function oEditControl()
 		bodyChooser.visible = false
 		bodyChooser.touchEnabled = false
 	end
-	
+
 	-- point control --
 	local pointControl = oPointControl()
 	editControl:addChild(pointControl)
@@ -714,7 +714,7 @@ local function oEditControl()
 	editControl.hidePointControl = function(self)
 		pointControl:hide()
 	end
-	
+
 	-- axis control --
 	local axisVisual = oLine(
 	{
@@ -727,7 +727,7 @@ local function oEditControl()
 	axisVisual.angle = 90
 	rotVisual:addChild(axisVisual)
 	axisVisual.visible = false
-	
+
 	editControl.showAxisEditor = function(self,axis,pos,axisChanged)
 		axisVisual.visible = false
 		local angle = -math.deg(math.atan2(axis.y,axis.x))
@@ -752,7 +752,7 @@ local function oEditControl()
 		axisVisual.visible = false
 		editControl:hideRotEditor()
 	end
-	
+
 	-- init joint chooser --
 	local jointSelected = nil
 	local jointChooser = CCNode()
@@ -762,7 +762,7 @@ local function oEditControl()
 		end
 	end)
 	jointChooser.visible = false
-	
+
 	editControl.showJointChooser = function(self,gearName,callback)
 		editControl:hide()
 		jointChooser.visible = true
@@ -927,9 +927,9 @@ local function oEditControl()
 					oEditor:resetItem(data)
 				end)
 			elseif name == "Vertices" then
-				local item = data.parent or data
-				editControl:showVertEditor(data:get("Vertices"),item:get("Position"),item:get("Angle"),function(vs)
-					data:set("Vertices",vs)
+				local parent = data.parent or data
+				editControl:showVertEditor(data:get("Vertices"),parent:get("Position"),item:get("Angle"),function(verts)
+					data:set("Vertices",verts)
 					oEditor:resetItem(data)
 				end)
 			elseif name == "BodyA" or name == "BodyB" then

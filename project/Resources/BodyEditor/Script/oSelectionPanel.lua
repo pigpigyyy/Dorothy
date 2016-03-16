@@ -35,7 +35,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask)
 	local panel = CCLayer()
 	panel.anchor = oVec2.zero
 	panel.touchEnabled = true
-	
+
 	if not noMask then
 		local mask = CCLayer()
 		mask.anchor = oVec2.zero
@@ -135,10 +135,10 @@ local function oSelectionPanel(borderSize,noCliping,noMask)
 
 	local function setOffset(deltaPos, touching)
 		local newPos = totalDelta + deltaPos
-		
+
 		if touching then
 			if newPos.x > paddingX then
-				newPos.x = paddingX 
+				newPos.x = paddingX
 			elseif newPos.x-moveX < -paddingX then
 				newPos.x = moveX-paddingX
 			end
@@ -148,7 +148,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask)
 				newPos.y = moveY+paddingY
 			end
 			deltaPos = newPos - totalDelta
-			
+
 			local lenY = 0
 			local lenX = 0
 			if newPos.y < 0 then
@@ -182,7 +182,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask)
 			end
 			deltaPos = newPos - totalDelta
 		end
-		
+
 		if viewWidth < borderSize.width then deltaPos.x = 0 end
 		if viewHeight < borderSize.height then deltaPos.y = 0 end
 
@@ -229,7 +229,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask)
 	local function setPos(self,delta)
 		local newPos = totalDelta+delta
 		if newPos.x > 0 then
-			newPos.x = 0 
+			newPos.x = 0
 		elseif newPos.x-moveX < 0 then
 			newPos.x = moveX
 		end
@@ -264,7 +264,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask)
 		panel:schedule(updateSpeed)
 		return true
 	end)
-	
+
 	local function touchEnded()
 		menu.enabled = true
 		if isReseting() then
@@ -315,7 +315,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask)
 					end)
 			}))
 	end
-	
+
 	panel.isAutoRemove = true
 	panel.hide = function(self)
 		panel.touchEnabled = false
@@ -343,7 +343,7 @@ local function oSelectionPanel(borderSize,noCliping,noMask)
 					end)
 			}))
 	end
-	
+
 	panel.reset = function(self,width,height,padX,padY)
 		viewWidth = math.max(width,borderSize.width)
 		viewHeight = math.max(height,borderSize.height)
@@ -358,18 +358,18 @@ local function oSelectionPanel(borderSize,noCliping,noMask)
 		_v = oVec2.zero
 		deltaMoveLength = 0
 	end
-	
+
 	panel.getTotalDelta = function(self)
 		return totalDelta
 	end
-	
+
 	panel.updateSize = function(self,width,height)
 		viewWidth = math.max(width,borderSize.width)
 		viewHeight = math.max(height,borderSize.height)
 		moveY = viewHeight-borderSize.height
 		moveX = borderSize.width-viewWidth
 	end
-	
+
 	return panel
 end
 

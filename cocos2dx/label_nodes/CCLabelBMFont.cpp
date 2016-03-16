@@ -712,6 +712,18 @@ CCSprite* CCLabelBMFont::getChar(int index)
 	return nullptr;
 }
 
+void CCLabelBMFont::colorText(int start, int stop, const ccColor3B& color)
+{
+	for (int i = start; i <= stop; i++)
+	{
+		CCSprite* charSprite = getChar(i);
+		if (charSprite)
+		{
+			charSprite->setColor(color);
+		}
+	}
+}
+
 void CCLabelBMFont::setText(unsigned short* newString, bool needUpdateLabel)
 {
 	if (needUpdateLabel)
@@ -810,6 +822,10 @@ void CCLabelBMFont::updateLabel()
 			while (!(characterSprite = _chars[j + justSkipped]) || !characterSprite->isVisible())
 			{
 				justSkipped++;
+				if (j + justSkipped >= stringLength)
+				{
+					break;
+				}
 			}
 			j += justSkipped;
 

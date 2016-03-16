@@ -1,0 +1,11 @@
+<Node>
+	<Import Module="View.Shape.SolidCircle"/>
+	<Import Module="View.Shape.SolidRect"/>
+
+	<SolidRect  Name="screen" Width="{ @W }" Height="{ @H }" Color="0x88000000" Ref="True">
+		<LabelBMFont Name="profileLabel" X="90" Y="{ @T-70 }" AnchorX="0" AnchorY="1" File="Font/Arial20.fnt" TextWidth="{ @W-100 }" Ref="True"/>
+	</SolidRect>
+	<Layer Name="profileBtn" X="{ @R-35 }" Y="{ $B+35 }" Width="40" Height="40" TouchEnabled="True" TouchPriority="{ editor.levelProfileScreen }" SwallowTouches="True" Ref="True">
+		<SolidCircle Radius="20" Color="0xff00ffff"/>
+	</Layer>
+</Node>

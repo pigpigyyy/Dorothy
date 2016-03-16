@@ -95,8 +95,6 @@ CCNode::CCNode()
 
 CCNode::~CCNode()
 {
-	CCLOGINFO("cocos2d: deallocing");
-
 	// callbacks
 	if (m_nUpdateScriptHandler)
 	{

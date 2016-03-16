@@ -289,9 +289,9 @@ Class TriggerEditorView,
 
 		@closeBtn\slot "Tapped",->
 			for scope in *{@localScope,@globalScope}
-				items = scope.menuItems
-				if items
-					for item in *scope.menuItems
+				menuItems = scope.menuItems
+				if menuItems
+					for item in *menuItems
 						exprEditor = item.exprEditor
 						if exprEditor and exprEditor.modified
 							exprEditor.modified = false

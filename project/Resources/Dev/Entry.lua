@@ -396,6 +396,7 @@ end)
 scene:addChild(panel)
 
 local layerEnd = CCLayer()
+layerEnd.anchor = oVec2.zero
 layerEnd.keypadEnabled = true
 layerEnd:slot("KeyBack",function() -- close app at anytime on keyback event
 	if CCApplication.targetPlatform ~= CCTargetPlatform.Ipad or CCApplication.targetPlatform ~= CCTargetPlatform.Iphone then
@@ -404,6 +405,6 @@ layerEnd:slot("KeyBack",function() -- close app at anytime on keyback event
 end)
 CCDirector.notificationNode = layerEnd
 
-CCDirector.displayStats = true
+--CCDirector.displayStats = true
 
 CCDirector:run(scene)

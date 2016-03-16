@@ -208,6 +208,7 @@ public:
 	/** updates the font chars based on the string to render */
 	void createFontChars();
 	CCSprite* getChar(int index);
+	void colorText(int start, int stop, const ccColor3B& color);
 
 	// super method
 	virtual void setText(const char* newString);

@@ -8,6 +8,7 @@ class CCLabelBMFont: public CCSpriteBatchNode
 	tolua_property__bool bool lineBreakWithoutSpace;
 
 	tolua_outside CCSprite* CCLabelBMFont_getChar @ getChar(int index);
+	tolua_outside void CCLabelBMFont_colorText @ colorText(int start, int stop, ccColor3& color);
 	static void purgeCachedData();
 
 	static CCLabelBMFont* create(const char* str, const char* fntFile, float width = kCCLabelAutomaticWidth, CCTextAlignment alignment = kCCTextAlignmentLeft, oVec2 imageOffset = oVec2::zero);

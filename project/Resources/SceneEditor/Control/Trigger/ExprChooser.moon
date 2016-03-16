@@ -91,9 +91,7 @@ ExprChooser = Class
 					else
 						stopIndex = text\find "]",startIndex,true
 					if colored
-						for i = startIndex,stopIndex
-							child = @bodyLabel\getChar i
-							child.color = color
+						@bodyLabel\colorText startIndex,stopIndex,color
 						char = @bodyLabel\getChar startIndex
 						charPoint = oVec2 char.width,char.height
 						upperY = (labelPos+char.position+charPoint*(oVec2(1,1)-char.anchor)).y+10
@@ -422,7 +420,6 @@ ExprChooser = Class
 		table.sort groupNames
 
 		allowUseLocal = @owner and (@owner\isInAction! or @owner\isInCondition!)
-		print "allowUseLocal",allowUseLocal
 
 		for groupName in *groupNames
 			hasGroupItem = false

@@ -25,7 +25,7 @@ events:
 local function oViewArea()
 	local winSize = CCDirector.winSize
 	local origin = oEditor.origin
-	
+
 	-- init view --
 	local view = CCLayerColor(ccColor4(0xff1a1a1a),winSize.width,winSize.height)
 	view.anchor = oVec2.zero
@@ -110,7 +110,7 @@ local function oViewArea()
 				worldNode.position = parent:get("Position")
 				worldNode.angle = parent:has("Angle") and parent:get("Angle") or 0
 				pos = worldNode:convertToNodeSpace(pos)
-				if oEditor.isFixed then 
+				if oEditor.isFixed then
 					pos = oEditor:round(pos)
 				end
 				data:set("Center",pos)
@@ -234,7 +234,7 @@ local function oViewArea()
 	bodyData[oEditor.Circle.Angle] = 25
 	bodyData[oEditor.Circle.Type] = oBodyDef.Dynamic
 	bodyData[oEditor.Circle.SubShapes] = {oEditor:newSubRectangle(),oEditor:newSubLoop()}
-	bodyData[oEditor.Circle.SubShapes][2][oEditor.SubLoop.Vertices] = 
+	bodyData[oEditor.Circle.SubShapes][2][oEditor.SubLoop.Vertices] =
 	{
 		oVec2(-160,0),
 		oVec2(-80,160),
@@ -254,7 +254,7 @@ local function oViewArea()
 	bodyData[oEditor.Rectangle.Position] = oVec2(0,-400)
 	bodyData[oEditor.Rectangle.Angle] = 45
 	oEditor:addData(bodyData)
-	
+
 	bodyData = oEditor:newLoop()
 	bodyData:set("Position",oVec2(0,300))
 	bodyData:set("Type",oBodyDef.Dynamic)

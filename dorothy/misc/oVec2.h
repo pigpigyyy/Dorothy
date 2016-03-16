@@ -41,6 +41,7 @@ public:
 	float lengthSquared() const;
 	float angle() const;
 	void normalize();
+	void clamp(const oVec2& from, const oVec2& to);
 	float x;
 	float y;
 	static const oVec2 zero;

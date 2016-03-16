@@ -49,12 +49,10 @@ CCTextureAtlas::CCTextureAtlas()
     ,m_bDirty(false)
     ,m_pTexture(NULL)
     ,m_pQuads(NULL)
-{}
+{ }
 
 CCTextureAtlas::~CCTextureAtlas()
 {
-    CCLOGINFO("cocos2d: CCTextureAtlas deallocing %p.", this);
-
     CC_SAFE_FREE(m_pQuads);
     CC_SAFE_FREE(m_pIndices);
 

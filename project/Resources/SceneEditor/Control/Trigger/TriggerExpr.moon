@@ -14,11 +14,6 @@ classColor = ccColor3 62,197,127
 noteColor = ccColor3 56,142,73
 errorColor = ccColor3 0xff0080
 
-colorText = (label,start,stop,color)->
-	for i = start,stop
-		char = label\getChar i
-		char.color = color if char
-
 LineTag = 1
 ErrorTag = 2
 
@@ -128,49 +123,49 @@ Class TriggerExprView,
 			@label.positionY = posY
 			@numberLabel.positionY = posY if @numberLabel
 			label = @label
-			colorText label,1,#value,textColor
+			label\colorText 1,#value,textColor
 			if TriggerDef.CodeMode
 				if value\match "^%s*%-%-%s"
-					colorText label,1,#value,noteColor
+					label\colorText 1,#value,noteColor
 				else
 					-- color keywords text
 					for start,word,stop in value\gmatch "()([%w_]+)()"
 						if keywords[word]
-							colorText label,start,stop-1,keywordColor
+							label\colorText start,stop-1,keywordColor
 						elseif word == "InvalidName" or word == "g_InvalidName"
-							colorText label,start,stop-1,errorColor
+							label\colorText start,stop-1,errorColor
 					-- color comment text
 					index = value\find "%-%-%s"
-					colorText label,index,#value,noteColor if index
+					label\colorText index,#value,noteColor if index
 					start,stop = value\find "%s%-%-%[%[[^%]]*%]%]%s"
-					colorText label,start,stop,noteColor if start
+					label\colorText start,stop,noteColor if start
 					-- color string text
 					value = value\gsub "\\.","xx"
 					for start,word,stop in value\gmatch "()(%b\"\")()"
 						if word == "\"InvalidName\""
-							colorText label,start,stop-1,errorColor
+							label\colorText start,stop-1,errorColor
 						else
-							colorText label,start,stop-1,classColor
+							label\colorText start,stop-1,classColor
 			else
 				if value\match "^%s*Note"
-					colorText label,1,#value,noteColor
+					label\colorText 1,#value,noteColor
 				else
 					-- color start of expression text
 					for start,word,stop in value\gmatch "()([%w_]*)()"
 						if word == "InvalidName" or word == "g_InvalidName"
-							colorText label,start,stop-1,errorColor
+							label\colorText start,stop-1,errorColor
 						elseif word\sub(1,1)\match "%u"
-							colorText label,start,stop-1,keywordColor
+							label\colorText start,stop-1,keywordColor
 							value = value\gsub "\\.","xx"
 					-- color comment text
 					index = value\find "note %b()"
-					colorText label,index,#value,noteColor if index
+					label\colorText index,#value,noteColor if index
 					-- color string text
 					for start,word,stop in value\gmatch "()(%b\"\")()"
 						if word == "\"InvalidName\""
-							colorText label,start,stop-1,errorColor
+							label\colorText start,stop-1,errorColor
 						else
-							colorText label,start,stop-1,classColor
+							label\colorText start,stop-1,classColor
 
 	updateText:=>
 		@text = tostring @expr if @expr
