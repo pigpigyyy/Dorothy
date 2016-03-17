@@ -16,7 +16,9 @@ local string_sub = string.sub
 local table_concat = table.concat
 
 local _M = {
-	max_tb_output_len = 70	-- controls the maximum length of the 'stringified' table before cutting with ' (more...)'
+	max_tb_output_len = 70,	-- controls the maximum length of the 'stringified' table before cutting with ' (more...)'
+	dump_locals = true,
+	simplified = false
 }
 
 -- this tables should be weak so the elements in them won't become uncollectable
@@ -92,8 +94,6 @@ for _, name in ipairs{
 	end
 end
 
-
-
 local m_user_known_functions = {}
 
 local function safe_tostring (value)
@@ -102,7 +102,7 @@ local function safe_tostring (value)
 end
 
 -- Private:
--- Parses a line, looking for possible function definitions (in a very na�ve way)
+-- Parses a line, looking for possible function definitions (in a very naive way)
 -- Returns '(anonymous)' if no function name was found in the line
 local function ParseLine(line)
 	assert(type(line) == "string")
@@ -139,7 +139,7 @@ local function GuessFunctionName(info)
 	if type(info.source) == "string" and info.source:sub(1,1) == "@" then
 		local file, err = io_open(info.source:sub(2), "r")
 		if not file then
-			--print("file not found: "..tostring(err))	-- whoops!
+			print("file not found: "..tostring(err))	-- whoops!
 			return "?"
 		end
 		local line
@@ -222,6 +222,8 @@ end
 -- @param level The stack level where the function is.
 --
 function Dumper:DumpLocals (level)
+	if not _M.dump_locals then return end
+
 	local prefix = "\t "
 	local i = 1
 
@@ -371,9 +373,17 @@ Stack Traceback
 		end
 		if info.what == "main" then
 			if string_sub(info.source, 1, 1) == "@" then
-				dumper:add_f("(%d) main chunk of file '%s' at line %d\r\n", level_to_show, string_sub(info.source, 2), info.currentline)
+				if _M.simplified then
+					dumper:add_f("(%d) '%s':%d\r\n", level_to_show, string_sub(info.source, 2), info.currentline)
+				else
+					dumper:add_f("(%d) main chunk of file '%s' at line %d\r\n", level_to_show, string_sub(info.source, 2), info.currentline)
+				end
 			else
-				dumper:add_f("(%d) main chunk of %s at line %d\r\n", level_to_show, info.short_src, info.currentline)
+				if _M.simplified then
+					dumper:add_f("(%d) '%s':%d\r\n", level_to_show, info.short_src, info.currentline)
+				else
+					dumper:add_f("(%d) main chunk of %s at line %d\r\n", level_to_show, info.short_src, info.currentline)
+				end
 			end
 		elseif info.what == "C" then
 			--print(info.namewhat, info.name)
@@ -401,11 +411,23 @@ Stack Traceback
 			-- test if we have a file name
 			local function_type = (info.namewhat == "") and "function" or info.namewhat
 			if info.source and info.source:sub(1, 1) == "@" then
-				dumper:add_f("(%d) Lua %s '%s' at file '%s:%d'%s\r\n", level_to_show, function_type, function_name, info.source:sub(2), info.currentline, was_guessed and " (best guess)" or "")
+				if _M.simplified then
+					dumper:add_f("(%d) '%s':%d%s\r\n", level_to_show, info.source:sub(2), info.currentline, was_guessed and " (guess)" or "")
+				else
+					dumper:add_f("(%d) Lua %s '%s' at file '%s':%d%s\r\n", level_to_show, function_type, function_name, info.source:sub(2), info.currentline, was_guessed and " (best guess)" or "")
+				end
 			elseif info.source and info.source:sub(1,1) == '#' then
-				dumper:add_f("(%d) Lua %s '%s' at template '%s:%d'%s\r\n", level_to_show, function_type, function_name, info.source:sub(2), info.currentline, was_guessed and " (best guess)" or "")
+				if _M.simplified then
+					dumper:add_f("(%d) '%s':%d%s\r\n", level_to_show, info.source:sub(2), info.currentline, was_guessed and " (guess)" or "")
+				else
+					dumper:add_f("(%d) Lua %s '%s' at template '%s':%d%s\r\n", level_to_show, function_type, function_name, info.source:sub(2), info.currentline, was_guessed and " (best guess)" or "")
+				end
 			else
-				dumper:add_f("(%d) Lua %s '%s' at line %d of chunk '%s'\r\n", level_to_show, function_type, function_name, info.currentline, source)
+				if _M.simplified then
+					dumper:add_f("(%d) '%s':%d\r\n", level_to_show, source, info.currentline)
+				else
+					dumper:add_f("(%d) Lua %s '%s' at chunk '%s':%d\r\n", level_to_show, function_type, function_name, source, info.currentline)
+				end
 			end
 			dumper:DumpLocals(level)
 		else

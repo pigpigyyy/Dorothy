@@ -2,7 +2,6 @@ local oContent = require("oContent")
 oContent:addSearchPath("Lib")
 
 local moonscript = require("moonscript")
-local util = require("moonscript.util")
 local Set = require("moonscript.data").Set
 local LintGlobal = require("LintGlobal")
 
@@ -31,10 +30,13 @@ local CCLayer = require("CCLayer")
 local builtin = require("builtin")
 local ubox = require("ubox")
 local xmlToLua = require("xmlToLua")
-local STP = require("StackTracePlus")
 
-print(tostring(coroutine.wrap(function() end)) == tostring(coroutine.wrap(function() end)))
-debug.traceback = STP.stacktrace
+debug.traceback = function(err)
+	local STP = require("StackTracePlus")
+	STP.dump_locals = false
+	STP.simplified = true
+	return STP.stacktrace(err, 1)
+end
 
 local _require = require
 local loaded = {} -- save loaded module names for end clean up
@@ -323,8 +325,9 @@ panel.init = function(_)
 	}
 	for i = 1,#editors do
 		local editor = editors[i]
-		local button = oButton(editor[1],16,200,50,0,0,function()
-			run(editor[2])
+		local name,module = editor[1],editor[2]
+		local button = oButton(name,16,200,50,0,0,function()
+			run(module)
 		end)
 		button.anchor = oVec2(0,1)
 		menu:addChild(button)
