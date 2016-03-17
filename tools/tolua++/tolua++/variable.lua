@@ -224,7 +224,7 @@ end
   else
     output('  if ('..self:outchecktype(var_index)..')')
   end
-  output('   tolua_error(tolua_S,"#vinvalid type in variable assignment.",&tolua_err);')
+  output('   tolua_error(tolua_S,"#vinvalid type in variable assignment",&tolua_err);')
   output('#endif\n')
   -- assign value
 		local def = 0
@@ -320,5 +320,3 @@ end
 function Variable (s)
  return _Variable (Declaration(s,'var'))
 end
-
-

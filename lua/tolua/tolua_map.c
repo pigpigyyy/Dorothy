@@ -151,7 +151,7 @@ static int tolua_bnd_setpeer(lua_State* L)
 	/* stack: userdata, table */
 	if (!lua_isuserdata(L, -2))
 	{
-		lua_pushstring(L, "Invalid argument #1 to setpeer: userdata expected.");
+		lua_pushstring(L, "invalid argument #1 to setpeer: userdata expected.");
 		lua_error(L);
 	}
 	if (lua_isnil(L, -1))

@@ -3,7 +3,6 @@ oContent:addSearchPath("Lib")
 
 local moonscript = require("moonscript")
 local util = require("moonscript.util")
-local errors = require("moonscript.errors")
 local Set = require("moonscript.data").Set
 local LintGlobal = require("LintGlobal")
 
@@ -32,20 +31,10 @@ local CCLayer = require("CCLayer")
 local builtin = require("builtin")
 local ubox = require("ubox")
 local xmlToLua = require("xmlToLua")
+local STP = require("StackTracePlus")
 
-local traceback = debug.traceback
-debug.traceback = function(err)
-	local trace = traceback("",2)
-	if trace then
-		local rewritten = errors.rewrite_traceback(util.trim(trace), err)
-		if rewritten then
-			return rewritten
-		else
-			return table.concat({err, util.trim(trace)}, "\n")
-		end
-	end
-	return ""
-end
+print(tostring(coroutine.wrap(function() end)) == tostring(coroutine.wrap(function() end)))
+debug.traceback = STP.stacktrace
 
 local _require = require
 local loaded = {} -- save loaded module names for end clean up

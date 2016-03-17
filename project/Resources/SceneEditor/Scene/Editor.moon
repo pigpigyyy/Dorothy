@@ -103,6 +103,8 @@ Class EditorView,
 			ProfileScreen = require "Control.Operation.ProfileScreen"
 			sleep!
 			ProfileScreen!
+			error "here"
+
 		panelWidth = 10+110*4
 		panelHeight = height*0.6
 		setupPanel = (name)->

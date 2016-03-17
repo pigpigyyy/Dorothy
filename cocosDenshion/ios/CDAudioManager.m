@@ -398,7 +398,7 @@ static BOOL configured = FALSE;
         CDLOG(@"Denshion::CDAudioManager - bad OpenAL context detected, attempting to resume audio session");
         [self audioSessionResumed];
     }    
-}    
+}
 
 - (id) init: (tAudioManagerMode) mode {
     if ((self = [super init])) {

@@ -265,7 +265,7 @@ static int class_call_event(lua_State* L)
 			return 1;
 		};
 	};
-	tolua_error(L, "Attempt to call a non-callable object.", NULL);
+	tolua_error(L, "attempt to call a non-callable object.", NULL);
 	return 0;
 }
 
@@ -289,7 +289,7 @@ static int do_operator(lua_State* L, int op)
 			lua_settop(L, 3);
 		}
 	}
-	tolua_error(L, "Attempt to perform operation on an invalid operand", NULL);
+	tolua_error(L, "attempt to perform operation on an invalid operand", NULL);
 	return 0;
 }
 

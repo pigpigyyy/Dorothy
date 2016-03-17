@@ -28,7 +28,7 @@ THE SOFTWARE.
 #include "CCThread.h"
 #include "CCPlatformMacros.h"
 
-#if CC_TARGET_PLATFORM == CC_PLATFORM_MAC
+#if CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_IOS
 	#include "CCStdC.h"
 	typedef struct timeval cc_timeval;
 #else

@@ -59,7 +59,7 @@ function classCode:register (pre)
  output(pre..' int top = lua_gettop(tolua_S);')
  output(pre..' static const unsigned char B[] = {\n   ')
  local t={n=0}
- 
+
  local b = gsub(s,'(.)',function (c)
                          local e = ''
                          t.n=t.n+1 if t.n==15 then t.n=0 e='\n'..pre end
@@ -69,9 +69,9 @@ function classCode:register (pre)
  output(b)
  output('\n'..pre..' };\n')
  if first_line and first_line ~= "" then
- 	output(pre..' tolua_dobuffer(tolua_S,(char*)B,sizeof(B),"tolua embedded: '..first_line..'");')
+ 	output(pre..' tolua_dobuffer(tolua_S,(char*)B,sizeof(B),"tolua_embedded/'..first_line..'");')
  else
- 	output(pre..' tolua_dobuffer(tolua_S,(char*)B,sizeof(B),"tolua: embedded Lua code '..code_n..'");')
+ 	output(pre..' tolua_dobuffer(tolua_S,(char*)B,sizeof(B),"tolua_embedded_code/'..code_n..'");')
  end
  output(pre..' lua_settop(tolua_S, top);')
  output(pre..'} /* end of embedded lua code */\n\n')
@@ -101,5 +101,3 @@ function Code (l)
   text = l
  }
 end
-
-
