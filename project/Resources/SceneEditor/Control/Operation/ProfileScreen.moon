@@ -98,7 +98,7 @@ Class ProfileScreenView,
 			if CCDirector.notificationNode == @
 				CCDirector.notificationNode = nil
 			else
-				CCDirector.notificationNode\removeChild @
+				@parent\removeChild @
 
 		if CCDirector.notificationNode
 			CCDirector.notificationNode\addChild @

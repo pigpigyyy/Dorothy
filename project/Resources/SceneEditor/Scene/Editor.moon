@@ -104,7 +104,6 @@ Class EditorView,
 			sleep!
 			ProfileScreen!
 
-		table(998)
 		panelWidth = 10+110*4
 		panelHeight = height*0.6
 		setupPanel = (name)->
