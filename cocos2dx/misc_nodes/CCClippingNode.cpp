@@ -146,6 +146,10 @@ void CCClippingNode::onExit()
 
 void CCClippingNode::visit()
 {
+	if (!m_bVisible)
+	{
+		return;
+	}
     // if stencil buffer disabled
     if (g_sStencilBits < 1)
     {

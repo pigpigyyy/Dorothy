@@ -12,7 +12,7 @@ textColor = ccColor3 255,255,255
 keywordColor = ccColor3 58,135,212
 classColor = ccColor3 62,197,127
 noteColor = ccColor3 56,142,73
-errorColor = ccColor3 0xff0080
+errorColor = ccColor3 255,0,128
 
 LineTag = 1
 ErrorTag = 2

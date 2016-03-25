@@ -130,6 +130,10 @@ The positions are updated at visit because:
 */
 void CCParallaxNode::visit()
 {
+	if (!m_bVisible)
+	{
+		return;
+	}
     //    CCPoint pos = position_;
     //    CCPoint    pos = [self convertToWorldSpace:CCPoint::zero];
     CCPoint pos = this->absolutePosition();

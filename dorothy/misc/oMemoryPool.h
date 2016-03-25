@@ -23,7 +23,10 @@ public:
 	oMemoryPool() :
 		_chunk(new Chunk()),
 		_freeList(nullptr)
-	{ }
+	{
+		static_assert(ITEM_SIZE >= sizeof(intptr_t),
+			"Size of pool item must be greater or equal to the size of a pointer.");
+	}
 	~oMemoryPool()
 	{
 		oMemoryPool::deleteChunk(_chunk);
@@ -42,9 +45,10 @@ public:
 			{
 				_chunk = new Chunk(_chunk);
 				int consumption = oMemoryPool::capacity();
-				if (consumption >= WARNING_SIZE * 1024)
+				if (consumption > WARNING_SIZE * 1024)
 				{
-					CCLOG("[WARNING] oMemoryPool consumes %d KB memory larger than %d KB for type %s", consumption / 1024, WARNING_SIZE, typeid(Item).name());
+					CCLOG("[WARNING] oMemoryPool consumes %d KB memory larger than %d KB for type %s",
+						consumption / 1024, WARNING_SIZE, typeid(Item).name());
 				}
 			}
 			char* addr = _chunk->buffer + _chunk->size;
@@ -62,7 +66,7 @@ public:
 	Item* newItem(Args&&... args)
 	{
 		Item* mem = (Item*)oMemoryPool<Item, CHUNK_CAPACITY>::alloc();
-		return new (mem)Item(std::forward<Args>(args)...);
+		return new (mem) Item(std::forward<Args>(args)...);
 	}
 	void deleteItem(Item* item)
 	{
@@ -147,7 +151,7 @@ private:
 			size(0),
 			next(next)
 		{ }
-		~Chunk() { delete[] buffer; }
+		~Chunk() { delete [] buffer; }
 		int size;
 		char* buffer;
 		Chunk* next;
@@ -166,7 +170,7 @@ private:
 
 #define USE_MEMORY_POOL(type) \
 public:\
-	inline void* operator new(size_t size){ return _memory.alloc(); }\
+	inline void* operator new(size_t size) { return _memory.alloc(); }\
 	inline void operator delete(void* ptr, size_t size) { _memory.free(ptr); }\
 	static int poolCollect()\
 	{\
