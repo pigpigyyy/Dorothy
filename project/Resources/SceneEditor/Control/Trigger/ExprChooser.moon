@@ -402,7 +402,7 @@ ExprChooser = Class
 					pickPointFromScene!
 				when "Number"
 					editNumber!
-				when "String","TriggerName","ActionName","Text","InitGlobalName"
+				when "String","TriggerName","ActionName","NodeName","Text","InitGlobalName"
 					editString!
 				else
 					if @curExpr.Item

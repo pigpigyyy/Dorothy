@@ -93,7 +93,7 @@ Class ExprEditorView,
 						indent += 1
 					for i = 3,#expr
 						nextExpr expr,i,indent+1
-					with @createExprItem mode("end ),"," "),indent
+					with @createExprItem mode("end )"," "),indent
 						.itemType = "End"
 				else
 					@createExprItem tostring(expr),indent,expr,parentExpr,index
