@@ -101,6 +101,7 @@ VarScope = Class
 Class ExprEditorView,
 	__init:(args)=>
 		@type = "Action"
+		@extension = ".action"
 
 		@exprData = nil
 		@filename = nil
@@ -346,22 +347,22 @@ Class ExprEditorView,
 							if @newName
 								oldFileFullname = editor.gameFullPath..@filename
 								filePath = Path.getPath oldFileFullname
-								newFileFullname = filePath..@newName..".action"
+								newFileFullname = filePath..@newName..@extension
 								return if oldFileFullname == newFileFullname
 								if oContent\exist newFileFullname
 									MessageBox text:"Action Name Exist!",okOnly:true
 									oldName = Path.getName @filename
 									@triggerName = oldName
-									emit "Scene.{ @type }.ChangeName",oldName
+									emit "Scene.#{ @type }.ChangeName",oldName
 								elseif not Path.isValid Path.getFilename newFileFullname
 									MessageBox text:"Invalid Name!",okOnly:true
 									oldName = Path.getName @filename
 									@triggerName = oldName
-									emit "Scene.{ @type }.ChangeName",oldName
+									emit "Scene.#{ @type }.ChangeName",oldName
 								else
 									oContent\saveToFile newFileFullname,TriggerDef.ToEditText @exprData
 									oContent\remove oldFileFullname
-									@filename = Path.getPath(@filename)..@newName..".action"
+									@filename = Path.getPath(@filename)..@newName..@extension
 								@newName = nil
 							selectedExprItem.text = tostring expr
 							@notifyEdit!
@@ -607,8 +608,8 @@ Class ExprEditorView,
 
 		@slot "Entered",checkReload
 
-		@gslot "Scene.{ @type }.ChangeName",(newName)-> @newName = newName
-		@gslot "Scene.{ @type }.Open",checkReload
+		@gslot "Scene.#{ @type }.ChangeName",(newName)-> @newName = newName
+		@gslot "Scene.#{ @type }.Open",checkReload
 
 	notifyEdit:=>
 		children = @triggerMenu.children
@@ -616,7 +617,7 @@ Class ExprEditorView,
 			children[i].lineNumber = i
 		@modified = true
 		@lintCode!
-		emit "Scene.{ @type }.Edited",@filename
+		emit "Scene.#{ @type }.Edited",@filename
 
 	createExprItem:(text,indent,expr,parentExpr,index)=>
 		children = @triggerMenu.children

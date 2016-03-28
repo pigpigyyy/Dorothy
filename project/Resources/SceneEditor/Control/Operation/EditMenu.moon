@@ -73,6 +73,13 @@ Class EditMenuView,
 			else
 				emit "Scene.Action.Open"
 
+		@aiBtn\slot "Tapped",->
+			clearSelection!
+			if @pickPanel.visible
+				MessageBox text:"Pick An Item First",okOnly:true
+			else
+				emit "Scene.AI.Open"
+
 		@delBtn\slot "Tapped",->
 			clearSelection!
 			emit "Scene.EditMenu.Delete"
@@ -236,7 +243,7 @@ Class EditMenuView,
 					@showItemButtons subItems,.showItem
 		setupItemButton @graphicBtn,@graphicLine,{"sprite","model","effect","layer"}
 		setupItemButton @physicsBtn,@physicsLine,{"body","world"}
-		setupItemButton @logicBtn,@logicLine,{"trigger","action"}
+		setupItemButton @logicBtn,@logicLine,{"trigger","action","ai"}
 
 		@gslot "Scene.ShowFix",(value)->
 			editor.xFix = false

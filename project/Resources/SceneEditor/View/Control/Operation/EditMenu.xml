@@ -36,12 +36,14 @@
 				<Button Name="worldBtn" Width="50" Height="50" Text="World" FontSize="16" Ref="True"/>
 				<GroupButton Name="logicBtn" Width="50" Height="50" Text="Logic" FontSize="16" Highlight="{ false }" Ref="True"/>
 				<DrawNode Name="logicLine" Color="0x00ffff" Visible="False" Ref="True">
-					<Segment BeginX="10" BeginY="0" EndX="10" EndY="-95"/>
+					<Segment BeginX="10" BeginY="0" EndX="10" EndY="-155"/>
 					<Segment BeginX="10" BeginY="-35" EndX="20" EndY="-35"/>
 					<Segment BeginX="10" BeginY="-95" EndX="20" EndY="-95"/>
+					<Segment BeginX="10" BeginY="-155" EndX="20" EndY="-155"/>
 				</DrawNode>
 				<Button Name="triggerBtn" Width="50" Height="50" Text="Trigger" FontSize="16" Ref="True"/>
 				<Button Name="actionBtn" Width="50" Height="50" Text="Action" FontSize="16" Ref="True"/>
+				<Button Name="aiBtn" Width="50" Height="50" Text="AI" FontSize="16" Ref="True"/>
 				<!--<Button Name="unitBtn" X="35" Y="{ $T-335 }" Width="50" Height="50" Text="Unit" FontSize="16" Ref="True"/>
 				<Button Name="uiBtn" X="35" Y="{ $T-395 }" Width="50" Height="50" Text="UI" FontSize="16" Ref="True"/>-->
 			</Menu>

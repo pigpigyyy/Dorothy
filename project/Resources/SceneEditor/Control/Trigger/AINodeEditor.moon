@@ -1,12 +1,12 @@
 Dorothy!
 EditorView = require "View.Control.Trigger.Editor"
-ActionExprEditor = require "Control.Trigger.ActionExprEditor"
+AINodeExprEditor = require "Control.Trigger.AINodeExprEditor"
 MenuItem = require "Control.Trigger.MenuItem"
-ExprChooser = require "Control.Trigger.ExprChooser"
 SelectionPanel = require "Control.Basic.SelectionPanel"
 InputBox = require "Control.Basic.InputBox"
 MessageBox = require "Control.Basic.MessageBox"
 TriggerDef = require "Data.TriggerDef"
+SolidRect = require "View.Shape.SolidRect"
 import Expressions,ToEditText from TriggerDef
 import CompareTable,Path from require "Data.Utils"
 
@@ -24,7 +24,7 @@ TriggerScope = Class
 				if not @triggerBtn.exprEditor
 					{width:panelW,height:panelH} = @panel
 					listMenuW = @scrollArea.width
-					exprEditor = with ActionExprEditor {
+					exprEditor = with AINodeExprEditor {
 							x:panelW/2+listMenuW/2
 							y:panelH/2
 							width:panelW-listMenuW
@@ -70,7 +70,7 @@ TriggerScope = Class
 		oContent\mkdir defaultFolder unless oContent\exist defaultFolder
 		@_groups = Path.getFolders path
 		table.sort @_groups
-		files = Path.getAllFiles path,"action"
+		files = Path.getAllFiles path,"node"
 		for i = 1,#files
 			files[i] = prefix..files[i]
 		filesToAdd,filesToDel = CompareTable @files,files
@@ -124,7 +124,10 @@ TriggerScope = Class
 
 Class
 	__partial:=>
-		EditorView title:"Action Editor", scope:false
+		{:width,:height} = CCDirector.winSize
+		mask = SolidRect :width,:height,color:0xaa000000
+		with EditorView title:"AI Node Editor", scope:false, width:width*0.8, height:height*0.7
+			\addChild mask,-1,-1
 
 	__init:(args)=>
 		{width:panelW,height:panelH} = @panel
@@ -133,8 +136,8 @@ Class
 		TriggerScope.panel = @panel
 
 		@localScope = TriggerScope @localListMenu,
-			"actionFullPath",
-			"actionFolder"
+			"aiNodeFullPath",
+			"aiNodeFolder"
 
 		@listScrollArea\setupMenuScroll @localListMenu
 		@listScrollArea.viewSize = @localListMenu\alignItems!
@@ -178,9 +181,9 @@ Class
 										@groupBtn.text = result
 						when "<DEL>"
 							text = if scope.currentGroup == "Default"
-								"Delete Actions\nBut Keep Group\n#{scope.currentGroup}"
+								"Delete Nodes\nBut Keep Group\n#{scope.currentGroup}"
 							else
-								"Delete Group\n#{scope.currentGroup}\nWith Actions"
+								"Delete Group\n#{scope.currentGroup}\nWith Nodes"
 							with MessageBox text:text
 								\slot "OK",(result)->
 									return unless result
@@ -193,40 +196,40 @@ Class
 							@groupBtn.text = item
 
 		@newBtn\slot "Tapped",->
-			with InputBox text:"New Action Name"
+			with InputBox text:"New Node Name"
 				\slot "Inputed",(result)->
 					return unless result
 					if not result\match("^[_%a][_%w]*$")
 						MessageBox text:"Invalid Name!",okOnly:true
 					else
 						scope = @localScope
-						triggerFullPath = scope.path..scope.currentGroup.."/"..result..".action"
+						triggerFullPath = scope.path..scope.currentGroup.."/"..result..".node"
 						if oContent\exist triggerFullPath
-							MessageBox text:"Action Exist!",okOnly:true
+							MessageBox text:"Node Exist!",okOnly:true
 						else
-							trigger = Expressions.UnitAction\Create!
+							trigger = Expressions.ConditionNode\Create!
 							trigger[2][2] = result
 							oContent\saveToFile triggerFullPath,ToEditText trigger
 							scope\updateItems!
-							triggerFile = scope.prefix..scope.currentGroup.."/"..result..".action"
+							triggerFile = scope.prefix..scope.currentGroup.."/"..result..".node"
 							for item in *scope.menu.children
 								if item.file == triggerFile
 									item\emit "Tapped",item
 									break
 
 		@addBtn\slot "Tapped",->
-			MessageBox text:"Place Actions In\nFolders Under\n/Logic/Action/",okOnly:true
+			MessageBox text:"Place Nodes In\nFolders Under\n/Logic/AI/Node/",okOnly:true
 
 		@delBtn\slot "Tapped",->
 			triggerBtn = TriggerScope.triggerBtn
 			if triggerBtn
-				with MessageBox text:"Delete Action\n#{triggerBtn.text}"
+				with MessageBox text:"Delete Node\n#{triggerBtn.text}"
 					\slot "OK",(result)->
 						return unless result
 						oContent\remove editor.gameFullPath..triggerBtn.file
 						@localScope\updateItems!
 			else
-				MessageBox text:"No Action Selected!",okOnly:true
+				MessageBox text:"No Node Selected!",okOnly:true
 
 		with @copyBtn
 			.copying = false
@@ -239,7 +242,7 @@ Class
 					@copyBtn.color = ccColor3 0xff0080
 					triggerBtn = TriggerScope.triggerBtn
 					if not triggerBtn
-						MessageBox text:"No Action Selected!",okOnly:true
+						MessageBox text:"No Node Selected!",okOnly:true
 						return
 					@copyBtn.targetFile = triggerBtn.file
 					@copyBtn.targetData = triggerBtn.exprEditor.exprData
@@ -251,10 +254,10 @@ Class
 					scope = @localScope
 					newPath = scope.path..scope.currentGroup.."/"..triggerName
 					count = 0
-					filename = newPath..".action"
+					filename = newPath..".node"
 					while oContent\exist filename
 						count += 1
-						filename = newPath..tostring(count)..".action"
+						filename = newPath..tostring(count)..".node"
 					triggerName ..= tostring count if count > 1
 					exprData = @copyBtn.targetData
 					oldName = exprData[2][2]
@@ -274,15 +277,18 @@ Class
 						exprEditor\save!
 			@hide!
 
-		@gslot "Scene.Action.ChangeName",(triggerName)->
+		@gslot "Scene.AINode.ChangeName",(triggerName)->
 			TriggerScope.triggerBtn.text = triggerName
 			file = TriggerScope.triggerBtn.file
-			TriggerScope.triggerBtn.file = Path.getPath(file)..triggerName..".action"
+			TriggerScope.triggerBtn.file = Path.getPath(file)..triggerName..".node"
 
-		@closeEvent = @gslot "Scene.Action.Close",-> @hide!
+		@closeEvent = @gslot "Scene.AINode.Close",-> @hide!
 
 	show:=>
 		@closeEvent.enabled = true
+		with @getChildByTag -1
+			.opacity = 0
+			\perform oOpacity 0.3,1,oEase.OutQuad
 		@panel\schedule once ->
 			@localScope\updateItems!
 			@groupBtn.text = @localScope.currentGroup
@@ -298,23 +304,18 @@ Class
 				@localListMenu.enabled = true
 				@editMenu.enabled = true
 				@opMenu.enabled = true
-				for control in *editor.children
-					if control ~= @ and control.__class ~= ExprChooser
-						control.visibleState = control.visible
-						control.visible = false
 		}
 
 	hide:=>
 		@closeEvent.enabled = false
-		for control in *editor.children
-			if control ~= @ and control.__class ~= ExprChooser
-				control.visible = control.visibleState
 		@listScrollArea.touchEnabled = false
 		@localListMenu.enabled = false
 		@editMenu.enabled = false
 		@opMenu.enabled = false
 		@closeBtn\perform oScale 0.3,0,0,oEase.InBack
 		@panel\perform oOpacity 0.3,0,oEase.OutQuad
+		with @getChildByTag -1
+			\perform oOpacity 0.3,0,oEase.OutQuad
 		@perform CCSequence {
 			CCDelay 0.3
 			CCHide!

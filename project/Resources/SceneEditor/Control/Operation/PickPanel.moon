@@ -51,6 +51,7 @@ Class PickPanelView,
 
 		@gslot "Scene.Trigger.Picking",pickFunction "Trigger"
 		@gslot "Scene.Action.Picking",pickFunction "Action"
+		@gslot "Scene.AINode.Picking",pickFunction "AINode"
 
 		@selectEvent = @gslot "Scene.ViewPanel.Select",(itemData)->
 			if @itemType ~= "Point"

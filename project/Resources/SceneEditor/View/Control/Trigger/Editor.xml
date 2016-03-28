@@ -10,7 +10,7 @@
 	<Import Module="View.Shape.SolidRect"/>
 	<Import Module="View.Control.Basic.CircleButton"/>
 
-	<Node Name="panel" X="{ $X }" Y="{ $Y }" Width="{ @W }" Height="{ @H }" Ref="True">
+	<Node Name="panel" X="{ $X }" Y="{ $Y }" Width="{ width or @W }" Height="{ height or @H }" Ref="True">
 		<SolidRect Width="{ $W }" Height="{ $H }" Color="0xff100000"/>
 
 		<Script>local menuHeight = scope and 150 or 100</Script>

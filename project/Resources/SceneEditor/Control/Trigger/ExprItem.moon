@@ -112,7 +112,7 @@ Class ExprItemView,
 			parentExpr = @parentExpr
 			if parentExpr
 				switch parentExpr[1]
-					when "Condition","Available"
+					when "Condition","Available","ConditionNode"
 						if #parentExpr ~= @index
 							value ..= " and"
 			@_text = value

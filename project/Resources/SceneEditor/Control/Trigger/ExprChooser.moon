@@ -559,7 +559,9 @@ ExprChooser = Class
 				.opacity = 0
 				\perform oOpacity 0.3,1,oEase.OutQuad
 		if @mask
-			@mask\perform oOpacity 0.3,1,oEase.OutQuad
+			with @mask
+				.opacity = 0
+				\perform oOpacity 0.3,1,oEase.OutQuad
 		with @panel
 			.opacity = 0
 			\perform CCSequence {

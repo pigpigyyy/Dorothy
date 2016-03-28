@@ -49,6 +49,22 @@ Expressions = {
 			table.concat codes,"\n"
 		Create:NewExpr!
 	}
+	ConditionNode: {
+		Type:"ConditionNode"
+		Group:"None"
+		Desc:"This AI condition node named [NodeName] checks"
+		ToCode:=> "ConditionNode( #{ @[2] }, function()"
+		Create:NewExpr "NodeName","True"
+	}
+	NodeName: {
+		Text:"Node Name"
+		Type:"NodeName"
+		Group:"Special"
+		Desc:"The AI node`s name."
+		CodeOnly:true
+		ToCode:=> "\"#{ @[2] }\""
+		Create:NewExprVal "InvalidName"
+	}
 	UnitAction: {
 		Type:"UnitAction"
 		Group:"None"
@@ -810,7 +826,7 @@ TriggerDef = {
 			switch expr[1]
 				when "Trigger"
 					nextExpr expr[3]
-				when "Condition","Action","UnitAction","Available","Run","Stop","Event"
+				when "Condition","Action","UnitAction","ConditionNode","Available","Run","Stop","Event"
 					return
 				when "SetLocal"
 					assignExpr = expr[2]

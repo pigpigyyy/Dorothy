@@ -253,6 +253,17 @@ Class EditorView,
 					@actionTriggerEditor = ActionTriggerEditor!
 					@actionTriggerEditor\show!
 					@addChild @actionTriggerEditor
+		@gslot "Scene.AI.Open",->
+			return unless @scene
+			if @aiTriggerEditor
+				@aiTriggerEditor\show!
+			else
+				@schedule once ->
+					AINodeEditor = require "Control.Trigger.AINodeEditor"
+					sleep!
+					@aiTriggerEditor = AINodeEditor!
+					@aiTriggerEditor\show!
+					@addChild @aiTriggerEditor
 
 	updateSprites:=> emit "Scene.LoadSprite",@graphicFolder
 	updateModels:=> emit "Scene.LoadModel",@graphicFolder
@@ -278,6 +289,9 @@ Class EditorView,
 				oContent\mkdir @triggerFullPath unless oContent\exist @triggerFullPath
 				oContent\mkdir @triggerGlobalFullPath unless oContent\exist @triggerGlobalFullPath
 				oContent\mkdir @actionFullPath unless oContent\exist @actionFullPath
+				oContent\mkdir @aiFullPath unless oContent\exist @aiFullPath
+				oContent\mkdir @aiNodeFullPath unless oContent\exist @aiNodeFullPath
+				oContent\mkdir @aiTreeFullPath unless oContent\exist @aiTreeFullPath
 				if @_actionEditor
 					@actionEditor.input = @gameFullPath
 					@actionEditor.output = @gameFullPath
@@ -319,6 +333,12 @@ Class EditorView,
 	triggerLocalFullPath:property => @_gameFullPath.."Logic/Trigger/Local/#{@scene}/"
 	triggerGlobalFolder:property => "Logic/Trigger/Global/"
 	triggerGlobalFullPath:property => @_gameFullPath.."Logic/Trigger/Global/"
+	aiFolder:property => "Logic/AI/"
+	aiFullPath:property => @_gameFullPath.."Logic/AI/"
+	aiNodeFolder:property => "Logic/AI/Node/"
+	aiNodeFullPath:property => @_gameFullPath.."Logic/AI/Node/"
+	aiTreeFolder:property => "Logic/AI/Tree/"
+	aiTreeFullPath:property => @_gameFullPath.."Logic/AI/Tree/"
 	sceneFolder:property => "Scene/"
 	sceneFullPath:property => @_gameFullPath.."Scene/"
 	uiFileFullPath:property => @sceneFullPath.."UI.scene"
