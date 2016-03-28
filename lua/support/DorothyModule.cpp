@@ -1104,6 +1104,38 @@ void oContent_setSearchResolutionsOrder(oContent* self, char* paths[], int lengt
 	}
 	self->setSearchResolutionsOrder(searchOrders);
 }
+void oContent_loadFileAsync(oContent* self, const char* filename, int handler)
+{
+	string file(filename);
+	self->loadFileAsyncUnsafe(filename, [file,handler](char* data, unsigned long size)
+	{
+		lua_State* L = CCLuaEngine::sharedEngine()->getState();
+		lua_pushlstring(L, file.c_str(), file.size());
+		lua_pushlstring(L, data, size);
+		CCLuaEngine::call(L, 2, 0);
+		CCLuaEngine::sharedEngine()->removeScriptHandler(handler);
+	});
+}
+void oContent_loadFileAsync(oContent* self, char* filenames[], int length, int handler)
+{
+	auto files = std::make_shared<vector<string>>(length);
+	for (int i = 0; i < length; i++)
+	{
+		(*files)[i] = filenames[i];
+		self->loadFileAsync(filenames[i], [files,i,handler](oOwnArray<char> data, unsigned long size)
+		{
+			auto fileArray = *files;
+			lua_State* L = CCLuaEngine::sharedEngine()->getState();
+			lua_pushlstring(L, fileArray[i].c_str(), fileArray[i].size());
+			lua_pushlstring(L, data, size);
+			CCLuaEngine::execute(L, handler, 2);
+			if (i == (int)fileArray.size() - 1)
+			{
+				CCLuaEngine::sharedEngine()->removeScriptHandler(handler);
+			}
+		});
+	}
+}
 
 CCSprite* CCSprite_createWithClip(const char* clipStr)
 {

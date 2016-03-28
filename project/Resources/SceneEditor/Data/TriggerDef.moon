@@ -465,7 +465,7 @@ Expressions = {
 		Text:"Number"
 		Type:"GlobalInit"
 		Group:"Variable"
-		Desc:"Init [InitGlobalName] to [Number] with note [Text]."
+		Desc:"Initially set global variable [InitGlobalName] to [Number] with note [Text]."
 		ToCode:=> "g_#{ @[2] } = #{ @[3] }"..(tostring(@[4]) == "" and "" or " -- #{ @[4] }")
 		Create:NewExpr "InitGlobalName","Number","Text"
 	}
@@ -490,7 +490,7 @@ Expressions = {
 		Text:"Model"
 		Type:"GlobalInit"
 		Group:"Variable"
-		Desc:"Init [InitGlobalName] to [Model] with note [Text]."
+		Desc:"Initially set global variable [InitGlobalName] to [Model] with note [Text]."
 		ToCode:=> "g_#{ @[2] } = #{ @[3] }"..(tostring(@[4]) == "" and "" or " -- #{ @[4] }")
 		Create:NewExpr "InitGlobalName","ModelByName","Text"
 	}
@@ -515,7 +515,7 @@ Expressions = {
 		Text:"Body"
 		Type:"GlobalInit"
 		Group:"Variable"
-		Desc:"Init [InitGlobalName] to [Body] with note [Text]."
+		Desc:"Initially set global variable [InitGlobalName] to [Body] with note [Text]."
 		ToCode:=> "g_#{ @[2] } = #{ @[3] }"..(tostring(@[4]) == "" and "" or " -- #{ @[4] }")
 		Create:NewExpr "InitGlobalName","BodyByName","Text"
 	}
@@ -728,7 +728,7 @@ TriggerDef = {
 			switch expr[1]
 				when "Trigger"
 					append indent,tostring expr
-					append 0,"" unless codeMode
+					append 0,"" unless TriggerDef.CodeMode
 					for i = 4,#expr
 						nextExpr expr,i,indent+1
 					append indent,")"
@@ -747,7 +747,7 @@ TriggerDef = {
 					handleAction indent,expr
 				when "UnitAction"
 					append indent,tostring expr
-					append 0,"" unless codeMode
+					append 0,"" unless TriggerDef.CodeMode
 					for i = 3,#expr
 						nextExpr expr,i,indent+1
 					append indent,")"
@@ -785,7 +785,7 @@ TriggerDef = {
 					append indent,tostring expr
 				else
 					append indent,tostring expr
-			if parentExpr 
+			if parentExpr
 				switch parentExpr[1]
 					when "Condition","Available"
 						if parentExpr[#parentExpr] ~= expr
@@ -810,13 +810,16 @@ TriggerDef = {
 			switch expr[1]
 				when "Trigger"
 					nextExpr expr[3]
-				when "Condition","Action","UnitAction","Available","Run","Stop"
+				when "Condition","Action","UnitAction","Available","Run","Stop","Event"
 					return
 				when "SetLocal"
 					assignExpr = expr[2]
 					varName = assignExpr[2][2]
 					if varName == "InvalidName"
 						err "Use local variable with invalid name."
+					elseif varName\sub(1,2) == "g_" and globals[varName\sub 3]
+						err "Name of local variable duplicates with global variable \"",
+							varName, "\"."
 					else
 						localType = varInScope varName
 						varType = assignExpr[1]\match "^SetLocal(.*)"
@@ -845,33 +848,39 @@ TriggerDef = {
 							"\" to value of type \"",varType,"\"."
 					nextExpr assignExpr[3],assignExpr
 				when "LocalName"
-					if expr[2] == "InvalidName"
+					varName = expr[2]
+					if varName == "InvalidName"
 						err "Use local variable with invalid name."
 						return
-					localType = varInScope expr[2]
+					elseif varName\sub(1,2) == "g_" and globals[varName\sub 3]
+						err "Name of local variable duplicates with global variable \"",
+							varName, "\"."
+						return
+					localType = varInScope varName
 					varType = parentExpr[1]\match "^Local(.*)"
 					if localType
 						if localType ~= varType
-							err "Local variable \"",expr[2],
+							err "Local variable \"",varName,
 								"\" of type \"",localType,
 								"\" is used as type \"",varType,"\"."
 					else
-						err "Local variable \"",expr[2],
+						err "Local variable \"",varName,
 							"\" of type \"",varType,
 							"\" is used without initialization."
 				when "GlobalName"
-					if expr[2] == "InvalidName"
+					varName = expr[2]
+					if varName == "InvalidName"
 						err "Use global variable with invalid name."
 						return
-					globalType = globals[expr[2]]
+					globalType = globals[varName]
 					varType = parentExpr[1]\match "^Global(.*)"
 					if globalType
 						if globalType ~= varType
-							err "Global variable \"g_",expr[2],
+							err "Global variable \"g_",varName,
 								"\" of type \"",globalType,
 								"\" is used as type \"",varType,"\"."
 					else
-						err "Global variable \"g_",expr[2],
+						err "Global variable \"g_",varName,
 							"\" of type \"",varType,
 							"\" is used without initialization."
 				else
@@ -892,6 +901,52 @@ TriggerDef = {
 					nextExpr expr,parentExpr
 			#errors > 0 and table.concat(errors,"\n") or ""
 		checkExpr
+
+	LintNotPass:(exprData)->
+		args = switch exprData[1]
+			when "Trigger"
+				exprData[4][2].Args
+			when "UnitAction"
+				action:"Action"
+			else
+				{}
+		locals = args and {k,v\match("^%a*") for k,v in pairs args} or nil
+		globals = {expr[2][2],expr[3].Type for expr in *editor\getGlobalExpr![2,]}
+
+		lintFunc = TriggerDef.GetLintFunction locals,globals
+
+		checkError = (parentExpr,index)->
+			expr = index and parentExpr[index] or parentExpr
+			switch expr[1]
+				when "Trigger"
+					for i = 4,#expr
+						return true if checkError expr,i
+				when "UnitAction"
+					for i = 3,#expr
+						return true if checkError expr,i
+				when "Event","Condition","Action","Available","Run","Stop"
+					return true if lintFunc(expr,parentExpr,"Start") ~= ""
+					for i = 2,#expr
+						return true if checkError expr,i
+					return true if lintFunc(expr,parentExpr,"End") ~= ""
+				when "If"
+					return true if lintFunc(expr,parentExpr,"Start") ~= ""
+					for i = 2,#expr[3]
+						return true if checkError expr[3],i
+					return true if lintFunc(expr,parentExpr,"Mid") ~= ""
+					for i = 2,#expr[4]
+						return true if checkError expr[4],i
+					return true if lintFunc(expr,parentExpr,"End") ~= ""
+				when "Loopi"
+					return true if lintFunc(expr,parentExpr,"Start") ~= ""
+					for i = 2,#expr[5]
+						return true if checkError expr[5],i
+					return true if lintFunc(expr,parentExpr,"End") ~= ""
+				else
+					return true if lintFunc(expr,parentExpr) ~= ""
+			false
+
+		checkError exprData
 }
 
 Groups = {}

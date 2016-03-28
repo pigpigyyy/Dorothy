@@ -149,6 +149,8 @@ void __oContent_getDirEntries(lua_State* L, oContent* self, const char* path, bo
 void oContent_copyFileAsync(oContent* self, const char* src, const char* dst, int handler);
 void oContent_setSearchPaths(oContent* self, char* paths[], int length);
 void oContent_setSearchResolutionsOrder(oContent* self, char* paths[], int length);
+void oContent_loadFileAsync(oContent* self, const char* filename, int handler);
+void oContent_loadFileAsync(oContent* self, char* filenames[], int length, int handler);
 
 CCSprite* CCSprite_createWithClip(const char* clipStr);
 

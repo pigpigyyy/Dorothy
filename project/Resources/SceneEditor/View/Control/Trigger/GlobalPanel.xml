@@ -17,7 +17,7 @@
 		<Item Name="view">
 			<Menu Name="editMenu" AnchorX="1" AnchorY="1" Width="250" Height="70" AlignItems="10" TouchPriority="{ editor.levelItemPanel-2 }" Visible="False" Ref="True">
 				<Button Name="pickBtn" Text="Pick" Width="50" Height="50" FontSize="16" BackColor="0xca000000" Ref="True"/>
-				<Button Name="initBtn" Text="Init" Width="50" Height="50" FontSize="20" BackColor="0xca000000" Ref="True"/>
+				<Button Name="initBtn" Text="Set" Width="50" Height="50" FontSize="20" BackColor="0xca000000" Ref="True"/>
 				<Button Name="addBtn" Text="Add" Width="50" Height="50" BackColor="0xca000000" FontSize="16" Ref="True"/>
 				<Button Name="delBtn" Text="Del" Width="50" Height="50" FontSize="16" BackColor="0xca000000" Ref="True"/>
 			</Menu>

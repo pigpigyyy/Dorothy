@@ -1,9 +1,9 @@
 Dorothy!
-TriggerItemView = require "View.Control.Trigger.TriggerItem"
+MenuItemView = require "View.Control.Trigger.MenuItem"
 
 -- [params]
 -- x, y, width, height, text
-Class TriggerItemView,
+Class MenuItemView,
 	__init:(args)=>
 		@_checked = false
 		@_text = @label.text

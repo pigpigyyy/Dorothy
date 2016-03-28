@@ -248,7 +248,7 @@ Class EditorView,
 				@actionTriggerEditor\show!
 			else
 				@schedule once ->
-					ActionTriggerEditor = require "Control.Trigger.ActionTriggerEditor"
+					ActionTriggerEditor = require "Control.Trigger.ActionEditor"
 					sleep!
 					@actionTriggerEditor = ActionTriggerEditor!
 					@actionTriggerEditor\show!
@@ -276,7 +276,6 @@ Class EditorView,
 				oContent\mkdir @logicFullPath unless oContent\exist @logicFullPath
 				oContent\mkdir @sceneFullPath unless oContent\exist @sceneFullPath
 				oContent\mkdir @triggerFullPath unless oContent\exist @triggerFullPath
-				oContent\mkdir @triggerLocalFullPath unless oContent\exist @triggerLocalFullPath
 				oContent\mkdir @triggerGlobalFullPath unless oContent\exist @triggerGlobalFullPath
 				oContent\mkdir @actionFullPath unless oContent\exist @actionFullPath
 				if @_actionEditor
@@ -945,3 +944,18 @@ Class EditorView,
 	saveGlobalExpr:=>
 		globalVarFile = editor.logicFullPath.."variable.global"
 		oContent\saveToFile globalVarFile,TriggerDef.ToEditText(@globalExpr)
+
+	lintAllTriggers:=>
+		editor\schedule once ->
+			actionFullPath = editor.actionFullPath
+			files = Path.getAllFiles actionFullPath,{"action","trigger"}
+			for i,file in ipairs files do files[i] = actionFullPath..file
+			oContent\loadFileAsync files,(name,data)->
+				exprData = TriggerDef.SetExprMeta loadstring(data)!
+				compiledFile = name\sub(1,-7).."lua"
+				if TriggerDef.LintNotPass exprData
+					if oContent\exist compiledFile
+						oContent\remove compiledFile
+				else
+					if not oContent\exist compiledFile
+						oContent\saveToFile compiledFile, TriggerDef.ToCodeText exprData

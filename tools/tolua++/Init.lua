@@ -242,13 +242,42 @@ local oCache_poolCollect = oCache.Pool.collect
 oCache.Pool.collect = function(self)
 	return oCache_poolCollect()
 end
+
+local oContent = builtin.oContent
+local oContent_loadFileAsync = oContent.loadFileAsync
+oContent.loadFileAsync = function(_,arg,handler)
+	if type(arg) == "string" then
+		local isloaded = false
+		local loadedData
+		oContent_loadFileAsync(arg, function(file,data)
+			if handler then
+				handler(file, data)
+			end
+			loadedData = data
+			isloaded = true
+		end)
+		wait(function() return not isloaded end)
+		return loadedData
+	elseif type(arg) == "table" then
+		local isloaded = false
+		local loadedData = {}
+		oContent_loadFileAsync(oContent, arg, function(file,data)
+			if handler then
+				handler(file, data)
+			end
+			table.insert(loadedData,data)
+			isloaded = true
+		end)
+		wait(function() return not isloaded end)
+		return loadedData
+	end
+end
+
 local CCTextureCache = builtin.CCTextureCache
 local CCTextureCache_loadAsync = CCTextureCache.loadAsync
 oCache.Texture = builtin.CCTextureCache()
 builtin.CCTextureCache = nil
 CCTextureCache.loadAsync = nil
-
-local oContent = builtin.oContent
 local function _loadTextureAsync(filename, loaded)
 	if not oContent:exist(filename) then
 		CCLuaLog(string.format("[ERROR] Texture file fails to load: %s", filename))
@@ -271,7 +300,7 @@ local oMusic = builtin.oMusic
 local function _loadAsync(filename, loaded)
 	local extension = string.match(filename, "%.([^%.\\/]*)$")
 	if extension then extension = string.lower(extension) end
-	local itemType = nil
+	local itemType
 	if extension == "png" or extension == "jpg" or extension == "tiff" or extension == "webp" then
 		return _loadTextureAsync(filename, loaded)
 	elseif extension == "clip" then

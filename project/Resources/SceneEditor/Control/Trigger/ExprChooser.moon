@@ -1,7 +1,7 @@
 Dorothy!
 ExprChooserView = require "View.Control.Trigger.ExprChooser"
 TriggerDef = require "Data.TriggerDef"
-TriggerItem = require "Control.Trigger.TriggerItem"
+MenuItem = require "Control.Trigger.MenuItem"
 SolidRect = require "View.Shape.SolidRect"
 GroupButton = require "Control.Basic.GroupButton"
 SelectionPanel = require "Control.Basic.SelectionPanel"
@@ -112,6 +112,7 @@ ExprChooser = Class
 										expr:@curExpr[index]
 										parentExpr:@curExpr
 										owner:@owner
+										editorType:@type
 										prev:@
 										:noVar
 										:backOnly
@@ -431,7 +432,7 @@ ExprChooser = Class
 					isGetGlobal = exprName\match "^Global"
 					isGetVar = isGetLocal or isGetGlobal
 					continue if (not allowUseLocal and isGetLocal) or (noVar and isGetVar)
-					exprItem = with TriggerItem {
+					exprItem = with MenuItem {
 							text:exprDef.Text or exprDef.Name
 							fontSize:18
 							width:180
@@ -443,7 +444,7 @@ ExprChooser = Class
 					@apiMenu\addChild exprItem
 					hasGroupItem = true
 			if hasGroupItem
-				@catMenu\addChild with TriggerItem {
+				@catMenu\addChild with MenuItem {
 						text:groupName
 						fontSize:18
 						width:80

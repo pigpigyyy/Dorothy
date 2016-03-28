@@ -24,6 +24,8 @@ class oContent
 	tolua_outside void oContent_loadFile @ loadFile(const char* filename);
     tolua_outside void oContent_setSearchPaths @ setSearchPaths(char* paths[tolua_len]);
     tolua_outside void oContent_setSearchResolutionsOrder @ setSearchResolutionsOrder(char* paths[tolua_len]);
+    tolua_outside void oContent_loadFileAsync @ loadFileAsync(char* filename, tolua_function handler);
+    tolua_outside void oContent_loadFileAsync @ loadFileAsync(char* paths[tolua_len], tolua_function handler);
 
 	void purgeCachedEntries();
 	

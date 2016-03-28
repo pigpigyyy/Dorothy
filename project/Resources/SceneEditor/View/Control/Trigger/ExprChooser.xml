@@ -4,7 +4,6 @@
 	<Import Module="View.Shape.LineRect"/>
 	<Import Module="View.Shape.SolidRect"/>
 	<Import Module="View.Control.Basic.CircleButton"/>
-	<Import Module="Control.Trigger.TriggerItem"/>
 	<Import Module="Control.Trigger.ExprPreview"/>
 
 	<Script>if level == 1 then</Script>
@@ -14,7 +13,7 @@
 		<ExprPreview Name="previewItem" Ref="True"/>
 	<Script>end</Script>
 
-	<Node Name="panel" X="{ @X }" Y="{ @Y+@H*0.04 }" Width="{ @W*0.8 }" Height="{ @H*0.6 }" Ref="True">
+	<Node Name="panel" X="{ @X }" Y="{ @Y+@H*0.05 }" Width="{ @W*0.8 }" Height="{ @H*0.6 }" Ref="True">
 		<SolidRect Width="{ $W }" Height="{ $H }" Color="0xff100000"/>
 
 		<Script>local catWidth = 100</Script>
@@ -57,7 +56,7 @@
 		</Line>
 	</Node>
 
-	<Menu Name="opMenu" X="{ @X+panel.width/2-35 }" Y="{ @Y+@H*0.04+panel.height/2 }" Width="130" Height="60" TouchPriority="{ editor.levelExprChooser-3 }" Ref="True">
+	<Menu Name="opMenu" X="{ @X+panel.width/2-35 }" Y="{ @Y+@H*0.05+panel.height/2 }" Width="130" Height="60" TouchPriority="{ editor.levelExprChooser-3 }" Ref="True">
 		<CircleButton Name="backBtn" X="{ backOnly and ($R-30) or ($L+30) }" Y="{ $Y }" Radius="30" Text="Back" FontSize="16" Ref="True">
 			<DrawNode>
 				<Dot X="30" Y="30" Radius="30" Color="0x22ffffff"/>

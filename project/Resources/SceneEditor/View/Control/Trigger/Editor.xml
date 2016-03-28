@@ -5,7 +5,7 @@
 	<Import Module="Control.Basic.ScrollArea"/>
 	<Import Module="Control.Basic.Button"/>
 	<Import Module="Control.Basic.GroupButton"/>
-	<Import Module="Control.Trigger.TriggerItem"/>
+	<Import Module="Control.Trigger.MenuItem" Name="TriggerItem"/>
 	<Import Module="View.Shape.LineRect"/>
 	<Import Module="View.Shape.SolidRect"/>
 	<Import Module="View.Control.Basic.CircleButton"/>
@@ -13,19 +13,23 @@
 	<Node Name="panel" X="{ $X }" Y="{ $Y }" Width="{ @W }" Height="{ @H }" Ref="True">
 		<SolidRect Width="{ $W }" Height="{ $H }" Color="0xff100000"/>
 
+		<Script>local menuHeight = scope and 150 or 100</Script>
+
 		<Node X="125" Y="{ $Y }" Width="250" Height="{ $H }">
 			<!-- scope menu -->
-			<Menu Name="scopeMenu" X="{ $X }" Y="{ $T-75 }" Width="{ $W }" Height="150" AlignItems="10" TouchPriority="{ editor.levelTriggerMenu-1 }" Ref="True">
+			<Menu Name="scopeMenu" X="{ $X }" Y="{ $T-menuHeight/2 }" Width="{ $W }" Height="{ menuHeight }" AlignItems="10" TouchPriority="{ editor.levelTriggerMenu-1 }" Ref="True">
 				<Node Width="{ $W }" Height="20">
-					<LabelTTF Text="Trigger Editor" X="{ $X }" Y="{ $Y+5 }" FontName="Arial" FontSize="20" AntiAlias="False" Color="0x00ffff"/>
+					<LabelTTF Text="{ title }" X="{ $X }" Y="{ $Y+5 }" FontName="Arial" FontSize="20" AntiAlias="False" Color="0x00ffff"/>
 				</Node>
-				<TriggerItem Name="localBtn" Text="Local" Width="{ ($W-30)/2 }" Height="40" FontSize="20" Ref="True"/>
-				<TriggerItem Name="globalBtn" Text="Global" Width="{ ($W-30)/2 }" Height="40" FontSize="20" Ref="True"/>
+				<Script>if scope then</Script>
+					<TriggerItem Name="localBtn" Text="Local" Width="{ ($W-30)/2 }" Height="40" FontSize="20" Ref="True"/>
+					<TriggerItem Name="globalBtn" Text="Global" Width="{ ($W-30)/2 }" Height="40" FontSize="20" Ref="True"/>
+				<Script>end</Script>
 				<GroupButton Name="groupBtn" Text="Default" Width="{ $W-20 }" Height="40" Ref="True"/>
 			</Menu>
 
 			<!-- trigger list -->
-			<ScrollArea Name="listScrollArea" X="{ $X }" Y="{ $T-150-($H-220)/2 }" Width="{ $W }" Height="{ $H-220 }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelTriggerMenu-2 }" Ref="True">
+			<ScrollArea Name="listScrollArea" X="{ $X }" Y="{ $T-menuHeight-($H-70-menuHeight)/2 }" Width="{ $W }" Height="{ $H-70-menuHeight }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelTriggerMenu-2 }" Ref="True">
 				<Item Name="view">
 					<Menu Name="localListMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.levelTriggerMenu-1 }" Enabled="False" Ref="True"/>
 					<Menu Name="globalListMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.levelTriggerMenu-1 }" Enabled="False" Ref="True" Visible="False"/>
@@ -45,11 +49,11 @@
 				<Vec2 X="0" Y="{ $T-1 }"/>
 			</Line>
 		</Node>
-	
+
 		<LineRect X="1" Y="1" Width="{ $W-2 }" Height="{ $H-2 }" Color="0xffffafaf"/>
 	</Node>
 
-	<Menu Name="opMenu" X="{ @R-40 }" Y="{ @T-40 }" Width="60" Height="60" TouchPriority="{ editor.levelTriggerMenu-3 }" Enabled="False" Ref="True">
+	<Menu Name="opMenu" X="{ math.min(panel.positionX+panel.width/2,@R-40) }" Y="{ math.min(panel.positionY+panel.height/2,@T-40) }" Width="60" Height="60" TouchPriority="{ editor.levelTriggerMenu-3 }" Enabled="False" Ref="True">
 		<CircleButton Name="closeBtn" X="{ $X }" Y="{ $Y }" Radius="30" Text="Close" FontSize="20" Ref="True">
 			<DrawNode>
 				<Dot X="30" Y="30" Radius="30" Color="0x22ffffff"/>

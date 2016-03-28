@@ -1,9 +1,10 @@
 Dorothy!
 GlobalPanelView = require "View.Control.Trigger.GlobalPanel"
-TriggerExpr = require "Control.Trigger.TriggerExpr"
+ExprItem = require "Control.Trigger.ExprItem"
 ExprChooser = require "Control.Trigger.ExprChooser"
 Button = require "Control.Basic.Button"
 import Expressions,SetExprMeta,ToEditText from require "Data.TriggerDef"
+import Path from require "Data.Utils"
 
 Class GlobalPanelView,
 	__init:(args)=>
@@ -13,6 +14,7 @@ Class GlobalPanelView,
 		@newBtn = nil
 		@curIndex = nil
 		@globalExpr = editor\getGlobalExpr!
+		@modified = false
 
 		selectVarItem = (exprItem)->
 			@selectedItem.checked = false if @selectedItem
@@ -50,9 +52,10 @@ Class GlobalPanelView,
 			@scrollArea.offset = offset
 
 		addNewGlobal = ->
+			@modified = true
 			@curExpr = Expressions.InitGlobalNumber\Create!
 			table.insert @globalExpr,@curExpr
-			newItem = with TriggerExpr {
+			newItem = with ExprItem {
 					lineNumber:#@menu.children
 					expr:@curExpr
 					width:@menu.width-20
@@ -87,7 +90,7 @@ Class GlobalPanelView,
 		lineNumber = 0
 		for expr in *@globalExpr[2,]
 			lineNumber += 1
-			@menu\addChild with TriggerExpr {
+			@menu\addChild with ExprItem {
 					lineNumber:lineNumber
 					expr:expr
 					width:@menu.width-20
@@ -129,6 +132,7 @@ Class GlobalPanelView,
 					editorType:owner.type
 				}
 				\slot "Result",(newExpr)->
+					@modified = true
 					@curExpr = newExpr
 					@globalExpr[@curIndex] = newExpr
 					ExprChooser.preview\update!
@@ -149,6 +153,7 @@ Class GlobalPanelView,
 		@addBtn\slot "Tapped",addNewGlobal
 
 		@delBtn\slot "Tapped",->
+			@modified = true
 			index = @menu.children\index @selectedItem
 			table.remove @globalExpr,index
 			item = @selectedItem
@@ -176,3 +181,8 @@ Class GlobalPanelView,
 			@emit "Result",name
 
 		@closeBtn\slot "Tapped",-> editor\saveGlobalExpr!
+
+	hide:=>
+		@__base.hide @
+		if @modified
+			editor\lintAllTriggers!

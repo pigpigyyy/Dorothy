@@ -1,27 +1,123 @@
 Dorothy!
 ExprEditorView = require "View.Control.Trigger.ExprEditor"
-TriggerExpr = require "Control.Trigger.TriggerExpr"
+ExprItem = require "Control.Trigger.ExprItem"
 ExprChooser = require "Control.Trigger.ExprChooser"
 PopupPanel = require "Control.Basic.PopupPanel"
 MessageBox = require "Control.Basic.MessageBox"
 TriggerDef = require "Data.TriggerDef"
 import Path from require "Data.Utils"
 
-Class ExprEditorView,
-	__init:(args)=>
-		@type = "Trigger"
-		@exprData = nil
-		@filename = nil
-		@asyncLoad = false
+Args = action:"Action"
+
+VarScope = Class
+	__init:(triggerMenu,createExprItem)=>
+		@createExprItem = createExprItem
+		@triggerMenu = triggerMenu
 		@actionItem = nil
-		@conditionItem = nil
 		@localVarItem = nil
 		@locals = nil
 		@localSet = nil
 		@localVarFrom = nil
 		@localVarTo = nil
-		@newTriggerName = nil
+
+	clear:=>
+		@actionItem = nil
+		@localVarItem = nil
+		@locals = {}
+		@localSet = {}
+
+	getLocalVarText:=>
+		if TriggerDef.CodeMode
+			"local "..table.concat(@locals,", ")
+		else
+			"Declare "..table.concat(@locals,", ").."."
+
+	createLocalVarItem:=>
+		indent = @actionItem.indent+1
+		localVarItem = with @createExprItem @getLocalVarText!,indent
+			.positionY = @actionItem.positionY-@actionItem.height/2-.height/2
+		children = @triggerMenu.children
+		index = children\index(@actionItem)+1
+		children\removeLast!
+		children\insert localVarItem,index
+		localVarItem
+
+	refreshLocalVars:=>
+		if @actionItem
+			nextExpr = (expr)->
+				return unless "table" == type expr
+				switch expr[1]
+					when "SetLocal"
+						assignExpr = expr[2]
+						varType = assignExpr[1]\sub 9,-1
+						varName = assignExpr[2][2]
+						if varName ~= "InvalidName"
+							if not Args[varName]
+								if not @localSet[varName]
+									table.insert @locals,varName
+								@localSet[varName] = varType
+					else
+						for i = 2,#expr
+							nextExpr expr[i]
+			@locals = {}
+			@localSet = {}
+			nextExpr @actionItem.expr
+			if @localVarItem
+				if #@locals > 0
+					@localVarItem.text = @getLocalVarText!
+				else
+					@localVarItem.parent\removeChild @localVarItem
+					@localVarItem = nil
+			else
+				if #@locals > 0
+					@localVarItem = @createLocalVarItem!
+		if @localVarFrom
+			@renameLocalVar @localVarFrom,@localVarTo
+			@localVarFrom,@localVarTo = nil,nil
+
+	renameLocalVar:(fromName,toName)=>
+		nextExpr = (expr)->
+			return false unless "table" == type expr
+			renamed = false
+			switch expr[1]
+				when "Action"
+					return false
+				when "LocalName"
+					if expr[2] == fromName
+						expr[2] = toName
+						renamed = true
+			for i = 2,#expr
+				if nextExpr expr[i]
+					renamed = true
+			renamed
+		children = @triggerMenu.children
+		startIndex = children\index(@actionItem)+1
+		indent = @actionItem.indent
+		for item in *children[startIndex,]
+			break if item.indent == indent
+			if item.expr and nextExpr item.expr
+				item.text = tostring item.expr
+
+Class ExprEditorView,
+	__init:(args)=>
+		@type = "Action"
+
+		@exprData = nil
+		@filename = nil
+		@asyncLoad = false
+
+		@availableItem = nil
+		@runItem = nil
+		@stopItem = nil
+
+		@currentScope = nil
+		createExprItem = (_,...)-> @createExprItem ...
+		@runScope = VarScope @triggerMenu,createExprItem
+		@stopScope = VarScope @triggerMenu,createExprItem
+
+		@newActionName = nil
 		@modified = false
+
 		@codeMode = (CCUserDefault.TriggerMode == "Code")
 
 		for child in *@editMenu.children
@@ -40,36 +136,39 @@ Class ExprEditorView,
 				@editMenu.transformTarget = button
 				@editMenu.position = oVec2 button.width,0
 				{:expr,:index,:parentExpr} = @_selectedExprItem
+				@currentScope = switch (parentExpr or expr)[1]
+					when "Run" then @runScope
+					when "Stop" then @stopScope
+					else nil
 				subExprItem = switch @_selectedExprItem.itemType
 					when "Mid","End" then true
 					else false
 				rootItem = switch expr[1]
-					when "Trigger","Event","Condition","Action" then true
-					else false
+					when "UnitAction","Available","Run","Stop" then true
+					else
+						if parentExpr then parentExpr[1] == "UnitAction"
+						else false
 				edit = not subExprItem
 				insert = if rootItem then false
 					elseif subExprItem then false
 					elseif #@triggerMenu.children >= 999 then false
-					elseif parentExpr then (parentExpr[1] ~= "Event")
 					else true
 				add = switch expr[1]
-					when "Trigger","Event"
-						false
+					when "UnitAction" then false
+					when "Available","Run","Stop" then true
 					else
-						if #@triggerMenu.children >= 999 then false
-						elseif parentExpr then (parentExpr[1] ~= "Event")
+						if rootItem or #@triggerMenu.children >= 999 then false
 						else true
 				del = if rootItem then false
 					elseif parentExpr and
-						(parentExpr[1] == "Condition" or
-							parentExpr[1] == "Event") and
+						parentExpr[1] == "Available" and
 						#parentExpr == 2
 						false
 					else
 						not subExprItem
-				mode = expr[1] == "Trigger"
-				up = index and index > 2 and not subExprItem
-				down = index and index < #parentExpr and not subExprItem
+				mode = expr[1] == "UnitAction"
+				up = index and index > 2 and not subExprItem and not rootItem
+				down = index and index < #parentExpr and not subExprItem and not rootItem
 				buttons = for v,k in pairs {:edit,:insert,:add,:del,:up,:down,:mode}
 					if k then v
 					else continue
@@ -81,105 +180,71 @@ Class ExprEditorView,
 
 		@setupMenuScroll @triggerMenu
 
-		getLocalVarText = ->
-			if TriggerDef.CodeMode
-				"local "..table.concat(@locals,", ")
-			else
-				"Declare "..table.concat(@locals,", ").."."
-
-		createLocalVarItem = ->
-			indent = @actionItem.indent+1
-			localVarItem = with @createExprItem getLocalVarText!,indent
-				.positionY = @actionItem.positionY-@actionItem.height/2-.height/2
-			children = @triggerMenu.children
-			index = children\index(@actionItem)+1
-			children\removeLast!
-			children\insert localVarItem,index
-			localVarItem
-
-		refreshLocalVars = ->
-			if @actionItem
-				args = @exprData[4][2].Args
-				nextExpr = (expr)->
-					return unless "table" == type expr
-					switch expr[1]
-						when "SetLocal"
-							assignExpr = expr[2]
-							varType = assignExpr[1]\sub 9,-1
-							varName = assignExpr[2][2]
-							if varName ~= "InvalidName"
-								if not (args and args[varName])
-									if not @localSet[varName]
-										table.insert @locals,varName
-									@localSet[varName] = varType
-						else
-							for i = 2,#expr
-								nextExpr expr[i]
-				@locals = {}
-				@localSet = {}
-				nextExpr @actionItem.expr
-				if @localVarItem
-					if #@locals > 0
-						@localVarItem.text = getLocalVarText!
-					else
-						@localVarItem.parent\removeChild @localVarItem
-						@localVarItem = nil
-				else
-					if #@locals > 0
-						@localVarItem = createLocalVarItem!
-
 		mode = (code,text)-> TriggerDef.CodeMode and code or text
 
 		nextExpr = (parentExpr,index,indent)->
 			expr = index and parentExpr[index] or parentExpr
 			switch expr[1]
-				when "Trigger"
+				when "UnitAction"
 					if TriggerDef.CodeMode
 						@createExprItem "return",indent
 						@createExprItem tostring(expr),indent,expr
 					else
-						@createExprItem "Trigger",indent
+						@createExprItem "Unit Action",indent
 						@createExprItem tostring(expr),indent+1,expr
-						@createExprItem " ",indent
-						indent -= 1
-					for i = 4,#expr
+					for i = 3,#expr
 						nextExpr expr,i,indent+1
 					@createExprItem mode(")"," "),indent
-				when "Event"
-					with @createExprItem mode(tostring(expr),"Event"),indent,expr
-						.itemType = "Start"
-						.actionExpr = expr
-					for i = 2,#expr
-						nextExpr expr,i,indent+1
-					with @createExprItem mode("),"," "),indent
-						.itemType = "End"
-					indent -= 1
-				when "Condition"
-					@conditionItem = with @createExprItem mode(tostring(expr),"Condition"),indent,expr
+				when "Available"
+					@availableItem = with @createExprItem mode(tostring(expr),"Available"),indent,expr
 						.itemType = "Start"
 						.actionExpr = expr
 					for i = 2,#expr
 						nextExpr expr,i,indent+1
 					with @createExprItem mode("end ),"," "),indent
 						.itemType = "End"
-				when "Action"
-					@actionItem = with @createExprItem mode(tostring(expr),"Action"),indent,expr
+				when "Run"
+					@runScope.actionItem = with @createExprItem mode(tostring(expr),"Run"),indent,expr
 						.itemType = "Start"
 						.actionExpr = expr
+					@currentScope = @runScope
 					children = @triggerMenu.children
 					index = #children+1
 					for i = 2,#expr
 						nextExpr expr,i,indent+1
-					if #@locals > 0
-						@localVarItem = createLocalVarItem!
-						@localVarItem.lineNumber = index
-						moveY = @localVarItem.height
-						start = index+1
-						stop = #children
-						for i = start,stop
-							child = children[i]
-							child.lineNumber = i
-							child.positionY -= moveY
+					with @runScope
+						if #.locals > 0
+							.localVarItem = \createLocalVarItem!
+							.localVarItem.lineNumber = index
+							moveY = .localVarItem.height
+							start = index+1
+							stop = #children
+							for i = start,stop
+								child = children[i]
+								child.lineNumber = i
+								child.positionY -= moveY
+					with @createExprItem mode("end ),"," "),indent
+						.itemType = "End"
+				when "Stop"
+					@stopScope.actionItem = with @createExprItem mode(tostring(expr),"Stop"),indent,expr
+						.itemType = "Start"
+						.actionExpr = expr
+					@currentScope = @stopScope
+					children = @triggerMenu.children
+					index = #children+1
+					for i = 2,#expr
+						nextExpr expr,i,indent+1
+					with @stopScope
+						if #.locals > 0
+							.localVarItem = \createLocalVarItem!
+							.localVarItem.lineNumber = index
+							moveY = .localVarItem.height
+							start = index+1
+							stop = #children
+							for i = start,stop
+								child = children[i]
+								child.lineNumber = i
+								child.positionY -= moveY
 					with @createExprItem mode("end )"," "),indent
 						.itemType = "End"
 				when "If"
@@ -210,9 +275,10 @@ Class ExprEditorView,
 					varName = assignExpr[2][2]
 					if varName ~= "InvalidName"
 						if not (@exprData[4][2].Args and @exprData[4][2].Args[varName])
-							if not @localSet[varName]
-								table.insert @locals,varName
-							@localSet[varName] = varType
+							with @currentScope
+								if not .localSet[varName]
+									table.insert .locals,varName
+								.localSet[varName] = varType
 					@createExprItem tostring(expr),indent,expr,parentExpr,index
 				else
 					@createExprItem tostring(expr),indent,expr,parentExpr,index
@@ -270,17 +336,14 @@ Class ExprEditorView,
 				itemIndex += 1
 			-- separate condition exprs by comma
 			if not delExpr and
-				parentExpr[1] == "Condition" and
-				selectedExprItem.expr[1] ~= "Condition"
+				parentExpr[1] == "Available" and
+				selectedExprItem.expr[1] ~= "Available"
 				selectedExprItem\updateText!
 			-- remove duplicated new exprs
 			for i = startIndex,stopIndex
 				children\removeLast!
 			-- refresh local variable names
-			refreshLocalVars!
-			if @localVarFrom
-				@renameLocalVar @localVarFrom,@localVarTo
-				@localVarFrom,@localVarTo = nil,nil
+			@currentScope\refreshLocalVars! if @currentScope
 			-- update items position
 			offset = @offset
 			@offset = oVec2.zero
@@ -307,30 +370,27 @@ Class ExprEditorView,
 						if parentExpr
 							parentExpr[index] = newExpr
 							addNewItem selectedExprItem,selectedExprItem.indent,parentExpr,index
-							if newExpr.Type == "Event"
-								@conditionItem\updateText!
-								@actionItem\updateText!
-						elseif expr[1] == "Trigger"
-							if @newTriggerName
+						elseif expr[1] == "UnitAction"
+							if @newActionName
 								oldFileFullname = editor.gameFullPath..@filename
 								filePath = Path.getPath oldFileFullname
-								newFileFullname = filePath..@newTriggerName..".trigger"
+								newFileFullname = filePath..@newActionName..".action"
 								return if oldFileFullname == newFileFullname
 								if oContent\exist newFileFullname
-									MessageBox text:"Trigger Name Exist!",okOnly:true
+									MessageBox text:"Action Name Exist!",okOnly:true
 									oldName = Path.getName @filename
 									@triggerName = oldName
-									emit "Scene.Trigger.ChangeName",oldName
+									emit "Scene.Action.ChangeName",oldName
 								elseif not Path.isValid Path.getFilename newFileFullname
 									MessageBox text:"Invalid Name!",okOnly:true
 									oldName = Path.getName @filename
 									@triggerName = oldName
-									emit "Scene.Trigger.ChangeName",oldName
+									emit "Scene.Action.ChangeName",oldName
 								else
 									oContent\saveToFile newFileFullname,TriggerDef.ToEditText @exprData
 									oContent\remove oldFileFullname
-									@filename = Path.getPath(@filename)..@newTriggerName..".trigger"
-								@newTriggerName = nil
+									@filename = Path.getPath(@filename)..@newActionName..".action"
+								@newActionName = nil
 							selectedExprItem.text = tostring expr
 							@notifyEdit!
 
@@ -359,12 +419,8 @@ Class ExprEditorView,
 				indent += (parentExpr.MultiLine and 1 or 0)
 				index or= #parentExpr
 			valueType = switch parentExpr[1]
-				when "Event"
-					"Event"
-				when "Condition"
-					"Boolean"
-				else
-					"Action"
+				when "Available" then "Boolean"
+				else "Action"
 			with ExprChooser {
 					valueType:valueType
 					parentExpr:parentExpr
@@ -398,8 +454,8 @@ Class ExprEditorView,
 					@triggerMenu\removeChild item
 			else
 				@triggerMenu\removeChild selectedExprItem
-			if expr.Type == "None" or expr.TypeIgnore
-				refreshLocalVars!
+			if @currentScope and expr.Type == "None" or expr.TypeIgnore
+				@currentScope\refreshLocalVars!
 			offset = @offset
 			@offset = oVec2.zero
 			@viewSize = @triggerMenu\alignItems 0
@@ -408,9 +464,9 @@ Class ExprEditorView,
 			prevItem.checked = true if prevItem.expr
 			@.changeExprItem prevItem
 			if prevItem.expr and
-				prevItem.expr[1] ~= "Condition" and
+				prevItem.expr[1] ~= "Available" and
 				prevItem.parentExpr and
-				prevItem.parentExpr[1] == "Condition"
+				prevItem.parentExpr[1] == "Available"
 				prevItem\updateText!
 			@notifyEdit!
 
@@ -423,7 +479,7 @@ Class ExprEditorView,
 			table.insert parentExpr,index-1,expr
 			children = @triggerMenu.children
 			startIndex = children\index(selectedExprItem)
-			if parentExpr[1] == "Condition"
+			if parentExpr[1] == "Available"
 				children[startIndex-1]\updateText!
 				selectedExprItem\updateText!
 			prevIndex = startIndex-1
@@ -467,7 +523,7 @@ Class ExprEditorView,
 			table.insert parentExpr,index+1,expr
 			children = @triggerMenu.children
 			startIndex = children\index(selectedExprItem)
-			if parentExpr[1] == "Condition"
+			if parentExpr[1] == "Available"
 				children[startIndex+1]\updateText!
 				selectedExprItem\updateText!
 			nextIndex = startIndex+1
@@ -565,7 +621,7 @@ Class ExprEditorView,
 						\addChild with CCLabelTTF "Error In Line #{@_selectedExprItem.lineNumber}","Arial",24
 							.color = ccColor3 0x00ffff
 							.position = oVec2 (panelWidth-20)/2,10
-					.menu\addChild with TriggerExpr text:@_selectedExprItem.errorInfo,width:panelWidth-40
+					.menu\addChild with ExprItem text:@_selectedExprItem.errorInfo,width:panelWidth-40
 						.enabled = false
 					.scrollArea.viewSize = .menu\alignItemsVertically!
 
@@ -579,8 +635,8 @@ Class ExprEditorView,
 
 		@slot "Entered",checkReload
 
-		@gslot "Scene.Trigger.ChangeName",(newName)-> @newTriggerName = newName
-		@gslot "Scene.Trigger.Open",checkReload
+		@gslot "Scene.Action.ChangeName",(newName)-> @newActionName = newName
+		@gslot "Scene.Action.Open",checkReload
 
 	notifyEdit:=>
 		children = @triggerMenu.children
@@ -588,13 +644,13 @@ Class ExprEditorView,
 			children[i].lineNumber = i
 		@modified = true
 		@lintCode!
-		emit "Scene.Trigger.Edited",@filename
+		emit "Scene.Action.Edited",@filename
 
 	createExprItem:(text,indent,expr,parentExpr,index)=>
 		children = @triggerMenu.children
 		lastItem = children and children.last or nil
 		lineNumber = children and #children+1 or 1
-		exprItem = with TriggerExpr {
+		exprItem = with ExprItem {
 				:indent
 				:text
 				:expr
@@ -625,10 +681,8 @@ Class ExprEditorView,
 		@view\schedule once ->
 			@triggerMenu.enabled = false
 			@triggerMenu\removeAllChildrenWithCleanup!
-			@actionItem = nil
-			@localVarItem = nil
-			@locals = {}
-			@localSet = {}
+			@runScope\clear!
+			@stopScope\clear!
 			@offset = oVec2.zero
 			@asyncLoad = true
 			@nextExpr @exprData,0
@@ -646,11 +700,11 @@ Class ExprEditorView,
 	save:=>
 		triggerText = TriggerDef.ToEditText @exprData
 		oContent\saveToFile editor.gameFullPath..@filename,triggerText
-		triggerCode = TriggerDef.ToCodeText @exprData
-		-- TODO: validata code here
-		codeFile = editor.gameFullPath..@filename
-		codeFile = Path.getPath(codeFile)..Path.getName(codeFile)..".lua"
-		oContent\saveToFile codeFile,triggerCode
+		if not @isCodeHasError
+			codeFile = editor.gameFullPath..@filename
+			codeFile = Path.getPath(codeFile)..Path.getName(codeFile)..".lua"
+			triggerCode = TriggerDef.ToCodeText @exprData
+			oContent\saveToFile codeFile,triggerCode
 
 	isInAction:=>
 		not @isInCondition! and not @isInEvent!
@@ -658,22 +712,18 @@ Class ExprEditorView,
 	isInCondition:=>
 		expr = @_selectedExprItem.expr
 		parentExpr = @_selectedExprItem.parentExpr
-		expr[1] == "Condition" or (parentExpr and parentExpr[1] == "Condition")
+		expr[1] == "Available" or (parentExpr and parentExpr[1] == "Available")
 
 	isInEvent:=>
 		expr = @_selectedExprItem.expr
-		parentExpr = @_selectedExprItem.parentExpr
-		expr[1] == "Event" or (parentExpr and parentExpr[1] == "Event")
+		switch expr[1]
+			when "Priority","Reaction","Recovery"
+				true
+			else
+				false
 
 	getPrevLocalVars:(targetType)=>
-		eventExpr = @exprData[4][2]
-		localVars = if eventExpr.Args
-			for k,v in pairs eventExpr.Args
-				if v\match("^%a*") == targetType
-					k
-				else continue
-		else {}
-
+		localVars = {k,v for k,v in pairs Args}
 		return localVars if not @isInAction!
 
 		targetExpr = @_selectedExprItem.expr
@@ -701,7 +751,7 @@ Class ExprEditorView,
 							return true
 			expr == targetExpr
 		table.insert varScope,{}
-		nextExpr @actionItem.expr
+		nextExpr @currentScope.actionItem.expr
 		for scope in *varScope
 			for v,k in pairs scope
 				if k == targetType
@@ -709,29 +759,8 @@ Class ExprEditorView,
 		localVars
 
 	markLocalVarRename:(fromName,toName)=>
-		@localVarFrom = fromName
-		@localVarTo = toName
-
-	renameLocalVar:(fromName,toName)=>
-		nextExpr = (expr)->
-			return false unless "table" == type expr
-			renamed = false
-			switch expr[1]
-				when "Action"
-					return false
-				when "LocalName"
-					if expr[2] == fromName
-						expr[2] = toName
-						renamed = true
-			for i = 2,#expr
-				if nextExpr expr[i]
-					renamed = true
-			renamed
-		children = @triggerMenu.children
-		startIndex = children\index(@actionItem)+1
-		for item in *children[startIndex,]
-			if item.expr and nextExpr item.expr
-				item.text = tostring item.expr
+		@currentScope.localVarFrom = fromName
+		@currentScope.localVarTo = toName
 
 	showEditButtons:(names)=>
 		buttonSet = {@["#{name}Btn"],true for name in *names}
@@ -757,13 +786,14 @@ Class ExprEditorView,
 			@triggerMenu.enabled = value
 			@editMenu.enabled = value
 
+	isCodeHasError:property => #@errorBtn.errorItems > 0
+
 	lintCode:=>
 		return unless @triggerMenu.children
 		@errorBtn.errorItems = {}
 		@errorBtn.currentIndex = 1
 
-		args = @exprData[4][2].Args
-		locals = args and {k,v\match("^%a*") for k,v in pairs args} or nil
+		locals = {k,v for k,v in pairs Args}
 		globals = {expr[2][2],expr[3].Type for expr in *editor\getGlobalExpr![2,]}
 		lintFunc = TriggerDef.GetLintFunction locals,globals
 
@@ -786,3 +816,8 @@ Class ExprEditorView,
 
 		if @_selectedExprItem and @_selectedExprItem.errorInfo
 			@errorInfoBtn\display true
+
+		if @isCodeHasError
+			codeFile = editor.gameFullPath..@filename
+			codeFile = Path.getPath(codeFile)..Path.getName(codeFile)..".lua"
+			oContent\remove codeFile if oContent\exist codeFile

@@ -4779,6 +4779,14 @@ local Dorothy =
 				static = true,
 				type = "method",
 			},
+			loadFileAsync =
+			{
+				args = "(filename: string)",
+				description = "args1 -- (filenames: table{string}, nil|handler: function)\n\n -- handler: function(filename: string, data: string)",
+				returns = "(data: string|table{string})",
+				static = true,
+				type = "method",
+			},
 			purgeCachedEntries =
 			{
 				args = "()",

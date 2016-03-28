@@ -1,6 +1,6 @@
 Dorothy!
 EditorView = require "View.Control.Trigger.Editor"
-TriggerExprEditor = require "Control.Trigger.TriggerExprEditor"
+ActionExprEditor = require "Control.Trigger.ActionExprEditor"
 MenuItem = require "Control.Trigger.MenuItem"
 ExprChooser = require "Control.Trigger.ExprChooser"
 SelectionPanel = require "Control.Basic.SelectionPanel"
@@ -24,7 +24,7 @@ TriggerScope = Class
 				if not @triggerBtn.exprEditor
 					{width:panelW,height:panelH} = @panel
 					listMenuW = @scrollArea.width
-					exprEditor = with TriggerExprEditor {
+					exprEditor = with ActionExprEditor {
 							x:panelW/2+listMenuW/2
 							y:panelH/2
 							width:panelW-listMenuW
@@ -70,7 +70,7 @@ TriggerScope = Class
 		oContent\mkdir defaultFolder unless oContent\exist defaultFolder
 		@_groups = Path.getFolders path
 		table.sort @_groups
-		files = Path.getAllFiles path,"trigger"
+		files = Path.getAllFiles path,"action"
 		for i = 1,#files
 			files[i] = prefix..files[i]
 		filesToAdd,filesToDel = CompareTable @files,files
@@ -124,7 +124,7 @@ TriggerScope = Class
 
 Class
 	__partial:=>
-		EditorView title:"Trigger Editor", scope:true
+		EditorView title:"Action Editor", scope:false
 
 	__init:(args)=>
 		{width:panelW,height:panelH} = @panel
@@ -133,39 +133,15 @@ Class
 		TriggerScope.panel = @panel
 
 		@localScope = TriggerScope @localListMenu,
-			"triggerLocalFullPath",
-			"triggerLocalFolder"
-
-		@globalScope = TriggerScope @globalListMenu,
-			"triggerGlobalFullPath",
-			"triggerGlobalFolder"
-
-		@localBtn.checked = true
-		scopeBtn = @localBtn
-		changeScope = (button)->
-			scopeBtn.checked = false unless scopeBtn == button
-			button.checked = true unless button.checked
-			scopeBtn = button
-			if @localBtn.checked
-				@localListMenu.visible = true
-				@globalListMenu.visible = false
-				@groupBtn.text = @localScope.currentGroup
-				@listScrollArea.viewSize = @localListMenu\alignItems!
-			else
-				@localListMenu.visible = false
-				@globalListMenu.visible = true
-				@groupBtn.text = @globalScope.currentGroup
-				@listScrollArea.viewSize = @globalListMenu\alignItems!
-		@localBtn\slot "Tapped",changeScope
-		@globalBtn\slot "Tapped",changeScope
+			"actionFullPath",
+			"actionFolder"
 
 		@listScrollArea\setupMenuScroll @localListMenu
-		@listScrollArea\setupMenuScroll @globalListMenu
 		@listScrollArea.viewSize = @localListMenu\alignItems!
 
 		lastGroupListOffset = oVec2.zero
 		@groupBtn\slot "Tapped",->
-			scope = @localBtn.checked and @localScope or @globalScope
+			scope = @localScope
 			groups = for group in *scope.groups
 				continue if group == "Default" or group == scope.currentGroup
 				group
@@ -202,9 +178,9 @@ Class
 										@groupBtn.text = result
 						when "<DEL>"
 							text = if scope.currentGroup == "Default"
-								"Delete Triggers\nBut Keep Group\n#{scope.currentGroup}"
+								"Delete Actions\nBut Keep Group\n#{scope.currentGroup}"
 							else
-								"Delete Group\n#{scope.currentGroup}\nWith Triggers"
+								"Delete Group\n#{scope.currentGroup}\nWith Actions"
 							with MessageBox text:text
 								\slot "OK",(result)->
 									return unless result
@@ -217,41 +193,40 @@ Class
 							@groupBtn.text = item
 
 		@newBtn\slot "Tapped",->
-			with InputBox text:"New Trigger Name"
+			with InputBox text:"New Action Name"
 				\slot "Inputed",(result)->
 					return unless result
 					if not result\match("^[_%a][_%w]*$")
 						MessageBox text:"Invalid Name!",okOnly:true
 					else
-						scope = @localBtn.checked and @localScope or @globalScope
-						triggerFullPath = scope.path..scope.currentGroup.."/"..result..".trigger"
+						scope = @localScope
+						triggerFullPath = scope.path..scope.currentGroup.."/"..result..".action"
 						if oContent\exist triggerFullPath
-							MessageBox text:"Trigger Exist!",okOnly:true
+							MessageBox text:"Action Exist!",okOnly:true
 						else
-							trigger = Expressions.Trigger\Create!
+							trigger = Expressions.UnitAction\Create!
 							trigger[2][2] = result
 							oContent\saveToFile triggerFullPath,ToEditText trigger
 							scope\updateItems!
-							triggerFile = scope.prefix..scope.currentGroup.."/"..result..".trigger"
+							triggerFile = scope.prefix..scope.currentGroup.."/"..result..".action"
 							for item in *scope.menu.children
 								if item.file == triggerFile
 									item\emit "Tapped",item
 									break
 
 		@addBtn\slot "Tapped",->
-			MessageBox text:"Place Triggers In\nFolders Under\n/Logic/Trigger/Global/",okOnly:true
+			MessageBox text:"Place Actions In\nFolders Under\n/Logic/Action/",okOnly:true
 
 		@delBtn\slot "Tapped",->
 			triggerBtn = TriggerScope.triggerBtn
 			if triggerBtn
-				with MessageBox text:"Delete Trigger\n#{triggerBtn.text}"
+				with MessageBox text:"Delete Action\n#{triggerBtn.text}"
 					\slot "OK",(result)->
 						return unless result
 						oContent\remove editor.gameFullPath..triggerBtn.file
-						scope = @localBtn.checked and @localScope or @globalScope
-						scope\updateItems!
+						@localScope\updateItems!
 			else
-				MessageBox text:"No Trigger Selected!",okOnly:true
+				MessageBox text:"No Action Selected!",okOnly:true
 
 		with @copyBtn
 			.copying = false
@@ -264,7 +239,7 @@ Class
 					@copyBtn.color = ccColor3 0xff0080
 					triggerBtn = TriggerScope.triggerBtn
 					if not triggerBtn
-						MessageBox text:"No Trigger Selected!",okOnly:true
+						MessageBox text:"No Action Selected!",okOnly:true
 						return
 					@copyBtn.targetFile = triggerBtn.file
 					@copyBtn.targetData = triggerBtn.exprEditor.exprData
@@ -273,13 +248,13 @@ Class
 					@copyBtn.color = ccColor3 0x00ffff
 					targetFilePath = editor.gameFullPath..@copyBtn.targetFile
 					triggerName = Path.getName(targetFilePath).."Copy"
-					scope = @localBtn.checked and @localScope or @globalScope
+					scope = @localScope
 					newPath = scope.path..scope.currentGroup.."/"..triggerName
 					count = 0
-					filename = newPath..".trigger"
+					filename = newPath..".action"
 					while oContent\exist filename
 						count += 1
-						filename = newPath..tostring(count)..".trigger"
+						filename = newPath..tostring(count)..".action"
 					triggerName ..= tostring count if count > 1
 					exprData = @copyBtn.targetData
 					oldName = exprData[2][2]
@@ -291,33 +266,26 @@ Class
 					@copyBtn.targetData = nil
 
 		@closeBtn\slot "Tapped",->
-			for scope in *{@localScope,@globalScope}
-				menuItems = scope.menuItems
-				if menuItems
-					for item in *menuItems
-						exprEditor = item.exprEditor
-						if exprEditor and exprEditor.modified
-							exprEditor.modified = false
-							exprEditor\save!
+			if @localScope.menuItems
+				for item in *@localScope.menuItems
+					exprEditor = item.exprEditor
+					if exprEditor and exprEditor.modified
+						exprEditor.modified = false
+						exprEditor\save!
 			@hide!
 
-		@gslot "Scene.Trigger.ChangeName",(triggerName)->
+		@gslot "Scene.Action.ChangeName",(triggerName)->
 			TriggerScope.triggerBtn.text = triggerName
 			file = TriggerScope.triggerBtn.file
-			TriggerScope.triggerBtn.file = Path.getPath(file)..triggerName..".trigger"
+			TriggerScope.triggerBtn.file = Path.getPath(file)..triggerName..".action"
 
-		@closeEvent = @gslot "Scene.Trigger.Close",-> @hide!
+		@closeEvent = @gslot "Scene.Action.Close",-> @hide!
 
 	show:=>
 		@closeEvent.enabled = true
 		@panel\schedule once ->
 			@localScope\updateItems!
-			sleep!
-			@globalScope\updateItems!
-			@groupBtn.text = if @localBtn.checked
-				@localScope.currentGroup
-			else
-				@globalScope.currentGroup
+			@groupBtn.text = @localScope.currentGroup
 		@visible = true
 		@closeBtn.scaleX = 0
 		@closeBtn.scaleY = 0
@@ -328,7 +296,6 @@ Class
 			CCCall ->
 				@listScrollArea.touchEnabled = true
 				@localListMenu.enabled = true
-				@globalListMenu.enabled = true
 				@editMenu.enabled = true
 				@opMenu.enabled = true
 				for control in *editor.children
@@ -344,7 +311,6 @@ Class
 				control.visible = control.visibleState
 		@listScrollArea.touchEnabled = false
 		@localListMenu.enabled = false
-		@globalListMenu.enabled = false
 		@editMenu.enabled = false
 		@opMenu.enabled = false
 		@closeBtn\perform oScale 0.3,0,0,oEase.InBack

@@ -1,7 +1,7 @@
 Dorothy!
-ActionTriggerEditorView = require "View.Control.Trigger.ActionTriggerEditor"
+EditorView = require "View.Control.Trigger.Editor"
 ActionExprEditor = require "Control.Trigger.ActionExprEditor"
-TriggerItem = require "Control.Trigger.TriggerItem"
+MenuItem = require "Control.Trigger.MenuItem"
 ExprChooser = require "Control.Trigger.ExprChooser"
 SelectionPanel = require "Control.Basic.SelectionPanel"
 InputBox = require "Control.Basic.InputBox"
@@ -70,7 +70,7 @@ TriggerScope = Class
 		oContent\mkdir defaultFolder unless oContent\exist defaultFolder
 		@_groups = Path.getFolders path
 		table.sort @_groups
-		files = Path.getAllFiles path,"trigger"
+		files = Path.getAllFiles path,"action"
 		for i = 1,#files
 			files[i] = prefix..files[i]
 		filesToAdd,filesToDel = CompareTable @files,files
@@ -79,7 +79,7 @@ TriggerScope = Class
 		for file in *filesToAdd
 			appendix = Path.getFilename file
 			group = file\sub #prefix+1,-#appendix-2
-			item = with TriggerItem {
+			item = with MenuItem {
 					text:Path.getName file
 					width:@_menu.width-20
 					height:35
@@ -122,7 +122,10 @@ TriggerScope = Class
 	path:property => editor[@_path]
 	menu:property => @_menu
 
-Class ActionTriggerEditorView,
+Class
+	__partial:=>
+		EditorView title:"Action Editor", scope:false
+
 	__init:(args)=>
 		{width:panelW,height:panelH} = @panel
 
@@ -197,7 +200,7 @@ Class ActionTriggerEditorView,
 						MessageBox text:"Invalid Name!",okOnly:true
 					else
 						scope = @localScope
-						triggerFullPath = scope.path..scope.currentGroup.."/"..result..".trigger"
+						triggerFullPath = scope.path..scope.currentGroup.."/"..result..".action"
 						if oContent\exist triggerFullPath
 							MessageBox text:"Action Exist!",okOnly:true
 						else
@@ -205,7 +208,7 @@ Class ActionTriggerEditorView,
 							trigger[2][2] = result
 							oContent\saveToFile triggerFullPath,ToEditText trigger
 							scope\updateItems!
-							triggerFile = scope.prefix..scope.currentGroup.."/"..result..".trigger"
+							triggerFile = scope.prefix..scope.currentGroup.."/"..result..".action"
 							for item in *scope.menu.children
 								if item.file == triggerFile
 									item\emit "Tapped",item
@@ -248,10 +251,10 @@ Class ActionTriggerEditorView,
 					scope = @localScope
 					newPath = scope.path..scope.currentGroup.."/"..triggerName
 					count = 0
-					filename = newPath..".trigger"
+					filename = newPath..".action"
 					while oContent\exist filename
 						count += 1
-						filename = newPath..tostring(count)..".trigger"
+						filename = newPath..tostring(count)..".action"
 					triggerName ..= tostring count if count > 1
 					exprData = @copyBtn.targetData
 					oldName = exprData[2][2]
@@ -274,7 +277,7 @@ Class ActionTriggerEditorView,
 		@gslot "Scene.Action.ChangeName",(triggerName)->
 			TriggerScope.triggerBtn.text = triggerName
 			file = TriggerScope.triggerBtn.file
-			TriggerScope.triggerBtn.file = Path.getPath(file)..triggerName..".trigger"
+			TriggerScope.triggerBtn.file = Path.getPath(file)..triggerName..".action"
 
 		@closeEvent = @gslot "Scene.Action.Close",-> @hide!
 

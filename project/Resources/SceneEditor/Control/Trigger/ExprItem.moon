@@ -1,5 +1,5 @@
 Dorothy!
-TriggerExprView = require "View.Control.Trigger.TriggerExpr"
+ExprItemView = require "View.Control.Trigger.ExprItem"
 TriggerDef = require "Data.TriggerDef"
 SolidRect = require "View.Shape.SolidRect"
 import Set from require "Data.Utils"
@@ -17,7 +17,7 @@ errorColor = ccColor3 255,0,128
 LineTag = 1
 ErrorTag = 2
 
-Class TriggerExprView,
+Class ExprItemView,
 	__init:(args)=>
 		{:text,:indent,:expr,:parentExpr,:index,:lineNumber} = args
 		@_checked = false
@@ -137,7 +137,7 @@ Class TriggerExprView,
 					-- color comment text
 					index = value\find "%-%-%s"
 					label\colorText index,#value,noteColor if index
-					start,stop = value\find "%s%-%-%[%[[^%]]*%]%]%s"
+					start,stop = value\find "%-%-%[%[[^%]]*%]%]%s"
 					label\colorText start,stop,noteColor if start
 					-- color string text
 					value = value\gsub "\\.","xx"
