@@ -78,7 +78,7 @@ Class EditMenuView,
 			if @pickPanel.visible
 				MessageBox text:"Pick An Item First",okOnly:true
 			else
-				emit "Scene.AI.Open"
+				emit "Scene.AITree.Open"
 
 		@delBtn\slot "Tapped",->
 			clearSelection!

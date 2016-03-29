@@ -253,17 +253,17 @@ Class EditorView,
 					@actionTriggerEditor = ActionTriggerEditor!
 					@actionTriggerEditor\show!
 					@addChild @actionTriggerEditor
-		@gslot "Scene.AI.Open",->
+		@gslot "Scene.AITree.Open",->
 			return unless @scene
-			if @aiTriggerEditor
-				@aiTriggerEditor\show!
+			if @aiTreeEditor
+				@aiTreeEditor\show!
 			else
 				@schedule once ->
-					AINodeEditor = require "Control.Trigger.AINodeEditor"
+					AITreeEditor = require "Control.AI.AITreeEditor"
 					sleep!
-					@aiTriggerEditor = AINodeEditor!
-					@aiTriggerEditor\show!
-					@addChild @aiTriggerEditor
+					@aiTreeEditor = AITreeEditor!
+					@aiTreeEditor\show!
+					@addChild @aiTreeEditor
 
 	updateSprites:=> emit "Scene.LoadSprite",@graphicFolder
 	updateModels:=> emit "Scene.LoadModel",@graphicFolder
