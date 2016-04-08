@@ -652,15 +652,15 @@ Class ExprEditorView,
 			triggerCode = TriggerDef.ToCodeText @exprData
 			oContent\saveToFile codeFile,triggerCode
 
-	isInAction:=>
+	isInAction:property =>
 		not @isInCondition! and not @isInEvent!
 
-	isInCondition:=>
+	isInCondition:property =>
 		expr = @_selectedExprItem.expr
 		parentExpr = @_selectedExprItem.parentExpr
 		expr[1] == "Condition" or (parentExpr and parentExpr[1] == "Condition")
 
-	isInEvent:=>
+	isInEvent:property =>
 		expr = @_selectedExprItem.expr
 		parentExpr = @_selectedExprItem.parentExpr
 		expr[1] == "Event" or (parentExpr and parentExpr[1] == "Event")
@@ -674,7 +674,7 @@ Class ExprEditorView,
 				else continue
 		else {}
 
-		return localVars if not @isInAction!
+		return localVars if not @isInAction
 
 		targetExpr = @_selectedExprItem.expr
 		varScope = {}

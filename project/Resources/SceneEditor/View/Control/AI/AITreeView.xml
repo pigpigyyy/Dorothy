@@ -1,1 +1,25 @@
-<Node/>
+<!-- params: X, Y, Width, Height-->
+<ScrollArea X="{ x or 0 }" Y="{ y or 0 }" Width="{ width-20 }" Height="{ height }" PaddingX="100" PaddingY="100" TouchPriority="{ editor.levelExprEditor-3 }">
+	<Import Module="Control.Basic.ScrollArea"/>
+	<Import Module="Control.Basic.Button"/>
+	<Import Module="View.Shape.SolidRect"/>
+
+	<Item Name="view">
+		<Menu Name="treeMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.levelExprEditor-1 }" Ref="True"/>
+
+		<Menu Name="editMenu" X="{ $R-65 }" Y="{ $T-70 }" AnchorX="0" AnchorY="1" Width="70" Height="430" AlignItems="10" TouchPriority="{ editor.levelExprEditor-2 }" Visible="False" Ref="True">
+			<Button Name="editBtn" Text="Edit" Width="50" Height="50" FontSize="16" BackColor="0xca000000" Ref="True"/>
+			<Button Name="addBtn" Text="Add" Width="50" Height="50" BackColor="0xca000000" FontSize="16" Ref="True"/>
+			<Button Name="insertBtn" Text="Insert" Width="50" Height="50" BackColor="0xca000000" FontSize="16" Ref="True"/>
+			<Button Name="delBtn" Text="Del" Width="50" Height="50" FontSize="16" BackColor="0xca000000" Ref="True"/>
+			<Button Name="upBtn" Text="Up" Width="50" Height="50" FontSize="16" BackColor="0xca000000" Ref="True"/>
+			<Button Name="downBtn" Text="Down" Width="50" Height="50" BackColor="0xca000000" FontSize="16" Ref="True"/>
+			<Button Name="modeBtn" Text="Mode" Width="50" Height="50" BackColor="0xca000000" FontSize="16" Ref="True"/>
+		</Menu>
+	</Item>
+
+	<Menu Name="errorMenu" AnchorX="0" AnchorY="0" Width="110" Height="50" TouchPriority="{ editor.levelExprEditor-2 }" Ref="True">
+		<Button Name="errorBtn" Text="!" X="{ $L+25 }" Y="{ $Y }" Width="50" Height="50" BackColor="0xca000000" FontSize="24" Ref="True"/>
+		<Button Name="errorInfoBtn" Text="Error" X="{ $R-25 }" Y="{ $Y }" Width="50" Height="50" BackColor="0xca000000" FontSize="20" Ref="True"/>
+	</Menu>
+</ScrollArea>

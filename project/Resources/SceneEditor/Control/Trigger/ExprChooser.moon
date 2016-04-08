@@ -420,7 +420,7 @@ ExprChooser = Class
 		groupNames = [groupName for groupName in pairs groups]
 		table.sort groupNames
 
-		allowUseLocal = @owner and (@owner\isInAction! or @owner\isInCondition!)
+		allowUseLocal = @owner and (@owner.isInAction or @owner.isInCondition)
 
 		for groupName in *groupNames
 			hasGroupItem = false

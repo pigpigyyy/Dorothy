@@ -1,8 +1,7 @@
-<!-- params: X, Y, Width, Height, Text, FontSize -->
-<MenuItem Name="menuItem" X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }" Color="0x00ffff" Opacity="0.6">
+<!-- params: X, Y, Width, Height -->
+<MenuItem Name="menuItem" X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }" Color="0x00ffff">
 	<Import Module="View.Shape.LineRect"/>
 
-	<LabelTTF Name="label" X="{ $X }" Y="{ $Y }" Text="{ text }" FontName="Arial" FontSize="{ fontSize or 16 }" Ref="True"/>
 	<Line Name="border" X="{ $X }" Y="{ $Y }" Ref="True">
 		<Vec2 X="{ -width/2 }" Y="{ height/2 }"/>
 		<Vec2 X="{ width/2 }" Y="{ height/2 }"/>
@@ -12,7 +11,7 @@
 	</Line>
 
 	<DrawNode Name="borderBold" X="{ $X }" Y="{ $Y }" Visible="False" Ref="True">
-		<Polygon FillColor="0x2200ffff">
+		<Polygon FillColor="0x4400ffff">
 			<Vec2 X="{ -width/2 }" Y="{ height/2 }"/>
 			<Vec2 X="{ width/2 }" Y="{ height/2 }"/>
 			<Vec2 X="{ width/2 }" Y="{ -height/2 }"/>
@@ -20,6 +19,8 @@
 		</Polygon>
 		<LineRect X="{ -width/2 }" Y="{ -height/2 }" Width="{ width }" Height="{ height }" Color="0xff00ffff"/>
 	</DrawNode>
+
+	<LabelBMFont Name="label" AnchorX="0" X="10" Y="{ $Y }" File="Font/Arial20.fnt" TextWidth="{ width-10 }" HorizontalAlign="Left" Ref="True"/>
 
 	<Action>
 		<Scale Name="scale" Time="0.25" X="1" Y="1" Ease="OutBack" Ref="True"/>

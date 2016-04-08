@@ -427,9 +427,9 @@ Class ExprEditorView,
 			triggerCode = TriggerDef.ToCodeText @exprData
 			oContent\saveToFile codeFile,triggerCode
 
-	isInAction:=> false
-	isInCondition:=> true
-	isInEvent:=> false
+	isInAction:property => false
+	isInCondition:property => true
+	isInEvent:property => false
 
 	getPrevLocalVars:(targetType)=> {}
 

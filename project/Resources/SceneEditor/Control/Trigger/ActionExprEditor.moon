@@ -678,15 +678,15 @@ Class ExprEditorView,
 			triggerCode = TriggerDef.ToCodeText @exprData
 			oContent\saveToFile codeFile,triggerCode
 
-	isInAction:=>
+	isInAction:property =>
 		not @isInCondition! and not @isInEvent!
 
-	isInCondition:=>
+	isInCondition:property =>
 		expr = @_selectedExprItem.expr
 		parentExpr = @_selectedExprItem.parentExpr
 		expr[1] == "Available" or (parentExpr and parentExpr[1] == "Available")
 
-	isInEvent:=>
+	isInEvent:property =>
 		expr = @_selectedExprItem.expr
 		switch expr[1]
 			when "Priority","Reaction","Recovery"
@@ -696,7 +696,7 @@ Class ExprEditorView,
 
 	getPrevLocalVars:(targetType)=>
 		localVars = {k,v for k,v in pairs Args}
-		return localVars if not @isInAction!
+		return localVars if not @isInAction
 
 		targetExpr = @_selectedExprItem.expr
 		varScope = {}

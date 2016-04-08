@@ -38,6 +38,81 @@ NewExpr = (...)->
 NewExprVal = (value)-> => setmetatable {@Name,value},@
 
 Expressions = {
+	AIRoot: {
+		Text:"AI Root Node"
+		Type:"AIRoot"
+		Group:"None"
+		Desc:"AI Root Node."
+		ToCode:=>
+			codes = [tostring expr for expr in *@[3,]]
+			table.concat {"return AIRoot(", @[2], table.concat(codes,","), ")"}
+		Create:NewExpr "TreeName"
+	}
+	TreeName: {
+		Text:"Tree Name"
+		Type:"TreeName"
+		Group:"Special"
+		Desc:"The AI tree`s name."
+		CodeOnly:true
+		ToCode:=> "\"#{ @[2] }\""
+		Create:NewExprVal "InvalidName"
+	}
+	ConName: {
+		Text:"Condition Name"
+		Type:"ConName"
+		Group:"Special"
+		Desc:"The condition node`s name."
+		CodeOnly:true
+		ToCode:=> "\"#{ @[2] }\""
+		Create:NewExprVal "InvalidName"
+	}
+	ActName: {
+		Text:"Action Name"
+		Type:"ActName"
+		Group:"Special"
+		Desc:"The action node`s name."
+		CodeOnly:true
+		ToCode:=> "\"#{ @[2] }\""
+		Create:NewExprVal "InvalidName"
+	}
+	Sel: {
+		Text:"Selection"
+		Type:"AINode"
+		Group:"AI"
+		Desc:"Selection Node."
+		ToCode:=>
+			codes = [tostring expr for expr in *@[2,]]
+			table.concat {"oSel(", table.concat(codes,","), ")"}
+		Create:NewExpr!
+	}
+	Seq: {
+		Text:"Sequence"
+		Type:"AINode"
+		Group:"AI"
+		Desc:"Sequence Node."
+		ToCode:=>
+			codes = [tostring expr for expr in *@[2,]]
+			table.concat {"oSeq(", table.concat(codes,","), ")"}
+		Create:NewExpr!
+	}
+	Con: {
+		Text:"Condition"
+		Type:"AINode"
+		Group:"AI"
+		Desc:"Condition Node."
+		ToCode:=>
+			"GCon( #{ @[2] } )"
+		Create:NewExpr "ConName"
+	}
+	Act: {
+		Text:"Action"
+		Type:"AINode"
+		Group:"AI"
+		Desc:"Action Node."
+		ToCode:=>
+			"GAct( \"#{ @[2] }\" )"
+		Create:NewExpr "ActName"
+	}
 	GlobalVar: {
 		Text:"Global Variable"
 		Type:"GlobalVar"

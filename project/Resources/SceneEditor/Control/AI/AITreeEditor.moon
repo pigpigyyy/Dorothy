@@ -1,6 +1,6 @@
 Dorothy!
 EditorView = require "View.Control.Trigger.Editor"
-ActionExprEditor = require "Control.Trigger.ActionExprEditor"
+AITreeView = require "Control.AI.AITreeView"
 MenuItem = require "Control.Trigger.MenuItem"
 ExprChooser = require "Control.Trigger.ExprChooser"
 SelectionPanel = require "Control.Basic.SelectionPanel"
@@ -24,7 +24,7 @@ TriggerScope = Class
 				if not @triggerBtn.exprEditor
 					{width:panelW,height:panelH} = @panel
 					listMenuW = @scrollArea.width
-					exprEditor = with ActionExprEditor {
+					exprEditor = with AITreeView {
 							x:panelW/2+listMenuW/2
 							y:panelH/2
 							width:panelW-listMenuW
@@ -50,12 +50,6 @@ TriggerScope = Class
 		@items = {}
 		@files = {}
 
-		if CCUserDefault.TriggerMode == nil
-			CCUserDefault.TriggerMode = "Text"
-			TriggerDef.CodeMode = false
-		else
-			TriggerDef.CodeMode = (CCUserDefault.TriggerMode == "Code")
-
 		@_menu\slot "Cleanup",->
 			for _,item in pairs @items
 				if item.parent
@@ -70,7 +64,7 @@ TriggerScope = Class
 		oContent\mkdir defaultFolder unless oContent\exist defaultFolder
 		@_groups = Path.getFolders path
 		table.sort @_groups
-		files = Path.getAllFiles path,"action"
+		files = Path.getAllFiles path,"tree"
 		for i = 1,#files
 			files[i] = prefix..files[i]
 		filesToAdd,filesToDel = CompareTable @files,files
@@ -204,7 +198,7 @@ Class
 						if oContent\exist triggerFullPath
 							MessageBox text:"AI Tree Exist!",okOnly:true
 						else
-							trigger = Expressions.UnitAction\Create!
+							trigger = Expressions.AIRoot\Create!
 							trigger[2][2] = result
 							oContent\saveToFile triggerFullPath,ToEditText trigger
 							scope\updateItems!
