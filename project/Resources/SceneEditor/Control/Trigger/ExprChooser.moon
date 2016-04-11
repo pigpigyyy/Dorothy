@@ -237,6 +237,26 @@ ExprChooser = Class
 			@bodyMenu\addChild itemButton
 			itemButton\emit "Tapped"
 
+		editConditionNode = ->
+			nodeFile = @curExpr[2][2]
+			nodeName = Path.getName nodeFile
+			itemButton = with GroupButton {
+					text:nodeName
+					width:math.min(200,@bodyMenu.width-20)
+					height:35
+				}
+				.position = oVec2 @bodyMenu.width/2,
+					@bodyLabel.positionY-@bodyLabel.height-10-.height/2
+				\slot "Tapped",->
+					@@level -= 1
+					@emit "Result",@curExpr
+					@hide!
+					curExpr = @curExpr[2]
+					emit "Scene.AINode.Open",{nodeFile,(newNodeFile)->
+						curExpr[2] = newNodeFile if newNodeFile
+					}
+			@bodyMenu\addChild itemButton
+
 		chooseItemFromScene = (itemType)->
 			itemButton = with GroupButton {
 					text:@curExpr[2]
@@ -404,6 +424,8 @@ ExprChooser = Class
 					editNumber!
 				when "String","TriggerName","ActionName","NodeName","Text","InitGlobalName"
 					editString!
+				when "Con"
+					editConditionNode!
 				else
 					if @curExpr.Item
 						chooseItemFromScene @curExpr[1]\sub 1,-5 -- "TypeName"\sub(1,-5) == "Type"
@@ -595,6 +617,9 @@ ExprChooser = Class
 			@previewItem\perform oOpacity 0.3,0,oEase.OutQuad
 			@@preview = nil
 		if @mask
-			@mask\perform oOpacity 0.3,0,oEase.OutQuad
+			@mask\perform CCSequence {
+				oOpacity 0.3,0,oEase.OutQuad
+				CCCall -> @mask.touchEnabled = false
+			}
 
 ExprChooser

@@ -742,9 +742,10 @@ Class ExprEditorView,
 			if buttonSet[child]
 				child.positionX = posX
 				child.visible = true
-				child.scaleX = 0
-				child.scaleY = 0
-				child\perform child.scale
+				with child.face
+					.scaleX = 0
+					.scaleY = 0
+					\perform child.scale
 				posX -= 60
 			else
 				child.visible = false

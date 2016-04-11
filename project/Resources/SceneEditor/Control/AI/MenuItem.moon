@@ -1,5 +1,6 @@
 Dorothy!
 MenuItemView = require "View.Control.AI.MenuItem"
+import Path from require "Data.Utils"
 
 -- [params]
 -- x, y, width, height, expr
@@ -63,9 +64,9 @@ Class MenuItemView,
 			when "AIRoot"
 				@text = "[Sel] Root"
 			when "Con"
-				@text = "[Con] "..value[2][2]
+				@text = "[Con] "..Path.getName value[2][2]
 			when "Act"
-				@text = "[Act] "..value[2][2]
+				@text = "[Act] "..Path.getName value[2][2]
 			else
 				@text = "[#{ value[1] }]"
 

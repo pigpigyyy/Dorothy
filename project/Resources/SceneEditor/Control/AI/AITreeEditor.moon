@@ -110,7 +110,6 @@ TriggerScope = Class
 				@@scrollArea.offset = @_groupOffset[@_currentGroup] or oVec2.zero
 
 	menuItems:property => @_menu.children
-
 	groups:property => @_groups
 	prefix:property => editor[@_prefix]
 	path:property => editor[@_path]
@@ -122,6 +121,12 @@ Class
 
 	__init:(args)=>
 		{width:panelW,height:panelH} = @panel
+
+		if CCUserDefault.TriggerMode == nil
+			CCUserDefault.TriggerMode = "Text"
+			TriggerDef.CodeMode = false
+		else
+			TriggerDef.CodeMode = (CCUserDefault.TriggerMode == "Code")
 
 		TriggerScope.scrollArea = @listScrollArea
 		TriggerScope.panel = @panel
@@ -275,15 +280,29 @@ Class
 
 		@closeEvent = @gslot "Scene.AITree.Close",-> @hide!
 
+		@gslot "Scene.AINode.Open",(args)->
+			{nodeFile,handleResult} = args
+			if @aiNodeEditor
+				@aiNodeEditor\show nodeFile
+			else
+				AINodeEditor = require "Control.AI.AINodeEditor"
+				@aiNodeEditor = AINodeEditor!
+				@aiNodeEditor\show nodeFile
+				editor\addChild @aiNodeEditor
+			@aiNodeEditor\slot("Selected")\set (result)->
+				handleResult result
+				TriggerScope.triggerBtn.exprEditor.editBtn\emit "Tapped"
+
 	show:=>
 		@closeEvent.enabled = true
 		@panel\schedule once ->
 			@localScope\updateItems!
 			@groupBtn.text = @localScope.currentGroup
 		@visible = true
-		@closeBtn.scaleX = 0
-		@closeBtn.scaleY = 0
-		@closeBtn\perform oScale 0.3,1,1,oEase.OutBack
+		with @closeBtn
+			.scaleX = 0
+			.scaleY = 0
+			\perform oScale 0.3,1,1,oEase.OutBack
 		@panel.opacity = 0
 		@panel\perform CCSequence {
 			oOpacity 0.3,1,oEase.OutQuad

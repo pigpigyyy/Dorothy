@@ -1,5 +1,6 @@
 local TriggerDef
 local Expressions
+import Path from require "Data.Utils"
 
 SetExprMeta = (expr)->
 	isTrigger = expr[1] == "Trigger"
@@ -45,7 +46,7 @@ Expressions = {
 		Desc:"AI Root Node."
 		ToCode:=>
 			codes = [tostring expr for expr in *@[3,]]
-			table.concat {"return AIRoot(", @[2], table.concat(codes,","), ")"}
+			table.concat {"return AIRoot( ", tostring(@[2]), ", ", table.concat(codes,", "), " )"}
 		Create:NewExpr "TreeName"
 	}
 	TreeName: {
@@ -63,7 +64,7 @@ Expressions = {
 		Group:"Special"
 		Desc:"The condition node`s name."
 		CodeOnly:true
-		ToCode:=> "\"#{ @[2] }\""
+		ToCode:=> (Path.getPath(@[2])..Path.getName(@[2]))\gsub("[\\/]",".")
 		Create:NewExprVal "InvalidName"
 	}
 	ActName: {
@@ -72,7 +73,7 @@ Expressions = {
 		Group:"Special"
 		Desc:"The action node`s name."
 		CodeOnly:true
-		ToCode:=> "\"#{ @[2] }\""
+		ToCode:=> (Path.getPath(@[2])..Path.getName(@[2]))\gsub("[\\/]",".")
 		Create:NewExprVal "InvalidName"
 	}
 	Sel: {
@@ -80,9 +81,10 @@ Expressions = {
 		Type:"AINode"
 		Group:"AI"
 		Desc:"Selection Node."
+		CodeOnly:true
 		ToCode:=>
 			codes = [tostring expr for expr in *@[2,]]
-			table.concat {"oSel(", table.concat(codes,","), ")"}
+			table.concat {"oSel( ", table.concat(codes,", "), " )"}
 		Create:NewExpr!
 	}
 	Seq: {
@@ -90,9 +92,10 @@ Expressions = {
 		Type:"AINode"
 		Group:"AI"
 		Desc:"Sequence Node."
+		CodeOnly:true
 		ToCode:=>
 			codes = [tostring expr for expr in *@[2,]]
-			table.concat {"oSeq(", table.concat(codes,","), ")"}
+			table.concat {"oSeq( ", table.concat(codes,", "), " )"}
 		Create:NewExpr!
 	}
 	Con: {
@@ -100,8 +103,9 @@ Expressions = {
 		Type:"AINode"
 		Group:"AI"
 		Desc:"Condition Node."
+		CodeOnly:true
 		ToCode:=>
-			"GCon( #{ @[2] } )"
+			"GCon( \"#{ @[2] }\" )"
 		Create:NewExpr "ConName"
 	}
 	Act: {
@@ -109,6 +113,7 @@ Expressions = {
 		Type:"AINode"
 		Group:"AI"
 		Desc:"Action Node."
+		CodeOnly:true
 		ToCode:=>
 			"GAct( \"#{ @[2] }\" )"
 		Create:NewExpr "ActName"
@@ -128,7 +133,7 @@ Expressions = {
 		Type:"ConditionNode"
 		Group:"None"
 		Desc:"This AI condition node named [NodeName] checks"
-		ToCode:=> "ConditionNode( #{ @[2] }, function()"
+		ToCode:=> "ConditionNode( #{ @[2] }, function() return"
 		Create:NewExpr "NodeName","True"
 	}
 	NodeName: {
@@ -153,7 +158,7 @@ Expressions = {
 		Group:"Special"
 		Desc:"The action`s name."
 		CodeOnly:true
-		ToCode:=> "\"#{ @[2] }\""
+		ToCode:=> Path.getName @[2]
 		Create:NewExprVal "InvalidName"
 	}
 	Priority: {
@@ -817,6 +822,12 @@ TriggerDef = {
 		nextExpr = (parentExpr,index,indent)->
 			expr = index and parentExpr[index] or parentExpr
 			switch expr[1]
+				when "ConditionNode"
+					append 0,"return"
+					append indent,tostring expr
+					for i = 3,#expr
+						nextExpr expr,i,indent+1
+					append indent,"end )"
 				when "Trigger"
 					append indent,tostring expr
 					append 0,"" unless TriggerDef.CodeMode
@@ -878,8 +889,8 @@ TriggerDef = {
 					append indent,tostring expr
 			if parentExpr
 				switch parentExpr[1]
-					when "Condition","Available"
-						if parentExpr[#parentExpr] ~= expr
+					when "Condition","Available","ConditionNode"
+						if parentExpr ~= expr and parentExpr[#parentExpr] ~= expr
 							insert strs,#strs," and"
 		nextExpr exprData,nil,0
 		TriggerDef.CodeMode = codeMode

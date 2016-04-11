@@ -3,6 +3,7 @@ AITreeViewView = require "View.Control.AI.AITreeView"
 MenuItem = require "Control.AI.MenuItem"
 TriggerDef = require "Data.TriggerDef"
 ExprChooser = require "Control.Trigger.ExprChooser"
+import Path from require "Data.Utils"
 
 MenuW = 200
 MenuH = 40
@@ -13,6 +14,8 @@ Class AITreeViewView,
 		@extension = ".tree"
 		@exprData = nil
 		@items = nil
+		@modified = false
+		@filename = nil
 		@setupMenuScroll @treeMenu
 
 		@_selectedExprItem = nil
@@ -22,7 +25,8 @@ Class AITreeViewView,
 			if button.checked
 				@editMenu.visible = true
 				{:expr,:parentExpr,:index} = button
-				isRoot = (index == nil)
+				isRoot = index == nil
+				isParentRoot = parentExpr == @exprData
 				isLeaf = switch expr[1]
 					when "Con","Act" then true
 					else false
@@ -31,7 +35,7 @@ Class AITreeViewView,
 				insert = not isRoot
 				add = true
 				del = not isRoot
-				up = index and ((isRoot and index > 3) or (not isRoot and index > 2))
+				up = index and ((isParentRoot and index > 3) or (not isParentRoot and index > 2))
 				down = index and index < #parentExpr
 				buttons = for v,k in pairs {:edit,:insert,:add,:del,:up,:down}
 					if k then v
@@ -50,11 +54,19 @@ Class AITreeViewView,
 						parentExpr:parentExpr
 						owner:@
 					}
-					.previewItem.visible = false
 					.backBtn.visible = false
 					\slot "Result",(newExpr)->
+						oldExpr = parentExpr[index]
 						parentExpr[index] = newExpr
 						selectedExprItem.expr = newExpr
+						if oldExpr ~= newExpr
+							@loadExpr @exprData
+							@_selectedExprItem = nil
+							@.changeExprItem with @items[newExpr]
+								.checked = true
+						else
+							@alignNodes!
+						@notifyEdit!
 
 		@addBtn\slot "Tapped",->
 			selectedExprItem = @_selectedExprItem
@@ -64,7 +76,6 @@ Class AITreeViewView,
 					parentExpr:expr
 					owner:@
 				}
-				.previewItem.visible = false
 				.backBtn.visible = false
 				\slot "Result",(newExpr)->
 					return unless newExpr
@@ -89,6 +100,42 @@ Class AITreeViewView,
 					return unless newExpr
 					table.insert parentExpr,index,newExpr
 					@alignNodes!
+					@notifyEdit!
+
+		@delBtn\slot "Tapped",->
+			selectedExprItem = @_selectedExprItem
+			{:expr,:parentExpr,:index} = selectedExprItem
+			table.remove parentExpr,index
+			@loadExpr @exprData
+			@.changeExprItem with @items[parentExpr]
+				.checked = true
+			@notifyEdit!
+
+		@upBtn\slot "Tapped",->
+			selectedExprItem = @_selectedExprItem
+			{:expr,:parentExpr,:index} = selectedExprItem
+			if (parentExpr == @exprData and index > 3) or index > 2
+				parentExpr[index] = parentExpr[index-1]
+				parentExpr[index-1] = expr
+				@alignNodes!
+				@_selectedExprItem = nil
+				@.changeExprItem selectedExprItem
+				@notifyEdit!
+
+		@downBtn\slot "Tapped",->
+			selectedExprItem = @_selectedExprItem
+			{:expr,:parentExpr,:index} = selectedExprItem
+			if index < #parentExpr
+				parentExpr[index] = parentExpr[index+1]
+				parentExpr[index+1] = expr
+				@alignNodes!
+				@_selectedExprItem = nil
+				@.changeExprItem selectedExprItem
+				@notifyEdit!
+
+	notifyEdit:=>
+		@modified = true
+		emit "Scene.#{ @type }.Edited",@filename
 
 	loadExpr:(arg)=>
 		offset = @offset
@@ -166,6 +213,15 @@ Class AITreeViewView,
 		nextNode @exprData,nil,10+MenuW/2,@treeMenu.height-10-MenuH/2
 		@viewSize = CCSize right-rootX+MenuW+20,rootY-bottom+MenuH+20
 
+	save:=>
+		triggerText = TriggerDef.ToEditText @exprData
+		oContent\saveToFile editor.gameFullPath..@filename,triggerText
+		if not @isCodeHasError
+			codeFile = editor.gameFullPath..@filename
+			codeFile = Path.getPath(codeFile)..Path.getName(codeFile)..".lua"
+			triggerCode = TriggerDef.ToCodeText @exprData
+			oContent\saveToFile codeFile,triggerCode
+
 	showEditButtons:(names)=>
 		buttonSet = {@["#{ name }Btn"],true for name in *names}
 		posY = @editMenu.height-35
@@ -174,9 +230,10 @@ Class AITreeViewView,
 			if buttonSet[child]
 				child.positionY = posY
 				child.visible = true
-				child.scaleX = 0
-				child.scaleY = 0
-				child\perform child.scale
+				with child.face
+					.scaleX = 0
+					.scaleY = 0
+					\perform child.scale
 				posY -= 60
 			else
 				child.visible = false

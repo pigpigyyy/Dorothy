@@ -425,6 +425,7 @@ Class ExprEditorView,
 			codeFile = editor.gameFullPath..@filename
 			codeFile = Path.getPath(codeFile)..Path.getName(codeFile)..".lua"
 			triggerCode = TriggerDef.ToCodeText @exprData
+			print triggerCode
 			oContent\saveToFile codeFile,triggerCode
 
 	isInAction:property => false

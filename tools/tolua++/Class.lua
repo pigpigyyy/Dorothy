@@ -116,7 +116,7 @@ local function __index(self,name)
 			while c do -- recursive to access super classes
 				item = c[1][name]
 				if item then
-					c[1][name] = item -- cache super properties to class
+					cls[1][name] = item -- cache super properties to class
 					return item(rawget(self,0) or self)
 				else
 					item = rawget(c,name)
@@ -191,10 +191,12 @@ local function class(arg1,arg2)
 	if not base then
 		base = {
 			{
-				__class = function() return base end
+				__class = function() return base end,
+				__base = function() return getmetatable(base) end,
 			},
 			{
-				__class = assignReadOnly
+				__class = assignReadOnly,
+				__base = assignReadOnly,
 			},
 			__index = __index,
 			__newindex = __newindex,

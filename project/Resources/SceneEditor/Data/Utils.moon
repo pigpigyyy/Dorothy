@@ -33,7 +33,7 @@ Path =
 	-- input: /aa/bb/file.xml
 	-- output: file
 	getName:(filename)->
-		filename\match "([^\\/]+)%.[^%.\\/]*$"
+		filename\match("([^\\/]+)%.[^%.\\/]*$") or filename
 
 	-- input: /aa/bb/file.xml
 	-- output: file.xml

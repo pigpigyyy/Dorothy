@@ -1,6 +1,6 @@
 Dorothy!
 EditorView = require "View.Control.Trigger.Editor"
-AINodeExprEditor = require "Control.Trigger.AINodeExprEditor"
+AINodeExprEditor = require "Control.AI.AINodeExprEditor"
 MenuItem = require "Control.Trigger.MenuItem"
 SelectionPanel = require "Control.Basic.SelectionPanel"
 InputBox = require "Control.Basic.InputBox"
@@ -29,6 +29,7 @@ TriggerScope = Class
 							y:panelH/2
 							width:panelW-listMenuW
 							height:panelH-20
+							exprLevel:editor.levelAINodeExpr
 						}
 						\loadExpr @triggerBtn.file
 					@triggerBtn.exprEditor = exprEditor
@@ -116,7 +117,6 @@ TriggerScope = Class
 				@@scrollArea.offset = @_groupOffset[@_currentGroup] or oVec2.zero
 
 	menuItems:property => @_menu.children
-
 	groups:property => @_groups
 	prefix:property => editor[@_prefix]
 	path:property => editor[@_path]
@@ -126,7 +126,7 @@ Class
 	__partial:=>
 		{:width,:height} = CCDirector.winSize
 		mask = SolidRect :width,:height,color:0xaa000000
-		with EditorView title:"AI Node Editor", scope:false, width:width*0.8, height:height*0.7
+		with EditorView title:"AI Condition Node", scope:false, width:width*0.8, height:height*0.7,editorLevel:editor.levelAINodeEditor,menuLevel:editor.levelAINodeMenu
 			\addChild mask,-1,-1
 
 	__init:(args)=>
@@ -268,14 +268,20 @@ Class
 					@copyBtn.targetFile = nil
 					@copyBtn.targetData = nil
 
-		@closeBtn\slot "Tapped",->
-			if @localScope.menuItems
-				for item in *@localScope.menuItems
-					exprEditor = item.exprEditor
-					if exprEditor and exprEditor.modified
-						exprEditor.modified = false
-						exprEditor\save!
-			@hide!
+		with @closeBtn
+			.text = "Select"
+			\slot "Tapped",->
+				if @localScope.menuItems
+					for item in *@localScope.menuItems
+						exprEditor = item.exprEditor
+						if exprEditor and exprEditor.modified
+							exprEditor.modified = false
+							exprEditor\save!
+				if TriggerScope.triggerBtn
+					@emit "Selected",TriggerScope.triggerBtn.file
+				else
+					@emit "Selected",nil
+				@hide!
 
 		@gslot "Scene.AINode.ChangeName",(triggerName)->
 			TriggerScope.triggerBtn.text = triggerName
@@ -284,14 +290,24 @@ Class
 
 		@closeEvent = @gslot "Scene.AINode.Close",-> @hide!
 
-	show:=>
+	show:(targetFile)=>
 		@closeEvent.enabled = true
 		with @getChildByTag -1
 			.opacity = 0
 			\perform oOpacity 0.3,1,oEase.OutQuad
 		@panel\schedule once ->
 			@localScope\updateItems!
-			@groupBtn.text = @localScope.currentGroup
+			with @localScope
+				files,items = .files,.items
+				if targetFile and #files > 0
+					for file in *files
+						item = items[file]
+						if file == targetFile and (not .triggerBtn or .triggerBtn.file ~= targetFile)
+							item.checked = true
+							TriggerScope.changeTrigger item
+							.currentGroup = item.group
+							@groupBtn.text = item.group
+							break
 		@visible = true
 		@closeBtn.scaleX = 0
 		@closeBtn.scaleY = 0
