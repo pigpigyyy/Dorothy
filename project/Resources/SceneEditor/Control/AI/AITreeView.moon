@@ -61,7 +61,6 @@ Class AITreeViewView,
 						selectedExprItem.expr = newExpr
 						if oldExpr ~= newExpr
 							@loadExpr @exprData
-							@_selectedExprItem = nil
 							@.changeExprItem with @items[newExpr]
 								.checked = true
 						else
@@ -85,6 +84,9 @@ Class AITreeViewView,
 						else
 							table.insert expr,newExpr
 					@alignNodes!
+					@.changeExprItem with @items[newExpr]
+						.checked = true
+					@notifyEdit!
 
 		@insertBtn\slot "Tapped",->
 			selectedExprItem = @_selectedExprItem
@@ -100,6 +102,8 @@ Class AITreeViewView,
 					return unless newExpr
 					table.insert parentExpr,index,newExpr
 					@alignNodes!
+					@.changeExprItem with @items[newExpr]
+						.checked = true
 					@notifyEdit!
 
 		@delBtn\slot "Tapped",->

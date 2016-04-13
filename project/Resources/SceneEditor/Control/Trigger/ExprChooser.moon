@@ -257,6 +257,28 @@ ExprChooser = Class
 					}
 			@bodyMenu\addChild itemButton
 
+		editActionNode = ->
+			nodeFile = @curExpr[2][2]
+			nodeName = Path.getName nodeFile
+			itemButton = with GroupButton {
+					text:nodeName
+					width:math.min(200,@bodyMenu.width-20)
+					height:35
+				}
+				.position = oVec2 @bodyMenu.width/2,
+					@bodyLabel.positionY-@bodyLabel.height-10-.height/2
+				\slot "Tapped",->
+					@@level -= 1
+					@emit "Result",@curExpr
+					@hide!
+					curExpr = @curExpr[2]
+					ActionChooser = require "Control.AI.ActionChooser"
+					editor\addChild with ActionChooser!
+						\slot "Selected",(file)->
+							curExpr[2] = file if file
+							emit "Scene.AINode.Edit"
+			@bodyMenu\addChild itemButton
+
 		chooseItemFromScene = (itemType)->
 			itemButton = with GroupButton {
 					text:@curExpr[2]
@@ -426,6 +448,8 @@ ExprChooser = Class
 					editString!
 				when "Con"
 					editConditionNode!
+				when "Act"
+					editActionNode!
 				else
 					if @curExpr.Item
 						chooseItemFromScene @curExpr[1]\sub 1,-5 -- "TypeName"\sub(1,-5) == "Type"

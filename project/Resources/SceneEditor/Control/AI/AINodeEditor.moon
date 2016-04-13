@@ -288,38 +288,42 @@ Class
 			file = TriggerScope.triggerBtn.file
 			TriggerScope.triggerBtn.file = Path.getPath(file)..triggerName..".node"
 
-		@closeEvent = @gslot "Scene.AINode.Close",-> @hide!
+		@closeEvent = @gslot "Scene.AINode.Close",->
+			emit "Scene.AITree.Close"
+			@hide!
 
 	show:(targetFile)=>
 		@closeEvent.enabled = true
 		with @getChildByTag -1
 			.opacity = 0
 			\perform oOpacity 0.3,1,oEase.OutQuad
-		@panel\schedule once ->
-			@localScope\updateItems!
-			with @localScope
-				files,items = .files,.items
-				if targetFile and #files > 0
-					for file in *files
-						item = items[file]
-						if file == targetFile and (not .triggerBtn or .triggerBtn.file ~= targetFile)
-							item.checked = true
-							TriggerScope.changeTrigger item
-							.currentGroup = item.group
-							@groupBtn.text = item.group
-							break
 		@visible = true
-		@closeBtn.scaleX = 0
-		@closeBtn.scaleY = 0
-		@closeBtn\perform oScale 0.3,1,1,oEase.OutBack
-		@panel.opacity = 0
-		@panel\perform CCSequence {
-			oOpacity 0.3,1,oEase.OutQuad
-			CCCall ->
-				@listScrollArea.touchEnabled = true
-				@localListMenu.enabled = true
-				@editMenu.enabled = true
-				@opMenu.enabled = true
+		with @closeBtn
+			.scaleX = 0
+			.scaleY = 0
+			\perform oScale 0.3,1,1,oEase.OutBack
+		with @panel
+			.opacity = 0
+			\schedule once ->
+				@localScope\updateItems!
+				with @localScope
+					files,items = .files,.items
+					if targetFile and #files > 0
+						for file in *files
+							item = items[file]
+							if file == targetFile and (not .triggerBtn or .triggerBtn.file ~= targetFile)
+								item.checked = true
+								TriggerScope.changeTrigger item
+								.currentGroup = item.group
+								@groupBtn.text = item.group
+								break
+			\perform CCSequence {
+				oOpacity 0.3,1,oEase.OutQuad
+				CCCall ->
+					@listScrollArea.touchEnabled = true
+					@localListMenu.enabled = true
+					@editMenu.enabled = true
+					@opMenu.enabled = true
 		}
 
 	hide:=>

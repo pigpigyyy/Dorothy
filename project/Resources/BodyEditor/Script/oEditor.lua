@@ -71,9 +71,9 @@ oEditor.worldNode = worldNode
 oEditor.touchPriorityEditMenu = CCMenu.DefaultHandlerPriority
 oEditor.touchPrioritySettingPanel = CCMenu.DefaultHandlerPriority+1
 oEditor.touchPriorityViewPanel = CCMenu.DefaultHandlerPriority+3
-oEditor.touchPriorityEditControl = CCMenu.DefaultHandlerPriority+5
-oEditor.touchPriorityVRuler = CCMenu.DefaultHandlerPriority+8
-oEditor.touchPriorityHRuler = CCMenu.DefaultHandlerPriority+9
+oEditor.touchPriorityVRuler = CCMenu.DefaultHandlerPriority+5
+oEditor.touchPriorityHRuler = CCMenu.DefaultHandlerPriority+6
+oEditor.touchPriorityEditControl = CCMenu.DefaultHandlerPriority+8
 oEditor.touchPriorityViewArea = CCMenu.DefaultHandlerPriority+10
 
 local function Point(x,y)
@@ -1316,9 +1316,9 @@ end
 local controls =
 {
 	"oViewArea",
-	"oEditControl",
 	"oVRuler",
 	"oHRuler",
+	"oEditControl",
 	"oEditMenu",
 	"oSettingPanel",
 	"oViewPanel",

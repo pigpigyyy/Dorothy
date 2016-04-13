@@ -7,6 +7,7 @@ SelectionPanel = require "Control.Basic.SelectionPanel"
 InputBox = require "Control.Basic.InputBox"
 MessageBox = require "Control.Basic.MessageBox"
 TriggerDef = require "Data.TriggerDef"
+AINodeEditor = require "Control.AI.AINodeEditor"
 import Expressions,ToEditText from TriggerDef
 import CompareTable,Path from require "Data.Utils"
 
@@ -281,17 +282,23 @@ Class
 		@closeEvent = @gslot "Scene.AITree.Close",-> @hide!
 
 		@gslot "Scene.AINode.Open",(args)->
+			if not args
+				@show!
+				@aiNodeEditor\show!
+				return
 			{nodeFile,handleResult} = args
 			if @aiNodeEditor
 				@aiNodeEditor\show nodeFile
 			else
-				AINodeEditor = require "Control.AI.AINodeEditor"
 				@aiNodeEditor = AINodeEditor!
 				@aiNodeEditor\show nodeFile
 				editor\addChild @aiNodeEditor
 			@aiNodeEditor\slot("Selected")\set (result)->
 				handleResult result
-				TriggerScope.triggerBtn.exprEditor.editBtn\emit "Tapped"
+				emit "Scene.AINode.Edit"
+
+		@gslot "Scene.AINode.Edit",->
+			TriggerScope.triggerBtn.exprEditor.editBtn\emit "Tapped"
 
 	show:=>
 		@closeEvent.enabled = true
@@ -312,16 +319,22 @@ Class
 				@editMenu.enabled = true
 				@opMenu.enabled = true
 				for control in *editor.children
-					if control ~= @ and control.__class ~= ExprChooser
-						control.visibleState = control.visible
-						control.visible = false
+					switch control.__class
+						when @@,ExprChooser,AINodeEditor
+							continue
+						else
+							control.visibleState = control.visible
+							control.visible = false
 		}
 
 	hide:=>
 		@closeEvent.enabled = false
 		for control in *editor.children
-			if control ~= @ and control.__class ~= ExprChooser
-				control.visible = control.visibleState
+			switch control.__class
+				when @@,ExprChooser,AINodeEditor
+					continue
+				else
+					control.visible = control.visibleState
 		@listScrollArea.touchEnabled = false
 		@localListMenu.enabled = false
 		@editMenu.enabled = false

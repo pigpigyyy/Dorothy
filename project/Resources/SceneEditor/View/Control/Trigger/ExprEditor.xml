@@ -4,7 +4,7 @@
 	<Import Module="Control.Basic.Button"/>
 	<Import Module="View.Shape.SolidRect"/>
 
-	<Script>local exprLevel = exprLevel or editor.levelExprEditor</Script>
+	<Script>local exprLevel = exprLevel or editor.levelTriggerExpr</Script>
 
 	<SolidRect Width="40" Height="{ $H }" Color="0x2200ffff"/>
 	<Item Name="view">
