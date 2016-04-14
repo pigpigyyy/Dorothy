@@ -1,6 +1,7 @@
 <!-- no params -->
 <Menu X="{ @X }" Y="{ @Y }" TouchPriority="{ editor.levelEditMenu }">
 	<Import Module="Control.Basic.Button"/>
+	<Import Module="Control.Basic.CircleButton"/>
 	<Import Module="Control.Operation.LittleProgress"/>
 	<Import Module="Control.Operation.PickPanel"/>
 	<Import Module="View.Shape.Camera"/>
@@ -119,5 +120,17 @@
 	<Button Name="foldBtn" X="{ $R-225 }" Y="{ $T-215 }" Width="50" Height="50" Text="Fold" FontSize="16" Ref="True"/>
 	<Button Name="editBtn" X="{ $R-225 }" Y="{ $T-275 }" Width="50" Height="50" Text="Edit" FontSize="16" Ref="True"/>
 	<Button Name="zoomEditBtn" X="{ $R-35 }" Y="{ $T-95 }" Width="50" Height="50" Text="Zoom" FontSize="16" Ref="True"/>
-
+	<CircleButton Name="playBtn" X="{ $R-225 }" Y="35" Radius="25" Ref="True">
+		<Item Name="face">
+			<Node X="25" Y="25" PassColor="False">
+				<DrawNode X="2">
+					<Polygon BorderColor="0xffff0080" BorderWidth="0.5" FillColor="0xaaff0080">
+						<Vec2 X="-12" Y="14"/>
+						<Vec2 X="12" Y="0"/>
+						<Vec2 X="-12" Y="-14"/>
+					</Polygon>
+				</DrawNode>
+			</Node>
+		</Item>
+	</CircleButton>
 </Menu>

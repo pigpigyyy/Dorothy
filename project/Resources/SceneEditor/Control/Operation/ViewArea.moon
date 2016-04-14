@@ -80,13 +80,14 @@ Class ViewAreaView,
 		@gslot "Scene.Camera.MoveTo",(pos)->
 			pos = oVec2(width/2,height/2)-pos
 			@unschedule!
+			touchEnabled = @touchEnabled
 			@touchEnabled = false
 			@crossNode\runAction CCSequence {
 				oPos 0.5,pos.x,pos.y,oEase.OutQuad
 				CCCall ->
 					if @scaleNode.numberOfRunningActions+
 						@crossNode.numberOfRunningActions == 1
-						@touchEnabled = true
+						@touchEnabled = touchEnabled
 			}
 			@xcross\runAction oPos 0.5,0,-pos.y,oEase.OutQuad
 			@ycross\runAction oPos 0.5,-pos.x,0,oEase.OutQuad
@@ -203,12 +204,17 @@ Class ViewAreaView,
 					\slot "CamMoved",(delta)->
 						emit "Scene.Camera.Move",delta
 
+		targetCam = nil
 		@gslot "Scene.Camera.Select",(subCam)->
+			targetCam = subCam
 			@touchEnabled = (subCam == nil)
 
 		@gslot "Scene.HideEditor",(args)->
 			{hide} = args
 			return if isHide == hide
 			isHide = hide
-			@touchEnabled = not hide
+			if targetCam
+				@touchEnabled = hide
+			else
+				@touchEnabled = not hide
 			@unschedule! if @touchEnabled

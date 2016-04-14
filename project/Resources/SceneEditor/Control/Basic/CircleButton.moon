@@ -8,7 +8,7 @@ CircleButtonView = require "View.Control.Basic.CircleButton"
 Class CircleButtonView,
 	__init: (args)=>
 		@_text = args.text
-		@label.texture.antiAlias = false
+		@label.texture.antiAlias = false if @label
 
 	text: property => @_text,
 		(value)=>

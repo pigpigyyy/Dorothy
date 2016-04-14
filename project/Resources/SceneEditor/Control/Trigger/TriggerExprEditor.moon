@@ -653,7 +653,7 @@ Class ExprEditorView,
 			oContent\saveToFile codeFile,triggerCode
 
 	isInAction:property =>
-		not @isInCondition! and not @isInEvent!
+		not @isInCondition and not @isInEvent
 
 	isInCondition:property =>
 		expr = @_selectedExprItem.expr

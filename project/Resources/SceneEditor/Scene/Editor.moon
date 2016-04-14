@@ -967,6 +967,8 @@ Class EditorView,
 	saveGlobalExpr:=>
 		globalVarFile = editor.logicFullPath.."variable.global"
 		oContent\saveToFile globalVarFile,TriggerDef.ToEditText(@globalExpr)
+		globalVarFile = editor.logicFullPath.."variable.lua"
+		oContent\saveToFile globalVarFile,TriggerDef.ToCodeText(@globalExpr)
 
 	lintAllTriggers:=>
 		editor\schedule once ->
