@@ -39,9 +39,7 @@ local function runScene(scene,tname)
 	local data = tname and transitions[tname]
 	local transition
 	if data then
-		local args = {}
-		args[1] = data[2]
-		args[2] = scene
+		local args = {data[2],scene}
 		for i = 3,#data do
 			args[i] = data[i]
 		end

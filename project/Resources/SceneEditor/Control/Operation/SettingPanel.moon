@@ -21,6 +21,7 @@ Class SettingPanelView,
 			{"Look","%s"}
 			{"Offset","%d"}
 			{"Effect","%s"}
+			{"Align","%s"}
 			{"Simulation","%s"}
 			{"Play","%s"}
 			{"Zoom","%.2f"}
@@ -73,6 +74,8 @@ Class SettingPanelView,
 
 		for _,item in pairs items
 			@menu\addChild item
+
+		items.Align.posItem = items.Position
 
 		groups = {
 			PlatformWorld: {
@@ -129,6 +132,7 @@ Class SettingPanelView,
 				items.Speed
 				items.FaceRight
 				items.Visible
+				items.Align
 			}
 			Sprite: {
 				items.Name
@@ -139,6 +143,7 @@ Class SettingPanelView,
 				items.Skew
 				items.Opacity
 				items.Visible
+				items.Align
 			}
 			Effect: {
 				items.Name
@@ -146,6 +151,7 @@ Class SettingPanelView,
 				items.Position
 				items.Play
 				items.Visible
+				items.Align
 			}
 		}
 
@@ -193,7 +199,13 @@ Class SettingPanelView,
 			currentGroup = groups[data.typeName]
 			getPosY = genPosY!
 			contentHeight = 40
+			parentData = editor\getData (editor\getItem data).parent
+			isParentUI = parentData and parentData.typeName == "UILayer"
 			for item in *currentGroup
+				if item.name == "align" and not isParentUI
+					item.positionX = -itemWidth
+					item.visible = false
+					continue
 				item.visible = true
 				item.positionX = itemWidth/2
 				item.positionY = getPosY!+(reset and 0 or @offset.y)
@@ -213,6 +225,8 @@ Class SettingPanelView,
 						". . ."
 					when "group"
 						editor.sceneData.groups[data[item.name]]
+					when "align"
+						Model.Align.ToName data[item.name]
 					else
 						data[item.name] == "" and "None" or data[item.name]
 			if currentCamItem

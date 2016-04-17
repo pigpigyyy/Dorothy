@@ -223,6 +223,17 @@ Class EditMenuView,
 				else
 					emit "Scene.Edit.ShowRuler",nil
 
+		@playBtn\slot "Tapped",->
+			-- test codes below
+			GameLoader = require "Lib.Game"
+			game = GameLoader editor.gameFullPath..editor.currentSceneFile
+			game.ui = GameLoader editor.uiFileFullPath
+			scene = CCScene!
+			game = with game!
+				.position = oVec2 scene.width/2,scene.height/2
+			editor\emit "Quit",with scene
+				\addChild game
+
 		setupItemButton = (button,groupLine,subItems)->
 			groupLine.data = button
 			with button
@@ -234,7 +245,7 @@ Class EditMenuView,
 						groupLine.visible = true
 						groupLine.opacity = 0
 						groupLine\perform oOpacity 0.3,1
-						groupLine.position = button.position-oVec2(25,25)
+						groupLine.position = button.position-oVec2 25,25
 					else
 						\schedule once ->
 							groupLine\perform oOpacity 0.3,0

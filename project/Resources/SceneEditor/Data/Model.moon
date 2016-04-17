@@ -29,19 +29,11 @@ Contact = (world,data)->
 
 Groups = (data)->
 	default = {
-		[0]:"Hide" -- 0
-		"P1" -- 1
-		"P2" -- 2
-		"P3" -- 3
-		"P4" -- 4
-		"P5" -- 5
-		"P6" --  6
-		"P7" -- 7
-		"P8" -- 8
-		"P9" -- 9
-		"P10" -- 10
-		"P11" -- 11
-		"P12" -- 12
+		[0]:"Hide"
+		"P1","P2","P3"
+		"P4","P5","P6"
+		"P7","P8","P9"
+		"P10","P11","P12"
 		"DetectPlayer" -- 13
 		"Terrain" -- 14
 		"Detect" -- 15
@@ -75,6 +67,63 @@ Contacts = (data)->
 			str ..= "}"
 			str
 		}
+
+local Align
+Align = {
+	Center:1
+	LeftBottom:2
+	LeftTop:3
+	RightTop:4
+	RightBottom:5
+	ToName:(align)->
+		switch align
+			when Align.Center
+				"Center"
+			when Align.LeftBottom
+				"Left Bottom"
+			when Align.LeftTop
+				"Left Top"
+			when Align.RightTop
+				"Right Top"
+			when Align.RightBottom
+				"Right Bottom"
+			else
+				"Center"
+	Get:(pos,align)->
+		if align == Align.Center
+			pos
+		else
+			{:width,:height} = CCDirector.winSize
+			switch align
+				when Align.LeftBottom
+					pos-oVec2 width/2,height/2
+				when Align.LeftTop
+					oVec2 pos.x-width/2,height/2-pos.y
+				when Align.RightTop
+					oVec2(width/2,height/2)-pos
+				when Align.RightBottom
+					oVec2 width/2-pos.x,pos.y-height/2
+				else
+					pos
+
+	Convert:(pos,fromAlign,toAlign)->
+		pos = Align.Get pos,fromAlign
+		if toAlign == Align.Center
+			pos
+		else
+			{:width,:height} = CCDirector.winSize
+			switch toAlign
+				when Align.LeftBottom
+					pos+oVec2 width/2,height/2
+				when Align.LeftTop
+					oVec2 pos.x+width/2,height/2-pos.y
+				when Align.RightTop
+					oVec2(width/2,height/2)-pos
+				when Align.RightBottom
+					oVec2 width/2-pos.x,pos.y+height/2
+				else
+					pos
+}
 
 Types =
 	PlatformWorld:1
@@ -188,6 +237,7 @@ Items =
 		str = "local v,r,t,f = require(\"oVec2\"),require(\"CCRect\"),true,false\nreturn "..tostring data
 		oContent\saveToFile filename,str
 
+	:Align
 	:Simulation
 
 	PlatformWorld:DataCreater
@@ -234,7 +284,7 @@ Items =
 		create:(scene)=>
 			layer = scene.UILayer
 			editor.items.UI = layer
-			layer.position -= editor.origin
+			layer.position += editor.origin
 			layer.visible = @visible and @display
 			editor.itemDefs[layer] = @
 			Children layer,@
@@ -371,10 +421,12 @@ Items =
 		visible:{14,true}
 		-- design
 		display:{15,true}
+		-- ui
+		align:{16,Align.Center}
 		-- helper
 		create:=>
 			model = with oModel @file
-				.position = @position
+				.position = Align.Get @position,@align
 				.angle = @angle
 				.scaleX = @scale.x
 				.scaleY = @scale.y
@@ -404,10 +456,12 @@ Items =
 		visible:{9,true}
 		-- design
 		display:{10,true}
+		-- ui
+		align:{11,Align.Center}
 		-- helper
 		create:=>
 			sprite = with CCSprite @file
-				.position = @position
+				.position = Align.Get @position,@align
 				.angle = @angle
 				.scaleX = @scale.x
 				.scaleY = @scale.y
@@ -429,13 +483,15 @@ Items =
 		visible:{6,true}
 		-- design
 		display:{7,true}
+		-- ui
+		align:{8,Align.Center}
 		-- helper
 		create:(parent)=>
 			effect = with oEffect @effect
 				.parent = parent
 				.visible = @visible and @display
 				\attachTo parent
-				\setOffset @position
+				\setOffset Align.Get @position,@align
 				\start! if @play
 			editor.items[@name] = effect
 			editor.itemDefs[effect] = @

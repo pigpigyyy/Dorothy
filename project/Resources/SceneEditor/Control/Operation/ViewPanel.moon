@@ -461,7 +461,7 @@ Class ViewPanelView,
 				else
 					return if itemData.typeName == "PlatformWorld"
 					if parentData.typeName == "UILayer" or itemData.typeName == "UILayer"
-						pos = uiPos+editor.origin
+						pos = uiPos-editor.origin
 					else
 						pos = worldPos/(itemData.zoom or parentData.zoom)
 			-- create new item data

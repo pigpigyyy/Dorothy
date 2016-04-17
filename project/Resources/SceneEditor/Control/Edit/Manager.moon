@@ -5,7 +5,7 @@ GroupChooser = require "Control.Edit.GroupChooser"
 GroupPanel = require "Control.Edit.GroupPanel"
 ContactPanel = require "Control.Edit.ContactPanel"
 Reference = require "Data.Reference"
-import Simulation from require "Data.Model"
+import Align,Simulation from require "Data.Model"
 
 Class CCNode,
 	__init:=>
@@ -511,8 +511,7 @@ Class CCNode,
 								when "World"
 									item.parent.parent.parent\setLayerOffset item.parent.zOrder,offset
 					when "position"
-						showPosEditor data.position,item.parent,(value)->
-							menuItem.value = value
+						showPosEditor Align.Get(data.position,data.align),item.parent,(value)->
 							switch data.typeName
 								when "Effect"
 									item\setOffset value
@@ -521,7 +520,8 @@ Class CCNode,
 									item\eachChild (child)-> child.position += delta
 								else
 									item.position = value
-							data.position = value
+							data.position = Align.Convert value,Align.Center,data.align
+							menuItem.value = data.position
 					when "simulation"
 						with SelectionPanel items:{"Low","Medium","High"}
 							\slot "Selected",(value,index)->
@@ -529,6 +529,16 @@ Class CCNode,
 									data.simulation = index
 									menuItem.value = value
 									item\setIterations Simulation index
+								cancelEditing!
+					when "align"
+						with SelectionPanel items:{"Center","Left Bottom","Left Top","Right Top","Right Bottom"}
+							\slot "Selected",(value,index)->
+								if value
+									newAlign = index
+									data.position = Align.Convert data.position,data.align,newAlign
+									data.align = newAlign
+									menuItem.value = value
+									menuItem.posItem.value = data.position
 								cancelEditing!
 					when "zoom"
 						showRuler data.zoom,0.5,10,1,(value)->

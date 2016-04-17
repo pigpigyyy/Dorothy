@@ -5,7 +5,11 @@ oContent\addSearchPath "SceneEditor"
 Editor = require "Scene.Editor"
 lastScene = CCDirector.currentScene
 CCScene\add "sceneEditor",with Editor!
-	\slot "Quit",->
+	\slot "Quit",(nextScene)->
+		if nextScene
+			CCDirector\replaceScene CCScene\crossFade(0.5,nextScene),true
+			CCScene\clearHistory!
+			return
 		if lastScene
 			CCDirector\replaceScene CCScene\crossFade(0.5,lastScene),true
 			CCScene\clearHistory!

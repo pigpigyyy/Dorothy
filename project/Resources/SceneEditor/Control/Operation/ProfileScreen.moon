@@ -94,11 +94,11 @@ Class ProfileScreenView,
 			\slot "TouchCancelled",touchEnded
 			\slot "TouchEnded",touchEnded
 
-		editor\slot "Cleanup",->
-			if CCDirector.notificationNode == @
-				CCDirector.notificationNode = nil
-			else
-				@parent\removeChild @
+		--editor\slot "Cleanup",->
+		--	if CCDirector.notificationNode == @
+		--		CCDirector.notificationNode = nil
+		--	else
+		--		@parent\removeChild @
 
 		if CCDirector.notificationNode
 			CCDirector.notificationNode\addChild @

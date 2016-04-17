@@ -1,5 +1,6 @@
 Dorothy!
 ViewAreaView = require "View.Control.Operation.ViewArea"
+import Align from require "Data.Model"
 
 -- [no signals]
 -- [no params]
@@ -171,11 +172,11 @@ Class ViewAreaView,
 							editor\moveTo pos*parentData.zoom+parentData.offset
 					else
 						item = editor\getItem itemData
-						pos = itemData.position
+						pos = Align.Get itemData.position,itemData.align
 						if not isHide
 							@cross.position = pos
 							@cross.transformTarget = item.parent
-							@cross\schedule -> @cross.position = itemData.position
+							@cross\schedule -> @cross.position = Align.Get itemData.position,itemData.align
 							showFrame itemData
 						if item.parent ~= editor.items.UI
 							parentData = editor\getData item.parent
