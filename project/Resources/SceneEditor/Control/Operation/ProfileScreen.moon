@@ -63,12 +63,10 @@ Class ProfileScreenView,
 							}
 							Editor = require "Scene.Editor"
 							CCScene\add "sceneEditor",with Editor!
+								.firstLaunch = false
 								.lastScene = @editorLastScene
 								.startupGame = @lastGame
 								.startupScene = @lastScene
-								\slot "Quit",(nextScene)->
-									CCScene\add "target",nextScene or .lastScene
-									CCScene\run "target"
 							CCScene\run "sceneEditor"
 							@lastScene,@lastGame,@editorLastScene = nil,nil,nil
 					@screen\addChild with CCMenu!

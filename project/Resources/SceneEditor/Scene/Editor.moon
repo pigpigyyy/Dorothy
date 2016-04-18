@@ -35,6 +35,7 @@ Class EditorView,
 		@camPos = oVec2 width/2,height/2
 		@startupGame = nil
 		@startupScene = nil
+		@firstLaunch = true
 
 		-- do some hack and I know what I`m doing.
 		rawset _G,"editor",@
@@ -102,17 +103,21 @@ Class EditorView,
 			@moveTo oVec2.zero
 			if not oContent\exist(writePath) and oContent\exist(resPath)
 				oContent\copyAsync resPath,writePath
-			if @startupGame or @startupScene -- has startup target without popup
+			if @firstLaunch
+				ScenePanel = require "Control.Item.ScenePanel"
+				sleep!
+				ScenePanel!
+				sleep!
+				ProfileScreen = require "Control.Operation.ProfileScreen"
+				sleep!
+				ProfileScreen!
+			elseif @startupGame or @startupScene
 				@game = @startupGame
 				@scene = @startupScene
-				return
-			ScenePanel = require "Control.Item.ScenePanel"
-			sleep!
-			ScenePanel!
-			sleep!
-			ProfileScreen = require "Control.Operation.ProfileScreen"
-			sleep!
-			ProfileScreen!
+
+		@slot "Quit",(nextScene)->
+			CCScene\add "target",nextScene or @lastScene
+			CCScene\run "target"
 
 		panelWidth = 10+110*4
 		panelHeight = height*0.6
