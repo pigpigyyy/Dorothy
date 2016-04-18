@@ -33,8 +33,8 @@ Class EditorView,
 		@yFix = false
 		@isFixed = true
 		@camPos = oVec2 width/2,height/2
-		@startupGame = nil
-		@startupScene = nil
+		@lastScene = nil
+		@startupData = nil
 		@firstLaunch = true
 
 		-- do some hack and I know what I`m doing.
@@ -111,9 +111,9 @@ Class EditorView,
 				ProfileScreen = require "Control.Operation.ProfileScreen"
 				sleep!
 				ProfileScreen!
-			elseif @startupGame or @startupScene
-				@game = @startupGame
-				@scene = @startupScene
+			elseif @startupData
+				@game = @startupData.game
+				@scene = @startupData.scene
 
 		@slot "Quit",(nextScene)->
 			CCScene\add "target",nextScene or @lastScene
@@ -721,7 +721,7 @@ Class EditorView,
 			table.insert @sceneData.contacts,{groupA,groupB,shouldContact}
 		@items.Scene\setShouldContact groupA,groupB,shouldContact
 		if @sceneData.children
-			for child in @sceneData.children
+			for child in *@sceneData.children
 				if child.typeName == "World"
 					subWorld = @getItem child
 					subWorld\setShouldContact groupA,groupB,shouldContact
@@ -973,6 +973,32 @@ Class EditorView,
 							}
 							subEditor.viewArea.viewNode.angle = 0
 
+	getSettings:=>
+		if not @settings
+			settingFile = editor.logicFullPath.."settings.lua"
+			@settings = if oContent\exist settingFile
+				dofile settingFile
+			else
+				oContent\saveToFile settingFile,"return {}\n"
+				{}
+		@settings
+
+	saveSettings:=>
+		if @settings
+			strs = {}
+			insert = table.insert
+			append = (str)-> insert strs,str
+			append "return {\n"
+			for k,v in pairs @settings
+				append "\t#{k} = "
+				if type(v) == "string"
+					append "\"#{v}\",\n"
+				else
+					append "#{v},\n"
+			append "}\n"
+			settingFile = editor.logicFullPath.."settings.lua"
+			oContent\saveToFile settingFile,table.concat strs
+
 	getGlobalExpr:=>
 		if not @globalExpr
 			globalVarFile = editor.logicFullPath.."variable.global"
@@ -981,6 +1007,8 @@ Class EditorView,
 			else
 				expr = TriggerDef.Expressions.GlobalVar\Create!
 				oContent\saveToFile globalVarFile,TriggerDef.ToEditText(expr)
+				globalVarFile = editor.logicFullPath.."variable.lua"
+				oContent\saveToFile globalVarFile,TriggerDef.ToCodeText(expr)
 				expr
 		@globalExpr
 

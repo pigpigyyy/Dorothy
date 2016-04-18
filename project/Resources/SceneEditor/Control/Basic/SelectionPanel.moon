@@ -1,11 +1,12 @@
 Dorothy!
 SelectionPanelView = require "View.Control.Basic.SelectionPanel"
 Button = require "Control.Basic.Button"
+SelectionItem = require "Control.Basic.SelectionItem"
 
 -- [signals]
 -- "Selected",(item,index)->
 -- [params]
--- items, title="", width=120, height=0.6*@H, itemHeight=50, fontSize=16
+-- items, title="", width=120, height=0.6*@H, itemHeight=50, fontSize=16, grouped=false, default=nil
 Class
 	__partial: (args)=>
 		args.width = args.width or 120
@@ -14,28 +15,59 @@ Class
 		SelectionPanelView args
 
 	__init: (args)=>
-		{:width,:items,:itemHeight,:fontSize} = args
+		{:width,:items,:itemHeight,:fontSize,:grouped} = args
 		itemHeight or= 50
 		fontSize or= 16
 
-		for i,item in ipairs items
-			button = Button {
-				text:item
-				fontSize:fontSize
-				width:width-20
-				height:itemHeight
-			}
-			button\slot "Tapped",->
-				@emit "Selected",item,i
-				@hide!
-			@menu\addChild button
+		if grouped
+			default = args.default
+			@selectedItem = nil
+			selected = (button)->
+				@selectedItem.checked = false if @selectedItem and @selectedItem ~= button
+				button.checked = true unless button.checked
+				@selectedItem = button
+			for i,item in ipairs items
+				selectionItem = with SelectionItem {
+						text:item
+						fontSize:fontSize
+						width:width-20
+						height:itemHeight
+					}
+					.index = i
+					\slot "Tapped",selected
+				@menu\addChild selectionItem
+				if default == item
+					@selectedItem = selectionItem
+					@selectedItem\makeChecked!
+		else
+			for i,item in ipairs items
+				@menu\addChild with Button {
+						text:item
+						fontSize:fontSize
+						width:width-20
+						height:itemHeight
+					}
+					\slot "Tapped",->
+						@emit "Selected",item,i
+						@hide!
 
-		@cancelBtn\slot "Tapped",->
-			@emit "Selected",nil,nil
-			@hide!
+		if grouped
+			@cancelBtn.text = "OK"
+			@cancelBtn\slot "Tapped",->
+				if @selectedItem
+					@emit "Selected",@selectedItem.text,@selectedItem.index
+				else
+					@emit "Selected",nil,nil
+				@hide!
+		else
+			@cancelBtn\slot "Tapped",->
+				@emit "Selected",nil,nil
+				@hide!
 
 		@scrollArea.viewSize = @menu\alignItemsVertically 10
 		@scrollArea\setupMenuScroll @menu
+		if @selectedItem
+			@scrollArea\scrollToPosY @selectedItem.positionY
 
 		CCDirector.currentScene\addChild @,998
 

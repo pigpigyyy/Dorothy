@@ -1,12 +1,13 @@
 Dorothy!
-MenuItemView = require "View.Control.Trigger.MenuItem"
+SelectionItemView = require "View.Control.Basic.SelectionItem"
 
 -- [params]
 -- x, y, width, height, text
-Class MenuItemView,
+Class SelectionItemView,
 	__init:(args)=>
 		@_checked = false
 		@_text = @label.text
+		@label.texture.antiAlias = false
 		@slot "Tapped",-> @checked = not @checked
 
 	makeChecked:=>
@@ -40,6 +41,7 @@ Class MenuItemView,
 		(value)=>
 			@_text = value
 			@label.text = value
+			@label.texture.antiAlias = false
 
 	glow:=>
 		@cascadeOpacity = false

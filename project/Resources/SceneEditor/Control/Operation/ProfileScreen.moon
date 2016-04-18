@@ -4,9 +4,23 @@ Button = require "Control.Basic.Button"
 
 Class ProfileScreenView,
 	__init:=>
+		if CCDirector.notificationNode
+			if CCDirector.notificationNode.name == "ProfileScreen"
+				return
+			children = CCDirector.notificationNode.children
+			if children
+				for child in *children
+					if child.name == "ProfileScreen"
+						return
+			CCDirector.notificationNode\addChild @
+		else
+			CCDirector.notificationNode = @
+
 		{:width,:height} = CCDirector.winSize
 		wordColor = ccColor3 0x00ffff
 		numColor = ccColor3 0xff0080
+
+		@name = "ProfileScreen"
 
 		@profileLabel.texture.antiAlias = false
 		totalUpdate = 0
@@ -39,7 +53,7 @@ Class ProfileScreenView,
 			totalTime = 0
 			totalFrame = 0
 			totalDrawcall = 0
-			if @lastGame and @lastScene
+			if @editorData
 				if @quitBtn
 					if not @quitBtn.face.visible
 						@quitBtn.enabled = true
@@ -64,11 +78,10 @@ Class ProfileScreenView,
 							Editor = require "Scene.Editor"
 							CCScene\add "sceneEditor",with Editor!
 								.firstLaunch = false
-								.lastScene = @editorLastScene
-								.startupGame = @lastGame
-								.startupScene = @lastScene
+								.startupData = @editorData
+								.lastScene = @editorData.lastScene
 							CCScene\run "sceneEditor"
-							@lastScene,@lastGame,@editorLastScene = nil,nil,nil
+							@editorData = nil
 					@screen\addChild with CCMenu!
 						.touchPriority = @profileBtn.touchPriority-1
 						.contentSize = CCSize 150,40
@@ -131,19 +144,10 @@ Class ProfileScreenView,
 			\slot "TouchCancelled",touchEnded
 			\slot "TouchEnded",touchEnded
 
-		@gslot "Scene.LastTarget",(args)->
-			{game,scene,lastScene} = args
-			@lastGame = game
-			@lastScene = scene
-			@editorLastScene = lastScene
+		@gslot "Scene.EditorData",(editorData)-> @editorData = editorData
 
 		--editor\slot "Cleanup",->
 		--	if CCDirector.notificationNode == @
 		--		CCDirector.notificationNode = nil
 		--	else
 		--		@parent\removeChild @
-
-		if CCDirector.notificationNode
-			CCDirector.notificationNode\addChild @
-		else
-			CCDirector.notificationNode = @

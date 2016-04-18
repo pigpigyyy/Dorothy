@@ -3,6 +3,8 @@ ScenePanelView = require "View.Control.Item.ScenePanel"
 MessageBox = require "Control.Basic.MessageBox"
 InputBox = require "Control.Basic.InputBox"
 Button = require "Control.Basic.Button"
+SelectionPanel = require "Control.Basic.SelectionPanel"
+import Path from require "Data.Utils"
 
 local ScenePanel
 ScenePanel = Class
@@ -35,6 +37,34 @@ ScenePanel = Class
 			xStart = itemWidth/2 -- left
 			yStart = height -- top
 			y = yStart
+			-- scene setting items
+			if editor.scene
+				yStart = @createTitle "Options",nil,yStart
+				i = 0
+				x = xStart+10+(i%itemNum)*(itemWidth+10)
+				y = yStart-itemHeight/2-10-math.floor(i/itemNum)*60
+				@createItem "Startup Scene",x,y,itemWidth,itemHeight,->
+					scenes = Path.getFiles editor.sceneFullPath,"scene"
+					scenes = for scene in *scenes
+						if scene == "UI.scene"
+							continue
+						else
+							Path.getName scene
+					settings = editor\getSettings!
+					with SelectionPanel {
+							title:"Startup Scene"
+							width:150
+							items:scenes
+							itemHeight:50
+							fontSize:18
+							grouped:true
+							default:settings.StartupScene
+						}
+						\slot "Selected",(scene)->
+							return unless scene
+							settings.StartupScene = scene
+							editor\saveSettings!
+				yStart = y - itemHeight/2
 			-- create scene items
 			if editor.game
 				-- function to get scene files
@@ -53,20 +83,23 @@ ScenePanel = Class
 						if folder ~= "." and folder ~= ".."
 							visitResource path.."/"..folder
 				-- create title for scene
-				yStart = @createTitle "Select  Scene",editor.scene,yStart
+				yStart = @createTitle "Scene",editor.scene,yStart
 				-- get scene files
 				scenePath = editor.sceneFullPath\gsub "[\\/]*$",""
 				visitResource scenePath if oContent\exist scenePath
 				-- create button for scenes
-				for i,sceneFile in ipairs sceneFiles
-					sleep 0.05
+				i = 0
+				for sceneFile in *sceneFiles
 					sceneName = sceneFile\match "([^\\/]*)%..*$"
+					continue if sceneName == editor.scene
+					sleep 0.05
+					i += 1
 					x = xStart+10+((i-1)%itemNum)*(itemWidth+10)
 					y = yStart-itemHeight/2-10-math.floor((i-1)/itemNum)*60
 					@createItem sceneName,x,y,itemWidth,itemHeight,->
 						editor.currentSceneFile = sceneFile
 						@hide!
-				i = #sceneFiles
+				i = #sceneFiles-(editor.scene and 1 or 0)
 				x = xStart+10+(i%itemNum)*(itemWidth+10)
 				y = yStart-itemHeight/2-10-math.floor(i/itemNum)*60
 				button = @createItem "<NEW>",x,y,itemWidth,itemHeight,->
@@ -83,7 +116,7 @@ ScenePanel = Class
 					x = xStart+10+((i+1)%itemNum)*(itemWidth+10)
 					y = yStart-itemHeight/2-10-math.floor((i+1)/itemNum)*60
 					button = @createItem "<DEL>",x,y,itemWidth,itemHeight,->
-						with MessageBox text:"Delete Scene\n"..editor.scene
+						with MessageBox text:"Delete Current Scene\n"..editor.scene
 							\slot "OK",(result)->
 								return unless result
 								MessageBox(text:"Confirm This\nDeletion")\slot "OK",(result)->
@@ -104,13 +137,16 @@ ScenePanel = Class
 					if folder ~= "." and folder ~= ".."
 						table.insert games,folder
 			-- create title for game
-			yStart = @createTitle "Select  Game",editor.game,yStart
+			yStart = @createTitle "Game",editor.game,yStart
 			-- get game folders
 			gamesPath = editor.gamesFullPath\gsub "[\\/]*$",""
 			visitResource gamesPath if oContent\exist gamesPath
 			-- create button for games
-			for i,game in ipairs games
+			i = 0
+			for game in *games
+				continue if game == editor.game
 				sleep 0.05
+				i += 1
 				x = xStart+10+((i-1)%itemNum)*(itemWidth+10)
 				y = yStart-itemHeight/2-10-math.floor((i-1)/itemNum)*60
 				@createItem game,x,y,itemWidth,itemHeight,->
@@ -119,7 +155,7 @@ ScenePanel = Class
 					thread ->
 						sleep 0.3
 						ScenePanel!
-			i = #games
+			i = #games-(editor.game and 1 or 0)
 			x = xStart+10+(i%itemNum)*(itemWidth+10)
 			y = yStart-itemHeight/2-10-math.floor(i/itemNum)*60
 			button = @createItem "<NEW>",x,y,itemWidth,itemHeight,->
@@ -139,7 +175,7 @@ ScenePanel = Class
 				x = xStart+10+((i+1)%itemNum)*(itemWidth+10)
 				y = yStart-itemHeight/2-10-math.floor((i+1)/itemNum)*60
 				button = @createItem "<DEL>",x,y,itemWidth,itemHeight,->
-					with MessageBox text:"Delete Game\n"..editor.game
+					with MessageBox text:"Delete Current Game\n"..editor.game
 						\slot "OK",(result)->
 							return unless result
 							MessageBox(text:"Confirm This\nDeletion")\slot "OK",(result)->
@@ -155,7 +191,7 @@ ScenePanel = Class
 
 	createTitle:(title,currentItem,yStart)=>
 		y = yStart-20
-		titleLabel = with CCLabelTTF title,"Arial",24
+		titleLabel = with CCLabelTTF (currentItem and "Change  "or "Select  ")..title,"Arial",24
 			.texture.antiAlias = false
 			.color = ccColor3 0x00ffff
 			.opacity = 0
@@ -177,7 +213,7 @@ ScenePanel = Class
 		yStart
 
 	createItem:(name,x,y,width,height,callback)=>
-		name = #name > 10 and name\sub(1,7).."..." or name
+		name = #name > 13 and name\sub(1,10).."..." or name
 		button = with Button {
 				x:x
 				y:y

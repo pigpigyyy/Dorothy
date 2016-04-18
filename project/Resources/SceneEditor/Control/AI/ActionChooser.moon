@@ -1,6 +1,6 @@
 Dorothy!
 ActionChooserView = require "View.Control.AI.ActionChooser"
-MenuItem = require "Control.Trigger.MenuItem"
+SelectionItem = require "Control.Basic.SelectionItem"
 import Set,Path from require "Data.Utils"
 
 Class ActionChooserView,
@@ -20,7 +20,7 @@ Class ActionChooserView,
 			if not button.items
 				files = Path.getFiles editor.actionFullPath..button.group
 				button.items = for file in *files
-					with MenuItem {
+					with SelectionItem {
 							text:Path.getName file
 							fontSize:18
 							width:180
@@ -44,7 +44,7 @@ Class ActionChooserView,
 
 		groups = Path.getFolders editor.actionFullPath
 		for group in *groups
-			@catMenu\addChild with MenuItem {
+			@catMenu\addChild with SelectionItem {
 					text:Path.getName group
 					fontSize:18
 					width:80

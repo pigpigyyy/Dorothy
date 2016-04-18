@@ -1,7 +1,7 @@
 Dorothy!
 EditorView = require "View.Control.Trigger.Editor"
 AINodeExprEditor = require "Control.AI.AINodeExprEditor"
-MenuItem = require "Control.Trigger.MenuItem"
+SelectionItem = require "Control.Basic.SelectionItem"
 SelectionPanel = require "Control.Basic.SelectionPanel"
 InputBox = require "Control.Basic.InputBox"
 MessageBox = require "Control.Basic.MessageBox"
@@ -80,7 +80,7 @@ TriggerScope = Class
 		for file in *filesToAdd
 			appendix = Path.getFilename file
 			group = file\sub #prefix+1,-#appendix-2
-			item = with MenuItem {
+			item = with SelectionItem {
 					text:Path.getName file
 					width:@_menu.width-20
 					height:35

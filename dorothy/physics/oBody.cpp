@@ -68,7 +68,7 @@ void oBody::onEnter()
 void oBody::onExit()
 {
 	CCNode::onExit();
-	_bodyB2->SetActive(false);//Set active false to trigger sensor`s body leave event.
+	_bodyB2->SetActive(false); // Set active false to trigger sensor`s body leave event.
 }
 
 void oBody::cleanup()
@@ -367,7 +367,7 @@ void oBody::updatePhysics()
 	{
 		const b2Vec2& pos = _bodyB2->GetPosition();
 		/* Here only CCNode::setPosition(const CCPoint& var) work for modify CCNode`s position.
-		 Other positioning functions have been overridden by CCBody`s.
+		 Other positioning functions have been overriden by CCBody`s.
 		*/
 		CCNode::setPosition(CCPoint(oWorld::oVal(pos.x), oWorld::oVal(pos.y)));
 		float angle = _bodyB2->GetAngle();

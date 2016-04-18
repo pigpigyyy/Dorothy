@@ -224,6 +224,7 @@ Class EditMenuView,
 					emit "Scene.Edit.ShowRuler",nil
 
 		@playBtn\slot "Tapped",->
+			@menuBtn\emit "Tapped" if @menuBtn.dirty
 			-- test codes below
 			GameLoader = require "Lib.Game"
 			game = GameLoader editor.gameFullPath..editor.currentSceneFile
@@ -231,7 +232,11 @@ Class EditMenuView,
 			scene = CCScene!
 			game = with game!
 				.position = oVec2 scene.width/2,scene.height/2
-			emit "Scene.LastTarget",{editor.game,editor.scene,editor.lastScene}
+			emit "Scene.EditorData",{
+				game:editor.game
+				scene:editor.scene
+				lastScene:editor.lastScene
+			}
 			editor\emit "Quit",with scene
 				\addChild game
 

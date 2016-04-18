@@ -119,6 +119,7 @@ local DataCreater = function(dataDef)
 end
 
 local items
+local sceneData
 local GameItems = {
 	PlatformWorld = DataCreater({
 		itemType = 1,
@@ -131,14 +132,16 @@ local GameItems = {
 		children = 8,
 		outline = 9,
 		create = function(self)
+			sceneData = self
+
 			local world = oPlatformWorld()
 			world.gravity = oVec2(0, self.gravity)
 			world:setIterations(Simulation(self.simulation))
 			world.scheduler = CCScheduler()
-			CCDirector.scheduler:schedule(world.scheduler)
 			world:slot("Cleanup", function()
 				CCDirector.scheduler:unschedule(world.scheduler)
 			end)
+			CCDirector.scheduler:schedule(world.scheduler)
 			items = {Scene = world}
 			if self.camera then
 				self.camera(world)
@@ -236,18 +239,17 @@ local GameItems = {
 
 			local world = oWorld()
 			world.gravity = self.gravity
-			world.showDebug = self.outline
-			world.visible = self.visible and self.display
+			world.visible = self.visible
 			world:setIterations(Simulation(self.simulation))
 			layer:addChild(world)
 
 			world.scheduler = CCScheduler()
 			CCDirector.scheduler:schedule(world.scheduler)
 			world:slot("Cleanup", function()
-				return CCDirector.scheduler:unschedule(world.scheduler)
+				CCDirector.scheduler:unschedule(world.scheduler)
 			end)
 			oData:apply(world)
-			Contact(world, editor.sceneData)
+			Contact(world, sceneData)
 			items[self.name] = world
 			Contact(world, self)
 			Children(world, self)
@@ -265,7 +267,7 @@ local GameItems = {
 		visible = 7,
 		display = 8,
 		create = function(self, parent)
-			local world = editor.items.Scene
+			local world = items.Scene
 			if "oWorld" == tolua.type(parent) then
 				world = parent
 			end

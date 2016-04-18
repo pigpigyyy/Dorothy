@@ -21,7 +21,7 @@
 					<Node Name="titleArea" X="{ $X }" Y="{ $T-20 }" Width="{ width }">
 						<LabelTTF Name="title" Text="{ title }" X="{ $X }" AntiAlias="False" FontName="Arial" FontSize="24" Color="0x00ffff"/>
 						<Script>
-							titleArea.height = title.height+10
+							titleArea.height = title.height+40
 							title.positionY = titleArea.height/2-5
 						</Script>
 					</Node>

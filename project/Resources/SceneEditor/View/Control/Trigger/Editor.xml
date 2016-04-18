@@ -5,7 +5,7 @@
 	<Import Module="Control.Basic.ScrollArea"/>
 	<Import Module="Control.Basic.Button"/>
 	<Import Module="Control.Basic.GroupButton"/>
-	<Import Module="Control.Trigger.MenuItem" Name="TriggerItem"/>
+	<Import Module="Control.Basic.SelectionItem"/>
 	<Import Module="View.Shape.LineRect"/>
 	<Import Module="View.Shape.SolidRect"/>
 	<Import Module="Control.Basic.CircleButton"/>
@@ -24,8 +24,8 @@
 					<LabelTTF Text="{ title }" X="{ $X }" Y="{ $Y+5 }" FontName="Arial" FontSize="20" AntiAlias="False" Color="0x00ffff"/>
 				</Node>
 				<Script>if scope then</Script>
-					<TriggerItem Name="localBtn" Text="Local" Width="{ ($W-30)/2 }" Height="40" FontSize="20" Ref="True"/>
-					<TriggerItem Name="globalBtn" Text="Global" Width="{ ($W-30)/2 }" Height="40" FontSize="20" Ref="True"/>
+					<SelectionItem Name="localBtn" Text="Local" Width="{ ($W-30)/2 }" Height="40" FontSize="20" Ref="True"/>
+					<SelectionItem Name="globalBtn" Text="Global" Width="{ ($W-30)/2 }" Height="40" FontSize="20" Ref="True"/>
 				<Script>end</Script>
 				<GroupButton Name="groupBtn" Text="Default" Width="{ $W-20 }" Height="40" Ref="True"/>
 			</Menu>
