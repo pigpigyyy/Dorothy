@@ -3,17 +3,10 @@ CCScene = require "Lib.CCSceneEx"
 oContent\addSearchPath "SceneEditor"
 
 Editor = require "Scene.Editor"
-lastScene = CCDirector.currentScene
 CCScene\add "sceneEditor",with Editor!
+	.lastScene = CCDirector.currentScene
 	\slot "Quit",(nextScene)->
-		if nextScene
-			CCDirector\replaceScene CCScene\crossFade(0.5,nextScene),true
-			CCScene\clearHistory!
-			return
-		if lastScene
-			CCDirector\replaceScene CCScene\crossFade(0.5,lastScene),true
-			CCScene\clearHistory!
-		else
-			CCDirector\popScene!
+		CCScene\add "target",nextScene or .lastScene
+		CCScene\run "target"
 
-CCScene\run "sceneEditor"
+CCScene\forward "sceneEditor"

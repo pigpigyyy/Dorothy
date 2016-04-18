@@ -376,7 +376,7 @@ Class CCNode,
 			if showArgs
 				@ruler.positionX = width/2
 				@ruler\show unpack showArgs
-			else
+			elseif @ruler
 				@ruler\hide!
 
 		@gslot "Scene.ViewPanel.Select",cancelEditing

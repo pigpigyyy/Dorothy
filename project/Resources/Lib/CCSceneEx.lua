@@ -35,7 +35,7 @@ function CCScene:remove(name)
 	return false
 end
 
-local function runScene(scene,tname)
+local function runScene(scene,tname,cleanup)
 	local data = tname and transitions[tname]
 	local transition
 	if data then
@@ -48,7 +48,7 @@ local function runScene(scene,tname)
 	if CCDirector.sceneStackSize == 0 then
 		CCDirector:run(transition or scene)
 	else
-		CCDirector:replaceScene(transition or scene,false)
+		CCDirector:replaceScene(transition or scene,cleanup)
 	end
 end
 
@@ -59,7 +59,7 @@ function CCScene:run(sname,tname)
 			sceneStack = {}
 		end
 		currentScene = scene
-		runScene(scene,tname)
+		runScene(scene,tname,true)
 	end
 end
 
@@ -68,7 +68,7 @@ function CCScene:forward(sname,tname)
 	if scene then
 		table.insert(sceneStack,currentScene)
 		currentScene = scene
-		runScene(scene,tname)
+		runScene(scene,tname,false)
 	end
 end
 
@@ -76,7 +76,7 @@ function CCScene:back(tname)
 	local lastScene = table.remove(sceneStack)
 	if lastScene then
 		currentScene = lastScene
-		runScene(lastScene,tname)
+		runScene(lastScene,tname,false)
 	end
 end
 

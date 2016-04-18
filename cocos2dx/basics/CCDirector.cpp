@@ -280,12 +280,11 @@ void CCDirector::drawScene()
 	if (m_pRunningScene)
 	{
 		m_pRunningScene->visit();
-	}
-
-	// draw the notifications node
-	if (m_pNotificationNode)
-	{
-		m_pNotificationNode->visit();
+		// draw the notifications node
+		if (m_pNotificationNode)
+		{
+			m_pNotificationNode->visit();
+		}
 	}
 
 	if (m_bDisplayStats)

@@ -33,6 +33,8 @@ Class EditorView,
 		@yFix = false
 		@isFixed = true
 		@camPos = oVec2 width/2,height/2
+		@startupGame = nil
+		@startupScene = nil
 
 		-- do some hack and I know what I`m doing.
 		rawset _G,"editor",@
@@ -46,6 +48,7 @@ Class EditorView,
 			CCScene\remove "actionEditor"
 			CCScene\remove "bodyEditor"
 			CCScene\remove "effectEditor"
+			@cleanupSubEditors!
 
 		CCScene\transition "rollIn",{"zoomFlip",0.5,CCOrientation.Down}
 		CCScene\transition "rollOut",{"zoomFlip",0.5,CCOrientation.Up}
@@ -99,6 +102,10 @@ Class EditorView,
 			@moveTo oVec2.zero
 			if not oContent\exist(writePath) and oContent\exist(resPath)
 				oContent\copyAsync resPath,writePath
+			if @startupGame or @startupScene -- has startup target without popup
+				@game = @startupGame
+				@scene = @startupScene
+				return
 			ScenePanel = require "Control.Item.ScenePanel"
 			sleep!
 			ScenePanel!
@@ -345,6 +352,14 @@ Class EditorView,
 	sceneFolder:property => "Scene/"
 	sceneFullPath:property => @_gameFullPath.."Scene/"
 	uiFileFullPath:property => @sceneFullPath.."UI.scene"
+
+	cleanupSubEditors:=>
+		for module in *{
+				"ActionEditor.Script.oEditor"
+				"BodyEditor.Script.oEditor"
+				"EffectEditor.Script.oEditor"
+			}
+			package.loaded[module] = nil
 
 	actionEditor:property =>
 		if not @_actionEditor

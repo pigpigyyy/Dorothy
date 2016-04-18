@@ -1,5 +1,6 @@
 Dorothy!
 ProfileScreenView = require "View.Control.Operation.ProfileScreen"
+Button = require "Control.Basic.Button"
 
 Class ProfileScreenView,
 	__init:=>
@@ -38,6 +39,44 @@ Class ProfileScreenView,
 			totalTime = 0
 			totalFrame = 0
 			totalDrawcall = 0
+			if @lastGame and @lastScene
+				if @quitBtn
+					if not @quitBtn.face.visible
+						@quitBtn.enabled = true
+						@quitBtn.face.visible = true
+						@quitBtn.face\perform oScale 0.3,1,1,oEase.OutBack
+				else
+					@quitBtn = with Button {
+							text:"Quit Game"
+							width:150
+							height:40
+							fontSize:18
+						}
+						.position = oVec2 .width/2,.height/2
+						.scaleX,.scaleY = 0,0
+						\perform oScale 0.3,1,1,oEase.OutBack
+						\slot "Tapped",->
+							@quitBtn.enabled = false
+							@quitBtn.face\perform CCSequence {
+								oScale 0.3,0,0,oEase.OutQuad
+								CCHide!
+							}
+							Editor = require "Scene.Editor"
+							CCScene\add "sceneEditor",with Editor!
+								.lastScene = @editorLastScene
+								.startupGame = @lastGame
+								.startupScene = @lastScene
+								\slot "Quit",(nextScene)->
+									CCScene\add "target",nextScene or .lastScene
+									CCScene\run "target"
+							CCScene\run "sceneEditor"
+							@lastScene,@lastGame,@editorLastScene = nil,nil,nil
+					@screen\addChild with CCMenu!
+						.touchPriority = @profileBtn.touchPriority-1
+						.contentSize = CCSize 150,40
+						.position = @profileLabel.position+
+							oVec2(@profileLabel.width/2,-@profileLabel.height-30)
+						\addChild @quitBtn
 
 		with @screen
 			.visible = false
@@ -46,7 +85,7 @@ Class ProfileScreenView,
 		startPos = nil
 		with @profileBtn
 			.screenOpened = false
-			.opacity = 0.05
+			.opacity = 0.1
 
 			\slot "TouchBegan",(touch)->
 				loc = \convertToNodeSpace touch.location
@@ -68,7 +107,7 @@ Class ProfileScreenView,
 
 			touchEnded = ->
 				\perform CCSpawn {
-					oOpacity 0.3,0.05,oEase.OutQuad
+					oOpacity 0.3,0.1,oEase.OutQuad
 					oScale 0.3,1,1,oEase.OutQuad
 				}
 				if startPos.length <= 10
@@ -93,6 +132,12 @@ Class ProfileScreenView,
 						@unschedule!
 			\slot "TouchCancelled",touchEnded
 			\slot "TouchEnded",touchEnded
+
+		@gslot "Scene.LastTarget",(args)->
+			{game,scene,lastScene} = args
+			@lastGame = game
+			@lastScene = scene
+			@editorLastScene = lastScene
 
 		--editor\slot "Cleanup",->
 		--	if CCDirector.notificationNode == @

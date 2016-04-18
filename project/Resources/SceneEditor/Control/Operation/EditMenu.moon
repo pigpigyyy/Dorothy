@@ -231,6 +231,7 @@ Class EditMenuView,
 			scene = CCScene!
 			game = with game!
 				.position = oVec2 scene.width/2,scene.height/2
+			emit "Scene.LastTarget",{editor.game,editor.scene,editor.lastScene}
 			editor\emit "Quit",with scene
 				\addChild game
 
