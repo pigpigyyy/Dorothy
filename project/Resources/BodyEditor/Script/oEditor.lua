@@ -34,6 +34,7 @@ oEditor.bodyData = {}
 oEditor.items = {}
 oEditor.input = oContent.writablePath.."Body/Input/"
 oEditor.output = oContent.writablePath.."Body/Output/"
+oEditor.prefix = ""
 oEditor.topMost = 9999
 oEditor.currentFile = nil
 oEditor.fixX = false

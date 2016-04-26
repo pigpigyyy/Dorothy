@@ -8,7 +8,7 @@ SelectionPanel = require "Control.Basic.SelectionPanel"
 InputBox = require "Control.Basic.InputBox"
 MessageBox = require "Control.Basic.MessageBox"
 TextBox = require "Control.Basic.TextBox"
-import Set,Path from require "Data.Utils"
+import Set,Path from require "Lib.Utils"
 
 local ExprChooser
 ExprChooser = Class

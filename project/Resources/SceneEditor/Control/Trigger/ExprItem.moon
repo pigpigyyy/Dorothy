@@ -2,7 +2,7 @@ Dorothy!
 ExprItemView = require "View.Control.Trigger.ExprItem"
 TriggerDef = require "Data.TriggerDef"
 SolidRect = require "View.Shape.SolidRect"
-import Set from require "Data.Utils"
+import Set from require "Lib.Utils"
 
 keywords = Set {"and", "break", "do", "else", "elseif", "end", "false", "for", "function",
 "if", "in", "local", "nil", "not", "or", "repeat", "return", "then", "true",

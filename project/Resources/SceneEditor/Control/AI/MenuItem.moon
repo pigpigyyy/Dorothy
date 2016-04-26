@@ -1,6 +1,6 @@
 Dorothy!
 MenuItemView = require "View.Control.AI.MenuItem"
-import Path from require "Data.Utils"
+import Path from require "Lib.Utils"
 
 -- [params]
 -- x, y, width, height, expr

@@ -3,7 +3,7 @@ SpritePanelView = require "View.Control.Item.SpritePanel"
 TabButton = require "Control.Item.TabButton"
 SpriteView = require "Control.Item.SpriteView"
 MessageBox = require "Control.Basic.MessageBox"
-import CompareTable from require "Data.Utils"
+import CompareTable from require "Lib.Utils"
 Reference = require "Data.Reference"
 
 -- [signals]

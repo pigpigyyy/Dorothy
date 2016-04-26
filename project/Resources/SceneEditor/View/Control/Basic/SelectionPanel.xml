@@ -18,19 +18,19 @@
 			<Item Name="view">
 				<Menu Name="menu" X="{ $X }" Y="{ $Y }" Width="{ width }" Height="{ height }" TouchPriority="{ editor.levelSelectionPanel-1 }" Ref="True">
 					<Script>if title then</Script>
-					<Node Name="titleArea" X="{ $X }" Y="{ $T-20 }" Width="{ width }">
-						<LabelTTF Name="title" Text="{ title }" X="{ $X }" AntiAlias="False" FontName="Arial" FontSize="24" Color="0x00ffff"/>
-						<Script>
-							titleArea.height = title.height+40
-							title.positionY = titleArea.height/2-5
-						</Script>
-					</Node>
+						<Node Name="titleArea" X="{ $X }" Y="{ $T-20 }" Width="{ width }" Ref="True">
+							<LabelTTF Name="title" Text="{ title }" X="{ $X }" AntiAlias="False" FontName="Arial" FontSize="24" Color="0x00ffff"/>
+							<Script>
+								titleArea.height = 60
+								title.positionY = titleArea.height/2-5
+							</Script>
+						</Node>
 					<Script>end</Script>
 					<Script>if subTitle then</Script>
-					<Node Name="subTitleArea" X="{ $X }" Y="{ $T-20 }" Width="{ width }">
+					<Node Name="subTitleArea" X="{ $X }" Y="{ $T-20 }" Width="{ width }" Ref="True">
 						<LabelTTF Name="subTitle" Text="{ subTitle }" X="{ $X }" AntiAlias="False" FontName="Arial" FontSize="{ fontSize }" Color="0x00ffff"/>
 						<Script>
-							subTitleArea.height = subTitle.height+10
+							subTitleArea.height = 20
 							subTitle.positionY = subTitleArea.height/2+5
 						</Script>
 					</Node>

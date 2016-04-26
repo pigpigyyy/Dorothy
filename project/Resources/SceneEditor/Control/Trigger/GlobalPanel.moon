@@ -4,7 +4,7 @@ ExprItem = require "Control.Trigger.ExprItem"
 ExprChooser = require "Control.Trigger.ExprChooser"
 Button = require "Control.Basic.Button"
 import Expressions,SetExprMeta,ToEditText from require "Data.TriggerDef"
-import Path from require "Data.Utils"
+import Path from require "Lib.Utils"
 
 Class GlobalPanelView,
 	__init:(args)=>

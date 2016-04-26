@@ -7,8 +7,8 @@ SelectionPanel = require "Control.Basic.SelectionPanel"
 InputBox = require "Control.Basic.InputBox"
 MessageBox = require "Control.Basic.MessageBox"
 TriggerDef = require "Data.TriggerDef"
-import Expressions,ToEditText from TriggerDef
-import CompareTable,Path from require "Data.Utils"
+import Expressions,ToEditText,ToCodeText from TriggerDef
+import CompareTable,Path from require "Lib.Utils"
 
 TriggerScope = Class
 	__initc:=>
@@ -231,6 +231,8 @@ Class
 							trigger = Expressions.Trigger\Create!
 							trigger[2][2] = result
 							oContent\saveToFile triggerFullPath,ToEditText trigger
+							triggerFullPath = scope.path..scope.currentGroup.."/"..result..".lua"
+							oContent\saveToFile triggerFullPath,ToCodeText trigger
 							scope\updateItems!
 							triggerFile = scope.prefix..scope.currentGroup.."/"..result..".trigger"
 							for item in *scope.menu.children

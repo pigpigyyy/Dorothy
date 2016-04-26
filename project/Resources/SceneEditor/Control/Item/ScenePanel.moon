@@ -4,7 +4,7 @@ MessageBox = require "Control.Basic.MessageBox"
 InputBox = require "Control.Basic.InputBox"
 Button = require "Control.Basic.Button"
 SelectionPanel = require "Control.Basic.SelectionPanel"
-import Path from require "Data.Utils"
+import Path from require "Lib.Utils"
 
 local ScenePanel
 ScenePanel = Class

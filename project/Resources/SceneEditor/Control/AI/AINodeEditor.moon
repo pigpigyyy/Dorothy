@@ -8,7 +8,7 @@ MessageBox = require "Control.Basic.MessageBox"
 TriggerDef = require "Data.TriggerDef"
 SolidRect = require "View.Shape.SolidRect"
 import Expressions,ToEditText from TriggerDef
-import CompareTable,Path from require "Data.Utils"
+import CompareTable,Path from require "Lib.Utils"
 
 TriggerScope = Class
 	__initc:=>

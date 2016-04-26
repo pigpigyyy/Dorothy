@@ -3,7 +3,7 @@ EffectPanelView = require "View.Control.Item.EffectPanel"
 EffectView = require "Control.Item.EffectView"
 MessageBox = require "Control.Basic.MessageBox"
 InputBox = require "Control.Basic.InputBox"
-import CompareTable from require "Data.Utils"
+import CompareTable from require "Lib.Utils"
 Reference = require "Data.Reference"
 
 -- [signals]

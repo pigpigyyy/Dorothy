@@ -5,7 +5,7 @@ Model = require "Data.Model"
 Reference = require "Data.Reference"
 CCScene = require "Lib.CCSceneEx"
 TriggerDef = require "Data.TriggerDef"
-import Path from require "Data.Utils"
+import Path from require "Lib.Utils"
 require "Lib.oBodyEx"
 
 Class EditorView,
@@ -357,6 +357,9 @@ Class EditorView,
 	sceneFolder:property => "Scene/"
 	sceneFullPath:property => @_gameFullPath.."Scene/"
 	uiFileFullPath:property => @sceneFullPath.."UI.scene"
+	globalVarFullPath:property => @logicFullPath.."Variable.global"
+	globalVarCompiledFullPath:property => @logicFullPath.."Variable.lua"
+	settingFullPath:property => @logicFullPath.."Settings.lua"
 
 	cleanupSubEditors:=>
 		for module in *{
@@ -390,6 +393,7 @@ Class EditorView,
 				.quitable = true
 				.input = @gameFullPath
 				.output = @gameFullPath
+				.prefix = @physicsFolder
 				.setupEvent = ->
 					(\slot "Edited")\set (body)->
 						emit "Scene.BodyUpdated",body
@@ -960,10 +964,8 @@ Class EditorView,
 						when "Model"
 							with subEditor.viewArea.itemNode
 								.angle = 0
-								.scaleX = 1
-								.scaleY = 1
-								.skewX = 0
-								.skewY = 0
+								.scaleX,.scaleY = 1,1
+								.skewX,.skewY = 0,0
 								.opacity = 1
 						when "Body"
 							scene.UILayer.transformTarget = @viewArea
@@ -975,11 +977,10 @@ Class EditorView,
 
 	getSettings:=>
 		if not @settings
-			settingFile = editor.logicFullPath.."settings.lua"
-			@settings = if oContent\exist settingFile
-				dofile settingFile
+			@settings = if oContent\exist @settingFullPath
+				dofile @settingFullPath
 			else
-				oContent\saveToFile settingFile,"return {}\n"
+				oContent\saveToFile @settingFullPath,"return {}\n"
 				{}
 		@settings
 
@@ -996,27 +997,22 @@ Class EditorView,
 				else
 					append "#{v},\n"
 			append "}\n"
-			settingFile = editor.logicFullPath.."settings.lua"
-			oContent\saveToFile settingFile,table.concat strs
+			oContent\saveToFile @settingFullPath,table.concat strs
 
 	getGlobalExpr:=>
 		if not @globalExpr
-			globalVarFile = editor.logicFullPath.."variable.global"
-			@globalExpr = if oContent\exist globalVarFile
-				TriggerDef.SetExprMeta dofile globalVarFile
+			@globalExpr = if oContent\exist @globalVarFullPath
+				TriggerDef.SetExprMeta dofile @globalVarFullPath
 			else
 				expr = TriggerDef.Expressions.GlobalVar\Create!
-				oContent\saveToFile globalVarFile,TriggerDef.ToEditText(expr)
-				globalVarFile = editor.logicFullPath.."variable.lua"
-				oContent\saveToFile globalVarFile,TriggerDef.ToCodeText(expr)
+				oContent\saveToFile @globalVarFullPath,TriggerDef.ToEditText(expr)
+				oContent\saveToFile @globalVarCompiledFullPath,TriggerDef.ToCodeText(expr)
 				expr
 		@globalExpr
 
 	saveGlobalExpr:=>
-		globalVarFile = editor.logicFullPath.."variable.global"
-		oContent\saveToFile globalVarFile,TriggerDef.ToEditText(@globalExpr)
-		globalVarFile = editor.logicFullPath.."variable.lua"
-		oContent\saveToFile globalVarFile,TriggerDef.ToCodeText(@globalExpr)
+		oContent\saveToFile @globalVarFullPath,TriggerDef.ToEditText(@globalExpr)
+		oContent\saveToFile @globalVarCompiledFullPath,TriggerDef.ToCodeText(@globalExpr)
 
 	lintAllTriggers:=>
 		editor\schedule once ->

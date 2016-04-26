@@ -1,7 +1,7 @@
 Dorothy!
 ActionChooserView = require "View.Control.AI.ActionChooser"
 SelectionItem = require "Control.Basic.SelectionItem"
-import Set,Path from require "Data.Utils"
+import Set,Path from require "Lib.Utils"
 
 Class ActionChooserView,
 	__init:=>

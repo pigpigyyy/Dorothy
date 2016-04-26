@@ -45,17 +45,17 @@ local function oFileChooser()
 
 	local files = {}
 	local function getResources(path)
-		local entries = oContent:getEntries(oEditor.output..path,false)
+		local entries = oContent:getEntries(oEditor.output..oEditor.prefix..path,false)
 		for i = 1,#entries do
 			local name = nil
 			if entries[i]:sub(-5,-1) == ".body" then
 				name = entries[i]:sub(1,-6)
 			end
 			if name then
-				table.insert(files,path..name)
+				table.insert(files,oEditor.prefix..path..name)
 			end
 		end
-		local folders = oContent:getEntries(oEditor.output..path,true)
+		local folders = oContent:getEntries(oEditor.output..oEditor.prefix..path,true)
 		for _,folder in ipairs(folders) do
 			if folder ~= "." and folder ~= ".." then
 				getResources(path..folder.."/")
@@ -134,9 +134,14 @@ local function oFileChooser()
 			panel:hide()
 			oEditor:addChild(oBox("New Body",function(name)
 				if name == "" or name:match("[\\/|:*?<>\"%.]") then
-					oEditor:addChild(oBox("Invalid Name"),oEditor.topMost)
+					oEditor:addChild(oBox("Invalid Name!"),oEditor.topMost)
 				else
-					oEditor:new(name..".body")
+					local newFile = oEditor.prefix..name..".body"
+					if oContent:exist(oEditor.output..newFile) then
+						oEditor:addChild(oBox("Name Exist!"),oEditor.topMost)
+					else
+						oEditor:new(newFile)
+					end
 				end
 			end,true),oEditor.topMost)
 		end)

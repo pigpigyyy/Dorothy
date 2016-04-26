@@ -5,7 +5,7 @@ MessageBox = require "Control.Basic.MessageBox"
 -- [no signals]
 -- [no params]
 Class EditMenuView,
-	__init: =>
+	__init:=>
 		{:width} = CCDirector.winSize
 		isHide = false
 
@@ -19,12 +19,8 @@ Class EditMenuView,
 		@showItemButtons {"graphic","physics","logic"},true,true
 
 		buttonNames = {
-			"sprite"
-			"model"
-			"body"
-			"effect"
-			"layer"
-			"world"
+			"sprite","model","body"
+			"effect","layer","world"
 		}
 
 		clearSelection = ->
@@ -87,12 +83,9 @@ Class EditMenuView,
 		mode = 0
 		@zoomBtn\slot "Tapped",->
 			scale = switch mode
-				when 0
-					2
-				when 1
-					0.5
-				when 2
-					1
+				when 0 then 2
+				when 1 then 0.5
+				when 2 then 1
 			mode += 1
 			mode %= 3
 			@zoomBtn.text = string.format("%d%%",scale*100)
@@ -224,21 +217,24 @@ Class EditMenuView,
 					emit "Scene.Edit.ShowRuler",nil
 
 		@playBtn\slot "Tapped",->
+			settings = editor\getSettings!
+			sceneFile = if settings.StartupScene
+				editor.sceneFullPath..settings.StartupScene..".scene"
+			else
+				nil
+			if not sceneFile or not oContent\exist sceneFile
+				MessageBox text:"Startup Scene\nIs Required!",okOnly:true
+				return
 			@menuBtn\emit "Tapped" if @menuBtn.dirty
 			-- test codes below
-			GameLoader = require "Lib.Game"
-			game = GameLoader editor.gameFullPath..editor.currentSceneFile
-			game.ui = GameLoader editor.uiFileFullPath
-			scene = CCScene!
-			game = with game!
-				.position = oVec2 scene.width/2,scene.height/2
+			Game = require "Lib.Game.Game"
+			game = Game editor.game,false
 			emit "Scene.EditorData",{
 				game:editor.game
 				scene:editor.scene
 				lastScene:editor.lastScene
 			}
-			editor\emit "Quit",with scene
-				\addChild game
+			editor\emit "Quit",game\loadScene!
 
 		setupItemButton = (button,groupLine,subItems)->
 			groupLine.data = button

@@ -712,7 +712,7 @@ oBody* oBody_create(oBodyDef* def, oWorld* world, oVec2 pos, float rot)
 		};
 		sensor->bodyLeave = [](oSensor* sensor, oBody* other)
 		{
-			oHandleSensor(sensor, other, oSlotList::BodyEnter);
+			oHandleSensor(sensor, other, oSlotList::BodyLeave);
 		};
 	};
 	body->eachSensor(sensorAddHandler);

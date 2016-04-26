@@ -166,7 +166,7 @@ local function oClipChooser(clipName)
 			local file = clipName:match("[^\\/]*$")
 			local prefix = (#file == #clipName and "" or clipName:sub(1,-1-#file))
 			panel.frameData.file = oCache.Clip:getTextureFile(filename):match("[^\\/]*$")
-			oContent:remove(oEditor.output..oEditor.prefix..oEditor.currentFile)
+			oContent:remove(oEditor.output..oEditor.currentFile)
 			oEditor.currentFile = prefix..oEditor.currentFile:match("[^\\/]*$")
 			oEditor.items[oEditor.currentName] = oEditor.currentFile
 			oEditor:dumpEffectFile()

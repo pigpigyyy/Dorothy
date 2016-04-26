@@ -33,7 +33,7 @@ local function oEditControl()
 
 	-- init fix menu --
 	local fixMenu = CCMenu()
-	fixMenu.touchPriority = oEditor.touchPriorityEditControl-1
+	fixMenu.touchPriority = oEditor.touchPriorityViewPanel
 	fixMenu.anchor = oVec2.zero
 	fixMenu.visible = false
 	fixMenu.touchEnabled = false
@@ -126,7 +126,7 @@ local function oEditControl()
 	-- init switch --
 	-- switchMenu
 	local switchMenu = CCMenu()
-	switchMenu.touchPriority = oEditor.touchPriorityEditControl
+	switchMenu.touchPriority = oEditor.touchPriorityViewPanel
 	switchMenu.anchor = oVec2.zero
 	switchMenu.visible = false
 	switchMenu.touchEnabled = false

@@ -3,7 +3,7 @@ ModelPanelView = require "View.Control.Item.ModelPanel"
 ModelView = require "Control.Item.ModelView"
 MessageBox = require "Control.Basic.MessageBox"
 InputBox = require "Control.Basic.InputBox"
-import CompareTable from require "Data.Utils"
+import CompareTable from require "Lib.Utils"
 Reference = require "Data.Reference"
 
 -- [signals]

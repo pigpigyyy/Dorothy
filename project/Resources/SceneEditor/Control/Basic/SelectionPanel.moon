@@ -9,15 +9,15 @@ SelectionItem = require "Control.Basic.SelectionItem"
 -- items, title="", width=120, height=0.6*@H, itemHeight=50, fontSize=16, grouped=false, default=nil
 Class
 	__partial: (args)=>
-		args.width = args.width or 120
-		args.height = args.height or (10+#args.items*60+(args.title and 60 or 0))
+		args.width or= 120
+		args.itemHeight or= 40
+		args.fontSize or= 16
+		args.height = args.height or (20+#args.items*(args.itemHeight+10)+(args.title and 70 or 0)+(args.subTitle and 30 or 0))
 		args.height = math.min CCDirector.winSize.height*0.6,args.height
 		SelectionPanelView args
 
 	__init: (args)=>
 		{:width,:items,:itemHeight,:fontSize,:grouped} = args
-		itemHeight or= 50
-		fontSize or= 16
 
 		if grouped
 			default = args.default

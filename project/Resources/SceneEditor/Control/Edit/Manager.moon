@@ -515,7 +515,7 @@ Class CCNode,
 							switch data.typeName
 								when "Effect"
 									item\setOffset value
-								when "Body"
+								when "BodyGroup"
 									delta = value - data.position
 									item\eachChild (child)-> child.position += delta
 								else

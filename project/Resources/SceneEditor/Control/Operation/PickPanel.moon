@@ -2,7 +2,7 @@ Dorothy!
 SelectionPanel = require "Control.Basic.SelectionPanel"
 PickPanelView = require "View.Control.Operation.PickPanel"
 PointControl = require "Control.Edit.PointControl"
-import Round from require "Data.Utils"
+import Round from require "Lib.Utils"
 
 -- [params]
 -- width, height

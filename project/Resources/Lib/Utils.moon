@@ -1,4 +1,5 @@
 Dorothy!
+
 Set = (list)-> {item,true for item in *list}
 
 CompareTable = (olds,news)->

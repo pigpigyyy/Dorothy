@@ -5,7 +5,7 @@ ExprChooser = require "Control.Trigger.ExprChooser"
 PopupPanel = require "Control.Basic.PopupPanel"
 MessageBox = require "Control.Basic.MessageBox"
 TriggerDef = require "Data.TriggerDef"
-import Path from require "Data.Utils"
+import Path from require "Lib.Utils"
 
 Args = action:"Action"
 

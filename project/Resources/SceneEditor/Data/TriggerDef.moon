@@ -1,6 +1,6 @@
 local TriggerDef
 local Expressions
-import Path from require "Data.Utils"
+import Path from require "Lib.Utils"
 
 SetExprMeta = (expr)->
 	isTrigger = expr[1] == "Trigger"
@@ -125,7 +125,6 @@ Expressions = {
 		Desc:"Global variable declaration and initialization."
 		ToCode:=>
 			codes = [tostring expr for expr in *@[2,]]
-			table.insert codes,1,"GlobalScope()"
 			table.concat codes,"\n"
 		Create:NewExpr!
 	}
@@ -251,12 +250,28 @@ Expressions = {
 		ToCode:=> "NoEvent()"
 		Create:NewExpr!
 	}
-	TimeCycle: {
-		Text:"Time Cycle"
+	SceneInitialized: {
+		Text:"Scene Initialized"
+		Type:"Event"
+		Group:"Misc"
+		Desc:"Target scene initialized."
+		ToCode:=> "SceneInitialized()"
+		Create:NewExpr!
+	}
+	TimeCycled: {
+		Text:"Time Cycled"
 		Type:"Event"
 		Group:"Time"
 		Desc:"Trigger event every [Number] seconds."
-		ToCode:=> "TimeCycle( #{ @[2] } )"
+		ToCode:=> "TimeCycled( #{ @[2] } )"
+		Create:NewExpr "Number"
+	}
+	TimeElapsed: {
+		Text:"Time Elapsed"
+		Type:"Event"
+		Group:"Time"
+		Desc:"Trigger event after [Number] seconds when target scene loaded."
+		ToCode:=> "TimeElapsed( #{ @[2] } )"
 		Create:NewExpr "Number"
 	}
 	BodyEnter: {
@@ -266,7 +281,7 @@ Expressions = {
 		Desc:"Any body enters sensor [Sensor] area."
 		ToCode:=> "BodyEnter( #{ @[2] } )"
 		Args:{
-			targetBody:"Body1" -- param order is needed
+			targetBody:"BodySlice1" -- param order is needed
 			sensorTag:"Number2"
 		}
 		Create:NewExpr "SensorByName"

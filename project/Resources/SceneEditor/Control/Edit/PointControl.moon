@@ -1,5 +1,5 @@
 Dorothy!
-import Round from require "Data.Utils"
+import Round from require "Lib.Utils"
 
 Class CCLayer,
 	__init:=>

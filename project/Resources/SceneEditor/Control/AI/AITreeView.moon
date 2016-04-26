@@ -3,7 +3,7 @@ AITreeViewView = require "View.Control.AI.AITreeView"
 MenuItem = require "Control.AI.MenuItem"
 TriggerDef = require "Data.TriggerDef"
 ExprChooser = require "Control.Trigger.ExprChooser"
-import Path from require "Data.Utils"
+import Path from require "Lib.Utils"
 
 MenuW = 200
 MenuH = 40
