@@ -75,11 +75,15 @@ Class ProfileScreenView,
 								oScale 0.3,0,0,oEase.OutQuad
 								CCHide!
 							}
+							Game = require "Lib.Game.Game"
+							Game.instance\stopAllTriggers!
+
 							Editor = require "Scene.Editor"
 							CCScene\add "sceneEditor",with Editor!
 								.firstLaunch = false
 								.startupData = @editorData
 								.lastScene = @editorData.lastScene
+								@editorData.lastScene = nil
 							CCScene\run "sceneEditor"
 							@editorData = nil
 					@screen\addChild with CCMenu!

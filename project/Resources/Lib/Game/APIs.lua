@@ -5,6 +5,9 @@ local once = require("once")
 local sleep = require("sleep")
 local thread = require("thread")
 local tolua = require("tolua")
+local oContent = require("oContent")
+local oVec2 = require("oVec2")
+local oModel = require("oModel")
 
 local APIs
 APIs = {
@@ -130,6 +133,40 @@ APIs = {
 			end
 		end
 		return nil
+	end,
+
+	Layer = function(name)
+		local item = Game.instance:getItem(name)
+		if tolua.type(item) == "oNode3D" then
+			return item
+		end
+		return nil
+	end,
+
+	Point = oVec2,
+
+	CreateModel = function(modelType, position, layer, angle, look, animation, loop)
+		local modelFile = Game.instance.gamePath..modelType
+		if oContent:exist(modelFile) and layer then
+			local model = oModel(modelFile)
+			model.position = position
+			model.angle = angle
+			model.look = look
+			model.loop = loop
+			model:play(animation)
+			layer:addChild(model)
+			return model
+		end
+		return nil
+	end,
+
+	PlayAnimation = function(model, animation, loop, look)
+		if model then
+			model.loop = loop
+			model.look = look
+			return model:play(animation)
+		end
+		return 0
 	end,
 
 }

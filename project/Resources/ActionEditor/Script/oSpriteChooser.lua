@@ -61,7 +61,7 @@ local function oSpriteChooser()
 	btnBk.position = oVec2(30,30)
 	cancelButton:addChild(btnBk,-1)
 	opMenu:addChild(cancelButton)
-	
+
 	panel.sprites = {}
 	panel.init = function(self)
 		local y = 0
@@ -69,12 +69,12 @@ local function oSpriteChooser()
 		local names = oCache.Clip:getNames(clipFile)
 		table.insert(names,1,"")
 		for i = 1,#names do
-			y = winSize.height*0.5+halfBH-10-math.floor((i-1)/6)*110
+			y = winSize.height*0.5+halfBH-10-math.floor((i-1)/itemNum)*110
 			local button = oButton(
 				"",
 				0,
 				100,100,
-				winSize.width*0.5-halfBW+10+((i-1)%6)*110,y,
+				winSize.width*0.5-halfBW+10+((i-1)%itemNum)*110,y,
 				function()
 					if panel.selected then
 						cancelButton.enabled = false
@@ -103,7 +103,7 @@ local function oSpriteChooser()
 			sprite:runAction(
 				CCSequence(
 				{
-					CCDelay(((i-1)%6)*0.05),
+					CCDelay(((i-1)%itemNum)*0.05),
 					oOpacity(0.3,1)
 				}))
 			--button.color = ccColor3()

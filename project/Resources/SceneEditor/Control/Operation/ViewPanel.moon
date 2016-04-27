@@ -330,6 +330,19 @@ Class ViewPanelView,
 							if child.fold
 								foldData child
 								sleep 0.6
+						if editor.startupData
+							itemName = editor.startupData.selectedItem
+							if itemName
+								itemData = editor\getData editor.items[itemName]
+								emit "Scene.ViewPanel.Pick",itemData
+							else
+								emit "Scene.ViewPanel.Pick",nil
+							if editor.startupData.camPosX and editor.startupData.camPosY
+								emit "Scene.ViewArea.MoveTo",
+									oVec2 editor.startupData.camPosX,
+										editor.startupData.camPosY
+						else
+							emit "Scene.ViewPanel.Pick",nil
 			else
 				drawNode = nil
 			@_selectedItem = nil

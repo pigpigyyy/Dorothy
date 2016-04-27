@@ -128,6 +128,7 @@ Class
 
 	__init:(args)=>
 		{width:panelW,height:panelH} = @panel
+		@firstDisplay = true
 
 		TriggerScope.scrollArea = @listScrollArea
 		TriggerScope.panel = @panel
@@ -310,6 +311,32 @@ Class
 
 		@closeEvent = @gslot "Scene.Trigger.Close",-> @hide!
 
+	currentTrigger:property =>
+		if TriggerScope.triggerBtn
+			TriggerScope.triggerBtn.file
+		else
+			nil,
+		(value)=>
+			item = @localScope.items[value]
+			if item
+				@localScope.currentGroup = item.group
+				@localBtn\emit "Tapped",@localBtn
+			else
+				item = @globalScope.items[value]
+				if item
+					@globalBtn.currentGroup = item.group
+					@globalBtn\emit "Tapped",@globalBtn
+			if item
+				item\emit "Tapped",item
+				if editor.startupData and editor.startupData.triggerLine
+					item.exprEditor.targetLine = editor.startupData.triggerLine
+
+	currentLine:property =>
+		if TriggerScope.triggerBtn and TriggerScope.triggerBtn.exprEditor
+			TriggerScope.triggerBtn.exprEditor.selectedLine
+		else
+			nil
+
 	show:=>
 		@closeEvent.enabled = true
 		@panel\schedule once ->
@@ -320,6 +347,10 @@ Class
 				@localScope.currentGroup
 			else
 				@globalScope.currentGroup
+			if @firstDisplay
+				@firstDisplay = false
+				if editor.startupData and editor.startupData.trigger
+					@currentTrigger = editor.startupData.trigger
 		@visible = true
 		@closeBtn.scaleX = 0
 		@closeBtn.scaleY = 0

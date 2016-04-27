@@ -229,11 +229,9 @@ Class EditMenuView,
 			-- test codes below
 			Game = require "Lib.Game.Game"
 			game = Game editor.game,false
-			emit "Scene.EditorData",{
-				game:editor.game
-				scene:editor.scene
-				lastScene:editor.lastScene
-			}
+			editorData = editor\getEditorData!
+			editorData.lastScene = editor.lastScene
+			emit "Scene.EditorData",editorData
 			editor\emit "Quit",game\loadScene!
 
 		setupItemButton = (button,groupLine,subItems)->

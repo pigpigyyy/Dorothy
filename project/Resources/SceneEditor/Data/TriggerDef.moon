@@ -753,9 +753,9 @@ Expressions = {
 		Type:"Number"
 		TypeIgnore:true
 		Group:"Model"
-		Desc:"Play animation [Animation] of model [Model] with loop [Boolean] and set model look to [Look], then return animation`s duration."
+		Desc:"Play model [Model] animation [Animation] with loop [Boolean] and set model look to [Look], then return animation`s duration."
 		ToCode:=> "PlayAnimation( #{ @[2] }, #{ @[3] }, #{ @[4] }, #{ @[5] } )"
-		Create:NewExpr "Animation","ModelByName","False","Look"
+		Create:NewExpr "ModelByName","Animation","False","Look"
 	}
 }
 

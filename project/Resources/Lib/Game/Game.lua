@@ -31,6 +31,12 @@ local TriggerScope = Class {
 			trigger:unregister()
 		end
 	end,
+
+	stopAll = function(self)
+		for _,trigger in ipairs(self._triggers) do
+			trigger:stop()
+		end
+	end,
 }
 
 local function readOnlyPath(subPath)
@@ -104,11 +110,10 @@ return Class {
 		self.__class.weakRef._instance = self
 	end,
 
-	clearScene = function(self,sceneData)
-		print("clearScene",sceneData)
-	end,
+	ref = function(self) end,
 
-	loadScene = function(self)
+	loadScene = function(self,scene)
+		if scene then self._scene = scene end
 		-- load current scene tree
 		local sceneData = Loader(self.sceneFile)
 		sceneData.ui = Loader(self.uiFile)
@@ -118,9 +123,6 @@ return Class {
 		self._items = items
 		gameScene.position = oVec2(entry.width/2,entry.height/2)
 		entry:addChild(gameScene)
-		entry:slot("Cleanup",function()
-			self:clearScene(sceneData)
-		end)
 		self._entry = entry
 		-- move game node
 		if self._gameNode.parent then
@@ -140,15 +142,21 @@ return Class {
 		-- load scene local triggers
 		if self._localTrigger then
 			self._localTrigger:unregisterAll()
+			self._localTrigger:stopAll()
 		end
-		self._localTriggers = TriggerScope(self._globalScope,self.triggerLocalPath)
-		self._localTriggers:registerAll()
+		local localTrigger = TriggerScope(self._globalScope,self.triggerLocalPath)
+		localTrigger:registerAll()
+		entry:slot("Cleanup",function()
+			self:ref()
+			localTrigger:stopAll()
+		end)
+		self._localTrigger = localTrigger
 		self._gameNode:emit("Initialized")
 		return entry
 	end,
 
-	forward = function(self,transition)
-		CCScene:forward(self._entry,transition)
+	forward = function(self,scene,transition)
+		CCScene:forward(self:loadScene(scene),transition)
 	end,
 
 	slot = function(self,name)
@@ -161,4 +169,14 @@ return Class {
 		end
 		return nil
 	end,
+
+	stopAllTriggers = function(self)
+		if self._localTrigger then
+			self._localTrigger:stopAll()
+		end
+		if self._globalTrigger then
+			self._globalTrigger:stopAll()
+		end
+	end,
+
 }

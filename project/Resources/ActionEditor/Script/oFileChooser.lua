@@ -285,6 +285,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 			if #clip < #(item.clipFile) then
 				prefix = item.clipFile:sub(1,-#clip-1)
 			end
+			modelFile = modelFile:gsub(prefix,"")
 			modelFile = prefix..modelFile
 			local model = oEditor.output..modelFile
 			if not oContent:exist(model) then

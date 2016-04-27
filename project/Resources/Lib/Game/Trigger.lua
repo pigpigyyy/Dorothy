@@ -1,6 +1,7 @@
 local Class = require("Class")
 local property = require("property")
 local thread = require("thread")
+local oRoutine = require("oRoutine")
 
 local Trigger = Class {
 	__init = function(self, name, enable, event, condition, action)
@@ -14,6 +15,7 @@ local Trigger = Class {
 				local args = {...}
 				self._routine = thread(function()
 					action(unpack(args))
+					self._routine = nil
 				end)
 			end
 		end
@@ -40,6 +42,13 @@ local Trigger = Class {
 
 	unregister = function(self)
 		self._event:remove(self._handler)
+	end,
+
+	stop = function(self)
+		if self._routine then
+			oRoutine:remove(self._routine)
+			self._routine = nil
+		end
 	end,
 }
 

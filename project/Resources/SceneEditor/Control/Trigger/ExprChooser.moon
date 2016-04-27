@@ -321,6 +321,7 @@ ExprChooser = Class
 				items = switch @curExpr[1]
 					when "Animation" then oCache.Model\getAnimationNames(modelFile) or {}
 					when "Look" then oCache.Model\getLookNames(modelFile) or {}
+				table.insert items,1,"None"
 				itemButton = with GroupButton {
 						text:@curExpr[2]
 						width:math.min(170,@bodyMenu.width-20)
@@ -338,6 +339,7 @@ ExprChooser = Class
 							}
 							\slot "Selected",(item)->
 								return unless item
+								item = "" if item == "None"
 								button.text = item
 								@curExpr[2] = item
 								@updatePreview!
@@ -350,8 +352,8 @@ ExprChooser = Class
 				when "CreateModel"
 					selectItem @parentExpr[2][2]
 				when "PlayAnimation"
-					if @parentExpr[3][1] == "ModelByName"
-						modelName = @parentExpr[3][2][2]
+					if @parentExpr[2][1] == "ModelByName"
+						modelName = @parentExpr[2][2][2]
 						model = editor.items[modelName]
 						if model
 							modelData = editor\getData model

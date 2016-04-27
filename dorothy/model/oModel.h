@@ -61,6 +61,7 @@ typedef Delegate<void (oModel* model)> oAnimationHandler;
 class oAnimationGroup
 {
 public:
+	int duration;
 	oOwnVector<oAnimation> animations;
 	oAnimationHandler animationEnd;
 };
@@ -99,8 +100,8 @@ public:
 	PROPERTY(float, _recoverTime, Recovery);
 	PROPERTY_BOOL(_faceRight, FaceRight);
 	void setLook(int index);
-	void play(uint32 index);
-	void play(const string& name);
+	int play(uint32 index);
+	int play(const string& name);
 	void pause();
 	void resume();
 	void resume(uint32 index);

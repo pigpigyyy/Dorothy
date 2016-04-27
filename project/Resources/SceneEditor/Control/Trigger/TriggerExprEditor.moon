@@ -582,6 +582,16 @@ Class ExprEditorView,
 		@gslot "Scene.Trigger.ChangeName",(newName)-> @newTriggerName = newName
 		@gslot "Scene.Trigger.Open",checkReload
 
+	selectedLine:property =>
+		if @_selectedExprItem
+			@_selectedExprItem.lineNumber
+		else
+			nil,
+		(value)=>
+			item = @triggerMenu.children[value]
+			item.checked = true
+			@.changeExprItem item
+
 	notifyEdit:=>
 		children = @triggerMenu.children
 		for i = 1,#children
@@ -635,6 +645,9 @@ Class ExprEditorView,
 			@asyncLoad = false
 			@triggerMenu.enabled = true
 			@lintCode!
+			if @targetLine
+				@selectedLine = @targetLine
+				@targetLine = nil
 		@exprData
 
 	codeMode:property => @_codeMode,

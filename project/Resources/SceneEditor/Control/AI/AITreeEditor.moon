@@ -122,6 +122,7 @@ Class
 
 	__init:(args)=>
 		{width:panelW,height:panelH} = @panel
+		@firstDisplay = true
 
 		if CCUserDefault.TriggerMode == nil
 			CCUserDefault.TriggerMode = "Text"
@@ -300,11 +301,26 @@ Class
 		@gslot "Scene.AINode.Edit",->
 			TriggerScope.triggerBtn.exprEditor.editBtn\emit "Tapped"
 
+	currentTree:property =>
+		if TriggerScope.triggerBtn
+			TriggerScope.triggerBtn.file
+		else
+			nil,
+		(value)=>
+			item = @localScope.items[value]
+			if item
+				@localScope.currentGroup = item.group
+				item\emit "Tapped",item
+
 	show:=>
 		@closeEvent.enabled = true
 		@panel\schedule once ->
 			@localScope\updateItems!
 			@groupBtn.text = @localScope.currentGroup
+			if @firstDisplay
+				@firstDisplay = false
+				if editor.startupData and editor.startupData.aiTree
+					@currentTree = editor.startupData.aiTree
 		@visible = true
 		with @closeBtn
 			.scaleX = 0

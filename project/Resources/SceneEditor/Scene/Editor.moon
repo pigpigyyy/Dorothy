@@ -448,8 +448,8 @@ Class EditorView,
 		itemData.name = name
 		name
 
-	getItem:(itemData)=>
-		itemName = switch itemData.typeName
+	getItemName:(itemData)=>
+		switch itemData.typeName
 			when "UILayer"
 				"UI"
 			when "PlatformWorld"
@@ -458,7 +458,8 @@ Class EditorView,
 				"Camera"
 			else
 				itemData.name
-		@items[itemName]
+
+	getItem:(itemData)=> @items[@getItemName itemData]
 
 	getData:(item)=> @itemDefs[item]
 
@@ -989,15 +990,24 @@ Class EditorView,
 			strs = {}
 			insert = table.insert
 			append = (str)-> insert strs,str
-			append "return {\n"
-			for k,v in pairs @settings
-				append "\t#{k} = "
-				if type(v) == "string"
-					append "\"#{v}\",\n"
-				else
-					append "#{v},\n"
-			append "}\n"
-			oContent\saveToFile @settingFullPath,table.concat strs
+			append "return"
+			appendTable = (tb)->
+				append "{"
+				for k,v in pairs tb
+					append k
+					append "="
+					switch type v
+						when "string"
+							append "\"#{v}\","
+						when "table"
+							appendTable v
+						else
+							append "#{v},"
+				append "},"
+			appendTable @settings
+			text = table.concat strs," "
+			text = text\sub(1,-2)
+			oContent\saveToFile @settingFullPath,text
 
 	getGlobalExpr:=>
 		if not @globalExpr
@@ -1028,3 +1038,18 @@ Class EditorView,
 				else
 					if not oContent\exist compiledFile
 						oContent\saveToFile compiledFile, TriggerDef.ToCodeText exprData
+
+	getEditorData:=>
+		get = (target,name)-> if @[target] then @[target][name] else nil
+		{
+			game:@game
+			scene:@scene
+			camPosX:@camPos.x
+			camPosY:@camPos.y
+			selectedItem:if @currentData then @getItemName @currentData else nil
+			trigger:get "triggerEditor","currentTrigger"
+			triggerLine:get "triggerEditor","currentLine"
+			action:get "actionTriggerEditor","currentAction"
+			actionLine:get "actionTriggerEditor","currentLine"
+			aiTree:get "aiTreeEditor","currentTree"
+		}

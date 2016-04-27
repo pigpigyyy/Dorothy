@@ -129,11 +129,11 @@ bool oModel::isFaceRight() const
 	return _faceRight;
 }
 
-void oModel::play( uint32 index )
+int oModel::play( uint32 index )
 {
 	if (index >= _animationGroups.size())
 	{
-		return;
+		return 0;
 	}
 	oModel::stop();
 	_isPlaying = true;
@@ -141,19 +141,20 @@ void oModel::play( uint32 index )
 	if (_recoverTime > 0.0f)
 	{
 		_isRecovering = true;
-		_resetAnimation.run(_recoverTime, _currentAnimation);
+		_resetAnimation.run(_recoverTime*_speed, _currentAnimation);
 	}
 	else
 	{
 		oModel::reset(_root);
 		oModel::onResetAnimationEnd();
 	}
+	return (_animationGroups[_currentAnimation]->duration + _recoverTime) * _speed;
 }
 
-void oModel::play( const string& name )
+int oModel::play( const string& name )
 {
 	int index = _modelDef->getAnimationIndexByName(name);
-	oModel::play(index);
+	return oModel::play(index);
 }
 
 void oModel::reset()
@@ -705,6 +706,7 @@ void oModel::setupCallback()
 				action,
 				CCCallFunc::create(this, callfunc_selector(oModel::onActionEnd)));
 		}
+		animationGroup->duration = action->getDuration();
 		animationGroup->animations[0]->setAction(action);
 	}
 }
