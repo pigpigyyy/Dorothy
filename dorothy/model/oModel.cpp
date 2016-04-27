@@ -129,7 +129,7 @@ bool oModel::isFaceRight() const
 	return _faceRight;
 }
 
-int oModel::play( uint32 index )
+float oModel::play( uint32 index )
 {
 	if (index >= _animationGroups.size())
 	{
@@ -151,7 +151,7 @@ int oModel::play( uint32 index )
 	return (_animationGroups[_currentAnimation]->duration + _recoverTime) * _speed;
 }
 
-int oModel::play( const string& name )
+float oModel::play( const string& name )
 {
 	int index = _modelDef->getAnimationIndexByName(name);
 	return oModel::play(index);

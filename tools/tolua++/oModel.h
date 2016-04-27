@@ -11,7 +11,7 @@ class oModel: public CCNode
 	tolua_readonly tolua_property__bool bool paused;
 	tolua_readonly tolua_property__common string currentAnimationName @ currentAnimation;
 	tolua_outside oVec2 oModel_getKey @ getKey(const char* key);
-	int play(const char* name);
+	float play(const char* name);
 	void pause();
 	void resume();
 	void resume(const char* name);

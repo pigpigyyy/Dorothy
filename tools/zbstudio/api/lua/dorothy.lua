@@ -3591,7 +3591,7 @@ local Dorothy =
 			{
 				args = "(animationName: string)",
 				description = "Play model`s animation of certain name.",
-				returns = "()",
+				returns = "(duration: float)",
 				type = "method"
 			},
 			pause =

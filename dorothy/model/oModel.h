@@ -100,8 +100,8 @@ public:
 	PROPERTY(float, _recoverTime, Recovery);
 	PROPERTY_BOOL(_faceRight, FaceRight);
 	void setLook(int index);
-	int play(uint32 index);
-	int play(const string& name);
+	float play(uint32 index);
+	float play(const string& name);
 	void pause();
 	void resume();
 	void resume(uint32 index);
