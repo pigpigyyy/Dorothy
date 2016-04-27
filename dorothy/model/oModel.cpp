@@ -148,7 +148,7 @@ float oModel::play( uint32 index )
 		oModel::reset(_root);
 		oModel::onResetAnimationEnd();
 	}
-	return (_animationGroups[_currentAnimation]->duration + _recoverTime) * _speed;
+	return (_animationGroups[_currentAnimation]->duration + _recoverTime) / _speed;
 }
 
 float oModel::play( const string& name )
