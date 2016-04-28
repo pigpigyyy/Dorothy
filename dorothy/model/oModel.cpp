@@ -148,7 +148,7 @@ float oModel::play( uint32 index )
 		oModel::reset(_root);
 		oModel::onResetAnimationEnd();
 	}
-	return (_animationGroups[_currentAnimation]->duration + _recoverTime) / _speed;
+	return (_animationGroups[_currentAnimation]->duration + _recoverTime) / MAX(_speed, FLT_EPSILON);
 }
 
 float oModel::play( const string& name )
@@ -305,12 +305,12 @@ void oModel::setSpeed( float speed )
 {
 	if (_speed != speed)
 	{
-		_speed = speed;
+		_speed = MAX(speed, 0);
 		for (oAnimationGroup* animationGroup : _animationGroups)
 		{
 			for (oAnimation* animation : animationGroup->animations)
 			{
-				animation->setSpeed(speed);
+				animation->setSpeed(_speed);
 			}
 		}
 	}
