@@ -145,6 +145,14 @@ APIs = {
 
 	Point = oVec2,
 
+	Loop = function(start,stop,step,work)
+		if (start < stop and step > 0) or (start > stop and step < 0) then
+			for i = start,stop,step do
+				work(i)
+			end
+		end
+	end,
+
 	CreateModel = function(modelType, position, layer, angle, look, animation, loop)
 		local modelFile = Game.instance.gamePath..modelType
 		if oContent:exist(modelFile) and layer then
@@ -169,6 +177,11 @@ APIs = {
 		return 0
 	end,
 
+	DestroyModel = function(model)
+		if model and model.parent then
+			model.parent:removeChild(model)
+		end
+	end,
 }
 
 return APIs

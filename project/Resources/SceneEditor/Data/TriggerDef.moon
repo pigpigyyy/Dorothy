@@ -439,6 +439,15 @@ Expressions = {
 		ToCode:=> "\"#{ @[2] }\""
 		Create:NewExprVal "InvalidName"
 	}
+	VariableName: {
+		Text:"Variable Name"
+		Type:"VariableName"
+		Group:"Special"
+		Desc:"A name for variable."
+		CodeOnly:true
+		ToCode:=> @[2]
+		Create:NewExprVal "i"
+	}
 	ModelType: {
 		Text:"Model Type"
 		Type:"ModelType"
@@ -655,13 +664,13 @@ Expressions = {
 		ToCode:=> "if #{ @[2] } then"
 		Create:NewExpr "True","Action","Action"
 	}
-	Loopi: {
+	Loop: {
 		Type:"None"
 		Group:"Code Flow"
-		Desc:"Count number i from [Number] to [Number] by [Number] and do."
+		Desc:"Count number [VariableName] from [Number] to [Number] by [Number] and do."
 		MultiLine:true
-		ToCode:=> "for i = #{ @[2] }, #{ @[3] }, #{ @[4] } do"
-		Create:NewExpr "Number","Number","Number","Action"
+		ToCode:=> "Loop( #{ @[3] }, #{ @[4] }, #{ @[5] }, function( #{ @[2] } )"
+		Create:NewExpr "VariableName","Number","Number","Number","Action"
 	}
 	Sleep: {
 		Type:"None"
@@ -885,11 +894,11 @@ TriggerDef = {
 					for i = 2,#expr[4]
 						nextExpr expr[4],i,indent+1
 					append indent,"end"
-				when "Loopi"
+				when "Loop"
 					append indent,tostring expr
-					for i = 2,#expr[5]
-						nextExpr expr[5],i,indent+1
-					append indent,"end"
+					for i = 2,#expr[6]
+						nextExpr expr[6],i,indent+1
+					append indent,"end)"
 				when "SetLocal"
 					assignExpr = expr[2]
 					exprName = assignExpr[1]
@@ -915,10 +924,11 @@ TriggerDef = {
 		errors = nil
 		varScope = {locals}
 		varInScope = (varName)->
+			local result
 			for scope in *varScope
 				varType = scope[varName]
-				return varType if varType
-			return nil
+				result = varType if varType
+			return result
 		err = (...)-> table.insert errors,table.concat{...}
 		pushScope = -> table.insert varScope,{}
 		popScope = -> table.remove varScope
@@ -929,6 +939,16 @@ TriggerDef = {
 					nextExpr expr[3]
 				when "Condition","Action","UnitAction","ConditionNode","Available","Run","Stop","Event"
 					return
+				when "Loop"
+					-- check params before adding loop variable into scope
+					for subExpr in *expr[3,]
+						nextExpr subExpr,expr
+					varName = expr[2][2]
+					if varInScope varName
+						err "Loop variable \"",varName,"\" uses the same name with a local variable."
+					else
+						scope = varScope[#varScope]
+						scope[varName] = "Number"
 				when "SetLocal"
 					assignExpr = expr[2]
 					varName = assignExpr[2][2]
@@ -1007,8 +1027,8 @@ TriggerDef = {
 			errors = {} if errors == nil or #errors > 0
 			switch itemType
 				when "Start"
-					nextExpr expr,parentExpr
 					pushScope!
+					nextExpr expr,parentExpr
 				when "Mid"
 					popScope!
 					pushScope!
@@ -1054,10 +1074,10 @@ TriggerDef = {
 					for i = 2,#expr[4]
 						return true if checkError expr[4],i
 					return true if lintFunc(expr,parentExpr,"End") ~= ""
-				when "Loopi"
+				when "Loop"
 					return true if lintFunc(expr,parentExpr,"Start") ~= ""
-					for i = 2,#expr[5]
-						return true if checkError expr[5],i
+					for i = 2,#expr[6]
+						return true if checkError expr[6],i
 					return true if lintFunc(expr,parentExpr,"End") ~= ""
 				else
 					return true if lintFunc(expr,parentExpr) ~= ""

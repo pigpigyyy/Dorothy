@@ -16,10 +16,10 @@ Class
 		@placeHolder = @_placeHolder
 		@colorPlaceHolder = ccColor3 0x00ffff
 
-		cursor = with oLine {oVec2.zero,oVec2(0,fontSize)},ccColor4 0xff00ffff
+		@cursor = with oLine {oVec2.zero,oVec2(0,fontSize)},ccColor4 0xff00ffff
 			.visible = false
 			.positionX = @width
-		@addChild cursor
+		@addChild @cursor
 
 		blink = CCRepeatForever CCSequence {
 			CCShow!
@@ -30,7 +30,7 @@ Class
 
 		@slot "InputAttach", ->
 			@placeHolder = ""
-			with cursor
+			with @cursor
 				.visible = true
 				.positionX = @width
 				\perform blink
@@ -38,7 +38,7 @@ Class
 
 		@slot "InputDetach", ->
 			@placeHolder = @_placeHolder
-			with cursor
+			with @cursor
 				.visible = false
 				\stopAllActions!
 				if @text ~= ""
@@ -49,7 +49,7 @@ Class
 			string.len(@text) < limit or addText == "\n"
 
 		inputed = ->
-			with cursor
+			with @cursor
 				.positionX = @width
 				\perform blink
 				@texture.antiAlias = false

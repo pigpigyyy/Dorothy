@@ -388,10 +388,38 @@ ExprChooser = Class
 					limit:15
 				}
 				.text = tostring @curExpr[2]
+				.textField\slot "InputAttach",(textBox)->
+					textBox.text = "" if textBox.text == "0"
+					textBox.cursor.positionX = textBox.width
+					true
 				.textField\slot "InputInserting",(addText,textBox)->
 					text = textBox.text..addText
 					number = tonumber text
 					addText == "\n" or number ~= nil or text == "-"
+				.textField\slot "InputInserted",inputed
+				.textField\slot "InputDeleted",inputed
+
+		editVarName = ->
+			inputed = (_,textBox)->
+				@curExpr[2] = textBox.text\match("^[_%a][_%w]*$") or "i"
+				@updatePreview!
+			@bodyMenu\addChild with TextBox {
+					x:@bodyMenu.width/2
+					y:@bodyLabel.positionY-@bodyLabel.height/2-20-20
+					width:170
+					height:35
+					fontSize:17
+					limit:15
+				}
+				.text = tostring @curExpr[2]
+				.textField\slot "InputAttach",(textBox)->
+					textBox.text = "" if textBox.text == "i"
+					textBox.cursor.positionX = textBox.width
+					true
+				.textField\slot "InputInserting",(addText,textBox)->
+					text = textBox.text..addText
+					result = text\match "^[_%a][_%w]*$"
+					addText == "\n" or result ~= nil
 				.textField\slot "InputInserted",inputed
 				.textField\slot "InputDeleted",inputed
 
@@ -452,6 +480,8 @@ ExprChooser = Class
 					editConditionNode!
 				when "Act"
 					editActionNode!
+				when "VariableName"
+					editVarName!
 				else
 					if @curExpr.Item
 						chooseItemFromScene @curExpr[1]\sub 1,-5 -- "TypeName"\sub(1,-5) == "Type"

@@ -195,13 +195,13 @@ Class ExprEditorView,
 						nextExpr expr[4],i,indent+1
 					with @createExprItem mode("end","End."),indent,expr,parentExpr,index
 						.itemType = "End"
-				when "Loopi"
+				when "Loop"
 					with @createExprItem tostring(expr),indent,expr,parentExpr,index
 						.itemType = "Start"
-						.actionExpr = expr[5]
-					for i = 2,#expr[5]
-						nextExpr expr[5],i,indent+1
-					with @createExprItem mode("end","End."),indent,expr,parentExpr,index
+						.actionExpr = expr[6]
+					for i = 2,#expr[6]
+						nextExpr expr[6],i,indent+1
+					with @createExprItem mode("end)","End."),indent,expr,parentExpr,index
 						.itemType = "End"
 				when "SetLocal"
 					assignExpr = expr[2]
@@ -691,6 +691,12 @@ Class ExprEditorView,
 
 		targetExpr = @_selectedExprItem.expr
 		varScope = {}
+		varInScope = (varName)->
+			local result
+			for scope in *varScope
+				varType = scope[varName]
+				result = varType if varType
+			return result
 		nextExpr = (expr)->
 			return false unless "table" == type expr
 			switch expr[1]
@@ -702,11 +708,20 @@ Class ExprEditorView,
 					scope = varScope[#varScope]
 					if varName ~= "InvalidName"
 						scope[varName] = varType
+				when "Loop"
+					scope = if varInScope expr[2][2] then {}
+						else {[expr[2][2]]:"Number"}
+					table.insert varScope,scope
+					actionExpr = expr[6]
+					for i = 2,#actionExpr
+						if nextExpr actionExpr[i]
+							return true -- true to stop search
+					table.remove varScope
 				when "Action"
 					table.insert varScope,{}
 					for i = 2,#expr
 						if nextExpr expr[i]
-							return true -- true to stop search
+							return true
 					table.remove varScope
 				else
 					for i = 2,#expr
@@ -715,9 +730,11 @@ Class ExprEditorView,
 			expr == targetExpr
 		table.insert varScope,{}
 		nextExpr @actionItem.expr
+		varSet = {} -- filter duplicated varName
 		for scope in *varScope
 			for v,k in pairs scope
-				if k == targetType
+				if k == targetType and not varSet[v]
+					varSet[v] = true
 					table.insert localVars,v
 		localVars
 
