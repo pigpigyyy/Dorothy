@@ -1026,9 +1026,9 @@ Class EditorView,
 
 	lintAllTriggers:=>
 		editor\schedule once ->
-			actionFullPath = editor.actionFullPath
-			files = Path.getAllFiles actionFullPath,{"action","trigger"}
-			for i,file in ipairs files do files[i] = actionFullPath..file
+			gameFullPath = editor.gameFullPath
+			files = Path.getAllFiles gameFullPath,{"action","trigger","node"}
+			for i,file in ipairs files do files[i] = gameFullPath..file
 			oContent\loadFileAsync files,(name,data)->
 				exprData = TriggerDef.SetExprMeta loadstring(data)!
 				compiledFile = name\sub(1,-7).."lua"

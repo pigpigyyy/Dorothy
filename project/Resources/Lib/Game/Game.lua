@@ -39,6 +39,33 @@ local TriggerScope = Class {
 	end,
 }
 
+local ItemCenter = Class {
+	__init = function(self,globalScope,path,keepRef)
+		if keepRef == nil then
+			keepRef = true
+			self._items = {}
+		end
+		local groups = Path.getFolders(path)
+		for _,group in ipairs(groups) do
+			local filePath = path..group.."/"
+			local files = Path.getFiles(filePath,"lua")
+			for _,file in ipairs(files) do
+				local loader = loadfile(filePath..file)
+				local name = Path.getName(file)
+				setfenv(loader,globalScope)
+				local func = loader()
+				if keepRef then
+					self._items[group.."."..name] = func
+				end
+			end
+		end
+	end,
+
+	get = function(self, name)
+		return self._items[name]
+	end,
+}
+
 local function readOnlyPath(subPath)
 	if subPath then
 		return property(function(self) return self._gamePath..subPath end)
@@ -138,6 +165,12 @@ return Class {
 			-- load global triggers
 			self._globalTrigger = TriggerScope(self._globalScope,self.triggerGlobalPath)
 			self._globalTrigger:registerAll()
+			-- load condition nodes
+			self._conditionCenter = ItemCenter(self._globalScope,self.aiNodePath)
+			-- load actions
+			self._actionCenter = ItemCenter(self._globalScope,self.actionPath,false)
+			-- load AI trees
+			self._aiCenter = ItemCenter(self._globalScope,self.aiTreePath,false)
 		end
 		-- load scene local triggers
 		if self._localTrigger then
@@ -168,6 +201,10 @@ return Class {
 			return self._items[name]
 		end
 		return nil
+	end,
+
+	getCondition = function(self,name)
+		return self._conditionCenter:get(name)
 	end,
 
 	stopAllTriggers = function(self)

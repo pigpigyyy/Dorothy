@@ -64,7 +64,7 @@ Expressions = {
 		Group:"Special"
 		Desc:"The condition node`s name."
 		CodeOnly:true
-		ToCode:=> (Path.getPath(@[2])..Path.getName(@[2]))\gsub("[\\/]",".")
+		ToCode:=> (Path.getPath(@[2])..Path.getName(@[2]))\gsub("[\\/]+",".")
 		Create:NewExprVal "InvalidName"
 	}
 	ActName: {
@@ -73,7 +73,7 @@ Expressions = {
 		Group:"Special"
 		Desc:"The action node`s name."
 		CodeOnly:true
-		ToCode:=> (Path.getPath(@[2])..Path.getName(@[2]))\gsub("[\\/]",".")
+		ToCode:=> (Path.getPath(@[2])..Path.getName(@[2]))\gsub("[\\/]+",".")
 		Create:NewExprVal "InvalidName"
 	}
 	Sel: {
@@ -84,7 +84,7 @@ Expressions = {
 		CodeOnly:true
 		ToCode:=>
 			codes = [tostring expr for expr in *@[2,]]
-			table.concat {"oSel( ", table.concat(codes,", "), " )"}
+			table.concat {"SelNode( ", table.concat(codes,", "), " )"}
 		Create:NewExpr!
 	}
 	Seq: {
@@ -95,7 +95,7 @@ Expressions = {
 		CodeOnly:true
 		ToCode:=>
 			codes = [tostring expr for expr in *@[2,]]
-			table.concat {"oSeq( ", table.concat(codes,", "), " )"}
+			table.concat {"SeqNode( ", table.concat(codes,", "), " )"}
 		Create:NewExpr!
 	}
 	Con: {
@@ -105,7 +105,7 @@ Expressions = {
 		Desc:"Condition Node."
 		CodeOnly:true
 		ToCode:=>
-			"GCon( \"#{ @[2] }\" )"
+			"ConNode( \"#{ @[2] }\" )"
 		Create:NewExpr "ConName"
 	}
 	Act: {
@@ -115,7 +115,7 @@ Expressions = {
 		Desc:"Action Node."
 		CodeOnly:true
 		ToCode:=>
-			"GAct( \"#{ @[2] }\" )"
+			"ActNode( \"#{ @[2] }\" )"
 		Create:NewExpr "ActName"
 	}
 	GlobalVar: {
@@ -132,7 +132,7 @@ Expressions = {
 		Type:"ConditionNode"
 		Group:"None"
 		Desc:"This AI condition node named [NodeName] checks"
-		ToCode:=> "ConditionNode( #{ @[2] }, function() return"
+		ToCode:=> "ConNode( #{ @[2] }, function() return"
 		Create:NewExpr "NodeName","True"
 	}
 	NodeName: {
@@ -157,7 +157,7 @@ Expressions = {
 		Group:"Special"
 		Desc:"The action`s name."
 		CodeOnly:true
-		ToCode:=> Path.getName @[2]
+		ToCode:=> "\"#{ @[2] }\""
 		Create:NewExprVal "InvalidName"
 	}
 	Priority: {
@@ -837,9 +837,9 @@ TriggerDef = {
 						if strs[i]\match startPattern
 							insert strs,i+2,localLine
 							break
-				append indent,"end )"..ending
+				append indent,"end"..ending
 
-		handleAction = createHandleAction "^Action%("
+		handleAction = createHandleAction "^Action%("," )"
 		handleRun = createHandleAction "^%-%-%[%[Run%]%]",","
 		handleStop = createHandleAction "^%-%-%[%[Stop%]%]"
 
@@ -881,7 +881,7 @@ TriggerDef = {
 					append indent,tostring expr
 					for i = 2,#expr
 						nextExpr expr,i,indent+1
-					append indent,"end ),"
+					append indent,"end,"
 				when "Run"
 					handleRun indent,expr
 				when "Stop"

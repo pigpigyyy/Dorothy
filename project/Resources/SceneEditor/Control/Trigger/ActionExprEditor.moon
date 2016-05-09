@@ -196,7 +196,7 @@ Class ExprEditorView,
 						.actionExpr = expr
 					for i = 2,#expr
 						nextExpr expr,i,indent+1
-					with @createExprItem mode("end ),"," "),indent
+					with @createExprItem mode("end,"," "),indent
 						.itemType = "End"
 				when "Run","Stop"
 					@currentScope = @varScopes[expr[1]]
@@ -218,7 +218,7 @@ Class ExprEditorView,
 								child = children[i]
 								child.lineNumber = i
 								child.positionY -= moveY
-					with @createExprItem mode("end ),"," "),indent
+					with @createExprItem mode("end"..(expr[1] == "Run" and "," or "")," "),indent
 						.itemType = "End"
 				when "If"
 					with @createExprItem tostring(expr),indent,expr,parentExpr,index
@@ -691,8 +691,7 @@ Class ExprEditorView,
 			triggerCode = TriggerDef.ToCodeText @exprData
 			oContent\saveToFile codeFile,triggerCode
 
-	isInAction:property =>
-		not @isInCondition! and not @isInEvent!
+	isInAction:property => not @isInCondition and not @isInEvent
 
 	isInCondition:property =>
 		expr = @_selectedExprItem.expr

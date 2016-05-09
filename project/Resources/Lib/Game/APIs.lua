@@ -8,6 +8,11 @@ local tolua = require("tolua")
 local oContent = require("oContent")
 local oVec2 = require("oVec2")
 local oModel = require("oModel")
+local oAction = require("oAction")
+local oAI = require("oAI")
+local oSeq = require("oSeq")
+local oSel = require("oSel")
+local oCon = require("oCon")
 
 local APIs
 APIs = {
@@ -180,6 +185,30 @@ APIs = {
 	DestroyModel = function(model)
 		if model and model.parent then
 			model.parent:removeChild(model)
+		end
+	end,
+
+	UnitAction = function(name, priority, reaction, recovery, available, run, stop)
+		oAction:add(name, priority, reaction, recovery, available, run, stop)
+	end,
+
+	AIRoot = function(name, ...)
+		oAI:add(name,oSel{...})
+	end,
+
+	SelNode = function(...)
+		return oSel{...}
+	end,
+
+	SeqNode = function(...)
+		return oSeq{...}
+	end,
+
+	ConNode = function(name, condition)
+		if condition then
+			return oCon(condition)
+		else
+			return Game.instance:getCondition(name)
 		end
 	end,
 }

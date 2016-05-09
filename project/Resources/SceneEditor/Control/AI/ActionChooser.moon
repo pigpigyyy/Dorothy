@@ -58,7 +58,7 @@ Class ActionChooserView,
 		@selectBtn\slot "Tapped",->
 			@hide!
 			if @curActionBtn
-				@emit "Selected",editor.actionFolder..@curActionBtn.file
+				@emit "Selected",@curActionBtn.file
 			else
 				@emit "Selected",nil
 

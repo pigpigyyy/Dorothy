@@ -210,6 +210,9 @@ Class
 							trigger = Expressions.ConditionNode\Create!
 							trigger[2][2] = result
 							oContent\saveToFile triggerFullPath,ToEditText trigger
+							codeFile = Path.getPath(triggerFullPath)..Path.getName(triggerFullPath)..".lua"
+							triggerCode = TriggerDef.ToCodeText trigger
+							oContent\saveToFile codeFile,triggerCode
 							scope\updateItems!
 							triggerFile = scope.prefix..scope.currentGroup.."/"..result..".node"
 							for item in *scope.menu.children
@@ -278,7 +281,7 @@ Class
 							exprEditor.modified = false
 							exprEditor\save!
 				if TriggerScope.triggerBtn
-					@emit "Selected",TriggerScope.triggerBtn.file
+					@emit "Selected",TriggerScope.triggerBtn.file\sub(#editor.aiNodeFolder+1,-1)
 				else
 					@emit "Selected",nil
 				@hide!
