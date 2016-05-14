@@ -3,7 +3,6 @@ local CCDirector = require("CCDirector")
 local CCLayer = require("CCLayer")
 local CCSize = require("CCSize")
 local CCMenu = require("CCMenu")
-local oEditor = require("oEditor")
 local CCLabelTTF = require("CCLabelTTF")
 local ccColor3 = require("ccColor3")
 local oVec2 = require("oVec2")
@@ -19,6 +18,7 @@ local ccColor4 = require("ccColor4")
 local oButton = require("oButton")
 
 local function oVertexControl()
+	local oEditor = require("oEditor")
 	local winSize = CCDirector.winSize
 	local vertSize = 40
 	local halfSize = vertSize*0.5
@@ -27,7 +27,7 @@ local function oVertexControl()
 	local vertexToAdd = false
 	local vertexToDel = false
 	local addButton = nil
-	local removeButton = nil
+	local removeButton
 	local lastCreateVertex = nil
 
 	local layer = CCLayer()
@@ -66,7 +66,7 @@ local function oVertexControl()
 			end)
 		end))
 	end)
-	
+
 	local function removeVertex()
 		if selectedVert then
 			local index = selectedVert.index
@@ -169,7 +169,7 @@ local function oVertexControl()
 			menu:addChild(item)
 		end
 	end
-	
+
 	local function addVertex(v)
 		local item = oVertex(v,#(menu.items)+1)
 		table.insert(menu.items,item)
@@ -237,13 +237,13 @@ local function oVertexControl()
 	mask.swallowTouches = true
 	mask:slot("TouchBegan",function() return selectedVert ~= nil end)
 	layer:addChild(mask)
-	
+
 	local editMenu = CCMenu()
 	editMenu.anchor = oVec2.zero
 	editMenu.touchPriority = oEditor.touchPriorityEditControl-1
 	editMenu.touchEnabled = false
 	layer:addChild(editMenu)
-	removeButton = oButton("-",20,50,50,winSize.width-465,winSize.height-35,function(button)	
+	removeButton = oButton("-",20,50,50,winSize.width-465,winSize.height-35,function(button)
 		vertexToDel = not vertexToDel
 		button.color = vertexToDel and ccColor3(0xff0080) or ccColor3(0x00ffff)
 		if vertexToAdd then
@@ -261,7 +261,7 @@ local function oVertexControl()
 		end
 	end)
 	editMenu:addChild(addButton)
-	
+
 	layer.show = function(self,vs,pos,angle,callback)
 		layer.touchEnabled = true
 		mask.touchEnabled = true

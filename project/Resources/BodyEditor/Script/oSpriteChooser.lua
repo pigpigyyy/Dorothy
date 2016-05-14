@@ -8,7 +8,6 @@ local ccColor4 = require("ccColor4")
 local CCMenu = require("CCMenu")
 local oButton = require("oButton")
 local oContent = require("oContent")
-local oEditor = require("oEditor")
 local oRoutine = require("oRoutine")
 local once = require("once")
 local oCache = require("oCache")
@@ -19,6 +18,7 @@ local thread = require("thread")
 local sleep = require("sleep")
 
 local function oSpriteChooser()
+	local oEditor = require("oEditor")
 	local winSize = CCDirector.winSize
 	local itemWidth = 100
 	local itemHeight = 100
@@ -64,10 +64,10 @@ local function oSpriteChooser()
 	btnBk.position = oVec2(30,30)
 	cancelButton:addChild(btnBk,-1)
 	opMenu:addChild(cancelButton)
-	
+
 	panel.sprites = {}
 	panel.init = function(self)
-		local y = 0
+		local y
 		local n = 0
 		local files = oContent:getEntries(oEditor.input,false)
 		local orderedFiles = {}
@@ -93,16 +93,18 @@ local function oSpriteChooser()
 		local routine
 		n = n + 1
 		y = borderSize.height-10-itemHeight*0.5-math.floor((n-1)/itemNum)*(itemHeight+10)
-		local button = oButton("Empty",16,100,100,
-			itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
-			function()
-				oRoutine:remove(routine)
-				cancelButton.enabled = false
-				panel:hide()
-				panel:fadeSprites()
-				panel:emit("Selected","")
-			end)
-		menu:addChild(button)
+		do
+			local button = oButton("Empty",16,100,100,
+				itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10),y,
+				function()
+					oRoutine:remove(routine)
+					cancelButton.enabled = false
+					panel:hide()
+					panel:fadeSprites()
+					panel:emit("Selected","")
+				end)
+			menu:addChild(button)
+		end
 		routine = oRoutine(once(function()
 			oCache:loadAsync(orderedFiles,function(filename)
 				if not panel.sprites then return end
@@ -127,8 +129,7 @@ local function oSpriteChooser()
 									panel:emit("Selected",clipStr)
 								end)
 							button.anchor = oVec2(0,1)
-							local sprite = nil
-							sprite = CCSprite(clipStr)
+							local sprite = CCSprite(clipStr)
 							local contentSize = sprite.contentSize
 							if contentSize.width > 100 or contentSize.height > 100 then
 								local scale = contentSize.width > contentSize.height and (100-2)/contentSize.width or (100-2)/contentSize.height
@@ -161,8 +162,7 @@ local function oSpriteChooser()
 									panel:hide()
 									panel:emit("Selected",filename)
 								end)
-							local sprite = nil
-							sprite = CCSprite(filename)
+							local sprite = CCSprite(filename)
 							local contentSize = sprite.contentSize
 							if contentSize.width > 100 or contentSize.height > 100 then
 								local scale = contentSize.width > contentSize.height and (100-2)/contentSize.width or (100-2)/contentSize.height

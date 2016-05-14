@@ -8,6 +8,7 @@ local oContent = require("oContent")
 local oVec2 = require("oVec2")
 local classfield = require("classfield")
 local CCNode = require("CCNode")
+local oCon = require("oCon")
 
 local TriggerScope = Class {
 	__init = function(self,globalScope,triggerPath)
@@ -134,6 +135,8 @@ return Class {
 		end)
 		self._gameNode = gameNode
 
+		self._notPass = oCon(function() return false end)
+
 		self.__class.weakRef._instance = self
 	end,
 
@@ -204,7 +207,7 @@ return Class {
 	end,
 
 	getCondition = function(self,name)
-		return self._conditionCenter:get(name)
+		return self._conditionCenter:get(name) or self._notPass
 	end,
 
 	stopAllTriggers = function(self)

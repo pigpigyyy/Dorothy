@@ -6,7 +6,6 @@ local CCDrawNode = require("CCDrawNode")
 local oVec2 = require("oVec2")
 local ccColor4 = require("ccColor4")
 local oContent = require("oContent")
-local oEditor = require("oEditor")
 local CCLabelTTF = require("CCLabelTTF")
 local ccColor3 = require("ccColor3")
 local oOpacity = require("oOpacity")
@@ -21,6 +20,7 @@ local emit = require("emit")
 local sleep = require("sleep")
 
 local function oFileChooser()
+	local oEditor = require("oEditor")
 	local winSize = CCDirector.winSize
 	local itemWidth = 120
 	local itemNum = 3
@@ -64,7 +64,7 @@ local function oFileChooser()
 	end
 	getResources("")
 	local n = 0
-	local y = 0
+	local y
 	local xStart = 0 -- left
 	local yStart = borderSize.height -- top
 
@@ -244,10 +244,10 @@ local function oFileChooser()
 				end
 			end)
 		backButton.anchor = oVec2.zero
-		local btnBk = CCDrawNode()
-		btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
-		btnBk.position = oVec2(30,30)
-		backButton:addChild(btnBk,-1)
+		local drawBk = CCDrawNode()
+		drawBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
+		drawBk.position = oVec2(30,30)
+		backButton:addChild(drawBk,-1)
 		opMenu:addChild(backButton)
 	end
 

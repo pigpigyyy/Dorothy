@@ -1,7 +1,6 @@
 local require = using("BodyEditor.Script")
 local CCDirector = require("CCDirector")
 local oVec2 = require("oVec2")
-local oEditor = require("oEditor")
 local CCLayerColor = require("CCLayerColor")
 local ccColor4 = require("ccColor4")
 local oLine = require("oLine")
@@ -19,6 +18,7 @@ local CCSequence = require("CCSequence")
 local CCHide = require("CCHide")
 
 local function oEditRuler()
+	local oEditor = require("oEditor")
 	local winSize = CCDirector.winSize
 	local center = oVec2(winSize.width*0.5,100)
 	local width = 60
@@ -77,10 +77,10 @@ local function oEditRuler()
 	local len = nil
 	local function setupLabels()
 		local posY = intervalNode.anchor.y*height
-		local center = math.floor(posY/100)
-		len = math.floor((posY+height+50)/100)-center
-		len = math.max(center-math.ceil((posY-height-50)/100),len)
-		local left,right = center-len,center+len
+		local centerY = math.floor(posY/100)
+		len = math.floor((posY+height+50)/100)-centerY
+		len = math.max(centerY-math.ceil((posY-height-50)/100),len)
+		local left,right = centerY-len,centerY+len
 		for i = left,right do
 			local pos = i*100
 			local label = CCLabelTTF(tostring(pos/100*indent),"Arial",10)
@@ -108,8 +108,8 @@ local function oEditRuler()
 
 	local function updateLabels()
 		local posY = intervalNode.anchor.y*height
-		local center = math.floor(posY/100)
-		local left,right = center-len,center+len
+		local centerY = math.floor(posY/100)
+		local left,right = centerY-len,centerY+len
 		local insertPos = 1
 		for i = left,right do
 			local pos = i*100
@@ -138,20 +138,20 @@ local function oEditRuler()
 			if up < top then
 				local target = top
 				for i = up,target do
-					local posY = i*interval
-					table.insert(vs,1,oVec2(-halfW,posY))
-					table.insert(vs,1,oVec2(-halfW+(i%10 == 0 and 16 or 8),posY))
-					table.insert(vs,1,oVec2(-halfW,posY))
+					local y = i*interval
+					table.insert(vs,1,oVec2(-halfW,y))
+					table.insert(vs,1,oVec2(-halfW+(i%10 == 0 and 16 or 8),y))
+					table.insert(vs,1,oVec2(-halfW,y))
 				end
 				up = target+1
 			end
 			if down < bottom then
 				local target = bottom
 				for i = down,target do
-					local posY = -i*interval
-					table.insert(vs,oVec2(-halfW,posY))
-					table.insert(vs,oVec2(-halfW+(i%10 == 0 and 16 or 8),posY))
-					table.insert(vs,oVec2(-halfW,posY))
+					local y = -i*interval
+					table.insert(vs,oVec2(-halfW,y))
+					table.insert(vs,oVec2(-halfW+(i%10 == 0 and 16 or 8),y))
+					table.insert(vs,oVec2(-halfW,y))
 				end
 				down = target+1
 			end
@@ -360,9 +360,9 @@ local function oEditRuler()
 	ruler:slot("TouchEnded",touchEnded)
 	ruler:slot("TouchCancelled",touchEnded)
 
-	ruler.show = function(self,default,min,max,indent,callback)
+	ruler.show = function(self,default,min,max,ind,callback)
 		self:setLimit(min,max)
-		self:setIndent(indent)
+		self:setIndent(ind)
 		self:setValue(default)
 		self.changed = callback
 		self.visible = true

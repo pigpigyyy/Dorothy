@@ -2,7 +2,6 @@ local require = using("BodyEditor.Script")
 local CCDirector = require("CCDirector")
 local CCSize = require("CCSize")
 local oSelectionPanel = require("oSelectionPanel")
-local oEditor = require("oEditor")
 local CCDrawNode = require("CCDrawNode")
 local oVec2 = require("oVec2")
 local ccColor4 = require("ccColor4")
@@ -17,6 +16,7 @@ local oPos = require("oPos")
 local oEase = require("oEase")
 
 local function oSettingPanel()
+	local oEditor = require("oEditor")
 	local winSize = CCDirector.winSize
 	local borderSize = CCSize(180,260*(winSize.height-30)/(600-30))
 	local self = oSelectionPanel(borderSize,false,true,true)
@@ -459,7 +459,7 @@ local function oSettingPanel()
 		label.texture.antiAlias = false
 		label.position = oVec2(halfBW,borderSize.height-18)
 		currentGroup = self[groupName]
-		local getPosY = genPosY()
+		getPosY = genPosY()
 		local contentHeight = 40
 		for _,item in ipairs(currentGroup) do
 			item.visible = true

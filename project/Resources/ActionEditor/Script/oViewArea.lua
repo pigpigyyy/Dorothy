@@ -1,5 +1,4 @@
 local require = using("ActionEditor.Script")
-local oEditor = require("oEditor")
 local CCDirector = require("CCDirector")
 local oVec2 = require("oVec2")
 local CCLayerColor = require("CCLayerColor")
@@ -23,6 +22,7 @@ local emit = require("emit")
 local ccColor3 = require("ccColor3")
 
 local function oViewArea()
+	local oEditor = require("oEditor")
 	local oKd = oEditor.oKd
 	local oSd = oEditor.oSd
 	local winSize = CCDirector.winSize

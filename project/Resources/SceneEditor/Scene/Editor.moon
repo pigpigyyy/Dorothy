@@ -382,6 +382,8 @@ Class EditorView,
 						emit "Scene.ModelUpdated",model
 					(\slot "Quit")\set -> @updateModels!
 					(\slot "Activated")\clear!
+				\slot "Cleanup",->
+					package.loaded["ActionEditor.Script.oEditor"] = nil
 			CCScene\add "actionEditor",actionEditor
 			@_actionEditor = actionEditor
 		@_actionEditor
@@ -399,6 +401,8 @@ Class EditorView,
 						emit "Scene.BodyUpdated",body
 					(\slot "Quit")\set -> @updateBodies!
 					(\slot "Activated")\clear!
+				\slot "Cleanup",->
+					package.loaded["BodyEditor.Script.oEditor"] = nil
 			CCScene\add "bodyEditor",bodyEditor
 			@_bodyEditor = bodyEditor
 		@_bodyEditor
@@ -417,6 +421,8 @@ Class EditorView,
 						emit "Scene.EffectUpdated",{effect,effectFile,delete}
 					(\slot "Quit")\set -> @updateEffects!
 					(\slot "Activated")\clear!
+				\slot "Cleanup",->
+					package.loaded["EffectEditor.Script.oEditor"] = nil
 			CCScene\add "effectEditor",effectEditor
 			@_effectEditor = effectEditor
 		@_effectEditor

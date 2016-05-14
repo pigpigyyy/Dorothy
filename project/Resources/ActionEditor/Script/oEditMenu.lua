@@ -1,5 +1,4 @@
 local require = using("ActionEditor.Script")
-local oEditor = require("oEditor")
 local CCDirector = require("CCDirector")
 local CCMenu = require("CCMenu")
 local oVec2 = require("oVec2")
@@ -20,36 +19,37 @@ local CCDelay = require("CCDelay")
 local oOpacity = require("oOpacity")
 local oPos = require("oPos")
 
-local oSd = oEditor.oSd
-local oAd = oEditor.oAd
-local oKd = oEditor.oKd
+local function oEditMenu()
+	local oEditor = require("oEditor")
+	local oSd = oEditor.oSd
+	local oAd = oEditor.oAd
+	local oKd = oEditor.oKd
 
-local function removeAnimation(sp,index)
-	local aDefs = sp[oSd.animationDefs]
-	table.remove(aDefs,index)
-	local children = sp[oSd.children]
-	for i = 1,#children do
-		removeAnimation(children[i],index)
-	end
-end
-
-local function removeLook(sp,index)
-	local looks = sp[oSd.looks]
-	for i = 1,#looks do
-		if looks[i] == index then
-			table.remove(looks,i)
-			break
+	local function removeAnimation(sp,index)
+		local aDefs = sp[oSd.animationDefs]
+		table.remove(aDefs,index)
+		local children = sp[oSd.children]
+		for i = 1,#children do
+			removeAnimation(children[i],index)
 		end
 	end
-	local children = sp[oSd.children]
-	for i = 1,#children do
-		removeLook(children[i],index)
-	end
-end
 
-local function oEditMenu()
-    local winSize = CCDirector.winSize
-    local menu = CCMenu()
+	local function removeLook(sp,index)
+		local looks = sp[oSd.looks]
+		for i = 1,#looks do
+			if looks[i] == index then
+				table.remove(looks,i)
+				break
+			end
+		end
+		local children = sp[oSd.children]
+		for i = 1,#children do
+			removeLook(children[i],index)
+		end
+	end
+
+	local winSize = CCDirector.winSize
+	local menu = CCMenu()
 	menu.anchor = oVec2.zero
 	local frameCopy = nil
 	local items =
@@ -191,7 +191,7 @@ local function oEditMenu()
 					else
 						local duration = pos/60 - oEditor.currentFramePos/60
 						local nextDef = oEditor.animationData[oEditor.keyIndex+1]
-						if nextDef then	
+						if nextDef then
 							nextDef[oKd.duration] = nextDef[oKd.duration]-duration
 						end
 						local frameDef =
@@ -209,7 +209,7 @@ local function oEditMenu()
 							duration
 						}
 						table.insert(oEditor.animationData,oEditor.keyIndex+1,frameDef)
-					end	
+					end
 					oEditor.dirty = true
 					oEditor.viewArea:getModel()
 					oEditor.controlBar:updateCursors()
@@ -314,7 +314,7 @@ local function oEditMenu()
 					else
 						local duration = pos/60 - oEditor.currentFramePos/60
 						local nextDef = oEditor.animationData[oEditor.keyIndex+1]
-						if nextDef then	
+						if nextDef then
 							nextDef[oKd.duration] = nextDef[oKd.duration]-duration
 						end
 						frameCopy[oKd.duration] = duration
@@ -502,7 +502,7 @@ local function oEditMenu()
 				if oEditor.spriteData and  oEditor.spriteData[oSd.parent] then
 					local sp = oEditor.spriteData
 					local parent = oEditor.spriteData[oSd.parent]
-					local index = 
+					local index =
 oEditor.spriteData[oSd.index]
 					local children = parent[oSd.children]
 					if index > 1 then
@@ -556,7 +556,7 @@ oEditor.spriteData[oSd.index]
 					end
 				end
 			end),
-		
+
 		Move = oButton("Move",16,50,50,winSize.width-205,335,
 			function(item)
 				if oEditor.spriteData then

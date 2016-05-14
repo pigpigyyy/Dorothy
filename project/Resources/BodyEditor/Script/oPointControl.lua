@@ -4,15 +4,15 @@ local CCDrawNode = require("CCDrawNode")
 local oVec2 = require("oVec2")
 local ccColor4 = require("ccColor4")
 local oLine = require("oLine")
-local oEditor = require("oEditor")
 local once = require("once")
 local wait = require("wait")
 local seconds = require("seconds")
 
 local function oPointControl()
+	local oEditor = require("oEditor")
 	local control = CCLayer()
 	control.visible = false
-	
+
 	local circle = CCDrawNode()
 	circle:drawDot(oVec2.zero,20,ccColor4(0xff00ffff))
 	circle:addChild(oLine({oVec2(-10,0),oVec2(10,0)},ccColor4()))

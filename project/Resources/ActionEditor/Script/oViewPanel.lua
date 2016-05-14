@@ -1,5 +1,4 @@
 local require = using("ActionEditor.Script")
-local oEditor = require("oEditor")
 local CCDirector = require("CCDirector")
 local CCSize = require("CCSize")
 local oVec2 = require("oVec2")
@@ -25,6 +24,7 @@ local oOpacity = require("oOpacity")
 local oPos = require("oPos")
 
 local function oViewPanel()
+	local oEditor = require("oEditor")
 	local oSd = oEditor.oSd
 	local winSize = CCDirector.winSize
 	local borderSize = CCSize(160,310*(winSize.height-90)/510)
@@ -157,7 +157,7 @@ local function oViewPanel()
 	local function setPos(delta)
 		local newPos = totalDelta+delta
 		if newPos.x > 0 then
-			newPos.x = 0 
+			newPos.x = 0
 		elseif newPos.x-moveX < 0 then
 			newPos.x = moveX
 		end
@@ -190,7 +190,7 @@ local function oViewPanel()
 				newPos.y = moveY+padding
 			end
 			deltaPos = newPos - totalDelta
-			
+
 			local lenY = 0
 			local lenX = 0
 			if newPos.y < 0 then
@@ -249,8 +249,8 @@ local function oViewPanel()
 		borderSelected.position = oVec2(size*0.5,size*0.5)
 		borderSelected.visible = false
 
-		local border = CCDrawNode()
-		border:drawPolygon(
+		local borderDraw = CCDrawNode()
+		borderDraw:drawPolygon(
 		{
 			oVec2(0,0),
 			oVec2(size,0),
@@ -258,7 +258,7 @@ local function oViewPanel()
 			oVec2(0,size)
 		},ccColor4(0x88000000))
 
-		border:addChild(oLine(
+		borderDraw:addChild(oLine(
 		{
 			oVec2(0,0),
 			oVec2(size,0),
@@ -272,7 +272,7 @@ local function oViewPanel()
 		menuItem.contentSize = CCSize(size,size)
 		menuItem.position = oVec2(x, y)
 		menuItem:addChild(borderSelected)
-		menuItem:addChild(border)
+		menuItem:addChild(borderDraw)
 
 		if root then
 			local label = CCLabelTTF("Root","Arial",16)
@@ -316,14 +316,12 @@ local function oViewPanel()
 			menuItem:addChild(flag)
 		end
 
-		local isSelected = false
 		local seqAnim = CCSequence(
 		{
 			oScale(0.15,1.3,1.3,oEase.OutSine),
 			oScale(0.15,1.0,1.0,oEase.InSine)
 		})
 		menuItem.select = function(self,selected)
-			isSelected = selected
 			borderSelected.visible = selected
 			if selected then
 				borderSelected:stopAllActions()
@@ -571,7 +569,7 @@ local function oViewPanel()
 		setPos(oVec2.zero)
 	end
 
-	local function oImageOutline(node, withFrame)
+	local function oImageOutline(target, isWithFrame)
 		local outline = CCNode()
 		local frame = oLine({},ccColor4(0xff00a2d8))
 		outline:addChild(frame)
@@ -608,7 +606,7 @@ local function oViewPanel()
 			self.transformTarget = node
 		end
 
-		outline:setNode(node, withFrame)
+		outline:setNode(target, isWithFrame)
 
 		outline.updateAnchor = function(self, node)
 			anchor.position = oVec2(node.contentSize.width*node.anchor.x, node.contentSize.height*node.anchor.y)
@@ -616,7 +614,7 @@ local function oViewPanel()
 
 		return outline
 	end
-	
+
 	panel.updateItemName = function(self,sp)
 		panel.items[sp]:setName(sp[oSd.name])
 	end
@@ -670,7 +668,7 @@ local function oViewPanel()
 
 				oEditor.sprite = node
 				oEditor.spriteData = sp
-				
+
 				if oEditor.state == oEditor.EDIT_ANIMATION then
 					oEditor.controlBar:updateCursors()
 				end
@@ -720,7 +718,7 @@ local function oViewPanel()
 				outline:setNode(node,withFrame)
 			end
 			outline.visible = true
-			
+
 			oEditor.sprite = node
 			oEditor.spriteData = sp
 		end
@@ -731,13 +729,13 @@ local function oViewPanel()
 			outline.visible = show
 		end
 	end
-	
+
 	panel.isOutlineVisible = function(self)
 		if outline then
 			return outline.visible
 		else
 			return false
-		end 
+		end
 	end
 
 	panel.updateAnchor = function(self,node)

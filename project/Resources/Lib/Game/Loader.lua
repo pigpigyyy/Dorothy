@@ -296,7 +296,7 @@ local GameItems = {
 		effect = 3, position = 4,
 		play = 5, visible = 6,
 		display = 7, align = 8,
-		create = function(self, parent, items)
+		create = function(self, parent, _, items)
 			local effect = oEffect(self.effect)
 			effect.visible = self.visible
 			effect:attachTo(parent)

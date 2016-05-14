@@ -1,5 +1,4 @@
 local require = using("ActionEditor.Script")
-local oEditor = require("oEditor")
 local CCDirector = require("CCDirector")
 local CCSize = require("CCSize")
 local oSelectionPanel = require("oSelectionPanel")
@@ -14,6 +13,7 @@ local CCSequence = require("CCSequence")
 local CCDelay = require("CCDelay")
 
 local function oLookChooser()
+	local oEditor = require("oEditor")
 	local oSd = oEditor.oSd
 	local winSize = CCDirector.winSize
 	local itemWidth = 120
@@ -74,7 +74,7 @@ local function oLookChooser()
 		for k,_ in pairs(lNames) do
 			local name = #k > 10 and k:sub(1,7).."..." or k
 			y = yStart-45-math.floor(i/itemNum)*60
-			local button = oButton(name,17,
+			button = oButton(name,17,
 				itemWidth,50,
 				xStart+itemWidth*0.5+10+(i%itemNum)*(itemWidth+10),
 				y,
@@ -94,7 +94,7 @@ local function oLookChooser()
 				}))
 			i = i+1
 		end
-		yStart = y-25
+		-- yStart = y-25
 
 		local yTo = winSize.height*0.5+halfBH-y+60
 		local viewHeight = yTo < borderSize.height and borderSize.height or yTo
@@ -103,7 +103,7 @@ local function oLookChooser()
 		local paddingY = 100
 		panel:reset(viewWidth,viewHeight,paddingX,paddingY)
 	end
-	
+
 	panel:show()
 	oEditor:addChild(panel)
 	return panel

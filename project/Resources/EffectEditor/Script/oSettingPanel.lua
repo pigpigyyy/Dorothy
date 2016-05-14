@@ -2,7 +2,6 @@ local require = using("EffectEditor.Script")
 local CCDirector = require("CCDirector")
 local CCSize = require("CCSize")
 local oSelectionPanel = require("oSelectionPanel")
-local oEditor = require("oEditor")
 local CCDrawNode = require("CCDrawNode")
 local oVec2 = require("oVec2")
 local CCLabelTTF = require("CCLabelTTF")
@@ -22,6 +21,7 @@ local wait = require("wait")
 local seconds = require("seconds")
 
 local function oSettingPanel()
+	local oEditor = require("oEditor")
 	local winSize = CCDirector.winSize
 	local borderSize = CCSize(240,winSize.height-20)
 	local self = oSelectionPanel(borderSize,false,true,true)
@@ -377,7 +377,7 @@ local function oSettingPanel()
 		label.visible = true
 		label.positionY = borderSize.height - 18
 		local contentHeight = 40
-		local getPosY = genPosY()
+		getPosY = genPosY()
 		for _,item in pairs(group) do
 			item.positionX = 0
 			item.positionY = getPosY()

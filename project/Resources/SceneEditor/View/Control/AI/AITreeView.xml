@@ -6,7 +6,6 @@
 
 	<Item Name="view">
 		<Menu Name="treeMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.levelTriggerExpr-1 }" Ref="True"/>
-
 		<Menu Name="editMenu" X="{ $R-65 }" Y="{ $T-70 }" AnchorX="0" AnchorY="1" Width="70" Height="430" AlignItems="10" TouchPriority="{ editor.levelTriggerExpr-2 }" Visible="False" Ref="True">
 			<Button Name="editBtn" Text="Edit" Width="50" Height="50" FontSize="16" BackColor="0xca000000" Ref="True"/>
 			<Button Name="addBtn" Text="Add" Width="50" Height="50" BackColor="0xca000000" FontSize="16" Ref="True"/>

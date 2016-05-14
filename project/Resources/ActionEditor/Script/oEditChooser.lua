@@ -1,5 +1,4 @@
 local require = using("ActionEditor.Script")
-local oEditor = require("oEditor")
 local CCDirector = require("CCDirector")
 local CCSize = require("CCSize")
 local oSelectionPanel = require("oSelectionPanel")
@@ -19,6 +18,7 @@ local oBox = require("oBox")
 local oFileChooser = require("oFileChooser")
 
 local function oEditChooser(withCancel)
+	local oEditor = require("oEditor")
 	local oSd = oEditor.oSd
 	local winSize = CCDirector.winSize
 	local itemWidth = 120
@@ -101,7 +101,7 @@ local function oEditChooser(withCancel)
 		title.opacity = 0
 		title:runAction(oOpacity(0.3,1))
 		yStart = y-title.contentSize.height
-		
+
 		local function addNewAnimation(sp,index)
 			local aDefs = sp[oSd.animationDefs]
 			for i = 1,index do
@@ -183,7 +183,7 @@ local function oEditChooser(withCancel)
 						panel:hide()
 						oEditor.animation = text
 						oEditor.editMenu:toAnimation()
-					end,true)	
+					end,true)
 			end)
 		newButton.color = ccColor3(0xffcc88)
 		menu:addChild(newButton)
@@ -288,7 +288,7 @@ local function oEditChooser(withCancel)
 				oOpacity(0.3,1)
 			}))
 		yStart = y-45
-	
+
 		if oEditor.state ~= oEditor.EDIT_SPRITE then
 			title = CCLabelTTF("Edit  Sprite","Arial",24)
 			title.texture.antiAlias = false
@@ -361,7 +361,7 @@ local function oEditChooser(withCancel)
 				CCDelay((i%itemNum)*0.05),
 				oOpacity(0.3,1)
 			}))
-		yStart = y-45
+		-- yStart = y-45
 
 		local yTo = winSize.height*0.5+halfBH-y+60
 		local viewHeight = yTo < borderSize.height and borderSize.height or yTo

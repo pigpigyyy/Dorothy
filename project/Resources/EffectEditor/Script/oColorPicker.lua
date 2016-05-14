@@ -1,7 +1,6 @@
 local require = using("EffectEditor.Script")
 local ccColor4 = require("ccColor4")
 local oNode3D = require("oNode3D")
-local oEditor = require("oEditor")
 local CCLayerColor = require("CCLayerColor")
 local oLine = require("oLine")
 local oVec2 = require("oVec2")
@@ -17,6 +16,7 @@ local cycle = require("cycle")
 local oEase = require("oEase")
 
 local function oColorPicker(color,callback)
+	local oEditor = require("oEditor")
 	color = color or ccColor4()
 	local changed = callback
 	local panelSize = 270
@@ -334,10 +334,10 @@ local function oColorPicker(color,callback)
 		end))
 	end
 
-	panel.show = function(self,color,callback)
+	panel.show = function(self,col,callb)
 		self.visible = true
-		self:setColor(color)
-		changed = callback
+		self:setColor(col)
+		changed = callb
 		self:schedule(once(function()
 			self.angleX = -90
 			cycle(0.3,function(progress)

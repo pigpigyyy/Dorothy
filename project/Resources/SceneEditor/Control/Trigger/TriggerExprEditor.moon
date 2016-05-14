@@ -201,7 +201,7 @@ Class ExprEditorView,
 						.actionExpr = expr[6]
 					for i = 2,#expr[6]
 						nextExpr expr[6],i,indent+1
-					with @createExprItem mode("end)","End."),indent,expr,parentExpr,index
+					with @createExprItem mode("end )","End."),indent,expr,parentExpr,index
 						.itemType = "End"
 				when "SetLocal"
 					assignExpr = expr[2]

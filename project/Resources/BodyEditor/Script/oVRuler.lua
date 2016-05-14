@@ -3,7 +3,6 @@ local CCDirector = require("CCDirector")
 local oVec2 = require("oVec2")
 local CCLayerColor = require("CCLayerColor")
 local ccColor4 = require("ccColor4")
-local oEditor = require("oEditor")
 local oLine = require("oLine")
 local CCLabelTTF = require("CCLabelTTF")
 local oPos = require("oPos")
@@ -18,6 +17,7 @@ local oScale = require("oScale")
 local CCRect = require("CCRect")
 
 local function oVRuler()
+	local oEditor = require("oEditor")
 	local winSize = CCDirector.winSize
 	local winWidth = winSize.width
 	local center = oVec2(winSize.width*0.5,winSize.height*0.5)

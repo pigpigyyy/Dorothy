@@ -11,7 +11,6 @@ local CCSize = require("CCSize")
 local CCLabelTTF = require("CCLabelTTF")
 local oScale = require("oScale")
 local oEase = require("oEase")
-local oEditor = require("oEditor")
 local CCSpawn = require("CCSpawn")
 local oPos = require("oPos")
 local oOpacity = require("oOpacity")
@@ -20,6 +19,7 @@ local CCSequence = require("CCSequence")
 local CCHide = require("CCHide")
 
 local function oEditRuler()
+	local oEditor = require("oEditor")
 	local winSize = CCDirector.winSize
 	local width = 60
 	local height = winSize.width-270
@@ -142,20 +142,20 @@ local function oEditRuler()
 			if up < top then
 				local target = top
 				for i = up,target do
-					local posY = i*interval
-					table.insert(vs,1,oVec2(-halfW,posY))
-					table.insert(vs,1,oVec2(-halfW+(i%10 == 0 and 16 or 8),posY))
-					table.insert(vs,1,oVec2(-halfW,posY))
+					local y = i*interval
+					table.insert(vs,1,oVec2(-halfW,y))
+					table.insert(vs,1,oVec2(-halfW+(i%10 == 0 and 16 or 8),y))
+					table.insert(vs,1,oVec2(-halfW,y))
 				end
 				up = target+1
 			end
 			if down < bottom then
 				local target = bottom
 				for i = down,target do
-					local posY = -i*interval
-					table.insert(vs,oVec2(-halfW,posY))
-					table.insert(vs,oVec2(-halfW+(i%10 == 0 and 16 or 8),posY))
-					table.insert(vs,oVec2(-halfW,posY))
+					local y = -i*interval
+					table.insert(vs,oVec2(-halfW,y))
+					table.insert(vs,oVec2(-halfW+(i%10 == 0 and 16 or 8),y))
+					table.insert(vs,oVec2(-halfW,y))
 				end
 				down = target+1
 			end
@@ -361,8 +361,8 @@ local function oEditRuler()
 	ruler:slot("TouchCancelled",touchEnded)
 
 	local isUsedForFrame = false
-	ruler.showForFrame = function(self,default,min,max,indent,callback)
-		self:setIndent(indent)
+	ruler.showForFrame = function(self,default,min,max,ind,callback)
+		self:setIndent(ind)
 		self:setLimit(min,max)
 		self:setValue(default)
 		self.changed = callback

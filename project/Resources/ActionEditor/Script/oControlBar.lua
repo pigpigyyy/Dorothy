@@ -1,6 +1,5 @@
 local require = using("ActionEditor.Script")
 local CCDirector = require("CCDirector")
-local oEditor = require("oEditor")
 local CCLayer = require("CCLayer")
 local oVec2 = require("oVec2")
 local CCSize = require("CCSize")
@@ -15,12 +14,13 @@ local oPos = require("oPos")
 local oEase = require("oEase")
 
 local function oControlBar()
-    local winSize = CCDirector.winSize
+	local oEditor = require("oEditor")
+	local winSize = CCDirector.winSize
 	local barDragPos = 50
 	local oSd = oEditor.oSd
 	local oAd = oEditor.oAd
 	local oKd = oEditor.oKd
-	
+
 	-- controlBar
 	local controlBar = CCLayer()
 	controlBar.anchor = oVec2.zero
@@ -131,6 +131,7 @@ local function oControlBar()
 				end
 			elseif animationDef[oAd.type] == 2 then
 				--TODO Frame animation
+				return
 			end
 		elseif oEditor.spriteData and oEditor.spriteData[oSd.parent] then
 			oEditor.controlBar:clearCursors()
@@ -259,7 +260,7 @@ local function oControlBar()
 		if locLength > barLength then locLength = barLength end
 		return true
 	end
-	
+
 	controlBar:slot("TouchBegan",function(touch)
 		if not isTouchValid(touch) then return false end
 		local loc = controlBar:convertToNodeSpace(touch.location)
@@ -351,13 +352,13 @@ local function oControlBar()
 	controlBar.getPos = function(self)
 		return bar:getPos()
 	end
-	
+
 	-- time: model animation`s played time
 	controlBar.setTime = function(self,time)
 		local pos = time*60
 		controlBar:setPos(pos)
 	end
-	
+
 	controlBar.getTime = function(self)
 		return bar:getPos()/60
 	end

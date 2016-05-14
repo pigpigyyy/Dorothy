@@ -1,5 +1,4 @@
 local require = using("ActionEditor.Script")
-local oEditor = require("oEditor")
 local CCDirector = require("CCDirector")
 local CCSize = require("CCSize")
 local oSelectionPanel = require("oSelectionPanel")
@@ -29,7 +28,8 @@ local CCCall = require("CCCall")
 
 local models = nil
 
-local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
+local function oFileChooser(withCancel,clipOnly,targetModelFile,groupOnly)
+	local oEditor = require("oEditor")
 	local winSize = CCDirector.winSize
 	local itemWidth = 120
 	local itemNum = 3
@@ -353,11 +353,11 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 		end
 
 		local n = 0
-		local y = 0
+		local y
 		local xStart = winSize.width*0.5-halfBW -- left
 		local yStart = winSize.height*0.5+halfBH -- top
 
-		local titleText = ""
+		local titleText
 		if groupOnly then
 			titleText = "Choose Image Group"
 		elseif clipOnly then
@@ -386,7 +386,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 			function(item)
 				local file = item.file
 				if file:sub(-5,-1) == ".clip" then
-					editButton.editTarget = modelFile or file:sub(1,-6)
+					editButton.editTarget = targetModelFile or file:sub(1,-6)
 					editButton.clipFile = file
 					addClip(file)
 					if cancelButton then cancelButton.positionX = 70 end
@@ -401,7 +401,7 @@ local function oFileChooser(withCancel,clipOnly,modelFile,groupOnly)
 						editButton.clipFile = clipFile:sub(#oEditor.output+1,-1)
 						editButton.clipName = clipFile:match("([^\\/]*)%.[^%.\\/]*$")
 					else
-						editButton.editTarget = modelFile or file
+						editButton.editTarget = targetModelFile or file
 						editButton.clipFile = file..".clip"
 						editButton.clipName = file
 					end

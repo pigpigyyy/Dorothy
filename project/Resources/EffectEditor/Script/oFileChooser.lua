@@ -7,7 +7,6 @@ local oVec2 = require("oVec2")
 local ccColor4 = require("ccColor4")
 local CCMenu = require("CCMenu")
 local oButton = require("oButton")
-local oEditor = require("oEditor")
 local CCLabelTTF = require("CCLabelTTF")
 local ccColor3 = require("ccColor3")
 local oOpacity = require("oOpacity")
@@ -22,6 +21,7 @@ local once = require("once")
 local sleep = require("sleep")
 
 local function oFileChooser(addExisted,newEffectName)
+	local oEditor = require("oEditor")
 	local winSize = CCDirector.winSize
 	local itemWidth = 120
 	local itemNum = 3
@@ -386,7 +386,7 @@ local function oFileChooser(addExisted,newEffectName)
 				end
 			end)
 		backButton.anchor = oVec2.zero
-		local btnBk = CCDrawNode()
+		btnBk = CCDrawNode()
 		btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
 		btnBk.position = oVec2(30,30)
 		backButton:addChild(btnBk,-1)

@@ -2,7 +2,6 @@ local require = using("BodyEditor.Script")
 local CCDirector = require("CCDirector")
 local CCSize = require("CCSize")
 local oSelectionPanel = require("oSelectionPanel")
-local oEditor = require("oEditor")
 local CCDrawNode = require("CCDrawNode")
 local oVec2 = require("oVec2")
 local ccColor4 = require("ccColor4")
@@ -16,6 +15,7 @@ local oPos = require("oPos")
 local oEase = require("oEase")
 
 local function oViewPanel()
+	local oEditor = require("oEditor")
 	local winSize = CCDirector.winSize
 	local borderSize = CCSize(180,310*(winSize.height-30)/(600-30))
 	local self = oSelectionPanel(borderSize,false,true)
@@ -98,7 +98,7 @@ local function oViewPanel()
 					crossA.position = data:get("Center")
 				else
 					worldNode.position = data:get("Position")
-					worldNode.angle = data:has("Angle") and data:get("Angle") or 0	
+					worldNode.angle = data:has("Angle") and data:get("Angle") or 0
 				end
 				local pos = worldNode:convertToWorldSpace(data:get("Center"))
 				pos = oEditor.world:convertToNodeSpace(pos)
@@ -203,11 +203,11 @@ local function oViewPanel()
 			local subShapeIndex = oEditor[data[1]].SubShapes
 			if subShapeIndex and data[subShapeIndex] then
 				for index,subShape in ipairs(data[subShapeIndex]) do
-					local item = oViewItem(subShape[1],index,90,getPosY(),selectCallback)
-					item.anchor = oVec2(0.5,1)
-					item.dataItem = subShape
-					item.parentData = data
-					table.insert(items,item)
+					local viewItem = oViewItem(subShape[1],index,90,getPosY(),selectCallback)
+					viewItem.anchor = oVec2(0.5,1)
+					viewItem.dataItem = subShape
+					viewItem.parentData = data
+					table.insert(items,viewItem)
 				end
 			end
 		end

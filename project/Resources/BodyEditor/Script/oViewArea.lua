@@ -1,6 +1,5 @@
 local require = using("BodyEditor.Script")
 local CCDirector = require("CCDirector")
-local oEditor = require("oEditor")
 local CCLayerColor = require("CCLayerColor")
 local ccColor4 = require("ccColor4")
 local oVec2 = require("oVec2")
@@ -23,6 +22,7 @@ events:
 --]]
 
 local function oViewArea()
+	local oEditor = require("oEditor")
 	local winSize = CCDirector.winSize
 	local origin = oEditor.origin
 

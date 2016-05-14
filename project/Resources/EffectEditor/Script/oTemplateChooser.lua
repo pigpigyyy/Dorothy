@@ -11,7 +11,6 @@ local CCLabelTTF = require("CCLabelTTF")
 local ccColor3 = require("ccColor3")
 local oOpacity = require("oOpacity")
 local emit = require("emit")
-local oEditor = require("oEditor")
 local oContent = require("oContent")
 local CCDictionary = require("CCDictionary")
 local oCache = require("oCache")
@@ -262,6 +261,7 @@ local templates =
 }
 
 local function oTemplateChooser(filename)
+	local oEditor = require("oEditor")
 	local winSize = CCDirector.winSize
 	local itemWidth = 120
 	local itemNum = 3
@@ -342,9 +342,9 @@ local function oTemplateChooser(filename)
 	for i = 1,#templateNames do
 		n = n+1
 		y = yStart-35-math.floor((n-1)/itemNum)*60
-		local name = templateNames[i]
+		local itemName = templateNames[i]
 		local button = oButton(
-			name,
+			itemName,
 			17,
 			itemWidth,50,
 			xStart+itemWidth*0.5+10+((n-1)%itemNum)*(itemWidth+10), y,
@@ -364,14 +364,14 @@ local function oTemplateChooser(filename)
 				local dataWrapper = {}
 				setmetatable(dataWrapper,
 				{
-					__newindex = function(_,name,value)
+					__newindex = function(_,key,value)
 						if not oEditor.dirty then
-							oEditor.dirty = rawget(parData,name) ~= value
+							oEditor.dirty = rawget(parData,key) ~= value
 						end
 						rawset(parData,name,value)
 					end,
-					__index = function(_,name)
-						return rawget(parData,name)
+					__index = function(_,key)
+						return rawget(parData,key)
 					end,
 					__call = function(_)
 						return parData
@@ -394,7 +394,7 @@ local function oTemplateChooser(filename)
 				emit("Effect.viewArea.changeEffect",name)
 				oEditor:emit("Edited",oEditor.currentName,oEditor.prefix..oEditor.currentFile)
 			end)
-		button.template = name
+		button.template = itemName
 		button.enabled = false
 		button.opacity = 0
 		button:runAction(

@@ -1,5 +1,4 @@
 local require = using("ActionEditor.Script")
-local oEditor = require("oEditor")
 local CCDirector = require("CCDirector")
 local CCSize = require("CCSize")
 local oSelectionPanel = require("oSelectionPanel")
@@ -18,6 +17,7 @@ local oOpacity = require("oOpacity")
 local CCNode = require("CCNode")
 
 local function oSpriteChooser()
+	local oEditor = require("oEditor")
 	local oSd = oEditor.oSd
 	local winSize = CCDirector.winSize
 	local itemWidth = 100
@@ -84,7 +84,7 @@ local function oSpriteChooser()
 				end)
 			button.anchor = oVec2(0,1)
 			local clipStr = clipFile.."|"..names[i]
-			local sprite = nil
+			local sprite
 			if names[i] ~= "" then
 				sprite = CCSprite(clipStr)
 				local contentSize = sprite.contentSize

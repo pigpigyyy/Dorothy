@@ -482,9 +482,8 @@ ExprChooser = Class
 					editActionNode!
 				when "VariableName"
 					editVarName!
-				else
-					if @curExpr.Item
-						chooseItemFromScene @curExpr[1]\sub 1,-5 -- "TypeName"\sub(1,-5) == "Type"
+				when "ModelName","BodyName","LayerName","SensorName"
+					chooseItemFromScene @curExpr[1]\sub 1,-5 -- "TypeName"\sub(1,-5) == "Type"
 
 		selectExpr = (button)->
 			@curExprBtn.checked = false if @curExprBtn and @curExprBtn ~= button

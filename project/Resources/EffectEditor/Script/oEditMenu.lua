@@ -1,7 +1,6 @@
 local require = using("EffectEditor.Script")
 local CCDirector = require("CCDirector")
 local CCMenu = require("CCMenu")
-local oEditor = require("oEditor")
 local oVec2 = require("oVec2")
 local oButton = require("oButton")
 local oFileChooser = require("oFileChooser")
@@ -16,6 +15,7 @@ local CCShow = require("CCShow")
 local CCHide = require("CCHide")
 
 local function oEditMenu()
+	local oEditor = require("oEditor")
 	local winSize = CCDirector.winSize
 
 	local menu = CCMenu()

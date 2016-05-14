@@ -1,5 +1,4 @@
 local require = using("ActionEditor.Script")
-local oEditor = require("oEditor")
 local CCDirector = require("CCDirector")
 local CCSize = require("CCSize")
 local oVec2 = require("oVec2")
@@ -21,6 +20,7 @@ local oOpacity = require("oOpacity")
 local oPos = require("oPos")
 
 local function oSettingPanel()
+	local oEditor = require("oEditor")
 	local oSd = oEditor.oSd
 	local oKd = oEditor.oKd
 	local winSize = CCDirector.winSize
@@ -55,15 +55,15 @@ local function oSettingPanel()
 	panel.touchEnabled = true
 	panel.position = oVec2(winSize.width-170,70)
 
-	local border = CCDrawNode()
-	border:drawPolygon(
+	local background = CCDrawNode()
+	background:drawPolygon(
 	{
 		oVec2.zero,
 		oVec2(borderSize.width,0),
 		oVec2(borderSize.width,borderSize.height),
 		oVec2(0,borderSize.height)
 	},ccColor4(0x88100000))
-	border:addChild(
+	background:addChild(
 		oLine(
 		{
 			oVec2.zero,
@@ -72,7 +72,7 @@ local function oSettingPanel()
 			oVec2(0,borderSize.height),
 			oVec2.zero
 		},ccColor4(0xffffafaf)))
-	panel:addChild(border)
+	panel:addChild(background)
 
 	local stencil = CCDrawNode()
 	stencil:drawPolygon(
@@ -145,7 +145,7 @@ local function oSettingPanel()
 
 	local function setOffset(deltaPos, touching)
 		local newPos = totalDelta + deltaPos
-		
+
 		if touching then
 			if newPos.x > 0 then
 				newPos.x = 0
@@ -158,7 +158,7 @@ local function oSettingPanel()
 				newPos.y = moveY+padding
 			end
 			deltaPos = newPos - totalDelta
-			
+
 			local lenY = 0
 			if newPos.y < 0 then
 				lenY = -newPos.y/padding
@@ -182,7 +182,7 @@ local function oSettingPanel()
 			end
 			deltaPos = newPos - totalDelta
 		end
-		
+
 		if viewWidth < borderSize.width then deltaPos.x = 0 end
 		if viewHeight < borderSize.height then deltaPos.y = 0 end
 
@@ -195,14 +195,14 @@ local function oSettingPanel()
 		end
 	end
 	view:addChild(menu)
-	
+
 	local function oSettingItem(name, x, y, enableFunc, disableFunc)
 		local menuItem = CCMenuItem()
 		menuItem.anchor = oVec2(0,1)
 		menuItem.contentSize = CCSize(160,30)
 		menuItem.position = oVec2(x, y)
 		menuItem.enabled = false
-		
+
 		local label = CCLabelTTF(name,"Arial",14)
 		label.color = ccColor3(0xffffff)
 		label.position = oVec2(40,15)
@@ -332,7 +332,7 @@ local function oSettingPanel()
 	panel:slot("TouchBegan",function(touch)
 		if touch.id ~= 0 or oEditor.isPlaying or not panel.visible then
 			return false
-		end		
+		end
 		if not CCRect(oVec2.zero, panel.contentSize):containsPoint(panel:convertToNodeSpace(touch.location)) then
 			return false
 		end
@@ -374,27 +374,27 @@ local function oSettingPanel()
 		end
 	end
 	local getPosY = genPosY()
-	
+
 	local posItem = nil
 	local posNextItem = nil
 	local posXY = false
-	
+
 	local scaleItem = nil
 	local scaleNextItem = nil
 	local scaleXY = false
-	
+
 	local skewItem = nil
 	local skewNextItem = nil
 	local skewXY = false
-	
+
 	local anchorItem = nil
 	local anchorNextItem = nil
 	local anchorXY = false
-	
+
 	local sizeItem = nil
 	local sizeNextItem = nil
 	local sizeXY = false
-	
+
 	local isEditingName = false
 
 	local skipSelection = false
@@ -881,7 +881,7 @@ local function oSettingPanel()
 			keyItems.KeyPoint:setEnabled(true)
 		end
 	end
-	
+
 	local spriteItems =
 	{
 		keyItems.Name,
@@ -912,8 +912,8 @@ local function oSettingPanel()
 		moveX = borderSize.width-viewWidth
 		setOffset(oVec2.zero)
 	end
-	
-	local animationItems = 
+
+	local animationItems =
 	{
 		keyItems.Time,
 		keyItems.PosX,
@@ -995,7 +995,7 @@ local function oSettingPanel()
 				end
 			end
 		end)
-	
+
 	panel.updateItems = function(self)
 		isShowingRoot = false
 		if oEditor.state ~= oEditor.EDIT_START then
@@ -1007,7 +1007,7 @@ local function oSettingPanel()
 			end
 			panel.positionY = 70
 			local borderH = 200*(winSize.height-90)/510
-			border.scaleY = 1
+			background.scaleY = 1
 			stencil.scaleY = 1
 			borderSize.height = borderH
 			panel.contentSize = borderSize
@@ -1021,7 +1021,7 @@ local function oSettingPanel()
 			panel.positionY = 10
 			local borderH = 200*(winSize.height-90)/510
 			local scale = (borderH+60)/borderH
-			border.scaleY = scale
+			background.scaleY = scale
 			stencil.scaleY = scale
 			borderSize.height = borderH+60
 			panel.contentSize = borderSize
@@ -1046,7 +1046,7 @@ local function oSettingPanel()
 			oEditor.currentFramePos = nil
 			return
 		end
-		
+
 		local frame = oEditor.animationData[index]
 		keyItems.Time:setValue(oEditor.currentFramePos/60)
 		keyItems.PosX:setValue(frame[oKd.x])
@@ -1064,7 +1064,7 @@ local function oSettingPanel()
 		keyItems.EaseA:setValue(oEditor.easeNames[frame[oKd.easeAngle]])
 		keyItems.EaseO:setValue(oEditor.easeNames[frame[oKd.easeOpacity]])
 	end
-	
+
 	panel:gslot("Action.ControlBarPos",
 		function(pos)
 			if not oEditor.animationData or not oEditor.sprite then
@@ -1165,13 +1165,13 @@ local function oSettingPanel()
 			item:select(false)
 		end
 	end
-	
+
 	panel.resetItems = function(self)
 		isShowingRoot = false
 		panel:clearSelection()
 		updateSpriteItems()
 	end
-	
+
 	panel.update = function(self)
 		if oEditor.state == oEditor.EDIT_ANIMATION then
 			if oEditor.spriteData then
@@ -1185,7 +1185,7 @@ local function oSettingPanel()
 				end
 			end
 		else
-			local sp = nil
+			local sp
 			if oEditor.spriteData then
 				sp = oEditor.spriteData
 			else

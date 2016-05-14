@@ -10,7 +10,6 @@ local CCSize = require("CCSize")
 local oSelectionPanel = require("oSelectionPanel")
 local CCMenu = require("CCMenu")
 local oButton = require("oButton")
-local oEditor = require("oEditor")
 local emit = require("emit")
 local oContent = require("oContent")
 local oCache = require("oCache")
@@ -46,6 +45,7 @@ local function oCircle(number)
 end
 
 local function oClipChooser(clipName)
+	local oEditor = require("oEditor")
 	local winSize = CCDirector.winSize
 	local itemWidth = clipName and 100 or 120
 	local itemHeight = clipName and 100 or 50
@@ -109,10 +109,10 @@ local function oClipChooser(clipName)
 			panel:hide()
 		end)
 		setButton.anchor = oVec2.zero
-		local btnBk = CCDrawNode()
-		btnBk:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
-		btnBk.position = oVec2(30,30)
-		setButton:addChild(btnBk,-1)
+		local drawCircle = CCDrawNode()
+		drawCircle:drawDot(oVec2.zero,30,ccColor4(0x22ffffff))
+		drawCircle.position = oVec2(30,30)
+		setButton:addChild(drawCircle,-1)
 		opMenu:addChild(setButton)
 	end
 

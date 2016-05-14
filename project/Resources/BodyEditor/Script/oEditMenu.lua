@@ -1,7 +1,6 @@
 local require = using("BodyEditor.Script")
 local CCDirector = require("CCDirector")
 local CCMenu = require("CCMenu")
-local oEditor = require("oEditor")
 local oVec2 = require("oVec2")
 local oScale = require("oScale")
 local oEase = require("oEase")
@@ -25,6 +24,7 @@ local oOpacity = require("oOpacity")
 local oPos = require("oPos")
 
 local function oEditMenu()
+	local oEditor = require("oEditor")
 	local winSize = CCDirector.winSize
 
 	local menu = CCMenu()
@@ -303,7 +303,7 @@ local function oEditMenu()
 		if scale ~= 1 then items.Zoom.mode = 2 end
 		items.Zoom.text = tostring(math.floor(scale*100)).."%"
 	end)
-	items.Zoom:gslot("Body.viewArea.scaleReset",function(scale)
+	items.Zoom:gslot("Body.viewArea.scaleReset",function()
 		items.Zoom.mode = 0
 		items.Zoom.text = "100%"
 		emit("Body.viewArea.toScale",1)

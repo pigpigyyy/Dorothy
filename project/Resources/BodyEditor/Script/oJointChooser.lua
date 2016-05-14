@@ -9,13 +9,12 @@ local CCLabelTTF = require("CCLabelTTF")
 local ccColor3 = require("ccColor3")
 local oOpacity = require("oOpacity")
 local oButton = require("oButton")
-local oEditor = require("oEditor")
 local emit = require("emit")
 local CCSequence = require("CCSequence")
 local CCDelay = require("CCDelay")
 local CCCall = require("CCCall")
 local CCMenu = require("CCMenu")
-	
+
 local joints =
 {
 	"Distance",
@@ -30,6 +29,7 @@ local joints =
 	"Wheel",
 }
 local function oJointChooser()
+	local oEditor = require("oEditor")
 	local winSize = CCDirector.winSize
 	local itemWidth = 120
 	local itemHeight = 60
@@ -56,7 +56,7 @@ local function oJointChooser()
 	border:addChild(background,-1)
 
 	local n = 0
-	local y = 0
+	local y
 	local xStart = 0 -- left
 	local yStart = borderSize.height -- top
 
@@ -109,7 +109,7 @@ local function oJointChooser()
 	local viewHeight = yTo < borderSize.height and borderSize.height or yTo
 	local viewWidth = borderSize.width
 	panel:reset(viewWidth,viewHeight,paddingX,paddingY)
-	
+
 	local opMenu = CCMenu()
 	opMenu.swallowTouches = true
 	opMenu.contentSize = CCSize(60,60)

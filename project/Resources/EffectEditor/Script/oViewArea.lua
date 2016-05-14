@@ -2,7 +2,6 @@ local require = using("EffectEditor.Script")
 local CCLayerColor = require("CCLayerColor")
 local ccColor4 = require("ccColor4")
 local oVec2 = require("oVec2")
-local oEditor = require("oEditor")
 local CCNode = require("CCNode")
 local CCDirector = require("CCDirector")
 local oLine = require("oLine")
@@ -13,6 +12,7 @@ local oEase = require("oEase")
 local oPos = require("oPos")
 
 local function oViewArea()
+	local oEditor = require("oEditor")
 	local view = CCLayerColor(ccColor4(0xff1a1a1a))
 	view.anchor = oVec2.zero
 

@@ -18,9 +18,9 @@ local oScale = require("oScale")
 local oEase = require("oEase")
 local CCCall = require("CCCall")
 local oButton = require("oButton")
-local oEditor = require("oEditor")
 
 local function oBox(text,okHandler,isInput)
+	local oEditor = require("oEditor")
 	local w = CCDirector.winSize.width*0.5
 	local h = CCDirector.winSize.height*0.5
 	local size = isInput and 125 or 120

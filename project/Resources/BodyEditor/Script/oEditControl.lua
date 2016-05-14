@@ -2,7 +2,6 @@ local require = using("BodyEditor.Script")
 local CCDirector = require("CCDirector")
 local CCNode = require("CCNode")
 local CCMenu = require("CCMenu")
-local oEditor = require("oEditor")
 local oVec2 = require("oVec2")
 local oButton = require("oButton")
 local ccColor3 = require("ccColor3")
@@ -27,6 +26,7 @@ local oPointControl = require("oPointControl")
 local CCUserDefault = require("CCUserDefault")
 
 local function oEditControl()
+	local oEditor = require("oEditor")
 	local winSize = CCDirector.winSize
 
 	local editControl = CCNode()
@@ -343,9 +343,7 @@ local function oEditControl()
 			local delta = (s>0 and -1 or 1)*math.acos(res)*180/math.pi/oEditor.scale
 			if oEditor.isFixed then
 				totalRot = totalRot + delta
-				if totalRot < 1 and totalRot > -1 then
-					delta = 0
-				else
+				if totalRot >= 1 or totalRot <= -1 then
 					delta = totalRot > 0 and math.floor(totalRot) or math.ceil(totalRot)
 					totalRot = 0
 					local angle = rotVisual.angle + delta

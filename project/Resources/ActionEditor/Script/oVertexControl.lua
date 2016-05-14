@@ -1,6 +1,5 @@
 local require = using("ActionEditor.Script")
 local CCDirector = require("CCDirector")
-local oEditor = require("oEditor")
 local CCLayer = require("CCLayer")
 local CCSize = require("CCSize")
 local CCMenu = require("CCMenu")
@@ -19,6 +18,7 @@ local oBox = require("oBox")
 local oButton = require("oButton")
 
 local function oVertexControl()
+	local oEditor = require("oEditor")
 	local winSize = CCDirector.winSize
 	local vertSize = 40
 	local halfSize = vertSize*0.5
@@ -43,7 +43,7 @@ local function oVertexControl()
 	menu.transformTarget = viewNode
 	menu.touchEnabled = false
 	layer:addChild(menu)
-	
+
 	local function removeVertex()
 		if selectedVert then
 			local name = selectedVert.name
@@ -149,7 +149,7 @@ local function oVertexControl()
 			menu:addChild(item)
 		end
 	end
-	
+
 	local function addVertex(v,name)
 		local item = oVertex(v,name)
 		menu.items[name] = item
@@ -165,8 +165,8 @@ local function oVertexControl()
 		if originalName == "" then originalName = "name" end
 		if menu.vs[originalName] then
 			local counter = 1
-			local nawName = nil
-			local usable = false
+			local nawName
+			local usable
 			repeat
 				nawName = originalName..tostring(counter)
 				usable = (menu.vs[nawName] == nil)
@@ -247,7 +247,7 @@ local function oVertexControl()
 	editMenu.touchPriority = CCMenu.DefaultHandlerPriority
 	editMenu.touchEnabled = false
 	layer:addChild(editMenu)
-	removeButton = oButton("-",20,50,50,winSize.width-325,winSize.height-35,function(button)	
+	removeButton = oButton("-",20,50,50,winSize.width-325,winSize.height-35,function(button)
 		vertexToDel = not vertexToDel
 		button.color = vertexToDel and ccColor3(0xff0080) or ccColor3(0x00ffff)
 		if vertexToAdd then

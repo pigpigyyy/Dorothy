@@ -6,7 +6,6 @@ local ccColor4 = require("ccColor4")
 local CCSize = require("CCSize")
 local CCDirector = require("CCDirector")
 local oSelectionPanel = require("oSelectionPanel")
-local oEditor = require("oEditor")
 local CCDrawNode = require("CCDrawNode")
 local CCSequence = require("CCSequence")
 local CCDelay = require("CCDelay")
@@ -41,6 +40,7 @@ local function oClipViewer(file,rect)
 end
 
 local function oFrameViewer()
+	local oEditor = require("oEditor")
 	local winSize = CCDirector.winSize
 	local halfW = winSize.width*0.5
 	local halfH = winSize.height*0.5

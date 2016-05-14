@@ -103,6 +103,10 @@ APIs = {
 		return condition
 	end,
 
+	IsValid = function(item)
+		return item ~= nil
+	end,
+
 	DoNothing = function() end,
 
 	Sleep = sleep,
