@@ -1,4 +1,76 @@
 import NewExpr,ExprIndex,ExprToString,Items from require "Data.API.Expression"
+Types = require "Data.API.Types"
+
+NewType = (typeName,defaultVal,group,nullable)->
+	equal = {
+		Name:"#{ typeName }Equal"
+		Text:typeName
+		Type:"ItemEqual"
+		MultiLine:false
+		TypeIgnore:false
+		Group:group
+		Desc:"#{ typeName } [#{ typeName }] equals [#{ typeName }]."
+		CodeOnly:false
+		ToCode:=> "( #{ @[2] } == #{ @[3] } )"
+		Create:NewExpr defaultVal,defaultVal
+		Args:false
+		__index:ExprIndex
+		__tostring:ExprToString
+	}
+	valid = if nullable
+		{
+			Name:"#{ typeName }Valid"
+			Text:typeName
+			Type:"ItemValid"
+			MultiLine:false
+			TypeIgnore:false
+			Group:group
+			Desc:"#{ typeName } [#{ typeName }] is valid."
+			CodeOnly:false
+			ToCode:=> "IsValid( #{ @[2] } )"
+			Create:NewExpr defaultVal
+			Args:false
+			__index:ExprIndex
+			__tostring:ExprToString
+		}
+	else nil
+	{ equal,valid }
+
+AppendTypes = ->
+	unpack for typeName,item in pairs Types
+		{defaultVal,group,nullable} = item
+		NewType typeName,defaultVal,group,nullable
+
+{
+	Name:"BodyValid"
+	Text:"Body"
+	Type:"ItemValid"
+	MultiLine:false
+	TypeIgnore:false
+	Group:"Boolean"
+	Desc:"Body [Body] is valid."
+	CodeOnly:false
+	ToCode:=> "IsValid( #{ @[2] } )"
+	Create:NewExpr "BodyByName"
+	Args:false
+	__index:ExprIndex
+	__tostring:ExprToString
+}
+{
+	Name:"SensorValid"
+	Text:"Sensor"
+	Type:"ItemValid"
+	MultiLine:false
+	TypeIgnore:false
+	Group:"Boolean"
+	Desc:"Sensor [Sensor] is valid."
+	CodeOnly:false
+	ToCode:=> "IsValid( #{ @[2] } )"
+	Create:NewExpr "SensorByName"
+	Args:false
+	__index:ExprIndex
+	__tostring:ExprToString
+}
 
 for item in *{
 	{
@@ -48,7 +120,7 @@ for item in *{
 	}
 	{
 		Name:"NumberGreater"
-		Text:">"
+		Text:"Greater"
 		Type:"NumberCompare"
 		MultiLine:false
 		TypeIgnore:false
@@ -63,7 +135,7 @@ for item in *{
 	}
 	{
 		Name:"NumberGreaterEqual"
-		Text:">="
+		Text:"Greater Equal"
 		Type:"NumberCompare"
 		MultiLine:false
 		TypeIgnore:false
@@ -78,7 +150,7 @@ for item in *{
 	}
 	{
 		Name:"NumberLess"
-		Text:"<"
+		Text:"Less"
 		Type:"NumberCompare"
 		MultiLine:false
 		TypeIgnore:false
@@ -93,82 +165,7 @@ for item in *{
 	}
 	{
 		Name:"NumberLessEqual"
-		Text:"<="
-		Type:"NumberCompare"
-		MultiLine:false
-		TypeIgnore:false
-		Group:"Boolean"
-		Desc:"Number [Number] less equal than [Number]."
-		CodeOnly:false
-		ToCode:=> "( #{ @[2] } <= #{ @[3] } )"
-		Create:NewExpr "Number","Number"
-		Args:false
-		__index:ExprIndex
-		__tostring:ExprToString
-	}
-	{
-		Name:"StringCompare"
-		Text:"String Compare"
-		Type:"Boolean"
-		MultiLine:false
-		TypeIgnore:false
-		Group:"Boolean"
-		Desc:"Check [StringCompare]."
-		CodeOnly:false
-		ToCode:=> tostring @[2]
-		Create:NewExpr "NumberEqual2"
-		Args:false
-		__index:ExprIndex
-		__tostring:ExprToString
-	}
-	{
-		Name:"NumberGreater"
-		Text:">"
-		Type:"NumberCompare"
-		MultiLine:false
-		TypeIgnore:false
-		Group:"Boolean"
-		Desc:"Number [Number] greater than [Number]."
-		CodeOnly:false
-		ToCode:=> "( #{ @[2] } > #{ @[3] } )"
-		Create:NewExpr "Number","Number"
-		Args:false
-		__index:ExprIndex
-		__tostring:ExprToString
-	}
-	{
-		Name:"NumberGreaterEqual"
-		Text:">="
-		Type:"NumberCompare"
-		MultiLine:false
-		TypeIgnore:false
-		Group:"Boolean"
-		Desc:"Number [Number] greater equal than [Number]."
-		CodeOnly:false
-		ToCode:=> "( #{ @[2] } >= #{ @[3] } )"
-		Create:NewExpr "Number","Number"
-		Args:false
-		__index:ExprIndex
-		__tostring:ExprToString
-	}
-	{
-		Name:"NumberLess"
-		Text:"<"
-		Type:"NumberCompare"
-		MultiLine:false
-		TypeIgnore:false
-		Group:"Boolean"
-		Desc:"Number [Number] less than [Number]."
-		CodeOnly:false
-		ToCode:=> "( #{ @[2] } < #{ @[3] } )"
-		Create:NewExpr "Number","Number"
-		Args:false
-		__index:ExprIndex
-		__tostring:ExprToString
-	}
-	{
-		Name:"NumberLessEqual"
-		Text:"<="
+		Text:"Less Equal"
 		Type:"NumberCompare"
 		MultiLine:false
 		TypeIgnore:false
@@ -189,54 +186,9 @@ for item in *{
 		TypeIgnore:false
 		Group:"Boolean"
 		Desc:"Is [ItemValid]."
-		CodeOnly:false
+		CodeOnly:true
 		ToCode:=> tostring @[2]
 		Create:NewExpr "ModelValid"
-		Args:false
-		__index:ExprIndex
-		__tostring:ExprToString
-	}
-	{
-		Name:"ModelValid"
-		Text:"Model"
-		Type:"ItemValid"
-		MultiLine:false
-		TypeIgnore:false
-		Group:"Boolean"
-		Desc:"Model [Model] is valid."
-		CodeOnly:false
-		ToCode:=> "IsValid( #{ @[2] } )"
-		Create:NewExpr "ModelByName"
-		Args:false
-		__index:ExprIndex
-		__tostring:ExprToString
-	}
-	{
-		Name:"BodyValid"
-		Text:"Body"
-		Type:"ItemValid"
-		MultiLine:false
-		TypeIgnore:false
-		Group:"Boolean"
-		Desc:"Body [Body] is valid."
-		CodeOnly:false
-		ToCode:=> "IsValid( #{ @[2] } )"
-		Create:NewExpr "BodyByName"
-		Args:false
-		__index:ExprIndex
-		__tostring:ExprToString
-	}
-	{
-		Name:"SensorValid"
-		Text:"Sensor"
-		Type:"ItemValid"
-		MultiLine:false
-		TypeIgnore:false
-		Group:"Boolean"
-		Desc:"Sensor [Sensor] is valid."
-		CodeOnly:false
-		ToCode:=> "IsValid( #{ @[2] } )"
-		Create:NewExpr "SensorByName"
 		Args:false
 		__index:ExprIndex
 		__tostring:ExprToString
@@ -302,23 +254,8 @@ for item in *{
 		__tostring:ExprToString
 	}
 	{
-		Name:"NumberEqual"
-		Text:"Number"
-		Type:"ItemEqual"
-		MultiLine:false
-		TypeIgnore:false
-		Group:"Boolean"
-		Desc:"Number [Number] equals [Number]."
-		CodeOnly:false
-		ToCode:=> "( #{ @[2] } == #{ @[3] } )"
-		Create:NewExpr "Number","Number"
-		Args:false
-		__index:ExprIndex
-		__tostring:ExprToString
-	}
-	{
 		Name:"NumberEqual2"
-		Text:"=="
+		Text:"Equal"
 		Type:"NumberCompare"
 		MultiLine:false
 		TypeIgnore:false
@@ -331,35 +268,11 @@ for item in *{
 		__index:ExprIndex
 		__tostring:ExprToString
 	}
-	{
-		Name:"BodyEqual"
-		Text:"Body"
-		Type:"ItemEqual"
-		MultiLine:false
-		TypeIgnore:false
-		Group:"Boolean"
-		Desc:"Body [Body] equals [Body]."
-		CodeOnly:false
-		ToCode:=> "( #{ @[2] } == #{ @[3] } )"
-		Create:NewExpr "BodyByName","BodyByName"
-		Args:false
-		__index:ExprIndex
-		__tostring:ExprToString
-	}
-	{
-		Name:"ModelEqual"
-		Text:"Model"
-		Type:"ItemEqual"
-		MultiLine:false
-		TypeIgnore:false
-		Group:"Boolean"
-		Desc:"Model [Model] equals [Model]."
-		CodeOnly:false
-		ToCode:=> "( #{ @[2] } == #{ @[3] } )"
-		Create:NewExpr "ModelByName","ModelByName"
-		Args:false
-		__index:ExprIndex
-		__tostring:ExprToString
-	}
+	AppendTypes!
 }
-	Items[item.Name] = item
+	itemName = item.Name
+	if itemName
+		Items[itemName] = item
+	else
+		for subItem in *item
+			Items[subItem.Name] = subItem

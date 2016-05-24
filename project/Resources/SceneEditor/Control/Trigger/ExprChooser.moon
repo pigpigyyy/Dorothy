@@ -32,6 +32,8 @@ ExprChooser = Class
 			:noVar
 			:backOnly
 		} = args
+		itemHeight = 35
+
 		@exprButtons = {}
 		@exprs = {}
 		@curGroupBtn = nil
@@ -43,6 +45,7 @@ ExprChooser = Class
 		@type = editorType or owner.type
 		@exprs[getmetatable expr] = expr if expr
 		@needOpen = false
+
 		if args.level == 1
 			@@preview = with @previewItem
 				.owner = @
@@ -62,7 +65,7 @@ ExprChooser = Class
 				if exprDef.Group == groupName
 					exprItem = @exprButtons[exprDef]
 					break
-			@apiScrollArea\scrollToPosY exprItem.positionY
+			@apiScrollArea\scrollToPosY exprItem.positionY-@apiMenu.height/2+itemHeight/2+10
 			thread ->
 				sleep 0.3
 				exprItem\glow!
@@ -143,7 +146,7 @@ ExprChooser = Class
 			localVarButton = with GroupButton {
 					text:Path.getName(@curExpr[2]) or ""
 					width:math.min(170,@bodyMenu.width-20)
-					height:35
+					height:itemHeight
 				}
 				.position = oVec2 @bodyMenu.width/2,
 					@bodyLabel.positionY-@bodyLabel.height/2-20-.height/2
@@ -166,7 +169,7 @@ ExprChooser = Class
 			localVarButton = with GroupButton {
 					text:@curExpr[2]
 					width:math.min(170,@bodyMenu.width-20)
-					height:35
+					height:itemHeight
 				}
 				.position = oVec2 @bodyMenu.width/2,
 					@bodyLabel.positionY-@bodyLabel.height-10-.height/2
@@ -219,7 +222,7 @@ ExprChooser = Class
 			itemButton = with GroupButton {
 					text:@curExpr[2]
 					width:math.min(200,@bodyMenu.width-20)
-					height:35
+					height:itemHeight
 				}
 				.position = oVec2 @bodyMenu.width/2,
 					@bodyLabel.positionY-@bodyLabel.height-10-.height/2
@@ -243,7 +246,7 @@ ExprChooser = Class
 			itemButton = with GroupButton {
 					text:nodeName
 					width:math.min(200,@bodyMenu.width-20)
-					height:35
+					height:itemHeight
 				}
 				.position = oVec2 @bodyMenu.width/2,
 					@bodyLabel.positionY-@bodyLabel.height-10-.height/2
@@ -263,7 +266,7 @@ ExprChooser = Class
 			itemButton = with GroupButton {
 					text:nodeName
 					width:math.min(200,@bodyMenu.width-20)
-					height:35
+					height:itemHeight
 				}
 				.position = oVec2 @bodyMenu.width/2,
 					@bodyLabel.positionY-@bodyLabel.height-10-.height/2
@@ -283,7 +286,7 @@ ExprChooser = Class
 			itemButton = with GroupButton {
 					text:@curExpr[2]
 					width:math.min(200,@bodyMenu.width-20)
-					height:35
+					height:itemHeight
 				}
 				.position = oVec2 @bodyMenu.width/2,
 					@bodyLabel.positionY-@bodyLabel.height-10-.height/2
@@ -301,7 +304,7 @@ ExprChooser = Class
 			localVarButton = with GroupButton {
 					text:"Pick"
 					width:math.min(200,@bodyMenu.width-20)
-					height:35
+					height:itemHeight
 				}
 				.position = oVec2 @bodyMenu.width/2,
 					@bodyLabel.positionY-@bodyLabel.height-10-.height/2
@@ -325,7 +328,7 @@ ExprChooser = Class
 				itemButton = with GroupButton {
 						text:@curExpr[2]
 						width:math.min(170,@bodyMenu.width-20)
-						height:35
+						height:itemHeight
 					}
 					.position = oVec2 @bodyMenu.width/2,
 						@bodyLabel.positionY-@bodyLabel.height/2-20-.height/2
@@ -367,7 +370,7 @@ ExprChooser = Class
 							x:@bodyMenu.width/2
 							y:@bodyLabel.positionY-@bodyLabel.height/2-20-20
 							width:260
-							height:35
+							height:itemHeight
 							fontSize:17
 							limit:15
 						}
@@ -383,7 +386,7 @@ ExprChooser = Class
 					x:@bodyMenu.width/2
 					y:@bodyLabel.positionY-@bodyLabel.height/2-20-20
 					width:170
-					height:35
+					height:itemHeight
 					fontSize:17
 					limit:15
 				}
@@ -407,7 +410,7 @@ ExprChooser = Class
 					x:@bodyMenu.width/2
 					y:@bodyLabel.positionY-@bodyLabel.height/2-20-20
 					width:170
-					height:35
+					height:itemHeight
 					fontSize:17
 					limit:15
 				}
@@ -423,17 +426,17 @@ ExprChooser = Class
 				.textField\slot "InputInserted",inputed
 				.textField\slot "InputDeleted",inputed
 
-		editString = ->
+		editString = (noticeChange)->
 			inputed = (_,textBox)->
 				text = textBox.text
 				@curExpr[2] = text\gsub "\"","\\\""
 				@updatePreview!
-				emit "Scene.#{ @type }.ChangeName",text
+				emit "Scene.#{ @type }.ChangeName",text if noticeChange
 			@bodyMenu\addChild with TextBox {
 					x:@bodyMenu.width/2
 					y:@bodyLabel.positionY-@bodyLabel.height/2-20-20
 					width:260
-					height:35
+					height:itemHeight
 					fontSize:17
 					limit:15
 				}
@@ -474,15 +477,17 @@ ExprChooser = Class
 					pickPointFromScene!
 				when "Number"
 					editNumber!
-				when "String","TriggerName","ActionName","NodeName","Text","InitGlobalName"
-					editString!
+				when "TriggerName","ActionName","NodeName"
+					editString true
+				when "String","Text","InitGlobalName"
+					editString false
 				when "Con"
 					editConditionNode!
 				when "Act"
 					editActionNode!
 				when "VariableName"
 					editVarName!
-				when "ModelName","BodyName","LayerName","SensorName"
+				when "ModelName","BodyName","BodySliceName","LayerName","SensorName","SpriteName"
 					chooseItemFromScene @curExpr[1]\sub 1,-5 -- "TypeName"\sub(1,-5) == "Type"
 
 		selectExpr = (button)->
@@ -513,7 +518,7 @@ ExprChooser = Class
 							text:exprDef.Text or exprDef.Name
 							fontSize:18
 							width:180
-							height:35
+							height:itemHeight
 						}
 						.exprDef = exprDef
 						\slot "Tapped",selectExpr
@@ -525,7 +530,7 @@ ExprChooser = Class
 						text:groupName
 						fontSize:18
 						width:80
-						height:35
+						height:itemHeight
 					}
 					\slot "Tapped",selectGroup
 

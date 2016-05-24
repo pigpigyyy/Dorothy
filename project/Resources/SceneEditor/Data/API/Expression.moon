@@ -55,8 +55,12 @@ LoadAPIs = ()->
 			"Number"
 			"String"
 			"Point"
+			"Effect"
+			"Node"
+			"Sprite"
 			"Model"
 			"Body"
+			"BodySlice"
 			"Layer"
 			"Sensor"
 		}

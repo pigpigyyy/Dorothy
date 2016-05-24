@@ -305,6 +305,7 @@ Class
 			@hide!
 
 		@gslot "Scene.Trigger.ChangeName",(triggerName)->
+			print "filename changed",triggerName
 			TriggerScope.triggerBtn.text = triggerName
 			file = TriggerScope.triggerBtn.file
 			TriggerScope.triggerBtn.file = Path.getPath(file)..triggerName..".trigger"

@@ -2,13 +2,13 @@ import NewExpr,NewExprVal,ExprIndex,ExprToString,Items from require "Data.API.Ex
 
 for item in *{
 	{
-		Name:"LayerName"
-		Text:"Layer Name"
-		Type:"LayerName"
+		Name:"SpriteName"
+		Text:"Sprite Name"
+		Type:"SpriteName"
 		MultiLine:false
 		TypeIgnore:false
 		Group:"Special"
-		Desc:"A name for layer."
+		Desc:"A name for sprite."
 		CodeOnly:true
 		ToCode:=> "\"#{ @[2] }\""
 		Create:NewExprVal "InvalidName"
@@ -17,16 +17,16 @@ for item in *{
 		__tostring:ExprToString
 	}
 	{
-		Name:"LayerByName"
-		Text:"Layer"
-		Type:"Layer"
+		Name:"SpriteByName"
+		Text:"Sprite"
+		Type:"Sprite"
 		MultiLine:false
 		TypeIgnore:false
-		Group:"Layer"
-		Desc:"Get layer [LayerName] from scene."
+		Group:"Sprite"
+		Desc:"Get sprite [SpriteName] from scene."
 		CodeOnly:false
-		ToCode:=> "Layer( #{ @[2] } )"
-		Create:NewExpr "LayerName"
+		ToCode:=> "Sprite( #{ @[2] } )"
+		Create:NewExpr "SpriteName"
 		Args:false
 		__index:ExprIndex
 		__tostring:ExprToString

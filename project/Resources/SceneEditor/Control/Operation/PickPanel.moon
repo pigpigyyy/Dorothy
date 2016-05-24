@@ -79,6 +79,26 @@ Class PickPanelView,
 										@pickedItem = itemData.name.."."..item
 										@label.text = itemString!
 										@showButton!
+					when "BodySlice"
+						if itemData.itemType == "Body"
+							bodyGroup = editor\getItem itemData
+							slices = {}
+							bodyGroup.data\each (name,item)->
+								if tolua.type(item) == "oBody" and not item.sensor
+									table.insert slices,name
+							if #slices > 0
+								with SelectionPanel {
+										title:"Select Slice"
+										width:150
+										items:slices
+										itemHeight:40
+										fontSize:20
+									}
+									\slot "Selected",(item)->
+										return unless item
+										@pickedItem = itemData.name.."."..item
+										@label.text = itemString!
+										@showButton!
 					when "Point"
 						isBody = itemData.itemType == "Body"
 						offset = isBody and itemData.position or oVec2.zero

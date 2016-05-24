@@ -208,6 +208,19 @@ TriggerDef = Class {
 						else
 							scope = varScope[#varScope]
 							scope[varName] = varType
+							if not localType
+								usedLocals = {}
+								searchExpr = (expr)->
+									return unless "table" == type expr
+									if expr[1] ~= "LocalName" and expr[1]\match "^Local"
+										usedLocals[expr[2][2]] = true
+									for i = 2,#expr
+										searchExpr expr[i]
+								searchExpr assignExpr[3]
+								if usedLocals[varName]
+									err "Local variable \"",varName,
+										"\" of type \"",varType,
+										"\" is used without initialization."
 					nextExpr assignExpr[3],assignExpr
 				when "SetGlobal"
 					assignExpr = expr[2]
