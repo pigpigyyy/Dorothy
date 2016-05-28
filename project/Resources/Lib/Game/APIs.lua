@@ -1,3 +1,4 @@
+local Dummy,DummyNoDefault = unpack(require("Lib.Game.Dummy"))
 local Trigger = require("Lib.Game.Trigger")
 local Game = require("Lib.Game.Game")
 local Class = require("Class")
@@ -45,22 +46,47 @@ local function IsValid(x)
 	if type(x) == "number" then
 		return IsValidNumber(x)
 	else
-		return x ~= nil
+		return x ~= Dummy
 	end
 end
 
-local function InvalidItem(x)
-	return x == nil
+local function GetItem(typeName)
+	return setmetatable({},{
+		__index = function(_,key)
+			local item = Game.instance:getItem(key)
+			if ctype(item) == typeName then
+				return item
+			end
+			return Dummy
+		end,
+	})
 end
 
-local function InvalidItems(...)
-	for i = 1,select("#",...) do
-		local x = select(i,...)
-		if x == nil then
-			return true
-		end
-	end
-	return false
+local function GetSlice(sensor)
+	local targetBody
+	local SliceItem = setmetatable({},{
+		__index = function(_,key)
+			local item = targetBody.data[key]
+			if not item or (sensor and not item.sensor) then
+				return Dummy
+			end
+			return item
+		end,
+		__call = function(_,body)
+			targetBody = body
+			return self
+		end,
+	})
+	local Slice = setmetatable({},{
+		__index = function(_,key)
+			local item = Game.instance:getItem(key)
+			if ctype(item) == "CCNode" then
+				return SliceItem(item)
+			end
+			return DummyNoDefault
+		end,
+	})
+	return Slice
 end
 
 local APIs
@@ -164,71 +190,13 @@ APIs = {
 	Sleep = sleep,
 	Print = print,
 
-	Effect = function(name)
-		local item = Game.instance:getItem(name)
-		if ctype(item) == "oEffect" then
-			return item
-		end
-		return nil
-	end,
-	Sprite = function(name)
-		local item = Game.instance:getItem(name)
-		if ctype(item) == "CCSprite" then
-			return item
-		end
-		return nil
-	end,
-	Model = function(name)
-		local item = Game.instance:getItem(name)
-		if ctype(item) == "oModel" then
-			return item
-		end
-		return nil
-	end,
-	Body = function(name)
-		local item = Game.instance:getItem(name)
-		if ctype(item) == "CCNode" then
-			return item
-		end
-		return nil
-	end,
-	BodySlice = function(name)
-		local index = name:find("%.")
-		if index then
-			local bodyName = name:sub(1,index-1)
-			local body = APIs.Body(bodyName)
-			if body then
-				local sliceName = name:sub(index+1,-1)
-				local slice = body.data[sliceName]
-				if slice then
-					return slice
-				end
-			end
-		end
-		return nil
-	end,
-	Sensor = function(name)
-		local index = name:find("%.")
-		if index then
-			local bodyName = name:sub(1,index-1)
-			local body = APIs.Body(bodyName)
-			if body then
-				local sensorName = name:sub(index+1,-1)
-				local sensor = body.data[sensorName]
-				if sensor and sensor.sensor then
-					return sensor
-				end
-			end
-		end
-		return nil
-	end,
-	Layer = function(name)
-		local item = Game.instance:getItem(name)
-		if ctype(item) == "oNode3D" then
-			return item
-		end
-		return nil
-	end,
+	Effect = GetItem("oEffect"),
+	Sprite = GetItem("CCSprite"),
+	Model = GetItem("oModel"),
+	Body = GetItem("CCNode"),
+	Layer = GetItem("oNode3D"),
+	Slice = GetSlice("CCNode",false),
+	Sensor = GetSlice("CCNode",true),
 
 	Point = oVec2,
 
@@ -242,7 +210,7 @@ APIs = {
 	end,
 
 	CreateModel = function(modelType, position, layer, angle, look, animation, loop)
-		if InvalidNumber(angle) or InvalidItem(layer) then return nil end
+		if InvalidNumber(angle) or not layer then return nil end
 		local modelFile = Game.instance.gamePath..modelType
 		if oContent:exist(modelFile) then
 			local model = oModel(modelFile)
@@ -258,14 +226,14 @@ APIs = {
 	end,
 
 	PlayAnimation = function(model, animation, loop, look)
-		if InvalidItem(model) then return 0 end
+		if not model then return 0 end
 		model.loop = loop
 		model.look = look
 		return model:play(animation)
 	end,
 
 	DestroyModel = function(model)
-		if InvalidItem(model) then return end
+		if not model then return end
 		if model.parent then
 			model.parent:removeChild(model)
 		end
@@ -294,6 +262,15 @@ APIs = {
 		else
 			return Game.instance:getCondition(name)
 		end
+	end,
+
+	IsSensed = function(body,tag)
+		if not body then return false end
+		local sensor = body:getSensorByTag(tag)
+		if sensor then
+			return sensor.sensed
+		end
+		return false
 	end,
 }
 

@@ -26,6 +26,8 @@ GetArgsText = (trigger)->
 ExprToString = (expr)->
 	if Expression.CodeMode or expr.CodeOnly
 		expr\ToCode!
+	elseif expr.ToDesc
+		expr\ToDesc!
 	else
 		index = 1
 		expr.Desc\gsub "%b[]",->
@@ -42,6 +44,10 @@ NewExpr = (...)->
 NewExprVal = (value)-> => setmetatable {@Name,value},@
 
 ExprIndex = (key)=> (getmetatable @)[key]
+
+Trim = (item)->
+	item = tostring item
+	item\sub(1,1) == "(" and item\sub(2,-2) or item
 
 LoadAPIs = ()->
 	for name in *{
@@ -60,7 +66,7 @@ LoadAPIs = ()->
 			"Sprite"
 			"Model"
 			"Body"
-			"BodySlice"
+			"Slice"
 			"Layer"
 			"Sensor"
 		}
@@ -77,6 +83,7 @@ Expression = {
 	:LoadAPIs
 	:ExprIndex
 	:ExprToString
+	:Trim
 }
 
 Expression

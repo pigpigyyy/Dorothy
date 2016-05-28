@@ -1,4 +1,4 @@
-import NewExpr,NewExprVal,ExprIndex,ExprToString,Items from require "Data.API.Expression"
+import NewExpr,NewExprVal,ExprIndex,ExprToString,Trim,Items from require "Data.API.Expression"
 
 for item in *{
 	{
@@ -40,7 +40,7 @@ for item in *{
 		Group:"Special"
 		Desc:"Priority [Number] to cancel other action."
 		CodeOnly:false
-		ToCode:=> "--[[Priority]] #{ @[2] },"
+		ToCode:=> "--[[Priority]] #{ Trim @[2] },"
 		Create:NewExpr "Number"
 		Args:false
 		__index:ExprIndex
@@ -55,7 +55,7 @@ for item in *{
 		Group:"Special"
 		Desc:"Reaction [Number] time to response to AI while doing the action."
 		CodeOnly:false
-		ToCode:=> "--[[Reaction]] #{ @[2] },"
+		ToCode:=> "--[[Reaction]] #{ Trim @[2] },"
 		Create:NewExpr "Number"
 		Args:false
 		__index:ExprIndex
@@ -70,7 +70,7 @@ for item in *{
 		Group:"Special"
 		Desc:"Recovery [Number] time to restore animation."
 		CodeOnly:false
-		ToCode:=> "--[[Recovery]] #{ @[2] },"
+		ToCode:=> "--[[Recovery]] #{ Trim @[2] },"
 		Create:NewExpr "Number"
 		Args:false
 		__index:ExprIndex

@@ -2,31 +2,31 @@ import NewExpr,NewExprVal,ExprIndex,ExprToString,Items from require "Data.API.Ex
 
 for item in *{
 	{
-		Name:"BodySliceName"
-		Text:"BodySlice Name"
-		Type:"BodySliceName"
+		Name:"SliceName"
+		Text:"Slice Name"
+		Type:"SliceName"
 		MultiLine:false
 		TypeIgnore:false
 		Group:"Special"
 		Desc:"A name for body slice."
 		CodeOnly:true
-		ToCode:=> "\"#{ @[2] }\""
+		ToCode:=> @[2]
 		Create:NewExprVal "InvalidName"
 		Args:false
 		__index:ExprIndex
 		__tostring:ExprToString
 	}
 	{
-		Name:"BodySliceByName"
-		Text:"BodySlice"
-		Type:"BodySlice"
+		Name:"SliceByName"
+		Text:"Slice"
+		Type:"Slice"
 		MultiLine:false
 		TypeIgnore:false
-		Group:"Body"
-		Desc:"Get body slice [BodySliceName] from scene."
+		Group:"Physics"
+		Desc:"Get body slice [SliceName] from scene."
 		CodeOnly:false
-		ToCode:=> "BodySlice( #{ @[2] } )"
-		Create:NewExpr "BodySliceName"
+		ToCode:=> "Slice.#{ @[2] }"
+		Create:NewExpr "SliceName"
 		Args:false
 		__index:ExprIndex
 		__tostring:ExprToString

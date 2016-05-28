@@ -1,4 +1,4 @@
-import NewExpr,NewExprVal,ExprIndex,ExprToString,Items from require "Data.API.Expression"
+import NewExpr,NewExprVal,ExprIndex,ExprToString,Trim,Items from require "Data.API.Expression"
 
 for item in *{
 	{
@@ -10,7 +10,7 @@ for item in *{
 		Group:"Code Flow"
 		Desc:"If condition [Boolean] meets do."
 		CodeOnly:false
-		ToCode:=> "if #{ @[2] } then"
+		ToCode:=> "if #{ Trim @[2] } then"
 		Create:NewExpr "True","Action","Action"
 		Args:false
 		__index:ExprIndex
@@ -25,8 +25,17 @@ for item in *{
 		Group:"Code Flow"
 		Desc:"Count number [VariableName] from [Number] to [Number] by [Number] and do."
 		CodeOnly:false
-		ToCode:=> "Loop( #{ @[3] }, #{ @[4] }, #{ @[5] }, function( #{ @[2] } )"
-		Create:NewExpr "VariableName","Number","Number","Number","Action"
+		ToCode:=> "Loop( #{ Trim @[3] }, #{ Trim @[4] }, #{ Trim @[5] }, function( #{ @[2] } )"
+		Create:=>
+			incExpr = Items.Number\Create!
+			incExpr[2] = 1
+			setmetatable {@Name,
+				Items.VariableName\Create!
+				Items.Number\Create!
+				Items.Number\Create!
+				incExpr
+				Items.Action\Create!
+			},@
 		Args:false
 		__index:ExprIndex
 		__tostring:ExprToString
@@ -40,7 +49,7 @@ for item in *{
 		Group:"Code Flow"
 		Desc:"Pause trigger execution for [Number] seconds."
 		CodeOnly:false
-		ToCode:=> "Sleep( #{ @[2] } )"
+		ToCode:=> "Sleep( #{ Trim @[2] } )"
 		Create:NewExpr "Number"
 		Args:false
 		__index:ExprIndex
@@ -70,7 +79,7 @@ for item in *{
 		Group:"Misc"
 		Desc:"Print message [String] in console."
 		CodeOnly:false
-		ToCode:=> "Print( #{ @[2] } )"
+		ToCode:=> "Print( #{ Trim @[2] } )"
 		Create:NewExpr "String"
 		Args:false
 		__index:ExprIndex

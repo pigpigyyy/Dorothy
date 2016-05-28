@@ -1,4 +1,4 @@
-import NewExpr,NewExprVal,ExprIndex,ExprToString,Items from require "Data.API.Expression"
+import NewExpr,NewExprVal,ExprIndex,ExprToString,Trim,Items from require "Data.API.Expression"
 
 for item in *{
 	{
@@ -54,7 +54,7 @@ for item in *{
 		Group:"Special"
 		Desc:"A name for model."
 		CodeOnly:true
-		ToCode:=> "\"#{ @[2] }\""
+		ToCode:=> @[2]
 		Create:NewExprVal "InvalidName"
 		Args:false
 		__index:ExprIndex
@@ -69,7 +69,7 @@ for item in *{
 		Group:"Model"
 		Desc:"Get model [ModelName] from scene."
 		CodeOnly:false
-		ToCode:=> "Model( #{ @[2] } )"
+		ToCode:=> "Model.#{ @[2] }"
 		Create:NewExpr "ModelName"
 		Args:false
 		__index:ExprIndex
@@ -84,7 +84,7 @@ for item in *{
 		Group:"Model"
 		Desc:"Create model [ModelType] at position [Point] of layer [Layer] with angle [Number] using look [Look] and play [Animation] with loop [Boolean]."
 		CodeOnly:false
-		ToCode:=> "CreateModel( #{ @[2] }, #{ @[3] }, #{ @[4] }, #{ @[5] }, #{ @[6] }, #{ @[7] }, #{ @[8] } )"
+		ToCode:=> "CreateModel( #{ Trim @[2] }, #{ Trim @[3] }, #{ Trim @[4] }, #{ Trim @[5] }, #{ Trim @[6] }, #{ Trim @[7] }, #{ Trim @[8] } )"
 		Create:NewExpr "ModelType","Point","LayerByName","Number","Look","Animation","False"
 		Args:false
 		__index:ExprIndex
@@ -99,7 +99,7 @@ for item in *{
 		Group:"Model"
 		Desc:"Destroy a model [Model]."
 		CodeOnly:false
-		ToCode:=> "DestroyModel( #{ @[2] } )"
+		ToCode:=> "DestroyModel( #{ Trim @[2] } )"
 		Create:NewExpr "ModelByName"
 		Args:false
 		__index:ExprIndex
@@ -114,7 +114,7 @@ for item in *{
 		Group:"Model"
 		Desc:"Play model [Model] animation [Animation] with loop [Boolean] and set model look to [Look], then return animation`s duration."
 		CodeOnly:false
-		ToCode:=> "PlayAnimation( #{ @[2] }, #{ @[3] }, #{ @[4] }, #{ @[5] } )"
+		ToCode:=> "PlayAnimation( #{ Trim @[2] }, #{ Trim @[3] }, #{ Trim @[4] }, #{ Trim @[5] } )"
 		Create:NewExpr "ModelByName","Animation","False","Look"
 		Args:false
 		__index:ExprIndex

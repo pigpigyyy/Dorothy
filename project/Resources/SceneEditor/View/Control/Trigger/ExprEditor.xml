@@ -9,8 +9,9 @@
 	<SolidRect Width="40" Height="{ $H }" Color="0x2200ffff"/>
 	<Item Name="view">
 		<Menu Name="triggerMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ exprLevel-1 }" Ref="True"/>
-		<Menu Name="editMenu" AnchorX="1" AnchorY="1" Width="430" Height="70" AlignItems="10" TouchPriority="{ exprLevel-2 }" Visible="False" Ref="True">
+		<Menu Name="editMenu" AnchorX="1" AnchorY="1" Width="490" Height="70" AlignItems="10" TouchPriority="{ exprLevel-2 }" Visible="False" Ref="True">
 			<Button Name="editBtn" Text="Edit" Width="50" Height="50" FontSize="16" BackColor="0xca000000" Ref="True"/>
+			<Button Name="copyBtn" Text="Copy" Width="50" Height="50" FontSize="16" BackColor="0xca000000" Ref="True"/>
 			<Button Name="addBtn" Text="Add" Width="50" Height="50" BackColor="0xca000000" FontSize="16" Ref="True"/>
 			<Button Name="insertBtn" Text="Insert" Width="50" Height="50" BackColor="0xca000000" FontSize="16" Ref="True"/>
 			<Button Name="delBtn" Text="Del" Width="50" Height="50" FontSize="16" BackColor="0xca000000" Ref="True"/>

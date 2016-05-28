@@ -10,7 +10,7 @@ for item in *{
 		Group:"Special"
 		Desc:"A name for sprite."
 		CodeOnly:true
-		ToCode:=> "\"#{ @[2] }\""
+		ToCode:=> @[2]
 		Create:NewExprVal "InvalidName"
 		Args:false
 		__index:ExprIndex
@@ -25,7 +25,7 @@ for item in *{
 		Group:"Sprite"
 		Desc:"Get sprite [SpriteName] from scene."
 		CodeOnly:false
-		ToCode:=> "Sprite( #{ @[2] } )"
+		ToCode:=> "Sprite.#{ @[2] }"
 		Create:NewExpr "SpriteName"
 		Args:false
 		__index:ExprIndex

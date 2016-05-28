@@ -10,7 +10,7 @@ for item in *{
 		Group:"Special"
 		Desc:"A name for body."
 		CodeOnly:true
-		ToCode:=> "\"#{ @[2] }\""
+		ToCode:=> @[2]
 		Create:NewExprVal "InvalidName"
 		Args:false
 		__index:ExprIndex
@@ -25,7 +25,7 @@ for item in *{
 		Group:"Body"
 		Desc:"Get body [BodyName] from scene."
 		CodeOnly:false
-		ToCode:=> "Body( #{ @[2] } )"
+		ToCode:=> "Body.#{ @[2] }"
 		Create:NewExpr "BodyName"
 		Args:false
 		__index:ExprIndex

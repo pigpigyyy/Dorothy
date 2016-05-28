@@ -221,10 +221,10 @@ void oBullet::destroy()
 	if (!_bulletDef->endEffect.empty())
 	{
 		oEffect* effect = oEffect::create(_bulletDef->endEffect);
-		effect->setOffset(this->getPosition())
-			->attachTo(this->getParent())
-			->autoRemove()
-			->start();
+		effect->setPosition(this->getPosition());
+		effect->addTo(this->getParent());
+		effect->autoRemove();
+		effect->start();
 	}
 	oBody::setVelocity(0, 0);
 	hitTarget.Clear();

@@ -1119,8 +1119,10 @@ public:
 
 	void setTransformTarget(CCNode* target);
 	CCNode* getTransformTarget() const;
-	
-	CCNode* getTargetParent() const;
+
+	virtual CCNode* addTo(CCNode* parent, int zOrder, int tag);
+	virtual CCNode* addTo(CCNode* parent, int zOrder);
+	virtual CCNode* addTo(CCNode* parent);
 
 	template<typename NodeFunc>
 	bool traverse(const NodeFunc& func)
@@ -1169,6 +1171,8 @@ private:
     /// Convert cocos2d coordinates to UI windows coordinate.
     CCPoint convertToWindowSpace(const CCPoint& nodePoint);
 
+	/// Get transform target`s parent
+	CCNode* getTargetParent() const;
 protected:
 	bool m_bRunning; ///< is running
 	bool m_bTransformDirty; ///< transform dirty flag
@@ -1211,8 +1215,8 @@ protected:
     
     int m_nZOrder;                      ///< z-order value that affects the draw order
     
-    CCArray *m_pChildren;               ///< array of children nodes
-    CCNode *m_pParent;                  ///< weak reference to parent node
+    CCArray* m_pChildren;               ///< array of children nodes
+    CCNode* m_pParent;                  ///< weak reference to parent node
     
     int m_nTag;                         ///< a tag. Can be any number you assigned just to identify this node
     

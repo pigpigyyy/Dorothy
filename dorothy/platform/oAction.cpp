@@ -436,7 +436,10 @@ void oAttack::update( float dt )
 				key.x = -key.x;
 			}
 			oEffect* effect = oEffect::create(attackEffect);
-			effect->setOffset(key)->attachTo(_owner)->autoRemove()->start();
+			effect->setPosition(key);
+			effect->addTo(_owner);
+			effect->autoRemove();
+			effect->start();
 		}
 	}
 }
@@ -594,8 +597,7 @@ _hitPoint()
 	if (!hitEffect.empty())
 	{
 		_effect = oEffect::create(hitEffect);
-		_effect->attachTo(_owner);
-		_effect->retain();
+		_effect->addTo(_owner);
 	}
 	oModel* model = unit->getModel();
 	model->handlers[oID::AnimationHit] += std::make_pair(this, &oHit::onAnimationEnd);
@@ -618,7 +620,8 @@ void oHit::run()
 	oVec2 key = CCPointApplyAffineTransform(_hitPoint, _owner->parentToNodeTransform());
 	if (_effect)
 	{
-		_effect->setOffset(key)->start();
+		_effect->setPosition(key);
+		_effect->start();
 	}
 	_owner->setVelocityX(_hitFromRight ? -_attackPower.x : _attackPower.x);
 	_owner->setVelocityY(_attackPower.y);
@@ -681,7 +684,9 @@ void oDie::run()
 	if (!hitEffect.empty())
 	{
 		oEffect* effect = oEffect::create(hitEffect);
-		effect->attachTo(_owner)->autoRemove()->start();
+		effect->addTo(_owner);
+		effect->autoRemove();
+		effect->start();
 	}
 	if (!_owner->getUnitDef()->sndDeath.empty())
 	{

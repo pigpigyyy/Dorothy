@@ -79,7 +79,7 @@ Class PickPanelView,
 										@pickedItem = itemData.name.."."..item
 										@label.text = itemString!
 										@showButton!
-					when "BodySlice"
+					when "Slice"
 						if itemData.itemType == "Body"
 							bodyGroup = editor\getItem itemData
 							slices = {}

@@ -10,7 +10,7 @@ for item in *{
 		Group:"Special"
 		Desc:"A name for effect."
 		CodeOnly:true
-		ToCode:=> "\"#{ @[2] }\""
+		ToCode:=> @[2]
 		Create:NewExprVal "InvalidName"
 		Args:false
 		__index:ExprIndex
@@ -25,7 +25,7 @@ for item in *{
 		Group:"Effect"
 		Desc:"Get effect [EffectName] from scene."
 		CodeOnly:false
-		ToCode:=> "Effect( #{ @[2] } )"
+		ToCode:=> "Effect.#{ @[2] }"
 		Create:NewExpr "EffectName"
 		Args:false
 		__index:ExprIndex

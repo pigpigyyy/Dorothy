@@ -18,7 +18,7 @@ DefaultItem = -> nil
 	Sprite:{"SpriteByName","Graphic",true,DefaultItem}
 	Model:{"ModelByName","Graphic",true,DefaultItem}
 	Body:{"BodyByName","Physics",true,DefaultItem}
-	BodySlice:{"BodySliceByName","Physics",true,DefaultItem}
+	Slice:{"SliceByName","Physics",true,DefaultItem}
 	Effect:{"EffectByName","Graphic",true,DefaultItem}
 	Layer:{"LayerByName","Graphic",true,DefaultItem}
 	Sensor:{"SensorByName","Physics",true,DefaultItem}

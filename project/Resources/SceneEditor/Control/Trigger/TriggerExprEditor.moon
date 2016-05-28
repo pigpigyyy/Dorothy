@@ -47,6 +47,8 @@ Class ExprEditorView,
 					when "Trigger","Event","Condition","Action" then true
 					else false
 				edit = not subExprItem
+				copy = not subExprItem and not rootItem and parentExpr[1] ~= "Condition" and
+					parentExpr[1] ~= "Event"
 				insert = if rootItem then false
 					elseif subExprItem then false
 					elseif #@triggerMenu.children >= 999 then false
@@ -70,7 +72,7 @@ Class ExprEditorView,
 				mode = expr[1] == "Trigger"
 				up = index and index > 2 and not subExprItem
 				down = index and index < #parentExpr and not subExprItem
-				buttons = for v,k in pairs {:edit,:insert,:add,:del,:up,:down,:mode}
+				buttons = for v,k in pairs {:edit,:copy,:insert,:add,:del,:up,:down,:mode}
 					if k then v
 					else continue
 				@showEditButtons buttons
@@ -374,6 +376,39 @@ Class ExprEditorView,
 					return unless newExpr
 					table.insert parentExpr,index,newExpr
 					addNewItem selectedExprItem,indent,parentExpr,index,false,after
+
+		with @copyBtn
+			.copying = false
+			\slot "Tapped",->
+				.copying = not .copying
+				if .copying
+					.text = "Paste"
+					.color = ccColor3 0xff88cc
+					copyTable = (tb,target)->
+						for i = 1,#target
+							item = target[i]
+							if "table" == type item
+								newItem = {}
+								copyTable newItem,item
+								item = newItem
+							tb[i] = item
+						setmetatable tb,getmetatable target
+					.targetExpr = copyTable {},@_selectedExprItem.expr
+				else
+					.text = "Copy"
+					.color = ccColor3 0x00ffff
+					selectedExprItem = @_selectedExprItem
+					{:indent,:parentExpr,:index} = selectedExprItem
+					switch selectedExprItem.itemType
+						when "Start","Mid"
+							parentExpr = selectedExprItem.actionExpr
+							index = #parentExpr+1
+							indent += 1
+						else
+							index += 1
+					table.insert parentExpr,index,.targetExpr
+					addNewItem selectedExprItem,indent,parentExpr,index,false,true
+					.targetExpr = nil
 
 		@insertBtn\slot "Tapped",insertNewExpr false
 		@addBtn\slot "Tapped",insertNewExpr true

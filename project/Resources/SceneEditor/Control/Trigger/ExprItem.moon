@@ -13,6 +13,7 @@ keywordColor = ccColor3 58,135,212
 classColor = ccColor3 62,197,127
 noteColor = ccColor3 56,142,73
 errorColor = ccColor3 255,0,128
+targetColor = ccColor3 0,255,255
 
 LineTag = 1
 ErrorTag = 2
@@ -166,6 +167,15 @@ Class ExprItemView,
 							label\colorText start,stop-1,errorColor
 						else
 							label\colorText start,stop-1,classColor
+			-- color target text
+			targetPos = {}
+			for pos in value\gmatch "()|"
+				char = label\getChar pos
+				if char and char.color == textColor
+					char.color = errorColor
+					table.insert targetPos,pos
+			if #targetPos == 2
+				label\colorText targetPos[1]+1,targetPos[2]-1,targetColor
 
 	updateText:=>
 		@text = tostring @expr if @expr

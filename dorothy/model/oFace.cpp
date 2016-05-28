@@ -186,16 +186,9 @@ void oParticleSystemQuad::childrenDisposed( oIDisposable* item )
 	CCNode::getParent()->removeChild(this, true);
 }
 
-oParticleSystemQuad::oParticleSystemQuad()
+oParticleSystemQuad::oParticleSystemQuad():
+_isFaceRoot(false)
 { }
-
-oParticleSystemQuad::~oParticleSystemQuad()
-{
-	if (disposing)
-	{
-		disposing(this);
-	}
-}
 
 oParticleSystemQuad* oParticleSystemQuad::createWithDef( oParticleDef* type )
 {
@@ -255,14 +248,6 @@ oSprite::oSprite():
 _isSelfVisible(true),
 _isFaceRoot(false)
 { }
-
-oSprite::~oSprite()
-{
-	if (disposing)
-	{
-		disposing(this);
-	}
-}
 
 oSprite* oSprite::create()
 {

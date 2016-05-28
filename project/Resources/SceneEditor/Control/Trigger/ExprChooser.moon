@@ -487,7 +487,7 @@ ExprChooser = Class
 					editActionNode!
 				when "VariableName"
 					editVarName!
-				when "ModelName","BodyName","BodySliceName","LayerName","SensorName","SpriteName"
+				when "ModelName","BodyName","SliceName","LayerName","SensorName","SpriteName"
 					chooseItemFromScene @curExpr[1]\sub 1,-5 -- "TypeName"\sub(1,-5) == "Type"
 
 		selectExpr = (button)->
@@ -612,7 +612,10 @@ ExprChooser = Class
 
 	updatePreview:=>
 		@emit "Result",@curExpr if @@level > 2
-		@@preview\update!
+		with @@preview
+			.targetExpr = @curExpr
+			\update!
+			.targetExpr = nil
 
 	finishEdit:=>
 		@@level -= 1

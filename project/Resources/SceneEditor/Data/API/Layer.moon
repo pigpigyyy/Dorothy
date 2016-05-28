@@ -10,7 +10,7 @@ for item in *{
 		Group:"Special"
 		Desc:"A name for layer."
 		CodeOnly:true
-		ToCode:=> "\"#{ @[2] }\""
+		ToCode:=> @[2]
 		Create:NewExprVal "InvalidName"
 		Args:false
 		__index:ExprIndex
@@ -25,7 +25,7 @@ for item in *{
 		Group:"Layer"
 		Desc:"Get layer [LayerName] from scene."
 		CodeOnly:false
-		ToCode:=> "Layer( #{ @[2] } )"
+		ToCode:=> "Layer.#{ @[2] }"
 		Create:NewExpr "LayerName"
 		Args:false
 		__index:ExprIndex

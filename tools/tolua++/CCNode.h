@@ -31,6 +31,10 @@ class CCNode: public CCObject
 	tolua_readonly tolua_property__qt int numberOfRunningActions;
 	tolua_readonly tolua_property__bool bool running;
 
+	CCNode* addTo(CCNode* child, int zOrder, int tag);
+	CCNode* addTo(CCNode* child, int zOrder);
+	CCNode* addTo(CCNode* child);
+
 	void addChild(CCNode* child, int zOrder, int tag);
 	void addChild(CCNode* child, int zOrder);
 	void addChild(CCNode* child);

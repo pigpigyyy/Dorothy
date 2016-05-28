@@ -1,4 +1,4 @@
-import NewExpr,ExprIndex,ExprToString,Items from require "Data.API.Expression"
+import NewExpr,ExprIndex,ExprToString,Trim,Items from require "Data.API.Expression"
 Types = require "Data.API.Types"
 
 NewType = (typeName,defaultVal,group)->
@@ -29,7 +29,7 @@ NewType = (typeName,defaultVal,group)->
 			Group:typeName
 			Desc:"Set #{ typeLowerCase } [#{ typeName }] position to [Point]."
 			CodeOnly:false
-			ToCode:=> "SetPosition( #{ @[2] }, #{ @[3] } )"
+			ToCode:=> "#{ @[2] }.position = #{ Trim @[3] }"
 			Create:NewExpr defaultVal,"Point"
 			Args:false
 			__index:ExprIndex
@@ -44,7 +44,7 @@ NewType = (typeName,defaultVal,group)->
 			Group:typeName
 			Desc:"Set #{ typeLowerCase } [#{ typeName }] angle to [Number]."
 			CodeOnly:false
-			ToCode:=> "SetAngle( #{ @[2] }, #{ @[3] } )"
+			ToCode:=> "#{ @[2] }.angle = #{ Trim @[3] }"
 			Create:NewExpr defaultVal,"Number"
 			Args:false
 			__index:ExprIndex
@@ -59,7 +59,7 @@ NewType = (typeName,defaultVal,group)->
 			Group:typeName
 			Desc:"Set #{ typeLowerCase } [#{ typeName }] visibility to [Boolean]."
 			CodeOnly:false
-			ToCode:=> "SetVisibility( #{ @[2] }, #{ @[3] } )"
+			ToCode:=> "#{ @[2] }.visible = #{ Trim @[3] }"
 			Create:NewExpr defaultVal,"True"
 			Args:false
 			__index:ExprIndex
@@ -74,8 +74,8 @@ NewType = (typeName,defaultVal,group)->
 			Group:typeName
 			Desc:"Set #{ typeLowerCase } [#{ typeName }] scale to [Point]."
 			CodeOnly:false
-			ToCode:=> "SetScale( #{ @[2] }, #{ @[3] } )"
-			Create:NewExpr "SpriteByName","Point"
+			ToCode:=> "#{ @[2] }.scale = #{ Trim @[3] }"
+			Create:NewExpr defaultVal,"Point"
 			Args:false
 			__index:ExprIndex
 			__tostring:ExprToString
@@ -89,8 +89,8 @@ NewType = (typeName,defaultVal,group)->
 			Group:typeName
 			Desc:"Set #{ typeLowerCase } [#{ typeName }] skew to [Point]."
 			CodeOnly:false
-			ToCode:=> "SetSkew( #{ @[2] }, #{ @[3] } )"
-			Create:NewExpr "SpriteByName","Point"
+			ToCode:=> "#{ @[2] }.skew = #{ Trim @[3] }"
+			Create:NewExpr defaultVal,"Point"
 			Args:false
 			__index:ExprIndex
 			__tostring:ExprToString
@@ -104,8 +104,8 @@ NewType = (typeName,defaultVal,group)->
 			Group:group
 			Desc:"Get #{ typeLowerCase } [#{ typeName }] position."
 			CodeOnly:false
-			ToCode:=> "GetPosition( #{ @[2] } )"
-			Create:NewExpr "SpriteByName"
+			ToCode:=> "#{ @[2] }.position"
+			Create:NewExpr defaultVal
 			Args:false
 			__index:ExprIndex
 			__tostring:ExprToString
@@ -119,8 +119,8 @@ NewType = (typeName,defaultVal,group)->
 			Group:group
 			Desc:"Get #{ typeLowerCase } [#{ typeName }] angle."
 			CodeOnly:false
-			ToCode:=> "GetAngle( #{ @[2] } )"
-			Create:NewExpr "SpriteByName"
+			ToCode:=> "#{ @[2] }.angle"
+			Create:NewExpr defaultVal
 			Args:false
 			__index:ExprIndex
 			__tostring:ExprToString
@@ -134,8 +134,8 @@ NewType = (typeName,defaultVal,group)->
 			Group:group
 			Desc:"Get #{ typeLowerCase } [#{ typeName }] visibility."
 			CodeOnly:false
-			ToCode:=> "GetVisibility( #{ @[2] } )"
-			Create:NewExpr "SpriteByName"
+			ToCode:=> "#{ @[2] }.visible"
+			Create:NewExpr defaultVal
 			Args:false
 			__index:ExprIndex
 			__tostring:ExprToString
@@ -149,8 +149,8 @@ NewType = (typeName,defaultVal,group)->
 			Group:group
 			Desc:"Get #{ typeLowerCase } [#{ typeName }] scale."
 			CodeOnly:false
-			ToCode:=> "GetScale( #{ @[2] } )"
-			Create:NewExpr "SpriteByName"
+			ToCode:=> "#{ @[2] }.scale"
+			Create:NewExpr defaultVal
 			Args:false
 			__index:ExprIndex
 			__tostring:ExprToString
@@ -164,8 +164,8 @@ NewType = (typeName,defaultVal,group)->
 			Group:group
 			Desc:"Get #{ typeLowerCase } [#{ typeName }] skew."
 			CodeOnly:false
-			ToCode:=> "GetSkew( #{ @[2] } )"
-			Create:NewExpr "SpriteByName"
+			ToCode:=> "#{ @[2] }.skew"
+			Create:NewExpr defaultVal
 			Args:false
 			__index:ExprIndex
 			__tostring:ExprToString
@@ -173,7 +173,7 @@ NewType = (typeName,defaultVal,group)->
 	}
 
 AppendTypes = ->
-	unpack for typeName in *{"Sprite","Model","BodySlice","Sensor"}
+	unpack for typeName in *{"Sprite","Model","Effect","Slice","Sensor"}
 		{defaultVal,group} = Types[typeName]
 		NewType typeName,defaultVal,group
 

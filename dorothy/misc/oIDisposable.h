@@ -20,6 +20,14 @@ typedef Delegate<void (oIDisposable* item)> oDisposeHandler;
 class oIDisposable
 {
 public:
+	virtual ~oIDisposable()
+	{
+		if (disposing)
+		{
+			disposing(this);
+		}
+	}
+
 	/** Implement the method to get the item disposed. */
 	virtual bool dispose() = 0;
 	/** Invoke the delegate when this item is disposing,

@@ -1,4 +1,4 @@
-for k,v in pairs(package.loaded) do
+for k,_ in pairs(package.loaded) do
 	package.loaded[k] = nil
 end
 
@@ -32,9 +32,9 @@ end
 builtin.CCMessageBox = nil
 
 local function wait(cond)
-	while cond(CCDirector.deltaTime) do
+	repeat
 		yield()
-	end
+	until not cond(CCDirector.deltaTime)
 end
 
 local function once(job)
@@ -424,6 +424,7 @@ oCache.swapAsync = function(cache, listA, listB, loaded)
 		elseif extension == "wav" then
 			oSound:unload(item)
 		elseif extension == "mp3" then
+			oMusic:unload(item)
 		else
 			CCLuaLog(string.format("[ERROR] Unsupported file to unload: %s", item))
 		end
@@ -435,7 +436,6 @@ oCache.swapAsync = function(cache, listA, listB, loaded)
 	cache:loadAsync(added_list, loaded)
 end
 
-local oContent = builtin.oContent
 local oContent_copyAsync = oContent.copyAsync
 oContent.copyAsync = function(self,src,dst)
 	local loaded  = false

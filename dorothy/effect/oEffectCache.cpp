@@ -127,7 +127,7 @@ void oEffectCache::startElement( void *ctx, const char *name, const char **atts 
 		{
 			const char* name = nullptr;
 			string file;
-			for (int i = 0;atts[i] != nullptr;i++)
+			for (int i = 0; atts[i] != nullptr; i++)
 			{
 				switch (atts[i][0])
 				{
@@ -150,67 +150,43 @@ void oEffectCache::endElement( void *ctx, const char *name )
 //oParticleEffect
 void oParticleEffect::start()
 {
-	_particle->setVisible(true);
-	_particle->resetSystem();
+	if (_particle) _particle->resetSystem();
 }
 void oParticleEffect::stop()
 {
-	_particle->setVisible(false);
-	_particle->stopSystem();
+	if (_particle) _particle->stopSystem();
 }
-void oParticleEffect::setVisible(bool visible)
+void oParticleEffect::autoRemove()
 {
-	_particle->setVisible(visible);
-}
-bool oParticleEffect::isVisible() const
-{
-	return _particle->isVisible();
-}
-oEffect* oParticleEffect::attachTo( CCNode* parent, int zOrder )
-{
-	if (!parent)
-	{
-		return this;
-	}
-	CCNode* oldParent = _particle->getParent();
-	if (oldParent == parent)
-	{
-		return this;
-	}
-	if (oldParent)
-	{
-		oldParent->removeChild(_particle, false);
-	}
-	parent->addChild(_particle, zOrder);
-	return this;
-}
-oEffect* oParticleEffect::autoRemove()
-{
-	_particle->setAutoRemoveOnFinish(true);
-	return this;
+	if (_particle) _particle->setAutoRemoveOnFinish(true);
 }
 oParticleEffect* oParticleEffect::create( const char* filename )
 {
-	oParticleEffect* effect = new oParticleEffect();
+	auto effect = oWRefMake(new oParticleEffect());
 	CC_INIT(effect);
-	effect->_particle = (CCParticleSystemQuad*)oSharedParticleCache.loadParticle(filename);
-	effect->_particle->setPositionType(kCCPositionTypeFree);
-	effect->_particle->setPosition(oVec2::zero);
-	effect->_particle->setVisible(false);
-	effect->_particle->stopSystem();
+	oParticleDef* particleDef = oSharedParticleCache.load(filename);
+	oParticleSystemQuad* particle = oParticleSystemQuad::createWithDef(particleDef);
+	particle->setPositionType(kCCPositionTypeFree);
+	particle->setPosition(oVec2::zero);
+	particle->stopSystem();
+	particle->disposing += [effect](oIDisposable*)
+	{
+		if (effect && effect->getParent())
+		{
+			effect->getParent()->removeChild(effect);
+		}
+	};
+	effect->addChild(particle);
+	effect->_particle = particle;
 	effect->autorelease();
 	return effect;
 }
-oEffect* oParticleEffect::setOffset( const oVec2& pos )
-{
-	_particle->setPosition(pos);
-	return this;
-}
 bool oParticleEffect::isPlaying()
 {
-	return _particle->isActive();
+	if (_particle) return _particle->isActive();
+	return false;
 }
-CCParticleSystemQuad* oParticleEffect::getParticle() const
+oParticleSystemQuad* oParticleEffect::getParticle() const
 {
 	return _particle;
 }
@@ -234,43 +210,22 @@ void oSpriteEffect::stop()
 	}
 	if (_isAutoRemoved)
 	{
-		_sprite->getParent()->removeChild(_sprite, true);
+		_sprite->stopAllActions();
+		CCNode* parent = CCNode::getParent();
+		if (parent) parent->removeChild(this, true);
 	}
 }
-void oSpriteEffect::setVisible(bool visible)
-{
-	_sprite->setVisible(visible);
-}
-bool oSpriteEffect::isVisible() const
-{
-	return _sprite->isVisible();
-}
-oEffect* oSpriteEffect::attachTo( CCNode* parent, int zOrder )
-{
-	CCNode* oldParent = _sprite->getParent();
-	if (oldParent == parent)
-	{
-		return this;
-	}
-	if (oldParent)
-	{
-		oldParent->removeChild(_sprite, false);
-	}
-	parent->addChild(_sprite, zOrder);
-	return this;
-}
-oEffect* oSpriteEffect::autoRemove()
+void oSpriteEffect::autoRemove()
 {
 	_isAutoRemoved = true;
-	return this;
 }
 void oSpriteEffect::onActionEnd()
 {
 	_sprite->setVisible(false);
 	if (_isAutoRemoved)
 	{
-		_sprite->stopAllActions();
-		_sprite->getParent()->removeChild(_sprite, true);
+		CCNode* parent = CCNode::getParent();
+		if (parent) parent->removeChild(this, true);
 	}
 }
 oSpriteEffect* oSpriteEffect::create( const char* filename )
@@ -295,14 +250,10 @@ oSpriteEffect* oSpriteEffect::create( const char* filename )
 			frameActionDef->toAction(),
 			CCCallFunc::create(effect, callfunc_selector(oSpriteEffect::onActionEnd)));
 	}
-
+	
+	effect->addChild(effect->_sprite);
 	effect->autorelease();
 	return effect;
-}
-oEffect* oSpriteEffect::setOffset( const oVec2& pos )
-{
-	_sprite->setPosition(pos);
-	return this;
 }
 bool oSpriteEffect::isPlaying()
 {
@@ -326,40 +277,13 @@ public:
 	{
 		if (_isAutoRemoved)
 		{
-			_node->getParent()->removeChild(_node, true);
+			CCNode* parent = CCNode::getParent();
+			if (parent) parent->removeChild(this, true);
 		}
 	}
-	virtual void setVisible(bool visible)
-	{
-		_node->setVisible(visible);
-	}
-	virtual bool isVisible() const
-	{
-		return _node->isVisible();
-	}
-	virtual oEffect* setOffset( const oVec2& pos )
-	{
-		_node->setPosition(pos);
-		return this;
-	}
-	virtual oEffect* attachTo( CCNode* parent, int zOrder = 0)
-	{
-		CCNode* oldParent = _node->getParent();
-		if (oldParent == parent)
-		{
-			return this;
-		}
-		if (oldParent)
-		{
-			oldParent->removeChild(_node, false);
-		}
-		parent->addChild(_node, zOrder);
-		return this;
-	}
-	virtual oEffect* autoRemove()
+	virtual void autoRemove()
 	{
 		_isAutoRemoved = true;
-		return  this;
 	}
 	static oDummyEffect* create()
 	{

@@ -19,13 +19,13 @@ class oParticleDef;
 class oParticleSystemQuad: public CCParticleSystemQuad, public oIDisposable
 {
 public:
-	virtual ~oParticleSystemQuad();
 	virtual void draw();
 	virtual bool dispose();
 	static oParticleSystemQuad* createWithDef(oParticleDef* def);
 	void childrenDisposed(oIDisposable* item);
 protected:
 	oParticleSystemQuad();
+private:
 	bool _isFaceRoot;
 	friend class oFace;
 };
@@ -34,7 +34,6 @@ protected:
 class oSprite: public CCSprite, public oIDisposable
 {
 public:
-	virtual ~oSprite();
 	/** Set self visibility and its children`s visibility is not affected. */
 	PROPERTY(bool, _isSelfVisible, SelfVisible);
 	virtual void draw();

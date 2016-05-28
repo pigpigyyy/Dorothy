@@ -484,7 +484,6 @@ void CCParticleSystem::initParticle(tCCParticle* particle)
 
     particle->pos.y = m_tSourcePosition.y + m_tPosVar.y * CCRANDOM_MINUS1_1();
 
-
     // Color
     ccColor4F start;
     start.r = clampf(m_tStartColor.r + m_tStartColorVar.r * CCRANDOM_MINUS1_1(), 0, 1);
@@ -603,6 +602,7 @@ void CCParticleSystem::resetSystem()
         p->timeToLive = 0;
     }
 }
+
 bool CCParticleSystem::isFull()
 {
     return (m_uParticleCount == m_uTotalParticles);
@@ -647,130 +647,126 @@ void CCParticleSystem::update(float dt)
         currentPosition = m_obPosition;
     }
 
-    if (m_bVisible)
+    while (m_uParticleIdx < m_uParticleCount)
     {
-        while (m_uParticleIdx < m_uParticleCount)
+        tCCParticle *p = &m_pParticles[m_uParticleIdx];
+
+        // life
+        p->timeToLive -= dt;
+
+        if (p->timeToLive > 0)
         {
-            tCCParticle *p = &m_pParticles[m_uParticleIdx];
-
-            // life
-            p->timeToLive -= dt;
-
-            if (p->timeToLive > 0) 
+            // Mode A: gravity, direction, tangential accel & radial accel
+            if (m_nEmitterMode == kCCParticleModeGravity)
             {
-                // Mode A: gravity, direction, tangential accel & radial accel
-                if (m_nEmitterMode == kCCParticleModeGravity) 
+                CCPoint tmp, radial, tangential;
+
+                radial = CCPoint::zero;
+                // radial acceleration
+                if (p->pos.x || p->pos.y)
                 {
-                    CCPoint tmp, radial, tangential;
-
-                    radial = CCPoint::zero;
-                    // radial acceleration
-                    if (p->pos.x || p->pos.y)
-                    {
-                        radial = ccpNormalize(p->pos);
-                    }
-                    tangential = radial;
-                    radial = ccpMult(radial, p->modeA.radialAccel);
-
-                    // tangential acceleration
-                    float newy = tangential.x;
-                    tangential.x = -tangential.y;
-                    tangential.y = newy;
-                    tangential = ccpMult(tangential, p->modeA.tangentialAccel);
-
-                    // (gravity + radial + tangential) * dt
-                    tmp = ccpAdd( ccpAdd( radial, tangential), modeA.gravity);
-                    tmp = ccpMult( tmp, dt);
-                    p->modeA.dir = ccpAdd( p->modeA.dir, tmp);
-                    tmp = ccpMult(p->modeA.dir, dt);
-                    p->pos = ccpAdd( p->pos, tmp );
+                    radial = ccpNormalize(p->pos);
                 }
+                tangential = radial;
+                radial = ccpMult(radial, p->modeA.radialAccel);
 
-                // Mode B: radius movement
-                else 
-                {                
-                    // Update the angle and radius of the particle.
-                    p->modeB.angle += p->modeB.degreesPerSecond * dt;
-                    p->modeB.radius += p->modeB.deltaRadius * dt;
+                // tangential acceleration
+                float newy = tangential.x;
+                tangential.x = -tangential.y;
+                tangential.y = newy;
+                tangential = ccpMult(tangential, p->modeA.tangentialAccel);
 
-                    p->pos.x = - cosf(p->modeB.angle) * p->modeB.radius;
-                    p->pos.y = - sinf(p->modeB.angle) * p->modeB.radius;
-                }
-
-                // color
-                p->color.r += (p->deltaColor.r * dt);
-                p->color.g += (p->deltaColor.g * dt);
-                p->color.b += (p->deltaColor.b * dt);
-                p->color.a += (p->deltaColor.a * dt);
-
-                // size
-                p->size += (p->deltaSize * dt);
-                p->size = MAX( 0, p->size );
-
-                // angle
-                p->rotation += (p->deltaRotation * dt);
-
-                //
-                // update values in quad
-                //
-
-                CCPoint    newPos;
-
-                if (m_ePositionType == kCCPositionTypeFree || m_ePositionType == kCCPositionTypeRelative) 
-                {
-                    CCPoint diff = ccpSub( currentPosition, p->startPos );
-                    newPos = ccpSub(p->pos, diff);
-                } 
-                else
-                {
-                    newPos = p->pos;
-                }
-
-                // translate newPos to correct position, since matrix transform isn't performed in batchnode
-                // don't update the particle with the new position information, it will interfere with the radius and tangential calculations
-                if (m_pBatchNode)
-                {
-                    newPos.x+=m_obPosition.x;
-                    newPos.y+=m_obPosition.y;
-                }
-
-                updateQuadWithParticle(p, newPos);
-                //updateParticleImp(self, updateParticleSel, p, newPos);
-
-                // update particle counter
-                ++m_uParticleIdx;
-            } 
-            else 
-            {
-                // life < 0
-                int currentIndex = p->atlasIndex;
-                if( m_uParticleIdx != m_uParticleCount-1 )
-                {
-                    m_pParticles[m_uParticleIdx] = m_pParticles[m_uParticleCount-1];
-                }
-                if (m_pBatchNode)
-                {
-                    //disable the switched particle
-                    m_pBatchNode->disableParticle(m_uAtlasIndex+currentIndex);
-
-                    //switch indexes
-                    m_pParticles[m_uParticleCount-1].atlasIndex = currentIndex;
-                }
-
-
-                --m_uParticleCount;
-
-                if( m_uParticleCount == 0 && m_bIsAutoRemoveOnFinish )
-                {
-                    this->unscheduleUpdate();
-                    m_pParent->removeChild(this, true);
-                    return;
-                }
+                // (gravity + radial + tangential) * dt
+                tmp = ccpAdd( ccpAdd( radial, tangential), modeA.gravity);
+                tmp = ccpMult( tmp, dt);
+                p->modeA.dir = ccpAdd( p->modeA.dir, tmp);
+                tmp = ccpMult(p->modeA.dir, dt);
+                p->pos = ccpAdd( p->pos, tmp );
             }
-        } //while
-        m_bTransformSystemDirty = false;
-    }
-    if (! m_pBatchNode)
+
+            // Mode B: radius movement
+            else
+            {
+                // Update the angle and radius of the particle.
+                p->modeB.angle += p->modeB.degreesPerSecond * dt;
+                p->modeB.radius += p->modeB.deltaRadius * dt;
+
+                p->pos.x = - cosf(p->modeB.angle) * p->modeB.radius;
+                p->pos.y = - sinf(p->modeB.angle) * p->modeB.radius;
+            }
+
+            // color
+            p->color.r += (p->deltaColor.r * dt);
+            p->color.g += (p->deltaColor.g * dt);
+            p->color.b += (p->deltaColor.b * dt);
+            p->color.a += (p->deltaColor.a * dt);
+
+            // size
+            p->size += (p->deltaSize * dt);
+            p->size = MAX( 0, p->size );
+
+            // angle
+            p->rotation += (p->deltaRotation * dt);
+
+            //
+            // update values in quad
+            //
+
+            CCPoint newPos;
+
+            if (m_ePositionType == kCCPositionTypeFree || m_ePositionType == kCCPositionTypeRelative)
+            {
+                CCPoint diff = ccpSub( currentPosition, p->startPos );
+                newPos = ccpSub(p->pos, diff);
+            }
+            else
+            {
+                newPos = p->pos;
+            }
+
+            // translate newPos to correct position, since matrix transform isn't performed in batchnode
+            // don't update the particle with the new position information, it will interfere with the radius and tangential calculations
+            if (m_pBatchNode)
+            {
+                newPos.x+=m_obPosition.x;
+                newPos.y+=m_obPosition.y;
+            }
+
+            updateQuadWithParticle(p, newPos);
+            //updateParticleImp(self, updateParticleSel, p, newPos);
+
+            // update particle counter
+            ++m_uParticleIdx;
+        }
+        else // life < 0
+        {
+            int currentIndex = p->atlasIndex;
+            if ( m_uParticleIdx != m_uParticleCount-1 )
+			{
+                m_pParticles[m_uParticleIdx] = m_pParticles[m_uParticleCount-1];
+            }
+            if (m_pBatchNode)
+            {
+                //disable the switched particle
+                m_pBatchNode->disableParticle(m_uAtlasIndex+currentIndex);
+
+                //switch indexes
+                m_pParticles[m_uParticleCount-1].atlasIndex = currentIndex;
+            }
+
+            --m_uParticleCount;
+
+            if ( m_uParticleCount == 0 && m_bIsAutoRemoveOnFinish )
+            {
+                this->unscheduleUpdate();
+                m_pParent->removeChild(this, true);
+                return;
+            }
+		}
+	} //while
+	m_bTransformSystemDirty = false;
+
+    if (!m_pBatchNode)
     {
         postStep();
     }

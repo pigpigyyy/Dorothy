@@ -1,4 +1,4 @@
-import NewExpr,NewExprVal,ExprIndex,ExprToString,Items from require "Data.API.Expression"
+import NewExpr,NewExprVal,ExprIndex,ExprToString,Trim,Items from require "Data.API.Expression"
 
 for item in *{
 	{
@@ -40,7 +40,7 @@ for item in *{
 		Group:"Time"
 		Desc:"Trigger event every [Number] seconds."
 		CodeOnly:false
-		ToCode:=> "TimeCycled( #{ @[2] } )"
+		ToCode:=> "TimeCycled( #{ Trim @[2] } )"
 		Create:NewExpr "Number"
 		Args:false
 		__index:ExprIndex
@@ -55,7 +55,7 @@ for item in *{
 		Group:"Time"
 		Desc:"Trigger event after [Number] seconds when target scene loaded."
 		CodeOnly:false
-		ToCode:=> "TimeElapsed( #{ @[2] } )"
+		ToCode:=> "TimeElapsed( #{ Trim @[2] } )"
 		Create:NewExpr "Number"
 		Args:false
 		__index:ExprIndex
@@ -73,7 +73,7 @@ for item in *{
 		ToCode:=> "BodyEnter( #{ @[2] } )"
 		Create:NewExpr "SensorByName"
 		Args:{
-			targetBody:"BodySlice1" -- param order is needed
+			target:"Slice1" -- param order is needed
 			sensorTag:"Number2"
 		}
 		__index:ExprIndex

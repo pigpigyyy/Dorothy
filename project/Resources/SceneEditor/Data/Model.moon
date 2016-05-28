@@ -490,8 +490,8 @@ Items =
 			effect = with oEffect @effect
 				.parent = parent
 				.visible = @visible and @display
-				\attachTo parent
-				\setOffset Align.Get @position,@align
+				.position Align.Get @position,@align
+				\addTo parent
 				\start! if @play
 			editor.items[@name] = effect
 			editor.itemDefs[effect] = @

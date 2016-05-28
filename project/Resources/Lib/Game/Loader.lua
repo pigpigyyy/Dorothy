@@ -299,8 +299,8 @@ local GameItems = {
 		create = function(self, parent, _, items)
 			local effect = oEffect(self.effect)
 			effect.visible = self.visible
-			effect:attachTo(parent)
-			effect:setOffset(AlignGet(self.position,self.align))
+			effect:addTo(parent)
+			effect.position = AlignGet(self.position,self.align)
 			if self.play then
 				effect:start()
 			end

@@ -1,4 +1,4 @@
-import NewExpr,NewExprVal,ExprIndex,ExprToString,Items from require "Data.API.Expression"
+import NewExpr,NewExprVal,ExprIndex,ExprToString,Trim,Items from require "Data.API.Expression"
 Types = require "Data.API.Types"
 
 NewType = (typeName,defaultVal,groupName)->
@@ -15,7 +15,7 @@ NewType = (typeName,defaultVal,groupName)->
 			Group:groupName
 			Desc:"Set [LocalName] to [#{ typeName }]."
 			CodeOnly:false
-			ToCode:=> "#{ @[2] } = #{ @[3] }"
+			ToCode:=> "#{ @[2] } = #{ Trim @[3] }"
 			Create:NewExpr "LocalName",isContainer and defaultVal\gsub("Local","Create") or defaultVal
 			Args:false
 			__index:ExprIndex
@@ -45,7 +45,7 @@ NewType = (typeName,defaultVal,groupName)->
 			Group:groupName
 			Desc:"Initially set global variable [InitGlobalName] to [#{ typeName }] with note [Text]."
 			CodeOnly:false
-			ToCode:=> "g_#{ @[2] } = #{ @[3] }"..(tostring(@[4]) == "" and "" or " -- #{ @[4] }")
+			ToCode:=> "g_#{ @[2] } = #{ Trim @[3] }"..(tostring(@[4]) == "" and "" or " -- #{ @[4] }")
 			Create:NewExpr "InitGlobalName",defaultVal,"Text"
 			Args:false
 			__index:ExprIndex
@@ -60,7 +60,7 @@ NewType = (typeName,defaultVal,groupName)->
 			Group:groupName
 			Desc:"Set [GlobalName] to [#{ typeName }]."
 			CodeOnly:false
-			ToCode:=> "g_#{ @[2] } = #{ @[3] }"
+			ToCode:=> "g_#{ @[2] } = #{ Trim @[3] }"
 			Create:NewExpr "GlobalName",defaultVal
 			Args:false
 			__index:ExprIndex

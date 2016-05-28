@@ -68,7 +68,7 @@ for item in *{
 		MultiLine:false
 		TypeIgnore:false
 		Group:"Operation"
-		Desc:"Power with base [Number] and exponent [Number]."
+		Desc:"Number [Number] ^ [Number]."
 		CodeOnly:false
 		ToCode:=> "( #{ @[2] } ^ #{ @[3] } )"
 		Create:NewExpr "Number","Number"
@@ -83,7 +83,7 @@ for item in *{
 		MultiLine:false
 		TypeIgnore:false
 		Group:"Operation"
-		Desc:"Get remainders after [Number] divides [Number]."
+		Desc:"Number [Number] % [Number]."
 		CodeOnly:false
 		ToCode:=> "( #{ @[2] } % #{ @[3] } )"
 		Create:NewExpr "Number","Number"

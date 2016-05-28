@@ -11,8 +11,9 @@ typedef unsigned int GLenum;
 class ccColor3
 {
 	ccColor3();
-	ccColor3(unsigned int value);
+	ccColor3(GLuint value);
 	ccColor3(GLubyte r, GLubyte g, GLubyte b);
+	bool operator==(ccColor3& color);
 	~ccColor3();
     GLubyte r;
     GLubyte g;
@@ -22,9 +23,10 @@ class ccColor3
 class ccColor4
 {
 	ccColor4();
-	ccColor4(unsigned int value);
+	ccColor4(GLuint value);
 	ccColor4(ccColor3 c, GLubyte a = 255);
 	ccColor4(GLubyte r, GLubyte g, GLubyte b, GLubyte a);
+	bool operator==(ccColor4& color);
 	~ccColor4();
     GLubyte r;
     GLubyte g;

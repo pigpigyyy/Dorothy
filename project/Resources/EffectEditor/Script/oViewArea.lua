@@ -142,16 +142,18 @@ local function oViewArea()
 	view:gslot("Effect.viewArea.changeEffect",function(effectName)
 		emit("Effect.viewArea.toOrigin",oEditor.origin)
 		if not effectName and oEditor.effect then
-			oEditor.effect:autoRemove():stop()
+			oEditor.effect:autoRemove()
+			oEditor.effect:stop()
 			oEditor.effect = nil
 			return
 		end
 		if oEditor.effect then
-			oEditor.effect:autoRemove():stop()
+			oEditor.effect:autoRemove()
+			oEditor.effect:stop()
 		end
 		if effectName then
 			local effect = oEffect(effectName)
-			effect:attachTo(scrollNode):start()
+			effect:addTo(scrollNode):start()
 			oEditor.effect = effect
 		end
 	end)

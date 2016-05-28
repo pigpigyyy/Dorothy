@@ -1056,7 +1056,6 @@ CCAffineTransform CCNode::nodeToParentTransform()
 			y += s * -m_obAnchorPointInPoints.x * m_fScaleX + c * -m_obAnchorPointInPoints.y * m_fScaleY;
 		}
 
-
 		// Build Transform Matrix
 		// Adjusted transform calculation for rotational skew
 		m_sTransform = CCAffineTransformMake(c * m_fScaleX, s * m_fScaleX,
@@ -1329,6 +1328,38 @@ CCNode* CCNode::getTransformTarget() const
 CCNode* CCNode::getTargetParent() const
 {
 	return _transformTargetRef ? (CCNode*)_transformTargetRef->target : m_pParent;
+}
+
+CCNode* CCNode::addTo(CCNode* parent, int zOrder, int tag)
+{
+	if (!parent)
+	{
+		return this;
+	}
+	if (m_pParent == parent)
+	{
+		if (zOrder != m_nZOrder)
+		{
+			parent->reorderChild(this, zOrder);
+		}
+		return this;
+	}
+	if (m_pParent)
+	{
+		m_pParent->removeChild(this, false);
+	}
+	parent->addChild(this, zOrder, tag);
+	return this;
+}
+
+CCNode* CCNode::addTo(CCNode* parent, int zOrder)
+{
+	return this->addTo(parent, zOrder, m_nTag);
+}
+
+CCNode* CCNode::addTo(CCNode* parent)
+{
+	return this->addTo(parent, m_nZOrder, m_nTag);
 }
 
 NS_CC_END

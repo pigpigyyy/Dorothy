@@ -238,7 +238,7 @@ public:
 	static oAction* create(oUnit* unit);
 protected:
 	bool _hitFromRight;
-	oEffect* _effect;
+	oRef<oEffect> _effect;
 	oVec2 _hitPoint;
 	oVec2 _attackPower;
 };

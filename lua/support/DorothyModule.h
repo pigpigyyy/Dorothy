@@ -220,13 +220,15 @@ class ccColor3
 {
 public:
 	ccColor3():r(255), g(255), b(255){}
-	ccColor3(unsigned int value):
+	ccColor3(GLuint value):
 	r((value&0x00FF0000)>>16),
 	g((value&0x0000FF00)>>8),
 	b(value&0x000000FF){}
 	ccColor3(GLubyte r, GLubyte g, GLubyte b):r(r), g(g), b(b){}
 	ccColor3(const ccColor3B& c):r(c.r), g(c.g), b(c.b){}
 	inline operator ccColor3B() const { return *(ccColor3B*)this; }
+	inline bool operator==(const ccColor3& c) const { return r==c.r&&g==c.g&&b==c.b; }
+	inline bool operator!=(const ccColor3& c) const { return !operator==(c); };
     GLubyte r;
     GLubyte g;
     GLubyte b;
@@ -236,7 +238,7 @@ class ccColor4
 {
 public:
 	ccColor4():r(255), g(255), b(255), a(255){}
-	ccColor4(unsigned int value):
+	ccColor4(GLuint value):
 	a(value >> 24),
 	r((value & 0x00FF0000) >> 16),
 	g((value & 0x0000FF00) >> 8),
@@ -249,6 +251,8 @@ public:
     GLubyte b;
     GLubyte a;
 	inline operator ccColor4B() const { return *(ccColor4B*)this; }
+	inline bool operator==(const ccColor4& c) const { return r==c.r&&g==c.g&&b==c.b&&a==c.a; }
+	inline bool operator!=(const ccColor4& c) const { return !operator==(c); };
 };
 
 void __oEffect_update(lua_State* L, oEffect* effect, int tableIndex);

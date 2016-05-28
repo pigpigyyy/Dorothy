@@ -5116,28 +5116,11 @@ local Dorothy =
 				returns = "()",
 				type = "method"
 			},
-			setOffset =
-			{
-				args = "(pos: oVec2)",
-				description = "",
-				returns = "(self: oEffect)",
-				typeName = "oEffect",
-				type = "method"
-			},
-			attachTo =
-			{
-				args = "(parent: CCNode, nil|zOrder: int)",
-				description = "",
-				returns = "(self: oEffect)",
-				typeName = "oEffect",
-				type = "method"
-			},
 			autoRemove =
 			{
 				args = "()",
 				description = "",
-				returns = "(self: oEffect)",
-				typeName = "oEffect",
+				returns = "()",
 				type = "method"
 			},
 			update =
@@ -5150,8 +5133,8 @@ local Dorothy =
 				type = "method"
 			},
 		},
-		parents = {"CCObject",},
-		description = "class oEffect(CCObject).\n -- (name: string)",
+		parents = {"CCNode",},
+		description = "class oEffect(CCNode).\n -- (name: string)",
 		type = "class",
 		index = index()
 	},

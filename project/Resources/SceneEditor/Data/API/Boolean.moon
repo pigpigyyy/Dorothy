@@ -1,4 +1,4 @@
-import NewExpr,ExprIndex,ExprToString,Items from require "Data.API.Expression"
+import NewExpr,ExprIndex,ExprToString,Trim,Items from require "Data.API.Expression"
 Types = require "Data.API.Types"
 
 NewType = (typeName,defaultVal,group,nullable)->
@@ -27,7 +27,7 @@ NewType = (typeName,defaultVal,group,nullable)->
 			Group:group
 			Desc:"#{ typeName } [#{ typeName }] is valid."
 			CodeOnly:false
-			ToCode:=> "IsValid( #{ @[2] } )"
+			ToCode:=> "IsValid( #{ Trim @[2] } )"
 			Create:NewExpr defaultVal
 			Args:false
 			__index:ExprIndex
@@ -50,7 +50,7 @@ AppendTypes = ->
 	Group:"Boolean"
 	Desc:"Body [Body] is valid."
 	CodeOnly:false
-	ToCode:=> "IsValid( #{ @[2] } )"
+	ToCode:=> "IsValid( #{ Trim @[2] } )"
 	Create:NewExpr "BodyByName"
 	Args:false
 	__index:ExprIndex
@@ -65,7 +65,7 @@ AppendTypes = ->
 	Group:"Boolean"
 	Desc:"Sensor [Sensor] is valid."
 	CodeOnly:false
-	ToCode:=> "IsValid( #{ @[2] } )"
+	ToCode:=> "IsValid( #{ Trim @[2] } )"
 	Create:NewExpr "SensorByName"
 	Args:false
 	__index:ExprIndex
@@ -111,7 +111,7 @@ for item in *{
 		TypeIgnore:false
 		Group:"Boolean"
 		Desc:"Check [NumberCompare]."
-		CodeOnly:false
+		CodeOnly:true
 		ToCode:=> tostring @[2]
 		Create:NewExpr "NumberEqual2"
 		Args:false

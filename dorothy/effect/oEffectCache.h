@@ -13,17 +13,13 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 NS_DOROTHY_BEGIN
 
-class oEffect: public CCObject
+class oEffect: public CCNode
 {
 public:
 	virtual void start() = 0;
 	virtual bool isPlaying() = 0;
 	virtual void stop() = 0;
-	virtual void setVisible(bool visible) = 0;
-	virtual bool isVisible() const = 0;
-	virtual oEffect* setOffset(const oVec2& pos) = 0;
-	virtual oEffect* attachTo(CCNode* parent, int zOrder = 0) = 0;
-	virtual oEffect* autoRemove() = 0;
+	virtual void autoRemove() = 0;
 	static oEffect* create(const string& name);
 	CC_LUA_TYPE(oEffect)
 };
@@ -34,15 +30,11 @@ public:
 	virtual void start();
 	virtual bool isPlaying();
 	virtual void stop();
-	virtual void setVisible(bool visible);
-	virtual bool isVisible() const;
-	virtual oEffect* setOffset( const oVec2& pos );
-	virtual oEffect* attachTo( CCNode* parent, int zOrder = 0);
-	virtual oEffect* autoRemove();
+	virtual void autoRemove();
 	static oParticleEffect* create(const char* filename);
-	CCParticleSystemQuad* getParticle() const;
+	oParticleSystemQuad* getParticle() const;
 private:
-	oRef<CCParticleSystemQuad> _particle;
+	oWRef<oParticleSystemQuad> _particle;
 };
 
 class oSpriteEffect: public oEffect
@@ -51,11 +43,7 @@ public:
 	virtual void start();
 	virtual bool isPlaying();
 	virtual void stop();
-	virtual void setVisible(bool visible);
-	virtual bool isVisible() const;
-	virtual oEffect* setOffset( const oVec2& pos );
-	virtual oEffect* attachTo( CCNode* parent, int zOrder = 0);
-	virtual oEffect* autoRemove();
+	virtual void autoRemove();
 	void onActionEnd();
 	static oSpriteEffect* create(const char* filename);
 	oSprite* getSprite() const;
