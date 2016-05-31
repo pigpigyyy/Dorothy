@@ -14,12 +14,30 @@ local oAI = require("oAI")
 local oSeq = require("oSeq")
 local oSel = require("oSel")
 local oCon = require("oCon")
+local CCNode = require("CCNode")
 
 local type = type
 local select = select
 local ctype = tolua.type
 local inf = math.huge
 local ninf = -inf
+
+--[[
+#define MT_DEL 1
+#define MT_CALL 2
+#define MT_SUPER 3
+#define MT_GET 4
+#define MT_SET 5
+#define MT_EQ 6
+#define MT_ADD 7
+#define MT_SUB 8
+#define MT_MUL 9
+#define MT_DIV 10
+#define MT_LT 11
+#define MT_LE 12
+]]
+local MT_GET = 4
+local MT_SET = 5
 
 local function IsValidNumber(x)
 	return x == x and ninf < x and x < inf
@@ -91,6 +109,30 @@ end
 
 local APIs
 APIs = {
+	Load = function()
+		CCNode[MT_GET].scale = function(self)
+			return oVec2(self.scaleX,self.scaleY)
+		end
+		CCNode[MT_SET].scale = function(self,value)
+			self.scaleX = value.x
+			self.scaleY = value.y
+		end
+		CCNode[MT_GET].skew = function(self)
+			return oVec2(self.skewX,self.skewY)
+		end
+		CCNode[MT_SET].skew = function(self,value)
+			self.skewX = value.x
+			self.skewY = value.y
+		end
+	end,
+
+	Unload = function()
+		CCNode[MT_GET].scale = nil
+		CCNode[MT_SET].scale = nil
+		CCNode[MT_GET].skew = nil
+		CCNode[MT_SET].skew = nil
+	end,
+
 	Trigger = Trigger,
 
 	Event = function(event)

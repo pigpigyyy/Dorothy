@@ -444,6 +444,20 @@ ExprChooser = Class
 				.textField\slot "InputInserted",inputed
 				.textField\slot "InputDeleted",inputed
 
+		editWaiting = ->
+			button = with GroupButton {
+					text:@curExpr[3] and "Wait" or "Not wait"
+					width:math.min(200,@bodyMenu.width-20)
+					height:itemHeight
+				}
+				.position = oVec2 @bodyMenu.width/2,
+					@bodyLabel.positionY-@bodyLabel.height-10-.height/2
+				\slot "Tapped",->
+					.text = .text == "Wait" and "Not wait" or "Wait"
+					@curExpr[3] = .text == "Wait"
+					@updatePreview!
+			@bodyMenu\addChild button
+
 		updateContent = (exprDef)->
 			@curExpr = @exprs[exprDef]
 			if @curExpr
@@ -487,6 +501,8 @@ ExprChooser = Class
 					editActionNode!
 				when "VariableName"
 					editVarName!
+				when "Perform"
+					editWaiting!
 				when "ModelName","BodyName","SliceName","LayerName","SensorName","SpriteName"
 					chooseItemFromScene @curExpr[1]\sub 1,-5 -- "TypeName"\sub(1,-5) == "Type"
 

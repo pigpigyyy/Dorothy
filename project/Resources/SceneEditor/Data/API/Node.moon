@@ -1,10 +1,25 @@
-import NewExpr,ExprIndex,ExprToString,Trim,Items from require "Data.API.Expression"
+import NewExpr,ExprIndex,ExprToString,Trim,AddItem,Items from require "Data.API.Expression"
 Types = require "Data.API.Types"
 
 NewType = (typeName,defaultVal,group)->
 	typeLowerCase = typeName\lower!
 	itemProperty = "#{ typeName }Property"
 	{
+		{
+			Name:"Perform#{ typeName }Action"
+			Text:typeName
+			Type:"PerformAction"
+			MultiLine:false
+			TypeIgnore:false
+			Group:group
+			Desc:"#{ typeName } [#{ typeName }] performs a group of actions."
+			CodeOnly:false
+			ToCode:=> "#{ @[2] }:perform("
+			Create:NewExpr "SpriteByName","ActionGroup"
+			Args:false
+			__index:ExprIndex
+			__tostring:ExprToString
+		}
 		{
 			Name:"Set#{ typeName }Property"
 			Text:typeName
@@ -268,11 +283,25 @@ for item in *{
 		__index:ExprIndex
 		__tostring:ExprToString
 	}
+	{
+		Name:"Perform"
+		Text:"Perform"
+		Type:"None"
+		MultiLine:true
+		TypeIgnore:false
+		Group:"Action"
+		Desc:"Do [PerformAction] and"
+		CodeOnly:true
+		ToCode:=> (@[3] and "Wait( " or "")..tostring @[2]
+		Create:=>
+			setmetatable { "Perform"
+				Items.PerformSpriteAction\Create!
+				false
+			},@
+		Args:false
+		__index:ExprIndex
+		__tostring:ExprToString
+	}
 	AppendTypes!
 }
-	itemName = item.Name
-	if itemName
-		Items[itemName] = item
-	else
-		for subItem in *item
-			Items[subItem.Name] = subItem
+	AddItem item

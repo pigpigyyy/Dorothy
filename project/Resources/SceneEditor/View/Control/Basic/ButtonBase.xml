@@ -2,7 +2,7 @@
 <MenuItem Name="menuItem" X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }" Color="0x00ffff" Tag="{ tag or 0 }">
 	<!-- Animations -->
 	<Action>
-		<Sequence Name="scale" Ref="True">
+		<Sequence Name="scaleAction" Ref="True">
 			<Scale X="0.3" Y="0.3"/>
 			<Scale Time="0.3" X="1" Y="1" Ease="OutBack"/>
 		</Sequence>
@@ -13,6 +13,6 @@
 
 	<!-- Tap Event -->
 	<Slot Name="TapBegan">
-		menuItem.face:perform(scale) -- keep button ref
+		menuItem.face:perform(scaleAction) -- keep button ref
 	</Slot>
 </MenuItem>

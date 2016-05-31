@@ -205,6 +205,27 @@ Class ExprEditorView,
 						nextExpr expr[6],i,indent+1
 					with @createExprItem mode("end )","End."),indent,expr,parentExpr,index
 						.itemType = "End"
+				when "Perform"
+					performExpr = expr[2]
+					wait = expr[3]
+					with @createExprItem tostring(expr),indent,expr,parentExpr,index
+						.itemType = "Start"
+						.actionExpr = performExpr[3]
+					for i = 2,#performExpr[3]
+						nextExpr performExpr[3],i,indent+1
+					with @createExprItem mode(")"..(wait and " )" or ""),"End."),indent,expr,parentExpr,index
+						.itemType = "End"
+				when "Sequence","Spawn"
+					groupExpr = expr[2]
+					with @createExprItem " ",indent,expr,parentExpr,index
+						.itemType = "Start"
+						.text = tostring expr
+						.actionExpr = groupExpr
+					for i = 2,#groupExpr
+						nextExpr groupExpr,i,indent+1
+					with @createExprItem " ",indent,expr,parentExpr,index
+						.itemType = "End"
+						.text = mode ")","End."
 				when "SetLocal"
 					assignExpr = expr[2]
 					exprName = assignExpr[1]
@@ -272,8 +293,10 @@ Class ExprEditorView,
 				itemIndex += 1
 			-- separate condition exprs by comma
 			if not delExpr and
-				parentExpr[1] == "Condition" and
-				selectedExprItem.expr[1] ~= "Condition"
+				((parentExpr[1] == "Condition" and
+				selectedExprItem.expr.Type == "Boolean") or
+				(parentExpr[1] == "ActionGroup" and
+				selectedExprItem.expr.Type == "Action"))
 				selectedExprItem\updateText!
 			-- remove duplicated new exprs
 			for i = startIndex,stopIndex
@@ -298,7 +321,7 @@ Class ExprEditorView,
 			selectedExprItem = @_selectedExprItem
 			if selectedExprItem
 				{:expr,:parentExpr,:index} = selectedExprItem
-				valueType = (expr.TypeIgnore or expr.Type == "None") and "Action" or expr.Type
+				valueType = (expr.TypeIgnore or expr.Type == "None") and "TriggerAction" or expr.Type
 				with ExprChooser {
 						valueType:valueType
 						expr:expr
@@ -361,12 +384,10 @@ Class ExprEditorView,
 				indent += (parentExpr.MultiLine and 1 or 0)
 				index or= #parentExpr
 			valueType = switch parentExpr[1]
-				when "Event"
-					"Event"
-				when "Condition"
-					"Boolean"
-				else
-					"Action"
+				when "Event" then "Event"
+				when "Condition" then "Boolean"
+				when "ActionGroup" then "Action"
+				else "TriggerAction"
 			with ExprChooser {
 					valueType:valueType
 					parentExpr:parentExpr
@@ -458,9 +479,8 @@ Class ExprEditorView,
 			table.insert parentExpr,index-1,expr
 			children = @triggerMenu.children
 			startIndex = children\index(selectedExprItem)
-			if parentExpr[1] == "Condition"
-				children[startIndex-1]\updateText!
-				selectedExprItem\updateText!
+			targetExpr = selectedExprItem.actionExpr or parentExpr
+			currentItem = selectedExprItem
 			prevIndex = startIndex-1
 			prevItem = children[prevIndex]
 			if prevItem.itemType == "End"
@@ -476,6 +496,7 @@ Class ExprEditorView,
 					break if searchEnd
 					if item.expr == expr and item.itemType == "End"
 						searchEnd = true
+						currentItem = item
 					item
 				for item in *items
 					children\remove item
@@ -484,6 +505,10 @@ Class ExprEditorView,
 			else
 					children\remove selectedExprItem
 					children\insert selectedExprItem,prevIndex
+			switch targetExpr[1]
+				when "Condition","ActionGroup"
+					prevItem\updateText!
+					currentItem\updateText!
 			offset = @offset
 			@offset = oVec2.zero
 			@viewSize = @triggerMenu\alignItems 0
@@ -502,14 +527,15 @@ Class ExprEditorView,
 			table.insert parentExpr,index+1,expr
 			children = @triggerMenu.children
 			startIndex = children\index(selectedExprItem)
-			if parentExpr[1] == "Condition"
-				children[startIndex+1]\updateText!
-				selectedExprItem\updateText!
+			targetExpr = selectedExprItem.actionExpr or parentExpr
+			currentItem = selectedExprItem
+			nextItem = children[startIndex+1]
 			nextIndex = startIndex+1
 			if expr.MultiLine
 				for i = startIndex,#children
 					childItem = children[i]
 					if childItem.expr == expr and childItem.itemType == "End"
+						currentItem = childItem
 						nextIndex = i+1
 						break
 			nextItem = children[nextIndex]
@@ -519,6 +545,7 @@ Class ExprEditorView,
 				for item in *children[nextIndex,]
 					break if searchEnd
 					if item.expr == tmpExpr and item.itemType == "End"
+						nextItem = item
 						searchEnd = true
 					item
 			else
@@ -527,6 +554,10 @@ Class ExprEditorView,
 				children\remove item
 				children\insert item,startIndex
 				startIndex += 1
+			switch targetExpr[1]
+				when "Condition","ActionGroup"
+					currentItem\updateText!
+					nextItem\updateText!
 			offset = @offset
 			@offset = oVec2.zero
 			@viewSize = @triggerMenu\alignItems 0

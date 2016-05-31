@@ -75,6 +75,8 @@ Class ProfileScreenView,
 								oScale 0.3,0,0,oEase.OutQuad
 								CCHide!
 							}
+							APIs = require "Lib.Game.APIs"
+							APIs.Unload()
 							Game = require "Lib.Game.Game"
 							Game.instance\stopAllTriggers!
 

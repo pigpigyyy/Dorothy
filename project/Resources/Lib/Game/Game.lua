@@ -161,7 +161,11 @@ return Class {
 		entry:addChild(self._gameNode)
 		-- load global variables
 		if not self._globalScope then
-			self._globalScope = setmetatable({},{__index=require("Lib.Game.APIs")})
+			-- load game apis
+			local APIs = require("Lib.Game.APIs")
+			APIs.Load()
+			-- create scope table
+			self._globalScope = setmetatable({},{__index=APIs})
 			local globalVarLoader = loadfile(self.globalVarFile)
 			setfenv(globalVarLoader,self._globalScope)
 			globalVarLoader()

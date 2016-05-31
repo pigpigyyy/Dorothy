@@ -135,6 +135,18 @@ TriggerDef = Class {
 					for i = 2,#expr[4]
 						nextExpr expr[4],i,indent+1
 					append indent,"end"
+				when "Perform"
+					performExpr = expr[2]
+					append indent,tostring expr
+					for i = 2,#performExpr[3]
+						nextExpr performExpr[3],i,indent+1
+					append indent,expr[3] and ") )" or ")"
+				when "Sequence","Spawn"
+					groupExpr = expr[2]
+					append indent,tostring expr
+					for i = 2,#groupExpr
+						nextExpr groupExpr,i,indent+1
+					append indent,")"
 				when "Loop"
 					append indent,tostring expr
 					for i = 2,#expr[6]
@@ -157,6 +169,9 @@ TriggerDef = Class {
 					when "Condition","Available","ConditionNode"
 						if parentExpr ~= expr and parentExpr[#parentExpr] ~= expr
 							insert strs,#strs," and"
+					when "ActionGroup"
+						if parentExpr ~= expr and parentExpr[#parentExpr] ~= expr
+							insert strs,#strs,", "
 		nextExpr exprData,nil,0
 		Expression.CodeMode = codeMode
 		table.concat strs
@@ -180,6 +195,8 @@ TriggerDef = Class {
 					nextExpr expr[3]
 				when "Condition","Action","UnitAction","ConditionNode","Available","Run","Stop","Event"
 					return
+				when "Perform"
+					nextExpr expr[2][2]
 				when "Loop"
 					-- check params before adding loop variable into scope
 					for subExpr in *expr[3,]
@@ -350,8 +367,8 @@ for exprName,expr in pairs Items
 	Types[expr.Type] or= {}
 	table.insert Types[expr.Type],expr
 	if expr.Type == "None" or expr.TypeIgnore
-		Types["Action"] or= {}
-		table.insert Types["Action"],expr
+		Types["TriggerAction"] or= {}
+		table.insert Types["TriggerAction"],expr
 for _,group in pairs Groups
 	table.sort group,(a,b)-> a.Name < b.Name
 for _,typeList in pairs Types

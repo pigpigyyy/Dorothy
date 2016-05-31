@@ -109,14 +109,17 @@ Class ExprItemView,
 
 	text:property => @_text,
 		(value)=>
+			@_text = value
 			value = string.rep("    ",@_indent)..value
 			parentExpr = @parentExpr
-			if parentExpr
+			if parentExpr and @itemType ~= "Start"
 				switch parentExpr[1]
 					when "Condition","Available","ConditionNode"
 						if #parentExpr ~= @index
 							value ..= " and"
-			@_text = value
+					when "ActionGroup"
+						if #parentExpr ~= @index
+							value ..= ","
 			@label.text = value
 			@label.texture.antiAlias = false
 			@height = @label.height+16
@@ -178,7 +181,11 @@ Class ExprItemView,
 				label\colorText targetPos[1]+1,targetPos[2]-1,targetColor
 
 	updateText:=>
-		@text = tostring @expr if @expr
+		if @expr
+			if @itemType == "End"
+				@text = @_text
+			else
+				@text = tostring @expr
 		@updateLine!
 
 	markError:(isError,info)=>

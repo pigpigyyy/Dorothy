@@ -1037,7 +1037,7 @@ Class EditorView,
 			for i,file in ipairs files do files[i] = gameFullPath..file
 			oContent\loadFileAsync files,(name,data)->
 				exprData = TriggerDef.SetExprMeta loadstring(data)!
-				compiledFile = name\sub(1,-7).."lua"
+				compiledFile = Path.getPath(name)..Path.getName(name)..".lua"
 				if TriggerDef.LintNotPass exprData
 					if oContent\exist compiledFile
 						oContent\remove compiledFile

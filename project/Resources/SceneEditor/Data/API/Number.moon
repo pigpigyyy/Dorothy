@@ -1,9 +1,9 @@
-import NewExpr,NewExprVal,ExprIndex,ExprToString,Items from require "Data.API.Expression"
+import NewExpr,NewExprVal,ExprIndex,ExprToString,AddItem from require "Data.API.Expression"
 
 for item in *{
 	{
 		Name:"Plus"
-		Text:"Plus"
+		Text:"Plus +"
 		Type:"Number"
 		MultiLine:false
 		TypeIgnore:false
@@ -18,7 +18,7 @@ for item in *{
 	}
 	{
 		Name:"Minus"
-		Text:"Minus"
+		Text:"Minus -"
 		Type:"Number"
 		MultiLine:false
 		TypeIgnore:false
@@ -33,7 +33,7 @@ for item in *{
 	}
 	{
 		Name:"Multiply"
-		Text:"Multiply"
+		Text:"Multiply *"
 		Type:"Number"
 		MultiLine:false
 		TypeIgnore:false
@@ -48,7 +48,7 @@ for item in *{
 	}
 	{
 		Name:"Divide"
-		Text:"Divide"
+		Text:"Divide /"
 		Type:"Number"
 		MultiLine:false
 		TypeIgnore:false
@@ -63,7 +63,7 @@ for item in *{
 	}
 	{
 		Name:"Power"
-		Text:"Power"
+		Text:"Power ^"
 		Type:"Number"
 		MultiLine:false
 		TypeIgnore:false
@@ -78,7 +78,7 @@ for item in *{
 	}
 	{
 		Name:"Module"
-		Text:"Module"
+		Text:"Module %"
 		Type:"Number"
 		MultiLine:false
 		TypeIgnore:false
@@ -107,4 +107,4 @@ for item in *{
 		__tostring:ExprToString
 	}
 }
-	Items[item.Name] = item
+	AddItem item

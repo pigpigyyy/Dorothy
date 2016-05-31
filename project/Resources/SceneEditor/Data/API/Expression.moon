@@ -49,6 +49,19 @@ Trim = (item)->
 	item = tostring item
 	item\sub(1,1) == "(" and item\sub(2,-2) or item
 
+AddAPI = (api)->
+	if Items[api.Name]
+		error "API named \"#{ api.Name }\" is duplicated!"
+	else
+		Items[api.Name] = api
+
+AddItem = (item)->
+	if item.Name
+		AddAPI item
+	else
+		for subItem in *item
+			AddAPI subItem
+
 LoadAPIs = ()->
 	for name in *{
 			"Variable"
@@ -57,6 +70,7 @@ LoadAPIs = ()->
 			"UnitAction"
 			"AI"
 			"Misc"
+			"Action"
 			"Boolean"
 			"Number"
 			"String"
@@ -80,6 +94,7 @@ Expression = {
 	:NewExpr
 	:NewExprVal
 	:Items
+	:AddItem
 	:LoadAPIs
 	:ExprIndex
 	:ExprToString

@@ -150,7 +150,7 @@ static int class_index_event(lua_State* L)
 			{
 				lua_pushvalue(L, 2);// ud key mt mt key
 				lua_rawget(L, -2);// mt[key], ud key mt mt cfunc
-				if (lua_iscfunction(L, -1))// check cfunc
+				if (lua_isfunction(L, -1))// check cfunc
 				{
 					if (loop)// is accessing base class
 					{
@@ -208,7 +208,7 @@ static int class_newindex_event(lua_State* L)
 			{
 				lua_pushvalue(L, 2);
 				lua_rawget(L, -2); /* stack: t k v mt tset func */
-				if (lua_iscfunction(L, -1))
+				if (lua_isfunction(L, -1))
 				{
 					if (loop)
 					{
@@ -225,8 +225,8 @@ static int class_newindex_event(lua_State* L)
 						lua_rawset(L, -3); // set[key] = cfunc, cfunc set
 						lua_pop(L, 1); // cfunc
 					}
-					lua_pushvalue(L, 1);
-					lua_pushvalue(L, 3);
+					lua_pushvalue(L, 1); // cfunc ud
+					lua_pushvalue(L, 3); // cfunc ud value
 					lua_call(L, 2, 0);
 					return 0;
 				}

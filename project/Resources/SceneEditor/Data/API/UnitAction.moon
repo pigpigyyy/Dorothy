@@ -1,4 +1,4 @@
-import NewExpr,NewExprVal,ExprIndex,ExprToString,Trim,Items from require "Data.API.Expression"
+import NewExpr,NewExprVal,ExprIndex,ExprToString,Trim,AddItem from require "Data.API.Expression"
 
 for item in *{
 	{
@@ -122,4 +122,4 @@ for item in *{
 		__tostring:ExprToString
 	}
 }
-	Items[item.Name] = item
+	AddItem item

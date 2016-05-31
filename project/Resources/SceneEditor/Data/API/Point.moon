@@ -1,4 +1,4 @@
-import NewExpr,NewExprVal,ExprIndex,ExprToString,Trim,Items from require "Data.API.Expression"
+import NewExpr,NewExprVal,ExprIndex,ExprToString,Trim,AddItem from require "Data.API.Expression"
 
 for item in *{
 	{
@@ -8,7 +8,7 @@ for item in *{
 		MultiLine:false
 		TypeIgnore:false
 		Group:"Point"
-		Desc:"Create point of position x [Number] and y [Number]."
+		Desc:"Create point with x [Number] and y [Number]."
 		CodeOnly:false
 		ToCode:=> "Point( #{ Trim @[2] }, #{ Trim @[3] } )"
 		Create:NewExpr "Number","Number"
@@ -18,7 +18,7 @@ for item in *{
 	}
 	{
 		Name:"PointAdd"
-		Text:"Add"
+		Text:"Add +"
 		Type:"Point"
 		MultiLine:false
 		TypeIgnore:false
@@ -33,7 +33,7 @@ for item in *{
 	}
 	{
 		Name:"PointSub"
-		Text:"Substract"
+		Text:"Substract -"
 		Type:"Point"
 		MultiLine:false
 		TypeIgnore:false
@@ -48,7 +48,7 @@ for item in *{
 	}
 	{
 		Name:"PointMult"
-		Text:"Multiply"
+		Text:"Multiply *"
 		Type:"Point"
 		MultiLine:false
 		TypeIgnore:false
@@ -63,7 +63,7 @@ for item in *{
 	}
 	{
 		Name:"PointDiv"
-		Text:"Divide"
+		Text:"Divide /"
 		Type:"Point"
 		MultiLine:false
 		TypeIgnore:false
@@ -78,7 +78,7 @@ for item in *{
 	}
 	{
 		Name:"PointCross"
-		Text:"Cross"
+		Text:"Cross *"
 		Type:"Point"
 		MultiLine:false
 		TypeIgnore:false
@@ -92,4 +92,4 @@ for item in *{
 		__tostring:ExprToString
 	}
 }
-	Items[item.Name] = item
+	AddItem item

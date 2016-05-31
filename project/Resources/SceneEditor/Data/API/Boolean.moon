@@ -1,4 +1,4 @@
-import NewExpr,ExprIndex,ExprToString,Trim,Items from require "Data.API.Expression"
+import NewExpr,ExprIndex,ExprToString,Trim,AddItem from require "Data.API.Expression"
 Types = require "Data.API.Types"
 
 NewType = (typeName,defaultVal,group,nullable)->
@@ -270,9 +270,4 @@ for item in *{
 	}
 	AppendTypes!
 }
-	itemName = item.Name
-	if itemName
-		Items[itemName] = item
-	else
-		for subItem in *item
-			Items[subItem.Name] = subItem
+	AddItem item
