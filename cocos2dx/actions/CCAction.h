@@ -100,13 +100,13 @@ public:
     /** Create an action */
     static CCAction* create();
 protected:
-    CCNode    *m_pOriginalTarget;
+    CCNode* m_pOriginalTarget;
     /** The "target".
     The target will be set with the 'startWithTarget' method.
     When the 'stop' method is called, target will be set to nil.
     The target is 'assigned', it is not 'retained'.
     */
-    CCNode    *m_pTarget;
+    CCNode* m_pTarget;
     /** The action tag. An identifier of the action */
     int     m_nTag;
 	CC_LUA_TYPE(CCAction)

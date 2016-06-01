@@ -227,7 +227,9 @@ Class
 				with MessageBox text:"Delete AI Tree\n#{triggerBtn.text}"
 					\slot "OK",(result)->
 						return unless result
-						oContent\remove editor.gameFullPath..triggerBtn.file
+						filename = editor.gameFullPath..triggerBtn.file
+						oContent\remove filename
+						oContent\remove Path.getPath(filename)..Path.getName(filename)..".lua"
 						@localScope\updateItems!
 			else
 				MessageBox text:"No AI Tree Selected!",okOnly:true

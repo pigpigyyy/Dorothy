@@ -1,5 +1,6 @@
-import NewExpr,ExprIndex,ExprToString,Trim,AddItem,Items from require "Data.API.Expression"
+Expression = require "Data.API.Expression"
 Types = require "Data.API.Types"
+import NewExpr,ExprIndex,ExprToString,Trim,AddItem,Items from Expression
 
 NewType = (typeName,defaultVal,group)->
 	typeLowerCase = typeName\lower!
@@ -15,7 +16,7 @@ NewType = (typeName,defaultVal,group)->
 			Desc:"#{ typeName } [#{ typeName }] performs a group of actions."
 			CodeOnly:false
 			ToCode:=> "#{ @[2] }:perform("
-			Create:NewExpr "SpriteByName","ActionGroup"
+			Create:NewExpr defaultVal,"ActionGroup"
 			Args:false
 			__index:ExprIndex
 			__tostring:ExprToString
@@ -141,7 +142,7 @@ NewType = (typeName,defaultVal,group)->
 			__tostring:ExprToString
 		}
 		{
-			Name:"Get#{ typeName }Visibility"
+			Name:"Is#{ typeName }Visible"
 			Text:typeName
 			Type:"ItemVisibility"
 			MultiLine:false
@@ -239,8 +240,8 @@ for item in *{
 		__tostring:ExprToString
 	}
 	{
-		Name:"GetVisibility"
-		Text:"Get Visibility"
+		Name:"IsVisibility"
+		Text:"Is Visible"
 		Type:"Boolean"
 		MultiLine:false
 		TypeIgnore:false
@@ -292,7 +293,7 @@ for item in *{
 		Group:"Action"
 		Desc:"Do [PerformAction] and"
 		CodeOnly:true
-		ToCode:=> (@[3] and "Wait( " or "")..tostring @[2]
+		ToCode:=> (@[3] and (Expression.CodeMode and "Wait( " or "Wait ") or "")..tostring @[2]
 		Create:=>
 			setmetatable { "Perform"
 				Items.PerformSpriteAction\Create!

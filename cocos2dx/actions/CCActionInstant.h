@@ -89,7 +89,7 @@ public:
 public:
 
     /** Allocates and initializes the action */
-    static CCHide * create();
+    static CCHide* create();
 };
 
 /** @brief Toggles the visibility of a node
@@ -268,7 +268,7 @@ public:
     virtual void execute();
 
 protected:
-    void            *m_pData;
+    void* m_pData;
 };
 
 

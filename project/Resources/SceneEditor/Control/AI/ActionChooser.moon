@@ -18,7 +18,7 @@ Class ActionChooserView,
 			button.checked = true unless button.checked
 			@curGroupBtn = button
 			if not button.items
-				files = Path.getFiles editor.actionFullPath..button.group
+				files = Path.getFiles editor.actionFullPath..button.group,"action"
 				button.items = for file in *files
 					with SelectionItem {
 							text:Path.getName file

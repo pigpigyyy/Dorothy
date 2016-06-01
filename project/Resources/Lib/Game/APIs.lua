@@ -1,20 +1,7 @@
+Dorothy()
 local Dummy,DummyNoDefault = unpack(require("Lib.Game.Dummy"))
 local Trigger = require("Lib.Game.Trigger")
 local Game = require("Lib.Game.Game")
-local Class = require("Class")
-local once = require("once")
-local sleep = require("sleep")
-local thread = require("thread")
-local tolua = require("tolua")
-local oContent = require("oContent")
-local oVec2 = require("oVec2")
-local oModel = require("oModel")
-local oAction = require("oAction")
-local oAI = require("oAI")
-local oSeq = require("oSeq")
-local oSel = require("oSel")
-local oCon = require("oCon")
-local CCNode = require("CCNode")
 
 local type = type
 local select = select
@@ -107,8 +94,10 @@ local function GetSlice(sensor)
 	return Slice
 end
 
+local CCNode_perform = CCNode.perform
+
 local APIs
-APIs = {
+APIs = setmetatable({
 	Load = function()
 		CCNode[MT_GET].scale = function(self)
 			return oVec2(self.scaleX,self.scaleY)
@@ -124,6 +113,16 @@ APIs = {
 			self.skewX = value.x
 			self.skewY = value.y
 		end
+		CCNode.perform = function(self,...)
+			local action
+			if select("#",...) > 1 then
+				action = CCSequence{...}
+			else
+				action = select(1,...)
+			end
+			CCNode_perform(self,action)
+			return action.duration or 0
+		end
 	end,
 
 	Unload = function()
@@ -131,6 +130,7 @@ APIs = {
 		CCNode[MT_SET].scale = nil
 		CCNode[MT_GET].skew = nil
 		CCNode[MT_SET].skew = nil
+		CCNode.perform = CCNode_perform
 	end,
 
 	Trigger = Trigger,
@@ -230,6 +230,17 @@ APIs = {
 	DoNothing = function() end,
 	IsValid = IsValid,
 	Sleep = sleep,
+	Wait = function(item)
+		local itemType = ctype(item)
+		if itemType == "oModel" then
+			while item.playing do
+				sleep()
+			end
+		elseif itemType == "number" then
+			sleep(item)
+		end
+		return item
+	end,
 	Print = print,
 
 	Effect = GetItem("oEffect"),
@@ -264,18 +275,10 @@ APIs = {
 			layer:addChild(model)
 			return model
 		end
-		return nil
-	end,
-
-	PlayAnimation = function(model, animation, loop, look)
-		if not model then return 0 end
-		model.loop = loop
-		model.look = look
-		return model:play(animation)
+		return Dummy
 	end,
 
 	DestroyModel = function(model)
-		if not model then return end
 		if model.parent then
 			model.parent:removeChild(model)
 		end
@@ -314,6 +317,18 @@ APIs = {
 		end
 		return false
 	end,
-}
+
+	Sequence = CCSequence,
+	Spawn = CCSpawn,
+	Delay = CCDelay,
+	Move = function(time,pos,easing)
+		return oPos(time,pos.x,pos.y,easing)
+	end,
+	Scale = function(time,scale,easing)
+		return oScale(time,scale.x,scale.y,easing)
+	end,
+},{
+	__index=oEase
+})
 
 return APIs

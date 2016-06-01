@@ -1,4 +1,5 @@
-import NewExpr,NewExprVal,ExprIndex,ExprToString,Trim,AddItem from require "Data.API.Expression"
+Expression = require "Data.API.Expression"
+import NewExpr,NewExprVal,ExprIndex,ExprToString,Trim,AddItem,Items from Expression
 
 for item in *{
 	{
@@ -82,10 +83,28 @@ for item in *{
 		MultiLine:false
 		TypeIgnore:true
 		Group:"Model"
-		Desc:"Create model [ModelType] at position [Point] of layer [Layer] with angle [Number] using look [Look] and play [Animation] with loop [Boolean]."
+		Desc:"Create model [ModelType] at position [Point] of layer [Layer] with angle [Number] using look [Look] and play [Animation] with loop [Boolean] and"
 		CodeOnly:false
-		ToCode:=> "CreateModel( #{ Trim @[2] }, #{ Trim @[3] }, #{ Trim @[4] }, #{ Trim @[5] }, #{ Trim @[6] }, #{ Trim @[7] }, #{ Trim @[8] } )"
-		Create:NewExpr "ModelType","Point","LayerByName","Number","Look","Animation","False"
+		ToCode:=>
+			codeMode = Expression.CodeMode
+			prefix = (@[9] and (codeMode and "Wait( " or "Wait ") or "")
+			appendix = (@[9] and (codeMode and " )" or "") or "")
+			desc = if codeMode
+				"CreateModel( #{ @[2] }, #{ Trim @[3] }, #{ @[4] }, #{ Trim @[5] }, #{ @[6] }, #{ @[7] }, #{ Trim @[8] } )"
+			else
+				"Create model [#{ @[2] }] at position [#{ @[3] }] of layer [#{ @[4] }] with angle [#{ @[5] }] using look [#{ @[6] }] and play [#{ @[7] }] with loop [#{ @[8] }]."
+			prefix..desc..appendix
+		Create:=>
+			setmetatable { "CreateModel"
+				Items.ModelType\Create!
+				Items.Point\Create!
+				Items.LayerByName\Create!
+				Items.Number\Create!
+				Items.Look\Create!
+				Items.Animation\Create!
+				Items.False\Create!
+				false
+			},@
 		Args:false
 		__index:ExprIndex
 		__tostring:ExprToString
@@ -108,14 +127,44 @@ for item in *{
 	{
 		Name:"PlayAnimation"
 		Text:"Play Animation"
-		Type:"Number"
+		Type:"None"
 		MultiLine:false
 		TypeIgnore:true
 		Group:"Model"
-		Desc:"Play model [Model] animation [Animation] with loop [Boolean] and set model look to [Look], then return animation`s duration."
+		Desc:"Play model [Model] animation [Animation] using look [Look] with loop [Boolean] and"
+		CodeOnly:true
+		ToCode:=>
+			codeMode = Expression.CodeMode
+			prefix = (@[4] and (codeMode and "Wait( " or "Wait ") or "")
+			appendix = (@[4] and (codeMode and " )" or "") or "")
+			desc = if codeMode
+				"#{ @[2] }:play( #{ @[3] }, #{ @[4] }, #{ Trim @[5] } )"
+			else
+				"Play model [#{ @[2] }] animation [#{ @[3] }] using look [#{ @[4] }] with loop [#{ Trim @[5] }]."
+			prefix..desc..appendix
+		Create:=>
+			setmetatable { "Play"
+				Items.ModelByName\Create!
+				Items.Animation\Create!
+				Items.Look\Create!
+				Items.False\Create!
+				false
+			},@
+		Args:false
+		__index:ExprIndex
+		__tostring:ExprToString
+	}
+	{
+		Name:"SetModelLook"
+		Text:"Look"
+		Type:"ModelProperty"
+		MultiLine:false
+		TypeIgnore:false
+		Group:"Graphic"
+		Desc:"Set look of [Model] to [Look]."
 		CodeOnly:false
-		ToCode:=> "PlayAnimation( #{ Trim @[2] }, #{ Trim @[3] }, #{ Trim @[4] }, #{ Trim @[5] } )"
-		Create:NewExpr "ModelByName","Animation","False","Look"
+		ToCode:=> "#{ @[2] }.look = #{ @[3] }"
+		Create:NewExpr "ModelByName","Look"
 		Args:false
 		__index:ExprIndex
 		__tostring:ExprToString

@@ -14,7 +14,7 @@ local Defaults = {
 	scale = Point,
 	skew = Point,
 	opacity = Number,
-	playAnimation = NumberFunc,
+	play = NumberFunc,
 }
 
 local Dummy

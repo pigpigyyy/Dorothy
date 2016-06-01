@@ -250,7 +250,9 @@ Class
 				with MessageBox text:"Delete Trigger\n#{triggerBtn.text}"
 					\slot "OK",(result)->
 						return unless result
-						oContent\remove editor.gameFullPath..triggerBtn.file
+						filename = editor.gameFullPath..triggerBtn.file
+						oContent\remove filename
+						oContent\remove Path.getPath(filename)..Path.getName(filename)..".lua"
 						scope = @localBtn.checked and @localScope or @globalScope
 						scope\updateItems!
 			else

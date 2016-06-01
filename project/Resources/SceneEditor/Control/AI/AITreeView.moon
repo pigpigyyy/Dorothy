@@ -237,7 +237,7 @@ Class AITreeViewView,
 				with child.face
 					.scaleX = 0
 					.scaleY = 0
-					\perform child.scale
+					\perform child.scaleAction
 				posY -= 60
 			else
 				child.visible = false

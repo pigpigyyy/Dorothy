@@ -52,6 +52,7 @@ for item in *{
 		ToCode:=> "Sleep( #{ Trim @[2] } )"
 		Create:NewExpr "Number"
 		Args:false
+		Async:true
 		__index:ExprIndex
 		__tostring:ExprToString
 	}

@@ -161,6 +161,10 @@ ExprChooser = Class
 					}
 			@bodyMenu\addChild localVarButton
 
+		addViewSize = ->
+			viewSize = @bodyScrollArea.viewSize
+			@bodyScrollArea.viewSize = CCSize viewSize.width,viewSize.height+itemHeight+20
+
 		editLocalVariable = (varType)->
 			isSetVar = @parentExpr[1] == "SetLocal#{ varType }"
 			localNames = @owner\getPrevLocalVars varType
@@ -217,6 +221,7 @@ ExprChooser = Class
 			if not @bodyMenu.activate
 				localVarButton\emit "Tapped",localVarButton
 				@bodyMenu.activate = true
+			addViewSize!
 
 		editGlobalVariable = ->
 			itemButton = with GroupButton {
@@ -239,6 +244,7 @@ ExprChooser = Class
 							@updatePreview!
 			@bodyMenu\addChild itemButton
 			itemButton\emit "Tapped"
+			addViewSize!
 
 		editConditionNode = ->
 			nodeFile = @curExpr[2][2]
@@ -259,6 +265,7 @@ ExprChooser = Class
 						curExpr[2] = newNodeFile if newNodeFile
 					}
 			@bodyMenu\addChild itemButton
+			addViewSize!
 
 		editActionNode = ->
 			nodeFile = @curExpr[2][2]
@@ -281,6 +288,7 @@ ExprChooser = Class
 							curExpr[2] = file if file
 							emit "Scene.AINode.Edit"
 			@bodyMenu\addChild itemButton
+			addViewSize!
 
 		chooseItemFromScene = (itemType)->
 			itemButton = with GroupButton {
@@ -299,6 +307,7 @@ ExprChooser = Class
 					@curExpr[2] = result
 					@updatePreview!
 			@bodyMenu\addChild itemButton
+			addViewSize!
 
 		pickPointFromScene = ->
 			localVarButton = with GroupButton {
@@ -317,6 +326,7 @@ ExprChooser = Class
 					thread ->
 						updateContent @curExprBtn.exprDef
 			@bodyMenu\addChild localVarButton
+			addViewSize!
 
 		editAnimationOrLook = ->
 			selectItem = (modelFile)->
@@ -377,6 +387,7 @@ ExprChooser = Class
 						.text = tostring @curExpr[2]
 						.textField\slot "InputInserted",inputed
 						.textField\slot "InputDeleted",inputed
+					addViewSize!
 
 		editNumber = ->
 			inputed = (_,textBox)->
@@ -401,6 +412,7 @@ ExprChooser = Class
 					addText == "\n" or number ~= nil or text == "-"
 				.textField\slot "InputInserted",inputed
 				.textField\slot "InputDeleted",inputed
+			addViewSize!
 
 		editVarName = ->
 			inputed = (_,textBox)->
@@ -425,6 +437,7 @@ ExprChooser = Class
 					addText == "\n" or result ~= nil
 				.textField\slot "InputInserted",inputed
 				.textField\slot "InputDeleted",inputed
+			addViewSize!
 
 		editString = (noticeChange)->
 			inputed = (_,textBox)->
@@ -443,20 +456,28 @@ ExprChooser = Class
 				.text = tostring @curExpr[2]
 				.textField\slot "InputInserted",inputed
 				.textField\slot "InputDeleted",inputed
+			addViewSize!
 
 		editWaiting = ->
-			button = with GroupButton {
-					text:@curExpr[3] and "Wait" or "Not wait"
-					width:math.min(200,@bodyMenu.width-20)
-					height:itemHeight
-				}
-				.position = oVec2 @bodyMenu.width/2,
-					@bodyLabel.positionY-@bodyLabel.height-10-.height/2
-				\slot "Tapped",->
-					.text = .text == "Wait" and "Not wait" or "Wait"
-					@curExpr[3] = .text == "Wait"
-					@updatePreview!
-			@bodyMenu\addChild button
+			if @parentExpr[1] == "Stop"
+				@bodyMenu\addChild with CCLabelTTF "Not wait","Arial",20
+					.color = ccColor3 0x00ffff
+					.position = oVec2 .width/2+15,
+						@bodyLabel.positionY-@bodyLabel.height-10-.height/2
+			else
+				button = with GroupButton {
+						text:@curExpr[#@curExpr] and "Wait" or "Not wait"
+						width:math.min(200,@bodyMenu.width-20)
+						height:itemHeight
+					}
+					.position = oVec2 @bodyMenu.width/2,
+						@bodyLabel.positionY-@bodyLabel.height-10-.height/2
+					\slot "Tapped",->
+						.text = .text == "Wait" and "Not wait" or "Wait"
+						@curExpr[#@curExpr] = .text == "Wait"
+						@updatePreview!
+				@bodyMenu\addChild button
+			addViewSize!
 
 		updateContent = (exprDef)->
 			@curExpr = @exprs[exprDef]
@@ -501,7 +522,7 @@ ExprChooser = Class
 					editActionNode!
 				when "VariableName"
 					editVarName!
-				when "Perform"
+				when "Perform","Play","CreateModel"
 					editWaiting!
 				when "ModelName","BodyName","SliceName","LayerName","SensorName","SpriteName"
 					chooseItemFromScene @curExpr[1]\sub 1,-5 -- "TypeName"\sub(1,-5) == "Type"
@@ -523,7 +544,7 @@ ExprChooser = Class
 		for groupName in *groupNames
 			hasGroupItem = false
 			for exprDef in *TriggerDef.Groups[groupName]
-				if exprDefSet[exprDef]
+				if exprDefSet[exprDef] and not (@parentExpr[1] == "Stop" and exprDef.Async)
 					-- Local variable is not allowed to appear outside the actions and conditions
 					exprName = exprDef.Name
 					isGetLocal = exprName\match "^Local"
