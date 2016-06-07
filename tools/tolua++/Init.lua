@@ -33,7 +33,7 @@ builtin.CCMessageBox = nil
 
 local function wait(cond)
 	repeat
-		yield()
+		yield(false)
 	until not cond(CCDirector.deltaTime)
 end
 
@@ -46,7 +46,7 @@ end
 
 local function loop(job)
 	return wrap(function()
-		repeat yield() until job()
+		repeat yield(false) until job() == true
 		return true
 	end)
 end
@@ -73,7 +73,7 @@ local function cycle(duration,work)
 		end
 	end
 	while worker() do
-		yield()
+		yield(false)
 	end
 end
 

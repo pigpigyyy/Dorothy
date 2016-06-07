@@ -121,7 +121,7 @@ APIs = setmetatable({
 				action = select(1,...)
 			end
 			CCNode_perform(self,action)
-			return action.duration or 0
+			return action
 		end
 	end,
 
@@ -238,6 +238,10 @@ APIs = setmetatable({
 			end
 		elseif itemType == "number" then
 			sleep(item)
+		elseif itemType == "CCAction" or itemType == "CCFiniteTimeAction" or itemType == "CCActionInterval" then
+			while not item.done do
+				sleep()
+			end
 		end
 		return item
 	end,
@@ -285,12 +289,12 @@ APIs = setmetatable({
 	end,
 
 	UnitAction = function(name, priority, reaction, recovery, available, run, stop)
-		if InvalidNumbers(priority, reaction, recovery) then return end
-		oAction:add(name, priority, reaction, recovery, available, run, stop)
+		if InvalidNumbers(priority, reaction, recovery) then return nil end
+		return {name=name, priority=priority, reaction=reaction, recovery=recovery, available=available, run=run, stop=stop}
 	end,
 
-	AIRoot = function(name, ...)
-		oAI:add(name,oSel{...})
+	AIRoot = function(_, ...)
+		return oSel{...}
 	end,
 
 	SelNode = function(...)
@@ -308,6 +312,8 @@ APIs = setmetatable({
 			return Game.instance:getCondition(name)
 		end
 	end,
+
+	ActNode = oAct,
 
 	IsSensed = function(body,tag)
 		if not body then return false end

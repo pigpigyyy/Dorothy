@@ -135,15 +135,15 @@ for item in *{
 		CodeOnly:true
 		ToCode:=>
 			codeMode = Expression.CodeMode
-			prefix = (@[4] and (codeMode and "Wait( " or "Wait ") or "")
-			appendix = (@[4] and (codeMode and " )" or "") or "")
+			prefix = (@[6] and (codeMode and "Wait( " or "Wait ") or "")
+			appendix = (@[6] and (codeMode and " )" or "") or "")
 			desc = if codeMode
 				"#{ @[2] }:play( #{ @[3] }, #{ @[4] }, #{ Trim @[5] } )"
 			else
 				"Play model [#{ @[2] }] animation [#{ @[3] }] using look [#{ @[4] }] with loop [#{ Trim @[5] }]."
 			prefix..desc..appendix
 		Create:=>
-			setmetatable { "Play"
+			setmetatable { "PlayAnimation"
 				Items.ModelByName\Create!
 				Items.Animation\Create!
 				Items.Look\Create!
@@ -165,6 +165,21 @@ for item in *{
 		CodeOnly:false
 		ToCode:=> "#{ @[2] }.look = #{ @[3] }"
 		Create:NewExpr "ModelByName","Look"
+		Args:false
+		__index:ExprIndex
+		__tostring:ExprToString
+	}
+	{
+		Name:"GetModelLook"
+		Text:"Get Look"
+		Type:"Look"
+		MultiLine:false
+		TypeIgnore:false
+		Group:"Graphic"
+		Desc:"Get look of [Model]."
+		CodeOnly:false
+		ToCode:=> "#{ @[2] }.look"
+		Create:NewExpr "ModelByName"
 		Args:false
 		__index:ExprIndex
 		__tostring:ExprToString

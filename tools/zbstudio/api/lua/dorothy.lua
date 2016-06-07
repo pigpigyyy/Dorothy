@@ -3867,7 +3867,7 @@ local Dorothy =
 			},
 			add =
 			{
-				args = "(id: int, node: oAINode)",
+				args = "(id: string, node: oAINode)",
 				description = "[Class Method] Add a new AI type of specified ID to store.",
 				returns = "()",
 				static = true,

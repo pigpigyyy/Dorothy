@@ -9,6 +9,8 @@ local oVec2 = require("oVec2")
 local classfield = require("classfield")
 local CCNode = require("CCNode")
 local oCon = require("oCon")
+local oAction = require("oAction")
+local oAI = require("oAI")
 
 local TriggerScope = Class {
 	__init = function(self,globalScope,triggerPath)
@@ -41,9 +43,8 @@ local TriggerScope = Class {
 }
 
 local ItemCenter = Class {
-	__init = function(self,globalScope,path,keepRef)
-		if keepRef == nil then
-			keepRef = true
+	__init = function(self,globalScope,path,itemType)
+		if itemType == "Trigger" or itemType == "AINode" or itemType == "AITree" then
 			self._items = {}
 		end
 		local groups = Path.getFolders(path)
@@ -54,9 +55,15 @@ local ItemCenter = Class {
 				local loader = loadfile(filePath..file)
 				local name = Path.getName(file)
 				setfenv(loader,globalScope)
-				local func = loader()
-				if keepRef then
-					self._items[group.."."..name] = func
+				local item = loader()
+				local itemName = group.."."..name
+				if itemType == "Trigger" or itemType == "AINode" then
+					self._items[itemName] = item
+				elseif itemType == "Action" then
+					oAction:add(itemName, item.priority, item.reaction, item.recovery, item.available, item.run, item.stop)
+				elseif itemType == "AITree" then
+					oAI:add(itemName, item)
+					self._items[itemName] = item
 				end
 			end
 		end
@@ -170,14 +177,14 @@ return Class {
 			setfenv(globalVarLoader,self._globalScope)
 			globalVarLoader()
 			-- load global triggers
-			self._globalTrigger = TriggerScope(self._globalScope,self.triggerGlobalPath)
+			self._globalTrigger = TriggerScope(self._globalScope,self.triggerGlobalPath,"Trigger")
 			self._globalTrigger:registerAll()
 			-- load condition nodes
-			self._conditionCenter = ItemCenter(self._globalScope,self.aiNodePath)
+			self._conditionCenter = ItemCenter(self._globalScope,self.aiNodePath,"AINode")
 			-- load actions
-			self._actionCenter = ItemCenter(self._globalScope,self.actionPath,false)
+			self._actionCenter = ItemCenter(self._globalScope,self.actionPath,"Action")
 			-- load AI trees
-			self._aiCenter = ItemCenter(self._globalScope,self.aiTreePath,false)
+			self._aiCenter = ItemCenter(self._globalScope,self.aiTreePath,"AITree")
 		end
 		-- load scene local triggers
 		if self._localTrigger then

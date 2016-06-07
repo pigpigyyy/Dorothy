@@ -361,6 +361,7 @@ ExprChooser = Class
 					itemButton\emit "Tapped",itemButton
 					@bodyMenu.activate = true
 
+			print @parentExpr[1]
 			switch @parentExpr[1]
 				when "CreateModel"
 					selectItem @parentExpr[2][2]
@@ -368,6 +369,7 @@ ExprChooser = Class
 					if @parentExpr[2][1] == "ModelByName"
 						modelName = @parentExpr[2][2][2]
 						model = editor.items[modelName]
+						print modelName,model
 						if model
 							modelData = editor\getData model
 							selectItem modelData.file
@@ -522,7 +524,7 @@ ExprChooser = Class
 					editActionNode!
 				when "VariableName"
 					editVarName!
-				when "Perform","Play","CreateModel"
+				when "Perform","PlayAnimation","CreateModel"
 					editWaiting!
 				when "ModelName","BodyName","SliceName","LayerName","SensorName","SpriteName"
 					chooseItemFromScene @curExpr[1]\sub 1,-5 -- "TypeName"\sub(1,-5) == "Type"
