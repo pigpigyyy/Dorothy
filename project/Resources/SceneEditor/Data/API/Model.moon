@@ -63,7 +63,7 @@ for item in *{
 	}
 	{
 		Name:"ModelByName"
-		Text:"Model"
+		Text:"Get Model"
 		Type:"Model"
 		MultiLine:false
 		TypeIgnore:false

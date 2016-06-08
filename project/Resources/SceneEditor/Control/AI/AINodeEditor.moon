@@ -1,6 +1,6 @@
 Dorothy!
 EditorView = require "View.Control.Trigger.Editor"
-AINodeExprEditor = require "Control.AI.AINodeExprEditor"
+ExprEditor = require "Control.Trigger.ExprEditor"
 SelectionItem = require "Control.Basic.SelectionItem"
 SelectionPanel = require "Control.Basic.SelectionPanel"
 InputBox = require "Control.Basic.InputBox"
@@ -24,7 +24,8 @@ TriggerScope = Class
 				if not @triggerBtn.exprEditor
 					{width:panelW,height:panelH} = @panel
 					listMenuW = @scrollArea.width
-					exprEditor = with AINodeExprEditor {
+					exprEditor = with ExprEditor {
+							type:"AINode"
 							x:panelW/2+listMenuW/2
 							y:panelH/2
 							width:panelW-listMenuW
@@ -298,6 +299,7 @@ Class
 			@hide!
 
 	show:(targetFile)=>
+		targetFile = editor.aiNodeFolder..targetFile
 		@closeEvent.enabled = true
 		with @getChildByTag -1
 			.opacity = 0

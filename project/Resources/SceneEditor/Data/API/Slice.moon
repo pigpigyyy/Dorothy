@@ -18,7 +18,7 @@ for item in *{
 	}
 	{
 		Name:"SliceByName"
-		Text:"Slice"
+		Text:"Get Slice"
 		Type:"Slice"
 		MultiLine:false
 		TypeIgnore:false

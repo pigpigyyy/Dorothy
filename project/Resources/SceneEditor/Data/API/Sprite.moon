@@ -18,7 +18,7 @@ for item in *{
 	}
 	{
 		Name:"SpriteByName"
-		Text:"Sprite"
+		Text:"Get Sprite"
 		Type:"Sprite"
 		MultiLine:false
 		TypeIgnore:false

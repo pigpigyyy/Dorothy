@@ -148,7 +148,7 @@ NewType = (typeName,defaultVal,group)->
 			MultiLine:false
 			TypeIgnore:false
 			Group:group
-			Desc:"Get #{ typeLowerCase } [#{ typeName }] visibility."
+			Desc:"Is #{ typeLowerCase } [#{ typeName }] visible."
 			CodeOnly:false
 			ToCode:=> "#{ @[2] }.visible"
 			Create:NewExpr defaultVal
@@ -249,7 +249,7 @@ for item in *{
 		Desc:"Get [ItemVisibility]."
 		CodeOnly:true
 		ToCode:=> tostring @[2]
-		Create:NewExpr "GetSpriteVisibility"
+		Create:NewExpr "IsSpriteVisible"
 		Args:false
 		__index:ExprIndex
 		__tostring:ExprToString

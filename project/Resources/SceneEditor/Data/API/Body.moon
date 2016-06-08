@@ -18,7 +18,7 @@ for item in *{
 	}
 	{
 		Name:"BodyByName"
-		Text:"Body"
+		Text:"Get Body"
 		Type:"Body"
 		MultiLine:false
 		TypeIgnore:false

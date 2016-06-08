@@ -18,7 +18,7 @@ for item in *{
 	}
 	{
 		Name:"EffectByName"
-		Text:"Effect"
+		Text:"Get Effect"
 		Type:"Effect"
 		MultiLine:false
 		TypeIgnore:false

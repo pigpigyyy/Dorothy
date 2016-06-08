@@ -1,6 +1,6 @@
 Dorothy!
 EditorView = require "View.Control.Trigger.Editor"
-TriggerExprEditor = require "Control.Trigger.TriggerExprEditor"
+ExprEditor = require "Control.Trigger.ExprEditor"
 SelectionItem = require "Control.Basic.SelectionItem"
 ExprChooser = require "Control.Trigger.ExprChooser"
 SelectionPanel = require "Control.Basic.SelectionPanel"
@@ -24,7 +24,8 @@ TriggerScope = Class
 				if not @triggerBtn.exprEditor
 					{width:panelW,height:panelH} = @panel
 					listMenuW = @scrollArea.width
-					exprEditor = with TriggerExprEditor {
+					exprEditor = with ExprEditor {
+							type:"Trigger"
 							x:panelW/2+listMenuW/2
 							y:panelH/2
 							width:panelW-listMenuW

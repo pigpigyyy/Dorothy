@@ -18,7 +18,7 @@ for item in *{
 	}
 	{
 		Name:"SensorByName"
-		Text:"Sensor"
+		Text:"Get Sensor"
 		Type:"Sensor"
 		MultiLine:false
 		TypeIgnore:false

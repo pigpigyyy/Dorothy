@@ -18,7 +18,7 @@ for item in *{
 	}
 	{
 		Name:"LayerByName"
-		Text:"Layer"
+		Text:"Get Layer"
 		Type:"Layer"
 		MultiLine:false
 		TypeIgnore:false

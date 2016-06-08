@@ -19,6 +19,9 @@ local Defaults = {
 
 local Dummy
 Dummy = setmetatable({},{
+	__call = function()
+		return Dummy
+	end,
 	__index = function(self, key)
 		local default = Defaults[key]
 		if default == nil then
