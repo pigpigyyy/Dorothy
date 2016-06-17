@@ -52,12 +52,6 @@ TriggerScope = Class
 		@items = {}
 		@files = {}
 
-		if CCUserDefault.TriggerMode == nil
-			CCUserDefault.TriggerMode = "Text"
-			TriggerDef.CodeMode = false
-		else
-			TriggerDef.CodeMode = (CCUserDefault.TriggerMode == "Code")
-
 		@_menu\slot "Cleanup",->
 			for _,item in pairs @items
 				if item.parent

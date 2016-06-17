@@ -124,12 +124,6 @@ Class
 		{width:panelW,height:panelH} = @panel
 		@firstDisplay = true
 
-		if CCUserDefault.TriggerMode == nil
-			CCUserDefault.TriggerMode = "Text"
-			TriggerDef.CodeMode = false
-		else
-			TriggerDef.CodeMode = (CCUserDefault.TriggerMode == "Code")
-
 		TriggerScope.scrollArea = @listScrollArea
 		TriggerScope.panel = @panel
 

@@ -11,7 +11,9 @@ TriggerDef = Class {
 	Expressions:classfield => Items
 
 	CodeMode:classfield => Expression.CodeMode,
-		(value)=> Expression.CodeMode = value
+		(value)=>
+			CCUserDefault.TriggerMode = value and "Code" or "Text"
+			Expression.CodeMode = value
 
 	ToEditText:(expr)->
 		strs = {"return "}

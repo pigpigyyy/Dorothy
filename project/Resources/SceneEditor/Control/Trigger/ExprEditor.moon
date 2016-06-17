@@ -128,7 +128,7 @@ Class ExprEditorView,
 		@newName = nil
 		@modified = false
 
-		@codeMode = (CCUserDefault.TriggerMode == "Code")
+		@codeMode = TriggerDef.CodeMode
 
 		for child in *@editMenu.children
 			child.scale = oScale 0.3,1,1,oEase.OutQuad
@@ -157,9 +157,6 @@ Class ExprEditorView,
 						if parentExpr then parentExpr[1] == "UnitAction"
 						else false
 				edit = not subExprItem
-				copy = not subExprItem and not rootItem and switch parentExpr[1]
-					when "Condition","Event","Available","ConditionNode" then false
-					else true
 				insert = if rootItem then false
 					elseif subExprItem then false
 					elseif #@triggerMenu.children >= 999 then false
@@ -173,6 +170,7 @@ Class ExprEditorView,
 						if rootItem or #@triggerMenu.children >= 999 then false
 						elseif parentExpr then (parentExpr[1] ~= "Event")
 						else true
+				copy = add and parentExpr[1] ~= "Event"
 				del = if rootItem then false
 					elseif parentExpr and (switch parentExpr[1]
 						when "Condition","Event","Available" then #parentExpr == 2
@@ -349,7 +347,7 @@ Class ExprEditorView,
 					@createExprItem tostring(expr),indent,expr,parentExpr,index
 
 		@nextExpr = (parentExpr,indent,index)=>
-			nextExpr parentExpr,index,indent -- params order changed
+			nextExpr parentExpr,index,indent -- param orders changed
 
 		addNewItem = (selectedExprItem,indent,parentExpr,index,delExpr=true,insertAfter=false)->
 			-- update triggerMenu
@@ -520,15 +518,11 @@ Class ExprEditorView,
 						for i = 1,#target
 							item = target[i]
 							if "table" == type item
-								newItem = {}
-								copyTable newItem,item
-								item = newItem
+								item = copyTable {},item
 							tb[i] = item
 						setmetatable tb,getmetatable target
 					.targetExpr = copyTable {},@_selectedExprItem.expr
 				else
-					.text = "Copy"
-					.color = ccColor3 0x00ffff
 					selectedExprItem = @_selectedExprItem
 					{:indent,:parentExpr,:index} = selectedExprItem
 					switch selectedExprItem.itemType
@@ -538,6 +532,29 @@ Class ExprEditorView,
 							indent += 1
 						else
 							index += 1
+					switch .targetExpr.Type
+						when "Boolean"
+							if not (switch parentExpr[1]
+								when "Condition","Available","ConditionNode" then true
+								else false)
+								.copying = true
+								MessageBox text:"Can Not Paste\nBoolean Item\nHere",okOnly:true
+								return
+						when "Action"
+							if not (switch parentExpr[1]
+								when "ActionGroup" then true
+								else false)
+								.copying = true
+								MessageBox text:"Can Not Paste\nAction Item\nHere",okOnly:true
+								return
+						else
+							switch parentExpr[1]
+								when "Condition","Available","ConditionNode","ActionGroup"
+									.copying = true
+									MessageBox text:"Can Not Paste\nTrigger Action\nHere",okOnly:true
+									return
+					.text = "Copy"
+					.color = ccColor3 0x00ffff
 					table.insert parentExpr,index,.targetExpr
 					addNewItem selectedExprItem,indent,parentExpr,index,false,true
 					.targetExpr = nil
@@ -683,7 +700,6 @@ Class ExprEditorView,
 			thread ->
 				sleep 0.3
 				@codeMode = not @codeMode
-				CCUserDefault.TriggerMode = @codeMode and "Code" or "Text"
 				TriggerDef.CodeMode = @codeMode
 				@loadExpr @exprData
 				@modeBtn\schedule once ->
@@ -748,9 +764,8 @@ Class ExprEditorView,
 					.scrollArea.viewSize = .menu\alignItemsVertically!
 
 		checkReload = ->
-			codeMode = (CCUserDefault.TriggerMode == "Code")
-			if @codeMode ~= codeMode
-				@codeMode = codeMode
+			if @codeMode ~= TriggerDef.CodeMode
+				@codeMode = TriggerDef.CodeMode
 				@loadExpr @exprData
 			else
 				@lintCode!

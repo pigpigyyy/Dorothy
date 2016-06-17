@@ -1,3 +1,5 @@
+CCUserDefault = require "CCUserDefault"
+
 local Expression
 Items = {}
 
@@ -100,5 +102,12 @@ Expression = {
 	:ExprToString
 	:Trim
 }
+
+Expression.CodeMode = switch CCUserDefault.TriggerMode
+	when "Code" then true
+	when "Text" then false
+	else
+		CCUserDefault.TriggerMode = "Text"
+		false
 
 Expression
