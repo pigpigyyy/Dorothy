@@ -390,7 +390,9 @@ Class CCNode,
 						lastName = data.name
 						menuItem\slot("TextChanged")\set (value)->
 							menuItem\slot "TextChanged",nil
-							value = lastName if value == ""
+							if value == ""
+								value = lastName
+								menuItem.value = lastName
 							value = editor\renameData data,value
 							return unless value
 							menuItem.value = value

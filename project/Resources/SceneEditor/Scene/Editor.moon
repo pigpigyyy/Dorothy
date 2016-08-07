@@ -5,7 +5,7 @@ Model = require "Data.Model"
 Reference = require "Data.Reference"
 CCScene = require "Lib.CCSceneEx"
 TriggerDef = require "Data.TriggerDef"
-import Path from require "Lib.Utils"
+import Path,Struct from require "Lib.Utils"
 require "Lib.oBodyEx"
 
 Class EditorView,
@@ -62,7 +62,6 @@ Class EditorView,
 				"VRuler"
 				"EditMenu"
 				"OperationPanel"
-				"ClipEditor"
 				"TriggerEditor"
 				"TriggerExpr"
 				"TriggerMenu"
@@ -71,6 +70,7 @@ Class EditorView,
 				"AINodeMenu"
 				"ExprChooser"
 				"ItemPanel"
+				"ClipEditor"
 				"MessageBox"
 				"InputBox"
 				"SelectionPanel"
@@ -101,7 +101,7 @@ Class EditorView,
 			@viewArea\addChild @editManager
 			sleep!
 			@moveTo oVec2.zero
-			if not oContent\exist(writePath) and oContent\exist(resPath)
+			if not oContent\exist(writePath) and oContent\exist resPath
 				oContent\copyAsync resPath,writePath
 			if @firstLaunch
 				ScenePanel = require "Control.Item.ScenePanel"
@@ -293,6 +293,8 @@ Class EditorView,
 			oAction\clear!
 			collectgarbage!
 			@_gameName = name
+			@currentSceneFile = nil
+			@globalExpr = nil
 			if name
 				@_gameFullPath = @gamesFullPath..name.."/"
 				oContent\addSearchPath @_gameFullPath
@@ -314,11 +316,10 @@ Class EditorView,
 					@bodyEditor.input = @gameFullPath
 					@bodyEditor.output = @gameFullPath
 				effectFile = @physicsFullPath.."list.effect"
+				@getGlobalExpr!
 				oCache.Effect\load effectFile if oContent\exist effectFile
 			else
 				@_gameFullPath = nil
-			@currentSceneFile = nil
-			@globalExpr = nil
 			Reference.update!
 
 	eachSceneItem:(handler)=>
@@ -777,9 +778,9 @@ Class EditorView,
 				camera.position = lastPos
 
 	getBodyBoundingBox:(item)=>
-		minX,minY,maxX,maxY = nil,nil,nil,nil
+		local minX,minY,maxX,maxY
 		item.data\each (_,child)->
-			return unless tolua.type(child) == "oBody"
+			return unless "oBody" == tolua.type child
 			rc = child.boundingBox
 			minX = rc.left unless minX
 			maxX = rc.right unless maxX

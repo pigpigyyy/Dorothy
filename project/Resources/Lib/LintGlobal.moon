@@ -70,11 +70,9 @@ class LinterBlock extends Block
 
 LintMoonGlobals = (codes)->
 	tree,err = parse.string codes
-	if not tree
-		return nil,err
+	return nil,err unless tree
 	scope = LinterBlock!
 	scope\stms tree
-	globals = Set scope.globals
-	return globals
+	Set scope.globals
 
 LintMoonGlobals

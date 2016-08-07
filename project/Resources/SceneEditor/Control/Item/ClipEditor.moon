@@ -6,7 +6,7 @@ Packer = require "Data.Packer"
 Reference = require "Data.Reference"
 
 Class ClipEditorView,
-	__init: (args)=>
+	__init:(args)=>
 		{:images} = args
 		@addImages images
 		@scrollArea\slot "Scrolled",(delta)->
@@ -56,7 +56,7 @@ Class ClipEditorView,
 
 		CCDirector.currentScene\addChild @,2
 
-	close: (result)=>
+	close:(result)=>
 		@opMenu.enabled = false
 		@perform oOpacity 0.3,0
 		@okBtn\perform oScale 0.3,0,0,oEase.InBack
@@ -71,7 +71,7 @@ Class ClipEditorView,
 				@parent\removeChild @
 		}
 
-	addImages: (images)=>
+	addImages:(images)=>
 		@scrollArea.view\removeAllChildrenWithCleanup!
 		{:width,:height} = @scrollArea
 		blocks = {}

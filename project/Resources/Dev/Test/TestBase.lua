@@ -2,6 +2,7 @@ local Class = require("Class")
 local CCScene = require("CCScene")
 local classfield = require("classfield")
 local CCDirector = require("CCDirector")
+local cclog = require("cclog")
 
 --[[
 Usage:
@@ -22,6 +23,18 @@ local TestBase = Class(CCScene,
 })
 
 function TestBase:run() -- override it
+end
+
+function TestBase:profile(name,work)
+	--collectgarbage("collect")
+	collectgarbage("stop")
+	local startMem = collectgarbage("count")
+	local startTime = CCDirector.eclapsedInterval
+	work()
+	local endTime = CCDirector.eclapsedInterval
+	local endMem = collectgarbage("count")
+	cclog("[%s] done! Time cost %.4f s. Memory cost %d KB.",name,endTime-startTime,endMem-startMem)
+	collectgarbage("restart")
 end
 
 function TestBase:profileRun()

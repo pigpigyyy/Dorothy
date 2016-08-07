@@ -1,4 +1,4 @@
-<!-- params: Width, Height, EditorLevel, MenuLevel -->
+<!-- params: Title, Width, Height, EditorLevel, MenuLevel -->
 <Layer X="{ @X }" Y="{ @Y }"
 	TouchPriority="{ editorLevel or editor.levelTriggerEditor }"
 	SwallowTouches="True" TouchEnabled="True" Visible="False">

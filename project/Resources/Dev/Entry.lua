@@ -142,7 +142,10 @@ local allowedUseOfGlobals =
 allowedUseOfGlobals = Set(allowedUseOfGlobals)
 
 local function LintMoonGlobals(moonCodes,entry)
-	local globals = LintGlobal(moonCodes)
+	local globals,err = LintGlobal(moonCodes)
+	if not globals then
+		error("Compile failed in "..entry.."\n"..err)
+	end
 	local requireModules = {}
 	for name,_ in pairs(globals) do
 		if not allowedUseOfGlobals[name] then
@@ -297,6 +300,7 @@ panel.init = function(_)
 			test:profileRun()
 		end
 	end
+
 	local function runWithBackButton(file)
 		run(file)
 		local endBtn = oButton("Back",17,60,false,0,0,function()
@@ -304,6 +308,7 @@ panel.init = function(_)
 			if CCScene.clearHistory then
 				CCScene:clearHistory()
 			end
+			package.loaded[file] = nil
 		end)
 		endBtn.anchor = oVec2.zero
 		local backMenu = CCMenu()
@@ -352,7 +357,7 @@ panel.init = function(_)
 	for i = 1,#files do files[i] = files[i]:match("^([^%.]*)") end
 	files = Set(files)
 	for file,_ in pairs(files) do
-		if file ~= "" then
+		if file ~= "" and file ~= "TestBase" then
 			local button = oButton(file,16,200,50,0,0,function()
 				runWithBackButton("Dev/Test/"..file)
 			end)
