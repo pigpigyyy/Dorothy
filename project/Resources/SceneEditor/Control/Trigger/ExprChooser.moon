@@ -283,7 +283,7 @@ ExprChooser = Class
 					@hide!
 					curExpr = @curExpr[2]
 					ActionChooser = require "Control.AI.ActionChooser"
-					editor\addChild with ActionChooser!
+					with ActionChooser!
 						\slot "Selected",(file)->
 							curExpr[2] = file if file
 							emit "Scene.AINode.Edit"

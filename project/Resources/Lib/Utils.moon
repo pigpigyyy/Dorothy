@@ -1,10 +1,32 @@
 Dorothy!
 {:type,:tostring,:setmetatable,:table,:rawset,:rawget} = _G
-import insert,remove,concat from table
+import insert,remove,concat,sort from table
 import floor,ceil from math
 
+StructUpdated = =>
+	update = rawget @,"__update"
+	if not update
+		rawset @,"__update",thread ->
+			notify = rawget @,"__notify"
+			notify "Updated"
+			rawset @,"__update",nil
 StructToString = =>
-	content = [(type(item) == 'string' and '\"'..item..'\"' or tostring item) for item in *@]
+	structDef = getmetatable @
+	content = {}
+	ordered = true
+	count = if #structDef == 0 then #@
+		else #structDef+1
+	for i = 1,count
+		value = @[i]
+		if value == nil
+			ordered = false 
+			continue
+		else
+			value = (type(value) == 'string' and "\"#{value}\"" or tostring value)
+			if ordered
+				insert content,value
+			else
+				insert content,"[#{i}]=#{value}"
 	"{"..(concat content,',').."}"
 StructDefMeta = {
 	set:(index,item)=>
@@ -14,6 +36,7 @@ StructDefMeta = {
 			notify = rawget @,"__notify"
 			if notify
 				notify "Changed",index-1,item
+				StructUpdated @
 		else
 			error "Access index out of range."
 	get:(index)=>
@@ -38,6 +61,8 @@ StructDefMeta = {
 		notify = rawget @,"__notify"
 		if notify
 			notify "Added",index-1,item
+			StructUpdated @
+		item
 	removefor:(arg)=>
 		local item,index
 		for i = 2,#@
@@ -50,6 +75,8 @@ StructDefMeta = {
 			notify = rawget @,"__notify"
 			if notify
 				notify "Removed",index-1,item
+				StructUpdated @
+		item
 	remove:(index)=>
 		length = #@
 		item = if index
@@ -68,15 +95,38 @@ StructDefMeta = {
 			notify = rawget @,"__notify"
 			if notify
 				notify "Removed",index-1,item
+				StructUpdated @
+		item
 	clear:=>
 		notify = rawget @,"__notify"
 		for index = #@,2,-1
 			item = remove @
 			if notify
 				notify "Removed",index-1,item
+				StructUpdated @
+	copy:(other)=>
+		notify = rawget @,"__notify"
+		for index = 2,#other
+			item = other[index]
+			rawset @,index,item
+			if notify
+				notify "Added",index-1,item
+				StructUpdated @
 	each:(handler)=>
 		for index = 2,#@
-			handler @[index],index-1
+			if true == handler @[index],index-1
+				break
+	eachPair:(handler)=>
+		for i,v in ipairs getmetatable @
+			if true == handler v,@[i+1]
+				break
+	contains:(item)=>
+		for index = 2,#@
+			if item == @[index]
+				return true
+		false
+	sort:(comparer)=>
+		sort @,comparer
 	__call:(data)=>
 		item = {@__name}
 		if data
@@ -84,8 +134,10 @@ StructDefMeta = {
 				key = @[k]
 				if key
 					item[key] = v
-				else
+				elseif type(k) == "number"
 					item[k+1] = v
+				else
+					error "Initialize to an invalid field named \"#{k}\" for \"#{@}\"."
 		setmetatable item,@
 		item
 	__tostring:=>
@@ -120,16 +172,32 @@ StructHelper = {
 					rawset @,index,value
 					notify = rawget @,"__notify"
 					if notify
-						notify key,value
+						notify "Modified",key,value
+						StructUpdated @
 				elseif key ~= "__notify"
 					error "Access invalid key \"#{ key }\" for #{ tupleDef }"
-				else
+				elseif value
 					rawset @,"__notify",value
+					if #tupleDef == 0
+						for i = 2,#@
+							value "Added",i-1,@[i]
+					else
+						for key in *tupleDef
+							value "Modified",key,@[key]
+					StructUpdated @
 			__tostring:StructToString
 		},StructDefMeta
-		for i = 1,select("#",...)
-			name = select i,...
-			tupleDef[name] = i+1
+		count = select "#",...
+		if count > 0
+			if "table" == type select(1,...)
+				for i,name in ipairs select(1,...)
+					tupleDef[i] = name
+					tupleDef[name] = i+1
+			else
+				for i = 1,count
+					name = select i,...
+					tupleDef[i] = name
+					tupleDef[name] = i+1
 		StructDefs[structName] = tupleDef
 		tupleDef
 	__index:(key)=>
@@ -166,6 +234,8 @@ Struct = setmetatable {
 				arg
 		StructLoad data
 		data
+	loadfile:(filename)=>
+		Struct\load oContent\loadFile filename
 },{
 	__index:(name)=>
 		def = StructDefs[name]
@@ -177,6 +247,7 @@ Struct = setmetatable {
 	__tostring:=>
 		concat [tostring v for _,v in pairs StructDefs],"\n"
 }
+Struct.Array!
 
 Set = (list)-> {item,true for item in *list}
 

@@ -402,7 +402,7 @@ Class CCNode,
 							if not itemChooser
 								cancelEditing!
 								return
-							editor\addChild itemChooser,998
+							editor\addChild itemChooser,editor.topMost
 							itemChooser\show!
 							itemChooser\slot("Selected")\set (filename)->
 								Reference.removeSceneItemRef editor\getSceneName(data),data
@@ -491,7 +491,7 @@ Class CCNode,
 							if not itemChooser
 								cancelEditing!
 								return
-							editor\addChild itemChooser,998
+							editor\addChild itemChooser,editor.topMost
 							itemChooser\show!
 							itemChooser\slot("Selected")\set (effectName)->
 								data.effect = effectName

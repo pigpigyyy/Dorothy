@@ -1,0 +1,16 @@
+<!-- params: Text, X, Y, Width, Height -->
+<MenuItem X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }">
+	<LabelTTF Name="attrName" Text="{ text }" FontName="Arial" FontSize="14" Color="0xffffff" X="{ attrName.width/2+10 }" Y="{ $Y }" AntiAlias="False"/>
+
+	<Script>local nextCenterX = attrName.positionX + attrName.width/2</Script>
+	<Script>nextCenterX = (width-10-nextCenterX)/2 + nextCenterX</Script>
+
+	<LabelTTF Name="label" X="{ nextCenterX }" Y="{ $Y }" FontName="Arial" FontSize="14" Ref="True"/>
+	<Line Name="frame" Color="0x00ffff" Visible="False" Ref="True">
+		<Vec2 X="0" Y="0"/>
+		<Vec2 X="{ width }" Y="0"/>
+		<Vec2 X="{ width }" Y="{ height }"/>
+		<Vec2 X="0" Y="{ height }"/>
+		<Vec2 X="0" Y="0"/>
+	</Line>
+</MenuItem>

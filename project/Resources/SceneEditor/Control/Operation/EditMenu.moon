@@ -16,7 +16,7 @@ Class EditMenuView,
 			child.positionX = -35
 			child.visible = false
 			child.displayed = false
-		@showItemButtons {"graphic","physics","logic"},true,true
+		@showItemButtons {"graphic","physics","logic","data"},true,true
 
 		buttonNames = {
 			"sprite","model","body"
@@ -75,6 +75,13 @@ Class EditMenuView,
 				MessageBox text:"Pick An Item First",okOnly:true
 			else
 				emit "Scene.AITree.Open"
+
+		@unitBtn\slot "Tapped",->
+			clearSelection!
+			if @pickPanel.visible
+				MessageBox text:"Pick An Item First",okOnly:true
+			else
+				emit "Scene.Unit.Open"
 
 		@delBtn\slot "Tapped",->
 			clearSelection!
@@ -255,6 +262,7 @@ Class EditMenuView,
 		setupItemButton @graphicBtn,@graphicLine,{"sprite","model","effect","layer"}
 		setupItemButton @physicsBtn,@physicsLine,{"body","world"}
 		setupItemButton @logicBtn,@logicLine,{"trigger","action","ai"}
+		setupItemButton @dataBtn,@dataLine,{"unit"}
 
 		@gslot "Scene.ShowFix",(value)->
 			editor.xFix = false
@@ -460,7 +468,7 @@ Class EditMenuView,
 				firstItem = child if isTarget and not firstItem
 				if child.displayed or isTarget
 					offsetX = switch child
-						when @graphicBtn,@physicsBtn,@logicBtn then 0
+						when @graphicBtn,@physicsBtn,@logicBtn,@dataBtn then 0
 						else 20
 					child.position = offset+oVec2(posX+offsetX,posY)
 					if isTarget
@@ -494,7 +502,7 @@ Class EditMenuView,
 							child.face.scaleY = 0
 							child.face\perform oScale 0.3,1,1,oEase.OutBack
 						offsetX = switch child
-							when @graphicBtn,@physicsBtn,@logicBtn then 0
+							when @graphicBtn,@physicsBtn,@logicBtn,@dataBtn then 0
 							else 20
 						child.position = offset+oVec2(posX+offsetX,posY)
 						posY -= 60

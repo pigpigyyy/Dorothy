@@ -36,6 +36,7 @@ Class EditorView,
 		@lastScene = nil
 		@startupData = nil
 		@firstLaunch = true
+		@topMost = 998
 
 		-- do some hack and I know what I`m doing.
 		rawset _G,"editor",@
@@ -65,6 +66,9 @@ Class EditorView,
 				"TriggerEditor"
 				"TriggerExpr"
 				"TriggerMenu"
+				"UnitEditor"
+				"AttributeEditor"
+				"UnitMenu"
 				"AINodeEditor"
 				"AINodeExpr"
 				"AINodeMenu"
@@ -279,6 +283,17 @@ Class EditorView,
 					@aiTreeEditor = AITreeEditor!
 					@aiTreeEditor\show!
 					@addChild @aiTreeEditor
+		@gslot "Scene.Unit.Open",->
+			return unless @scene
+			if @unitEditor
+				@unitEditor\show!
+			else
+				@schedule once ->
+					UnitEditor = require "Control.Unit.Editor"
+					sleep!
+					@unitEditor = UnitEditor!
+					@unitEditor\show!
+					@addChild @unitEditor
 
 	updateSprites:=> emit "Scene.LoadSprite",@graphicFolder
 	updateModels:=> emit "Scene.LoadModel",@graphicFolder
@@ -309,6 +324,8 @@ Class EditorView,
 				oContent\mkdir @aiFullPath unless oContent\exist @aiFullPath
 				oContent\mkdir @aiNodeFullPath unless oContent\exist @aiNodeFullPath
 				oContent\mkdir @aiTreeFullPath unless oContent\exist @aiTreeFullPath
+				oContent\mkdir @dataFolder unless oContent\exist @dataFolder
+				oContent\mkdir @dataFullPath unless oContent\exist @dataFullPath
 				if @_actionEditor
 					@actionEditor.input = @gameFullPath
 					@actionEditor.output = @gameFullPath
@@ -355,12 +372,15 @@ Class EditorView,
 	aiNodeFullPath:property => @_gameFullPath.."Logic/AI/Node/"
 	aiTreeFolder:property => "Logic/AI/Tree/"
 	aiTreeFullPath:property => @_gameFullPath.."Logic/AI/Tree/"
+	dataFolder:property => "Data/"
+	dataFullPath:property => @_gameFullPath.."Data/"
 	sceneFolder:property => "Scene/"
 	sceneFullPath:property => @_gameFullPath.."Scene/"
 	uiFileFullPath:property => @sceneFullPath.."UI.scene"
 	globalVarFullPath:property => @logicFullPath.."Variable.global"
 	globalVarCompiledFullPath:property => @logicFullPath.."Variable.lua"
 	settingFullPath:property => @logicFullPath.."Settings.lua"
+	builtinActionPath:property => "SceneEditor/Data/Built-In"
 
 	cleanupSubEditors:=>
 		for module in *{
@@ -497,9 +517,9 @@ Class EditorView,
 						parent\swapLayer i,i+1
 			elseif child
 				parent\addChild child
-				children = parent.children
-				children\removeLast!
-				children\insert child,index
+				with parent.children
+					\removeLast!
+					\insert child,index
 		else
 			parent = @getItem parentData
 			child = newData parent,index

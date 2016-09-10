@@ -1,0 +1,17 @@
+<!-- params: Width -->
+<SettingPanel Title="Character Settings" Width="{ width }">
+	<Import Module="Control.Unit.SettingPanel"/>
+	<Import Module="Control.Unit.AttributeItem"/>
+	<Import Module="Control.Unit.AnimationViewer"/>
+	<Import Module="Control.Unit.ListPanel"/>
+
+	<AttributeItem Name="nameBtn" Text="Name:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="tagBtn" Text="Tag:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AnimationViewer Name="modelPanel" Width="{ $W-20 }" Ref="True"/>
+	<AttributeItem Name="sizeBtn" Text="Size:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="scaleBtn" Text="Scale:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="maxHpBtn" Text="HP:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="moveBtn" Text="Move:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="jumpBtn" Text="Jump:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<ListPanel Name="actionPanel" Title="Actions:" Width="{ $W-20 }" Height="60" Ref="True"/>
+</SettingPanel>

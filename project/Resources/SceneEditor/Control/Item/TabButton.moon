@@ -9,7 +9,8 @@ TabButtonView = require "View.Control.Item.TabButton"
 Class TabButtonView,
 	__init: (args)=>
 		@file = args.file
-		@_expanded = false
+		@_expanded = args.expanded == true
+		@emit "Expanded",true if @_expanded
 		@_checked = false
 		@_isCheckMode = false
 		@slot "Tapped", ->

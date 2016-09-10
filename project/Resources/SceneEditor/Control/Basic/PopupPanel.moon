@@ -12,7 +12,7 @@ Class PopupPanelView,
 		itemRect = CCRect.zero
 		@scrollArea\setupMenuScroll @menu
 		@closeBtn\slot "Tapped",-> @hide!
-		CCDirector.currentScene\addChild @,998
+		CCDirector.currentScene\addChild @,editor.topMost
 		thread -> @show!
 
 	show:=>

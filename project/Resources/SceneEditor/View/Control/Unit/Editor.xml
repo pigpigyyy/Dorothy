@@ -1,0 +1,60 @@
+<!-- params: Title, Width, Height, EditorLevel, MenuLevel -->
+<Layer Name="layer" X="{ @X }" Y="{ @Y }"
+	TouchPriority="{ editorLevel or editor.levelUnitEditor }"
+	SwallowTouches="True" TouchEnabled="True" Visible="False">
+	<Import Module="Control.Basic.ScrollArea"/>
+	<Import Module="Control.Basic.Button"/>
+	<Import Module="Control.Basic.GroupButton"/>
+	<Import Module="Control.Basic.SelectionItem"/>
+	<Import Module="View.Shape.LineRect"/>
+	<Import Module="View.Shape.SolidRect"/>
+	<Import Module="Control.Basic.CircleButton"/>
+
+	<Script>local menuLevel = menuLevel or editor.levelUnitMenu</Script>
+
+	<Node Name="panel" X="{ $X }" Y="{ $Y }" Width="{ width or @W }" Height="{ height or @H }" Ref="True">
+		<SolidRect Width="{ $W }" Height="{ $H }" Color="0xff100000"/>
+
+		<Script>local menuHeight = 100</Script>
+
+		<Node X="125" Y="{ $Y }" Width="250" Height="{ $H }">
+			<!-- scope menu -->
+			<Menu Name="scopeMenu" X="{ $X }" Y="{ $T-menuHeight/2 }" Width="{ $W }" Height="100" AlignItems="10" TouchPriority="{ menuLevel-1 }" Ref="True">
+				<Node Width="{ $W }" Height="20">
+					<LabelTTF Text="{ title }" X="{ $X }" Y="{ $Y+5 }" FontName="Arial" FontSize="20" AntiAlias="False" Color="0x00ffff"/>
+				</Node>
+				<GroupButton Name="groupBtn" Text="Default" Width="{ $W-20 }" Height="40" Ref="True"/>
+			</Menu>
+
+			<!-- unit list -->
+			<ScrollArea Name="listScrollArea" X="{ $X }" Y="{ $T-menuHeight-($H-70-menuHeight)/2 }" Width="{ $W }" Height="{ $H-70-menuHeight }" PaddingX="0" PaddingY="100" TouchPriority="{ menuLevel-2 }" Ref="True">
+				<Item Name="view">
+					<Menu Name="listMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ menuLevel-1 }" Ref="True"/>
+				</Item>
+			</ScrollArea>
+
+			<!-- unit edit menu -->
+			<Menu Name="editMenu" X="{ $X }" Y="{ $B+35 }" Width="{ $W }" Height="70" AlignItems="10" TouchPriority="{ menuLevel-1 }" Enabled="False" Ref="True">
+				<Button Name="newBtn" Text="New" Width="50" Height="50" FontSize="16" Ref="True"/>
+				<Button Name="addBtn" Text="Add" Width="50" Height="50" FontSize="16" Ref="True"/>
+				<Button Name="delBtn" Text="Del" Width="50" Height="50" FontSize="16" Ref="True"/>
+				<Button Name="copyBtn" Text="Copy" Width="50" Height="50" FontSize="16" Ref="True"/>
+			</Menu>
+
+			<Line Color="0xffafaf" X="{ $R }" Y="{ $Y }" Height="{ $H }">
+				<Vec2 X="0" Y="{ $B+1 }"/>
+				<Vec2 X="0" Y="{ $T-1 }"/>
+			</Line>
+		</Node>
+
+		<LineRect X="1" Y="1" Width="{ $W-2 }" Height="{ $H-2 }" Color="0xffffafaf"/>
+	</Node>
+
+	<Menu Name="opMenu" X="{ math.min(panel.positionX+panel.width/2,@R-40) }" Y="{ math.min(panel.positionY+panel.height/2,@T-40) }" Width="60" Height="60" TouchPriority="{ menuLevel-3 }" Enabled="False" Ref="True">
+		<CircleButton Name="closeBtn" X="{ $X }" Y="{ $Y }" Radius="30" Text="Close" FontSize="20" Ref="True">
+			<DrawNode>
+				<Dot X="30" Y="30" Radius="30" Color="0x22ffffff"/>
+			</DrawNode>
+		</CircleButton>
+	</Menu>
+</Layer>

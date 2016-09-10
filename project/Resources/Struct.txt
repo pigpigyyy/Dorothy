@@ -1,0 +1,32 @@
+	-- 定义Struct
+	local Unit = Struct.Unit("name", "group", "tag", "actions")
+	local Action = Struct.Action("name", "id")
+	local Array = Struct.Array
+
+	-- 创建实例
+	local unit = Unit {
+		name = "abc",
+		group = 123,
+		tag = "tagX",
+		actions = Array {
+			Action { name = "walk",id = "a1" },
+			Action { name = "run", id = "a2" },
+			Action { name = "sleep", id = "a3" }
+		}
+	}
+
+	-- 监听属性变化
+	unit.__notify = function(event, key, value)
+		if "Modified" == event then
+		elseif "Updated" == event then
+		end
+	end
+
+	-- 监听列表变化
+	unit.actions.__notify = function(event, index, item)
+		if "Added" == event then
+		elseif "Removed" == event then
+		elseif "Changed" == event then
+		elseif "Updated" == event then
+		end
+	end

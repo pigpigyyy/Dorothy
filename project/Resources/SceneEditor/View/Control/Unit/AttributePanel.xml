@@ -1,0 +1,20 @@
+<!-- params: X, Y, Width, Height -->
+<ScrollArea X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }" PaddingX="0" PaddingY="100" TouchPriority="{ editor.levelAttributeEditor-3 }">
+	<Import Module="Control.Unit.CharacterSetting"/>
+	<Import Module="Control.Unit.PhysicsSetting"/>
+	<Import Module="Control.Basic.ScrollArea"/>
+	<Import Module="Control.Basic.Button"/>
+	<Import Module="View.Shape.SolidRect"/>
+
+	<Item Name="view">
+		<Menu Name="attributeMenu" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.levelAttributeEditor-1 }" Ref="True">
+			<Script>local itemWidth = math.max(width-200,200)</Script>
+			<CharacterSetting Name="characterSetting" Width="{ itemWidth }" Ref="True"/>
+			<PhysicsSetting Name="physicsSetting" Width="{ itemWidth }" Ref="True"/>
+		</Menu>
+	</Item>
+	<Menu Name="errorMenu" AnchorX="0" AnchorY="0" Width="110" Height="50" TouchPriority="{ editor.levelAttributeEditor-2 }" Ref="True">
+		<Button Name="errorBtn" Text="!" X="{ $L+25 }" Y="{ $Y }" Width="50" Height="50" BackColor="0xca000000" FontSize="24" Ref="True"/>
+		<Button Name="errorInfoBtn" Text="Error" X="{ $R-25 }" Y="{ $Y }" Width="50" Height="50" BackColor="0xca000000" FontSize="20" Ref="True"/>
+	</Menu>
+</ScrollArea>

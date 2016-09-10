@@ -170,7 +170,7 @@ Class ExprEditorView,
 						if rootItem or #@triggerMenu.children >= 999 then false
 						elseif parentExpr then (parentExpr[1] ~= "Event")
 						else true
-				copy = add and parentExpr[1] ~= "Event"
+				copy = add and parentExpr and parentExpr[1] ~= "Event"
 				del = if rootItem then false
 					elseif parentExpr and (switch parentExpr[1]
 						when "Condition","Event","Available" then #parentExpr == 2
@@ -834,6 +834,7 @@ Class ExprEditorView,
 				TriggerDef.SetExprMeta dofile arg
 		@updateArgs!
 		@view\schedule once ->
+			menuEnabled = @triggerMenu.enabled
 			@triggerMenu.enabled = false
 			@triggerMenu\removeAllChildrenWithCleanup!
 			for _, scope in pairs @varScopes do scope\clear!
@@ -841,7 +842,7 @@ Class ExprEditorView,
 			@asyncLoad = true
 			@nextExpr @exprData,0
 			@asyncLoad = false
-			@triggerMenu.enabled = true
+			@triggerMenu.enabled = menuEnabled
 			@lintCode!
 			if @targetLine
 				@selectedLine = @targetLine

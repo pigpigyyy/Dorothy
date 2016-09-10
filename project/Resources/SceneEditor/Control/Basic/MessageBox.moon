@@ -6,7 +6,7 @@ MessageBoxView = require "View.Control.Basic.MessageBox"
 -- [params]
 -- text, okOnly
 Class MessageBoxView,
-	__init: (args)=>
+	__init:(args)=>
 		@okBtn\slot "Tapped", ->
 			@clicked true
 
@@ -24,7 +24,7 @@ Class MessageBoxView,
 			@title.position = oVec2 xPos,90-@title.height/2
 			@scrollArea.offset = oVec2 120-xPos,0
 
-		CCDirector.currentScene\addChild @,998
+		CCDirector.currentScene\addChild @,editor.topMost
 
 	clicked: (result)=>
 		@opMenu.enabled = false

@@ -1,0 +1,12 @@
+<!-- params: Title, X, Y, Width -->
+<Node X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="80">
+	<Import Module="Control.Unit.ListItem"/>
+	<Import Module="View.Shape.LineRect"/>
+
+	<LabelTTF Name="title" Text="{ title }" X="{ $L+10 }" Y="{ $T-15 }" AnchorX="0" FontName="Arial" FontSize="16" Ref="True"/>
+
+	<Menu Name="menu" X="{ $X+15 }" Y="{ $Y-15 }" Width="{ $W-30 }" Height="50" TouchPriority="{ editor.levelAttributeEditor }" SwallowTouches="False" Ref="True" AlignItems="10">
+		<ListItem Name="addItem" Width="{ $W-20 }" Height="30" Ref="True"/>
+	</Menu>
+
+</Node>

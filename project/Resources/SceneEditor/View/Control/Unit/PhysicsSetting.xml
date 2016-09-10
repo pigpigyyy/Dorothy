@@ -1,0 +1,15 @@
+<!-- params: Width -->
+<SettingPanel Title="Physics Settings" Width="{ width }">
+	<Import Module="Control.Unit.SettingPanel"/>
+	<Import Module="Control.Unit.AttributeItem"/>
+
+	<AttributeItem Name="typeBtn" Text="Type:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="densityBtn" Text="Density:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="frictionBtn" Text="Friction:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="restitutionBtn" Text="Restitution:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="fixedRotationBtn" Text="FixedRotation:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="isBulletBtn" Text="IsBullet:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="linearDampingBtn" Text="LinearDamping:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="angularDampingBtn" Text="AngularDamping:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="gravityScaleBtn" Text="GravityScale:" Width="{ $W-20 }" Height="30" Ref="True"/>
+</SettingPanel>

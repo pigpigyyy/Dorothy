@@ -1,9 +1,12 @@
-<!-- params: X=0, Y=0, Width, Height, Text -->
+<!-- params: X=0, Y=0, Width, Height, Text, FontSize -->
 <MenuItem Name="item" X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }" Text="{ text }" Color="0x00ffff">
 	<Import Module="View.Shape.LineRect"/>
 
-	<LineRect Width="{ width }" Height="{ height }" Color="0xffffffff"/>
-	<LabelTTF X="{ $X }" Y="{ $Y }" FontName="Arial" FontSize="16" AntiAlias="False" Text="{ text }"/>
+	<Script>if not noFrame then</Script>
+		<LineRect Width="{ width }" Height="{ height }" Color="0xffffffff"/>
+	<Script>end</Script>
+
+	<LabelTTF AnchorX="0" X="{ $L+50 }" Y="{ $Y }" FontName="Arial" FontSize="20" AntiAlias="False" Text="{ text }"/>
 	<Node Name="arrow" X="{ height/2 }" Y="{ height/2 }" PassColor="False">
 		<DrawNode>
 			<Polygon FillColor="0x22ff0080" BorderWidth="0.5" BorderColor="0xffff0080">

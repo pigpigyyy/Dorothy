@@ -8,7 +8,7 @@ Class TestBase,
 		-- Declare struct classes
 		Unit = Struct.Unit "name", "group", "type", "actions"
 		Action = Struct.Action "name", "id"
-		Array = Struct.Array!
+		Array = Struct.Array
 
 		-- Create struct instances
 		unit = Unit
@@ -24,15 +24,17 @@ Class TestBase,
 		-- Convert instance to string 
 		str = tostring unit
 
+		print "unitStr",str
+
 		-- Load string to instance
 		unit = Struct\load str
 
 		-- Register for field changes
-		unit.__notify = (key,value)->
-			print "Modified", key, "to", value
+		unit.__notify = (event,key,value)->
+			print event,key,"to",value
 
 		unit.actions.__notify = (event,index,item)->
-			print event, index, tostring item
+			print event,index,tostring item
 
 		-- Change some fields
 		unit.type = "typeY"
@@ -58,7 +60,7 @@ Class TestBase,
 
 		unit.actions\removefor action
 		print unit.actions.count
-		print unit.name, unit.group, unit.type, tostring unit.actions
+		print "Unit:",tostring unit
 
 		-- Test different namespaces
 		Grid = Struct.UI.Grid "cols","rows"
@@ -66,6 +68,11 @@ Class TestBase,
 		Cell = Struct.Items.Cell "number","text"
 		print tostring Grid cols:123,rows:456
 		print tostring Grid2 x:123,y:456,z:233
+
+		unorderedField = Grid2 z:"unordered",x:217
+		print tostring unorderedField
+		unorderedField.y = 3
+		print tostring unorderedField
 
 		-- Serialize all struct defines to string
 		print tostring Struct

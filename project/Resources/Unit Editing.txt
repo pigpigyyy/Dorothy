@@ -1,0 +1,91 @@
+Character Settings
+	name
+		string
+	tag
+		number [,]
+	model
+		model list
+	size
+		size
+	scale
+		number [0,]
+	maxHp
+		number [0,]
+	move
+		number [0,]
+	jump
+		number [0,]
+	actions
+
+Physics Settings
+	type
+		oBodyDef.Dynamic
+		oBodyDef.Kinematic
+		oBodyDef.Static
+	density
+		number [0,26]
+	friction
+		number [0,1]
+	restitution
+		number [0,1]
+	fixedRotation
+		boolean
+	isBullet
+		boolean
+	linearDamping
+		number [0,1]
+	angularDamping
+		number [0,1]
+	gravityScale
+		number [,]
+
+Battle Settings
+	attackBase
+		number [0,]
+	attackPower
+		number [0,]
+	attackRange
+		number [0,]
+	attackTarget
+		oAttackTarget.Multi
+		oAttackTarget.Single
+	targetAllow
+		oRelation.Any
+		oRelation.Enemy
+		oRelation.Friend
+		oRelation.Neutral
+		oRelation.Unkown
+	attackDelay
+		number [0,] seconds
+	attackType
+		oAttackType.Melee
+		oAttackType.Range
+	usePreciseHit
+		boolean
+	bulletType
+		bullet list
+	damageType
+		[0,15]
+	defenceType
+		[0,15]
+
+AI Settings
+	sensity
+		number [0,]
+	detectDistance
+		number [0,]
+	reflexArc
+		AI list
+	instincts
+
+Visual Settings
+	attackEffect
+		effect list
+	attackEffectDelay
+		number [0,]
+	hitEffect
+		effect list
+	sndAttack
+		sound list
+	sndDeath
+		sound list

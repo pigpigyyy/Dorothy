@@ -18,7 +18,10 @@ Class ActionChooserView,
 			button.checked = true unless button.checked
 			@curGroupBtn = button
 			if not button.items
-				files = Path.getFiles editor.actionFullPath..button.group,"action"
+				files = if button.group == "Built-In"
+					Path.getFiles editor.builtinActionPath,"action"
+				else
+					Path.getFiles editor.actionFullPath..button.group,"action"
 				button.items = for file in *files
 					with SelectionItem {
 							text:Path.getName file
@@ -43,6 +46,7 @@ Class ActionChooserView,
 				.viewSize = @apiMenu\alignItems!
 
 		groups = Path.getFolders editor.actionFullPath
+		table.insert groups,1,"Built-In"
 		for group in *groups
 			@catMenu\addChild with SelectionItem {
 					text:Path.getName group
@@ -53,6 +57,8 @@ Class ActionChooserView,
 				.group = group
 				\slot "Tapped",selectGroup
 		@catScrollArea.viewSize = @catMenu\alignItems!
+		@catScrollArea\setupMenuScroll @catMenu
+		@apiScrollArea\setupMenuScroll @apiMenu
 		selectGroup @catMenu.children[1] if @catMenu.children
 
 		@selectBtn\slot "Tapped",->
@@ -63,6 +69,7 @@ Class ActionChooserView,
 				@emit "Selected",nil
 
 		@show!
+		editor\addChild @,editor.topMost
 
 	show:=>
 		@visible = true

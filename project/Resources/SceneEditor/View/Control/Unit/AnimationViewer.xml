@@ -1,0 +1,24 @@
+<!-- params: X, Y, Width -->
+<Node Name="node" X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }">
+	<Import Module="Control.Basic.Button"/>
+	<Import Module="Control.Basic.ScrollArea"/>
+	<Import Module="View.Shape.LineRect"/>
+
+	<Script>local imageWidth = width > 260 and 200 or (width-60)</Script>
+	<Script>local imageHeight = math.max(imageWidth,170)</Script>
+	<Script>node.height = imageHeight</Script>
+
+	<Node X="{ $X }" Y="{ $Y }" Width="{ imageWidth+60 }" Height="{ imageHeight }">
+		<ScrollArea Name="imageScrollArea" X="{ $L+imageWidth/2 }" Y="{ $Y }" Width="{ imageWidth }" Height="{ $H }" PaddingX="50" PaddingY="50" TouchPriority="{ editor.levelAttributeEditor }" Ref="True">
+			<Item Name="view">
+				<Menu Name="imagePanel" X="{ $X }" Y="{ $Y }" Width="{ $W }" Height="{ $H }" TouchPriority="{ editor.levelAttributeEditor }" Ref="True"/>
+				<LineRect Width="{ imageWidth }" Height="{ $H }" Color="0xff00ffff"/>
+			</Item>
+		</ScrollArea>
+		<Menu X="{ $R-25 }" Y="{ $Y }" Width="70" Height="170" TouchPriority="{ editor.levelAttributeEditor }">
+			<Button Name="modelBtn" Text="Model" X="{ $X }" Y="{ $T-25 }" Width="50" Height="50" FontSize="16" Ref="True"/>
+			<Button Name="zoomBtn" Text="100%" X="{ $X }" Y="{ $Y }" Width="50" Height="50" FontSize="16" Ref="True"/>
+			<Button Name="actionBtn" Text="idle" X="{ $X }" Y="{ $B+25 }" Width="50" Height="50" FontSize="16" Ref="True"/>
+		</Menu>
+	</Node>
+</Node>

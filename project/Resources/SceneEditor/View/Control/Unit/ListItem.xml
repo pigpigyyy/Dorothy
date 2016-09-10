@@ -1,0 +1,18 @@
+<!-- params: Text, X, Y, Width, Height -->
+<MenuItem X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" Height="{ height }">
+	<Import Module="Control.Basic.Button"/>
+	
+	<Script>if text then</Script>
+		<DrawNode X="-15" Y="{ $Y }">
+			<Polygon BorderColor="0xff00ffff" BorderWidth="0.5" FillColor="0x2200ffff">
+				<Vec2 X="-2.5" Y="-2.5"/>
+				<Vec2 X="2.5" Y="-2.5"/>
+				<Vec2 X="2.5" Y="2.5"/>
+				<Vec2 X="-2.5" Y="2.5"/>
+			</Polygon>
+		</DrawNode>
+	<Script>end</Script>
+
+	<LabelTTF Name="label" Text="{ text or '' }" AnchorX="0" X="{ $L }" Y="{ $Y }" FontName="Arial" FontSize="14" Ref="True"/>
+	<Button Name="opBtn" Text="{ text and '-' or '+' }" X="{ $R-15 }" Y="{ $Y }" Width="30" Height="{ height }" FontSize="16" Ref="True"/>
+</MenuItem>

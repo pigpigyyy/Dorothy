@@ -31,8 +31,7 @@ Class ScrollAreaView,
 		deltaMoveLength = 0
 
 		updateReset = (deltaTime)->
-			x = nil
-			y = nil
+			local x,y
 			timePassed += deltaTime
 			t = math.min timePassed*4,1
 			with oEase
@@ -177,9 +176,10 @@ Class ScrollAreaView,
 					@emit "ScrollStart"
 
 		@scroll = (delta)=>
-			deltaX += delta.x
-			deltaY += delta.y
-			@emit "Scrolled",oVec2(delta.x,delta.y)
+			if delta
+				deltaX += delta.x
+				deltaY += delta.y
+				@emit "Scrolled",oVec2(delta.x,delta.y)
 			startReset! if isReseting!
 
 		@scrollTo = (offset)=>
@@ -234,6 +234,19 @@ Class ScrollAreaView,
 			menu.enabled = false
 		@slot "ScrollTouchEnded",->
 			menu.enabled = menuEnabled if not menu.enabled
+
+	adjustScrollSize:(menu,padding=10,alignMode="auto")=> -- alignMode:auto,vertical,horizontal
+		offset = @offset
+		@scrollTo oVec2.zero
+		@viewSize = switch alignMode
+			when "auto"
+				menu\alignItems padding
+			when "vertical"
+				menu\alignItemsVertically padding
+			when "horizontal"
+				menu\alignItemsHorizontally padding
+		@scrollTo offset
+		@scroll!
 
 	scrollToPosY:(posY,time=0.3)=>
 		height = @height

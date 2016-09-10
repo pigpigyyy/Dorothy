@@ -69,7 +69,7 @@ Class
 		if @selectedItem
 			@scrollArea\scrollToPosY @selectedItem.positionY
 
-		CCDirector.currentScene\addChild @,998
+		CCDirector.currentScene\addChild @,editor.topMost
 
 	hide:=>
 		@scrollArea.touchEnabled = false

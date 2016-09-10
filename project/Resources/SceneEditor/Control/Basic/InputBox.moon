@@ -6,7 +6,7 @@ InputBoxView = require "View.Control.Basic.InputBox"
 -- [params]
 -- text
 Class InputBoxView,
-	__init: =>
+	__init:=>
 		@textBox\attachWithIME!
 		@textBox\slot "Inputed",(text) ->
 			@inputed text unless text == ""
@@ -17,9 +17,9 @@ Class InputBoxView,
 		@cancelBtn\slot "Tapped", ->
 			@inputed nil
 
-		CCDirector.currentScene\addChild @,998
+		CCDirector.currentScene\addChild @,editor.topMost
 
-	inputed: (text)=>
+	inputed:(text)=>
 		@activateArea.enabled = false
 		@opMenu.enabled = false
 		@perform oOpacity 0.6,0

@@ -1,0 +1,13 @@
+<!-- params: Title, X, Y, Width -->
+<Menu Name="menu" X="{ x or 0 }" Y="{ y or 0 }" Width="{ width }" TouchPriority="{ editor.levelAttributeEditor }" SwallowTouches="False">
+	<Import Module="Control.Item.TabButton"/>
+	<Import Module="View.Shape.SolidRect"/>
+
+	<TabButton Name="expandBtn" Text="{ title }" Expanded="{ true }" NoFrame="{ true }" Width="{ $W-20 }" Height="40" Ref="True"/>
+	<ClipNode Name="mask" Visible="False" Ref="True">
+		<Stencil>
+			<SolidRect X="-1" Y="-1" Width="{ menu.width+2 }" Height="{ menu.height+2 }"/>
+		</Stencil>
+		<Node Name="maskContent" Ref="True"/>
+	</ClipNode>
+</Menu>

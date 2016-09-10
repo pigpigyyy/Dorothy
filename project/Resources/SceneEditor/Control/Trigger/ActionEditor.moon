@@ -32,6 +32,8 @@ TriggerScope = Class
 							height:panelH-20
 						}
 						\loadExpr @triggerBtn.file
+						if @editor.localScope.currentGroup == "Built-In"
+							.triggerMenu.enabled = false
 					@triggerBtn.exprEditor = exprEditor
 					@triggerBtn\slot "Cleanup",->
 						parent = exprEditor.parent
@@ -53,10 +55,7 @@ TriggerScope = Class
 
 		@_menu\slot "Cleanup",->
 			for _,item in pairs @items
-				if item.parent
-					item.parent\removeChild item
-				else
-					item\cleanup!
+				item\cleanup! unless item.parent
 
 	updateItems:=>
 		path = @path
@@ -65,15 +64,18 @@ TriggerScope = Class
 		oContent\mkdir defaultFolder unless oContent\exist defaultFolder
 		@_groups = Path.getFolders path
 		table.sort @_groups
+		table.insert @_groups,1,"Built-In"
 		files = Path.getAllFiles path,"action"
 		for i = 1,#files
 			files[i] = prefix..files[i]
+		for builtinFile in *Path.getAllFiles editor.builtinActionPath,"action"
+			table.insert files,editor.builtinActionPath.."/"..builtinFile
 		filesToAdd,filesToDel = CompareTable @files,files
 		allItemsUpdated = #filesToDel == #@files
 		@files = files
 		for file in *filesToAdd
 			appendix = Path.getFilename file
-			group = file\sub #prefix+1,-#appendix-2
+			group = file\sub(1,-#appendix-2)\match "([^\\/]*)$"
 			item = with SelectionItem {
 					text:Path.getName file
 					width:@_menu.width-20
@@ -109,6 +111,21 @@ TriggerScope = Class
 				@@scrollArea.offset = oVec2.zero
 				@@scrollArea.viewSize = \alignItems!
 				@@scrollArea.offset = @_groupOffset[@_currentGroup] or oVec2.zero
+			if group == "Built-In"
+				for button in *{@@editor.newBtn,@@editor.addBtn,@@editor.delBtn}
+					button.enabled = false
+					button\perform CCSequence {
+						oScale 0.3,0,0,oEase.OutQuad
+						CCHide!
+					}
+			else
+				for button in *{@@editor.newBtn,@@editor.addBtn,@@editor.delBtn}
+					if not button.enabled
+						button.enabled = true
+						button\perform CCSequence {
+							CCShow!
+							oScale 0.3,1,1,oEase.OutQuad
+						}
 
 	menuItems:property => @_menu.children
 
@@ -125,6 +142,7 @@ Class
 		{width:panelW,height:panelH} = @panel
 		@firstDisplay = true
 
+		TriggerScope.editor = @
 		TriggerScope.scrollArea = @listScrollArea
 		TriggerScope.panel = @panel
 
@@ -234,14 +252,17 @@ Class
 			.targetFile = nil
 			.targetData = nil
 			\slot "Tapped",->
+				triggerBtn = TriggerScope.triggerBtn
+				if not triggerBtn
+					MessageBox text:"No Action Selected!",okOnly:true
+					return
+				if @copyBtn.copying and @localScope.currentGroup == "Built-In"
+					MessageBox text:"Can`t Add Action\nHere!",okOnly:true
+					return
 				@copyBtn.copying = not @copyBtn.copying
 				if @copyBtn.copying
 					@copyBtn.text = "Paste"
 					@copyBtn.color = ccColor3 0xff0080
-					triggerBtn = TriggerScope.triggerBtn
-					if not triggerBtn
-						MessageBox text:"No Action Selected!",okOnly:true
-						return
 					@copyBtn.targetFile = triggerBtn.file
 					@copyBtn.targetData = triggerBtn.exprEditor.exprData
 				else
