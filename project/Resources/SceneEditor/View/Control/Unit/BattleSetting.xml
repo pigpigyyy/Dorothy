@@ -1,0 +1,17 @@
+<!-- params: Width -->
+<SettingPanel Title="Battle Settings" Width="{ width }">
+	<Import Module="Control.Unit.SettingPanel"/>
+	<Import Module="Control.Unit.AttributeItem"/>
+
+	<AttributeItem Name="attackBaseBtn" Text="AttackBase:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="attackPowerBtn" Text="AttackPower:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="attackRangeBtn" Text="AttackRange:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="attackTargetBtn" Text="AttackTarget:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="targetAllowBtn" Text="TargetAllow:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="attackDelayBtn" Text="AttackDelay:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="attackTypeBtn" Text="AttackType:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="usePreciseHitBtn" Text="UsePreciseHit:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="bulletTypeBtn" Text="BulletType:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="damageTypeBtn" Text="DamageType:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="defenceTypeBtn" Text="DefenceType:" Width="{ $W-20 }" Height="30" Ref="True"/>
+</SettingPanel>

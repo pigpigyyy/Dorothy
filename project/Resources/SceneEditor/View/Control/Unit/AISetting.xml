@@ -1,0 +1,11 @@
+<!-- params: Width -->
+<SettingPanel Title="AI Settings" Width="{ width }">
+	<Import Module="Control.Unit.SettingPanel"/>
+	<Import Module="Control.Unit.AttributeItem"/>
+	<Import Module="Control.Unit.ListPanel"/>
+
+	<AttributeItem Name="sensityBtn" Text="Sensity:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="detectDistanceBtn" Text="DetectDistance:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="reflexArcBtn" Text="ReflexArc:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<ListPanel Name="instinctPanel" Title="Instincts:" Width="{ $W-20 }" Height="60" Ref="True"/>
+</SettingPanel>

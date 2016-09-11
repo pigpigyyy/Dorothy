@@ -1,0 +1,11 @@
+<!-- params: Width -->
+<SettingPanel Title="Visual Settings" Width="{ width }">
+	<Import Module="Control.Unit.SettingPanel"/>
+	<Import Module="Control.Unit.AttributeItem"/>
+
+	<AttributeItem Name="attackEffectBtn" Text="AttackEffect:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="attackEffectDelayBtn" Text="AttackEffectDelay:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="hitEffectBtn" Text="HitEffect:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="sndAttackBtn" Text="SndAttack:" Width="{ $W-20 }" Height="30" Ref="True"/>
+	<AttributeItem Name="sndDeathBtn" Text="SndDeath:" Width="{ $W-20 }" Height="30" Ref="True"/>
+</SettingPanel>

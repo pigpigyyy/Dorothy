@@ -298,6 +298,7 @@ CCSize CCMenu::alignItemsVerticallyWithPadding(float padding)
 			CCNode* pChild = (CCNode*)pObject;
 			float realWidth = pChild->getContentSize().width * pChild->getScaleX();
 			float realHeight = pChild->getContentSize().height * pChild->getScaleY();
+			if (realWidth == 0.0f || realHeight == 0.0f) continue;
 			float realPosY = (1.0f - pChild->getAnchorPoint().y) * realHeight;
 			y -= realPosY;
 			pChild->setPositionX(width*0.5f - (0.5f - pChild->getAnchorPoint().x) * realWidth);
@@ -322,6 +323,7 @@ CCSize CCMenu::alignItemsHorizontallyWithPadding(float padding)
 			CCNode* pChild = (CCNode*)pObject;
 			float realWidth = pChild->getContentSize().width * pChild->getScaleX();
 			float realHeight = pChild->getContentSize().height * pChild->getScaleY();
+			if (realWidth == 0.0f || realHeight == 0.0f) continue;
 			float realPosX = pChild->getAnchorPoint().x * realWidth;
 			x += realPosX;
 			pChild->setPositionX(x);
@@ -351,6 +353,10 @@ CCSize CCMenu::alignItemsWithPadding(float padding)
 			CCNode* pChild = (CCNode*)pObject;
 
 			float realWidth = pChild->getContentSize().width * pChild->getScaleX();
+			float realHeight = pChild->getContentSize().height * pChild->getScaleY();
+
+			if (realWidth == 0.0f || realHeight == 0.0f) continue;
+
 			if (x + realWidth + padding > width)
 			{
 				x = padding;
@@ -360,7 +366,6 @@ CCSize CCMenu::alignItemsWithPadding(float padding)
 			float realPosX = pChild->getAnchorPoint().x * realWidth;
 			x += realPosX;
 
-			float realHeight = pChild->getContentSize().height * pChild->getScaleY();
 			float realPosY = (1.0f - pChild->getAnchorPoint().y) * realHeight;
 
 			pChild->setPositionX(x);

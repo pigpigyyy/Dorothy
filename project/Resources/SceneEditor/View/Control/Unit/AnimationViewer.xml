@@ -4,7 +4,7 @@
 	<Import Module="Control.Basic.ScrollArea"/>
 	<Import Module="View.Shape.LineRect"/>
 
-	<Script>local imageWidth = width > 260 and 200 or (width-60)</Script>
+	<Script>local imageWidth = width > 360 and 300 or (width-60)</Script>
 	<Script>local imageHeight = math.max(imageWidth,170)</Script>
 	<Script>node.height = imageHeight</Script>
 
@@ -15,7 +15,7 @@
 				<LineRect Width="{ imageWidth }" Height="{ $H }" Color="0xff00ffff"/>
 			</Item>
 		</ScrollArea>
-		<Menu X="{ $R-25 }" Y="{ $Y }" Width="70" Height="170" TouchPriority="{ editor.levelAttributeEditor }">
+		<Menu AnchorY="1" X="{ $R-25 }" Y="{ $T }" Width="70" Height="170" TouchPriority="{ editor.levelAttributeEditor }">
 			<Button Name="modelBtn" Text="Model" X="{ $X }" Y="{ $T-25 }" Width="50" Height="50" FontSize="16" Ref="True"/>
 			<Button Name="zoomBtn" Text="100%" X="{ $X }" Y="{ $Y }" Width="50" Height="50" FontSize="16" Ref="True"/>
 			<Button Name="actionBtn" Text="idle" X="{ $X }" Y="{ $B+25 }" Width="50" Height="50" FontSize="16" Ref="True"/>
