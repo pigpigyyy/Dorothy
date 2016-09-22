@@ -1,6 +1,6 @@
 Dorothy!
 SettingPanelView = require "View.Control.Unit.SettingPanel"
-MessageBox = require "Control.Basic.MessageBox"
+--MessageBox = require "Control.Basic.MessageBox"
 SolidRect = require "View.Shape.SolidRect"
 
 Class SettingPanelView,

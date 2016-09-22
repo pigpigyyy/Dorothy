@@ -4,6 +4,7 @@
 	<Import Module="View.Shape.SolidRect"/>
 
 	<TabButton Name="expandBtn" Text="{ title }" Expanded="{ true }" NoFrame="{ true }" Width="{ $W-20 }" Height="40" Ref="True"/>
+
 	<ClipNode Name="mask" Visible="False" Ref="True">
 		<Stencil>
 			<SolidRect X="-1" Y="-1" Width="{ menu.width+2 }" Height="{ menu.height+2 }"/>

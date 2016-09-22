@@ -7,7 +7,7 @@ Class AttributePanelView,
 		updateSize = -> @adjustScrollSize @attributeMenu,0,"auto"
 		updateSize!
 
-		updateEnableState = ->
+		updateEnableState = -> thread -> -- fix issue on Mac
 			enabled = @attributeMenu.enabled
 			@characterSetting.isEnabled = enabled
 			@physicsSetting.isEnabled = enabled
