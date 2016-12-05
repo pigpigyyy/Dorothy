@@ -25,9 +25,9 @@ Class PickPanelView,
 				if itemType == "Point"
 					@pointControl = with PointControl!
 						\show currentItem,if editor.currentData
-								editor\getItem editor.currentData
-							else
-								nil
+							editor\getItem editor.currentData
+						else
+							nil
 						\slot "PosChanged",(pos)->
 							@pickedItem = Round pos
 							@label.text = itemString!

@@ -158,10 +158,10 @@ Class ExprEditorView,
 						else false
 				edit = not subExprItem
 				insert = if rootItem then false
-					elseif subExprItem then false
-					elseif #@triggerMenu.children >= 999 then false
-					elseif parentExpr then (parentExpr[1] ~= "Event")
-					else true
+				elseif subExprItem then false
+				elseif #@triggerMenu.children >= 999 then false
+				elseif parentExpr then (parentExpr[1] ~= "Event")
+				else true
 				add = switch expr[1]
 					when "Trigger","Event" then false
 					when "UnitAction" then false
@@ -171,14 +171,15 @@ Class ExprEditorView,
 						elseif parentExpr then (parentExpr[1] ~= "Event")
 						else true
 				copy = add and parentExpr and parentExpr[1] ~= "Event"
-				del = if rootItem then false
-					elseif parentExpr and (switch parentExpr[1]
-						when "Condition","Event","Available" then #parentExpr == 2
-						when "ConditionNode" then #parentExpr == 3
-						else false)
-						false
-					else
-						not subExprItem
+				del = if rootItem
+					false
+				elseif parentExpr and (switch parentExpr[1]
+					when "Condition","Event","Available" then #parentExpr == 2
+					when "ConditionNode" then #parentExpr == 3
+					else false)
+					false
+				else
+					not subExprItem
 				mode = switch expr[1]
 					when "UnitAction","Trigger","ConditionNode" then true
 					else false
@@ -909,8 +910,7 @@ Class ExprEditorView,
 					if varName ~= "InvalidName"
 						scope[varName] = varType
 				when "Loop"
-					scope = if varInScope expr[2][2] then {}
-						else {[expr[2][2]]:"Number"}
+					scope = if varInScope expr[2][2] then {} else {[expr[2][2]]:"Number"}
 					table.insert varScope,scope
 					actionExpr = expr[6]
 					for i = 2,#actionExpr

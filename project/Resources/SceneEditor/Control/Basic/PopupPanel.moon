@@ -8,8 +8,6 @@ PopupPanelView = require "View.Control.Basic.PopupPanel"
 -- width,height
 Class PopupPanelView,
 	__init:(args)=>
-		contentRect = CCRect.zero
-		itemRect = CCRect.zero
 		@scrollArea\setupMenuScroll @menu
 		@closeBtn\slot "Tapped",-> @hide!
 		CCDirector.currentScene\addChild @,editor.topMost

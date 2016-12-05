@@ -1,7 +1,6 @@
 Dorothy!
 ListPanelView = require "View.Control.Unit.ListPanel"
 ListItem = require "Control.Unit.ListItem"
-LineRect = require "View.Shape.LineRect"
 MessageBox = require "Control.Basic.MessageBox"
 
 Class ListPanelView,

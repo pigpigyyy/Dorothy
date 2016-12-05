@@ -341,8 +341,8 @@ Class SpritePanelView,
 							@clipItems[clip]\perform oOpacity 0.3,0
 						sleep 0.3
 						editor\updateSprites!
-				else
-					MessageBox text:"No Group Selected",okOnly:true
+			else
+				MessageBox text:"No Group Selected",okOnly:true
 
 		@closeBtn\slot "Tapped",->
 			@hide!

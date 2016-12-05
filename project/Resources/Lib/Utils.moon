@@ -14,12 +14,11 @@ StructToString = =>
 	structDef = getmetatable @
 	content = {}
 	ordered = true
-	count = if #structDef == 0 then #@
-		else #structDef+1
+	count = if #structDef == 0 then #@ else #structDef+1
 	for i = 1,count
 		value = @[i]
 		if value == nil
-			ordered = false 
+			ordered = false
 			continue
 		else
 			value = (type(value) == 'string' and "\"#{value}\"" or tostring value)
@@ -208,7 +207,6 @@ StructHelper = {
 	__tostring:=>
 		content = {}
 		path = @path..@name.."."
-		length = #path
 		i = 1
 		for k,v in pairs StructDefs
 			if k\find path,1,true

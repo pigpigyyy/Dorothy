@@ -526,9 +526,9 @@ Class EditorView,
 			if child
 				parent\addChild child
 		sceneName = if parentData.typeName == "UILayer"
-				"UI.scene"
-			else
-				@scene..".scene"
+			"UI.scene"
+		else
+			@scene..".scene"
 		Reference.addSceneItemRef sceneName,newData
 		emit "Scene.Dirty",true
 		index
@@ -544,9 +544,9 @@ Class EditorView,
 		return unless index
 		@itemDefs[item] = nil
 		sceneName = if parentData.typeName == "UILayer"
-				"UI.scene"
-			else
-				@scene..".scene"
+			"UI.scene"
+		else
+			@scene..".scene"
 		switch itemData.typeName
 			when "Layer","World"
 				if itemData.children
@@ -708,9 +708,9 @@ Class EditorView,
 		@sceneData = with Model.PlatformWorld!
 			.camera = Model.Camera!
 			.ui = if oContent\exist @uiFileFullPath
-					Model.loadData @uiFileFullPath
-				else
-					Model.UILayer!
+				Model.loadData @uiFileFullPath
+			else
+				Model.UILayer!
 		@_sceneName = sceneFile\match "([^\\/]*)%.[^%.\\/]*$"
 		@_currentSceneFile = sceneFile
 		@save!

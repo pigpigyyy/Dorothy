@@ -129,7 +129,6 @@ Dorothy!
 		updateLabels!
 
 	@gslot "Scene.Camera.MoveTo",(pos)->
-		height = winSize.height
 		posY = editor.origin.y-pos.y
 		intervalNode\runAction oPos 0.5,halfW,posY,oEase.OutQuad
 		oRoutine once -> cycle 0.5,updateLabels

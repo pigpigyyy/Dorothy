@@ -181,11 +181,11 @@ Class ViewAreaView,
 						if item.parent ~= editor.items.UI
 							parentData = editor\getData item.parent
 							editor\moveTo pos*parentData.zoom+parentData.offset
-				else
-					@cross.transformTarget = nil
-					@cross.visible = false
-					@cross\unschedule!
-					hideFrame!
+			else
+				@cross.transformTarget = nil
+				@cross.visible = false
+				@cross\unschedule!
+				hideFrame!
 		@gslot "Scene.ViewPanel.Pick",itemChoosed
 		@gslot "Scene.ViewPanel.Select",itemChoosed
 

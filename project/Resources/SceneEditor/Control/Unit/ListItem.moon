@@ -13,7 +13,6 @@ Class
 
 	__init:(args)=>
 		@opBtn\slot "Tapped",->
-			opText = @opBtn.text
 			@emit "Operation",@
 		@opBtn.color = ccColor3 0xff0080 if @opText == "-"
 		@item = args.item

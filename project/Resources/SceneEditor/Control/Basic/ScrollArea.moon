@@ -105,7 +105,7 @@ Class ScrollAreaView,
 			@emit "Scrolled",oVec2(dPosX,dPosY)
 
 			startReset! if not touching and
-			(newPosY < -paddingY*0.5 or 
+			(newPosY < -paddingY*0.5 or
 			newPosY > moveY+paddingY*0.5 or
 			newPosX > paddingX*0.5 or
 			newPosX < -moveX-paddingX*0.5)
