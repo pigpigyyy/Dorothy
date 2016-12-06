@@ -30,7 +30,7 @@ public:
 
 oContent::oContent():
 _isUsingGameFile(false),
-_writablePath(std::move(CCFileUtils::sharedFileUtils()->getWritablePath()))
+_writablePath(CCFileUtils::sharedFileUtils()->getWritablePath())
 {
 	CCFileUtils::sharedFileUtils()->setDataSource(new oDataSource());
 }

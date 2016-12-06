@@ -51,10 +51,6 @@ end
 _G.require = require
 builtin.require = require
 
-for k,_ in pairs(builtin) do
-	print(string.format("\"%s\",",k))
-end
-
 local scene = CCScene()
 
 local winSize = CCDirector.winSize

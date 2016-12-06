@@ -226,7 +226,7 @@ std::vector<std::string> CCFileUtilsMac::getDirEntries(const std::string& path, 
 	{
 		CCLOG("oContent get entry error, %s, %s", strerror(errno), fullPath.c_str());
 	}
-	return std::move(files);
+	return files;
 }
 
 std::string CCFileUtilsMac::getFullPathForDirectoryAndFilename(const std::string& strDirectory, const std::string& strFilename)

@@ -1,5 +1,5 @@
 # Ignore thumbnails created by windows
-Thumbs.db
+*.db
 
 # Ignore files build by Visual Studio
 *.obj

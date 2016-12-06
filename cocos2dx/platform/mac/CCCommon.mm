@@ -59,7 +59,7 @@ void CCMessageBox(const char * pszMsg, const char * pszTitle)
 	[alert addButtonWithTitle:@"OK"];
 	[alert setMessageText:msg];
 	[alert setInformativeText:title];
-	[alert setAlertStyle:NSWarningAlertStyle];
+	[alert setAlertStyle:NSAlertStyle::NSAlertStyleWarning];
 
 	NSWindow *window = [[EAGLView sharedEGLView] window];
 	[alert beginSheetModalForWindow:window completionHandler: nil];

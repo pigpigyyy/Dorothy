@@ -369,9 +369,9 @@ static bool _initWithString(const char * pText, cocos2d::CCImage::ETextAlign eAl
 		// alignment, linebreak
 		unsigned uHoriFlag = eAlign & 0x0f;
 		unsigned uVertFlag = (eAlign & 0xf0) >> 4;
-		NSTextAlignment align = (2 == uHoriFlag) ? NSRightTextAlignment
-			: (3 == uHoriFlag) ? NSCenterTextAlignment
-			: NSLeftTextAlignment;
+		NSTextAlignment align = (2 == uHoriFlag) ? NSTextAlignment::NSTextAlignmentRight
+			: (3 == uHoriFlag) ? NSTextAlignment::NSTextAlignmentCenter
+			: NSTextAlignment::NSTextAlignmentLeft;
 		
 		NSMutableParagraphStyle *paragraphStyle = [[[NSMutableParagraphStyle alloc] init] autorelease];
 		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
@@ -427,9 +427,9 @@ static bool _initWithString(const char * pText, cocos2d::CCImage::ETextAlign eAl
 			
 		CGFloat xPadding = 0;
 		switch (align) {
-			case NSLeftTextAlignment: xPadding = 0; break;
-			case NSCenterTextAlignment: xPadding = (dimensions.width-realDimensions.width)/2.0f; break;
-			case NSRightTextAlignment: xPadding = dimensions.width-realDimensions.width; break;
+			case NSTextAlignment::NSTextAlignmentLeft: xPadding = 0; break;
+			case NSTextAlignment::NSTextAlignmentCenter: xPadding = (dimensions.width-realDimensions.width)/2.0f; break;
+			case NSTextAlignment::NSTextAlignmentRight: xPadding = dimensions.width-realDimensions.width; break;
 			default: break;
 		}
 		

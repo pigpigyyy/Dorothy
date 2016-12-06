@@ -447,7 +447,7 @@ std::vector<std::string> ZipFile::getDirEntries(const std::string& path, bool is
 			}
 		}
 	}
-	return std::move(results);
+	return results;
 }
 
 bool ZipFile::fileExists(const std::string& fileName) const

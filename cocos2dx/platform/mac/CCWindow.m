@@ -29,7 +29,7 @@ THE SOFTWARE.
 
 - (id) initWithFrame:(NSRect)frame fullscreen:(BOOL)fullscreen
 {
-	int styleMask = fullscreen ? NSBackingStoreBuffered : ( NSTitledWindowMask | NSClosableWindowMask );
+	int styleMask = fullscreen ? NSBackingStoreBuffered : ( NSWindowStyleMaskTitled | NSWindowStyleMaskClosable );
 	self = [self initWithContentRect:frame
 						   styleMask:styleMask
 							 backing:NSBackingStoreBuffered
