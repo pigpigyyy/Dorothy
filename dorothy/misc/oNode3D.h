@@ -17,7 +17,6 @@ public:
 	oNode3D();
 	PROPERTY(float, _rotationX, RotationX);
 	PROPERTY(float, _rotationY, RotationY);
-	virtual CCAffineTransform nodeToParentTransform();
 	virtual void transform();
 	CREATE_FUNC(oNode3D);
 	CC_LUA_TYPE(oNode3D)

@@ -45,44 +45,6 @@ float oNode3D::getRotationY() const
 	return _rotationY;
 }
 
-CCAffineTransform oNode3D::nodeToParentTransform()
-{
-	if (m_bTransformDirty)
-	{
-		float c = 1, s = 0;
-		if (m_fRotation)
-		{
-			float radians = -CC_DEGREES_TO_RADIANS(m_fRotation);
-			c = cosf(radians);
-			s = sinf(radians);
-		}
-		bool needsSkewMatrix = (m_fSkewX || m_fSkewY);
-		float x = m_obPosition.x;
-		float y = m_obPosition.y;
-		if (!needsSkewMatrix && m_obAnchorPointInPoints != CCPoint::zero)
-		{
-			x += c * -m_obAnchorPointInPoints.x * m_fScaleX + -s * -m_obAnchorPointInPoints.y * m_fScaleY;
-			y += s * -m_obAnchorPointInPoints.x * m_fScaleX + c * -m_obAnchorPointInPoints.y * m_fScaleY;
-		}
-		m_sTransform = CCAffineTransformMake(c * m_fScaleX, s * m_fScaleX,
-			-s * m_fScaleY, c * m_fScaleY,
-			x, y);
-		if (needsSkewMatrix)
-		{
-			CCAffineTransform skewMatrix = CCAffineTransformMake(1.0f, tanf(CC_DEGREES_TO_RADIANS(m_fSkewY)),
-				tanf(CC_DEGREES_TO_RADIANS(m_fSkewX)), 1.0f,
-				0.0f, 0.0f);
-			m_sTransform = CCAffineTransformConcat(skewMatrix, m_sTransform);
-			if (m_obAnchorPointInPoints != CCPoint::zero)
-			{
-				m_sTransform = CCAffineTransformTranslate(m_sTransform, -m_obAnchorPointInPoints.x, -m_obAnchorPointInPoints.y);
-			}
-		}
-		m_bTransformDirty = false;
-	}
-	return m_sTransform;
-}
-
 void oNode3D::transform()
 {
 	kmMat4 transfrom4x4;
