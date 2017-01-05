@@ -38,7 +38,9 @@ return Class(TestBase,{
 		end
 
 		local fields = {}
-		local classOrFunc = {}
+		local classOrFunc = {
+			CCArray = 100,
+		}
 		local filter = Set {".","..","luaminify","moonscript"}
 		local function stat(dir)
 			local entries = oContent:getEntries(dir,true)

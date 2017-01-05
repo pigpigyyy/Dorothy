@@ -5,7 +5,7 @@
 editor.usetabs = true
 editor.tabwidth = 4
 editor.calltipdelay = 2000
-editor.fontsize = 13
+editor.fontsize = 18
 editor.fontname = "新宋体"
 editor.showfncall = false
 
