@@ -49,8 +49,6 @@ CCAffineTransform oNode3D::nodeToParentTransform()
 {
 	if (m_bTransformDirty)
 	{
-		float x = 0;
-		float y = 0;
 		float c = 1, s = 0;
 		if (m_fRotation)
 		{
@@ -59,6 +57,8 @@ CCAffineTransform oNode3D::nodeToParentTransform()
 			s = sinf(radians);
 		}
 		bool needsSkewMatrix = (m_fSkewX || m_fSkewY);
+		float x = m_obPosition.x;
+		float y = m_obPosition.y;
 		if (!needsSkewMatrix && m_obAnchorPointInPoints != CCPoint::zero)
 		{
 			x += c * -m_obAnchorPointInPoints.x * m_fScaleX + -s * -m_obAnchorPointInPoints.y * m_fScaleY;
@@ -78,7 +78,6 @@ CCAffineTransform oNode3D::nodeToParentTransform()
 				m_sTransform = CCAffineTransformTranslate(m_sTransform, -m_obAnchorPointInPoints.x, -m_obAnchorPointInPoints.y);
 			}
 		}
-
 		m_bTransformDirty = false;
 	}
 	return m_sTransform;
@@ -90,12 +89,10 @@ void oNode3D::transform()
 
 	// Convert 3x3 into 4x4 matrix
 	CCAffineTransform tmpAffine = this->nodeToParentTransform();
+	tmpAffine = CCAffineTransformTranslate(tmpAffine, m_obAnchorPointInPoints.x, m_obAnchorPointInPoints.y);
 	CGAffineToGL(&tmpAffine, transfrom4x4.mat);
+	transfrom4x4.mat[14] = m_fPositionZ;
 
-	kmMat4 translation;
-    kmMat4Translation(&translation, m_obPosition.x, m_obPosition.y, m_fPositionZ);
-	kmMat4Multiply(&transfrom4x4, &transfrom4x4, &translation);
-	
 	if (_rotationX)
 	{
 		kmMat4 rot;
@@ -108,6 +105,10 @@ void oNode3D::transform()
 		kmMat4RotationY(&rot, CC_DEGREES_TO_RADIANS(_rotationY));
 		kmMat4Multiply(&transfrom4x4, &transfrom4x4, &rot);
 	}
+
+	kmMat4 translate;
+	kmMat4Translation(&translate, -m_obAnchorPointInPoints.x, -m_obAnchorPointInPoints.y, 0);
+	kmMat4Multiply(&transfrom4x4, &transfrom4x4, &translate);
 
 	kmGLMultMatrix(&transfrom4x4);
 
