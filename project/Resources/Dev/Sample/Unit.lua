@@ -117,14 +117,21 @@ end
 layer:slot("TouchEnded",touchEnded)
 layer:slot("TouchCancelled",touchEnded)
 
+local center = oVec2(CCDirector.winSize.width/2, CCDirector.winSize.height/2)
+local line = oLine({oVec2(0,center.y),oVec2(CCDirector.winSize.width,center.y)},ccColor4())
+scene:addChild(line)
+line = oLine({oVec2(center.x,0),oVec2(center.x,CCDirector.winSize.height)},ccColor4())
+scene:addChild(line)
+
 local model = oModel("ActionEditor/Model/Output/jiandunA.model")
 model.look = "happy"
 local node = oNode3D()
-local center = oVec2(CCDirector.winSize.width/2, CCDirector.winSize.height/2)
 model.position = oVec2(model.width/2, model.height/2)
 node.contentSize = model.contentSize
 node.anchor = oVec2(0.5,0.5)
 node.skewY = 45
+--node.scaleX = 2
+--node.scaleY = 2
 node.position = center
 node:schedule(function()
 	node.angleY = node.angleY + 1

@@ -113,6 +113,9 @@ void oNode3D::transform()
 		if (m_obAnchorPointInPoints != CCPoint::zero)
 		{
 			m_sTransform = CCAffineTransformTranslate(m_sTransform, -m_obAnchorPointInPoints.x, -m_obAnchorPointInPoints.y);
+			kmMat4 translate;
+			kmMat4Translation(&translate, -m_obAnchorPointInPoints.x, -m_obAnchorPointInPoints.y, 0);
+			kmMat4Multiply(&transfrom4x4, &transfrom4x4, &translate);
 		}
 	}
 
