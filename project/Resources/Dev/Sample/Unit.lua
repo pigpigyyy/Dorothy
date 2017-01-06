@@ -1,3 +1,4 @@
+Dorothy()
 local oButton = require("ActionEditor.Script.oButton")
 
 local oPlatformWorld = require("oPlatformWorld")
@@ -115,5 +116,20 @@ local function touchEnded()
 end
 layer:slot("TouchEnded",touchEnded)
 layer:slot("TouchCancelled",touchEnded)
+
+local model = oModel("ActionEditor/Model/Output/jiandunA.model")
+model.look = "happy"
+local node = oNode3D()
+local center = oVec2(CCDirector.winSize.width/2, CCDirector.winSize.height/2)
+model.position = oVec2(model.width/2, model.height/2)
+node.contentSize = model.contentSize
+node.anchor = oVec2(0.5,0.5)
+node.skewY = 45
+node.position = center
+node:schedule(function()
+	node.angleY = node.angleY + 1
+end)
+node:addChild(model)
+scene:addChild(node)
 
 CCDirector:run(CCScene:crossFade(0.5,scene))

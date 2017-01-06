@@ -49,11 +49,35 @@ void oNode3D::transform()
 {
 	kmMat4 transfrom4x4;
 
-	// Convert 3x3 into 4x4 matrix
-	CCAffineTransform tmpAffine = this->nodeToParentTransform();
-	tmpAffine = CCAffineTransformTranslate(tmpAffine, m_obAnchorPointInPoints.x, m_obAnchorPointInPoints.y);
-	CGAffineToGL(&tmpAffine, transfrom4x4.mat);
+	float x = m_obPosition.x;
+	float y = m_obPosition.y;
+	float c = 1, s = 0;
+	if (m_fRotation)
+	{
+		float radians = -CC_DEGREES_TO_RADIANS(m_fRotation);
+		c = cosf(radians);
+		s = sinf(radians);
+	}
+	bool needsSkewMatrix = (m_fSkewX || m_fSkewY);
+
+	if (!needsSkewMatrix && m_obAnchorPointInPoints != CCPoint::zero)
+	{
+		x += c * -m_obAnchorPointInPoints.x * m_fScaleX + -s * -m_obAnchorPointInPoints.y * m_fScaleY;
+		y += s * -m_obAnchorPointInPoints.x * m_fScaleX + c * -m_obAnchorPointInPoints.y * m_fScaleY;
+	}
+	m_sTransform = CCAffineTransformMake(c * m_fScaleX, s * m_fScaleX,
+		-s * m_fScaleY, c * m_fScaleY,
+		x, y);
+	
+	CGAffineToGL(&m_sTransform, transfrom4x4.mat);
 	transfrom4x4.mat[14] = m_fPositionZ;
+
+	if (!needsSkewMatrix && m_obAnchorPointInPoints != CCPoint::zero)
+	{
+		kmMat4 translate;
+		kmMat4Translation(&translate, m_obAnchorPointInPoints.x, m_obAnchorPointInPoints.y, 0);
+		kmMat4Multiply(&transfrom4x4, &transfrom4x4, &translate);
+	}
 
 	if (_rotationX)
 	{
@@ -68,9 +92,29 @@ void oNode3D::transform()
 		kmMat4Multiply(&transfrom4x4, &transfrom4x4, &rot);
 	}
 
-	kmMat4 translate;
-	kmMat4Translation(&translate, -m_obAnchorPointInPoints.x, -m_obAnchorPointInPoints.y, 0);
-	kmMat4Multiply(&transfrom4x4, &transfrom4x4, &translate);
+	if (!needsSkewMatrix && m_obAnchorPointInPoints != CCPoint::zero)
+	{
+		kmMat4 translate;
+		kmMat4Translation(&translate, -m_obAnchorPointInPoints.x, -m_obAnchorPointInPoints.y, 0);
+		kmMat4Multiply(&transfrom4x4, &transfrom4x4, &translate);
+	}
+
+	if (needsSkewMatrix)
+	{
+		CCAffineTransform skewMatrix = CCAffineTransformMake(1.0f, tanf(CC_DEGREES_TO_RADIANS(m_fSkewY)),
+			tanf(CC_DEGREES_TO_RADIANS(m_fSkewX)), 1.0f,
+			0.0f, 0.0f);
+		m_sTransform = CCAffineTransformConcat(skewMatrix, m_sTransform);
+
+		kmMat4 skewTransfrom4x4;
+		CGAffineToGL(&skewMatrix, skewTransfrom4x4.mat);
+		kmMat4Multiply(&transfrom4x4, &transfrom4x4, &skewTransfrom4x4);
+
+		if (m_obAnchorPointInPoints != CCPoint::zero)
+		{
+			m_sTransform = CCAffineTransformTranslate(m_sTransform, -m_obAnchorPointInPoints.x, -m_obAnchorPointInPoints.y);
+		}
+	}
 
 	kmGLMultMatrix(&transfrom4x4);
 
