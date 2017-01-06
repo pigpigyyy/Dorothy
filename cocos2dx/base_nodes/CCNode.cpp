@@ -489,7 +489,11 @@ void CCNode::cleanup()
 	CC_SAFE_RELEASE_NULL(m_pHelperObject);
 
 	// remove peer data
-	CCScriptEngine::sharedEngine()->removePeer(this);
+	// in lua reference
+	// registry <- ubox <- userdata <- peer
+	// remove peer here in case: userdata <- peer <- userdata
+	// but lua gc can handle this
+	//CCScriptEngine::sharedEngine()->removePeer(this);
 
 	// cleanup children
 	arrayMakeObjectsPerformSelector(m_pChildren, cleanup, CCNode*);
