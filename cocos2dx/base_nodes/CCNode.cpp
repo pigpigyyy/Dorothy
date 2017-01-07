@@ -1289,15 +1289,6 @@ void CCNode::setCascadeColor(bool var)
 {
 	_cascadeColor = var;
 	this->setColor(_realColor);
-	if (!var)
-	{
-		CCObject *obj = NULL;
-		CCARRAY_FOREACH(m_pChildren, obj)
-		{
-			CCNode* node = (CCNode*)obj;
-			node->updateDisplayedColor(_displayedColor);
-		}
-	}
 }
 
 bool CCNode::isCascadeColor() const
