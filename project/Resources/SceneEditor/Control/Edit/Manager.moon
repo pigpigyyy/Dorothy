@@ -588,8 +588,8 @@ Class CCNode,
 								with ContactPanel group:group
 									\slot "Hide",-> cancelEditing!
 					when "gravity"
-						showRuler data.gravity,-50,50,10,(value)->
-							data.gravity = value
+						showRuler data.gravity.y,-50,50,10,(value)->
+							data.gravity = oVec2 0,value
 							menuItem.value = value
 							item.gravity = oVec2 0,value
 					when "opacity"
