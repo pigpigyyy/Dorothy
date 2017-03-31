@@ -226,12 +226,12 @@ int oBody::getGroup() const
 
 void oBody::applyLinearImpulse(const oVec2& impulse, const oVec2& pos)
 {
-	_bodyB2->ApplyLinearImpulse(impulse, pos, true);
+	_bodyB2->ApplyLinearImpulse(impulse, pos);
 }
 
 void oBody::applyAngularImpulse(float impulse)
 {
-	_bodyB2->ApplyAngularImpulse(impulse, true);
+	_bodyB2->ApplyAngularImpulse(impulse);
 }
 
 b2Fixture* oBody::attachFixture(b2FixtureDef* fixtureDef)

@@ -17,9 +17,9 @@
 */
 
 #include "Box2D/Common/b2Settings.h"
-#include <stdio.h>
-#include <stdarg.h>
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstdarg>
 
 b2Version b2_version = {2, 3, 2};
 
