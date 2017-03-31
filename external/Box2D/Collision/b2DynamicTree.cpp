@@ -16,11 +16,8 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
-#include <Box2D/Collision/b2DynamicTree.h>
-#include <cstring>
-#include <cfloat>
-using namespace std;
-
+#include "Box2D/Collision/b2DynamicTree.h"
+#include <string.h>
 
 b2DynamicTree::b2DynamicTree()
 {
@@ -655,6 +652,7 @@ void b2DynamicTree::ValidateMetrics(int32 index) const
 
 void b2DynamicTree::Validate() const
 {
+#if !defined(NDEBUG)
 	ValidateStructure(m_root);
 	ValidateMetrics(m_root);
 
@@ -670,6 +668,7 @@ void b2DynamicTree::Validate() const
 	b2Assert(GetHeight() == ComputeHeight());
 
 	b2Assert(m_nodeCount + freeCount == m_nodeCapacity);
+#endif
 }
 
 int32 b2DynamicTree::GetMaxBalance() const
