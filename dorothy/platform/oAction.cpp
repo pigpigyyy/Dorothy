@@ -332,7 +332,7 @@ void oJump::run()
 	target->ApplyLinearImpulse(
 		b2Vec2(-self->GetMass() * self->GetLinearVelocityX(),
 			-self->GetMass() * self->GetLinearVelocityY()),
-			output.pointB);
+			output.pointB, true);
 	oAction::run();
 }
 
