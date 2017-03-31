@@ -16,16 +16,16 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
-#include "Box2D/Collision/b2Distance.h"
-#include "Box2D/Dynamics/b2Island.h"
-#include "Box2D/Dynamics/b2Body.h"
-#include "Box2D/Dynamics/b2Fixture.h"
-#include "Box2D/Dynamics/b2World.h"
-#include "Box2D/Dynamics/Contacts/b2Contact.h"
-#include "Box2D/Dynamics/Contacts/b2ContactSolver.h"
-#include "Box2D/Dynamics/Joints/b2Joint.h"
-#include "Box2D/Common/b2StackAllocator.h"
-#include "Box2D/Common/b2Timer.h"
+#include <Box2D/Collision/b2Distance.h>
+#include <Box2D/Dynamics/b2Island.h>
+#include <Box2D/Dynamics/b2Body.h>
+#include <Box2D/Dynamics/b2Fixture.h>
+#include <Box2D/Dynamics/b2World.h>
+#include <Box2D/Dynamics/Contacts/b2Contact.h>
+#include <Box2D/Dynamics/Contacts/b2ContactSolver.h>
+#include <Box2D/Dynamics/Joints/b2Joint.h>
+#include <Box2D/Common/b2StackAllocator.h>
+#include <Box2D/Common/b2Timer.h>
 
 /*
 Position Correction Notes
@@ -211,10 +211,10 @@ void b2Island::Solve(b2Profile* profile, const b2TimeStep& step, const b2Vec2& g
 			// Solution: v(t) = v0 * exp(-c * t)
 			// Time step: v(t + dt) = v0 * exp(-c * (t + dt)) = v0 * exp(-c * t) * exp(-c * dt) = v * exp(-c * dt)
 			// v2 = exp(-c * dt) * v1
-			// Pade approximation:
-			// v2 = v1 * 1 / (1 + c * dt)
-			v *= 1.0f / (1.0f + h * b->m_linearDamping);
-			w *= 1.0f / (1.0f + h * b->m_angularDamping);
+			// Taylor expansion:
+			// v2 = (1.0f - c * dt) * v1
+			v *= b2Clamp(1.0f - h * b->m_linearDamping, 0.0f, 1.0f);
+			w *= b2Clamp(1.0f - h * b->m_angularDamping, 0.0f, 1.0f);
 		}
 
 		m_positions[i].c = c;
@@ -312,9 +312,9 @@ void b2Island::Solve(b2Profile* profile, const b2TimeStep& step, const b2Vec2& g
 		bool contactsOkay = contactSolver.SolvePositionConstraints();
 
 		bool jointsOkay = true;
-		for (int32 j = 0; j < m_jointCount; ++j)
+		for (int32 i = 0; i < m_jointCount; ++i)
 		{
-			bool jointOkay = m_joints[j]->SolvePositionConstraints(solverData);
+			bool jointOkay = m_joints[i]->SolvePositionConstraints(solverData);
 			jointsOkay = jointsOkay && jointOkay;
 		}
 

@@ -19,7 +19,7 @@
 #ifndef B2_CHAIN_SHAPE_H
 #define B2_CHAIN_SHAPE_H
 
-#include "Box2D/Collision/Shapes/b2Shape.h"
+#include <Box2D/Collision/Shapes/b2Shape.h>
 
 class b2EdgeShape;
 
@@ -99,8 +99,8 @@ inline b2ChainShape::b2ChainShape()
 	m_radius = b2_polygonRadius;
 	m_vertices = NULL;
 	m_count = 0;
-	m_hasPrevVertex = false;
-	m_hasNextVertex = false;
+	m_hasPrevVertex = NULL;
+	m_hasNextVertex = NULL;
 }
 
 #endif
