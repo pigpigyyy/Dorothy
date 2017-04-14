@@ -926,7 +926,7 @@ local function oEditControl()
 				end)
 			elseif name == "Vertices" then
 				local parent = data.parent or data
-				editControl:showVertEditor(data:get("Vertices"),parent:get("Position"),item:get("Angle"),function(verts)
+				editControl:showVertEditor(data:get("Vertices"),parent:get("Position"),parent:get("Angle"),function(verts)
 					data:set("Vertices",verts)
 					oEditor:resetItem(data)
 				end)
