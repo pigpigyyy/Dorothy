@@ -67,7 +67,8 @@ local oKd =
 	easeAngle = 12,
 	easeScale = 13,
 	easeSkew = 14,
-	duration = 15
+	duration = 15,
+	event = 16,
 }
 
 local oFd =

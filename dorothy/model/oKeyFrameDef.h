@@ -38,6 +38,7 @@ public:
 	float rotation;/*5*/
 	float skewX;
 	float skewY;/*6*/
+	string eventName;
 	string toXml(oKeyFrameDef* lastDef);
 };
 

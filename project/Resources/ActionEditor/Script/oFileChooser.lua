@@ -104,6 +104,7 @@ local function oFileChooser(withCancel,clipOnly,targetModelFile,groupOnly)
 
 	local function addImages(file)
 		panel:removeMenuItems()
+		local padding = 2
 		local blocks = {}
 		local images = oContent:getEntries(oEditor.input..file,false)
 		local blendFunc = ccBlendFunc(ccBlendFunc.One,ccBlendFunc.Zero)
@@ -118,8 +119,8 @@ local function oFileChooser(withCancel,clipOnly,targetModelFile,groupOnly)
 					sp.anchor = oVec2.zero
 					local block =
 					{
-						w = sp.contentSize.width+4,
-						h = sp.contentSize.height+4,
+						w = sp.contentSize.width+padding*2,
+						h = sp.contentSize.height+padding*2,
 						sp = sp,
 						name = images[i]:match("([^\\/]*)%.[^%.\\/]*$")
 					}
@@ -131,11 +132,11 @@ local function oFileChooser(withCancel,clipOnly,targetModelFile,groupOnly)
 
 		oPacker:fit(blocks)
 		local w = oPacker.root.w
-		local v = 2;while v < w do v = v*2	end
-		w = v
+		--local v = 2;while v < w do v = v*2 end
+		--w = v
 		local h = oPacker.root.h
-		v = 2;while v < h do v = v*2 end
-		h = v
+		--v = 2;while v < h do v = v*2 end
+		--h = v
 		local frame = oLine(
 		{
 			oVec2.zero,
@@ -146,23 +147,21 @@ local function oFileChooser(withCancel,clipOnly,targetModelFile,groupOnly)
 		},ccColor4(0x44ffffff))
 
 		local node = CCNode()
-
 		for n = 1, #blocks do
 			local block = blocks[n]
 			if block.fit then
-				block.fit.y = h-block.fit.y-block.h
-				local rect = CCRect(block.fit.x, block.fit.y, block.w, block.h)
+				local x, y, w, h = block.fit.x+padding, h-block.fit.y-block.h+padding, block.sp.width, block.sp.height
 				local line = oLine(
 				{
-					oVec2(rect.left+2,rect.bottom+2),
-					oVec2(rect.right-2,rect.bottom+2),
-					oVec2(rect.right-2,rect.top-2),
-					oVec2(rect.left+2,rect.top-2),
-					oVec2(rect.left+2,rect.bottom+2)
+					oVec2(x,y),
+					oVec2(x+w,y),
+					oVec2(x+w,y+h),
+					oVec2(x,y+h),
+					oVec2(x,y)
 				},ccColor4())
 				frame:addChild(line)
 
-				block.sp.position = rect.origin+oVec2(2,2)
+				block.sp.position = oVec2(x,y)
 				node:addChild(block.sp)
 			end
 		end
@@ -175,7 +174,7 @@ local function oFileChooser(withCancel,clipOnly,targetModelFile,groupOnly)
 		local xml = "<A A=\""..file..".png\">"
 		for i = 1,#blocks do
 			local block = blocks[i]
-			xml = xml.."<B A=\""..block.name.."\" B=\""..tostring(block.fit.x+2)..","..tostring(h-block.fit.y-2-block.h+4)..","..tostring(block.w-4)..","..tostring(block.h-4).."\"/>"
+			xml = xml.."<B A=\""..block.name.."\" B=\""..tostring(block.fit.x+padding)..","..tostring(block.fit.y+padding)..","..tostring(block.w-padding*2)..","..tostring(block.h-padding*2).."\"/>"
 		end
 		xml = xml.."</A>"
 

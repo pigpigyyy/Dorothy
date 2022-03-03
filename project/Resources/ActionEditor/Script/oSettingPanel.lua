@@ -210,7 +210,7 @@ local function oSettingPanel()
 		menuItem:addChild(label)
 
 		local isInput = false
-		if name == "Name :" then
+		if name == "Name :" or name == "Event :" then
 			label = oTextField(108,7,14,8,
 				function()
 					emit("Action.SettingSelected",nil)
@@ -283,7 +283,7 @@ local function oSettingPanel()
 					emit("Action.SettingSelected",menuItem)
 				end
 			else
-				if oEditor.state == oEditor.EDIT_SPRITE and enableFunc ~= nil and disableFunc ~= nil then
+				if enableFunc ~= nil and disableFunc ~= nil then
 					emit("Action.SettingSelected",menuItem)
 				end
 			end
@@ -396,6 +396,7 @@ local function oSettingPanel()
 	local sizeXY = false
 
 	local isEditingName = false
+	local isEditingEvent = false
 
 	local skipSelection = false
 	local keyItems =
@@ -418,6 +419,22 @@ local function oSettingPanel()
 					oEditor.dirty = true
 					oEditor.editMenu:markEditButton(true)
 				end
+			end),
+		Event = oSettingItem("Event :",0,getPosY(),
+			function(item)
+				item.label:attachWithIME()
+				isEditingEvent = true
+			end,
+			function(item)
+				if not isEditingEvent or not oEditor.spriteData then
+					return
+				end
+				isEditingEvent = false
+				item.label:detachWithIME()
+				local text = item.label.text
+				oEditor.animationData[oEditor.keyIndex][oKd.event] = text
+				oEditor.dirty = true
+				oEditor.editMenu:markEditButton(true)
 			end),
 		Time = oSettingItem("Time :",0,getPosY()),--1
 		PosX = oSettingItem("PosX :",0,getPosY(),
@@ -929,7 +946,8 @@ local function oSettingPanel()
 		keyItems.EaseS,
 		keyItems.EaseK,
 		keyItems.EaseA,
-		keyItems.EaseO
+		keyItems.EaseO,
+		keyItems.Event,
 	}
 	local function updateAnimationItems()
 		initValues()
@@ -1063,6 +1081,7 @@ local function oSettingPanel()
 		keyItems.EaseK:setValue(oEditor.easeNames[frame[oKd.easeSkew]])
 		keyItems.EaseA:setValue(oEditor.easeNames[frame[oKd.easeAngle]])
 		keyItems.EaseO:setValue(oEditor.easeNames[frame[oKd.easeOpacity]])
+		keyItems.Event:setValue(frame[oKd.event])
 	end
 
 	panel:gslot("Action.ControlBarPos",

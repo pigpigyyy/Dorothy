@@ -101,6 +101,7 @@ struct oModelXml
 						EaseScale = 'J',
 						EaseRotate = 'K',
 						EaseSkew = 'L',
+						EventName = 'M',
 						//</a>
 
  				FrameAnimation = 'E',//4

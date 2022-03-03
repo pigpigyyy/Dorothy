@@ -1697,6 +1697,7 @@ void __oModelCache_getData(lua_State* L, const char* filename)
 					lua_setInt(13, frame->easeScale);
 					lua_setInt(14, frame->easeSkew);
 					lua_setFloat(15, frame->duration);
+					lua_setString(16, frame->eventName.c_str());
 					lua_rawseti(L, -2, i + 2);
 				}
 				lua_rawseti(L, -2, defIndex + 1);
@@ -1902,6 +1903,7 @@ oModelDef* __oModelCache_loadData(lua_State* L, const char* filename, int tableI
 					frameDef->easeScale = lua_getInt(13);
 					frameDef->easeSkew = lua_getInt(14);
 					frameDef->duration = lua_getFloat(15);
+					frameDef->eventName = lua_getString(16);
 					keyAnimationDef->add(frameDef);
 					lua_pop(L, 1);// pop frameDef
 				}

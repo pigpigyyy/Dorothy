@@ -91,6 +91,10 @@ string oKeyFrameDef::toXml(oKeyFrameDef* lastDef)
 	{
 		stream << ' ' << char(oModelXml::EaseOpacity) << "=\"" << (int)easeOpacity << '\"';
 	}
+	if (!eventName.empty())
+	{
+		stream << ' ' << char(oModelXml::EventName) << "=\"" << eventName << '\"';
+	}
 	stream << "/>";
 	return stream.str();
 }

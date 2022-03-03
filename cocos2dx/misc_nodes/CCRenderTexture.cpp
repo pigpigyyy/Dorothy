@@ -363,27 +363,21 @@ bool CCRenderTexture::initWithWidthAndHeight(int w, int h, CCTexture2DPixelForma
 void CCRenderTexture::begin()
 {
     kmGLMatrixMode(KM_GL_PROJECTION);
-	kmGLPushMatrix();
-	kmGLMatrixMode(KM_GL_MODELVIEW);
     kmGLPushMatrix();
+    kmGLLoadIdentity();
     
-    CCDirector* director = CCDirector::sharedDirector();
-    director->setProjection(director->getProjection());
 
     const CCSize& texSize = m_pTexture->getContentSizeInPixels();
-
-    // Calculate the adjustment ratios based on the old and new projections
-    CCSize size = director->getWinSizeInPixels();
-    float widthRatio = size.width / texSize.width;
-    float heightRatio = size.height / texSize.height;
 
     // Adjust the orthographic projection and viewport
     glViewport(0, 0, (GLsizei)texSize.width, (GLsizei)texSize.height);
 
     kmMat4 orthoMatrix;
-    kmMat4OrthographicProjection(&orthoMatrix, (float)-1.0 / widthRatio,  (float)1.0 / widthRatio,
-        (float)-1.0 / heightRatio, (float)1.0 / heightRatio, -1,1 );
+    kmMat4OrthographicProjection(&orthoMatrix, 0, texSize.width, 0, texSize.height, -1024, 1024);
     kmGLMultMatrix(&orthoMatrix);
+    kmGLMatrixMode(KM_GL_MODELVIEW);
+    kmGLPushMatrix();
+    kmGLLoadIdentity();
 
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, &m_nOldFBO);
     glBindFramebuffer(GL_FRAMEBUFFER, m_uFBO);
